@@ -15,11 +15,11 @@ Nabledge-6を Claude Code で使用するためのガイドです。
 curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-6-cc.sh | bash
 ```
 
-実行後、`.claude/settings.json` が自動的に作成または更新されます。
+実行後、`.claude/skills/nabledge-6/` ディレクトリが作成され、スキルファイルがコピーされます。Claude Codeを起動するだけですぐにスキルが使えます。
 
 ### チーム共有
 
-`.claude/settings.json` をGitにコミット・プッシュしてください。チームメンバーがリポジトリをクローンしてClaude Codeを起動すると、自動的にプラグインのインストールが促されます。
+`.claude/skills/` ディレクトリをGitにコミット・プッシュしてください。チームメンバーがリポジトリをクローンすると、自動的にnabledge-6スキルが利用可能になります。
 
 ## 使い方
 
@@ -66,7 +66,7 @@ UniversalDaoの使い方を教えて
 curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-6-cc.sh | bash
 ```
 
-実行後、更新された `.claude/settings.json` をGitにコミット・プッシュしてください。
+実行後、更新された `.claude/skills/` ディレクトリをGitにコミット・プッシュしてください。
 
 ### 特定バージョンの指定（オプション）
 
@@ -78,6 +78,6 @@ curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-6-cc.sh
 NABLEDGE_BRANCH=0.2 bash setup.sh
 ```
 
-実行後、`.claude/settings.json` をGitにコミット・プッシュしてください。
+実行後、`.claude/skills/` ディレクトリをGitにコミット・プッシュしてください。
 
 **注**: 通常は最新版の使用を推奨します。特定バージョンの指定は、動作検証やトラブルシューティングが必要な場合のみ使用してください。
