@@ -17,6 +17,10 @@ Nabledgeは、NablarchによるAI支援開発スキルです。Claude CodeやGit
 
 全体およびプラグイン別の変更履歴は [CHANGELOG.md](CHANGELOG.md) を参照してください。
 
+## フィードバック
+
+問題の報告や機能の提案は、[nablarch/nabledge のIssue](https://github.com/nablarch/nabledge/issues) にお願いします。
+
 ## ライセンス
 
 Apache-2.0
