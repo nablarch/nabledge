@@ -202,7 +202,7 @@ Follow `workflows/code-analysis.md`:
    - Write Nablarch usage with important points (✅ ⚠️ 💡)
    - Apply template with all placeholders
    - Calculate analysis duration
-   - Write file to `work/YYYYMMDD/code-analysis-<target>.md`
+   - Write file to `.nabledge/YYYYMMDD/code-analysis-<target>.md`
    - Inform user of completion
 
 **Tools**: Read, Glob, Grep, Bash with jq, Write

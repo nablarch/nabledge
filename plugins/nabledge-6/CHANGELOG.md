@@ -4,6 +4,11 @@ nabledge-6プラグインの主な変更内容を記録しています。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に基づいています。
 
+## [Unreleased]
+
+### 変更
+- コード分析の出力先ディレクトリを `.nabledge/` に変更しました。Nabledgeが生成したファイルがプロジェクトのファイルから明確に分離されます（従来は `work/YYYYMMDD/` に出力）
+
 ## [0.2] - 2026-02-17
 
 ### 修正
