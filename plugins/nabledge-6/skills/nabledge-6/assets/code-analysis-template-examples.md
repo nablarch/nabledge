@@ -145,7 +145,7 @@ String batchDate = BusinessDateUtil.getDate("batch");
 **Format**: `[FileName.java:StartLine-EndLine](relative/path/to/FileName.java)`
 
 **Path calculation**:
-- Output location: `work/20260210/code-analysis-xxx.md`
+- Output location: `.nabledge/20260210/code-analysis-xxx.md`
 - Source location: `proman-batch/src/main/java/.../Action.java`
 - Relative path: `../../proman-batch/src/main/java/.../Action.java`
 
@@ -183,7 +183,7 @@ String batchDate = BusinessDateUtil.getDate("batch");
 - Use `:StartLine-EndLine` for class/method ranges
 - Use `[:LineNumber]` for single-line annotations
 - Line numbers should be accurate (check with Read tool)
-- Relative paths must be correct (use `../../` to go up from work/YYYYMMDD/)
+- Relative paths must be correct (use `../../` to go up from .nabledge/YYYYMMDD/)
 
 ---
 
@@ -218,7 +218,7 @@ String batchDate = BusinessDateUtil.getDate("batch");
 **Format**: Bullet list with links and descriptions of what's covered
 
 **Path structure**:
-- Output: `work/20260210/code-analysis-xxx.md`
+- Output: `.nabledge/20260210/code-analysis-xxx.md`
 - Knowledge base: `.claude/skills/nabledge-6/docs/features/libraries/xxx.md`
 - Relative path: `../../.claude/skills/nabledge-6/docs/features/libraries/xxx.md`
 
