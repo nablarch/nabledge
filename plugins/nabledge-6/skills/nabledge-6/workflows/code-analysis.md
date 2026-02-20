@@ -38,17 +38,27 @@ This workflow analyzes existing code, traces dependencies, and generates structu
 
 **Tool**: Bash
 
-**Action**:
+**Action** - Store start time with unique session ID:
 ```bash
-date '+%Y-%m-%d %H:%M:%S'
+UNIQUE_ID="$(date '+%s%3N')-$$"
+echo "$UNIQUE_ID" > /tmp/nabledge-code-analysis-id
+date '+%s' > "/tmp/nabledge-code-analysis-start-$UNIQUE_ID"
+echo "Start time recorded: $(date '+%Y-%m-%d %H:%M:%S')"
+echo "Session ID: $UNIQUE_ID"
 ```
 
-**Output example**: `2026-02-10 14:54:00`
+**Output example**:
+```
+Start time recorded: 2026-02-10 14:54:00
+Session ID: 1707559440123-12345
+```
 
 **IMPORTANT**:
-- **Write down this timestamp** in your working memory
-- You will need it in Step 3.3 to calculate analysis duration
-- Format: `Start: YYYY-MM-DD HH:MM:SS`
+- **Session ID stored in**: `/tmp/nabledge-code-analysis-id` (fixed path for retrieval in Step 3.3)
+- **Start time stored in**: `/tmp/nabledge-code-analysis-start-$UNIQUE_ID` (unique file per session)
+- **UNIQUE_ID format**: `{millisecond_timestamp}-{process_PID}` ensures uniqueness across parallel executions
+- Epoch time (seconds since 1970) stored for accurate duration calculation
+- No need to remember values - Step 3.3 will read session ID from fixed file path
 
 **Why this matters**: The `{{analysis_duration}}` placeholder must contain the actual elapsed time, not an estimate. Users will compare it against the "Cooked for X" time shown in their IDE.
 
@@ -197,11 +207,11 @@ date '+%Y-%m-%d %H:%M:%S'
 
 #### 3.1: Read template and guide
 
-**MUST READ FIRST**:
-```
-Read: .claude/skills/nabledge-6/assets/code-analysis-template.md
-Read: .claude/skills/nabledge-6/assets/code-analysis-template-guide.md
-Read: .claude/skills/nabledge-6/assets/code-analysis-template-examples.md
+**MUST READ FIRST** (use single cat command for efficiency):
+```bash
+cat .claude/skills/nabledge-6/assets/code-analysis-template.md \
+    .claude/skills/nabledge-6/assets/code-analysis-template-guide.md \
+    .claude/skills/nabledge-6/assets/code-analysis-template-examples.md
 ```
 
 **Extract from templates**:
@@ -277,16 +287,10 @@ sequenceDiagram
 
 1. **Determine output path**: `.nabledge/YYYYMMDD/code-analysis-<target-name>.md`
 
-2. **Get current timestamp** (for generation_date and generation_time):
-   ```bash
-   date '+%Y-%m-%d %H:%M:%S'
-   ```
-   Extract date and time parts for {{generation_date}} and {{generation_time}}.
-
-3. **Fill template placeholders** (except {{analysis_duration}}):
+2. **Fill template placeholders** (time-related placeholders will be filled in Step 6):
    - `{{target_name}}`: Target code name
-   - `{{generation_date}}`: Current date (YYYY-MM-DD)
-   - `{{generation_time}}`: Current time (HH:MM:SS)
+   - `{{generation_date}}`: "{{DATE_PLACEHOLDER}}"  ← 置き換え用マーカー（そのまま）
+   - `{{generation_time}}`: "{{TIME_PLACEHOLDER}}"  ← 置き換え用マーカー（そのまま）
    - `{{analysis_duration}}`: "{{DURATION_PLACEHOLDER}}"  ← 置き換え用マーカー（そのまま）
    - `{{target_description}}`: One-line description
    - `{{modules}}`: Affected modules
@@ -312,31 +316,63 @@ sequenceDiagram
 
 5. **Write file** using Write tool
 
-6. **Calculate duration and update file** (IMMEDIATE execution after Write):
+6. **Update time-related placeholders** (IMMEDIATE execution after Write):
 
-   **Step 6.1**: Get end time and calculate duration
+   Execute single bash script to fill all time-related placeholders:
    ```bash
-   date '+%Y-%m-%d %H:%M:%S'
+   # Retrieve session ID from Step 0
+   UNIQUE_ID=$(cat /tmp/nabledge-code-analysis-id 2>/dev/null || echo "")
+
+   # Get current time
+   end_time=$(date '+%s')
+   current_datetime=$(date '+%Y-%m-%d %H:%M:%S')
+   generation_date=$(echo "$current_datetime" | cut -d' ' -f1)
+   generation_time=$(echo "$current_datetime" | cut -d' ' -f2)
+
+   # Calculate duration with error handling
+   START_TIME_FILE="/tmp/nabledge-code-analysis-start-$UNIQUE_ID"
+   if [ -z "$UNIQUE_ID" ] || [ ! -f "$START_TIME_FILE" ]; then
+     echo "WARNING: Start time file not found. Duration will be set to '不明'."
+     duration_text="不明"
+   else
+     start_time=$(cat "$START_TIME_FILE")
+     duration_seconds=$((end_time - start_time))
+
+     # Format as Japanese text
+     if [ $duration_seconds -lt 60 ]; then
+       duration_text="約${duration_seconds}秒"
+     else
+       minutes=$((duration_seconds / 60))
+       seconds=$((duration_seconds % 60))
+       duration_text="約${minutes}分${seconds}秒"
+     fi
+   fi
+
+   # Replace all placeholders in the output file (three -e expressions execute sequentially)
+   sed -i \
+     -e "s/{{DATE_PLACEHOLDER}}/$generation_date/g" \
+     -e "s/{{TIME_PLACEHOLDER}}/$generation_time/g" \
+     -e "s/{{DURATION_PLACEHOLDER}}/$duration_text/g" \
+     .nabledge/YYYYMMDD/code-analysis-<target>.md
+
+   # Clean up temp files
+   rm -f "$START_TIME_FILE"
+   rm -f /tmp/nabledge-code-analysis-id
+
+   # Output for user
+   echo "Generated: $generation_date $generation_time"
+   echo "Duration: $duration_text"
    ```
 
-   - Retrieve start time from Step 0 (stored in working memory)
-   - Calculate elapsed time: end time - start time
-   - Format as Japanese text:
-     - If < 60 seconds: "約{seconds}秒" (e.g., "約30秒", "約45秒")
-     - If >= 60 seconds: "約{minutes}分{seconds}秒" (e.g., "約5分18秒", "約2分30秒")
-     - Round down to nearest second (don't estimate)
-
-   **Step 6.2**: Replace placeholder using sed
-   ```bash
-   sed -i 's/{{DURATION_PLACEHOLDER}}/約X分Y秒/g' .nabledge/YYYYMMDD/code-analysis-<target>.md
-   ```
-
-   Replace `約X分Y秒` with the actual calculated duration from Step 6.1.
+   **Replace in command**:
+   - `YYYYMMDD`: Actual date directory
+   - `<target>`: Actual target name
 
    **IMPORTANT**:
-   - Execute Steps 6.1 and 6.2 immediately after Step 5 with no other operations between them
-   - If sed fails (permission error, file locked, etc.), inform user of the calculated duration so they can manually edit the file
-   - The placeholder will remain in the file if sed fails, but user can update it later
+   - Execute immediately after Step 5 with no other operations between them
+   - This script handles: session ID retrieval, generation date/time, duration calculation, and file updates
+   - **Error handling**: If start time file is missing, duration is set to "不明" (unknown) with warning message
+   - Script continues execution even if duration calculation fails, ensuring placeholders are always replaced
 
 7. **Inform user**: Show output path and actual duration
 
