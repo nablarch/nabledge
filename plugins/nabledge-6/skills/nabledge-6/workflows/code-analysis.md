@@ -111,24 +111,79 @@ date '+%Y-%m-%d %H:%M:%S'
 
 **Tools**: Read (index.toon), Bash with jq (keyword-search workflow)
 
-**Action**:
+**Action**: Batch process knowledge searches for all Nablarch components to reduce tool calls.
 
-For each Nablarch component identified in Step 1:
+**Batch processing approach**:
 
-1. **Execute keyword-search workflow** (see workflows/keyword-search.md):
-   - Use component name + technical terms as keywords
-   - Example: "UniversalDao" → ["UniversalDao", "DAO", "データベース", "CRUD"]
+1. **Identify all Nablarch components** from Step 1 analysis:
+   - Example: ["UniversalDao", "ExecutionContext", "ValidationUtil", "DbAccessException"]
 
-2. **Execute section-judgement workflow** (see workflows/section-judgement.md):
-   - Judge relevance of each section
+2. **Combine keywords for batch search**:
+   - Merge component names + technical terms from all components
+   - Extract L1/L2/L3 keywords for all components at once
+
+   **Bash script example for keyword combination**:
+   ```bash
+   # Declare arrays for combined keywords
+   declare -a l1_all l2_all l3_all
+
+   # UniversalDao component keywords
+   l1_all+=("データベース" "database")
+   l2_all+=("DAO" "UniversalDao" "O/Rマッパー")
+   l3_all+=("CRUD" "検索" "登録" "更新" "ページング")
+
+   # ExecutionContext component keywords
+   l1_all+=("リクエスト" "request")
+   l2_all+=("ExecutionContext" "コンテキスト")
+   l3_all+=("リクエスト処理" "データ取得")
+
+   # ValidationUtil component keywords
+   l1_all+=("バリデーション" "validation")
+   l2_all+=("ValidationUtil" "Bean Validation")
+   l3_all+=("検証" "エラー" "例外処理")
+
+   # Remove duplicates and prepare for keyword-search workflow
+   l1_keywords=($(printf '%s\n' "${l1_all[@]}" | sort -u))
+   l2_keywords=($(printf '%s\n' "${l2_all[@]}" | sort -u))
+   l3_keywords=($(printf '%s\n' "${l3_all[@]}" | sort -u))
+   ```
+
+   **Result** - Combined keywords ready for keyword-search:
+     - L1: ["データベース", "database", "バリデーション", "validation", "リクエスト", "request"]
+     - L2: ["DAO", "UniversalDao", "O/Rマッパー", "ExecutionContext", "コンテキスト", "ValidationUtil", "Bean Validation"]
+     - L3: ["CRUD", "検索", "登録", "更新", "ページング", "リクエスト処理", "データ取得", "検証", "エラー", "例外処理"]
+
+3. **Execute keyword-search workflow once** (see workflows/keyword-search.md):
+   - Use combined keywords for all components
+   - Batch process file selection (Step 1)
+   - Batch extract candidate sections (Step 2)
+   - Get 20-30 candidates covering all components
+
+4. **Execute section-judgement workflow once** (see workflows/section-judgement.md):
+   - Batch extract all candidate sections (2-3 jq calls instead of 5-10)
+   - Judge relevance for each section
    - Keep only High and Partial relevance sections
 
-3. **Collect knowledge** for documentation:
+5. **Group knowledge by component** after receiving results:
+   - Parse returned sections and map to original components
+   - UniversalDao → [universal-dao.json:overview, universal-dao.json:crud]
+   - ValidationUtil → [data-bind.json:validation]
+
+6. **Collect knowledge** for documentation:
    - API usage patterns
    - Configuration requirements
    - Code examples
    - Error handling
    - Best practices
+
+**Tool call reduction**:
+- **Before**: Sequential processing per component = ~36 calls
+  - Per component: keyword-search (12 calls) + section-judgement (5-10 calls) = ~18 calls
+  - For 2-3 components: 36-54 calls total
+- **After**: Batch processing for all components = ~15 calls
+  - keyword-search batch (3 calls) + section-judgement batch (2-3 calls) + grouping (0 calls) = ~6 calls once
+  - Additional overhead for multi-component coordination: ~5-10 calls (dependency grouping and knowledge mapping)
+  - Total: ~15 calls
 
 **Efficiency**: Collect High-relevance sections only (5-10 sections per component). Skip components with no relevant knowledge.
 
