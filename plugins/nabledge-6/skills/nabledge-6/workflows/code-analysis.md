@@ -223,12 +223,12 @@ cat .claude/skills/nabledge-6/assets/code-analysis-template.md \
 
 #### 3.2: Pre-fill deterministic placeholders
 
-**Tool**: Bash (scripts/prefill-template.sh)
+**Tool**: Bash (.claude/skills/nabledge-6/scripts/prefill-template.sh)
 
 **Action**: Execute prefill script to pre-populate 8 deterministic placeholders:
 
 ```bash
-scripts/prefill-template.sh \
+.claude/skills/nabledge-6/scripts/prefill-template.sh \
   --target-name "<target-name>" \
   --target-desc "<one-line-description>" \
   --modules "<module1, module2>" \
@@ -275,20 +275,20 @@ scripts/prefill-template.sh \
 
 #### 3.3: Generate Mermaid diagram skeletons
 
-**Tool**: Bash (scripts/generate-mermaid-skeleton.sh)
+**Tool**: Bash (.claude/skills/nabledge-6/scripts/generate-mermaid-skeleton.sh)
 
 **Action**: Generate diagram skeletons to reduce LLM workload:
 
 **Class Diagram Skeleton**:
 ```bash
-scripts/generate-mermaid-skeleton.sh \
+.claude/skills/nabledge-6/scripts/generate-mermaid-skeleton.sh \
   --source-files "<file1.java,file2.java>" \
   --diagram-type class
 ```
 
 **Sequence Diagram Skeleton**:
 ```bash
-scripts/generate-mermaid-skeleton.sh \
+.claude/skills/nabledge-6/scripts/generate-mermaid-skeleton.sh \
   --source-files "<main-file.java>" \
   --diagram-type sequence \
   --main-class "<MainClass>"
