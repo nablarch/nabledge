@@ -157,6 +157,18 @@ Follow the workflows in this order:
    - **ONLY use information from knowledge files**
    - Cite sources (e.g., "universal-dao.json:paging section")
    - DO NOT supplement with LLM training data
+   - **Priority order**: Accuracy > Brevity > Completeness (if knowledge files lack information for full structure, provide shorter answer rather than supplementing)
+
+   **Output format constraints** (to keep answers concise):
+   - **Target length**: 500 tokens or less (strict limit for simple queries; may extend to 800 tokens for multi-part questions)
+   - **If answer naturally exceeds limit**: Prioritize 結論 section and provide knowledge file references for details
+   - **Required structure**:
+     - **結論** (Conclusion): Direct answer to user's question
+     - **根拠** (Evidence): 1 code example from knowledge files
+     - **注意点** (Considerations): Important points or limitations
+   - **For detailed/complex topics**: Provide summary + reference to knowledge file path
+     - Example: "詳しくは knowledge/features/libraries/universal-dao.json#paging を参照"
+   - Use Japanese section names (結論、根拠、注意点) since users are Japanese
 
 4. **Handle missing knowledge** (if needed):
    - State clearly: "この情報は知識ファイルに含まれていません"
