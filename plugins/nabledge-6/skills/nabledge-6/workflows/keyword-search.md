@@ -26,9 +26,9 @@ This workflow searches the knowledge index (index.toon) using keyword matching t
 **Tools you will use**:
 - Read tool: Read knowledge/index.toon
 - Grep tool (optional): Search for keywords in index.toon
-- Bash tool with jq: Extract .index from knowledge files
+- Bash tool with jq: Batch extract .index from knowledge files
 
-**Expected tool calls**: 10-15 calls
+**Expected tool calls**: 3-5 calls (reduced from 10-15 via batch processing)
 
 **Expected output**: 20-30 candidate sections
 
@@ -73,20 +73,67 @@ This workflow searches the knowledge index (index.toon) using keyword matching t
 
 **Tools**: Bash with jq
 
-**Action**: For each of the 10-15 selected files:
+**Action**: Batch process all 10-15 selected files in a single bash script to reduce tool calls.
 
-1. Extract only the `.index` field using jq:
-   ```bash
-   jq '.index' knowledge/features/libraries/universal-dao.json
-   ```
-2. Match your keywords against section hints using this **scoring strategy**:
-   - L2 (Technical component) keyword match: **+2 points** per hint
-   - L3 (Functional) keyword match: **+2 points** per hint
-   - L1 (Technical domain) keywords are **not scored** (too broad for section-level matching)
-   - Case-insensitive matching, partial matching allowed
-   - Sum up all matched hint scores for each section
-3. Keep sections with score ≥2
-4. Stop when you have 20-30 candidate sections total
+**Batch processing script example**:
+```bash
+# Batch extract .index from all selected files
+# Input: Array of file paths with scores from Step 1
+# Output: Candidates list with file_path, section_id, score, matched_hints
+
+for file in knowledge/features/libraries/universal-dao.json \
+            knowledge/features/web/handlers.json \
+            knowledge/features/database/database-access.json; do
+  # Extract .index field
+  jq -r --arg file "$file" '.index | to_entries[] | "\($file)|\(.key)|\(.value.hints | join(","))"' "$file" 2>/dev/null
+done | while IFS='|' read -r filepath section hints; do
+  # Score each section by matching L2/L3 keywords against hints
+  score=0
+  matched=""
+
+  # L2 keywords matching (+2 points each)
+  for kw in "${l2_keywords[@]}"; do
+    if echo "$hints" | grep -iq "$kw"; then
+      score=$((score + 2))
+      matched="$matched,$kw(L2)"
+    fi
+  done
+
+  # L3 keywords matching (+2 points each)
+  for kw in "${l3_keywords[@]}"; do
+    if echo "$hints" | grep -iq "$kw"; then
+      score=$((score + 2))
+      matched="$matched,$kw(L3)"
+    fi
+  done
+
+  # Output sections with score ≥2
+  if [ $score -ge 2 ]; then
+    echo "$filepath|$section|$score|${matched:1}"  # ${matched:1} removes leading comma
+  fi
+done | sort -t'|' -k3 -rn | head -30
+```
+
+**Note**: The script assumes `l2_keywords` and `l3_keywords` arrays are defined from Step 1 keyword extraction. Example:
+```bash
+l2_keywords=("DAO" "UniversalDao" "O/Rマッパー")
+l3_keywords=("ページング" "paging" "per" "page" "limit" "offset")
+```
+
+**Scoring strategy** (implemented in the batch script):
+- L2 (Technical component) keyword match: **+2 points** per hint
+- L3 (Functional) keyword match: **+2 points** per hint
+- L1 (Technical domain) keywords are **not scored** (too broad for section-level matching)
+- Case-insensitive matching, partial matching allowed
+- Sum up all matched hint scores for each section
+- Keep sections with score ≥2
+- Limit to top 20-30 candidates
+
+**Key advantages of batch processing**:
+- **Reduced tool calls**: 10-15 individual jq calls → 1 batch script call
+- **Consistent scoring**: All sections scored in single execution context
+- **Efficient sorting**: Use unix sort to rank candidates by score
+- **Early termination**: Stop at 30 candidates without processing remaining files
 
 **Rationale**: At section level, both technical components (L2) and specific functions (L3) are equally important for identifying the right content. L1 keywords are too broad for section discrimination.
 

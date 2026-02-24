@@ -34,22 +34,24 @@ curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-6-ghc.s
 
 ## 使い方
 
-### 基本的な使い方
+### `/n6` プロンプト
 
-自然言語でNablarchに関する質問や依頼をするだけで、GitHub Copilotが自動的にnabledge-6スキルを使用します。
+Nablarchに関する質問やコード分析を実行するには、`/n6` プロンプトを使用します。
 
-**例**:
-```
-Nablarchのバッチ処理の実装方法を教えて
+**基本的な使い方**:
+```bash
+/n6 UniversalDaoのページングを教えて
+/n6 バッチ処理のエラーハンドリング方式を調べて
+/n6 トランザクション管理ハンドラの設定方法
+/n6 code-analysis LoginActionの構造を理解したい
 ```
 
-```
-このプロジェクトのコードをNablarchの観点から分析して
-```
+### コマンドリファレンス
 
-```
-UniversalDaoの使い方を教えて
-```
+| コマンド | 説明 | 入力形式 | 出力場所・内容 |
+|---------|------|---------|--------------|
+| `/n6 <質問>` | 知識検索を実行 | 質問<br>例: `/n6 UniversalDaoのページング` | サマリー結果のみメインコンテキストに返る |
+| `/n6 code-analysis <対象>` | コード分析を実行 | コマンド<br>例: `/n6 code-analysis LoginAction` | サマリー結果のみメインコンテキストに返る<br>詳細: `.nabledge/YYYYMMDD/code-analysis-<target>.md` |
 
 ## バージョンアップ
 
@@ -61,7 +63,7 @@ UniversalDaoの使い方を教えて
 curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-6-ghc.sh | bash
 ```
 
-更新後、`.claude` ディレクトリの変更をGitにコミット・プッシュしてください。
+更新後、`.claude/` と `.github/` ディレクトリの変更をGitにコミット・プッシュしてください。
 
 ### 特定バージョンの指定（オプション）
 
@@ -73,6 +75,6 @@ curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-6-ghc.s
 NABLEDGE_BRANCH=0.2 bash setup.sh
 ```
 
-更新後、`.claude` ディレクトリの変更をGitにコミット・プッシュしてください。
+更新後、`.claude/` と `.github/` ディレクトリの変更をGitにコミット・プッシュしてください。
 
 **注**: 通常は最新版の使用を推奨します。特定バージョンの指定は、動作検証やトラブルシューティングが必要な場合のみ使用してください。

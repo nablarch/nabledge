@@ -48,6 +48,15 @@ mkdir -p "$PROJECT_ROOT/.claude/skills"
 echo "Copying nabledge-6 skill to project..."
 cp -r "$TEMP_DIR/$REPO_NAME/plugins/nabledge-6/skills/nabledge-6" "$PROJECT_ROOT/.claude/skills/"
 
+# Copy GHC-specific .github directory
+echo "Setting up GitHub Copilot prompts..."
+if [ -d "$TEMP_DIR/$REPO_NAME/plugins/nabledge-6/.github" ]; then
+    cp -r "$TEMP_DIR/$REPO_NAME/plugins/nabledge-6/.github" "$PROJECT_ROOT/"
+    echo "GitHub Copilot configuration installed: $PROJECT_ROOT/.github/"
+else
+    echo "Warning: .github directory not found in plugin"
+fi
+
 # Verify installation
 echo "Verifying installation..."
 if [ ! -f "$PROJECT_ROOT/.claude/skills/nabledge-6/SKILL.md" ]; then
@@ -77,9 +86,11 @@ show_completion_message() {
         echo "IMPORTANT: Please install jq before using the skill."
     else
         echo "GitHub Copilot skills have been enabled in .vscode/settings.json"
-        echo "Commit .vscode/settings.json to share this configuration with your team."
+        echo "Commit .claude/ and .github/ directories to share this with your team."
         echo ""
-        echo "You can now use nabledge-6 with GitHub Copilot by asking questions in natural language."
+        echo "You can now use nabledge-6 with GitHub Copilot:"
+        echo "  - Type /n6 followed by your question"
+        echo "  - The /n6 shortcut uses a separate context for better performance"
     fi
 }
 

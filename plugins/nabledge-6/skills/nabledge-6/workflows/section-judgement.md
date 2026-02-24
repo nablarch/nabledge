@@ -38,10 +38,10 @@ This workflow judges the relevance of candidate sections by reading their actual
 **Output**: Filtered sections with relevance scores
 
 **Tools you will use**:
-- Bash tool with jq: Extract specific sections from JSON files
+- Bash tool with jq: Batch extract specific sections from JSON files
 - None (mental): Judge relevance based on content
 
-**Expected tool calls**: 5-10 calls (read 5-10 section contents)
+**Expected tool calls**: 2-3 calls (reduced from 5-10 via batch extraction by file)
 
 **Expected output**: 5-15 sections with High/Partial relevance
 
@@ -89,16 +89,46 @@ Keyword matching alone is insufficient for accurate relevance judgement. This wo
 
 **Tools**: Bash with jq
 
-**Action**: For each candidate (start with first 5-10):
+**Action**: Batch extract all candidate sections to reduce tool calls, then judge relevance.
 
-1. Extract the specific section using jq:
-   ```bash
-   jq '.sections.paging' knowledge/features/libraries/universal-dao.json
-   ```
+**Batch extraction script example**:
+```bash
+# Batch extract multiple sections from multiple files
+# Input: Candidates list with file_path and section_id
+# Output: Section content for each candidate
 
-2. Read the section content carefully and understand what it explains
+# Group candidates by file to minimize jq calls
+declare -A file_sections
 
-3. Judge relevance based ONLY on section content (no external knowledge)
+# Parse candidates and group by file
+# file_sections["knowledge/features/libraries/universal-dao.json"]="paging overview crud"
+
+for file in "${!file_sections[@]}"; do
+  sections="${file_sections[$file]}"
+  # Extract all sections from this file in one jq call
+  for section in $sections; do
+    content=$(jq -r --arg sec "$section" '.sections[$sec] // empty' "$file" 2>/dev/null)
+    if [ -n "$content" ]; then
+      echo "===FILE: $file"
+      echo "===SECTION: $section"
+      echo "$content"
+      echo "===END==="
+    fi
+  done
+done
+```
+
+**Efficiency improvements**:
+- Extract all sections from same file in one jq call (reduces 5-10 calls → 2-3 calls, 60-70% reduction)
+- **Handle missing sections**: Use `// empty` to skip sections that don't exist
+- **Structured output**: Delimited format for parsing section boundaries
+- **Early termination**: Stop after extracting 5-10 sections if efficiency is critical
+
+**After extraction, judge relevance**:
+
+1. Read each extracted section content carefully and understand what it explains
+
+2. Judge relevance based ONLY on section content (no external knowledge)
 
 **Relevance criteria** (judge based ONLY on section content):
 
