@@ -23,45 +23,24 @@ curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-6-cc.sh
 
 ## 使い方
 
-### 基本的な使い方
+### `/n6` コマンド
 
-自然言語でNablarchに関する質問や依頼をするだけで、Claude Codeが自動的にnabledge-6スキルを使用します。
+Nablarchに関する質問やコード分析を実行するには、`/n6` コマンドを使用します。
 
-**例**:
-```
-Nablarchのバッチ処理の実装方法を教えて
-```
-
-```
-このプロジェクトのコードをNablarchの観点から分析して
-```
-
-```
-UniversalDaoの使い方を教えて
-```
-
-### 手動実行（オプション）
-
-明示的にスキルを指定したい場合は、以下のコマンドで手動実行できます：
-
+**基本的な使い方**:
 ```bash
-/nabledge-6
-```
-
-対話的にNablarchに関する質問や、コード分析を行うことができます。
-
-コード分析を直接実行する場合:
-
-```bash
-/nabledge-6 code-analysis
+/n6 UniversalDaoのページングを教えて
+/n6 バッチ処理のエラーハンドリング方式を調べて
+/n6 トランザクション管理ハンドラの設定方法
+/n6 code-analysis LoginActionの構造を理解したい
 ```
 
 ### コマンドリファレンス
 
 | コマンド | 説明 | 入力形式 | 出力場所・内容 |
 |---------|------|---------|--------------|
-| `/nabledge-6` | 対話モードで起動。知識検索またはコード分析を選択可能 | なし | なし（対話形式で結果を表示） |
-| `/nabledge-6 code-analysis` | 既存コードの構造を分析し、ドキュメントを生成 | ターゲットコード指定（対話で入力）<br>例: "LoginAction", "proman-batchモジュール" | `.nabledge/YYYYMMDD/code-analysis-<target>.md`<br>依存関係図、コンポーネント一覧、Nablarch利用状況を含む構造化ドキュメント<br>[テンプレート](../assets/code-analysis-template.md) \| [ガイド](../assets/code-analysis-template-guide.md) \| [例](../assets/code-analysis-template-examples.md) |
+| `/n6 <質問>` | 知識検索を実行 | 質問<br>例: `/n6 UniversalDaoのページング` | サマリー結果のみメインコンテキストに返る |
+| `/n6 code-analysis <対象>` | コード分析を実行 | コマンド<br>例: `/n6 code-analysis LoginAction` | サマリー結果のみメインコンテキストに返る<br>詳細: `.nabledge/YYYYMMDD/code-analysis-<target>.md` |
 
 ## バージョンアップ
 
@@ -73,7 +52,7 @@ UniversalDaoの使い方を教えて
 curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-6-cc.sh | bash
 ```
 
-実行後、更新された `.claude/skills/` ディレクトリをGitにコミット・プッシュしてください。
+実行後、更新された `.claude/` ディレクトリをGitにコミット・プッシュしてください。
 
 ### 特定バージョンの指定（オプション）
 
