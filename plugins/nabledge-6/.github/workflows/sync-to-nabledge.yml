@@ -1,0 +1,44 @@
+name: Sync to nabledge repository
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout nabledge-dev
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout nabledge repository
+        uses: actions/checkout@v4
+        with:
+          repository: nablarch/nabledge
+          ref: develop
+          token: ${{ secrets.NABLEDGE_SYNC_TOKEN }}
+          path: nabledge-repo
+
+      - name: Clean nabledge repository
+        run: .github/scripts/clean-repository.sh nabledge-repo
+
+      - name: Transform to plugin structure
+        run: |
+          # Use transform script
+          .github/scripts/transform-to-plugin.sh . nabledge-repo
+
+      - name: Validate marketplace structure
+        run: .github/scripts/validate-marketplace.sh nabledge-repo
+
+      - name: Commit and Push to nabledge
+        working-directory: nabledge-repo
+        run: |
+          TRIGGER_COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+          ../.github/scripts/commit-and-push.sh \
+            "Sync nabledge marketplace from nabledge-dev" \
+            "Triggered by: ${TRIGGER_COMMIT_URL}" \
+            "develop"

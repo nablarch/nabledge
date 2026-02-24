@@ -1,6 +1,8 @@
 ---
 name: nabledge-6
 description: Provides structured knowledge about Nablarch 6 framework (batch processing, RESTful web services, handlers, libraries, tools) and code analysis capabilities. Use when developing Nablarch applications, implementing features, reviewing code, investigating errors, answering questions about Nablarch 6 APIs and patterns, or analyzing existing code to understand its structure and dependencies.
+user-invocable: false
+disable-model-invocation: true
 ---
 
 # Nabledge-6: Nablarch 6 Knowledge Base

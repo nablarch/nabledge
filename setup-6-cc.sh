@@ -48,12 +48,26 @@ mkdir -p "$PROJECT_ROOT/.claude/skills"
 echo "Copying nabledge-6 skill to project..."
 cp -r "$TEMP_DIR/$REPO_NAME/plugins/nabledge-6/skills/nabledge-6" "$PROJECT_ROOT/.claude/skills/"
 
+# Copy CC-specific n6 command
+echo "Setting up /n6 command..."
+mkdir -p "$PROJECT_ROOT/.claude/commands"
+if [ -f "$TEMP_DIR/$REPO_NAME/plugins/nabledge-6/commands/n6.md" ]; then
+    cp "$TEMP_DIR/$REPO_NAME/plugins/nabledge-6/commands/n6.md" "$PROJECT_ROOT/.claude/commands/n6.md"
+    echo "Command installed: $PROJECT_ROOT/.claude/commands/n6.md"
+else
+    echo "Warning: n6.md not found in plugin"
+fi
+
 # Verify installation
 echo "Verifying installation..."
 if [ ! -f "$PROJECT_ROOT/.claude/skills/nabledge-6/SKILL.md" ]; then
     echo "Error: Installation verification failed"
     echo "SKILL.md not found at expected location"
     exit 1
+fi
+
+if [ ! -f "$PROJECT_ROOT/.claude/commands/n6.md" ]; then
+    echo "Warning: /n6 command not installed"
 fi
 
 if [ ! -d "$PROJECT_ROOT/.claude/skills/nabledge-6/knowledge" ]; then
@@ -77,9 +91,11 @@ show_completion_message() {
         echo "IMPORTANT: Please install jq before using the skill."
     else
         echo "Claude Code will automatically recognize the skill without restart."
-        echo "Commit the .claude/skills/ directory to share this skill with your team."
+        echo "Commit the .claude/ directory to share this skill with your team."
         echo ""
-        echo "You can now use nabledge-6 with Claude Code by typing /nabledge-6"
+        echo "You can now use nabledge-6 with Claude Code:"
+        echo "  - Type /nabledge-6 or /n6 followed by your question"
+        echo "  - The /n6 command uses a separate context for better performance"
     fi
 }
 
