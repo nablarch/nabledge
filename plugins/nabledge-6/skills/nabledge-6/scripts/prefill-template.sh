@@ -168,8 +168,9 @@ OFFICIAL_DOCS_LINKS=$(echo "$OFFICIAL_DOCS_LINKS" | sed 's/^$//')
 mkdir -p "$(dirname "$OUTPUT_PATH")"
 
 # Copy template and replace placeholders
-# Use temporary file to avoid issues with sed -i
-TEMP_FILE=$(mktemp)
+# Use temporary file in output directory to avoid environment dependencies
+OUTPUT_DIR_REAL=$(dirname "$OUTPUT_PATH")
+TEMP_FILE="$OUTPUT_DIR_REAL/.prefill-template-$$.tmp"
 
 # Set up cleanup trap to remove temp files on exit/error
 trap 'rm -f "$TEMP_FILE" "$TEMP_FILE.tmp"' EXIT INT TERM
