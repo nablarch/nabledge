@@ -4,6 +4,11 @@ nabledge-6プラグインの主な変更内容を記録しています。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に基づいています。
 
+## [Unreleased]
+
+### 修正
+- コード分析出力の知識ベースリンクが正しく動作するようになりました。セットアップスクリプトでインストールした場合に、`.nabledge/YYYYMMDD/`から`.claude/skills/nabledge-6/docs/`へのリンクが正しく解決されます（相対パス計算のバグを修正） (Issue #91)
+
 ## [0.3] - 2026-02-24
 
 ### 追加

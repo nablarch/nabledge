@@ -115,9 +115,9 @@ GENERATION_TIME=$(date '+%H:%M:%S')
 
 # Calculate relative path from output directory to project root
 OUTPUT_DIR=$(dirname "$OUTPUT_PATH")
-# Count directory levels: Each '/' represents one level of depth
-# Example: ".nabledge/20260220" = 2 levels, requires "../../" prefix
-LEVEL_COUNT=$(echo "$OUTPUT_DIR" | tr -cd '/' | wc -c)
+# Count directory levels: Number of path components = slashes + 1
+# Example: ".nabledge/20260220" has 1 slash → 2 levels → requires "../../" prefix
+LEVEL_COUNT=$(( $(echo "$OUTPUT_DIR" | tr -cd '/' | wc -c) + 1 ))
 RELATIVE_PREFIX=""
 for ((i=0; i<LEVEL_COUNT; i++)); do
     RELATIVE_PREFIX="../$RELATIVE_PREFIX"
