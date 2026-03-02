@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      test_mode:
+        description: 'Test mode (dry-run without actual push)'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   sync:
@@ -34,11 +41,38 @@ jobs:
       - name: Validate marketplace structure
         run: .github/scripts/validate-marketplace.sh nabledge-repo
 
+      - name: Capture and transform commit message
+        id: commit_message
+        run: |
+          .github/scripts/capture-commit-message.sh \
+            "${{ github.sha }}" \
+            "${{ github.event.head_commit.message }}"
+
+      - name: Build commit body with trigger information
+        run: |
+          .github/scripts/build-commit-body.sh \
+            "${{ github.repository }}" \
+            "${{ github.sha }}" \
+            "$COMMIT_BODY"
+
+      - name: Display transformed commit message (test mode)
+        if: ${{ github.event.inputs.test_mode == 'true' }}
+        run: |
+          echo "=== Test Mode: Commit Message Transformation ==="
+          echo ""
+          echo "Subject:"
+          echo "$COMMIT_SUBJECT"
+          echo ""
+          echo "Body:"
+          echo "$FULL_COMMIT_BODY"
+          echo ""
+          echo "Push to nabledge repository: SKIPPED (test mode)"
+
       - name: Commit and Push to nabledge
+        if: ${{ github.event.inputs.test_mode != 'true' }}
         working-directory: nabledge-repo
         run: |
-          TRIGGER_COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
           ../.github/scripts/commit-and-push.sh \
-            "Sync nabledge marketplace from nabledge-dev" \
-            "Triggered by: ${TRIGGER_COMMIT_URL}" \
+            "$COMMIT_SUBJECT" \
+            "$FULL_COMMIT_BODY" \
             "develop"
