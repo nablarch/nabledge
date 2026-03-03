@@ -15,8 +15,12 @@ Required arguments:
   --target-name <name>        Target name (e.g., "LoginAction", "ログイン機能")
   --target-desc <description> One-line description of the target
   --modules <modules>         Affected modules (e.g., "proman-web, proman-common")
-  --source-files <files>      Comma-separated source file paths (relative from project root)
-  --knowledge-files <files>   Comma-separated knowledge file paths (relative from project root)
+  --source-files <files>      Comma-separated source file basenames (e.g., "LoginAction.java,LoginForm.java")
+                              Script searches from project root and includes all matches.
+                              If multiple files found, directory path added to label for disambiguation.
+  --knowledge-files <files>   Comma-separated knowledge file basenames (e.g., "universal-dao,web-application")
+                              Script searches in .claude/skills/nabledge-6/knowledge/ and includes all matches.
+                              Extension (.json) is optional. Automatically converts to .md paths.
   --output-path <path>        Output file path
 
 Optional arguments:
@@ -26,8 +30,8 @@ Example:
   $0 --target-name "LoginAction" \\
      --target-desc "ログイン認証処理" \\
      --modules "proman-web" \\
-     --source-files "proman-web/src/main/java/LoginAction.java,proman-web/src/main/java/LoginForm.java" \\
-     --knowledge-files ".claude/skills/nabledge-6/docs/features/web/web-application.md" \\
+     --source-files "LoginAction.java,LoginForm.java" \\
+     --knowledge-files "universal-dao,web-application" \\
      --output-path ".nabledge/20260220/code-analysis-login-action.md"
 EOF
     exit 1
@@ -113,6 +117,36 @@ fi
 GENERATION_DATE=$(date '+%Y-%m-%d')
 GENERATION_TIME=$(date '+%H:%M:%S')
 
+# Search for file by basename
+# Usage: search_files <file_pattern> <search_dir> <file_type>
+# Returns: all matching paths on stdout (one per line), or empty if not found
+search_files() {
+    local file_pattern="$1"
+    local search_dir="$2"
+    local file_type="$3"  # "source" or "knowledge"
+
+    # Search for file
+    local matches
+    if [[ "$file_type" == "knowledge" ]]; then
+        # For knowledge files, search for .json files
+        local basename="${file_pattern%.json}"  # Remove .json if present
+        matches=$(find "$search_dir" -type f -name "${basename}.json" 2>/dev/null)
+    else
+        # For source files, search by exact basename
+        matches=$(find "$search_dir" -type f -name "$file_pattern" 2>/dev/null)
+    fi
+
+    # Check if matches is empty
+    if [[ -z "$matches" ]]; then
+        echo "Warning: ${file_type} file not found: '$file_pattern' (searched in: $search_dir) - link will be omitted" >&2
+        return 0
+    fi
+
+    # Return all matches
+    echo "$matches"
+    return 0
+}
+
 # Calculate relative path from output directory to project root
 OUTPUT_DIR=$(dirname "$OUTPUT_PATH")
 # Count directory levels: Number of path components = slashes + 1
@@ -120,7 +154,8 @@ OUTPUT_DIR=$(dirname "$OUTPUT_PATH")
 LEVEL_COUNT=$(( $(echo "$OUTPUT_DIR" | tr -cd '/' | wc -c) + 1 ))
 RELATIVE_PREFIX=""
 for ((i=0; i<LEVEL_COUNT; i++)); do
-    RELATIVE_PREFIX="../$RELATIVE_PREFIX"
+    # Append ../ at end (was prepending incorrectly before fix)
+    RELATIVE_PREFIX="${RELATIVE_PREFIX}../"
 done
 
 # Build source files links
@@ -128,11 +163,40 @@ SOURCE_FILES_LINKS=""
 IFS=',' read -ra FILES <<< "$SOURCE_FILES"
 for file in "${FILES[@]}"; do
     file=$(echo "$file" | xargs) # trim whitespace
-    filename=$(basename "$file")
-    relative_path="${RELATIVE_PREFIX}${file}"
-    # Extract simple description from filename (remove .java extension)
-    desc=$(basename "$file" .java)
-    SOURCE_FILES_LINKS+="- [${filename}](${relative_path}) - ${desc}"$'\n'
+    [[ -z "$file" ]] && continue
+
+    # Search for files (returns all matches)
+    matches=$(search_files "$file" "." "source")
+
+    # If file not found, skip (warning already printed)
+    if [[ -z "$matches" ]]; then
+        continue
+    fi
+
+    # Count matches
+    match_count=$(echo "$matches" | wc -l)
+
+    # Process each match
+    while IFS= read -r resolved_path; do
+        # Remove leading ./ from path
+        resolved_path=$(echo "$resolved_path" | sed 's|^\./||')
+
+        filename=$(basename "$resolved_path")
+        relative_path="${RELATIVE_PREFIX}${resolved_path}"
+
+        # If multiple matches, add directory path to label
+        if [[ $match_count -gt 1 ]]; then
+            # Extract parent directory path for disambiguation
+            dir_path=$(dirname "$resolved_path")
+            label="${filename} (${dir_path})"
+        else
+            label="${filename}"
+        fi
+
+        # Extract simple description from filename (remove extension)
+        desc=$(basename "$resolved_path" | sed 's/\.[^.]*$//')
+        SOURCE_FILES_LINKS+="- [${label}](${relative_path}) - ${desc}"$'\n'
+    done <<< "$matches"
 done
 SOURCE_FILES_LINKS=$(echo "$SOURCE_FILES_LINKS" | sed 's/^$//')
 
@@ -141,11 +205,47 @@ KNOWLEDGE_BASE_LINKS=""
 IFS=',' read -ra FILES <<< "$KNOWLEDGE_FILES"
 for file in "${FILES[@]}"; do
     file=$(echo "$file" | xargs) # trim whitespace
-    filename=$(basename "$file" .md)
-    relative_path="${RELATIVE_PREFIX}${file}"
-    # Use filename as description (capitalize first letter)
-    desc=$(echo "$filename" | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++)sub(/./,toupper(substr($i,1,1)),$i)}1')
-    KNOWLEDGE_BASE_LINKS+="- [${desc}](${relative_path})"$'\n'
+    [[ -z "$file" ]] && continue
+
+    # Search for files (returns all matches)
+    matches=$(search_files "$file" ".claude/skills/nabledge-6/knowledge" "knowledge")
+
+    # If file not found, skip (warning already printed)
+    if [[ -z "$matches" ]]; then
+        continue
+    fi
+
+    # Count matches
+    match_count=$(echo "$matches" | wc -l)
+
+    # Process each match
+    while IFS= read -r resolved_path; do
+        # Remove leading ./ from path
+        resolved_path=$(echo "$resolved_path" | sed 's|^\./||')
+
+        # Convert knowledge JSON paths to docs MD paths
+        # Example: .claude/skills/nabledge-6/knowledge/features/X.json
+        #       → .claude/skills/nabledge-6/docs/features/X.md
+        doc_file="${resolved_path/\/knowledge\//\/docs\/}"
+        doc_file="${doc_file/.json/.md}"
+
+        filename=$(basename "$doc_file" .md)
+        relative_path="${RELATIVE_PREFIX}${doc_file}"
+
+        # Use filename as description (capitalize first letter)
+        desc=$(echo "$filename" | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++)sub(/./,toupper(substr($i,1,1)),$i)}1')
+
+        # If multiple matches, add category path to label for disambiguation
+        if [[ $match_count -gt 1 ]]; then
+            # Extract category from path (e.g., features/libraries, features/handlers)
+            category=$(echo "$resolved_path" | sed 's|.*/knowledge/\(.*\)/[^/]*$|\1|')
+            label="${desc} (${category})"
+        else
+            label="${desc}"
+        fi
+
+        KNOWLEDGE_BASE_LINKS+="- [${label}](${relative_path})"$'\n'
+    done <<< "$matches"
 done
 KNOWLEDGE_BASE_LINKS=$(echo "$KNOWLEDGE_BASE_LINKS" | sed 's/^$//')
 

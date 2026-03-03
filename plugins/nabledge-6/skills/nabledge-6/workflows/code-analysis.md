@@ -160,17 +160,28 @@ Output directory: .nabledge/20260210
 
 5. **Group knowledge by component** after receiving results:
    - Parse returned sections and map to original components
-   - UniversalDao → [universal-dao.json:overview, universal-dao.json:crud]
-   - ValidationUtil → [data-bind.json:validation]
+   - Extract unique file paths from section-judgement output
+   - Example mappings:
+     - UniversalDao → [.claude/skills/nabledge-6/knowledge/features/libraries/universal-dao.json]
+     - ValidationUtil → [.claude/skills/nabledge-6/knowledge/features/libraries/data-bind.json]
 
-6. **Collect knowledge** for documentation:
+6. **Collect knowledge file basenames** for Step 3.2:
+   - Extract unique knowledge files from section-judgement output
+   - Use basenames only (filename without path and extension)
+   - Example: `universal-dao,data-bind,web-application`
+   - prefill-template.sh will automatically search and include all matches
+   - If multiple files with same name exist, script adds category path to labels for disambiguation
+   - Deduplicate: Multiple sections may come from same file
+   - Format as comma-separated list for --knowledge-files parameter
+
+7. **Collect knowledge content** for documentation:
    - API usage patterns
    - Configuration requirements
    - Code examples
    - Error handling
    - Best practices
 
-**Output**: Relevant knowledge sections with API usage, patterns, and best practices
+**Output**: Full JSON file paths for Step 3.2, and relevant knowledge sections with API usage, patterns, and best practices
 
 ### Step 3: Generate and output documentation
 
@@ -205,8 +216,8 @@ cat .claude/skills/nabledge-6/assets/code-analysis-template.md \
   --target-name "<target-name>" \
   --target-desc "<one-line-description>" \
   --modules "<module1, module2>" \
-  --source-files "<file1.java,file2.java>" \
-  --knowledge-files "<knowledge1.md,knowledge2.md>" \
+  --source-files "File1.java,File2.java" \
+  --knowledge-files "universal-dao,data-bind,web-application" \
   --official-docs "<url1,url2>" \
   --output-path ".nabledge/YYYYMMDD/code-analysis-<target>.md"
 ```
@@ -215,10 +226,22 @@ cat .claude/skills/nabledge-6/assets/code-analysis-template.md \
 - `target-name`: Target code name (e.g., "LoginAction")
 - `target-desc`: One-line description (e.g., "ログイン認証処理")
 - `modules`: Affected modules (e.g., "proman-web, proman-common")
-- `source-files`: Comma-separated source file paths from Step 1
-- `knowledge-files`: Comma-separated knowledge file paths from Step 2
+- `source-files`: Comma-separated source file basenames from Step 1
+  - Example: "LoginAction.java,LoginForm.java"
+  - Script searches from project root and includes all matches
+  - If multiple files found, directory path added to labels for disambiguation
+- `knowledge-files`: Comma-separated knowledge file basenames from Step 2
+  - Example: "universal-dao,data-bind" (extension .json is optional)
+  - Script searches in .claude/skills/nabledge-6/knowledge/ and includes all matches
+  - Automatically converts .json paths to .md paths
+  - If multiple files found, category path added to labels for disambiguation
 - `official-docs`: Comma-separated official doc URLs (optional)
 - `output-path`: Output file path
+
+**File Resolution**:
+- Script searches automatically by basename
+- Warns if not found (link omitted, processing continues)
+- Includes all matches if multiple files found (with path disambiguation in labels)
 
 **Pre-filled placeholders (8/16)**:
 - `{{target_name}}`: From target-name parameter
