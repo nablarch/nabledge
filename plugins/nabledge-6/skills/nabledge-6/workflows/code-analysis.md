@@ -212,14 +212,17 @@ cat .claude/skills/nabledge-6/assets/code-analysis-template.md \
 **Action**: Execute prefill script to pre-populate 8 deterministic placeholders:
 
 ```bash
-.claude/skills/nabledge-6/scripts/prefill-template.sh \
+# Execute prefill script (now calculates output path internally)
+# Capture output path from the script's final "Output: <path>" line
+OUTPUT_PATH=$(.claude/skills/nabledge-6/scripts/prefill-template.sh \
   --target-name "<target-name>" \
   --target-desc "<one-line-description>" \
   --modules "<module1, module2>" \
   --source-files "File1.java,File2.java" \
   --knowledge-files "universal-dao,data-bind,web-application" \
-  --official-docs "<url1,url2>" \
-  --output-path ".nabledge/YYYYMMDD/code-analysis-<target>.md"
+  | grep "^Output: " | cut -d' ' -f2)
+
+echo "Output file: $OUTPUT_PATH"
 ```
 
 **Parameters**:
@@ -228,15 +231,19 @@ cat .claude/skills/nabledge-6/assets/code-analysis-template.md \
 - `modules`: Affected modules (e.g., "proman-web, proman-common")
 - `source-files`: Comma-separated source file basenames from Step 1
   - Example: "LoginAction.java,LoginForm.java"
+  - **Important**: Pass basenames only (e.g., 'File.java'). Script handles paths defensively but workflows should use basenames.
   - Script searches from project root and includes all matches
   - If multiple files found, directory path added to labels for disambiguation
 - `knowledge-files`: Comma-separated knowledge file basenames from Step 2
   - Example: "universal-dao,data-bind" (extension .json is optional)
+  - **Important**: Pass basenames without extension (e.g., 'universal-dao'). Script handles paths and .json extension defensively but workflows should use basenames.
   - Script searches in .claude/skills/nabledge-6/knowledge/ and includes all matches
   - Automatically converts .json paths to .md paths
   - If multiple files found, category path added to labels for disambiguation
-- `official-docs`: Comma-separated official doc URLs (optional)
-- `output-path`: Output file path
+
+**Automatic behavior**:
+- **Output path**: Script automatically generates output path: `.nabledge/YYYYMMDD/code-analysis-<target-name>.md`
+- **Official docs**: Official documentation URLs are automatically extracted from `official_doc_urls` field in knowledge JSON files
 
 **File Resolution**:
 - Script searches automatically by basename
@@ -251,7 +258,7 @@ cat .claude/skills/nabledge-6/assets/code-analysis-template.md \
 - `{{modules}}`: From modules parameter
 - `{{source_files_links}}`: Generated from source-files parameter
 - `{{knowledge_base_links}}`: Generated from knowledge-files parameter
-- `{{official_docs_links}}`: Generated from official-docs parameter
+- `{{official_docs_links}}`: Automatically extracted from knowledge JSON files' `official_doc_urls` field
 
 **Output**: Template file with 8 placeholders pre-filled, 8 remaining for LLM
 
@@ -456,7 +463,7 @@ sequenceDiagram
 #### 3.5: Fill remaining placeholders and output
 
 1. **Read pre-filled template**: Use Read tool on the file created in Step 3.2
-   - File path: `.nabledge/YYYYMMDD/code-analysis-<target>.md`
+   - File path: `$OUTPUT_PATH` (captured from script output in Step 3.2)
    - This file already contains 8/16 placeholders filled (deterministic content)
 
 2. **Construct complete content**: Build the full document content in memory by:
@@ -497,7 +504,7 @@ sequenceDiagram
    - Mermaid diagrams refined from skeletons (not regenerated)
 
 4. **Write complete file**: Use Write tool with full document content
-   - File path: Same as Step 3.2 (`.nabledge/YYYYMMDD/code-analysis-<target>.md`)
+   - File path: `$OUTPUT_PATH` (captured from Step 3.2)
    - Content: Complete document with all 16 placeholders filled (8 pre-filled + 8 generated)
    - This will overwrite the pre-filled template from Step 3.2 with the complete version
    - Write tool requires prior Read (already done in step 1)

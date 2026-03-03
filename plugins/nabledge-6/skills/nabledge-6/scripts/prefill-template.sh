@@ -7,7 +7,7 @@ set -e
 # Usage message
 usage() {
     cat << EOF
-Usage: $0 --target-name <name> --target-desc <description> --modules <modules> --source-files <files> --knowledge-files <files> --output-path <path>
+Usage: $0 --target-name <name> --target-desc <description> --modules <modules> --source-files <files> --knowledge-files <files>
 
 Pre-fill deterministic placeholders in code analysis template.
 
@@ -17,22 +17,29 @@ Required arguments:
   --modules <modules>         Affected modules (e.g., "proman-web, proman-common")
   --source-files <files>      Comma-separated source file basenames (e.g., "LoginAction.java,LoginForm.java")
                               Script searches from project root and includes all matches.
+                              Paths are accepted but only basenames are used.
                               If multiple files found, directory path added to label for disambiguation.
   --knowledge-files <files>   Comma-separated knowledge file basenames (e.g., "universal-dao,web-application")
                               Script searches in .claude/skills/nabledge-6/knowledge/ and includes all matches.
                               Extension (.json) is optional. Automatically converts to .md paths.
-  --output-path <path>        Output file path
+                              Paths are accepted but only basenames are used.
+                              Official documentation URLs are extracted from knowledge JSON files.
 
-Optional arguments:
-  --official-docs <docs>      Comma-separated official documentation URLs (default: none)
+Note:
+  - Output path is automatically calculated as: .nabledge/YYYYMMDD/code-analysis-{target-name}.md
+  - Official documentation links are automatically extracted from knowledge JSON files
 
 Example:
   $0 --target-name "LoginAction" \\
      --target-desc "ログイン認証処理" \\
      --modules "proman-web" \\
      --source-files "LoginAction.java,LoginForm.java" \\
-     --knowledge-files "universal-dao,web-application" \\
-     --output-path ".nabledge/20260220/code-analysis-login-action.md"
+     --knowledge-files "universal-dao,web-application"
+
+# Example output:
+# Pre-filled template written to: .nabledge/20260303/code-analysis-LoginAction.md
+# ...
+# Output: .nabledge/20260303/code-analysis-LoginAction.md
 EOF
     exit 1
 }
@@ -43,8 +50,6 @@ TARGET_DESC=""
 MODULES=""
 SOURCE_FILES=""
 KNOWLEDGE_FILES=""
-OFFICIAL_DOCS=""
-OUTPUT_PATH=""
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -68,14 +73,6 @@ while [[ $# -gt 0 ]]; do
             KNOWLEDGE_FILES="$2"
             shift 2
             ;;
-        --official-docs)
-            OFFICIAL_DOCS="$2"
-            shift 2
-            ;;
-        --output-path)
-            OUTPUT_PATH="$2"
-            shift 2
-            ;;
         -h|--help)
             usage
             ;;
@@ -87,10 +84,21 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Validate required arguments
-if [[ -z "$TARGET_NAME" || -z "$TARGET_DESC" || -z "$MODULES" || -z "$SOURCE_FILES" || -z "$KNOWLEDGE_FILES" || -z "$OUTPUT_PATH" ]]; then
+if [[ -z "$TARGET_NAME" || -z "$TARGET_DESC" || -z "$MODULES" || -z "$SOURCE_FILES" || -z "$KNOWLEDGE_FILES" ]]; then
     echo "Error: Missing required arguments" >&2
     usage
 fi
+
+# Validate jq availability (required for official docs extraction)
+if ! command -v jq &> /dev/null; then
+    echo "Warning: jq not found. Official documentation links cannot be extracted from knowledge files." >&2
+    echo "Install jq to enable automatic official docs extraction." >&2
+fi
+
+# Calculate output path internally
+OUTPUT_DIR=".nabledge/$(date '+%Y%m%d')"
+OUTPUT_FILE="code-analysis-${TARGET_NAME}.md"
+OUTPUT_PATH="$OUTPUT_DIR/$OUTPUT_FILE"
 
 # Find project root
 if git rev-parse --show-toplevel &>/dev/null; then
@@ -147,16 +155,8 @@ search_files() {
     return 0
 }
 
-# Calculate relative path from output directory to project root
-OUTPUT_DIR=$(dirname "$OUTPUT_PATH")
-# Count directory levels: Number of path components = slashes + 1
-# Example: ".nabledge/20260220" has 1 slash → 2 levels → requires "../../" prefix
-LEVEL_COUNT=$(( $(echo "$OUTPUT_DIR" | tr -cd '/' | wc -c) + 1 ))
-RELATIVE_PREFIX=""
-for ((i=0; i<LEVEL_COUNT; i++)); do
-    # Append ../ at end (was prepending incorrectly before fix)
-    RELATIVE_PREFIX="${RELATIVE_PREFIX}../"
-done
+# Fixed relative path prefix (2-level depth: .nabledge/YYYYMMDD/)
+RELATIVE_PREFIX="../../"
 
 # Build source files links
 SOURCE_FILES_LINKS=""
@@ -164,6 +164,9 @@ IFS=',' read -ra FILES <<< "$SOURCE_FILES"
 for file in "${FILES[@]}"; do
     file=$(echo "$file" | xargs) # trim whitespace
     [[ -z "$file" ]] && continue
+
+    # Extract basename defensively (in case path is provided)
+    file=$(basename "$file")
 
     # Search for files (returns all matches)
     matches=$(search_files "$file" "." "source")
@@ -207,6 +210,11 @@ for file in "${FILES[@]}"; do
     file=$(echo "$file" | xargs) # trim whitespace
     [[ -z "$file" ]] && continue
 
+    # Extract basename defensively (in case path is provided)
+    file=$(basename "$file")
+    # Remove .json extension if present
+    file="${file%.json}"
+
     # Search for files (returns all matches)
     matches=$(search_files "$file" ".claude/skills/nabledge-6/knowledge" "knowledge")
 
@@ -249,20 +257,42 @@ for file in "${FILES[@]}"; do
 done
 KNOWLEDGE_BASE_LINKS=$(echo "$KNOWLEDGE_BASE_LINKS" | sed 's/^$//')
 
-# Build official docs links (if provided)
+# Extract official docs links from knowledge JSON files
 OFFICIAL_DOCS_LINKS=""
-if [[ -n "$OFFICIAL_DOCS" ]]; then
-    IFS=',' read -ra DOCS <<< "$OFFICIAL_DOCS"
-    for doc in "${DOCS[@]}"; do
-        doc=$(echo "$doc" | xargs) # trim whitespace
-        # Extract title from URL (last segment before .html)
-        title=$(basename "$doc" .html | sed 's/_/ /g' | awk '{for(i=1;i<=NF;i++)sub(/./,toupper(substr($i,1,1)),$i)}1')
-        OFFICIAL_DOCS_LINKS+="- [${title}](${doc})"$'\n'
-    done
-else
+IFS=',' read -ra FILES <<< "$KNOWLEDGE_FILES"
+for file in "${FILES[@]}"; do
+    file=$(echo "$file" | xargs) # trim whitespace
+    [[ -z "$file" ]] && continue
+
+    # Extract basename defensively (in case path is provided)
+    file=$(basename "$file")
+    # Remove .json extension if present
+    file="${file%.json}"
+
+    # Find the JSON file
+    json_path=$(find ".claude/skills/nabledge-6/knowledge" -type f -name "${file}.json" 2>/dev/null | head -1)
+
+    if [[ -n "$json_path" ]]; then
+        # Extract official_doc_urls using jq (if jq is available)
+        if command -v jq &> /dev/null; then
+            urls=$(jq -r '.official_doc_urls[]?' "$json_path" 2>/dev/null)
+            if [[ -n "$urls" ]]; then
+                while IFS= read -r url; do
+                    # Extract title from URL (last segment before .html)
+                    title=$(basename "$url" .html | sed 's/_/ /g' | awk '{for(i=1;i<=NF;i++)sub(/./,toupper(substr($i,1,1)),$i)}1')
+                    OFFICIAL_DOCS_LINKS+="- [${title}](${url})"$'\n'
+                done <<< "$urls"
+            fi
+        fi
+    fi
+done
+
+# Remove duplicates and sort
+OFFICIAL_DOCS_LINKS=$(echo "$OFFICIAL_DOCS_LINKS" | sort -u)
+
+if [[ -z "$OFFICIAL_DOCS_LINKS" ]]; then
     OFFICIAL_DOCS_LINKS="(No official documentation links available)"
 fi
-OFFICIAL_DOCS_LINKS=$(echo "$OFFICIAL_DOCS_LINKS" | sed 's/^$//')
 
 # Create output directory if it doesn't exist
 mkdir -p "$(dirname "$OUTPUT_PATH")"
@@ -312,7 +342,19 @@ awk -v links="$OFFICIAL_DOCS_LINKS" '{gsub(/\{\{official_docs_links\}\}/, links)
 # Copy to output path
 cp "$TEMP_FILE" "$OUTPUT_PATH"
 
+# Verify write succeeded
+if [ ! -f "$OUTPUT_PATH" ]; then
+    echo "Error: Failed to write output file to $OUTPUT_PATH" >&2
+    exit 1
+fi
+
 # Trap will clean up temp files automatically
+
+# Count official docs links (exclude the placeholder message)
+official_docs_count=0
+if [[ "$OFFICIAL_DOCS_LINKS" != "(No official documentation links available)" ]]; then
+    official_docs_count=$(echo "$OFFICIAL_DOCS_LINKS" | grep -c '^\- \[')
+fi
 
 echo "Pre-filled template written to: $OUTPUT_PATH"
 echo ""
@@ -324,7 +366,7 @@ echo "  ✓ target_description: $TARGET_DESC"
 echo "  ✓ modules: $MODULES"
 echo "  ✓ source_files_links: $(echo "$SOURCE_FILES" | tr ',' '\n' | wc -l) files"
 echo "  ✓ knowledge_base_links: $(echo "$KNOWLEDGE_FILES" | tr ',' '\n' | wc -l) files"
-echo "  ✓ official_docs_links: $(if [[ -n "$OFFICIAL_DOCS" ]]; then echo "$OFFICIAL_DOCS" | tr ',' '\n' | wc -l; else echo 0; fi) links"
+echo "  ✓ official_docs_links: $official_docs_count links"
 echo ""
 echo "Remaining placeholders for LLM (8/16):"
 echo "  - analysis_duration (to be filled after Write completes)"
@@ -335,3 +377,5 @@ echo "  - flow_content"
 echo "  - flow_sequence_diagram"
 echo "  - components_details"
 echo "  - nablarch_usage"
+echo ""
+echo "Output: $OUTPUT_PATH"
