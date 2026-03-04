@@ -4,13 +4,11 @@ nabledge-6プラグインの主な変更内容を記録しています。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に基づいています。
 
-## [Unreleased]
-
-### 変更
-- 知識検索時のファイル選択精度を向上させました。より関連性の高いドキュメントセクションを選択できるようになりました (Issue #88)
+## [0.4] - 2026-03-04
 
 ### 修正
-- コード分析出力の知識ベースリンクが正しく動作するようになりました。セットアップスクリプトでインストールした場合に、`.nabledge/YYYYMMDD/`から`.claude/skills/nabledge-6/docs/`へのリンクが正しく解決されます（相対パス計算のバグを修正） (Issue #91)
+- コード分析結果のソースファイル、知識ベースへのリンクが正しく遷移しない問題を修正しました (Issue #91, #108, #110)
+- 開発用ファイル（`.github/workflows/`、`.github/scripts/`）が誤って配布されていた問題を修正しました。次回インストール時に既存の開発用ファイルも自動削除されます (Issue #112)
 
 ## [0.3] - 2026-02-24
 
@@ -34,6 +32,7 @@ nabledge-6プラグインの主な変更内容を記録しています。
 ### 追加
 - 評価版として、Nablarch 6のバッチ処理に関する基礎知識とコード分析ワークフローを提供
 
+[0.4]: https://github.com/nablarch/nabledge/releases/tag/0.4
 [0.3]: https://github.com/nablarch/nabledge/releases/tag/0.3
 [0.2]: https://github.com/nablarch/nabledge/releases/tag/0.2
 [0.1]: https://github.com/nablarch/nabledge/releases/tag/0.1
