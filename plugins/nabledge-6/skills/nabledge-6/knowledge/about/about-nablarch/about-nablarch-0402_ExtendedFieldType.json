@@ -1,0 +1,81 @@
+{
+  "id": "about-nablarch-0402_ExtendedFieldType",
+  "title": "データフォーマッタ機能におけるフィールドタイプの拡張",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/04/0402_ExtendedFieldType.html"
+  ],
+  "index": [
+    {
+      "id": "introduction",
+      "title": "導入",
+      "hints": [
+        "データフォーマッタ",
+        "フォーマッタ機能",
+        "汎用データフォーマット"
+      ]
+    },
+    {
+      "id": "overview",
+      "title": "概要",
+      "hints": [
+        "EBCDIC",
+        "CP930",
+        "シフトコード",
+        "ダブルバイト文字",
+        "データ連携",
+        "DoubleByteCharacterString"
+      ]
+    },
+    {
+      "id": "provided-package",
+      "title": "提供パッケージ",
+      "hints": [
+        "please.change.me.core.dataformat.convertor.datatype",
+        "パッケージ"
+      ]
+    },
+    {
+      "id": "field-type-structure",
+      "title": "フィールドタイプの構成",
+      "hints": [
+        "EbcdicDoubleByteCharacterString",
+        "EbcdicNoShiftCodeDoubleByteCharacterString",
+        "フィールドタイプ",
+        "データタイプクラス",
+        "固定長フォーマット"
+      ]
+    },
+    {
+      "id": "field-type-usage",
+      "title": "フィールドタイプの使用方法",
+      "hints": [
+        "EbcdicFixedLengthConvertorFactory",
+        "FixedLengthConvertorFactory",
+        "CaseInsensitiveMap",
+        "ConcurrentHashMap",
+        "ファクトリクラス",
+        "フィールドタイプ使用方法"
+      ]
+    },
+    {
+      "id": "field-type-definition-list",
+      "title": "フィールドタイプ・フィールドコンバータ定義一覧",
+      "hints": [
+        "ESN",
+        "EN",
+        "EbcdicDoubleByteCharacterString",
+        "EbcdicNoShiftCodeDoubleByteCharacterString",
+        "タイプ識別子",
+        "フィールドタイプ定義"
+      ]
+    }
+  ],
+  "sections": {
+    "introduction": "フォーマッタ機能の概要、基本となる汎用データフォーマット機能に関する詳細は、:ref:`data_format` を参照すること。",
+    "overview": "EBCDIC（CP930）のダブルバイト文字データ連携では、接続先システムのインターフェースにより、シフトコード付与の有無が異なる。本サンプルは両方に対応するため、シフトコード付きEBCDIC（CP930）とシフトコード無しEBCDIC（CP930）の2つのデータタイプクラスを提供する。\n\n> **重要**: Nablarchデフォルトの`DoubleByteCharacterString`はShift_JIS/MS932を想定。EBCDIC（CP930）では各プロジェクトによる拡張が必要。JDKで使用されるCP930はダブルバイト文字に必ずシフトコードが付加されている必要がある。\n\nこのデータタイプは透過的にシフトコードを付加・除去し、上記の差を吸収して文字列化やバイトシーケンスへのエンコードを可能にする。",
+    "provided-package": "本機能は、下記のパッケージで提供される。\n\n**パッケージ**: `please.change.me.core.dataformat.convertor.datatype`",
+    "field-type-structure": "| パッケージ名 | クラス名 | 概要 |\n|---|---|---|\n| `please.change.me.core.dataformat.convertor.datatype` | `EbcdicDoubleByteCharacterString` | EBCDIC(CP930)のダブルバイト文字列。固定長フォーマットの全角文字フィールド入出力用。入出力バイトデータに**シフトコード付与**を想定。 |\n| `please.change.me.core.dataformat.convertor.datatype` | `EbcdicNoShiftCodeDoubleByteCharacterString` | EBCDIC(CP930)のダブルバイト文字列。固定長フォーマットの全角文字フィールド入出力用。入出力バイトデータに**シフトコード無し**を想定。 |",
+    "field-type-usage": "追加したフィールドタイプの使用方法は :ref:`data_format-field_type_add` を参照。\n\nFixed(固定長)フォーマットのファクトリクラス実装例:\n\n```java\npublic class EbcdicFixedLengthConvertorFactory extends FixedLengthConvertorFactory {\n    @Override\n    protected Map<String, Class<?>> getDefaultConvertorTable() {\n        final Map<String, Class<?>> defaultConvertorTable = new CaseInsensitiveMap<Class<?>>(\n                new ConcurrentHashMap<String, Class<?>>(super.getDefaultConvertorTable()));\n        // EBCDIC(CP930)用のデータタイプ ESN, EN を追加する\n        defaultConvertorTable.put(\"ESN\", EbcdicDoubleByteCharacterString.class);\n        defaultConvertorTable.put(\"EN\", EbcdicNoShiftCodeDoubleByteCharacterString.class);\n        return Collections.unmodifiableMap(defaultConvertorTable);\n    }\n}\n```",
+    "field-type-definition-list": "**フィールドタイプ**\n\n| タイプ識別子 | Java型 | 内容 |\n|---|---|---|\n| ESN | String | ダブルバイト文字列 (バイト長 = 文字数 × 2 + 2(シフトコード分))<br>デフォルト: 全角空白による右トリム・パディング<br>入力: シフトアウト・シフトインコード付加状態を想定し文字列化<br>出力: シフトアウト・シフトインコードを自動付加<br>**クラス**: `please.change.me.core.dataformat.converter.datatype.EbcdicDoubleByteCharacterString`<br>**引数**: バイト長(数値、必須) |\n| EN | String | ダブルバイト文字列 (バイト長 = 文字数 × 2)<br>デフォルト: 全角空白による右トリム・パディング<br>入力: シフトアウト・シフトインコードを内部補完して文字列化<br>出力: シフトアウト・シフトインコードを付加しない<br>**クラス**: `please.change.me.core.dataformat.converter.datatype.EbcdicNoShiftCodeDoubleByteCharacterString`<br>**引数**: バイト長(数値、必須) |"
+  }
+}

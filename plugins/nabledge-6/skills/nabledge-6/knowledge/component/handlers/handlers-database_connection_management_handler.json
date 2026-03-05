@@ -1,0 +1,112 @@
+{
+  "id": "handlers-database_connection_management_handler",
+  "title": "データベース接続管理ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/common/database_connection_management_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/DbConnectionManagementHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/connection/ConnectionFactory.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/connection/DbConnectionContext.html"
+  ],
+  "index": [
+    {
+      "id": "overview",
+      "title": "概要",
+      "hints": [
+        "データベース接続管理",
+        "スレッド管理",
+        "後続ハンドラ",
+        "ライブラリ",
+        "データベース接続"
+      ]
+    },
+    {
+      "id": "important-requirements",
+      "title": "重要な要件",
+      "hints": [
+        "transaction_management_handler",
+        "トランザクション制御",
+        "必須設定",
+        "データベース変更",
+        "破棄される"
+      ]
+    },
+    {
+      "id": "processing-flow",
+      "title": "処理の流れ",
+      "hints": [
+        "データベース接続の取得",
+        "データベース接続の解放",
+        "処理フロー"
+      ]
+    },
+    {
+      "id": "handler-class-name",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "DbConnectionManagementHandler",
+        "nablarch.common.handler.DbConnectionManagementHandler",
+        "ハンドラクラス"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "モジュール一覧",
+        "依存関係",
+        "nablarch-core-jdbc",
+        "nablarch-common-jdbc"
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "制約",
+      "hints": [
+        "制約"
+      ]
+    },
+    {
+      "id": "configure-database-connection",
+      "title": "データベースの接続先を設定する",
+      "hints": [
+        "ConnectionFactory",
+        "nablarch.core.db.connection.ConnectionFactory",
+        "DbConnectionManagementHandler",
+        "nablarch.common.handler.DbConnectionManagementHandler",
+        "BasicDbConnectionFactoryForDataSource",
+        "nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource",
+        "connectionFactory",
+        "データベース接続",
+        "接続先設定",
+        "ファクトリクラス"
+      ]
+    },
+    {
+      "id": "multiple-database-connections",
+      "title": "アプリケーションで複数のデータベース接続（トランザクション）を使用する",
+      "hints": [
+        "DbConnectionManagementHandler",
+        "nablarch.common.handler.DbConnectionManagementHandler",
+        "DbConnectionContext",
+        "nablarch.core.db.connection.DbConnectionContext",
+        "AppDbConnection",
+        "connectionFactory",
+        "connectionName",
+        "複数データベース接続",
+        "デフォルト接続",
+        "名前付き接続",
+        "トランザクション"
+      ]
+    }
+  ],
+  "sections": {
+    "overview": "後続のハンドラ及びライブラリで使用するためのデータベース接続を、スレッド上で管理するハンドラ。\n\nデータベースアクセスの詳細は、:ref:`database`を参照。",
+    "important-requirements": "> **重要**: このハンドラを使用する場合は、:ref:`transaction_management_handler`をセットで設定すること。\n>\n> トランザクション制御ハンドラが設定されていない場合、トランザクション制御が実施されないため後続で行ったデータベースへの変更は全て破棄される。",
+    "processing-flow": "本ハンドラでは、以下の処理を行う:\n\n- **データベース接続の取得**\n- **データベース接続の解放**\n\n処理の流れの詳細は、公式ドキュメントの処理フロー図（DbConnectionManagementHandler_flow.png）を参照。",
+    "handler-class-name": "**クラス名**: `nablarch.common.handler.DbConnectionManagementHandler`",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-jdbc</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-jdbc</artifactId>\n</dependency>\n```",
+    "constraints": "なし",
+    "configure-database-connection": "`connectionFactory`プロパティに:java:extdoc:`ConnectionFactory <nablarch.core.db.connection.ConnectionFactory>`実装クラスを設定。\n\n**設定例**:\n```xml\n<component class=\"nablarch.common.handler.DbConnectionManagementHandler\">\n  <property name=\"connectionFactory\" ref=\"connectionFactory\" />\n</component>\n\n<component name=\"connectionFactory\"\n    class=\"nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource\">\n  <!-- プロパティの設定は省略 -->\n</component>\n```\n\n> **重要**: データベース接続オブジェクトを取得するためのファクトリクラスの詳細は、:ref:`database-connect`を参照。",
+    "multiple-database-connections": "複数のデータベース接続を使用する場合、このハンドラをハンドラキュー上に複数設定する。\n\n:java:extdoc:`connectionName <nablarch.common.handler.DbConnectionManagementHandler.setConnectionName(java.lang.String)>`プロパティでデータベース接続名を指定（省略時はデフォルト接続）。データベース接続名はスレッド内で一意とする必要がある。最もよく使う接続をデフォルトとし、それ以外に任意の名前をつけることを推奨。\n\n**設定例**:\n```xml\n<!-- デフォルトのデータベース接続 -->\n<component class=\"nablarch.common.handler.DbConnectionManagementHandler\">\n  <property name=\"connectionFactory\" ref=\"connectionFactory\" />\n</component>\n\n<!-- userAccessLogという名前でデータベース接続を登録 -->\n<component class=\"nablarch.common.handler.DbConnectionManagementHandler\">\n  <property name=\"connectionFactory\" ref=\"userAccessLogConnectionFactory\" />\n  <property name=\"connectionName\" value=\"userAccessLog\" />\n</component>\n```\n\n**デフォルト接続の使用**:\n\n引数なしで:java:extdoc:`DbConnection#getConnection <nablarch.core.db.connection.DbConnectionContext.getConnection()>`を呼び出し。\n\n```java\nAppDbConnection connection = DbConnectionContext.getConnection();\n```\n\n**名前付き接続の使用**:\n\n:java:extdoc:`DbConnection#getConnection(String) <nablarch.core.db.connection.DbConnectionContext.getConnection(java.lang.String)>`に接続名を指定。接続名は:java:extdoc:`connectionName <nablarch.common.handler.DbConnectionManagementHandler.setConnectionName(java.lang.String)>`プロパティの値と一致させる。\n\n```java\nAppDbConnection connection = DbConnectionContext.getConnection(\"userAccessLog\");\n```"
+  }
+}

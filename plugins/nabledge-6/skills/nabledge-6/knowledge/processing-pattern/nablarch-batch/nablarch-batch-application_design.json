@@ -1,0 +1,35 @@
+{
+  "id": "nablarch-batch-application_design",
+  "title": "アプリケーションの責務配置",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/application_design.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/DataReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.Success.html"
+  ],
+  "index": [
+    {
+      "id": "overview",
+      "title": "アプリケーションの責務配置",
+      "hints": [
+        "nablarch.fw.DataReader",
+        "DataReader",
+        "nablarch.fw.Result",
+        "Result",
+        "nablarch.fw.Result.Success",
+        "Success",
+        "アクションクラス",
+        "フォームクラス",
+        "エンティティクラス",
+        "責務配置",
+        "バリデーション",
+        "相関バリデーション",
+        "Bean Validation",
+        "データレコードマッピング"
+      ]
+    }
+  ],
+  "sections": {
+    "overview": "Nablarchバッチアプリケーションを作成する際に実装すべきクラスとその責務について説明する。\n\n**アクションクラス (Action Class)**\n\n:java:extdoc:`DataReader<nablarch.fw.DataReader>` を生成。読み込んだデータレコードを元に業務ロジック実行し :java:extdoc:`Result<nablarch.fw.Result>` 返却\n\n例えば、ファイルの取り込みバッチであれば、業務ロジックとして以下の処理を行う:\n\n- データレコードからフォームクラスを作成して、バリデーションを行う\n- フォームクラスからエンティティクラスを作成して、データベースにデータを追加する\n- 処理結果として :java:extdoc:`Success<nablarch.fw.Result.Success>` を返す\n\n**フォームクラス (Form Class)**\n\n:java:extdoc:`DataReader<nablarch.fw.DataReader>` が読み込んだデータレコードをマッピング。バリデーション用アノテーションと相関バリデーションのロジックを持つ。階層構造(formがformを持つ)も可\n\n**プロパティ定義ルール**: 全て `String` で定義（バイナリ項目はバイト配列）。理由は :ref:`Bean Validation <bean_validation-form_property>` 参照\n\n> **補足**: 外部ファイル等で入力データが安全でない場合のみフォームクラスでバリデーション。データベース等で安全な場合はフォームクラス不要、データレコードから直接エンティティクラス作成\n\n**エンティティクラス (Entity Class)**\n\nテーブルと1対1対応。カラムに対応するプロパティを持つ"
+  }
+}

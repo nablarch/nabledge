@@ -1,0 +1,33 @@
+{
+  "id": "nablarch-batch-nablarch_batch_pessimistic_lock",
+  "title": "Nablarchバッチアプリケーションの悲観的ロック",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/feature_details/nablarch_batch_pessimistic_lock.html"
+  ],
+  "index": [
+    {
+      "id": "implementation-example",
+      "title": "実装例",
+      "hints": [
+        "BatchAction",
+        "SqlRow",
+        "DataReader",
+        "DatabaseRecordReader",
+        "SqlPStatement",
+        "DbConnectionContext",
+        "ExecutionContext",
+        "Project",
+        "UniversalDao",
+        "Result",
+        "Success",
+        "悲観的ロック",
+        "バッチアプリケーション",
+        "データリーダ",
+        "トランザクション制御"
+      ]
+    }
+  ],
+  "sections": {
+    "implementation-example": "この実装パターンにより、ロック時間が短縮され他プロセスへの影響を抑えることができる。\n\n**実装ポイント**:\n- データリーダでは処理対象レコードの主キーのみ取得する\n- `handle`メソッド内で悲観的ロックを行う（:ref:`universal_dao`を使用した悲観的ロックについては :ref:`universal_dao_jpa_pessimistic_lock` を参照）\n\n**実装例**:\n```java\npublic class SampleAction extends BatchAction<SqlRow> {\n\n    @Override\n    public DataReader<SqlRow> createReader(final ExecutionContext ctx) {\n        final DatabaseRecordReader reader = new DatabaseRecordReader();\n        final SqlPStatement statement = DbConnectionContext.getConnection()\n                .prepareParameterizedSqlStatementBySqlId(\n                        Project.class.getName() + \"#GET_ID\");\n\n        // 検索条件の取得処理は省略\n\n        reader.setStatement(statement, condition);\n        return reader;\n    }\n\n    @Override\n    public Result handle(final SqlRow inputData, final ExecutionContext ctx) {\n        final Project project =\n                UniversalDao.findBySqlFile(Project.class, \"FIND_BY_ID_WITH_LOCK\", inputData);\n\n        // 業務処理のため省略\n\n        UniversalDao.update(project);\n        return new Success();\n    }\n}\n```"
+  }
+}

@@ -23,7 +23,8 @@ Analyze existing code, trace dependencies, generate structured documentation.
 
 **Action** - Store start time with unique session ID in output directory:
 ```bash
-OUTPUT_DIR=".nabledge/$(date '+%Y%m%d')"
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+OUTPUT_DIR="$REPO_ROOT/.nabledge/$(date '+%Y%m%d')"
 mkdir -p "$OUTPUT_DIR"
 UNIQUE_ID="$(date '+%s%3N')-$$"
 echo "$UNIQUE_ID" > "$OUTPUT_DIR/.nabledge-code-analysis-id"
@@ -47,7 +48,6 @@ Output directory: .nabledge/20260210
 - Epoch time (seconds since 1970) for accurate duration calculation
 - Step 3.5 reads session ID from output directory
 - Files stored in same directory as code analysis output
-- Keyword search results stored in same directory: `.nabledge/YYYYMMDD/.keyword-search-results.json`
 - All intermediate and final outputs must stay in .nabledge/YYYYMMDD/ directory
 
 **Why this matters**: `{{analysis_duration}}` placeholder must contain actual elapsed time. Users compare against "Cooked for X" time in IDE.
@@ -109,79 +109,42 @@ Output directory: .nabledge/20260210
 
 ### Step 2: Search Nablarch knowledge
 
-**Tools**: Read (index.toon), Bash with jq (keyword-search workflow)
+**Tools**: Bash (scripts/full-text-search.sh, scripts/read-sections.sh)
 
-**Action**: Batch process knowledge searches for all Nablarch components.
+**Action**: Search relevant knowledge for all Nablarch components identified in Step 1.
 
-**Batch processing**:
+**Search process**:
 
-1. **Identify all Nablarch components** from Step 1 analysis:
-   - Example: ["UniversalDao", "ExecutionContext", "ValidationUtil", "DbAccessException"]
+1. **Collect search keywords** from Step 1 analysis:
+   - Use Nablarch component names identified in Step 1 as search keywords
+   - Include class names, Japanese feature names, and related technical terms
+   - Example: ["UniversalDao", "ExecutionContext", "ValidationUtil", "バリデーション", "トランザクション"]
 
-2. **Combine keywords for batch search**:
-   - Merge component names + technical terms from all components
-   - Extract L1/L2 keywords for all components at once
-
-   **Bash script example for keyword combination**:
+2. **Execute full-text search**:
    ```bash
-   # Declare arrays for combined keywords
-   declare -a l1_all l2_all
-
-   # UniversalDao component keywords
-   l1_all+=("DAO" "UniversalDao" "O/Rマッパー")
-   l2_all+=("CRUD" "検索" "登録" "更新" "ページング")
-
-   # ExecutionContext component keywords
-   l1_all+=("ExecutionContext" "コンテキスト")
-   l2_all+=("リクエスト処理" "データ取得")
-
-   # ValidationUtil component keywords
-   l1_all+=("ValidationUtil" "Bean Validation")
-   l2_all+=("検証" "エラー" "例外処理")
-
-   # Remove duplicates and prepare for keyword-search workflow
-   l1_keywords=($(printf '%s\n' "${l1_all[@]}" | sort -u))
-   l2_keywords=($(printf '%s\n' "${l2_all[@]}" | sort -u))
+   bash .claude/skills/nabledge-6/scripts/full-text-search.sh \
+     "UniversalDao" "ExecutionContext" "ValidationUtil" "バリデーション" "トランザクション"
    ```
+   - Output: Scored and ranked candidate sections (max 15 results)
 
-   **Result** - Combined keywords ready for keyword-search:
-     - L1: ["DAO", "UniversalDao", "O/Rマッパー", "ExecutionContext", "コンテキスト", "ValidationUtil", "Bean Validation"]
-     - L2: ["CRUD", "検索", "登録", "更新", "ページング", "リクエスト処理", "データ取得", "検証", "エラー", "例外処理"]
+3. **Execute section judgement**:
+   - Read `workflows/_knowledge-search/_section-judgement.md`
+   - Follow the workflow with candidate sections from step 2
+   - Output: Filtered sections (High and Partial relevance only)
 
-3. **Execute keyword-search workflow**:
-   - Read `workflows/keyword-search.md`
-   - Follow the workflow with combined keywords for all components
-   - Expected output: 20-30 candidate sections covering all components
-
-4. **Execute section-judgement workflow**:
-   - Read `workflows/section-judgement.md`
-   - Follow the workflow with candidate sections from step 3
-   - Expected output: Filtered sections (High and Partial relevance only)
-
-5. **Group knowledge by component** after receiving results:
-   - Parse returned sections and map to original components
-   - Extract unique file paths from section-judgement output
-   - Example mappings:
-     - UniversalDao → [.claude/skills/nabledge-6/knowledge/features/libraries/universal-dao.json]
-     - ValidationUtil → [.claude/skills/nabledge-6/knowledge/features/libraries/data-bind.json]
-
-6. **Collect knowledge file basenames** for Step 3.2:
+4. **Collect knowledge file basenames** for Step 3.2:
    - Extract unique knowledge files from section-judgement output
    - Use basenames only (filename without path and extension)
-   - Example: `universal-dao,data-bind,web-application`
+   - Example: `libraries-universal_dao,libraries-data_bind`
    - prefill-template.sh will automatically search and include all matches
-   - If multiple files with same name exist, script adds category path to labels for disambiguation
    - Deduplicate: Multiple sections may come from same file
    - Format as comma-separated list for --knowledge-files parameter
 
-7. **Collect knowledge content** for documentation:
-   - API usage patterns
-   - Configuration requirements
-   - Code examples
-   - Error handling
-   - Best practices
+5. **Collect knowledge content** for documentation:
+   - Use `scripts/read-sections.sh` to read High-relevance sections
+   - Collect: API usage patterns, configuration requirements, code examples, best practices
 
-**Output**: Full JSON file paths for Step 3.2, and relevant knowledge sections with API usage, patterns, and best practices
+**Output**: Knowledge file basenames for Step 3.2, and relevant knowledge content for documentation
 
 ### Step 3: Generate and output documentation
 
@@ -194,9 +157,10 @@ Output directory: .nabledge/20260210
 **MUST READ FIRST** (use single cat command for efficiency):
 ```bash
 cat .claude/skills/nabledge-6/assets/code-analysis-template.md \
-    .claude/skills/nabledge-6/assets/code-analysis-template-guide.md \
-    .claude/skills/nabledge-6/assets/code-analysis-template-examples.md
+    .claude/skills/nabledge-6/assets/code-analysis-template-guide.md
 ```
+
+**Note**: Template examples are inlined in Step 3.4 below. Do NOT read code-analysis-template-examples.md.
 
 **Extract from templates**:
 - All `{{placeholder}}` variables
@@ -219,7 +183,7 @@ OUTPUT_PATH=$(.claude/skills/nabledge-6/scripts/prefill-template.sh \
   --target-desc "<one-line-description>" \
   --modules "<module1, module2>" \
   --source-files "File1.java,File2.java" \
-  --knowledge-files "universal-dao,data-bind,web-application" \
+  --knowledge-files "libraries-universal_dao,libraries-data_bind" \
   | grep "^Output: " | cut -d' ' -f2)
 
 echo "Output file: $OUTPUT_PATH"
@@ -235,7 +199,7 @@ echo "Output file: $OUTPUT_PATH"
   - Script searches from project root and includes all matches
   - If multiple files found, directory path added to labels for disambiguation
 - `knowledge-files`: Comma-separated knowledge file basenames from Step 2
-  - Example: "universal-dao,data-bind" (extension .json is optional)
+  - Example: "libraries-universal_dao,libraries-data_bind" (extension .json is optional)
   - **Important**: Pass basenames without extension (e.g., 'universal-dao'). Script handles paths and .json extension defensively but workflows should use basenames.
   - Script searches in .claude/skills/nabledge-6/knowledge/ and includes all matches
   - Automatically converts .json paths to .md paths
@@ -327,6 +291,25 @@ echo "Output file: $OUTPUT_PATH"
 - You will retrieve these skeletons in the following steps
 
 #### 3.4: Build documentation content
+
+**Output budget** (MANDATORY):
+
+Total output: **10-15 KB** (10,000-15,000文字)
+
+| Section | Budget | Guideline |
+|---------|--------|-----------|
+| overview_content | 200-400文字 | 目的と構成を簡潔に |
+| dependency_graph | 15-30行 | クラス名のみ、メソッド/フィールド不要 |
+| component_summary_table | コンポーネント数×1行 | Role は5-10語 |
+| flow_content | 300-500文字 | 主要フローのみ、例外フローは省略可 |
+| flow_sequence_diagram | 20-40行 | 主要パスのみ、alt/loop は重要なもの1-2個まで |
+| components_details | コンポーネントあたり300-500文字 | キーメソッド3個以内 |
+| nablarch_usage | コンポーネントあたり200-400文字 | 重要ポイント3個以内 |
+
+**超過時の対応**: 合計が15KBを超えそうな場合、以下の優先度で削減する：
+1. components_details の詳細度を下げる（メソッド説明を短縮）
+2. nablarch_usage の重要ポイントを3個に絞る
+3. flow_sequence_diagram の alt/loop を削減
 
 **CRITICAL**: All diagram work REFINES skeletons from Step 3.3. REFINE, not REGENERATE.
 
@@ -458,7 +441,50 @@ sequenceDiagram
 - Usage in this code
 - Knowledge base link
 
-**See detailed examples**: assets/code-analysis-template-examples.md
+**Output format examples**:
+
+**Component Summary Table**:
+```markdown
+| Component | Role | Type | Dependencies |
+|-----------|------|------|--------------|
+| LoginAction | ログイン処理 | Action | LoginForm, UniversalDao |
+| LoginForm | ログイン入力検証 | Form | なし |
+```
+
+**Important Points prefixes**:
+- ✅ **Must do**: Critical actions that must be performed
+- ⚠️ **Caution**: Gotchas, limitations, common mistakes
+- 💡 **Benefit**: Why use this, advantages, design philosophy
+- 🎯 **When to use**: Use cases, scenarios, applicability
+- ⚡ **Performance**: Performance considerations, optimization tips
+
+**Nablarch Usage structure**:
+```markdown
+### ObjectMapper
+
+**クラス**: `nablarch.common.databind.ObjectMapper`
+
+**説明**: CSVやTSV、固定長データをJava Beansとして扱う機能を提供する
+
+**使用方法**:
+\```java
+ObjectMapper<ProjectDto> mapper = ObjectMapperFactory.create(ProjectDto.class, outputStream);
+mapper.write(dto);
+mapper.close();
+\```
+
+**重要ポイント**:
+- ✅ **必ず`close()`を呼ぶ**: バッファをフラッシュし、リソースを解放する
+- ⚠️ **大量データ処理時**: メモリに全データを保持しないため、大量データでも問題なく処理可能
+- 💡 **アノテーション駆動**: `@Csv`, `@CsvFormat`でフォーマットを宣言的に定義できる
+
+**このコードでの使い方**:
+- `initialize()`でObjectMapperを生成（Line 25-28）
+- `handle()`で各レコードを`mapper.write(dto)`で出力（Line 52）
+- `terminate()`で`mapper.close()`してリソース解放（Line 60）
+
+**詳細**: [データバインド](../../.claude/skills/nabledge-6/docs/features/libraries/data-bind.md)
+```
 
 #### 3.5: Fill remaining placeholders and output
 
@@ -525,7 +551,8 @@ sequenceDiagram
    Execute single bash script to fill duration placeholder:
    ```bash
    # Set output directory path
-   OUTPUT_DIR=".nabledge/YYYYMMDD"  # Replace with actual date
+   REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+   OUTPUT_DIR="$REPO_ROOT/.nabledge/YYYYMMDD"  # Replace with actual date
 
    # Retrieve session ID from Step 0
    UNIQUE_ID=$(cat "$OUTPUT_DIR/.nabledge-code-analysis-id" 2>/dev/null || echo "")
@@ -583,7 +610,7 @@ sequenceDiagram
 
 **Template file**: `.claude/skills/nabledge-6/assets/code-analysis-template.md`
 **Template guide**: `.claude/skills/nabledge-6/assets/code-analysis-template-guide.md`
-**Template examples**: `.claude/skills/nabledge-6/assets/code-analysis-template-examples.md`
+**Note**: Template examples are inlined in Step 3.4
 
 The template provides structured format with sections:
 1. Header (date/time, duration, modules)

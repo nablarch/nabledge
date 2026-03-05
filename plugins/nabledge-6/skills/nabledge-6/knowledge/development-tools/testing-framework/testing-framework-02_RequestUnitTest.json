@@ -1,0 +1,141 @@
+{
+  "id": "testing-framework-02_RequestUnitTest",
+  "title": "リクエスト単体テスト（ウェブアプリケーション）",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/06_TestFWGuide/02_RequestUnitTest.html"
+  ],
+  "index": [
+    {
+      "id": "database-related-features",
+      "title": "データベース関連機能",
+      "hints": [
+        "DbAccessTestSupport",
+        "データベース機能",
+        "テストサポート",
+        "トランザクション制御",
+        "beginTransactions",
+        "commitTransactions",
+        "endTransactions",
+        "setThreadContextValues"
+      ]
+    },
+    {
+      "id": "pre-execution-helpers",
+      "title": "事前準備補助機能",
+      "hints": [
+        "HttpRequestTestSupport",
+        "HttpRequest",
+        "ExecutionContext",
+        "createHttpRequest",
+        "createExecutionContext",
+        "setValidToken",
+        "setToken",
+        "リクエスト作成",
+        "コンテキスト作成",
+        "トークン発行",
+        "2重サブミット防止"
+      ]
+    },
+    {
+      "id": "system-repository-initialization",
+      "title": "システムリポジトリの初期化",
+      "hints": [
+        "システムリポジトリ",
+        "再初期化",
+        "execute",
+        "コンポーネント設定",
+        "バックアップ",
+        "連続実行"
+      ]
+    },
+    {
+      "id": "message-assertion",
+      "title": "メッセージ",
+      "hints": [
+        "HttpRequestTestSupport",
+        "assertApplicationMessageId",
+        "メッセージID検証",
+        "アプリケーション例外",
+        "アサート"
+      ]
+    },
+    {
+      "id": "html-dump-output-directory",
+      "title": "HTMLダンプ出力ディレクトリ",
+      "hints": [
+        "HTMLダンプ",
+        "出力ディレクトリ",
+        "tmp/html_dump",
+        "HTMLリソース",
+        "html_dump_bk",
+        "バックアップ"
+      ]
+    },
+    {
+      "id": "configuration-values",
+      "title": "各種設定値",
+      "hints": [
+        "nablarch.test.core.http.HttpTestConfiguration",
+        "nablarch.test.tool.htmlcheck.HtmlChecker",
+        "nablarch.test.tool.htmlcheck.Html4HtmlChecker",
+        "httpTestConfiguration",
+        "htmlDumpDir",
+        "webBaseDir",
+        "xmlComponentFile",
+        "userIdSessionKey",
+        "exceptionRequestVarKey",
+        "dumpFileExtension",
+        "httpHeader",
+        "sessionInfo",
+        "htmlResourcesExtensionList",
+        "jsTestResourceDir",
+        "backup",
+        "htmlResourcesCharset",
+        "checkHtml",
+        "htmlChecker",
+        "htmlCheckerConfig",
+        "ignoreHtmlResourceDirectory",
+        "tempDirectory",
+        "uploadTmpDirectory",
+        "dumpVariableItem",
+        "コンポーネント設定ファイル",
+        "環境設定",
+        "リクエスト単体テスト設定"
+      ]
+    },
+    {
+      "id": "jvm-options",
+      "title": "JVMオプションの指定",
+      "hints": [
+        "-Xms",
+        "-Xmx",
+        "-Xverify:none",
+        "ヒープサイズ",
+        "JVMオプション",
+        "パフォーマンス最適化",
+        "実行速度向上"
+      ]
+    },
+    {
+      "id": "skip-resource-copy",
+      "title": "HTMLリソースコピーの抑止",
+      "hints": [
+        "nablarch.test.skip-resource-copy",
+        "HTMLリソースコピー",
+        "HTMLダンプ出力",
+        "システムプロパティ",
+        "パフォーマンス最適化"
+      ]
+    }
+  ],
+  "sections": {
+    "database-related-features": "データベース機能は`DbAccessTestSupport`クラスに委譲。\n\n> **重要**: 以下のメソッドはリクエスト単体テストでは不要のため、意図的に委譲していない（アプリケーションプログラマの誤解を防ぐため）：\n> - `public void beginTransactions()`\n> - `public void commitTransactions()`\n> - `public void endTransactions()`\n> - `public void setThreadContextValues(String sheetName, String id)`\n\n詳細は:doc:`02_DbAccessTest`を参照。",
+    "pre-execution-helpers": "**HttpRequest作成**\n\n```java\nHttpRequest createHttpRequest(String requestUri, Map<String, String[]> params)\n```\n\n引数: リクエストURI, リクエストパラメータ。HTTPメソッドはPOSTに設定される。パラメータやURI以外のデータを設定する場合は、返却されたインスタンスに対して追加設定すること。\n\n**ExecutionContext作成**\n\n```java\nExecutionContext createExecutionContext(String userId)\n```\n\n引数のユーザIDをセッションに格納（ログイン状態を模擬）。\n\n**トークン発行**\n\n2重サブミット防止を施しているURIに対するテストには、テスト実行前にトークン発行とセッション設定が必要。\n\n```java\nvoid setValidToken(HttpRequest request, ExecutionContext context)\n```\n\nトークン発行＋セッション格納。\n\n```java\nvoid setToken(HttpRequest request, ExecutionContext context, boolean valid)\n```\n\n第3引数がtrueの場合は`setValidToken`と同じ動作。falseの場合はセッションからトークン情報を除去。テストデータでトークン設定可否を制御する場合に使用：\n\n```java\n// テストデータから取得したものとする\nString isTokenValid; \n\n// \"true\"の場合はトークンが設定される\nsetToken(req, ctx, Boolean.parseBoolean(isTokenValid));\n```",
+    "system-repository-initialization": "`execute`メソッド内部でシステムリポジトリの再初期化を実行。クラス単体テストとリクエスト単体テストで設定を分けずに連続実行可能。\n\n処理手順:\n1. 現在のシステムリポジトリの状態をバックアップ\n2. テスト対象ウェブアプリケーションのコンポーネント設定ファイルでシステムリポジトリを再初期化\n3. `execute`メソッド終了時にバックアップを復元\n\n設定の詳細は:ref:`howToConfigureRequestUnitTestEnv`を参照。",
+    "message-assertion": "```java\nvoid assertApplicationMessageId(String expectedCommaSeparated, ExecutionContext actual);\n```\n\n引数:\n- 期待するメッセージID（複数ある場合はカンマ区切り）\n- ExecutionContext\n\nアプリケーション例外に格納されたメッセージIDが想定通りであることを確認。例外が発生しなかった場合、またはアプリケーション例外以外の例外が発生した場合はアサート失敗。\n\n> **補足**: メッセージIDの比較はソート後に行うため、テストデータ記載時に順序を気にする必要はない。",
+    "html-dump-output-directory": "テスト実行時、`tmp/html_dump`ディレクトリがプロジェクトルートに作成される。構造：\n- `tmp/html_dump/{テストクラス名}/{テストケース説明}.html`\n\nHTMLリソース（スタイルシート、画像等）も同ディレクトリに出力されるため、このディレクトリを保存すればどの環境でも同じようにHTMLを参照可能。\n\n> **注意**: `html_dump`ディレクトリが既に存在する場合、`html_dump_bk`にバックアップされる。\n\nディレクトリ構造図: ![HTMLダンプ出力ディレクトリ構造](assets/testing-framework-02_RequestUnitTest/htmlDumpDir.png)",
+    "configuration-values": "リクエスト単体テストの環境設定は、コンポーネント設定ファイルで変更可能。\n\n**コンポーネント設定ファイル設定項目**:\n\n| 設定項目名 | 説明 | デフォルト値 |\n|---|---|---|\n| htmlDumpDir | HTMLダンプファイル出力ディレクトリ | `./tmp/html_dump` |\n| webBaseDir | ウェブアプリケーションのルートディレクトリ[1] | `../main/web` |\n| xmlComponentFile | リクエスト単体テスト実行時に使用するコンポーネント設定ファイル[2] | (なし) |\n| userIdSessionKey | ログイン中ユーザIDを格納するセッションキー | `user.id` |\n| exceptionRequestVarKey | ApplicationExceptionが格納されるリクエストスコープのキー | `nablarch_application_error` |\n| dumpFileExtension | ダンプファイルの拡張子 | `html` |\n| httpHeader | HttpRequestにHTTPリクエストヘッダとして格納される値 | `Content-Type: application/x-www-form-urlencoded`<br>`Accept-Language: ja JP` |\n| sessionInfo | セッションに格納される値 | (なし) |\n| htmlResourcesExtensionList | ダンプディレクトリへコピーされるHTMLリソースの拡張子 | css、jpg、js |\n| jsTestResourceDir | javascriptの自動テスト実行時に使用するリソースのコピー先ディレクトリ名 | `../test/web` |\n| backup | ダンプディレクトリのバックアップOn/Off | `true` |\n| htmlResourcesCharset | CSSファイル(スタイルシート)の文字コード | `UTF-8` |\n| checkHtml | HTMLチェックの実施On/Off | `true` |\n| htmlChecker | HTMLチェックを行うオブジェクト。`nablarch.test.tool.htmlcheck.HtmlChecker`インタフェース実装クラスのインスタンス。詳細は :ref:`customize_html_check` を参照。 | `nablarch.test.tool.htmlcheck.Html4HtmlChecker`。`htmlCheckerConfig`で設定した設定ファイルが適用される。 |\n| htmlCheckerConfig | HTMLチェックツールの設定ファイルパス。`htmlChecker`を設定しなかった場合のみ有効。 | `test/resources/httprequesttest/html-check-config.csv` |\n| ignoreHtmlResourceDirectory | HTMLリソースの中でコピー対象外とするディレクトリ名のLIST | (なし) |\n| tempDirectory | JSPのコンパイル先ディレクトリ | jettyのデフォルト動作に依存[3] |\n| uploadTmpDirectory | アップロードファイルを一時的に格納するディレクトリ。テスト時に準備したアップロード対象ファイルは本ディレクトリにコピー後に処理される。これにより、アクションでファイルを移動した場合でも、本ディレクトリ配下のファイルが移動されるだけであり、実態が移動されることを防ぐ。 | `./tmp` |\n| dumpVariableItem | HTMLダンプファイル出力時に可変項目(JSESSIONID、2重サブミット防止用のトークン)を出力するか否か。これらの項目はテスト実行毎に異なる値が設定される。HTMLダンプ結果を毎回同じ結果にしたい場合(前回実行結果と差異がないことを確認したい場合等)は`false`に設定。可変項目をそのまま出力する場合は`true`に設定。 | `false` |\n\n[1] PJ共通のwebモジュールが存在する場合、カンマ区切りでディレクトリを設定する。複数指定された場合、先頭から順にリソースが読み込まれる。例:\n\n```xml\n<component name=\"httpTestConfiguration\" class=\"nablarch.test.core.http.HttpTestConfiguration\">\n  <property name=\"webBaseDir\" value=\"/path/to/web-a/,/path/to/web-common\"/>\n</component>\n```\n\nこの場合、web-a、web-commonの順にリソースが探索される。\n\n[2] この項目を設定した場合、リクエスト送信直前に指定されたコンポーネント設定ファイルで初期化が行われる。通常は設定不要。クラス単体テストとリクエスト単体テストとで設定を変える必要がある場合のみ設定する。\n\n[3] jettyのデフォルト動作では、「./work」がコンパイル先ディレクトリとなる。「./work」が存在しない場合は、Tempフォルダ(Windowsの場合は、ユーザのホームディレクトリ/Local Settings/Temp)が出力先となる。\n\n> **補足**: `ignoreHtmlResourceDirectory`にバージョン管理用のディレクトリ(.svnや.git)を設定すると、HTMLリソースコピー時のパフォーマンスが向上する。\n\n**設定例**:\n\nセッションに値を設定する例:\n\n| キー | 値 | 説明 |\n|---|---|---|\n| commonHeaderLoginUserName | \"リクエスト単体テストユーザ\" | 共通ヘッダ領域に表示するログインユーザ名 |\n| commonHeaderLoginDate | \"20100914\" | 共通ヘッダ領域に表示するログイン日時 |\n\n```xml\n<component name=\"httpTestConfiguration\" class=\"nablarch.test.core.http.HttpTestConfiguration\">\n    <property name=\"htmlDumpDir\" value=\"./tmp/html_dump\"/>\n    <property name=\"webBaseDir\" value=\"../main/web\"/>\n    <property name=\"xmlComponentFile\" value=\"http-request-test.xml\"/>\n    <property name=\"userIdSessionKey\" value=\"user.id\"/>\n    <property name=\"httpHeader\">\n        <map>\n            <entry key=\"Content-Type\" value=\"application/x-www-form-urlencoded\"/>\n            <entry key=\"Accept-Language\" value=\"ja JP\"/>\n        </map>\n    </property>\n    <property name=\"sessionInfo\">\n        <map>\n            <entry key=\"commonHeaderLoginUserName\" value=\"リクエスト単体テストユーザ\"/>\n            <entry key=\"commonHeaderLoginDate\" value=\"20100914\" />\n        </map>\n    </property>\n    <property name=\"htmlResourcesExtensionList\">\n        <list>\n            <value>css</value>\n            <value>jpg</value>\n            <value>js</value>\n        </list>\n    </property>\n    <property name=\"backup\" value=\"true\" />\n    <property name=\"htmlResourcesCharset\" value=\"UTF-8\" />\n    <property name=\"ignoreHtmlResourceDirectory\">\n        <list>\n            <value>.svn</value>\n        </list>\n    </property>\n    <property name=\"tempDirectory\" value=\"webTemp\" />\n    <property name=\"htmlCheckerConfig\"\n      value=\"test/resources/httprequesttest/html-check-config.csv\" />\n</component>\n```\n\n**パフォーマンス最適化**:\n\n性能が低いPCでリクエスト単体テスト実行速度を向上させたい場合の設定。\n\n> **補足**: Pentium4、Pentium Dual-Core等の処理性能が低いCPUに効果がある。それ以降のCPUでは効果が限定的なため、無理に設定する必要はない。",
+    "jvm-options": "最大ヒープサイズと最小ヒープサイズを同一にすることで、ヒープサイズ拡張のオーバヘッドを回避できる:\n\n```\n-Xms256m -Xmx256m\n```\n\nクラスファイルの検証を省略することで実行速度が向上する:\n\n```\n-Xverify:none\n```",
+    "skip-resource-copy": "システムプロパティ `-Dnablarch.test.skip-resource-copy=true` を指定すると、 :ref:`HTMLダンプ出力<dump-dir-label>` 時のHTMLリソースコピーを抑止できる。\n\n静的なHTMLリソース(CSS、画像ファイル等)を頻繁に編集しない場合、テスト実行の度にコピーする必要はないため、このシステムプロパティを設定してもよい。\n\n> **重要**: 本システムプロパティを指定した場合、HTMLリソースのコピーが行われなくなるので、CSSなどのHTMLリソースを編集しても :ref:`HTMLダンプ出力<dump-dir-label>` に反映されない。\n\n> **補足**: HTMLリソースディレクトリが存在しない場合は、システムプロパティの設定有無に関わらず、HTMLリソースのコピーが実行される。"
+  }
+}
