@@ -519,6 +519,11 @@ mapper.close();
 
    **Important**: For diagram placeholders, retrieve refined skeletons from working memory (`CLASS_DIAGRAM_SKELETON` and `SEQUENCE_DIAGRAM_SKELETON` from Step 3.3).
 
+   **CRITICAL: Build and Write must be a single step**:
+   - Items 2 (Construct), 3 (Verify), 4 (Write) in this Step 3.5 must be executed as one continuous operation
+   - DO NOT split Build and Write into separate tool calls
+   - Splitting causes the generated content to be re-read as input tokens in each subsequent step, multiplying token usage by 2-3x
+
 3. **Verify template compliance** before writing:
    - All template sections present
    - Section order matches template
