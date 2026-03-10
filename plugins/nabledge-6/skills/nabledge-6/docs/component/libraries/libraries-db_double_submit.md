@@ -1,5 +1,7 @@
 # データベースを使用した二重サブミット防止
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/db_double_submit.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/DbTokenManager.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/DbTokenSchema.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/HttpSessionTokenManager.html)
+
 ## 機能概要
 
 アプリケーションサーバをスケールアウトする際、HTTPセッションのトークン管理ではスティッキーセッションやセッションレプリケーションが必要となる。サーバ側のトークンをデータベースに保管することで、特別な設定なしに複数のアプリケーションサーバ間でトークンを共有できる。
@@ -7,6 +9,13 @@
 > **補足**: ブラウザが閉じられた場合などにテーブル上にトークンが残ることがある。期限切れのトークンは定期的に削除する必要がある。
 
 > **重要**: HTTPセッションを使用した :ref:`二重サブミット防止 <tag-double_submission>` はCSRF対策に使用できたが、本機能はユーザを識別せずにトークンをDBに格納しているためCSRF対策に使用できない。本機能を使用する場合は、CSRF対策に :ref:`csrf_token_verification_handler` を使用すること。
+
+<details>
+<summary>keywords</summary>
+
+二重サブミット防止, DBトークン管理, スケールアウト, CSRF対策, tag-double_submission, csrf_token_verification_handler
+
+</details>
 
 ## モジュール一覧
 
@@ -17,6 +26,13 @@
   <artifactId>nablarch-fw-web-doublesubmit-jdbc</artifactId>
 </dependency>
 ```
+
+<details>
+<summary>keywords</summary>
+
+nablarch-fw-web-doublesubmit-jdbc, データベース二重サブミット防止, Mavenモジュール
+
+</details>
 
 ## 使用方法
 
@@ -71,3 +87,10 @@
 > <!-- トークンをHTTPセッションに保存する -->
 > <component name="tokenManager" class="nablarch.common.web.token.HttpSessionTokenManager"/>
 > ```
+
+<details>
+<summary>keywords</summary>
+
+DbTokenManager, DbTokenSchema, SimpleDbTransactionManager, UUIDV4TokenGenerator, HttpSessionTokenManager, BasicApplicationInitializer, tokenManager, tokenGenerator, DOUBLE_SUBMISSIONテーブル, dbManager, dbTokenSchema, tableName, tokenName, createdAtName, TOKEN, CREATED_AT
+
+</details>

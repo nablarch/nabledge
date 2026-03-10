@@ -1,5 +1,7 @@
 # リソース(アクション)クラスの実装に関して
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/rest/feature_details/resource_signature.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsHttpRequest.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/ExecutionContext.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/ws/rs/PathParam.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/ws/rs/QueryParam.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/EntityResponse.html)
+
 ## リソースクラスのメソッドのシグネチャ
 
 ## メソッド引数
@@ -29,6 +31,13 @@ public HttpResponse sample(SampleForm form, JaxRsHttpRequest request) {
 | フォーム(Java Beans) | :ref:`body_convert_handler` でレスポンスボディに変換してクライアントに返却 |
 | `HttpResponse` | HttpResponseの情報をそのままクライアントに返却 |
 
+<details>
+<summary>keywords</summary>
+
+JaxRsHttpRequest, ExecutionContext, HttpResponse, メソッドシグネチャ, 引数, 戻り値, リソースクラス, void, Java Beans, HttpRequest
+
+</details>
+
 ## パスパラメータを扱う
 
 パスパラメータは `JaxRsHttpRequest` から取得する。メソッドの引数に `JaxRsHttpRequest` を定義し、ルーティング設定で指定したパスパラメータ名を `getPathParam()` に渡す。
@@ -55,6 +64,13 @@ public User delete(JaxRsHttpRequest req) {
 
 > **重要**: Jakarta RESTful Web Servicesで規定されている `PathParam` は使用できない。
 
+<details>
+<summary>keywords</summary>
+
+JaxRsHttpRequest, PathParam, パスパラメータ, getPathParam, ルーティング設定, router_adaptor, UniversalDao
+
+</details>
+
 ## クエリーパラメータを扱う
 
 クエリパラメータは `JaxRsHttpRequest` から取得する。メソッドの引数に `JaxRsHttpRequest` を定義し、`getParamMap()` で取得後、`BeanUtil` でFormにマッピングする。
@@ -76,6 +92,13 @@ public HttpResponse search(JaxRsHttpRequest req) {
 ```
 
 > **重要**: Jakarta RESTful Web Servicesで規定されている `QueryParam` は使用できない。
+
+<details>
+<summary>keywords</summary>
+
+JaxRsHttpRequest, BeanUtil, QueryParam, クエリパラメータ, getParamMap, BeanUtil.createAndCopy, UserSearchForm, ValidatorUtil
+
+</details>
 
 ## レスポンスヘッダを設定する
 
@@ -102,3 +125,10 @@ public EntityResponse<List<Client>> something(JaxRsHttpRequest request, Executio
     return response;
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+HttpResponse, EntityResponse, レスポンスヘッダ, setHeader, @Produces, ステータスコード, secure_handler, setStatusCode, setEntity
+
+</details>

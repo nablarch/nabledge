@@ -1,5 +1,7 @@
 # HTTPアクセスログ（RESTfulウェブサービス用）の出力
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/log/jaxrs_access_log.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsAccessLogFormatter.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsAccessJsonLogFormatter.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/MessageBodyLogTargetMatcher.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsBodyLogTargetMatcher.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/LogContentMaskingFilter.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsBodyMaskingFilter.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/BasicLogFormatter.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/ThreadContext.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/JsonLogFormatter.html) [11](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/session/SessionUtil.html)
+
 ## HTTPアクセスログの出力方針
 
 HTTPアクセスログはフレームワークが提供するハンドラを使用して出力する。アプリケーションではハンドラを設定することでHTTPアクセスログを出力できる。
@@ -54,6 +56,13 @@ jaxRsAccessLogFormatter.endFormat=@@@@ END @@@@ rid = [$requestId$] uid = [$user
                                     \n\tfree_memory    = [$freeMemory$]
 ```
 
+<details>
+<summary>keywords</summary>
+
+HTTPアクセスログ出力方針, ログレベル INFO, HTTP_ACCESS, log.properties, app-log.properties, JaxRsAccessLogFormatter, アプリケーションログ, jaxrs_access_log_handler, 証跡ログ, リクエストパラメータ
+
+</details>
+
 ## HTTPアクセスログの設定
 
 設定は :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
@@ -105,6 +114,13 @@ jaxRsAccessLogFormatter.beginOutputEnabled=true
 jaxRsAccessLogFormatter.endOutputEnabled=true
 ```
 
+<details>
+<summary>keywords</summary>
+
+JaxRsAccessLogFormatter, jaxRsAccessLogFormatter.className, jaxRsAccessLogFormatter.beginFormat, jaxRsAccessLogFormatter.endFormat, jaxRsAccessLogFormatter.datePattern, jaxRsAccessLogFormatter.maskingPatterns, jaxRsAccessLogFormatter.maskingChar, jaxRsAccessLogFormatter.bodyLogTargetMatcher, jaxRsAccessLogFormatter.bodyMaskingFilter, jaxRsAccessLogFormatter.bodyMaskingItemNames, jaxRsAccessLogFormatter.parametersSeparator, jaxRsAccessLogFormatter.sessionScopeSeparator, jaxRsAccessLogFormatter.beginOutputEnabled, jaxRsAccessLogFormatter.endOutputEnabled, HTTPアクセスログ設定, マスキング, リクエストボディログ, レスポンスボディログ, MessageBodyLogTargetMatcher, JaxRsBodyLogTargetMatcher, LogContentMaskingFilter, JaxRsBodyMaskingFilter, BasicLogFormatter, ThreadContext
+
+</details>
+
 ## JSON形式の構造化ログとして出力する
 
 HTTPアクセスログの各項目をJSON値として出力するには `JaxRsAccessJsonLogFormatter` を使用する（デフォルトの `JaxRsAccessLogFormatter` では各項目はmessageの値に文字列として出力される）。設定は :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
@@ -141,6 +157,13 @@ httpAccessLogFormatter.beginLabel=HTTP ACCESS BEGIN
 httpAccessLogFormatter.endLabel=HTTP ACCESS END
 ```
 
+<details>
+<summary>keywords</summary>
+
+JaxRsAccessJsonLogFormatter, JSON構造化ログ, jaxRsAccessLogFormatter.beginTargets, jaxRsAccessLogFormatter.endTargets, jaxRsAccessLogFormatter.datePattern, jaxRsAccessLogFormatter.maskingPatterns, jaxRsAccessLogFormatter.maskingChar, jaxRsAccessLogFormatter.beginOutputEnabled, jaxRsAccessLogFormatter.endOutputEnabled, jaxRsAccessLogFormatter.structuredMessagePrefix, jaxRsAccessLogFormatter.beginLabel, jaxRsAccessLogFormatter.endLabel, httpAccessLogFormatter.className, JsonLogFormatter
+
+</details>
+
 ## セッションストアIDについて
 
 セッションストアIDを出力に含めた場合、:ref:`session_store` が発行するセッションを識別するIDが出力される。
@@ -151,3 +174,10 @@ httpAccessLogFormatter.endLabel=HTTP ACCESS END
 
 - セッションストアIDが発行されていないリクエストでは、途中でIDが発行されたとしても、同一リクエスト内で出力されるセッションストアIDは全て空になる
 - 途中で `セッションを破棄` したり `IDを変更` しても、ログに出力される値はリクエスト処理開始時のものから変化しない
+
+<details>
+<summary>keywords</summary>
+
+セッションストアID, session_store_handler, jaxrs_access_log_handler, セッション識別ID, ハンドラ配置順序, SessionUtil
+
+</details>

@@ -1,5 +1,7 @@
 # アプリケーションの責務配置
 
+**公式ドキュメント**: [アプリケーションの責務配置](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/application_design.html)
+
 ## クラスとその責務
 
 ウェブアプリケーションを構成する3つのクラスとその責務:
@@ -17,3 +19,10 @@
 
 **エンティティクラス**
 テーブルと1対1で対応するクラス。カラムに対応するプロパティを持つ。
+
+<details>
+<summary>keywords</summary>
+
+アクションクラス, フォームクラス, エンティティクラス, 責務配置, バリデーション, セッション保存禁止, Stringプロパティ, htmlフォーム単位, 不正パラメータ除外, 相関バリデーション
+
+</details>

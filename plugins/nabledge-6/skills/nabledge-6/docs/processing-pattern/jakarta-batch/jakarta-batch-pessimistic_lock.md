@@ -1,5 +1,7 @@
 # Jakarta Batchに準拠したバッチアプリケーションの悲観的ロック
 
+**公式ドキュメント**: [Jakarta Batchに準拠したバッチアプリケーションの悲観的ロック](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/feature_details/pessimistic_lock.html)
+
 ## 悲観的ロックの実装パターン
 
 ItemReaderでは処理対象レコードの主キーのみ取得し、ItemProcessorで主キーをもとに悲観的ロック付きで取得することで、ロック時間を短縮して他プロセスへの影響を抑える。
@@ -54,3 +56,10 @@ public class SampleWriter extends AbstractItemWriter {
     }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+UniversalDao, DeferredEntityList, AbstractItemReader, AbstractItemWriter, ItemProcessor, 悲観的ロック, ロック時間短縮, Jakartaバッチ, 主キー取得, バッチ排他制御, @Dependent, @Named, SampleReader, SampleProcessor, SampleWriter, ProjectId, Project
+
+</details>

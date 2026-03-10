@@ -1,5 +1,7 @@
 # Nablarchバッチアプリケーションの悲観的ロック
 
+**公式ドキュメント**: [Nablarchバッチアプリケーションの悲観的ロック](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/feature_details/nablarch_batch_pessimistic_lock.html)
+
 ## Nablarchバッチアプリケーションの悲観的ロック
 
 以下に示す例を参考に実装することで、ロック時間が短縮され他プロセスへの影響を抑えることができる。
@@ -37,3 +39,10 @@ public class SampleAction extends BatchAction<SqlRow> {
     }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+BatchAction, SampleAction, DatabaseRecordReader, SqlPStatement, DbConnectionContext, UniversalDao, SqlRow, ExecutionContext, Project, Success, DataReader, Result, 悲観的ロック, バッチ処理, データリーダ, 主キー取得, 排他制御
+
+</details>

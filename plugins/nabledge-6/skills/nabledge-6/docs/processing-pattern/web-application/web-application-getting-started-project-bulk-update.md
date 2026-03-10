@@ -1,5 +1,7 @@
 # 一括更新機能の作成
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/project_bulk_update/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Required.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Domain.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/validation/Valid.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/persistence/OptimisticLockException.html)
+
 ## 一括更新機能の作成
 
 ## フォームの作成
@@ -120,3 +122,10 @@ public HttpResponse update(HttpRequest request, ExecutionContext context) {
 > **重要**: `UniversalDao#batchUpdate` はバッチ実行用であり排他制御を行わない。排他制御が必要な場合は `UniversalDao#update` を使用すること。排他制御エラー（`OptimisticLockException`）発生時は全件の更新がロールバックされる。
 
 > **Tip**: 独自のエラー制御ハンドラを追加することで、`OptimisticLockException` 発生時に排他制御エラー画面へ遷移させることができる。ハンドラによるエラー制御の作成方法は :ref:`ハンドラで例外クラスに対応したエラーページに遷移させる <forward_error_page-handler>` を参照。
+
+<details>
+<summary>keywords</summary>
+
+InnerProjectForm, ProjectBulkForm, ProjectListDto, ProjectBulkAction, ProjectSearchForm, ProjectSearchDto, EntityList, UniversalDao, BeanUtil, SessionUtil, Project, @Valid, @Required, @Domain, @InjectForm, @OnError, @OnDoubleSubmission, ApplicationException, OptimisticLockException, useToken, 一括更新, ネストフォーム, セッションストア, 排他制御, Bean Validation
+
+</details>

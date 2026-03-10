@@ -1,5 +1,7 @@
 # OnErrorインターセプタ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web_interceptor/on_error.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnError.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpErrorResponse.html)
+
 ## インターセプタクラス名
 
 業務アクションでの例外発生時に、指定したレスポンスを返却するインターセプタ。:ref:`inject_form_interceptor` と組み合わせる場合、このインターセプタを :ref:`inject_form_interceptor` より前に実行されるよう設定することで、バリデーションエラーに対するレスポンスを指定できる。
@@ -12,6 +14,13 @@
 
 **クラス**: `nablarch.fw.web.interceptor.OnError`
 
+<details>
+<summary>keywords</summary>
+
+OnError, nablarch.fw.web.interceptor.OnError, OnErrorインターセプタ, 例外処理, バリデーションエラー対応, インターセプタ設定
+
+</details>
+
 ## モジュール一覧
 
 **モジュール**:
@@ -21,6 +30,13 @@
   <artifactId>nablarch-fw-web</artifactId>
 </dependency>
 ```
+
+<details>
+<summary>keywords</summary>
+
+nablarch-fw-web, com.nablarch.framework, モジュール依存関係, Maven依存性
+
+</details>
 
 ## OnErrorを使用する
 
@@ -35,6 +51,13 @@ public HttpResponse handle(HttpRequest request, ExecutionContext context) {
     // 業務処理は省略
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+@OnError, ApplicationException, RuntimeException, type属性, path属性, アクションメソッド設定, HTTPレスポンス制御, HttpResponse
+
+</details>
 
 ## エラー時の遷移先画面に表示するデータを取得する
 
@@ -56,6 +79,13 @@ public HttpResponse initializeRegisterPage(HttpRequest request, ExecutionContext
 }
 ```
 
+<details>
+<summary>keywords</summary>
+
+内部フォワード, forward://, リクエストスコープ, エラー時データ取得, @InjectForm, @OnError, HttpResponse
+
+</details>
+
 ## 複数のレスポンスを指定する
 
 単一の例外に対して複数のレスポンスは指定できないため、業務アクションのメソッド内に個別に `HttpErrorResponse` を生成する必要がある。
@@ -73,3 +103,10 @@ public HttpResponse handle(HttpRequest request, ExecutionContext context) {
     }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+HttpErrorResponse, 複数レスポンス, 条件分岐, ApplicationException, nablarch.fw.web.HttpErrorResponse
+
+</details>

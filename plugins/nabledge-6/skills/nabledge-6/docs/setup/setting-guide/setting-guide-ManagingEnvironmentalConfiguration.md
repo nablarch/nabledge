@@ -1,5 +1,7 @@
 # 処理方式、環境に依存する設定の管理方法
 
+**公式ドキュメント**: [処理方式、環境に依存する設定の管理方法](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/setting_guide/ManagingEnvironmentalConfiguration/index.html)
+
 ## アプリケーション設定の整理
 
 アプリケーション設定を以下の2つの観点で整理することを推奨。
@@ -10,6 +12,13 @@
 | 環境 | 開発環境、本番環境 | コンポーネント定義の一部を変更する必要がある(モック化など)。 |
 
 ![処理方式と環境の設定差異](../../knowledge/setup/setting-guide/assets/setting-guide-ManagingEnvironmentalConfiguration/method_and_staging.png)
+
+<details>
+<summary>keywords</summary>
+
+処理方式, 環境, アプリケーション設定整理, コンポーネント定義, 環境設定値管理
+
+</details>
 
 ## アプリケーション設定ファイル切り替えの前提
 
@@ -34,6 +43,13 @@ web/batch
 ```
 
 > **補足**: 環境非依存の環境設定ファイル(common.properties)は全ての環境で使用する。環境が不足している場合は :ref:`how_to_add_profile` を参照して環境を追加する。実行基盤のプロジェクトから参照される共通プロジェクトを使用している場合、共通プロジェクト単体の環境毎のアプリケーション設定ファイルは不要である。
+
+<details>
+<summary>keywords</summary>
+
+ディレクトリ構造, env.properties, common.properties, 環境設定ファイル配置, アーキタイプ
+
+</details>
 
 ## アプリケーション設定切り替えの仕組み
 
@@ -67,6 +83,13 @@ Target-Environment:本番環境
 mvn test
 ```
 
+<details>
+<summary>keywords</summary>
+
+Mavenプロファイル, アプリケーション設定切り替え, ビルド, MANIFEST.MF, Target-Environment, ユニットテスト, devプロファイル, アーキタイプ初期定義
+
+</details>
+
 ## コンポーネント設定ファイル(xmlファイル)の作成方法
 
 コンポーネント設定ファイル(xmlファイル)を切り替えることで、環境ごとのコンポーネント切り替え（モック化など）を実現する。
@@ -75,11 +98,25 @@ mvn test
 2. それらのコンポーネント定義に対して、環境毎に本番からの差分としてコンポーネント定義を作成する。
 3. 作成したコンポーネント設定ファイルを環境毎のディレクトリに配置し、ビルド時に差し替える。
 
+<details>
+<summary>keywords</summary>
+
+コンポーネント設定ファイル, モック切り替え, 環境ごとコンポーネント差分, xmlファイル切り替え
+
+</details>
+
 ## 環境ごとに環境設定値を切り替える方法
 
 環境毎に配置した環境設定ファイル(env.properties)を切り替えることによって実現する。
 
 > **補足**: アーキタイプから生成した直後は、環境毎に変更する可能性が低い設定項目については、common.propertiesに記載されている。common.propertiesに記載されている値を環境毎に変えたい場合は、項目をenv.propertiesに移動(カット＆ペースト)する。
+
+<details>
+<summary>keywords</summary>
+
+env.properties, 環境設定値切り替え, common.properties, 環境依存設定, カット＆ペースト, 環境設定ファイル切り替え
+
+</details>
 
 ## プロファイルの定義
 
@@ -108,10 +145,31 @@ mvn test
 | env.classifier | warファイル名、jarファイル名の末尾につける識別子（半角英数）。maven-war-plugin及びmaven-jar-pluginのclassifierプロパティに値を設定することで実現。 |
 | webxml.path | 使用するweb.xmlを指定する。JNDIの設定はweb.xmlにも記載が必要で環境差異が発生する可能性があるため設定可能にしている。本番と同一で問題なければ`src/main/webapp/WEB-INF/web.xml`を設定する。 |
 
+<details>
+<summary>keywords</summary>
+
+pom.xml, プロファイル定義, env.dir, env.classifier, env.name, webxml.path, maven-war-plugin, maven-jar-plugin
+
+</details>
+
 ## ディレクトリの追加
 
 プロファイルの定義で指定した`env.dir`のディレクトリを`src/env/{env.dir}/resources/`として追加する。例えば`env.dir=ita`（結合試験環境A）のプロファイルを追加した場合は、`src/env/ita/resources/`を作成する。
 
+<details>
+<summary>keywords</summary>
+
+ディレクトリ追加, 環境追加, src/env, リソースディレクトリ
+
+</details>
+
 ## アプリケーション設定ファイルの作成及び修正
 
 新規環境のアプリケーション設定ファイルは、類似しているプロファイルのアプリケーション設定ファイルをコピーし、修正して作成する。
+
+<details>
+<summary>keywords</summary>
+
+アプリケーション設定ファイル作成, 設定ファイルコピー, プロファイル設定ファイル修正
+
+</details>

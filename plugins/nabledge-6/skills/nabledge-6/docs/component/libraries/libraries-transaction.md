@@ -1,10 +1,19 @@
 # トランザクション管理
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/transaction.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/transaction/JdbcTransactionFactory.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/transaction/TransactionTimeoutException.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/transaction/Transaction.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/transaction/TransactionFactory.html)
+
 ## 機能概要
 
 データベースやメッセージキューなどトランザクション制御が必要なリソースに対するトランザクション管理機能を提供する。
 
 新たなリソースへのトランザクション制御要件が出た場合は、本機能で定められたインタフェースを実装することで対応できる。詳細は :ref:`transaction_addResource` を参照。
+
+<details>
+<summary>keywords</summary>
+
+トランザクション管理, データベーストランザクション, メッセージキュートランザクション, トランザクション制御リソース追加
+
+</details>
 
 ## モジュール一覧
 
@@ -20,6 +29,13 @@
   <artifactId>nablarch-core-jdbc</artifactId>
 </dependency>
 ```
+
+<details>
+<summary>keywords</summary>
+
+nablarch-core-transaction, nablarch-core-jdbc, モジュール依存関係
+
+</details>
 
 ## データベースに対するトランザクション制御
 
@@ -37,6 +53,13 @@
 ```
 
 > **補足**: JdbcTransactionFactoryを直接使用することは基本的にない。トランザクション制御が必要な場合は :ref:`transaction_management_handler` を使うこと。
+
+<details>
+<summary>keywords</summary>
+
+JdbcTransactionFactory, isolationLevel, transactionTimeoutSec, データベーストランザクション制御, データベース接続設定, database-new_transaction, TransactionManagementHandler
+
+</details>
 
 ## データベースに対するトランザクションタイムアウトを適用する
 
@@ -57,6 +80,13 @@
 > **補足**: DBアクセスしないロジックで処理遅延が発生した場合（例: 無限ループ）はトランザクションタイムアウトで検出できない。アプリケーションサーバのタイムアウト機能などを使うこと。
 
 **リセットタイミング**: `Transaction#begin` 呼び出し時にリセットされる。`Transaction#commit` や `Transaction#rollback` ではリセットされないので注意すること。
+
+<details>
+<summary>keywords</summary>
+
+JdbcTransactionFactory, TransactionTimeoutException, transactionTimeoutSec, トランザクションタイムアウト, クエリータイムアウト, Statement#setQueryTimeout
+
+</details>
 
 ## 拡張例
 
@@ -121,3 +151,10 @@ public class SampleTransactionFactory implements TransactionFactory {
   </property>
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+Transaction, TransactionFactory, TransactionManagementHandler, トランザクションリソース追加, カスタムトランザクション実装, IBM MQ
+
+</details>

@@ -1,5 +1,7 @@
 # エラー時の遷移先の指定方法
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/feature_details/forward_error_page.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/NoDataException.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/persistence/OptimisticLockException.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/message/ApplicationException.html)
+
 ## ハンドラで共通の振る舞いを定義する
 
 システム全体で共通のエラーページに遷移させる場合、個別のアクションメソッドに :ref:`on_error_interceptor` や :ref:`on_errors_interceptor` を設定すると設定漏れや遷移先の指定ミスが発生しやすい。このような場合は個別のアクションに遷移先を指定するのではなく、エラー時の遷移先を制御するハンドラを追加して対応すること。
@@ -23,6 +25,13 @@ public class ExampleErrorForwardHandler implements Handler<Object, Object> {
 }
 ```
 
+<details>
+<summary>keywords</summary>
+
+ExampleErrorForwardHandler, HttpErrorResponse, NoDataException, OptimisticLockException, on_error_interceptor, on_errors_interceptor, エラーページ共通化, ハンドラによるエラー遷移制御, システム全体エラー画面統一, 例外ハンドリング
+
+</details>
+
 ## 1つの例外クラスに対して複数の遷移先がある場合の実装方法
 
 :ref:`on_error_interceptor` は例外クラスに対して1つの遷移先しか指定できないため、`ApplicationException` が発生箇所によって遷移先を切り替えたい場合は、アクションメソッド内で `try-catch` を使って例外を捕捉し `HttpErrorResponse` で遷移先を指定すること。
@@ -41,3 +50,10 @@ public HttpResponse list(HttpRequest request, ExecutionContext context) {
   return new HttpResponse("/WEB-INF/view/client/complete.jsp");
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+ApplicationException, HttpErrorResponse, @InjectForm, @OnError, on_error_interceptor, 業務例外, 複数遷移先, try-catch, 遷移先切り替え, forward
+
+</details>

@@ -1,10 +1,19 @@
 # アーキテクチャ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/nablarch/architecture.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/OnDoubleSubmission.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/UseToken.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnErrors.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnError.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/interceptor/InjectForm.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Interceptor.Factory.html)
+
 ## Nablarchアプリケーションフレームワークの主な構成要素
 
 > **警告**: 本項で解説するアーキテクチャは、:ref:`jsr352_batch` には該当しない（詳細は :ref:`jsr352_batch` の :ref:`jsr352_architecture` を参照）。
 
 ![Nablarchアプリケーションフレームワーク構成要素](../../knowledge/about/about-nablarch/assets/about-nablarch-architecture/fw-design.png)
+
+<details>
+<summary>keywords</summary>
+
+Nablarchフレームワーク構成要素, アーキテクチャ概要, JSR352バッチ適用外, フレームワーク設計図
+
+</details>
 
 ## ハンドラキュー(handler queue)
 
@@ -43,6 +52,20 @@
 >
 > インターセプタの実行順設定の詳細は `Factory` を参照。
 
+<details>
+<summary>keywords</summary>
+
+ハンドラキュー, ハンドラ, インターセプタ, 横断的処理, OnDoubleSubmission, UseToken, OnErrors, OnError, InjectForm, nablarch.common.web.token.OnDoubleSubmission, nablarch.common.web.token.UseToken, nablarch.fw.web.interceptor.OnErrors, nablarch.fw.web.interceptor.OnError, nablarch.common.web.interceptor.InjectForm, Interceptor.Factory, nablarch.fw.Interceptor.Factory
+
+</details>
+
 ## ライブラリ(library)
 
 ライブラリとは、データベースアクセスやファイルアクセス、ログ出力などのようにハンドラから呼び出されるコンポーネント群のこと。Nablarchアプリケーションフレームワークが提供するライブラリは :ref:`library` を参照。
+
+<details>
+<summary>keywords</summary>
+
+ライブラリ, データベースアクセス, ファイルアクセス, ログ出力, コンポーネント
+
+</details>

@@ -1,5 +1,7 @@
 # 更新機能の作成
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/project_update/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/NoDataException.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/OnDoubleSubmission.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/ResourceLocator.html)
+
 ## 更新内容の入力と確認
 
 ## フォームの作成
@@ -116,6 +118,13 @@ WHERE
 </n:form>
 ```
 
+<details>
+<summary>keywords</summary>
+
+ProjectTargetForm, ProjectUpdateForm, ProjectAction, ProjectDto, ProjectProfit, Project, LoginUserPrincipal, Client, @InjectForm, @OnError, @Required, @Domain, NoDataException, ApplicationException, MessageUtil, MessageLevel, UniversalDao, SessionUtil, BeanUtil, フォーム作成, 更新画面表示, バリデーション, 楽観的ロック, セッションストア, 二重サブミット防止
+
+</details>
+
 ## データベースの更新
 
 ## データベース更新アクションメソッド（update）
@@ -169,3 +178,10 @@ public HttpResponse completeOfUpdate(HttpRequest request, ExecutionContext conte
 ```
 
 完了画面のタイトルは`プロジェクト変更完了画面`とし、`message-info`クラスのdiv内に更新完了メッセージを表示する。
+
+<details>
+<summary>keywords</summary>
+
+ProjectAction, Project, @OnDoubleSubmission, @Version, @Column, UniversalDao, SessionUtil, ResourceLocator, 楽観的ロック, データベース更新, 二重サブミット防止, リダイレクト, バージョン番号
+
+</details>

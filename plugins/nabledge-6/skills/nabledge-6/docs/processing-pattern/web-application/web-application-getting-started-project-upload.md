@@ -1,5 +1,7 @@
 # アップロードを用いた一括登録機能の作成
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/project_upload/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpRequest.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/upload/PartInfo.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/upload/util/UploadHelper.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/exception/ApplicationException.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/Csv.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/CsvFormat.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Required.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Domain.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/LineNumber.html) [11](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/ObjectMapper.html) [12](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/ValidatorUtil.html) [13](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/validation/Validator.html) [14](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/message/Message.html) [15](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/message/ApplicationException.html) [16](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html)
+
 ## 作成する業務アクションメソッドの全体像
 
 **アノテーション**: `@OnDoubleSubmission`, `@OnError`
@@ -29,6 +31,13 @@ public HttpResponse upload(HttpRequest request, ExecutionContext context) {
 2. CSVファイルの内容をBeanにバインドしてバリデーションする
 3. DBへ一括登録する
 4. ファイルを保存する
+
+<details>
+<summary>keywords</summary>
+
+ProjectUploadAction, @OnDoubleSubmission, @OnError, ApplicationException, HttpRequest, PartInfo, LoginUserPrincipal, SessionUtil, MessageUtil, MessageLevel, HttpResponse, ExecutionContext, CSVファイルアップロード, 一括登録, 業務アクションメソッド, ファイルアップロード処理フロー
+
+</details>
 
 ## ファイルアップロード機能の実装
 
@@ -86,6 +95,13 @@ private void saveFile(final PartInfo partInfo) {
   </property>
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+ApplicationException, MessageUtil, MessageLevel, HttpRequest, PartInfo, UploadHelper, filePathSetting, FilePathSetting, n:form, n:file, n:message, n:errors, multipart/form-data, ファイルアップロード画面, UploadHelper#moveFileTo, ファイル保存, マルチパートリクエストハンドラ, ファイルパス管理
+
+</details>
 
 ## 一括登録機能の実装
 
@@ -204,3 +220,10 @@ private void insertProjects(List<Project> projects) {
     }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+ProjectUploadDto, ObjectMapper, ObjectMapperFactory, ValidatorUtil, UniversalDao, ApplicationException, InvalidDataFormatException, Message, MessageUtil, MessageLevel, @Csv, @CsvFormat, @Required, @Domain, @LineNumber, PartInfo, HttpRequest, HttpResponse, ExecutionContext, Collectors, LoginUserPrincipal, Project, CsvDataBindConfig, CSVファイル一括登録, ファイルアップロード, Bean Validation, バッチインサート, 行番号取得
+
+</details>

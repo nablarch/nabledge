@@ -1,5 +1,7 @@
 # アーキテクチャ概要
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/architecture.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseRecordReader.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseTableQueueReader.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/ProcessStopHandler.ProcessStop.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchAction.html)
+
 ## 構成
 
 データベースをキューとして扱うタイプのメッセージング処理では、定期的にデータベース上のテーブルを監視し未処理のレコードを順次処理するための機能を提供している。
@@ -8,13 +10,34 @@
 
 Nablarchバッチアプリケーションと同じ構成となる。詳細は :ref:`Nablarchバッチアプリケーションの構成 <nablarch_batch-structure>` を参照。
 
+<details>
+<summary>keywords</summary>
+
+Nablarchバッチアプリケーション構成, DBキューメッセージング構成, nablarch_batch-structure, 未処理レコード処理済み変更, DBキューメッセージング概要, 定期的なテーブル監視, 未処理レコード順次処理
+
+</details>
+
 ## リクエストパスによるアクションとリクエストIDの指定
 
 コマンドライン引数で実行するアクションとリクエストIDを指定する（Nablarchバッチアプリケーションと同様）。詳細は :ref:`NablarchバッチアプリケーションのアクションとリクエストIDの指定 <nablarch_batch-resolve_action>` を参照。
 
+<details>
+<summary>keywords</summary>
+
+コマンドライン引数, アクション指定, リクエストID指定, nablarch_batch-resolve_action
+
+</details>
+
 ## 処理の流れ
 
 Nablarchバッチアプリケーションと同じ処理の流れ。詳細は :ref:`nablarch_batch-process_flow` を参照。
+
+<details>
+<summary>keywords</summary>
+
+処理の流れ, Nablarchバッチ処理フロー, nablarch_batch-process_flow
+
+</details>
 
 ## 使用するハンドラ
 
@@ -45,6 +68,13 @@ Nablarchバッチアプリケーションと同じ処理の流れ。詳細は :r
 - :ref:`ServiceAvailabilityCheckHandler`
 - :ref:`file_record_writer_dispose_handler`
 
+<details>
+<summary>keywords</summary>
+
+ハンドラキュー, status_code_convert_handler, data_read_handler, duplicate_process_check_handler, request_path_java_package_mapping, multi_thread_execution_handler, retry_handler, process_stop_handler, request_thread_loop_handler, database_connection_management_handler, transaction_management_handler, global_error_handler, thread_context_handler, thread_context_clear_handler, ServiceAvailabilityCheckHandler, file_record_writer_dispose_handler
+
+</details>
+
 ## ハンドラの最小構成
 
 最小ハンドラ構成（これをベースにプロジェクト要件に従い標準ハンドラやカスタムハンドラを追加すること）:
@@ -66,6 +96,13 @@ Nablarchバッチアプリケーションと同じ処理の流れ。詳細は :r
 | 13 | :ref:`data_read_handler` | サブ | データリーダで1件読み込み後続ハンドラに渡す。実行時IDを採番 | — | 読み込んだレコードをログ出力後に元例外を再送出 |
 | 14 | :ref:`transaction_management_handler`（業務処理用） | サブ | トランザクション開始 | コミット | ロールバック |
 
+<details>
+<summary>keywords</summary>
+
+最小ハンドラ構成, ProcessStop, MultiThreadExecutionHandler, DataReadHandler, スレッドコンテキスト, サブスレッド, RetryHandler, ProcessStopHandler
+
+</details>
+
 ## 使用するデータリーダ
 
 > **注意**: `DatabaseRecordReader` を使用した場合、繰り返しテーブルを監視できないので注意すること。
@@ -80,6 +117,20 @@ Nablarchバッチアプリケーションと同じ処理の流れ。詳細は :r
 > - 未処理データがなくなった場合、再度検索SQLを実行して未処理データを抽出する
 > - 処理中データの識別子（主キー値）を保持し、複数スレッドによる重複処理を防ぐ
 
+<details>
+<summary>keywords</summary>
+
+DatabaseTableQueueReader, DatabaseRecordReader, データリーダ, キュー監視, マルチスレッド重複処理防止, db_messaging_architecture-reader
+
+</details>
+
 ## 使用するアクションのテンプレートクラス
 
 **クラス**: `BatchAction`（汎用的なバッチアクション）
+
+<details>
+<summary>keywords</summary>
+
+BatchAction, テンプレートクラス, nablarch.fw.action.BatchAction
+
+</details>

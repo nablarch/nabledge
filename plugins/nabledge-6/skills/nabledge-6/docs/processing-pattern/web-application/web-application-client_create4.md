@@ -1,5 +1,7 @@
 # データベースへの登録
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/client_create/client_create4.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/OnDoubleSubmission.html)
+
 ## データベースへの登録
 
 ### 登録処理の実装
@@ -81,3 +83,10 @@ public HttpResponse complete(HttpRequest request, ExecutionContext context) {
     </body>
 </html>
 ```
+
+<details>
+<summary>keywords</summary>
+
+UniversalDao, SessionUtil, HttpRequest, ExecutionContext, HttpResponse, @OnDoubleSubmission, OnDoubleSubmission, allowDoubleSubmission, forConfirmationPage, Client, データベース登録, 二重サブミット防止, セッションストア, 303リダイレクト, 登録完了画面
+
+</details>

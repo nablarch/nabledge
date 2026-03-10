@@ -1,11 +1,20 @@
 # Java21で使用する場合のセットアップ方法
 
+**公式ドキュメント**: [Java21で使用する場合のセットアップ方法](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Java21.html)
+
 ## Java21で使用する場合のセットアップ方法
 
 Java21でブランクプロジェクトを使用する場合、各ブランクプロジェクトの疎通確認前に以下の手順を行う。
 
 - 標準エンコーディングの変更（標準エンコーディングをJava17以前と同じ実行環境にしたい場合）
 - Javaバージョンの変更
+
+<details>
+<summary>keywords</summary>
+
+Java21, ブランクプロジェクト, セットアップ手順, 疎通確認
+
+</details>
 
 ## 標準エンコーディングの変更（標準エンコーディングをJava17以前と同じく実行環境依存にしたい場合）
 
@@ -15,6 +24,13 @@ Java18から標準エンコーディングがUTF-8に統一され、環境依存
 
 > **重要**: Java17までは `-Dfile.encoding=COMPAT` は有効ではないため、従来の実行環境にこのJVMオプションが適用されないよう注意すること。
 
+<details>
+<summary>keywords</summary>
+
+標準エンコーディング, UTF-8, file.encoding, COMPAT, MAVEN_OPTS, Java18, エンコーディング変更, maven-surefire-plugin, argLine
+
+</details>
+
 ## Javaバージョンの変更
 
 ブランクプロジェクトではソース及びclassファイルが準拠するJavaバージョンとしてJava17が設定されているため、以下のようにpom.xmlを変更する。
@@ -23,3 +39,10 @@ Java18から標準エンコーディングがUTF-8に統一され、環境依存
 <!-- Javaバージョンの箇所を以下のように変更する-->
 <java.version>21</java.version>
 ```
+
+<details>
+<summary>keywords</summary>
+
+Javaバージョン, pom.xml, java.version, Java21, ブランクプロジェクト
+
+</details>

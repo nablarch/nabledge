@@ -1,5 +1,7 @@
 # リクエストハンドラエントリ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/common/request_handler_entry.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/RequestHandlerEntry.html)
+
 ## ハンドラクラス名
 
 特定のリクエストパスのみ委譲先のハンドラを呼び出す特殊なハンドラ。ハンドラを修正せずに「特定のURLのみハンドラの処理を行う」機能を実現できる。:ref:`resource_mapping` との組み合わせで静的コンテンツの一括ダウンロード、:ref:`database_connection_management_handler` や :ref:`transaction_management_handler` との組み合わせで特定URLのみDB接続を変える用途にも使用できる。
@@ -7,6 +9,13 @@
 処理: リクエストパスがマッチするか判定し、対象であれば委譲先のハンドラを呼び出す。
 
 **クラス名**: `nablarch.fw.RequestHandlerEntry`
+
+<details>
+<summary>keywords</summary>
+
+RequestHandlerEntry, nablarch.fw.RequestHandlerEntry, リクエストパスフィルタリング, 条件付きハンドラ呼び出し, 特定URLハンドラ
+
+</details>
 
 ## モジュール一覧
 
@@ -18,9 +27,23 @@
 </dependency>
 ```
 
+<details>
+<summary>keywords</summary>
+
+nablarch-core, com.nablarch.framework, モジュール依存関係
+
+</details>
+
 ## 制約
 
 なし。
+
+<details>
+<summary>keywords</summary>
+
+制約なし
+
+</details>
 
 ## 本ハンドラの使用例
 
@@ -54,6 +77,13 @@
       <component-ref name="sessionStoreHandler" />
 ```
 
+<details>
+<summary>keywords</summary>
+
+requestPattern, handler, ResourceMapping, WebFrontController, 静的コンテンツダウンロード, JPEGファイルダウンロード
+
+</details>
+
 ## リクエストパターン指定のバリエーション
 
 `requestPattern` プロパティはGlob式に似た書式で設定する。`*` は `/` および `.` にはマッチしない。
@@ -82,3 +112,10 @@
 | `//*.jsp` | `/app/index.jsp` | 呼ばれる |
 | `//*.jsp` | `/app/admin/index.jsp` | 呼ばれる |
 | `//*.jsp` | `/app/index.html` | 呼ばれない（`*.jsp`がマッチしない） |
+
+<details>
+<summary>keywords</summary>
+
+requestPattern, ワイルドカード, Glob式, 前方一致, パターンマッチング
+
+</details>

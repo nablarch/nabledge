@@ -1,5 +1,7 @@
 # アプリケーションの責務配置
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/application_design.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/DataReader.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result/Success.html)
+
 ## クラスとその責務
 
 **アクションクラス** (`nablarch.fw.DataReader` / `nablarch.fw.Result`)
@@ -23,3 +25,10 @@
 **エンティティクラス**
 
 テーブルと1対1で対応するクラス。カラムに対応するプロパティを持つ。
+
+<details>
+<summary>keywords</summary>
+
+DataReader, Result, Result.Success, アクションクラス, フォームクラス, エンティティクラス, バリデーション, 責務配置, バッチ設計
+
+</details>

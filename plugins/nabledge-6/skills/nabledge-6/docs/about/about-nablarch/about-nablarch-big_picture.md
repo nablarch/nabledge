@@ -1,5 +1,7 @@
 # 全体像
 
+**公式ドキュメント**: [全体像](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/nablarch/big_picture.html)
+
 ## 全体像
 
 Nablarchアプリケーションフレームワークは、処理方式対応の**実行制御基盤**と個別機能の**ライブラリ**から構成される。
@@ -19,3 +21,10 @@ Nablarchアプリケーションフレームワークは、処理方式対応の
 
 - **柔軟な機能追加・変更**: パイプラインのハンドラを差し替えることで機能追加・変更が容易。ハンドラは処理方式間で共有可能なため、処理方式ごとに同じ機能を重複実装する必要がない。
 - **開発方法の共通化**: 各実行制御基盤上のアプリケーションをほぼ同様の方法で開発・テストできるため、ある処理方式のスキルで他の処理方式も最小学習で開発可能。
+
+<details>
+<summary>keywords</summary>
+
+実行制御基盤, ライブラリ, パイプライン型処理モデル, ハンドラ, 処理方式, web_application, web_service, batch_application, messaging, 共通アーキテクチャ
+
+</details>

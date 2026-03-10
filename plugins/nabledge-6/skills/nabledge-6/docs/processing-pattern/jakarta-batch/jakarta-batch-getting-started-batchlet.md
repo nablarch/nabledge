@@ -1,5 +1,7 @@
 # 対象テーブルのデータを削除するバッチの作成(Batchletステップ)
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/getting_started/batchlet/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/batch/api/Batchlet.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/batch/api/AbstractBatchlet.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/inject/Named.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/enterprise/context/Dependent.html)
+
 ## バッチの実行方法
 
 JSR-352バッチジョブは `nablarch.fw.batch.ee.Main` をメインクラスとして起動し、ジョブ名を引数として渡す。
@@ -12,6 +14,13 @@ $mvn exec:java -Dexec.mainClass=nablarch.fw.batch.ee.Main ^
 実行ポイント:
 - **メインクラス**: `nablarch.fw.batch.ee.Main` がNablarchのJSR-352バッチ起動クラスである。
 - **ジョブ名**: `-Dexec.args` にジョブ定義ファイルの `job` 要素 `id` 属性で指定したジョブ名（例: `zip-code-truncate-table`）を渡す。
+
+<details>
+<summary>keywords</summary>
+
+nablarch.fw.batch.ee.Main, メインクラス, ジョブ名指定, exec:java, zip-code-truncate-table, バッチ起動コマンド, JSR-352バッチ実行
+
+</details>
 
 ## 対象テーブルのデータを削除する
 
@@ -87,3 +96,10 @@ public class TruncateTableBatchlet extends AbstractBatchlet {
 - 複数ステップ構成の場合は `step` 要素を複数定義し順次実行する。
 - `batchlet` 要素の `ref` 属性にはBatchletクラス名の頭文字を小文字にした名称を指定する。
 - `property` 要素でBatchletクラスのプロパティにインジェクトする値を指定する。
+
+<details>
+<summary>keywords</summary>
+
+TruncateTableBatchlet, AbstractBatchlet, Batchlet, jakarta.batch.api.Batchlet, @Dependent, @Named, @Inject, @BatchProperty, AppDbConnection, DbConnectionContext, SqlPStatement, Batchletステップ実装, テーブルデータ削除バッチ, CDI管理Bean登録, ジョブ定義ファイル設定, バッチプロパティインジェクション
+
+</details>

@@ -1,5 +1,7 @@
 # ファイルダウンロード機能の作成
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/project_download/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/Csv.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/CsvFormat.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/ObjectMapper.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/download/FileResponse.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html)
+
 ## CSVファイルのダウンロードを行う
 
 ### ダウンロードボタンの作成
@@ -87,3 +89,10 @@ public HttpResponse download(HttpRequest request, ExecutionContext context) {
     return response;
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+CSVファイルダウンロード, ファイルダウンロード, データバインド, 遅延ロード, Content-Disposition, FileResponse, ObjectMapper, ObjectMapperFactory, TempFileUtil, DeferredEntityList, UniversalDao, ProjectDownloadDto, @Csv, @CsvFormat, @InjectForm, @OnError, BeanUtil, HttpResponse, HttpRequest, ExecutionContext, CsvDataBindConfig, LoginUserPrincipal, SessionUtil, ProjectSearchForm, ProjectSearchDto, ApplicationException
+
+</details>

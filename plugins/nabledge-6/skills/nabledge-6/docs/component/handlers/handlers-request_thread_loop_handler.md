@@ -1,10 +1,19 @@
 # リクエストスレッド内ループ制御ハンドラ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/standalone/request_thread_loop_handler.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/retry/Retryable.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/ServiceUnavailable.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/ProcessStopHandler/ProcessStop.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/launcher/ProcessAbnormalEnd.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/ServiceError.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result/Error.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/java/lang/RuntimeException.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/java/lang/ThreadDeath.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/java/lang/StackOverflowError.html) [11](https://nablarch.github.io/docs/LATEST/javadoc/java/lang/OutOfMemoryError.html) [12](https://nablarch.github.io/docs/LATEST/javadoc/java/lang/VirtualMachineError.html)
+
 ## ハンドラクラス名
 
 プロセスの停止要求があるまで後続ハンドラを繰り返し実行するハンドラ。メッセージキューやDBテーブルを監視し未処理データを随時処理するプロセスで使用する。
 
 **クラス名**: `nablarch.fw.handler.RequestThreadLoopHandler`
+
+<details>
+<summary>keywords</summary>
+
+RequestThreadLoopHandler, nablarch.fw.handler.RequestThreadLoopHandler, リクエストスレッド内ループ制御, ループ処理, スタンドアロン
+
+</details>
 
 ## モジュール一覧
 
@@ -16,9 +25,23 @@
 </dependency>
 ```
 
+<details>
+<summary>keywords</summary>
+
+nablarch-fw-standalone, com.nablarch.framework, Mavenモジュール, 依存関係
+
+</details>
+
 ## 制約
 
 :ref:`retry_handler` より後ろに配置すること。このハンドラは処理継続可能な例外の場合に `リトライ可能例外(Retryable)` を送出するため、:ref:`retry_handler` よりも後ろに設定する必要がある。
+
+<details>
+<summary>keywords</summary>
+
+retry_handler, Retryable, nablarch.fw.handler.retry.Retryable, ハンドラ配置順序, 制約
+
+</details>
 
 ## サービス閉塞中の待機時間を設定する
 
@@ -35,9 +58,23 @@
 
 > **補足**: 後続ハンドラに :ref:`ServiceAvailabilityCheckHandler` を設定しない場合は本設定値不要（設定しても使われない）。
 
+<details>
+<summary>keywords</summary>
+
+serviceUnavailabilityRetryInterval, ServiceUnavailable, nablarch.fw.results.ServiceUnavailable, ServiceAvailabilityCheckHandler, サービス閉塞, 待機時間
+
+</details>
+
 ## 本ハンドラの停止方法
 
 プロセス停止要求を示す例外が発生するまで繰り返し後続ハンドラに処理を委譲する。メンテナンスなどでプロセスを停止する場合は、本ハンドラより後続に :ref:`process_stop_handler` を設定し、外部からプロセスを停止できるようにする必要がある。
+
+<details>
+<summary>keywords</summary>
+
+process_stop_handler, プロセス停止, ProcessStop, 停止方法, メンテナンス
+
+</details>
 
 ## 後続ハンドラで発生した例外(エラー)に応じた処理内容
 
@@ -56,3 +93,10 @@
 | `OutOfMemoryError` | 標準エラー出力にヒープ不足発生メッセージを出力後、`FATAL` レベルのログを出力し、`Retryable` を送出。**標準エラー出力を先に行う理由**: ログ出力時に再度ヒープ不足が発生する可能性があるため、標準エラー出力にメッセージ出力後にログを出力する。ヒープ不足の原因オブジェクトへの参照が切れ処理継続可能な場合があるため Retryable を送出する |
 | `VirtualMachineError` | 発生した例外を再送出 |
 | 上記以外のエラー | `FATAL` レベルのログを出力し、`Retryable` を送出 |
+
+<details>
+<summary>keywords</summary>
+
+ServiceUnavailable, nablarch.fw.results.ServiceUnavailable, ProcessStop, nablarch.fw.handler.ProcessStopHandler.ProcessStop, ProcessAbnormalEnd, nablarch.fw.launcher.ProcessAbnormalEnd, ServiceError, nablarch.fw.results.ServiceError, Result.Error, RuntimeException, ThreadDeath, StackOverflowError, OutOfMemoryError, VirtualMachineError, Retryable, 例外ハンドリング, エラー処理
+
+</details>

@@ -1,5 +1,7 @@
 # Jakarta Batchに準拠したバッチアプリケーションとNablarchバッチアプリケーションとの機能比較
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/functional_comparison.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/listener/job/DuplicateJobRunningCheckListener.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/batch/api/chunk/ItemReader.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/ResumeDataReader.html)
+
 ## Jakarta Batchに準拠したバッチアプリケーションとNablarchバッチアプリケーションとの機能比較
 
 凡例: ◎ = Jakarta Batch仕様で定義, ○ = 提供あり, △ = 一部提供あり, × = 提供なし, — = 対象外
@@ -31,3 +33,10 @@
 [6] ジョブスケジューラなどで対応すること。例えば、終了コードを元に次に実行するジョブを切り替える等の対応が必要。
 
 [7] Jakarta Batchに準拠したバッチアプリケーションでは、一定間隔で入力データソースを監視するようなバッチ処理は実現できない。このようなバッチアプリケーションが必要となった場合は、:ref:`Nablarchバッチアプリケーションの常駐バッチ <nablarch_batch-resident_batch>` を使用して実現すること。
+
+<details>
+<summary>keywords</summary>
+
+DuplicateJobRunningCheckListener, ItemReader, ResumeDataReader, Jakarta Batchとの機能比較, バッチアプリケーション比較, リトライ処理, 障害復旧・再実行, 並列実行, 常駐バッチ, コミット制御, 例外ハンドリング, 同時実行防止, プロセス停止
+
+</details>

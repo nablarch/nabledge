@@ -1,5 +1,7 @@
 # データベースをキューとしたメッセージングのエラー処理
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/feature_details/error_processing.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchActionBase.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/launcher/ProcessAbnormalEnd.html)
+
 ## エラーとなったデータを除外し処理を継続する
 
 エラーデータの除外は、例外発生時のコールバックメソッド `transactionFailure` で行う。
@@ -13,6 +15,13 @@ protected void transactionFailure(SqlRow inputData, ExecutionContext context) {
   // この情報を使用して該当レコードを処理対象外（例えば処理失敗のステータスなど）に更新する。
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+BatchActionBase, transactionFailure, SqlRow, ExecutionContext, エラーデータ除外, トランザクション失敗コールバック, 処理継続, データベースメッセージング
+
+</details>
 
 ## プロセスを異常終了させる
 
@@ -32,3 +41,10 @@ public Result handle(SqlRow inputData, ExecutionContext ctx) {
   return new Result.Success();
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+ProcessAbnormalEnd, SqlRow, ExecutionContext, Result, プロセス異常終了, テーブルキュー監視, 処理停止, データ滞留
+
+</details>

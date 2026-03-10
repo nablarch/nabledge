@@ -1,5 +1,7 @@
 # マルチプロセス化
 
+**公式ドキュメント**: [マルチプロセス化](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/feature_details/multiple_process.html)
+
 ## マルチプロセス化
 
 > **警告**: 同一のデータベースをキューとしたメッセージングを何も対応せずに複数起動した場合、同一データを処理し2重取り込みの障害が発生する。
@@ -71,3 +73,10 @@
    ```
 
 > **重要**: 悲観ロックSQL（`beforeReadRecords`内）は別トランザクションで実行する必要がある。
+
+<details>
+<summary>keywords</summary>
+
+DatabaseRecordReader, DatabaseRecordListener, SimpleDbTransactionManager, SimpleDbTransactionExecutor, DatabaseTableQueueReader, SystemRepository, beforeReadRecords, AppDbConnection, DataReader, SqlRow, ExecutionContext, マルチプロセス化, 悲観ロック, DBキューメッセージング複数起動, 2重取り込み防止, PROCESS_ID, 冗長化構成
+
+</details>

@@ -1,8 +1,17 @@
 # CSRFトークン検証ハンドラ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/csrf_token_verification_handler.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/CsrfTokenVerificationHandler.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/csrf/CsrfTokenUtil.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/CsrfTokenGenerator.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/UUIDv4CsrfTokenGenerator.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/VerificationTargetMatcher.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/HttpMethodVerificationTargetMatcher.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/VerificationFailureHandler.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/BadRequestVerificationFailureHandler.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/test/NopHandler.html)
+
 ## ハンドラクラス名
 
 **クラス名**: `nablarch.fw.web.handler.CsrfTokenVerificationHandler`
+
+<details>
+<summary>keywords</summary>
+
+CsrfTokenVerificationHandler, nablarch.fw.web.handler.CsrfTokenVerificationHandler, CSRFトークン検証ハンドラ, ハンドラクラス名
+
+</details>
 
 ## モジュール一覧
 
@@ -14,6 +23,13 @@
 </dependency>
 ```
 
+<details>
+<summary>keywords</summary>
+
+nablarch-fw-web, com.nablarch.framework, モジュール, Maven依存関係
+
+</details>
+
 ## 制約
 
 **必須要件**: 本ハンドラはCSRFトークンをセッションストアに格納するため、本ハンドラを使用する場合は :ref:`session_store` の使用が必須となる。
@@ -22,6 +38,13 @@
 - :ref:`tag` を使用する場合は :ref:`nablarch_tag_handler` より後ろに配置すること（:ref:`tag-hidden_encryption` を使用してCSRFトークンを出力するため）
 
 > **補足**: :ref:`multipart_handler` を使ったファイルアップロード時にファイルの保存前にCSRFトークンの検証を行いたい場合は、:ref:`multipart_handler` の前に本ハンドラおよび :ref:`session_store_handler` を配置すること。
+
+<details>
+<summary>keywords</summary>
+
+session_store_handler, nablarch_tag_handler, multipart_handler, tag-hidden_encryption, session_store, セッションストア必須, ハンドラ配置順, CSRFトークン制約
+
+</details>
 
 ## CSRFトークンの生成と検証
 
@@ -76,6 +99,13 @@
 <component name="csrfTokenVerificationHandler" class="nablarch.test.NopHandler" />
 ```
 
+<details>
+<summary>keywords</summary>
+
+CsrfTokenGenerator, UUIDv4CsrfTokenGenerator, VerificationTargetMatcher, HttpMethodVerificationTargetMatcher, VerificationFailureHandler, BadRequestVerificationFailureHandler, NopHandler, csrfTokenGenerator, verificationTargetMatcher, verificationFailureHandler, csrfTokenHeaderName, csrfTokenParameterName, csrfTokenSessionStoredVarName, csrfTokenSavedStoreName, X-CSRF-TOKEN, csrf-token, nablarch_csrf-token, WebConfig, nablarch.common.web.WebConfig, CsrfTokenUtil, RESTfulウェブサービス, CSRFトークン生成, CSRFトークン検証, テスト無効化, BadRequest 400
+
+</details>
+
 ## CSRFトークンを再生成する
 
 ログイン時にCSRFトークンを再生成しないと、悪意のある人物がCSRFトークンとセッションIDを利用者に送り込み、ログイン後に攻撃リクエストを送信させることが可能になる。
@@ -83,3 +113,10 @@
 - アクション等のリクエスト処理で `CsrfTokenUtil.regenerateCsrfToken` を呼び出すと、ハンドラの戻り処理でCSRFトークンが再生成される
 - ログイン時にセッションストアを破棄して再生成する実装であれば、このメソッドは不要（セッションストア破棄時にCSRFトークンも破棄され、次のページ表示時に新しいトークンが生成されるため）
 - ログイン時にセッションIDの再生成のみ行う実装の場合は、このメソッドを使用してCSRFトークンも再生成すること
+
+<details>
+<summary>keywords</summary>
+
+CsrfTokenUtil, regenerateCsrfToken, nablarch.common.web.csrf.CsrfTokenUtil, CSRFトークン再生成, ログイン, セッションID再生成, セッションストア破棄
+
+</details>

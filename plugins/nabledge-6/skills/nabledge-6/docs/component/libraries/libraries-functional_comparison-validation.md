@@ -1,5 +1,7 @@
 # Bean ValidationとNablarch Validationの機能比較
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/validation/functional_comparison.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/ValidatorUtil.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html)
+
 ## Bean ValidationとNablarch Validationの機能比較
 
 凡例: ○：提供あり　△：一部提供あり　×：提供なし　－:対象外
@@ -33,3 +35,10 @@
 [7] Bean Validationではプロパティの型は全てStringとして定義するため型変換は行わない。型変換が必要な場合はバリデーション実施後に `BeanUtil` を使って型変換する。
 
 [8] 正規化はBean Validationの機能ではなくハンドラとして提供している。正規化が必要な場合は :ref:`normalize_handler` を使用する。
+
+<details>
+<summary>keywords</summary>
+
+ValidatorUtil, BeanUtil, nablarch.core.validation.ee.ValidatorUtil, nablarch.core.beans.BeanUtil, Bean Validation機能比較, Nablarch Validation機能比較, バリデーション機能比較, ドメインバリデーション, 型変換, 正規化, 相関バリデーション, Jakarta Bean Validation
+
+</details>

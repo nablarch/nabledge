@@ -1,5 +1,7 @@
 # Nablarch Validation
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/validation/nablarch_validation.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/validator/package-summary.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/convertor/package-summary.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/date/package-summary.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/validator/package-summary.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ValidationManager.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/domain/DomainValidationHelper.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/domain/DomainValidator.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/PropertyName.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/convertor/Digits.html) [11](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/validator/NumberRange.html) [12](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ValidationUtil.html) [13](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ValidateFor.html) [14](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/DirectCallableValidator.html) [15](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/validator/unicode/SystemChar.html) [16](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/validator/unicode/SystemCharValidator.html) [17](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ValidationContext.html) [18](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ValidationTarget.html) [19](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/WebUtil.html) [20](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/Validation.html) [21](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/Validator.html) [22](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/Convertor.html) [23](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/FormCreator.html)
+
 ## 機能概要
 
 > **補足**: :ref:`validation` の説明通り、[bean_validation](libraries-bean_validation.md) を使用することを推奨する。
@@ -14,6 +16,13 @@ Nablarchバリデーション機能の特徴:
 - `convertor`
 - `date`
 - `validator`
+
+<details>
+<summary>keywords</summary>
+
+Nablarchバリデーション, バリデーション, 型変換, 正規化, ドメインバリデーション, バリデータ, コンバータ
+
+</details>
 
 ## モジュール一覧
 
@@ -36,6 +45,13 @@ Nablarchバリデーション機能の特徴:
   <artifactId>nablarch-common-code</artifactId>
 </dependency>
 ```
+
+<details>
+<summary>keywords</summary>
+
+nablarch-core-validation, nablarch-common-date, nablarch-common-code, Maven依存関係, モジュール
+
+</details>
 
 ## 使用するバリデータとコンバータを設定する
 
@@ -62,6 +78,13 @@ Nablarchバリデーション機能の特徴:
   </property>
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+ValidationManager, convertors, validators, validationManager, バリデータ設定, コンバータ設定, コンポーネント設定
+
+</details>
 
 ## バリデーションルールを設定する
 
@@ -91,6 +114,13 @@ public class SampleForm {
   }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+@Length, @SystemChar, @Required, @Digits, バリデーションルール, アノテーション, setter
+
+</details>
 
 ## ドメインバリデーションを使う
 
@@ -207,6 +237,13 @@ public void setUserName(String userName) {
 
 **複数バリデーションルール時の挙動**: 1つの入力項目に複数エラーが存在する場合、1つ目のエラーで精査を打ち切る（例: `Length`エラーの場合`SystemChar`バリデーションは実行されない）。
 
+<details>
+<summary>keywords</summary>
+
+DomainDefinition, DomainValidationHelper, DomainValidator, ValidationManager, @Domain, @ConversionFormat, @Validation, BasicApplicationInitializer, domainAnnotation, domainValidationHelper, ドメインバリデーション, ドメインEnum, バリデーション有効化
+
+</details>
+
 ## バリデーション対象のBeanを継承する
 
 **Beanの継承は推奨しない。** 理由: 親クラスの変更により予期せぬバリデーションが実行されたり、複雑な上書きルールを意識したアノテーション設定が必要になり、バグの原因となる。
@@ -238,6 +275,13 @@ public class ChildForm extends ParentForm {
   }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+@PropertyName, @Digits, @NumberRange, Bean継承, バリデーション継承, コンバータ継承
+
+</details>
 
 ## バリデーションを実行する
 
@@ -283,6 +327,13 @@ SampleForm form = validationContext.createObject();  // Mapコンストラクタ
 
 > **補足**: ウェブアプリケーションでは :ref:`inject_form_interceptor` でより簡易的にバリデーションが行える。
 
+<details>
+<summary>keywords</summary>
+
+ValidationUtil, ValidationContext, @ValidateFor, validateAndConvertRequest, abortIfInvalid, createObject, バリデーション実行, フォームバリデーション, Mapコンストラクタ
+
+</details>
+
 ## バリデーションの明示的な実行
 
 アノテーションベースではなく直接バリデーションを実行する方法。原則は通常のアノテーションベースのバリデーションを使用し、個別にバリデーションを実行する必要がある場合（例: :ref:`コード管理のパターン<code-use_pattern>` を使って特定の画面だけパターンを変えてバリデーションしたい場合）にのみ使用する。
@@ -308,6 +359,13 @@ public static void validate(ValidationContext<SampleForm> context) {
 }
 ```
 
+<details>
+<summary>keywords</summary>
+
+DirectCallableValidator, ValidationUtil.validate, @ValidateFor, 明示的バリデーション, 個別バリデーション実行, CodeValue
+
+</details>
+
 ## 文字種バリデーションを行う
 
 文字種バリデーションの定義方法は :ref:`bean_validation` と同じ。ただし、使用するアノテーションは `@SystemChar` であり、:ref:`bean_validation` とは**完全修飾名が異なる**（アノテーション名は同一）ので注意。
@@ -323,6 +381,13 @@ public static void validate(ValidationContext<SampleForm> context) {
   <!-- その他のプロパティは省略 -->
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+@SystemChar, SystemCharValidator, allowSurrogatePair, 文字種バリデーション, サロゲートペア, LiteralCharsetDef
+
+</details>
 
 ## 相関バリデーションを行う
 
@@ -345,6 +410,13 @@ public static void validate(ValidationContext<SampleForm> context) {
     }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+ValidationContext, addMessage, isValid, 相関バリデーション, 複数項目バリデーション, @ValidateFor
+
+</details>
 
 ## 一括登録のようなBeanの配列を入力とする機能でバリデーションを行う
 
@@ -377,6 +449,13 @@ public class SampleForm {
 }
 ```
 
+<details>
+<summary>keywords</summary>
+
+@ValidationTarget, ValidationTarget, size, sizeKey, ネストBean, 一括登録バリデーション, 配列入力バリデーション
+
+</details>
+
 ## ラジオボタンやリストボックスの選択値に応じてバリデーション項目を変更する
 
 `WebUtil` を使うことで、ラジオボタンやリストボックスの選択値に応じてバリデーション項目を切り替えられる。
@@ -394,9 +473,23 @@ public static void validate(ValidationContext<SampleForm> context) {
 
 > **補足**: 送信された値まで確認する場合は `WebUtil.containsPropertyKeyValue` を使用。単純にラジオボタンのチェック有無だけを調べる場合は `WebUtil.containsPropertyKey` を使う。
 
+<details>
+<summary>keywords</summary>
+
+WebUtil, containsPropertyKeyValue, containsPropertyKey, 条件付きバリデーション, ラジオボタン, リストボックス
+
+</details>
+
 ## 特定の項目に紐づくバリデーションエラーのメッセージを作りたい
 
 :ref:`Bean Validationの特定の項目に紐づくバリデーションエラーのメッセージを作りたい <bean_validation-create_message_for_property>` を参照。
+
+<details>
+<summary>keywords</summary>
+
+bean_validation-create_message_for_property, 項目エラーメッセージ, バリデーションエラーメッセージ, Bean Validation
+
+</details>
 
 ## バリデーションエラー時のメッセージに項目名を埋め込みたい
 
@@ -423,6 +516,13 @@ public class SampleForm {
 
 `username` プロパティで必須エラーが発生した場合、生成されるメッセージは「名前を入力してください。」となる。
 
+<details>
+<summary>keywords</summary>
+
+@PropertyName, PropertyName, {0}, 項目名埋め込み, バリデーションエラーメッセージ項目名
+
+</details>
+
 ## 数値型への型変換
 
 バリデーション後にBeanクラスの数値型に入力値を変換するには、その項目に `@Digits` アノテーションが必須。ドメインバリデーション使用時はドメインEnumへの設定が必要となる。
@@ -439,13 +539,34 @@ public class SampleForm {
 }
 ```
 
+<details>
+<summary>keywords</summary>
+
+@Digits, Digits, 数値型変換, Integer変換, ドメインバリデーション数値型
+
+</details>
+
 ## データベースとの相関バリデーションを行う
 
 データベースとの相関バリデーションは業務アクションで行う。業務アクションで行う理由は :ref:`Bean Validationのデータベースとの相関バリデーション <bean_validation-database_validation>` を参照。
 
+<details>
+<summary>keywords</summary>
+
+業務アクション, データベース相関バリデーション, bean_validation-database_validation
+
+</details>
+
 ## ウェブアプリケーションのユーザ入力値のチェックを行う
 
 ウェブアプリケーションのユーザ入力値チェックは :ref:`inject_form_interceptor` を使用して行う。詳細は :ref:`inject_form_interceptor` を参照。
+
+<details>
+<summary>keywords</summary>
+
+inject_form_interceptor, ウェブバリデーション, ユーザ入力値チェック, InjectForm
+
+</details>
 
 ## 拡張例
 
@@ -522,3 +643,10 @@ public class SampleConvertor implements Convertor {
 変更手順:
 1. `FormCreator` の実装クラスを作成
 2. `ValidationManager.formCreator` に作成したクラスのコンポーネント定義を追加
+
+<details>
+<summary>keywords</summary>
+
+Validator, Convertor, FormCreator, ValidationManager, ValidationContext, NumberFormatException, @Validation, @Target, @Retention, SampleValidator, SampleConvertor, ElementType, RetentionPolicy, nablarch.core.validation.Validator, nablarch.core.validation.Convertor, nablarch.core.validation.FormCreator, nablarch.core.validation.ValidationManager, nablarch.core.validation.ValidationContext, カスタムバリデータ追加, カスタムコンバータ追加, Bean生成方法変更, プロジェクト固有バリデーション拡張
+
+</details>

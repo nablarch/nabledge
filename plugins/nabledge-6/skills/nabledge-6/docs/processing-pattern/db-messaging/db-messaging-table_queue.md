@@ -1,5 +1,7 @@
 # テーブルキューを監視し未処理データを取り込むアプリケーションの作成
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/getting_started/table_queue.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchAction.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/statement/SqlRow.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseTableQueueReader.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseRecordReader.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseRecordListener.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/statement/SqlPStatement.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.Success.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchActionBase.html)
+
 ## アクションクラスを作成する
 
 `BatchAction` を継承したアクションクラスを作成する。
@@ -10,6 +12,13 @@
 public class ProjectCreationServiceAction extends BatchAction<SqlRow> {
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+BatchAction, SqlRow, テーブルキュー, アクションクラス作成, DBメッセージング
+
+</details>
 
 ## テーブルを監視するためのリーダを生成する
 
@@ -69,6 +78,13 @@ from ins_project_receive_message
 where status = '0' and process_id = :processId
 ```
 
+<details>
+<summary>keywords</summary>
+
+DatabaseTableQueueReader, DatabaseRecordReader, DatabaseRecordListener, SqlPStatement, createReader, SimpleDbTransactionManager, SimpleDbTransactionExecutor, AppDbConnection, SystemRepository, テーブルキュー監視, 悲観ロック, 未処理データ取得
+
+</details>
+
 ## 未処理データを元に業務処理を実行する
 
 `handle` メソッドに業務処理を実装する。
@@ -91,6 +107,13 @@ public Result handle(final SqlRow inputData, final ExecutionContext context) {
     return new Result.Success();
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+handle, Result.Success, UniversalDao, ApplicationException, MessageUtil, MessageLevel, 業務処理実装, テーブルキュー処理
+
+</details>
 
 ## 処理済みデータのステータスを更新する
 
@@ -143,3 +166,10 @@ where received_message_sequence = :id
 ```
 
 SQLファイルへのSQL記述ルールは :ref:`database-use_sql_file` 参照。
+
+<details>
+<summary>keywords</summary>
+
+transactionSuccess, transactionFailure, StatusUpdateDto, ステータス更新, 処理済みデータ, 正常終了, 異常終了
+
+</details>

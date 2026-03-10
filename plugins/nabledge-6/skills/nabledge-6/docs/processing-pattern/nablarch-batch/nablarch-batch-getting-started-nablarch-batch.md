@@ -1,5 +1,7 @@
 # ファイルをDBに登録するバッチの作成
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/getting_started/nablarch_batch/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/Csv.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/CsvFormat.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/LineNumber.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/DataReader.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/ObjectMapper.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchAction.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html)
+
 ## 住所ファイル登録バッチ実行手順
 
 ## 住所ファイル登録バッチ実行手順
@@ -30,6 +32,13 @@ H2のコンソールから下記SQLを実行し、住所情報が登録されて
 SELECT * FROM ZIP_CODE_DATA;
 ```
 
+<details>
+<summary>keywords</summary>
+
+ZIP_CODE_DATA, TRUNCATE, ImportZipCodeFileAction, ImportZipCodeFile, import-zip-code-file.xml, mvn exec:java, nablarch.fw.launcher.Main, requestPath, diConfig, userId, バッチ実行, テーブル削除, 登録確認
+
+</details>
+
 ## 入力データソースからデータを読み込む
 
 ## フォームクラスの作成
@@ -54,6 +63,13 @@ SELECT * FROM ZIP_CODE_DATA;
 
 > **補足**: `ObjectMapper` のように `hasNext` メソッドを持たないクラスからデータを読む場合、`ObjectMapperIterator` を作成するとデータリーダの実装をシンプルにできる
 
+<details>
+<summary>keywords</summary>
+
+ZipCodeForm, ZipCodeFileReader, ObjectMapperIterator, ObjectMapperFactory, FilePathSetting, DataReader, ObjectMapper, @Csv, @CsvFormat, @LineNumber, @Domain, @Required, CsvType, QuoteMode, CSVファイル読み込み, データリーダ, csv-input, importZipCode, バリデーション, 行番号
+
+</details>
+
 ## 業務ロジックを実行する
 
 ## 業務アクションの作成
@@ -65,3 +81,10 @@ SELECT * FROM ZIP_CODE_DATA;
 - `@ValidateData` インターセプタにより、`handle` メソッドには常にバリデーション済みの入力データが引き渡される
 
 > **補足**: :ref:`bean_validation` のロジックはバッチ間で差がないため、インターセプタ（`@ValidateData`）を作成してバリデーション処理を共通化できる
+
+<details>
+<summary>keywords</summary>
+
+ImportZipCodeFileAction, BatchAction, ZipCodeData, BeanUtil, UniversalDao, ZipCodeFileReader, @ValidateData, handle, createReader, Result, Result.Success, 業務アクション, DBへのデータ登録, インターセプタ, バリデーション共通化
+
+</details>

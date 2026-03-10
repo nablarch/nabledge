@@ -1,5 +1,7 @@
 # 検索機能の作成
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/rest/getting_started/search/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/ws/rs/Produces.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsHttpRequest.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/ValidatorUtil.html)
+
 ## プロジェクト情報を検索する
 
 ## 機能概要
@@ -114,3 +116,10 @@ public class ProjectAction {
       return UniversalDao.findAllBySqlFile(Project.class, "FIND_PROJECT", searchCondition);
   }
 ```
+
+<details>
+<summary>keywords</summary>
+
+ProjectSearchForm, ProjectSearchDto, ProjectAction, Project, BeanUtil, JaxRsHttpRequest, ValidatorUtil, UniversalDao, MediaType, @Produces, @Path, @GET, @Domain, RESTful検索処理, クエリパラメータ, UniversalDao検索, JSON返却, BeanValidation
+
+</details>

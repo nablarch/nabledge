@@ -1,8 +1,17 @@
 # Bean Validationに対応したForm/Entityのクラス単体テスト
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/01_ClassUnitTest/01_entityUnitTest/01_entityUnitTestWithBeanValidation.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/validation/constraints/AssertTrue.html)
+
 ## Bean Validationに対応したForm/Entityのクラス単体テスト
 
 Bean ValidationによるForm/Entity単体テストの書き方を説明する。Form単体テストとEntity単体テストはほぼ同じ方法で行え、共通内容はForm単体テストをベースに説明する。
+
+<details>
+<summary>keywords</summary>
+
+Bean Validation, Form単体テスト, Entity単体テスト, 単体テスト, EntityTestSupport
+
+</details>
 
 ## Form/Entity単体テストの書き方
 
@@ -43,6 +52,13 @@ public class UserRegistrationFormTest extends EntityTestSupport {
 文字種・文字列長テスト方法でカバーできない精査（例：日付入力項目のフォーマット精査）に対して使用する。各プロパティに1つの入力値と期待するメッセージIDのペアを記述することで任意の値で単項目精査テストができる。
 
 > **補足**: プロパティとして別のFormを保持するForm（`<親Form>.<子Form>.<子フォームのプロパティ名>` 形式でアクセスする親Form）には使用不可。その場合は独自に精査処理のテストを実装すること。
+
+<details>
+<summary>keywords</summary>
+
+EntityTestSupport, nablarch.test.core.db.EntityTestSupport, テストデータExcel, テストクラス作成, Form単体テスト, Entity単体テスト, 単項目精査テスト
+
+</details>
 
 ## テストケース表の作成方法（文字種・文字列長）
 
@@ -91,6 +107,13 @@ messageIdWhenInvalidLength省略時のデフォルト値:
 
 ![文字種・文字列長テストケース例](../../knowledge/development-tools/testing-framework/assets/testing-framework-01_entityUnitTestWithBeanValidation/entityUnitTest_CharsetAndLengthExample_BeanValidation.png)
 
+<details>
+<summary>keywords</summary>
+
+propertyName, allowEmpty, group, min, max, messageIdWhenEmptyInput, messageIdWhenInvalidLength, messageIdWhenNotApplicable, interpolateKey_n, interpolateValue_n, 文字種テスト, 文字列長テスト, 単項目精査
+
+</details>
+
 ## テストメソッドの作成方法
 
 **クラス**: `nablarch.test.core.db.EntityTestSupport`
@@ -121,6 +144,13 @@ public void testCharsetAndLength() {
 | 文字列長不足 | 最小文字列長－1の文字列 | 入力値はo印を付けた文字種で構成される。min省略時は本テストは実行されない。 |
 | 文字列長超過 | 最大文字列長＋1の文字列 | 入力値はo印を付けた文字種で構成される。max省略時は本テストは実行されない。 |
 
+<details>
+<summary>keywords</summary>
+
+testValidateCharsetAndLength, EntityTestSupport, 文字種テスト実行, 文字列長テスト実行, 単項目精査テスト
+
+</details>
+
 ## テストケース表の作成方法（その他の単項目精査）
 
 テストケース表で用意するカラム:
@@ -136,6 +166,13 @@ public void testCharsetAndLength() {
 | interpolateValue_n | 埋め込み文字の値（nは1からの連番、省略可） |
 
 ![その他単項目精査テストデータ例](../../knowledge/development-tools/testing-framework/assets/testing-framework-01_entityUnitTestWithBeanValidation/entityUnitTest_singleValidationDataExample_BeanValidation.png)
+
+<details>
+<summary>keywords</summary>
+
+propertyName, case, group, messageId, その他単項目精査, 日付フォーマット精査, input1, interpolateKey_n, interpolateValue_n, special_notation_in_cell
+
+</details>
 
 ## テストメソッドの作成方法（単項目精査）
 
@@ -173,6 +210,13 @@ public class UserRegistrationFormTest extends EntityTestSupport {
 }
 ```
 
+<details>
+<summary>keywords</summary>
+
+testSingleValidation, EntityTestSupport, 単項目精査, UserRegistrationFormTest, TARGET_CLASS, sheetName, id
+
+</details>
+
 ## テストケース表の作成（項目間精査）
 
 単項目精査でテストできない `@AssertTrue` を指定した項目間精査などは、別途テストを作成する必要がある。
@@ -202,6 +246,13 @@ public class UserRegistrationFormTest extends EntityTestSupport {
 > - `sampleForm.userTelArray[0].telNoArea`（Form配列の先頭要素のプロパティを指定する場合）
 
 ![項目間精査テストデータ例](../../knowledge/development-tools/testing-framework/assets/testing-framework-01_entityUnitTestWithBeanValidation/entityUnitTest_validationTestData_BeanValidation.png)
+
+<details>
+<summary>keywords</summary>
+
+AssertTrue, testShots, params, 項目間精査, テストケース表, 入力パラメータ表, 埋め込み文字, special_notation_in_cell, interpolateKey, interpolateValue, expectedMessageId, propertyName
+
+</details>
 
 ## テストメソッドの作成方法（項目間精査）
 
@@ -234,6 +285,13 @@ public class UserRegistrationFormTest extends EntityTestSupport {
     }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+testBeanValidation, testWholeFormValidation, EntityTestSupport, 項目間精査, UserRegistrationFormTest, TARGET_CLASS, sheetName
+
+</details>
 
 ## Excelへの定義（setter/getter）
 
@@ -281,6 +339,13 @@ assertEquals(form.getUsers(), Arrays.asList(data.get("get")));
 
 ![setter/getterロジックのExcelデータ定義例](../../knowledge/development-tools/testing-framework/assets/testing-framework-01_entityUnitTestWithBeanValidation/entityUnitTest_SetterAndGetter_PostNo.png)
 
+<details>
+<summary>keywords</summary>
+
+testSetterAndGetter, getParamMap, getListParamMap, EntityTestSupport, setter/getterテスト, Entity単体テスト, 型制限, BigDecimal, java.util.Date, valueOf, Integer, Long, java.sql.Date, java.sql.Timestamp
+
+</details>
+
 ## 設定項目一覧
 
 **クラス**: `nablarch.test.core.entity.EntityTestConfiguration`
@@ -297,6 +362,13 @@ assertEquals(form.getUsers(), Arrays.asList(data.get("get")));
 | emptyInputMessageId | 未入力時のメッセージのデフォルト値 |
 | characterGenerator | 文字列生成クラス（`nablarch.test.core.util.generator.CharacterGenerator`の実装クラスを指定。通常は`nablarch.test.core.util.generator.BasicJapaneseCharacterGenerator`を使用） |
 | validationTestStrategy | テスト用バリデーションストラテジ（Bean Validationを使用する場合は`nablarch.test.core.entity.BeanValidationTestStrategy`を**固定で指定**） |
+
+<details>
+<summary>keywords</summary>
+
+EntityTestConfiguration, BasicJapaneseCharacterGenerator, BeanValidationTestStrategy, CharacterGenerator, maxMessageId, maxAndMinMessageId, underLimitMessageId, fixLengthMessageId, minMessageId, emptyInputMessageId, validationTestStrategy, characterGenerator
+
+</details>
 
 ## コンポーネント設定ファイルの記述例
 
@@ -317,3 +389,10 @@ assertEquals(form.getUsers(), Arrays.asList(data.get("get")));
   </property>
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+EntityTestConfiguration, BasicJapaneseCharacterGenerator, BeanValidationTestStrategy, nablarch.test.core.entity.EntityTestConfiguration, XML設定例
+
+</details>

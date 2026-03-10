@@ -1,5 +1,7 @@
 # コード管理
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/code.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/BasicCodeManager.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/cache/BasicStaticDataCache.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/BasicCodeLoader.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/schema/CodePatternSchema.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/CodeUtil.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/validator/ee/CodeValue.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/validator/CodeValue.html)
+
 ## 機能概要
 
 アプリケーションで使用する**値と名称**とのマッピングを管理する機能を提供する。
@@ -21,6 +23,13 @@
 
 **テーブル管理**: 値および名称の情報をDBで管理する。事前にテーブルを作成し、静的なコード情報を登録しておく必要がある。詳細は :ref:`code-setup_table` を参照。
 
+<details>
+<summary>keywords</summary>
+
+コード管理, コード値名称マッピング, 値, 名称, 略称, 国際化対応, 多言語化, 参照整合性制約, code-validation, doma_adaptor, テーブル管理
+
+</details>
+
 ## モジュール一覧
 
 **モジュール**:
@@ -34,6 +43,13 @@
   <artifactId>nablarch-common-code-jdbc</artifactId>
 </dependency>
 ```
+
+<details>
+<summary>keywords</summary>
+
+nablarch-common-code, nablarch-common-code-jdbc, モジュール依存関係, Maven
+
+</details>
 
 ## コード管理機能を使用する為の初期設定
 
@@ -92,6 +108,13 @@
 </component>
 ```
 
+<details>
+<summary>keywords</summary>
+
+BasicCodeManager, BasicStaticDataCache, BasicCodeLoader, CodePatternSchema, CodeNameSchema, BasicApplicationInitializer, コード管理機能設定, コードパターンテーブル, コード名称テーブル, 初期設定, codeManager, loadOnStartup
+
+</details>
+
 ## 機能毎に使用するコード情報を切り替える
 
 ## 機能毎に使用するコード情報を切り替える
@@ -120,6 +143,13 @@ List<String> pattern2 = CodeUtil.getValues("GENDER", "PATTERN2");
 
 カスタムタグライブラリの詳細は :ref:`tag-code_input_output` を参照。
 
+<details>
+<summary>keywords</summary>
+
+CodeUtil, パターン切り替え, CodePatternSchema, patternColumnNames, getValues, codeSelect, pattern属性, PATTERN1, PATTERN2
+
+</details>
+
 ## 名称の多言語化対応
 
 ## 名称の多言語化対応
@@ -138,11 +168,25 @@ CodeUtil.getShortName("GENDER", "MALE", Locale.ENGLISH);  // -> M
 
 > **重要**: JSP用カスタムタグライブラリでは言語指定による値の取得はできない。カスタムタグライブラリが使用する言語情報の詳細は :ref:`tag-code_input_output` を参照。
 
+<details>
+<summary>keywords</summary>
+
+CodeUtil, 多言語化対応, getName, getShortName, Locale, LANG, 言語指定
+
+</details>
+
 ## 画面などで表示する名称のソート順を定義する
 
 ## 画面などで表示する名称のソート順を定義する
 
 ソート順はコード名称テーブルのSORT_ORDERカラムに設定する。言語ごとに設定可能（国によってソート順が異なる場合に対応）。IDに紐づく一覧取得時にSORT_ORDER昇順で返される。
+
+<details>
+<summary>keywords</summary>
+
+SORT_ORDER, ソート順定義, コード名称テーブル, codeSelect
+
+</details>
 
 ## 名称、略称以外の名称を定義する
 
@@ -160,6 +204,13 @@ JSPで表示する場合は `optionColumnName` にカラム名、`labelPattern` 
 ```jsp
 <n:codeSelect name="form.gender" codeId="GENDER" optionColumnName="KANA_NAME" cssClass="form-control" labelPattern="$OPTIONALNAME$"/>
 ```
+
+<details>
+<summary>keywords</summary>
+
+CodeUtil, getOptionalName, オプション名称, OPTIONAL_NAME, optionColumnName, labelPattern, FORM_NAME, KANA_NAME, CodePatternSchema, patternColumnNames
+
+</details>
 
 ## 入力値が有効なコード値かチェックする
 
@@ -201,3 +252,10 @@ public class SampleDomainBean {
   String flowStatusGuest;
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+@CodeValue, バリデーション, CodeValue, bean_validation, nablarch_validation, pattern属性, SampleDomainBean, ドメインバリデーション
+
+</details>

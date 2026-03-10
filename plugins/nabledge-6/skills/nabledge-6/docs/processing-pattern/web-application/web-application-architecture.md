@@ -1,5 +1,7 @@
 # アーキテクチャ概要
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/architecture.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html)
+
 ## ウェブアプリケーションの構成
 
 ウェブアプリケーション構築にはServletAPIの使用を前提とする。
@@ -8,6 +10,13 @@
 
 - :ref:`nablarch_servlet_context_listener` (`NablarchServletContextListener`): システムリポジトリやログの初期化処理を行うサーブレットコンテキストリスナー
 - :ref:`web_front_controller` (`WebFrontController`): 受け取ったリクエストに対する処理をハンドラキューに委譲するサーブレットフィルタ
+
+<details>
+<summary>keywords</summary>
+
+NablarchServletContextListener, WebFrontController, ウェブアプリケーション構成, サーブレットコンテキストリスナー, ハンドラキュー, ServletAPI
+
+</details>
 
 ## ウェブアプリケーションの処理の流れ
 
@@ -18,6 +27,13 @@
 5. アクションクラスは処理結果を示す`HttpResponse`を作成し返却する。
 6. `HttpResponseHandler`が`HttpResponse`をクライアントへのレスポンスに変換する（例: JSPのServlet Forward）。
 7. responseが返却される。
+
+<details>
+<summary>keywords</summary>
+
+WebFrontController, DispatchHandler, HttpResponse, HttpResponseHandler, リクエスト処理フロー, ディスパッチハンドラ, アクションクラス, jakarta.servlet.Filter
+
+</details>
 
 ## ウェブアプリケーションで使用するハンドラ
 
@@ -75,3 +91,10 @@
 | 11 | :ref:`database_connection_management_handler` | DB接続を取得する | DB接続を解放する | — |
 | 12 | :ref:`transaction_management_handler` | トランザクションを開始する | トランザクションをコミットする | トランザクションをロールバックする |
 | 13 | :ref:`router_adaptor` | リクエストパスをもとに呼び出すアクションを決定する | — | — |
+
+<details>
+<summary>keywords</summary>
+
+ハンドラキュー構成, 最小ハンドラ構成, 文字エンコーディング, セッションストア, CSRFトークン検証, トランザクション管理, router_adaptor, セキュリティヘッダ
+
+</details>

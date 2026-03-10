@@ -1,5 +1,7 @@
 # JSR310(Date and Time API)アダプタ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/adaptors/jsr310_adaptor.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/java/time/LocalDate.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/java/time/LocalDateTime.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/jsr310/util/DateTimeConfiguration.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/jsr310/util/BasicDateTimeConfiguration.html)
+
 ## モジュール一覧
 
 > **重要**: Nablarch 6u2以降、本アダプタの機能はフレームワーク本体に取り込まれているため、本アダプタを使用しなくても :ref:`bean_util` でJSR310(Date and Time API)を使用できる。本アダプタは後方互換維持のために残している。
@@ -13,6 +15,13 @@
   <artifactId>nablarch-jsr310-adaptor</artifactId>
 </dependency>
 ```
+
+<details>
+<summary>keywords</summary>
+
+nablarch-jsr310-adaptor, LocalDate, LocalDateTime, JSR310アダプタ, Date and Time API, 後方互換, BeanUtil JSR310対応
+
+</details>
 
 ## 使用方法
 
@@ -29,3 +38,10 @@
 > ```xml
 > <component name="dateTimeConfiguration" class="sample.SampleDateTimeConfiguration" />
 > ```
+
+<details>
+<summary>keywords</summary>
+
+DateTimeConfiguration, BasicDateTimeConfiguration, dateTimeConfiguration, JSR310有効化, 日時フォーマット設定, コンポーネント設定, JSR310.xml
+
+</details>

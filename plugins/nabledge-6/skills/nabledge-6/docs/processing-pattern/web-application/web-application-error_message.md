@@ -1,5 +1,7 @@
 # バリデーションエラーのメッセージを画面表示する
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/feature_details/error_message.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/message/ErrorMessages.html)
+
 ## バリデーションエラーのメッセージを画面表示する
 
 サーバサイドバリデーションのエラーメッセージは :ref:`http_error_handler` によってリクエストスコープに格納される。テンプレートエンジンからリクエストスコープの `ErrorMessages` にアクセスしてエラーメッセージを表示する。リクエストスコープの変数名は :ref:`http_error_handler-error_messages` 参照。
@@ -35,3 +37,10 @@
   <li th:each="message : ${errors.allMessages}" th:text="${message}">エラーメッセージ</li>
 </ul>
 ```
+
+<details>
+<summary>keywords</summary>
+
+ErrorMessages, nablarch.fw.web.message.ErrorMessages, hasError, getMessage, getGlobalMessages, getAllMessages, バリデーションエラーメッセージ表示, Thymeleaf, リクエストスコープ, グローバルメッセージ, プロパティエラーメッセージ
+
+</details>

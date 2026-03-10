@@ -1,5 +1,7 @@
 # 様々なフォーマットのデータへのアクセス
 
+**公式ドキュメント**: [様々なフォーマットのデータへのアクセス](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/data_converter.html)
+
 ## 機能概要と推奨
 
 :ref:`data_bind` の使用を推奨する。理由:
@@ -9,3 +11,10 @@
 > **重要**: :ref:`data_bind` で扱えないフォーマットには :ref:`data_format` を使用すること。
 
 > **補足**: :ref:`data_bind` と :ref:`data_format` の機能比較は :ref:`data_io-functional_comparison` を参照。
+
+<details>
+<summary>keywords</summary>
+
+データバインド, 汎用データフォーマット, data_bind, data_format, データ入出力, フォーマット変換, 機能選択, IDE補完
+
+</details>

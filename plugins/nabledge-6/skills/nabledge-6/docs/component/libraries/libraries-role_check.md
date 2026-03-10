@@ -1,5 +1,7 @@
 # アノテーションによる認可チェック
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/authorization/role_check.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/BasicRoleEvaluator.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/session/SessionStoreUserRoleResolver.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/CheckRole.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Interceptor.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/Forbidden.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/session/SessionStoreUserRoleUtil.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/CheckRoleLogger.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/repository/initialization/BasicApplicationInitializer.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/CheckRoleUtil.html) [11](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/RoleEvaluator.html) [12](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/repository/SystemRepository.html) [13](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/ThreadContext.html) [14](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/UserRoleResolver.html)
+
 ## 機能概要
 
 アノテーションによる認可チェックでは、ユーザにロール(役割)を割り当て、機能にも実行に必要なロールを割り当て、ユーザが機能のロールを持つかどうかで認可判定を行う。機能とロールの割り当てはアノテーションで行い、ユーザとロールの割り当て方法はフレームワークでは規定しない。[permission_check](libraries-permission_check.md) より単純なデータ構造で権限管理できる。
@@ -15,6 +17,13 @@ public HttpResponse index(HttpRequest request, ExecutionContext context) {
 
 - **本認可チェックが適している場合**: ロール自体の増減やロールに割り当てる機能の変更が頻繁に発生しない場合。ロールと機能の組み合わせが固定されており今後大きく変化しない場合。
 - **[permission_check](libraries-permission_check.md) を推奨する場合**: 組織変更でロールや機能の組み合わせが頻繁に変わるシステム（例: 部署によって権限が変わる場合）。本認可チェックでは変更のたびにアノテーションの書き換えが必要になるため、[permission_check](libraries-permission_check.md) を使って権限の組み合わせをデータで管理することを推奨する。
+
+<details>
+<summary>keywords</summary>
+
+@CheckRole, CheckRole, 認可チェック, ロールベースアクセス制御, ロール割り当て, permission_check, 認可判定, BasicRoleEvaluator, 使い分け
+
+</details>
 
 ## モジュール一覧
 
@@ -34,6 +43,13 @@ public HttpResponse index(HttpRequest request, ExecutionContext context) {
   <artifactId>nablarch-main-default-configuration</artifactId>
 </dependency>
 ```
+
+<details>
+<summary>keywords</summary>
+
+nablarch-common-auth, nablarch-common-auth-session, nablarch-main-default-configuration, モジュール, 依存関係
+
+</details>
 
 ## 使用方法
 
@@ -179,6 +195,13 @@ JSP側でEL式/JSTLを使って制御する:
 </c:if>
 ```
 
+<details>
+<summary>keywords</summary>
+
+@CheckRole, CheckRole, BasicRoleEvaluator, SessionStoreUserRoleResolver, CheckRoleUtil, checkRole, checkRoleAllOf, checkRoleAnyOf, CheckRoleLogger, SessionStoreUserRoleUtil, SessionUtil, Forbidden, BasicApplicationInitializer, userRoleResolver, targetPackage, targetClassPattern, interceptorsOrder, anyOf, ロール割り当て, セッションストア, JSP表示制御, アノテーション設定確認, プログラム判定
+
+</details>
+
 ## 仕組み
 
 アノテーションによるチェック処理はNablarchの `インターセプタ` の仕組みを使って実現している。`CheckRole` アノテーションはこのインターセプタを実装したものである。
@@ -189,6 +212,13 @@ JSP側でEL式/JSTLを使って制御する:
 - チェック処理に渡すユーザIDは `ThreadContext` の `getUserId` メソッドで取得する
 - `BasicRoleEvaluator`（`RoleEvaluator` のデフォルト実装）はユーザのロール解決を `UserRoleResolver` に委譲する
 - `SessionStoreUserRoleResolver`（`UserRoleResolver` のデフォルト実装）はセッションストアに保存された情報でユーザのロールを解決する
+
+<details>
+<summary>keywords</summary>
+
+RoleEvaluator, BasicRoleEvaluator, UserRoleResolver, SessionStoreUserRoleResolver, CheckRole, CheckRoleUtil, SystemRepository, ThreadContext, Interceptor, 認可チェックの仕組み, インターセプタ, ロール解決, roleEvaluator
+
+</details>
 
 ## 拡張方法
 
@@ -205,3 +235,10 @@ JSP側でEL式/JSTLを使って制御する:
 ```xml
 <component name="userRoleResolver" class="com.example.CustomUserRoleResolver" />
 ```
+
+<details>
+<summary>keywords</summary>
+
+RoleEvaluator, UserRoleResolver, BasicRoleEvaluator, SessionStoreUserRoleResolver, roleEvaluator, userRoleResolver, カスタマイズ, 拡張, 差し替え
+
+</details>

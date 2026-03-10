@@ -1,13 +1,36 @@
 # Nablarchのコンセプト
 
+**公式ドキュメント**: [Nablarchのコンセプト](https://nablarch.github.io/docs/LATEST/doc/about_nablarch/concept.html)
+
 ## Robustness
 
 ロバストネス（堅牢性）: 環境の変化・外部からの攻撃・内部のエラーといった様々な変動に対してダメージや損失を最小限にとどめ、機能を維持し続ける能力。Nablarchでは「障害耐性」「セキュリティ強固性」に加え「長期間使い続けられる」という意味も含む。
+
+<details>
+<summary>keywords</summary>
+
+ロバストネス, 堅牢性, 障害耐性, セキュリティ強固性, 長期利用
+
+</details>
 
 ## Testability
 
 テスタビリティ（テスト容易性）を重視して設計。各種ドライバ、モック、自動テストの枠組みなど、様々な処理方式・様々な粒度でのテストを可能にする仕組みを提供。
 
+<details>
+<summary>keywords</summary>
+
+テスタビリティ, テスト容易性, テストドライバ, モック, 自動テスト
+
+</details>
+
 ## Ready-to-Use
 
 フレームワークに加えて、使用頻度の高いミドルウェア（RedisやSLF4Jなど）に適合させるためのアダプタ、未経験者でもすぐに開発を始められる環境など、再利用可能なコンテンツを「すぐに使える」状態で提供。
+
+<details>
+<summary>keywords</summary>
+
+再利用可能コンテンツ, アダプタ, ミドルウェア対応, 即時利用可能, Redis, SLF4J
+
+</details>

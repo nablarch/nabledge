@@ -1,5 +1,7 @@
 # メール送信
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/mail.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailRequestTable.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailRecipientTable.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailAttachedFileTable.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailTemplateTable.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailConfig.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailRequester.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailRequestConfig.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailSessionConfig.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailUtil.html) [11](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/FreeTextMailContext.html) [12](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/TemplateMailContext.html) [13](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/AttachedFile.html) [14](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/TinyTemplateEngineMailProcessor.html) [15](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailSender.html) [16](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/mail/internet/AddressException.html) [17](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/InvalidCharacterException.html) [18](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/mail/SendFailedException.html) [19](https://nablarch.github.io/docs/LATEST/javadoc/java/lang/Exception.html)
+
 ## 機能概要
 
 メール送信機能は、ディレードオンライン処理方式を採用している。メール送信を即時に行うのではなく、メール送信要求をDBに格納し、:ref:`常駐バッチ<nablarch_batch-resident_batch>` で非同期にメール送信する。
@@ -32,6 +34,13 @@
 - 開封率・クリックカウントの効果測定
 - メールアドレスによるクライアント判別と送信メール切り替え
 
+<details>
+<summary>keywords</summary>
+
+メール送信, ディレードオンライン処理, 非同期メール送信, テンプレートメール, 定型メール, 大量メール一斉送信非対応, TinyTemplateEngineMailProcessor, mail_sender_freemarker_adaptor, mail_sender_thymeleaf_adaptor, mail_sender_velocity_adaptor
+
+</details>
+
 ## モジュール一覧
 
 **モジュール**:
@@ -51,6 +60,13 @@
   <artifactId>nablarch-common-idgenerator-jdbc</artifactId>
 </dependency>
 ```
+
+<details>
+<summary>keywords</summary>
+
+nablarch-mail-sender, nablarch-common-idgenerator, nablarch-common-idgenerator-jdbc, メール送信モジュール, Maven依存関係
+
+</details>
 
 ## メール送信を使うための設定
 
@@ -194,6 +210,13 @@
 </component>
 ```
 
+<details>
+<summary>keywords</summary>
+
+MailRequestTable, MailRecipientTable, MailAttachedFileTable, MailTemplateTable, MailConfig, MailRequester, MailRequestConfig, MailSessionConfig, TinyTemplateEngineMailProcessor, mailRequestSbnId, recipientTypeTO, recipientTypeCC, recipientTypeBCC, statusUnsent, statusSent, statusFailure, mailRequestCountMessageId, sendSuccessMessageId, sendFailureCode, abnormalEndExitCode, defaultReplyTo, defaultReturnPath, defaultCharset, maxRecipientCount, maxAttachedFileSize, mailSmtpHost, mailHost, mailSmtpPort, mailSmtpConnectionTimeout, mailSmtpTimeout, mailSendPatternIdColumnName, sendProcessIdColumnName, メール送信設定, テーブルスキーマ設定, SMTPサーバ設定, コード値設定, メール送信要求コンポーネント設定
+
+</details>
+
 ## メール送信要求を登録する
 
 **クラス**: `MailRequester`, `MailUtil`, `FreeTextMailContext`, `TemplateMailContext`, `AttachedFile`
@@ -229,6 +252,13 @@ String mailRequestId = requester.requestToSend(mailRequest);
 > - キーに`null`を指定した場合は例外を送出する
 > - 値に`null`を指定した場合、空文字列で置き換える
 > - テンプレートのプレースホルダとキー/値の整合性チェックは行わない。プレースホルダに対応する値が未設定の場合、プレースホルダが変換されずにメールが送信される。対応するプレースホルダがない値は無視されてメールが送信される。
+
+<details>
+<summary>keywords</summary>
+
+MailRequester, MailUtil, FreeTextMailContext, TemplateMailContext, AttachedFile, requestToSend, getMailRequester, setVariable, addAttachedFile, メール送信要求登録, 定型メール, 非定型メール, テンプレートメール, 添付ファイル
+
+</details>
 
 ## メールを送信する(メール送信バッチを実行する)
 
@@ -267,6 +297,13 @@ java nablarch.fw.launcher.Main \
   -mailSendPatternId 02
 ```
 
+<details>
+<summary>keywords</summary>
+
+MailSender, メール送信バッチ, 常駐バッチ, 二重送信防止, statusUpdateTransaction, mailSendPatternId, メール送信パターンID, 未送信データ抽出
+
+</details>
+
 ## メール送信時のエラー処理
 
 `MailSender` は例外の種類に応じて以下の処理を行う。外部入力データ（アドレスやヘッダ）に起因する例外やメール送信失敗例外が発生した場合は、対象のメール送信要求のステータスを送信失敗にして次のメール送信処理を行う。上記以外の例外が発生した場合は、メール送信要求のステータスを送信失敗にしてリトライする。
@@ -284,6 +321,13 @@ java nablarch.fw.launcher.Main \
 
 ログ出力処理やリトライ処理を変更したい場合は :ref:`mail-mail_extension_sample` を参照。
 
+<details>
+<summary>keywords</summary>
+
+MailSender, AddressException, InvalidCharacterException, SendFailedException, リトライ, メール送信エラー, 例外処理, ログ出力
+
+</details>
+
 ## メール送信をマルチプロセス化する
 
 メール送信要求テーブルのプロセスIDカラムを使用した悲観ロックにより、複数プロセスが同一送信要求を処理しないようにする。
@@ -296,6 +340,13 @@ java nablarch.fw.launcher.Main \
 > **重要**: 2. の設定がされていない場合、排他制御がされないため1件のメール送信要求を複数プロセスが処理する可能性がある。見かけ上メール送信バッチが動作するため設定漏れを検知しづらい。メール送信をマルチプロセス化する場合は上記の設定を漏れなく行うこと。
 
 > **重要**: マルチプロセス化の目的は大量メールの分散送信ではなく（:ref:`do-not-use-for-campaign-mail` 参照）、冗長構成のサーバで一部に障害が発生してもメール送信を継続できることである。各プロセスが送信対象とするメールはプロセス起動時点での未送信メール全てであり（メール送信パターンIDを指定している場合は該当パターンIDのうち未送信メール全て）、プロセス間での均等分散は行わない。
+
+<details>
+<summary>keywords</summary>
+
+MailRequestTable, sendProcessIdColumnName, mailMultiProcessTransaction, 悲観ロック, マルチプロセス, 冗長構成, 排他制御
+
+</details>
 
 ## メールヘッダインジェクション攻撃への対策
 
@@ -310,6 +361,13 @@ java nablarch.fw.launcher.Main \
 対象項目:
 - 件名
 - 差し戻し先メールアドレス
+
+<details>
+<summary>keywords</summary>
+
+InvalidCharacterException, メールヘッダインジェクション, セキュリティ対策, 改行コード, 件名, 差し戻し先メールアドレス, JavaMail
+
+</details>
 
 ## 拡張例
 
@@ -352,3 +410,10 @@ java nablarch.fw.launcher.Main \
   </property>
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+MailSender, MailRequester, mailTransactionManager, 電子署名, メール本文暗号化, トランザクション指定, 拡張, SimpleDbTransactionManager, TableIdGenerator
+
+</details>

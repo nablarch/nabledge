@@ -1,8 +1,17 @@
 # 初期セットアップ手順　補足事項
 
+**公式ドキュメント**: [初期セットアップ手順　補足事項](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/blank_project/firstStep_appendix/firststep_complement.html)
+
 ## 初期セットアップ手順　補足事項
 
 このページは、初期セットアップ手順の補足事項として、H2データベースの確認方法とアーキタイプから生成したプロジェクトに組み込まれているツールについて説明する。
+
+<details>
+<summary>keywords</summary>
+
+初期セットアップ補足, H2データベース確認, ブランクプロジェクト補足
+
+</details>
 
 ## H2のデータの確認方法
 
@@ -36,6 +45,13 @@ H2コンソールの起動手順:
 
 > **重要**: アーキタイプから生成したプロジェクトはH2の組み込みモードを使用しており、1プロセスからのみ接続を受け付ける。**切断を忘れると、アプリケーションからH2に接続できなくなる。**
 
+<details>
+<summary>keywords</summary>
+
+H2コンソール起動, H2データベース確認, JDBC接続, 組み込みモード接続制限, h2.bat, jdbc:h2:../db/SAMPLE, env.properties
+
+</details>
+
 ## アーキタイプから生成したプロジェクトに組み込まれているツール
 
 | ツール | Mavenフェーズ | 補足 |
@@ -45,3 +61,10 @@ H2コンソールの起動手順:
 | [gsp-dba-maven-plugin](https://github.com/coastland/gsp-dba-maven-plugin) | － | 起動: `mvn -P gsp gsp-dba:<ゴール名>`（例: `mvn -P gsp gsp-dba:generate-ddl`）。`mvn -P gsp generate-resources` で generate-ddl・execute-ddl・generate-entity・load-data・export-schema を順に実行可能。 |
 
 > **重要**: ツールの設定を変更する際は、親モジュールのpom.xmlを必ず理解した上で行うこと。pom.xmlを理解することで、多くの設定項目について**容易**に設定変更が可能になる。
+
+<details>
+<summary>keywords</summary>
+
+JspStaticAnalysis, カバレッジ取得, gsp-dba-maven-plugin, jacoco, Mavenプラグイン, 組み込みツール, generate-ddl, execute-ddl, generate-entity, load-data, export-schema, SonarQube, Jenkins
+
+</details>

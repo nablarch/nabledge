@@ -1,5 +1,7 @@
 # ウェブサービス編
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/MessagingException.html)
+
 ## RESTfulウェブサービスフレームワークの選択
 
 :ref:`restful_web_service` と :ref:`http_messaging` の2種類のRESTfulウェブサービス用フレームワークを提供。:ref:`restful_web_service` の使用を推奨。
@@ -14,3 +16,10 @@
 4. リクエストボディのパース時の例外が全て単一の例外クラス `MessagingException` にマッピングされるため、根本原因を元に細かな処理制御を行うことができない。
 
 > **補足**: :ref:`restful_web_service` と :ref:`http_messaging` の機能比較は [restful_web_service_functional_comparison](restful-web-service-functional_comparison.md) を参照。
+
+<details>
+<summary>keywords</summary>
+
+MessagingException, nablarch.fw.messaging.MessagingException, RESTfulウェブサービス, HTTPメッセージング, フレームワーク選択, restful_web_service, http_messaging, Jakarta RESTful Web Services
+
+</details>

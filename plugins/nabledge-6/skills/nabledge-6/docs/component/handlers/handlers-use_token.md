@@ -1,5 +1,7 @@
 # UseTokenインターセプタ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web_interceptor/use_token.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/UseToken.html)
+
 ## インターセプタクラス名
 
 :ref:`二重サブミット(同一リクエストの二重送信)防止 <tag-double_submission_server_side>` のためのトークンを発行するインターセプタ。主にJSP以外のテンプレートエンジンを採用している場合に使用する。
@@ -10,6 +12,13 @@ JSPを使用している場合は :ref:`tag-form_tag` のuseToken属性でトー
 
 **クラス**: `nablarch.common.web.token.UseToken`
 
+<details>
+<summary>keywords</summary>
+
+UseToken, nablarch.common.web.token.UseToken, 二重サブミット防止, トークン発行, JSP以外のテンプレートエンジン, on_double_submission_interceptor
+
+</details>
+
 ## モジュール一覧
 
 **モジュール**:
@@ -19,6 +28,13 @@ JSPを使用している場合は :ref:`tag-form_tag` のuseToken属性でトー
   <artifactId>nablarch-fw-web-tag</artifactId>
 </dependency>
 ```
+
+<details>
+<summary>keywords</summary>
+
+nablarch-fw-web-tag, com.nablarch.framework, Mavenモジュール
+
+</details>
 
 ## UseTokenを使用する
 
@@ -41,3 +57,10 @@ public HttpResponse confirm(HttpRequest req, ExecutionContext ctx) {
 ```
 
 `name` 属性は `"nablarch_token"` と設定し、`value` 属性はリクエストスコープのキー `"nablarch_request_token"` から取得した値を設定する必要がある。このname属性とリクエストスコープから値を取得するキーは変更可能。詳しくは :ref:`サーバ側の二重サブミット防止 <tag-double_submission_server_side>` を参照。
+
+<details>
+<summary>keywords</summary>
+
+@UseToken, nablarch_token, nablarch_request_token, Thymeleaf, hiddenフィールド, トークン埋め込み, 二重サブミット防止
+
+</details>

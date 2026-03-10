@@ -1,5 +1,7 @@
 # Nablarch 6u2 リリースノート
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/6u2/doc/migration/index.html) [2](https://nablarch.github.io/docs/6u2/doc/application_framework/application_framework/nablarch/platform.html) [3](https://nablarch.github.io/docs/6u2/doc/application_framework/application_framework/libraries/database/universal_dao.html#id43) [4](https://nablarch.github.io/docs/6u2/doc/application_framework/application_framework/libraries/bean_util.html) [5](https://nablarch.github.io/docs/6u2/doc/application_framework/application_framework/configuration/index.html) [6](https://nablarch.github.io/docs/6u2/doc/application_framework/application_framework/handlers/web/secure_handler.html#content-security-policy) [7](https://nablarch.github.io/docs/6u2/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Web.html) [8](https://nablarch.github.io/docs/6u2/doc/application_framework/adaptors/slf4j_adaptor.html) [9](https://nablarch.github.io/docs/6u2/doc/application_framework/adaptors/log_adaptor.html) [10](https://nablarch.github.io/docs/6u2/doc/application_framework/adaptors/doma_adaptor.html) [11](https://nablarch.github.io/docs/6u2/doc/application_framework/adaptors/jaxrs_adaptor.html) [12](https://nablarch.github.io/docs/6u2/doc/application_framework/adaptors/micrometer_adaptor.html) [13](https://nablarch.github.io/docs/6u2/doc/application_framework/cloud_native/distributed_tracing/aws_distributed_tracing.html) [14](https://nablarch.github.io/docs/6u2/doc/examples/index.html) [15](https://nablarch.github.io/docs/6u2/doc/application_framework/application_framework/libraries/validation/bean_validation.html) [16](https://nablarch.github.io/docs/6u2/publishedApi/nablarch-all/publishedApiDoc/programmer/nablarch/core/date/SystemTimeUtil.html) [17](https://nablarch.github.io/docs/6u2/doc/index.html)
+
 ## 6u2 変更点（5u25からの移行）
 
 ## システムへの影響がある変更
@@ -83,6 +85,13 @@
 - ドメイン定義書サンプルのバリデーション記載をBean Validationに変更（Nablarch Validationから変更）
 - JSP自動生成ツール・業務画面JSP検証ツールの記載削除
 
+<details>
+<summary>keywords</summary>
+
+5u25からの変更点, Jakarta EE 10対応, Java 17必須, BeanUtil, SystemTimeUtil, LocalDateTime, LocalDate, ユニバーサルDAO, JSR310アダプタ, SLF4Jアダプタ, Domaアダプタ, ETL基盤削除, 帳票ライブラリ削除, ワークフローライブラリ削除, UI開発基盤削除, nablarch-fw-web, nablarch-core-beans, nablarch.httpTestConfiguration.tempDirectory
+
+</details>
+
 ## 6u2 変更点（6u1からの移行）
 
 ## システムへの影響がある変更
@@ -154,6 +163,13 @@
 - ドメイン定義書サンプルのバリデーション記載をBean Validationに変更
 - 業務画面JSP検証ツールの記載削除
 
+<details>
+<summary>keywords</summary>
+
+6u1からの変更点, CSP nonce対応, Bean Validation, Micrometerアダプタ, OTLP, マイグレーションガイド, テスト環境データベース, Oracle 23ai, JBoss Logging, Domaアダプタ, nablarch-micrometer-adaptor, nablarch-testing-jetty12, nablarch.httpTestConfiguration.tempDirectory
+
+</details>
+
 ## バージョンアップ手順
 
 ## 5系からバージョンアップする場合
@@ -168,6 +184,13 @@
    - `micrometer-registry-cloudwatch2`
    - `micrometer-registry-statsd`
 3. Mavenのビルドを再実行する
+
+<details>
+<summary>keywords</summary>
+
+バージョンアップ手順, nablarch-bom, pom.xml, micrometer-registry-datadog, micrometer-registry-cloudwatch2, micrometer-registry-statsd, 5系からの移行, 6u1からの移行
+
+</details>
 
 ## モジュールバージョン一覧
 
@@ -251,3 +274,10 @@
 | アダプタ | com.nablarch.integration | slf4j-nablarch-adaptor | 2.1.0 |
 | アダプタ | com.nablarch.integration | nablarch-wmq-adaptor | 2.1.0 |
 | 開発ツール | com.nablarch.tool | nablarch-toolbox | 2.1.0 |
+
+<details>
+<summary>keywords</summary>
+
+モジュールバージョン, 6u2, com.nablarch.framework, com.nablarch.integration, com.nablarch.example, nablarch-testing-jetty12, nablarch-biz-sample-all, アーティファクトID, 依存関係バージョン
+
+</details>

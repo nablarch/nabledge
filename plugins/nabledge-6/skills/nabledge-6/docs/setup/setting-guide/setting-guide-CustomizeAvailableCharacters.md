@@ -1,10 +1,19 @@
 # 使用可能文字の追加手順
 
+**公式ドキュメント**: [使用可能文字の追加手順](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/setting_guide/CustomizingConfigurations/CustomizeAvailableCharacters.html)
+
 ## 文字集合の包含関係
 
 使用可能な文字集合は複数の文字集合から構成される（包含関係が存在する）。
 
 ![](../../knowledge/setup/setting-guide/assets/setting-guide-CustomizeAvailableCharacters/charset.png)
+
+<details>
+<summary>keywords</summary>
+
+文字集合, 包含関係, 使用可能文字, 文字種別
+
+</details>
 
 ## 文字集合定義の所在
 
@@ -20,6 +29,13 @@
 
 > **補足**: 定義場所: `nablarch/core/validation/charset-definition.xml`
 
+<details>
+<summary>keywords</summary>
+
+charset-definition.config, charset-definition.xml, 文字集合定義, halfWidthWhitespace, デフォルトコンフィギュレーション
+
+</details>
+
 ## メッセージIDを設定するだけで使用できる使用可能文字
 
 以下の使用可能文字はメッセージIDを設定するだけで使用できる。
@@ -34,6 +50,13 @@
 プレースホルダは :download:`デフォルト設定一覧 <../../configuration/デフォルト設定一覧.xlsx>` を参照。
 
 メッセージID及びメッセージ内容の変更手順は [./CustomizeMessageIDAndMessage](setting-guide-CustomizeMessageIDAndMessage.md) を参照。
+
+<details>
+<summary>keywords</summary>
+
+メッセージID設定, システム許容文字, 全角文字, 半角英数, ASCII文字, 半角数字, 全角カタカナ, バリデーション設定
+
+</details>
 
 ## メッセージIDを指定するだけでは使用できない使用可能文字
 
@@ -122,8 +145,22 @@ Nablarchの設定ファイル（ウェブプロジェクトでは `web-component
 
 メッセージID及びメッセージ内容の変更手順は [./CustomizeMessageIDAndMessage](setting-guide-CustomizeMessageIDAndMessage.md) を参照。
 
+<details>
+<summary>keywords</summary>
+
+LiteralCharsetDef, nablarch.core.validation.validator.unicode.LiteralCharsetDef, コンポーネント定義, 全角英字, 全角ひらがな, 起動時警告, 文字バリデーション設定, allowedCharacters, messageId
+
+</details>
+
 ## 単独で使用できない使用可能文字
 
 以下の文字は単独では使用できない。
 
 - halfWidthSpace
+
+<details>
+<summary>keywords</summary>
+
+halfWidthSpace, 半角スペース, 単独使用不可
+
+</details>

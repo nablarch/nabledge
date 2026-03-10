@@ -1,5 +1,7 @@
 # 入力値のチェック
 
+**公式ドキュメント**: [入力値のチェック](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/validation.html)
+
 ## 入力値のチェック概要と推奨機能
 
 クライアントから送信されるユーザ入力値や、システム間連携により外部システムから送信される値が妥当かを検証するための機能を提供する。
@@ -21,3 +23,10 @@ Nablarchでは2種類のバリデーション機能を提供している。
 > **補足**: :ref:`bean_validation` と :ref:`nablarch_validation` で提供している機能の違いは、 :ref:`validation-functional_comparison` を参照。
 
 バリデーションエラー時に表示するメッセージの定義方法は、 [message](libraries-message.md) を参照。
+
+<details>
+<summary>keywords</summary>
+
+バリデーション, Bean Validation, Nablarch Validation, Jakarta Bean Validation, 入力値チェック, 推奨バリデーション
+
+</details>

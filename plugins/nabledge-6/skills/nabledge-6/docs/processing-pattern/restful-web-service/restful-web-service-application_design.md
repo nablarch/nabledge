@@ -1,5 +1,7 @@
 # RESTFulウェブサービスの責務配置
 
+**公式ドキュメント**: [RESTFulウェブサービスの責務配置](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/rest/application_design.html)
+
 ## クラスとその責務
 
 ## クラスとその責務
@@ -14,3 +16,10 @@
 1. **API単位にフォームクラスを作成する**: インタフェース(API)が異なる場合は別のフォームクラスとして作成すること。登録用APIと更新用APIのように似た項目があっても、APIが異なる場合は別々のフォームクラスとする必要がある。インタフェース変更の影響範囲を限定でき、1つのインタフェースに対応したバリデーションロジックだけを持つため、責務が明確で可読性や保守性が高くなる
 2. 相関バリデーションロジックが複数フォームクラスで共通となる場合は、ロジックを別クラスに抽出して共通化すること
 3. **フォームクラスのプロパティは全て `String` で定義する**: 理由は :ref:`Bean Validation <bean_validation-form_property>` を参照
+
+<details>
+<summary>keywords</summary>
+
+アクションクラス, フォームクラス, DTO, エンティティクラス, API単位のフォームクラス設計, バリデーション, HTTPボディマッピング, String型プロパティ, 相関バリデーション
+
+</details>

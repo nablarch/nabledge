@@ -1,5 +1,7 @@
 # メッセージングログの出力
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/log/messaging_log.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/logging/MessagingLogFormatter.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/logging/MessagingJsonLogFormatter.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/JsonLogFormatter.html)
+
 ## メッセージングログの出力方針
 
 メッセージングログは :ref:`system_messaging` のメッセージ送受信時に出力する。アプリケーション全体のアプリケーションログに出力する。
@@ -41,6 +43,13 @@ messagingLogFormatter.receivedMessageFormat=@@@@ RECEIVED MESSAGE @@@@\n\tthread
 messagingLogFormatter.httpSentMessageFormat=@@@@ HTTP SENT MESSAGE @@@@\n\tthread_name    = [$threadName$]\n\tmessage_id     = [$messageId$]\n\tdestination    = [$destination$]\n\tcorrelation_id = [$correlationId$]\n\tmessage_header = [$messageHeader$]\n\tmessage_body   = [$messageBody$]
 messagingLogFormatter.httpReceivedMessageFormat=@@@@ HTTP RECEIVED MESSAGE @@@@\n\tthread_name    = [$threadName$]\n\tmessage_id     = [$messageId$]\n\tdestination    = [$destination$]\n\tcorrelation_id = [$correlationId$]\n\tmessage_header = [$messageHeader$]\n\tmessage_body   = [$messageBody$]
 ```
+
+<details>
+<summary>keywords</summary>
+
+メッセージングログ出力方針, ログレベル INFO, ロガー名 MESSAGING, アプリケーションログ出力, log.properties設定, メッセージングログ設定例
+
+</details>
 
 ## メッセージングログの設定
 
@@ -126,6 +135,13 @@ messagingLogFormatter.httpSentMessageFormat=@@@@ HTTP SENT MESSAGE @@@@\n\tthrea
 messagingLogFormatter.httpReceivedMessageFormat=@@@@ HTTP RECEIVED MESSAGE @@@@\n\tthread_name    = [$threadName$]\n\tmessage_id     = [$messageId$]\n\tdestination    = [$destination$]\n\tcorrelation_id = [$correlationId$]\n\tmessage_header = [$messageHeader$]\n\tmessage_body   = [$messageBody$]
 ```
 
+<details>
+<summary>keywords</summary>
+
+MessagingLogFormatter, messagingLogFormatter.className, messagingLogFormatter.maskingPatterns, messagingLogFormatter.maskingChar, messagingLogFormatter.sentMessageFormat, messagingLogFormatter.receivedMessageFormat, messagingLogFormatter.httpSentMessageFormat, messagingLogFormatter.httpReceivedMessageFormat, メッセージマスキング設定, MOMメッセージングフォーマット, HTTPメッセージングフォーマット, メッセージボディISO-8859-1
+
+</details>
+
 ## JSON形式の構造化ログとして出力する
 
 `MessagingLogFormatter` のデフォルト動作ではメッセージングログの各項目は `message` の値に文字列として出力される。各項目をJSONの値として出力するには `MessagingJsonLogFormatter` を使用する。設定は :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
@@ -166,3 +182,10 @@ messagingLogFormatter.receivedMessageTargets=threadName,messageId,destination,co
 messagingLogFormatter.httpSentMessageTargets=threadName,messageId,destination,correlationId,messageHeader,messageBody
 messagingLogFormatter.httpReceivedMessageTargets=threadName,messageId,destination,correlationId,messageHeader,messageBody
 ```
+
+<details>
+<summary>keywords</summary>
+
+MessagingJsonLogFormatter, JSON構造化ログ, messagingLogFormatter.structuredMessagePrefix, messagingLogFormatter.sentMessageTargets, messagingLogFormatter.receivedMessageTargets, messagingLogFormatter.httpSentMessageTargets, messagingLogFormatter.httpReceivedMessageTargets, messagingLogFormatter.sentMessageLabel, messagingLogFormatter.receivedMessageLabel, messagingLogFormatter.httpSentMessageLabel, messagingLogFormatter.httpReceivedMessageLabel, JsonLogFormatter, メッセージングログJSON形式出力
+
+</details>

@@ -1,5 +1,7 @@
 # ユニバーサルDAO
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/database/universal_dao.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/BasicDaoContextFactory.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/DeferredEntityList.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/Pagination.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/EntityList.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/dialect/Dialect.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnError.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/transaction/SimpleDbTransactionManager.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/connection/ConnectionFactory.html) [11](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/transaction/TransactionFactory.html) [12](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.Transaction.html) [13](https://nablarch.github.io/docs/LATEST/javadoc/java/sql/DatabaseMetaData.html) [14](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/DatabaseMetaDataExtractor.html) [15](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/dialect/H2Dialect.html)
+
 ## 機能概要
 
 Jakarta Persistenceアノテーションを使った簡易的なO/Rマッパー。内部で :ref:`database` を使用しているため、 :ref:`database` の設定が必要。
@@ -27,6 +29,13 @@ SQLファイルとSQL IDを指定した検索で、結果をBean（Entity、Form
 
 使用できるデータタイプは :ref:`universal_dao_bean_data_types` を参照。
 
+<details>
+<summary>keywords</summary>
+
+ユニバーサルDAO, O/Rマッパー, CRUD, Beanマッピング, Jakarta Persistence, 共通項目自動設定, doma_adaptor, @Table
+
+</details>
+
 ## モジュール一覧
 
 **モジュール**:
@@ -37,6 +46,13 @@ SQLファイルとSQL IDを指定した検索で、結果をBean（Entity、Form
 </dependency>
 ```
 
+<details>
+<summary>keywords</summary>
+
+nablarch-common-dao, com.nablarch.framework, Maven依存関係
+
+</details>
+
 ## ユニバーサルDAOを使うための設定を行う
 
 :ref:`database` の設定に加えて、 `BasicDaoContextFactory` をコンポーネント定義に追加する。コンポーネント名は `daoContextFactory` で設定すること。
@@ -46,6 +62,13 @@ SQLファイルとSQL IDを指定した検索で、結果をBean（Entity、Form
 ```
 
 > **重要**: 基本的な使い方は `UniversalDao` のJavadocを参照。
+
+<details>
+<summary>keywords</summary>
+
+BasicDaoContextFactory, daoContextFactory, コンポーネント定義, 初期設定
+
+</details>
 
 ## 任意のSQL(SQLファイル)で検索する
 
@@ -66,9 +89,23 @@ UniversalDao.findAllBySqlFile(GoldUser.class, "sample.entity.Member#FIND_BY_NAME
 
 > **補足**: 「#」の指定は機能単位（Actionハンドラ単位）にSQLを集約したい場合に使用できるが、指定が煩雑になるため基本は「#」なしの指定を使用すること。
 
+<details>
+<summary>keywords</summary>
+
+findAllBySqlFile, SQLファイル, SQL ID, SQLファイルパス導出, 任意SQL検索
+
+</details>
+
 ## テーブルをJOINした検索結果を取得する
 
 複数テーブルをJOINした結果を取得する場合は、JOIN対象データを個別に検索せず、**1回で検索できるSQL** と **JOINした結果をマッピングするBean** を作成すること（個別検索は非効率）。
+
+<details>
+<summary>keywords</summary>
+
+JOIN, 複数テーブル, 一覧検索, JOINマッピング
+
+</details>
 
 ## 検索結果を遅延ロードする
 
@@ -90,6 +127,13 @@ try (DeferredEntityList<User> users
 
 > **重要**: 使用するRDBMSによっては、カーソルオープン中にトランザクション制御が行われるとカーソルがクローズされる。遅延ロード中にトランザクション制御を行うとクローズ済みカーソルを参照しエラーとなる可能性がある。DBベンダーのマニュアルに沿ってカーソルの挙動を調整するか、 :ref:`ページング<universal_dao-paging>` などで回避すること。
 
+<details>
+<summary>keywords</summary>
+
+DeferredEntityList, UniversalDao.defer, 遅延ロード, 大量データ, サーバサイドカーソル, フェッチサイズ
+
+</details>
+
 ## 条件を指定して検索する
 
 検索条件を指定してSQLファイルで検索できる。
@@ -101,6 +145,13 @@ List<Project> projects = UniversalDao.findAllBySqlFile(
 ```
 
 > **重要**: 検索条件はEntityではなく検索条件を持つ専用のBeanを指定すること。ただし1つのテーブルのみへのアクセスの場合はEntityを指定しても良い。
+
+<details>
+<summary>keywords</summary>
+
+findAllBySqlFile, 検索条件, 条件検索, 専用Bean
+
+</details>
 
 ## 型を変換する
 
@@ -117,6 +168,13 @@ List<Project> projects = UniversalDao.findAllBySqlFile(
 - DBからの取得時: 自動生成SQLの場合と同様の処理。
 
 > **重要**: DBの型とプロパティの型が不一致の場合、実行時に型変換エラーが発生する場合がある。また暗黙的型変換によるインデックス未使用で性能劣化が発生する可能性がある。DBとJavaのデータタイプのマッピングはJDBCドライバのマニュアルを参照すること（例: DBがdate型の場合プロパティ型は `java.sql.Date`、数値型(integer/bigint/number)の場合は `int`/`long`）。
+
+<details>
+<summary>keywords</summary>
+
+@Temporal, java.util.Date, java.util.Calendar, 型変換, java.sql.Date, 暗黙的型変換, universal_dao_jpa_temporal
+
+</details>
 
 ## ページングを行う
 
@@ -136,6 +194,13 @@ Pagination pagination = users.getPagination();
 > **補足**: ページング用の検索処理は :ref:`データベースアクセス(JDBCラッパー)の範囲指定検索機能 <database-paging>` を使用する。
 
 > **補足**: 実際の範囲指定レコード取得の前に件数取得SQLが発行される。件数取得SQLによる性能劣化が発生した場合は :ref:`universal_dao-customize_sql_for_counting` を参照して件数取得SQLを変更すること。
+
+<details>
+<summary>keywords</summary>
+
+UniversalDao.per, UniversalDao.page, Pagination, EntityList, ページング, 件数取得SQL
+
+</details>
 
 ## サロゲートキーを採番する
 
@@ -186,6 +251,13 @@ public Long getId() { return id; }
 
 > **補足**: シーケンス及びテーブルを使用したサロゲートキーの採番処理は :ref:`generator` を使用する。設定値（テーブル名やカラム名など）はリンク先を参照。
 
+<details>
+<summary>keywords</summary>
+
+@GeneratedValue, @SequenceGenerator, @TableGenerator, GenerationType, Dialect, サロゲートキー, シーケンス採番
+
+</details>
+
 ## バッチ実行(一括登録、更新、削除)を行う
 
 大量データの一括登録・更新・削除にバッチ実行が使用可能。アプリケーションサーバとDBサーバ間のラウンドトリップ回数を削減しパフォーマンス向上が期待できる。
@@ -196,6 +268,13 @@ public Long getId() { return id; }
 - `batchDelete`
 
 > **重要**: `batchUpdate` による一括更新では排他制御を行わない。更新対象EntityとDBのバージョンが不一致でも、そのレコードの更新は行われずに正常終了する。排他制御が必要な更新処理では、一括更新ではなく1レコード毎の更新処理を使用すること。
+
+<details>
+<summary>keywords</summary>
+
+batchInsert, batchUpdate, batchDelete, 一括登録, 一括更新, 一括削除
+
+</details>
 
 ## 楽観的ロックを行う
 
@@ -215,11 +294,25 @@ public HttpResponse update(HttpRequest request, ExecutionContext context) {
 
 > **重要**: :ref:`universal_dao-batch_execute` に記載の通り、一括更新処理（`batchUpdate`）では楽観的ロックは使用できない。
 
+<details>
+<summary>keywords</summary>
+
+@Version, OptimisticLockException, OnError, 楽観的ロック, 排他制御
+
+</details>
+
 ## 悲観的ロックを行う
 
 ユニバーサルDAOでは悲観的ロックの機能を特に提供していない。
 
 悲観的ロックはDBの行ロック（`SELECT FOR UPDATE`）を使用する。行ロックのSQLは `UniversalDao#findBySqlFile` メソッドを使って実行する。
+
+<details>
+<summary>keywords</summary>
+
+findBySqlFile, SELECT FOR UPDATE, 悲観的ロック, 行ロック
+
+</details>
 
 ## 排他制御の考え方
 
@@ -227,17 +320,38 @@ public HttpResponse update(HttpRequest request, ExecutionContext context) {
 
 バージョン番号を持つテーブルは排他制御の単位ごとに定義し、競合が許容される最大の単位で定義する。例えば「ユーザ」単位でのロックが業務的に許容されるならユーザテーブルにバージョン番号を定義する。単位を大きくすると競合の可能性が高くなり、更新失敗（楽観的ロックの場合）や処理遅延（悲観的ロックの場合）を招く点に注意すること。
 
+<details>
+<summary>keywords</summary>
+
+バージョンカラム, 排他制御, ロック単位, 競合, 楽観的ロック, 悲観的ロック
+
+</details>
+
 ## データサイズの大きいバイナリデータを登録（更新）する
 
 データサイズの大きいバイナリデータ（例：OracleのBLOB）は、ユニバーサルDAOではデータをすべてメモリに展開しないと登録・更新できない。データベースが提供する機能を使ってファイルなどから直接登録・更新すること。
 
 詳細: :ref:`database-binary_column`
 
+<details>
+<summary>keywords</summary>
+
+BLOBデータ登録, バイナリデータ, 大容量バイナリデータ, Oracle BLOB, database-binary_column
+
+</details>
+
 ## データサイズの大きいテキストデータを登録（更新）する
 
 データサイズの大きいテキストデータ（例：OracleのCLOB）は、ユニバーサルDAOではデータをすべてメモリに展開しないと登録・更新できない。データベースが提供する機能を使ってファイルなどから直接登録・更新すること。
 
 詳細: :ref:`database-clob_column`
+
+<details>
+<summary>keywords</summary>
+
+CLOBデータ登録, テキストデータ, 大容量テキストデータ, Oracle CLOB, database-clob_column
+
+</details>
 
 ## 現在のトランザクションとは異なるトランザクションで実行する
 
@@ -293,6 +407,13 @@ FindPersonsTransaction findPersonsTransaction = new FindPersonsTransaction();
 EntityList<Person> persons = findPersonsTransaction.getPersons();
 ```
 
+<details>
+<summary>keywords</summary>
+
+SimpleDbTransactionManager, UniversalDao.Transaction, 個別トランザクション, 別トランザクション実行, connectionFactory, transactionFactory, dbTransactionName, ConnectionFactory, TransactionFactory
+
+</details>
+
 ## DatabaseMetaDataから情報を取得できない場合に対応する
 
 データベースによっては、シノニムを使用している場合や権限の問題で、 `java.sql.DatabaseMetaData` から主キー情報を取得できない場合がある。主キー情報を取得できなくなると、主キーを指定した検索が正しく動作しない。
@@ -308,6 +429,13 @@ sample.dao.CustomDatabaseMetaDataExtractorを作成した場合の設定例
 -->
 <component name="databaseMetaDataExtractor" class="sample.dao.CustomDatabaseMetaDataExtractor" />
 ```
+
+<details>
+<summary>keywords</summary>
+
+DatabaseMetaDataExtractor, java.sql.DatabaseMetaData, シノニム, 主キー情報取得, databaseMetaDataExtractor, 権限問題, 主キー検索
+
+</details>
 
 ## ページング処理の件数取得用SQLを変更する
 
@@ -359,6 +487,13 @@ public class CustomH2Dialect extends H2Dialect {
   </property>
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+件数取得SQL, SELECT COUNT(*), convertCountSql, Dialect, H2Dialect, ページング, ORDER BY, カスタムダイアレクト, sqlMap, StatementFactory
+
+</details>
 
 ## Entityに使用できるJakarta Persistenceアノテーション
 
@@ -426,6 +561,13 @@ public class CustomH2Dialect extends H2Dialect {
 - `pkColumnValue` 属性: 採番テーブルのレコードを識別するための値を設定
 - 別途 :ref:`採番用の設定 <generator_dao_setting>` が必要
 
+<details>
+<summary>keywords</summary>
+
+@Entity, @Table, @Access, @Column, @Id, @Version, @Temporal, @GeneratedValue, @SequenceGenerator, @TableGenerator, 楽観ロック, 自動採番, シーケンス採番, テーブル採番, sequenceName, pkColumnValue, generator, strategy, Dialect
+
+</details>
+
 ## Beanに使用できるデータタイプ
 
 > **重要**: ここに記載のないデータタイプに対して、検索結果をマッピングできない（実行時例外となる）。
@@ -444,3 +586,10 @@ public class CustomH2Dialect extends H2Dialect {
 | `java.time.LocalDate` | |
 | `java.time.LocalDateTime` | |
 | `byte[]` | BLOBなど非常に大きいサイズのデータはヒープ上に展開しないよう注意。大きいバイナリデータはデータベースアクセスを直接使用してStream経由で参照すること。詳細は `database-binary_column` を参照。 |
+
+<details>
+<summary>keywords</summary>
+
+java.lang.String, java.lang.Short, java.lang.Integer, java.lang.Long, java.math.BigDecimal, java.lang.Boolean, java.util.Date, java.sql.Date, java.sql.Timestamp, java.time.LocalDate, java.time.LocalDateTime, byte[], @Temporal, Beanデータタイプ, 検索結果マッピング, UniversalDAO Bean型, バイナリデータ
+
+</details>

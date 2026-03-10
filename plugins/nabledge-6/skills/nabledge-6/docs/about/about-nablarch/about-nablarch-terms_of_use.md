@@ -1,12 +1,28 @@
 # ご利用にあたって
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/terms_of_use/index.html) [2](https://plausible.io) [3](https://plausible.io/data-policy)
+
 ## 情報の利用目的
 
 取得した情報はアクセス解析に利用される。ページのアクセス数等からサイトの利用状況を把握し、サイトの改善に利用する。アクセス情報は匿名で収集され、個人を特定することはできない。
 
+<details>
+<summary>keywords</summary>
+
+アクセス解析, 情報収集, 匿名収集, サイト改善
+
+</details>
+
 ## 情報の送信先
 
 取得した情報は [Plausible Analytics](https://plausible.io) に送信される。
+
+<details>
+<summary>keywords</summary>
+
+Plausible Analytics, アクセス情報送信先, 外部送信
+
+</details>
 
 ## 情報の種類・用途
 
@@ -25,3 +41,10 @@
 [4] IPアドレスを使用して位置情報を取得するが、都市レベルより詳細な追跡は行わない。IPアドレスは破棄されるため、データベース等に保存されることはない。
 
 詳細は [Plausible Analyticsのポリシー](https://plausible.io/data-policy) を参照。
+
+<details>
+<summary>keywords</summary>
+
+ページのURL, リファラー, ブラウザ, OS, デバイス種別, 位置情報, ユーザーエージェント, IPアドレス
+
+</details>

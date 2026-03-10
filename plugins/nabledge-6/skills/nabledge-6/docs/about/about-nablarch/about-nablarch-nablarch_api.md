@@ -1,5 +1,7 @@
 # Nablarch API
 
+**公式ドキュメント**: [Nablarch API](https://nablarch.github.io/docs/LATEST/doc/nablarch_api/index.html)
+
 ## Nablarch API概要
 
 > **補足**: Nablarch 6からは非公開APIも含めた形でAPIドキュメントを提供している（Nablarch 5まではアーキテクトとアプリケーションプログラマ向けの公開APIのみ）。これは、Javaのバージョンが上がってJavadocの生成を拡張する仕組みが変わり、公開APIだけに絞ったJavadoc生成ができなくなったためである。
@@ -12,3 +14,10 @@
 **具体例**:
 - `DaoContext`: クラスに `@Published(tag="architect")` が記載されているためアーキテクト向けの公開API
 - `BasicDaoContext#findAll`: クラスにもメソッドにも `@Published` が記載されていないため非公開API
+
+<details>
+<summary>keywords</summary>
+
+@Published, 公開API判断, Nablarch APIドキュメント, アーキテクト向けAPI, 非公開API, Javadocアノテーション, NablarchTestingApi, DaoContext, BasicDaoContext
+
+</details>

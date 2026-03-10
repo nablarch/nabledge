@@ -1,5 +1,7 @@
 # マルチスレッド実行制御ハンドラ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/standalone/multi_thread_execution_handler.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.MultiStatus.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/ExecutionHandlerCallback.html)
+
 ## 概要
 
 サブスレッドを作成し、ハンドラキュー上の後続ハンドラの処理を各サブスレッド上で並行実行するハンドラ。
@@ -13,9 +15,23 @@
 - サブスレッドで例外及びエラー発生時のコールバック処理
 - サブスレッドでの処理終了後のコールバック処理
 
+<details>
+<summary>keywords</summary>
+
+マルチスレッド実行制御ハンドラ, サブスレッド, 並行実行, MultiStatus, nablarch.fw.Result.MultiStatus, 処理結果, 集約
+
+</details>
+
 ## ハンドラクラス名
 
 **クラス名**: `nablarch.fw.handler.MultiThreadExecutionHandler`
+
+<details>
+<summary>keywords</summary>
+
+MultiThreadExecutionHandler, nablarch.fw.handler.MultiThreadExecutionHandler, ハンドラクラス名
+
+</details>
 
 ## モジュール一覧
 
@@ -27,9 +43,23 @@
 </dependency>
 ```
 
+<details>
+<summary>keywords</summary>
+
+nablarch-fw-standalone, モジュール一覧, 依存関係
+
+</details>
+
 ## 制約
 
 特に無し
+
+<details>
+<summary>keywords</summary>
+
+制約, マルチスレッド実行制御ハンドラ, スタンドアロン
+
+</details>
 
 ## スレッド数を指定する
 
@@ -43,6 +73,13 @@
 ```
 
 > **重要**: 本ハンドラ以降の処理を複数スレッドで実行する場合、後続のハンドラやバッチアクションはスレッドセーフな実装が必要。スレッドセーフでない処理を複数スレッドで実行すると、予期せぬ例外やデータ不整合が発生する。
+
+<details>
+<summary>keywords</summary>
+
+concurrentNumber, スレッド数, 並列実行, スレッドセーフ, 多重実行
+
+</details>
 
 ## スレッド起動前後で任意の処理を実行したい
 
@@ -88,11 +125,25 @@ public class SampleHandler implements Handler<Object, Result>, ExecutionHandlerC
 }
 ```
 
+<details>
+<summary>keywords</summary>
+
+ExecutionHandlerCallback, nablarch.fw.handler.ExecutionHandlerCallback, preExecution, errorInExecution, postExecution, コールバック処理, サブスレッド起動前後, トランザクション確定
+
+</details>
+
 ## データベース接続に関する設定について
 
 - 親スレッド側でDBアクセスが必要な場合: 本ハンドラより前に `:ref:database_connection_management_handler` の設定が必要
 - サブスレッド側でDBアクセスが必要な場合: 本ハンドラより後のサブスレッドで実行されるハンドラ構成に `:ref:database_connection_management_handler` の設定が必要（トランザクション制御ハンドラも同様）
 - 親スレッド・サブスレッドの両方でDBアクセスする場合、最低2つのDBコネクションが必要。サブスレッドが複数の場合はスレッド数分が追加で必要（例: サブスレッド10の場合、合計11コネクション）
+
+<details>
+<summary>keywords</summary>
+
+database_connection_management_handler, データベース接続設定, DBコネクション数, 親スレッド, サブスレッド
+
+</details>
 
 ## サブスレッドでの例外発生時の振る舞い
 
@@ -106,3 +157,10 @@ public class SampleHandler implements Handler<Object, Result>, ExecutionHandlerC
 4. 各サブスレッドはデータリーダがクローズされているため、実行中の処理が終わったタイミングで正常終了する
 
 > **重要**: `InterruptedException` を捕捉している場合は、割り込み要求により安全に処理できないことを示しているため、例外を送出する等で処理を異常終了させること。
+
+<details>
+<summary>keywords</summary>
+
+ThreadPoolExecutor, InterruptedException, サブスレッド例外, shutdownNow, ロールバック, 割り込み処理
+
+</details>

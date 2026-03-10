@@ -1,5 +1,7 @@
 # リクエスト単体テスト（メッセージ受信処理）
 
+**公式ドキュメント**: [リクエスト単体テスト（メッセージ受信処理）](https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/06_TestFWGuide/RequestUnitTest_real.html)
+
 ## 全体像
 
 リクエスト単体テスト（メッセージ受信処理）では、要求電文1件を受信したときの動作を擬似的に再現し、テストを行う。
@@ -19,9 +21,23 @@
 | MQSupport | 電文作成などメッセージングのテストに必要な機能を提供 | — |
 | TestDataConvertor | Excelから読み込んだテストデータを編集するためのインタフェース。データ種別ごとにアーキテクトが実装する | — |
 
+<details>
+<summary>keywords</summary>
+
+StandaloneTestSupportTemplate, MessagingRequestTestSupport, MessagingReceiveTestSupport, TestShot, MainForRequestTesting, DbAccessTestSupport, MQSupport, TestDataConvertor, メッセージ受信処理テスト, リクエスト単体テスト, クラス構造
+
+</details>
+
 ## StandaloneTestSupportTemplate
 
 バッチやメッセージング処理などコンテナ外で動作する処理のテスト実行環境を提供する。テストデータを読み取り、全TestShotを実行する。
+
+<details>
+<summary>keywords</summary>
+
+StandaloneTestSupportTemplate, TestShot, テスト実行環境, バッチテスト, メッセージングテスト, コンテナ外処理
+
+</details>
 
 ## TestShot
 
@@ -41,6 +57,13 @@
 
 入力データ準備や結果確認ロジックはバッチや各種メッセージング処理ごとに異なるため、方式に応じたカスタマイズが可能。
 
+<details>
+<summary>keywords</summary>
+
+TestShot, テストショット, データベースセットアップ, ステータスコード確認, ログ出力確認, 準備処理, 結果確認
+
+</details>
+
 ## MessagingRequestTestSupport
 
 同期応答メッセージ受信処理テスト用のスーパクラス。テストクラスはこのクラスを継承して作成する。
@@ -51,6 +74,13 @@ TestShotの準備処理・結果確認に加えて以下の機能を追加提供
 
 > **補足**: 入力データをキューにPUTする際、main側のコンポーネント設定ファイルを読み込む。`nablarch.fw.messaging.FwHeaderDefinition`実装クラスは`fwHeaderDefinition`という名前で登録されていなければならない。異なる名称を使用する場合は`getFwHeaderDefinitionName()`をオーバライドしてコンポーネント名を変更できる。
 
+<details>
+<summary>keywords</summary>
+
+MessagingRequestTestSupport, FwHeaderDefinition, fwHeaderDefinition, getFwHeaderDefinitionName, 同期応答メッセージ, 要求電文, 応答電文
+
+</details>
+
 ## MessagingReceiveTestSupport
 
 応答不要メッセージ処理テスト用のスーパクラス。テストクラスはこのクラスを継承して作成する。
@@ -58,17 +88,38 @@ TestShotの準備処理・結果確認に加えて以下の機能を追加提供
 TestShotの準備処理・結果確認に加えて以下の機能を追加提供する:
 - 準備処理: 要求電文の作成
 
+<details>
+<summary>keywords</summary>
+
+MessagingReceiveTestSupport, 応答不要メッセージ, 要求電文作成, メッセージ受信テスト
+
+</details>
+
 ## MainForRequestTesting
 
 リクエスト単体テスト用のメインクラス。本番用メインクラスとの主な差異:
 - テスト用のコンポーネント設定ファイルからシステムリポジトリを初期化する
 - 常駐化機能を無効化する
 
+<details>
+<summary>keywords</summary>
+
+MainForRequestTesting, テスト用メインクラス, 常駐化無効化, コンポーネント設定ファイル
+
+</details>
+
 ## MQSupport
 
 メッセージに関する操作を提供するクラス。主な機能:
 - テストデータから要求電文を作成し、受信キューにPUTする
 - 応答電文を送信キューからGETし、テストデータの期待値と内容を比較する
+
+<details>
+<summary>keywords</summary>
+
+MQSupport, 要求電文作成, 受信キュー, 応答電文, 送信キュー, メッセージングテスト
+
+</details>
 
 ## TestDataConvertor
 
@@ -82,6 +133,20 @@ Excelから読み込んだテストデータを編集するためのインタフ
 
 実装クラスの登録: テスト用のコンポーネント設定ファイルに`TestDataConverter_<データ種別>`というキー名で登録する必要がある。
 
+<details>
+<summary>keywords</summary>
+
+TestDataConvertor, テストデータ編集, レイアウト定義, TestDataConverter_データ種別, Excelテストデータ
+
+</details>
+
 ## メッセージ
 
 > **補足**: パディングおよびバイナリデータの扱いは:ref:`about_fixed_length_file`と同様。
+
+<details>
+<summary>keywords</summary>
+
+パディング, バイナリデータ, 固定長ファイル, about_fixed_length_file, メッセージテストデータ
+
+</details>

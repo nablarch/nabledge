@@ -1,5 +1,7 @@
 # データを導出するバッチの作成(Chunkステップ)
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/getting_started/chunk/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/batch/api/chunk/ItemReader.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/batch/api/chunk/AbstractItemReader.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/batch/api/chunk/ItemProcessor.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/batch/api/chunk/ItemWriter.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/inject/Named.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/enterprise/context/Dependent.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html)
+
 ## 動作確認手順
 
 賞与計算バッチの動作確認手順:
@@ -30,11 +32,25 @@
    SELECT * FROM BONUS;
    ```
 
+<details>
+<summary>keywords</summary>
+
+動作確認, TRUNCATE TABLE BONUS, 賞与計算バッチ実行, bonus-calculate, mvn exec:java, SELECT * FROM BONUS, H2コンソール, 動作確認手順
+
+</details>
+
 ## バッチ処理の構成
 
 バッチ処理は、JSR352で規定されたインターフェースの実装に加えて、トランザクション制御などの共通的な処理を提供するリスナーによって構成する。
 
 リスナーの詳細は:ref:`バッチアプリケーションで使用するリスナー<jsr352-listener>`および:ref:`リスナーの指定方法<jsr352-listener>`を参照。
+
+<details>
+<summary>keywords</summary>
+
+リスナー, トランザクション制御, JSR352, バッチ処理構成, jsr352-listener, バッチアプリケーション リスナー, nablarchJobListenerExecutor, nablarchStepListenerExecutor
+
+</details>
 
 ## 入力データソースからデータを読み込む
 
@@ -110,6 +126,13 @@ FROM EMPLOYEE
 INNER JOIN GRADE ON EMPLOYEE.GRADE_CODE = GRADE.GRADE_CODE
 ```
 
+<details>
+<summary>keywords</summary>
+
+ItemReader, AbstractItemReader, ItemProcessor, DeferredEntityList, UniversalDao, @Named, @Dependent, Chunkステップ データ読み込み, 遅延ロード, ItemReader実装, open, readItem, close, EmployeeSearchReader, EmployeeForm, findAllBySqlFile
+
+</details>
+
 ## 業務ロジックを実行する
 
 **クラス**: `ItemProcessor`を実装し`processItem`を実装する。
@@ -140,6 +163,13 @@ public class BonusCalculateProcessor implements ItemProcessor {
 }
 ```
 
+<details>
+<summary>keywords</summary>
+
+ItemProcessor, BonusCalculateProcessor, @Named, @Dependent, 業務ロジック実装, Chunkステップ 業務処理, processItem, writeItems, Bonus, calculateBonus, EmployeeForm
+
+</details>
+
 ## 永続化処理を行う
 
 **クラス**: `AbstractItemWriter`（`ItemWriter`）を継承し`writeItems`を実装する。
@@ -158,6 +188,13 @@ public class BonusWriter extends AbstractItemWriter {
     }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+ItemWriter, AbstractItemWriter, UniversalDao, batchInsert, トランザクションコミット, 永続化処理, Chunkステップ 書き込み, writeItems, BonusWriter, @Dependent, @Named
+
+</details>
 
 ## JOB設定ファイルを作成する
 
@@ -184,3 +221,10 @@ public class BonusWriter extends AbstractItemWriter {
   </step>
 </job>
 ```
+
+<details>
+<summary>keywords</summary>
+
+JOB定義ファイル, item-count, chunk要素, nablarchJobListenerExecutor, nablarchStepListenerExecutor, nablarchItemWriteListenerExecutor, JOB設定, batch-jobs, META-INF, bonus-calculate
+
+</details>

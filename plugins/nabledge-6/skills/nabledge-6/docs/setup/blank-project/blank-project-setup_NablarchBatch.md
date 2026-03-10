@@ -1,11 +1,20 @@
 # Nablarchバッチプロジェクトの初期セットアップ
 
+**公式ドキュメント**: [Nablarchバッチプロジェクトの初期セットアップ](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_NablarchBatch.html)
+
 ## Nablarchバッチプロジェクトの初期セットアップ
 
 Nablarchバッチプロジェクトの初期セットアップでは以下を行う。
 
 - Nablarchバッチプロジェクトの生成
 - Nablarchバッチプロジェクトの動作確認
+
+<details>
+<summary>keywords</summary>
+
+バッチプロジェクト初期セットアップ, プロジェクト生成, 動作確認
+
+</details>
 
 ## 生成するプロジェクトの概要
 
@@ -21,6 +30,13 @@ Nablarchバッチプロジェクトの初期セットアップでは以下を行
 メール送信バッチは:ref:`常駐バッチ<nablarch_batch-resident_batch>`として動作し、SMTPサーバにメールを送信する。コンポーネント設定ファイルのサンプルは`src/main/resources/mail-sender-boot.xml`にある。初期環境構築時には不要だが、使用時は:ref:`メール送信<mail>`の解説を参照すること。
 
 他プロジェクトとの関係・ディレクトリ構成は[../MavenModuleStructures/index](blank-project-MavenModuleStructures.md)を参照。
+
+<details>
+<summary>keywords</summary>
+
+Mavenプロジェクト, H2 Database Engine, メール送信バッチ, 常駐バッチ, mail-sender-boot.xml
+
+</details>
 
 ## ブランクプロジェクト作成
 
@@ -48,6 +64,13 @@ mvn archetype:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArti
 > **重要**: groupIdおよびpackageはJavaのパッケージ名にマッピングされるため、英小文字・数字・ドットのみ使用し、ハイフンは使用しないこと。
 
 プロジェクト情報の入力が終わると、`Y: :`と表示される。入力した内容をもとにひな形を生成する場合には「Y」を入力する。プロジェクト情報の入力をやり直したい場合には「N」を入力する。コマンドが正常終了した場合、ブランクプロジェクトがカレントディレクトリ配下に作成される。
+
+<details>
+<summary>keywords</summary>
+
+ブランクプロジェクト作成, Maven Archetype, nablarch-batch-archetype, mvn archetype:generate, groupId, archetypeVersion
+
+</details>
 
 ## 疎通確認(都度起動バッチ)
 
@@ -111,6 +134,13 @@ Thread Result:[200 Success] The request has succeeded.
 2020-04-28 08:56:23.413 -INFO- nablarch.fw.launcher.Main [...] @@@@ END @@@@ exit code = [0] execute time(ms) = [559]
 ```
 
+<details>
+<summary>keywords</summary>
+
+都度起動バッチ, 疎通確認, SampleBatchActionRequestTest, SampleAction, SampleBatch, batch-boot.xml, mvn test, MultiThreadExecutionHandler, BasicCommitLogger
+
+</details>
+
 ## 疎通確認(テーブルをキューとして使ったメッセージング)
 
 生成プロジェクトに含まれるアプリケーション:
@@ -147,9 +177,23 @@ mvn exec:java -Dexec.mainClass=nablarch.fw.launcher.Main ^
 
 一端終了後に再起動する場合は[../firstStep_appendix/ResiBatchReboot](blank-project-ResiBatchReboot.md)を参照。
 
+<details>
+<summary>keywords</summary>
+
+テーブルをキューとして使ったメッセージング, SampleResiAction, SampleResiBatch, resident-batch-boot.xml, BATCH_REQUEST, PROCESS_HALT_FLG, 常駐バッチ, DatabaseTableQueueReader
+
+</details>
+
 ## 疎通確認になぜか失敗する場合
 
 原因は分からないが疎通確認に失敗する場合、どこかで手順を誤っている可能性がある。原因が分からない場合は、ブランクプロジェクト作成（:ref:`firstStepGenerateBatchBlankProject`）からやり直してみること。
+
+<details>
+<summary>keywords</summary>
+
+疎通確認失敗, 手順やり直し, トラブルシューティング
+
+</details>
 
 ## データベースに関する設定を行う
 
@@ -157,6 +201,20 @@ mvn exec:java -Dexec.mainClass=nablarch.fw.launcher.Main ^
 
 ER図からのDDL生成・実行、Entityクラスの自動生成を行う場合はgsp-dba-maven-pluginの初期設定が必要。詳細は:ref:`gsp-maven-plugin`を参照。
 
+<details>
+<summary>keywords</summary>
+
+データベース設定, H2 Database Engine, RDBMS変更, gsp-dba-maven-plugin, DDL生成
+
+</details>
+
 ## 補足
 
 H2のデータ確認方法やブランクプロジェクトに組み込まれているツールについては[../firstStep_appendix/firststep_complement](blank-project-firststep_complement.md)を参照。
+
+<details>
+<summary>keywords</summary>
+
+H2データ確認, ブランクプロジェクトツール, firststep_complement
+
+</details>

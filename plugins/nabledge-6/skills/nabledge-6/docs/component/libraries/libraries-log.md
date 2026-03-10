@@ -1,5 +1,7 @@
 # ログ出力
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/log.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/Logger.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/LoggerFactory.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/BasicLogger.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/BasicLoggerFactory.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/FileLogWriter.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/SynchronousFileLogWriter.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/StandardOutputLogWriter.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/LogPublisher.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/BasicLogFormatter.html) [11](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/DateRotatePolicy.html) [12](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/FileSizeRotatePolicy.html) [13](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/LoggerManager.html) [14](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/LogLevel.html) [15](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/util/FileUtil.html) [16](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/LogFormatter.html) [17](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/ThreadContext.html) [18](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/RotatePolicy.html) [19](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/LogWriter.html) [20](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/LogWriterSupport.html) [21](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/LogLevelLabelProvider.html) [22](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/LogItem.html) [23](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/JsonLogFormatter.html) [24](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/FailureJsonLogFormatter.html) [25](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/statement/SqlJsonLogFormatter.html) [26](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/PerformanceJsonLogFormatter.html) [27](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/HttpAccessJsonLogFormatter.html) [28](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsAccessJsonLogFormatter.html) [29](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/logging/MessagingJsonLogFormatter.html) [30](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/ApplicationSettingJsonLogFormatter.html) [31](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/ApplicationSettingLogFormatter.html) [32](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/launcher/logging/LauncherJsonLogFormatter.html) [33](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/launcher/logging/LauncherLogFormatter.html) [34](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/CommitLogger.html) [35](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/BasicCommitLogger.html) [36](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/JsonCommitLogger.html) [37](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/LogContext.html) [38](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/LogListener.html)
+
 ## 機能概要
 
 ログ出力は3コンポーネント（LogWriter・LogFormatter・Logger/LoggerFactory）で構成され、それぞれの実装を差し替えられる。オープンソースのログ出力ライブラリを使用したい場合は `Logger` / `LoggerFactory` を差し替える。既存ロギングフレームワーク向けの専用アダプタについては :ref:`log_adaptor` を参照。
@@ -37,6 +39,13 @@ RotatePolicy:
 | :ref:`メッセージングログ <messaging_log>` | メッセージング処理のメッセージ送受信状況を出力する。 |
 
 > **補足**: 本フレームワークでは、:ref:`障害通知ログ <failure_log>` と :ref:`障害解析ログ <failure_log>` を合わせて**障害ログ**と呼ぶ。
+
+<details>
+<summary>keywords</summary>
+
+BasicLogger, BasicLoggerFactory, FileLogWriter, SynchronousFileLogWriter, StandardOutputLogWriter, LogPublisher, BasicLogFormatter, DateRotatePolicy, FileSizeRotatePolicy, LogWriter, LogFormatter, Logger, LoggerFactory, ログ出力機能, LogWriter差し替え, LogFormatter差し替え, Logger差し替え, ログの種類, failure_log, sql_log, performance_log, http_access_log, jaxrs_access_log, messaging_log, 障害ログ, ブランクプロジェクト, アーキタイプ
+
+</details>
 
 ## モジュール一覧
 
@@ -76,6 +85,13 @@ RotatePolicy:
 </dependency>
 ```
 
+<details>
+<summary>keywords</summary>
+
+nablarch-core, nablarch-core-applog, nablarch-core-jdbc, nablarch-fw-web, nablarch-fw-jaxrs, nablarch-fw-messaging, Maven依存関係, モジュール設定
+
+</details>
+
 ## ログを出力する
 
 ログ出力には `Logger` を使用し、`LoggerManager` から取得する。ロガー名には文字列またはクラスが指定できる。クラスが指定された場合はFQCNがロガー名となる。
@@ -96,6 +112,13 @@ if (LOGGER.isDebugEnabled()) {
 > **重要**: 常にログを出力することになっているレベルは、ソースコードの可読性が落ちるため事前チェックをしなくてよい。例えば本番運用時の出力レベルがINFOの場合、FATALからINFOまでは事前チェック不要。
 
 > **補足**: SQLログや監視ログなど特定用途向けのログ出力では、その用途を表す名前（SQL、MONITORなど）をロガー名に指定し、それ以外はクラスのFQCNを指定する。
+
+<details>
+<summary>keywords</summary>
+
+Logger, LoggerManager, LoggerManager.get, isDebugEnabled, logDebug, ログ出力, ロガー取得, ログレベル事前チェック
+
+</details>
 
 ## ログ出力の設定
 
@@ -186,6 +209,13 @@ loggers.validation.level=DEBUG
 loggers.validation.writerNames=stdout
 ```
 
+<details>
+<summary>keywords</summary>
+
+log.properties, nablarch.log.filePath, loggerFactory.className, writerNames, availableLoggersNamesOrder, nameRegex, loggers, BasicLoggerFactory, LogLevel, FileUtil, ログ設定, プロパティファイル, LogWriter設定, ロガー設定, FileLogWriter, StandardOutputLogWriter
+
+</details>
+
 ## ログ出力の設定を上書く
 
 システムプロパティを使用して、プロパティファイルと同じキー名で値を指定することにより設定を上書きできる。共通プロパティファイルを用意しておき、プロセス毎にログ出力設定を変更できる。
@@ -195,6 +225,13 @@ loggers.validation.writerNames=stdout
 ```bash
 java -Dloggers.root.level=INFO ...
 ```
+
+<details>
+<summary>keywords</summary>
+
+システムプロパティ, ログ設定上書き, プロセス毎設定変更, loggers.root.level
+
+</details>
 
 ## ログのフォーマットを指定する
 
@@ -238,6 +275,13 @@ ID体系:
 
 > **補足**: `BasicLogFormatter` では `\n` と `\t` という文字列は出力できない。
 
+<details>
+<summary>keywords</summary>
+
+BasicLogFormatter, LogFormatter, ThreadContext, 起動プロセス, 処理方式, 実行時ID, thread_context_handler, nablarch.bootProcess, nablarch.processingSystem, プレースホルダ, datePattern, ログフォーマット
+
+</details>
+
 ## 各種ログの設定
 
 各種ログの出力機能（:ref:`failure_log-setting`、:ref:`sql_log-setting` など）を使用するには、:ref:`log-basic_setting` に加えて各種ログの設定が必要。設定はプロパティファイルに記述する。
@@ -255,6 +299,13 @@ java -Dnablarch.appLog.filePath=file:/var/log/app/app-log.properties ...
 - :ref:`http_access_log-setting`
 - :ref:`jaxrs_access_log-setting`
 - :ref:`messaging_log-setting`
+
+<details>
+<summary>keywords</summary>
+
+app-log.properties, nablarch.appLog.filePath, FileUtil, 各種ログ設定, failure_log, sql_log, performance_log, http_access_log, jaxrs_access_log, messaging_log
+
+</details>
 
 ## ログファイルのローテーションを行う
 
@@ -277,9 +328,23 @@ writer.sample.rotatePolicy=nablarch.core.log.basic.DateRotatePolicy
 writer.sample.rotateTime=12:00
 ```
 
+<details>
+<summary>keywords</summary>
+
+FileSizeRotatePolicy, DateRotatePolicy, RotatePolicy, FileLogWriter, ログローテーション, rotatePolicy, rotateTime
+
+</details>
+
 ## LogWriterを追加する
 
 新しいLogWriterを追加する場合は `LogWriter` インタフェースを実装したクラスを作成する。`LogFormatter` を使用するLogWriterを作成する場合は、共通処理を提供する `LogWriterSupport` を継承して作成する。
+
+<details>
+<summary>keywords</summary>
+
+LogWriter, LogWriterSupport, LogFormatter, LogWriter拡張, LogWriter追加
+
+</details>
 
 ## LogFormatterを追加する
 
@@ -291,6 +356,13 @@ writer.sample.rotateTime=12:00
 public void logInfo(String message, Object... options)
 public void logInfo(String message, Throwable cause, Object... options)
 ```
+
+<details>
+<summary>keywords</summary>
+
+LogFormatter, LogLevelLabelProvider, Logger, LogFormatter拡張, LogFormatter追加, options引数, 可変長引数, logInfo
+
+</details>
 
 ## ログの出力項目（プレースホルダ）を追加する
 
@@ -329,6 +401,13 @@ public class CustomLogFormatter extends BasicLogFormatter {
 }
 ```
 
+<details>
+<summary>keywords</summary>
+
+BasicLogFormatter, LogItem, ObjectSettings, LogContext, プレースホルダ追加, getLogItems, CustomBootProcessItem, CustomLogFormatter
+
+</details>
+
 ## ログの初期化メッセージを出力しないようにする
 
 初期化メッセージが不要な場合は、提供するWriterを元に初期化メッセージを出力しないWriterを作成して対応する。:ref:`log_adaptor` を使用した場合は初期化メッセージが出力されないため本対応は不要。
@@ -360,6 +439,13 @@ public boolean needsToWrite(final LogContext context) {
 writerNames=sample
 writer.sample.className = sample.CustomFileLogWriter
 ```
+
+<details>
+<summary>keywords</summary>
+
+FileLogWriter, LogWriterSupport, needsToWrite, 初期化メッセージ抑制, suppressionWriting, log_adaptor, 初期化メッセージ, StringUtil, initializeWriter
+
+</details>
 
 ## LogWriterでのJsonLogFormatter設定
 
@@ -430,6 +516,13 @@ LOGGER.logInfo("addition fields", structuredArgs);
 {"date":"2021-02-04 12:34:56.789","logLevel":"INFO","message":"addition fields","key1":"value1","key2":123,"key3":true,"key5":"2021-02-04 12:34:56.789"}
 ```
 
+<details>
+<summary>keywords</summary>
+
+JsonLogFormatter, BasicLogFormatter, LoggerManager, targets, datePattern, ignoreNullValueMember, payload, JSON形式ログ出力, 構造化ログ, JsonLogFormatter設定, payload追加, writer.appLog.formatter.className, writer.appLog.formatter.targets, writer.appLog.formatter.datePattern
+
+</details>
+
 ## 各種ログのJSON版フォーマッタ
 
 各種ログのフォーマッタをJSON用に差し替えることで各種ログもJSON形式で出力できる。それぞれのフォーマッタの具体的な設定方法は各ログのリンク先を参照のこと。
@@ -442,6 +535,13 @@ LOGGER.logInfo("addition fields", structuredArgs);
 | :ref:`HTTPアクセスログ <http_access_log-json_setting>` | `HttpAccessJsonLogFormatter` |
 | :ref:`HTTPアクセスログ（RESTfulウェブサービス用） <jaxrs_access_log-json_setting>` | `JaxRsAccessJsonLogFormatter` |
 | :ref:`メッセージングログ <messaging_log-json_setting>` | `MessagingJsonLogFormatter` |
+
+<details>
+<summary>keywords</summary>
+
+FailureJsonLogFormatter, SqlJsonLogFormatter, PerformanceJsonLogFormatter, HttpAccessJsonLogFormatter, JaxRsAccessJsonLogFormatter, MessagingJsonLogFormatter, 各種ログJSON, フォーマッタ差し替え, 障害ログ, SQLログ, パフォーマンスログ, HTTPアクセスログ, メッセージングログ
+
+</details>
 
 ## NablarchバッチのJSON出力設定
 
@@ -499,6 +599,13 @@ launcherLogFormatter.endLogMsgLabel=BATCH END
 </component>
 ```
 
+<details>
+<summary>keywords</summary>
+
+ApplicationSettingJsonLogFormatter, ApplicationSettingLogFormatter, LauncherJsonLogFormatter, LauncherLogFormatter, CommitLogger, BasicCommitLogger, JsonCommitLogger, structuredMessagePrefix, applicationSettingLogFormatter.className, applicationSettingLogFormatter.appSettingTargets, applicationSettingLogFormatter.appSettingWithDateTargets, applicationSettingLogFormatter.systemSettingItems, launcherLogFormatter.className, launcherLogFormatter.startTargets, launcherLogFormatter.endTargets, launcherLogFormatter.startLogMsgLabel, launcherLogFormatter.endLogMsgLabel, バッチJSON設定, commitLogger
+
+</details>
+
 ## SynchronousFileLogWriterを使用するにあたっての注意事項
 
 > **重要**: `SynchronousFileLogWriter` は複数プロセスからの書き込み用に作成されたものだが、:ref:`障害通知ログ <failure_log>` のように出力頻度が低いログ出力にのみ使用すること。頻繁にログを出力する場面で使用するとロック取得待ちによる性能劣化や競合によるログの消失が発生する可能性がある。アプリケーションログやアクセスログのように出力頻度の高いログに使用してはいけない。
@@ -546,6 +653,13 @@ writer.monitorLog.failureCodeInterruptLockWait=MSG00104
 ```
 
 > **重要**: `maxFileSize`プロパティを指定するとログのローテーションが発生し、ログが出力できなくなるので指定しないこと。
+
+<details>
+<summary>keywords</summary>
+
+SynchronousFileLogWriter, nablarch.core.log.basic.SynchronousFileLogWriter, failureCodeCreateLockFile, failureCodeReleaseLockFile, failureCodeForceDeleteLockFile, failureCodeInterruptLockWait, lockFilePath, lockRetryInterval, lockWaitTime, outputBufferSize, 複数プロセス書き込み, ロックファイル排他制御, 障害通知ログ, ログ競合, BasicLogFormatter, maxFileSize, filePath, encoding, level, writerNames
+
+</details>
 
 ## LogPublisherの使い方
 
@@ -596,6 +710,13 @@ LogPublisher.addListener(listener);
 
 登録した `LogListener` は、`removeListener(LogListener)` または `removeAllListeners()` で削除できる。
 
+<details>
+<summary>keywords</summary>
+
+LogPublisher, LogListener, LogContext, nablarch.core.log.basic.LogPublisher, nablarch.core.log.basic.LogListener, nablarch.core.log.basic.LogContext, addListener, removeListener, removeAllListeners, ログイベント連携, ログリスナー登録, onWritten
+
+</details>
+
 ## ログレベルの定義
 
 ログレベルは6段階。FATALからTRACEに向かって順にレベルが低くなる。設定で指定されたレベル以上のログをすべて出力する（例: WARNレベル指定時はFATAL・ERROR・WARNのみ出力）。
@@ -613,6 +734,13 @@ LogPublisher.addListener(listener);
 
 > **補足**: フレームワークが出力するログについては、:ref:`log-fw_log_policy` を参照すること。
 
+<details>
+<summary>keywords</summary>
+
+FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ログレベル定義, ログ出力制御
+
+</details>
+
 ## フレームワークのログ出力方針
 
 | ログレベル | 出力方針 |
@@ -622,6 +750,13 @@ LogPublisher.addListener(listener);
 | INFO | アプリケーションの実行状況に関連するエラーを検知した場合にINFOレベルで出力する。例: URLパラメータの改竄エラー、認可チェックエラー。 |
 | DEBUG | アプリケーション開発時に使用するデバッグ情報を出力する。DEBUGレベルを設定することで開発に必要な情報が出力されるよう考慮されている。 |
 | TRACE | フレームワーク開発時に使用するデバッグ情報を出力する。アプリケーション開発での使用は想定していない。 |
+
+<details>
+<summary>keywords</summary>
+
+フレームワークログ出力方針, 障害ログ, FATAL, ERROR, WARN, INFO, DEBUG, TRACE
+
+</details>
 
 ## log4jとの機能比較
 
@@ -651,3 +786,10 @@ LogPublisher.addListener(listener);
 
 [1] Nablarchのログ出力はファイルの世代管理を提供していないので、一部提供ありとしている。
 [2] :ref:`log_adaptor` を使用する。または、プロジェクトで作成する。作成方法は :ref:`log-add_log_writer` を参照。
+
+<details>
+<summary>keywords</summary>
+
+log4j, 機能比較, ログローテーション, log_adaptor, log-add_log_writer, ファイルサイズローテーション, 非同期ログ出力
+
+</details>

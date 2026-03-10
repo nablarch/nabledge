@@ -1,14 +1,30 @@
 # スレッドコンテキスト変数管理ハンドラ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/common/thread_context_handler.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/threadcontext/ThreadContextHandler.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/threadcontext/ThreadContextAttribute.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/threadcontext/RequestIdAttribute.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/threadcontext/InternalRequestIdAttribute.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/threadcontext/UserIdAttribute.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/UserIdAttributeInSessionStore.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/threadcontext/LanguageAttribute.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/HttpLanguageAttribute.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/LanguageAttributeInHttpCookie.html) [11](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/LanguageAttributeInHttpSession.html) [12](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/threadcontext/TimeZoneAttribute.html) [13](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/TimeZoneAttributeInHttpCookie.html) [14](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/TimeZoneAttributeInHttpSession.html) [15](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/threadcontext/ExecutionIdAttribute.html) [16](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/ThreadContext.html) [17](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/LanguageAttributeInHttpUtil.html) [18](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/TimeZoneAttributeInHttpUtil.html)
+
 ## 概要
 
 スレッドコンテキストの各属性値について、リクエスト毎に初期化処理を行うハンドラ。
 
 **スレッドコンテキスト**とは、リクエストIDやユーザIDなど、同一の処理スレッド内で共有する値をスレッドローカル領域上に保持するための仕組みである。
 
+<details>
+<summary>keywords</summary>
+
+スレッドコンテキスト変数管理ハンドラ概要, スレッドコンテキストとは, リクエスト毎に初期化, スレッドローカル, リクエストID, ユーザID, 処理スレッド内で共有
+
+</details>
+
 ## ハンドラクラス名
 
 **クラス名**: `nablarch.common.handler.threadcontext.ThreadContextHandler`
+
+<details>
+<summary>keywords</summary>
+
+ThreadContextHandler, nablarch.common.handler.threadcontext.ThreadContextHandler, スレッドコンテキスト変数管理ハンドラ, ハンドラクラス名
+
+</details>
 
 ## モジュール一覧
 
@@ -28,9 +44,23 @@
 </dependency>
 ```
 
+<details>
+<summary>keywords</summary>
+
+nablarch-fw, nablarch-fw-web, Maven依存関係, モジュール設定, 国際化モジュール
+
+</details>
+
 ## 制約
 
 なし
+
+<details>
+<summary>keywords</summary>
+
+制約なし, スレッドコンテキストハンドラ制約
+
+</details>
 
 ## リクエスト毎にスレッドコンテキストの初期化を行う
 
@@ -134,6 +164,13 @@ public class SessionStoreUserIdAttribute extends UserIdAttribute {
 </component>
 ```
 
+<details>
+<summary>keywords</summary>
+
+ThreadContextAttribute, RequestIdAttribute, InternalRequestIdAttribute, UserIdAttribute, UserIdAttributeInSessionStore, LanguageAttribute, HttpLanguageAttribute, LanguageAttributeInHttpCookie, LanguageAttributeInHttpSession, TimeZoneAttribute, TimeZoneAttributeInHttpCookie, TimeZoneAttributeInHttpSession, ExecutionIdAttribute, スレッドコンテキスト初期化, リクエストID設定, ユーザID設定, 言語設定, タイムゾーン設定, セッションキー, anonymousId, sessionKey, getUserIdSession, thread_context_clear_handler, ServiceAvailabilityCheckHandler, SessionUtil
+
+</details>
+
 ## スレッドコンテキストの属性値を設定/取得する
 
 スレッドコンテキストへのアクセスは `ThreadContext` を使用する。
@@ -142,6 +179,13 @@ public class SessionStoreUserIdAttribute extends UserIdAttribute {
 // リクエストIDの取得
 String requestId = ThreadContext.getRequestId();
 ```
+
+<details>
+<summary>keywords</summary>
+
+ThreadContext, getRequestId, スレッドコンテキスト取得, 属性値アクセス, nablarch.core.ThreadContext
+
+</details>
 
 ## ユーザが言語を選択する画面を作る
 
@@ -189,6 +233,13 @@ public class I18nHandler implements HttpRequestHandler {
 }
 ```
 
+<details>
+<summary>keywords</summary>
+
+LanguageAttributeInHttpCookie, LanguageAttributeInHttpSession, LanguageAttributeInHttpUtil, keepLanguage, 言語選択, 国際化, 多言語対応, Cookie言語設定, languageAttribute, user.language
+
+</details>
+
 ## ユーザがタイムゾーンを選択する画面を作る
 
 国際化対応でユーザがタイムゾーンを選択できる機能は、`TimeZoneAttributeInHttpCookie` または `TimeZoneAttributeInHttpSession` と `TimeZoneAttributeInHttpUtil` を組み合わせて実現する。
@@ -234,3 +285,10 @@ public class I18nHandler implements HttpRequestHandler {
     }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+TimeZoneAttributeInHttpCookie, TimeZoneAttributeInHttpSession, TimeZoneAttributeInHttpUtil, keepTimeZone, タイムゾーン選択, 国際化, タイムゾーン切り替え, timeZoneAttribute, user.timeZone
+
+</details>

@@ -1,5 +1,7 @@
 # リクエストディスパッチハンドラ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/common/request_path_java_package_mapping.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Request.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/RequestPathJavaPackageMapping.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/JavaPackageMappingEntry.html)
+
 ## ハンドラクラス名
 
 **クラス**: `nablarch.fw.handler.RequestPathJavaPackageMapping`
@@ -21,6 +23,13 @@
 
 処理: リクエストパスを解析し、対応するアクションの `handle` メソッドを呼び出す。
 
+<details>
+<summary>keywords</summary>
+
+RequestPathJavaPackageMapping, nablarch.fw.handler.RequestPathJavaPackageMapping, リクエストディスパッチ, アクション委譲, リクエストパス解析, メッセージングディスパッチ
+
+</details>
+
 ## モジュール一覧
 
 **モジュール**:
@@ -31,9 +40,23 @@
 </dependency>
 ```
 
+<details>
+<summary>keywords</summary>
+
+nablarch-fw, モジュール依存設定, com.nablarch.framework
+
+</details>
+
 ## 制約
 
 なし
+
+<details>
+<summary>keywords</summary>
+
+制約なし, RequestPathJavaPackageMapping制約
+
+</details>
 
 ## ベースパッケージ、ベースパスの設定
 
@@ -46,11 +69,25 @@
 </component>
 ```
 
+<details>
+<summary>keywords</summary>
+
+basePackage, basePath, ベースパッケージ設定, ベースパス設定, RequestPathJavaPackageMapping設定
+
+</details>
+
 ## 複数パッケージのクラスにディスパッチする
 
 リクエストパスのクラス名指定箇所に、ベースパッケージからの相対パッケージ名を指定することで複数パッケージのクラスへディスパッチできる。
 
 例: :ref:`request_path_java_package_mapping_path_setting` の設定（basePath=`/app/action/`、basePackage=`nablarch.application`）で `nablarch.application.xxx.ExampleBatchAction` へディスパッチする場合、リクエストパスに `/app/action/xxx/ExampleBatchAction` を指定する。
+
+<details>
+<summary>keywords</summary>
+
+複数パッケージディスパッチ, 相対パッケージ指定, リクエストパスサブパッケージ
+
+</details>
 
 ## クラス名のプレフィクス、サフィックスの設定
 
@@ -66,6 +103,13 @@
   <property name="classNameSuffix" value="BatchAction" />
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+classNamePrefix, classNameSuffix, クラス名省略, プレフィクス設定, サフィックス設定
+
+</details>
 
 ## 複雑なパッケージへのディスパッチ
 
@@ -97,6 +141,13 @@
 </component>
 ```
 
+<details>
+<summary>keywords</summary>
+
+JavaPackageMappingEntry, nablarch.fw.handler.JavaPackageMappingEntry, optionalPackageMappingEntries, requestPattern, 複雑なパッケージディスパッチ, パッケージマッピング, リクエストパターン設定
+
+</details>
+
 ## ディスパッチ対象クラスを遅延実行する
 
 デフォルトではディスパッチ先クラスへの委譲は即時実行される。ハンドラキュー上の後続ハンドラ実行後にディスパッチしたい場合は、`immediate` プロパティに `false` を設定する。
@@ -107,3 +158,10 @@
   <property name="immediate"   value="false" />
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+immediate, 遅延実行, ディスパッチタイミング制御, 後続ハンドラ実行後ディスパッチ
+
+</details>

@@ -1,5 +1,7 @@
 # リトライハンドラ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/standalone/retry_handler.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/retry/Retryable.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/RetryHandler.RetryContext.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/retry/CountingRetryContext.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/retry/TimeRetryContext.html)
+
 ## ハンドラクラス名
 
 **クラス名**: `nablarch.fw.handler.RetryHandler`
@@ -12,6 +14,13 @@
 - `リトライ回数による上限設定`
 - `経過時間による上限設定`
 
+<details>
+<summary>keywords</summary>
+
+RetryHandler, nablarch.fw.handler.RetryHandler, Retryable, nablarch.fw.handler.retry.Retryable, RetryContext, nablarch.fw.handler.RetryHandler.RetryContext, CountingRetryContext, TimeRetryContext, リトライ制御, デッドロックリカバリ, デッドロック, 単純リトライ, リカバリ可能なエラー
+
+</details>
+
 ## モジュール一覧
 
 **モジュール**:
@@ -22,9 +31,23 @@
 </dependency>
 ```
 
+<details>
+<summary>keywords</summary>
+
+nablarch-fw-standalone, スタンドアロンモジュール, モジュール依存
+
+</details>
+
 ## 制約
 
 リトライ対象例外を送出するハンドラは、本ハンドラより後ろに設定すること。本ハンドラより手前でリトライ対象の例外を送出しても、単に例外として処理される。
+
+<details>
+<summary>keywords</summary>
+
+ハンドラ配置順序, リトライ対象例外, 設定順序制約, 後続ハンドラ
+
+</details>
 
 ## リトライの上限を設定する
 
@@ -47,3 +70,10 @@
 ```
 
 > **補足**: 上限値は想定する最大の復旧時間プラスアルファに設定すること。例えば、DB切り替えに最大5分かかる場合は7分等を設定する。複数の例外に対するリトライを実現する場合は、最も復旧まで時間を要するものをベースに上限値を設定すること。
+
+<details>
+<summary>keywords</summary>
+
+CountingRetryContext, nablarch.fw.handler.retry.CountingRetryContext, TimeRetryContext, nablarch.fw.handler.retry.TimeRetryContext, CountingRetryContextFactory, nablarch.fw.handler.retry.CountingRetryContextFactory, retryContextFactory, retryCount, retryIntervals, リトライ上限設定, リトライ回数, 経過時間, 復旧時間
+
+</details>

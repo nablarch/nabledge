@@ -1,8 +1,17 @@
 # Nablarchフレームワークが使用するテーブル名の変更手順
 
+**公式ドキュメント**: [Nablarchフレームワークが使用するテーブル名の変更手順](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/setting_guide/CustomizingConfigurations/CustomizeSystemTableName.html)
+
 ## 概要
 
 テーブル名が命名規約にそぐわない場合、またはスキーマ修飾したい場合に変更する。
+
+<details>
+<summary>keywords</summary>
+
+テーブル名変更, 命名規約, スキーマ修飾, テーブル名カスタマイズ, 認可チェック用テーブル
+
+</details>
 
 ## 変更方法
 
@@ -59,3 +68,10 @@ nablarch.ugroupSystemAccountTable.name=T_UGROUP_SYSTEM_ACCOUNT
   </property>
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+nablarch.businessDateTable.tableName, nablarch.codeNameTable.name, nablarch.codePatternTable.name, nablarch.idGeneratorTable.tableName, nablarch.mailAttachedFileTable.tableName, nablarch.mailRecipientTable.tableName, nablarch.mailRequestTable.tableName, nablarch.mailTemplateTable.tableName, nablarch.messageTable.tableName, nablarch.requestTable.name, nablarch.batchRequestTable.name, nablarch.permissionUnitTable.name, nablarch.permissionUnitRequestTable.name, nablarch.systemAccountTable.name, nablarch.systemAccountAuthorityTable.name, nablarch.ugroupTable.name, nablarch.ugroupAuthorityTable.name, nablarch.ugroupSystemAccountTable.name, DbStore, UserSessionSchema, common.properties, セッションストア, テーブル名設定, 認可チェック, コード管理, メール送信, 自動採番, プロセス多重起動防止, ブランクプロジェクト, アーキタイプ, T_テーブル名
+
+</details>

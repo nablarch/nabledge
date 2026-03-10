@@ -1,5 +1,7 @@
 # SLF4Jアダプタ
 
+**公式ドキュメント**: [SLF4Jアダプタ](https://nablarch.github.io/docs/LATEST/doc/application_framework/adaptors/slf4j_adaptor.html)
+
 ## モジュール一覧
 
 **モジュール**:
@@ -17,6 +19,13 @@ SLF4J: Defaulting to no-operation (NOP) logger implementation
 SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
 ```
 
+<details>
+<summary>keywords</summary>
+
+slf4j-nablarch-adaptor, SLF4Jアダプタ, ログ出力集約, SLF4Jバージョン互換性, SLF4J 2.0.0, StaticLoggerBinder
+
+</details>
+
 ## SLF4Jアダプタを使用する
 
 SLF4Jが実行時に必要なクラスを自動で検出するため、依存モジュールに追加するだけで使用可能。
@@ -29,3 +38,10 @@ SLF4Jが実行時に必要なクラスを自動で検出するため、依存モ
   <scope>runtime</scope>
 </dependency>
 ```
+
+<details>
+<summary>keywords</summary>
+
+slf4j-nablarch-adaptor, SLF4Jアダプタ使用方法, 依存モジュール追加, runtime scope, ログ出力設定
+
+</details>

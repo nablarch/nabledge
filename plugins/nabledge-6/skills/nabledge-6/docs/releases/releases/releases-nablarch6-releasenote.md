@@ -1,5 +1,7 @@
 # Nablarch 6 リリースノート
 
+**公式ドキュメント**: [Nablarch 6 リリースノート](https://nablarch.github.io/docs/6/doc/migration/index.html)
+
 ## Nablarch 6 リリースノート（変更内容・モジュールバージョン一覧）
 
 Nablarch 5u23 からの変更点。
@@ -108,3 +110,10 @@ Nablarch 5 から 6 への移行手順: [Nablarch 5から6への移行ガイド]
 | アダプタ | com.nablarch.integration | slf4j-nablarch-adaptor | 2.0.0 |
 | アダプタ | com.nablarch.integration | nablarch-wmq-adaptor | 2.0.0 |
 | 開発ツール | com.nablarch.tool | nablarch-toolbox | 2.0.0 |
+
+<details>
+<summary>keywords</summary>
+
+Jakarta EE 10対応, Java 17, Nablarch 5から6への移行, マイグレーション, モジュールバージョン, ETL基盤削除, 帳票ライブラリ削除, ワークフローライブラリ削除, アダプタ動作未検証, nablarch-testing-jetty12, com.nablarch.framework, com.nablarch.integration, nablarch-single-module-archetype, com.nablarch.configuration, com.nablarch.tool, nablarch-toolbox
+
+</details>

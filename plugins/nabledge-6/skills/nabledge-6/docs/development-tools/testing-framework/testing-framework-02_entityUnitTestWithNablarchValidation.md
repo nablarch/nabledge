@@ -1,5 +1,7 @@
 # Nablarch Validationに対応したForm/Entityのクラス単体テスト
 
+**公式ドキュメント**: [Nablarch Validationに対応したForm/Entityのクラス単体テスト](https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/01_ClassUnitTest/01_entityUnitTest/02_entityUnitTestWithNablarchValidation.html)
+
 ## Form/Entity単体テストの書き方
 
 ## テストデータの作成
@@ -24,11 +26,25 @@
 public class SystemAccountEntityTest extends EntityTestSupport {
 ```
 
+<details>
+<summary>keywords</summary>
+
+nablarch.test.core.db.EntityTestSupport, EntityTestSupport, SystemAccountEntityTest, テストデータExcel作成, Formクラス単体テスト, Entityクラス単体テスト
+
+</details>
+
 ## 文字種と文字列長の単項目精査テストケース
 
 文字種・文字列長に関する単項目精査専用のテスト方法。ケース数が多くなりがちな単項目精査のテストケース作成・メンテナンスを容易にする。
 
 > **補足**: 本テスト方法は、プロパティとして別のFormを保持するForm（`<親Form>.<子Form>.<子フォームのプロパティ名>` 形式でプロパティにアクセスする親Form）に対しては使用できない。その場合、独自に精査処理のテストを実装すること。
+
+<details>
+<summary>keywords</summary>
+
+EntityTestSupport, 文字種単項目精査テスト, 文字列長単項目精査テスト, 別のFormを保持するForm, testValidateCharsetAndLength, 単項目精査テスト方法
+
+</details>
 
 ## テストケース表の作成方法（文字種・文字列長）
 
@@ -61,6 +77,13 @@ messageIdWhenInvalidLength省略時のデフォルト値:
 
 ![テストケース表の例](../../knowledge/development-tools/testing-framework/assets/testing-framework-02_entityUnitTestWithNablarchValidation/entityUnitTest_CharsetAndLengthExample.png)
 
+<details>
+<summary>keywords</summary>
+
+propertyName, allowEmpty, messageIdWhenEmptyInput, messageIdWhenInvalidLength, messageIdWhenNotApplicable, entityUnitTest_EntityTestConfiguration, maxMessageId, fixLengthMessageId, maxAndMinMessageId, underLimitMessageId, 文字種テストケース表
+
+</details>
+
 ## テストメソッドの作成方法（文字種・文字列長）
 
 スーパークラスの以下のメソッドを呼び出す:
@@ -86,6 +109,13 @@ testValidateCharsetAndLength(ENTITY_CLASS, sheetName, id);
 | 文字列長不足 | min-1長の文字列 | — |
 | 文字列長超過 | max+1長の文字列 | — |
 
+<details>
+<summary>keywords</summary>
+
+testValidateCharsetAndLength, EntityTestSupport, 文字種テストメソッド, 文字列長テスト, CharsetAndLength
+
+</details>
+
 ## テストケース表の作成方法（その他の単項目精査）
 
 文字種・文字列長のテストでカバーできない精査（例: 数値の範囲精査）向けのテスト方法。各プロパティについて入力値と期待するメッセージIDのペアを記述することで任意の値で単項目精査のテストができる。
@@ -105,6 +135,13 @@ Excelシートに以下のカラムを用意する:
 
 ![テストケース表の例](../../knowledge/development-tools/testing-framework/assets/testing-framework-02_entityUnitTestWithNablarchValidation/entityUnitTest_singleValidationDataExample.png)
 
+<details>
+<summary>keywords</summary>
+
+testSingleValidation, propertyName, case, input1, messageId, 範囲精査テスト, 単項目精査テストケース表
+
+</details>
+
 ## テストメソッドの作成方法（その他の単項目精査）
 
 スーパークラスの以下のメソッドを呼び出す:
@@ -119,9 +156,23 @@ void testSingleValidation(Class entityClass, String sheetName, String id)
 testSingleValidation(ENTITY_CLASS, sheetName, id);
 ```
 
+<details>
+<summary>keywords</summary>
+
+testSingleValidation, EntityTestSupport, 単項目精査テストメソッド
+
+</details>
+
 ## バリデーションメソッドのテストケース
 
 上記の単項目精査テストでは、エンティティのセッターメソッドに付与されたアノテーションのみが検証され、**アノテーション**: `@ValidateFor` を付与したstaticバリデーションメソッドは実行されない。独自のバリデーションメソッドをエンティティに実装した場合は、別途テストを作成する必要がある。
+
+<details>
+<summary>keywords</summary>
+
+@ValidateFor, ValidateFor, バリデーションメソッドテスト, staticバリデーションメソッド
+
+</details>
 
 ## テストケース表の作成
 
@@ -139,6 +190,13 @@ testSingleValidation(ENTITY_CLASS, sheetName, id);
 入力パラメータ表（ID: `params` 固定）: テストケース表に対応する入力パラメータを1行ずつ記載。:ref:`special_notation_in_cell` の記法で効率的に入力値を作成できる。
 
 ![テストデータ例](../../knowledge/development-tools/testing-framework/assets/testing-framework-02_entityUnitTestWithNablarchValidation/entityUnitTest_validationTestData.png)
+
+<details>
+<summary>keywords</summary>
+
+testShots, params, expectedMessageId, propertyName, テストケース表作成, バリデーションテストデータ, 入力パラメータ表
+
+</details>
 
 ## テストケース、テストデータの作成
 
@@ -175,6 +233,13 @@ testSingleValidation(ENTITY_CLASS, sheetName, id);
 
 ![項目間精査テストケース](../../knowledge/development-tools/testing-framework/assets/testing-framework-02_entityUnitTestWithNablarchValidation/entityUnitTest_RelationalValidation.png)
 
+<details>
+<summary>keywords</summary>
+
+精査対象確認, 項目間精査, nablarch_validation, バリデーション対象プロパティ, 単項目精査, ネストFormプロパティ指定
+
+</details>
+
 ## テストメソッドの作成方法
 
 これまでに作成したテストケース、データを使用するテストメソッドを以下に示す。下記コードの変数内容を変更するだけで、異なるEntityの精査のテストに対応できる。
@@ -199,6 +264,13 @@ public void testValidateForRegisterUser() {
 
 // ～後略～
 ```
+
+<details>
+<summary>keywords</summary>
+
+testValidateAndConvert, testValidateForRegisterUser, ENTITY_CLASS, validateFor, sheetName, テストメソッド作成
+
+</details>
 
 ## コンストラクタに対するテストケース
 
@@ -254,6 +326,13 @@ public void testConstructor() {
 }
 ```
 
+<details>
+<summary>keywords</summary>
+
+testConstructorAndGetter, EntityTestSupport, コンストラクタテスト, getParamMap, getListParamMap, Map<String, Object>コンストラクタ, testConstructorOther, SystemAccountEntityTest
+
+</details>
+
 ## 設定項目一覧
 
 **クラス**: `nablarch.test.core.entity.EntityTestConfiguration`
@@ -270,6 +349,13 @@ public void testConstructor() {
 | characterGenerator | 文字列生成クラス（`nablarch.test.core.util.generator.CharacterGenerator` の実装クラス） |
 
 `characterGenerator` には通常 `nablarch.test.core.util.generator.BasicJapaneseCharacterGenerator` を使用する。設定するメッセージIDはバリデータの設定値と合致させる。
+
+<details>
+<summary>keywords</summary>
+
+EntityTestConfiguration, maxMessageId, maxAndMinMessageId, fixLengthMessageId, underLimitMessageId, emptyInputMessageId, characterGenerator, BasicJapaneseCharacterGenerator, CharacterGenerator
+
+</details>
 
 ## コンポーネント設定ファイルの記述例
 
@@ -305,3 +391,10 @@ public void testConstructor() {
   </property>
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+EntityTestConfiguration, RequiredValidator, LengthValidator, BasicJapaneseCharacterGenerator, コンポーネント設定ファイル記述例
+
+</details>

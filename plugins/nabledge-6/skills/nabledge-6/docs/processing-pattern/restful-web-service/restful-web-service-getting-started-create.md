@@ -1,5 +1,7 @@
 # 登録機能の作成
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/rest/getting_started/create/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/ws/rs/Consumes.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/validation/Valid.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html)
+
 ## プロジェクト情報を登録する
 
 ## 動作確認手順
@@ -86,3 +88,10 @@ public class ProjectAction {
 ```
 
 - `@Path` と `@POST` アノテーションでPOSTリクエスト時にマッピングするアクションメソッドを定義する
+
+<details>
+<summary>keywords</summary>
+
+ProjectForm, ProjectAction, Project, BeanUtil, UniversalDao, HttpResponse, MediaType, Serializable, @Consumes, @Valid, @Required, @Domain, @Path, @POST, JSONリクエスト登録処理, RESTful APIリソース登録, HTTPステータスコード201, フォームからエンティティへの変換
+
+</details>

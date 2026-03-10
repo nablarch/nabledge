@@ -1,5 +1,7 @@
 # データベースを入力とするChunkステップ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/feature_details/database_reader.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/chunk/BaseDatabaseItemReader.html)
+
 ## データベースを入力とするChunkステップ
 
 データベースから処理対象データを抽出する場合、Jakarta Batchが提供するリーダではなく `BaseDatabaseItemReader` を実装すること。
@@ -51,3 +53,10 @@ public class EmployeeSearchReader extends BaseDatabaseItemReader {
   }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+BaseDatabaseItemReader, nablarch.fw.batch.ee.chunk.BaseDatabaseItemReader, DeferredEntityList, UniversalDao, ProgressManager, @Dependent, @Named, @Inject, doOpen, readItem, doClose, EmployeeSearchReader, EmployeeForm, データベース入力Chunk, 遅延ロード, リーダ専用DB接続, Chunkステップ
+
+</details>

@@ -1,5 +1,7 @@
 # Redisヘルスチェッカ(Lettuce)アダプタ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/adaptors/lettuce_adaptor/redishealthchecker_lettuce_adaptor.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/health/HealthChecker.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/health/RedisHealthChecker.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/redisstore/lettuce/LettuceRedisClient.html)
+
 ## Redisのヘルスチェックを行う
 
 **クラス**: `nablarch.integration.health.RedisHealthChecker`, `nablarch.fw.web.handler.health.HealthChecker`
@@ -32,3 +34,10 @@
 ```
 
 LettuceRedisClientの設定については :ref:`redisstore_redis_client_config_client_classes` を参照。
+
+<details>
+<summary>keywords</summary>
+
+RedisHealthChecker, LettuceRedisClient, HealthChecker, HealthCheckEndpointHandler, healthCheckers, client, key, Redisヘルスチェック, ヘルスチェック設定, Lettuceアダプタ
+
+</details>

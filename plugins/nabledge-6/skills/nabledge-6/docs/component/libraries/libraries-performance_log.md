@@ -1,5 +1,7 @@
 # パフォーマンスログの出力
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/log/performance_log.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/PerformanceLogUtil.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/PerformanceLogFormatter.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/PerformanceJsonLogFormatter.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/JsonLogFormatter.html)
+
 ## パフォーマンスログの出力方針
 
 パフォーマンスログはヒープサイズの取得等でパフォーマンスに影響を与える可能性があるため、DEBUGレベルで出力する。
@@ -40,6 +42,13 @@ performanceLogFormatter.format=\n\tpoint = [$point$] result = [$result$]\
                                \n\tend_free_memory = [$endFreeMemory$] end_used_memory = [$endUsedMemory$]
 ```
 
+<details>
+<summary>keywords</summary>
+
+パフォーマンスログ出力方針, DEBUGレベル, PERFORMANCEロガー, log.properties設定, app-log.properties設定, PerformanceLogFormatter, ログレベル設定
+
+</details>
+
 ## パフォーマンスログを出力する
 
 `PerformanceLogUtil` を使用して出力する。処理開始時に `PerformanceLogUtil#start`、終了時に `PerformanceLogUtil#end` を呼び出す。`end` が呼ばれた時点で `start` 取得時の日時とメモリ使用量を合わせて出力する。
@@ -63,6 +72,13 @@ PerformanceLogUtil.end(point, String.valueOf(searchResult.size()));
 ```
 
 > **重要**: `PerformanceLogUtil` は測定対象を :ref:`実行時ID <log-execution_id>` ＋ポイント名で一意に識別する。再帰呼び出しの中で使用すると計測できないため注意すること。
+
+<details>
+<summary>keywords</summary>
+
+PerformanceLogUtil, startメソッド, endメソッド, パフォーマンス計測, 実行時間計測, メモリ使用量, 再帰呼び出し制限, 実行時ID, ポイント名, オプション情報, Object..., varargs
+
+</details>
 
 ## パフォーマンスログの設定
 
@@ -108,6 +124,13 @@ performanceLogFormatter.datePattern=yyyy-MM-dd HH:mm:ss.SSS
 performanceLogFormatter.format=point:$point$ result:$result$ exe_time:$executionTime$ms
 ```
 
+<details>
+<summary>keywords</summary>
+
+PerformanceLogFormatter, performanceLogFormatter.className, performanceLogFormatter.format, performanceLogFormatter.datePattern, performanceLogFormatter.targetPoints, app-log.properties設定, フォーマット設定, プレースホルダ
+
+</details>
+
 ## JSON形式の構造化ログとして出力する
 
 :ref:`log-json_log_setting` 設定でJSON形式出力を有効にした場合、`PerformanceLogFormatter` ではパフォーマンスログの各項目はmessageの値に文字列として出力される。各項目をJSONの値として出力するには `PerformanceJsonLogFormatter` を使用する。設定は :ref:`log-app_log_setting` のプロパティファイルに行う。
@@ -128,3 +151,10 @@ performanceLogFormatter.targetPoints=UserSearchAction#doUSERS00101
 performanceLogFormatter.datePattern=yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
 performanceLogFormatter.targets=point,result,executionTime
 ```
+
+<details>
+<summary>keywords</summary>
+
+PerformanceJsonLogFormatter, JsonLogFormatter, performanceLogFormatter.targets, performanceLogFormatter.structuredMessagePrefix, JSON構造化ログ, performanceLogFormatter.className, performanceLogFormatter.datePattern, performanceLogFormatter.targetPoints
+
+</details>

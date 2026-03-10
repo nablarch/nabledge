@@ -1,5 +1,7 @@
 # 更新機能の作成
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/rest/getting_started/update/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/ws/rs/Consumes.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/validation/Valid.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/ErrorResponseBuilder.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/NoDataException.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/jakarta/persistence/OptimisticLockException.html)
+
 ## プロジェクト情報を更新する
 
 ## 概要
@@ -86,3 +88,10 @@ public class ProjectAction {
         return new HttpResponse(HttpResponse.Status.OK.getStatusCode());
     }
 ```
+
+<details>
+<summary>keywords</summary>
+
+ProjectUpdateForm, ProjectAction, Project, @Required, @Domain, @Consumes, @Valid, @PUT, @Path, BeanUtil, UniversalDao, HttpResponse, ErrorResponseBuilder, NoDataException, OptimisticLockException, PUTリクエスト, REST更新処理, JSONリクエストボディ受信, フォームバリデーション
+
+</details>

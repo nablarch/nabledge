@@ -1,5 +1,7 @@
 # データバインドと汎用データフォーマットの比較表
 
+**公式ドキュメント**: [データバインドと汎用データフォーマットの比較表](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/data_io/functional_comparison.html)
+
 ## データバインドと汎用データフォーマットの機能比較
 
 機能比較（○：提供あり　△：一部提供あり　×：提供なし　－:対象外）
@@ -21,3 +23,10 @@
 [3] XMLデータの入出力は未実装。XMLデータを扱う場合は、:ref:`data_format` やJakarta XML Bindingを使用すること。
 [4] 固定長データのみtrim等のコンバータを提供している。CSVで値を変換したい場合は、出力前及び入力後に変換すること。
 [5] 入力データの寄せ字（文字変換）は、文字変換用のハンドラを作成し対応すること。
+
+<details>
+<summary>keywords</summary>
+
+データバインド, 汎用データフォーマット, 機能比較, CSV入出力, 固定長データ, JSON入出力, XML入出力, データ変換, 寄せ字, data_bind, data_format
+
+</details>

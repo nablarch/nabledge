@@ -1,5 +1,7 @@
 # リリース情報
 
+**公式ドキュメント**: [リリース情報](https://nablarch.github.io/docs/LATEST/doc/releases/index.html)
+
 ## リリース一覧
 
 [全リリースノート一括ダウンロード](../../knowledge/about/release-notes/assets/release-notes-releases/nablarch-6-OSS-all-releasenote.zip)
@@ -14,3 +16,10 @@
 > **重要**: [1] 先行リリースバージョン（6u1および6）は新たな使用を避けること
 
 Nablarch 5のリリース情報: [こちら](https://nablarch.github.io/docs/5-LATEST/doc/releases/index.html)
+
+<details>
+<summary>keywords</summary>
+
+リリース情報, バージョン一覧, リリースノート, Nablarch 6, 6u3, 6u2, 6u1, 6, 先行リリース, ドキュメント, 全リリースノート一括ダウンロード
+
+</details>

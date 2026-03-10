@@ -1,5 +1,7 @@
 # Nablarchセキュリティ対策チェックリスト
 
+**公式ドキュメント**: [1](https://www.ipa.go.jp/security/vuln/websecurity.html) [2](https://nablarch.github.io/docs/LATEST/doc/development_tools/toolbox/JspStaticAnalysis/01_JspStaticAnalysis.html)
+
 ## Nablarchセキュリティ対策チェックリスト
 
 ## 概要
@@ -176,3 +178,10 @@ PCI DSS 要件6.5の各項目とIPAチェックリスト項目との対応:
 | 6.5.10 | 4.セッション管理の不備、11.アクセス制御や認可制御の欠落 |
 
 > **注意**: 要件8などその他アプリケーション実装に関する要件はNablarchでは対応していないため、各プロジェクトで個別に対応すること。
+
+<details>
+<summary>keywords</summary>
+
+SQLインジェクション, OSコマンドインジェクション, ディレクトリトラバーサル, セッション管理の不備, クロスサイトスクリプティング, XSS, CSRF, HTTPヘッダインジェクション, メールヘッダインジェクション, クリックジャッキング, バッファオーバーフロー, アクセス制御, 認可制御, セキュリティチェックリスト, PCI DSS, ユニバーサルDAO, JDBCラッパー, セッションストア, CSRF対策機能, セキュアハンドラ, ファイルパス管理, HTTP文字エンコード制御ハンドラ, HTTPエラー制御ハンドラ, 使用不許可APIチェックツール, JSP静的解析ツール, カスタムタグ, 認可チェック, メール送信, 二重サブミット防止, PreparedStatement, HttpOnly, X-Frame-Options, JavaMail, HttpServletResponse
+
+</details>

@@ -1,5 +1,7 @@
 # SQLログの出力
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/log/sql_log.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/statement/SqlLogFormatter.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/statement/SqlPStatement.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/statement/SqlStatement.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/statement/SqlJsonLogFormatter.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/JsonLogFormatter.html)
+
 ## SQLログの出力方針
 
 SQLログは、パフォーマンスチューニングに使用するために、SQL文の実行時間やSQL文を出力する。アプリケーションでは、ログ出力を設定することにより出力する。
@@ -54,6 +56,13 @@ sqlLogFormatter.startExecuteBatchFormat=$methodName$\n\tSQL = [$sql$]\n\tadditio
 sqlLogFormatter.endExecuteBatchFormat=$methodName$\n\texecute_time(ms) = [$executeTime$] batch_count = [$updateCount$]
 ```
 
+<details>
+<summary>keywords</summary>
+
+SQLログ, SQLログ出力方針, SQL文実行時間, SqlLogFormatter, log.properties, app-log.properties, DEBUGレベル, SQLパラメータ, バインド変数, FileLogWriter, BasicLogFormatter, SqlPStatement, SqlStatement, sqlLogFormatter.startRetrieveFormat, sqlLogFormatter.endRetrieveFormat, sqlLogFormatter.startExecuteFormat, sqlLogFormatter.endExecuteFormat, sqlLogFormatter.startExecuteQueryFormat, sqlLogFormatter.endExecuteQueryFormat, sqlLogFormatter.startExecuteUpdateFormat, sqlLogFormatter.endExecuteUpdateFormat, sqlLogFormatter.startExecuteBatchFormat, sqlLogFormatter.endExecuteBatchFormat
+
+</details>
+
 ## SQLログの設定
 
 設定は :ref:`log-app_log_setting` のプロパティファイルに行う。
@@ -89,6 +98,13 @@ sqlLogFormatter.endExecuteUpdateFormat=$methodName$\n\texe:$executeTime$ms count
 sqlLogFormatter.startExecuteBatchFormat=$methodName$\n\tSQL:$sql$\n\tadditional_info:\n\t$additionalInfo$
 sqlLogFormatter.endExecuteBatchFormat=$methodName$\n\texe:$executeTime$ms count:$updateCount$
 ```
+
+<details>
+<summary>keywords</summary>
+
+SqlLogFormatter, SqlPStatement, SqlStatement, sqlLogFormatter.className, sqlLogFormatter.startRetrieveFormat, sqlLogFormatter.endRetrieveFormat, sqlLogFormatter.startExecuteFormat, sqlLogFormatter.endExecuteFormat, sqlLogFormatter.startExecuteQueryFormat, sqlLogFormatter.endExecuteQueryFormat, sqlLogFormatter.startExecuteUpdateFormat, sqlLogFormatter.endExecuteUpdateFormat, sqlLogFormatter.startExecuteBatchFormat, sqlLogFormatter.endExecuteBatchFormat, SQLログ設定, ログフォーマット, プレースホルダ
+
+</details>
 
 ## JSON形式の構造化ログとして出力する
 
@@ -127,3 +143,10 @@ sqlLogFormatter.endExecuteUpdateTargets=methodName,executeTime,updateCount
 sqlLogFormatter.startExecuteBatchTargets=methodName,sql,additionalInfo
 sqlLogFormatter.endExecuteBatchTargets=methodName,executeTime,batchCount
 ```
+
+<details>
+<summary>keywords</summary>
+
+SqlJsonLogFormatter, JsonLogFormatter, sqlLogFormatter.structuredMessagePrefix, sqlLogFormatter.startRetrieveTargets, sqlLogFormatter.endRetrieveTargets, sqlLogFormatter.startExecuteTargets, sqlLogFormatter.endExecuteTargets, sqlLogFormatter.startExecuteQueryTargets, sqlLogFormatter.endExecuteQueryTargets, sqlLogFormatter.startExecuteUpdateTargets, sqlLogFormatter.endExecuteUpdateTargets, sqlLogFormatter.startExecuteBatchTargets, sqlLogFormatter.endExecuteBatchTargets, JSON形式ログ, 構造化ログ, SQLログJSON出力
+
+</details>

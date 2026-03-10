@@ -1,5 +1,7 @@
 # 運用担当者向けのログ出力
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/feature_details/operator_notice_log.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/operation/OperationLogger.html)
+
 ## 運用担当者向けログの出力内容
 
 運用担当者向けログには、最低限以下の内容を出力すること:
@@ -7,6 +9,13 @@
 - どのように対処すべきか
 
 これらが出力されていない場合、運用担当者が対処方法を判断できない。
+
+<details>
+<summary>keywords</summary>
+
+運用担当者向けログ, ログ出力内容, 何が発生したか, 対処方法, ログ必須項目
+
+</details>
 
 ## 運用担当者向けのログを専用のログファイルに出力するための設定を追加する
 
@@ -32,6 +41,13 @@ loggers.OPERATOR.writerNames=operationLog
 ```
 
 > **注意**: :ref:`log_adaptor` を使用している場合は、アダプタに対応したログライブラリのマニュアルを参照すること。
+
+<details>
+<summary>keywords</summary>
+
+operator, log.properties, FileLogWriter, BasicLogFormatter, ログカテゴリ設定, 運用担当者向けログ設定, operationLog
+
+</details>
 
 ## 運用担当者向けのログを出力する
 
@@ -66,3 +82,10 @@ public class SampleBatchlet extends AbstractBatchlet {
 ```bash
 ERROR operator ファイルが存在しません。正しく受信できているか確認してください。
 ```
+
+<details>
+<summary>keywords</summary>
+
+OperationLogger, LogLevel, AbstractBatchlet, 運用担当者向けログ出力, バッチ異常終了, 例外送出, OperationLogger.write, @Named, @Dependent, FileNotFoundException
+
+</details>

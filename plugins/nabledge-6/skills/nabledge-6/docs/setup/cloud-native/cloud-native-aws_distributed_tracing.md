@@ -1,5 +1,7 @@
 # AWSにおける分散トレーシング
 
+**公式ドキュメント**: [AWSにおける分散トレーシング](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/cloud_native/distributed_tracing/aws_distributed_tracing.html)
+
 ## 概要
 
 > **重要**: 2020年10月に[AWS Distro for OpenTelemetry](https://aws.amazon.com/jp/otel/?otel-blogs.sort-by=item.additionalFields.createdDate&otel-blogs.sort-order=desc)が発表されたが、2021年3月現在production-readyとなっているが、正式リリースはされていない。正式リリース後、Nablarchでの動作確認がとれた場合は本章をAWS Distro for OpenTelemetryを使用した手順に差し替える可能性がある。
@@ -9,6 +11,13 @@ Nablarchはフレームワークの構造上、[自動計測エージェント](
 以下はコンテナ用アーキタイプを使用した場合の例を示す。設定の判断基準:
 - 受信HTTPリクエスト の設定のみでサービス間の関連はトレースできる
 - 送信HTTP呼び出し と SQLクエリ はアプリケーションの要件に応じて設定する
+
+<details>
+<summary>keywords</summary>
+
+分散トレーシング, AWS X-Ray, AWS X-Ray SDK for Java, 自動計測エージェント, AWS Distro for OpenTelemetry
+
+</details>
 
 ## 依存関係の追加
 
@@ -44,6 +53,13 @@ Nablarchはフレームワークの構造上、[自動計測エージェント](
 
 > **補足**: SQLクエリのトレースには `aws-xray-recorder-sdk-sql-postgres` や `aws-xray-recorder-sdk-sql-mysql` ではなく、任意のJDBCデータソースをトレース可能な `aws-xray-recorder-sdk-sql` を使用する。
 
+<details>
+<summary>keywords</summary>
+
+aws-xray-recorder-sdk-bom, aws-xray-recorder-sdk-core, aws-xray-recorder-sdk-apache-http, aws-xray-recorder-sdk-sql, 依存関係追加, Maven
+
+</details>
+
 ## 受信HTTPリクエスト
 
 受信HTTPリクエストのトレースには `com.amazonaws.xray.jakarta.servlet.AWSXRayServletFilter` を `src/main/webapp/WEB-INF/web.xml` に追加する。AWSXRayServletFilterのfilter-mappingは既存のfilter-mappingより上に記載する。
@@ -68,6 +84,13 @@ Nablarchはフレームワークの構造上、[自動計測エージェント](
   <url-pattern>/*</url-pattern>
 </filter-mapping>
 ```
+
+<details>
+<summary>keywords</summary>
+
+AWSXRayServletFilter, 受信HTTPリクエストトレース, web.xml, com.amazonaws.xray.jakarta.servlet.AWSXRayServletFilter, サーブレットフィルタ
+
+</details>
 
 ## 送信HTTP呼び出し
 
@@ -179,6 +202,13 @@ WebTarget target = httpClient.target(productAPI).path("/products");
 ProductResponse products = target.request().get(ProductResponse.class);
 ```
 
+<details>
+<summary>keywords</summary>
+
+送信HTTP呼び出しトレース, JerseyHttpClientWithAWSXRayFactory, ApacheConnectorProvider, ApacheHttpClientBuilderConfigurator, com.amazonaws.xray.proxies.apache.http.HttpClientBuilder, jersey-apache-connector, ComponentFactory, @SystemRepositoryComponent, @ComponentRef, @ConfigValue
+
+</details>
+
 ## SQLクエリ
 
 データソースを `com.amazonaws.xray.sql.TracingDataSource` でデコレートすることでSQLクエリが計測される。Nablarchは `dataSource` という名前でデータソースコンポーネントを取得するため、元のデータソースを `rawDataSource` に名前変更し、`TracingDataSourceFactory` を `dataSource` という名前で登録する。
@@ -233,3 +263,10 @@ public class TracingDataSourceFactory implements ComponentFactory<DataSource> {
   <property name="dataSource" ref="rawDataSource" />
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+TracingDataSource, TracingDataSourceFactory, SQLクエリトレース, データソースデコレート, com.amazonaws.xray.sql.TracingDataSource, dataSource
+
+</details>

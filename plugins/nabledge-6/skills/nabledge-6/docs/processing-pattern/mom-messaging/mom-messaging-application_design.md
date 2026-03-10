@@ -1,5 +1,7 @@
 # アプリケーションの責務配置
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/mom/application_design.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/reader/FwHeaderReader.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/reader/MessageReader.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/RequestMessage.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/ResponseMessage.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.Success.html)
+
 ## アプリケーションの責務配置
 
 **クラス構成（MOMメッセージング）**:
@@ -24,3 +26,10 @@
 テーブルと1対1に対応するクラス。カラムに対応するプロパティを持つ。
 
 > **重要**: メッセージングはシステムで共通のデータリーダを使用するため、:ref:`Nablarchバッチアプリケーションの責務配置<nablarch_batch-application_design>` と異なり、アクションはデータリーダを生成する責務を持たない。メッセージングで使用するデータリーダはコンポーネント定義に `dataReader` という名前で追加する。
+
+<details>
+<summary>keywords</summary>
+
+FwHeaderReader, MessageReader, RequestMessage, ResponseMessage, nablarch.fw.messaging.reader.FwHeaderReader, nablarch.fw.messaging.reader.MessageReader, nablarch.fw.messaging.RequestMessage, nablarch.fw.messaging.ResponseMessage, nablarch.fw.Result.Success, MOMメッセージング, アクションクラス, フォームクラス, エンティティクラス, データリーダ, 責務配置, 応答不要メッセージング
+
+</details>

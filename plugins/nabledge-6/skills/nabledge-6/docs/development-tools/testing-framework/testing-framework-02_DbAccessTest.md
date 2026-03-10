@@ -1,5 +1,7 @@
 # データベースを使用するクラスのテスト
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/06_TestFWGuide/02_DbAccessTest.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/statement/SqlPStatement.html)
+
 ## 主なクラス, リソース
 
 **クラス**: `DbAccessTestSupport`
@@ -11,11 +13,25 @@
 | テスト対象クラス | テストされるクラス | — |
 | `DbAccessTestSupport` | 準備データ投入などDB操作機能を提供。テスト実行前後にDBトランザクションの開始・終了処理を行う（:ref:`using_transactions`） | — |
 
+<details>
+<summary>keywords</summary>
+
+DbAccessTestSupport, テストクラス, テストデータ, Excelファイル, データベーステスト, 準備データ投入, トランザクション制御
+
+</details>
+
 ## 基本的なテスト方法
 
 参照系テスト: `setUpDb(シート名)` でDB準備データを登録し、`assertSqlResultSetEquals(シート名, 期待値ID, actual)` で検索結果を確認する。
 
 更新系テスト: `setUpDb(シート名)` でDB準備データ登録 → テスト対象メソッド実行 → `commitTransactions()` でコミット → `assertTableEquals(シート名, actual)` でDB状態確認。
+
+<details>
+<summary>keywords</summary>
+
+setUpDb, assertSqlResultSetEquals, commitTransactions, assertTableEquals, 参照系テスト, 更新系テスト
+
+</details>
 
 ## 参照系テスト - シーケンス
 
@@ -24,6 +40,13 @@
 1. `setUpDb(シート名)` でExcelシートからDB準備データを登録
 2. テスト対象メソッドを呼び出し、戻り値（`SqlResultSet`）を取得
 3. `assertSqlResultSetEquals(シート名, 期待値ID, actual)` で結果を検証
+
+<details>
+<summary>keywords</summary>
+
+setUpDb, assertSqlResultSetEquals, 参照系テスト, テスト実行順序
+
+</details>
 
 ## 参照系テスト - テストソースコード実装例
 
@@ -39,6 +62,13 @@ public class DbAccessTestSample extends DbAccessTestSupport {
     }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+DbAccessTestSupport, setUpDb, assertSqlResultSetEquals, SqlResultSet, 参照系テスト実装
+
+</details>
 
 ## 参照系テスト - テストデータ記述例
 
@@ -66,6 +96,13 @@ ID    | EMP_NAME | DEPT_NAME
 00002 | 田中一郎 | 総務部
 ```
 
+<details>
+<summary>keywords</summary>
+
+SETUP_TABLE, LIST_MAP, テストデータ形式, Excelシート, 準備データ記述
+
+</details>
+
 ## 更新系テスト - シーケンス
 
 更新系テストのシーケンス（`update_sequence.png`）:
@@ -78,6 +115,13 @@ ID    | EMP_NAME | DEPT_NAME
 > **重要**: Nablarch Application Frameworkでは複数種類のトランザクションを併用する前提のため、テスト対象クラス実行後にDB内容を確認する際は `commitTransactions()` を必ず呼び出すこと。コミットしない場合、テスト結果確認が正常に行われない。
 
 > **補足**: 参照系テストではコミット不要。
+
+<details>
+<summary>keywords</summary>
+
+commitTransactions, assertTableEquals, 更新系テスト, トランザクションコミット, DB更新確認
+
+</details>
 
 ## 更新系テスト - テストソースコード実装例
 
@@ -94,6 +138,13 @@ public class DbAccessTestSample extends DbAccsessTestSupport {
     }
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+DbAccessTestSupport, setUpDb, commitTransactions, assertTableEquals, 更新系テスト実装
+
+</details>
 
 ## 更新系テスト - テストデータ記述例
 
@@ -121,6 +172,13 @@ ID    | EMP_NAME   | EXPIRED
 00002 | 田中一郎 | FALSE
 ```
 
+<details>
+<summary>keywords</summary>
+
+SETUP_TABLE, EXPECTED_TABLE, テストデータ形式, 更新系テスト, 期待値記述
+
+</details>
+
 ## データベーステストデータの省略記述方法
 
 準備データ・期待値の記述で、テストに無関係なカラムは省略可能。省略されたカラムには :ref:`default_values_when_column_omitted` が設定される。
@@ -136,6 +194,13 @@ ID    | EMP_NAME   | EXPIRED
 - **準備データ**: 主キーカラムは省略不可。その他は省略可（省略値は :ref:`default_values_when_column_omitted`）
 - **DB期待値 (`EXPECTED_TABLE`)**: 省略カラムは比較対象外
 - **DB期待値 (`EXPECTED_COMPLETE_TABLE`)**: 省略カラムは :ref:`デフォルト値<default_values_when_column_omitted>` が格納されているものとして比較。「無関係なカラムが更新されていないこと」を確認する更新系テストに使用する
+
+<details>
+<summary>keywords</summary>
+
+EXPECTED_TABLE, EXPECTED_COMPLETE_TABLE, カラム省略, default_values_when_column_omitted, テストデータ保守性, テストデータ可読性, 更新系テスト, 主キー省略不可
+
+</details>
 
 ## テストケース例
 
@@ -153,6 +218,13 @@ ID    | EMP_NAME   | EXPIRED
 | COL_D | テスト対象機能では使用しないカラム |
 | 有効期限 | 有効期限を過ぎたデータが処理対象 |
 | 削除フラグ | 有効期限超過レコードの値を'1'に変更 |
+
+<details>
+<summary>keywords</summary>
+
+SAMPLE_TABLE, 有効期限, 削除フラグ, カラム省略例, 更新系テスト具体例
+
+</details>
 
 ## 省略せずに全カラムを記載した場合（悪い例）
 
@@ -174,6 +246,13 @@ PK_1 | PK_2 | COL_A | COL_B | COL_C | COL_D | 有効期限  | 削除フラグ
 02   | 0002 | 2a    | 2b    | 2c    | 2d    | 20110101 | 0
 ```
 
+<details>
+<summary>keywords</summary>
+
+SETUP_TABLE, EXPECTED_TABLE, 全カラム記載, 可読性低下, テストデータ悪い例
+
+</details>
+
 ## 関係のあるカラムのみを記載した場合（良い例）
 
 関係のあるカラムのみを記載した場合（良い例）: テストに無関係なCOL_A〜COL_Dを省略することで可読性が向上し、テーブル定義変更の影響も受けにくくなる。
@@ -181,6 +260,13 @@ PK_1 | PK_2 | COL_A | COL_B | COL_C | COL_D | 有効期限  | 削除フラグ
 準備データ（良い例）: 主キー（PK_1, PK_2）とテスト対象カラム（有効期限, 削除フラグ）のみ記載する。テストに無関係なCOL_A〜COL_Dは省略する。省略されたカラムには :ref:`default_values_when_column_omitted` が設定されているものとして扱われる。
 
 期待値（良い例）: `EXPECTED_COMPLETE_TABLE` を使用し、関係のあるカラム（PK_1, PK_2, 有効期限, 削除フラグ）のみ記載する。省略したCOL_A〜COL_Dは :ref:`デフォルト値<default_values_when_column_omitted>` と比較され、更新されていないことを確認できる。`EXPECTED_TABLE` を使用した場合は省略カラムが比較対象外となるのに対し、`EXPECTED_COMPLETE_TABLE` を使用することで省略カラムも含めて確認できる。
+
+<details>
+<summary>keywords</summary>
+
+SETUP_TABLE, EXPECTED_COMPLETE_TABLE, カラム省略, 良い例, テストデータ可読性, 更新系テスト
+
+</details>
 
 ## 関係のあるカラムのみを記載した場合（良い例）
 
@@ -208,6 +294,13 @@ PK_1 | PK_2 | COL_A | COL_B | COL_C | COL_D | 有効期限  | 削除フラグ
 | 01 | 0001 | 20101231 | 1 |
 | 02 | 0002 | 20110101 | 0 |
 
+<details>
+<summary>keywords</summary>
+
+SETUP_TABLE, EXPECTED_COMPLETE_TABLE, EXPECTED_TABLE, 関係カラムのみ記述, 可読性向上, 保守性向上
+
+</details>
+
 ## デフォルト値
 
 自動テストフレームワークのコンポーネント設定ファイルにて明示的に指定していない場合、デフォルト値には以下の値が使用される。
@@ -217,6 +310,13 @@ PK_1 | PK_2 | COL_A | COL_B | COL_C | COL_D | 有効期限  | 削除フラグ
 | 数値型 | 0 |
 | 文字列型 | 半角スペース |
 | 日付型 | 1970-01-01 00:00:00.0 |
+
+<details>
+<summary>keywords</summary>
+
+デフォルト値, 数値型, 文字列型, 日付型, 省略カラム, 1970-01-01, 半角スペース
+
+</details>
 
 ## 設定項目一覧
 
@@ -229,6 +329,13 @@ PK_1 | PK_2 | COL_A | COL_B | COL_C | COL_D | 有効期限  | 削除フラグ
 | charValue | 文字列型のデフォルト値 | 1文字のASCII文字 |
 | numberValue | 数値型のデフォルト値 | 0または正の整数 |
 | dateValue | 日付型のデフォルト値 | JDBCタイムスタンプエスケープ形式 (yyyy-mm-dd hh:mm:ss.fffffffff) |
+
+<details>
+<summary>keywords</summary>
+
+BasicDefaultValues, charValue, numberValue, dateValue, デフォルト値変更, コンポーネント設定
+
+</details>
 
 ## コンポーネント設定ファイルの記述例
 
@@ -245,6 +352,13 @@ PK_1 | PK_2 | COL_A | COL_B | COL_C | COL_D | 有効期限  | 削除フラグ
   </property>
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+BasicTestDataParser, BasicDefaultValues, testDataParser, XML設定例, defaultValues
+
+</details>
 
 ## 注意点
 
@@ -277,3 +391,10 @@ PK_1 | PK_2 | COL_A | COL_B | COL_C | COL_D | 有効期限  | 削除フラグ
 ## Excelカラムのデータ型
 
 `SqlPStatement` で対応している型のカラムのみ記述可能。それ以外のデータ型（例: OracleのROWID、PostgreSQLのOIDなど）は記述不可。
+
+<details>
+<summary>keywords</summary>
+
+setUpDb, assertTableEquals, assertSqlResultSetEquals, ThreadContext, SqlPStatement, 外部キー, Timestamp型フォーマット, java.sql.Timestamp, 登録更新テスト
+
+</details>

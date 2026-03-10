@@ -1,5 +1,7 @@
 # Domaアダプタ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/adaptors/doma_adaptor.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/doma/Transactional.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/doma/DomaDaoRepository.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/doma/DomaConfig.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/doma/batch/ee/listener/DomaTransactionStepListener.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/doma/batch/ee/listener/DomaTransactionItemWriteListener.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/doma/DomaTransactionNotSupportedConfig.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/doma/ConnectionFactoryFromDomaConnection.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/doma/NablarchJdbcLogger.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/doma/DomaStatementProperties.html)
+
 ## モジュール一覧
 
 Doma2を使用したデータベースアクセスを行うためのアダプタ。データベースアクセスにDomaを使用することで以下のメリットが得られる:
@@ -16,6 +18,13 @@ Doma2を使用したデータベースアクセスを行うためのアダプタ
 ```
 
 > **補足**: Doma 2.62.0でテスト済み。バージョンを変更する場合はプロジェクト側でテストを行い問題ないことを確認すること。
+
+<details>
+<summary>keywords</summary>
+
+nablarch-doma-adaptor, com.nablarch.integration, Domaアダプタ, Maven依存関係, モジュール設定, Doma2, 動的SQL, 2waySQL, Transactional, パフォーマンス向上, トランザクション制御
+
+</details>
 
 ## Domaアダプタを使用するための設定を行う
 
@@ -62,6 +71,13 @@ H2の設定例:
 </component>
 ```
 
+<details>
+<summary>keywords</summary>
+
+doma-processor, maven-compiler-plugin, domaDialect, dataSource, H2Dialect, org.seasar.doma.jdbc.dialect.Dialect, ダイアレクト設定, データソース設定, 依存関係設定
+
+</details>
+
 ## Domaを使用してデータベースにアクセスする
 
 `@Dao` アノテーションを付与したDaoインタフェースを作成する。
@@ -81,6 +97,13 @@ public HttpResponse create(final HttpRequest request, final ExecutionContext con
 
 > **補足**: Doma 2.44.0よりDaoアノテーションのconfig属性が非推奨になったため実装方法を変更している。詳しくは :ref:`migration_doma2.44.0` を参照すること。
 
+<details>
+<summary>keywords</summary>
+
+DomaDaoRepository, Transactional, nablarch.integration.doma.Transactional, nablarch.integration.doma.DomaDaoRepository, @Dao, @Transactional, データベースアクセス, トランザクション管理, Daoルックアップ
+
+</details>
+
 ## 別トランザクションで実行する
 
 `Transactional` インターセプタのトランザクションとは別の新規トランザクションでDBアクセスしたい場合は、 `DomaConfig#getTransactionManager` で取得した `TransactionManager` を使用する。
@@ -91,6 +114,13 @@ DomaConfig.singleton()
         .requiresNew(() ->
                 DomaDaoRepository.get(ProjectDao.class).insert(project);
 ```
+
+<details>
+<summary>keywords</summary>
+
+DomaConfig, TransactionManager, nablarch.integration.doma.DomaConfig, requiresNew, 別トランザクション, トランザクション分離
+
+</details>
 
 ## Jakarta Batchに準拠したバッチアプリケーションで使用する
 
@@ -117,6 +147,13 @@ Jakarta Batchに準拠したバッチアプリケーションでDomaを使用す
 @BatchInsert(batchSize = 1000)
 int[] batchInsert(List<Bonus> bonuses);
 ```
+
+<details>
+<summary>keywords</summary>
+
+DomaTransactionStepListener, DomaTransactionItemWriteListener, nablarch.integration.doma.batch.ee.listener.DomaTransactionStepListener, nablarch.integration.doma.batch.ee.listener.DomaTransactionItemWriteListener, @BatchInsert, batchSize, Jakarta Batch, バッチリスナー, バッチ更新
+
+</details>
 
 ## Jakarta Batchに準拠したバッチアプリケーションで遅延ロードを行う
 
@@ -170,6 +207,13 @@ public class ProjectReader extends AbstractItemReader {
 
 > **補足**: Doma 2.44.0よりDaoアノテーションのconfig属性が非推奨になったため実装方法を変更している。詳しくは :ref:`migration_doma2.44.0` を参照すること。
 
+<details>
+<summary>keywords</summary>
+
+DomaTransactionNotSupportedConfig, nablarch.integration.doma.DomaTransactionNotSupportedConfig, AbstractItemReader, @Dependent, @Named, 遅延ロード, 大量データ読み込み, Stream, Jakarta Batch, @Select, SelectType, SelectType.RETURN
+
+</details>
+
 ## 複数のデータベースにアクセスする
 
 複数データベースにアクセスする場合は、新しくConfigクラスを作成して使用する。
@@ -213,6 +257,13 @@ public HttpResponse create(final HttpRequest request, final ExecutionContext con
 
 > **補足**: Doma 2.44.0よりSingletonConfigアノテーションの付与およびDaoアノテーションのconfig属性が非推奨になったため実装方法を変更している。詳しくは :ref:`migration_doma2.44.0` を参照すること。
 
+<details>
+<summary>keywords</summary>
+
+CustomConfig, Config, DomaDaoRepository, nablarch.integration.doma.DomaDaoRepository, 複数データベース, マルチDB, Configクラス, OracleDialect, LocalTransactionDataSource, LocalTransactionManager, SystemRepository, SingletonConfig
+
+</details>
+
 ## DomaとNablarchのデータベースアクセスを併用する
 
 DomaとNablarchのデータベースアクセスを併用する場合（例: :ref:`メール送信ライブラリ <mail>` の利用）、NablarchのDBアクセスをDomaと同じトランザクション（DB接続）配下で実行できる。
@@ -236,6 +287,13 @@ DomaとNablarchのデータベースアクセスを併用する場合（例: :re
 </component>
 ```
 
+<details>
+<summary>keywords</summary>
+
+ConnectionFactoryFromDomaConnection, nablarch.integration.doma.ConnectionFactoryFromDomaConnection, connectionFactoryFromDoma, DomaとNablarch併用, トランザクション共有
+
+</details>
+
 ## ロガーを切り替える
 
 デフォルトでは `NablarchJdbcLogger` （NablarchロガーによるJdbcLogger実装）が使用される。他のロガーに差し替える場合はコンポーネント定義ファイルに設定する。
@@ -248,6 +306,13 @@ DomaとNablarchのデータベースアクセスを併用する場合（例: :re
 ```xml
 <component name="domaJdbcLogger" class="org.seasar.doma.jdbc.UtilLoggingJdbcLogger" />
 ```
+
+<details>
+<summary>keywords</summary>
+
+NablarchJdbcLogger, UtilLoggingJdbcLogger, nablarch.integration.doma.NablarchJdbcLogger, domaJdbcLogger, JdbcLogger, ロガー切り替え, JDBCログ
+
+</details>
 
 ## java.sql.Statementに関する設定を行う
 
@@ -270,11 +335,25 @@ DomaとNablarchのデータベースアクセスを併用する場合（例: :re
 </component>
 ```
 
+<details>
+<summary>keywords</summary>
+
+DomaStatementProperties, domaStatementProperties, maxRows, fetchSize, queryTimeout, batchSize, java.sql.Statement設定, フェッチサイズ設定, クエリタイムアウト設定, バッチサイズ設定, 最大行数制限
+
+</details>
+
 ## Doma 2.44.0までの実装方法から移行する
 
 [Doma 2.44.0](https://github.com/domaframework/doma/releases/tag/2.44.0)より、Daoアノテーションのconfig属性およびSingletonConfigアノテーションが非推奨となった。NablarchでもAPIを追加し、案内していた内容から実装方法を変更している。引き続き動作するが、Domaの変更に合わせて実装方法を移行することを推奨する。
 
 なお、Doma 2.44.0以前に案内していた実装方法でも引き続き同じ動作を行う。
+
+<details>
+<summary>keywords</summary>
+
+Doma移行, config属性 非推奨, SingletonConfig非推奨, SingletonConfig, Doma 2.44.0, DaoアノテーションのconfigAttribute, DomaTransactionNotSupportedConfig, DomaDaoRepository, CustomConfig
+
+</details>
 
 ## 移行パターン1: DomaConfigを使った基本的な実装からの移行
 
@@ -321,6 +400,13 @@ public HttpResponse create(final HttpRequest request, final ExecutionContext con
 ```
 
 Daoアノテーションのconfig属性を指定しないDaoを使用して `DomaDaoRepository#get` を使ってDaoの実装クラスを取得した場合、`DomaConfig` を使用してDaoの実装クラスが構築される。
+
+<details>
+<summary>keywords</summary>
+
+DomaConfig 移行, Dao config属性削除, DomaDaoRepository#get, DomaDaoRepository, @Dao config属性, @Transactional
+
+</details>
 
 ## 移行パターン2: DomaTransactionNotSupportedConfigを使用した遅延ロードからの移行
 
@@ -389,6 +475,13 @@ public class ProjectReader extends AbstractItemReader {
 ```
 
 Daoアノテーションにconfig属性を指定しないDaoを使用して `DomaDaoRepository#get(java.lang.Class, java.lang.Class)` を呼び出した場合、第2引数に指定したConfigを使用してDaoの実装クラスが構築される。
+
+<details>
+<summary>keywords</summary>
+
+DomaTransactionNotSupportedConfig 移行, 遅延ロード 移行, Jakarta Batch 遅延ロード, DomaDaoRepository#get 第2引数, DomaDaoRepository.get(Class, Class), @Select, @Dependent, @Named, AbstractItemReader
+
+</details>
 
 ## 移行パターン3: 独自Configクラスを作成している場合の移行
 
@@ -463,3 +556,10 @@ public HttpResponse create(final HttpRequest request, final ExecutionContext con
 ```
 
 Daoアノテーションにconfig属性を指定しないDaoを使用して `DomaDaoRepository#get(java.lang.Class, java.lang.Class)` を呼び出した場合、第2引数に指定したConfigを使用してDaoの実装クラスが構築される。
+
+<details>
+<summary>keywords</summary>
+
+独自Config 移行, CustomConfig 移行, SingletonConfig削除, SingletonConfig アノテーション, DomaDaoRepository.get(Class, Class), 複数データベース Config移行
+
+</details>

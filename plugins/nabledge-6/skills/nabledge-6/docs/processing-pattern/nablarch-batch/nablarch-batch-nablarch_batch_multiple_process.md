@@ -1,5 +1,7 @@
 # 常駐バッチアプリケーションのマルチプロセス化
 
+**公式ドキュメント**: [常駐バッチアプリケーションのマルチプロセス化](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/feature_details/nablarch_batch_multiple_process.html)
+
 ## 常駐バッチアプリケーションのマルチプロセス化
 
 基本的な設定は :ref:`db_messaging-multiple_process` と同様。
@@ -47,3 +49,10 @@ public DatabaseRecordReader createReader(ExecutionContext context) {
     return reader;
 }
 ```
+
+<details>
+<summary>keywords</summary>
+
+DatabaseRecordReader, DatabaseRecordListener, SimpleDbTransactionExecutor, ParameterizedSqlPStatement, DbConnectionContext, ExecutionContext, AppDbConnection, FileCreateRequest, SystemRepository, UUID, マルチプロセス化, 悲観ロック, 常駐バッチ, processId UUID
+
+</details>

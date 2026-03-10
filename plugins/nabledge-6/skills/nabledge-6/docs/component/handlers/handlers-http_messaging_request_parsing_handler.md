@@ -1,8 +1,17 @@
 # HTTPメッセージングリクエスト変換ハンドラ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/http_messaging/http_messaging_request_parsing_handler.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpRequest.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/RequestMessage.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/DataRecordFormatter.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/reader/StructuredFwHeaderDefinition.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/handler/HttpMessagingRequestParsingHandler.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/RequestEntityTooLarge.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/MessagingException.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/InvalidDataFormatException.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/java/lang/Integer.html)
+
 ## ハンドラクラス名
 
 **クラス**: `nablarch.fw.messaging.handler.HttpMessagingRequestParsingHandler`
+
+<details>
+<summary>keywords</summary>
+
+HttpMessagingRequestParsingHandler, nablarch.fw.messaging.handler.HttpMessagingRequestParsingHandler, ハンドラクラス
+
+</details>
 
 ## モジュール一覧
 
@@ -14,10 +23,24 @@
 </dependency>
 ```
 
+<details>
+<summary>keywords</summary>
+
+nablarch-fw-messaging-http, モジュール, Maven依存関係, com.nablarch.framework
+
+</details>
+
 ## 制約
 
 - :ref:`http_response_handler` より後ろに配置すること: 変換処理に失敗した場合にステータスコードを指定したレスポンスをクライアントに返すため。
 - :ref:`thread_context_handler` より後ろに配置すること: スレッドコンテキスト上のリクエストIDをもとに `DataRecordFormatter` を取得するため。
+
+<details>
+<summary>keywords</summary>
+
+http_response_handler, thread_context_handler, DataRecordFormatter, ハンドラ配置順序, 制約
+
+</details>
 
 ## HTTPリクエストを要求電文に変換する
 
@@ -73,6 +96,13 @@
 | `MessagingException` | INFO | 400 | リクエストボディが不正 |
 | `InvalidDataFormatException` | INFO | 400 | リクエストボディのフォーマットが不正 |
 
+<details>
+<summary>keywords</summary>
+
+HttpRequest, RequestMessage, X-Message-Id, X-Correlation-Id, StructuredFwHeaderDefinition, StandardFwHeaderDefinition, RequestEntityTooLarge, MessagingException, InvalidDataFormatException, HTTPリクエスト変換, 要求電文, フレームワーク制御ヘッダ, リクエストボディ変換, フォーマット定義, fwHeaderKeys
+
+</details>
+
 ## 巨大なサイズのリクエストを防ぐ
 
 巨大なリクエストボディによるディスクリソース枯渇を防ぐため、サイズ上限超過時はINFOログを出力し `413` を返す。
@@ -87,3 +117,10 @@
   <property name="bodyLengthLimit" value="10000000" />
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+bodyLengthLimit, サイズ制限, リクエストボディ上限, 413, ディスクリソース枯渇防止
+
+</details>

@@ -1,5 +1,7 @@
 # 汎用データフォーマット
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/data_io/data_format.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/DataFormatConfig.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/datatype/JsonNumber.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/datatype/JsonBoolean.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/datatype/DataType.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/io/FileRecordWriterHolder.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/download/DataRecordResponse.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpRequest.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/util/FilePathSetting.html) [11](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/FormatterFactory.html) [12](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/DataRecordFormatter.html) [13](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/upload/util/UploadHelper.html) [14](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/XmlDataParser.html) [15](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/XmlDataBuilder.html) [16](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/CharacterReplacementManager.html) [17](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/CharacterReplacementConfig.html) [18](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/FixedLengthConvertorFactory.html) [19](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/VariableLengthConvertorFactory.html) [20](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/JsonDataConvertorFactory.html) [21](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/XmlDataConvertorFactory.html) [22](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/FixedLengthConvertorSetting.html) [23](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/VariableLengthConvertorSetting.html) [24](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/JsonDataConvertorSetting.html) [25](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/XmlDataConvertorSetting.html)
+
 ## 機能概要
 
 標準でサポートするフォーマット: 固定長、可変長（CSV/TSVなど）、JSON、XML。固定長と可変長はマルチレイアウトデータ（レコードごとに異なるレイアウト）にも対応。
@@ -25,6 +27,13 @@
 
 固定長ファイルのスペース・ゼロ(0)パディングおよびトリミングに対応。アプリケーション側での処理不要。詳細は :ref:`data_format-field_convertor_list` 参照。
 
+<details>
+<summary>keywords</summary>
+
+固定長, 可変長, JSON, XML, マルチレイアウト, 非推奨, BeanUtil, JsonNumber, JsonBoolean, DataType, data_bind, パック数値, パディング, トリミング, EBCDIC, ゾーン10進数, messaging
+
+</details>
+
 ## モジュール一覧
 
 **モジュール**:
@@ -42,6 +51,13 @@
   <artifactId>nablarch-fw-web-extension</artifactId>
 </dependency>
 ```
+
+<details>
+<summary>keywords</summary>
+
+nablarch-core-dataformat, nablarch-fw-web-extension, モジュール依存関係
+
+</details>
 
 ## 入出力データのフォーマットを定義する
 
@@ -75,6 +91,13 @@ type    = "02"
 4 data    X
 ```
 
+<details>
+<summary>keywords</summary>
+
+フォーマット定義ファイル, data_format/format_definition, マルチレイアウト, レコード識別フィールド, Classifier
+
+</details>
+
 ## ファイルにデータを出力する
 
 **クラス**: `nablarch.common.io.FileRecordWriterHolder`
@@ -107,6 +130,13 @@ FileRecordWriterHolder.write(user, "user.csv");
 </component>
 ```
 
+<details>
+<summary>keywords</summary>
+
+FileRecordWriterHolder, DataFormatConfig, flushEachRecordInWriting, file_record_writer_dispose_handler, file_path_management, ファイル出力, バッファサイズ
+
+</details>
+
 ## ファイルダウンロードで使用する
 
 **クラス**: `nablarch.common.web.download.DataRecordResponse`
@@ -132,6 +162,13 @@ public HttpResponse download(HttpRequest request, ExecutionContext context) {
 ```
 
 > **補足**: フォーマット定義ファイルの格納パスは :ref:`file_path_management` に設定すること。
+
+<details>
+<summary>keywords</summary>
+
+DataRecordResponse, Content-Type, Content-Disposition, ファイルダウンロード, file_path_management
+
+</details>
 
 ## アップロードしたファイルを読み込む
 
@@ -181,6 +218,13 @@ int cnt = helper
     .importWith(this, "INSERT_SQL");                              // BulkValidationResult
 ```
 
+<details>
+<summary>keywords</summary>
+
+UploadHelper, DataRecordFormatter, FormatterFactory, FilePathSetting, HttpRequest, アップロード, nablarch_validation, bean_validation, BufferedInputStream, PartInfo, DataRecord, BulkValidator, BulkValidationResult, BeanUtil
+
+</details>
+
 ## JSONやXMLの階層構造のデータを読み書きする
 
 JSONやXMLの階層構造（ネスト）データを扱う場合、Mapのキーにドット区切り記法を使用する。
@@ -199,6 +243,13 @@ data.put("user[1].name", "なまえ2");
 フォーマット定義ファイルにはネスト構造を対応する形式で定義する。XMLおよびJSONで出力する場合、上記のMapキー形式に従ったデータを準備することで階層構造として出力される。
 
 > **重要**: 親要素が任意（`?`）の場合は、子要素も全て任意項目として定義することを推奨する。必須の子要素を持つ任意の親要素はサポートされていない。
+
+<details>
+<summary>keywords</summary>
+
+階層構造, ドット区切り, parent.child, 配列, user[0].name, Map, ネスト, 任意項目, data_format-structured_data
+
+</details>
 
 ## XMLでDTDを使う
 
@@ -222,6 +273,13 @@ data.put("user[1].name", "なまえ2");
   <property name="allowDTD" value="true" />
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+DTD, XXE, allowDTD, XmlDataParser, セキュリティ, XML外部エンティティ, XXE攻撃, XML外部実体参照, DTD無効化
+
+</details>
 
 ## XMLで名前空間を使う
 
@@ -273,6 +331,13 @@ Map<String, Object> data = new HashMap<String, Object>();
 data.put("testnsKey1", "value1");
 ```
 
+<details>
+<summary>keywords</summary>
+
+名前空間, namespace, xmlns, ?@xmlns, XmlDataParser, XmlDataBuilder, プレフィックス, XML名前空間, 名前空間定義, フォーマット定義ファイル名前空間
+
+</details>
+
 ## XMLで属性を持つ要素にコンテンツを定義する
 
 属性を持つXML要素にコンテンツ（テキスト内容）を定義するには、フォーマット定義ファイルで予約フィールド名 `body` を使用する。
@@ -292,6 +357,13 @@ data.put("child.body", "value2");
 ```
 
 コンテンツ名 `body` を変更したい場合は :ref:`data_format-xml_content_name_change` を参照。
+
+<details>
+<summary>keywords</summary>
+
+body, 属性, コンテンツ, XML要素, data_format-xml_content_name_change, 予約フィールド名
+
+</details>
 
 ## 文字の置き換え(寄せ字)を行う
 
@@ -391,6 +463,13 @@ data.put("child.body", "value2");
 1 name N(100) replacement("b_system")
 ```
 
+<details>
+<summary>keywords</summary>
+
+寄せ字, 文字置き換え, CharacterReplacementManager, characterReplacementManager, CharacterReplacementConfig, replacement, typeName, filePath, encoding, data_format-replacement
+
+</details>
+
 ## フィールドタイプを追加する
 
 カスタムフィールドタイプを追加するには `DataType` インターフェースを実装し、各フォーマット用のファクトリクラスを拡張して設定クラスに登録する。
@@ -478,6 +557,13 @@ Fixed(固定長)の設定例:
 
 > **重要**: `convertorTable` プロパティでのフィールドタイプ追加は非推奨。理由: (1) 追加したいフィールドタイプだけでなく、デフォルトのフィールドタイプも全て設定が必要で、バージョンアップ時に自動適用されず手動修正が必要になる。(2) デフォルト定義はファクトリクラスに実装されており、設定ミスを起こしやすい。
 
+<details>
+<summary>keywords</summary>
+
+拡張, DataType, FixedLengthConvertorFactory, VariableLengthConvertorFactory, JsonDataConvertorFactory, XmlDataConvertorFactory, FixedLengthConvertorSetting, convertorTable, data_format-field_type_add, VariableLengthConvertorSetting, JsonDataConvertorSetting, XmlDataConvertorSetting, nablarch.core.dataformat.convertor.datatype.DataType, nablarch.core.dataformat.convertor.FixedLengthConvertorFactory, フィールドタイプ追加, カスタムデータタイプ, ファクトリクラス拡張, fixedLengthConvertorFactory, variableLengthConvertorFactory, jsonDataConvertorFactory, xmlDataConvertorFactory
+
+</details>
+
 ## XMLで属性を持つ要素のコンテンツ名を変更する
 
 属性を持つXML要素のコンテンツフィールドのデフォルト名（`body`）を変更するには、`XmlDataParser` と `XmlDataBuilder` の `contentName` プロパティを設定する。コンポーネント名はそれぞれ必ず `XmlDataParser`、`XmlDataBuilder` にすること。
@@ -514,6 +600,13 @@ Fixed(固定長)の設定例:
   <property name="contentName" value="change" />
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+contentName, XmlDataParser, XmlDataBuilder, body, コンテンツ名変更, data_format-xml_content_name_change, nablarch.core.dataformat.XmlDataParser, nablarch.core.dataformat.XmlDataBuilder, XML属性要素コンテンツ名
+
+</details>
 
 ## JSONやXMLの階層構造のデータを読み書きする
 
@@ -579,6 +672,13 @@ data.put("user[1].age", 31);
 }
 ```
 
+<details>
+<summary>keywords</summary>
+
+JSON階層構造, XML階層構造, Map, ドット記法, 配列添字, ネスト構造, 階層構造データ読み書き
+
+</details>
+
 ## XMLで属性を持つ要素にコンテンツを定義する
 
 XMLで属性を持つ要素にコンテンツを定義するには、フォーマット定義ファイルにコンテンツを表すフィールド名 `body` を使用する。デフォルトのフィールド名を変更する場合は :ref:`data_format-xml_content_name_change` を参照。
@@ -611,6 +711,20 @@ data.put("child.attr", "value1");
 data.put("child.body", "value2");
 ```
 
+<details>
+<summary>keywords</summary>
+
+body, XML属性, コンテンツフィールド, 属性とコンテンツ共存
+
+</details>
+
 ## 出力するデータの表示形式をフォーマットする
 
 データ出力時に日付・数値などの表示形式をフォーマットするには :ref:`format` を使用する。詳細は :ref:`format` を参照。
+
+<details>
+<summary>keywords</summary>
+
+format, 日付フォーマット, 数値フォーマット, 出力フォーマット
+
+</details>

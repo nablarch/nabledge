@@ -1,5 +1,7 @@
 # Jakarta RESTful Web Servicesサポート/Jakarta RESTful Web Services/HTTPメッセージングの機能比較
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/functional_comparison.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/action/MessagingAction.html)
+
 ## 機能比較表
 
 > **補足**: Jakarta RESTful Web ServicesサポートとHTTPメッセージングの表内マークはクリックで解説ページへ遷移する。
@@ -38,3 +40,10 @@
 [10] Nablarchにあるサービス提供可否チェックがアプリケーションの要件にマッチする場合はそれを使用する。マッチしない場合は、アプリケーションで設計/実装する。
 [11] Nablarchにあるトランザクション管理を使用する。
 [12] エラー処理は共通化し、JaxRsResponseHandlerをカスタマイズすることを想定している。業務処理で個別にエラー処理をしたい場合は、リソースメソッドにてtry/catchを使用する。
+
+<details>
+<summary>keywords</summary>
+
+機能比較, Jakarta RESTful Web Servicesサポート, HTTPメッセージング, Jakarta RESTful Web Services, リクエストマッピング, バリデーション, クライアントAPI, MessagingAction, BodyConverter, DataRecordFormatter, JaxRsResponseHandler, RESTfulウェブサービス選択, 非同期処理, トランザクション制御
+
+</details>

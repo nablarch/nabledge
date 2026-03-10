@@ -1,5 +1,7 @@
 # ルーティングアダプタ
 
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/adaptors/router_adaptor.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/router/RoutesMapping.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/router/PathOptionsProviderRoutesMapping.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/router/jaxrs/JaxRsPathOptionsProvider.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsHttpRequest.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/router/PathOptionsFormatter.html)
+
 ## モジュール一覧
 
 **モジュール**:
@@ -11,6 +13,13 @@
 ```
 
 > **補足**: http-request-routerのバージョン0.1.1でテスト済み。バージョン変更時はプロジェクト側でテストを実施すること。
+
+<details>
+<summary>keywords</summary>
+
+nablarch-router-adaptor, com.nablarch.integration, ルーティングアダプタ, モジュール依存関係, http-request-router
+
+</details>
 
 ## ルーティングアダプタを使用するための設定を行う
 
@@ -50,6 +59,13 @@
 
 クラスパス直下に `routes.xml` を作成し、URLと業務アクションのマッピングを設定する。設定方法は[ライブラリのREADMEドキュメント(外部サイト)](https://github.com/kawasima/http-request-router/blob/master/README.ja.md)を参照。
 
+<details>
+<summary>keywords</summary>
+
+RoutesMapping, nablarch.integration.router.RoutesMapping, packageMapping, basePackage, ディスパッチハンドラ設定, ルート定義ファイル, routes.xml, ハンドラキュー設定, アクションクラスマッピング, WebFrontController, nablarch.fw.web.servlet.WebFrontController, BasicApplicationInitializer, nablarch.core.repository.initialization.BasicApplicationInitializer, handlerQueue, initializeList
+
+</details>
+
 ## 業務アクションとURLを自動的にマッピングする
 
 `match` タグの `path` 属性に `:controller` や `:action` パラメータを使用することで、業務アクションとURLの自動マッピングが可能。
@@ -79,6 +95,13 @@ router.controllerDetector=nablarch.integration.router.NablarchControllerDetector
 | PersonAction#search | /action/person/search |
 | LoginAction#index | /action/login/index |
 | ProjectUploadAction#index | /action/projectUpload/index |
+
+<details>
+<summary>keywords</summary>
+
+NablarchControllerDetector, nablarch.integration.router.NablarchControllerDetector, routes.properties, 自動マッピング, JBoss, WildFly, :controller, :action, router.controllerDetector
+
+</details>
 
 ## Jakarta RESTful Web ServicesのPathアノテーションでマッピングする
 
@@ -304,3 +327,10 @@ POST /api/foo/(:id) => com.example.FooAction#update
   </property>
 </component>
 ```
+
+<details>
+<summary>keywords</summary>
+
+PathOptionsProviderRoutesMapping, JaxRsPathOptionsProvider, JaxRsMethodBinderFactory, JerseyJaxRsHandlerListFactory, RoutesMapping, JaxRsHttpRequest, PathOptionsFormatter, BasicApplicationInitializer, WebFrontController, @Path, @GET, @POST, @DELETE, @HEAD, @OPTIONS, @PATCH, @PUT, @Produces, applicationPath, basePackage, pathOptionsProvider, pathOptionsFormatter, methodBinderFactory, handlerQueue, initializeList, Pathアノテーション ルーティング, JAX-RS マッピング, パスパラメータ, ルーティング定義確認, アノテーション引き継ぎ, インターフェース継承
+
+</details>

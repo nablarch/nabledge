@@ -1,8 +1,17 @@
 # テーブルをキューとして使ったメッセージングを再び起動したい場合にすること
 
+**公式ドキュメント**: [テーブルをキューとして使ったメッセージングを再び起動したい場合にすること](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/blank_project/firstStep_appendix/ResiBatchReboot.html)
+
 ## 概要
 
 テーブルをキューとして使ったメッセージングを一端終了した後に再び起動させたい場合、処理対象データの処理済みフラグを再設定する必要がある。
+
+<details>
+<summary>keywords</summary>
+
+テーブルをキューとして使ったメッセージング, 処理済みフラグ, 再起動, 再設定
+
+</details>
 
 ## 手順
 
@@ -53,3 +62,10 @@ COMMIT;
 7. 左上のdisconnectボタン（赤色のアイコン）をクリックして切断する。
 
 > **重要**: アーキタイプから生成したプロジェクトはH2の組み込みモードを使用している。組み込みモード使用時は、1プロセスからのみ接続を受け付ける。そのため、**切断を忘れると、アプリケーションからH2に接続できなくなる。**
+
+<details>
+<summary>keywords</summary>
+
+H2データベース, SAMPLE_USER, h2.bat, 組み込みモード, 未処理状態リセット, JDBC URL, Test Connection
+
+</details>
