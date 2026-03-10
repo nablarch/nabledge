@@ -1,0 +1,44 @@
+{
+  "id": "db-messaging-error_processing",
+  "title": "データベースをキューとしたメッセージングのエラー処理",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/feature_details/error_processing.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchActionBase.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/launcher/ProcessAbnormalEnd.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "exclude-error-data",
+      "title": "エラーとなったデータを除外し処理を継続する",
+      "hints": [
+        "BatchActionBase",
+        "transactionFailure",
+        "SqlRow",
+        "ExecutionContext",
+        "エラーデータ除外",
+        "トランザクション失敗コールバック",
+        "処理継続",
+        "データベースメッセージング"
+      ]
+    },
+    {
+      "id": "process-abnormal-end",
+      "title": "プロセスを異常終了させる",
+      "hints": [
+        "ProcessAbnormalEnd",
+        "SqlRow",
+        "ExecutionContext",
+        "Result",
+        "プロセス異常終了",
+        "テーブルキュー監視",
+        "処理停止",
+        "データ滞留"
+      ]
+    }
+  ],
+  "sections": {
+    "exclude-error-data": "エラーデータの除外は、例外発生時のコールバックメソッド :java:extdoc:`transactionFailure <nablarch.fw.action.BatchActionBase.transactionFailure(D,nablarch.fw.ExecutionContext)>` で行う。\n\n> **重要**: エラーデータを除外しなかった場合、エラーとなったデータが再び処理対象として抽出され、再度例外が発生する。(基本的に、同じデータを同じ状態で処理した場合、同じ結果となるため。)結果として、エラーデータを繰り返し処理し、それ以外のデータが処理できずに障害（例えば遅延障害）の原因となる。\n\n```java\n@Override\nprotected void transactionFailure(SqlRow inputData, ExecutionContext context) {\n  // inputDataがエラーとなった際の入力データなので、\n  // この情報を使用して該当レコードを処理対象外（例えば処理失敗のステータスなど）に更新する。\n}\n```",
+    "process-abnormal-end": "プロセスを異常終了させたい場合は、:java:extdoc:`ProcessAbnormalEnd <nablarch.fw.launcher.ProcessAbnormalEnd>` を送出する。\n\n> **重要**: プロセスを異常終了させると、テーブルキューの監視処理が終了するため、テーブルに未処理のデータが滞留し、データの取り込み遅延などが発生する。安易にプロセスを異常終了させるのではなく、:ref:`エラーとなったデータを除外 <db_messaging-exclude_error_data>` して処理を継続させることを推奨する。\n\n```java\n@Override\npublic Result handle(SqlRow inputData, ExecutionContext ctx) {\n\n  if (isAbnormalEnd(inputData)) {\n    // 異常終了すべき状態の場合は、ProcessAbnormalEndを送出する。\n    throw new ProcessAbnormalEnd(100, \"sample_process_failure\");\n  }\n\n  return new Result.Success();\n}\n```"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "jakarta-batch-application_design",
+  "title": "アプリケーションの責務配置",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/application_design.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "batchlet-step",
+      "title": "Batchletステップの場合",
+      "hints": [
+        "Batchlet",
+        "バッチレット",
+        "ステップ処理結果",
+        "業務ロジック実行",
+        "バッチレットクラス",
+        "終了ステータス",
+        "Jakarta Batch Specification"
+      ]
+    },
+    {
+      "id": "chunk-step",
+      "title": "Chunkステップの場合",
+      "hints": [
+        "ItemReader",
+        "ItemProcessor",
+        "ItemWriter",
+        "Form",
+        "Entity",
+        "チャンク処理",
+        "フォームクラス",
+        "エンティティクラス",
+        "入力値チェック",
+        "Bean Validation",
+        "Jakarta Batch Specification"
+      ]
+    }
+  ],
+  "sections": {
+    "batchlet-step": "**クラス**: `Batchlet`\n\nバッチレットで業務ロジックを実行し、ステップの処理結果を表す文字列（バッチレットの終了ステータス）を返却する。終了ステータスの詳細は Jakarta Batch Specification を参照。用途例: ファイルダウンロード、`insert～select` のみで完結するSQL実行など。",
+    "chunk-step": "**クラス**: `ItemReader`\n\nデータソース（ファイルやデータベース等）から処理対象データを読み込み、フォームに変換して返却する。`ItemReader` は Jakarta Batch で規定されているインタフェースであるため、実装方法などの詳細は Jakarta Batch Specification を参照。\n\n**クラス**: `ItemProcessor`\n\nアイテムリーダが読み込んだデータを元に業務ロジックを実行し、出力対象データを生成する。出力対象がDBの場合はエンティティに変換、DB以外は出力用フォームに変換する。`ItemProcessor` は Jakarta Batch で規定されているインタフェースであるため、実装方法などの詳細は Jakarta Batch Specification を参照。\n\n> **補足**: 外部から取得したデータを扱う場合は、業務ロジック実行前に入力値チェックを行うこと。:ref:`入力値のチェック <validation>` 参照。\n\n**クラス**: `ItemWriter`\n\nアイテムプロセッサで変換したエンティティ（フォーム）をデータベースやファイルに出力する。`ItemWriter` は Jakarta Batch で規定されているインタフェースであるため、実装方法などの詳細は Jakarta Batch Specification を参照。\n\n**クラス**: `Form`（フォームクラス）\n\nアイテムリーダが読み込んだデータを保持するクラス。出力対象がDB以外の場合は出力データも保持する。外部から受け付けた信用できない値を保持するフォームでは、プロパティ型をすべて `String` にすること（バイナリ項目はバイト配列）。理由は :ref:`Bean Validation <bean_validation-form_property>` 参照。\n\n**クラス**: `Entity`（エンティティクラス）\n\nテーブルと1対1で対応するクラス。カラムに対応するプロパティを持つ。"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "id": "handlers-resource_mapping",
+  "title": "リソースマッピングハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/resource_mapping.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/ResourceMapping.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "handler-class",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "nablarch.fw.web.handler.ResourceMapping",
+        "ResourceMapping",
+        "リソースマッピングハンドラ",
+        "ハンドラクラス名"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "com.nablarch.framework",
+        "Mavenモジュール",
+        "依存関係"
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "制約",
+      "hints": [
+        "forwarding_handler",
+        "http_response_handler",
+        "forward://",
+        "servlet://",
+        "file://",
+        "classpath://",
+        "ハンドラ配置順序",
+        "制約"
+      ]
+    },
+    {
+      "id": "static-resource-download",
+      "title": "静的リソースのダウンロード",
+      "hints": [
+        "baseUri",
+        "basePath",
+        "request_handler_entry",
+        "静的リソースダウンロード",
+        "認可チェック",
+        "ResourceMapping設定",
+        "後続ハンドラ呼び出しなし"
+      ]
+    }
+  ],
+  "sections": {
+    "handler-class": "**クラス名**: :java:extdoc:`nablarch.fw.web.handler.ResourceMapping`",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "constraints": "- :ref:`forwarding_handler` よりも後に配置すること: `forward://` スキームを使用するため。\n- :ref:`http_response_handler` よりも後に配置すること: `servlet://`、`file://`、`classpath://` スキームの使用と、エラー時の404(Not Found)応答処理のため。",
+    "static-resource-download": "> **重要**: ログが大量に出力される、高負荷サーバでアプリケーションサーバの負荷が大きいといったデメリットがある。認可チェック等、他のハンドラを経由する必要があるコンテンツのみに使用すること。一般的な静的リソースはウェブコンテナ/ウェブサーバの機能でダウンロードすること。\n\n> **重要**: 主に :ref:`request_handler_entry` と組み合わせて「特定の拡張子の場合に静的リソースをダウンロードする」機能の実現に使用する。使用例は :ref:`リクエストハンドラエントリの使用例 <request_handler_entry_usage>` を参照。\n\n本ハンドラは後続のハンドラを呼び出さない。\n\n`baseUri` と `basePath` の2つのプロパティを設定する:\n\n| プロパティ名 | 説明 |\n|---|---|\n| baseUri | 処理対象のURL。マッチしない場合はHTTPステータス404(NotFound)を返す |\n| basePath | baseUriにマッチした場合のレスポンスのベースURL。スキーマ省略時は `servlet://` が使用される |\n\n```xml\n<component name=\"imgMapping\"\n           class=\"nablarch.fw.web.handler.ResourceMapping\">\n  <property name=\"baseUri\" value=\"/\"/>\n  <property name=\"basePath\" value=\"servlet:///\"/>\n</component>\n```\n\n> **重要**: 本ハンドラを単独でハンドラキューに追加すると、すべてのURLが静的リソースとして処理される（本ハンドラ以降のすべてのハンドラが実行されなくなる）。:ref:`request_handler_entry` と組み合わせて使用すること。"
+  }
+}

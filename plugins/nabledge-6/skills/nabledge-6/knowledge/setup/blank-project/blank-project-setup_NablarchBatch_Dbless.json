@@ -1,0 +1,81 @@
+{
+  "id": "blank-project-setup_NablarchBatch_Dbless",
+  "title": "Nablarchバッチ（DB接続無し）プロジェクトの初期セットアップ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_NablarchBatch_Dbless.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "initial-setup",
+      "title": "Nablarchバッチ（DB接続無し）プロジェクトの初期セットアップ",
+      "hints": [
+        "初期セットアップ",
+        "DB接続無しバッチ",
+        "ブランクプロジェクト生成",
+        "疎通確認",
+        "Nablarchバッチ"
+      ]
+    },
+    {
+      "id": "project-overview",
+      "title": "生成するプロジェクトの概要",
+      "hints": [
+        "Mavenプロジェクト",
+        "単一プロジェクト構成",
+        "都度起動バッチ",
+        "プロジェクト種別",
+        "プロジェクト構成"
+      ]
+    },
+    {
+      "id": "blank-project-creation",
+      "title": "ブランクプロジェクト作成",
+      "hints": [
+        "nablarch-batch-dbless-archetype",
+        "mvn archetype:generate",
+        "archetypeVersion",
+        "groupId",
+        "artifactId",
+        "version",
+        "package",
+        "Nablarch 6u2",
+        "Maven Archetype Plugin"
+      ]
+    },
+    {
+      "id": "connectivity-test",
+      "title": "疎通確認(都度起動バッチ)",
+      "hints": [
+        "SampleBatchActionRequestTest",
+        "SampleAction",
+        "SampleBatch",
+        "mvn test",
+        "mvn package",
+        "nablarch.fw.launcher.Main",
+        "batch-boot.xml",
+        "都度起動バッチ",
+        "疎通確認",
+        "バッチ起動テスト",
+        "MultiThreadExecutionHandler",
+        "nablarch.fw.handler.MultiThreadExecutionHandler"
+      ]
+    },
+    {
+      "id": "supplement",
+      "title": "補足",
+      "hints": [
+        "ブランクプロジェクト組み込みツール",
+        "firststep_complement",
+        "ツール設定"
+      ]
+    }
+  ],
+  "sections": {
+    "initial-setup": "Nablarchバッチ（DB接続無し）プロジェクトの初期セットアップでは以下を行う。\n\n1. Nablarchバッチ（DB接続無し）プロジェクトの生成\n2. Nablarchバッチ（DB接続無し）プロジェクトの動作確認",
+    "project-overview": "| 項目 | 説明 |\n|---|---|\n| プロジェクト種別 | Mavenプロジェクト |\n| プロジェクト構成 | 単一プロジェクト構成 |\n| 含まれるもの | Nablarchバッチアプリケーション用の基本的な設定、疎通確認用の都度起動バッチアプリケーション、Mavenと連動して動作するツールの初期設定（:ref:`about_maven_parent_module` 参照） |\n\n他のプロジェクトとの関係、及びディレクトリ構成は :doc:`../MavenModuleStructures/index` を参照。",
+    "blank-project-creation": "[Maven Archetype Plugin(外部サイト、英語)](https://maven.apache.org/archetype/maven-archetype-plugin/usage.html) を使用してブランクプロジェクトを生成する。\n\nまず、ブランクプロジェクトを作成したいディレクトリ（任意のディレクトリで可）にカレントディレクトリを変更する。\n\nその後、以下のコマンドを実行する。\n\n```bat\nmvn archetype:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArtifactId=nablarch-batch-dbless-archetype -DarchetypeVersion={nablarch_version}\n```\n\nバージョン変更時は以下のパラメータを変更すること:\n\n| 設定値 | 説明 |\n|---|---|\n| archetypeVersion | 使用したいアーキタイプのバージョンを指定する（Nablarch 6u2以降を指定すること） |\n\nプロジェクト情報の入力項目:\n\n| 入力項目 | 説明 | 設定例 |\n|---|---|---|\n| groupId | グループID（通常はパッケージ名） | `com.example` |\n| artifactId | アーティファクトID | `myapp-batch-dbless` |\n| version | バージョン番号 | `0.1.0` |\n| package | パッケージ（通常はグループIDと同じ） | `com.example` |\n\n> **重要**: groupIdおよびpackageはJavaのパッケージ名にマッピングされる。入力値には英小文字、数字、ドットを使用し、ハイフンは使用しないこと。\n\nプロジェクト情報の入力が終わると、`Y: :` と表示される。\n\n- 入力した内容をもとにひな形を生成する場合には「Y」を入力する。\n- プロジェクト情報の入力をやり直したい場合には「N」を入力する。\n\nコマンドが正常終了した場合、ブランクプロジェクトがカレントディレクトリ配下に作成される。",
+    "connectivity-test": "### 自動テスト（都度起動バッチ）\n\n| ユニットテストクラス | テスト内容 |\n|---|---|\n| SampleBatchActionRequestTest | Nablarchのテスティングフレームワークを使用して、バッチを起動可能であるかを確認する |\n\n```text\ncd myapp-batch-dbless\nmvn test\n```\n\n実行に成功すると、以下のようなログがコンソールに出力される。\n\n```text\n[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0\n[INFO]\n[INFO] ------------------------------------------------------------------------\n[INFO] BUILD SUCCESS\n[INFO] ------------------------------------------------------------------------\n```\n\n### 起動テスト（都度起動バッチ）\n\n| バッチクラス | 内容 |\n|---|---|\n| SampleAction | バッチアプリケーション実装する際に一般的に使用するNablarchの機能の動作確認 |\n\nバッチアプリケーションのビルド:\n\n```text\ncd myapp-batch-dbless\nmvn package\n```\n\n都度起動バッチアプリケーションの起動:\n\n```bash\nmvn exec:java -Dexec.mainClass=nablarch.fw.launcher.Main ^\n    -Dexec.args=\"'-diConfig' 'classpath:batch-boot.xml' '-requestPath' 'SampleBatch' '-userId' 'batch_user'\"\n```\n\n起動に成功すると、以下のようなログがコンソールに出力される。\n\n```text\n2020-04-28 08:56:23.353 -INFO- com.example.SampleBatch [...] 疎通確認を開始します。\n2020-04-28 08:56:23.383 -INFO- com.example.SampleBatch [...] 疎通確認が完了しました。\n2020-04-28 08:56:23.396 -INFO- nablarch.fw.handler.MultiThreadExecutionHandler [...] \nThread Status: normal end.\nThread Result:[200 Success] The request has succeeded.\n2020-04-28 08:56:23.413 -INFO- nablarch.fw.launcher.Main [...] @@@@ END @@@@ exit code = [0]\n```",
+    "supplement": "ブランクプロジェクトに組み込まれているツールについては :doc:`../firstStep_appendix/firststep_complement` を参照すること。"
+  }
+}

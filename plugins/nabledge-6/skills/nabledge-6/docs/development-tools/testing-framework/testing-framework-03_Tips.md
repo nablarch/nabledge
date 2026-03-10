@@ -1,206 +1,80 @@
 # 目的別API使用方法
 
-## 概要
-
-目的別のAPIの使用方法を説明する。
-
-* :ref:`how_to_get_data_from_excel`
-* :ref:`how_to_run_the_same_test`
-* :ref:`tips_groupId`
-* :ref:`how_to_fix_date`
-* :ref:`how_to_numbering_sequence`
-* :ref:`using_ThreadContext`
-* :ref:`using_TestDataParser`
-* :ref:`using_junit_annotation`
-* :ref:`using_transactions`
-* :ref:`using_ohter_class`
-* :ref:`how_to_assert_property_from_excel`
-* :ref:`tips_test_data`
-* :ref:`how_to_express_empty_line`
-* :ref:`how_to_change_master_data`
-* :ref:`how_to_change_test_data_dir`
-* :ref:`how_to_convert_test_data`
-
 ## Excelファイルから、入力パラメータや戻り値に対する期待値などを取得したい
 
-テスト実行時の引数や戻り値の期待値をExcelに記載し、`List<Map<String, String>>`形式で取得できる。
+データタイプ`LIST_MAP=<ID>`を使用してExcelファイルからList<Map<String,String>>形式のデータを取得できる。
 
-**Excel書式**:
-```
-LIST_MAP=<シート内で一意になるID>
-```
+- データ2行目: MapのKey
+- データ3行目以降: MapのValue
 
-2行目がMapのキー、3行目以降がMapの値と解釈される。
+**メソッド**: `TestSupport#getListMap(String sheetName, String id)`, `DbAccessTestSupport#getListMap(String sheetName, String id)`（第1引数: シート名、第2引数: ID）
 
-**API**:
-- `TestSupport#getListMap(String sheetName, String id)`
-- `DbAccessTestSupport#getListMap(String sheetName, String id)`
-
-第1引数: シート名、第2引数: ID
-
-**実装例**:
 ```java
-public class EmployeeComponentTest extends DbAccessTestSupport {
-    @Test
-    public void testGetName() {
-       List<Map<String, String>> parameters = getListMap("testGetName", "parameters");
-       Map<String, String>> param = parameters.get(0);
-       String empNo = parameter.get("empNo");
-       String expected = parameter.get("expected");
-       
-       EmployeeComponent target = new EmployeeComponent();
-       String actual = target.getName(empNo);
-       assertEquals(expected, actual);
-    }
-}
+List<Map<String, String>> parameters = getListMap("testGetName", "parameters");
+Map<String, String> param = parameters.get(0);
+String empNo = param.get("empNo");
+String expected = param.get("expected");
 ```
 
-**Excel例**:
-```
-LIST_MAP=parameters
+Excelシート記述形式（`LIST_MAP=parameters`）:
 
 | empNo | expected |
-|-------|----------|
+|---|---|
 | 00001 | 山田太郎 |
 | 00002 | 鈴木一郎 |
-```
-
-取得されるListオブジェクトの構造:
-```java
-List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-Map<String, String> first = new HashMap<String, String>();
-first.put("empNo","00001");
-first.put("expected", "山田太郎");
-list.add(first);
-Map<String, String> second = new HashMap<String, String>();
-second.put("empNo","00002");
-map.put("expected", "鈴木一郎");
-list.add(second);
-```
 
 ## 同じテストメソッドをテストデータを変えて実行したい
 
-List-Map取得メソッドでテストをループ実行することで、Excelデータを追加するだけでテストバリエーションを増やせる。
+List-Mapで取得したデータをループしてテストを実行することで、Excelデータを追加するだけでデータバリエーションを増やせる。
 
-**実装例**:
 ```java
-public class EmployeeComponentTest extends DbAccessTestSupport {
-    @Test
-    public void testSelectByPk() {
-       setUpDb("testSelectByPk");
-       List<Map<String, String>> parameters = getListMap("testGetName", "parameters");
-       for (Map<String, String> param : parameters) {
-           String empNo = param.get("empNo");
-           String expectedDataId = param.get("expectedDataId");
-           EmployeeComponent target = new EmployeeComponent();
-           SqlResultSet actual = target.selectByPk(empNo);
-           assertSqlResultSetEquals("testSelectByPk", expectedDataId, actual);
-        }
-    }
+List<Map<String, String>> parameters = getListMap("testGetName", "parameters");
+for (Map<String, String> param : parameters) {
+    String empNo = param.get("empNo");
+    String expectedDataId = param.get("expectedDataId");
+    SqlResultSet actual = target.selectByPk(empNo);
+    assertSqlResultSetEquals("testSelectByPk", expectedDataId, actual);
 }
 ```
 
-**Excel例**:
-```
-// ループさせるデータ
-LIST_MAP=parameters
-
-| empNo | expectedDataId |
-|-------|----------------|
-| 00001 | expected01     |
-| 00002 | expected02     |
-
-// 準備データ
-SETUP_TABLE=EMPLOYEE
-
-| NO    | NAME     |
-|-------|----------|
-| 00001 | 山田太郎 |
-| 00002 | 鈴木一郎 |
-
-// 期待値データ1
-LIST_MAP=expected01
-
-| NO    | NAME     |
-|-------|----------|
-| 00001 | 山田太郎 |
-
-// 期待値データ2
-LIST_MAP=expected02
-
-| NO    | NAME     |
-|-------|----------|
-| 00001 | 山田太郎 |
-```
-
-> **重要**: 更新系テストではループ内で`setUpDb`を呼び出すこと。そうしないとテスト成否がデータ順序に依存する。
+> **重要**: 更新系のテストを行う場合、ループ内で`setUpDb`を呼び出すこと。そうしないとテストの成否がデータの順番に依存する。
 
 ## 一つのシートに複数テストケースのデータを記載したい
 
-グループIDを付与することで複数テストケースのデータを1シートに混在させられる。
+グループIDを付与することで、`EXPECTED_TABLE`と`SETUP_TABLE`の複数テストケースのデータを1シートに混在させることができる。
 
-**対応データタイプ**:
-- `EXPECTED_TABLE`
-- `SETUP_TABLE`
+**サポートデータタイプ**: `EXPECTED_TABLE`, `SETUP_TABLE`
 
-**書式**:
-```
-データタイプ[グループID]=テーブル名
-```
+書式: `データタイプ[グループID]=テーブル名`
 
-オーバーロードメソッドにグループIDを渡すことで、指定グループのデータのみを処理できる。
-
-**実装例**:
 ```java
-// グループ"case_001"のデータのみ登録
+// グループID "case_001" のデータのみ登録
 setUpDb("testUpdate", "case_001");
-
-// グループ"case_001"のデータのみアサート
+// グループID "case_001" のデータのみassert
 assertTableEquals("データベース更新結果確認", "testUpdate", "case_001");
 ```
 
-**Excel例**:
+Excel記述例:
 ```
-// ケース001: 従業員の所属を変更する
 SETUP_TABLE[case_001]=EMPLOYEE_TABLE
-
-| ID    | EMP_NAME | DEPT_CODE |
-|-------|----------|-----------|  
-| 00001 | 山田太郎 | 0001      |
-| 00002 | 田中一郎 | 0002      |
-
 EXPECTED_TABLE[case_001]=EMPLOYEE_TABLE
 
-| ID    | EMP_NAME | DEPT_CODE |
-|-------|----------|-----------|  
-| 00001 | 山田太郎 | 0001      |
-| 00002 | 田中一郎 | 0010      | // 更新
-
-// ケース002: 従業員の氏名を変更する
 SETUP_TABLE[case_002]=EMPLOYEE_TABLE
-
-| ID    | EMP_NAME | DEPT_CODE |
-|-------|----------|-----------|  
-| 00001 | 山田太郎 | 0001      |
-| 00002 | 田中一郎 | 0002      |
-
 EXPECTED_TABLE[case_002]=EMPLOYEE_TABLE
-
-| ID    | EMP_NAME | DEPT_CODE |
-|-------|----------|-----------|  
-| 00001 | 佐藤太郎 | 0001      | // 更新
-| 00002 | 田中一郎 | 0002      |
 ```
 
-> **重要**: グループIDのデータは :ref:`auto-test-framework_multi-datatype` のようにグループごとにまとめて記述すること。まとめないとデータ読み込みが途中で終了しテストが正しく実行されない。
+> **注意**: 複数グループIDのデータを記述する際は、グループIDごとにまとめて記述すること。まとめて記述しないとデータ読み込みが途中で終了しテストが正しく実行されない。
 
 ## システム日時を任意の値に固定したい
 
-システム日付を含むテストで、日によって結果が変わる問題を解決するため、システム日時を固定値に設定できる。
+**クラス**: `nablarch.test.FixedSystemTimeProvider`
 
-`SystemTimeProvider`の実装を`FixedSystemTimeProvider`に差し替えることで、任意のシステム日時を返せる。
+コンポーネント設定ファイルの`systemTimeProvider`に`FixedSystemTimeProvider`を指定することで、任意のシステム日時を固定できる。
 
-**設定例**:
+| プロパティ名 | 設定内容 |
+|---|---|
+| fixedDate | 固定日時文字列。形式: `yyyyMMddHHmmss`（12桁）または `yyyyMMddHHmmssSSS`（15桁） |
+
 ```xml
 <component name="systemTimeProvider"
     class="nablarch.test.FixedSystemTimeProvider">
@@ -208,104 +82,206 @@ EXPECTED_TABLE[case_002]=EMPLOYEE_TABLE
 </component>
 ```
 
-**プロパティ**:
-
-| プロパティ名 | 設定内容 |
-|-------------|----------|
-| fixedDate | 指定したい日時。フォーマット: `yyyyMMddHHmmss` (12桁) または `yyyyMMddHHmmssSSS` (15桁) |
-
-**使用例**:
 ```java
 SystemTimeProvider provider = (SystemTimeProvider) SystemRepository.getObject("systemTimeProvider");
 Date now = provider.getDate();
 ```
 
+## 採番をテストしたい
+
+シーケンス採番のテストでは、採番結果が実行タイミングに依存するため、テスト用に採番値を固定する必要がある。
+
+Nablarchテスティングフレームワークでは、採番処理をテスト用の実装に差し替えることで、任意の採番値を返すようにできる。テスト用コンポーネント設定ファイルで、IdGeneratorインタフェースの実装クラスをモック実装に差し替えて使用する。
+
+## ThreadContextを使用したい
+
+ThreadContextはリクエストスコープの情報（ユーザID、リクエストIDなど）を保持する。テストでThreadContextの値を設定する場合は、テスト用コンポーネント設定でスレッドコンテキスト変数定義を設定するか、テストコード内で直接`ThreadContext.setObject(String key, Object value)`を使用する。
+
+テスト実行後はThreadContextの値がクリアされることを確認すること。
+
+## TestDataParserを使用したい
+
+TestDataParserはExcelなどのテストデータファイルを解析するクラス。直接インスタンス化して使用することで、テストデータをプログラムから柔軟に読み取れる。
+
+TestDataParserを直接使用する場合は、データファイルのパスとシート名を指定してデータを取得する。通常はDbAccessTestSupportやTestSupportのメソッド経由で間接的に使用する。
+
+## JUnitのアノテーションを使用したい
+
+NablarchテスティングフレームワークはJUnitの標準アノテーションと組み合わせて使用できる。
+
+- `@Test`: テストメソッドのマーク（標準JUnit）
+- `@Rule` / `@ClassRule`: JUnit Ruleの適用
+- `@Before` / `@After`: テスト前後の処理
+
+DbAccessTestSupportなどの基底クラスはJUnit 4の`TestCase`を継承しているため、JUnit 4のアノテーションが使用可能。
+
+## トランザクションを使用したい
+
+テストコードからトランザクションを制御する場合は、SimpleDbTransactionManagerなどのトランザクションマネージャを使用する。
+
+DbAccessTestSupportを継承したテストでは、テストフレームワークが自動的にトランザクション管理を行う。各テストメソッド終了後にロールバックされるため、テスト間でデータが干渉しない。
+
+手動でコミットが必要な場合は、トランザクションマネージャを取得してコミット操作を行う。
+
+## その他のクラスを使用したい
+
+テスティングフレームワークが提供するその他のユーティリティクラスを使用することで、テスト実装を簡素化できる。
+
+システムリポジトリからコンポーネントを取得する場合は`SystemRepository.getObject(String name)`を使用する。テスト用のコンポーネント設定ファイルをシステムリポジトリにロードした後、各コンポーネントを取得してテストに使用する。
+
+## Excelのデータを使ってBeanのプロパティをアサートしたい
+
+ExcelファイルのデータをBeanのプロパティ検証に使用する場合、`assertProperties`メソッドが利用できる。
+
+ExcelシートにBeanのプロパティ名と期待値を記載し、`assertProperties(String sheetName, String id, Object bean)`を呼び出すことで、Beanの各プロパティ値とExcelの期待値を一括比較できる。
+
+これにより、多数のプロパティを持つBeanのアサーションを簡潔に記述できる。
+
+クラスのプロパティ検証にはExcelファイルのデータと照合する以下のメソッドを使用する。引数: 第1引数=エラー時メッセージ、第2引数=シート名、第3引数=ID、第4引数=検証対象（Object/Object[]/List<?>）。
+
+- `HttpRequestTestSupport#assertObjectPropertyEquals(String message, String sheetName, String id, Object actual)`
+- `HttpRequestTestSupport#assertObjectArrayPropertyEquals(String message, String sheetName, String id, Object[] actual)`
+- `HttpRequestTestSupport#assertObjectListPropertyEquals(String message, String sheetName, String id, List<?> actual)`
+
+テストデータの記述方法は :ref:`how_to_get_data_from_excel` と同様。2行目がプロパティ名、3行目以降が検証値。
+
+**テストコード例**:
+
+```java
+assertObjectPropertyEquals(message, sheetName, "expectedUsers", users);
+```
+
+**Excelデータ記述例**（`LIST_MAP=expectedUsers`）:
+
+| kanjiName | kanaName | mailAddress |
+|-----------|----------|-------------|
+| 漢字氏名 | カナシメイ | test@anydomain.com |
+
+## テストデータに関するヒント
+
+テストデータ記述に関するヒント:
+
+- **NULL値**: Excelセルを空欄にするとNULLとして扱われる
+- **空文字**: 空文字を明示的に指定する場合は特殊な記法を使用する
+- **コメント行**: `//`で始まる行はコメントとして無視される
+- **型指定**: 1行目（ヘッダ行の次）に型を指定できる（例: `// CHAR(5)`）
+- **数値**: 数値データはそのまま記載可能
+
+## 空行を表現したい
+
+Excelテストデータで空行（改行のみの文字列）を表現する場合、通常の空セルはNULLとして扱われるため区別が必要。
+
+空文字（長さ0の文字列）を表現するには、テスティングフレームワークが定義する特殊な記法（空文字リテラル）を使用する。具体的な記法はフレームワークのバージョンに依存するため、公式ドキュメントを確認すること。
+
+## マスタデータを変更したい
+
+テスト実行前にマスタデータを投入・変更する場合は、`SETUP_TABLE`データタイプを使用してExcelシートにマスタデータを定義する。
+
+```
+SETUP_TABLE=CODE_MASTER
+```
+
+システム全体で共有するマスタデータはテストクラスの`setUpClass`相当の処理で投入し、テスト個別のマスタデータは各テストメソッドの`setUpDb`で投入する。
+
+## テストデータのディレクトリを変更したい
+
+テストデータファイルのデフォルト配置ディレクトリを変更する場合は、コンポーネント設定ファイルでテストサポートクラスの`basePath`プロパティを設定する。
+
+デフォルトではテストクラスと同一パッケージのリソースディレクトリにExcelファイルを配置するが、プロジェクト構成に合わせてディレクトリを変更できる。
+
+:ref:`how_to_change_test_data_dir` を参照。テストデータの配置ディレクトリを変更する方法については、ソースドキュメントの当該セクションを確認すること。
+
+## テストデータを変換したい
+
+テストデータの型変換が必要な場合は、TestDataConverterインタフェースを実装したクラスを使用する。
+
+Excelから読み取った文字列データをJavaの特定の型（Date、BigDecimalなど）に変換する際に使用する。カスタムコンバータを実装することで、プロジェクト固有の型変換ルールを適用できる。
+
 ## シーケンスオブジェクトを使った採番のテストをしたい
 
-シーケンスオブジェクトを使用した採番処理では次の採番値が予測不可能で期待値を設定できない。テストでは設定ファイルの変更のみでシーケンス採番をテーブル採番に置き換えることで検証可能にする。
+シーケンスオブジェクト採番は次に採番される値が予測不可なため、テスト用設定ファイルでテーブル採番（`nablarch.common.idgenerator.FastTableIdGenerator`）に置き換えることで期待値を設定できる。
 
-手順: (1) 準備データをテーブルにセットアップ (2) 期待値はテーブル設定値を元に設定
+手順:
+1. 採番テーブルに準備データをセットアップ
+2. 期待値はテーブルに設定した値を元に設定する
 
-**本番環境設定例（シーケンスオブジェクト使用）**:
+**本番用設定（シーケンスオブジェクトを使用した採番設定）**:
+
 ```xml
 <component name="idGenerator" class="nablarch.common.idgenerator.OracleSequenceIdGenerator">
     <property name="idTable">
         <map>
-            <entry key="1101" value="SEQ_1"/>
-            <entry key="1102" value="SEQ_2"/>
-            <entry key="1103" value="SEQ_3"/>
-            <entry key="1104" value="SEQ_4"/>
+            <entry key="1101" value="SEQ_1"/> <!-- ID1採番用 -->
+            <entry key="1102" value="SEQ_2"/> <!-- ID2採番用 -->
+            <entry key="1103" value="SEQ_3"/> <!-- ID3採番用 -->
+            <entry key="1104" value="SEQ_4"/> <!-- ID4採番用 -->
         </map>
     </property>
 </component>
 ```
 
-**テスト環境設定（テーブル採番に置換）**:
+**テスト用設定（本番の`idGenerator`コンポーネントをテーブル採番用設定で上書き）**:
+
 ```xml
 <component name="idGenerator" class="nablarch.common.idgenerator.FastTableIdGenerator">
     <property name="tableName" value="TEST_SBN_TBL"/>
     <property name="idColumnName" value="ID_COL"/>
     <property name="noColumnName" value="NO_COL"/>
-    <property name="dbTransactionManager" ref="dbTransactionManager" />
+    <property name="dbTransactionManager" ref="dbTransactionManager"/>
 </component>
 ```
 
-> **補足**: 設定値の詳細は `IdGenerator` を参照
+> **補足**: テーブル採番用の設定値の詳細は、`IdGenerator` を参照すること。
 
-**Excelテストデータ記述例**:
+**Excelファイル記述例（採番対象ID:1101）**:
 
 準備データ（`SETUP_TABLE=TEST_SBN_TBL`）:
+
 | ID_COL | NO_COL |
 |--------|--------|
-| 1101   | 100    |
+| 1101 | 100 |
 
-> **補足**: テスト範囲内で使用する採番対象のレコードのみ設定
+> **補足**: 採番用テーブルには、テスト範囲内で使用する採番対象のレコードのみを設定する。
 
 期待値（`EXPECTED_TABLE=TEST_SBN_TBL`）:
+
 | ID_COL | NO_COL |
 |--------|--------|
-| 1101   | 101    |
+| 1101 | 101 |
 
-期待値（`EXPECTED_TABLE=USER_INFO`）:
-| USER_ID    | KANJI_NAME | KANA_NAME |
-|------------|------------|-----------||
-| 0000000101 | 漢字名     | ｶﾅﾒｲ      |
+期待値（`EXPECTED_TABLE=USER_INFO`、採番した値が登録されるテーブル）:
 
-> **補足**: この例ではテスト内で1度のみ採番を想定。期待値は「準備データの値 + 1」
+| USER_ID | KANJI_NAME | KANA_NAME |
+|------------|------------|----------|
+| 0000000101 | 漢字名 | ｶﾅﾒｲ |
+
+> **補足**: 本記述例では、テスト内で1度のみ採番処理が行われていることを想定している。このため、期待値は「準備データの値 + 1」となっている。
 
 ## ThreadContextにユーザID、リクエストIDなどを設定したい
 
-Nablarch Application Frameworkでは通常ThreadContextにユーザID・リクエストIDが設定済みだが、データベースアクセスクラスの単体テストではフレームワークを経由しないため未設定となる。
+データベースアクセスクラスの自動テストでは、フレームワークを経由せず直接起動するためThreadContextに値が設定されていない。ExcelファイルにLIST_MAPでデータを記述し、以下のメソッドを呼び出すことでThreadContextに値を設定できる。
 
-**設定メソッド**:
 - `TestSupport#setThreadContextValues(String sheetName, String id)`
 - `DbAccessTestSupport#setThreadContextValues(String sheetName, String id)`
 
-Excelファイルにデータを記述し、上記メソッドを呼び出すことでThreadContextに値を設定できる。
+> **補足**: 自動設定項目を使用してDBを登録・更新する際は、ThreadContextにリクエストIDとユーザIDが必要。テスト対象クラス起動前にこれらの値をThreadContextに設定すること。
 
-> **重要**: 自動設定項目を使用したDB登録・更新では、ThreadContextにリクエストIDとユーザIDの設定が必須。テスト対象クラス起動前に設定すること。
+**テストコード例**:
 
-**テストコード実装例**:
 ```java
-public class DbAccessTestSample extends DbAccessTestSupport {
-    @Test
-    public void testInsert() {
-        setThreadContextValues("testSelect", "threadContext");
-        // ...
-    }
-}
+setThreadContextValues("testSelect", "threadContext");
 ```
 
-**Excelデータ記述例** (`LIST_MAP=threadContext`):
-| USER_ID | REQUEST_ID | LANG  |
-|---------|------------|-------|
-| U00001  | RS000001   | ja_JP |
+**Excelデータ記述例**（シート[testInsert]、`LIST_MAP=threadContext`）:
+
+| USER_ID | REQUEST_ID | LANG |
+|---------|------------|------|
+| U00001 | RS000001 | ja_JP |
 
 ## 任意のディレクトリのExcelファイルを読み込みたい
 
-テストソースコードと同じディレクトリのExcelファイルはシート名指定のみで読み込み可能。別ディレクトリのファイルを読み込む場合は、TestDataParser実装クラスを直接使用する。
+テストソースコードと同じディレクトリに存在するExcelファイルであれば、シート名を指定するだけで読み込み可能である。別のディレクトリに存在するファイルを読み込みたい場合は、`TestDataParser`実装クラスを直接使用することで取得できる。
 
-**実装例**:
 ```java
 TestDataParser parser = (TestDataParser) SystemRepository.getObject("testDataParser");
 List<Map<String, String>> list = parser.getListMap("/foo/bar/Baz.xlsx", "sheet001", "params");
@@ -313,13 +289,12 @@ List<Map<String, String>> list = parser.getListMap("/foo/bar/Baz.xlsx", "sheet00
 
 ## テスト実行前後に共通処理を行いたい
 
-JUnit4のアノテーション（`@Before`, `@After`, `@BeforeClass`, `@AfterClass`）を使用してテスト実行前後の共通処理を実行できる。
+JUnit4の`@Before`、`@After`、`@BeforeClass`、`@AfterClass`アノテーションを使用することで、テスト実行前後に共通処理を実行できる。
 
 ## @BeforeClass, @AfterClass使用時の注意点
 
-**注意**: サブクラスでスーパークラスと同名・同アノテーションのメソッドを作成しないこと。同名メソッドに同種アノテーションを付与すると、スーパークラスのメソッドは起動されない。
+サブクラスにてスーパークラスと同名・同アノテーション（`@BeforeClass`/`@AfterClass`）のメソッドを作成しないこと。同名メソッドに同種のアノテーションを付与した場合、スーパークラスのメソッドは起動されなくなる。
 
-**誤った実装例**:
 ```java
 public class TestSuper {
     @BeforeClass
@@ -333,7 +308,7 @@ public class TestSub extends TestSuper {
     public static void setUpBeforeClass() {
         // スーパークラスのメソッドを上書き
     }
-    
+
     @Test
     public void test() {
         System.out.println("test");
@@ -341,28 +316,24 @@ public class TestSub extends TestSuper {
 }
 ```
 
-上記TestSubを実行すると「test」のみ表示される（スーパークラスのメソッドは実行されない）。
+上記TestSubを実行した場合、「test」と表示される。
 
 ## デフォルト以外のトランザクションを使用したい
 
-データベースアクセスクラスの単体テストでは、通常データベースアクセスクラス自身はトランザクション制御を行わないため、テストクラス側で制御が必要。
-
-テスティングフレームワークはトランザクション自動制御機構を提供。プロパティファイルにトランザクション名を記載すれば、テストメソッド実行前後に自動的にトランザクション開始・終了を行う。これにより明示的なトランザクション開始が不要となり、終了処理漏れも防止できる。
-
-**利用手順**: テストクラスで`DbAccessTestSupport`を継承する（スーパークラスの`@Before`、`@After`メソッドが自動呼び出しされる）。
+`DbAccessTestSupport`を継承することで、スーパークラスの`@Before`/`@After`メソッドが自動的に呼び出され、テストメソッド実行前後のトランザクション開始/終了が自動化される。プロパティファイルにトランザクション名を記載することで、テスティングフレームワークがトランザクション制御を行う。これにより、個別テストでの明示的なトランザクション開始や、終了処理漏れがなくなる。
 
 ## 本フレームワークのクラスを継承せずに使用したい
 
-別クラスを継承する必要があり本フレームワークのスーパークラスを継承できない場合、スーパークラスをインスタンス化して処理を委譲することで代替可能。
+フレームワークのスーパークラスを継承できない場合、スーパークラスをインスタンス化して処理を委譲することで代替できる。
 
-**委譲使用時の制約**:
-- コンストラクタにテストクラス自身のClassインスタンスを渡す
-- `@Before`メソッド、`@After`メソッドは明示的に呼び出す
+- コンストラクタにテストクラス自身の`Class`インスタンス（`getClass()`）を渡す必要がある
+- `@Before`/`@After`メソッドは明示的に呼び出す必要がある（`beginTransactions()`/`endTransactions()`）
 
-**実装例**:
 ```java
 public class SampleTest extends AnotherSuperClass {
-    private DbAccessTestSupport dbSupport = new DbAccessTestSupport(getClass());
+
+    private DbAccessTestSupport dbSupport
+          = new DbAccessTestSupport(getClass());
 
     @Before
     public void setUp() {
@@ -377,48 +348,10 @@ public class SampleTest extends AnotherSuperClass {
     @Test
     public void test() {
         dbSupport.setUpDb("test");
-        // ...
         dbSupport.assertSqlResultSetEquals("test", "id", actual);
     }
 }
 ```
-
-## クラスのプロパティを検証したい
-
-テスト対象クラスのプロパティをExcelファイル記述データと比較検証できる。
-
-Excelデータ形式: 2行目がプロパティ名、3行目以降が検証値。
-
-**検証メソッド**:
-- `HttpRequestTestSupport#assertObjectPropertyEquals(String message, String sheetName, String id, Object actual)`
-- `HttpRequestTestSupport#assertObjectArrayPropertyEquals(String message, String sheetName, String id, Object[] actual)`
-- `HttpRequestTestSupport#assertObjectListPropertyEquals(String message, String sheetName, String id, List<?> actual)`
-
-引数: (1) エラーメッセージ (2) シート名 (3) ID (4) 検証対象（オブジェクト/配列/リスト）
-
-**実装例**:
-```java
-public class UserUpdateActionRequestTest extends HttpRequestTestSupport {
-    @Test
-    public void testRW11AC0301Normal() {
-        execute("testRW11AC0301Normal", new BasicAdvice() {
-            @Override
-            public void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {
-                String message = testCaseInfo.getTestCaseName();
-                String sheetName = testCaseInfo.getSheetName();
-                UserForm form = (UserForm) context.getRequestScopedVar("user_form");
-                UsersEntity users = form.getUsers();
-                assertObjectPropertyEquals(message, sheetName, "expectedUsers", users);
-            }
-        });
-    }
-}
-```
-
-**Excelデータ記述例** (`LIST_MAP=expectedUsers`):
-| kanjiName | kanaName     | mailAddress            |
-|-----------|--------------|------------------------|
-| 漢字氏名  | カナシメイ   | test@anydomain.com     |
 
 ## テストデータに空白、空文字、改行やnullを記述したい
 
@@ -426,69 +359,58 @@ public class UserUpdateActionRequestTest extends HttpRequestTestSupport {
 
 ## テストデータに空行を記述したい
 
-可変長ファイルを扱う場合等でテストデータに空行を含めたい場合がある。全くの空行は無視されるため、:ref:`special_notation_in_cell` のダブルクォーテーションを使用して `""` と記述することで空行を表す。
+全くの空行は無視されるため、:ref:`special_notation_in_cell` のダブルクォーテーション記法（`""`）で空文字列を記述することで空行を表現できる。
 
-**記述例** (`SETUP_VARIABLE=/path/to/file.csv`):
+> **補足**: 行のうち1セルだけ `""` にすれば良い。可読性のため左端のセルへの記載を推奨する。
+
+**記述例**（2レコード目が空行、`SETUP_VARIABLE=/path/to/file.csv`）:
+
 | name | address |
-|------|---------||
-| 山田 | 東京都  |
-| ""   |         |
-| 田中 | 大阪府  |
-
-2レコード目が空行となる。
-
-> **補足**: 空行を表す場合、全セルを `""` で埋める必要はない。行のうちいずれか1セルのみでよい。可読性のため左端セルへの記載を推奨。
+|------|---------|
+| 山田 | 東京都 |
+| "" | |
+| 田中 | 大阪府 |
 
 ## マスタデータを変更してテストを行いたい
 
-:doc:`04_MasterDataRestore` を参照。
+[04_MasterDataRestore](testing-framework-04_MasterDataRestore.md) を参照。
 
 ## テストデータ読み込みディレクトリを変更したい
 
-**デフォルト**: テストデータは`test/java`配下から読み込み。
-
-**設定変更**: コンポーネント設定ファイルに以下を追加:
-
-| プロパティ名 | 説明 |
-|---|---|
-| nablarch.test.resource-root | カレントディレクトリからの相対パス。セミコロン(;)区切りで複数指定可 |
-
-**例**:
-```
-nablarch.test.resource-root=path/to/test-data-dir
-```
-
-**複数指定**:
-```
-nablarch.test.resource-root=test/online;test/batch
-```
-
-> **注意**: 複数指定時、同名ファイルは最初に発見されたものを使用。
-
-> **補足**: VM引数で一時変更可能: `-Dnablarch.test.resource-root=path/to/test-data-dir`
-
-## メッセージング処理でテストデータに対し定型的な変換処理を追加したい
-
-**デフォルト**: テストデータは指定エンコーディングでバイト列変換のみ。
-
-**カスタム変換追加**: `TestDataConverter`実装をシステムリポジトリ登録。
-
-**インタフェース**: `nablarch.test.core.file.TestDataConverter`
-
-**システムリポジトリ登録**:
+テストデータはデフォルトで `test/java` 配下から読み込まれる。コンポーネント設定ファイルに以下のキーを追加することで変更できる。
 
 | キー | 値 |
 |---|---|
-| TestDataConverter_<データ種別> | 実装クラス名。データ種別はfile-type指定値 |
+| nablarch.test.resource-root | テスト実行時のカレントディレクトリからの相対パス。セミコロン(;)区切りで複数指定可 |
 
-**設定例**:
+```bash
+nablarch.test.resource-root=path/to/test-data-dir
+```
+
+複数ディレクトリ指定例:
+
+```text
+nablarch.test.resource-root=test/online;test/batch
+```
+
+- 一時的な変更はVM引数で代替可能: `-Dnablarch.test.resource-root=path/to/test-data-dir`
+- 複数ディレクトリで同名テストデータが存在する場合、最初に発見されたテストデータが読み込まれる
+
+## メッセージング処理でテストデータに対し定型的な変換処理を追加したい
+
+**インタフェース**: `nablarch.test.core.file.TestDataConverter`
+
+上記インタフェースを実装しシステムリポジトリに登録することで、URLエンコーディング等の定型変換処理を追加できる。
+
+| キー | 値 |
+|---|---|
+| TestDataConverter_<データ種別> | TestDataConverterを実装したクラスのクラス名。データ種別はテストデータのfile-typeに指定した値 |
+
 ```xml
-<component name="TestDataConverter_FormUrlEncoded" 
+<component name="TestDataConverter_FormUrlEncoded"
            class="please.change.me.test.core.file.FormUrlEncodedTestDataConverter"/>
 ```
 
-![Excel記述例](../../knowledge/development-tools/testing-framework/assets/testing-framework-03_Tips/data_convert_example.png)
+![URLエンコーディング変換前のExcelファイル記述例](../../knowledge/development-tools/testing-framework/assets/testing-framework-03_Tips/data_convert_example.png)
 
-コンバータ実装により内部的に以下と同等:
-
-![内部表現](../../knowledge/development-tools/testing-framework/assets/testing-framework-03_Tips/data_convert_internal.png)
+![URLエンコーディング変換後（テストフレームワーク内部での扱い）](../../knowledge/development-tools/testing-framework/assets/testing-framework-03_Tips/data_convert_internal.png)

@@ -1,0 +1,187 @@
+{
+  "id": "testing-framework-01_entityUnitTestWithBeanValidation",
+  "title": "Bean Validationに対応したForm/Entityのクラス単体テスト",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/01_ClassUnitTest/01_entityUnitTest/01_entityUnitTestWithBeanValidation.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/validation/constraints/AssertTrue.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "overview",
+      "title": "Bean Validationに対応したForm/Entityのクラス単体テスト",
+      "hints": [
+        "Bean Validation",
+        "Form単体テスト",
+        "Entity単体テスト",
+        "単体テスト",
+        "EntityTestSupport"
+      ]
+    },
+    {
+      "id": "form-entity-unit-test",
+      "title": "Form/Entity単体テストの書き方",
+      "hints": [
+        "EntityTestSupport",
+        "nablarch.test.core.db.EntityTestSupport",
+        "テストデータExcel",
+        "テストクラス作成",
+        "Form単体テスト",
+        "Entity単体テスト",
+        "単項目精査テスト"
+      ]
+    },
+    {
+      "id": "test-case-table-charset-length",
+      "title": "テストケース表の作成方法（文字種・文字列長）",
+      "hints": [
+        "propertyName",
+        "allowEmpty",
+        "group",
+        "min",
+        "max",
+        "messageIdWhenEmptyInput",
+        "messageIdWhenInvalidLength",
+        "messageIdWhenNotApplicable",
+        "interpolateKey_n",
+        "interpolateValue_n",
+        "文字種テスト",
+        "文字列長テスト",
+        "単項目精査"
+      ]
+    },
+    {
+      "id": "test-method-creation",
+      "title": "テストメソッドの作成方法",
+      "hints": [
+        "testValidateCharsetAndLength",
+        "EntityTestSupport",
+        "文字種テスト実行",
+        "文字列長テスト実行",
+        "単項目精査テスト"
+      ]
+    },
+    {
+      "id": "test-case-table-other-validation",
+      "title": "テストケース表の作成方法（その他の単項目精査）",
+      "hints": [
+        "propertyName",
+        "case",
+        "group",
+        "messageId",
+        "その他単項目精査",
+        "日付フォーマット精査",
+        "input1",
+        "interpolateKey_n",
+        "interpolateValue_n",
+        "special_notation_in_cell"
+      ]
+    },
+    {
+      "id": "single-validation-method",
+      "title": "テストメソッドの作成方法（単項目精査）",
+      "hints": [
+        "testSingleValidation",
+        "EntityTestSupport",
+        "単項目精査",
+        "UserRegistrationFormTest",
+        "TARGET_CLASS",
+        "sheetName",
+        "id"
+      ]
+    },
+    {
+      "id": "test-case-table",
+      "title": "テストケース表の作成（項目間精査）",
+      "hints": [
+        "AssertTrue",
+        "testShots",
+        "params",
+        "項目間精査",
+        "テストケース表",
+        "入力パラメータ表",
+        "埋め込み文字",
+        "special_notation_in_cell",
+        "interpolateKey",
+        "interpolateValue",
+        "expectedMessageId",
+        "propertyName"
+      ]
+    },
+    {
+      "id": "cross-field-validation-method",
+      "title": "テストメソッドの作成方法（項目間精査）",
+      "hints": [
+        "testBeanValidation",
+        "testWholeFormValidation",
+        "EntityTestSupport",
+        "項目間精査",
+        "UserRegistrationFormTest",
+        "TARGET_CLASS",
+        "sheetName"
+      ]
+    },
+    {
+      "id": "excel-definition",
+      "title": "Excelへの定義（setter/getter）",
+      "hints": [
+        "testSetterAndGetter",
+        "getParamMap",
+        "getListParamMap",
+        "EntityTestSupport",
+        "setter/getterテスト",
+        "Entity単体テスト",
+        "型制限",
+        "BigDecimal",
+        "java.util.Date",
+        "valueOf",
+        "Integer",
+        "Long",
+        "java.sql.Date",
+        "java.sql.Timestamp"
+      ]
+    },
+    {
+      "id": "configuration-items",
+      "title": "設定項目一覧",
+      "hints": [
+        "EntityTestConfiguration",
+        "BasicJapaneseCharacterGenerator",
+        "BeanValidationTestStrategy",
+        "CharacterGenerator",
+        "maxMessageId",
+        "maxAndMinMessageId",
+        "underLimitMessageId",
+        "fixLengthMessageId",
+        "minMessageId",
+        "emptyInputMessageId",
+        "validationTestStrategy",
+        "characterGenerator"
+      ]
+    },
+    {
+      "id": "component-config-example",
+      "title": "コンポーネント設定ファイルの記述例",
+      "hints": [
+        "EntityTestConfiguration",
+        "BasicJapaneseCharacterGenerator",
+        "BeanValidationTestStrategy",
+        "nablarch.test.core.entity.EntityTestConfiguration",
+        "XML設定例"
+      ]
+    }
+  ],
+  "sections": {
+    "overview": "Bean ValidationによるForm/Entity単体テストの書き方を説明する。Form単体テストとEntity単体テストはほぼ同じ方法で行え、共通内容はForm単体テストをベースに説明する。",
+    "form-entity-unit-test": "## テストデータの作成\n\nテストデータExcelファイルはテストソースコードと同じディレクトリに同じ名前（拡張子のみ.xlsx）で格納する。\n\n精査テストケース用シートと、setter/getterテストケース用シートでそれぞれ1シートを使用する前提。\n\nメッセージデータ・コードマスタ等の静的マスタデータはプロジェクト管理データが事前投入済みの前提（個別テストデータとして作成しない）。\n\nサンプルファイル（右クリック→保存でダウンロード）:\n- :download:`テストクラス(UserRegistrationFormTest.java)<../_download/UserRegistrationFormTest.java>`\n- :download:`テストデータ(UserRegistrationFormTest.xlsx)<../_download/UserRegistrationFormTest.xlsx>`\n- :download:`テスト対象クラス(UserRegistrationForm.java)<../_download/UserRegistrationForm.java>`\n\n## テストクラスの作成\n\nテストクラス作成ルール:\n1. テスト対象のForm/Entityと同一パッケージ\n2. クラス名は `{Form/Entity名}Test`\n3. `nablarch.test.core.db.EntityTestSupport` を継承\n\n```java\npackage com.nablarch.example.app.web.form;\nimport nablarch.test.core.db.EntityTestSupport;\npublic class UserRegistrationFormTest extends EntityTestSupport {\n```\n\n## 文字種と文字列長の単項目精査テストケース\n\n文字種・文字列長の単項目精査テスト専用テスト方法を提供する（単項目精査テストケース作成が容易になり、保守性の高いテストデータが作成できる）。\n\n> **補足**: プロパティとして別のFormを保持するForm（`<親Form>.<子Form>.<子フォームのプロパティ名>` 形式でアクセスする親Form）には使用不可。その場合は独自に精査処理のテストを実装すること。\n\n## その他の単項目精査テストケース\n\n文字種・文字列長テスト方法でカバーできない精査（例：日付入力項目のフォーマット精査）に対して使用する。各プロパティに1つの入力値と期待するメッセージIDのペアを記述することで任意の値で単項目精査テストができる。\n\n> **補足**: プロパティとして別のFormを保持するForm（`<親Form>.<子Form>.<子フォームのプロパティ名>` 形式でアクセスする親Form）には使用不可。その場合は独自に精査処理のテストを実装すること。",
+    "test-case-table-charset-length": "テストケース表で用意するカラム:\n\n| カラム名 | 記載内容 |\n|---|---|\n| propertyName | テスト対象のプロパティ名 |\n| allowEmpty | そのプロパティが未入力を許容するか |\n| group | Bean Validationのグループ（省略可）。FQCNで指定。内部クラスは `$` で区切る。 |\n| min | 入力値として許容する最小文字列長（省略可） |\n| max | 入力値として許容する最大文字列長（省略可） |\n| messageIdWhenEmptyInput | 未入力時に期待するメッセージ（省略可）。省略時は :ref:`entityUnitTest_EntityTestConfiguration_BeanValidation` のemptyInputMessageIdを使用。 |\n| messageIdWhenInvalidLength | 文字列長不適合時に期待するメッセージ（省略可）。省略時は :ref:`entityUnitTest_EntityTestConfiguration_BeanValidation` で設定したデフォルト値が使用される。省略時にどのデフォルト値が使用されるかはmax欄・min欄の記載により決まる（下表参照）。 |\n| messageIdWhenNotApplicable | 文字種不適合時に期待するメッセージ |\n| interpolateKey_n | 埋め込み文字のキー名（nは1からの連番、省略可） |\n| interpolateValue_n | 埋め込み文字の値（nは1からの連番、省略可） |\n| 半角英字 | 半角英字を許容するか |\n| 半角数字 | 半角数字を許容するか |\n| 半角記号 | 半角記号を許容するか |\n| 半角カナ | 半角カナを許容するか |\n| 全角英字 | 全角英字を許容するか |\n| 全角数字 | 全角数字を許容するか |\n| 全角ひらがな | 全角ひらがなを許容するか |\n| 全角カタカナ | 全角カタカナを許容するか |\n| 全角漢字 | 全角漢字を許容するか |\n| 全角記号その他 | 全角記号その他を許容するか |\n| 外字 | 外字を許容するか |\n\n文字種許容カラムの設定値: `o`（許容する、半角英小文字のオー）、`x`（許容しない、半角英小文字のエックス）\n\nmessageIdWhenInvalidLength省略時のデフォルト値:\n\n| max欄 | min欄 | maxとminの比較 | 使用されるデフォルト値 |\n|---|---|---|---|\n| あり | なし | — | maxMessageId |\n| あり | あり | max > min | maxAndMinMessageId（超過時）、underLimitMessageId（不足時） |\n| あり | あり | max = min | fixLengthMessageId |\n| なし | あり | — | minMessageId |\n\nメッセージ指定方法:\n- メッセージをそのまま記載: `入力必須です。`\n- 埋め込み文字あり: `{min}文字以上{max}文字以下で入力してください。`\n- メッセージIDとして記載（メッセージ全体を `{}` で囲む）: `{nablarch.core.validation.ee.SystemChar.message}`\n- `{}` で囲まれた部分は :ref:`message-format-spec` の埋め込み文字として扱われる\n\n![文字種・文字列長テストケース例](assets/testing-framework-01_entityUnitTestWithBeanValidation/entityUnitTest_CharsetAndLengthExample_BeanValidation.png)",
+    "test-method-creation": "**クラス**: `nablarch.test.core.db.EntityTestSupport`\n\nスーパークラスの以下のメソッドを使用する:\n\n```java\nvoid testValidateCharsetAndLength(Class entityClass, String sheetName, String id)\n```\n\n```java\n@Test\npublic void testCharsetAndLength() {\n    String sheetName = \"testCharsetAndLength\";\n    String id = \"charsetAndLength\";\n    testValidateCharsetAndLength(TARGET_CLASS, sheetName, id);\n}\n```\n\nこのメソッドを実行すると、テストデータの各行ごとに以下の観点でテストが実行される:\n\n| 観点 | 入力値 | 備考 |\n|---|---|---|\n| 文字種 | 各文字種（半角英字〜外字） | max欄記載の長さの文字列で構成。max省略時はmin欄の長さ、両方省略時は長さ1 |\n| 未入力 | 空文字（長さ0） | — |\n| 最小文字列 | 最小文字列長の文字列 | 入力値はo印を付けた文字種で構成される。max省略時は最長文字列・文字列長超過のテストは実行されない。min省略時は文字列長不足のテストは実行されない。 |\n| 最長文字列 | 最大文字列長の文字列 | 入力値はo印を付けた文字種で構成される。max省略時は本テストは実行されない。 |\n| 文字列長不足 | 最小文字列長－1の文字列 | 入力値はo印を付けた文字種で構成される。min省略時は本テストは実行されない。 |\n| 文字列長超過 | 最大文字列長＋1の文字列 | 入力値はo印を付けた文字種で構成される。max省略時は本テストは実行されない。 |",
+    "test-case-table-other-validation": "テストケース表で用意するカラム:\n\n| カラム名 | 記載内容 |\n|---|---|\n| propertyName | テスト対象のプロパティ名 |\n| case | テストケースの簡単な説明 |\n| group | Bean Validationのグループ（省略可）。指定方法は文字種・文字列長テストと同じ。 |\n| input1 | 入力値。複数パラメータがある場合はinput2, input3とカラムを増やす。:ref:`special_notation_in_cell` の記法使用可。 |\n| messageId | 上記入力値で単項目精査した場合に期待するメッセージ。精査エラーにならないことを期待する場合は空欄。指定方法は文字種・文字列長テストと同じ。 |\n| interpolateKey_n | 埋め込み文字のキー名（nは1からの連番、省略可） |\n| interpolateValue_n | 埋め込み文字の値（nは1からの連番、省略可） |\n\n![その他単項目精査テストデータ例](assets/testing-framework-01_entityUnitTestWithBeanValidation/entityUnitTest_singleValidationDataExample_BeanValidation.png)",
+    "single-validation-method": "単項目精査のテストを実行するには、スーパクラス（`EntityTestSupport`）の以下のメソッドを呼び出す。\n\n```java\nvoid testSingleValidation(Class entityClass, String sheetName, String id)\n```\n\n**コード例**:\n\n```java\npublic class UserRegistrationFormTest extends EntityTestSupport {\n\n    /**\n     * テスト対象Formクラス。\n     */\n    private static final Class<?> TARGET_CLASS = UserRegistrationForm.class;\n\n    /**\n     * 単項目精査のテストケース（上記以外）\n     */\n    @Test\n    public void testSingleValidation() {\n\n        // テストデータを記載したシート名\n        String sheetName = \"testSingleValidation\";\n\n        // テストデータのID\n        String id = \"singleValidation\";\n\n        // テスト実行\n        testSingleValidation(TARGET_CLASS, sheetName, id);\n    }\n}\n```",
+    "test-case-table": "単項目精査でテストできない :java:extdoc:`@AssertTrue <jakarta.validation.constraints.AssertTrue>` を指定した項目間精査などは、別途テストを作成する必要がある。\n\n**テストケース表**（ID: `testShots` 固定）:\n\n| カラム名 | 記載内容 |\n|---|---|\n| title | テストケースのタイトル |\n| description | テストケースの簡単な説明 |\n| group | Bean Validationのグループ（省略可） |\n| expectedMessageId[n] | 期待するメッセージ（nは1からの連番） |\n| propertyName[n] | 期待するプロパティ（nは1からの連番） |\n| interpolateKey[n]_[k] | 埋め込み文字のキー名（nはexpectedMessageIdのnに対応、kは1からの連番。省略可） |\n| interpolateValue[n]_[k] | 埋め込み文字の値（nはexpectedMessageIdのnに対応、kは1からの連番。省略可） |\n\n精査エラーが発生するプロパティ名とエラーメッセージのみ記載する（精査エラーが発生しないプロパティは記載しない）。複数メッセージを期待する場合は`expectedMessageId2`, `propertyName2`のように連番を増やす。複数メッセージの埋め込み文字は`interpolateKey2_1`, `interpolateValue2_1`のように連番を増やす。\n\n**入力パラメータ表**（ID: `params` 固定）:\n- テストケース表に対応する入力パラメータを1行ずつ記載する\n- 項目間精査で検証するプロパティの値を記載する。入力必須のプロパティが他に存在する場合も記載が必要\n\n> **補足**: :ref:`special_notation_in_cell` の記法を使用することで、効率的に入力値を作成できる。\n\n> **補足**: Form単体テストで別のFormのプロパティを指定する場合の記法:\n> - `sampleForm.systemUser.userId`（Formのプロパティを指定する場合）\n> - `sampleForm.userTelArray[0].telNoArea`（Form配列の先頭要素のプロパティを指定する場合）\n\n![項目間精査テストデータ例](assets/testing-framework-01_entityUnitTestWithBeanValidation/entityUnitTest_validationTestData_BeanValidation.png)",
+    "cross-field-validation-method": "項目間精査のテストを実行するには、スーパクラス（`EntityTestSupport`）の以下のメソッドを呼び出す。\n\n```java\nvoid testBeanValidation(Class entityClass, String sheetName)\n```\n\n**コード例**:\n\n```java\npublic class UserRegistrationFormTest extends EntityTestSupport {\n\n    /**\n     * テスト対象Formクラス。\n     */\n    private static final Class<?> TARGET_CLASS = UserRegistrationForm.class;\n\n    /**\n     * 項目間精査のテストケース\n     */\n    @Test\n    public void testWholeFormValidation() {\n        // テストデータを記載したシート名\n        String sheetName = \"testWholeFormValidation\";\n\n        // テスト実行\n        testBeanValidation(TARGET_CLASS, sheetName);\n    }\n}\n```",
+    "excel-definition": "setter、getterテストの対象は**Formに定義されている全プロパティ**。setterで設定した値とgetterで取得した値が期待通りであることを確認する。\n\n> **補足**: Entityは自動生成されるため、アプリケーションで使用されないsetter/getterが生成される可能性がある。そのため、Entity単体テストでsetter/getterのテストを**必ず行うこと**。一般的なFormはリクエスト単体テストでsetter/getterのテストができるため、クラス単体テストでのテストは不要。\n\n![setter/getter Excelデータ定義](assets/testing-framework-01_entityUnitTestWithBeanValidation/entityUnitTest_SetterAndGetter.png)\n\n**テストメソッド**: `testSetterAndGetter(Class entityClass, String sheetName, String id)` を呼び出す。\n\n```java\npublic class UserRegistrationFormTest extends EntityTestSupport {\n    private static final Class<?> TARGET_CLASS = UserRegistrationForm.class;\n\n    @Test\n    public void testSetterAndGetter() {\n        String sheetName = \"testSetterAndGetter\";\n        String id = \"setterAndGetter\";\n        testSetterAndGetter(TARGET_CLASS, sheetName, id);\n    }\n}\n```\n\n> **補足**: `testSetterAndGetter`でテスト可能な型には制限がある。対象外の型は個別にsetterとgetterを呼び出してテストする必要がある。テスト可能な型:\n> - `String`およびその配列\n> - `BigDecimal`およびその配列\n> - `java.util.Date`およびその配列（Excelへはyyyy-MM-dd形式またはyyyy-MM-dd HH:mm:ss形式で記述）\n> - `valueOf(String)`メソッドを持つクラスおよびその配列（例: `Integer`, `Long`, `java.sql.Date`, `java.sql.Timestamp`）\n>\n> 非対応型（例: `List<String>`）は`getParamMap(sheetName, id)`でテストデータを取得し、個別にsetter/getterを呼び出してテストする（複数プロパティの場合は`getListParamMap`を使用）。\n\n![非対応型のExcelデータ定義例](assets/testing-framework-01_entityUnitTestWithBeanValidation/entityUnitTest_SetterAndGetterOther.png)\n\n```java\n// 非対応型(List<String>)の個別テスト例\nMap<String, String[]> data = getParamMap(sheetName, \"setterAndGetterOther\");\nList<String> users = Arrays.asList(data.get(\"set\"));\nUserRegistrationForm form = new UserRegistrationForm();\nform.setUsers(users);\nassertEquals(form.getUsers(), Arrays.asList(data.get(\"get\")));\n```\n\n> **補足**: setterやgetterにロジックを記述した場合（例: setterは郵便番号上3桁と下4桁で受け取り、getterはまとめて7桁で返す）は、そのロジックを確認するテストケースを作成すること。\n\n![setter/getterロジックのExcelデータ定義例](assets/testing-framework-01_entityUnitTestWithBeanValidation/entityUnitTest_SetterAndGetter_PostNo.png)",
+    "configuration-items": "**クラス**: `nablarch.test.core.entity.EntityTestConfiguration`\n\nコンポーネント設定ファイルで以下の値を設定する:\n\n| 設定項目名 | 説明 |\n|---|---|\n| maxMessageId | 最大文字列長超過時のメッセージのデフォルト値 |\n| maxAndMinMessageId | 最長最小文字列長範囲外のメッセージのデフォルト値（可変長、超過時） |\n| underLimitMessageId | 最長最小文字列長範囲外のメッセージのデフォルト値（可変長、不足時） |\n| fixLengthMessageId | 最長最小文字列長範囲外のメッセージのデフォルト値（固定長） |\n| minMessageId | 文字列長不足時のメッセージのデフォルト値（maxを省略したテストケースを作成する場合は**必須**） |\n| emptyInputMessageId | 未入力時のメッセージのデフォルト値 |\n| characterGenerator | 文字列生成クラス（`nablarch.test.core.util.generator.CharacterGenerator`の実装クラスを指定。通常は`nablarch.test.core.util.generator.BasicJapaneseCharacterGenerator`を使用） |\n| validationTestStrategy | テスト用バリデーションストラテジ（Bean Validationを使用する場合は`nablarch.test.core.entity.BeanValidationTestStrategy`を**固定で指定**） |",
+    "component-config-example": "```xml\n<component name=\"entityTestConfiguration\" class=\"nablarch.test.core.entity.EntityTestConfiguration\">\n  <property name=\"maxMessageId\"        value=\"{nablarch.core.validation.ee.Length.max.message}\"/>\n  <property name=\"maxAndMinMessageId\"  value=\"{nablarch.core.validation.ee.Length.min.max.message}\"/>\n  <property name=\"fixLengthMessageId\"  value=\"{nablarch.core.validation.ee.Length.fixed.message}\"/>\n  <property name=\"underLimitMessageId\" value=\"{nablarch.core.validation.ee.Length.min.max.message}\"/>\n  <property name=\"minMessageId\"        value=\"{nablarch.core.validation.ee.Length.min.message}\"/>\n  <property name=\"emptyInputMessageId\" value=\"{nablarch.core.validation.ee.Required.message}\"/>\n  <property name=\"characterGenerator\">\n    <component name=\"characterGenerator\"\n               class=\"nablarch.test.core.util.generator.BasicJapaneseCharacterGenerator\"/>\n  </property>\n  <property name=\"validationTestStrategy\">\n    <component class=\"nablarch.test.core.entity.BeanValidationTestStrategy\"/>\n  </property>\n</component>\n```"
+  }
+}

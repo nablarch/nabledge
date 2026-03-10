@@ -1,0 +1,61 @@
+{
+  "id": "libraries-db_double_submit",
+  "title": "データベースを使用した二重サブミット防止",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/db_double_submit.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/DbTokenManager.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/DbTokenSchema.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/HttpSessionTokenManager.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "feature-overview",
+      "title": "機能概要",
+      "hints": [
+        "二重サブミット防止",
+        "DBトークン管理",
+        "スケールアウト",
+        "CSRF対策",
+        "tag-double_submission",
+        "csrf_token_verification_handler"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web-doublesubmit-jdbc",
+        "データベース二重サブミット防止",
+        "Mavenモジュール"
+      ]
+    },
+    {
+      "id": "usage",
+      "title": "使用方法",
+      "hints": [
+        "DbTokenManager",
+        "DbTokenSchema",
+        "SimpleDbTransactionManager",
+        "UUIDV4TokenGenerator",
+        "HttpSessionTokenManager",
+        "BasicApplicationInitializer",
+        "tokenManager",
+        "tokenGenerator",
+        "DOUBLE_SUBMISSIONテーブル",
+        "dbManager",
+        "dbTokenSchema",
+        "tableName",
+        "tokenName",
+        "createdAtName",
+        "TOKEN",
+        "CREATED_AT"
+      ]
+    }
+  ],
+  "sections": {
+    "feature-overview": "アプリケーションサーバをスケールアウトする際、HTTPセッションのトークン管理ではスティッキーセッションやセッションレプリケーションが必要となる。サーバ側のトークンをデータベースに保管することで、特別な設定なしに複数のアプリケーションサーバ間でトークンを共有できる。\n\n> **補足**: ブラウザが閉じられた場合などにテーブル上にトークンが残ることがある。期限切れのトークンは定期的に削除する必要がある。\n\n> **重要**: HTTPセッションを使用した :ref:`二重サブミット防止 <tag-double_submission>` はCSRF対策に使用できたが、本機能はユーザを識別せずにトークンをDBに格納しているためCSRF対策に使用できない。本機能を使用する場合は、CSRF対策に :ref:`csrf_token_verification_handler` を使用すること。",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web-doublesubmit-jdbc</artifactId>\n</dependency>\n```",
+    "usage": "データベース上にトークンを保存するためのテーブルが必要。\n\n`DOUBLE_SUBMISSION` テーブル:\n\n| カラム名 | データ型 |\n|---|---|\n| TOKEN (PK) | `java.lang.String` |\n| CREATED_AT | `java.sql.Timestamp` |\n\nテーブル名およびカラム名は変更可能。変更する場合は :java:extdoc:`DbTokenManager.dbTokenSchema <nablarch.common.web.token.DbTokenManager.setDbTokenSchema(nablarch.common.web.token.DbTokenSchema)>` に :java:extdoc:`DbTokenSchema <nablarch.common.web.token.DbTokenSchema>` のコンポーネントを定義する。\n\n`tokenManager` という名前でコンポーネント定義を追加する（:ref:`初期化<repository-initialize_object>` が必要）。これによりトークンがデータベースで管理される。\n\n```xml\n<component name=\"tokenManager\" class=\"nablarch.common.web.token.DbTokenManager\">\n  <property name=\"dbManager\">\n    <component class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">\n      <property name=\"dbTransactionName\" value=\"tokenTransaction\"/>\n    </component>\n  </property>\n  <!-- テーブル名、カラム名を変更する場合のみ以下設定が必要 -->\n  <property name=\"dbTokenSchema\">\n    <component class=\"nablarch.common.web.token.DbTokenSchema\">\n      <property name=\"tableName\" value=\"DB_TOKEN\"/>\n      <property name=\"tokenName\" value=\"VALUE_COL\"/>\n      <property name=\"createdAtName\" value=\"CREATED_AT_COL\"/>\n    </component>\n  </property>\n</component>\n\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"tokenManager\"/>\n    </list>\n  </property>\n</component>\n```\n\n`tokenGenerator` という名前でコンポーネント定義を追加する。これによりトークンにUUIDが使用され、推測および衝突の可能性を考慮しなくてよくなる。\n\n```xml\n<component name=\"tokenGenerator\" class=\"nablarch.common.web.token.UUIDV4TokenGenerator\" />\n```\n\n> **重要**: :ref:`テスティングフレームワークのトークン発行<how_to_set_token_in_request_unit_test>` はトークンのDB保存に対応していない。自動テスト実行時には :java:extdoc:`HttpSessionTokenManager <nablarch.common.web.token.HttpSessionTokenManager>` に差し替えてテストする必要がある。\n>\n> ```xml\n> <!-- トークンをHTTPセッションに保存する -->\n> <component name=\"tokenManager\" class=\"nablarch.common.web.token.HttpSessionTokenManager\"/>\n> ```"
+  }
+}

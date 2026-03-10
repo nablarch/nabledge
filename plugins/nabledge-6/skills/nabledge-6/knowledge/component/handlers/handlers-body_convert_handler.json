@@ -1,0 +1,91 @@
+{
+  "id": "handlers-body_convert_handler",
+  "title": "リクエストボディ変換ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/rest/body_convert_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/ws/rs/Consumes.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/ws/rs/Produces.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/BodyConvertHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/BodyConverter.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "handler-class-name",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "BodyConvertHandler",
+        "nablarch.fw.jaxrs.BodyConvertHandler",
+        "リクエストボディ変換ハンドラ",
+        "レスポンスボディ変換"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-jaxrs",
+        "com.nablarch.framework",
+        "モジュール依存関係"
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "制約",
+      "hints": [
+        "router_adaptor",
+        "ハンドラ設定順序",
+        "ディスパッチ先特定",
+        "アノテーション情報"
+      ]
+    },
+    {
+      "id": "converter-configuration",
+      "title": "変換処理を行うコンバータを設定する",
+      "hints": [
+        "BodyConverter",
+        "bodyConverters",
+        "JaxbBodyConverter",
+        "FormUrlEncodedConverter",
+        "MIMEタイプ変換設定",
+        "415ステータスコード"
+      ]
+    },
+    {
+      "id": "convert-request",
+      "title": "リクエストボディをFormに変換する",
+      "hints": [
+        "@Consumes",
+        "Consumes",
+        "Content-Type",
+        "リクエストボディ変換",
+        "415ステータスコード",
+        "@Valid",
+        "HttpResponse",
+        "MediaType",
+        "application/json",
+        "UniversalDao"
+      ]
+    },
+    {
+      "id": "convert-response",
+      "title": "リソース(アクション)の処理結果をレスポンスボディに変換する",
+      "hints": [
+        "@Produces",
+        "Produces",
+        "レスポンスボディ変換",
+        "application/json",
+        "MediaType",
+        "UniversalDao"
+      ]
+    }
+  ],
+  "sections": {
+    "handler-class-name": "**クラス名**: `nablarch.fw.jaxrs.BodyConvertHandler`\n\nリクエストボディとレスポンスボディの変換処理を行うハンドラ。",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-jaxrs</artifactId>\n</dependency>\n```",
+    "constraints": "本ハンドラは `router_adaptor` よりも後ろに設定すること。リソース(アクション)クラスのメソッドに設定されたアノテーション情報を元に変換処理を行うため、ディスパッチ先を特定する `router_adaptor` よりも後ろに配置する必要がある。",
+    "converter-configuration": "`bodyConverters` プロパティに、プロジェクトで使用するMIMEに対応した `BodyConverter` の実装クラスを設定する。\n\n> **補足**: 設定されたコンバータで変換できないMIMEが使用された場合、ステータスコード `415` を返却する。\n\n```xml\n<component class=\"nablarch.fw.jaxrs.BodyConvertHandler\">\n  <property name=\"bodyConverters\">\n    <list>\n      <!-- application/xmlに対応したリクエスト・レスポンスのコンバータ -->\n      <component class=\"nablarch.fw.jaxrs.JaxbBodyConverter\" />\n      <!-- application/x-www-form-urlencodedに対応したリクエスト・レスポンスのコンバータ -->\n      <component class=\"nablarch.fw.jaxrs.FormUrlEncodedConverter\" />\n    </list>\n  </property>\n</component>\n```",
+    "convert-request": "リクエストボディの変換フォーマットはメソッドの `Consumes` アノテーションで決まる。リクエストヘッダの `Content-Type` が `Consumes` のMIMEと異なる場合、ステータスコード `415` を返却する。\n\nこの例では、`MediaType.APPLICATION_JSON` が示す `application/json` に対応した `BodyConverter` でリクエストボディが `Person` に変換される。\n\n```java\n@Consumes(MediaType.APPLICATION_JSON)\n@Valid\npublic HttpResponse saveJson(Person person) {\n    UniversalDao.insert(person);\n    return new HttpResponse();\n}\n```",
+    "convert-response": "レスポンスボディへの変換フォーマットはメソッドの `Produces` アノテーションで決まる。\n\nこの例では、`MediaType.APPLICATION_JSON` が示す `application/json` に対応した `BodyConverter` でリクエストボディが `Person` に変換される。\n\n```java\nGET\n@Produces(MediaType.APPLICATION_JSON)\npublic List<Person> findJson() {\n    return UniversalDao.findAll(Person.class);\n}\n```"
+  }
+}

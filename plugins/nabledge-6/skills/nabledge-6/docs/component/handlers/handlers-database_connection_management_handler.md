@@ -1,29 +1,18 @@
 # データベース接続管理ハンドラ
 
-## 概要
-
-後続のハンドラ及びライブラリで使用するためのデータベース接続を、スレッド上で管理するハンドラ。
-
-データベースアクセスの詳細は、:ref:`database`を参照。
-
-## 重要な要件
-
-> **重要**: このハンドラを使用する場合は、:ref:`transaction_management_handler`をセットで設定すること。
->
-> トランザクション制御ハンドラが設定されていない場合、トランザクション制御が実施されないため後続で行ったデータベースへの変更は全て破棄される。
-
-## 処理の流れ
-
-本ハンドラでは、以下の処理を行う:
-
-- **データベース接続の取得**
-- **データベース接続の解放**
-
-処理の流れの詳細は、公式ドキュメントの処理フロー図（DbConnectionManagementHandler_flow.png）を参照。
-
 ## ハンドラクラス名
 
+後続ハンドラおよびライブラリで使用するDBへの接続をスレッド上で管理するハンドラ。
+
+> **重要**: このハンドラを使用する場合は `:ref:transaction_management_handler` をセットで設定すること。トランザクション制御ハンドラが未設定の場合、トランザクション制御が行われず後続のDB変更が全て破棄される。
+
+処理フロー:
+1. データベース接続の取得
+2. データベース接続の解放
+
 **クラス名**: `nablarch.common.handler.DbConnectionManagementHandler`
+
+**制約**: なし。
 
 ## モジュール一覧
 
@@ -39,15 +28,10 @@
 </dependency>
 ```
 
-## 制約
-
-なし
-
 ## データベースの接続先を設定する
 
-`connectionFactory`プロパティに`ConnectionFactory`実装クラスを設定。
+`connectionFactory` プロパティ（`DbConnectionManagementHandler.setConnectionFactory(ConnectionFactory)`）に `ConnectionFactory` 実装クラスを設定してDBに接続する。
 
-**設定例**:
 ```xml
 <component class="nablarch.common.handler.DbConnectionManagementHandler">
   <property name="connectionFactory" ref="connectionFactory" />
@@ -59,15 +43,12 @@
 </component>
 ```
 
-> **重要**: データベース接続オブジェクトを取得するためのファクトリクラスの詳細は、:ref:`database-connect`を参照。
+> **注意**: ファクトリクラスの詳細は `:ref:database-connect` を参照。
 
 ## アプリケーションで複数のデータベース接続（トランザクション）を使用する
 
-複数のデータベース接続を使用する場合、このハンドラをハンドラキュー上に複数設定する。
+複数のDB接続が必要な場合、このハンドラをハンドラキュー上に複数設定する。各接続は `connectionName` プロパティ（`DbConnectionManagementHandler.setConnectionName(String)`）で命名管理する（スレッド内で一意）。`connectionName` 省略時はデフォルト接続となる。最もよく使う接続をデフォルトにし、それ以外に名前を付けると良い。
 
-`connectionName`プロパティでデータベース接続名を指定（省略時はデフォルト接続）。データベース接続名はスレッド内で一意とする必要がある。最もよく使う接続をデフォルトとし、それ以外に任意の名前をつけることを推奨。
-
-**設定例**:
 ```xml
 <!-- デフォルトのデータベース接続 -->
 <component class="nablarch.common.handler.DbConnectionManagementHandler">
@@ -81,18 +62,14 @@
 </component>
 ```
 
-**デフォルト接続の使用**:
-
-引数なしで`DbConnection#getConnection`を呼び出し。
-
+デフォルト接続を使用（引数なし）:
 ```java
 AppDbConnection connection = DbConnectionContext.getConnection();
 ```
 
-**名前付き接続の使用**:
-
-`DbConnection#getConnection(String)`に接続名を指定。接続名は`connectionName`プロパティの値と一致させる。
-
+`userAccessLog` 接続を使用（引数にデータベース接続名を指定）:
 ```java
 AppDbConnection connection = DbConnectionContext.getConnection("userAccessLog");
 ```
+
+> **注意**: `DbConnectionContext.getConnection(String)` に渡す接続名は、`connectionName` プロパティに設定した値と一致させる必要がある。

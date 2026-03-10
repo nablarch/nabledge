@@ -1,0 +1,71 @@
+{
+  "id": "adapters-web_thymeleaf_adaptor",
+  "title": "ウェブアプリケーション Thymeleafアダプタ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/adaptors/web_thymeleaf_adaptor.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/responsewriter/thymeleaf/ThymeleafResponseWriter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/HttpResponseHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-web-thymeleaf-adaptor",
+        "com.nablarch.integration",
+        "Thymeleafアダプタ",
+        "モジュール依存関係",
+        "テンプレートエンジン"
+      ]
+    },
+    {
+      "id": "setup-configuration",
+      "title": "ウェブアプリケーション Thymeleafアダプタを使用するための設定を行う",
+      "hints": [
+        "ThymeleafResponseWriter",
+        "HttpResponseHandler",
+        "TemplateEngine",
+        "ITemplateResolver",
+        "ClassLoaderTemplateResolver",
+        "ServletContextTemplateResolver",
+        "templateEngine",
+        "customResponseWriter",
+        "Thymeleaf設定"
+      ]
+    },
+    {
+      "id": "target-determination",
+      "title": "処理対象判定について",
+      "hints": [
+        "ThymeleafResponseWriter",
+        "HttpResponse",
+        "pathPattern",
+        "処理対象判定",
+        "サーブレットフォワード",
+        ".html",
+        "コンテンツパス",
+        "サフィックス省略"
+      ]
+    },
+    {
+      "id": "using-template-engine",
+      "title": "テンプレートエンジンを使用する",
+      "hints": [
+        "TemplateEngine",
+        "ClassLoaderTemplateResolver",
+        "HttpResponse",
+        "prefix",
+        "テンプレートファイル配置",
+        "テンプレートパス指定"
+      ]
+    }
+  ],
+  "sections": {
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-web-thymeleaf-adaptor</artifactId>\n</dependency>\n```\n\n> **補足**: Thymeleaf 3.1.1.RELEASE でテスト済み。バージョンを変更する場合は、プロジェクト側でテストを行うこと。",
+    "setup-configuration": "コンポーネント設定ファイルで `ThymeleafResponseWriter` を `HttpResponseHandler` の `customResponseWriter` プロパティに設定する。`ThymeleafResponseWriter` には `templateEngine` プロパティに Thymeleaf の `TemplateEngine` を設定する必要がある。\n\n```xml\n<component name=\"templateEngine\" class=\"org.thymeleaf.TemplateEngine\" autowireType=\"None\">\n  <property name=\"templateResolver\">\n    <component class=\"org.thymeleaf.templateresolver.ClassLoaderTemplateResolver\">\n      <property name=\"prefix\" value=\"template/\"/>\n    </component>\n  </property>\n</component>\n\n<component name=\"thymeleafResponseWriter\"\n           class=\"nablarch.fw.web.handler.responsewriter.thymeleaf.ThymeleafResponseWriter\"\n           autowireType=\"None\">\n  <property name=\"templateEngine\" ref=\"templateEngine\" />\n</component>\n\n<component name=\"httpResponseHandler\"\n           class=\"nablarch.fw.web.handler.HttpResponseHandler\">\n  <property name=\"customResponseWriter\" ref=\"thymeleafResponseWriter\"/>\n</component>\n```\n\n> **補足**: `org.thymeleaf.templateresolver.ServletContextTemplateResolver` は :ref:`repository` にコンポーネントとして登録できない。コンストラクタ引数に `jakarta.servlet.ServletContext` が必須（デフォルトコンストラクタなし）であり、システムリポジトリ構築時には `jakarta.servlet.ServletContext` にアクセスできず :ref:`ファクトリ<repository-factory_injection>` によるオブジェクト生成もできないため。`ITemplateResolver` インタフェースの実装クラスとして `ServletContextTemplateResolver` の代わりに `ClassLoaderTemplateResolver` 等の別の実装クラスを使用すること。",
+    "using-template-engine": "テンプレートファイルの配置場所は `TemplateEngine` の設定による。`ClassLoaderTemplateResolver` に `prefix` を設定した場合（例: `template/`）、クラスパス上のそのプレフィックスディレクトリ配下にテンプレートファイルを配置する。\n\nテンプレートを使うには、テンプレートファイルへのパスを指定した `HttpResponse` をアクションクラスの戻り値として返す。\n\n- `prefix` 設定あり: プレフィックスを省略したパスを指定（例: `return new HttpResponse(\"index.html\");`）\n- `prefix` 設定なし: パスをそのまま指定（例: `return new HttpResponse(\"template/index.html\");`）",
+    "target-determination": "`ThymeleafResponseWriter` は `HttpResponse` のコンテンツパスによって処理対象か判断する。デフォルトではコンテンツパスが `.html` で終わる場合テンプレートエンジンで出力し、それ以外はサーブレットフォワードが実行される。\n\n`pathPattern` プロパティで判定条件を変更可能（デフォルト値: `.*\\.html`）。コンテンツパスが正規表現にマッチした場合、テンプレートエンジンの処理対象と判定される。\n\n> **重要**: サフィックスを省略しないこと。\n> - OK: `return new HttpResponse(\"index.html\");`\n> - NG: `return new HttpResponse(\"index\");`\n>\n> サフィックスを省略した場合、セッションストアからリクエストスコープへの移送が行われず、テンプレートからセッションストアの値を参照できなくなる。"
+  }
+}

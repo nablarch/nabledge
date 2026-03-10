@@ -1,0 +1,73 @@
+{
+  "id": "handlers-keitai_access_handler",
+  "title": "携帯端末アクセスハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/keitai_access_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/KeitaiAccessHandler.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "handler-class",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "KeitaiAccessHandler",
+        "nablarch.fw.web.handler.KeitaiAccessHandler",
+        "携帯端末アクセスハンドラ",
+        "フィーチャーフォン対応",
+        "JavaScript非対応環境"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "com.nablarch.framework",
+        "モジュール依存関係"
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "制約",
+      "hints": [
+        "配置制約",
+        "http_response_handler",
+        "thread_context_handler",
+        "ハンドラ配置順序"
+      ]
+    },
+    {
+      "id": "javascript-suppressed-tags",
+      "title": "JavaScript出力が抑制されるタグ",
+      "hints": [
+        "JavaScript抑制",
+        "n:submitLink",
+        "n:a タグ",
+        "n:form タグ",
+        "n:script タグ",
+        "GETメソッド",
+        "タグライブラリ"
+      ]
+    },
+    {
+      "id": "url-mapping",
+      "title": "URLの関連付け",
+      "hints": [
+        "URL関連付け",
+        "nablarch_uri_override_",
+        "nablarch_submit",
+        "フォームサブミット",
+        "ボタンURI解決",
+        "サーバサイドURI書き換え"
+      ]
+    }
+  ],
+  "sections": {
+    "handler-class": "JavaScriptが動作しない環境（フィーチャーフォン等）でウェブアプリケーションを動作させるハンドラ。下記を実現する:\n\n1. 画面で押されたボタンのボタン名から、想定されるURLにディスパッチ\n2. JSP上にJavaScriptを出力しないよう変数を設定\n\n**クラス名**: :java:extdoc:`KeitaiAccessHandler<nablarch.fw.web.handler.KeitaiAccessHandler>`",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "constraints": "- :ref:`http_response_handler` より後ろに配置すること: JSPへのフォワード処理を行う :ref:`http_response_handler` より後に配置する必要がある。\n- :ref:`thread_context_handler` より前に配置すること: URIを決定する処理があるため、URIを使用する :ref:`thread_context_handler` より前に配置する必要がある。",
+    "javascript-suppressed-tags": "携帯端末アクセスハンドラを使用したURLにアクセスした際、下記NablarchタグライブラリのJavaScript出力が抑制される:\n\n- :ref:`n:form タグ <tag-form_tag>`\n- :ref:`n:script タグ <tag-script_tag>`\n- :ref:`サブミット関連のタグ <tag_reference_submit>`\n\n> **重要**: 下記タグは機能が実現できないため使用不可。\n> - :ref:`n:submitLink タグ <tag-submit_link_tag>`\n>\n> n:submitLink タグの代替として n:a タグを使用すること。リクエストパラメータはGETメソッドのパラメータで送信する必要がある。",
+    "url-mapping": "フォームのURI属性の書き換えをサーバサイドで実施する仕組み。\n\n**JSP表示時**:\n\n1. n:submit、n:button が出力するinputタグのname属性に `nablarch_uri_override_<JSP上のname属性>|<サブミット先のURI>` を設定\n2. n:form タグはJavaScriptなしで単純に `<form>` タグを出力（ボタン押下時にformのaction URLに押下ボタンのname属性が送られる）\n\n**フォームサブミット時**:\n\n1. KeitaiAccessHandler が、押下ボタンのname属性（`nablarch_uri_override_` から始まる文字列）から元のURI属性を取得\n2. リクエストパラメータに `nablarch_submit` キーで取得したURI属性を設定（JavaScriptで行うformのURI属性書き換えをサーバサイドで実施）\n3. 後続処理に委譲する（以降、ボタンに対応するURIが指定された場合と同じ動作）"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "id": "web-application-getting-started-project-update",
+  "title": "更新機能の作成",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/project_update/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/NoDataException.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/OnDoubleSubmission.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/ResourceLocator.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "input-and-confirmation",
+      "title": "更新内容の入力と確認",
+      "hints": [
+        "ProjectTargetForm",
+        "ProjectUpdateForm",
+        "ProjectAction",
+        "ProjectDto",
+        "ProjectProfit",
+        "Project",
+        "LoginUserPrincipal",
+        "Client",
+        "@InjectForm",
+        "@OnError",
+        "@Required",
+        "@Domain",
+        "NoDataException",
+        "ApplicationException",
+        "MessageUtil",
+        "MessageLevel",
+        "UniversalDao",
+        "SessionUtil",
+        "BeanUtil",
+        "フォーム作成",
+        "更新画面表示",
+        "バリデーション",
+        "楽観的ロック",
+        "セッションストア",
+        "二重サブミット防止"
+      ]
+    },
+    {
+      "id": "database-update",
+      "title": "データベースの更新",
+      "hints": [
+        "ProjectAction",
+        "Project",
+        "@OnDoubleSubmission",
+        "@Version",
+        "@Column",
+        "UniversalDao",
+        "SessionUtil",
+        "ResourceLocator",
+        "楽観的ロック",
+        "データベース更新",
+        "二重サブミット防止",
+        "リダイレクト",
+        "バージョン番号"
+      ]
+    }
+  ],
+  "sections": {
+    "input-and-confirmation": "## フォームの作成\n\n**クラス**: `ProjectTargetForm`, `ProjectUpdateForm`\n**アノテーション**: `@Required`, `@Domain`\n\n- `ProjectTargetForm`: 詳細→更新画面遷移時のパスパラメータ（`show/:projectId`の`:projectId`）でプロジェクトIDを受け取る\n- `ProjectUpdateForm`: 更新画面の入力値（編集後の値）を受け取る\n\n入力項目が登録画面と重複しても、:ref:`フォームはHTMLのフォーム単位で作成すべき<application_design-form_html>`ため、更新画面専用フォームを作成する。\n\n```java\npublic class ProjectTargetForm implements Serializable {\n    @Required\n    @Domain(\"id\")\n    private String projectId;\n    // getter/setter省略\n}\n```\n\n```java\npublic class ProjectUpdateForm implements Serializable {\n    @Required\n    @Domain(\"projectName\")\n    private String projectName;\n    // getter/setter省略\n}\n```\n\n## 更新画面表示アクションメソッド（edit）\n\n**アノテーション**: `@InjectForm`\n\n```java\n@InjectForm(form = ProjectTargetForm.class)\npublic HttpResponse edit(HttpRequest request, ExecutionContext context) {\n    SessionUtil.delete(context, \"project\");\n    ProjectTargetForm targetForm = context.getRequestScopedVar(\"form\");\n    LoginUserPrincipal userContext = SessionUtil.get(context, \"userContext\");\n    ProjectDto dto = UniversalDao.findBySqlFile(ProjectDto.class, \"FIND_BY_PROJECT\",\n            new Object[]{targetForm.getProjectId(), userContext.getUserId()});\n    context.setRequestScopedVar(\"form\", dto);\n    SessionUtil.put(context, \"project\", BeanUtil.createAndCopy(Project.class, dto));\n    return new HttpResponse(\"/WEB-INF/view/project/update.jsp\");\n}\n```\n\n- 編集フォームの初期値取得には:java:extdoc:`UniversalDao#findBySqlFile<nablarch.common.dao.UniversalDao.findBySqlFile(java.lang.Class,java.lang.String,java.lang.Object)>`で一意キー検索を行う。:ref:`テーブルJOIN結果<universal_dao-join>`のため結果はBeanで受け取る。対象データ不在時は:java:extdoc:`NoDataException<nablarch.common.dao.NoDataException>`が送出される。\n- :ref:`楽観的ロック<universal_dao_jpa_version>`のため、編集開始時点のエンティティを:ref:`session_store`に登録する。\n\n> **補足**: NoDataException発生時は独自エラー制御ハンドラで404エラー画面へ遷移する。:ref:`ハンドラで例外クラスに対応したエラーページに遷移させる<forward_error_page-handler>`を参照。\n\n## 更新内容確認アクションメソッド（confirmOfUpdate）\n\n**アノテーション**: `@InjectForm`, `@OnError`\n\n```java\n@InjectForm(form = ProjectUpdateForm.class, prefix = \"form\")\n@OnError(type = ApplicationException.class, path = \"/WEB-INF/view/project/update.jsp\")\npublic HttpResponse confirmOfUpdate(HttpRequest request, ExecutionContext context) {\n    ProjectUpdateForm form = context.getRequestScopedVar(\"form\");\n    if (form.hasClientId()) {\n        if (!UniversalDao.exists(Client.class, \"FIND_BY_CLIENT_ID\",\n                new Object[] {Integer.parseInt(form.getClientId()) })) {\n            throw new ApplicationException(\n                MessageUtil.createMessage(MessageLevel.ERROR,\n                    \"errors.nothing.client\", form.getClientId()));\n        }\n    }\n    Project project = SessionUtil.get(context, \"project\");\n    BeanUtil.copy(form, project);\n    context.setRequestScopedVar(\"form\", BeanUtil.createAndCopy(ProjectDto.class, form));\n    context.setRequestScopedVar(\"profit\", new ProjectProfit(\n            project.getSales(),\n            project.getCostOfGoodsSold(),\n            project.getSga(),\n            project.getAllocationOfCorpExpenses()\n    ));\n    return new HttpResponse(\"/WEB-INF/view/project/confirmOfUpdate.jsp\");\n}\n```\n\n- データベース検索が必要なバリデーションは業務アクションメソッドに記述する。存在確認には:java:extdoc:`UniversalDao#exists<nablarch.common.dao.UniversalDao.exists(java.lang.Class,java.lang.String,java.lang.Object)>`を使用する。詳細は:ref:`データベース検索が必要なバリデーション<bean_validation-database_validation>`を参照。\n- :ref:`フォームを直接セッションストアに格納すべきではない<session_store-form>`ため、Beanへ詰め替える。\n- 確認画面表示用に`ProjectProfit`オブジェクトを生成してリクエストスコープにセットする。\n\n顧客存在確認SQL（client.sql）：\n\n```sql\nFIND_BY_CLIENT_ID =\nSELECT\n    CLIENT_ID,\n    CLIENT_NAME,\n    INDUSTRY_CODE\nFROM\n    CLIENT\nWHERE\n    CLIENT_ID = :clientId\n```\n\n存在確認用SQLはSELECT文として作成する。\n\n## 更新確認画面のJSP（update.jsp）\n\n更新画面を確認画面として使い回す。:ref:`tag-submit_tag`の`allowDoubleSubmission=\"false\"`で二重サブミット防止JSを追加する。詳細は:ref:`tag-double_submission`を参照。\n\n```jsp\n<n:form useToken=\"true\">\n    <n:forConfirmationPage>\n        <n:submit value=\"確定\" uri=\"/action/project/update\"\n                allowDoubleSubmission=\"false\" type=\"button\" />\n    </n:forConfirmationPage>\n</n:form>\n```",
+    "database-update": "## データベース更新アクションメソッド（update）\n\n**アノテーション**: `@OnDoubleSubmission`\n\n```java\n@OnDoubleSubmission\npublic HttpResponse update(HttpRequest request, ExecutionContext context) {\n    Project targetProject = SessionUtil.delete(context, \"project\");\n    UniversalDao.update(targetProject);\n    return new HttpResponse(303, \"redirect://completeOfUpdate\");\n}\n```\n\n- エンティティに更新値を設定し、:java:extdoc:`UniversalDao#update<nablarch.common.dao.UniversalDao.update(java.lang.Object)>`でDB更新する。更新処理では:ref:`楽観的ロック<universal_dao_jpa_version>`が実行される。\n- 二重サブミット防止のため:java:extdoc:`@OnDoubleSubmission<nablarch.common.web.token.OnDoubleSubmission>`を付与する。\n- ブラウザ更新での再実行防止のためレスポンスをリダイレクトする。リソースパスの書式は:java:extdoc:`ResourceLocator<nablarch.fw.web.ResourceLocator>`を参照。リダイレクトのステータスコードは:ref:`web_feature_details-status_code`を参照。\n\n## 楽観的ロック用エンティティ定義\n\n**クラス**: `Project`\n**アノテーション**: `@Version`, `@Column`\n\n:ref:`楽観的ロック<universal_dao_jpa_version>`を有効化するには、エンティティに`version`プロパティを作成し、ゲッタに:ref:`@Version<universal_dao_jpa_version>`を付与する。\n\n```java\nprivate Long version;\n\n@Version\n@Column(name = \"VERSION\", precision = 19, nullable = false, unique = false)\npublic Long getVersion() {\n    return version;\n}\n```\n\n## 完了画面表示アクションメソッド（completeOfUpdate）\n\n```java\npublic HttpResponse completeOfUpdate(HttpRequest request, ExecutionContext context) {\n    return new HttpResponse(\"/WEB-INF/view/project/completeOfUpdate.jsp\");\n}\n```\n\n## 更新完了画面のJSP（completeOfUpdate.jsp）\n\n```jsp\n<div class=\"message-area message-info\">\n    プロジェクトの更新が完了しました。\n</div>\n```\n\n完了画面のタイトルは`プロジェクト変更完了画面`とし、`message-info`クラスのdiv内に更新完了メッセージを表示する。"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "id": "adapters-router_adaptor",
+  "title": "ルーティングアダプタ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/adaptors/router_adaptor.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/router/RoutesMapping.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/router/PathOptionsProviderRoutesMapping.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/router/jaxrs/JaxRsPathOptionsProvider.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsHttpRequest.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/router/PathOptionsFormatter.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-router-adaptor",
+        "com.nablarch.integration",
+        "ルーティングアダプタ",
+        "モジュール依存関係",
+        "http-request-router"
+      ]
+    },
+    {
+      "id": "setup",
+      "title": "ルーティングアダプタを使用するための設定を行う",
+      "hints": [
+        "RoutesMapping",
+        "nablarch.integration.router.RoutesMapping",
+        "packageMapping",
+        "basePackage",
+        "ディスパッチハンドラ設定",
+        "ルート定義ファイル",
+        "routes.xml",
+        "ハンドラキュー設定",
+        "アクションクラスマッピング",
+        "WebFrontController",
+        "nablarch.fw.web.servlet.WebFrontController",
+        "BasicApplicationInitializer",
+        "nablarch.core.repository.initialization.BasicApplicationInitializer",
+        "handlerQueue",
+        "initializeList"
+      ]
+    },
+    {
+      "id": "auto-mapping",
+      "title": "業務アクションとURLを自動的にマッピングする",
+      "hints": [
+        "NablarchControllerDetector",
+        "nablarch.integration.router.NablarchControllerDetector",
+        "routes.properties",
+        "自動マッピング",
+        "JBoss",
+        "WildFly",
+        ":controller",
+        ":action",
+        "router.controllerDetector"
+      ]
+    },
+    {
+      "id": "path-annotation-routing",
+      "title": "Jakarta RESTful Web ServicesのPathアノテーションでマッピングする",
+      "hints": [
+        "PathOptionsProviderRoutesMapping",
+        "JaxRsPathOptionsProvider",
+        "JaxRsMethodBinderFactory",
+        "JerseyJaxRsHandlerListFactory",
+        "RoutesMapping",
+        "JaxRsHttpRequest",
+        "PathOptionsFormatter",
+        "BasicApplicationInitializer",
+        "WebFrontController",
+        "@Path",
+        "@GET",
+        "@POST",
+        "@DELETE",
+        "@HEAD",
+        "@OPTIONS",
+        "@PATCH",
+        "@PUT",
+        "@Produces",
+        "applicationPath",
+        "basePackage",
+        "pathOptionsProvider",
+        "pathOptionsFormatter",
+        "methodBinderFactory",
+        "handlerQueue",
+        "initializeList",
+        "Pathアノテーション ルーティング",
+        "JAX-RS マッピング",
+        "パスパラメータ",
+        "ルーティング定義確認",
+        "アノテーション引き継ぎ",
+        "インターフェース継承"
+      ]
+    }
+  ],
+  "sections": {
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-router-adaptor</artifactId>\n</dependency>\n```\n\n> **補足**: http-request-routerのバージョン0.1.1でテスト済み。バージョン変更時はプロジェクト側でテストを実施すること。",
+    "setup": "### ディスパッチハンドラを設定する\n\n`RoutesMapping` をハンドラキューの最後に設定する。\n\n設定ポイント:\n- コンポーネント名は **packageMapping** とする\n- `basePackage` 属性にアクションクラスのパッケージを設定（複数パッケージの場合は共通親パッケージを設定）\n- `RoutesMapping` を初期化対象リストに設定する\n\n```xml\n<component name=\"packageMapping\" class=\"nablarch.integration.router.RoutesMapping\">\n  <property name=\"basePackage\" value=\"sample.web.action\" />\n</component>\n\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component-ref name=\"packageMapping\" />\n    </list>\n  </property>\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"packageMapping\"/>\n    </list>\n  </property>\n</component>\n```\n\n### ルート定義ファイルを作成する\n\nクラスパス直下に `routes.xml` を作成し、URLと業務アクションのマッピングを設定する。設定方法は[ライブラリのREADMEドキュメント(外部サイト)](https://github.com/kawasima/http-request-router/blob/master/README.ja.md)を参照。",
+    "auto-mapping": "`match` タグの `path` 属性に `:controller` や `:action` パラメータを使用することで、業務アクションとURLの自動マッピングが可能。\n\n> **重要**: JBossまたはWildFlyを使用している場合、この機能は使用できない。`get` タグ等で個別にマッピングを定義すること。\n\n> **重要**: `get` タグ等による個別定義とこの機能の併用は推奨しない。ルート定義ファイルからマッピングが読み取りづらくなるため。\n\n有効化: クラスパス直下の `net/unit8/http/router` ディレクトリに `routes.properties` を作成し、以下を設定する。\n\n```bash\nrouter.controllerDetector=nablarch.integration.router.NablarchControllerDetector\n```\n\nルート定義ファイル例:\n```xml\n<routes>\n  <match path=\"/action/:controller/:action\" />\n</routes>\n```\n\nマッピング例:\n\n| 業務アクション | URL |\n|---|---|\n| PersonAction#index | /action/person/index |\n| PersonAction#search | /action/person/search |\n| LoginAction#index | /action/login/index |\n| ProjectUploadAction#index | /action/projectUpload/index |",
+    "path-annotation-routing": "本アダプタのバージョン1.2.0から、Jakarta RESTful Web Servicesの`jakarta.ws.rs.Path`アノテーション（以下`Path`アノテーションと表記）を使ったルーティングのマッピングができるようになった。\n\n> **重要**: JBossやWildflyなど、クラスパス配下のリソースをvfs（バーチャルファイルシステム）で管理するウェブアプリケーションサーバでは、`Path`アノテーションが付与されたクラスの検索ができないため本機能は使用不可。その場合はXMLを用いたルーティング定義を使用すること。\n\n## ディスパッチハンドラの変更\n\nXMLマッピング定義では :java:extdoc:`RoutesMapping <nablarch.integration.router.RoutesMapping>` を使用するが、`Path`アノテーションによるマッピング定義を用いる場合は :java:extdoc:`PathOptionsProviderRoutesMapping <nablarch.integration.router.PathOptionsProviderRoutesMapping>` をディスパッチハンドラとして設定する必要がある。\n\n```xml\n<component name=\"packageMapping\" class=\"nablarch.integration.router.PathOptionsProviderRoutesMapping\">\n  <property name=\"pathOptionsProvider\">\n    <component class=\"nablarch.integration.router.jaxrs.JaxRsPathOptionsProvider\">\n      <property name=\"applicationPath\" value=\"${nablarch.webApi.applicationPath}\" />\n      <property name=\"basePackage\" value=\"${nablarch.commonProperty.basePackage}\" />\n    </component>\n  </property>\n  <property name=\"methodBinderFactory\">\n    <component class=\"nablarch.fw.jaxrs.JaxRsMethodBinderFactory\">\n      <property name=\"handlerList\">\n        <component class=\"nablarch.integration.jaxrs.jersey.JerseyJaxRsHandlerListFactory\"/>\n      </property>\n    </component>\n  </property>\n</component>\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component-ref name=\"packageMapping\"/>\n    </list>\n  </property>\n</component>\n```\n\n:java:extdoc:`JaxRsPathOptionsProvider <nablarch.integration.router.jaxrs.JaxRsPathOptionsProvider>` の必須プロパティ:\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| applicationPath | ○ | パスに共通するプレフィックス（`jakarta.ws.rs.ApplicationPath`アノテーションの値と同一） |\n| basePackage | ○ | `Path`アノテーションが設定されたクラスを検索するルートパッケージ名 |\n\n:java:extdoc:`PathOptionsProviderRoutesMapping <nablarch.integration.router.PathOptionsProviderRoutesMapping>` のコンポーネントは初期化対象のリストへの追加が必要:\n\n```xml\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"packageMapping\" />\n    </list>\n  </property>\n</component>\n```\n\n## マッピングの実装方法\n\nアクションクラスを`Path`アノテーションで注釈してパスと紐づけ、さらにHTTPメソッドアノテーション（`@GET`等）でメソッドと紐づける。\n\n```java\n@Path(\"/sample\")\npublic class SampleAction {\n    @GET\n    @Produces(MediaType.APPLICATION_JSON)\n    public List<Person> findAll() { }\n\n    @POST\n    @Produces(MediaType.APPLICATION_JSON)\n    public int register(JaxRsHttpRequest request) { }\n}\n```\n\n| パス | HTTPメソッド | ディスパッチされるメソッド |\n|---|---|---|\n| `/sample` | `GET` | `SampleAction#findAll()` |\n| `/sample` | `POST` | `SampleAction#register(JaxRsHttpRequest)` |\n\n> **補足**: 標準のHTTPメソッドアノテーション: `jakarta.ws.rs.DELETE`, `jakarta.ws.rs.GET`, `jakarta.ws.rs.HEAD`, `jakarta.ws.rs.OPTIONS`, `jakarta.ws.rs.PATCH`, `jakarta.ws.rs.POST`, `jakarta.ws.rs.PUT`\n\nメソッドレベルに`Path`アノテーションを付けることでサブパスを定義可能:\n\n```java\n@Path(\"/sample\")\npublic class TestAction {\n    @GET\n    @Path(\"/foo\")\n    @Produces(MediaType.APPLICATION_JSON)\n    public Person foo() { }\n\n    @GET\n    @Path(\"/bar\")\n    @Produces(MediaType.APPLICATION_JSON)\n    public Person bar() { }\n}\n```\n\n| パス | HTTPメソッド | ディスパッチされるメソッド |\n|---|---|---|\n| `/sample/foo` | `GET` | `TestAction#foo()` |\n| `/sample/bar` | `GET` | `TestAction#bar()` |\n\n## パスパラメータの定義\n\nパスパラメータはhttp-request-routerの記法ではなく、Jakarta RESTful Web Servicesの仕様に従った形式で記述する。\n\n- `{パラメータ名}`: パスの一部をパラメータとして定義\n- `{パラメータ名 : 正規表現}`: 正規表現でパラメータの書式を制約（例: `\\\\d+`で数値のみ）\n\n:java:extdoc:`JaxRsHttpRequest#getPathParam(String) <nablarch.fw.jaxrs.JaxRsHttpRequest.getPathParam(java.lang.String)>` でパスパラメータ値を取得する。\n\n```java\n@Path(\"/sample\")\npublic class TestAction {\n    @GET\n    @Path(\"/foo/{param}\")\n    public Person foo(JaxRsHttpRequest request) {\n        String param = request.getPathParam(\"param\");\n    }\n\n    @GET\n    @Path(\"/bar/{id : \\\\d+}\")\n    public Person bar(JaxRsHttpRequest request) {\n        int id = Integer.parseInt(request.getPathParam(\"id\"));\n    }\n}\n```\n\n| パス | HTTPメソッド | ディスパッチされるメソッド |\n|---|---|---|\n| `/sample/foo/hello` | `GET` | `TestAction#foo(JaxRsHttpRequest)` |\n| `/sample/foo/world` | `GET` | `TestAction#foo(JaxRsHttpRequest)` |\n| `/sample/bar/123` | `GET` | `TestAction#bar(JaxRsHttpRequest)` |\n| `/sample/bar/987` | `GET` | `TestAction#bar(JaxRsHttpRequest)` |\n\n## インターフェースや親クラスのアノテーション引き継ぎ\n\nアクションクラスは、実装しているインターフェースや継承している親クラスの`Path`アノテーションおよびHTTPメソッドアノテーションを引き継ぐことができる。\n\n**例1: インターフェースにアノテーションを定義し、実装クラスで引き継ぐ**\n\n```java\n@Path(\"/sample\")\npublic interface TestApi {\n    @GET\n    @Path(\"/foo/{param}\")\n    @Produces(MediaType.APPLICATION_JSON)\n    Person foo(JaxRsHttpRequest request);\n\n    @GET\n    @Path(\"/bar/{id : \\\\d+}\")\n    @Produces(MediaType.APPLICATION_JSON)\n    Person bar(JaxRsHttpRequest request);\n}\n\npublic class TestAction implements TestApi {\n    @Override\n    public Person foo(JaxRsHttpRequest request) { }\n\n    @Override\n    public Person bar(JaxRsHttpRequest request) { }\n}\n```\n\n`TestApi`インターフェースにパスパラメータやHTTPメソッドを定義し、メソッドの実装は`TestAction`クラスで行っている。`TestAction`クラスのメソッドには`Path`アノテーションやHTTPメソッドに関するアノテーションは注釈されていないが、実行時には`TestApi`インターフェースのメソッドに注釈されたアノテーションが定義として使用される。\n\n> **補足**: 型定義に`Path`アノテーションが注釈されているクラス/インターフェースが重要。継承・実装の階層をたどり、最初に見つかった`Path`アノテーションが型定義に注釈されているクラス/インターフェースに宣言されているメソッドのみがリクエストを受け付けるメソッドとして認識される。\n\n**例2: アクションクラスが独自メソッドを追加する場合の注意**\n\n```java\n@Path(\"/sample\")  // Pathアノテーションが型定義に注釈されている\npublic interface TestApi {\n    // TestApiインターフェースにはPathアノテーションが型定義に注釈されているため、fooメソッドはリクエストを受け付けるメソッドとして認識される\n    @GET\n    @Path(\"/foo/{param}\")\n    @Produces(MediaType.APPLICATION_JSON)\n    Person foo(JaxRsHttpRequest request);\n}\n\npublic class TestAction implements TestApi {\n    @Override\n    public Person foo(JaxRsHttpRequest request) { }\n\n    // TestActionクラスにはPathアノテーションが注釈されていないため、barメソッドはリクエストを受け付けるメソッドとしては認識されない\n    @GET\n    @Path(\"/bar/{id : \\\\d+}\")\n    @Produces(MediaType.APPLICATION_JSON)\n    public Person bar(JaxRsHttpRequest request) { }\n}\n```\n\nこの例では`TestApi`インターフェースに`Path`アノテーションが注釈されているため、`foo`メソッドがリクエストを受け付けるメソッドとして認識され、`TestAction`クラスに宣言されている`bar`メソッドには`@GET`アノテーションなどが注釈されているがこれはリクエストを受け付けるメソッドとしては無視される。\n\n| クラス/インターフェース | 宣言されているメソッド | リクエストを受け付けられるか？ |\n|---|---|---|\n| `TestApi` | `foo` | ○ |\n| `TestAction` | `bar` | × |\n\nどの型定義に`Path`アノテーションが注釈されているか、そしてそのクラスにアノテーションで注釈されたメソッドが定義されているかによって、リクエストを受け付けるメソッドが決まることに注意すること。\n\n## ルーティング定義の確認\n\n:java:extdoc:`PathOptionsProviderRoutesMapping <nablarch.integration.router.PathOptionsProviderRoutesMapping>` が読み込んだルーティング定義は、初期化時にデバッグレベルでログに出力される。\n\nデフォルトでは次のようなフォーマットでルーティングの一覧が出力される:\n\n```text\n2020-07-20 13:35:53.092 -DEBUG- nablarch.integration.router.PathOptionsProviderRoutesMapping [null] boot_proc = [] proc_sys = [jaxrs] req_id = [null] usr_id = [null] GET /api/bar => com.example.BarAction#findAll\nGET /api/bar/fizz => com.example.BarAction#fizz\nGET /api/foo => com.example.FooAction#findAll\nPOST /api/foo => com.example.FooAction#register\nDELETE /api/foo/(:id) => com.example.FooAction#delete\nGET /api/foo/(:id) => com.example.FooAction#find\nPOST /api/foo/(:id) => com.example.FooAction#update\n```\n\nログフォーマットを変更する場合は、:java:extdoc:`PathOptionsFormatter <nablarch.integration.router.PathOptionsFormatter>` を実装したクラスを作成し、`PathOptionsProviderRoutesMapping`の`pathOptionsFormatter`プロパティに設定する:\n\n```xml\n<component name=\"packageMapping\" class=\"nablarch.integration.router.PathOptionsProviderRoutesMapping\">\n  <property name=\"pathOptionsFormatter\">\n    <component class=\"com.example.CustomPathOptionsFormatter\" />\n  </property>\n</component>\n```"
+  }
+}

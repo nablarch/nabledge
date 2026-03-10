@@ -1,0 +1,37 @@
+{
+  "id": "web-application-client_create3",
+  "title": "登録内容確認画面から登録画面へ戻る",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/client_create/client_create3.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html"
+  ],
+  "index": [
+    {
+      "id": "back-to-input",
+      "title": "登録内容確認画面から登録画面へ戻る実装",
+      "hints": [
+        "ClientAction",
+        "SessionUtil",
+        "BeanUtil",
+        "nablarch.core.beans.BeanUtil",
+        "HttpResponse",
+        "HttpRequest",
+        "ExecutionContext",
+        "Client",
+        "ClientForm",
+        "EntityList",
+        "Industry",
+        "UniversalDao",
+        "確認画面から戻る",
+        "セッションストア",
+        "内部フォーワード",
+        "フォーム変換",
+        "登録画面戻る"
+      ]
+    }
+  ],
+  "sections": {
+    "back-to-input": "確認画面から登録画面へ戻る際の実装パターン。`ClientAction`に`back()`メソッドと`input()`メソッドを実装する。\n\n**`back()`メソッド**:\n\n```java\npublic HttpResponse back(HttpRequest request, ExecutionContext context) {\n    Client client = SessionUtil.get(context, \"client\");\n    ClientForm form = BeanUtil.createAndCopy(ClientForm.class, client);\n    context.setRequestScopedVar(\"form\", form);\n    return new HttpResponse(\"forward://input\");\n}\n```\n\n- :ref:`session_store` から顧客情報を取得する\n- :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` を使用して顧客エンティティをフォームに変換し、リクエストスコープに登録する\n- レスポンスの遷移先を初期表示処理への内部フォーワードとする（登録画面表示時にプルダウン用の業種情報を再取得するため）\n\n**`input()`メソッド**:\n\n```java\npublic HttpResponse input(HttpRequest request, ExecutionContext context) {\n    SessionUtil.delete(context, \"client\");\n    EntityList<Industry> industries = UniversalDao.findAll(Industry.class);\n    context.setRequestScopedVar(\"industries\", industries);\n    return new HttpResponse(\"/WEB-INF/view/client/create.jsp\");\n}\n```\n\n- 初期表示処理で :ref:`session_store` へ登録したオブジェクトを削除する（戻るボタンを押下せずにヘッダメニューから直接登録画面に遷移された場合等を考慮）"
+  }
+}

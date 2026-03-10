@@ -3,56 +3,66 @@
   "title": "基本方針",
   "official_doc_urls": [
     "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/nablarch/policy.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/util/annotation/Published.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/java/math/BigDecimal.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/java/text/DecimalFormat.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/util/annotation/Published.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/java/lang/Deprecated.html"
   ],
+  "processing_patterns": [],
   "index": [
     {
-      "id": "handling-empty-input",
+      "id": "no-input-value-handling",
       "title": "外部から受け付ける未入力値の扱い",
       "hints": [
+        "normalize_handler",
         "未入力値",
         "null変換",
-        "normalize_handler"
+        "入力値正規化",
+        "ハンドラキュー"
       ]
     },
     {
-      "id": "collection-api-not-null",
+      "id": "collection-api-no-null",
       "title": "コレクションや配列を返すAPIは原則nullを戻さない",
       "hints": [
         "コレクション",
         "配列",
-        "null",
-        "空のコレクション"
+        "null戻り値",
+        "空コレクション",
+        "空配列"
       ]
     },
     {
-      "id": "no-checked-exceptions",
+      "id": "unchecked-exceptions-only",
       "title": "Nablarchは検査例外を送出しない",
       "hints": [
-        "非検査例外",
         "検査例外",
-        "例外処理"
+        "非検査例外",
+        "例外処理",
+        "RuntimeException",
+        "ハンドラ"
       ]
     },
     {
-      "id": "english-messages",
+      "id": "log-message-english",
       "title": "ログや例外のメッセージは英語で統一する",
       "hints": [
-        "ログメッセージ",
+        "ログ",
         "例外メッセージ",
-        "英語"
+        "英語",
+        "国際化",
+        "メッセージ言語"
       ]
     },
     {
-      "id": "sql-customization",
+      "id": "sql-component-replacement",
       "title": "コンポーネントを差し替えることでNablarchが発行するSQLを変更できる",
       "hints": [
         "SQL変更",
         "コンポーネント差し替え",
-        "データベースアクセス"
+        "データベースアクセス",
+        "テーブル名変更",
+        "設定ファイル"
       ]
     },
     {
@@ -60,7 +70,9 @@
       "title": "OSSは使用しない",
       "hints": [
         "OSS",
+        "依存関係",
         "アダプタ",
+        "adaptor",
         "プロダクションコード"
       ]
     },
@@ -69,8 +81,10 @@
       "title": "複数の例外が発生した場合は起因例外をスローする",
       "hints": [
         "起因例外",
+        "例外スロー",
+        "WARNINGログ",
         "複数例外",
-        "WARNINGログ"
+        "例外チェーン"
       ]
     },
     {
@@ -78,8 +92,10 @@
       "title": "スレッドセーフである",
       "hints": [
         "スレッドセーフ",
+        "シングルトン",
+        "ハンドラキュー",
         "repository",
-        "シングルトン"
+        "スレッドアンセーフ"
       ]
     },
     {
@@ -88,16 +104,20 @@
       "hints": [
         "Java17",
         "後方互換",
-        "Nablarch6"
+        "Nablarch6",
+        "Java対応バージョン",
+        "Java18"
       ]
     },
     {
-      "id": "public-api",
+      "id": "public-api-usage",
       "title": "アプリケーションで使用してもよいAPIについて",
       "hints": [
         "Published",
         "公開API",
-        "後方互換"
+        "後方互換",
+        "nablarch.core.util.annotation.Published",
+        "アノテーション"
       ]
     },
     {
@@ -105,36 +125,37 @@
       "title": "文字列からBigDecimal変換時に発生する可能性のあるヒープ不足について",
       "hints": [
         "BigDecimal",
-        "DecimalFormat",
-        "nablarch.max_scale",
-        "ヒープ不足",
         "指数表現",
-        "scale"
+        "ヒープ不足",
+        "nablarch.max_scale",
+        "scale",
+        "DecimalFormat"
       ]
     },
     {
       "id": "deprecated-api",
       "title": "非推奨(Deprecated)APIについて",
       "hints": [
-        "@Deprecated",
+        "Deprecated",
         "非推奨API",
-        "移動したクラス",
-        "セキュリティ"
+        "@Deprecated",
+        "廃止予定",
+        "java.lang.Deprecated"
       ]
     }
   ],
   "sections": {
-    "handling-empty-input": "Nablarchでは未入力値を`null`に統一する。HTTPリクエストパラメータ、XMLなど外部入力の未入力値は`null`に変換される。出力時は出力形式に応じて未入力を意味する値に変換される。\n\n変換はNablarchのハンドラ・ライブラリが自動的に行う。アプリケーションで変換処理を実装する必要はない。\n\n> **重要**: 未入力値を`null`に変換するには:ref:`normalize_handler`をハンドラキューに追加すること。\n\nアプリケーションでは未入力値を`null`として扱うこと。",
-    "collection-api-not-null": "Nablarchが提供するコレクションや配列を返すAPIは、対象データが存在しない場合は`null`ではなく空のコレクションや配列を返す。\n\n例外: HTTPリクエストパラメータのように識別子を指定して取得するAPIは`null`を返す。",
-    "no-checked-exceptions": "Nablarch内のすべてのAPIは非検査例外のみを送出する。Nablarchで定義している例外クラスもすべて非検査例外。\n\nこれによりアプリケーションで例外を意識する必要がなく、ハンドラで共通的な例外処理を行える。",
-    "english-messages": "Nablarchのログや例外メッセージはすべて英語。英語以外に変更する機能は提供していない。",
-    "sql-customization": "データベースアクセスコンポーネントには必ずインタフェースが定義されており、実装の差し替えが可能。プロジェクト側で実装クラスを作成し設定ファイルから差し替えることで、発行するSQLを変更できる。\n\n例: Nablarchが使用するテーブルのカラムを追加・削除する場合、コンポーネントを差し替えることで対応可能。\n\nテーブル名やカラム名の変更のみであれば、クラスを作成せず設定ファイルの修正のみで対応できる。",
-    "no-oss": "Nablarchのプロダクションコードは、致命的な不具合や脆弱性への迅速な対応・リリースを目的としてOSSを使用していない。\n\nOSSを使用したい場合は:ref:`adaptor`として提供されているコンポーネントをプロジェクト要件に応じて採用できる。",
-    "root-cause-exception": "複数の例外が発生した場合、Nablarchは起因例外をスローする。起因例外以外の情報はWARNINGログに出力する。",
-    "thread-safe": "Nablarchが提供する機能は基本的にスレッドセーフ。\n\n:ref:`repository`上のオブジェクトはシングルトンとなるため、スレッドセーフとする必要がある。\n\n> **補足**: スレッドアンセーフな機能（例: データベース接続）は、Javadoc上にスレッドアンセーフであることを明記している。",
-    "java17-compliance": "Nablarch6のプロダクションコードはJava17に準拠。Java18以降のAPIは使用していない。\n\nアプリケーション開発時はJava17以降のバージョンであればよく、Java18以降のAPIも使用できる。",
-    "public-api": "公開APIは:java:extdoc:`Published<nablarch.core.util.annotation.Published>`アノテーションで識別できる。\n\n公開APIはバージョンアップ時に後方互換を維持し、アプリケーションに修正が発生しないようにしている。ただし、致命的な不具合と脆弱性の対応時には後方互換を維持できない場合もある。",
-    "bigdecimal-heap-issue": "文字列からBigDecimalに変換する際、指数表現（例: `9e100000`）を指定すると以下の問題が発生する場合がある：\n\n- :java:extdoc:`BigDecimal#toPlainString()<java.math.BigDecimal.toPlainString()>`呼び出しで非常に大きい文字列が生成されヒープが圧迫される\n- :java:extdoc:`DecimalFormat<java.text.DecimalFormat>`でフォーマットする際に非常に大きい文字列が生成されヒープが圧迫される\n\nNablarchでは:java:extdoc:`BigDecimal#scale<java.math.BigDecimal.scale()>`を使用して桁数チェックを行い、ヒープを圧迫する大きな値の取り込みを防止している。許容するscaleの範囲は`-9999`から`9999`。この範囲を超える指数表現の値を変換しようとした場合、例外を送出する。\n\n許容するscaleの範囲は設定で変更可能。システムリポジトリ機能の環境設定ファイル（:ref:`repository-environment_configuration`）に指定する。\n\n例: 許容範囲を`-10`から`10`とする場合：\n```properties\nnablarch.max_scale=10\n```",
-    "deprecated-api": "以下に該当するAPIは:java:extdoc:`@Deprecated<java.lang.Deprecated>`アノテーションを付与し非推奨とする。\n\n**1. 他パッケージに移動したクラス**\n\n移動前クラスは非推奨とし、Javadocに移動先クラスを記載する。移動前クラスは移動後クラスに全処理を委譲しているため動作は保証されるが、メソッド追加などは行われないため移動先クラスを使用することが好ましい。\n\n**2. 不具合やセキュリティ面で問題のあるクラスやメソッド**\n\n不具合やセキュリティ面で問題があるクラスは非推奨とする。Javadocに理由および代替APIや実装方法を記載している。問題を解消したAPIを使用するよう対応が必要。\n\n> **重要**: 不具合や脆弱性は基本的に修正するが、クラス構造的な制約や後方互換維持を目的として問題のあるAPIを非推奨として残す場合がある。非推奨APIとして残した場合、新たな不具合が見つかっても対応は行わない。このため、問題が解消された新しいAPIを使用するようアプリケーション側は必ず対応する必要がある。\n\n> **補足**: 本ドキュメントで代替機能の使用を推奨しているものについては、非推奨API(:java:extdoc:`@Deprecated<java.lang.Deprecated>`の付与)とはしていない。これらのAPI（機能）は使用すること自体は問題なく、不具合などがあった場合もバージョンアップ時に対応するため。"
+    "no-input-value-handling": "Nablarchでは外部から受け付けた未入力値を `null` に変換する。HTTPリクエストのパラメータやXMLなど外部から受け付けたデータの未入力値は `null` に変換される。外部へ `null` を出力する場合は、出力形式に応じて未入力を意味する値に変換される。変換はNablarchのハンドラ・ライブラリが行うため、アプリケーションで変換する必要はない。\n\n> **重要**: この未入力値の `null` 変換を有効にするには、:ref:`normalize_handler` をハンドラキューに追加する必要がある。\n\nアプリケーションでは未入力値を `null` として開発すること。",
+    "collection-api-no-null": "Nablarchが提供するコレクションや配列を返すAPIは、対象データが存在しない場合に `null` ではなく空のコレクションや配列を返す。\n\nただし、HTTPリクエストパラメータのように識別子を指定して取得するAPIの場合は、空の配列ではなく `null` を返す。",
+    "unchecked-exceptions-only": "Nablarch内の全てのAPIは非検査例外のみを送出する。Nablarchで定義している例外クラスも全て非検査例外。これにより、アプリケーションで例外を意識する必要がなく、ハンドラで共通的な例外処理を行うことができる。",
+    "log-message-english": "Nablarchのログや例外のメッセージは全て英語で統一されている。Nablarch内で出力しているログや例外のメッセージを英語以外に変更する機能は提供していない。",
+    "sql-component-replacement": "Nablarchでデータベースにアクセスするコンポーネントにはインタフェースが定義されており、実装の差し替えが可能。プロジェクト側で実装クラスを作成し設定ファイルからコンポーネントを差し替えることで、発行するSQLを変更できる（例: テーブルのカラム追加・削除への対応）。\n\nテーブル名やカラム名をデフォルトから変更したい場合は、新しいクラスを作成する必要はなく、設定ファイルの修正のみでよい。",
+    "no-oss": "Nablarchのプロダクションコードは、致命的な不具合や脆弱性への迅速な対応・リリースを目的としてOSSを使用していない。\n\nOSSを使用したい場合は、:ref:`adaptor` としてOSSを使用できるコンポーネントが提供されている。",
+    "root-cause-exception": "処理中に複数の例外が発生した場合、Nablarchは起因例外をスローする。起因例外以外の情報はWARNINGログに出力される。",
+    "thread-safe": "Nablarchが提供する機能は基本的にスレッドセーフ。ハンドラキュー上のハンドラを各スレッドで実行するアーキテクチャのため、各スレッドが安全に要求を処理できる。アーキテクチャの詳細は :ref:`nablarch_architecture` 参照。\n\n:ref:`repository` 上のオブジェクトはシングルトンとなるため、スレッドセーフにする必要がある。\n\n> **補足**: スレッドアンセーフな機能（例: データベース接続）はJavadoc上にスレッドアンセーフであることが明記されている。",
+    "java17-compliance": "Nablarch6のプロダクションコードはJava17に準拠しており、Java18以降で提供されているAPIは使用していない。これは既存のNablarch6導入プロジェクトに対する後方互換を維持するためである。\n\nNablarch6を使用したアプリケーション開発はJava17以降のバージョンであればよく、Java18以降で提供されているAPIも問題なく使用できる。",
+    "public-api-usage": "Nablarchでは公開APIに :java:extdoc:`Published<nablarch.core.util.annotation.Published>` アノテーションが付与されており、どのクラスやメソッドが公開APIかわかるようになっている。\n\n公開APIはバージョンアップ時に後方互換を維持する。ただし、致命的な不具合と脆弱性の対応時には後方互換を維持できない場合もある。",
+    "bigdecimal-heap-issue": "文字列からBigDecimalへの変換時に指数表現（例: `9e100000`）を指定すると、:java:extdoc:`BigDecimal#toPlainString() <java.math.BigDecimal.toPlainString()>` の呼び出しや :java:extdoc:`DecimalFormat <java.text.DecimalFormat>` でのフォーマット時に非常に大きい文字列が生成されヒープが圧迫される。\n\nNablarchでは :java:extdoc:`BigDecimal#scale <java.math.BigDecimal.scale()>` を使用して桁数チェックを行い、許容するscaleの範囲（デフォルト: `-9999` 〜 `9999`）を超える指数表現の値を変換しようとした場合に例外を送出してヒープ圧迫を防止する。\n\n許容するscaleの範囲は設定で変更可能。設定は :ref:`repository-environment_configuration` の環境設定ファイルに指定する。\n\n```properties\nnablarch.max_scale=10\n```\n\n（上記は許容範囲を `-10` 〜 `10` に設定する例）",
+    "deprecated-api": "以下に該当するAPIには :java:extdoc:`@Deprecated <java.lang.Deprecated>` アノテーションを付与し非推奨とする。\n\n1. **他パッケージに移動したクラス**: 移動前クラスは非推奨とし、移動後クラスに全処理を委譲するため動作は保証される。ただしメソッド追加などは行われないため、移動先クラスを使用することが好ましい。\n2. **不具合やセキュリティ面で問題のあるクラスやメソッド**: Javadocに理由および代わりに使用すべきAPIや実装方法が記載されている。\n\n> **重要**: 不具合や脆弱性については基本的に問題を解消するよう修正する。しかし、クラス構造的な制約や後方互換の維持を目的として問題のあるAPIを非推奨として残す場合がある。非推奨APIとして残した場合は、新たな不具合などが見つかっても対応は行わない。問題が解消された新しいAPIを使用するようアプリケーション側は必ず対応する必要がある。\n\n> **補足**: 本ドキュメントで代替機能の使用を推奨しているものについては、非推奨API（`@Deprecated` の付与）とはしていない。これらのAPIは使用すること自体は問題なく、不具合があった場合もバージョンアップ時に対応するためである。"
   }
 }

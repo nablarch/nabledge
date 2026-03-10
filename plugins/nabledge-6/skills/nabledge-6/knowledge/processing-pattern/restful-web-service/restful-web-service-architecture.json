@@ -1,0 +1,60 @@
+{
+  "id": "restful-web-service-architecture",
+  "title": "アーキテクチャ概要",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/rest/architecture.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "restful-web-service-structure",
+      "title": "RESTfulウェブサービスの構成",
+      "hints": [
+        "Jakarta RESTful Web Servicesサポート",
+        "@Produces",
+        "@Consumes",
+        "@Valid",
+        "ウェブサービス構成",
+        "クライアントサイド制限",
+        "使用可能アノテーション",
+        "Servletリソースインジェクション",
+        "Jakarta CDI"
+      ]
+    },
+    {
+      "id": "restful-web-service-processing-flow",
+      "title": "RESTfulウェブサービスの処理の流れ",
+      "hints": [
+        "WebFrontController",
+        "DispatchHandler",
+        "JaxRsResponseHandler",
+        "BodyConvertHandler",
+        "HttpResponse",
+        "処理フロー",
+        "ハンドラキュー",
+        "jakarta.servlet.Filter"
+      ]
+    },
+    {
+      "id": "restful-web-service-handlers",
+      "title": "RESTfulウェブサービスで使用するハンドラ",
+      "hints": [
+        "最小ハンドラ構成",
+        "JaxRsResponseHandler",
+        "BodyConvertHandler",
+        "JaxRsBeanValidationHandler",
+        "global_error_handler",
+        "router_adaptor",
+        "RoutesMapping",
+        "JaxRsMethodBinderFactory",
+        "jaxrs_adaptor",
+        "ハンドラキュー設定"
+      ]
+    }
+  ],
+  "sections": {
+    "restful-web-service-structure": "Jakarta RESTful Web ServicesサポートはNablarchのウェブアプリケーションをベースとする。\n\n> **補足**: Nablarch5では「JAX-RSサポート」と呼ばれていたが、Java EEのEclipse Foundation移管に伴い仕様名が変わったため、Nablarch6で「Jakarta RESTful Web Servicesサポート」に名称変更。機能的な差はなし。\n\n使用できるアノテーション:\n- `@Produces`（レスポンスのメディアタイプ指定）\n- `@Consumes`（リクエストのメディアタイプ指定）\n- `@Valid`（リクエストに対するBeanValidation実行）\n\n使用不可: `@Context`アノテーションによるServletリソースインジェクション、Jakarta Contexts and Dependency Injection\n\n> **重要**: クライアントサイドの機能は提供しない。Jakarta RESTful Web Servicesのクライアントが必要な場合は、JerseyやRESTEasyなどのJakarta RESTful Web Services実装を使用すること。\n\n構成はNablarchウェブアプリケーションと同じ。詳細は :ref:`web_application-structure` を参照。",
+    "restful-web-service-processing-flow": "1. :ref:`web_front_controller`（`jakarta.servlet.Filter`実装クラス）がリクエストを受信する。\n2. :ref:`web_front_controller` がリクエストの処理をハンドラキュー（handler queue）に委譲する。\n3. `DispatchHandler`がURIを元に処理すべきアクションクラスを特定し、ハンドラキューの末尾に追加する。\n4. アクションクラスがフォームクラス/エンティティクラスを使用して業務ロジックを実行する。各クラスの詳細は :ref:`rest-application_design` を参照。\n5. アクションクラスが処理結果のDTOまたは`HttpResponse`を作成し返却する。\n6. `JaxRsResponseHandler`が`HttpResponse`をクライアントへのレスポンスに変換して応答する。アクションの処理結果がフォームクラスの場合は`BodyConvertHandler`により`HttpResponse`に変換され、ボディ形式はアクションクラスに設定されたメディアタイプとなる。",
+    "restful-web-service-handlers": "RESTfulウェブサービス構築用ハンドラ一覧:\n\n**リクエスト・レスポンス変換**\n- :ref:`jaxrs_response_handler`\n- :ref:`body_convert_handler`\n\n**データベース関連**\n- :ref:`database_connection_management_handler`\n- :ref:`transaction_management_handler`\n\n**リクエスト検証**\n- :ref:`jaxrs_bean_validation_handler`\n- :ref:`csrf_token_verification_handler`\n\n**エラー処理**\n- :ref:`global_error_handler`\n\n**その他**\n- :ref:`リクエストURIとアクションを紐付けるハンドラ <router_adaptor>`\n- :ref:`health_check_endpoint_handler`\n\n### 最小ハンドラ構成\n\n| No. | ハンドラ | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|\n| 1 | :ref:`global_error_handler` | — | — | 実行時例外/エラー時にログ出力 |\n| 2 | :ref:`jaxrs_response_handler` | — | レスポンスの書き込み | 例外対応レスポンス生成・書き込み・ログ出力 |\n| 3 | :ref:`database_connection_management_handler` | DB接続を取得 | DB接続を解放 | — |\n| 4 | :ref:`transaction_management_handler` | トランザクション開始 | トランザクションをコミット | トランザクションをロールバック |\n| 5 | :ref:`リクエストURIとアクションを紐付けるハンドラ <router_adaptor>` | リクエストパスからアクション(メソッド)を決定 | — | — |\n| 6 | :ref:`body_convert_handler` | request bodyをフォームクラスに変換 | アクション処理結果のフォームをresponse bodyに変換 | — |\n| 7 | :ref:`jaxrs_bean_validation_handler` | No6のフォームクラスをバリデーション | — | — |\n\n> **補足**: :ref:`リクエストURIとアクションを紐付けるハンドラ <router_adaptor>` より後ろのハンドラはハンドラキューに直接設定せず、router_adaptorに対して設定する。:ref:`jaxrs_adaptor` を使用した場合、:ref:`body_convert_handler` と :ref:`jaxrs_bean_validation_handler` が自動追加される。追加ハンドラやメディアタイプ拡張が必要な場合は以下の設定例を参照。\n\n```xml\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <!-- 前段のハンドラは省略 -->\n      <component name=\"packageMapping\" class=\"nablarch.integration.router.RoutesMapping\">\n        <property name=\"methodBinderFactory\">\n          <component class=\"nablarch.fw.jaxrs.JaxRsMethodBinderFactory\">\n            <property name=\"handlerList\">\n              <list>\n                <component class=\"nablarch.fw.jaxrs.BodyConvertHandler\">\n                  <!-- サポートするメディアタイプのコンバータを設定する -->\n                </component>\n                <component class=\"nablarch.fw.jaxrs.JaxRsBeanValidationHandler\" />\n              </list>\n            </property>\n          </component>\n        </property>\n      </component>\n    </list>\n  </property>\n</component>\n```"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "restful-web-service-getting-started-create",
+  "title": "登録機能の作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/rest/getting_started/create/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/ws/rs/Consumes.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/validation/Valid.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html"
+  ],
+  "index": [
+    {
+      "id": "project-registration",
+      "title": "プロジェクト情報を登録する",
+      "hints": [
+        "ProjectForm",
+        "ProjectAction",
+        "Project",
+        "BeanUtil",
+        "UniversalDao",
+        "HttpResponse",
+        "MediaType",
+        "Serializable",
+        "@Consumes",
+        "@Valid",
+        "@Required",
+        "@Domain",
+        "@Path",
+        "@POST",
+        "JSONリクエスト登録処理",
+        "RESTful APIリソース登録",
+        "HTTPステータスコード201",
+        "フォームからエンティティへの変換"
+      ]
+    }
+  ],
+  "sections": {
+    "project-registration": "## 動作確認手順\n\n1. **事前にDBの状態を確認**\n\n   H2のコンソールから下記SQLを実行し、レコードが存在しないことを確認する。\n\n   ```sql\n   SELECT * FROM PROJECT WHERE PROJECT_NAME = 'プロジェクト９９９';\n   ```\n\n2. **プロジェクト情報の登録**\n\n   POSTリクエストで以下の情報を送信する。\n\n   - URL: `http://localhost:9080/projects`\n   - HTTPメソッド: `POST`\n   - Content-Type: `application/json`\n\n   リクエストボディ（全フィールド）:\n\n   ```json\n   {\n       \"projectName\": \"プロジェクト９９９\",\n       \"projectType\": \"development\",\n       \"projectClass\": \"ss\",\n       \"projectManager\": \"山田\",\n       \"projectLeader\": \"田中\",\n       \"clientId\": 10,\n       \"projectStartDate\": \"20160101\",\n       \"projectEndDate\": \"20161231\",\n       \"note\": \"備考９９９\",\n       \"sales\": 10000,\n       \"costOfGoodsSold\": 20000,\n       \"sga\": 30000,\n       \"allocationOfCorpExpenses\": 40000\n   }\n   ```\n\n3. **動作確認**\n\n   H2のコンソールから下記SQLを実行し、レコードが1件取得できることを確認する。\n\n   ```sql\n   SELECT * FROM PROJECT WHERE PROJECT_NAME = 'プロジェクト９９９';\n   ```\n\n## フォームの作成\n\n**クラス**: `public class ProjectForm implements Serializable`\n\n- プロパティは全てString型で宣言すること（:ref:`bean_validation-form_property` 参照）\n\n```java\n@Required\n@Domain(\"projectName\")\nprivate String projectName;\n```\n\n## 業務アクションメソッドの実装\n\n実装ポイント:\n- :java:extdoc:`Consumes<jakarta.ws.rs.Consumes>` アノテーションに `MediaType.APPLICATION_JSON` を指定してJSON形式のリクエストを受け付ける\n- :java:extdoc:`Valid<jakarta.validation.Valid>` アノテーションでリクエストのバリデーションを実行する（:ref:`jaxrs_bean_validation_handler` 参照）\n- :java:extdoc:`BeanUtil<nablarch.core.beans.BeanUtil>` でフォームをエンティティに変換し、:ref:`universal_dao` でDB登録する\n- 戻り値はリソース作成完了（ステータスコード `201`）を表す :java:extdoc:`HttpResponse<nablarch.fw.web.HttpResponse>` を返却する\n\n## URLとのマッピングを定義\n\n:ref:`router_adaptor` を使用し、:ref:`router_adaptor_path_annotation` でURLマッピングを定義する。\n\n```java\n@Path(\"/projects\")\npublic class ProjectAction {\n  @POST\n  @Consumes(MediaType.APPLICATION_JSON)\n  @Valid\n  public HttpResponse save(ProjectForm project) {\n    UniversalDao.insert(BeanUtil.createAndCopy(Project.class, project));\n    return new HttpResponse(HttpResponse.Status.CREATED.getStatusCode());\n  }\n}\n```\n\n- `@Path` と `@POST` アノテーションでPOSTリクエスト時にマッピングするアクションメソッドを定義する"
+  }
+}

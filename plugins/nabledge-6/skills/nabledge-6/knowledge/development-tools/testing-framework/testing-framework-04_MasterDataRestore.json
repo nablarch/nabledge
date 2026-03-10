@@ -1,0 +1,115 @@
+{
+  "id": "testing-framework-04_MasterDataRestore",
+  "title": "マスタデータ復旧機能",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/06_TestFWGuide/04_MasterDataRestore.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "overview",
+      "title": "概要",
+      "hints": [
+        "マスタデータ復旧",
+        "マスタデータ変更",
+        "テスト失敗防止",
+        "テストメソッド終了",
+        "異常系テスト"
+      ]
+    },
+    {
+      "id": "features",
+      "title": "特徴",
+      "hints": [
+        "テスト実行順序",
+        "自動復旧",
+        "高速復旧",
+        "バックアップスキーマ",
+        "一括復旧"
+      ]
+    },
+    {
+      "id": "required-schemas",
+      "title": "必要となるスキーマ",
+      "hints": [
+        "自動テスト用スキーマ",
+        "バックアップ用スキーマ",
+        "必要スキーマ",
+        "2つのスキーマ"
+      ]
+    },
+    {
+      "id": "operation-mechanism",
+      "title": "動作イメージ",
+      "hints": [
+        "監視対象テーブル",
+        "SQLログ監視",
+        "全件削除",
+        "全件挿入",
+        "復旧メカニズム",
+        "コンポーネント設定ファイル"
+      ]
+    },
+    {
+      "id": "backup-schema-setup",
+      "title": "バックアップ用スキーマの作成、データ投入",
+      "hints": [
+        "バックアップスキーマ作成",
+        "マスタデータ復旧",
+        "データ投入",
+        "復旧対象テーブル"
+      ]
+    },
+    {
+      "id": "foreign-key-tables",
+      "title": "外部キーが設定されたテーブルを使用する場合について",
+      "hints": [
+        "外部キー",
+        "slow test",
+        "テーブル削除挿入順序",
+        "親子関係",
+        "nablarch.suppress-table-sort"
+      ]
+    },
+    {
+      "id": "component-config-watched-tables",
+      "title": "コンポーネント設定ファイルに監視対象テーブルを記載",
+      "hints": [
+        "MasterDataRestorer",
+        "nablarch.test.core.db.MasterDataRestorer",
+        "backupSchema",
+        "tablesTobeWatched",
+        "testEventListeners",
+        "監視対象テーブル",
+        "コンポーネント設定"
+      ]
+    },
+    {
+      "id": "log-output-settings",
+      "title": "ログ出力設定",
+      "hints": [
+        "MasterDataRestorer$SqlLogWatchingFormatter",
+        "nablarch.test.core.db.MasterDataRestorer$SqlLogWatchingFormatter",
+        "NopLogWriter",
+        "nablarch.test.core.log.NopLogWriter",
+        "BasicLoggerFactory",
+        "nablarch.core.log.basic.BasicLoggerFactory",
+        "StandardOutputLogWriter",
+        "nablarch.core.log.basic.StandardOutputLogWriter",
+        "SQLログ",
+        "app-log.properties",
+        "log.properties"
+      ]
+    }
+  ],
+  "sections": {
+    "overview": "自動テスト中にマスタデータが更新された場合、そのテストメソッドが終了した時点でマスタデータを元の状態に復旧する機能。\n\nマスタメンテナンス機能等のテストでは、マスタデータを変更しないと実施できない異常系テストケース（例: 存在するはずのデータが存在しなかった場合のテスト）が存在し、マスタレコードの削除が必要になる場合がある。テスト中にマスタデータを変更した場合、それ以降のテストクラスではマスタデータが意図しない状態になりテストが失敗することがある。本機能はこのような意図しないテスト失敗を防止するために提供される。",
+    "features": "本機能には以下の特徴がある。\n\n- テストの実行順序に依存せずに、常に正しい状態のマスタデータでテストできる。\n- マスタデータ復旧は自動で行われるので、各テストクラスで復旧処理・復旧用データを用意する必要がない。\n- バックアップ用スキーマからテーブル毎に一括で復旧するので、1件ずつINSERTする場合に比べて高速に復旧できる。",
+    "required-schemas": "本機能を使用するにあたり、以下の**2つのスキーマ**が必要となる。\n\n| スキーマ | 説明 |\n|---|---|\n| 自動テスト用スキーマ | 自動テストに使用するスキーマ。 |\n| バックアップ用スキーマ | 復旧に使用するためのマスタデータを保存しておくためのスキーマ。 |",
+    "operation-mechanism": "自動テストフレームワークはコンポーネント設定ファイルより監視対象テーブル名一覧を取得する。テスト実行中、SQLログを監視することにより監視対象テーブルを変更するSQL文が発行されたかどうかを検出する。\n\n監視対象テーブルを変更するSQL文が発行された場合、テストメソッド終了後に変更があったテーブルを復旧する。復旧の手順は以下のとおり：\n\n1. テーブル内のレコードを全件削除する。\n2. バックアップ用スキーマのテーブルからレコードを全件挿入する。",
+    "backup-schema-setup": "バックアップ用スキーマに自動テスト用スキーマと同じテーブルを作成し、復旧用データを投入する。\n\n> **補足**: 復旧用スキーマに全テーブルを作成する必要はない。復旧対象とするテーブルのみ存在すればよい（復旧対象外のテーブルがあっても問題ない）。",
+    "foreign-key-tables": "外部キーが設定されたテーブルを復旧する場合、デフォルトではJDBCの機能で親子関係を取得・構築し、削除処理は子テーブルから、挿入処理は親テーブルから順に行う。\n\nテーブル数が膨大なプロジェクトでは、JDBC機能による親子関係構築処理が原因でslow test問題が発生する場合がある。この場合、記述順（:ref:`MasterDataRestore-configuration` 参照）を元にテーブルの削除・挿入処理を行う機能を使用する。\n\n記述順での復旧を有効にするには、環境設定ファイルに以下を追加する：\n\n```jproperties\nnablarch.suppress-table-sort=true\n```",
+    "component-config-watched-tables": "自動テスト用コンポーネント設定ファイルに監視対象テーブルを列挙する。\n\n**クラス名**: `nablarch.test.core.db.MasterDataRestorer`\n\n| プロパティ名 | 説明 | デフォルト値 |\n|---|---|---|\n| backupSchema | マスタデータ復旧用スキーマ名 | なし |\n| tablesTobeWatched | 監視対象テーブル名のリスト | なし |\n| testEventListeners | テストイベントリスナーの一覧。`nablarch.test.core.db.MasterDataRestorer`を登録することでテストメソッド終了時にマスタデータが復旧される。 | なし |\n\n```xml\n<component name=\"masterDataRestorer\"\n           class=\"nablarch.test.core.db.MasterDataRestorer\">\n  <property name=\"backupSchema\" value=\"nablarch_test_master\"/>\n  <property name=\"tablesTobeWatched\">\n    <list>\n      <value>MESSAGE</value>\n      <value>ID_GENERATE</value>\n      <value>BUSINESS_DATE</value>\n      <value>PERMISSION_UNIT</value>\n      <value>REQUEST</value>\n      <value>PERMISSION_UNIT_REQUEST</value>\n    </list>\n  </property>\n</component>\n```",
+    "log-output-settings": "本機能はSQLログを監視してマスタデータへの変更を検出するため、SQLログ出力の設定が必要。\n\n**app-log.properties** — `sqlLogFormatter`のクラス名に本機能の提供クラスを指定する：\n\n```none\nsqlLogFormatter.className=nablarch.test.core.db.MasterDataRestorer$SqlLogWatchingFormatter\n```\n\n**log.properties** — SQLログをDEBUGレベル以上で出力する設定をする。以下の例では、SQLログを標準出力に表示させないよう専用のロガー（何もしないロガー: `NopLogWriter`）を設定している：\n\n```none\nloggerFactory.className=nablarch.core.log.basic.BasicLoggerFactory\nwriterNames=stdout,nop\nwriter.stdout.className=nablarch.core.log.basic.StandardOutputLogWriter\nwriter.nop.className=nablarch.test.core.log.NopLogWriter\navailableLoggersNamesOrder=sql,root\nloggers.root.nameRegex=.*\nloggers.root.level=DEBUG\nloggers.root.writerNames=stdout\nloggers.sql.nameRegex=SQL\nloggers.sql.level=DEBUG\nloggers.sql.writerNames=nop\n```"
+  }
+}

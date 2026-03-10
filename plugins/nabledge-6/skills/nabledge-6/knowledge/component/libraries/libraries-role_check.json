@@ -1,0 +1,119 @@
+{
+  "id": "libraries-role_check",
+  "title": "アノテーションによる認可チェック",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/authorization/role_check.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/BasicRoleEvaluator.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/session/SessionStoreUserRoleResolver.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/CheckRole.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Interceptor.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/Forbidden.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/session/SessionStoreUserRoleUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/CheckRoleLogger.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/repository/initialization/BasicApplicationInitializer.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/CheckRoleUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/RoleEvaluator.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/repository/SystemRepository.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/ThreadContext.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/authorization/role/UserRoleResolver.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "overview",
+      "title": "機能概要",
+      "hints": [
+        "@CheckRole",
+        "CheckRole",
+        "認可チェック",
+        "ロールベースアクセス制御",
+        "ロール割り当て",
+        "permission_check",
+        "認可判定",
+        "BasicRoleEvaluator",
+        "使い分け"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-common-auth",
+        "nablarch-common-auth-session",
+        "nablarch-main-default-configuration",
+        "モジュール",
+        "依存関係"
+      ]
+    },
+    {
+      "id": "how-to-use",
+      "title": "使用方法",
+      "hints": [
+        "@CheckRole",
+        "CheckRole",
+        "BasicRoleEvaluator",
+        "SessionStoreUserRoleResolver",
+        "CheckRoleUtil",
+        "checkRole",
+        "checkRoleAllOf",
+        "checkRoleAnyOf",
+        "CheckRoleLogger",
+        "SessionStoreUserRoleUtil",
+        "SessionUtil",
+        "Forbidden",
+        "BasicApplicationInitializer",
+        "userRoleResolver",
+        "targetPackage",
+        "targetClassPattern",
+        "interceptorsOrder",
+        "anyOf",
+        "ロール割り当て",
+        "セッションストア",
+        "JSP表示制御",
+        "アノテーション設定確認",
+        "プログラム判定"
+      ]
+    },
+    {
+      "id": "architecture",
+      "title": "仕組み",
+      "hints": [
+        "RoleEvaluator",
+        "BasicRoleEvaluator",
+        "UserRoleResolver",
+        "SessionStoreUserRoleResolver",
+        "CheckRole",
+        "CheckRoleUtil",
+        "SystemRepository",
+        "ThreadContext",
+        "Interceptor",
+        "認可チェックの仕組み",
+        "インターセプタ",
+        "ロール解決",
+        "roleEvaluator"
+      ]
+    },
+    {
+      "id": "extension",
+      "title": "拡張方法",
+      "hints": [
+        "RoleEvaluator",
+        "UserRoleResolver",
+        "BasicRoleEvaluator",
+        "SessionStoreUserRoleResolver",
+        "roleEvaluator",
+        "userRoleResolver",
+        "カスタマイズ",
+        "拡張",
+        "差し替え"
+      ]
+    }
+  ],
+  "sections": {
+    "overview": "アノテーションによる認可チェックでは、ユーザにロール(役割)を割り当て、機能にも実行に必要なロールを割り当て、ユーザが機能のロールを持つかどうかで認可判定を行う。機能とロールの割り当てはアノテーションで行い、ユーザとロールの割り当て方法はフレームワークでは規定しない。:doc:`permission_check` より単純なデータ構造で権限管理できる。\n\n**アノテーション**: `@CheckRole`\n\n```java\n@CheckRole(\"ADMIN\")\npublic HttpResponse index(HttpRequest request, ExecutionContext context) {\n```\n\n## ハンドラによる認可チェックとの使い分け\n\n- **本認可チェックが適している場合**: ロール自体の増減やロールに割り当てる機能の変更が頻繁に発生しない場合。ロールと機能の組み合わせが固定されており今後大きく変化しない場合。\n- **:doc:`permission_check` を推奨する場合**: 組織変更でロールや機能の組み合わせが頻繁に変わるシステム（例: 部署によって権限が変わる場合）。本認可チェックでは変更のたびにアノテーションの書き換えが必要になるため、:doc:`permission_check` を使って権限の組み合わせをデータで管理することを推奨する。",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth-session</artifactId>\n</dependency>\n<!-- デフォルトコンフィグレーションを利用する場合 -->\n<dependency>\n  <groupId>com.nablarch.configuration</groupId>\n  <artifactId>nablarch-main-default-configuration</artifactId>\n</dependency>\n```",
+    "how-to-use": "## コンポーネントの定義\n\n**クラス**: `nablarch.common.authorization.role.BasicRoleEvaluator`, `nablarch.common.authorization.role.session.SessionStoreUserRoleResolver`\n\n```xml\n<component name=\"roleEvaluator\"\n           class=\"nablarch.common.authorization.role.BasicRoleEvaluator\">\n    <property name=\"userRoleResolver\" ref=\"userRoleResolver\" />\n</component>\n<component name=\"userRoleResolver\"\n           class=\"nablarch.common.authorization.role.session.SessionStoreUserRoleResolver\" />\n```\n\nデフォルトコンフィグレーションを使う場合:\n```xml\n<import file=\"nablarch/common/authorization/role/session/authorization-session.xml\" />\n```\n\n## interceptorsOrderへの追加\n\nコンポーネント定義に `interceptorsOrder` を定義している場合は `nablarch.common.authorization.role.CheckRole` を追加する必要がある。`interceptorsOrder` を定義していない場合、または `nablarch/webui/interceptors.xml` を読み込んでいる場合は対応不要。\n\n```xml\n<list name=\"interceptorsOrder\">\n  <value>nablarch.common.authorization.role.CheckRole</value>\n</list>\n```\n\n## ロールの定義\n\nロールは任意の文字列。文字種やフォーマットに制限はないが、理解しやすい値を推奨。アノテーションで指定する際は文字列リテラルではなく定数で管理することを推奨（修正が容易になる）。\n\n```java\npublic class Roles {\n    public static final String ROLE_ADMIN = \"ADMIN\";\n    public static final String ROLE_PROJECT_MANAGER = \"PROJECT_MANAGER\";\n}\n```\n\n## ユーザのロールをセッションストアへ保存\n\nログイン時にユーザのロールを解決し、:java:extdoc:`SessionStoreUserRoleUtil <nablarch.common.authorization.role.session.SessionStoreUserRoleUtil>` の `save` メソッドでセッションストアに保存する。以降の認可チェックはセッションストアの情報を使用する。\n\n```java\nList<String> userRoles = resolveUserRoles(loginId);\nSessionStoreUserRoleUtil.save(userRoles, executionContext);\n```\n\n> **補足**: ユーザからロールを解決する方法はフレームワークでは規定しない。プロジェクトごとに実装する（多くの場合はDBから解決）。\n\n## アクションメソッドへのロール割り当て\n\n**アノテーション**: `@CheckRole` (`nablarch.common.authorization.role.CheckRole`)\n\n```java\n@CheckRole(Roles.ROLE_ADMIN)\npublic HttpResponse index(HttpRequest request, ExecutionContext context) {\n```\n\n`ADMIN` ロールを持たないユーザがメソッドを実行しようとした場合は :java:extdoc:`Forbidden <nablarch.fw.results.Forbidden>` がスローされる。\n\n複数ロールの指定:\n- **AND条件（デフォルト）**: `@CheckRole({Roles.ROLE_ADMIN, Roles.ROLE_PROJECT_MANAGER})`\n- **OR条件**: `anyOf = true` を指定\n\n```java\n@CheckRole(\n    value = {Roles.ROLE_ADMIN, Roles.ROLE_PROJECT_MANAGER},\n    anyOf = true\n)\npublic HttpResponse index(HttpRequest request, ExecutionContext context) {\n```\n\n## CheckRoleLoggerによるアノテーション設定の確認\n\n:java:extdoc:`CheckRoleLogger <nablarch.common.authorization.role.CheckRoleLogger>` を :java:extdoc:`BasicApplicationInitializer <nablarch.core.repository.initialization.BasicApplicationInitializer>` の `initializeList` に設定することで、システム起動時にデバッグレベルのログにアノテーション設定状況を出力できる。\n\n```xml\n<component name=\"initializer\"\n           class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component class=\"nablarch.common.authorization.role.CheckRoleLogger\">\n        <property name=\"targetPackage\" value=\"com.nablarch.example.app.web.action\" />\n      </component>\n    </list>\n  </property>\n</component>\n```\n\n| プロパティ名 | 説明 |\n|---|---|\n| `targetPackage` | アクションクラスが存在するパッケージ（サブパッケージも対象） |\n| `targetClassPattern` | 対象クラスの正規表現（デフォルト: 末尾が `Action` で終わるクラス） |\n\n上記設定が完了したら、**ログレベルをデバッグレベルにしてシステムを起動する**。これにより、システム起動時にアノテーション設定状況がログに出力されるようになる。\n\nログ出力要素（タブ区切り）:\n\n| 要素 | 説明 |\n|---|---|\n| `class` | クラスの完全修飾名 |\n| `signature` | メソッドのシグネチャ |\n| `role` | 割り当てられているロール（未設定の場合は空） |\n| `anyOf` | `@CheckRole` の `anyOf` 値（未設定の場合は空） |\n\n複数ロールが割り当てられている場合、それぞれのロールは別行で出力される。\n\n## プログラムによるロール判定\n\n**クラス**: `nablarch.common.authorization.role.CheckRoleUtil`\n\n```java\nif (CheckRoleUtil.checkRole(Roles.ROLE_ADMIN, executionContext)) {\n    // ADMIN ロールを持つ場合の処理\n}\n```\n\n複数ロール指定: `checkRoleAllOf`（AND条件）または `checkRoleAnyOf`（OR条件）を使用。\n\n## JSPでの表示制御\n\nJSPでの表示・非表示はサーバー側でロールを判定した結果をセッションストアに保存して実現する（JSP用カスタムタグは提供されていない）。`UserContext` はプロジェクトごとに作成するJava Beans。\n\n```java\nUserContext userContext = new UserContext();\nuserContext.setAdmin(CheckRoleUtil.checkRole(Roles.ROLE_ADMIN, executionContext));\nuserContext.setProjectManager(CheckRoleUtil.checkRole(Roles.ROLE_PROJECT_MANAGER, executionContext));\nSessionUtil.put(executionContext, \"userContext\", userContext);\n```\n\nJSP側でEL式/JSTLを使って制御する:\n\n```jsp\n<c:if test=\"${userContext.admin}\">\n  <%-- ADMIN ロールを持つ場合に表示 --%>\n</c:if>\n<c:if test=\"${userContext.projectManager}\">\n  <%-- PROJECT_MANAGER ロールを持つ場合に表示 --%>\n</c:if>\n```",
+    "architecture": "アノテーションによるチェック処理はNablarchの :java:extdoc:`インターセプタ <nablarch.fw.Interceptor>` の仕組みを使って実現している。:java:extdoc:`CheckRole <nablarch.common.authorization.role.CheckRole>` アノテーションはこのインターセプタを実装したものである。\n\n**処理の委譲関係**:\n- :java:extdoc:`CheckRole <nablarch.common.authorization.role.CheckRole>` / :java:extdoc:`CheckRoleUtil <nablarch.common.authorization.role.CheckRoleUtil>` は直接認可チェックを行わず、:java:extdoc:`RoleEvaluator <nablarch.common.authorization.role.RoleEvaluator>` に委譲する\n- `RoleEvaluator` のインスタンスは :java:extdoc:`SystemRepository <nablarch.core.repository.SystemRepository>` から `roleEvaluator` という名前で取得する\n- チェック処理に渡すユーザIDは :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>` の `getUserId` メソッドで取得する\n- :java:extdoc:`BasicRoleEvaluator <nablarch.common.authorization.role.BasicRoleEvaluator>`（`RoleEvaluator` のデフォルト実装）はユーザのロール解決を :java:extdoc:`UserRoleResolver <nablarch.common.authorization.role.UserRoleResolver>` に委譲する\n- :java:extdoc:`SessionStoreUserRoleResolver <nablarch.common.authorization.role.session.SessionStoreUserRoleResolver>`（`UserRoleResolver` のデフォルト実装）はセッションストアに保存された情報でユーザのロールを解決する",
+    "extension": ":java:extdoc:`RoleEvaluator <nablarch.common.authorization.role.RoleEvaluator>` または :java:extdoc:`UserRoleResolver <nablarch.common.authorization.role.UserRoleResolver>` の実体を差し替えることで拡張できる。\n\n**RoleEvaluatorの差し替え**: `RoleEvaluator` を実装した独自クラスを `roleEvaluator` という名前でコンポーネント登録する。\n\n```xml\n<component name=\"roleEvaluator\" class=\"com.example.CustomRoleEvaluator\" />\n```\n\n**UserRoleResolverのみ差し替え**: :java:extdoc:`BasicRoleEvaluator <nablarch.common.authorization.role.BasicRoleEvaluator>` はそのまま使いつつ `UserRoleResolver` のみ差し替えたい場合、デフォルトコンフィグレーションを使用しているときは `userRoleResolver` という名前で独自クラスを定義することで差し替えできる。\n\n```xml\n<component name=\"userRoleResolver\" class=\"com.example.CustomUserRoleResolver\" />\n```"
+  }
+}

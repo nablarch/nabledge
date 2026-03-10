@@ -7,7 +7,6 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/DispatchHandler.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/StatusCodeConvertHandler.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/ProcessStopHandler.ProcessStop.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseRecordReader.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/FileDataReader.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/ValidatableFileDataReader.html",
@@ -15,70 +14,80 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchAction.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/FileBatchAction.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/NoInputDataBatchAction.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/action/AsyncMessageSendAction.html"
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/action/AsyncMessageSendAction.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/ProcessStopHandler.ProcessStop.html"
   ],
+  "processing_patterns": [],
   "index": [
     {
-      "id": "nablarch-batch-application-structure",
+      "id": "application-structure",
       "title": "Nablarchバッチアプリケーションの構成",
       "hints": [
-        "Main",
         "都度起動バッチ",
         "常駐バッチ",
-        "db_messaging",
         "スタンドアロンアプリケーション",
-        "システムリポジトリ",
+        "db_messaging",
+        "Mainクラス",
         "ハンドラキュー",
-        "バッチタイプ"
+        "バッチ種別選択"
       ]
     },
     {
-      "id": "request-path-action-request-id",
+      "id": "resolve-action",
       "title": "リクエストパスによるアクションとリクエストIDの指定",
       "hints": [
-        "SampleBatchAction",
         "requestPath",
-        "コマンドライン引数",
         "リクエストID",
-        "バッチプロセス識別",
-        "アクション指定"
+        "コマンドライン引数",
+        "アクションクラス指定",
+        "バッチプロセス識別子"
       ]
     },
     {
-      "id": "nablarch-batch-process-flow",
+      "id": "process-flow",
       "title": "Nablarchバッチアプリケーションの処理の流れ",
       "hints": [
         "DataReader",
-        "nablarch.fw.DataReader",
         "DispatchHandler",
-        "nablarch.fw.handler.DispatchHandler",
-        "Result",
-        "nablarch.fw.Result",
         "StatusCodeConvertHandler",
-        "nablarch.fw.handler.StatusCodeConvertHandler",
+        "Result",
         "処理フロー",
-        "データレコード処理",
-        "アクションクラス",
-        "プロセス終了コード"
+        "ハンドラキュー",
+        "プロセス終了コード",
+        "ステータスコード変換"
       ]
     },
     {
-      "id": "handlers",
+      "id": "handler-list",
       "title": "Nablarchバッチアプリケーションで使用するハンドラ",
       "hints": [
+        "status_code_convert_handler",
+        "data_read_handler",
+        "duplicate_process_check_handler",
+        "request_path_java_package_mapping",
+        "multi_thread_execution_handler",
+        "loop_handler",
+        "dbless_loop_handler",
+        "retry_handler",
+        "process_resident_handler",
+        "process_stop_handler",
+        "database_connection_management_handler",
+        "transaction_management_handler",
+        "global_error_handler",
+        "thread_context_handler",
+        "thread_context_clear_handler",
+        "ServiceAvailabilityCheckHandler",
+        "file_record_writer_dispose_handler",
         "ProcessStop",
         "ハンドラキュー構成",
         "都度起動バッチ",
         "常駐バッチ",
-        "トランザクション制御",
-        "マルチスレッド実行",
         "最小ハンドラ構成",
-        "DB接続管理",
-        "ループ制御"
+        "マルチスレッド実行"
       ]
     },
     {
-      "id": "data-readers",
+      "id": "data-reader-list",
       "title": "Nablarchバッチアプリケーションで使用するデータリーダ",
       "hints": [
         "DatabaseRecordReader",
@@ -86,14 +95,15 @@
         "ValidatableFileDataReader",
         "ResumeDataReader",
         "DataReader",
+        "データリーダ",
         "データベース読み込み",
         "ファイル読み込み",
-        "バリデーション",
-        "レジューム機能"
+        "レジューム機能",
+        "バリデーション付きファイル読み込み"
       ]
     },
     {
-      "id": "actions",
+      "id": "action-list",
       "title": "Nablarchバッチアプリケーションで使用するアクション",
       "hints": [
         "BatchAction",
@@ -101,17 +111,18 @@
         "NoInputDataBatchAction",
         "AsyncMessageSendAction",
         "バッチアクション",
-        "ファイル入力",
-        "メッセージ送信"
+        "ファイル入力バッチ",
+        "入力データなしバッチ",
+        "応答不要メッセージ送信"
       ]
     }
   ],
   "sections": {
-    "nablarch-batch-application-structure": "NablarchバッチアプリケーションはDBやファイルのデータレコード1件ごとに処理を繰り返し実行する機能を提供。\n\n**バッチタイプ**:\n\n**都度起動バッチ**:\n日次や月次など、定期的にプロセスを起動してバッチ処理を実行\n\n**常駐バッチ**:\nプロセスを起動しておき、一定間隔でバッチ処理を実行。オンライン処理で作成された要求データを定期的に一括処理する場合などに使用\n\n> **重要**: 常駐バッチはマルチスレッド実行時、処理が遅いスレッドの終了を他スレッドが待つため要求データ取り込み遅延が発生する可能性がある。新規開発では常駐バッチではなく :ref:`db_messaging` を推奨。既存プロジェクトでも遅延の可能性がある場合は :ref:`db_messaging` への変更を検討すること。\n\n**アプリケーション構成**:\n\nNablarchバッチアプリケーションはjavaコマンドから直接起動するスタンドアロンアプリケーション。\n\n**構成要素**:\n- **:ref:`main` (Main)**: 起点となるメインクラス。javaコマンドから起動し、システムリポジトリとログを初期化後、ハンドラキューを実行",
-    "request-path-action-request-id": "コマンドライン引数`-requestPath`でアクションとリクエストIDを指定する。\n\n**書式**:\n```properties\n-requestPath=アクションのクラス名/リクエストID\n```\n\n**例**:\n```properties\n-requestPath=com.sample.SampleBatchAction/BATCH0001\n```\n\nリクエストIDは各バッチプロセスの識別子。同一の業務アクションクラスを実行するプロセスを複数起動する場合、このリクエストIDで識別する。",
-    "nablarch-batch-process-flow": "入力データ読み込みから処理結果返却までの流れ:\n\n1. :ref:`共通起動ランチャ(Main) <main>` がハンドラキュー(handler queue)を実行\n2. :java:extdoc:`データリーダ(DataReader)<nablarch.fw.DataReader>` が入力データを読み込み、データレコードを1件ずつ提供\n3. ハンドラキューの :java:extdoc:`ディスパッチハンドラ(DispatchHandler) <nablarch.fw.handler.DispatchHandler>` がコマンドライン引数(-requestPath)のリクエストパスから処理すべきアクションクラス(action class)を特定し、ハンドラキューの末尾に追加\n4. アクションクラス(action class)は、フォームクラス(form class)やエンティティクラス(entity class)を使用してデータレコード1件ごとの業務ロジック(business logic)を実行\n5. アクションクラス(action class)は処理結果を示す :java:extdoc:`Result <nablarch.fw.Result>` を返却\n6. 処理対象データがなくなるまで2～5を繰り返す\n7. ハンドラキューの :java:extdoc:`ステータスコード→プロセス終了コード変換ハンドラ(StatusCodeConvertHandler) <nablarch.fw.handler.StatusCodeConvertHandler>` が処理結果のステータスコードをプロセス終了コードに変換し、プロセス終了コードを返却",
-    "handlers": "プロジェクト要件に応じてハンドラキューを構築する。標準ハンドラで要件を満たせない場合はカスタムハンドラを作成する。\n\n**ハンドラ分類**:\n\nリクエスト・レスポンス変換:\n- :ref:`status_code_convert_handler`\n- :ref:`data_read_handler`\n\nバッチ実行制御:\n- :ref:`duplicate_process_check_handler`\n- :ref:`request_path_java_package_mapping`\n- :ref:`multi_thread_execution_handler`\n- :ref:`loop_handler`\n- :ref:`dbless_loop_handler`\n- :ref:`retry_handler`\n- :ref:`process_resident_handler`\n- :ref:`process_stop_handler`\n\nデータベース:\n- :ref:`database_connection_management_handler`\n- :ref:`transaction_management_handler`\n\nエラー処理:\n- :ref:`global_error_handler`\n\nその他:\n- :ref:`thread_context_handler`\n- :ref:`thread_context_clear_handler`\n- :ref:`ServiceAvailabilityCheckHandler`\n- :ref:`file_record_writer_dispose_handler`\n\n### 都度起動バッチの最小ハンドラ構成\n\nプロジェクト要件に応じてNablarch標準ハンドラ・カスタムハンドラを追加する。\n\n**DB接続有り**:\n\n| No. | ハンドラ | スレッド | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|---|\n| 1 | :ref:`status_code_convert_handler` | メイン | — | ステータスコードをプロセス終了コードに変換 | — |\n| 2 | :ref:`global_error_handler` | メイン | — | — | 実行時例外・エラーをログ出力 |\n| 3 | :ref:`database_connection_management_handler` (初期処理/終了処理用) | メイン | DB接続取得 | DB接続解放 | — |\n| 4 | :ref:`transaction_management_handler` (初期処理/終了処理用) | メイン | トランザクション開始 | トランザクションコミット | トランザクションロールバック |\n| 5 | :ref:`request_path_java_package_mapping` | メイン | コマンドライン引数からアクション決定 | — | — |\n| 6 | :ref:`multi_thread_execution_handler` | メイン | サブスレッド作成・後続ハンドラ並行実行 | 全スレッド正常終了まで待機 | 処理中スレッド完了待機・起因例外再送出 |\n| 7 | :ref:`database_connection_management_handler` (業務処理用) | サブ | DB接続取得 | DB接続解放 | — |\n| 8 | :ref:`loop_handler` | サブ | 業務トランザクション開始 | コミット間隔ごとに業務トランザクションコミット・データリーダに処理対象データが残っていればループ継続 | 業務トランザクションロールバック |\n| 9 | :ref:`data_read_handler` | サブ | データリーダでレコード1件読み込み・後続ハンドラに渡す・:ref:`実行時ID<log-execution_id>`を採番 | — | 読み込みレコードをログ出力後、元例外再送出 |\n\n**DB接続無し**:\n\nDB未接続の場合、DB接続関連ハンドラとトランザクション制御が不要。\n\n| No. | ハンドラ | スレッド | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|---|\n| 1 | :ref:`status_code_convert_handler` | メイン | — | ステータスコードをプロセス終了コードに変換 | — |\n| 2 | :ref:`global_error_handler` | メイン | — | — | 実行時例外・エラーをログ出力 |\n| 3 | :ref:`request_path_java_package_mapping` | メイン | コマンドライン引数からアクション決定 | — | — |\n| 4 | :ref:`multi_thread_execution_handler` | メイン | サブスレッド作成・後続ハンドラ並行実行 | 全スレッド正常終了まで待機 | 処理中スレッド完了待機・起因例外再送出 |\n| 5 | :ref:`dbless_loop_handler` | サブ | — | データリーダに処理対象データが残っていればループ継続 | — |\n| 6 | :ref:`data_read_handler` | サブ | データリーダでレコード1件読み込み・後続ハンドラに渡す・:ref:`実行時ID<log-execution_id>`を採番 | — | 読み込みレコードをログ出力後、元例外再送出 |\n\n### 常駐バッチの最小ハンドラ構成\n\nプロジェクト要件に応じてNablarch標準ハンドラ・カスタムハンドラを追加する。\n\n都度起動バッチとの差分: メインスレッドに以下が追加:\n- :ref:`thread_context_handler` (:ref:`process_stop_handler`のために必要)\n- :ref:`thread_context_clear_handler`\n- :ref:`retry_handler`\n- :ref:`process_resident_handler`\n- :ref:`process_stop_handler`\n\n| No. | ハンドラ | スレッド | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|---|\n| 1 | :ref:`status_code_convert_handler` | メイン | — | ステータスコードをプロセス終了コードに変換 | — |\n| 2 | :ref:`thread_context_clear_handler` | メイン | — | :ref:`thread_context_handler`でスレッドローカルに設定した値を全削除 | — |\n| 3 | :ref:`global_error_handler` | メイン | — | — | 実行時例外・エラーをログ出力 |\n| 4 | :ref:`thread_context_handler` | メイン | コマンドライン引数からリクエストID・ユーザID等のスレッドコンテキスト変数初期化 | — | — |\n| 5 | :ref:`retry_handler` | メイン | — | — | リトライ可能な実行時例外を捕捉・リトライ上限未達なら後続ハンドラ再実行 |\n| 6 | :ref:`process_resident_handler` | メイン | データ監視間隔ごとに後続ハンドラ繰り返し実行 | ループ継続 | ログ出力・実行時例外はリトライ可能例外にラップして送出・エラーはそのまま再送出 |\n| 7 | :ref:`process_stop_handler` | メイン | リクエストテーブルの処理停止フラグがオンなら後続ハンドラ実行せず:java:extdoc:`ProcessStop<nablarch.fw.handler.ProcessStopHandler.ProcessStop>`例外送出 | — | — |\n| 8 | :ref:`database_connection_management_handler` (初期処理/終了処理用) | メイン | DB接続取得 | DB接続解放 | — |\n| 9 | :ref:`transaction_management_handler` (初期処理/終了処理用) | メイン | トランザクション開始 | トランザクションコミット | トランザクションロールバック |\n| 10 | :ref:`request_path_java_package_mapping` | メイン | コマンドライン引数からアクション決定 | — | — |\n| 11 | :ref:`multi_thread_execution_handler` | メイン | サブスレッド作成・後続ハンドラ並行実行 | 全スレッド正常終了まで待機 | 処理中スレッド完了待機・起因例外再送出 |\n| 12 | :ref:`database_connection_management_handler` (業務処理用) | サブ | DB接続取得 | DB接続解放 | — |\n| 13 | :ref:`loop_handler` | サブ | 業務トランザクション開始 | コミット間隔ごとに業務トランザクションコミット・データリーダに処理対象データが残っていればループ継続 | 業務トランザクションロールバック |\n| 14 | :ref:`data_read_handler` | サブ | データリーダでレコード1件読み込み・後続ハンドラに渡す・:ref:`実行時ID<log-execution_id>`を採番 | — | 読み込みレコードをログ出力後、元例外再送出 |",
-    "data-readers": "**標準データリーダ**:\n- :java:extdoc:`DatabaseRecordReader<nablarch.fw.reader.DatabaseRecordReader>` (DB読み込み)\n- :java:extdoc:`FileDataReader<nablarch.fw.reader.FileDataReader>` (ファイル読み込み)\n- :java:extdoc:`ValidatableFileDataReader<nablarch.fw.reader.ValidatableFileDataReader>` (バリデーション機能付きファイル読み込み)\n- :java:extdoc:`ResumeDataReader<nablarch.fw.reader.ResumeDataReader>` (レジューム機能付き読み込み)\n\n> **補足**: 標準データリーダで要件を満たせない場合、:java:extdoc:`DataReader<nablarch.fw.DataReader>`インタフェースを実装したカスタムクラスを作成する。\n\n> **重要**: :java:extdoc:`FileDataReader<nablarch.fw.reader.FileDataReader>`と:java:extdoc:`ValidatableFileDataReader<nablarch.fw.reader.ValidatableFileDataReader>`は:ref:`data_format`を使用する。:ref:`data_bind`を使用する場合はこれらのデータリーダを使用しないこと。",
-    "actions": "**標準アクションクラス**:\n- :java:extdoc:`BatchAction<nablarch.fw.action.BatchAction>` (汎用バッチアクションテンプレート)\n- :java:extdoc:`FileBatchAction<nablarch.fw.action.FileBatchAction>` (ファイル入力バッチアクションテンプレート)\n- :java:extdoc:`NoInputDataBatchAction<nablarch.fw.action.NoInputDataBatchAction>` (入力データ不要バッチアクションテンプレート)\n- :java:extdoc:`AsyncMessageSendAction<nablarch.fw.messaging.action.AsyncMessageSendAction>` (応答不要メッセージ送信)\n\n> **重要**: :java:extdoc:`FileBatchAction<nablarch.fw.action.FileBatchAction>`は:ref:`data_format`を使用する。:ref:`data_bind`を使用する場合は他のアクションクラスを使用すること。"
+    "application-structure": "Nablarchバッチアプリケーションは、DBやファイルのデータレコード1件ごとに処理を繰り返すバッチ処理構築機能を提供する。以下の2種類がある。\n\n**都度起動バッチ**: 日次や月次など定期的にプロセスを起動してバッチ処理を実行する。\n\n**常駐バッチ**: プロセスを起動しておき一定間隔でバッチ処理を実行する。オンライン処理で作成された要求データを定期的に一括処理するような場合に使用する。\n\n> **重要**: 常駐バッチはマルチスレッドで実行した場合、処理が遅いスレッドの終了を他のスレッドが待つことにより、要求データの取り込み遅延が発生する可能性がある。新規開発プロジェクトでは常駐バッチではなく :ref:`db_messaging` を使用することを推奨する。既存プロジェクトでは常駐バッチをこのまま稼働させることはできるが、上記問題が発生する可能性がある場合（既に発生している場合）には、:ref:`db_messaging` への変更を検討すること。\n\nNablarchバッチアプリケーションは、javaコマンドから直接起動するスタンドアロンアプリケーションとして実行する。\n\n構成要素:\n- **:ref:`main` (Main)**: アプリケーションの起点となるメインクラス。javaコマンドから直接起動し、システムリポジトリやログの初期化処理を行い、ハンドラキューを実行する。",
+    "resolve-action": "コマンドライン引数 `-requestPath` で実行するアクションクラスとリクエストIDを指定する。\n\n```properties\n# 書式\n-requestPath=アクションのクラス名/リクエストID\n\n# 指定例\n-requestPath=com.sample.SampleBatchAction/BATCH0001\n```\n\nリクエストIDは各バッチプロセスの識別子。同一の業務アクションクラスを複数プロセスで起動する場合の識別子となる。",
+    "process-flow": "1. :ref:`main` (Main) がハンドラキューを実行する。\n2. :java:extdoc:`データリーダ(DataReader)<nablarch.fw.DataReader>` が入力データを読み込み、データレコードを1件ずつ提供する。\n3. :java:extdoc:`ディスパッチハンドラ(DispatchHandler) <nablarch.fw.handler.DispatchHandler>` が、コマンドライン引数 `-requestPath` で指定するリクエストパスを元に処理すべきアクションクラスを特定し、ハンドラキューの末尾に追加する。\n4. アクションクラスは、フォームクラスやエンティティクラスを使用して、データレコード1件ごとの業務ロジックを実行する。\n5. アクションクラスは、処理結果を示す :java:extdoc:`Result <nablarch.fw.Result>` を返却する。\n6. 処理対象データがなくなるまで2〜5を繰り返す。\n7. :java:extdoc:`ステータスコード→プロセス終了コード変換ハンドラ(StatusCodeConvertHandler) <nablarch.fw.handler.StatusCodeConvertHandler>` が、処理結果のステータスコードをプロセス終了コードに変換し、バッチアプリケーションの処理結果としてプロセス終了コードが返される。",
+    "handler-list": "**リクエスト/レスポンス変換**\n- :ref:`status_code_convert_handler`\n- :ref:`data_read_handler`\n\n**バッチ実行制御**\n- :ref:`duplicate_process_check_handler`\n- :ref:`request_path_java_package_mapping`\n- :ref:`multi_thread_execution_handler`\n- :ref:`loop_handler`\n- :ref:`dbless_loop_handler`\n- :ref:`retry_handler`\n- :ref:`process_resident_handler`\n- :ref:`process_stop_handler`\n\n**DB関連**\n- :ref:`database_connection_management_handler`\n- :ref:`transaction_management_handler`\n\n**エラー処理**\n- :ref:`global_error_handler`\n\n**その他**\n- :ref:`thread_context_handler`\n- :ref:`thread_context_clear_handler`\n- :ref:`ServiceAvailabilityCheckHandler`\n- :ref:`file_record_writer_dispose_handler`\n\n## 都度起動バッチの最小ハンドラ構成（DB接続有り）\n\n| No. | ハンドラ | スレッド | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|---|\n| 1 | :ref:`status_code_convert_handler` | メイン | — | ステータスコードをプロセス終了コードに変換する。 | — |\n| 2 | :ref:`global_error_handler` | メイン | — | — | 実行時例外、またはエラーの場合、ログ出力を行う。 |\n| 3 | :ref:`database_connection_management_handler`（初期処理/終了処理用） | メイン | DB接続を取得する。 | DB接続を解放する。 | — |\n| 4 | :ref:`transaction_management_handler`（初期処理/終了処理用） | メイン | トランザクションを開始する。 | トランザクションをコミットする。 | トランザクションをロールバックする。 |\n| 5 | :ref:`request_path_java_package_mapping` | メイン | コマンドライン引数をもとに呼び出すアクションを決定する。 | — | — |\n| 6 | :ref:`multi_thread_execution_handler` | メイン | サブスレッドを作成し、後続ハンドラの処理を並行実行する。 | 全スレッドの正常終了まで待機する。 | 処理中のスレッドが完了するまで待機し起因例外を再送出する。 |\n| 7 | :ref:`database_connection_management_handler`（業務処理用） | サブ | DB接続を取得する。 | DB接続を解放する。 | — |\n| 8 | :ref:`loop_handler` | サブ | 業務トランザクションを開始する。 | コミット間隔毎に業務トランザクションをコミットする。データリーダ上に処理対象データが残っていればループを継続する。 | 業務トランザクションをロールバックする。 |\n| 9 | :ref:`data_read_handler` | サブ | データリーダを使用してレコードを1件読み込み、後続ハンドラの引数として渡す。:ref:`実行時ID<log-execution_id>` を採番する。 | — | 読み込んだレコードをログ出力した後、元例外を再送出する。 |\n\n## 都度起動バッチの最小ハンドラ構成（DB接続無し）\n\n| No. | ハンドラ | スレッド | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|---|\n| 1 | :ref:`status_code_convert_handler` | メイン | — | ステータスコードをプロセス終了コードに変換する。 | — |\n| 2 | :ref:`global_error_handler` | メイン | — | — | 実行時例外、またはエラーの場合、ログ出力を行う。 |\n| 3 | :ref:`request_path_java_package_mapping` | メイン | コマンドライン引数をもとに呼び出すアクションを決定する。 | — | — |\n| 4 | :ref:`multi_thread_execution_handler` | メイン | サブスレッドを作成し、後続ハンドラの処理を並行実行する。 | 全スレッドの正常終了まで待機する。 | 処理中のスレッドが完了するまで待機し起因例外を再送出する。 |\n| 5 | :ref:`dbless_loop_handler` | サブ | — | データリーダ上に処理対象データが残っていればループを継続する。 | — |\n| 6 | :ref:`data_read_handler` | サブ | データリーダを使用してレコードを1件読み込み、後続ハンドラの引数として渡す。:ref:`実行時ID<log-execution_id>` を採番する。 | — | 読み込んだレコードをログ出力した後、元例外を再送出する。 |\n\n## 常駐バッチの最小ハンドラ構成\n\n都度起動バッチに以下のハンドラをメインスレッド側に追加した構成:\n- :ref:`thread_context_handler`（:ref:`process_stop_handler` のために必要）\n- :ref:`thread_context_clear_handler`\n- :ref:`retry_handler`\n- :ref:`process_resident_handler`\n- :ref:`process_stop_handler`\n\n| No. | ハンドラ | スレッド | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|---|\n| 1 | :ref:`status_code_convert_handler` | メイン | — | ステータスコードをプロセス終了コードに変換する。 | — |\n| 2 | :ref:`thread_context_clear_handler` | メイン | — | :ref:`thread_context_handler` でスレッドローカル上に設定した値を全て削除する。 | — |\n| 3 | :ref:`global_error_handler` | メイン | — | — | 実行時例外、またはエラーの場合、ログ出力を行う。 |\n| 4 | :ref:`thread_context_handler` | メイン | コマンドライン引数からリクエストID、ユーザID等のスレッドコンテキスト変数を初期化する。 | — | — |\n| 5 | :ref:`retry_handler` | メイン | — | — | リトライ可能な実行時例外を捕捉し、かつリトライ上限に達していなければ後続のハンドラを再実行する。 |\n| 6 | :ref:`process_resident_handler` | メイン | データ監視間隔ごとに後続のハンドラを繰り返し実行する。 | ループを継続する。 | ログ出力を行い、実行時例外が送出された場合はリトライ可能例外にラップして送出する。エラーが送出された場合はそのまま再送出する。 |\n| 7 | :ref:`process_stop_handler` | メイン | リクエストテーブル上の処理停止フラグがオンであった場合は、後続ハンドラの処理は行なわずにプロセス停止例外（:java:extdoc:`ProcessStop <nablarch.fw.handler.ProcessStopHandler.ProcessStop>`）を送出する。 | — | — |\n| 8 | :ref:`database_connection_management_handler`（初期処理/終了処理用） | メイン | DB接続を取得する。 | DB接続を解放する。 | — |\n| 9 | :ref:`transaction_management_handler`（初期処理/終了処理用） | メイン | トランザクションを開始する。 | トランザクションをコミットする。 | トランザクションをロールバックする。 |\n| 10 | :ref:`request_path_java_package_mapping` | メイン | コマンドライン引数をもとに呼び出すアクションを決定する。 | — | — |\n| 11 | :ref:`multi_thread_execution_handler` | メイン | サブスレッドを作成し、後続ハンドラの処理を並行実行する。 | 全スレッドの正常終了まで待機する。 | 処理中のスレッドが完了するまで待機し起因例外を再送出する。 |\n| 12 | :ref:`database_connection_management_handler`（業務処理用） | サブ | DB接続を取得する。 | DB接続を解放する。 | — |\n| 13 | :ref:`loop_handler` | サブ | 業務トランザクションを開始する。 | コミット間隔毎に業務トランザクションをコミットする。データリーダ上に処理対象データが残っていればループを継続する。 | 業務トランザクションをロールバックする。 |\n| 14 | :ref:`data_read_handler` | サブ | データリーダを使用してレコードを1件読み込み、後続ハンドラの引数として渡す。:ref:`実行時ID<log-execution_id>` を採番する。 | — | 読み込んだレコードをログ出力した後、元例外を再送出する。 |",
+    "data-reader-list": "- :java:extdoc:`DatabaseRecordReader (データベース読み込み)<nablarch.fw.reader.DatabaseRecordReader>`\n- :java:extdoc:`FileDataReader (ファイル読み込み)<nablarch.fw.reader.FileDataReader>`\n- :java:extdoc:`ValidatableFileDataReader (バリデーション機能付きファイル読み込み)<nablarch.fw.reader.ValidatableFileDataReader>`\n- :java:extdoc:`ResumeDataReader (レジューム機能付き読み込み)<nablarch.fw.reader.ResumeDataReader>`\n\n> **補足**: 標準データリーダで要件を満たせない場合は、:java:extdoc:`DataReader<nablarch.fw.DataReader>` インタフェースを実装したクラスをプロジェクトで作成する。\n\n> **重要**: :java:extdoc:`FileDataReader<nablarch.fw.reader.FileDataReader>` と :java:extdoc:`ValidatableFileDataReader<nablarch.fw.reader.ValidatableFileDataReader>` はデータアクセスに :ref:`data_format` を使用している。:ref:`data_bind` を使用する場合は、これらのデータリーダを使用しないこと。",
+    "action-list": "- :java:extdoc:`BatchAction (汎用的なバッチアクションのテンプレートクラス)<nablarch.fw.action.BatchAction>`\n- :java:extdoc:`FileBatchAction (ファイル入力のバッチアクションのテンプレートクラス)<nablarch.fw.action.FileBatchAction>`\n- :java:extdoc:`NoInputDataBatchAction (入力データを使用しないバッチアクションのテンプレートクラス)<nablarch.fw.action.NoInputDataBatchAction>`\n- :java:extdoc:`AsyncMessageSendAction (応答不要メッセージ送信用のアクションクラス)<nablarch.fw.messaging.action.AsyncMessageSendAction>`\n\n> **重要**: :java:extdoc:`FileBatchAction<nablarch.fw.action.FileBatchAction>` はデータアクセスに :ref:`data_format` を使用している。:ref:`data_bind` を使用する場合は、他のアクションクラスを使用すること。"
   }
 }

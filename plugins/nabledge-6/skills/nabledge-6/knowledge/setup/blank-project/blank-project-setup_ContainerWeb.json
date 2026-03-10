@@ -1,0 +1,110 @@
+{
+  "id": "blank-project-setup_ContainerWeb",
+  "title": "コンテナ用ウェブプロジェクトの初期セットアップ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/blank_project/setup_containerBlankProject/setup_ContainerWeb.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "container-web-initial-setup",
+      "title": "コンテナ用ウェブプロジェクトの初期セットアップ",
+      "hints": [
+        "コンテナ用ウェブプロジェクト生成",
+        "Dockerコンテナ",
+        "初期セットアップ",
+        "コンテナイメージ作成"
+      ]
+    },
+    {
+      "id": "project-overview",
+      "title": "生成するプロジェクトの概要",
+      "hints": [
+        "H2 Database Engine",
+        "ルーティングアダプタ",
+        "Mavenプロジェクト",
+        "単一プロジェクト構成",
+        "router_adaptor",
+        "about_maven_parent_module"
+      ]
+    },
+    {
+      "id": "blank-project-creation",
+      "title": "ブランクプロジェクト作成",
+      "hints": [
+        "nablarch-container-web-archetype",
+        "Maven Archetype Plugin",
+        "archetypeVersion",
+        "groupId",
+        "artifactId",
+        "ブランクプロジェクト生成",
+        "mvn archetype:generate"
+      ]
+    },
+    {
+      "id": "startup-test",
+      "title": "疎通確認",
+      "hints": [
+        "疎通確認",
+        "firstStepWebStartupTest",
+        "コンテナ用ウェブプロジェクト動作確認"
+      ]
+    },
+    {
+      "id": "build-container-image",
+      "title": "コンテナイメージを作成する",
+      "hints": [
+        "Jib",
+        "jib:dockerBuild",
+        "jib.from.image",
+        "Dockerコンテナイメージ作成",
+        "Tomcat",
+        "mvn package jib:dockerBuild",
+        "docker image ls",
+        "ローカルリポジトリ"
+      ]
+    },
+    {
+      "id": "run-container-image",
+      "title": "コンテナイメージを実行する",
+      "hints": [
+        "docker run",
+        "コンテナ実行",
+        "ボリューム指定",
+        "Docker Toolbox",
+        "SAMPLE.h2.db",
+        "Docker Desktop"
+      ]
+    },
+    {
+      "id": "database-settings",
+      "title": "データベースに関する設定を行う",
+      "hints": [
+        "customize-db",
+        "gsp-maven-plugin",
+        "gsp-dba-maven-plugin",
+        "H2 Database Engine",
+        "RDBMS変更"
+      ]
+    },
+    {
+      "id": "appendix",
+      "title": "補足",
+      "hints": [
+        "H2データ確認",
+        "ブランクプロジェクトツール",
+        "firststep_complement"
+      ]
+    }
+  ],
+  "sections": {
+    "container-web-initial-setup": "コンテナ用ウェブプロジェクトの初期セットアップで行う作業:\n\n1. コンテナ用ウェブプロジェクトの生成\n2. コンテナ用ウェブプロジェクトの動作確認\n3. コンテナイメージの作成\n4. コンテナイメージの実行",
+    "project-overview": "| 項目 | 説明 |\n|---|---|\n| プロジェクト種別 | Mavenプロジェクト |\n| プロジェクト構成 | 単一プロジェクト構成 |\n| 使用DB | H2 Database Engine（アプリケーションに組み込み） |\n| 組み込まれているアダプタ | ルーティングアダプタ（:ref:`router_adaptor` 参照） |\n| 生成するプロジェクトに含まれるもの | Nablarchウェブアプリケーション用の基本設定、疎通確認用ウェブアプリケーション、Mavenと連動して動作するツールの初期設定（:ref:`about_maven_parent_module` 参照） |\n\n他のプロジェクトとの関係およびディレクトリ構成は :doc:`../MavenModuleStructures/index` を参照。",
+    "blank-project-creation": "[Maven Archetype Plugin](https://maven.apache.org/archetype/maven-archetype-plugin/usage.html) を使用してブランクプロジェクトを生成する。\n\n```bat\nmvn archetype:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArtifactId=nablarch-container-web-archetype -DarchetypeVersion={nablarch_version}\n```\n\nバージョン変更時のパラメータ:\n\n| 設定値 | 説明 |\n|---|---|\n| archetypeVersion | 使用したいアーキタイプのバージョン（Nablarch 6u2以降を指定すること） |\n\nプロジェクト情報の入力項目:\n\n| 入力項目 | 説明 | 設定例 |\n|---|---|---|\n| groupId | グループID（通常はパッケージ名） | `com.example` |\n| artifactId | アーティファクトID | `myapp-container-web` |\n| version | バージョン番号 | `0.1.0` |\n| package | パッケージ（通常はグループIDと同じ） | `com.example` |\n\n> **重要**: groupIdおよびpackageはJavaのパッケージ名にマッピングされる。英小文字、数字、ドットを使用し、ハイフンは使用しないこと。\n\nプロジェクト情報の入力が終わると、`Y: :` と表示される。\n\n- 入力した内容をもとにひな形を生成する場合には「Y」を入力する。\n- プロジェクト情報の入力をやり直したい場合には「N」を入力する。\n\nコマンドが正常終了した場合、ブランクプロジェクトがカレントディレクトリ配下に作成される。",
+    "startup-test": "疎通確認の仕組みや手順は通常のウェブプロジェクトと同じ。:ref:`firstStepWebStartupTest` を参照。\n\n> **注意**: アーティファクトIDが `myapp-container-web` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。",
+    "build-container-image": "ブランクプロジェクトには [Jib](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin) プラグインが組み込まれており、`jib:dockerBuild` ゴールでコンテナイメージを作成できる。\n\n```text\ncd myapp-container-web\nmvn package jib:dockerBuild\n```\n\nビルドされたDockerイメージは、ローカルリポジトリに保存される。以下のコマンドでローカルリポジトリに保存されたイメージを確認できる。\n\n```text\ndocker image ls\nREPOSITORY              TAG         IMAGE ID       CREATED        SIZE\nmyapp-container-web     0.1.0       dd60cbdc7722   50 years ago   449MB\nmyapp-container-web     latest      dd60cbdc7722   50 years ago   449MB\n```\n\n作成されるイメージ（デフォルト設定）:\n- `${project.artifactId}:latest`\n- `${project.artifactId}:${project.version}`\n\n初期設定のベースイメージ: [Tomcat のイメージ](https://hub.docker.com/_/tomcat)\n\nベースイメージは `jib.from.image` プロパティで変更できる。`pom.xml` への設定例:\n\n```xml\n<properties>\n  <jib.from.image>tomcat:10.1.34-jre17-temurin-jammy</jib.from.image>\n</properties>\n```\n\n> **補足**: タグが指すイメージが変更されると検証時と異なるバージョンが選択される可能性がある。検証完了後はダイジェストで指定することを推奨する。ダイジェスト指定例: `<jib.from.image>tomcat@sha256:28fde3a9cf9ff62b250cd2ce5b8981a75eedbe6a37a9954c8432f6f52483cfb8</jib.from.image>`",
+    "run-container-image": "```text\ncd myapp-container-web\ndocker run -d -p 8080:8080 -v %CD%\\h2:/usr/local/tomcat/h2 --name myapp-container-web myapp-container-web\n```\n\n起動後、`http://localhost:8080/` でアプリケーションの動作を確認できる。\n\n> **補足**: 上記コマンドはSAMPLE.h2.dbを使用する場合の例。SAMPLE.h2.dbを使用しない場合はボリューム指定（`-v`）は不要。\n\n> **前提**: Dockerの実行はDocker Desktopを使用していることを前提としている（:ref:`firstStepPreamble` 参照）。\n\n> **補足**: Docker Toolboxを使用している場合、ボリューム指定でエラーになる。DockerはVirtualBox上のVMで動作するため、ボリュームのホスト側に指定できるパスはVM上のパスになる。Windowsのデフォルトでは `C:\\Users` がVM上の `/c/users` にマウントされているため、ボリューム指定を `-v /c/users/path/to/project/h2:/usr/local/tomcat/h2` のようにする必要がある。\n\nコンテナ停止:\n```text\ndocker stop myapp-container-web\n```\n\nコンテナ削除:\n```text\ndocker rm myapp-container-web\n```",
+    "database-settings": "初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は :ref:`customize-db` を参照。\n\nER図からのDDL生成・実行、Entityクラスの自動生成にはgsp-dba-maven-pluginの初期設定と実行が必要。詳細は :ref:`gsp-maven-plugin` を参照。",
+    "appendix": "H2のデータの確認方法やブランクプロジェクトに組み込まれているツールの詳細は :doc:`../firstStep_appendix/firststep_complement` を参照。"
+  }
+}

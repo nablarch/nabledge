@@ -1,0 +1,92 @@
+{
+  "id": "handlers-HttpErrorHandler",
+  "title": "HTTPエラー制御ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/HttpErrorHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/HttpErrorHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/NoMoreHandlerException.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpErrorResponse.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.Error.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/message/ApplicationException.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/message/ErrorMessages.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/WebConfig.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "handler-class",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "HttpErrorHandler",
+        "nablarch.fw.web.handler.HttpErrorHandler",
+        "HTTPエラー制御ハンドラ",
+        "例外ハンドラ",
+        "エラーレスポンス変換"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "モジュール依存関係",
+        "com.nablarch.framework"
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "制約",
+      "hints": [
+        "http_response_handler",
+        "http_access_log_handler",
+        "ハンドラ配置順序",
+        "配置制約",
+        "HTTPレスポンスハンドラ",
+        "HTTPアクセスログハンドラ",
+        "HttpResponse"
+      ]
+    },
+    {
+      "id": "error-handling",
+      "title": "例外の種類に応じた処理とレスポンスの生成",
+      "hints": [
+        "NoMoreHandlerException",
+        "HttpErrorResponse",
+        "ApplicationException",
+        "ErrorMessages",
+        "nablarch.fw.Result.Error",
+        "writeFailureLogPattern",
+        "errorMessageRequestAttributeName",
+        "例外処理",
+        "ログ出力レベル",
+        "エラーレスポンス生成",
+        "StackOverflowError",
+        "ThreadDeath",
+        "VirtualMachineError",
+        "errors"
+      ]
+    },
+    {
+      "id": "default-page",
+      "title": "デフォルトページの設定",
+      "hints": [
+        "defaultPage",
+        "defaultPages",
+        "デフォルトページ設定",
+        "エラーページ",
+        "web.xml",
+        "HttpErrorHandler",
+        "error-page",
+        "HttpResponse"
+      ]
+    }
+  ],
+  "sections": {
+    "handler-class": "後続のハンドラで発生した例外に対するログ出力やレスポンスへの変換を行うハンドラ。以下の処理を行う：\n\n1. 例外の種類に応じたログ出力\n2. 例外の種類に応じたエラー用HttpResponseの生成と返却\n3. デフォルトページの設定\n\n**クラス名**: `nablarch.fw.web.handler.HttpErrorHandler`",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "constraints": "- :ref:`http_response_handler` より後ろに配置すること: 本ハンドラで生成した :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` をHTTPレスポンスハンドラが処理するため。\n- :ref:`http_access_log_handler` より後ろに配置すること: 本ハンドラで生成したエラー用 :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` を元にログ出力を行うため。",
+    "error-handling": "| 例外/エラー | ログレベル | レスポンス |\n|---|---|---|\n| :java:extdoc:`nablarch.fw.NoMoreHandlerException` | INFO | 404 |\n| :java:extdoc:`nablarch.fw.web.HttpErrorResponse` | なし | :java:extdoc:`HttpErrorResponse#getResponse() <nablarch.fw.web.HttpErrorResponse.getResponse()>` |\n| :java:extdoc:`nablarch.fw.Result.Error` | 設定による | :java:extdoc:`Error#getStatusCode() <nablarch.fw.Result.Error.getStatusCode()>` |\n| :java:extdoc:`java.lang.StackOverflowError` | FATAL | 500 |\n| :java:extdoc:`java.lang.ThreadDeath` と :java:extdoc:`java.lang.VirtualMachineError`（StackOverflowError以外） | — | — |\n| 上記以外の例外・エラー | FATAL | 500 |\n\n- `NoMoreHandlerException`: 処理すべきaction classが存在しなかった証跡として記録。レスポンス404。\n- `HttpErrorResponse`: 業務例外（バリデーション等）のためログ出力なし。\n- `StackOverflowError`: データや実装バグに起因する可能性があるため障害扱い。レスポンス500。\n- `ThreadDeath`・`VirtualMachineError`（StackOverflowError以外）: 本ハンドラでは何もせず上位ハンドラに処理を任せる（エラーを再送出）。\n- 上記以外: 予期しない例外・エラーのため障害扱い。レスポンス500。\n\n**HttpErrorResponseの原因例外が :java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` の場合の追加処理:**\n1. `ApplicationException` のメッセージ情報を :java:extdoc:`ErrorMessages <nablarch.fw.web.message.ErrorMessages>` に変換する。\n2. :java:extdoc:`ErrorMessages <nablarch.fw.web.message.ErrorMessages>` をリクエストスコープに設定する（デフォルトキー名: `errors`）。キー名はコンポーネント設定ファイルで変更可能。\n\n```xml\n<component name=\"webConfig\" class=\"nablarch.common.web.WebConfig\">\n  <!-- キーをmessagesに変更 -->\n  <property name=\"errorMessageRequestAttributeName\" value=\"messages\" />\n</component>\n```\n\n**Result.Errorのログ出力設定:**\n:java:extdoc:`writeFailureLogPattern <nablarch.fw.web.handler.HttpErrorHandler.setWriteFailureLogPattern(java.lang.String)>` プロパティに正規表現を設定し、:java:extdoc:`Error#getStatusCode() <nablarch.fw.Result.Error.getStatusCode()>` とマッチした場合に `FATAL` レベルのログを出力する。",
+    "default-page": "後続ハンドラや本ハンドラのエラー処理で生成した :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` にデフォルトページを適用する機能。`HttpResponse` が設定されていなかった場合、:java:extdoc:`defaultPage <nablarch.fw.web.handler.HttpErrorHandler.setDefaultPage(java.lang.String,java.lang.String)>` / :java:extdoc:`defaultPages <nablarch.fw.web.handler.HttpErrorHandler.setDefaultPages(java.util.Map)>` で設定されたデフォルトページを適用する。\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpErrorHandler\">\n  <property name=\"defaultPages\">\n    <map>\n      <entry key=\"4..\" value=\"/USER_ERROR.jsp\" />\n      <entry key=\"404\" value=\"/NOT_FOUND.jsp\" />\n      <entry key=\"5..\" value=\"/ERROR.jsp\" />\n      <entry key=\"503\" value=\"/NOT_IN_SERVICE.jsp\" />\n    </map>\n  </property>\n</component>\n```\n\n> **重要**: この機能を使用した場合、`web.xml` へのエラーページ設定（`error-page` 要素）と重複してJSPの設定が必要となる。`web.xml` へ設定しなかった場合、エラーの発生場所によってはウェブサーバのデフォルトのエラーページが表示される。デフォルトエラーページの設定は本機能ではなく `web.xml` へ行うことを推奨する。"
+  }
+}

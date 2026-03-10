@@ -1,0 +1,104 @@
+{
+  "id": "handlers-csrf_token_verification_handler",
+  "title": "CSRFトークン検証ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/csrf_token_verification_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/CsrfTokenVerificationHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/csrf/CsrfTokenUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/CsrfTokenGenerator.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/UUIDv4CsrfTokenGenerator.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/VerificationTargetMatcher.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/HttpMethodVerificationTargetMatcher.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/VerificationFailureHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/BadRequestVerificationFailureHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/test/NopHandler.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "handler-class",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "CsrfTokenVerificationHandler",
+        "nablarch.fw.web.handler.CsrfTokenVerificationHandler",
+        "CSRFトークン検証ハンドラ",
+        "ハンドラクラス名"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "com.nablarch.framework",
+        "モジュール",
+        "Maven依存関係"
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "制約",
+      "hints": [
+        "session_store_handler",
+        "nablarch_tag_handler",
+        "multipart_handler",
+        "tag-hidden_encryption",
+        "session_store",
+        "セッションストア必須",
+        "ハンドラ配置順",
+        "CSRFトークン制約"
+      ]
+    },
+    {
+      "id": "csrf-token-generation-verification",
+      "title": "CSRFトークンの生成と検証",
+      "hints": [
+        "CsrfTokenGenerator",
+        "UUIDv4CsrfTokenGenerator",
+        "VerificationTargetMatcher",
+        "HttpMethodVerificationTargetMatcher",
+        "VerificationFailureHandler",
+        "BadRequestVerificationFailureHandler",
+        "NopHandler",
+        "csrfTokenGenerator",
+        "verificationTargetMatcher",
+        "verificationFailureHandler",
+        "csrfTokenHeaderName",
+        "csrfTokenParameterName",
+        "csrfTokenSessionStoredVarName",
+        "csrfTokenSavedStoreName",
+        "X-CSRF-TOKEN",
+        "csrf-token",
+        "nablarch_csrf-token",
+        "WebConfig",
+        "nablarch.common.web.WebConfig",
+        "CsrfTokenUtil",
+        "RESTfulウェブサービス",
+        "CSRFトークン生成",
+        "CSRFトークン検証",
+        "テスト無効化",
+        "BadRequest 400"
+      ]
+    },
+    {
+      "id": "csrf-token-regeneration",
+      "title": "CSRFトークンを再生成する",
+      "hints": [
+        "CsrfTokenUtil",
+        "regenerateCsrfToken",
+        "nablarch.common.web.csrf.CsrfTokenUtil",
+        "CSRFトークン再生成",
+        "ログイン",
+        "セッションID再生成",
+        "セッションストア破棄"
+      ]
+    }
+  ],
+  "sections": {
+    "handler-class": "**クラス名**: `nablarch.fw.web.handler.CsrfTokenVerificationHandler`",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "constraints": "**必須要件**: 本ハンドラはCSRFトークンをセッションストアに格納するため、本ハンドラを使用する場合は :ref:`session_store` の使用が必須となる。\n\n- :ref:`session_store_handler` より後ろに配置すること（CSRFトークンをセッションストアに格納するため）\n- :ref:`tag` を使用する場合は :ref:`nablarch_tag_handler` より後ろに配置すること（:ref:`tag-hidden_encryption` を使用してCSRFトークンを出力するため）\n\n> **補足**: :ref:`multipart_handler` を使ったファイルアップロード時にファイルの保存前にCSRFトークンの検証を行いたい場合は、:ref:`multipart_handler` の前に本ハンドラおよび :ref:`session_store_handler` を配置すること。",
+    "csrf-token-generation-verification": "**デフォルト動作**:\n\n- セッションストア格納名: `nablarch_csrf-token`\n- トークン生成: :java:extdoc:`UUIDv4CsrfTokenGenerator<nablarch.fw.web.handler.csrf.UUIDv4CsrfTokenGenerator>` (UUID v4使用)\n- 格納先: デフォルトのセッションストア（ストア名を指定しない）\n- 検証対象判定: :java:extdoc:`HttpMethodVerificationTargetMatcher<nablarch.fw.web.handler.csrf.HttpMethodVerificationTargetMatcher>` — `GET`/`HEAD`/`TRACE`/`OPTIONS` は検証対象外、`POST`/`PUT` 等は検証対象\n- CSRFトークンのリクエスト取得名: HTTPヘッダ `X-CSRF-TOKEN`、HTTPパラメータ `csrf-token`\n- 検証失敗時: :java:extdoc:`BadRequestVerificationFailureHandler<nablarch.fw.web.handler.csrf.BadRequestVerificationFailureHandler>` でBadRequest(400)を返す\n\n**設定例** (:ref:`tag` 使用時):\n\n```xml\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component-ref name=\"sessionStoreHandler\" />\n      <component-ref name=\"nablarchTagHandler\"/>\n      <component-ref name=\"csrfTokenVerificationHandler\"/>\n    </list>\n  </property>\n</component>\n\n<component name=\"csrfTokenVerificationHandler\"\n           class=\"nablarch.fw.web.handler.CsrfTokenVerificationHandler\" />\n```\n\n**RESTfulウェブサービスでのCSRF対策**: :java:extdoc:`CsrfTokenUtil<nablarch.common.web.csrf.CsrfTokenUtil>` を使用すると、生成されたCSRFトークンを取得できる。プロジェクトのアーキテクチャに合わせてクライアントにCSRFトークンを送る仕組みを実装することで、:ref:`RESTfulウェブサービス<restful_web_service>` のCSRF対策を実現できる。\n\n**カスタマイズ可能なコンポーネント** (`CsrfTokenVerificationHandler` プロパティ):\n\n| プロパティ名 | インターフェース | 説明 |\n|---|---|---|\n| csrfTokenGenerator | :java:extdoc:`CsrfTokenGenerator<nablarch.fw.web.handler.csrf.CsrfTokenGenerator>` | CSRFトークンの生成 |\n| verificationTargetMatcher | :java:extdoc:`VerificationTargetMatcher<nablarch.fw.web.handler.csrf.VerificationTargetMatcher>` | 検証対象か否かの判定 |\n| verificationFailureHandler | :java:extdoc:`VerificationFailureHandler<nablarch.fw.web.handler.csrf.VerificationFailureHandler>` | 検証失敗時の処理 |\n\n**`nablarch.common.web.WebConfig` で変更可能なプロパティ**:\n\n| プロパティ名 | 説明 |\n|---|---|\n| csrfTokenHeaderName | HTTPリクエストヘッダからCSRFトークンを取得する際の名前（デフォルト: `X-CSRF-TOKEN`） |\n| csrfTokenParameterName | HTTPリクエストパラメータからCSRFトークンを取得する際の名前（デフォルト: `csrf-token`） |\n| csrfTokenSessionStoredVarName | セッションストアに格納する際の名前（デフォルト: `nablarch_csrf-token`） |\n| csrfTokenSavedStoreName | CSRFトークンを保存するセッションストアの名前 |\n\n> **重要**: テスティングフレームワークを使用してリクエスト単体テストを実施すると、正しい画面遷移を経由しないためCSRFトークンの検証に失敗する。テスト実行時の設定でCSRF対策を無効化すること。本ハンドラのコンポーネントを :java:extdoc:`NopHandler<nablarch.test.NopHandler>` に差し替えることで無効化できる。\n\n```xml\n<component name=\"csrfTokenVerificationHandler\" class=\"nablarch.test.NopHandler\" />\n```",
+    "csrf-token-regeneration": "ログイン時にCSRFトークンを再生成しないと、悪意のある人物がCSRFトークンとセッションIDを利用者に送り込み、ログイン後に攻撃リクエストを送信させることが可能になる。\n\n- アクション等のリクエスト処理で :java:extdoc:`CsrfTokenUtil.regenerateCsrfToken<nablarch.common.web.csrf.CsrfTokenUtil.regenerateCsrfToken(nablarch.fw.ExecutionContext)>` を呼び出すと、ハンドラの戻り処理でCSRFトークンが再生成される\n- ログイン時にセッションストアを破棄して再生成する実装であれば、このメソッドは不要（セッションストア破棄時にCSRFトークンも破棄され、次のページ表示時に新しいトークンが生成されるため）\n- ログイン時にセッションIDの再生成のみ行う実装の場合は、このメソッドを使用してCSRFトークンも再生成すること"
+  }
+}

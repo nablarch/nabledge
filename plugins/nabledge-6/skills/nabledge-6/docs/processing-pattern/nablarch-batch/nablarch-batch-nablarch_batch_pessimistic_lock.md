@@ -1,14 +1,14 @@
 # Nablarchバッチアプリケーションの悲観的ロック
 
-## 実装例
+## Nablarchバッチアプリケーションの悲観的ロック
 
-この実装パターンにより、ロック時間が短縮され他プロセスへの影響を抑えることができる。
+以下に示す例を参考に実装することで、ロック時間が短縮され他プロセスへの影響を抑えることができる。
 
-**実装ポイント**:
+**ポイント**:
 - データリーダでは処理対象レコードの主キーのみ取得する
-- `handle`メソッド内で悲観的ロックを行う（:ref:`universal_dao`を使用した悲観的ロックについては :ref:`universal_dao_jpa_pessimistic_lock` を参照）
+- `handle` メソッド内で悲観的ロックを行う
+- :ref:`universal_dao` を使用した悲観的ロックについては :ref:`universal_dao_jpa_pessimistic_lock` を参照
 
-**実装例**:
 ```java
 public class SampleAction extends BatchAction<SqlRow> {
 

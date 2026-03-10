@@ -1,0 +1,41 @@
+{
+  "id": "restful-web-service-getting-started-search",
+  "title": "検索機能の作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/rest/getting_started/search/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/ws/rs/Produces.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsHttpRequest.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/ValidatorUtil.html"
+  ],
+  "index": [
+    {
+      "id": "search-project",
+      "title": "プロジェクト情報を検索する",
+      "hints": [
+        "ProjectSearchForm",
+        "ProjectSearchDto",
+        "ProjectAction",
+        "Project",
+        "BeanUtil",
+        "JaxRsHttpRequest",
+        "ValidatorUtil",
+        "UniversalDao",
+        "MediaType",
+        "@Produces",
+        "@Path",
+        "@GET",
+        "@Domain",
+        "RESTful検索処理",
+        "クエリパラメータ",
+        "UniversalDao検索",
+        "JSON返却",
+        "BeanValidation"
+      ]
+    }
+  ],
+  "sections": {
+    "search-project": "## 機能概要\n\n- 検索条件として、`顧客ID(完全一致)`、`プロジェクト名(部分一致)` を指定できる。\n- 検索条件を指定しない場合は、全てのプロジェクト情報を返却する。\n\n## 動作確認\n\n- テストURL: `http://localhost:9080/projects?clientId=1`（顧客IDが1のプロジェクトを検索）\n- HTTPメソッド: GET\n- レスポンス例（フィールド: `projectId`、`projectName`、`projectType`）:\n\n```javascript\n[{\n    \"projectId\": 1,\n    \"projectName\": \"プロジェクト００１\",\n    \"projectType\": \"development\",\n    // 省略\n}]\n```\n\n## フォームの作成\n\n**クラス**: `ProjectSearchForm`\n\n- プロパティは全てString型で宣言する。詳細は :ref:`バリデーションルールの設定方法 <bean_validation-form_property>` を参照。\n\n```java\npublic class ProjectSearchForm implements Serializable {\n    @Domain(\"id\")\n    private String clientId;\n\n    @Domain(\"projectName\")\n    private String projectName;\n    // ゲッタ及びセッタは省略\n}\n```\n\n## 検索条件Beanの作成\n\n**クラス**: `ProjectSearchDto`\n\n- BeanのプロパティはDB検索条件カラムの型と互換性のある型とする。詳細は :ref:`対応する条件カラムの定義(型)と互換性のある型とする<universal_dao-search_with_condition>` を参照。\n\n```java\npublic class ProjectSearchDto implements Serializable {\n    private Integer clientId;\n    private String projectName;\n    // ゲッタ及びセッタは省略\n}\n```\n\n## SQLの作成\n\n- SQLインジェクションを防ぐため、SQLは外部ファイルに記述する。詳細は :ref:`database-use_sql_file` を参照。\n- Beanのプロパティ名を使ってSQLに値をバインドする。詳細は :ref:`database-input_bean` を参照。\n- 検索条件として指定された項目のみを条件に含める場合は :ref:`$if 構文を使用してSQL文を構築<database-use_variable_condition>` する。\n\n```sql\nFIND_PROJECT =\nSELECT * FROM PROJECT\nWHERE\n    $if(clientId) {CLIENT_ID = :clientId}\n    AND $if(projectName) {PROJECT_NAME LIKE :%projectName%}\n```\n\n## 業務アクションメソッド\n\n- 検索結果をJSON形式で返却するため :java:extdoc:`Produces<jakarta.ws.rs.Produces>` アノテーションに `MediaType.APPLICATION_JSON` を指定する。\n- クエリパラメータは :java:extdoc:`JaxRsHttpRequest<nablarch.fw.jaxrs.JaxRsHttpRequest>` から取得する。\n- :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` でリクエストパラメータからフォームを作成し、:java:extdoc:`ValidatorUtil#validate <nablarch.core.validation.ee.ValidatorUtil.validate(java.lang.Object)>` でバリデーションを行う。\n- フォームの値を :java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` で検索条件Beanにコピーし、:ref:`universal_dao` で検索する。\n- 戻り値は :ref:`body_convert_handler` によってJSON形式に変換されるため、業務アクションメソッド内での変換処理は不要。\n\n```java\n@Produces(MediaType.APPLICATION_JSON)\npublic List<Project> find(JaxRsHttpRequest req) {\n\n    // リクエストパラメータをBeanに変換\n    ProjectSearchForm form =\n            BeanUtil.createAndCopy(ProjectSearchForm.class, req.getParamMap());\n\n    // BeanValidation実行\n    ValidatorUtil.validate(form);\n\n    ProjectSearchDto searchCondition = BeanUtil.createAndCopy(ProjectSearchDto.class, form);\n    return UniversalDao.findAllBySqlFile(Project.class, \"FIND_PROJECT\", searchCondition);\n}\n```\n\n## URLとのマッピング\n\n- :ref:`router_adaptor` を使用して業務アクションとURLのマッピングを行う。マッピングには :ref:`Jakarta RESTful Web ServicesのPathアノテーション <router_adaptor_path_annotation>` を使用する。\n- `@Path` アノテーションと `@GET` アノテーションを使用して、GETリクエスト時にマッピングする業務アクションメソッドを定義する。\n\n```java\n@Path(\"/projects\")\npublic class ProjectAction {\n  @GET\n  @Produces(MediaType.APPLICATION_JSON)\n  public List<Project> find(JaxRsHttpRequest req) {\n\n      // リクエストパラメータをBeanに変換\n      ProjectSearchForm form =\n              BeanUtil.createAndCopy(ProjectSearchForm.class, req.getParamMap());\n\n      // BeanValidation実行\n      ValidatorUtil.validate(form);\n\n      ProjectSearchDto searchCondition = BeanUtil.createAndCopy(ProjectSearchDto.class, form);\n      return UniversalDao.findAllBySqlFile(Project.class, \"FIND_PROJECT\", searchCondition);\n  }\n```"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "id": "adapters-mail_sender_freemarker_adaptor",
+  "title": "E-mail FreeMarkerアダプタ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/adaptors/mail_sender_freemarker_adaptor.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/mail/freemarker/FreeMarkerMailProcessor.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailRequester.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/repository/di/ComponentFactory.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/TemplateEngineProcessedResult.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-mail-sender-freemarker-adaptor",
+        "FreeMarkerメールアダプタ",
+        "モジュール依存関係",
+        "FreeMarker 2.3.27-incubating"
+      ]
+    },
+    {
+      "id": "setup",
+      "title": "E-mail FreeMarkerアダプタを使用するための設定を行う",
+      "hints": [
+        "FreeMarkerMailProcessor",
+        "MailRequester",
+        "ComponentFactory",
+        "Configuration",
+        "ConfigurationFactory",
+        "basePackagePath",
+        "encoding",
+        "nablarch.integration.mail.freemarker.FreeMarkerMailProcessor",
+        "nablarch.common.mail.MailRequester",
+        "nablarch.core.repository.di.ComponentFactory",
+        "FreeMarkerアダプタ設定",
+        "コンポーネント設定",
+        "テンプレートエンジン設定"
+      ]
+    },
+    {
+      "id": "template-creation",
+      "title": "メールのテンプレートを作成する",
+      "hints": [
+        "TemplateEngineProcessedResult",
+        "nablarch.common.mail.TemplateEngineProcessedResult",
+        "テンプレート作成",
+        "デリミタ",
+        "件名と本文分割"
+      ]
+    },
+    {
+      "id": "mail-request",
+      "title": "メール送信要求を登録する",
+      "hints": [
+        "メール送信要求登録",
+        "定型メール送信",
+        "mail-request"
+      ]
+    }
+  ],
+  "sections": {
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-mail-sender-freemarker-adaptor</artifactId>\n</dependency>\n```\n\n> **補足**: FreeMarkerのバージョン2.3.27-incubatingを使用してテストを行っている。バージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。",
+    "setup": ":java:extdoc:`FreeMarkerMailProcessor<nablarch.integration.mail.freemarker.FreeMarkerMailProcessor>` を :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` に設定する。`FreeMarkerMailProcessor` には FreeMarker の `Configuration` を設定する必要がある。\n\n`Configuration` は :java:extdoc:`ComponentFactory<nablarch.core.repository.di.ComponentFactory>` の実装クラスを作成してコンポーネントを設定することを推奨する。理由:\n- `Configuration` のデフォルトコンストラクタは非推奨\n- `Configuration` への設定はコンポーネント設定ファイルよりもJavaコードで行う方がやりやすい\n\n`ConfigurationFactory` 実装例:\n\n```java\npublic class ConfigurationFactory implements ComponentFactory<Configuration> {\n    private String basePackagePath;\n    private String encoding;\n\n    @Override\n    public Configuration createObject() {\n        Configuration cfg = new Configuration(Configuration.getVersion());\n        cfg.setClassLoaderForTemplateLoading(getClass().getClassLoader(), basePackagePath);\n        cfg.setDefaultEncoding(encoding);\n        //必要に応じてConfigurationへその他の設定を行う\n        return cfg;\n    }\n\n    public void setBasePackagePath(String basePackagePath) { this.basePackagePath = basePackagePath; }\n    public void setEncoding(String encoding) { this.encoding = encoding; }\n}\n```\n\nコンポーネント設定ファイルの例:\n\n```xml\n<component name=\"templateEngineMailProcessor\"\n           class=\"nablarch.integration.mail.freemarker.FreeMarkerMailProcessor\" autowireType=\"None\">\n  <property name=\"configuration\">\n    <component class=\"com.example.ConfigurationFactory\">\n      <property name=\"basePackagePath\" value=\"com/example/template/\"/>\n      <property name=\"encoding\" value=\"UTF-8\"/>\n    </component>\n  </property>\n</component>\n\n<component name=\"mailRequester\" class=\"nablarch.common.mail.MailRequester\">\n  <property name=\"templateEngineMailProcessor\" ref=\"templateEngineMailProcessor\"/>\n</component>\n```",
+    "template-creation": "件名と本文を1つのテンプレートに記述する。件名と本文はデリミタと呼ばれる行で分割され、デフォルトのデリミタは `---`（半角ハイフン3つ）。\n\nテンプレート例:\n\n```\n${title}について${option}\n---\n${title}は、申請番号${requestId}で申請されました。\n${approver}は速やかに${title}を承認してください。${option}\n```\n\n件名と本文の詳細な分割ルールは :java:extdoc:`TemplateEngineProcessedResult#valueOf<nablarch.common.mail.TemplateEngineProcessedResult.valueOf(java.lang.String)>` を参照。\n\nテンプレートファイルの配置場所は `Configuration` の設定による。前節の設定例ではクラスパスからロードされ、`basePackagePath` に `com/example/template/` を設定した場合、クラスパス上の `com/example/template/` ディレクトリにテンプレートファイルを配置する。",
+    "mail-request": "定型メールの送信要求を登録するだけでよい。詳細は :ref:`mail-request` を参照。"
+  }
+}

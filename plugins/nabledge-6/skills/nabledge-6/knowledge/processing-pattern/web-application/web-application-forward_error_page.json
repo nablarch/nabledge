@@ -1,0 +1,49 @@
+{
+  "id": "web-application-forward_error_page",
+  "title": "エラー時の遷移先の指定方法",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/feature_details/forward_error_page.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/NoDataException.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/persistence/OptimisticLockException.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/message/ApplicationException.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "handler-common-behavior",
+      "title": "ハンドラで共通の振る舞いを定義する",
+      "hints": [
+        "ExampleErrorForwardHandler",
+        "HttpErrorResponse",
+        "NoDataException",
+        "OptimisticLockException",
+        "on_error_interceptor",
+        "on_errors_interceptor",
+        "エラーページ共通化",
+        "ハンドラによるエラー遷移制御",
+        "システム全体エラー画面統一",
+        "例外ハンドリング"
+      ]
+    },
+    {
+      "id": "multiple-forward-destinations",
+      "title": "1つの例外クラスに対して複数の遷移先がある場合の実装方法",
+      "hints": [
+        "ApplicationException",
+        "HttpErrorResponse",
+        "@InjectForm",
+        "@OnError",
+        "on_error_interceptor",
+        "業務例外",
+        "複数遷移先",
+        "try-catch",
+        "遷移先切り替え",
+        "forward"
+      ]
+    }
+  ],
+  "sections": {
+    "handler-common-behavior": "システム全体で共通のエラーページに遷移させる場合、個別のアクションメソッドに :ref:`on_error_interceptor` や :ref:`on_errors_interceptor` を設定すると設定漏れや遷移先の指定ミスが発生しやすい。このような場合は個別のアクションに遷移先を指定するのではなく、エラー時の遷移先を制御するハンドラを追加して対応すること。\n\n例: :java:extdoc:`NoDataException <nablarch.common.dao.NoDataException>` と :java:extdoc:`jakarta.persistence.OptimisticLockException` が発生した場合に専用エラー画面へ遷移させるハンドラ実装:\n\n```java\npublic class ExampleErrorForwardHandler implements Handler<Object, Object> {\n  @Override\n  public Object handle(Object data, ExecutionContext context) {\n    try {\n      return context.handleNext(data);\n    } catch (NoDataException e) {\n      throw new HttpErrorResponse(\n          404, \"/WEB-INF/view/common/errorPages/pageNotFoundError.jsp\", e);\n    } catch (OptimisticLockException e) {\n      throw new HttpErrorResponse(\n          400, \"/WEB-INF/view/common/errorPages/optimisticLockError.jsp\", e);\n    }\n  }\n}\n```",
+    "multiple-forward-destinations": ":ref:`on_error_interceptor` は例外クラスに対して1つの遷移先しか指定できないため、:java:extdoc:`ApplicationException <nablarch.core.message.ApplicationException>` が発生箇所によって遷移先を切り替えたい場合は、アクションメソッド内で `try-catch` を使って例外を捕捉し `HttpErrorResponse` で遷移先を指定すること。\n\n```java\n@InjectForm(form = ClientSearchForm.class, prefix = \"form\")\n@OnError(type = ApplicationException.class, path = \"forward://new\")\npublic HttpResponse list(HttpRequest request, ExecutionContext context) {\n  // ...\n  try {\n    service.save(entity);\n  } catch (ApplicationException e) {\n    // saveで発生した例外は他の箇所とは異なる画面に遷移させる\n    throw new HttpErrorResponse(\"forward://index\", e);\n  }\n  return new HttpResponse(\"/WEB-INF/view/client/complete.jsp\");\n}\n```"
+  }
+}

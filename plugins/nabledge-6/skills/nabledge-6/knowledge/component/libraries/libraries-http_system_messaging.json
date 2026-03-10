@@ -1,0 +1,98 @@
+{
+  "id": "libraries-http_system_messaging",
+  "title": "HTTPメッセージング",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/system_messaging/http_system_messaging.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/action/MessagingAction.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/MessageSender.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/MessageSenderClient.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/realtime/http/client/HttpMessagingClient.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/RequestMessage.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/SyncMessage.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/FwHeaderDefinition.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/StandardFwHeaderDefinition.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "overview",
+      "title": "機能概要",
+      "hints": [
+        "MessagingAction",
+        "MessageSender",
+        "HTTPメッセージング",
+        "メッセージ送受信",
+        "MOMメッセージング互換",
+        "実行制御基盤",
+        "HTTPメッセージ受信",
+        "HTTPメッセージ送信"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-messaging",
+        "nablarch-fw-messaging-http",
+        "モジュール依存関係",
+        "Maven依存関係"
+      ]
+    },
+    {
+      "id": "usage",
+      "title": "使用方法",
+      "hints": [
+        "MessageSenderClient",
+        "HttpMessagingClient",
+        "MessagingAction",
+        "SyncMessage",
+        "MessageSender",
+        "ResponseMessage",
+        "RequestMessage",
+        "ExecutionContext",
+        "HTTPメッセージ受信",
+        "HTTPメッセージ送信",
+        "messageSenderClient",
+        "コンポーネント定義",
+        "メッセージ送信設定"
+      ]
+    },
+    {
+      "id": "extension",
+      "title": "拡張例",
+      "hints": [
+        "FwHeaderDefinition",
+        "StandardFwHeaderDefinition",
+        "HttpMessagingClient",
+        "フレームワーク制御ヘッダのカスタマイズ",
+        "HTTPクライアント処理変更",
+        "フレームワーク制御ヘッダ読み書き変更"
+      ]
+    },
+    {
+      "id": "data-model",
+      "title": "送受信電文のデータモデル",
+      "hints": [
+        "プロトコルヘッダ",
+        "共通プロトコルヘッダ",
+        "メッセージボディ",
+        "フレームワーク制御ヘッダ",
+        "requestId",
+        "userId",
+        "resendFlag",
+        "statusCode",
+        "X-Message-Id",
+        "X-Correlation-Id",
+        "データモデル",
+        "NablarchHeader"
+      ]
+    }
+  ],
+  "sections": {
+    "overview": "HTTPを使ったメッセージの送受信機能。メッセージのフォーマットには :ref:`data_format` を使用する。\n\n> **重要**: フレームワーク制御ヘッダはメッセージボディに含めることを前提としているため、外部システムで既に電文フォーマットが規定されている場合は適合しない場合がある。代替機能の使用を推奨する。\n> - サーバサイド(メッセージ受信): :ref:`restful_web_service` の使用を推奨。\n> - クライアントサイド(メッセージ送信): Jakarta RESTful Web ServicesのClient機能の使用を推奨。\n>\n> やむを得ず本機能を使用する場合は :ref:`http_system_messaging-change_fw_header` を参照してプロジェクトで実装を追加すること。\n\n| 送受信の種類 | 実行制御基盤 |\n|---|---|\n| HTTPメッセージ受信(:ref:`http_system_messaging-message_receive`) | :ref:`http_messaging` |\n| HTTPメッセージ送信(:ref:`http_system_messaging-message_send`) | 実行制御基盤に依存しない |\n\n:ref:`mom_system_messaging` と同じAPI（:java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>` / :java:extdoc:`MessageSender<nablarch.fw.messaging.MessageSender>`）で実装できるため、学習コストが低い。",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-messaging</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-messaging-http</artifactId>\n</dependency>\n```",
+    "usage": "### HTTPメッセージングを使うための設定\n\n- メッセージ受信の場合: ハンドラ構成以外に設定不要。\n- メッセージ送信の場合: :java:extdoc:`MessageSenderClient<nablarch.fw.messaging.MessageSenderClient>` の実装クラスをコンポーネント定義に追加する。デフォルト実装は :java:extdoc:`HttpMessagingClient<nablarch.fw.messaging.realtime.http.client.HttpMessagingClient>`。コンポーネント名は `messageSenderClient` と指定すること（ルックアップで使用される）。\n\n```xml\n<component name=\"messageSenderClient\"\n           class=\"nablarch.fw.messaging.realtime.http.client.HttpMessagingClient\" />\n```\n\n### メッセージを受信する(HTTPメッセージ受信)\n\n外部システムからメッセージを受信し、応答を返す。\n\n![HTTPメッセージ受信の処理フロー](assets/libraries-http_system_messaging/http_system_messaging-message_receive.png)\n\n- :java:extdoc:`MessagingAction<nablarch.fw.messaging.action.MessagingAction>` を継承して実装する。\n- 応答電文は :java:extdoc:`RequestMessage.reply<nablarch.fw.messaging.RequestMessage.reply()>` で作成する。\n\n```java\npublic class SampleAction extends MessagingAction {\n    protected ResponseMessage onReceive(RequestMessage request,\n                                        ExecutionContext context) {\n        Map<String, Object> reqData = request.getParamMap();\n        return request.reply()\n                .setStatusCodeHeader(\"200\")\n                .addRecord(new HashMap() {{\n                     put(\"FIcode\",     \"9999\");\n                     put(\"FIname\",     \"ﾅﾌﾞﾗｰｸｷﾞﾝｺｳ\");\n                     put(\"officeCode\", \"111\");\n                  }});\n    }\n}\n```\n\n### メッセージを送信する(HTTPメッセージ送信)\n\n外部システムにメッセージを送信し、応答または待機タイムアウトまで待機する。タイムアウト時は補償処理が必要。\n\n![HTTPメッセージ送信の処理フロー](assets/libraries-http_system_messaging/http_system_messaging-message_send.png)\n\n- 要求電文は :java:extdoc:`SyncMessage<nablarch.fw.messaging.SyncMessage>` で作成する。\n- 送信には :java:extdoc:`MessageSender.sendSync<nablarch.fw.messaging.MessageSender.sendSync(nablarch.fw.messaging.SyncMessage)>` を使用する。\n\n```java\nSyncMessage requestMessage = new SyncMessage(\"RM11AC0202\")\n                               .addDataRecord(new HashMap() {{\n                                    put(\"FIcode\",     \"9999\");\n                                    put(\"FIname\",     \"ﾅﾌﾞﾗｰｸｷﾞﾝｺｳ\");\n                                    put(\"officeCode\", \"111\");\n                                }});\nSyncMessage responseMessage = MessageSender.sendSync(requestMessage);\n```\n\nHTTPヘッダに独自項目を追加する場合:\n```java\nrequestMessage.getHeaderRecord().put(\"Accept-Charset\", \"UTF-8\");\n```",
+    "extension": "### フレームワーク制御ヘッダの読み書きを変更する\n\n- **HTTPメッセージ送信の場合**: メッセージボディのフォーマット定義を変更すればよい。\n- **HTTPメッセージ受信の場合**: :java:extdoc:`FwHeaderDefinition<nablarch.fw.messaging.FwHeaderDefinition>` インタフェースを実装したクラスが読み書きを担う（デフォルト: :java:extdoc:`StandardFwHeaderDefinition<nablarch.fw.messaging.StandardFwHeaderDefinition>`）。プロジェクトで `FwHeaderDefinition` を実装したクラスを作成し、:ref:`http_messaging_request_parsing_handler` と :ref:`http_messaging_response_building_handler` に設定する。\n\n> **補足**: フレームワーク制御ヘッダの使用は任意。特別要件がない限り使用する必要はない。\n\n### HTTPメッセージ送信のHTTPクライアント処理を変更する\n\n:java:extdoc:`HttpMessagingClient<nablarch.fw.messaging.realtime.http.client.HttpMessagingClient>` のデフォルト動作がプロジェクト要件に合わない場合（例: `Accept: text/json,text/xml` が固定設定される）は、`HttpMessagingClient` を継承したクラスを作成し、:ref:`http_system_messaging-settings` の方法でコンポーネント定義に追加してカスタマイズする。",
+    "data-model": "![送受信電文のデータモデル](assets/libraries-http_system_messaging/http_system_messaging-data_model.png)\n\n### プロトコルヘッダ\n\nウェブコンテナによるメッセージ送受信処理に使用される情報を格納したヘッダ領域。Mapインターフェースでアクセス可能。\n\n### 共通プロトコルヘッダ\n\nフレームワークが使用するヘッダ（キー名をカッコで示す）:\n\n- **メッセージID (X-Message-Id)**: 電文ごとに一意採番される文字列。送信時は送信処理で採番した値、受信時は送信側が発番した値。\n- **関連メッセージID (X-Correlation-Id)**: 電文が関連する電文のメッセージID。応答電文では要求電文のメッセージID、再送要求では応答再送を要求する要求電文のメッセージID。\n\n### メッセージボディ\n\nHTTPリクエストのデータ領域。フレームワーク機能は原則プロトコルヘッダ領域のみを使用し、それ以外は未解析のバイナリデータとして扱う。:ref:`data_format` によって解析し、フィールド名をキーとするMap形式で読み書き可能。\n\n### フレームワーク制御ヘッダ\n\nフレームワーク機能が電文中に定義されていることを前提とする制御項目群。\n\n| 制御項目 | フィールド名(デフォルト) | 説明 | 使用するハンドラ |\n|---|---|---|---|\n| リクエストID | requestId | 実行する業務処理を識別するID | :ref:`request_path_java_package_mapping`, :ref:`message_resend_handler`, :ref:`permission_check_handler`, :ref:`ServiceAvailabilityCheckHandler` |\n| ユーザID | userId | 電文の実行権限を表す文字列 | :ref:`permission_check_handler` |\n| 再送要求フラグ | resendFlag | 再送要求電文の送信時に設定されるフラグ | :ref:`message_resend_handler` |\n| ステータスコード | statusCode | 要求電文に対する処理結果コード | :ref:`message_reply_handler` |\n\n標準的なフレームワーク制御ヘッダのフォーマット定義例:\n\n```bash\n[NablarchHeader]\n1   requestId   X(10)       # リクエストID\n11  userId      X(10)       # ユーザID\n21  resendFlag  X(1)  \"0\"   # 再送要求フラグ (0: 初回送信 1: 再送要求)\n22  statusCode  X(4)  \"200\" # ステータスコード\n26 ?filler      X(25)       # 予備領域\n```\n\nフォーマット定義にフレームワーク制御ヘッダ以外の項目を含めた場合は任意ヘッダ項目としてアクセス可能（プロジェクト毎の簡易拡張に使用可能）。将来的な項目追加に対応するため予備領域を設けることを強く推奨。"
+  }
+}

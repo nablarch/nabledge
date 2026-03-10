@@ -1,0 +1,30 @@
+{
+  "id": "http-messaging-application_design",
+  "title": "アプリケーションの責務配置",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/http_messaging/application_design.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/RequestMessage.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/ResponseMessage.html"
+  ],
+  "index": [
+    {
+      "id": "responsibility-layout",
+      "title": "アプリケーションの責務配置",
+      "hints": [
+        "RequestMessage",
+        "ResponseMessage",
+        "nablarch.fw.messaging.RequestMessage",
+        "nablarch.fw.messaging.ResponseMessage",
+        "アクションクラス",
+        "フォームクラス",
+        "エンティティクラス",
+        "HTTPメッセージング責務配置",
+        "バリデーション"
+      ]
+    }
+  ],
+  "sections": {
+    "responsibility-layout": "**アクションクラス**: :java:extdoc:`RequestMessage<nablarch.fw.messaging.RequestMessage>` を元に業務ロジックを実行し、:java:extdoc:`ResponseMessage<nablarch.fw.messaging.ResponseMessage>` を作成して返却する。例えば、リクエストメッセージの取り込み処理であれば、業務ロジックとして以下の処理を行う。\n\n1. リクエストメッセージからフォームクラスを作成し、バリデーションを行う\n2. フォームクラスからエンティティクラスを作成して、データベースにデータを追加する\n3. レスポンスメッセージを作成し返却する\n\n**フォームクラス**: :java:extdoc:`RequestMessage<nablarch.fw.messaging.RequestMessage>` をマッピングするクラス。バリデーションアノテーションの設定と相関バリデーションロジックを持つ。プロパティは全て `String` で定義する（バイナリ項目はバイト配列）（:ref:`Bean Validation <bean_validation-form_property>` 参照）。\n\n**エンティティクラス**: テーブルと1対1で対応するクラス。カラムに対応するプロパティを持つ。"
+  }
+}

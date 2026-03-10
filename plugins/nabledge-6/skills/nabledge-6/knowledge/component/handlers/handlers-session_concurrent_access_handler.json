@@ -1,0 +1,46 @@
+{
+  "id": "handlers-session_concurrent_access_handler",
+  "title": "セッション並行アクセスハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/session_concurrent_access_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/SessionConcurrentAccessHandler.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "handler-class",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "SessionConcurrentAccessHandler",
+        "nablarch.fw.web.handler.SessionConcurrentAccessHandler",
+        "セッション並行アクセス制御",
+        "スレッド処理不整合防止",
+        "セッション排他制御",
+        "並行アクセス制御",
+        "非推奨ハンドラ"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "com.nablarch.framework",
+        "モジュール依存関係"
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "制約",
+      "hints": [
+        "制約なし",
+        "使用制限なし"
+      ]
+    }
+  ],
+  "sections": {
+    "handler-class": "> **重要**: 新規プロジェクトにおける本ハンドラの使用は推奨しない。セッション変数保存ハンドラを使用すること。\n\nセッションごとにリクエスト処理の並行同時アクセスに対してスレッド間の処理不整合を防ぐ。\n\n処理内容:\n1. セッションに保持した情報のコピーを作成する\n2. 処理終了後、他のスレッドによってセッションが更新されていないかチェックし、更新済みであればエラーとする\n3. 処理終了後、セッション情報のコピーをセッションに反映する\n\n**クラス名**: `nablarch.fw.web.handler.SessionConcurrentAccessHandler`",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "constraints": "なし。"
+  }
+}

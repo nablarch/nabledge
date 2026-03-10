@@ -1,0 +1,28 @@
+{
+  "id": "restful-web-service-web_service",
+  "title": "ウェブサービス編",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/MessagingException.html"
+  ],
+  "index": [
+    {
+      "id": "recommended-framework",
+      "title": "RESTfulウェブサービスフレームワークの選択",
+      "hints": [
+        "MessagingException",
+        "nablarch.fw.messaging.MessagingException",
+        "RESTfulウェブサービス",
+        "HTTPメッセージング",
+        "フレームワーク選択",
+        "restful_web_service",
+        "http_messaging",
+        "Jakarta RESTful Web Services"
+      ]
+    }
+  ],
+  "sections": {
+    "recommended-framework": ":ref:`restful_web_service` と :ref:`http_messaging` の2種類のRESTfulウェブサービス用フレームワークを提供。:ref:`restful_web_service` の使用を推奨。\n\n:ref:`restful_web_service` では [Jakarta RESTful Web Services](https://jakarta.ee/specifications/restful-ws/) で規定されている一部のアノテーションを使用して容易にウェブサービスを構築できる。\n\n:ref:`http_messaging` には以下の制約があり柔軟な設計及び実装ができない:\n\n1. HTTPヘッダやボディ部にNablarchの制御用領域が必要。既に構築済みの外部システムと連携するウェブサービスでは設計及び実装の難易度が高くなる。\n2. レスポンスヘッダに設定する項目を容易にカスタマイズできない。変更する場合は :ref:`http_messaging_response_building_handler-header` に記載の通りハンドラ自体を差し替える必要がある。\n3. :ref:`data_format` 機能に依存。フォーマット定義ファイルの作成が必要で開発コストが高く、カスタマイズが容易でなく、入出力データをMapオブジェクトで扱う必要があり実装ミスを起こしやすい。\n4. リクエストボディのパース時の例外が全て単一の例外クラス :java:extdoc:`MessagingException <nablarch.fw.messaging.MessagingException>` にマッピングされるため、根本原因を元に細かな処理制御を行うことができない。\n\n> **補足**: :ref:`restful_web_service` と :ref:`http_messaging` の機能比較は :ref:`restful_web_service_functional_comparison` を参照。"
+  }
+}

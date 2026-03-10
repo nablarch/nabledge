@@ -2,42 +2,40 @@
   "id": "about-nablarch-0401_ExtendedDataFormatter",
   "title": "データフォーマッタの拡張",
   "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/04/0401_ExtendedDataFormatter.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/value/DefaultValue.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/value/NumberString.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/value/SignedNumberString.html"
+    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/04/0401_ExtendedDataFormatter.html"
   ],
+  "processing_patterns": [],
   "index": [
     {
-      "id": "introduction",
-      "title": "はじめに",
+      "id": "intro",
+      "title": "",
       "hints": [
-        "データフォーマット",
-        "汎用データフォーマット機能",
-        "前提知識"
+        "データフォーマッタ拡張",
+        "カスタムフォーマッタ"
       ]
     },
     {
       "id": "overview",
       "title": "概要",
       "hints": [
-        "データフォーマッタ拡張",
+        "データフォーマッタ追加",
+        "カスタムフォーマッタ",
         "application/x-www-form-urlencoded",
-        "FormUrlEncoded",
-        "カスタムフォーマッタ"
+        "FormUrlEncodedフォーマッタ"
       ]
     },
     {
-      "id": "packages",
+      "id": "provided-packages",
       "title": "提供パッケージ",
       "hints": [
         "please.change.me.core.dataformat",
         "please.change.me.core.dataformat.convertor",
-        "please.change.me.test.core.file"
+        "please.change.me.test.core.file",
+        "提供パッケージ"
       ]
     },
     {
-      "id": "configuration",
+      "id": "formurlencode-formatter-structure",
       "title": "FormUrlEncodedデータフォーマッタの構成",
       "hints": [
         "FormUrlEncodedDataFormatterFactory",
@@ -45,7 +43,7 @@
         "FormUrlEncodedDataConvertorFactory",
         "FormUrlEncodedDataConvertorSetting",
         "FormUrlEncodedTestDataConverter",
-        "URLエンコード",
+        "URLエンコーディング",
         "クラス構成"
       ]
     },
@@ -54,76 +52,79 @@
       "title": "使用方法",
       "hints": [
         "使用方法",
-        "設定方法"
+        "FormUrlEncodedデータフォーマッタ設定"
       ]
     },
     {
-      "id": "usage-method",
+      "id": "formurlencode-formatter-usage",
       "title": "FormUrlEncodedデータフォーマッタの使用方法",
       "hints": [
         "FormUrlEncodedDataFormatterFactory",
-        "コンポーネント設定",
-        "formatterFactory"
+        "formatterFactory",
+        "コンポーネント設定"
       ]
     },
     {
-      "id": "format-definition",
+      "id": "format-definition-example",
       "title": "フォーマット定義ファイルの記述例",
       "hints": [
         "フォーマット定義ファイル",
-        "file-type",
         "FormUrlEncoded",
-        "text-encoding",
-        "ディレクティブ定義",
-        "データレコード定義"
+        "file-type",
+        "text-encoding"
       ]
     },
     {
-      "id": "field-types-converters",
+      "id": "field-type-converter-list",
       "title": "フィールドタイプ・フィールドコンバータ定義一覧",
       "hints": [
         "フィールドタイプ",
-        "フィールドコンバータ",
+        "タイプ識別子",
+        "X",
+        "N",
+        "XN",
+        "X9",
+        "SX9",
         "number",
         "signed_number",
-        "DefaultValue",
-        "NumberString",
-        "SignedNumberString",
-        "BigDecimal"
+        "リテラル値",
+        "nablarch.core.dataformat.convertor.value.NumberString",
+        "nablarch.core.dataformat.convertor.value.SignedNumberString",
+        "nablarch.core.dataformat.convertor.value.DefaultValue",
+        "BigDecimal変換"
       ]
     },
     {
-      "id": "multiple-values",
+      "id": "multiple-values-same-key",
       "title": "同一キーで複数の値を取り扱う場合",
       "hints": [
-        "配列",
+        "同一キー複数値",
         "String配列",
-        "多重度",
-        "複数値"
+        "多重度設定"
       ]
     },
     {
-      "id": "test-data",
+      "id": "test-data-format",
       "title": "テストデータの記述方法",
       "hints": [
-        "テストデータコンバータ",
         "FormUrlEncodedTestDataConverter",
-        "Excel",
-        "URLエンコーディング",
-        "Key=Value形式"
+        "テストデータコンバータ",
+        "TestDataConverter_FormUrlEncoded",
+        "URLエンコーディングテスト",
+        "Excelテストデータ"
       ]
     }
   ],
   "sections": {
-    "introduction": "フォーマッタ機能の概要および汎用データフォーマット機能の詳細は :ref:`data_format` を参照。",
-    "overview": "## 概要\n\nNablarchが提供するフォーマッタ（JSON、XMLなど）以外のフォーマッタを使用する場合、データフォーマッタを追加して対応する。\n\n本サンプルでは、application/x-www-form-urlencoded形式（`Key=Value` を `&` で結合）に対応したフォーマッタの実装例を示す。",
-    "packages": "## 提供パッケージ\n\n**パッケージ**:\n- `please.change.me.core.dataformat`\n- `please.change.me.core.dataformat.convertor`\n- `please.change.me.test.core.file`",
-    "configuration": "## FormUrlEncodedデータフォーマッタの構成\n\napplication/x-www-form-urlencoded形式（`name1=value1&name2=value2`）のデータを取り扱う。同一キーで複数値も可能。\n\n**エンコーディング規則**:\n- 値: URLエンコードを実施\n- キー: URLエンコードなし（汎用データフォーマットの定義書式に従う）。特殊文字使用不可\n\n**クラス一覧**:\n\n| パッケージ | クラス | 概要 |\n|---|---|---|\n| `please.change.me.core.dataformat` | `FormUrlEncodedDataFormatterFactory` | フォーマッタファクトリ。`createFormatter(String fileType, String formatFilePath)`をオーバーライドして`FormUrlEncodedDataRecordFormatter`を生成 |\n| `please.change.me.core.dataformat` | `FormUrlEncodedDataRecordFormatter` | application/x-www-form-urlencodedデータの解析・構築。読込時は出現順非依存、書込時はフォーマット定義順で出力 |\n| `please.change.me.core.dataformat.convertor` | `FormUrlEncodedDataConvertorFactory` | コンバータファクトリ。デフォルトのコンバータ名と実装クラスの対応表を保持 |\n| `please.change.me.core.dataformat.convertor` | `FormUrlEncodedDataConvertorSetting` | コンバータ設定情報を保持。コンバータ名と実装クラスの対応表をDIコンテナから設定 |\n| `please.change.me.test.core.file` | `FormUrlEncodedTestDataConverter` | テストデータコンバータ。Key=Value形式のテストデータを解析し、Value部を動的にURLエンコード |",
-    "usage": "## 使用方法\n\n（詳細は以下の各セクションを参照）",
-    "usage-method": "## FormUrlEncodedデータフォーマッタの使用方法\n\n作成したフォーマッタファクトリクラスを使用する設定:\n\n```xml\n<component name=\"formatterFactory\" class=\"please.change.me.core.dataformat.FormUrlEncodedDataFormatterFactory\"/>\n```",
-    "format-definition": "## フォーマット定義ファイルの記述例\n\n```\n#\n# ディレクティブ定義部\n#\nfile-type:     \"FormUrlEncoded\"  # フォームURLエンコード形式ファイル\ntext-encoding: \"UTF-8\"  # 文字列型フィールドの文字エンコーディング\n\n#\n# データレコード定義部\n#\n[data]\n1    key1   X      # 項目1\n2    key2   X      # 項目2\n```",
-    "field-types-converters": "## フィールドタイプ・フィールドコンバータ定義一覧\n\n**フィールドタイプ**:\n\n| タイプ識別子 | Java型 | 内容 |\n|---|---|---|\n| X、N、XN、X9、SX9 | String | すべてのフィールドを文字列として読み書き。タイプ識別子による動作の違いはない。フィールド長の概念がないため引数不要。Number型データを扱う場合はnumber/signed_numberコンバータを使用 |\n\n**フィールドコンバータ**:\n\n| コンバータ名 | Java型 | 内容 |\n|---|---|---|\n| リテラル値 | Object ↔ Object | **入力**: 何もしない<br>**出力**: 値が未設定の場合に指定リテラル値を出力<br>**実装**: `nablarch.core.dataformat.convertor.value.DefaultValue`<br>**引数**: なし |\n| number | String ↔ BigDecimal | **入力**: 符号なし数値として形式チェック後BigDecimalに変換。null/空文字の場合null返却<br>**出力**: 文字列に変換後符号なし数値として形式チェック。nullの場合空文字出力<br>**実装**: `nablarch.core.dataformat.convertor.value.NumberString`<br>**引数**: なし |\n| signed_number | String ↔ BigDecimal | 符号が許可される点以外はnumberコンバータと同じ<br>**実装**: `nablarch.core.dataformat.convertor.value.SignedNumberString`<br>**引数**: なし |",
-    "multiple-values": "## 同一キーで複数の値を取り扱う場合\n\n同一キーで複数値を扱う場合、データは`String[]`配列形式で保持される。フォーマット定義ファイルで多重度を設定する必要がある。\n\n定義方法は汎用データフォーマット機能のドキュメントを参照。",
-    "test-data": "## テストデータの記述方法\n\nFormUrlEncodedデータフォーマッタを使用する場合、入力データをURLエンコーディングする必要があるが、エンコード済みデータをExcelに直接記述することは現実的でない。テストデータコンバータを使用して解決する。\n\n**コンポーネント設定**:\n\nテスト側のコンポーネント設定ファイルに以下を追記:\n\n```xml\n<!-- テストデータコンバータ定義 -->\n<component name=\"TestDataConverter_FormUrlEncoded\"\n           class=\"please.change.me.test.core.file.FormUrlEncodedTestDataConverter\"/>\n```\n\n**Excelファイル**:\n\nfile-typeに`\"FormUrlEncoded\"`を指定し、テストデータを項目ごとにKey=Value形式で記述する。\n\n![テストデータ記述例](assets/about-nablarch-0401_ExtendedDataFormatter/test_data_example.png)\n\nテストフレームワークが`FormUrlEncodedTestDataConverter`を呼び出し、次のようなURLエンコード済みデータに変換:\n\n```\nkanjiName=%E6%BC%A2%E5%AD%97%E6%B0%8F%E5%90%8D&kanaName=%E3%82%AB%E3%83%8A%E3%82%B7%E3%83%A1%E3%82%A4&mailAddr=test%40anydomain.com\n```"
+    "overview": "Nablarch標準（Json、Xml等）とは別のフォーマッタが必要な場合、データフォーマッタを追加することで対応できる。\n\n本サンプルはapplication/x-www-form-urlencoded形式（`name1=value1&name2=value2`のようにKey=Valueを`&`で結合する形式）に対応したフォーマッタの実装例を示す。",
+    "provided-packages": "- `please.change.me.core.dataformat`\n- `please.change.me.core.dataformat.convertor`\n- `please.change.me.test.core.file`",
+    "formurlencode-formatter-structure": "FormUrlEncodedデータフォーマッタはapplication/x-www-form-urlencodedデータ（`name1=value1&name2=value2`形式）を処理する。\n\n> **重要**: 値はURLエンコードされる。キーはURLエンコードされないため、キー文字列に特殊文字は使用不可。\n\n| クラス | パッケージ | 概要 |\n|---|---|---|\n| `FormUrlEncodedDataFormatterFactory` | `please.change.me.core.dataformat` | フォーマッタファクトリクラス。`createFormatter(String fileType, String formatFilePath)`をオーバーライドし、`FormUrlEncodedDataRecordFormatter`のインスタンスを生成する。 |\n| `FormUrlEncodedDataRecordFormatter` | `please.change.me.core.dataformat` | フォーマッタクラス。読み込み時はパラメータ出現順不問、書き込み時はフォーマット定義順で出力する。 |\n| `FormUrlEncodedDataConvertorFactory` | `please.change.me.core.dataformat.convertor` | データコンバータのファクトリクラス。コンバータ名と実装クラスの対応表を保持する。 |\n| `FormUrlEncodedDataConvertorSetting` | `please.change.me.core.dataformat.convertor` | コンバータ設定情報保持クラス。DIコンテナからコンバータ名と実装クラスの対応表を設定する。 |\n| `FormUrlEncodedTestDataConverter` | `please.change.me.test.core.file` | テストデータコンバータクラス。Key=Value形式のテストデータを解析し、Value部にURLエンコーディングを動的に適用する。 |",
+    "usage": "なし",
+    "formurlencode-formatter-usage": "業務アプリケーションでFormUrlEncodedDataFormatterFactoryを使用する場合、以下のコンポーネント設定を追加する。\n\n```xml\n<component name=\"formatterFactory\" class=\"please.change.me.core.dataformat.FormUrlEncodedDataFormatterFactory\"/>\n```",
+    "format-definition-example": "```\nfile-type:     \"FormUrlEncoded\"  # フォームURLエンコード形式ファイル\ntext-encoding: \"UTF-8\"           # 文字列型フィールドの文字エンコーディング\n\n[data]\n1    key1   X      # 項目1\n2    key2   X      # 項目2\n```",
+    "field-type-converter-list": "> **重要**: FormUrlEncodedデータフォーマッタでは全フィールドをString型として処理する。タイプ識別子（X、N、XN、X9、SX9）による動作差はなく、フィールド長の概念がないため引数不要。Number型（BigDecimalなど）を扱う場合はnumber/signed_numberコンバータを使用すること。\n\n**フィールドタイプ**\n\n| タイプ識別子 | Java型 | 内容 |\n|---|---|---|\n| X、N、XN、X9、SX9 | String | 全タイプでStringとして読み書き。引数不要。 |\n\n**フィールドコンバータ**\n\n| コンバータ名 | Java型(変換前後) | 内容 |\n|---|---|---|\n| リテラル値 | Object <-> Object | 入力時: 何もしない。出力時: 値が未設定の場合に指定リテラル値を出力。デフォルト実装: `nablarch.core.dataformat.convertor.value.DefaultValue`。引数: なし |\n| number | String <-> BigDecimal | 入力時: 符号なし数値チェック後にBigDecimalへ変換（null/空文字はnull）。出力時: 文字列変換後に符号なし数値チェック（nullは空文字）。デフォルト実装: `nablarch.core.dataformat.convertor.value.NumberString`。引数: なし |\n| signed_number | String <-> BigDecimal | 符号付き数値を許可する以外はnumberと同仕様。デフォルト実装: `nablarch.core.dataformat.convertor.value.SignedNumberString`。引数: なし |",
+    "multiple-values-same-key": "同一キーで複数の値を取り扱う場合、データはString配列形式で保持される。フォーマット定義ファイルにて多重度の設定が必要。",
+    "test-data-format": "URLエンコーディングされたデータをExcelファイルに直接記述することは可読性・保守性の面で現実的ではないため、テストデータコンバータを使用する。\n\n**コンポーネント設定ファイル**\n\n```xml\n<component name=\"TestDataConverter_FormUrlEncoded\"\n           class=\"please.change.me.test.core.file.FormUrlEncodedTestDataConverter\"/>\n```\n\n**Excelファイル**\n\nfile-typeに`\"FormUrlEncoded\"`を指定し、テストデータを項目ごとにKey-Value形式で記述する。\n\n![テストデータExcelファイル例](assets/about-nablarch-0401_ExtendedDataFormatter/test_data_example.png)\n\nテストフレームワークにより`FormUrlEncodedTestDataConverter`が呼び出され、FormUrlEncodedデータフォーマッタには以下のデータが入力される:\n\n```\nkanjiName=%E6%BC%A2%E5%AD%97%E6%B0%8F%E5%90%8D&kanaName=%E3%82%AB%E3%83%8A%E3%82%B7%E3%83%A1%E3%82%A4&mailAddr=test%40anydomain.com\n```",
+    "intro": "なし"
   }
 }

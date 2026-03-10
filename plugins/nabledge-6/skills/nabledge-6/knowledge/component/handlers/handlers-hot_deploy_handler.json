@@ -1,0 +1,53 @@
+{
+  "id": "handlers-hot_deploy_handler",
+  "title": "ホットデプロイハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/hot_deploy_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/hotdeploy/HotDeployHandler.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "handler-class-name",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "HotDeployHandler",
+        "nablarch.fw.hotdeploy.HotDeployHandler",
+        "ホットデプロイ",
+        "クラス再ロード",
+        "開発環境専用",
+        "本番環境禁止",
+        "リクエスト単体テスト"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web-hotdeploy",
+        "com.nablarch.framework",
+        "モジュール",
+        "Maven依存関係",
+        "制約",
+        "ホットデプロイハンドラ制約"
+      ]
+    },
+    {
+      "id": "target-packages",
+      "title": "ホットデプロイ対象のパッケージを指定する",
+      "hints": [
+        "targetPackages",
+        "ホットデプロイ対象パッケージ",
+        "エンティティクラス除外",
+        "クラスローダ",
+        "session_store",
+        "キャスト失敗"
+      ]
+    }
+  ],
+  "sections": {
+    "handler-class-name": "**クラス名**: `nablarch.fw.hotdeploy.HotDeployHandler`\n\n開発環境専用のハンドラ。リクエストごとにクラスを再ロードし、アプリケーションサーバ再起動なしにアクションクラス・フォームクラスの変更を即座に反映する。\n\n> **重要**: クラス再ロードによりレスポンス速度の低下につながる可能性があるため、**本番環境では絶対に使用してはならない。**\n\n> **重要**: リクエスト単体テスト時には本ハンドラを使用しないこと（テストが正常に動作しない可能性がある）。\n\n> **補足**: 本ハンドラを使用する場合は、サーバのホットデプロイ機能を無効化すること。",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web-hotdeploy</artifactId>\n</dependency>\n```\n\n**制約**: なし。",
+    "target-packages": "ホットデプロイ対象パッケージは `targetPackages` プロパティに設定する。\n\n```xml\n<component class=\"nablarch.fw.hotdeploy.HotDeployHandler\">\n  <property name=\"targetPackages\">\n    <list>\n      <value>please.change.me.web.action</value>\n      <value>please.change.me.web.form</value>\n    </list>\n  </property>\n</component>\n```\n\n> **重要**: エンティティクラスはホットデプロイ対象にしてはならない。理由: (1) リクエストごとに対象パッケージ内の全クラスが再ロードされるためレスポンス速度の低下につながる恐れがある (2) リクエストごとにクラスローダが変わるため、`:ref:session_store` を使用した場合などでエンティティクラスのキャストに失敗する場合がある。"
+  }
+}

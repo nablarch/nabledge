@@ -1,0 +1,51 @@
+{
+  "id": "web-application-getting-started-project-download",
+  "title": "ファイルダウンロード機能の作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/project_download/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/Csv.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/CsvFormat.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/ObjectMapper.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/download/FileResponse.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html"
+  ],
+  "index": [
+    {
+      "id": "csv-file-download",
+      "title": "CSVファイルのダウンロードを行う",
+      "hints": [
+        "CSVファイルダウンロード",
+        "ファイルダウンロード",
+        "データバインド",
+        "遅延ロード",
+        "Content-Disposition",
+        "FileResponse",
+        "ObjectMapper",
+        "ObjectMapperFactory",
+        "TempFileUtil",
+        "DeferredEntityList",
+        "UniversalDao",
+        "ProjectDownloadDto",
+        "@Csv",
+        "@CsvFormat",
+        "@InjectForm",
+        "@OnError",
+        "BeanUtil",
+        "HttpResponse",
+        "HttpRequest",
+        "ExecutionContext",
+        "CsvDataBindConfig",
+        "LoginUserPrincipal",
+        "SessionUtil",
+        "ProjectSearchForm",
+        "ProjectSearchDto",
+        "ApplicationException"
+      ]
+    }
+  ],
+  "sections": {
+    "csv-file-download": "### ダウンロードボタンの作成\n\nファイルダウンロードアクション (`/action/project/download`) へのGETリクエストリンクを配置し、現在の検索条件をクエリパラメータとして渡す。\n\n```jsp\n<c:url value=\"/action/project/download\" var=\"download_uri\">\n    <c:param name=\"searchForm.clientId\" value=\"${searchForm.clientId}\"/>\n    <c:param name=\"searchForm.clientName\" value=\"${searchForm.clientName}\"/>\n    <c:param name=\"searchForm.projectName\" value=\"${searchForm.projectName}\"/>\n    <c:param name=\"searchForm.projectType\" value=\"${searchForm.projectType}\"/>\n    <c:forEach items=\"${searchForm.projectClass}\" var=\"projectClass\">\n        <c:param name=\"searchForm.projectClass\" value=\"${projectClass}\" />\n    </c:forEach>\n    <c:param name=\"searchForm.projectStartDateBegin\" value=\"${searchForm.projectStartDateBegin}\"/>\n    <c:param name=\"searchForm.projectStartDateEnd\" value=\"${searchForm.projectStartDateEnd}\"/>\n    <c:param name=\"searchForm.projectEndDateBegin\" value=\"${searchForm.projectEndDateBegin}\"/>\n    <c:param name=\"searchForm.projectEndDateEnd\" value=\"${searchForm.projectEndDateEnd}\"/>\n    <c:param name=\"searchForm.sortKey\" value=\"${searchForm.sortKey}\"/>\n    <c:param name=\"searchForm.sortDir\" value=\"${searchForm.sortDir}\"/>\n    <c:param name=\"searchForm.pageNumber\" value=\"${searchForm.pageNumber}\"/>\n</c:url>\n<n:a href=\"${download_uri}\">\n    <n:write name=\"label\" />\n    <n:img src=\"/images/download.png\" alt=\"ダウンロード\" />\n</n:a>\n```\n\n### ファイルをバインドするBeanの作成\n\n**アノテーション**: `@Csv`, `@CsvFormat`\n\n- CSVヘッダーとBeanプロパティの紐付けには :java:extdoc:`@Csv<nablarch.common.databind.csv.Csv>` を使用する。\n- CSVフォーマット指定には :java:extdoc:`@CsvFormat<nablarch.common.databind.csv.CsvFormat>` を使用する。:ref:`デフォルトフォーマット<data_bind-csv_format_set>` を使用する場合は :java:extdoc:`@CsvFormat<nablarch.common.databind.csv.CsvFormat>` は不要。\n- アノテーション設定の詳細は :ref:`data_bind-csv_format-beans` を参照。\n\n```java\n@Csv(headers = { /** ヘッダを記述 **/},\n        properties = { /** バインド対象のプロパティ **/},\n        type = Csv.CsvType.CUSTOM)\n@CsvFormat(charset = \"Shift_JIS\", fieldSeparator = ',', ignoreEmptyLine = true,\n        lineSeparator = \"\\r\\n\", quote = '\"',\n        quoteMode = CsvDataBindConfig.QuoteMode.NORMAL, requiredHeader = true, emptyToNull = true)\npublic class ProjectDownloadDto implements Serializable {\n    private String projectName;\n    private String projectType;\n}\n```\n\n### 業務アクションメソッドの作成\n\n**クラス**: `FileResponse`, `ObjectMapper`, `ObjectMapperFactory`, `TempFileUtil`, `DeferredEntityList`, `UniversalDao`  \n**アノテーション**: `@InjectForm`, `@OnError`\n\n- BeanをCSVファイルに出力するには :ref:`データバインド<data_bind>` の :java:extdoc:`ObjectMapper<nablarch.common.databind.ObjectMapper>` を使用する。\n- ファイルをダウンロードレスポンスとして返すには :java:extdoc:`FileResponse<nablarch.common.web.download.FileResponse>` を使用する（詳細: :ref:`data_bind-file_download`）。\n- 大量データ取得時はメモリ逼迫防止のため :java:extdoc:`UniversalDao#defer<nablarch.common.dao.UniversalDao.defer()>` で :ref:`遅延ロード<universal_dao-lazy_load>` する。\n- レスポンスのContent-Typeは :java:extdoc:`HttpResponse#setContentType<nablarch.fw.web.HttpResponse.setContentType(java.lang.String)>` で設定する（詳細: :ref:`data_format-file_download`）。\n- ダウンロードファイル名は :java:extdoc:`HttpResponse#setContentDisposition<nablarch.fw.web.HttpResponse.setContentDisposition(java.lang.String)>` で設定する（詳細: :ref:`data_format-file_download`）。\n\n```java\n@InjectForm(form = ProjectSearchForm.class, prefix = \"searchForm\", name = \"searchForm\")\n@OnError(type = ApplicationException.class, path = \"/WEB-INF/view/project/index.jsp\")\npublic HttpResponse download(HttpRequest request, ExecutionContext context) {\n    ProjectSearchForm searchForm = context.getRequestScopedVar(\"searchForm\");\n    ProjectSearchDto searchCondition = BeanUtil.createAndCopy(ProjectSearchDto.class, searchForm);\n    LoginUserPrincipal userContext = SessionUtil.get(context, \"userContext\");\n    searchCondition.setUserId(userContext.getUserId());\n\n    final Path path = TempFileUtil.createTempFile();\n    try (DeferredEntityList<ProjectDownloadDto> searchList = (DeferredEntityList<ProjectDownloadDto>) UniversalDao\n                .defer()\n                .findAllBySqlFile(ProjectDownloadDto.class, \"SEARCH_PROJECT\", searchCondition);\n         ObjectMapper<ProjectDownloadDto> mapper = ObjectMapperFactory.create(ProjectDownloadDto.class,\n                TempFileUtil.newOutputStream(path))) {\n        for (ProjectDownloadDto dto : searchList) {\n            mapper.write(dto);\n        }\n    }\n\n    FileResponse response = new FileResponse(path.toFile(), true);\n    response.setContentType(\"text/csv; charset=Shift_JIS\");\n    response.setContentDisposition(\"プロジェクト一覧.csv\");\n    return response;\n}\n```"
+  }
+}

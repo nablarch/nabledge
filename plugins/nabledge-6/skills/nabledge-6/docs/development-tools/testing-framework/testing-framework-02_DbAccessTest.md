@@ -1,306 +1,279 @@
 # データベースを使用するクラスのテスト
 
-## 主なクラス、リソース
+## 主なクラス, リソース
 
-データベーステストフレームワークを使用することで、準備データ投入やデータ確認などのデータベース操作を自動化できる。
-
-**クラス構成**
-
-![クラス構成](../../knowledge/development-tools/testing-framework/assets/testing-framework-02_DbAccessTest/class_structure.png)
+**クラス**: `DbAccessTestSupport`
 
 | 名称 | 役割 | 作成単位 |
 |---|---|---|
-| テストクラス | テストロジック実装。`DbAccessTestSupport`を継承 | テスト対象クラスごと |
-| テストデータ (Excelファイル) | 準備データ・期待値を記載 | テストクラスごと |
-| テスト対象クラス | テスト対象 | — |
-| `DbAccessTestSupport` | 準備データ投入等の機能提供。トランザクション制御 (:ref:`using_transactions`) | — |
+| テストクラス | テストロジックを実装する。`DbAccessTestSupport`を継承する | テスト対象クラスにつき1つ |
+| テストデータ（Excelファイル） | 準備データや期待値などのテストデータを記載する | テストクラスにつき1つ |
+| テスト対象クラス | テストされるクラス | — |
+| `DbAccessTestSupport` | 準備データ投入などDB操作機能を提供。テスト実行前後にDBトランザクションの開始・終了処理を行う（:ref:`using_transactions`） | — |
 
 ## 基本的なテスト方法
 
-**参照系のテスト**
+参照系テスト: `setUpDb(シート名)` でDB準備データを登録し、`assertSqlResultSetEquals(シート名, 期待値ID, actual)` で検索結果を確認する。
 
-テスト手順:
-1. 準備データ登録
-2. テスト対象メソッド起動
-3. 検索結果が期待値と一致することを確認
+更新系テスト: `setUpDb(シート名)` でDB準備データ登録 → テスト対象メソッド実行 → `commitTransactions()` でコミット → `assertTableEquals(シート名, actual)` でDB状態確認。
 
-**更新系のテスト**
+## 参照系テスト - シーケンス
 
-テスト手順:
-1. 準備データ登録
-2. テスト対象メソッド起動
-3. トランザクションコミット
-4. DB値が期待通り更新されたことを確認
+参照系テストのシーケンス（`select_sequence.png`）:
 
-> **重要**: Nablarchでは複数トランザクション併用が前提。テスト対象クラス実行後にDB内容を確認する際はトランザクションをコミットすること。コミットしない場合、テスト結果確認が正常に行われない。
+1. `setUpDb(シート名)` でExcelシートからDB準備データを登録
+2. テスト対象メソッドを呼び出し、戻り値（`SqlResultSet`）を取得
+3. `assertSqlResultSetEquals(シート名, 期待値ID, actual)` で結果を検証
 
-> **補足**: 参照系テストではコミット不要。
-
-## シーケンス（参照系）
-
-![参照系テストシーケンス](../../knowledge/development-tools/testing-framework/assets/testing-framework-02_DbAccessTest/select_sequence.png)
-
-**実行フロー**: テストクラス → `setUpDb()` (準備データ登録) → テスト対象メソッド起動 → DB検索 → `assertSqlResultSetEquals()` (期待値比較)
-
-## テストソースコード実装例（参照系）
+## 参照系テスト - テストソースコード実装例
 
 ```java
 public class DbAccessTestSample extends DbAccessTestSupport {
     @Test
     public void testSelectAll() {
-        setUpDb("testSelectAll");  // 準備データ登録（引数=シート名）
-        
-        EmployeeDbAccess target = new EmployeeDbAccess();
+        setUpDb("testSelectAll");  // 引数はシート名
+        EmployeeDbAcess target = new EmployeeDbAccess();
         SqlResultSet actual = target.selectAll();
-        
-        assertSqlResultSetEquals("testSelectAll", "expected", actual);  // 期待値比較（シート名, 期待値ID, 実測値）
+        // 引数: 期待値を格納したシート名, 期待値のID, 実際の値
+        assertSqlResultSetEquals("testSelectAll", "expected", actual);
     }
 }
 ```
 
-**クラス**: `DbAccessTestSupport` (継承必須), `SqlResultSet`, `EmployeeDbAccess`
+## 参照系テスト - テストデータ記述例
 
-**メソッド**:
-- `setUpDb(String sheetName)`: 準備データ登録
-- `assertSqlResultSetEquals(String sheetName, String id, SqlResultSet actual)`: 検索結果の期待値比較
+準備データ（`SETUP_TABLE`形式）:
+- 1行目: `SETUP_TABLE=<登録対象テーブル名>`
+- 2行目: カラム名
+- 3行目以降: 登録レコード
 
-## テストデータ記述例（参照系）
-
-**準備データ形式** (:ref:`how_to_write_setup_table`):
-
-| 行 | 内容 |
-|---|---|
-| 1行目 | `SETUP_TABLE=<テーブル名>` |
-| 2行目 | カラム名 |
-| 3行目〜 | レコード |
-
-例:
 ```
 SETUP_TABLE=EMPLOYEE
-ID          EMP_NAME     DEPT_CODE
-00001       山田太郎     0001
-00002       田中一郎     0002
+ID    | EMP_NAME | DEPT_CODE
+00001 | 山田太郎 | 0001
+00002 | 田中一郎 | 0002
 ```
 
-**期待値形式**:
+期待値（`LIST_MAP`形式）:
+- 1行目: `LIST_MAP=<シート内で一意の期待値ID>`
+- 2行目: SELECT文で指定したカラム名または別名
+- 3行目以降: 検索結果
 
-| 行 | 内容 |
-|---|---|
-| 1行目 | `LIST_MAP=<期待値ID>` |
-| 2行目 | SELECT文のカラム名または別名 |
-| 3行目〜 | 期待する検索結果 |
-
-例:
 ```
 LIST_MAP=expected
-ID          EMP_NAME     DEPT_NAME
-00001       山田太郎     人事部
-00002       田中一郎     総務部
+ID    | EMP_NAME | DEPT_NAME
+00001 | 山田太郎 | 人事部
+00002 | 田中一郎 | 総務部
 ```
 
-## シーケンス（更新系）
+## 更新系テスト - シーケンス
 
-![更新系テストシーケンス](../../knowledge/development-tools/testing-framework/assets/testing-framework-02_DbAccessTest/update_sequence.png)
+更新系テストのシーケンス（`update_sequence.png`）:
 
-**実行フロー**: テストクラス → `setUpDb()` (準備データ登録) → テスト対象メソッド起動 → `commitTransactions()` → `assertTableEquals()` (DB値の期待値比較)
+1. `setUpDb(シート名)` でDB準備データを登録
+2. テスト対象メソッドを呼び出す
+3. `commitTransactions()` でトランザクションをコミット
+4. `assertTableEquals(シート名, actual)` でDB更新結果を検証
 
-## テストソースコード実装例（更新系）
+> **重要**: Nablarch Application Frameworkでは複数種類のトランザクションを併用する前提のため、テスト対象クラス実行後にDB内容を確認する際は `commitTransactions()` を必ず呼び出すこと。コミットしない場合、テスト結果確認が正常に行われない。
+
+> **補足**: 参照系テストではコミット不要。
+
+## 更新系テスト - テストソースコード実装例
 
 ```java
-public class DbAccessTestSample extends DbAccessTestSupport {
+public class DbAccessTestSample extends DbAccsessTestSupport {
     @Test
     public void testDeleteExpired() {
-        setUpDb("testDeleteExpired");  // 準備データ登録
-        
-        EmployeeDbAccess target = new EmployeeDbAccess();
-        target.deleteExpired();  // 更新処理実行
-        
-        commitTransactions();  // コミット（更新系では必須）
-        
-        assertTableEquals("testDeleteExpired");  // DB値の期待値比較
+        setUpDb("testDeleteExpired");  // 引数はシート名
+        EmployeeDbAcess target = new EmployeeDbAccess();
+        SqlResultSet actual = target.deleteExpired();
+        commitTransactions();  // トランザクションをコミット
+        // 引数: 期待値を格納したシート名, 実際の値
+        assertTableEquals("testDeleteExpired", actual);
     }
 }
 ```
 
-**メソッド**:
-- `commitTransactions()`: トランザクションコミット（更新系テストでは必須）
-- `assertTableEquals(String sheetName)`: DB内容の期待値比較
+## 更新系テスト - テストデータ記述例
 
-## テストデータ記述例（更新系）
+準備データ（`SETUP_TABLE`形式）:
+- 1行目: `SETUP_TABLE=<テーブル名>`
+- 2行目: カラム名
+- 3行目以降: レコード
 
-**準備データ形式**: 参照系と同じ (`SETUP_TABLE=<テーブル名>`)
+```
+SETUP_TABLE=EMPLOYEE
+ID    | EMP_NAME | EXPIRED
+00001 | 山田太郎 | TRUE
+00002 | 田中一郎 | FALSE
+```
 
-**期待値形式** (更新系):
+期待値（`EXPECTED_TABLE`形式）:
+- 1行目: `EXPECTED_TABLE=<確認対象テーブル名>`
+- 2行目: カラム名
+- 3行目以降: 期待値（コメント行 `// データ型` でデータ型指定可。コメント行はカラム名行と データ行の間に置く）
 
-| 行 | 内容 |
-|---|---|
-| 1行目 | `EXPECTED_TABLE=<テーブル名>` |
-| 2行目 | カラム名 |
-| 3行目〜 | 期待するDB値 |
-
-例:
 ```
 EXPECTED_TABLE=EMPLOYEE
-ID          EMP_NAME      EXPIRED
+ID    | EMP_NAME   | EXPIRED
 // CHAR(5)  VARCHAR(64)   BOOLEAN
-00002       田中一郎      FALSE
+00002 | 田中一郎 | FALSE
 ```
-
-注: 2行目にデータ型をコメント記載可 (例: `// CHAR(5)`)
 
 ## データベーステストデータの省略記述方法
 
-**カラム省略記述**
+準備データ・期待値の記述で、テストに無関係なカラムは省略可能。省略されたカラムには :ref:`default_values_when_column_omitted` が設定される。
 
-関係のないカラムは省略可能。省略カラムには :ref:`default_values_when_column_omitted` が設定される。テストデータの可読性・保守性が向上。特に更新系テスト（多カラム中1カラムのみ更新）で有効。
+この機能により以下のメリットが得られる:
+- **可読性向上**: テストデータの可読性が向上する
+- **保守性向上**: テーブル定義が変更された場合でも、関係無いカラムであればテストデータ修正作業が発生しなくなる
+- **更新系テストに特に有効**: 多くのカラムのうち1カラムだけが更新される場合、不要なカラムを記述する必要がなくなる
 
-> **重要**: 以下の場合はカラム省略不可:
-> - 検索結果の期待値: 検索対象カラム全てを記述必須
-> - 登録系テスト: 新規登録レコードの全カラムを確認必須
+> **重要**: DB**検索結果**の期待値は検索対象カラム全てを記述必須（主キーのみ確認は不可）。**登録系**テストでも新規登録レコードの全カラム確認が必要でカラム省略不可。
 
-**準備データでのカラム省略**
-
-省略カラムにはデフォルト値が設定される。ただし **主キーは省略不可**。
-
-**期待値でのカラム省略**
-
-- `EXPECTED_TABLE`: 省略カラムは比較対象外
-- `EXPECTED_COMPLETE_TABLE`: 省略カラムにはデフォルト値が格納されているものとして比較（更新系で「無関係カラムが未更新」を確認する場合に使用）
+省略制約:
+- **準備データ**: 主キーカラムは省略不可。その他は省略可（省略値は :ref:`default_values_when_column_omitted`）
+- **DB期待値 (`EXPECTED_TABLE`)**: 省略カラムは比較対象外
+- **DB期待値 (`EXPECTED_COMPLETE_TABLE`)**: 省略カラムは :ref:`デフォルト値<default_values_when_column_omitted>` が格納されているものとして比較。「無関係なカラムが更新されていないこと」を確認する更新系テストに使用する
 
 ## テストケース例
 
-**テストケース**: 有効期限を過ぎたレコードの削除フラグを1に更新 (テスト日付: 2011/01/01)
+テストケース: 「有効期限」を過ぎたレコードは「削除フラグ」が1に更新されること（テスト実施日: 2011/01/01）。
 
-**テーブル構造** (SAMPLE_TABLE):
+使用テーブル（SAMPLE_TABLE）:
 
 | カラム名 | 説明 |
 |---|---|
-| PK1, PK2 | 主キー |
-| COL_A〜COL_D | テスト対象機能では未使用 |
-| 有効期限 | 処理対象判定（有効期限を過ぎたデータが処理対象） |
-| 削除フラグ | 更新対象（有効期限切れ → 1） |
+| PK1 | 主キー |
+| PK2 | 主キー |
+| COL_A | テスト対象機能では使用しないカラム |
+| COL_B | テスト対象機能では使用しないカラム |
+| COL_C | テスト対象機能では使用しないカラム |
+| COL_D | テスト対象機能では使用しないカラム |
+| 有効期限 | 有効期限を過ぎたデータが処理対象 |
+| 削除フラグ | 有効期限超過レコードの値を'1'に変更 |
 
 ## 省略せずに全カラムを記載した場合（悪い例）
 
-**悪い例（全カラム記載）**
+全カラムを省略せずに記載した場合（悪い例）: COL_A〜COL_Dはテストに無関係だが全て記載されており可読性に劣る。テーブル定義変更時に無関係なカラムも修正が必要になる。
 
-問題点:
-- 無関係カラム (COL_A〜D) の記載により可読性が低下
-- テーブル定義変更時、無関係カラムも修正が必要
+準備データ（悪い例）:
+```
+SETUP_TABLE=SAMPLE_TABLE
+PK_1 | PK_2 | COL_A | COL_B | COL_C | COL_D | 有効期限  | 削除フラグ
+01   | 0001 | 1a    | 1b    | 1c    | 1d    | 20101231 | 0
+02   | 0002 | 2a    | 2b    | 2c    | 2d    | 20110101 | 0
+```
 
-準備データ・期待値ともに全8カラム (PK_1, PK_2, COL_A, COL_B, COL_C, COL_D, 有効期限, 削除フラグ) を記載。テスト対象は削除フラグのみだが、無関係なCOL_A〜Dも全て記述する必要がある。
+期待値（悪い例）:
+```
+EXPECTED_TABLE=SAMPLE_TABLE
+PK_1 | PK_2 | COL_A | COL_B | COL_C | COL_D | 有効期限  | 削除フラグ
+01   | 0001 | 1a    | 1b    | 1c    | 1d    | 20101231 | 1
+02   | 0002 | 2a    | 2b    | 2c    | 2d    | 20110101 | 0
+```
 
 ## 関係のあるカラムのみを記載した場合（良い例）
 
-関係のあるカラムのみを記載することで可読性、保守性が向上する。テーブル定義変更時も無関係なカラムは影響を受けない。
+関係のあるカラムのみを記載した場合（良い例）: テストに無関係なCOL_A〜COL_Dを省略することで可読性が向上し、テーブル定義変更の影響も受けにくくなる。
 
-このテストケースに関係のあるカラム:
-- 主キー (PK_1, PK_2)
-- 有効期限（更新対象レコード抽出条件）
-- 削除フラグ（更新対象）
+準備データ（良い例）: 主キー（PK_1, PK_2）とテスト対象カラム（有効期限, 削除フラグ）のみ記載する。テストに無関係なCOL_A〜COL_Dは省略する。省略されたカラムには :ref:`default_values_when_column_omitted` が設定されているものとして扱われる。
 
-**準備データ例**
+期待値（良い例）: `EXPECTED_COMPLETE_TABLE` を使用し、関係のあるカラム（PK_1, PK_2, 有効期限, 削除フラグ）のみ記載する。省略したCOL_A〜COL_Dは :ref:`デフォルト値<default_values_when_column_omitted>` と比較され、更新されていないことを確認できる。`EXPECTED_TABLE` を使用した場合は省略カラムが比較対象外となるのに対し、`EXPECTED_COMPLETE_TABLE` を使用することで省略カラムも含めて確認できる。
 
-SETUP_TABLE=SAMPLE_TABLE
+## 関係のあるカラムのみを記載した場合（良い例）
 
-| PK_1 | PK_2 | 有効期限 | 削除フラグ |
-|------|------|----------|------------|
-| 01   | 0001 | 20101231 | 0          |
-| 02   | 0002 | 20110101 | 0          |
+テストケースに関係のあるカラムのみをExcelに記載することで可読性・保守性が向上する。テーブル定義変更時も、無関係なカラムであれば影響を受けない。
 
-**期待値例**
+このテストケースに関係のあるカラムは以下のとおり。
 
-`EXPECTED_TABLE`の代わりに`EXPECTED_COMPLETE_TABLE`を使用する。
+- レコードを一意に特定するための主キーカラム（PK_1、PK_2）
+- 更新対象レコードを抽出する条件となる「有効期限」カラム
+- 更新対象となる「削除フラグ」カラム
 
-EXPECTED_COMPLETE_TABLE=SAMPLE_TABLE
+期待値の記述には `EXPECTED_TABLE` の代わりに `EXPECTED_COMPLETE_TABLE` を使用する。
+
+**SETUP_TABLE 例** (SAMPLE_TABLE):
 
 | PK_1 | PK_2 | 有効期限 | 削除フラグ |
-|------|------|----------|------------|
-| 01   | 0001 | 20101231 | 1          |
-| 02   | 0002 | 20110101 | 0          |
+|---|---|---|---|
+| 01 | 0001 | 20101231 | 0 |
+| 02 | 0002 | 20110101 | 0 |
+
+**EXPECTED_COMPLETE_TABLE 例** (SAMPLE_TABLE):
+
+| PK_1 | PK_2 | 有効期限 | 削除フラグ |
+|---|---|---|---|
+| 01 | 0001 | 20101231 | 1 |
+| 02 | 0002 | 20110101 | 0 |
 
 ## デフォルト値
 
-コンポーネント設定ファイルで明示的に指定しない場合のデフォルト値:
+自動テストフレームワークのコンポーネント設定ファイルにて明示的に指定していない場合、デフォルト値には以下の値が使用される。
 
-| カラム型 | デフォルト値          |
-|----------|-----------------------|
-| 数値型   | 0                     |
-| 文字列型 | 半角スペース          |
-| 日付型   | 1970-01-01 00:00:00.0 |
-
-## デフォルト値の変更方法
+| カラム | デフォルト値 |
+|---|---|
+| 数値型 | 0 |
+| 文字列型 | 半角スペース |
+| 日付型 | 1970-01-01 00:00:00.0 |
 
 ## 設定項目一覧
 
 **クラス**: `nablarch.test.core.db.BasicDefaultValues`
 
-設定可能な値:
+コンポーネント設定ファイルで設定できる項目:
 
-| 設定項目名  | 説明                   | 設定値                                                           |
-|-------------|------------------------|------------------------------------------------------------------|
-| charValue   | 文字列型のデフォルト値 | 1文字のASCII文字                                                 |
-| numberValue | 数値型のデフォルト値   | 0または正の整数                                                  |
-| dateValue   | 日付型のデフォルト値   | JDBCタイムスタンプエスケープ形式 (yyyy-mm-dd hh:mm:ss.fffffffff) |
+| 設定項目名 | 説明 | 設定値 |
+|---|---|---|
+| charValue | 文字列型のデフォルト値 | 1文字のASCII文字 |
+| numberValue | 数値型のデフォルト値 | 0または正の整数 |
+| dateValue | 日付型のデフォルト値 | JDBCタイムスタンプエスケープ形式 (yyyy-mm-dd hh:mm:ss.fffffffff) |
 
 ## コンポーネント設定ファイルの記述例
 
-設定例:
-
-| 設定項目名  | 設定値                        |
-|-------------|-------------------------------|
-| charValue   | a                             |
-| numberValue | 1                             |
-| dateValue   | 2000-01-01 12:34:56.123456789 |
-
 ```xml
+<!-- TestDataParser -->
 <component name="testDataParser" class="nablarch.test.core.reader.BasicTestDataParser">
+  <!-- データベースデフォルト値 -->
   <property name="defaultValues">
     <component class="nablarch.test.core.db.BasicDefaultValues">
       <property name="charValue" value="a"/>
       <property name="dateValue" value="2000-01-01 12:34:56.123456789"/>
       <property name="numberValue" value="1"/>
-    </property>
+    </component>
   </property>
 </component>
 ```
 
-## 
-
-このセクションには内容がありません。おそらく文書構造上の区切りまたはパーサーのアーティファクトです。
-
 ## 注意点
 
-## setUpDbメソッドに関する注意点
+## setUpDbメソッドの注意点
 
-- Excelファイルに全カラムを記述する必要はない。省略されたカラムにはデフォルト値が設定される
-- 1シート内に複数テーブルを記述可能。`setUpDb(String sheetName)`実行時、指定シート内のデータタイプ`SETUP_TABLE`すべてが登録対象となる
+- Excelに全カラムを記述する必要はない。省略されたカラムにはデフォルト値が設定される。
+- 1シート内に複数テーブルを記述できる。`setUpDb(String sheetName)` 実行時、指定シート内のデータタイプ `SETUP_TABLE` 全てが登録対象となる。
 
-## assertTableEqualsメソッドに関する注意点
+## assertTableEqualsメソッドの注意点
 
-- 期待値の記述で省略されたカラムは比較対象外
-- レコード順序が異なっていても主キーで突合して正しく比較できる。レコード順序を意識した期待データ作成は不要
-- 1シート内に複数テーブルを記述可能。`assertTableEquals(String sheetName)`実行時、指定シート内のデータタイプ`EXPECTED_TABLE`すべてが比較される
-- `java.sql.Timestamp`型のフォーマットは`yyyy-mm-dd hh:mm:ss.fffffffff`。ナノ秒が設定されていない場合でも0ナノ秒として表示される（例: `2010-01-01 12:34:56.0`）。Excelシートに期待値を記載する際は末尾の小数点+ゼロを付与すること
+- 期待値で省略されたカラムは比較対象外。
+- 主キーで突合するため、レコード順序が異なっていても正しく比較できる。
+- 1シート内に複数テーブル記述可能。`assertTableEquals(String sheetName)` 実行時、指定シート内のデータタイプ `EXPECTED_TABLE` 全てが比較される。
+- `java.sql.Timestamp` 型のフォーマットは `yyyy-mm-dd hh:mm:ss.fffffffff`（fffffffffはナノ秒）。ナノ秒未設定でも `0` として表示される（例: `2010-01-01 12:34:56.0`）。Excelに期待値を記載する場合は末尾に `.0` を付与すること。
 
-## assertSqlResultSetEqualsメソッドに関する注意点
+## assertSqlResultSetEqualsメソッドの注意点
 
-- SELECT文で指定されたすべてのカラム名（別名）が比較対象。特定カラムを比較対象外にすることはできない
-- レコードの順序が異なる場合は等価でないとみなす（アサート失敗）。理由:
-  - SELECTで指定されたカラムに主キーが含まれているとは限らない
-  - SELECT実行時はORDER BY指定がなされる場合がほとんどであり、順序についても厳密に比較する必要がある
+- SELECT文で指定した全カラムが比較対象。特定カラムのみを比較対象外にすることはできない。
+- レコード順序が異なる場合はアサート失敗。（理由: SELECTカラムに主キーが含まれるとは限らないため、また ORDER BY 指定がなされる場合が多く順序も厳密に比較する必要があるため）
 
-## クラス単体テストにおける登録・更新系テストの注意点
+## 登録・更新系テストの注意点
 
-- 自動設定項目を利用してDB登録・更新する際は、ThreadContextにリクエストIDとユーザIDが設定されている必要がある。テスト対象クラス起動前に設定すること（:ref:`using_ThreadContext`参照）
-- デフォルト以外のトランザクションを使用する場合は、本フレームワークにトランザクション制御を行わせる必要がある（:ref:`using_transactions`参照）
+- 自動設定項目を利用してDBに登録・更新する際は、ThreadContextにリクエストIDとユーザIDが設定されている必要がある。テスト対象クラス起動前に設定すること。（:ref:`using_ThreadContext`）
+- デフォルト以外のトランザクションを使用する場合は、本フレームワークにトランザクション制御を行わせる必要がある。（:ref:`using_transactions`）
 
-## 外部キーが設定されたテーブルにデータをセットアップしたい
+## 外部キーテーブルへのデータセットアップ
 
-:ref:`master_data_backup`と同じ機能を用いて、テーブルの親子関係を判断しデータを削除及び登録する。詳細は:ref:`MasterDataRestore-fk_key`を参照。
+:ref:`master_data_backup` と同じ機能を用いてテーブルの親子関係を判断しデータを削除・登録する。詳細は :ref:`MasterDataRestore-fk_key` を参照。
 
-## Excelファイルに記述できるカラムのデータ型に関する注意点
+## Excelカラムのデータ型
 
-Excelファイルには、`SqlPStatement`で対応している型のカラムのみテストデータとして記述できる。
-
-それ以外のデータ型（例: OracleのROWID、PostgreSQLのOID）のカラムはテストデータとして記述できない点に注意。
+`SqlPStatement` で対応している型のカラムのみ記述可能。それ以外のデータ型（例: OracleのROWID、PostgreSQLのOIDなど）は記述不可。

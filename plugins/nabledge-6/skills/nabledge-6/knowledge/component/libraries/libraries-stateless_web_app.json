@@ -1,0 +1,83 @@
+{
+  "id": "libraries-stateless_web_app",
+  "title": "Webアプリケーションをステートレスにする",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/stateless_web_app.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/LanguageAttributeInHttpSession.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/TimeZoneAttributeInHttpSession.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/threadcontext/UserIdAttribute.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/LanguageAttributeInHttpCookie.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/TimeZoneAttributeInHttpCookie.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/handler/threadcontext/UserIdAttributeInSessionStore.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/servlet/WebFrontController.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "basic-concept",
+      "title": "基本的な考え方",
+      "hints": [
+        "ステートレス",
+        "スケールアウト",
+        "HTTPセッション",
+        "廃棄容易性",
+        "Twelve-Factor App"
+      ]
+    },
+    {
+      "id": "http-session-dependence",
+      "title": "HTTPセッションに依存している機能",
+      "hints": [
+        "セッションストア",
+        "2重サブミット防止",
+        "スレッドコンテキスト変数管理ハンドラ",
+        "HTTPリライトハンドラ",
+        "hidden暗号化",
+        "HTTPセッション依存機能一覧"
+      ]
+    },
+    {
+      "id": "http-session-independent-introduction",
+      "title": "HTTPセッション非依存機能の導入方法",
+      "hints": [
+        "LanguageAttributeInHttpSession",
+        "TimeZoneAttributeInHttpSession",
+        "UserIdAttribute",
+        "LanguageAttributeInHttpCookie",
+        "TimeZoneAttributeInHttpCookie",
+        "UserIdAttributeInSessionStore",
+        "db_managed_expiration",
+        "db_double_submit",
+        "HTTPセッション非依存への切り替え",
+        "useHiddenEncryption"
+      ]
+    },
+    {
+      "id": "local-filesystem",
+      "title": "ローカルファイルシステムの使用",
+      "hints": [
+        "ローカルファイルシステム",
+        "ファイルアップロード",
+        "共有ストレージ",
+        "ステートレス"
+      ]
+    },
+    {
+      "id": "detect-session-creation",
+      "title": "HTTPセッションの誤生成を検知する",
+      "hints": [
+        "WebFrontController",
+        "preventSessionCreation",
+        "HTTPセッション生成検知",
+        "例外送出"
+      ]
+    }
+  ],
+  "sections": {
+    "basic-concept": "HTTPセッションはAPサーバで状態を持つためスケールアウトができない。通常の対処方法:\n\n1. ロードバランサーでスティッキーセッションを有効にする\n2. APサーバのセッションレプリケーション機能を使用する\n3. APサーバのHTTPセッション保存先をNoSQLにする\n\n1, 2は[Twelve-Factor App](https://12factor.net/ja/)の廃棄容易性の点で劣り、2, 3はAPサーバ依存となる。\n\nNablarchのHTTPセッション依存機能を非依存のものに切り替えることでAPサーバをステートレスにできる。",
+    "http-session-dependence": "以下の機能はデフォルトでHTTPセッションに依存している:\n\n- :ref:`session_store`\n- :ref:`2重サブミット防止<tag-double_submission>`\n- :ref:`thread_context_handler`\n- :ref:`http_rewrite_handler`\n- :ref:`hidden暗号化<tag-hidden_encryption>`",
+    "http-session-independent-introduction": ":ref:`http-session-dependence` の各機能をHTTPセッション非依存に切り替える方法。\n\n**セッションストア**: :ref:`db_managed_expiration` を使用する。\n\n**2重サブミット防止**: :ref:`db_double_submit` を使用する。\n\n**スレッドコンテキスト変数管理ハンドラ**: :ref:`スレッドコンテキストの初期化<thread_context_handler-initialization>` で以下の部品を代替に切り替える:\n\n| HTTPセッション依存（使用しない） | 代替（HTTPセッション非依存） |\n|---|---|\n| :java:extdoc:`LanguageAttributeInHttpSession<nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpSession>` | :java:extdoc:`LanguageAttributeInHttpCookie<nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpCookie>` |\n| :java:extdoc:`TimeZoneAttributeInHttpSession<nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpSession>` | :java:extdoc:`TimeZoneAttributeInHttpCookie<nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpCookie>` |\n| :java:extdoc:`UserIdAttribute<nablarch.common.handler.threadcontext.UserIdAttribute>` | :java:extdoc:`UserIdAttributeInSessionStore<nablarch.common.web.handler.threadcontext.UserIdAttributeInSessionStore>` |\n\n**HTTPリライトハンドラ**: :ref:`http_rewrite_handler` を使用しない。使用する場合はセッションスコープにアクセスしないよう設定する。\n\n**hidden暗号化**: :ref:`hidden暗号化<tag-hidden_encryption>` はHTTPセッションに依存するため、:ref:`useHiddenEncryption <tag-use_hidden_encryption>` に `false` を設定して無効化する。",
+    "local-filesystem": "アップロードファイル等をAPサーバのローカルに保存するとステートを持つことになる。APサーバがローカルにファイルを持たないよう、共有ストレージを用意する必要がある。",
+    "detect-session-creation": "設定漏れや実装ミスによるHTTPセッションの誤生成を検知する機能。有効化するとHTTPセッション生成時に例外が送出される。\n\n:java:extdoc:`WebFrontController<nablarch.fw.web.servlet.WebFrontController>` の `preventSessionCreation` プロパティに `true` を設定することで有効化（デフォルト: `false`）。\n\n```xml\n<!-- ハンドラキュー構成 -->\n<component name=\"webFrontController\"\n           class=\"nablarch.fw.web.servlet.WebFrontController\">\n\n  <!-- HTTPセッションの誤生成を検知する -->\n  <property name=\"preventSessionCreation\" value=\"true\" />\n```"
+  }
+}

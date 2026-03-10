@@ -1,0 +1,88 @@
+{
+  "id": "nablarch-batch-getting-started-nablarch-batch",
+  "title": "ファイルをDBに登録するバッチの作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/getting_started/nablarch_batch/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/Csv.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/CsvFormat.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/LineNumber.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/DataReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/ObjectMapper.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchAction.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html"
+  ],
+  "index": [
+    {
+      "id": "batch-execution-procedure",
+      "title": "住所ファイル登録バッチ実行手順",
+      "hints": [
+        "ZIP_CODE_DATA",
+        "TRUNCATE",
+        "ImportZipCodeFileAction",
+        "ImportZipCodeFile",
+        "import-zip-code-file.xml",
+        "mvn exec:java",
+        "nablarch.fw.launcher.Main",
+        "requestPath",
+        "diConfig",
+        "userId",
+        "バッチ実行",
+        "テーブル削除",
+        "登録確認"
+      ]
+    },
+    {
+      "id": "read-input-data",
+      "title": "入力データソースからデータを読み込む",
+      "hints": [
+        "ZipCodeForm",
+        "ZipCodeFileReader",
+        "ObjectMapperIterator",
+        "ObjectMapperFactory",
+        "FilePathSetting",
+        "DataReader",
+        "ObjectMapper",
+        "@Csv",
+        "@CsvFormat",
+        "@LineNumber",
+        "@Domain",
+        "@Required",
+        "CsvType",
+        "QuoteMode",
+        "CSVファイル読み込み",
+        "データリーダ",
+        "csv-input",
+        "importZipCode",
+        "バリデーション",
+        "行番号"
+      ]
+    },
+    {
+      "id": "execute-business-logic",
+      "title": "業務ロジックを実行する",
+      "hints": [
+        "ImportZipCodeFileAction",
+        "BatchAction",
+        "ZipCodeData",
+        "BeanUtil",
+        "UniversalDao",
+        "ZipCodeFileReader",
+        "@ValidateData",
+        "handle",
+        "createReader",
+        "Result",
+        "Result.Success",
+        "業務アクション",
+        "DBへのデータ登録",
+        "インターセプタ",
+        "バリデーション共通化"
+      ]
+    }
+  ],
+  "sections": {
+    "batch-execution-procedure": "## 住所ファイル登録バッチ実行手順\n\n### 1. 登録対象テーブルのデータを削除する\n\nH2のコンソールから下記SQLを実行し、データ登録対象テーブルのデータを削除する。\n\n```sql\nTRUNCATE TABLE ZIP_CODE_DATA;\n```\n\n### 2. 住所ファイル登録バッチを実行する\n\nコマンドプロンプトから下記コマンドを実行する。\n\n```bash\n$cd {nablarch-example-batchリポジトリ}\n$mvn exec:java -Dexec.mainClass=nablarch.fw.launcher.Main ^\n    -Dexec.args=\"'-requestPath' 'ImportZipCodeFileAction/ImportZipCodeFile' '-diConfig' 'classpath:import-zip-code-file.xml' '-userId' '105'\"\n```\n\n### 3. ファイルの内容がDBに登録されたことを確認する\n\nH2のコンソールから下記SQLを実行し、住所情報が登録されていることを確認する。\n\n```sql\nSELECT * FROM ZIP_CODE_DATA;\n```",
+    "read-input-data": "## フォームクラスの作成\n\n**クラス**: `ZipCodeForm`\n**アノテーション**: :java:extdoc:`Csv<nablarch.common.databind.csv.Csv>`, :java:extdoc:`CsvFormat<nablarch.common.databind.csv.CsvFormat>`, :java:extdoc:`LineNumber<nablarch.common.databind.LineNumber>`\n\n- :ref:`data_bind` でCSVをバインドするフォームに `@Csv` と `@CsvFormat` を付与する\n- `@Csv` の `type` 属性に `CsvType.CUSTOM` を指定し、`@CsvFormat` の `quoteMode` 属性に `QuoteMode.NORMAL` を指定する\n- :ref:`bean_validation` 実施のためバリデーションアノテーション（`@Domain`, `@Required`）を付与する\n- 行数プロパティのゲッタに `@LineNumber` を付与すると対象データの行番号が自動設定される\n\n## データリーダの作成\n\n**クラス**: `ZipCodeFileReader`（:java:extdoc:`DataReader<nablarch.fw.DataReader>` 実装）\n\n- ファイルパスの取得には `FilePathSetting.getInstance()` を使用し、`csv-input` ベースパスから `importZipCode` ファイルを取得する\n- `ObjectMapperFactory.create(ZipCodeForm.class, ...)` で `ObjectMapper` を生成し、`ObjectMapperIterator` でラップしてイテレータを作成する\n- `read`: イテレータから一行分のデータを返却し、業務アクションハンドラへ引き渡す\n- `hasNext`: 次行の有無を判定。`false` を返すとファイル読み込みが終了する\n- `close`: `ObjectMapperIterator#close()` を呼び出してストリームのclose処理を行う\n\n> **補足**: :java:extdoc:`ObjectMapper<nablarch.common.databind.ObjectMapper>` のように `hasNext` メソッドを持たないクラスからデータを読む場合、`ObjectMapperIterator` を作成するとデータリーダの実装をシンプルにできる",
+    "execute-business-logic": "## 業務アクションの作成\n\n**クラス**: `ImportZipCodeFileAction`（:java:extdoc:`BatchAction<nablarch.fw.action.BatchAction>` 継承）\n\n- `handle`: データリーダから渡された一行分のデータに対する処理を実装する。`BeanUtil.createAndCopy(ZipCodeData.class, inputData)` でフォームをエンティティ（`ZipCodeData`）に変換し、:java:extdoc:`UniversalDao.insert<nablarch.common.dao.UniversalDao.insert(java.lang.Object)>` でDBに登録する。処理成功時は `return new Result.Success();` を返す\n- `createReader`: 使用するデータリーダクラス（`ZipCodeFileReader`）のインスタンスを返す\n- `@ValidateData` インターセプタにより、`handle` メソッドには常にバリデーション済みの入力データが引き渡される\n\n> **補足**: :ref:`bean_validation` のロジックはバッチ間で差がないため、インターセプタ（`@ValidateData`）を作成してバリデーション処理を共通化できる"
+  }
+}

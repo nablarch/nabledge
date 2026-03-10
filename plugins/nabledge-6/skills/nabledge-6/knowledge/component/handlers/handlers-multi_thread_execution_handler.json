@@ -1,0 +1,110 @@
+{
+  "id": "handlers-multi_thread_execution_handler",
+  "title": "マルチスレッド実行制御ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/standalone/multi_thread_execution_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.MultiStatus.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/ExecutionHandlerCallback.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "overview",
+      "title": "概要",
+      "hints": [
+        "マルチスレッド実行制御ハンドラ",
+        "サブスレッド",
+        "並行実行",
+        "MultiStatus",
+        "nablarch.fw.Result.MultiStatus",
+        "処理結果",
+        "集約"
+      ]
+    },
+    {
+      "id": "handler-class-name",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "MultiThreadExecutionHandler",
+        "nablarch.fw.handler.MultiThreadExecutionHandler",
+        "ハンドラクラス名"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-standalone",
+        "モジュール一覧",
+        "依存関係"
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "制約",
+      "hints": [
+        "制約",
+        "マルチスレッド実行制御ハンドラ",
+        "スタンドアロン"
+      ]
+    },
+    {
+      "id": "thread-count",
+      "title": "スレッド数を指定する",
+      "hints": [
+        "concurrentNumber",
+        "スレッド数",
+        "並列実行",
+        "スレッドセーフ",
+        "多重実行"
+      ]
+    },
+    {
+      "id": "callback",
+      "title": "スレッド起動前後で任意の処理を実行したい",
+      "hints": [
+        "ExecutionHandlerCallback",
+        "nablarch.fw.handler.ExecutionHandlerCallback",
+        "preExecution",
+        "errorInExecution",
+        "postExecution",
+        "コールバック処理",
+        "サブスレッド起動前後",
+        "トランザクション確定"
+      ]
+    },
+    {
+      "id": "database-connection-config",
+      "title": "データベース接続に関する設定について",
+      "hints": [
+        "database_connection_management_handler",
+        "データベース接続設定",
+        "DBコネクション数",
+        "親スレッド",
+        "サブスレッド"
+      ]
+    },
+    {
+      "id": "exception-behavior",
+      "title": "サブスレッドでの例外発生時の振る舞い",
+      "hints": [
+        "ThreadPoolExecutor",
+        "InterruptedException",
+        "サブスレッド例外",
+        "shutdownNow",
+        "ロールバック",
+        "割り込み処理"
+      ]
+    }
+  ],
+  "sections": {
+    "overview": "サブスレッドを作成し、ハンドラキュー上の後続ハンドラの処理を各サブスレッド上で並行実行するハンドラ。\n\n**処理結果**: このハンドラでの処理結果は、各サブスレッドでの実行結果を集約したオブジェクト（`nablarch.fw.Result.MultiStatus`）となる。\n\n本ハンドラでは以下の処理を行う:\n- サブスレッド起動前のコールバック処理\n- サブスレッドの起動\n- サブスレッドでの後続ハンドラの実行\n- サブスレッドで例外及びエラー発生時のコールバック処理\n- サブスレッドでの処理終了後のコールバック処理",
+    "handler-class-name": "**クラス名**: `nablarch.fw.handler.MultiThreadExecutionHandler`",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-standalone</artifactId>\n</dependency>\n```",
+    "constraints": "特に無し",
+    "thread-count": "デフォルトはサブスレッド1つ。`concurrentNumber` プロパティで後続ハンドラの並列実行数を変更可能。\n\n```xml\n<component class=\"nablarch.fw.handler.MultiThreadExecutionHandler\">\n  <!-- 後続ハンドラを8多重で実行する -->\n  <property name=\"concurrentNumber\" value=\"8\" />\n</component>\n```\n\n> **重要**: 本ハンドラ以降の処理を複数スレッドで実行する場合、後続のハンドラやバッチアクションはスレッドセーフな実装が必要。スレッドセーフでない処理を複数スレッドで実行すると、予期せぬ例外やデータ不整合が発生する。",
+    "callback": "コールバック処理は以下の3タイミングで実行される:\n\n1. サブスレッド起動前\n2. サブスレッドで例外発生後の全スレッド終了後\n3. 全サブスレッド終了後（サブスレッドで例外が発生した場合でも実行）\n\nコールバック対象: このハンドラより後続に設定されたハンドラで `ExecutionHandlerCallback` を実装しているもの。複数のハンドラが実装している場合は、より手前のハンドラから順に実行される。\n\n> **重要**: コールバック処理中にエラーや例外が発生した場合、残りのハンドラへのコールバック処理は実行されない。\n\n> **重要**: コールバック処理でのDB操作は、親スレッド側のDBコネクションとトランザクションが使用される。コールバック内での更新は本ハンドラ終了後に親スレッドの `:ref:transaction_management_handler` でコミットされる。即時確定が必要な場合は個別トランザクションを使用すること（`:ref:universal_dao-transaction`、`:ref:database-new_transaction` 参照）。\n\n```java\npublic class SampleHandler implements Handler<Object, Result>, ExecutionHandlerCallback<Object, Result> {\n\n  @Override\n  public Result handle(Object input, ExecutionContext context) {\n    return context.handleNext(input);\n  }\n\n  @Override\n  public void preExecution(Object input, ExecutionContext context) {\n    // サブスレッド起動前のコールバック処理\n  }\n\n  @Override\n  public void errorInExecution(Throwable error, ExecutionContext context) {\n    // サブスレッドでエラーが発生した場合のコールバック処理\n  }\n\n  @Override\n  public void postExecution(Result result, ExecutionContext context) {\n    // サブスレッド終了後のコールバック処理\n    if (result.isSuccess()) {\n        // サブスレッドが正常終了\n    } else {\n        // サブスレッドが異常終了\n    }\n  }\n}\n```",
+    "database-connection-config": "- 親スレッド側でDBアクセスが必要な場合: 本ハンドラより前に `:ref:database_connection_management_handler` の設定が必要\n- サブスレッド側でDBアクセスが必要な場合: 本ハンドラより後のサブスレッドで実行されるハンドラ構成に `:ref:database_connection_management_handler` の設定が必要（トランザクション制御ハンドラも同様）\n- 親スレッド・サブスレッドの両方でDBアクセスする場合、最低2つのDBコネクションが必要。サブスレッドが複数の場合はスレッド数分が追加で必要（例: サブスレッド10の場合、合計11コネクション）",
+    "exception-behavior": "サブスレッドで予期せぬ例外が発生した場合、`ThreadPoolExecutor#shutdownNow()` を呼び出し、他の処理中のサブスレッドをデータ処理完了後に安全に終了させる。\n\nサブスレッドに `:ref:database_connection_management_handler` および `:ref:transaction_management_handler` を設定した場合の例外時の動作:\n\n1. 例外が発生したサブスレッドは処理が中断されロールバックされる\n2. 親スレッドは各サブスレッドで使用されるデータリーダをクローズする\n3. 親スレッドは全サブスレッドに対し停止要求を行う\n4. 各サブスレッドはデータリーダがクローズされているため、実行中の処理が終わったタイミングで正常終了する\n\n> **重要**: `InterruptedException` を捕捉している場合は、割り込み要求により安全に処理できないことを示しているため、例外を送出する等で処理を異常終了させること。"
+  }
+}

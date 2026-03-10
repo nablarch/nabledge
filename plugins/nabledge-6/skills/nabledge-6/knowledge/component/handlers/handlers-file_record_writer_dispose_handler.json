@@ -1,0 +1,68 @@
+{
+  "id": "handlers-file_record_writer_dispose_handler",
+  "title": "出力ファイル開放ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/common/file_record_writer_dispose_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/io/FileRecordWriterHolder.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/io/FileRecordWriterDisposeHandler.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "overview",
+      "title": "概要",
+      "hints": [
+        "出力ファイル開放ハンドラとは",
+        "FileRecordWriterDisposeHandler概要",
+        "出力ファイルを閉じる",
+        "リソース解放ハンドラ"
+      ]
+    },
+    {
+      "id": "handler-class",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "FileRecordWriterDisposeHandler",
+        "nablarch.common.io.FileRecordWriterDisposeHandler",
+        "出力ファイル開放ハンドラ",
+        "ハンドラクラス"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-core-dataformat",
+        "com.nablarch.framework",
+        "汎用データフォーマット",
+        "モジュール依存関係"
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "制約",
+      "hints": [
+        "制約なし",
+        "出力ファイル開放ハンドラ制約"
+      ]
+    },
+    {
+      "id": "handler-queue-configuration",
+      "title": "ハンドラキューへの設定について",
+      "hints": [
+        "FileRecordWriterHolder",
+        "nablarch.common.io.FileRecordWriterHolder",
+        "ハンドラキュー設定",
+        "出力ファイル自動クローズ",
+        "リソース解放"
+      ]
+    }
+  ],
+  "sections": {
+    "overview": "業務アクションやハンドラで開いた出力ファイルを閉じる(リソースの解放)ハンドラ。解放対象となるのは `FileRecordWriterHolder` を使用して開いた出力ファイルのみ。`java.io` パッケージ等の他のAPIで開いたリソースは個別にクローズ処理を行うこと。",
+    "handler-class": "**クラス**: `nablarch.common.io.FileRecordWriterDisposeHandler`",
+    "module-list": "**モジュール**:\n```xml\n<!-- 汎用データフォーマット -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-dataformat</artifactId>\n</dependency>\n```",
+    "constraints": "出力ファイル開放ハンドラに固有の制約はない。",
+    "handler-queue-configuration": "> **重要**: 解放対象は `FileRecordWriterHolder` を使用して開いた出力ファイルのみ。`java.io` パッケージ等で開いたリソースは個別にクローズ処理を行うこと。\n\nハンドラキューに設定するだけで、後続ハンドラや業務アクションで開いた出力ファイルを自動的にクローズする。ファイルを出力する全てのハンドラより手前に設定すること。"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "id": "handlers-permission_check_handler",
+  "title": "認可チェックハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/common/permission_check_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/permission/PermissionFactory.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/threadcontext/InternalRequestIdAttribute.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/permission/Permission.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/Forbidden.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/permission/PermissionCheckHandler.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "handler-class",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "PermissionCheckHandler",
+        "nablarch.common.permission.PermissionCheckHandler",
+        "PermissionFactory",
+        "nablarch.common.permission.PermissionFactory",
+        "認可チェックハンドラ",
+        "ハンドラクラス"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-common-auth",
+        "com.nablarch.framework",
+        "モジュール",
+        "依存関係"
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "制約",
+      "hints": [
+        "InternalRequestIdAttribute",
+        "nablarch.common.handler.threadcontext.InternalRequestIdAttribute",
+        "ハンドラ配置順序",
+        "制約",
+        "スレッドコンテキスト",
+        "内部リクエストID"
+      ]
+    },
+    {
+      "id": "request-permission-check",
+      "title": "リクエストに対する認可チェック",
+      "hints": [
+        "PermissionCheckHandler",
+        "Permission",
+        "nablarch.common.permission.Permission",
+        "Forbidden",
+        "nablarch.fw.results.Forbidden",
+        "setUsesInternalRequestId",
+        "リクエスト認可チェック",
+        "権限チェック",
+        "403エラー",
+        "内部リクエストID"
+      ]
+    },
+    {
+      "id": "error-page-for-forbidden",
+      "title": "権限がない場合に表示するエラーページを指定する",
+      "hints": [
+        "エラーページ指定",
+        "403エラーページ",
+        "HTTPエラー制御ハンドラ",
+        "HttpErrorHandler_DefaultPage"
+      ]
+    },
+    {
+      "id": "exclude-from-permission-check",
+      "title": "特定のリクエストを認可チェックから除外する",
+      "hints": [
+        "setIgnoreRequestIds",
+        "PermissionCheckHandler",
+        "nablarch.common.permission.PermissionCheckHandler",
+        "認可チェック除外",
+        "ログイン前リクエスト"
+      ]
+    }
+  ],
+  "sections": {
+    "handler-class": "**クラス名**: `nablarch.common.permission.PermissionCheckHandler`\n\n本ハンドラを使用するには、:java:extdoc:`PermissionFactory <nablarch.common.permission.PermissionFactory>` を実装したクラスを本ハンドラに設定する必要がある。",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth</artifactId>\n</dependency>\n```",
+    "constraints": "- :ref:`thread_context_handler` より後ろに配置すること。スレッドコンテキスト上のリクエストIDとユーザIDをもとに認可チェックを行うため。\n- :ref:`forwarding_handler` より後ろに配置すること。内部フォーワード先の :ref:`内部リクエストID <internal_request_id>` をもとに認可チェックしたい場合。この場合、:ref:`thread_context_handler` の `attributes` に :java:extdoc:`InternalRequestIdAttribute <nablarch.common.handler.threadcontext.InternalRequestIdAttribute>` を追加すること。\n- :ref:`http_error_handler` より後ろに配置すること。認可チェックエラー時に表示するエラーページを指定するため。",
+    "request-permission-check": "ログイン中のユーザが現在のリクエスト（リクエストID）に対して権限を持っているかをチェックする（詳細は :ref:`permission_check` 参照）。\n\n- **権限がある場合**: :java:extdoc:`Permission <nablarch.common.permission.Permission>` をスレッドローカルに設定し、後続ハンドラを呼び出す。:ref:`permission_check-server_side_check` や :ref:`permission_check-view_control` で参照可能。\n- **権限がない場合**: :java:extdoc:`Forbidden(403) <nablarch.fw.results.Forbidden>` を送出する。\n\nチェック対象のリクエストIDをフォーワード先のリクエストIDに変更する場合は、:java:extdoc:`PermissionCheckHandler.setUsesInternalRequestId <nablarch.common.permission.PermissionCheckHandler.setUsesInternalRequestId(boolean)>` で `true` を指定する（デフォルト: `false`）。",
+    "error-page-for-forbidden": "権限がない場合に表示するエラーページは、:ref:`http_error_handler` （HTTPエラー制御ハンドラ）で指定する。指定方法は :ref:`HttpErrorHandler_DefaultPage` 参照。",
+    "exclude-from-permission-check": "認可チェックを除外したいリクエスト（ログイン前のリクエストなど）は、:java:extdoc:`PermissionCheckHandler.setIgnoreRequestIds <nablarch.common.permission.PermissionCheckHandler.setIgnoreRequestIds(java.lang.String...)>` で指定する。\n\n```xml\n<component name=\"permissionCheckHandler\"\n           class=\"nablarch.common.permission.PermissionCheckHandler\">\n  <property name=\"permissionFactory\" ref=\"permissionFactory\"/>\n  <!-- 認可チェックを除外するリクエストIDをカンマ区切りで指定する -->\n  <property name=\"ignoreRequestIds\" value=\"/action/login,/action/logout\" />\n</component>\n```"
+  }
+}

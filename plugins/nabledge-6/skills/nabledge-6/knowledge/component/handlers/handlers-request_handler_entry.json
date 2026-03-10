@@ -1,0 +1,68 @@
+{
+  "id": "handlers-request_handler_entry",
+  "title": "リクエストハンドラエントリ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/common/request_handler_entry.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/RequestHandlerEntry.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "handler-class-name",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "RequestHandlerEntry",
+        "nablarch.fw.RequestHandlerEntry",
+        "リクエストパスフィルタリング",
+        "条件付きハンドラ呼び出し",
+        "特定URLハンドラ"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-core",
+        "com.nablarch.framework",
+        "モジュール依存関係"
+      ]
+    },
+    {
+      "id": "constraint",
+      "title": "制約",
+      "hints": [
+        "制約なし"
+      ]
+    },
+    {
+      "id": "usage-example",
+      "title": "本ハンドラの使用例",
+      "hints": [
+        "requestPattern",
+        "handler",
+        "ResourceMapping",
+        "WebFrontController",
+        "静的コンテンツダウンロード",
+        "JPEGファイルダウンロード"
+      ]
+    },
+    {
+      "id": "request-pattern-variations",
+      "title": "リクエストパターン指定のバリエーション",
+      "hints": [
+        "requestPattern",
+        "ワイルドカード",
+        "Glob式",
+        "前方一致",
+        "パターンマッチング"
+      ]
+    }
+  ],
+  "sections": {
+    "handler-class-name": "特定のリクエストパスのみ委譲先のハンドラを呼び出す特殊なハンドラ。ハンドラを修正せずに「特定のURLのみハンドラの処理を行う」機能を実現できる。:ref:`resource_mapping` との組み合わせで静的コンテンツの一括ダウンロード、:ref:`database_connection_management_handler` や :ref:`transaction_management_handler` との組み合わせで特定URLのみDB接続を変える用途にも使用できる。\n\n処理: リクエストパスがマッチするか判定し、対象であれば委譲先のハンドラを呼び出す。\n\n**クラス名**: `nablarch.fw.RequestHandlerEntry`",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n```",
+    "constraint": "なし。",
+    "usage-example": "`requestPattern` プロパティに処理対象リクエストパスを、`handler` プロパティに委譲先ハンドラを設定する。\n\n```xml\n<component name=\"imgMapping\"\n           class=\"nablarch.fw.web.handler.ResourceMapping\">\n  <property name=\"baseUri\" value=\"/\"/>\n  <property name=\"basePath\" value=\"servlet:///\"/>\n</component>\n\n<component name=\"webFrontController\"\n           class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component class=\"nablarch.fw.handler.GlobalErrorHandler\"/>\n      <component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\"/>\n      <component class=\"nablarch.common.io.FileRecordWriterDisposeHandler\" />\n      <component class=\"nablarch.fw.web.handler.HttpResponseHandler\"/>\n      <!-- 拡張子が \".jpg\" である静的JPGファイルのダウンロードを行う設定 -->\n      <component class=\"nablarch.fw.RequestHandlerEntry\">\n        <property name=\"requestPattern\" value=\"//*.jpg\"/>\n        <property name=\"handler\" ref=\"imgMapping\"/>\n      </component>\n      <!--\n        \"*.jpg\" で終わるJPEGファイルのダウンロード以外のリクエストでは、\n        以下のハンドラの呼び出しが行われる\n        -->\n      <component-ref name=\"multipartHandler\"/>\n      <component-ref name=\"sessionStoreHandler\" />\n```",
+    "request-pattern-variations": "`requestPattern` プロパティはGlob式に似た書式で設定する。`*` は `/` および `.` にはマッチしない。\n\n| requestPattern | リクエストパス | 結果 |\n|---|---|---|\n| `/` | `/` | 呼ばれる |\n| `/` | `/index.jsp` | 呼ばれない |\n| `/*` | `/` | 呼ばれる |\n| `/*` | `/app` | 呼ばれる |\n| `/*` | `/app/` | 呼ばれない（`*` は`/`にはマッチしない） |\n| `/*` | `/index.jsp` | 呼ばれない（`*` は`.`にはマッチしない） |\n| `/app/*.jsp` | `/app/index.jsp` | 呼ばれる |\n| `/app/*.jsp` | `/app/admin` | 呼ばれない |\n| `/app/*/test` | `/app/admin/test` | 呼ばれる |\n| `/app/*/test` | `/app/test/` | 呼ばれない |\n\n末尾の `/` が `//` と重ねられている場合、それ以前の文字列について前方一致すればマッチ成功と判定する。\n\n| requestPattern | リクエストパス | 結果 |\n|---|---|---|\n| `/app//` | `/` | 呼ばれない |\n| `/app//` | `/app/` | 呼ばれる |\n| `/app//` | `/app/admin/` | 呼ばれる |\n| `/app//` | `/app/admin/index.jsp` | 呼ばれる |\n| `//*.jsp` | `/app/index.jsp` | 呼ばれる |\n| `//*.jsp` | `/app/admin/index.jsp` | 呼ばれる |\n| `//*.jsp` | `/app/index.html` | 呼ばれない（`*.jsp`がマッチしない） |"
+  }
+}

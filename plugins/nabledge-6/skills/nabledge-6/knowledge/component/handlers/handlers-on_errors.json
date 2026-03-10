@@ -1,0 +1,51 @@
+{
+  "id": "handlers-on_errors",
+  "title": "OnErrorsインターセプタ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web_interceptor/on_errors.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnErrors.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnError.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "interceptor-class-name",
+      "title": "インターセプタクラス名",
+      "hints": [
+        "OnErrors",
+        "nablarch.fw.web.interceptor.OnErrors",
+        "例外インターセプタ",
+        "レスポンス指定",
+        "業務アクション例外処理"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "モジュール依存関係"
+      ]
+    },
+    {
+      "id": "using-on-errors",
+      "title": "OnErrorsを使用する",
+      "hints": [
+        "@OnErrors",
+        "@OnError",
+        "nablarch.fw.web.interceptor.OnError",
+        "UserLockedException",
+        "AuthenticationException",
+        "ApplicationException",
+        "例外ハンドリング",
+        "継承関係",
+        "サブクラス優先定義"
+      ]
+    }
+  ],
+  "sections": {
+    "interceptor-class-name": "業務アクションでの例外発生時に、指定したレスポンスを返却するインターセプタ。複数の例外に対してレスポンスを指定できる。\n\n業務アクションのメソッドに :java:extdoc:`OnErrors <nablarch.fw.web.interceptor.OnErrors>` アノテーションを設定することで有効となる。\n\n**クラス**: `nablarch.fw.web.interceptor.OnErrors`",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "using-on-errors": ":java:extdoc:`OnErrors <nablarch.fw.web.interceptor.OnErrors>` アノテーションをリクエスト処理メソッドに設定する。各例外に対するレスポンスは :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` で指定する。\n\n**アノテーション**: `@OnErrors`, `@OnError`\n\n```java\n@OnErrors({\n        @OnError(type = UserLockedException.class, path = \"/WEB-INF/view/login/locked.jsp\"),\n        @OnError(type = AuthenticationException.class, path = \"/WEB-INF/view/login/index.jsp\"),\n        @OnError(type = ApplicationException.class, path = \"/WEB-INF/view/login/index.jsp\")\n})\npublic HttpResponse handle(HttpRequest request, ExecutionContext context) {\n    // 業務処理は省略\n}\n```\n\n> **重要**: :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` の定義順に例外を処理するため、継承関係にある例外を定義する場合は、必ずサブクラスの例外から先に定義すること。"
+  }
+}

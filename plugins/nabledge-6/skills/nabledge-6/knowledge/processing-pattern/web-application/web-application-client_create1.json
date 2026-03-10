@@ -1,0 +1,31 @@
+{
+  "id": "web-application-client_create1",
+  "title": "登録画面初期表示の作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/client_create/client_create1.html"
+  ],
+  "index": [
+    {
+      "id": "initial-display",
+      "title": "登録画面初期表示の作成",
+      "hints": [
+        "HttpRequest",
+        "HttpResponse",
+        "ExecutionContext",
+        "UniversalDao",
+        "EntityList",
+        "Industry",
+        "ClientAction",
+        "登録画面初期表示",
+        "リクエストスコープ",
+        "URLマッピング",
+        "業務アクションメソッド",
+        "プルダウン初期データ取得"
+      ]
+    }
+  ],
+  "sections": {
+    "initial-display": "## JSP実装\n\n:download:`create.jsp <../downloads/client_create/create.jsp>`\n\n`/src/main/webapp/WEB-INF/view/client/create.jsp`:\n\n```jsp\n<n:form>\n    <div class=\"row m-3\">\n        <label class=\"col-md-2 col-form-label fs-5\">顧客名</label>\n        <!-- フォーム作成前なので、name属性には仮の値を指定する -->\n        <div class=\"col-md-10 form-group\">\n            <n:text name=\"tmp\" cssClass=\"form-control form-control-lg\"/>\n        </div>\n    </div>\n    <div class=\"row m-3\">\n        <label class=\"col-md-2 col-form-label fs-5\">業種</label>\n        <!-- フォーム作成前なので、name属性には仮の値を指定する -->\n        <div class=\"col-md-10 form-group\">\n            <n:select\n                    listName=\"industries\"\n                    elementValueProperty=\"industryCode\"\n                    elementLabelProperty=\"industryName\"\n                    name=\"tmp\"\n                    withNoneOption=\"true\"\n                    cssClass=\"form-select form-select-lg\"/>\n        </div>\n    </div>\n    <div class=\"button-nav\">\n        <!-- 登録内容確認画面は作成前なので、uri属性には仮の値を指定する -->\n        <n:button uri=\"tmp\" cssClass=\"btn btn-lg btn-success\">登録</n:button>\n    </div>\n</n:form>\n```\n\n- `name=\"tmp\"` および `uri=\"tmp\"` はフォームや遷移先画面が未作成の段階での仮の値\n- :ref:`tag` を使用してテキスト入力フォーム・プルダウンを作成する（:ref:`tag-input_form` 参照）\n- :ref:`tag-select_tag` の `listName` 属性に、リクエストスコープに登録する業種リストの名称を指定してプルダウンに表示する（:ref:`tag-selection` 参照）\n\n## 業務アクション実装\n\n業務アクションメソッドのシグネチャ要件（満たさない場合は404エラー）：\n\n```java\npublic HttpResponse methodName(HttpRequest request, ExecutionContext context)\n```\n\n| パラメータ | 説明 |\n|---|---|\n| request | フレームワークから受け渡されるリクエストオブジェクト |\n| context | フレームワークから受け渡される実行コンテキスト |\n| 戻り値 | 遷移先を設定したレスポンスオブジェクト |\n\n実装例（`ClientAction.java`）：\n\n```java\npublic HttpResponse input(HttpRequest request, ExecutionContext context) {\n    EntityList<Industry> industries = UniversalDao.findAll(Industry.class);\n    context.setRequestScopedVar(\"industries\", industries);\n    return new HttpResponse(\"/WEB-INF/view/client/create.jsp\");\n}\n```\n\n- :ref:`universal_dao` を使用してデータベースから業種情報を全件取得する\n- 取得した業種リストをリクエストスコープに登録してJSPへ値を受け渡す\n\n## URLマッピング (routes.xml)\n\nマッピング処理はOSSライブラリの `http_request_router` ([外部サイト](https://github.com/kawasima/http-request-router)) を使用して行う。\n\n```xml\n<routes>\n  <get path=\"/action/client\" to=\"Client#input\"/>\n</routes>\n```\n\nroutes.xmlは上から評価されるため、このマッピングは他の設定より前に記述する。\n\n> **補足**: routes.xmlの指定方法は、[ライブラリのREADMEドキュメント(外部サイト)](https://github.com/kawasima/http-request-router/blob/master/README.ja.md) を参照。\n\n## ヘッダメニューへのリンク追加\n\n`/src/main/webapp/WEB-INF/view/common/menu.jsp`:\n\n```jsp\n<ul class=\"navbar-nav me-auto\">\n  <li class=\"nav-item px-2\">\n    <n:a href=\"/action/client\" cssClass=\"nav-link\">顧客登録</n:a>\n  </li>\n</ul>\n```\n\n- :ref:`tag` の :ref:`tag-a_tag` を使用してリンクを作成する"
+  }
+}

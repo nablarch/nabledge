@@ -1,0 +1,142 @@
+{
+  "id": "handlers-multipart_handler",
+  "title": "マルチパートリクエストハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/multipart_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/upload/MultipartHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/upload/UploadSettings.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpRequest.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "handler-class",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "MultipartHandler",
+        "nablarch.fw.web.upload.MultipartHandler",
+        "マルチパートリクエストハンドラ",
+        "ハンドラクラス"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "nablarch-core",
+        "モジュール依存関係",
+        "Maven"
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "制約",
+      "hints": [
+        "制約",
+        "マルチパートハンドラ制約"
+      ]
+    },
+    {
+      "id": "operation-conditions",
+      "title": "このハンドラの動作条件",
+      "hints": [
+        "Content-Type",
+        "multipart/form-data",
+        "動作条件",
+        "マルチパート判定",
+        "リクエスト振り分け"
+      ]
+    },
+    {
+      "id": "temp-storage-config",
+      "title": "アップロードファイルの一時保存先を指定する",
+      "hints": [
+        "uploadFileTmpDir",
+        "file_path_management",
+        "FilePathSetting",
+        "一時保存先ディレクトリ",
+        "java.io.tmpdir",
+        "アップロード一時ファイル"
+      ]
+    },
+    {
+      "id": "file-size-limit",
+      "title": "巨大なファイルのアップロードを防ぐ",
+      "hints": [
+        "contentLengthLimit",
+        "UploadSettings",
+        "413",
+        "Payload Too Large",
+        "ファイルサイズ上限",
+        "DoS攻撃対策",
+        "アップロードサイズ制限"
+      ]
+    },
+    {
+      "id": "max-file-count",
+      "title": "ファイルの大量アップロードを防ぐ",
+      "hints": [
+        "maxFileCount",
+        "UploadSettings",
+        "400",
+        "Bad Request",
+        "ファイル数上限",
+        "大量アップロード防止"
+      ]
+    },
+    {
+      "id": "temp-file-cleanup",
+      "title": "一時ファイルの削除（クリーニング）を行う",
+      "hints": [
+        "autoCleaning",
+        "UploadSettings",
+        "一時ファイル削除",
+        "クリーニング",
+        "自動削除設定",
+        "ディスクフル防止"
+      ]
+    },
+    {
+      "id": "error-page-config",
+      "title": "マルチパート解析エラー及びファイルサイズ上限超過時の遷移先画面を設定する",
+      "hints": [
+        "web.xml",
+        "400",
+        "BadRequest",
+        "エラーページ設定",
+        "session_store_handler",
+        "http_error_handler",
+        "マルチパート解析エラー"
+      ]
+    },
+    {
+      "id": "read-upload-file",
+      "title": "アップロードしたファイルを読み込む",
+      "hints": [
+        "HttpRequest",
+        "getPart",
+        "PartInfo",
+        "data_bind",
+        "data_format",
+        "アップロードファイル読み込み",
+        "一時ファイル取得",
+        "バイナリファイル",
+        "getSavedFile",
+        "InputStream"
+      ]
+    }
+  ],
+  "sections": {
+    "handler-class": "**クラス名**: `nablarch.fw.web.upload.MultipartHandler`",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```\n一時保存先を指定する場合のみ:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n```",
+    "constraints": "なし。",
+    "operation-conditions": "リクエストヘッダの `Content-Type` が `multipart/form-data` と一致する場合のみリクエストボディを解析する。それ以外の場合は何もせず後続ハンドラに委譲する。",
+    "temp-storage-config": "一時保存先ディレクトリは :ref:`file_path_management` に設定する。論理名は `uploadFileTmpDir` とすること。未設定の場合はシステムプロパティ `java.io.tmpdir` の値を使用する。\n\n> **補足**: 保存先ディレクトリの値は環境ごとに異なるため、コンポーネント設定ファイルではなく環境設定ファイルへの設定を推奨する。詳細は :ref:`repository-environment_configuration` 参照。\n\n```xml\n<component name=\"filePathSetting\" class=\"nablarch.core.util.FilePathSetting\">\n  <property name=\"basePathSettings\">\n    <map>\n      <entry key=\"uploadFileTmpDir\" value=\"file:/var/nablarch/uploadTmpDir\" />\n    </map>\n  </property>\n</component>\n```",
+    "file-size-limit": "アップロードサイズの上限を超過した場合、413(Payload Too Large)をクライアントに返却する。設定省略時は無制限となる。DoS攻撃防止のため常に設定すること。\n\n> **補足**: アップロードサイズの上限はファイル単位ではなく1リクエスト全体の上限。複数ファイルの場合はファイルサイズ合計値（Content-Length）でチェックされる。ファイル単位でのサイズチェックが必要な場合はアクション側で実装すること。\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| contentLengthLimit | | | 無制限 | アップロードサイズ(Content-Length)の上限(バイト数) |\n\n```xml\n<component class=\"nablarch.fw.web.upload.MultipartHandler\" name=\"multipartHandler\">\n  <property name=\"uploadSettings\">\n    <component class=\"nablarch.fw.web.upload.UploadSettings\">\n      <property name=\"contentLengthLimit\" value=\"1000000\" />\n    </component>\n  </property>\n</component>\n```",
+    "max-file-count": "上限を超えるファイルがアップロードされた場合、400(Bad Request)を返す。`maxFileCount` に0以上の値を設定するとその値が上限となる。負数を設定した場合は無制限。未設定時のデフォルトは-1（無制限）。\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| maxFileCount | | | -1 | 一度にアップロードできるファイル数の上限。0以上: 上限値、負数: 無制限 |\n\n```xml\n<component class=\"nablarch.fw.web.upload.MultipartHandler\" name=\"multipartHandler\">\n  <property name=\"uploadSettings\">\n    <component class=\"nablarch.fw.web.upload.UploadSettings\">\n      <property name=\"maxFileCount\" value=\"100\" />\n    </component>\n  </property>\n</component>\n```",
+    "temp-file-cleanup": "クリーニング実行条件:\n1. ボディの解析中に例外が発生した場合\n2. ハンドラの復路で自動削除設定が有効な場合\n\n自動削除設定はデフォルトで有効。本番環境で安易に無効にすると大量の一時ファイルがディスク上に残り、ディスクフルの原因となるため注意すること。無効にする場合は :java:extdoc:`UploadSettings#autoCleaning <nablarch.fw.web.upload.UploadSettings.setAutoCleaning(boolean)>` に `false` を設定する。",
+    "error-page-config": "マルチパート解析エラーおよびファイルサイズ上限超過時に400(BadRequest)をクライアントに返却する。`web.xml` に400に対応したエラーページを設定すること。設定を省略した場合は、ウェブアプリケーションサーバが持つデフォルトのページなどがクライアントに返却される。\n\n> **重要**: このハンドラは :ref:`session_store_handler` より手前に設定する必要がある。このため、後続に設定される :ref:`http_error_handler` の :ref:`HttpErrorHandler_DefaultPage` は使用できない。\n\nマルチパート解析エラーが発生するケース:\n- アップロード中にクライアントからの切断要求があり、ボディ部が不完全な場合\n- バウンダリーが存在しない場合",
+    "read-upload-file": ":java:extdoc:`HttpRequest <nablarch.fw.web.HttpRequest>` の :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` を呼び出してアップロードファイルを取得する。引数にはパラメータ名を指定する。\n\n```java\npublic HttpResponse upload(HttpRequest request, ExecutionContext context) throws IOException {\n    List<PartInfo> partInfoList = request.getPart(\"uploadFile\");\n\n    if (partInfoList.isEmpty()) {\n        // アップロードファイルが指定されていなかった場合は業務エラー\n    }\n\n    InputStream file = partInfoList.get(0).getInputStream();\n    // 以下アップロードファイルを読み込み処理を行う。\n}\n```\n\nアップロードファイルの処理には :ref:`data_bind` が推奨。扱えない形式の場合は :ref:`data_format` を使用すること。\n\n> **補足**: バイナリファイル（画像等）の場合は以下のようにバイトデータを読み込むこと。\n>\n> ```java\n> File savedFile = partInfo.getSavedFile();\n> try {\n>     byte[] bytes = Files.readAllBytes(savedFile.toPath());\n> } catch (IOException e) {\n>     throw new RuntimeException(e);\n> }\n> ```"
+  }
+}

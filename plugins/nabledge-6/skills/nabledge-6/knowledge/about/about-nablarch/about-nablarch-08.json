@@ -1,0 +1,136 @@
+{
+  "id": "about-nablarch-08",
+  "title": "HTMLメール送信機能サンプル",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/08/index.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "implemented",
+      "title": "実装済み",
+      "hints": [
+        "HTMLメール送信",
+        "代替テキスト",
+        "HTMLエスケープ",
+        "セキュリティ対策",
+        "一括送信非対応",
+        "メールクライアント差異",
+        "レスポンシブデザイン非推奨",
+        "mail"
+      ]
+    },
+    {
+      "id": "withdrawn",
+      "title": "取り下げ",
+      "hints": [
+        "未対応機能",
+        "画像埋めこみ非対応",
+        "クライアント差異吸収非対応",
+        "取り下げ要求"
+      ]
+    },
+    {
+      "id": "mail-format",
+      "title": "メールの形式",
+      "hints": [
+        "TemplateMailContext",
+        "TemplateHtmlMailContext",
+        "メール形式",
+        "メール構造パターン",
+        "添付ファイル",
+        "TEXT",
+        "HTML"
+      ]
+    },
+    {
+      "id": "class-diagram",
+      "title": "クラス図",
+      "hints": [
+        "HtmlMailRequester",
+        "TemplateHtmlMailContext",
+        "HtmlMailTable",
+        "HtmlMailSender",
+        "HtmlMailContentCreator",
+        "MailRequester",
+        "MailSender",
+        "クラス構成",
+        "コンポーネント設定",
+        "mailRequester"
+      ]
+    },
+    {
+      "id": "data-model",
+      "title": "データモデル",
+      "hints": [
+        "HTMLメール用代替テキストテンプレートテーブル",
+        "HTMLメール用代替テキストテーブル",
+        "メールテンプレートID",
+        "言語",
+        "代替テキスト",
+        "メール送信要求ID",
+        "データモデル"
+      ]
+    },
+    {
+      "id": "send-html-mail",
+      "title": "HTMLメールの送信",
+      "hints": [
+        "HTMLメール送信実装",
+        "TemplateMailContext",
+        "TemplateHtmlMailContext",
+        "定型メール送信"
+      ]
+    },
+    {
+      "id": "dynamic-content-switching",
+      "title": "コンテンツの動的な切替",
+      "hints": [
+        "TemplateHtmlMailContext",
+        "contentType",
+        "text/plain",
+        "text/html",
+        "コンテンツ切替",
+        "動的切替",
+        "代替テキスト切替"
+      ]
+    },
+    {
+      "id": "digital-signature",
+      "title": "電子署名の併用",
+      "hints": [
+        "HtmlMailRequester",
+        "HtmlMailTable",
+        "HtmlMailContentCreator",
+        "SMIMESignedMailSender",
+        "電子署名",
+        "S/MIME",
+        "HTMLメール併用",
+        "bouncycastle_mail_sample"
+      ]
+    },
+    {
+      "id": "embed-tags",
+      "title": "タグを埋めこむ",
+      "hints": [
+        "TemplateHtmlMailContext",
+        "setReplaceKeyRawValue",
+        "setReplaceKeyValue",
+        "HTMLタグ埋めこみ",
+        "HTMLエスケープ回避",
+        "セキュリティリスク"
+      ]
+    }
+  ],
+  "sections": {
+    "implemented": "> **重要**: 本サンプルはキャンペーン通知のようなHTMLメールの一括送信には対応していない。以下に該当する場合は専用プロダクトの使用を推奨する:\n> - キャンペーン通知・メールマガジンなど大量メールの一括送信\n> - 開封率・クリックカウントの効果測定\n> - メールアドレスからクライアント（フィーチャーフォン等）を判別して送信メールを切替\n> - 絵文字・デコメールの使用\n> - HTMLコンテンツ作成を顧客が行う場合（本サンプルは開発者によるコンテンツ作成が必要）\n\n> **重要**: 一部のクライアントではHTMLメールが期待通りに表示されずユーザがメールを参照しない可能性がある。業務要件としてユーザ通知が重要なメールにはHTMLメールを使用しないこと。\n\n> **重要**: **HTMLメールのレイアウト** — メールクライアントにより表示に差異があるため、HTMLメール標準を策定し顧客と合意すること。検討事項: テスト対象のメールクライアント・デバイス・OS、HTMLタグ・CSSプロパティの使用範囲、フォント・配色の使用範囲、コンテンツ横幅。\n>\n> **コンテンツ作成の留意点**:\n> - `<head>`タグを無視するメールクライアントがあるため、スタイルをCSSファイルや`<style>`タグに切り出すことは**推奨されていない**\n> - 極力シンプルなデザインにすること\n> - メディアクエリをサポートしないメールクライアントがあるため、極力レスポンシブデザインは採用しないこと\n\n[ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-html-mail)\n\n本機能は:ref:`メール送信機能<mail>`を使用してHTMLメールを送信するサンプル（導入プロジェクトで使用する際には、ソースコード(プロダクション、テストコード共に）をプロジェクトに取り込み、使用すること）。\n\n実装済み機能:\n- HTMLメール（代替テキストを含む）を送信できる\n- 本文のプレースホルダー部分の文字列にHTMLエスケープを行う（通常のオンライン画面と同様のセキュリティ対策）",
+    "withdrawn": "取り下げた要求（本サンプルでは提供しない）:\n\n1. **メールクライアント毎の差異吸収** (CSSなどのスタイル差異、JavaScriptの使用可否を含む実装差異の吸収)\n   - HTMLのデザインおよび対象クライアントの選定はPJにて対応するため、本サンプルでは提供しない\n\n2. **HTMLメールへの画像埋めこみ**\n   - 画像埋めこみはメール容量を増大させ、HTMLを拒否したユーザでも受信に時間がかかる\n   - メールサーバへの負荷も増大する\n   - コンシューマ向けWebサービスではURL形式の使用が多いため未提供",
+    "mail-format": "本サンプルで送信可能なメール形式（RFC 2557に準拠したContent-Typeで送信）:\n\n| メール形式 | 業務Actionが使用するコンテキストクラス | 添付ファイル | メール構造のパターン |\n|---|---|---|---|\n| TEXT | `TemplateMailContext` | 無し | 1 |\n| TEXT | `TemplateMailContext` | 有り | 2 |\n| HTML | `TemplateHtmlMailContext` | 無し | 3 |\n| HTML | `TemplateHtmlMailContext` | 有り | 4 |\n\n**メール構造パターン1** (TEXT、添付無し):\n![メール構造パターン1](assets/about-nablarch-08/Mail_Pattern01.jpg)\n\n**メール構造パターン2** (TEXT、添付有り):\n![メール構造パターン2](assets/about-nablarch-08/Mail_Pattern02.jpg)\n\n**メール構造パターン3** (HTML、添付無し):\n![メール構造パターン3](assets/about-nablarch-08/Mail_Pattern03.jpg)\n\n**メール構造パターン4** (HTML、添付有り):\n![メール構造パターン4](assets/about-nablarch-08/Mail_Pattern04.jpg)",
+    "class-diagram": "![HTMLメールクラス図](assets/about-nablarch-08/HtmlMail_ClassDiagram.png)\n\n各クラスの責務:\n\n| クラス名 | 概要 |\n|---|---|\n| `please.change.me.common.mail.html.HtmlMailRequester` | `MailRequester`を拡張したHTMLメール送信要求を受け付けるクラス |\n| `please.change.me.common.mail.html.TemplateHtmlMailContext` | `TemplateMailContext`を拡張し、HTMLメールに必要な情報を保持するクラス。代替テキストを本文に変換することでHTMLメール用テンプレートを使用してプレーンテキスト形式のメールを送信する機能を実現する |\n| `please.change.me.common.mail.html.HtmlMailTable` | HTMLメール用のテーブルにアクセスするクラス |\n| `please.change.me.common.mail.html.HtmlMailSender` | `MailSender`を拡張したHTMLメールの送信をサポートするクラス。HTMLメール用の要求でない場合は親クラスに処理を委譲しプレーンテキスト形式のメールを送信する |\n| `please.change.me.common.mail.html.HtmlMailContentCreator` | HTMLメール用のコンテンツを生成するクラス |\n\nコンポーネント設定:\n\n```xml\n<component name=\"mailRequester\" class=\"please.change.me.common.mail.html.HtmlMailRequester\">\n    <property name=\"mailRequestConfig\" ref=\"mailRequestConfig\" />\n    <property name=\"mailRequestIdGenerator\" ref=\"mailRequestIdGenerator\" />\n    <property name=\"mailRequestTable\" ref=\"mailRequestTable\" />\n    <property name=\"mailRecipientTable\" ref=\"mailRecipientTable\" />\n    <property name=\"mailAttachedFileTable\" ref=\"mailAttachedFileTable\" />\n    <property name=\"mailTemplateTable\" ref=\"mailTemplateTable\" />\n    <property name=\"htmlMailTable\" ref=\"htmlMailTable\" />\n</component>\n\n<component name=\"htmlMailTable\" class=\"please.change.me.common.mail.html.HtmlMailTable\" />\n```\n\n> **注意**: Nablarchアプリケーションフレームワークの標準メール送信機能ではスキーマ定義を設定ファイルで行うが、本ライブラリではソースコードを直接修正すれば良いため、設定ファイルでのスキーマ定義は不要。ただし、テーブルアクセスの機能（`HtmlMailTable`）はRequesterとSenderで共通のため、`htmlMailTable`コンポーネントの定義は必ず行うこと。",
+    "data-model": "メール機能からの拡張テーブル（DDLはテスト資源に含まれる）。\n\n**HTMLメール用代替テキストテンプレートテーブル** — HTML用定型メールの代替テキストを管理するメールテンプレートの関連テーブル:\n\n| 定義 | Javaの型 | 備考 |\n|---|---|---|\n| メールテンプレートID | `java.lang.String` | PK |\n| 言語 | `java.lang.String` | PK |\n| 代替テキスト | `java.lang.String` | HTMLメールを表示できないメーラーのためのテキスト |\n\n**HTMLメール用代替テキストテーブル** — HTMLメール用の代替テキストを管理するメール送信要求の関連テーブル:\n\n| 定義 | Javaの型 | 備考 |\n|---|---|---|\n| メール送信要求ID | `java.lang.String` | PK |\n| 代替テキスト | `java.lang.String` | HTMLメールを表示できないメーラーのためのテキスト |",
+    "send-html-mail": "実装は:ref:`メール送信機能<mail>`の定型メール送信と同様。業務アクションで使用するコンテキストクラスが `TemplateMailContext` の代わりに `TemplateHtmlMailContext` となる点のみが異なる。",
+    "dynamic-content-switching": "メール送信要求時に `TemplateHtmlMailContext` の `contentType` に **プレーンテキスト** を指定した場合、代替テキストを本文に差し替える。\n\n| コンテキストクラス | 指定されたType | 本文への移送元 | Content-Type |\n|---|---|---|---|\n| `TemplateMailContext` | — | メールテンプレート.本文 | text/plain |\n| `TemplateHtmlMailContext` | `text/plain` | 代替テキストテンプレート.代替テキスト | text/plain |\n| `TemplateHtmlMailContext` | `text/html` | メールテンプレート.本文 | text/html |\n\n```java\npublic HttpResponse doSendMail(HttpRequest req, ExecutionContext ctx) {\n    MailSampleForm form = MailSampleForm.validate(req, \"mail\");\n    TemplateHtmlMailContext mail = new TemplateHtmlMailContext();\n    // このとき、ユーザがContentType.PLAINを選択していれば、代替テキストが本文に切り替わる。\n    mail.setContentType(form.getType());\n    // その他のプロパティを設定し、MailRequesterを呼び出す。\n}\n```",
+    "digital-signature": ":ref:`電子署名の拡張サンプル<bouncycastle_mail_sample>`とHTMLメールサンプルを併用する場合:\n\n- メール送信要求の登録処理は本サンプル（`HtmlMailRequester`）を使用する\n- メール送信バッチは `HtmlMailContentCreator` を使用してHTMLメールのコンテンツを作成できるよう、電子署名の拡張サンプル（`SMIMESignedMailSender`）を拡張して使用する\n\n```java\n@Override\nprotected void addBodyContent(MimeMessage mimeMessage, MailRequestTable.MailRequest mailRequest,\n        List<? extends MailAttachedFileTable.MailAttachedFile> attachedFiles, ExecutionContext context) throws MessagingException {\n\n    String mailSendPatternId = context.getSessionScopedVar(\"mailSendPatternId\");\n    Map<String, CertificateWrapper> certificateChain = SystemRepository.get(CERTIFICATE_REPOSITORY_KEY);\n    CertificateWrapper certificateWrapper = certificateChain.get(mailSendPatternId);\n\n    try {\n        SMIMESignedGenerator smimeSignedGenerator = new SMIMESignedGenerator();\n        // ---中略---\n\n        MimeBodyPart bodyPart;\n        HtmlMailTable htmlTable = SystemRepository.get(\"htmlMailTable\");\n        SqlRow alternativeText = htmlTable.findAlternativeText(mailRequest.getMailRequestId());\n        if (alternativeText != null) {\n            bodyPart = new MimeBodyPart();\n            bodyPart.setContent(HtmlMailContentCreator.create(mailRequest.getMailBody(), mailRequest.getCharset(),\n                                                              alternativeText.getString(\"alternativeText\"), attachedFiles));\n            mimeMessage.setContent(smimeSignedGenerator.generate(bodyPart));\n        } else {\n            bodyPart = new MimeBodyPart();\n            bodyPart.setText(mailRequest.getMailBody(), mailRequest.getCharset());\n            // ---後略---\n        }\n    } catch (Exception e) {\n        MailConfig mailConfig = SystemRepository.get(\"mailConfig\");\n        String mailRequestId = mailRequest.getMailRequestId();\n        throw new TransactionAbnormalEnd(\n                mailConfig.getAbnormalEndExitCode(), e,\n                mailConfig.getSendFailureCode(), mailRequestId);\n    }\n}\n```",
+    "embed-tags": "> **重要**: タグの埋めこみは以下の理由から提供時には実装しておらず、推奨もしていない:\n> - HTMLメールのレイアウト確認が困難になる\n> - セキュリティ対策もPJにて実施する必要がある\n>\n> 安易に使用せず、テンプレートを複数用意することで対応できないか検討すること（テンプレートの作成コストでセキュリティ上のリスクを補填できる点も考慮すること）。\n\n本サンプルではHTMLエスケープを強制するため、動的にHTMLタグをテンプレートに埋めこむことはできない。動的に埋めこむ必要がある場合は、PJにて `TemplateHtmlMailContext` を修正し、`TemplateMailContext#setReplaceKeyValue` を呼び出すAPIを追加すること。\n\n```java\n// HTMLエスケープをせずにタグを埋めこむ。\npublic void setReplaceKeyRawValue(String key, String tag) {\n    super.setReplaceKeyValue(key, tag);\n}\n```\n\n> **補足**: HTMLメールのテストは通常のメールと同様:\n> - HTMLテキストはメール送信要求のテーブルを検証する\n> - 実際のメールクライアントでのレイアウト確認は送信バッチを使用してメールを送信して確認する"
+  }
+}

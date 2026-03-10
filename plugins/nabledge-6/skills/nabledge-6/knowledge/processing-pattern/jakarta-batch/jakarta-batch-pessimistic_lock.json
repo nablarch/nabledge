@@ -1,0 +1,36 @@
+{
+  "id": "jakarta-batch-pessimistic_lock",
+  "title": "Jakarta Batchに準拠したバッチアプリケーションの悲観的ロック",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/feature_details/pessimistic_lock.html"
+  ],
+  "index": [
+    {
+      "id": "pessimistic-lock",
+      "title": "悲観的ロックの実装パターン",
+      "hints": [
+        "UniversalDao",
+        "DeferredEntityList",
+        "AbstractItemReader",
+        "AbstractItemWriter",
+        "ItemProcessor",
+        "悲観的ロック",
+        "ロック時間短縮",
+        "Jakartaバッチ",
+        "主キー取得",
+        "バッチ排他制御",
+        "@Dependent",
+        "@Named",
+        "SampleReader",
+        "SampleProcessor",
+        "SampleWriter",
+        "ProjectId",
+        "Project"
+      ]
+    }
+  ],
+  "sections": {
+    "pessimistic-lock": "ItemReaderでは処理対象レコードの主キーのみ取得し、ItemProcessorで主キーをもとに悲観的ロック付きで取得することで、ロック時間を短縮して他プロセスへの影響を抑える。\n\n**ポイント**:\n- `ItemReader`: `UniversalDao.defer().findAllBySqlFile()` で主キーのみ取得する\n- `ItemProcessor`: 主キーをもとに `UniversalDao.findBySqlFile()` でロック付き取得する\n- :ref:`universal_dao` を使用した悲観的ロックは :ref:`universal_dao_jpa_pessimistic_lock` を参照\n\n```java\n@Dependent\n@Named\npublic class SampleReader extends AbstractItemReader {\n    private DeferredEntityList<ProjectId> list;\n    private Iterator<ProjectId> iterator;\n\n    @Override\n    public void open(Serializable checkpoint) throws Exception {\n        list = (DeferredEntityList<ProjectId>) UniversalDao.defer()\n                .findAllBySqlFile(ProjectId.class, \"GET_ID\", condition);\n        iterator = list.iterator();\n    }\n\n    @Override\n    public Object readItem() {\n        if (iterator.hasNext()) return iterator.next();\n        return null;\n    }\n\n    @Override\n    public void close() throws Exception { list.close(); }\n}\n\n@Dependent\n@Named\npublic class SampleProcessor implements ItemProcessor {\n    @Override\n    public Object processItem(Object item) {\n        final Project project =\n                UniversalDao.findBySqlFile(Project.class, \"FIND_BY_ID_WITH_LOCK\", item);\n        // 業務処理のため省略\n        return project;\n    }\n}\n\n@Dependent\n@Named\npublic class SampleWriter extends AbstractItemWriter {\n    @Override\n    public void writeItems(List<Object> items) {\n        UniversalDao.batchUpdate(items);\n    }\n}\n```"
+  }
+}

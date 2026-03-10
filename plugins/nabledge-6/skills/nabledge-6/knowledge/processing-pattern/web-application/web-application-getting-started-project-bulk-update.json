@@ -1,0 +1,49 @@
+{
+  "id": "web-application-getting-started-project-bulk-update",
+  "title": "一括更新機能の作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/project_bulk_update/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Required.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Domain.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/validation/Valid.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/persistence/OptimisticLockException.html"
+  ],
+  "index": [
+    {
+      "id": "bulk-update-implementation",
+      "title": "一括更新機能の作成",
+      "hints": [
+        "InnerProjectForm",
+        "ProjectBulkForm",
+        "ProjectListDto",
+        "ProjectBulkAction",
+        "ProjectSearchForm",
+        "ProjectSearchDto",
+        "EntityList",
+        "UniversalDao",
+        "BeanUtil",
+        "SessionUtil",
+        "Project",
+        "@Valid",
+        "@Required",
+        "@Domain",
+        "@InjectForm",
+        "@OnError",
+        "@OnDoubleSubmission",
+        "ApplicationException",
+        "OptimisticLockException",
+        "useToken",
+        "一括更新",
+        "ネストフォーム",
+        "セッションストア",
+        "排他制御",
+        "Bean Validation"
+      ]
+    }
+  ],
+  "sections": {
+    "bulk-update-implementation": "## フォームの作成\n\n複数プロジェクトの一括更新では2種類のフォームを使用する。\n\n**プロジェクト1件分フォーム** (`InnerProjectForm`): 各プロジェクトの更新値を受け付ける。入れ子フォームにも :ref:`Bean Validation<bean_validation>` を実行するため、:java:extdoc:`@Required<nablarch.core.validation.ee.Required>` や :java:extdoc:`@Domain<nablarch.core.validation.ee.Domain>` 等のバリデーションアノテーションを付与する。\n\n```java\npublic class InnerProjectForm implements Serializable {\n    @Required\n    @Domain(\"projectName\")\n    private String projectName;\n    // 他プロパティ省略\n}\n```\n\n**親フォーム** (`ProjectBulkForm`): :java:extdoc:`@Valid<jakarta.validation.Valid>` を付与することで入れ子フォームも :ref:`Bean Validation<bean_validation>` の対象になる。\n\n```java\npublic class ProjectBulkForm implements Serializable {\n    @Valid\n    private List<InnerProjectForm> projectList = new ArrayList<>();\n}\n```\n\n## セッションストア登録用Bean\n\n**クラス**: `ProjectListDto` — 更新対象リストを一括更新画面・確認画面で持ちまわすため :ref:`セッションストア<session_store>` に登録する。\n\n```java\npublic class ProjectListDto implements Serializable {\n    private List<Project> projectList = new ArrayList<>();\n}\n```\n\n> **重要**: 配列やコレクション型を :ref:`セッションストア<session_store>` に登録する場合は、Serializableなbeanのプロパティとして定義し、そのbeanをセッションストアに登録すること。詳細は :ref:`セッションストア使用上の制約<session_store-constraint>` を参照。\n\n## 一括更新画面表示アクション\n\n確認画面から戻った際に同条件でページング・再検索できるよう、検索条件を :ref:`セッションストア<session_store>` に登録して持ちまわす。\n\n**アノテーション**: `@InjectForm`, `@OnError`\n\n```java\n@InjectForm(form = ProjectSearchForm.class, prefix = \"searchForm\", name = \"searchForm\")\n@OnError(type = ApplicationException.class, path = \"forward://initialize\")\npublic HttpResponse list(HttpRequest request, ExecutionContext context) {\n    ProjectSearchForm searchForm = context.getRequestScopedVar(\"searchForm\");\n    ProjectSearchDto projectSearchDto = BeanUtil.createAndCopy(ProjectSearchDto.class, searchForm);\n    EntityList<Project> projectList = searchProject(projectSearchDto, context);\n    ProjectListDto projectListDto = new ProjectListDto();\n    projectListDto.setProjectList(projectList);\n    SessionUtil.put(context, \"projectListDto\", projectListDto);\n    context.setRequestScopedVar(\"bulkForm\", projectListDto);\n    SessionUtil.put(context, \"projectSearchDto\", projectSearchDto);\n    return new HttpResponse(\"/WEB-INF/view/projectBulk/update.jsp\");\n}\n```\n\n## 一括更新画面JSP\n\n- :ref:`セッションストア<session_store>` に登録したオブジェクトはJSPでリクエストスコープと同様に扱える。\n- 配列型・:java:extdoc:`List<java.util.List>` 型プロパティの要素は `プロパティ名[index]` 形式でアクセスする（:ref:`tag-access_rule` 参照）。\n\n```jsp\n<n:text name=\"bulkForm.projectList[${status.index}].projectName\"\n        maxlength=\"64\" cssClass=\"form-control form-control-lg\" errorCss=\"input-error\"/>\n<n:plainHidden name=\"bulkForm.projectList[${status.index}].projectId\"/>\n```\n\n## 更新確認アクション\n\n更新情報は :ref:`セッションストア<session_store>` に保持する。\n\n**アノテーション**: `@InjectForm`, `@OnError`\n\n```java\n@InjectForm(form = ProjectBulkForm.class, prefix = \"bulkForm\", name = \"bulkForm\")\n@OnError(type = ApplicationException.class, path = \"/WEB-INF/view/projectBulk/update.jsp\")\npublic HttpResponse confirmOfUpdate(HttpRequest request, ExecutionContext context) {\n    ProjectBulkForm form = context.getRequestScopedVar(\"bulkForm\");\n    ProjectListDto dto = SessionUtil.get(context, \"projectListDto\");\n    final List<InnerProjectForm> innerForms = form.getProjectList();\n    dto.getProjectList().forEach(project ->\n        innerForms.stream()\n            .filter(innerForm -> Objects.equals(innerForm.getProjectId(),\n                                               project.getProjectId().toString()))\n            .findFirst()\n            .ifPresent(innerForm -> BeanUtil.copy(innerForm, project)));\n    return new HttpResponse(\"/WEB-INF/view/projectBulk/confirmOfUpdate.jsp\");\n}\n```\n\n## 確認画面JSP\n\n確認画面では `<n:form useToken=\"true\">` を使用して二重送信防止トークンを設定する。\n\n```jsp\n<n:form useToken=\"true\">\n    <!-- ボタン部分は省略 -->\n</n:form>\n```\n\n## 一括更新実行アクション\n\n**アノテーション**: `@OnDoubleSubmission`\n\n```java\n@OnDoubleSubmission\npublic HttpResponse update(HttpRequest request, ExecutionContext context) {\n    ProjectListDto projectListDto = SessionUtil.get(context, \"projectListDto\");\n    projectListDto.getProjectList().forEach(UniversalDao::update);\n    return new HttpResponse(303, \"redirect://completeOfUpdate\");\n}\n```\n\n> **重要**: :java:extdoc:`UniversalDao#batchUpdate <nablarch.common.dao.UniversalDao.batchUpdate(java.util.List)>` はバッチ実行用であり排他制御を行わない。排他制御が必要な場合は :java:extdoc:`UniversalDao#update <nablarch.common.dao.UniversalDao.update(java.lang.Object)>` を使用すること。排他制御エラー（:java:extdoc:`OptimisticLockException<jakarta.persistence.OptimisticLockException>`）発生時は全件の更新がロールバックされる。\n\n> **Tip**: 独自のエラー制御ハンドラを追加することで、:java:extdoc:`OptimisticLockException<jakarta.persistence.OptimisticLockException>` 発生時に排他制御エラー画面へ遷移させることができる。ハンドラによるエラー制御の作成方法は :ref:`ハンドラで例外クラスに対応したエラーページに遷移させる <forward_error_page-handler>` を参照。"
+  }
+}

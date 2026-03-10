@@ -1,0 +1,112 @@
+{
+  "id": "db-messaging-architecture",
+  "title": "アーキテクチャ概要",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/architecture.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseRecordReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseTableQueueReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/ProcessStopHandler.ProcessStop.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchAction.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "configuration",
+      "title": "構成",
+      "hints": [
+        "Nablarchバッチアプリケーション構成",
+        "DBキューメッセージング構成",
+        "nablarch_batch-structure",
+        "未処理レコード処理済み変更",
+        "DBキューメッセージング概要",
+        "定期的なテーブル監視",
+        "未処理レコード順次処理"
+      ]
+    },
+    {
+      "id": "action-and-request-id",
+      "title": "リクエストパスによるアクションとリクエストIDの指定",
+      "hints": [
+        "コマンドライン引数",
+        "アクション指定",
+        "リクエストID指定",
+        "nablarch_batch-resolve_action"
+      ]
+    },
+    {
+      "id": "process-flow",
+      "title": "処理の流れ",
+      "hints": [
+        "処理の流れ",
+        "Nablarchバッチ処理フロー",
+        "nablarch_batch-process_flow"
+      ]
+    },
+    {
+      "id": "handlers",
+      "title": "使用するハンドラ",
+      "hints": [
+        "ハンドラキュー",
+        "status_code_convert_handler",
+        "data_read_handler",
+        "duplicate_process_check_handler",
+        "request_path_java_package_mapping",
+        "multi_thread_execution_handler",
+        "retry_handler",
+        "process_stop_handler",
+        "request_thread_loop_handler",
+        "database_connection_management_handler",
+        "transaction_management_handler",
+        "global_error_handler",
+        "thread_context_handler",
+        "thread_context_clear_handler",
+        "ServiceAvailabilityCheckHandler",
+        "file_record_writer_dispose_handler"
+      ]
+    },
+    {
+      "id": "minimum-handler-configuration",
+      "title": "ハンドラの最小構成",
+      "hints": [
+        "最小ハンドラ構成",
+        "ProcessStop",
+        "MultiThreadExecutionHandler",
+        "DataReadHandler",
+        "スレッドコンテキスト",
+        "サブスレッド",
+        "RetryHandler",
+        "ProcessStopHandler"
+      ]
+    },
+    {
+      "id": "data-reader",
+      "title": "使用するデータリーダ",
+      "hints": [
+        "DatabaseTableQueueReader",
+        "DatabaseRecordReader",
+        "データリーダ",
+        "キュー監視",
+        "マルチスレッド重複処理防止",
+        "db_messaging_architecture-reader"
+      ]
+    },
+    {
+      "id": "action-template-class",
+      "title": "使用するアクションのテンプレートクラス",
+      "hints": [
+        "BatchAction",
+        "テンプレートクラス",
+        "nablarch.fw.action.BatchAction"
+      ]
+    }
+  ],
+  "sections": {
+    "configuration": "データベースをキューとして扱うタイプのメッセージング処理では、定期的にデータベース上のテーブルを監視し未処理のレコードを順次処理するための機能を提供している。\n\n> **重要**: 未処理のレコードの判定はテーブルのレコード上で表す必要がある。処理が終わったレコードの状態を処理済みへ変更する処理が必要。\n\nNablarchバッチアプリケーションと同じ構成となる。詳細は :ref:`Nablarchバッチアプリケーションの構成 <nablarch_batch-structure>` を参照。",
+    "action-and-request-id": "コマンドライン引数で実行するアクションとリクエストIDを指定する（Nablarchバッチアプリケーションと同様）。詳細は :ref:`NablarchバッチアプリケーションのアクションとリクエストIDの指定 <nablarch_batch-resolve_action>` を参照。",
+    "process-flow": "Nablarchバッチアプリケーションと同じ処理の流れ。詳細は :ref:`nablarch_batch-process_flow` を参照。",
+    "handlers": "プロジェクト要件に従いハンドラキューを構築すること（プロジェクトカスタムハンドラの作成が必要な場合もある）。\n\n**リクエスト/レスポンス変換ハンドラ**:\n- :ref:`status_code_convert_handler`\n- :ref:`data_read_handler`\n\n**実行制御ハンドラ**:\n- :ref:`duplicate_process_check_handler`\n- :ref:`request_path_java_package_mapping`\n- :ref:`multi_thread_execution_handler`\n- :ref:`retry_handler`\n- :ref:`process_stop_handler`\n- :ref:`request_thread_loop_handler`\n\n**データベース関連ハンドラ**:\n- :ref:`database_connection_management_handler`\n- :ref:`transaction_management_handler`\n\n**エラー処理ハンドラ**:\n- :ref:`global_error_handler`\n\n**その他**:\n- :ref:`thread_context_handler`\n- :ref:`thread_context_clear_handler`\n- :ref:`ServiceAvailabilityCheckHandler`\n- :ref:`file_record_writer_dispose_handler`",
+    "minimum-handler-configuration": "最小ハンドラ構成（これをベースにプロジェクト要件に従い標準ハンドラやカスタムハンドラを追加すること）:\n\n| No. | ハンドラ | スレッド | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|---|\n| 1 | :ref:`status_code_convert_handler` | メイン | — | ステータスコードをプロセス終了コードに変換 | — |\n| 2 | :ref:`thread_context_clear_handler` | メイン | — | :ref:`thread_context_handler` でスレッドローカル上の値を全削除 | — |\n| 3 | :ref:`global_error_handler` | メイン | — | — | 実行時例外またはエラーの場合ログ出力 |\n| 4 | :ref:`thread_context_handler` | メイン | コマンドライン引数からリクエストID・ユーザID等のスレッドコンテキスト変数を初期化 | — | — |\n| 5 | :ref:`retry_handler` | メイン | — | — | リトライ可能な実行時例外を捕捉しリトライ上限未達なら後続ハンドラを再実行 |\n| 6 | :ref:`database_connection_management_handler`（初期処理/終了処理用） | メイン | DB接続取得 | DB接続解放 | — |\n| 7 | :ref:`transaction_management_handler`（初期処理/終了処理用） | メイン | トランザクション開始 | コミット | ロールバック |\n| 8 | :ref:`request_path_java_package_mapping` | メイン | コマンドライン引数をもとに呼び出すアクションを決定 | — | — |\n| 9 | :ref:`multi_thread_execution_handler` | メイン | サブスレッドを作成し後続ハンドラを並行実行 | 全スレッドの正常終了まで待機 | 処理中スレッド完了まで待機し起因例外を再送出 |\n| 10 | :ref:`database_connection_management_handler`（業務処理用） | サブ | DB接続取得 | DB接続解放 | — |\n| 11 | :ref:`request_thread_loop_handler` | サブ | — | 後続ハンドラに処理を再委譲 | 例外/エラーに応じたログ出力と再送出 |\n| 12 | :ref:`process_stop_handler` | サブ | リクエストテーブルの処理停止フラグがオンの場合、:java:extdoc:`ProcessStop <nablarch.fw.handler.ProcessStopHandler.ProcessStop>` を送出 | — | — |\n| 13 | :ref:`data_read_handler` | サブ | データリーダで1件読み込み後続ハンドラに渡す。実行時IDを採番 | — | 読み込んだレコードをログ出力後に元例外を再送出 |\n| 14 | :ref:`transaction_management_handler`（業務処理用） | サブ | トランザクション開始 | コミット | ロールバック |",
+    "data-reader": "> **注意**: :java:extdoc:`DatabaseRecordReader <nablarch.fw.reader.DatabaseRecordReader>` を使用した場合、繰り返しテーブルを監視できないので注意すること。\n\n使用するデータリーダ: :java:extdoc:`DatabaseTableQueueReader <nablarch.fw.reader.DatabaseTableQueueReader>`\n\n> **重要**: プロジェクトでカスタムリーダを作成する場合の実装要件:\n> - 対象データがなくなっても継続して監視できること\n> - マルチスレッド環境で同一データを複数スレッドで処理しないこと\n>\n> `DatabaseTableQueueReader` の実装:\n> - 未処理データがなくなった場合、再度検索SQLを実行して未処理データを抽出する\n> - 処理中データの識別子（主キー値）を保持し、複数スレッドによる重複処理を防ぐ",
+    "action-template-class": "**クラス**: :java:extdoc:`BatchAction <nablarch.fw.action.BatchAction>`（汎用的なバッチアクション）"
+  }
+}

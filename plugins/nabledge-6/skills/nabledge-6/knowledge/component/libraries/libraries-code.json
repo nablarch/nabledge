@@ -1,0 +1,140 @@
+{
+  "id": "libraries-code",
+  "title": "コード管理",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/code.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/BasicCodeManager.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/cache/BasicStaticDataCache.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/BasicCodeLoader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/schema/CodePatternSchema.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/CodeUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/validator/ee/CodeValue.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/validator/CodeValue.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "overview",
+      "title": "機能概要",
+      "hints": [
+        "コード管理",
+        "コード値名称マッピング",
+        "値",
+        "名称",
+        "略称",
+        "国際化対応",
+        "多言語化",
+        "参照整合性制約",
+        "code-validation",
+        "doma_adaptor",
+        "テーブル管理"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-common-code",
+        "nablarch-common-code-jdbc",
+        "モジュール依存関係",
+        "Maven"
+      ]
+    },
+    {
+      "id": "setup",
+      "title": "コード管理機能を使用する為の初期設定",
+      "hints": [
+        "BasicCodeManager",
+        "BasicStaticDataCache",
+        "BasicCodeLoader",
+        "CodePatternSchema",
+        "CodeNameSchema",
+        "BasicApplicationInitializer",
+        "コード管理機能設定",
+        "コードパターンテーブル",
+        "コード名称テーブル",
+        "初期設定",
+        "codeManager",
+        "loadOnStartup"
+      ]
+    },
+    {
+      "id": "use-pattern",
+      "title": "機能毎に使用するコード情報を切り替える",
+      "hints": [
+        "CodeUtil",
+        "パターン切り替え",
+        "CodePatternSchema",
+        "patternColumnNames",
+        "getValues",
+        "codeSelect",
+        "pattern属性",
+        "PATTERN1",
+        "PATTERN2"
+      ]
+    },
+    {
+      "id": "multilingualization",
+      "title": "名称の多言語化対応",
+      "hints": [
+        "CodeUtil",
+        "多言語化対応",
+        "getName",
+        "getShortName",
+        "Locale",
+        "LANG",
+        "言語指定"
+      ]
+    },
+    {
+      "id": "sort-order",
+      "title": "画面などで表示する名称のソート順を定義する",
+      "hints": [
+        "SORT_ORDER",
+        "ソート順定義",
+        "コード名称テーブル",
+        "codeSelect"
+      ]
+    },
+    {
+      "id": "option-name",
+      "title": "名称、略称以外の名称を定義する",
+      "hints": [
+        "CodeUtil",
+        "getOptionalName",
+        "オプション名称",
+        "OPTIONAL_NAME",
+        "optionColumnName",
+        "labelPattern",
+        "FORM_NAME",
+        "KANA_NAME",
+        "CodePatternSchema",
+        "patternColumnNames"
+      ]
+    },
+    {
+      "id": "validation",
+      "title": "入力値が有効なコード値かチェックする",
+      "hints": [
+        "@CodeValue",
+        "バリデーション",
+        "CodeValue",
+        "bean_validation",
+        "nablarch_validation",
+        "pattern属性",
+        "SampleDomainBean",
+        "ドメインバリデーション"
+      ]
+    }
+  ],
+  "sections": {
+    "overview": "アプリケーションで使用する**値と名称**とのマッピングを管理する機能を提供する。\n\n例：\n\n| 値 | 名称 | 略称 |\n|---|---|---|\n| male | 男性 | 男 |\n| female | 女性 | 女 |\n\n> **重要**: この機能では静的なコード情報（値と名称のマッピング）を管理する。「商品コード」「企業コード」のように値に紐づく情報が動的に変化するものは管理対象外。そのような情報はアプリケーションでマスタテーブルを作成して対処すること。\n\n> **重要**: この機能を使用すると、コードの名称を持つテーブルとコード値を持つテーブルにRDBMSの参照整合性制約を設定できない。制約チェックには :ref:`code-validation` を使用すること。\n\n> **補足**: 静的なコード情報はenumで表現した方が良い。理由：(1) DBを使用したコード定義は大掛かりでメンテナンスコストが高い (2) Javaでコード値を扱うための数値型定数定義と二重メンテナンスが発生する。NablarchはenumとDBの相互変換機能を持っていないが、Domaを使用することでenumの値をDB登録できる。設定は :ref:`doma_adaptor` を参照。\n\n**国際化対応**: 言語ごとに名称を管理可能。詳細は :ref:`code-use_multilingualization` を参照。\n\n**テーブル管理**: 値および名称の情報をDBで管理する。事前にテーブルを作成し、静的なコード情報を登録しておく必要がある。詳細は :ref:`code-setup_table` を参照。",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-code</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-code-jdbc</artifactId>\n</dependency>\n```",
+    "setup": "## コード管理機能を使用する為の初期設定\n\nコード情報は `コードパターンテーブル` と `コード名称テーブル` の2テーブルで管理する。\n\n各カラムの用途:\n\n| カラム | 説明 |\n|---|---|\n| ID | コード情報を一意に識別するID（性別区分・住所区分等ごとに一意のIDを設定） |\n| VALUE | コード内の名称を識別する値（例: `male`, `female`） |\n| PATTERN | 値を使用するか否かのフラグ（`0`または`1`）。有効な値の切り替えに使用。省略可能。 |\n| LANG | 言語。多言語化対応時に`Locale#getLanguage()`の値を格納。日本語のみの場合は`ja`を設定。 |\n| SORT_ORDER | ソート順。IDに紐づく一覧取得時にSORT_ORDER昇順で返される。 |\n| NAME | VALUEに対応した名称 |\n| SHORT_NAME | VALUEに対応した略称 |\n| OPTIONAL_NAME | 名称・略称だけでは管理しきれない場合に使用するオプション名称。カラム名・数は必要数定義可能。 |\n\n**設定ポイント**:\n- :java:extdoc:`BasicCodeManager <nablarch.common.code.BasicCodeManager>` のコンポーネント名は **codeManager** とすること\n- :java:extdoc:`BasicStaticDataCache <nablarch.core.cache.BasicStaticDataCache>` の `loadOnStartup` 設定は :ref:`static_data_cache-cache_timing` を参照すること\n- :java:extdoc:`BasicCodeLoader <nablarch.common.code.BasicCodeLoader>` および :java:extdoc:`BasicStaticDataCache <nablarch.core.cache.BasicStaticDataCache>` は初期化が必要なため初期化リストに設定すること\n\n```xml\n<component name=\"codeLoader\" class=\"nablarch.common.code.BasicCodeLoader\">\n  <property name=\"codePatternSchema\">\n    <component class=\"nablarch.common.code.schema.CodePatternSchema\">\n      <!-- CodePatternSchemaのプロパティにテーブル名及びカラム名を設定する。 -->\n    </component>\n  </property>\n  <property name=\"codeNameSchema\">\n    <component class=\"nablarch.common.code.schema.CodeNameSchema\">\n      <!-- CodeNameSchemaのプロパティにテーブル名及びカラム名を設定する。 -->\n    </component>\n  </property>\n</component>\n\n<component name=\"codeCache\" class=\"nablarch.core.cache.BasicStaticDataCache\">\n  <property name=\"loader\" ref=\"codeLoader\"/>\n  <property name=\"loadOnStartup\" value=\"false\"/>\n</component>\n\n<component name=\"codeManager\" class=\"nablarch.common.code.BasicCodeManager\">\n  <property name=\"codeDefinitionCache\" ref=\"codeCache\"/>\n</component>\n\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"codeLoader\"/>\n      <component-ref name=\"codeCache\"/>\n    </list>\n  </property>\n</component>\n```",
+    "use-pattern": "## 機能毎に使用するコード情報を切り替える\n\nコードパターンテーブルにパターン列を定義し、パターンを切り替えることで機能ごとに表示・非表示を切り替えられる。\n\nパターン列は :java:extdoc:`CodePatternSchema.patternColumnNames <nablarch.common.code.schema.CodePatternSchema.setPatternColumnNames(java.lang.String[])>` に設定する（設定方法は :ref:`code-setup_table` を参照）。\n\nパターン指定でコード情報を取得（Java）:\n\n```java\n// PATTERN1のリストを取得: [MALE, FEMALE, OTHER]\nList<String> pattern1 = CodeUtil.getValues(\"GENDER\", \"PATTERN1\");\n\n// PATTERN2のリストを取得: [MALE, FEMALE]\nList<String> pattern2 = CodeUtil.getValues(\"GENDER\", \"PATTERN2\");\n```\n\nパターン名は設定ファイルで設定したカラム名と**厳密に一致**させること。\n\n画面（JSP）でパターンを指定する場合は `pattern` 属性に指定する:\n\n```jsp\n<n:codeSelect name=\"form.gender\" codeId=\"GENDER\" pattern=\"PATTERN2\" cssClass=\"form-control\" />\n```\n\nカスタムタグライブラリの詳細は :ref:`tag-code_input_output` を参照。",
+    "multilingualization": "## 名称の多言語化対応\n\nコード名称テーブルにサポートする言語ごとのデータを準備する（LANGカラムに言語を設定）。\n\n```java\n// 名称\nCodeUtil.getName(\"GENDER\", \"MALE\", Locale.JAPANESE);    // -> 男性\nCodeUtil.getName(\"GENDER\", \"MALE\", Locale.ENGLISH);     // -> Male\n\n// 略称\nCodeUtil.getShortName(\"GENDER\", \"MALE\", Locale.JAPANESE); // -> 男\nCodeUtil.getShortName(\"GENDER\", \"MALE\", Locale.ENGLISH);  // -> M\n```\n\n> **重要**: JSP用カスタムタグライブラリでは言語指定による値の取得はできない。カスタムタグライブラリが使用する言語情報の詳細は :ref:`tag-code_input_output` を参照。",
+    "sort-order": "## 画面などで表示する名称のソート順を定義する\n\nソート順はコード名称テーブルのSORT_ORDERカラムに設定する。言語ごとに設定可能（国によってソート順が異なる場合に対応）。IDに紐づく一覧取得時にSORT_ORDER昇順で返される。",
+    "option-name": "## 名称、略称以外の名称を定義する\n\nオプション名称カラムをコード名称テーブルに追加して対応する。オプション名称カラム名は :java:extdoc:`CodePatternSchema.patternColumnNames <nablarch.common.code.schema.CodePatternSchema.setPatternColumnNames(java.lang.String[])>` に設定する（設定方法は :ref:`code-setup_table` を参照）。\n\n```java\nCodeUtil.getOptionalName(\"GENDER\", \"MALE\", \"KANA_NAME\"); // -> おとこ\nCodeUtil.getOptionalName(\"GENDER\", \"FEMALE\", \"FORM_NAME\", Locale.JAPANESE); // -> Female\n```\n\nJSPで表示する場合は `optionColumnName` にカラム名、`labelPattern` に **$OPTIONALNAME$** を指定する:\n\n```jsp\n<n:codeSelect name=\"form.gender\" codeId=\"GENDER\" optionColumnName=\"KANA_NAME\" cssClass=\"form-control\" labelPattern=\"$OPTIONALNAME$\"/>\n```",
+    "validation": "## 入力値が有効なコード値かチェックする\n\n**アノテーション**: `nablarch.common.code.validator.ee.CodeValue`（Bean Validation用）、`nablarch.common.code.validator.CodeValue`（Nablarch Validation用）\n\nBean Validation（:ref:`bean_validation`）:\n\n```java\n@CodeValue(codeId = \"GENDER\")\nprivate String gender;\n```\n\nNablarch Validation（:ref:`nablarch_validation`）:\n\n```java\n@CodeValue(codeId = \"GENDER\")\npublic void setGender(String gender) {\n  this.gender = gender;\n}\n```\n\nパターンを使用して選択値を制限した場合、バリデーション時も同パターン内の有効値かチェックする必要がある。`pattern` 属性にパターン名を指定する:\n\n```java\n@CodeValue(codeId = \"GENDER\", pattern = \"PATTERN2\")\nprivate String gender;\n```\n\n> **補足**: :ref:`ドメインバリデーション <bean_validation-domain_validation>` を使用した場合、1つのドメインに対して1つのパターンしか指定できない。複数パターンに対応するには、パターンごとにドメインを定義する必要がある（バリデーションで必要なドメインのみ定義すればよい）。\n\n```java\npublic class SampleDomainBean {\n  @CodeValue(codeId = \"FLOW_STATUS\", pattern = \"PATTERN1\")\n  String flowStatusGeneral;\n\n  @CodeValue(codeId = \"FLOW_STATUS\", pattern = \"PATTERN2\")\n  String flowStatusGuest;\n}\n```"
+  }
+}

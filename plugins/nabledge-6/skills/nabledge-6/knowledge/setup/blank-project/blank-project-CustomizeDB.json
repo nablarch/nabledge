@@ -1,0 +1,310 @@
+{
+  "id": "blank-project-CustomizeDB",
+  "title": "使用するRDBMSの変更手順",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/blank_project/CustomizeDB.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "prerequisites",
+      "title": "前提",
+      "hints": [
+        "H2 Database Engine",
+        "RDBMS設定変更",
+        "アーキタイプ生成プロジェクト",
+        "データベース接続前提条件"
+      ]
+    },
+    {
+      "id": "maven-repository-registration",
+      "title": "Mavenリポジトリへのファイル登録",
+      "hints": [
+        "Mavenリポジトリ",
+        "ファイル登録",
+        "JDBCドライバ",
+        "customizeDBAddFileMavenRepo"
+      ]
+    },
+    {
+      "id": "jdbc-driver-registration",
+      "title": "JDBCドライバの登録",
+      "hints": [
+        "JDBCドライバ登録",
+        "Mavenリポジトリ",
+        "CI環境",
+        "ライセンス確認"
+      ]
+    },
+    {
+      "id": "jdbc-h2",
+      "title": "H2",
+      "hints": [
+        "H2",
+        "JDBCドライバ",
+        "Mavenセントラルリポジトリ",
+        "登録不要"
+      ]
+    },
+    {
+      "id": "jdbc-oracle",
+      "title": "Oracle",
+      "hints": [
+        "Oracle",
+        "JDBCドライバ",
+        "Mavenセントラルリポジトリ",
+        "登録不要"
+      ]
+    },
+    {
+      "id": "jdbc-postgresql",
+      "title": "PostgreSQL",
+      "hints": [
+        "PostgreSQL",
+        "JDBCドライバ",
+        "Mavenセントラルリポジトリ",
+        "登録不要"
+      ]
+    },
+    {
+      "id": "jdbc-db2",
+      "title": "DB2",
+      "hints": [
+        "DB2",
+        "JDBCドライバ",
+        "db2jcc4",
+        "ローカルMavenリポジトリ登録",
+        "mvn install:install-file"
+      ]
+    },
+    {
+      "id": "jdbc-sqlserver",
+      "title": "SQLServer",
+      "hints": [
+        "SQL Server",
+        "JDBCドライバ",
+        "Mavenセントラルリポジトリ",
+        "登録不要"
+      ]
+    },
+    {
+      "id": "file-modification",
+      "title": "ファイル修正",
+      "hints": [
+        "ファイル修正",
+        "RDBMS設定",
+        "env.properties",
+        "pom.xml",
+        "customizeDBNotExistPjRepo"
+      ]
+    },
+    {
+      "id": "properties-file",
+      "title": "propertiesファイルの修正",
+      "hints": [
+        "env.properties",
+        "nablarch.db.jdbcDriver",
+        "nablarch.db.url",
+        "nablarch.db.user",
+        "nablarch.db.password",
+        "nablarch.db.schema",
+        "nablarch.connectionFactory.jndiResourceName",
+        "JNDI",
+        "コネクションプール",
+        "大文字小文字区別"
+      ]
+    },
+    {
+      "id": "properties-h2",
+      "title": "H2の設定例（デフォルト）",
+      "hints": [
+        "H2設定例",
+        "org.h2.Driver",
+        "nablarch.db.jdbcDriver",
+        "jdbc:h2"
+      ]
+    },
+    {
+      "id": "properties-oracle",
+      "title": "Oracleの設定例",
+      "hints": [
+        "Oracle設定例",
+        "oracle.jdbc.driver.OracleDriver",
+        "jdbc:oracle:thin",
+        "nablarch.db.url"
+      ]
+    },
+    {
+      "id": "properties-postgresql",
+      "title": "PostgreSQLの設定例",
+      "hints": [
+        "PostgreSQL設定例",
+        "org.postgresql.Driver",
+        "jdbc:postgresql",
+        "nablarch.db.url"
+      ]
+    },
+    {
+      "id": "properties-db2",
+      "title": "DB2の設定例",
+      "hints": [
+        "DB2設定例",
+        "com.ibm.db2.jcc.DB2Driver",
+        "jdbc:db2",
+        "nablarch.db.url"
+      ]
+    },
+    {
+      "id": "properties-sqlserver",
+      "title": "SQL Serverの設定例",
+      "hints": [
+        "SQL Server設定例",
+        "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+        "jdbc:sqlserver",
+        "instanceName"
+      ]
+    },
+    {
+      "id": "container-production-config",
+      "title": "コンテナの本番環境設定",
+      "hints": [
+        "コンテナ設定",
+        "OS環境変数",
+        "env.properties上書き",
+        "プロファイル切り替え不使用",
+        "Twelve-Factor App",
+        "container_production_config"
+      ]
+    },
+    {
+      "id": "pom-xml-modification",
+      "title": "pom.xmlファイルの修正",
+      "hints": [
+        "pom.xml",
+        "Maven依存関係",
+        "JDBCドライバ依存設定",
+        "customizeDBProfiles",
+        "customizeDB_pom_dependencies"
+      ]
+    },
+    {
+      "id": "jndi-profiles-element",
+      "title": "(本番環境でJNDIからコネクションを取得するプロジェクトの場合)profiles要素内",
+      "hints": [
+        "JDBCドライバ設定",
+        "profiles要素",
+        "JNDI接続",
+        "Maven依存関係",
+        "データベース切替",
+        "com.h2database",
+        "com.oracle.database.jdbc",
+        "org.postgresql",
+        "com.ibm.db2",
+        "com.microsoft.sqlserver",
+        "h2",
+        "ojdbc11",
+        "postgresql",
+        "jcc",
+        "mssql-jdbc"
+      ]
+    },
+    {
+      "id": "local-pool-dependencies-element",
+      "title": "(本番環境でローカルにコネクションプールを作成するプロジェクトの場合)dependencies要素内",
+      "hints": [
+        "JDBCドライバ設定",
+        "ローカルコネクションプール",
+        "dependencies要素",
+        "Maven依存関係",
+        "com.h2database"
+      ]
+    },
+    {
+      "id": "jndi-component-configuration",
+      "title": "(本番環境でJNDIからコネクションを取得するプロジェクトの場合)コンポーネント設定ファイル (src/main/resources/)",
+      "hints": [
+        "Dialectクラス設定",
+        "コンポーネント設定ファイル",
+        "JNDI接続",
+        "データベース方言",
+        "nablarch.core.db.dialect.OracleDialect",
+        "nablarch.core.db.dialect.PostgreSQLDialect",
+        "nablarch.core.db.dialect.DB2Dialect",
+        "nablarch.core.db.dialect.SqlServerDialect",
+        "nablarch.core.db.dialect.H2Dialect",
+        "web-component-configuration.xml",
+        "rest-component-configuration.xml"
+      ]
+    },
+    {
+      "id": "local-pool-data-source-xml",
+      "title": "(本番環境でローカルにコネクションプールを作成するプロジェクトの場合)data-source.xml (src/main/resources/)",
+      "hints": [
+        "Dialectクラス設定",
+        "data-source.xml",
+        "ローカルコネクションプール",
+        "データベース方言"
+      ]
+    },
+    {
+      "id": "unit-test-xml",
+      "title": "unit-test.xml (src/test/resources)",
+      "hints": [
+        "テスト設定",
+        "ユニットテスト",
+        "データベース設定",
+        "Oracle設定",
+        "nablarch.test.core.db.GenericJdbcDbInfo",
+        "test-db-info-oracle.xml"
+      ]
+    },
+    {
+      "id": "table-creation",
+      "title": "テーブル作成",
+      "hints": [
+        "テーブル作成",
+        "DDL実行",
+        "DB2設定",
+        "gsp-dba-maven-plugin",
+        "db/ddl/"
+      ]
+    },
+    {
+      "id": "data-insertion",
+      "title": "データの投入",
+      "hints": [
+        "データ投入",
+        "Insert文",
+        "DB2設定",
+        "初期データ",
+        "db/data/"
+      ]
+    }
+  ],
+  "sections": {
+    "prerequisites": "Nablarchアーキタイプで生成したプロジェクトは、初期状態では **H2 Database Engine** を使用するように設定されている。\n\n**前提条件**:\n- 各アーキタイプから生成した直後のプロジェクトを対象とする\n- RDBMSに接続用ユーザとスキーマが作成済みで、ユーザに適切な権限が付与済みであること",
+    "maven-repository-registration": "使用するRDBMSのJDBCドライバについては、以下のいずれかのMavenリポジトリに登録されている必要がある:\n- Mavenのセントラルリポジトリ\n- プロジェクトのMavenリポジトリ\n- ローカルのMavenリポジトリ\n\nMavenのセントラルリポジトリに公開されていないJDBCドライバについては、ローカルのMavenリポジトリへの登録手順が必要になる。詳細はサブセクション「JDBCドライバの登録」を参照。",
+    "jdbc-driver-registration": "JDBCドライバは以下のいずれかのMavenリポジトリに登録されている必要がある:\n- Mavenのセントラルリポジトリ\n- プロジェクトのMavenリポジトリ\n- ローカルのMavenリポジトリ\n\n> **重要**: JDBCドライバはCI環境構築までに、プロジェクトのMavenリポジトリへ登録することを強く推奨する。JDBCドライバ入手時はライセンスを確認すること。",
+    "jdbc-h2": "H2のJDBCドライバはMavenのセントラルリポジトリに公開されているため、ローカルのMavenリポジトリへの登録は不要。",
+    "jdbc-oracle": "OracleのJDBCドライバはMavenのセントラルリポジトリに公開されているため、ローカルのMavenリポジトリへの登録は不要。",
+    "jdbc-postgresql": "PostgreSQLのJDBCドライバはMavenのセントラルリポジトリに公開されているため、ローカルのMavenリポジトリへの登録は不要。",
+    "jdbc-db2": "DB2のJDBCドライバはMavenのセントラルリポジトリに公開されていないため、ローカルのMavenリポジトリへの登録が必要。\n\n入手先: [IBM DB2 JDBC Driver Versions and Downloads](https://www.ibm.com/support/pages/db2-jdbc-driver-versions-and-downloads)\n\nローカルMavenリポジトリへの登録コマンド例:\n```bash\nmvn install:install-file -DgroupId=com.ibm -DartifactId=db2jcc4 -Dversion=10.5.0.7 -Dpackaging=jar -Dfile=db2jcc4.jar\n```",
+    "jdbc-sqlserver": "SQL ServerのJDBCドライバはMavenのセントラルリポジトリに公開されているため、ローカルのMavenリポジトリへの登録は不要。",
+    "file-modification": "使用するRDBMSに合わせてpropertiesファイルおよびpom.xmlを修正するセクション。サブセクション「propertiesファイルの修正」「pom.xmlファイルの修正」を参照。",
+    "properties-file": "`env.properties` に設定するプロパティ:\n\n| プロパティ名 | 説明 |\n|---|---|\n| nablarch.connectionFactory.jndiResourceName | JNDIでDataSourceを取得する際のリソース名 |\n| nablarch.db.jdbcDriver | JDBCドライバのクラス名 |\n| nablarch.db.url | データベースの接続URL |\n| nablarch.db.user | データベースアクセスユーザ名 |\n| nablarch.db.password | データベースアクセスユーザのパスワード |\n| nablarch.db.schema | 接続するスキーマ名（Nablarchテスティングフレームワーク用） |\n\n**JNDIからコネクションを取得する環境のpropertiesファイル**（`nablarch.connectionFactory.jndiResourceName` を設定）:\n\n| プロジェクト種別 | ファイル |\n|---|---|\n| ウェブ、RESTfulウェブサービス | `src/env/prod/resources/env.properties` |\n| Jakarta Batchに準拠したバッチ、Nablarchバッチ、コンテナ版各種 | なし |\n\n**ローカルにコネクションプールを作成する環境のpropertiesファイル**（`nablarch.db.jdbcDriver` 等を設定）:\n\n| プロジェクト種別 | ファイル |\n|---|---|\n| ウェブ、RESTfulウェブサービス | `src/env/dev/resources/env.properties` |\n| Jakarta Batchに準拠したバッチ、Nablarchバッチ | `src/env/dev/resources/env.properties`、`src/env/prod/resources/env.properties` |\n| コンテナ版ウェブ、コンテナ版RESTfulウェブサービス、コンテナ版Nablarchバッチ | `src/main/resources/env.properties` |\n\n> **重要**: DBによってはユーザ名、パスワード、スキーマの大文字小文字を区別する。DBに設定した通りに `env.properties` にも設定すること。",
+    "properties-h2": "```text\nnablarch.db.jdbcDriver=org.h2.Driver\nnablarch.db.url=jdbc:h2:./h2/db/SAMPLE\nnablarch.db.user=SAMPLE\nnablarch.db.password=SAMPLE\nnablarch.db.schema=PUBLIC\n```",
+    "properties-oracle": "```text\nnablarch.db.jdbcDriver=oracle.jdbc.driver.OracleDriver\n# jdbc:oracle:thin:@ホスト名:ポート番号:データベースのSID\nnablarch.db.url=jdbc:oracle:thin:@localhost:1521/xe\nnablarch.db.user=sample\nnablarch.db.password=sample\nnablarch.db.schema=sample\n```",
+    "properties-postgresql": "```text\nnablarch.db.jdbcDriver=org.postgresql.Driver\n# jdbc:postgresql://ホスト名:ポート番号/データベース名\nnablarch.db.url=jdbc:postgresql://localhost:5432/postgres\nnablarch.db.user=sample\nnablarch.db.password=sample\nnablarch.db.schema=sample\n```",
+    "properties-db2": "```text\nnablarch.db.jdbcDriver=com.ibm.db2.jcc.DB2Driver\n# jdbc:db2://ホスト名:ポート番号/データベース名\nnablarch.db.url=jdbc:db2://localhost:50000/SAMPLE\nnablarch.db.user=sample\nnablarch.db.password=sample\nnablarch.db.schema=sample\n```",
+    "properties-sqlserver": "```text\nnablarch.db.jdbcDriver=com.microsoft.sqlserver.jdbc.SQLServerDriver\n# jdbc:sqlserver://ホスト名:ポート番号;instanceName=インスタンス名\nnablarch.db.url=jdbc:sqlserver://localhost:1433;instanceName=SQLEXPRESS\nnablarch.db.user=SAMPLE\nnablarch.db.password=SAMPLE\nnablarch.db.schema=SAMPLE\n```",
+    "container-production-config": "コンテナ用プロジェクトでは、プロファイルによる環境設定の切り替えは行わない。代わりに、アプリケーションを動かす環境のOS環境変数を使って `env.properties` に宣言した設定値を上書きする。\n\n- OS環境変数未設定の環境では `src/main/resources/env.properties` の設定がそのまま使用される\n- 本番等のコンテナ環境では、OS環境変数を使って `nablarch.db.url` 等の環境依存値を適切に上書きする必要がある\n\nOS環境変数による設定上書き方法: `repository-overwrite_environment_configuration_by_os_env_var` を参照。\n\nプロファイルではなくOS環境変数で設定を切り替えるようにしている理由については、[The Twelve-Factor App の III. 設定](https://12factor.net/ja/config)（外部サイト）を参照。",
+    "pom-xml-modification": "pom.xmlの依存関係を修正してRDBMS対応を行うセクション（`customizeDB_pom_dependencies`）。ソースドキュメントでは `customizeDBProfiles` アンカーが定義されており、他のドキュメントから参照される。",
+    "jndi-profiles-element": "> **補足**: 本番環境でJNDIからコネクションを取得する場合、ローカルでコネクションプールを作るときだけ明示的に依存関係に入れる必要があるため、profiles要素内に記載する。JNDIからコネクションを取得する場合、APサーバのクラスローダからJDBCドライバを取得できる。\n\nprofiles要素内の`<dependencies>`に使用するデータベースのJDBCドライバ依存関係を記述する。\n\n**H2（デフォルト）**:\n```xml\n<dependency>\n  <groupId>com.h2database</groupId>\n  <artifactId>h2</artifactId>\n  <version>2.2.220</version>\n  <scope>runtime</scope>\n</dependency>\n```\n\n**Oracle**:\n```xml\n<dependency>\n  <groupId>com.oracle.database.jdbc</groupId>\n  <artifactId>ojdbc11</artifactId>\n  <version>23.2.0.0</version>\n  <scope>runtime</scope>\n</dependency>\n```\n\n**PostgreSQL**:\n```xml\n<dependency>\n  <groupId>org.postgresql</groupId>\n  <artifactId>postgresql</artifactId>\n  <version>42.7.2</version>\n  <scope>runtime</scope>\n</dependency>\n```\n\n**DB2**:\n```xml\n<dependency>\n  <groupId>com.ibm.db2</groupId>\n  <artifactId>jcc</artifactId>\n  <version>11.5.9.0</version>\n  <scope>runtime</scope>\n</dependency>\n```\n\n**SQL Server**:\n```xml\n<dependency>\n  <groupId>com.microsoft.sqlserver</groupId>\n  <artifactId>mssql-jdbc</artifactId>\n  <version>12.6.1.jre11</version>\n  <scope>runtime</scope>\n</dependency>\n```",
+    "local-pool-dependencies-element": "本番環境でローカルにコネクションプールを作成するプロジェクトの場合、dependencies要素内のJDBCドライバ依存関係を修正する。デフォルト（H2）の記述例：\n\n```xml\n<dependencies>\n  <!-- TODO: プロジェクトで使用するDB製品にあわせたJDBCドライバに修正してください。 -->\n  <dependency>\n    <groupId>com.h2database</groupId>\n    <artifactId>h2</artifactId>\n    <version>2.2.220</version>\n    <scope>runtime</scope>\n  </dependency>\n</dependencies>\n```\n\ndependency要素内の各要素は :ref:`customizeDBProfiles` と同じように記述する。",
+    "jndi-component-configuration": "本番環境でJNDIからコネクションを取得するプロジェクトの場合、`src/main/resources`のコンポーネント設定ファイルのDialectクラスを使用するデータベースに合わせて変更する。\n\n| プロジェクト種別 | コンポーネント設定ファイル名 |\n|---|---|\n| ウェブ | web-component-configuration.xml |\n| RESTfulウェブサービス | rest-component-configuration.xml |\n\nデフォルト（H2）設定：\n```xml\n<!-- ダイアレクト設定 -->\n<!-- 使用するDBに合わせてダイアレクトを設定すること -->\n<component name=\"dialect\" class=\"nablarch.core.db.dialect.H2Dialect\" />\n```\n\n| データベース | Dialectクラス |\n|---|---|\n| Oracle | nablarch.core.db.dialect.OracleDialect |\n| PostgreSQL | nablarch.core.db.dialect.PostgreSQLDialect |\n| DB2 | nablarch.core.db.dialect.DB2Dialect |\n| SQL Server | nablarch.core.db.dialect.SqlServerDialect |",
+    "local-pool-data-source-xml": "本番環境でローカルにコネクションプールを作成するプロジェクトの場合、`data-source.xml`（`src/main/resources/`）にDialectクラスが記述されている。使用するデータベースに対応したDialectクラスに修正する。\n\n使用するDialectクラスは :ref:`customizeDBWebComponentConfiguration` と同一である。",
+    "unit-test-xml": "`src/test/resources/unit-test.xml`にテスティングフレームワークが使用するデータベースの設定が記述されている。デフォルトは汎用のDB設定。Oracleを使用する場合は記述を修正する。\n\n```xml\n<!-- TODO: 使用するDBに合せて設定してください。 -->\n<!-- Oracle用の設定 -->\n<!--\n  <import file=\"nablarch/test/test-db-info-oracle.xml\"/>\n-->\n<!-- 汎用のDB設定 -->\n<component name=\"dbInfo\" class=\"nablarch.test.core.db.GenericJdbcDbInfo\">\n  <property name=\"dataSource\" ref=\"dataSource\"/>\n  <property name=\"schema\" value=\"${nablarch.db.schema}\"/>\n</component>\n```",
+    "table-creation": "各プロジェクトの`db/ddl/`ディレクトリにRDBMS別のDDLが用意されている。このDDLを実行してNablarchが使用するテーブルを作成する。\n\n> **補足**: DB2の場合、`create.sql`の先頭に接続先データベースと使用スキーマが記述されているので書き換えてからDDLを実行する。実行は「DB2 コマンド・ウィンドウ」で行う。\n> ```\n> db2 -tvf \"C:\\develop\\myapp-web\\db\\ddl\\db2\\create.sql\"\n> ```\n\n> **補足**: gsp-dba-maven-plugin使用時は以下のコマンドでテーブルを作成できる（別途設定が必要。設定は :doc:`addin_gsp` 参照）。\n> ```bash\n> mvn -P gsp clean generate-resources\n> ```",
+    "data-insertion": "各プロジェクトの`db/data/`ディレクトリにInsert文が用意されている。このInsert文を実行してNablarchが使用するデータをInsertする。\n\n> **補足**: DB2の場合、`data.sql`の先頭に接続先データベースと使用スキーマを記述してからSQLを実行する。\n> ```\n> CONNECT TO SAMPLE2;\n> SET SCHEMA sample;\n> ```\n> 実行は「DB2 コマンド・ウィンドウ」で行う。\n> ```\n> db2 -tvf \"C:\\develop\\myapp-web\\db\\data\\data.sql\"\n> ```"
+  }
+}

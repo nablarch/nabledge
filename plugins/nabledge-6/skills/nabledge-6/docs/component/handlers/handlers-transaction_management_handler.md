@@ -1,20 +1,15 @@
 # トランザクション制御ハンドラ
 
-## 概要
+## ハンドラクラス名
 
 データベースやメッセージキューなどのトランザクションに対応したリソースを使用し、後続処理における透過的トランザクションを実現するハンドラ。
 
-**本ハンドラで行う処理**:
+本ハンドラでは、以下の処理を行う:
+1. トランザクションの開始
+2. トランザクションの終了（コミットやロールバック）
+3. トランザクションの終了時のコールバック
 
-* トランザクションの開始
-* トランザクションの終了(コミットやロールバック)
-* トランザクションの終了時のコールバック
-
-トランザクション機能の詳細は、:ref:`transaction` を参照。
-
-## ハンドラクラス名
-
-**クラス**: `TransactionManagementHandler`
+**クラス名**: `nablarch.common.handler.TransactionManagementHandler`
 
 ## モジュール一覧
 
@@ -40,15 +35,20 @@
 
 ## 制約
 
-:ref:`database_connection_management_handler` より後ろに配置すること。データベーストランザクション制御時、トランザクション管理対象のDB接続がスレッド上に存在する必要があるため。
+- :ref:`database_connection_management_handler` より後ろに配置すること。データベースに対するトランザクションを制御する場合、スレッド上にトランザクション管理対象のDB接続が存在している必要があるため。
 
 ## トランザクション制御対象を設定する
 
-`transactionFactory` プロパティに設定した `TransactionFactory` 実装クラスを使用してトランザクション制御対象を取得し、スレッド上で管理する。
+`transactionFactory` プロパティに `TransactionFactory` 実装クラスを設定し、トランザクション制御対象を取得してスレッド上で管理する。
 
-**トランザクション識別名**: デフォルトは `transaction`。任意の名前を使う場合は `transactionName` プロパティに設定。:ref:`複数のトランザクションを使用する場合<transaction_management_handler-multi_transaction>` は設定が必須。
+| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |
+|---|---|---|---|---|
+| transactionFactory | TransactionFactory | | | トランザクション制御対象を取得するファクトリクラス |
+| transactionName | String | | transaction | スレッド上でトランザクションを識別する名前 |
 
-> **補足**: :ref:`database_connection_management_handler` で設定したデータベースに対するトランザクションを制御する場合、`DbConnectionManagementHandler#connectionName` と同じ値を `transactionName` に設定すること。`DbConnectionManagementHandler#connectionName` に値を設定していない場合は省略可。
+- 複数トランザクション使用時は `transactionName` への設定が必須（:ref:`transaction_management_handler-multi_transaction` 参照）
+
+> **補足**: :ref:`database_connection_management_handler` で設定したDBのトランザクションを制御する場合、`DbConnectionManagementHandler#connectionName` に設定した値と同じ値を `transactionName` に設定すること。`connectionName` 未設定時は `transactionName` の設定を省略可。
 
 ```xml
 <component class="nablarch.common.handler.TransactionManagementHandler">
@@ -56,20 +56,19 @@
   <property name="transactionName" value="name" />
 </component>
 
+<!-- データベーストランザクション制御の場合はJdbcTransactionFactoryを設定する -->
 <component name="databaseTransactionFactory"
     class="nablarch.core.db.transaction.JdbcTransactionFactory">
-  <!-- プロパティの設定は省略 -->
 </component>
 ```
 
 ## 特定の例外の場合にトランザクションをコミットさせる
 
-**デフォルト動作**: 全エラー・例外がロールバック対象。
-
-**特定例外でコミットする場合**: `transactionCommitExceptions` プロパティにコミット対象の例外クラスを設定。設定した例外クラスのサブクラスもコミット対象となる。
+デフォルトでは全てのエラー・例外がロールバック対象。特定の例外発生時にコミットする場合は `transactionCommitExceptions` プロパティに対象例外クラス（FQCN）を設定する。設定した例外クラスのサブクラスもコミット対象となる。
 
 ```xml
 <component class="nablarch.common.handler.TransactionManagementHandler">
+  <!-- コミット対象の例外クラスをFQCNで設定する -->
   <property name="transactionCommitExceptions">
     <list>
       <value>example.TransactionCommitException</value>
@@ -80,17 +79,15 @@
 
 ## トランザクション終了時に任意の処理を実行したい
 
-**コールバック処理**: トランザクション終了（コミット・ロールバック）時にコールバック処理を実行する。
+後続ハンドラの中で `TransactionEventCallback` を実装しているハンドラに対してコールバック処理を行う。複数ハンドラが実装している場合は手前から順次実行。
 
-**コールバック対象**: 後続ハンドラで `TransactionEventCallback` を実装しているもの。複数ある場合は手前から順次実行。
+- ロールバック時はロールバック後にコールバックを実行（新しいトランザクション）。コールバック正常終了でコミット。
 
-**ロールバック時の動作**: ロールバック後にコールバック処理を実行。コールバック処理は新しいトランザクションで実行され、正常終了するとコミットされる。
+> **重要**: 複数ハンドラがコールバック処理を実装していた場合、コールバック中にエラーや例外が発生すると残りのハンドラへのコールバック処理は実行されない。
 
-> **重要**: 複数ハンドラがコールバック処理を実装している場合、コールバック処理中にエラー・例外が発生すると残りのハンドラに対するコールバック処理は実行されない。
-
-**実装手順**:
-
-1. **コールバック処理を行うハンドラの作成**: `TransactionEventCallback` を実装。`transactionNormalEnd` にコミット時、`transactionAbnormalEnd` にロールバック時のコールバック処理を実装。
+`TransactionEventCallback` を実装し、以下のメソッドを定義する:
+- `transactionNormalEnd`: トランザクションコミット時のコールバック
+- `transactionAbnormalEnd`: トランザクションロールバック時のコールバック
 
 ```java
 public static class SampleHandler
@@ -113,8 +110,7 @@ public static class SampleHandler
 }
 ```
 
-2. **ハンドラキュー構築**: トランザクション制御ハンドラの後続にコールバック処理を実装したハンドラを設定。
-
+ハンドラキューの設定（コールバックを実装したハンドラを後続に設定）:
 ```xml
 <list name="handlerQueue">
   <component class="nablarch.common.handler.TransactionManagementHandler">
@@ -126,31 +122,30 @@ public static class SampleHandler
 
 ## アプリケーションで複数のトランザクションを使用する
 
-**複数トランザクション制御**: このハンドラをハンドラキュー上に複数設定することで対応する。
+複数のトランザクション制御が必要な場合は、`TransactionManagementHandler` をハンドラキューに複数設定し、それぞれ異なる `transactionName` を設定する。
 
-**設定例（複数のDB接続に対するトランザクション制御）**:
-
+複数DB接続のトランザクション制御設定例:
 ```xml
-<!-- デフォルトのデータベース接続を設定 -->
+<!-- デフォルトのDB接続 -->
 <component name="defaultDatabaseHandler"
     class="nablarch.common.handler.DbConnectionManagementHandler">
   <property name="connectionFactory" ref="connectionFactory" />
 </component>
 
-<!-- userAccessLogという名前でデータベース接続を登録 -->
+<!-- userAccessLogという名前でDB接続を登録 -->
 <component name="userAccessLogDatabaseHandler"
     class="nablarch.common.handler.DbConnectionManagementHandler">
   <property name="connectionFactory" ref="userAccessLogConnectionFactory" />
   <property name="connectionName" value="userAccessLog" />
 </component>
 
-<!-- デフォルトのデータベース接続に対するトランザクション制御の設定 -->
+<!-- デフォルトDB接続のトランザクション制御 -->
 <component name="defaultTransactionHandler"
     class="nablarch.common.handler.TransactionManagementHandler">
   <property name="transactionFactory" ref="databaseTransactionFactory" />
 </component>
 
-<!-- userAccessLogというデータベース接続に対するトランザクション制御の設定 -->
+<!-- userAccessLog DB接続のトランザクション制御 -->
 <component name="userAccessLogTransactionHandler"
     class="nablarch.common.handler.TransactionManagementHandler">
   <property name="transactionFactory" ref="databaseTransactionFactory" />
@@ -158,15 +153,11 @@ public static class SampleHandler
 </component>
 ```
 
-**ハンドラキュー設定例**:
-
+ハンドラキュー設定例:
 ```xml
 <list name="handlerQueue">
-  <!-- デフォルトのデータベースに対する接続とトランザクション制御 -->
   <component-ref name="defaultDatabaseHandler" />
   <component-ref name="defaultTransactionHandler" />
-
-  <!-- userAccessLogのデータベースに対する接続とトランザクション制御 -->
   <component-ref name="userAccessLogDatabaseHandler" />
   <component-ref name="userAccessLogTransactionHandler" />
 </list>

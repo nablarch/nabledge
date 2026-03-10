@@ -1,0 +1,107 @@
+{
+  "id": "handlers-request_thread_loop_handler",
+  "title": "リクエストスレッド内ループ制御ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/standalone/request_thread_loop_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/retry/Retryable.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/ServiceUnavailable.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/ProcessStopHandler/ProcessStop.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/launcher/ProcessAbnormalEnd.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/ServiceError.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result/Error.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/java/lang/RuntimeException.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/java/lang/ThreadDeath.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/java/lang/StackOverflowError.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/java/lang/OutOfMemoryError.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/java/lang/VirtualMachineError.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "handler-class-name",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "RequestThreadLoopHandler",
+        "nablarch.fw.handler.RequestThreadLoopHandler",
+        "リクエストスレッド内ループ制御",
+        "ループ処理",
+        "スタンドアロン"
+      ]
+    },
+    {
+      "id": "module-list",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-standalone",
+        "com.nablarch.framework",
+        "Mavenモジュール",
+        "依存関係"
+      ]
+    },
+    {
+      "id": "constraints",
+      "title": "制約",
+      "hints": [
+        "retry_handler",
+        "Retryable",
+        "nablarch.fw.handler.retry.Retryable",
+        "ハンドラ配置順序",
+        "制約"
+      ]
+    },
+    {
+      "id": "service-unavailability-interval",
+      "title": "サービス閉塞中の待機時間を設定する",
+      "hints": [
+        "serviceUnavailabilityRetryInterval",
+        "ServiceUnavailable",
+        "nablarch.fw.results.ServiceUnavailable",
+        "ServiceAvailabilityCheckHandler",
+        "サービス閉塞",
+        "待機時間"
+      ]
+    },
+    {
+      "id": "stop-method",
+      "title": "本ハンドラの停止方法",
+      "hints": [
+        "process_stop_handler",
+        "プロセス停止",
+        "ProcessStop",
+        "停止方法",
+        "メンテナンス"
+      ]
+    },
+    {
+      "id": "error-handling",
+      "title": "後続ハンドラで発生した例外(エラー)に応じた処理内容",
+      "hints": [
+        "ServiceUnavailable",
+        "nablarch.fw.results.ServiceUnavailable",
+        "ProcessStop",
+        "nablarch.fw.handler.ProcessStopHandler.ProcessStop",
+        "ProcessAbnormalEnd",
+        "nablarch.fw.launcher.ProcessAbnormalEnd",
+        "ServiceError",
+        "nablarch.fw.results.ServiceError",
+        "Result.Error",
+        "RuntimeException",
+        "ThreadDeath",
+        "StackOverflowError",
+        "OutOfMemoryError",
+        "VirtualMachineError",
+        "Retryable",
+        "例外ハンドリング",
+        "エラー処理"
+      ]
+    }
+  ],
+  "sections": {
+    "handler-class-name": "プロセスの停止要求があるまで後続ハンドラを繰り返し実行するハンドラ。メッセージキューやDBテーブルを監視し未処理データを随時処理するプロセスで使用する。\n\n**クラス名**: `nablarch.fw.handler.RequestThreadLoopHandler`",
+    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-standalone</artifactId>\n</dependency>\n```",
+    "constraints": ":ref:`retry_handler` より後ろに配置すること。このハンドラは処理継続可能な例外の場合に :java:extdoc:`リトライ可能例外(Retryable) <nablarch.fw.handler.retry.Retryable>` を送出するため、:ref:`retry_handler` よりも後ろに設定する必要がある。",
+    "service-unavailability-interval": "後続ハンドラから :java:extdoc:`ServiceUnavailable <nablarch.fw.results.ServiceUnavailable>` が発生した場合の待機時間を `serviceUnavailabilityRetryInterval` プロパティで設定する。省略時は1秒待機後に後続ハンドラを再実行する。\n\n> **警告**: 待機時間を長くしすぎると、サービスが開局に変更されても即処理が開始されない問題がある。要件にあわせて値を設定すること。\n\n```xml\n<component class=\"nablarch.fw.handler.RequestThreadLoopHandler\">\n  <!-- 待機時間に5秒を設定 -->\n  <property name=\"serviceUnavailabilityRetryInterval\" value=\"5000\" />\n</component>\n```\n\n> **補足**: 後続ハンドラに :ref:`ServiceAvailabilityCheckHandler` を設定しない場合は本設定値不要（設定しても使われない）。",
+    "stop-method": "プロセス停止要求を示す例外が発生するまで繰り返し後続ハンドラに処理を委譲する。メンテナンスなどでプロセスを停止する場合は、本ハンドラより後続に :ref:`process_stop_handler` を設定し、外部からプロセスを停止できるようにする必要がある。",
+    "error-handling": "> **補足**: メッセージキューやDBテーブルを監視するプロセスでは各リクエストは独立して扱われる。1つのリクエスト処理がエラーとなっても他のリクエスト処理は継続しなければならないため、プロセス正常停止要求や致命的な一部の例外を除き処理を継続する。\n\n| 例外/エラー | 処理内容 |\n|---|---|\n| :java:extdoc:`ServiceUnavailable <nablarch.fw.results.ServiceUnavailable>` | 一定時間待機後に後続ハンドラに再委譲（待機時間設定は :ref:`request_thread_loop_handler-interval` 参照） |\n| :java:extdoc:`ProcessStop <nablarch.fw.handler.ProcessStopHandler.ProcessStop>` | 本ハンドラの処理を終了 |\n| :java:extdoc:`ProcessAbnormalEnd <nablarch.fw.launcher.ProcessAbnormalEnd>` | 捕捉した例外を再送出 |\n| :java:extdoc:`ServiceError <nablarch.fw.results.ServiceError>` | 例外クラスにログ出力処理を委譲し、:java:extdoc:`Retryable <nablarch.fw.handler.retry.Retryable>` を送出 |\n| :java:extdoc:`Result.Error <nablarch.fw.Result.Error>` | `FATAL` レベルのログを出力し、:java:extdoc:`Retryable <nablarch.fw.handler.retry.Retryable>` を送出 |\n| :java:extdoc:`RuntimeException <java.lang.RuntimeException>` | `FATAL` レベルのログを出力し、:java:extdoc:`Retryable <nablarch.fw.handler.retry.Retryable>` を送出 |\n| :java:extdoc:`ThreadDeath <java.lang.ThreadDeath>` | `INFO` レベルのログを出力し、ThreadDeathを再送出 |\n| :java:extdoc:`StackOverflowError <java.lang.StackOverflowError>` | `FATAL` レベルのログを出力し、:java:extdoc:`Retryable <nablarch.fw.handler.retry.Retryable>` を送出 |\n| :java:extdoc:`OutOfMemoryError <java.lang.OutOfMemoryError>` | 標準エラー出力にヒープ不足発生メッセージを出力後、`FATAL` レベルのログを出力し、:java:extdoc:`Retryable <nablarch.fw.handler.retry.Retryable>` を送出。**標準エラー出力を先に行う理由**: ログ出力時に再度ヒープ不足が発生する可能性があるため、標準エラー出力にメッセージ出力後にログを出力する。ヒープ不足の原因オブジェクトへの参照が切れ処理継続可能な場合があるため Retryable を送出する |\n| :java:extdoc:`VirtualMachineError <java.lang.VirtualMachineError>` | 発生した例外を再送出 |\n| 上記以外のエラー | `FATAL` レベルのログを出力し、:java:extdoc:`Retryable <nablarch.fw.handler.retry.Retryable>` を送出 |"
+  }
+}

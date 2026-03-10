@@ -1,0 +1,56 @@
+{
+  "id": "web-application-architecture",
+  "title": "アーキテクチャ概要",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/architecture.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "web-application-structure",
+      "title": "ウェブアプリケーションの構成",
+      "hints": [
+        "NablarchServletContextListener",
+        "WebFrontController",
+        "ウェブアプリケーション構成",
+        "サーブレットコンテキストリスナー",
+        "ハンドラキュー",
+        "ServletAPI"
+      ]
+    },
+    {
+      "id": "web-application-flow",
+      "title": "ウェブアプリケーションの処理の流れ",
+      "hints": [
+        "WebFrontController",
+        "DispatchHandler",
+        "HttpResponse",
+        "HttpResponseHandler",
+        "リクエスト処理フロー",
+        "ディスパッチハンドラ",
+        "アクションクラス",
+        "jakarta.servlet.Filter"
+      ]
+    },
+    {
+      "id": "web-application-handlers",
+      "title": "ウェブアプリケーションで使用するハンドラ",
+      "hints": [
+        "ハンドラキュー構成",
+        "最小ハンドラ構成",
+        "文字エンコーディング",
+        "セッションストア",
+        "CSRFトークン検証",
+        "トランザクション管理",
+        "router_adaptor",
+        "セキュリティヘッダ"
+      ]
+    }
+  ],
+  "sections": {
+    "web-application-structure": "ウェブアプリケーション構築にはServletAPIの使用を前提とする。\n\n**コンポーネント**:\n\n- :ref:`nablarch_servlet_context_listener` (`NablarchServletContextListener`): システムリポジトリやログの初期化処理を行うサーブレットコンテキストリスナー\n- :ref:`web_front_controller` (`WebFrontController`): 受け取ったリクエストに対する処理をハンドラキューに委譲するサーブレットフィルタ",
+    "web-application-flow": "1. :ref:`web_front_controller` (`jakarta.servlet.Filter`の実装クラス)がrequestを受信する。\n2. :ref:`web_front_controller` はrequestに対する処理をハンドラキュー(handler queue)に委譲する。\n3. ハンドラキューのディスパッチハンドラ(`DispatchHandler`)が、URIを元に処理すべきアクションクラスを特定しハンドラキューの末尾に追加する。\n4. アクションクラス(action class)は、フォームクラス(form class)やエンティティクラス(entity class)を使用して業務ロジックを実行する。各クラスの詳細は :doc:`application_design` を参照。\n5. アクションクラスは処理結果を示す`HttpResponse`を作成し返却する。\n6. `HttpResponseHandler`が`HttpResponse`をクライアントへのレスポンスに変換する（例: JSPのServlet Forward）。\n7. responseが返却される。",
+    "web-application-handlers": "プロジェクトの要件に従い、ハンドラキューを構築すること。要件によっては、プロジェクトカスタムなハンドラを作成することになる。\n\n**リクエスト・レスポンス変換ハンドラ**:\n- :ref:`http_character_encoding_handler`\n- :ref:`http_response_handler`\n- :ref:`forwarding_handler`\n- :ref:`multipart_handler`\n- :ref:`session_store_handler`\n- :ref:`normalize_handler`\n- :ref:`secure_handler`\n\n**リクエストフィルタリングハンドラ**:\n- :ref:`service_availability`\n- :ref:`permission_check_handler`\n\n**データベース関連ハンドラ**:\n- :ref:`database_connection_management_handler`\n- :ref:`transaction_management_handler`\n\n**リクエスト検証ハンドラ**:\n- :ref:`csrf_token_verification_handler`\n\n**エラー処理ハンドラ**:\n- :ref:`http_error_handler`\n- :ref:`global_error_handler`\n\n**その他**:\n- :ref:`http_request_java_package_mapping`\n- :ref:`nablarch_tag_handler`\n- :ref:`thread_context_handler`\n- :ref:`thread_context_clear_handler`\n- :ref:`http_access_log_handler`\n- :ref:`file_record_writer_dispose_handler`\n- :ref:`health_check_endpoint_handler`\n\n**最小ハンドラ構成**:\n\nこれをベースに、プロジェクト要件に従ってNablarchの標準ハンドラやプロジェクトで作成したカスタムハンドラを追加する。\n\n| No. | ハンドラ | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|\n| 1 | :ref:`http_character_encoding_handler` | リクエストとレスポンスに文字エンコーディングを設定する | — | — |\n| 2 | :ref:`global_error_handler` | — | — | 実行時例外・エラー時にログ出力する |\n| 3 | :ref:`http_response_handler` | — | サーブレットフォーワード・リダイレクト・レスポンス書き込みのいずれかを行う | 実行時例外・エラー時に既定のエラーページを表示する |\n| 4 | :ref:`secure_handler` | — | レスポンスオブジェクト(:java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>`)にセキュリティ関連のレスポンスヘッダを設定する | — |\n| 5 | :ref:`multipart_handler` | マルチパートリクエストの内容を一時ファイルに保存する | 保存した一時ファイルを削除する | — |\n| 6 | :ref:`session_store_handler` | セッションストアから内容を読み込む | セッションストアに内容を書き込む | — |\n| 7 | :ref:`normalize_handler` | リクエストパラメータのノーマライズ処理を行う | — | — |\n| 8 | :ref:`forwarding_handler` | — | 遷移先が内部フォーワードの場合、後続ハンドラを再実行する | — |\n| 9 | :ref:`http_error_handler` | — | — | 例外の種類に応じたログ出力とレスポンスの生成を行う |\n| 10 | :ref:`nablarch_tag_handler` | Nablarchカスタムタグの動作に必要な事前処理を行う | — | — |\n| 11 | :ref:`database_connection_management_handler` | DB接続を取得する | DB接続を解放する | — |\n| 12 | :ref:`transaction_management_handler` | トランザクションを開始する | トランザクションをコミットする | トランザクションをロールバックする |\n| 13 | :ref:`router_adaptor` | リクエストパスをもとに呼び出すアクションを決定する | — | — |"
+  }
+}

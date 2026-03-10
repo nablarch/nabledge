@@ -1,0 +1,110 @@
+{
+  "id": "web-application-getting-started-project-upload",
+  "title": "アップロードを用いた一括登録機能の作成",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/project_upload/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpRequest.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/upload/PartInfo.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/upload/util/UploadHelper.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/exception/ApplicationException.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/Csv.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/CsvFormat.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Required.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Domain.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/LineNumber.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/ObjectMapper.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/ValidatorUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/validation/Validator.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/message/Message.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/message/ApplicationException.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html"
+  ],
+  "processing_patterns": [],
+  "index": [
+    {
+      "id": "action-method-overview",
+      "title": "作成する業務アクションメソッドの全体像",
+      "hints": [
+        "ProjectUploadAction",
+        "@OnDoubleSubmission",
+        "@OnError",
+        "ApplicationException",
+        "HttpRequest",
+        "PartInfo",
+        "LoginUserPrincipal",
+        "SessionUtil",
+        "MessageUtil",
+        "MessageLevel",
+        "HttpResponse",
+        "ExecutionContext",
+        "CSVファイルアップロード",
+        "一括登録",
+        "業務アクションメソッド",
+        "ファイルアップロード処理フロー"
+      ]
+    },
+    {
+      "id": "file-upload-implementation",
+      "title": "ファイルアップロード機能の実装",
+      "hints": [
+        "ApplicationException",
+        "MessageUtil",
+        "MessageLevel",
+        "HttpRequest",
+        "PartInfo",
+        "UploadHelper",
+        "filePathSetting",
+        "FilePathSetting",
+        "n:form",
+        "n:file",
+        "n:message",
+        "n:errors",
+        "multipart/form-data",
+        "ファイルアップロード画面",
+        "UploadHelper#moveFileTo",
+        "ファイル保存",
+        "マルチパートリクエストハンドラ",
+        "ファイルパス管理"
+      ]
+    },
+    {
+      "id": "bulk-registration-implementation",
+      "title": "一括登録機能の実装",
+      "hints": [
+        "ProjectUploadDto",
+        "ObjectMapper",
+        "ObjectMapperFactory",
+        "ValidatorUtil",
+        "UniversalDao",
+        "ApplicationException",
+        "InvalidDataFormatException",
+        "Message",
+        "MessageUtil",
+        "MessageLevel",
+        "@Csv",
+        "@CsvFormat",
+        "@Required",
+        "@Domain",
+        "@LineNumber",
+        "PartInfo",
+        "HttpRequest",
+        "HttpResponse",
+        "ExecutionContext",
+        "Collectors",
+        "LoginUserPrincipal",
+        "Project",
+        "CsvDataBindConfig",
+        "CSVファイル一括登録",
+        "ファイルアップロード",
+        "Bean Validation",
+        "バッチインサート",
+        "行番号取得"
+      ]
+    }
+  ],
+  "sections": {
+    "action-method-overview": "**アノテーション**: `@OnDoubleSubmission`, `@OnError`\n\n```java\n@OnDoubleSubmission\n@OnError(type = ApplicationException.class, path = \"/WEB-INF/view/projectUpload/create.jsp\")\npublic HttpResponse upload(HttpRequest request, ExecutionContext context) {\n    List<PartInfo> partInfoList = request.getPart(\"uploadFile\");\n    if (partInfoList.isEmpty()) {\n        throw new ApplicationException(\n                MessageUtil.createMessage(MessageLevel.ERROR, \"errors.upload\"));\n    }\n    PartInfo partInfo = partInfoList.get(0);\n    LoginUserPrincipal userContext = SessionUtil.get(context, \"userContext\");\n    List<Project> projects = readFileAndValidate(partInfo, userContext);\n    insertProjects(projects);\n    context.setRequestScopedVar(\"uploadProjectSize\", projects.size());\n    saveFile(partInfo);\n    return new HttpResponse(\"/WEB-INF/view/projectUpload/create.jsp\");\n}\n```\n\n処理の流れ：\n\n1. ファイルを取得する\n2. CSVファイルの内容をBeanにバインドしてバリデーションする\n3. DBへ一括登録する\n4. ファイルを保存する",
+    "file-upload-implementation": "## ファイルアップロード画面の作成\n\n- `n:form` の `enctype` 属性を `multipart/form-data` に指定（マルチパートファイル送信に必須）\n- `n:file` の `name` 属性に指定した値が、業務アクションで `HttpRequest#getPart` に渡す登録名となる\n- `n:message` で完了メッセージを表示。`option0` 属性にリクエストスコープのアップロード件数を指定\n- `n:errors` でバリデーションエラーメッセージを一覧表示\n\n```jsp\n<n:form useToken=\"true\" enctype=\"multipart/form-data\">\n    <c:if test=\"${not empty uploadProjectSize}\">\n        <ul><li class=\"message-info\"><n:message messageId=\"success.upload.project\" option0=\"${uploadProjectSize}\" /></li></ul>\n    </c:if>\n    <n:errors errorCss=\"message-error\"/>\n    <n:file name=\"uploadFile\" id=\"uploadFile\"/>\n    <n:button uri=\"/action/projectUpload/upload\" allowDoubleSubmission=\"false\" cssClass=\"btn btn-lg btn-light\">登録</n:button>\n</n:form>\n```\n\n## ファイルの取得と保存を行う業務アクションメソッドの作成\n\n- `HttpRequest#getPart` でファイルを取得\n- ファイルが未アップロードの場合、`PartInfo` リストのサイズは0となる。この値で業務例外（`ApplicationException`）を送出するなどの制御を行う\n- アップロードファイルはマルチパートリクエストハンドラによって一時領域に保存され、自動削除される。永続化が必要な場合はファイルを任意のディレクトリへ移送する\n- ファイルの移送はファイルパス管理を使用している場合のみ可能\n- `UploadHelper#moveFileTo` の第一引数には、設定ファイルに登録されたファイル格納ディレクトリのキー名を指定\n\n```java\npublic HttpResponse upload(HttpRequest request, ExecutionContext context)\n        throws IOException {\n    List<PartInfo> partInfoList = request.getPart(\"uploadFile\");\n    if (partInfoList.isEmpty()) {\n        throw new ApplicationException(MessageUtil.createMessage(MessageLevel.ERROR, \"errors.upload\"));\n    }\n    PartInfo partInfo = partInfoList.get(0);\n    saveFile(partInfo);\n}\n\nprivate void saveFile(final PartInfo partInfo) {\n    String fileName = generateUniqueFileName(partInfo.getFileName());\n    UploadHelper helper = new UploadHelper(partInfo);\n    helper.moveFileTo(\"uploadFiles\", fileName);\n}\n```\n\n```xml\n<!-- filepath-for-webui.xml -->\n<component name=\"filePathSetting\" class=\"nablarch.core.util.FilePathSetting\" autowireType=\"None\">\n  <property name=\"basePathSettings\">\n    <map>\n      <entry key=\"uploadFiles\" value=\"file:./work/input\" />\n    </map>\n  </property>\n</component>\n```",
+    "bulk-registration-implementation": "## ファイルをバインドするBeanの作成\n\nCSVファイルとBeanプロパティの紐付けは :java:extdoc:`@Csv<nablarch.common.databind.csv.Csv>` で設定する。CSVフォーマット指定は :java:extdoc:`@CsvFormat<nablarch.common.databind.csv.CsvFormat>` を使用する（:ref:`デフォルトのフォーマットの指定<data_bind-csv_format_set>` を使用する場合は不要）。詳細は :ref:`CSVファイルをJava Beansクラスにバインドする場合のフォーマット指定方法 <data_bind-csv_format-beans>` を参照。\n\n- ファイルからの入力値を受け付けるため、プロパティは :ref:`String型で定義<bean_validation-form_property>` する。適切な型への変換はバリデーションを通過した安全な値に対して行う\n- :java:extdoc:`@Required<nablarch.core.validation.ee.Required>` や :java:extdoc:`@Domain<nablarch.core.validation.ee.Domain>` などのバリデーション用アノテーションを付与して :ref:`Bean Validation<bean_validation>` を実行する\n- 行数プロパティのゲッタに :java:extdoc:`LineNumber<nablarch.common.databind.LineNumber>` を付与することで、対象データの行番号が自動設定される\n\n> **補足**: 入力必須項目のバリデーションエラーメッセージをファイルアップロード向けのメッセージに変更する場合は :ref:`入力値のチェックルールを設定する<client_create_validation_rule>` を参照。\n\n```java\n@Csv(headers = { /** ヘッダを記述 **/},\n        properties = { /** バインド対象のプロパティ **/},\n        type = Csv.CsvType.CUSTOM)\n@CsvFormat(charset = \"Shift_JIS\", fieldSeparator = ',', ignoreEmptyLine = true,\n        lineSeparator = \"\\r\\n\", quote = '\"',\n        quoteMode = CsvDataBindConfig.QuoteMode.NORMAL, requiredHeader = true, emptyToNull = true)\npublic class ProjectUploadDto implements Serializable {\n    @Required(message = \"{nablarch.core.validation.ee.Required.upload}\")\n    @Domain(\"projectName\")\n    private String projectName;\n\n    private Long lineNumber;\n\n    @LineNumber\n    public Long getLineNumber() {\n        return lineNumber;\n    }\n}\n```\n\n## CSVのバインドとバリデーション\n\nファイルのBeanバインドには :ref:`データバインド<data_bind>` の :java:extdoc:`ObjectMapper<nablarch.common.databind.ObjectMapper>` を使用する。:java:extdoc:`ObjectMapper#read()<nablarch.common.databind.ObjectMapper.read()>` でバインド済みBeanを取得できる。\n\n- :java:extdoc:`ValidatorUtil#getValidator<nablarch.core.validation.ee.ValidatorUtil.getValidator()>` で :java:extdoc:`Validator<jakarta.validation.Validator>` オブジェクトを生成し、任意のBeanに :ref:`Bean Validation<bean_validation>` を実行できる\n- エラー発生時もバリデーションを中止せず最終行まで検証する場合は、全エラーメッセージを :java:extdoc:`Message<nablarch.core.message.Message>` のリストに収集し、:java:extdoc:`ApplicationException<nablarch.core.message.ApplicationException>` を送出することで :ref:`tag-errors_tag` で画面出力できる\n- バリデーションメッセージへのプロパティ名付与については :ref:`バリデーションエラー時のメッセージに項目名を含めたい<bean_validation-property_name>` を参照\n\n```java\nprivate List<Project> readFileAndValidate(final PartInfo partInfo, final LoginUserPrincipal userContext) {\n    List<Message> messages = new ArrayList<>();\n    List<Project> projects = new ArrayList<>();\n\n    try (final ObjectMapper<ProjectUploadDto> mapper\n             = ObjectMapperFactory.create(ProjectUploadDto.class, partInfo.getInputStream())) {\n        ProjectUploadDto projectUploadDto;\n        while ((projectUploadDto = mapper.read()) != null) {\n            messages.addAll(validate(projectUploadDto));\n            projects.add(createProject(projectUploadDto, userContext.getUserId()));\n        }\n    } catch (InvalidDataFormatException e) {\n        messages.add(\n            MessageUtil.createMessage(MessageLevel.ERROR, \"errors.upload.format\", e.getLineNumber()));\n    }\n\n    if (!messages.isEmpty()) {\n        throw new ApplicationException(messages);\n    }\n    return projects;\n}\n```\n\n`validate()` メソッドでは、アノテーションベースの単項目バリデーションと業務ルールチェックを組み合わせる。`ValidatorUtil.validate()` を try/catch で囲み、`ApplicationException` に含まれる各エラーメッセージを `MessageUtil.createMessage()` で行番号付きのメッセージに変換してリストに追加する。その後、業務ルールチェック（顧客存在チェックなど）の失敗も同じリストに追加して返す。\n\n```java\nprivate List<Message> validate(final ProjectUploadDto projectUploadDto) {\n    List<Message> messages = new ArrayList<>();\n\n    // 単項目バリデーション（Bean Validationアノテーションに基づく）\n    try {\n        ValidatorUtil.validate(projectUploadDto);\n    } catch (ApplicationException e) {\n        messages.addAll(e.getMessages()\n                .stream()\n                .map(message -> MessageUtil.createMessage(MessageLevel.ERROR,\n                        \"errors.upload.validate\", projectUploadDto.getLineNumber(), message))\n                .collect(Collectors.toList()));\n    }\n\n    // 顧客存在チェック（業務ルール）\n    if (!existsClient(projectUploadDto)) {\n        messages.add(MessageUtil.createMessage(MessageLevel.ERROR,\n                \"errors.upload.client\", projectUploadDto.getLineNumber()));\n    }\n\n    return messages;\n}\n```\n\n## DBへの一括登録\n\n一括登録は :java:extdoc:`UniversalDao#batchInsert<nablarch.common.dao.UniversalDao.batchInsert(java.util.List)>` を使用する。一度に登録する件数が膨大になるとパフォーマンス低下を招くため、1回あたりの件数に上限を設ける（例：100件ごとに実行）。\n\n```java\npublic HttpResponse upload(HttpRequest request, ExecutionContext context) throws IOException {\n    // バリデーションの実行は前述\n    insertProjects(projects);\n    // ファイル保存は前述\n}\n\nprivate void insertProjects(List<Project> projects) {\n    List<Project> insertProjects = new ArrayList<Project>();\n    for (Project project : projects) {\n        insertProjects.add(project);\n        if (insertProjects.size() >= 100) {\n            UniversalDao.batchInsert(insertProjects);\n            insertProjects.clear();\n        }\n    }\n    if (!insertProjects.isEmpty()) {\n        UniversalDao.batchInsert(insertProjects);\n    }\n}\n```"
+  }
+}

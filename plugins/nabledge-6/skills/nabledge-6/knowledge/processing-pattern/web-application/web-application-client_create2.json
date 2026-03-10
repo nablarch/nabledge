@@ -1,0 +1,47 @@
+{
+  "id": "web-application-client_create2",
+  "title": "登録内容の確認",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/client_create/client_create2.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/interceptor/InjectForm.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnError.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Required.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/session/SessionUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html"
+  ],
+  "index": [
+    {
+      "id": "registration-confirmation",
+      "title": "登録確認処理の実装",
+      "hints": [
+        "ClientForm",
+        "ClientAction",
+        "BeanUtil",
+        "SessionUtil",
+        "UniversalDao",
+        "EntityList",
+        "Client",
+        "Industry",
+        "HttpResponse",
+        "HttpRequest",
+        "ExecutionContext",
+        "@InjectForm",
+        "@OnError",
+        "@Required",
+        "@Domain",
+        "ApplicationException",
+        "Serializable",
+        "フォームクラス作成",
+        "バリデーション設定",
+        "セッションストア保存",
+        "登録確認画面",
+        "確認画面JSP",
+        "入力画面確認画面切り替え"
+      ]
+    }
+  ],
+  "sections": {
+    "registration-confirmation": "## フォームクラス\n\n**クラス**: `ClientForm`\n\n- フォームクラスには必ずセッタ及びゲッタを作成する\n- :java:extdoc:`@InjectForm <nablarch.common.web.interceptor.InjectForm>` を使用したバリデーション実行のため、フォームは `Serializable` インタフェースを実装する\n- 入力値プロパティは全てString型で宣言する（:ref:`bean_validation-form_property` 参照）\n\n```java\npublic class ClientForm implements Serializable {\n    private String clientName;\n    private String industryCode;\n    // getter、setterは省略\n}\n```\n\n## 登録画面JSPの修正\n\n登録画面JSP（`/src/main/webapp/WEB-INF/view/client/create.jsp`）に以下の修正を行う：\n\n- :ref:`tag-text_tag` の `name` 属性に顧客名プロパティ名を指定する（:ref:`tag-access_rule` 参照）\n- :ref:`tag-select_tag` の `name` 属性に業種コードプロパティ名を指定する\n- 各タグに `errorCss` 属性を追加して入力エラー時のCSSクラスを設定する\n- :ref:`tag-button_tag` の `uri` 属性に確認画面へのURIを指定する（:ref:`tag-specify_uri` 参照）\n- `n:error` タグで入力エラー時のエラーメッセージ表示領域を追加する\n\n```jsp\n<n:form>\n    <div class=\"row m-3\">\n        <label class=\"col-md-2 col-form-label fs-5\">顧客名</label>\n        <div class=\"col-md-10 form-group\">\n            <n:text name=\"form.clientName\"\n                    cssClass=\"form-control form-control-lg\" errorCss=\"input-error\" />\n                    <n:error errorCss=\"message-error mt-2\" name=\"form.clientName\" />\n        </div>\n    </div>\n    <div class=\"row m-3\">\n        <label class=\"col-md-2 col-form-label fs-5\">業種</label>\n        <div class=\"col-md-10 form-group\">\n            <n:select\n                    listName=\"industries\"\n                    elementValueProperty=\"industryCode\"\n                    elementLabelProperty=\"industryName\"\n                    name=\"form.industryCode\"\n                    withNoneOption=\"true\"\n                    cssClass=\"form-select form-select-lg\"\n                    errorCss=\"input-error\" />\n            <n:error errorCss=\"message-error mt-2\" name=\"form.industryCode\" />\n        </div>\n    </div>\n    <div class=\"button-nav\">\n        <n:button\n                uri=\"/action/client/confirm\"\n                cssClass=\"btn btn-lg btn-success\">登録</n:button>\n    </div>\n</n:form>\n```\n\n## バリデーションルールの設定\n\n**アノテーション**: `@Required`, `@Domain`\n\n- :ref:`bean_validation` には `nablarch.core.validation.ee` 配下のアノテーションを使用する（`nablarch.core.validation.validator` 配下の同名アノテーションと混同しないこと）\n- :ref:`ドメインバリデーション <bean_validation-domain_validation>` でプロパティにバリデーションルールを定義する\n- プルダウン等に適したメッセージは :java:extdoc:`Required <nablarch.core.validation.ee.Required>` の `message` 属性で独自定義する\n\n```java\n@Required\n@Domain(\"clientName\")\nprivate String clientName;\n\n@Required(message = \"{nablarch.core.validation.ee.Required.select.message}\")\n@Domain(\"industryCode\")\nprivate String industryCode;\n```\n\nプルダウン向けのメッセージは `messages.properties` に追加する：\n\n```properties\n# プルダウンに適した入力必須メッセージを追加する\nnablarch.core.validation.ee.Required.select.message=選択してください。\n```\n\nメッセージ定義の詳細は :ref:`message-property_definition` を参照。\n\n## confirmメソッドとバリデーション設定\n\n**アノテーション**: `@InjectForm`, `@OnError`\n\n```java\n@InjectForm(form = ClientForm.class, prefix = \"form\")\n@OnError(type = ApplicationException.class, path = \"forward://input\")\npublic HttpResponse confirm(HttpRequest request, ExecutionContext context) {\n    ClientForm form = context.getRequestScopedVar(\"form\");\n\n    Client client = BeanUtil.createAndCopy(Client.class, form);\n    SessionUtil.put(context, \"client\", client);\n\n    EntityList<Industry> industries = UniversalDao.findAll(Industry.class);\n    context.setRequestScopedVar(\"industries\", industries);\n\n    return new HttpResponse(\"/WEB-INF/view/client/confirm.jsp\");\n}\n```\n\n- 業務アクションメソッドに :java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` を付与して :ref:`bean_validation` を実行する\n- :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` の `path` 属性でバリデーションエラー時のフォワード先を指定する（確認画面遷移前に業種リスト設定が必要なため、inputメソッドへ内部フォワードする）\n- バリデーション通過後はリクエストスコープから `context.getRequestScopedVar(\"form\")` でバリデーション済みオブジェクトを取得できる\n- 登録画面の表示処理時と同様、業種情報をデータベースから取得してリクエストスコープに設定する\n- :ref:`セッションストア <session_store>` への保存には :java:extdoc:`SessionUtil <nablarch.common.web.session.SessionUtil>` を使用する\n- :ref:`セッションストアにフォームは格納しない <session_store-form>` ため、:java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` でフォームをエンティティに変換してから格納する\n- :ref:`セッションストア <session_store>` を使用する際の詳しい実装例は :ref:`create_example` を参照\n\n## 確認画面JSP\n\n**ファイル**: `/src/main/webapp/WEB-INF/view/client/confirm.jsp`\n\n:ref:`tag-confirmation_page_tag` を使用することで登録画面のJSPを流用して確認画面を作成できる（:ref:`tag-make_common` 参照）。\n\n```jsp\n<%@ page language=\"java\" contentType=\"text/html; charset=UTF-8\" pageEncoding=\"UTF-8\" %>\n<%@ taglib prefix=\"c\" uri=\"jakarta.tags.core\" %>\n<%@ taglib prefix=\"n\" uri=\"http://tis.co.jp/nablarch\" %>\n<n:confirmationPage path=\"./create.jsp\" ></n:confirmationPage>\n```\n\n## 登録画面・確認画面の表示切り替え\n\n- 登録画面のみで表示する項目は :ref:`tag-for_input_page_tag` の内部に記述する\n- 確認画面のみで表示する項目は :ref:`tag-for_confirmation_page_tag` の内部に記述する\n\n```jsp\n<n:forInputPage>\n    <n:button uri=\"/action/client/confirm\">登録</n:button>\n</n:forInputPage>\n<n:forConfirmationPage>\n    <n:button uri=\"/action/client/back\">入力へ戻る</n:button>\n    <n:button uri=\"/action/client/create\">確定</n:button>\n</n:forConfirmationPage>\n```\n\n## 動作確認\n\n**バリデーションエラーが発生しないケース**\n\n1. 顧客登録画面を表示する\n2. 顧客名に全角文字列、業種に任意の値を選択して確認ボタンを押下する\n3. 登録確認画面が表示され、入力した顧客名・業種がラベルで表示されることを確認する\n\n**バリデーションエラーが発生するケース**\n\n1. 顧客登録画面を表示する\n2. 顧客名に半角文字列、業種を未選択にして確認ボタンを押下する\n3. 登録画面が再度表示され、エラーメッセージが表示されることを確認する"
+  }
+}
