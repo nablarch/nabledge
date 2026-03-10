@@ -4,22 +4,10 @@ nabledge-6プラグインの主な変更内容を記録しています。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に基づいています。
 
-## [Unreleased]
+## [0.5] - 2026-03-10
 
-### 修正
-- コード分析ワークフローで、出力ファイルの構築と書き込みが別ステップに分離された場合にトークン使用量が異常に増加する問題を修正しました (Issue #125)
-- データリードハンドラの知識検索で、`createReader` メソッドが検出されない問題を修正しました (Issue #125)
-
-### 変更
-- **知識検索アーキテクチャの刷新**: 全文検索→インデックス検索のフォールバック構成に変更
-- 知識ファイルのセクション形式をMarkdownテキストに統一（新形式での再生成により対応）
-- index.toonを5フィールド構成に拡張
-- 知識検索時のファイル選択精度を向上させました。より関連性の高いドキュメントセクションを選択できるようになりました (Issue #88)
-
-### 削除
-- keyword-search.md、knowledge-search.md、section-judgement.md（トップレベル）を新ワークフローに置換
-- 旧検索パイプライン用スクリプト（extract-section-hints.sh、parse-index.sh、sort-sections.sh）を削除
-- 既存の知識ファイル17件を削除（新形式での全量再生成を予定）
+### 追加
+- Nablarch 6の全ドキュメントをカバーする知識ファイルを追加しました。より広い範囲の質問に回答できるようになりました。
 
 ## [0.4] - 2026-03-04
 
@@ -49,6 +37,7 @@ nabledge-6プラグインの主な変更内容を記録しています。
 ### 追加
 - 評価版として、Nablarch 6のバッチ処理に関する基礎知識とコード分析ワークフローを提供
 
+[0.5]: https://github.com/nablarch/nabledge/releases/tag/0.5
 [0.4]: https://github.com/nablarch/nabledge/releases/tag/0.4
 [0.3]: https://github.com/nablarch/nabledge/releases/tag/0.3
 [0.2]: https://github.com/nablarch/nabledge/releases/tag/0.2
