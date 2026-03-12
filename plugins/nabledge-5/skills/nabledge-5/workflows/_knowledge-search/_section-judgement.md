@@ -30,7 +30,7 @@ Caller converts to pointer JSON.
 
 **Command**:
 ```bash
-KNOWLEDGE_DIR=".claude/skills/nabledge-6/knowledge"
+KNOWLEDGE_DIR=".claude/skills/nabledge-5/knowledge"
 
 for pair in "component/libraries/libraries-universal_dao.json:paging" \
             "component/libraries/libraries-universal_dao.json:overview" \

@@ -77,7 +77,7 @@ Output directory: .nabledge/20260210
 5. **Classify dependencies**:
    - Project code (proman-*): Trace further
    - Nablarch framework: Note for knowledge search
-   - JDK/Jakarta EE: Note but don't trace
+   - JDK/Java EE: Note but don't trace
    - Third-party libraries: Note but don't trace
 
 6. **Determine trace depth** (ask user if unclear):
@@ -122,7 +122,7 @@ Output directory: .nabledge/20260210
 
 2. **Execute full-text search**:
    ```bash
-   bash .claude/skills/nabledge-6/scripts/full-text-search.sh \
+   bash .claude/skills/nabledge-5/scripts/full-text-search.sh \
      "UniversalDao" "ExecutionContext" "ValidationUtil" "validation" "transaction"
    ```
    - Output: Scored and ranked candidate sections (max 15 results)
@@ -156,8 +156,8 @@ Output directory: .nabledge/20260210
 
 **MUST READ FIRST** (use single cat command for efficiency):
 ```bash
-cat .claude/skills/nabledge-6/assets/code-analysis-template.md \
-    .claude/skills/nabledge-6/assets/code-analysis-template-guide.md
+cat .claude/skills/nabledge-5/assets/code-analysis-template.md \
+    .claude/skills/nabledge-5/assets/code-analysis-template-guide.md
 ```
 
 **Note**: Template examples are inlined in Step 3.4 below. Do NOT read code-analysis-template-examples.md.
@@ -171,14 +171,14 @@ cat .claude/skills/nabledge-6/assets/code-analysis-template.md \
 
 #### 3.2: Pre-fill deterministic placeholders
 
-**Tool**: Bash (.claude/skills/nabledge-6/scripts/prefill-template.sh)
+**Tool**: Bash (.claude/skills/nabledge-5/scripts/prefill-template.sh)
 
 **Action**: Execute prefill script to pre-populate 8 deterministic placeholders:
 
 ```bash
 # Execute prefill script (now calculates output path internally)
 # Capture output path from the script's final "Output: <path>" line
-OUTPUT_PATH=$(.claude/skills/nabledge-6/scripts/prefill-template.sh \
+OUTPUT_PATH=$(.claude/skills/nabledge-5/scripts/prefill-template.sh \
   --target-name "<target-name>" \
   --target-desc "<one-line-description>" \
   --modules "<module1, module2>" \
@@ -201,7 +201,7 @@ echo "Output file: $OUTPUT_PATH"
 - `knowledge-files`: Comma-separated knowledge file basenames from Step 2
   - Example: "libraries-universal_dao,libraries-data_bind" (extension .json is optional)
   - **Important**: Pass basenames without extension (e.g., 'universal-dao'). Script handles paths and .json extension defensively but workflows should use basenames.
-  - Script searches in .claude/skills/nabledge-6/knowledge/ and includes all matches
+  - Script searches in .claude/skills/nabledge-5/knowledge/ and includes all matches
   - Automatically converts .json paths to .md paths
   - If multiple files found, category path added to labels for disambiguation
 
@@ -242,20 +242,20 @@ echo "Output file: $OUTPUT_PATH"
 
 #### 3.3: Generate Mermaid diagram skeletons
 
-**Tool**: Bash (.claude/skills/nabledge-6/scripts/generate-mermaid-skeleton.sh)
+**Tool**: Bash (.claude/skills/nabledge-5/scripts/generate-mermaid-skeleton.sh)
 
 **Action**: Generate diagram skeletons to reduce LLM workload:
 
 **Class Diagram Skeleton**:
 ```bash
-.claude/skills/nabledge-6/scripts/generate-mermaid-skeleton.sh \
+.claude/skills/nabledge-5/scripts/generate-mermaid-skeleton.sh \
   --source-files "<file1.java,file2.java>" \
   --diagram-type class
 ```
 
 **Sequence Diagram Skeleton**:
 ```bash
-.claude/skills/nabledge-6/scripts/generate-mermaid-skeleton.sh \
+.claude/skills/nabledge-5/scripts/generate-mermaid-skeleton.sh \
   --source-files "<main-file.java>" \
   --diagram-type sequence \
   --main-class "<MainClass>"
@@ -483,7 +483,7 @@ mapper.close();
 - Each record output via `mapper.write(dto)` in `handle()` (Line 52)
 - Resources released via `mapper.close()` in `terminate()` (Line 60)
 
-**Details**: [Data Bind](../../.claude/skills/nabledge-6/docs/features/libraries/data-bind.md)
+**Details**: [Data Bind](../../.claude/skills/nabledge-5/docs/features/libraries/data-bind.md)
 ```
 
 #### 3.5: Fill remaining placeholders and output
@@ -612,8 +612,8 @@ mapper.close();
 
 ## Output template
 
-**Template file**: `.claude/skills/nabledge-6/assets/code-analysis-template.md`
-**Template guide**: `.claude/skills/nabledge-6/assets/code-analysis-template-guide.md`
+**Template file**: `.claude/skills/nabledge-5/assets/code-analysis-template.md`
+**Template guide**: `.claude/skills/nabledge-5/assets/code-analysis-template-guide.md`
 **Note**: Template examples are inlined in Step 3.4
 
 The template provides structured format with sections:
