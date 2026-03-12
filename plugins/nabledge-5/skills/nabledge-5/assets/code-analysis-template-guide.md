@@ -210,9 +210,9 @@ mapper.close();
 ### {{official_docs_links}}
 
 ```markdown
-- [Nablarchバッチ処理](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/index.html)
-- [データバインド](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/data_io/data_bind.html)
-- [業務日付管理](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/system_utility/business_date.html)
+- [Nablarchバッチ処理](https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/batch/index.html)
+- [データバインド](https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/libraries/data_io/data_bind.html)
+- [業務日付管理](https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/libraries/system_utility/business_date.html)
 ```
 
 ## Tips

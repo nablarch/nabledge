@@ -253,15 +253,15 @@ String batchDate = BusinessDateUtil.getDate("batch");
 ```markdown
 ### Official Documentation
 
-- [Nablarchバッチ処理](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/index.html)
-- [データバインド](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/data_io/data_bind.html)
-- [業務日付管理](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/system_utility/business_date.html)
-- [ファイルパス管理](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/file_path_management.html)
-- [UniversalDao](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/database/universal_dao.html)
+- [Nablarchバッチ処理](https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/batch/index.html)
+- [データバインド](https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/libraries/data_io/data_bind.html)
+- [業務日付管理](https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/libraries/system_utility/business_date.html)
+- [ファイルパス管理](https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/libraries/file_path_management.html)
+- [UniversalDao](https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/libraries/database/universal_dao.html)
 ```
 
 **Tips**:
 - Include 3-8 official documentation links
-- Use full URLs (https://nablarch.github.io/docs/LATEST/doc/...)
+- Use full URLs (https://nablarch.github.io/docs/5-LATEST/doc/...)
 - Match the topics covered in Knowledge Base Links
 - Order by relevance to analyzed code
