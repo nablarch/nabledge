@@ -61,7 +61,7 @@ nablarch-fw-standalone, nablarch-core-transaction, nablarch-core-jdbc, モジュ
 
 ## 制約
 
-- :ref:`database_connection_management_handler` より後ろに設定すること。DBトランザクション制御時、スレッド上にトランザクション管理対象のDB接続が存在している必要がある。
+- [database_connection_management_handler](handlers-database_connection_management_handler.md) より後ろに設定すること。DBトランザクション制御時、スレッド上にトランザクション管理対象のDB接続が存在している必要がある。
 
 <details>
 <summary>keywords</summary>
@@ -76,7 +76,7 @@ database_connection_management_handler, DbConnectionManagementHandler, ハンド
 
 トランザクション識別名のデフォルトは `transaction`。変更する場合は `transactionName` プロパティに設定する。
 
-> **補足**: :ref:`database_connection_management_handler` で設定したDBに対してトランザクション制御する場合、`DbConnectionManagementHandler#connectionName` に設定した値と同じ値を `transactionName` プロパティに設定すること。`connectionName` が未設定の場合は `transactionName` の設定も省略可。
+> **補足**: [database_connection_management_handler](handlers-database_connection_management_handler.md) で設定したDBに対してトランザクション制御する場合、`DbConnectionManagementHandler#connectionName` に設定した値と同じ値を `transactionName` プロパティに設定すること。`connectionName` が未設定の場合は `transactionName` の設定も省略可。
 
 ```xml
 <component class="nablarch.fw.handler.LoopHandler">

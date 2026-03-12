@@ -20,12 +20,12 @@
 > **補足**: 応答不要メッセージングでは以下が異なる: (1) データ取り込みが目的で、業務ロジックは後続するバッチが行うため、バリデーションを行わない (2) 電文を返さないため処理結果として `Success` を返す
 
 **フォームクラス**
-`RequestMessage` をマッピングするクラス。バリデーション用アノテーションの設定と相関バリデーションロジックを持つ。プロパティは全て `String` で定義する（バイナリ項目のみバイト配列）。`String` とすべき理由は :ref:`bean_validation-form_property` 参照。
+`RequestMessage` をマッピングするクラス。バリデーション用アノテーションの設定と相関バリデーションロジックを持つ。プロパティは全て `String` で定義する（バイナリ項目のみバイト配列）。`String` とすべき理由は [bean_validation-form_property](../../component/libraries/libraries-bean_validation.md) 参照。
 
 **エンティティクラス**
 テーブルと1対1に対応するクラス。カラムに対応するプロパティを持つ。
 
-> **重要**: メッセージングはシステムで共通のデータリーダを使用するため、:ref:`Nablarchバッチアプリケーションの責務配置<nablarch_batch-application_design>` と異なり、アクションはデータリーダを生成する責務を持たない。メッセージングで使用するデータリーダはコンポーネント定義に `dataReader` という名前で追加する。
+> **重要**: メッセージングはシステムで共通のデータリーダを使用するため、[Nablarchバッチアプリケーションの責務配置](../nablarch-batch/nablarch-batch-application_design.md) と異なり、アクションはデータリーダを生成する責務を持たない。メッセージングで使用するデータリーダはコンポーネント定義に `dataReader` という名前で追加する。
 
 <details>
 <summary>keywords</summary>

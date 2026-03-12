@@ -43,7 +43,7 @@ nablarch-fw-web, com.nablarch.framework, モジュール依存関係
 
 ## 制約
 
-:ref:`http_response_handler` より後ろに設定すること。本ハンドラで設定したレスポンスヘッダを :ref:`http_response_handler` がServlet APIのレスポンスオブジェクトに設定するため。
+[http_response_handler](handlers-http_response_handler.md) より後ろに設定すること。本ハンドラで設定したレスポンスヘッダを [http_response_handler](handlers-http_response_handler.md) がServlet APIのレスポンスオブジェクトに設定するため。
 
 <details>
 <summary>keywords</summary>
@@ -117,7 +117,7 @@ SecureResponseHeader, SecureResponseHeaderSupport, nablarch.fw.web.handler.secur
 
 ## Content Security Policy(CSP)に対応する
 
-本ハンドラの設定と `ContentSecurityPolicyHeader`、および :ref:`Jakarta Server PagesカスタムタグのCSP対応 <tag-content_security_policy>` を組み合わせることでCSPに関する機能を有効にできる。
+本ハンドラの設定と `ContentSecurityPolicyHeader`、および [Jakarta Server PagesカスタムタグのCSP対応](../libraries/libraries-tag.md) を組み合わせることでCSPに関する機能を有効にできる。
 
 > **補足**: Content Security Policy(CSP)は、クロスサイトスクリプティングなどのコンテンツへのインジェクションに関する攻撃を検知し影響を軽減するために追加できる仕組みである。
 
@@ -201,7 +201,7 @@ nonceはリクエストの都度生成され、リクエストスコープに格
 - onclick属性にサブミット用の関数呼び出しを設定するカスタムタグは、その内容をscript要素に出力するように変更する。
 - 任意の要素にnonceを設定できるカスタムタグも有効になる。
 
-詳細は :ref:`Jakarta Server PagesカスタムタグのCSP対応 <tag-content_security_policy>` を参照。
+詳細は [Jakarta Server PagesカスタムタグのCSP対応](../libraries/libraries-tag.md) を参照。
 
 <details>
 <summary>keywords</summary>

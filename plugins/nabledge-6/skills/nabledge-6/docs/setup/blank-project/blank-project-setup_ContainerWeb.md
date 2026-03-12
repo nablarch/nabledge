@@ -25,8 +25,8 @@
 | プロジェクト種別 | Mavenプロジェクト |
 | プロジェクト構成 | 単一プロジェクト構成 |
 | 使用DB | H2 Database Engine（アプリケーションに組み込み） |
-| 組み込まれているアダプタ | ルーティングアダプタ（:ref:`router_adaptor` 参照） |
-| 生成するプロジェクトに含まれるもの | Nablarchウェブアプリケーション用の基本設定、疎通確認用ウェブアプリケーション、Mavenと連動して動作するツールの初期設定（:ref:`about_maven_parent_module` 参照） |
+| 組み込まれているアダプタ | ルーティングアダプタ（[router_adaptor](../../component/adapters/adapters-router_adaptor.md) 参照） |
+| 生成するプロジェクトに含まれるもの | Nablarchウェブアプリケーション用の基本設定、疎通確認用ウェブアプリケーション、Mavenと連動して動作するツールの初期設定（[about_maven_parent_module](blank-project-MavenModuleStructures.md) 参照） |
 
 他のプロジェクトとの関係およびディレクトリ構成は [../MavenModuleStructures/index](blank-project-MavenModuleStructures.md) を参照。
 
@@ -164,9 +164,9 @@ docker run, コンテナ実行, ボリューム指定, Docker Toolbox, SAMPLE.h2
 
 ## データベースに関する設定を行う
 
-初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は :ref:`customize-db` を参照。
+初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は [customize-db](blank-project-CustomizeDB.md) を参照。
 
-ER図からのDDL生成・実行、Entityクラスの自動生成にはgsp-dba-maven-pluginの初期設定と実行が必要。詳細は :ref:`gsp-maven-plugin` を参照。
+ER図からのDDL生成・実行、Entityクラスの自動生成にはgsp-dba-maven-pluginの初期設定と実行が必要。詳細は [gsp-maven-plugin](blank-project-addin_gsp.md) を参照。
 
 <details>
 <summary>keywords</summary>

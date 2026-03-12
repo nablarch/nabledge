@@ -8,16 +8,16 @@ Nablarchアプリケーションフレームワークは、処理方式対応の
 
 **様々な処理方式に対応**
 
-実行制御基盤と:ref:`ライブラリ<library>`の組み合わせで以下の処理方式に対応:
+実行制御基盤と[ライブラリ](../../component/libraries/libraries-libraries.md)の組み合わせで以下の処理方式に対応:
 
-- :ref:`web_application`
+- [web_application](../../processing-pattern/web-application/web-application-web.md)
 - :ref:`web_service`
-- :ref:`batch_application`
-- :ref:`messaging`
+- [batch_application](../../processing-pattern/nablarch-batch/nablarch-batch-batch.md)
+- [messaging](../../processing-pattern/db-messaging/db-messaging-messaging.md)
 
 **共通アーキテクチャ（パイプライン型処理モデル）**
 
-:ref:`共通アーキテクチャ<nablarch_architecture>`では、パイプライン型処理モデルに従い全データ処理を実行。複数の処理方式を組み合わせるシステムで以下のメリットがある:
+[共通アーキテクチャ](about-nablarch-architecture.md)では、パイプライン型処理モデルに従い全データ処理を実行。複数の処理方式を組み合わせるシステムで以下のメリットがある:
 
 - **柔軟な機能追加・変更**: パイプラインのハンドラを差し替えることで機能追加・変更が容易。ハンドラは処理方式間で共有可能なため、処理方式ごとに同じ機能を重複実装する必要がない。
 - **開発方法の共通化**: 各実行制御基盤上のアプリケーションをほぼ同様の方法で開発・テストできるため、ある処理方式のスキルで他の処理方式も最小学習で開発可能。

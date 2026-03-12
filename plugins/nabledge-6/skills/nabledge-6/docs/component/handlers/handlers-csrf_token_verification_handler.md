@@ -34,10 +34,10 @@ nablarch-fw-web, com.nablarch.framework, モジュール, Maven依存関係
 
 **必須要件**: 本ハンドラはCSRFトークンをセッションストアに格納するため、本ハンドラを使用する場合は :ref:`session_store` の使用が必須となる。
 
-- :ref:`session_store_handler` より後ろに配置すること（CSRFトークンをセッションストアに格納するため）
-- :ref:`tag` を使用する場合は :ref:`nablarch_tag_handler` より後ろに配置すること（:ref:`tag-hidden_encryption` を使用してCSRFトークンを出力するため）
+- [session_store_handler](handlers-SessionStoreHandler.md) より後ろに配置すること（CSRFトークンをセッションストアに格納するため）
+- :ref:`tag` を使用する場合は [nablarch_tag_handler](handlers-nablarch_tag_handler.md) より後ろに配置すること（:ref:`tag-hidden_encryption` を使用してCSRFトークンを出力するため）
 
-> **補足**: :ref:`multipart_handler` を使ったファイルアップロード時にファイルの保存前にCSRFトークンの検証を行いたい場合は、:ref:`multipart_handler` の前に本ハンドラおよび :ref:`session_store_handler` を配置すること。
+> **補足**: [multipart_handler](handlers-multipart_handler.md) を使ったファイルアップロード時にファイルの保存前にCSRFトークンの検証を行いたい場合は、[multipart_handler](handlers-multipart_handler.md) の前に本ハンドラおよび [session_store_handler](handlers-SessionStoreHandler.md) を配置すること。
 
 <details>
 <summary>keywords</summary>

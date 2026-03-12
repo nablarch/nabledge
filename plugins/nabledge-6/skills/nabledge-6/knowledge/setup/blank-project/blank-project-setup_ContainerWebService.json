@@ -4,10 +4,9 @@
   "official_doc_urls": [
     "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/blank_project/setup_containerBlankProject/setup_ContainerWebService.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "container-restful-web-service-setup",
+      "id": "s1",
       "title": "コンテナ用RESTfulウェブサービスプロジェクトの初期セットアップ",
       "hints": [
         "コンテナ用RESTfulウェブサービス",
@@ -18,7 +17,7 @@
       ]
     },
     {
-      "id": "prerequisites",
+      "id": "s2",
       "title": "事前準備",
       "hints": [
         "事前準備",
@@ -29,7 +28,7 @@
       ]
     },
     {
-      "id": "project-overview",
+      "id": "s3",
       "title": "生成するプロジェクトの概要",
       "hints": [
         "Mavenプロジェクト",
@@ -40,7 +39,7 @@
       ]
     },
     {
-      "id": "blank-project-creation",
+      "id": "s4",
       "title": "ブランクプロジェクト作成",
       "hints": [
         "mvn archetype:generate",
@@ -51,7 +50,7 @@
       ]
     },
     {
-      "id": "connectivity-check",
+      "id": "s5",
       "title": "疎通確認",
       "hints": [
         "疎通確認",
@@ -60,7 +59,7 @@
       ]
     },
     {
-      "id": "create-container-image",
+      "id": "s6",
       "title": "コンテナイメージを作成する",
       "hints": [
         "コンテナイメージ作成",
@@ -69,7 +68,7 @@
       ]
     },
     {
-      "id": "run-container-image",
+      "id": "s7",
       "title": "コンテナイメージを実行する",
       "hints": [
         "コンテナイメージ実行",
@@ -80,7 +79,7 @@
       ]
     },
     {
-      "id": "database-configuration",
+      "id": "s8",
       "title": "データベースに関する設定を行う",
       "hints": [
         "H2 Database Engine",
@@ -91,7 +90,7 @@
       ]
     },
     {
-      "id": "appendix",
+      "id": "s9",
       "title": "補足",
       "hints": [
         "H2データ確認",
@@ -101,14 +100,14 @@
     }
   ],
   "sections": {
-    "container-restful-web-service-setup": "コンテナ用RESTfulウェブサービスプロジェクトの初期セットアップでは以下を行う。\n\n- RESTfulウェブサービスプロジェクトの生成\n- RESTfulウェブサービスプロジェクトの動作確認\n- コンテナイメージの作成\n- コンテナイメージの実行",
-    "prerequisites": ":ref:`firstStepContainerWebServiceStartupTest` で使用するため、以下のいずれかをインストールする。\n\n- Firefox\n- Chrome",
-    "project-overview": "| 項目 | 説明 |\n|---|---|\n| プロジェクト種別 | Mavenプロジェクト |\n| プロジェクト構成 | 単一プロジェクト構成 |\n| 使用DB | H2 Database Engine（アプリケーションに組み込み） |\n| 組み込まれているアダプタ | Jersey用アダプタ（:ref:`jaxrs_adaptor`）、ルーティングアダプタ（:ref:`router_adaptor`） |\n| 生成するプロジェクトに含まれるもの | NablarchのRESTfulウェブサービス用の基本的な設定、疎通確認用RESTfulウェブサービス、Mavenと連動して動作するツールの初期設定 |",
-    "blank-project-creation": "[Maven Archetype Plugin](https://maven.apache.org/archetype/maven-archetype-plugin/usage.html) を使用してブランクプロジェクトを生成する。\n\nまず、カレントディレクトリをブランクプロジェクトを作成したいディレクトリ（任意のディレクトリで可）に変更する。その後、以下のコマンドを実行する。\n\n```bat\nmvn archetype:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArtifactId=nablarch-container-jaxrs-archetype -DarchetypeVersion={nablarch_version}\n```\n\n| 設定値 | 説明 |\n|---|---|\n| archetypeVersion | 使用したいアーキタイプのバージョンを指定する。（Nablarch 6u2以降を指定すること） |\n\nプロジェクト情報の入力項目：\n\n| 入力項目 | 説明 | 設定例 |\n|---|---|---|\n| groupId | グループID（通常はパッケージ名を入力） | `com.example` |\n| artifactId | アーティファクトID | `myapp-container-jaxrs` |\n| version | バージョン番号 | `0.1.0` |\n| package | パッケージ（通常はグループIDと同じ） | `com.example` |\n\n> **重要**: groupIdおよびpackageは、Javaのパッケージ名にマッピングされる。入力値には英小文字、数字、ドットを使用し、ハイフンは使用しないこと。\n\nプロジェクト情報の入力が終わると、`Y:` と表示される。\n\n- 入力した内容をもとにひな形を生成する場合は「Y」を入力する。\n- プロジェクト情報の入力をやり直したい場合は「N」を入力する。\n\nコマンドが正常終了した場合、ブランクプロジェクトがカレントディレクトリ配下に作成される。",
-    "connectivity-check": "疎通確認の手順は通常のRESTfulウェブサービスプロジェクトと同じ。:ref:`firstStepWebServiceStartupTest` を参照。\n\n> **注意**: アーティファクトID が `myapp-container-jaxrs` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。",
-    "create-container-image": "コンテナイメージの作成方法はコンテナ用ウェブプロジェクトと同じ。:ref:`firstStepBuildContainerWebDockerImage` を参照。\n\n> **注意**: アーティファクトID が `myapp-container-jaxrs` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。",
-    "run-container-image": "コンテナイメージの実行方法はコンテナ用ウェブプロジェクトと同じ。:ref:`firstStepRunContainerWebDockerImage` を参照。\n\n> **注意**: アーティファクトID が `myapp-container-jaxrs` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。\n\n動作確認URL:\n- `http://localhost:8080/find/json`\n- `http://localhost:8080/find/xml`",
-    "database-configuration": "ブランクプロジェクトの初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は、:ref:`customize-db` を参照。\n\nER図からのDDL生成や実行、Entityクラスの自動生成には、gsp-dba-maven-pluginの初期設定および実行が必要。詳細は :ref:`gsp-maven-plugin` を参照。",
-    "appendix": "H2のデータの確認方法や、ブランクプロジェクトに組み込まれているツールに関しては、:doc:`../firstStep_appendix/firststep_complement` を参照。"
+    "s1": "コンテナ用RESTfulウェブサービスプロジェクトの初期セットアップでは以下を行う。\n\n- RESTfulウェブサービスプロジェクトの生成\n- RESTfulウェブサービスプロジェクトの動作確認\n- コンテナイメージの作成\n- コンテナイメージの実行",
+    "s2": ":ref:`firstStepContainerWebServiceStartupTest` で使用するため、以下のいずれかをインストールする。\n\n- Firefox\n- Chrome",
+    "s3": "| 項目 | 説明 |\n|---|---|\n| プロジェクト種別 | Mavenプロジェクト |\n| プロジェクト構成 | 単一プロジェクト構成 |\n| 使用DB | H2 Database Engine（アプリケーションに組み込み） |\n| 組み込まれているアダプタ | Jersey用アダプタ（[jaxrs_adaptor](../../component/adapters/adapters-jaxrs_adaptor.json#s1)）、ルーティングアダプタ（[router_adaptor](../../component/adapters/adapters-router_adaptor.json#s1)） |\n| 生成するプロジェクトに含まれるもの | NablarchのRESTfulウェブサービス用の基本的な設定、疎通確認用RESTfulウェブサービス、Mavenと連動して動作するツールの初期設定 |",
+    "s4": "[Maven Archetype Plugin](https://maven.apache.org/archetype/maven-archetype-plugin/usage.html) を使用してブランクプロジェクトを生成する。\n\nまず、カレントディレクトリをブランクプロジェクトを作成したいディレクトリ（任意のディレクトリで可）に変更する。その後、以下のコマンドを実行する。\n\n```bat\nmvn archetype:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArtifactId=nablarch-container-jaxrs-archetype -DarchetypeVersion={nablarch_version}\n```\n\n| 設定値 | 説明 |\n|---|---|\n| archetypeVersion | 使用したいアーキタイプのバージョンを指定する。（Nablarch 6u2以降を指定すること） |\n\nプロジェクト情報の入力項目：\n\n| 入力項目 | 説明 | 設定例 |\n|---|---|---|\n| groupId | グループID（通常はパッケージ名を入力） | `com.example` |\n| artifactId | アーティファクトID | `myapp-container-jaxrs` |\n| version | バージョン番号 | `0.1.0` |\n| package | パッケージ（通常はグループIDと同じ） | `com.example` |\n\n> **重要**: groupIdおよびpackageは、Javaのパッケージ名にマッピングされる。入力値には英小文字、数字、ドットを使用し、ハイフンは使用しないこと。\n\nプロジェクト情報の入力が終わると、`Y:` と表示される。\n\n- 入力した内容をもとにひな形を生成する場合は「Y」を入力する。\n- プロジェクト情報の入力をやり直したい場合は「N」を入力する。\n\nコマンドが正常終了した場合、ブランクプロジェクトがカレントディレクトリ配下に作成される。",
+    "s5": "疎通確認の手順は通常のRESTfulウェブサービスプロジェクトと同じ。:ref:`firstStepWebServiceStartupTest` を参照。\n\n> **注意**: アーティファクトID が `myapp-container-jaxrs` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。",
+    "s6": "コンテナイメージの作成方法はコンテナ用ウェブプロジェクトと同じ。:ref:`firstStepBuildContainerWebDockerImage` を参照。\n\n> **注意**: アーティファクトID が `myapp-container-jaxrs` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。",
+    "s7": "コンテナイメージの実行方法はコンテナ用ウェブプロジェクトと同じ。:ref:`firstStepRunContainerWebDockerImage` を参照。\n\n> **注意**: アーティファクトID が `myapp-container-jaxrs` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。\n\n動作確認URL:\n- `http://localhost:8080/find/json`\n- `http://localhost:8080/find/xml`",
+    "s8": "ブランクプロジェクトの初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は、[customize-db](blank-project-CustomizeDB.json) を参照。\n\nER図からのDDL生成や実行、Entityクラスの自動生成には、gsp-dba-maven-pluginの初期設定および実行が必要。詳細は [gsp-maven-plugin](blank-project-addin_gsp.json#s3) を参照。",
+    "s9": "H2のデータの確認方法や、ブランクプロジェクトに組み込まれているツールに関しては、[../firstStep_appendix/firststep_complement](blank-project-firststep_complement.json) を参照。"
   }
 }

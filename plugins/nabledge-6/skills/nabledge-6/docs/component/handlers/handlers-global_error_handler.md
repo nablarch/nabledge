@@ -35,7 +35,7 @@ nablarch-fw, com.nablarch.framework, Mavenモジュール, 依存関係
 ## 制約
 
 - できるだけハンドラキューの先頭に配置すること。このハンドラより手前のハンドラで例外が発生した場合は、ウェブアプリケーションサーバやJVMにより例外処理が行われる。
-- スレッドコンテキストの情報をログに出力したい場合は、:ref:`thread_context_clear_handler` より後に配置すること。
+- スレッドコンテキストの情報をログに出力したい場合は、[thread_context_clear_handler](handlers-thread_context_clear_handler.md) より後に配置すること。
 
 <details>
 <summary>keywords</summary>

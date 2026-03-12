@@ -4,7 +4,7 @@
 
 ## 概要
 
-:ref:`session_store` および :ref:`health_check_endpoint_handler` で[Redis(外部サイト、英語)](https://redis.io/)を使用可能にするアダプタ。Redisクライアントライブラリとして[Lettuce(外部サイト、英語)](https://redis.github.io/lettuce/)を使用。
+:ref:`session_store` および [health_check_endpoint_handler](../handlers/handlers-health_check_endpoint_handler.md) で[Redis(外部サイト、英語)](https://redis.io/)を使用可能にするアダプタ。Redisクライアントライブラリとして[Lettuce(外部サイト、英語)](https://redis.github.io/lettuce/)を使用。
 
 <details>
 <summary>keywords</summary>

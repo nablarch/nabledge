@@ -38,8 +38,8 @@ nablarch-fw-web, モジュール依存関係, com.nablarch.framework
 
 ## 制約
 
-- :ref:`http_response_handler` より後ろに配置すること: 本ハンドラで生成した `HttpResponse` をHTTPレスポンスハンドラが処理するため。
-- :ref:`http_access_log_handler` より後ろに配置すること: 本ハンドラで生成したエラー用 `HttpResponse` を元にログ出力を行うため。
+- [http_response_handler](handlers-http_response_handler.md) より後ろに配置すること: 本ハンドラで生成した `HttpResponse` をHTTPレスポンスハンドラが処理するため。
+- [http_access_log_handler](handlers-http_access_log_handler.md) より後ろに配置すること: 本ハンドラで生成したエラー用 `HttpResponse` を元にログ出力を行うため。
 
 <details>
 <summary>keywords</summary>

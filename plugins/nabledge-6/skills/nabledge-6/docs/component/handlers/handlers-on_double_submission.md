@@ -6,7 +6,7 @@
 
 **クラス**: `nablarch.common.web.token.OnDoubleSubmission`
 
-このインターセプタを使用するには、:ref:`tag-double_submission_token_setting` または :ref:`use_token_interceptor` によるトークン設定が必要。
+このインターセプタを使用するには、:ref:`tag-double_submission_token_setting` または [use_token_interceptor](handlers-use_token.md) によるトークン設定が必要。
 
 <details>
 <summary>keywords</summary>

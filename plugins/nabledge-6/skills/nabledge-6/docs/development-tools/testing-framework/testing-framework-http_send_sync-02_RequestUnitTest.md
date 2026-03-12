@@ -17,9 +17,9 @@ HTTP同期応答メッセージ送信処理, リクエスト単体テスト, mes
 
 ## 電文を1回送信する場合
 
-![応答電文の記述例（1回送信）](../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-02_RequestUnitTest/http_send_sync_response.png)
+![応答電文の記述例（1回送信）](../../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-02_RequestUnitTest/http_send_sync_response.png)
 
-![要求電文期待値の記述例（1回送信）](../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-02_RequestUnitTest/http_send_sync_expected.png)
+![要求電文期待値の記述例（1回送信）](../../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-02_RequestUnitTest/http_send_sync_expected.png)
 
 > **補足**: `RESPONSE_BODY_MESSAGES`（および`EXPECTED_REQUEST_BODY_MESSAGES`）は複数フィールドに分割して記述可能。フィールド名は任意の文字列を指定する（例: `XML1`, `XML2`, `XML3`）。
 
@@ -27,13 +27,13 @@ HTTP同期応答メッセージ送信処理, リクエスト単体テスト, mes
 
 ## 電文を2回以上送信する場合
 
-![応答電文の記述例（複数回送信）](../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-02_RequestUnitTest/http_send_sync_ok_pattern_response.png)
+![応答電文の記述例（複数回送信）](../../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-02_RequestUnitTest/http_send_sync_ok_pattern_response.png)
 
-![要求電文期待値の記述例（複数回送信）](../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-02_RequestUnitTest/http_send_sync_ok_pattern_expected.png)
+![要求電文期待値の記述例（複数回送信）](../../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-02_RequestUnitTest/http_send_sync_ok_pattern_expected.png)
 
 複数回電文を送信する場合のテスト記述ルール:
 
-- 同一データタイプ（例: `RESPONSE_HEADER_MESSAGES`と`RESPONSE_BODY_MESSAGES`）はまとめて記述する（詳細: :ref:`tips_groupId` および :ref:`auto-test-framework_multi-datatype`）
+- 同一データタイプ（例: `RESPONSE_HEADER_MESSAGES`と`RESPONSE_BODY_MESSAGES`）はまとめて記述する（詳細: :ref:`tips_groupId` および [auto-test-framework_multi-datatype](testing-framework-01_Abstract.md)）
 - 同一リクエストIDの電文は`no`の値を変えてまとめて記述する
 - 同一リクエストIDの電文は長さを合わせること（合わせられない場合は手動テストを行う）
 
@@ -71,14 +71,14 @@ errorMode:timeout, errorMode:msgException, HttpMessagingTimeoutException, Messag
 
 `testShots`の`expectedMessageByClient`および`responseMessageByClient`にグループIDを設定する。モックアップ自体は :ref:`dealUnitTest_send_sync` を参照。グループIDの関連は :ref:`message_sendSyncMessage_test` の`expectedMessage`/`responseMessage`の場合と同様。
 
-![testShotsの記述例（HTTP）](../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-02_RequestUnitTest/http_send_sync_shot.png)
+![testShotsの記述例（HTTP）](../../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-02_RequestUnitTest/http_send_sync_shot.png)
 
 同一アクション内でMOM同期応答メッセージ送信処理とHTTP同期応答メッセージ送信処理が同時に行われる場合:
 
 - `expectedMessage`/`responseMessage`: MOM同期応答メッセージ送信処理用グループID
 - `expectedMessageByClient`/`responseMessageByClient`: HTTP同期応答メッセージ送信処理用グループID
 
-![testShotsの記述例（MOM+HTTP併用）](../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-02_RequestUnitTest/http_mom_send_sync_shot.png)
+![testShotsの記述例（MOM+HTTP併用）](../../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-02_RequestUnitTest/http_mom_send_sync_shot.png)
 
 > **補足**: MOMとHTTPのグループIDには必ず異なる値を設定すること。同一のグループIDを指定した場合、正しく結果検証が行われない。
 

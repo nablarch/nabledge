@@ -48,12 +48,43 @@ failureLogFormatter.notificationFormat=fail_code = [$failureCode$] $message$
 failureLogFormatter.analysisFormat=fail_code = [$failureCode$] $message$\nInput Data :\n$data$
 ```
 
-> **補足**: 大規模システムで障害時の連絡先が複数存在する場合、:ref:`failure_log-add_contact` を使用することでリクエストID毎に連絡先情報をログに含めることができる。
+> **補足**: 大規模システムで障害時の連絡先が複数存在する場合、[failure_log-add_contact](#s3) を使用することでリクエストID毎に連絡先情報をログに含めることができる。
+
+フレームワークが送出するRuntimeException系例外はデフォルト障害コードで障害ログが出力される。障害監視でフィルタリングできるよう、フレームワーク障害コードを変更する機能がある。
+
+「例外が送出されたクラス」はスタックトレースのルート要素（最後の`Caused by`の送出クラス）を指す。プロパティファイルのキー（パッケージ名）はFQCNに前方一致で検索され、読み込み後はキー名の長さの降順にソートされる（より限定的なパッケージが優先）。基本はパッケージ名単位に指定する。
+
+**failure-log-fw-codes.properties の設定例**:
+```properties
+nablarch=FW_ERROR
+nablarch.core.cache=FW_CACHE_ERROR
+nablarch.core.date=FW_DATE_ERROR
+nablarch.core.db=FW_DB_ERROR
+nablarch.core.message=FW_MESSAGE_ERROR
+nablarch.core.repository=FW_REPOSITORY_ERROR
+nablarch.core.transaction=FW_TRANSACTION_ERROR
+```
+
+読み込み後はキー名の長さの降順にソートされ、上から順に検索される:
+```properties
+nablarch.core.transaction=FW_TRANSACTION_ERROR
+nablarch.core.repository=FW_REPOSITORY_ERROR
+nablarch.core.message=FW_MESSAGE_ERROR
+nablarch.core.cache=FW_CACHE_ERROR
+nablarch.core.date=FW_DATE_ERROR
+nablarch.core.db=FW_DB_ERROR
+nablarch=FW_ERROR
+```
+
+**app-log.properties でプロパティファイルパスを指定**:
+```properties
+failureLogFormatter.fwFailureCodeFilePath=classpath:failure-log-fw-codes.properties
+```
 
 <details>
 <summary>keywords</summary>
 
-障害通知ログ, 障害解析ログ, MONITOR, ロガー名, log.properties設定, app-log.properties設定, FileLogWriter, BasicLogFormatter, 障害ログ出力方針
+障害通知ログ, 障害解析ログ, MONITOR, ロガー名, log.properties設定, app-log.properties設定, FileLogWriter, BasicLogFormatter, 障害ログ出力方針, FailureLogFormatter, fwFailureCodeFilePath, フレームワーク障害コード変更, パッケージ名前方一致検索, 障害コードフィルタリング
 
 </details>
 
@@ -70,7 +101,7 @@ try {
 }
 ```
 
-バッチとメッセージングで障害検知時に処理を終了したい場合は、`TransactionAbnormalEnd` または `ProcessAbnormalEnd` を送出し、例外ハンドラ（:ref:`global_error_handler` や :ref:`request_thread_loop_handler`）に障害ログの出力を委譲する。
+バッチとメッセージングで障害検知時に処理を終了したい場合は、`TransactionAbnormalEnd` または `ProcessAbnormalEnd` を送出し、例外ハンドラ（[global_error_handler](../handlers/handlers-global_error_handler.md) や [request_thread_loop_handler](../handlers/handlers-request_thread_loop_handler.md)）に障害ログの出力を委譲する。
 
 ```java
 // 自ら例外を生成する場合
@@ -88,23 +119,40 @@ try {
 
 > **補足**: 上記例のように、障害ログの出力ではログから障害内容を特定するために障害コードを指定する。障害コードのコード体系は、プロジェクト毎に規定すること。
 
-**障害ログに出力されるメッセージ**: :ref:`message` を使用して障害コードに対応するメッセージを取得する。メッセージが見つからない場合は例外が発生し、その例外をWARNレベルでログ出力した上で、障害ログには以下を出力する:
+**障害ログに出力されるメッセージ**: [message](libraries-message.md) を使用して障害コードに対応するメッセージを取得する。メッセージが見つからない場合は例外が発生し、その例外をWARNレベルでログ出力した上で、障害ログには以下を出力する:
 ```
 failed to get the message to output the failure log. failureCode = [<障害コード>]
 ```
 
 障害コードの指定がない場合（例外ハンドラで捕捉した場合など）は、デフォルトの障害コード（`failureLogFormatter.defaultFailureCode`）とメッセージ（`failureLogFormatter.defaultMessage`）を出力する。
 
+派生元実行時情報とは、前段処理（例: ウェブ処理）の実行時情報を後段処理（例: バッチ処理）の障害ログに出力する機能。後段処理の障害発生時に前段処理の追跡作業を軽減する。
+
+プレースホルダ`$data$`を`analysisFormat`に指定すると、データリーダで読み込まれたデータが障害ログに出力される。前段処理でデータに実行時情報を含めておくことで、後段処理の障害発生時に前段処理の実行時情報が出力される。
+
+データベースを使用したデータ連携での実行時情報カラム例:
+
+| 項目 | カラム名 |
+|---|---|
+| リクエストID | INSERT_REQUEST_ID |
+| 実行時ID | INSERT_EXECUTION_ID |
+| ユーザID | UPDATED_USER_ID |
+
+**app-log.properties の設定例**:
+```properties
+failureLogFormatter.analysisFormat=fail_code = [$failureCode$] $message$\nInput Data :\n$data$
+```
+
 <details>
 <summary>keywords</summary>
 
-FailureLogUtil, TransactionAbnormalEnd, ProcessAbnormalEnd, 障害コード, 障害ログ出力, logError, バッチ障害ログ, UserNotFoundException, メッセージ取得失敗, 障害コード体系, プロジェクト規定
+FailureLogUtil, TransactionAbnormalEnd, ProcessAbnormalEnd, 障害コード, 障害ログ出力, logError, バッチ障害ログ, UserNotFoundException, メッセージ取得失敗, 障害コード体系, プロジェクト規定, $data$プレースホルダ, 派生元実行時情報, データ連携障害ログ, 前段処理実行時情報出力, analysisFormat
 
 </details>
 
 ## 障害ログの設定
 
-障害ログの設定は :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
+障害ログの設定は [log-app_log_setting](libraries-log.md) で説明したプロパティファイルに行う。
 
 **クラス**: `nablarch.core.log.app.FailureLogFormatter`
 
@@ -116,8 +164,8 @@ FailureLogUtil, TransactionAbnormalEnd, ProcessAbnormalEnd, 障害コード, 障
 | failureLogFormatter.language | | ThreadContextに設定されている言語 | 障害コードからメッセージを取得する際の言語 |
 | failureLogFormatter.notificationFormat | | `fail_code = [$failureCode$] $message$` | 障害通知ログのフォーマット |
 | failureLogFormatter.analysisFormat | | 障害通知ログと同じ | 障害解析ログのフォーマット |
-| failureLogFormatter.contactFilePath | | | 連絡先情報のプロパティファイルパス（:ref:`failure_log-add_contact` 参照） |
-| failureLogFormatter.fwFailureCodeFilePath | | | フレームワーク障害コード変更情報のプロパティファイルパス（:ref:`failure_log-change_fw_failure_code` 参照） |
+| failureLogFormatter.contactFilePath | | | 連絡先情報のプロパティファイルパス（[failure_log-add_contact](#s3) 参照） |
+| failureLogFormatter.fwFailureCodeFilePath | | | フレームワーク障害コード変更情報のプロパティファイルパス（[failure_log-change_fw_failure_code](#s4) 参照） |
 
 **notificationFormat / analysisFormat のプレースホルダ**:
 
@@ -128,9 +176,9 @@ FailureLogUtil, TransactionAbnormalEnd, ProcessAbnormalEnd, 障害コード, 障
 | $data$ | 障害が発生した処理対象データ（toStringメソッドの結果） |
 | $contact$ | 連絡先情報 |
 
-> **重要**: セキュリティ要件により個人情報や機密情報の出力が許されない場合は、:ref:`failure_log-placeholder_customize` を参照してプロジェクトでカスタマイズすること。
+> **重要**: セキュリティ要件により個人情報や機密情報の出力が許されない場合は、[failure_log-placeholder_customize](#) を参照してプロジェクトでカスタマイズすること。
 
-> **補足**: 処理対象データの出力により、派生元実行時情報（ウェブからバッチへのデータ連携時の画面処理実行時点のリクエストIDや実行IDなど）を障害ログに出力できる。詳細は :ref:`failure_log-output_src_exe_info` を参照。
+> **補足**: 処理対象データの出力により、派生元実行時情報（ウェブからバッチへのデータ連携時の画面処理実行時点のリクエストIDや実行IDなど）を障害ログに出力できる。詳細は [failure_log-output_src_exe_info](#) を参照。
 
 **設定例**:
 ```properties
@@ -146,10 +194,35 @@ failureLogFormatter.contactFilePath=classpath:failure-log-contact.properties
 failureLogFormatter.fwFailureCodeFilePath=classpath:failure-log-fw-codes.properties
 ```
 
+`$data$`はデフォルトでtoStringメソッドにより全データ項目が出力される。特定項目のマスクなどが必要な場合は以下の手順でカスタマイズする:
+
+1. `LogItem` を実装したクラスを作成
+2. `FailureLogFormatter` を継承し、`getLogItems(Map<String, String>)` をオーバーライドして`$data$`に対してカスタムクラスを設定
+3. `app-log.properties`の`failureLogFormatter.className`に継承クラスを指定
+
+フレームワーク提供の `DataItem` を継承して拡張可能。`FailureLogContext.getData()` で処理対象データを取得し、カスタム処理（マスク等）を適用する。`MaskingMapValueEditor` はフレームワークが提供するMap編集用のユーティリティで、マスク文字とマスク対象パターンを指定してMap値をマスクできる。
+
+**FailureLogFormatter継承クラスの実装例**:
+```java
+public class CustomDataFailureLogFormatter extends FailureLogFormatter {
+    @Override
+    protected Map<String, LogItem<FailureLogContext>> getLogItems(Map<String, String> props) {
+        Map<String, LogItem<FailureLogContext>> logItems = super.getLogItems(props);
+        logItems.put("$data$", new CustomDataItem());
+        return logItems;
+    }
+}
+```
+
+**app-log.properties の設定**:
+```properties
+failureLogFormatter.className=nablarch.core.log.app.CustomDataFailureLogFormatter
+```
+
 <details>
 <summary>keywords</summary>
 
-failureLogFormatter.className, failureLogFormatter.defaultFailureCode, failureLogFormatter.defaultMessage, failureLogFormatter.language, failureLogFormatter.notificationFormat, failureLogFormatter.analysisFormat, failureLogFormatter.contactFilePath, failureLogFormatter.fwFailureCodeFilePath, FailureLogFormatter, プレースホルダ, 障害ログ設定, ThreadContext
+failureLogFormatter.className, failureLogFormatter.defaultFailureCode, failureLogFormatter.defaultMessage, failureLogFormatter.language, failureLogFormatter.notificationFormat, failureLogFormatter.analysisFormat, failureLogFormatter.contactFilePath, failureLogFormatter.fwFailureCodeFilePath, FailureLogFormatter, プレースホルダ, 障害ログ設定, ThreadContext, LogItem, DataItem, FailureLogContext, MaskingMapValueEditor, プレースホルダカスタマイズ, マスキング, getLogItems
 
 </details>
 
@@ -198,116 +271,7 @@ failureLogFormatter.contactFilePath=classpath:failure-log-contact.properties
 
 リクエストIDに対応する連絡先情報が見つからない場合は`null`が出力される。
 
-<details>
-<summary>keywords</summary>
-
-連絡先情報, contactFilePath, $contact$, リクエストID前方一致, failure-log-contact.properties, 障害連絡先, 大規模システム, ThreadContext
-
-</details>
-
-## フレームワークの障害コードを変更する
-
-フレームワークが送出するRuntimeException系例外はデフォルト障害コードで障害ログが出力される。障害監視でフィルタリングできるよう、フレームワーク障害コードを変更する機能がある。
-
-「例外が送出されたクラス」はスタックトレースのルート要素（最後の`Caused by`の送出クラス）を指す。プロパティファイルのキー（パッケージ名）はFQCNに前方一致で検索され、読み込み後はキー名の長さの降順にソートされる（より限定的なパッケージが優先）。基本はパッケージ名単位に指定する。
-
-**failure-log-fw-codes.properties の設定例**:
-```properties
-nablarch=FW_ERROR
-nablarch.core.cache=FW_CACHE_ERROR
-nablarch.core.date=FW_DATE_ERROR
-nablarch.core.db=FW_DB_ERROR
-nablarch.core.message=FW_MESSAGE_ERROR
-nablarch.core.repository=FW_REPOSITORY_ERROR
-nablarch.core.transaction=FW_TRANSACTION_ERROR
-```
-
-読み込み後はキー名の長さの降順にソートされ、上から順に検索される:
-```properties
-nablarch.core.transaction=FW_TRANSACTION_ERROR
-nablarch.core.repository=FW_REPOSITORY_ERROR
-nablarch.core.message=FW_MESSAGE_ERROR
-nablarch.core.cache=FW_CACHE_ERROR
-nablarch.core.date=FW_DATE_ERROR
-nablarch.core.db=FW_DB_ERROR
-nablarch=FW_ERROR
-```
-
-**app-log.properties でプロパティファイルパスを指定**:
-```properties
-failureLogFormatter.fwFailureCodeFilePath=classpath:failure-log-fw-codes.properties
-```
-
-<details>
-<summary>keywords</summary>
-
-FailureLogFormatter, fwFailureCodeFilePath, フレームワーク障害コード変更, パッケージ名前方一致検索, 障害コードフィルタリング
-
-</details>
-
-## 派生元実行時情報を出力する
-
-派生元実行時情報とは、前段処理（例: ウェブ処理）の実行時情報を後段処理（例: バッチ処理）の障害ログに出力する機能。後段処理の障害発生時に前段処理の追跡作業を軽減する。
-
-プレースホルダ`$data$`を`analysisFormat`に指定すると、データリーダで読み込まれたデータが障害ログに出力される。前段処理でデータに実行時情報を含めておくことで、後段処理の障害発生時に前段処理の実行時情報が出力される。
-
-データベースを使用したデータ連携での実行時情報カラム例:
-
-| 項目 | カラム名 |
-|---|---|
-| リクエストID | INSERT_REQUEST_ID |
-| 実行時ID | INSERT_EXECUTION_ID |
-| ユーザID | UPDATED_USER_ID |
-
-**app-log.properties の設定例**:
-```properties
-failureLogFormatter.analysisFormat=fail_code = [$failureCode$] $message$\nInput Data :\n$data$
-```
-
-<details>
-<summary>keywords</summary>
-
-$data$プレースホルダ, 派生元実行時情報, データ連携障害ログ, 前段処理実行時情報出力, analysisFormat
-
-</details>
-
-## プレースホルダに対する出力処理をカスタマイズする
-
-`$data$`はデフォルトでtoStringメソッドにより全データ項目が出力される。特定項目のマスクなどが必要な場合は以下の手順でカスタマイズする:
-
-1. `LogItem` を実装したクラスを作成
-2. `FailureLogFormatter` を継承し、`getLogItems(Map<String, String>)` をオーバーライドして`$data$`に対してカスタムクラスを設定
-3. `app-log.properties`の`failureLogFormatter.className`に継承クラスを指定
-
-フレームワーク提供の `DataItem` を継承して拡張可能。`FailureLogContext.getData()` で処理対象データを取得し、カスタム処理（マスク等）を適用する。`MaskingMapValueEditor` はフレームワークが提供するMap編集用のユーティリティで、マスク文字とマスク対象パターンを指定してMap値をマスクできる。
-
-**FailureLogFormatter継承クラスの実装例**:
-```java
-public class CustomDataFailureLogFormatter extends FailureLogFormatter {
-    @Override
-    protected Map<String, LogItem<FailureLogContext>> getLogItems(Map<String, String> props) {
-        Map<String, LogItem<FailureLogContext>> logItems = super.getLogItems(props);
-        logItems.put("$data$", new CustomDataItem());
-        return logItems;
-    }
-}
-```
-
-**app-log.properties の設定**:
-```properties
-failureLogFormatter.className=nablarch.core.log.app.CustomDataFailureLogFormatter
-```
-
-<details>
-<summary>keywords</summary>
-
-LogItem, FailureLogFormatter, DataItem, FailureLogContext, MaskingMapValueEditor, プレースホルダカスタマイズ, マスキング, getLogItems
-
-</details>
-
-## JSON形式の構造化ログとして出力する
-
-:ref:`log-json_log_setting` でJSON形式ログを設定した場合、`FailureLogFormatter` では障害ログ各項目はmessageの値に文字列として出力される。各項目もJSONの値として出力するには `FailureJsonLogFormatter` を使用する。
+[log-json_log_setting](libraries-log.md) でJSON形式ログを設定した場合、`FailureLogFormatter` では障害ログ各項目はmessageの値に文字列として出力される。各項目もJSONの値として出力するには `FailureJsonLogFormatter` を使用する。
 
 | プロパティ名 | 必須 | 説明 |
 |---|---|---|
@@ -317,8 +281,8 @@ LogItem, FailureLogFormatter, DataItem, FailureLogContext, MaskingMapValueEditor
 | failureLogFormatter.language | | 障害コードからメッセージ取得時の言語。未指定時は `ThreadContext` の言語を使用 |
 | failureLogFormatter.notificationTargets | | 障害通知ログの出力項目（カンマ区切り） |
 | failureLogFormatter.analysisTargets | | 障害解析ログの出力項目（カンマ区切り）。指定可能な出力項目とデフォルト設定は障害通知ログと同じ |
-| failureLogFormatter.contactFilePath | | 連絡先情報プロパティファイルのパス（:ref:`failure_log-add_contact` 参照） |
-| failureLogFormatter.fwFailureCodeFilePath | | フレームワーク障害コード変更情報プロパティファイルのパス（:ref:`failure_log-change_fw_failure_code` 参照） |
+| failureLogFormatter.contactFilePath | | 連絡先情報プロパティファイルのパス（[failure_log-add_contact](#s3) 参照） |
+| failureLogFormatter.fwFailureCodeFilePath | | フレームワーク障害コード変更情報プロパティファイルのパス（[failure_log-change_fw_failure_code](#s4) 参照） |
 | failureLogFormatter.structuredMessagePrefix | | JSONマーカー文字列。デフォルト: `"$JSON$"` |
 
 `notificationTargets`/`analysisTargets` に指定可能な出力項目（○ = デフォルト出力）:
@@ -330,7 +294,7 @@ LogItem, FailureLogFormatter, DataItem, FailureLogContext, MaskingMapValueEditor
 | 処理対象データ | data | |
 | 連絡先 | contact | |
 
-> **重要**: `structuredMessagePrefix` を変更する場合、LogWriterの `structuredMessagePrefix` プロパティで `JsonLogFormatter` にも同じ値を設定すること（:ref:`log-basic_setting` 参照）。
+> **重要**: `structuredMessagePrefix` を変更する場合、LogWriterの `structuredMessagePrefix` プロパティで `JsonLogFormatter` にも同じ値を設定すること（[log-basic_setting](libraries-log.md) 参照）。
 
 **記述例**:
 ```properties
@@ -345,6 +309,6 @@ failureLogFormatter.defaultMessage=an unexpected exception occurred.
 <details>
 <summary>keywords</summary>
 
-FailureJsonLogFormatter, JsonLogFormatter, ThreadContext, JSON構造化ログ, notificationTargets, analysisTargets, structuredMessagePrefix, failureLogFormatter.contactFilePath, failureLogFormatter.fwFailureCodeFilePath, failureLogFormatter.language, failureLogFormatter.defaultFailureCode, failureLogFormatter.defaultMessage
+連絡先情報, contactFilePath, $contact$, リクエストID前方一致, failure-log-contact.properties, 障害連絡先, 大規模システム, ThreadContext, FailureJsonLogFormatter, JsonLogFormatter, JSON構造化ログ, notificationTargets, analysisTargets, structuredMessagePrefix, failureLogFormatter.contactFilePath, failureLogFormatter.fwFailureCodeFilePath, failureLogFormatter.language, failureLogFormatter.defaultFailureCode, failureLogFormatter.defaultMessage
 
 </details>

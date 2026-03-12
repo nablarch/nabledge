@@ -1,0 +1,128 @@
+{
+  "id": "biz-samples-13",
+  "title": "Logbookを用いたリクエスト/レスポンスログ出力サンプル",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/13/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/StandardOutputLogWriter.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "サンプル概要",
+      "hints": [
+        "Logbook",
+        "ソースコード",
+        "nablarch-biz-sample-all",
+        "HTTPリクエストログ",
+        "レスポンスログ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "概要",
+      "hints": [
+        "Logbook",
+        "HTTPリクエストログ",
+        "レスポンスログ",
+        "ログ出力サンプル",
+        "zalando"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "本サンプルで取り扱う範囲",
+      "hints": [
+        "SLF4Jアダプタ",
+        "slf4j_adaptor",
+        "標準出力",
+        "JAX-RSクライアント",
+        "Jersey",
+        "JsonPath",
+        "マスク処理",
+        "ログ出力機能連携"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "依存ライブラリの追加",
+      "hints": [
+        "logbook-bom",
+        "logbook-core",
+        "logbook-jaxrs",
+        "logbook-json",
+        "jersey-bom",
+        "jersey-client",
+        "jersey-media-json-jackson",
+        "jersey-hk2",
+        "slf4j-nablarch-adaptor",
+        "dependencyManagement",
+        "依存ライブラリ"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "log.propertiesの設定",
+      "hints": [
+        "log.properties",
+        "StandardOutputLogWriter",
+        "BasicLogFormatter",
+        "TRACE",
+        "LOGBOOK",
+        "availableLoggersNamesOrder",
+        "nameRegex",
+        "log-basic_setting",
+        "Logbookロガー設定"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "Logbookの構成",
+      "hints": [
+        "Logbook.builder",
+        "BodyFilter",
+        "JsonPathBodyFilters",
+        "condition",
+        "Filtering",
+        "jsonPath",
+        "replace",
+        "ボディマスク処理",
+        "Logbook設定"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "JAX-RSクライアントにLogbookを登録",
+      "hints": [
+        "LogbookClientFilter",
+        "ClientBuilder",
+        "JAX-RSクライアント登録",
+        "register"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "リクエスト/レスポンスのログを出力",
+      "hints": [
+        "Outgoing Request",
+        "Incoming Response",
+        "Remote",
+        "Duration",
+        "ログフォーマット",
+        "マスク出力",
+        "標準出力ログ例",
+        "HTTPヘッダ",
+        "レスポンスボディ"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-logbook)",
+    "s2": "[Logbook](https://github.com/zalando/logbook) を使用してHTTPリクエストおよびレスポンスのログ出力を行うサンプル。",
+    "s3": "本サンプルで取り扱う範囲:\n- Logbookのログ出力にはNablarchのログ出力機能を使用する\n  - Nablarchとの連携は [SLF4Jアダプタ](../../component/adapters/adapters-slf4j_adaptor.json#s1) を使用して実現する\n  - ログは標準出力に出力する\n- リクエスト送信にはJAX-RSクライアントを使用し、メッセージ形式はJSON\n  - JAX-RSクライアントの実装としてJerseyを使用する\n- [JsonPath](https://github.com/json-path/JsonPath) を使用してJSON形式の特定項目にマスク処理を行う",
+    "s4": "Logbook（3.9.0）、Jersey（3.1.1）、SLF4Jアダプタを依存関係に追加する:\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    <dependency>\n      <groupId>org.zalando</groupId>\n      <artifactId>logbook-bom</artifactId>\n      <version>3.9.0</version>\n      <type>pom</type>\n      <scope>import</scope>\n    </dependency>\n    <dependency>\n      <groupId>org.glassfish.jersey</groupId>\n      <artifactId>jersey-bom</artifactId>\n      <version>3.1.1</version>\n      <type>pom</type>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n<dependencies>\n  <dependency>\n    <groupId>com.nablarch.integration</groupId>\n    <artifactId>slf4j-nablarch-adaptor</artifactId>\n    <scope>runtime</scope>\n  </dependency>\n  <dependency>\n    <groupId>org.zalando</groupId>\n    <artifactId>logbook-core</artifactId>\n  </dependency>\n  <dependency>\n    <groupId>org.zalando</groupId>\n    <artifactId>logbook-jaxrs</artifactId>\n  </dependency>\n  <dependency>\n    <groupId>org.zalando</groupId>\n    <artifactId>logbook-json</artifactId>\n  </dependency>\n  <dependency>\n    <groupId>org.glassfish.jersey.core</groupId>\n    <artifactId>jersey-client</artifactId>\n  </dependency>\n  <dependency>\n    <groupId>org.glassfish.jersey.media</groupId>\n    <artifactId>jersey-media-json-jackson</artifactId>\n  </dependency>\n  <dependency>\n    <groupId>org.glassfish.jersey.inject</groupId>\n    <artifactId>jersey-hk2</artifactId>\n  </dependency>\n</dependencies>\n```\n\n> **補足**: 依存関係のバージョンは実行環境に合わせて適切なバージョンを設定すること。",
+    "s5": "LogbookはTRACEレベルでログ出力するため、Logbook専用ロガーを個別定義することを推奨する。\n\n```properties\nwriter.stdout.className=nablarch.core.log.basic.StandardOutputLogWriter\nwriter.stdout.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.stdout.formatter.format=$date$ -$logLevel$- $runtimeLoggerName$ [$executionId$] boot_proc = [$bootProcess$] proc_sys = [$processingSystem$] req_id = [$requestId$] usr_id = [$userId$] $message$$information$$stackTrace$\n\navailableLoggersNamesOrder=DEV,PER,SQL,MON,ACC,LOGBOOK,ROO\n\nloggers.LOGBOOK.nameRegex=org\\\\.zalando\\\\.logbook\\\\..*\nloggers.LOGBOOK.level=TRACE\nloggers.LOGBOOK.writerNames=stdout\n```\n\nNablarchのログ出力設定については [log-basic_setting](../../component/libraries/libraries-log.json#s3) を参照。",
+    "s6": "`Logbook.builder().build()` でインスタンスを生成する。デフォルト設定ではすべてのリクエスト/レスポンスのボディを含む情報が出力される。\n\nLogbookには様々な設定があり、出力条件を設定する `condition` やマスク処理を設定する `Filtering` 等を設定できる。BodyFilterを設定することでボディのマスク処理が可能:\n\n```java\n// デフォルト設定\nLogbook logbook = Logbook.builder().build();\n\n// ボディのid項目をマスク\nLogbook logbook = Logbook.builder()\n        .bodyFilter(jsonPath(\"$.id\").replace(\"*****\"))\n        .build();\n\n// 配列内のidとusername項目をマスク\nLogbook logbook = Logbook.builder()\n        .bodyFilter(JsonPathBodyFilters.jsonPath(\"$[*].id\").replace(\"*****\"))\n        .bodyFilter(JsonPathBodyFilters.jsonPath(\"$[*].username\").replace(\"*****\"))\n        .build();\n```\n\n各種設定の詳細は [LogbookのREADME](https://github.com/zalando/logbook/blob/main/README.md) を参照。",
+    "s7": "`LogbookClientFilter` クラスを使用してJAX-RSクライアントにLogbookを登録する:\n\n```java\nClient client = ClientBuilder.newClient()\n                  .register(new LogbookClientFilter(logbook));\n```",
+    "s8": "Logbookを登録したJAX-RSクライアントでリクエストを送信するとログが出力される:\n\n```java\nResponse response = client.target(\"http://localhost:3000\")\n                      .path(\"/users\")\n                      .request()\n                      .get();\n```\n\nNablarchのログ出力機能に設定したフォーマットで出力され、メッセージ部分のみLogbookのフォーマット（メッセージ種類、ヘッダ、ボディ）で出力される。\n\nリクエストのログ出力例:\n\n```\n2023-05-11 09:38:06.438 -TRACE- org.zalando.logbook.Logbook [202305110938060580001] boot_proc = [] proc_sys = [jaxrs] req_id = [/logbook/get] usr_id = [guest] Outgoing Request: bb068bcf35bc5226\nRemote: localhost\nGET http://localhost:3000/users HTTP/1.1\n```\n\nレスポンスのログ出力例（HTTPヘッダとボディが含まれる）:\n\n```\n2023-05-11 09:38:06.496 -TRACE- org.zalando.logbook.Logbook [202305110938060580001] boot_proc = [] proc_sys = [jaxrs] req_id = [/logbook/get] usr_id = [guest] Incoming Response: bb068bcf35bc5226\nDuration: 57 ms\nHTTP/1.1 200 OK\nConnection: keep-alive\nContent-Length: 213\nContent-Type: application/json; charset=utf-8\nDate: Thu, 11 May 2023 00:38:06 GMT\nKeep-Alive: timeout=5\n\n[{\"id\":\"81b8b153-5ed5-4d42-be13-346f257b368d\",\"username\":\"Chasity91\"},{\"id\":\"6b1e7b91-6a1f-4424-be3c-4e3d28dd59c0\",\"username\":\"Felton_Rohan\"},{\"id\":\"622677a4-04e3-4b70-85dd-a0b7f7161678\",\"username\":\"Bella_Purdy\"}]\n```\n\n[logbook_settings](#) のマスク設定（配列内の `id` と `username` をマスク）が有効な場合、ボディの該当項目が `*****` に変換されて出力される:\n\n```\n2023-05-11 09:48:37.513 -TRACE- org.zalando.logbook.Logbook [202305110948374650002] boot_proc = [] proc_sys = [jaxrs] req_id = [/logbook/get/mask] usr_id = [guest] Incoming Response: e1ba3d95197a4539\nDuration: 9 ms\nHTTP/1.1 200 OK\nConnection: keep-alive\nContent-Length: 213\nContent-Type: application/json; charset=utf-8\nDate: Thu, 11 May 2023 00:48:37 GMT\nKeep-Alive: timeout=5\n\n[{\"id\":\"*****\",\"username\":\"*****\"},{\"id\":\"*****\",\"username\":\"*****\"},{\"id\":\"*****\",\"username\":\"*****\"}]\n```"
+  }
+}

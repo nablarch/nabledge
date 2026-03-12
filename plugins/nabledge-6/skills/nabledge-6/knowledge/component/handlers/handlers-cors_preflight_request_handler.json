@@ -9,10 +9,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/cors/BasicCors.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "handler-class-name",
+      "id": "s1",
       "title": "ハンドラクラス名",
       "hints": [
         "CorsPreflightRequestHandler",
@@ -23,7 +22,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s2",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-fw-jaxrs",
@@ -33,7 +32,7 @@
       ]
     },
     {
-      "id": "constraints",
+      "id": "s3",
       "title": "制約",
       "hints": [
         "jaxrs_response_handler",
@@ -44,7 +43,7 @@
       ]
     },
     {
-      "id": "cors-setup",
+      "id": "s4",
       "title": "CORSを実現する",
       "hints": [
         "BasicCors",
@@ -68,9 +67,9 @@
     }
   ],
   "sections": {
-    "handler-class-name": "本ハンドラは :ref:`restful_web_service` でCORS(Cross-Origin Resource Sharing)を実現するために使用する。プリフライトリクエストは本ハンドラで処理し、実際のリクエストに対する処理は :java:extdoc:`CorsResponseFinisher <nablarch.fw.jaxrs.cors.CorsResponseFinisher>` で処理する。\n\n**クラス名**: `nablarch.fw.jaxrs.CorsPreflightRequestHandler`",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-jaxrs</artifactId>\n</dependency>\n```",
-    "constraints": "> **重要**: :ref:`jaxrs_response_handler` より後ろに配置すること。本ハンドラで生成した :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` を :ref:`jaxrs_response_handler` が処理するため、本ハンドラは :ref:`jaxrs_response_handler` より後ろに配置する必要がある。",
-    "cors-setup": "CORSを実現するには本ハンドラと :java:extdoc:`CorsResponseFinisher <nablarch.fw.jaxrs.cors.CorsResponseFinisher>` を設定する。CORSの処理は :java:extdoc:`Cors <nablarch.fw.jaxrs.cors.Cors>` インタフェースが行う。フレームワークの基本実装として :java:extdoc:`BasicCors <nablarch.fw.jaxrs.cors.BasicCors>` クラスを提供しており、本ハンドラと :java:extdoc:`CorsResponseFinisher <nablarch.fw.jaxrs.cors.CorsResponseFinisher>` にBasicCorsを指定する。\n\n**設定例**:\n```xml\n<component name=\"cors\" class=\"nablarch.fw.jaxrs.cors.BasicCors\">\n  <!-- 許可するOriginの指定。この設定は必須 -->\n  <property name=\"allowOrigins\">\n    <list>\n      <value>https://www.example.com</value>\n    </list>\n  </property>\n</component>\n\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component class=\"nablarch.fw.jaxrs.JaxRsResponseHandler\">\n        <property name=\"responseFinishers\">\n          <list>\n            <component class=\"nablarch.fw.jaxrs.cors.CorsResponseFinisher\">\n              <property name=\"cors\" ref=\"cors\" />\n            </component>\n          </list>\n        </property>\n      </component>\n      <component class=\"nablarch.fw.jaxrs.CorsPreflightRequestHandler\">\n        <property name=\"cors\" ref=\"cors\" />\n      </component>\n    </list>\n  </property>\n</component>\n```\n\n**BasicCorsのデフォルト動作**\n\nプリフライトリクエスト（CorsPreflightRequestHandlerが呼び出す）:\n- 判定条件（以下の条件をすべて満たす場合にプリフライトリクエストと判定）:\n  - HTTPメソッド: OPTIONS\n  - Originヘッダ: 存在する\n  - Access-Control-Request-Methodヘッダ: 存在する\n- プリフライトリクエストと判定した場合のレスポンス:\n  - ステータスコード: 204\n  - Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE, PATCH\n  - Access-Control-Allow-Headers: Content-Type, X-CSRF-TOKEN\n  - Access-Control-Max-Age: -1\n  - 実際のリクエストと同じレスポンスヘッダも設定する\n\n実際のリクエスト（CorsResponseFinisherが呼び出す）:\n- Access-Control-Allow-Origin: リクエストのOriginヘッダ（許可Originに含まれる場合のみ設定）\n- Vary: Origin（許可Originに含まれる場合のみ設定）\n- Access-Control-Allow-Credentials: true\n\nレスポンスヘッダの内容は設定で変更可能。"
+    "s1": "本ハンドラは :ref:`restful_web_service` でCORS(Cross-Origin Resource Sharing)を実現するために使用する。プリフライトリクエストは本ハンドラで処理し、実際のリクエストに対する処理は `CorsResponseFinisher` で処理する。\n\n**クラス名**: `nablarch.fw.jaxrs.CorsPreflightRequestHandler`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-jaxrs</artifactId>\n</dependency>\n```",
+    "s3": "> **重要**: [jaxrs_response_handler](handlers-jaxrs_response_handler.json#s2) より後ろに配置すること。本ハンドラで生成した `HttpResponse` を [jaxrs_response_handler](handlers-jaxrs_response_handler.json#s2) が処理するため、本ハンドラは [jaxrs_response_handler](handlers-jaxrs_response_handler.json#s2) より後ろに配置する必要がある。",
+    "s4": "CORSを実現するには本ハンドラと `CorsResponseFinisher` を設定する。CORSの処理は `Cors` インタフェースが行う。フレームワークの基本実装として `BasicCors` クラスを提供しており、本ハンドラと `CorsResponseFinisher` にBasicCorsを指定する。\n\n**設定例**:\n```xml\n<component name=\"cors\" class=\"nablarch.fw.jaxrs.cors.BasicCors\">\n  <!-- 許可するOriginの指定。この設定は必須 -->\n  <property name=\"allowOrigins\">\n    <list>\n      <value>https://www.example.com</value>\n    </list>\n  </property>\n</component>\n\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component class=\"nablarch.fw.jaxrs.JaxRsResponseHandler\">\n        <property name=\"responseFinishers\">\n          <list>\n            <component class=\"nablarch.fw.jaxrs.cors.CorsResponseFinisher\">\n              <property name=\"cors\" ref=\"cors\" />\n            </component>\n          </list>\n        </property>\n      </component>\n      <component class=\"nablarch.fw.jaxrs.CorsPreflightRequestHandler\">\n        <property name=\"cors\" ref=\"cors\" />\n      </component>\n    </list>\n  </property>\n</component>\n```\n\n**BasicCorsのデフォルト動作**\n\nプリフライトリクエスト（CorsPreflightRequestHandlerが呼び出す）:\n- 判定条件（以下の条件をすべて満たす場合にプリフライトリクエストと判定）:\n  - HTTPメソッド: OPTIONS\n  - Originヘッダ: 存在する\n  - Access-Control-Request-Methodヘッダ: 存在する\n- プリフライトリクエストと判定した場合のレスポンス:\n  - ステータスコード: 204\n  - Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE, PATCH\n  - Access-Control-Allow-Headers: Content-Type, X-CSRF-TOKEN\n  - Access-Control-Max-Age: -1\n  - 実際のリクエストと同じレスポンスヘッダも設定する\n\n実際のリクエスト（CorsResponseFinisherが呼び出す）:\n- Access-Control-Allow-Origin: リクエストのOriginヘッダ（許可Originに含まれる場合のみ設定）\n- Vary: Origin（許可Originに含まれる場合のみ設定）\n- Access-Control-Allow-Credentials: true\n\nレスポンスヘッダの内容は設定で変更可能。"
   }
 }

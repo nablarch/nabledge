@@ -4,7 +4,7 @@
 
 ## バッチアプリケーションの起動方法
 
-- :ref:`Jakarta Batchアプリケーションの起動方法 <jsr352_run_batch_application>`
+- [Jakarta Batchアプリケーションの起動方法](jakarta-batch-run_batch_application.md)
 
 <details>
 <summary>keywords</summary>
@@ -15,7 +15,7 @@ Jakarta Batchアプリケーション起動, バッチ起動方法, jsr352_run_b
 
 ## システムリポジトリの初期化
 
-- :ref:`Jakarta Batchアプリケーションでシステムリポジトリの初期化 <jsr352_run_batch_init_repository>`
+- [Jakarta Batchアプリケーションでシステムリポジトリの初期化](jakarta-batch-run_batch_application.md)
 
 <details>
 <summary>keywords</summary>
@@ -26,7 +26,7 @@ Jakarta Batchアプリケーション起動, バッチ起動方法, jsr352_run_b
 
 ## バッチジョブに適用するリスナーの定義方法
 
-- :ref:`リスナーの定義方法 <jsr352-listener_definition>`
+- [リスナーの定義方法](jakarta-batch-architecture.md)
 
 <details>
 <summary>keywords</summary>
@@ -37,7 +37,7 @@ Jakarta Batchアプリケーション起動, バッチ起動方法, jsr352_run_b
 
 ## 入力値のチェック
 
-- :ref:`入力値のチェック <validation>`
+- [入力値のチェック](../../component/libraries/libraries-validation.md)
 
 <details>
 <summary>keywords</summary>
@@ -48,7 +48,7 @@ Jakarta Batchアプリケーション起動, バッチ起動方法, jsr352_run_b
 
 ## データベースアクセス
 
-- :ref:`データベースアクセス <database_management>`
+- [データベースアクセス](../../component/libraries/libraries-database_management.md)
 - [feature_details/database_reader](jakarta-batch-database_reader.md)
 
 <details>
@@ -60,7 +60,7 @@ Jakarta Batchアプリケーション起動, バッチ起動方法, jsr352_run_b
 
 ## ファイル入出力
 
-- :ref:`ファイル入出力<data_converter>`
+- [ファイル入出力](../../component/libraries/libraries-data_converter.md)
 
 <details>
 <summary>keywords</summary>
@@ -71,10 +71,10 @@ Jakarta Batchアプリケーション起動, バッチ起動方法, jsr352_run_b
 
 ## 排他制御
 
-排他制御は2種類の方法を提供しているが、:ref:`UniversalDaoを推奨する理由 <exclusive_control-deprecated>` に記載がある通り、:ref:`universal_dao` の使用を推奨する。
+排他制御は2種類の方法を提供しているが、[UniversalDaoを推奨する理由](../../component/libraries/libraries-exclusive_control.md) に記載がある通り、[universal_dao](../../component/libraries/libraries-universal_dao.md) の使用を推奨する。
 
-- :ref:`exclusive_control`
-- :ref:`universal_dao`
+- [exclusive_control](../../component/libraries/libraries-exclusive_control.md)
+- [universal_dao](../../component/libraries/libraries-universal_dao.md)
   - [悲観的ロック](jakarta-batch-pessimistic_lock.md)
 
 <details>
@@ -97,7 +97,7 @@ Jakarta Batchアプリケーション起動, バッチ起動方法, jsr352_run_b
 
 ## MOMメッセージ送信
 
-- :ref:`同期応答メッセージ送信<mom_system_messaging-sync_message_send>`
+- [同期応答メッセージ送信](../../component/libraries/libraries-mom_system_messaging.md)
 
 <details>
 <summary>keywords</summary>

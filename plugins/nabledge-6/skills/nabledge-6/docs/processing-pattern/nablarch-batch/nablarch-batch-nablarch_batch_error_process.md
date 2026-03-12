@@ -4,7 +4,7 @@
 
 ## バッチ処理をリランできるようにする
 
-ファイル入力を除き、バッチ処理をリランできるようにする機能は提供されていない。処理対象レコードにステータスを持たせ、処理成功・失敗時にステータスを変更するアプリケーション設計と実装が必要。ステータス変更の実装方法は :ref:`loop_handler-callback` を参照。
+ファイル入力を除き、バッチ処理をリランできるようにする機能は提供されていない。処理対象レコードにステータスを持たせ、処理成功・失敗時にステータスを変更するアプリケーション設計と実装が必要。ステータス変更の実装方法は [loop_handler-callback](../../component/handlers/handlers-loop_handler.md) を参照。
 
 ファイル入力の場合は `ResumeDataReader` を使用することで、障害発生ポイントからの再実行が可能。
 
@@ -17,11 +17,11 @@ ResumeDataReader, nablarch.fw.reader.ResumeDataReader, リラン, 再実行, ス
 
 ## バッチ処理でエラー発生時に処理を継続する
 
-エラー発生時の処理継続は :ref:`常駐バッチ<nablarch_batch-resident_batch>` のみ対応。:ref:`都度起動バッチ<nablarch_batch-each_time_batch>` は対応していない。
+エラー発生時の処理継続は [常駐バッチ](nablarch-batch-architecture.md) のみ対応。[都度起動バッチ](nablarch-batch-architecture.md) は対応していない。
 
-:ref:`常駐バッチ<nablarch_batch-resident_batch>` では `TransactionAbnormalEnd` を送出すると、:ref:`retry_handler` により処理が継続される。ただし、:ref:`nablarch_batch_error_process-rerun` に記載の通り、バッチ処理がリランできる設計になっている必要がある。
+[常駐バッチ](nablarch-batch-architecture.md) では `TransactionAbnormalEnd` を送出すると、[retry_handler](../../component/handlers/handlers-retry_handler.md) により処理が継続される。ただし、[nablarch_batch_error_process-rerun](#s1) に記載の通り、バッチ処理がリランできる設計になっている必要がある。
 
-> **補足**: :ref:`都度起動バッチ<nablarch_batch-each_time_batch>` で `TransactionAbnormalEnd` が送出されると、バッチ処理が異常終了となる。
+> **補足**: [都度起動バッチ](nablarch-batch-architecture.md) で `TransactionAbnormalEnd` が送出されると、バッチ処理が異常終了となる。
 
 <details>
 <summary>keywords</summary>

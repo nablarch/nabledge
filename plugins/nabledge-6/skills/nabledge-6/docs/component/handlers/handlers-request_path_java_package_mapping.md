@@ -6,7 +6,7 @@
 
 **クラス**: `nablarch.fw.handler.RequestPathJavaPackageMapping`
 
-リクエストパスを元にアクションへ処理を委譲するハンドラ。主に :ref:`messaging` でアクションにディスパッチする目的で使用する。
+リクエストパスを元にアクションへ処理を委譲するハンドラ。主に [messaging](../../processing-pattern/db-messaging/db-messaging-messaging.md) でアクションにディスパッチする目的で使用する。
 
 リクエストパスは `Request#getRequestPath()` から取得する。
 
@@ -80,7 +80,7 @@ basePackage, basePath, ベースパッケージ設定, ベースパス設定, Re
 
 リクエストパスのクラス名指定箇所に、ベースパッケージからの相対パッケージ名を指定することで複数パッケージのクラスへディスパッチできる。
 
-例: :ref:`request_path_java_package_mapping_path_setting` の設定（basePath=`/app/action/`、basePackage=`nablarch.application`）で `nablarch.application.xxx.ExampleBatchAction` へディスパッチする場合、リクエストパスに `/app/action/xxx/ExampleBatchAction` を指定する。
+例: [request_path_java_package_mapping_path_setting](#s3) の設定（basePath=`/app/action/`、basePackage=`nablarch.application`）で `nablarch.application.xxx.ExampleBatchAction` へディスパッチする場合、リクエストパスに `/app/action/xxx/ExampleBatchAction` を指定する。
 
 <details>
 <summary>keywords</summary>
@@ -113,7 +113,7 @@ classNamePrefix, classNameSuffix, クラス名省略, プレフィクス設定, 
 
 ## 複雑なパッケージへのディスパッチ
 
-:ref:`request_path_java_package_mapping_multi_package_dispatch` の方法では、アクションを同一パッケージ配下のサブパッケージにまとめる必要がある制約がある。`optionalPackageMappingEntries` プロパティに `JavaPackageMappingEntry` を使用してリクエストパスごとに別々のパッケージを設定できる。
+[request_path_java_package_mapping_multi_package_dispatch](#s4) の方法では、アクションを同一パッケージ配下のサブパッケージにまとめる必要がある制約がある。`optionalPackageMappingEntries` プロパティに `JavaPackageMappingEntry` を使用してリクエストパスごとに別々のパッケージを設定できる。
 
 | リクエストパス | ディスパッチ対象クラス |
 |---|---|

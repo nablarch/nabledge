@@ -28,7 +28,7 @@
 
 **クラス**: `ProjectSearchForm`
 
-- プロパティは全てString型で宣言する。詳細は :ref:`バリデーションルールの設定方法 <bean_validation-form_property>` を参照。
+- プロパティは全てString型で宣言する。詳細は [バリデーションルールの設定方法](../../component/libraries/libraries-bean_validation.md) を参照。
 
 ```java
 public class ProjectSearchForm implements Serializable {
@@ -45,7 +45,7 @@ public class ProjectSearchForm implements Serializable {
 
 **クラス**: `ProjectSearchDto`
 
-- BeanのプロパティはDB検索条件カラムの型と互換性のある型とする。詳細は :ref:`対応する条件カラムの定義(型)と互換性のある型とする<universal_dao-search_with_condition>` を参照。
+- BeanのプロパティはDB検索条件カラムの型と互換性のある型とする。詳細は [対応する条件カラムの定義(型)と互換性のある型とする](../../component/libraries/libraries-universal_dao.md) を参照。
 
 ```java
 public class ProjectSearchDto implements Serializable {
@@ -57,9 +57,9 @@ public class ProjectSearchDto implements Serializable {
 
 ## SQLの作成
 
-- SQLインジェクションを防ぐため、SQLは外部ファイルに記述する。詳細は :ref:`database-use_sql_file` を参照。
-- Beanのプロパティ名を使ってSQLに値をバインドする。詳細は :ref:`database-input_bean` を参照。
-- 検索条件として指定された項目のみを条件に含める場合は :ref:`$if 構文を使用してSQL文を構築<database-use_variable_condition>` する。
+- SQLインジェクションを防ぐため、SQLは外部ファイルに記述する。詳細は [database-use_sql_file](../../component/libraries/libraries-database.md) を参照。
+- Beanのプロパティ名を使ってSQLに値をバインドする。詳細は [database-input_bean](../../component/libraries/libraries-database.md) を参照。
+- 検索条件として指定された項目のみを条件に含める場合は [$if 構文を使用してSQL文を構築](../../component/libraries/libraries-database.md) する。
 
 ```sql
 FIND_PROJECT =
@@ -74,8 +74,8 @@ WHERE
 - 検索結果をJSON形式で返却するため `Produces` アノテーションに `MediaType.APPLICATION_JSON` を指定する。
 - クエリパラメータは `JaxRsHttpRequest` から取得する。
 - `BeanUtil` でリクエストパラメータからフォームを作成し、`ValidatorUtil#validate` でバリデーションを行う。
-- フォームの値を `BeanUtil` で検索条件Beanにコピーし、:ref:`universal_dao` で検索する。
-- 戻り値は :ref:`body_convert_handler` によってJSON形式に変換されるため、業務アクションメソッド内での変換処理は不要。
+- フォームの値を `BeanUtil` で検索条件Beanにコピーし、[universal_dao](../../component/libraries/libraries-universal_dao.md) で検索する。
+- 戻り値は [body_convert_handler](../../component/handlers/handlers-body_convert_handler.md) によってJSON形式に変換されるため、業務アクションメソッド内での変換処理は不要。
 
 ```java
 @Produces(MediaType.APPLICATION_JSON)
@@ -95,7 +95,7 @@ public List<Project> find(JaxRsHttpRequest req) {
 
 ## URLとのマッピング
 
-- :ref:`router_adaptor` を使用して業務アクションとURLのマッピングを行う。マッピングには :ref:`Jakarta RESTful Web ServicesのPathアノテーション <router_adaptor_path_annotation>` を使用する。
+- [router_adaptor](../../component/adapters/adapters-router_adaptor.md) を使用して業務アクションとURLのマッピングを行う。マッピングには [Jakarta RESTful Web ServicesのPathアノテーション](../../component/adapters/adapters-router_adaptor.md) を使用する。
 - `@Path` アノテーションと `@GET` アノテーションを使用して、GETリクエスト時にマッピングする業務アクションメソッドを定義する。
 
 ```java

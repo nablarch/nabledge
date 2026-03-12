@@ -32,85 +32,12 @@ public HttpResponse upload(HttpRequest request, ExecutionContext context) {
 3. DBへ一括登録する
 4. ファイルを保存する
 
-<details>
-<summary>keywords</summary>
-
-ProjectUploadAction, @OnDoubleSubmission, @OnError, ApplicationException, HttpRequest, PartInfo, LoginUserPrincipal, SessionUtil, MessageUtil, MessageLevel, HttpResponse, ExecutionContext, CSVファイルアップロード, 一括登録, 業務アクションメソッド, ファイルアップロード処理フロー
-
-</details>
-
-## ファイルアップロード機能の実装
-
-## ファイルアップロード画面の作成
-
-- `n:form` の `enctype` 属性を `multipart/form-data` に指定（マルチパートファイル送信に必須）
-- `n:file` の `name` 属性に指定した値が、業務アクションで `HttpRequest#getPart` に渡す登録名となる
-- `n:message` で完了メッセージを表示。`option0` 属性にリクエストスコープのアップロード件数を指定
-- `n:errors` でバリデーションエラーメッセージを一覧表示
-
-```jsp
-<n:form useToken="true" enctype="multipart/form-data">
-    <c:if test="${not empty uploadProjectSize}">
-        <ul><li class="message-info"><n:message messageId="success.upload.project" option0="${uploadProjectSize}" /></li></ul>
-    </c:if>
-    <n:errors errorCss="message-error"/>
-    <n:file name="uploadFile" id="uploadFile"/>
-    <n:button uri="/action/projectUpload/upload" allowDoubleSubmission="false" cssClass="btn btn-lg btn-light">登録</n:button>
-</n:form>
-```
-
-## ファイルの取得と保存を行う業務アクションメソッドの作成
-
-- `HttpRequest#getPart` でファイルを取得
-- ファイルが未アップロードの場合、`PartInfo` リストのサイズは0となる。この値で業務例外（`ApplicationException`）を送出するなどの制御を行う
-- アップロードファイルはマルチパートリクエストハンドラによって一時領域に保存され、自動削除される。永続化が必要な場合はファイルを任意のディレクトリへ移送する
-- ファイルの移送はファイルパス管理を使用している場合のみ可能
-- `UploadHelper#moveFileTo` の第一引数には、設定ファイルに登録されたファイル格納ディレクトリのキー名を指定
-
-```java
-public HttpResponse upload(HttpRequest request, ExecutionContext context)
-        throws IOException {
-    List<PartInfo> partInfoList = request.getPart("uploadFile");
-    if (partInfoList.isEmpty()) {
-        throw new ApplicationException(MessageUtil.createMessage(MessageLevel.ERROR, "errors.upload"));
-    }
-    PartInfo partInfo = partInfoList.get(0);
-    saveFile(partInfo);
-}
-
-private void saveFile(final PartInfo partInfo) {
-    String fileName = generateUniqueFileName(partInfo.getFileName());
-    UploadHelper helper = new UploadHelper(partInfo);
-    helper.moveFileTo("uploadFiles", fileName);
-}
-```
-
-```xml
-<!-- filepath-for-webui.xml -->
-<component name="filePathSetting" class="nablarch.core.util.FilePathSetting" autowireType="None">
-  <property name="basePathSettings">
-    <map>
-      <entry key="uploadFiles" value="file:./work/input" />
-    </map>
-  </property>
-</component>
-```
-
-<details>
-<summary>keywords</summary>
-
-ApplicationException, MessageUtil, MessageLevel, HttpRequest, PartInfo, UploadHelper, filePathSetting, FilePathSetting, n:form, n:file, n:message, n:errors, multipart/form-data, ファイルアップロード画面, UploadHelper#moveFileTo, ファイル保存, マルチパートリクエストハンドラ, ファイルパス管理
-
-</details>
-
-## 一括登録機能の実装
-
 ## ファイルをバインドするBeanの作成
 
-CSVファイルとBeanプロパティの紐付けは `@Csv` で設定する。CSVフォーマット指定は `@CsvFormat` を使用する（:ref:`デフォルトのフォーマットの指定<data_bind-csv_format_set>` を使用する場合は不要）。詳細は :ref:`CSVファイルをJava Beansクラスにバインドする場合のフォーマット指定方法 <data_bind-csv_format-beans>` を参照。
+CSVファイルとBeanプロパティの紐付けは `@Csv` で設定する。CSVフォーマット指定は `@CsvFormat` を使用する（[デフォルトのフォーマットの指定](../../component/libraries/libraries-data_bind.md) を使用する場合は不要）。詳細は [CSVファイルをJava Beansクラスにバインドする場合のフォーマット指定方法](../../component/libraries/libraries-data_bind.md) を参照。
 
-- ファイルからの入力値を受け付けるため、プロパティは :ref:`String型で定義<bean_validation-form_property>` する。適切な型への変換はバリデーションを通過した安全な値に対して行う
-- `@Required` や `@Domain` などのバリデーション用アノテーションを付与して :ref:`Bean Validation<bean_validation>` を実行する
+- ファイルからの入力値を受け付けるため、プロパティは [String型で定義](../../component/libraries/libraries-bean_validation.md) する。適切な型への変換はバリデーションを通過した安全な値に対して行う
+- `@Required` や `@Domain` などのバリデーション用アノテーションを付与して [Bean Validation](../../component/libraries/libraries-bean_validation.md) を実行する
 - 行数プロパティのゲッタに `LineNumber` を付与することで、対象データの行番号が自動設定される
 
 > **補足**: 入力必須項目のバリデーションエラーメッセージをファイルアップロード向けのメッセージに変更する場合は :ref:`入力値のチェックルールを設定する<client_create_validation_rule>` を参照。
@@ -138,11 +65,11 @@ public class ProjectUploadDto implements Serializable {
 
 ## CSVのバインドとバリデーション
 
-ファイルのBeanバインドには :ref:`データバインド<data_bind>` の `ObjectMapper` を使用する。`ObjectMapper#read()` でバインド済みBeanを取得できる。
+ファイルのBeanバインドには [データバインド](../../component/libraries/libraries-data_bind.md) の `ObjectMapper` を使用する。`ObjectMapper#read()` でバインド済みBeanを取得できる。
 
-- `ValidatorUtil#getValidator` で `Validator` オブジェクトを生成し、任意のBeanに :ref:`Bean Validation<bean_validation>` を実行できる
-- エラー発生時もバリデーションを中止せず最終行まで検証する場合は、全エラーメッセージを `Message` のリストに収集し、`ApplicationException` を送出することで :ref:`tag-errors_tag` で画面出力できる
-- バリデーションメッセージへのプロパティ名付与については :ref:`バリデーションエラー時のメッセージに項目名を含めたい<bean_validation-property_name>` を参照
+- `ValidatorUtil#getValidator` で `Validator` オブジェクトを生成し、任意のBeanに [Bean Validation](../../component/libraries/libraries-bean_validation.md) を実行できる
+- エラー発生時もバリデーションを中止せず最終行まで検証する場合は、全エラーメッセージを `Message` のリストに収集し、`ApplicationException` を送出することで [tag-errors_tag](../../component/libraries/libraries-tag_reference.md) で画面出力できる
+- バリデーションメッセージへのプロパティ名付与については [バリデーションエラー時のメッセージに項目名を含めたい](../../component/libraries/libraries-bean_validation.md) を参照
 
 ```java
 private List<Project> readFileAndValidate(final PartInfo partInfo, final LoginUserPrincipal userContext) {
@@ -224,6 +151,70 @@ private void insertProjects(List<Project> projects) {
 <details>
 <summary>keywords</summary>
 
-ProjectUploadDto, ObjectMapper, ObjectMapperFactory, ValidatorUtil, UniversalDao, ApplicationException, InvalidDataFormatException, Message, MessageUtil, MessageLevel, @Csv, @CsvFormat, @Required, @Domain, @LineNumber, PartInfo, HttpRequest, HttpResponse, ExecutionContext, Collectors, LoginUserPrincipal, Project, CsvDataBindConfig, CSVファイル一括登録, ファイルアップロード, Bean Validation, バッチインサート, 行番号取得
+ProjectUploadAction, @OnDoubleSubmission, @OnError, ApplicationException, HttpRequest, PartInfo, LoginUserPrincipal, SessionUtil, MessageUtil, MessageLevel, HttpResponse, ExecutionContext, CSVファイルアップロード, 一括登録, 業務アクションメソッド, ファイルアップロード処理フロー, ProjectUploadDto, ObjectMapper, ObjectMapperFactory, ValidatorUtil, UniversalDao, InvalidDataFormatException, Message, @Csv, @CsvFormat, @Required, @Domain, @LineNumber, Collectors, Project, CsvDataBindConfig, CSVファイル一括登録, ファイルアップロード, Bean Validation, バッチインサート, 行番号取得
+
+</details>
+
+## ファイルアップロード機能の実装
+
+## ファイルアップロード画面の作成
+
+- `n:form` の `enctype` 属性を `multipart/form-data` に指定（マルチパートファイル送信に必須）
+- `n:file` の `name` 属性に指定した値が、業務アクションで `HttpRequest#getPart` に渡す登録名となる
+- `n:message` で完了メッセージを表示。`option0` 属性にリクエストスコープのアップロード件数を指定
+- `n:errors` でバリデーションエラーメッセージを一覧表示
+
+```jsp
+<n:form useToken="true" enctype="multipart/form-data">
+    <c:if test="${not empty uploadProjectSize}">
+        <ul><li class="message-info"><n:message messageId="success.upload.project" option0="${uploadProjectSize}" /></li></ul>
+    </c:if>
+    <n:errors errorCss="message-error"/>
+    <n:file name="uploadFile" id="uploadFile"/>
+    <n:button uri="/action/projectUpload/upload" allowDoubleSubmission="false" cssClass="btn btn-lg btn-light">登録</n:button>
+</n:form>
+```
+
+## ファイルの取得と保存を行う業務アクションメソッドの作成
+
+- `HttpRequest#getPart` でファイルを取得
+- ファイルが未アップロードの場合、`PartInfo` リストのサイズは0となる。この値で業務例外（`ApplicationException`）を送出するなどの制御を行う
+- アップロードファイルはマルチパートリクエストハンドラによって一時領域に保存され、自動削除される。永続化が必要な場合はファイルを任意のディレクトリへ移送する
+- ファイルの移送はファイルパス管理を使用している場合のみ可能
+- `UploadHelper#moveFileTo` の第一引数には、設定ファイルに登録されたファイル格納ディレクトリのキー名を指定
+
+```java
+public HttpResponse upload(HttpRequest request, ExecutionContext context)
+        throws IOException {
+    List<PartInfo> partInfoList = request.getPart("uploadFile");
+    if (partInfoList.isEmpty()) {
+        throw new ApplicationException(MessageUtil.createMessage(MessageLevel.ERROR, "errors.upload"));
+    }
+    PartInfo partInfo = partInfoList.get(0);
+    saveFile(partInfo);
+}
+
+private void saveFile(final PartInfo partInfo) {
+    String fileName = generateUniqueFileName(partInfo.getFileName());
+    UploadHelper helper = new UploadHelper(partInfo);
+    helper.moveFileTo("uploadFiles", fileName);
+}
+```
+
+```xml
+<!-- filepath-for-webui.xml -->
+<component name="filePathSetting" class="nablarch.core.util.FilePathSetting" autowireType="None">
+  <property name="basePathSettings">
+    <map>
+      <entry key="uploadFiles" value="file:./work/input" />
+    </map>
+  </property>
+</component>
+```
+
+<details>
+<summary>keywords</summary>
+
+ApplicationException, MessageUtil, MessageLevel, HttpRequest, PartInfo, UploadHelper, filePathSetting, FilePathSetting, n:form, n:file, n:message, n:errors, multipart/form-data, ファイルアップロード画面, UploadHelper#moveFileTo, ファイル保存, マルチパートリクエストハンドラ, ファイルパス管理
 
 </details>

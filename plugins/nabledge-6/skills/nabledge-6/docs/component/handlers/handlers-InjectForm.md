@@ -73,7 +73,7 @@ public HttpResponse handle(HttpRequest req, ExecutionContext ctx) {
 }
 ```
 
-> **補足**: :ref:`bean_validation` を使用する場合、バリデーションエラー時にもリクエストスコープからオブジェクトを取得可能となるよう設定できる。詳細は :ref:`bean_validation_onerror` を参照。
+> **補足**: [bean_validation](../libraries/libraries-bean_validation.md) を使用する場合、バリデーションエラー時にもリクエストスコープからオブジェクトを取得可能となるよう設定できる。詳細は [bean_validation_onerror](../libraries/libraries-bean_validation.md) を参照。
 
 <details>
 <summary>keywords</summary>
@@ -88,7 +88,7 @@ public HttpResponse handle(HttpRequest req, ExecutionContext ctx) {
 
 > **重要**: `OnError` が設定されていない場合、バリデーションエラーがシステムエラー扱いとなる。
 
-バリデーションエラー発生時に遷移先画面で表示するデータを取得したい場合は、:ref:`on_error-forward` を参照。
+バリデーションエラー発生時に遷移先画面で表示するデータを取得したい場合は、[on_error-forward](handlers-on_error.md) を参照。
 
 <details>
 <summary>keywords</summary>
@@ -99,7 +99,7 @@ public HttpResponse handle(HttpRequest req, ExecutionContext ctx) {
 
 ## Bean Validationのグループを指定する
 
-:ref:`bean_validation` を使用する場合、`InjectForm#validationGroup` にグループを指定できる。
+[bean_validation](../libraries/libraries-bean_validation.md) を使用する場合、`InjectForm#validationGroup` にグループを指定できる。
 
 ```java
 // UserFormクラス内で設定されたバリデーションルールのうち、Createグループに所属するルールのみを使用して検証する。

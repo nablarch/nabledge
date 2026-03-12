@@ -4,7 +4,7 @@
 
 ## マスタデータ投入ツール
 
-> **補足**: :ref:`blank_project` を使用してプロジェクトを構築した場合、データベース関連ツールとして :ref:`gsp-dba-maven-plugin <gsp-maven-plugin>` が設定される。このため、マスタデータの投入は本ツールではなく :ref:`gsp-dba-maven-plugin <gsp-maven-plugin>` の使用を推奨する。
+> **補足**: [blank_project](../../setup/blank-project/blank-project-blank_project.md) を使用してプロジェクトを構築した場合、データベース関連ツールとして [gsp-dba-maven-plugin](../../setup/blank-project/blank-project-addin_gsp.md) が設定される。このため、マスタデータの投入は本ツールではなく [gsp-dba-maven-plugin](../../setup/blank-project/blank-project-addin_gsp.md) の使用を推奨する。
 
 > **重要**: 本ツールはマルチスレッド機能に対応していない。マルチスレッド機能のテストは、テスティングフレームワークを使用しないテスト（結合テストなど）で行うこと。
 

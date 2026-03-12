@@ -8,7 +8,7 @@
   ],
   "index": [
     {
-      "id": "chunk-step-with-database",
+      "id": "s1",
       "title": "データベースを入力とするChunkステップ",
       "hints": [
         "BaseDatabaseItemReader",
@@ -32,6 +32,6 @@
     }
   ],
   "sections": {
-    "chunk-step-with-database": "データベースから処理対象データを抽出する場合、Jakarta Batchが提供するリーダではなく :java:extdoc:`BaseDatabaseItemReader <nablarch.fw.batch.ee.chunk.BaseDatabaseItemReader>` を実装すること。\n\nリーダ専用のデータベース接続を使用するため、トランザクション制御時にカーソルが自動クローズされるデータベースでもChunkステップを実現できる。\n\n**クラス**: `nablarch.fw.batch.ee.chunk.BaseDatabaseItemReader`\n\n実装時は以下のメソッドをオーバーライドする:\n\n- `doOpen(Serializable checkpoint)`: 処理対象データをデータベースから抽出する。大量データ取得時はヒープ圧迫を避けるため遅延ロード（`UniversalDao.defer()`）を使用すること。\n- `readItem()`: 次の1レコードを返す。データが存在しない場合・最後まで処理した場合は `null` を返す。\n- `doClose()`: リソース解放が必要な場合に実装する。\n\n```java\n@Dependent\n@Named\npublic class EmployeeSearchReader extends BaseDatabaseItemReader {\n\n  private DeferredEntityList<EmployeeForm> list;\n  private Iterator<EmployeeForm> iterator;\n  private final ProgressManager progressManager;\n\n  @Inject\n  public EmployeeSearchReader(ProgressManager progressManager) {\n    this.progressManager = progressManager;\n  }\n\n  @Override\n  public void doOpen(Serializable checkpoint) throws Exception {\n    progressManager.setInputCount(\n        UniversalDao.countBySqlFile(EmployeeForm.class, \"SELECT_EMPLOYEE\"));\n    list = (DeferredEntityList<EmployeeForm>) UniversalDao.defer()\n            .findAllBySqlFile(EmployeeForm.class, \"SELECT_EMPLOYEE\");\n    iterator = list.iterator();\n  }\n\n  @Override\n  public Object readItem() {\n    if (iterator.hasNext()) {\n      return iterator.next();\n    }\n    return null;\n  }\n\n  @Override\n  public void doClose() throws Exception {\n    list.close();\n  }\n}\n```"
+    "s1": "データベースから処理対象データを抽出する場合、Jakarta Batchが提供するリーダではなく `BaseDatabaseItemReader` を実装すること。\n\nリーダ専用のデータベース接続を使用するため、トランザクション制御時にカーソルが自動クローズされるデータベースでもChunkステップを実現できる。\n\n**クラス**: `nablarch.fw.batch.ee.chunk.BaseDatabaseItemReader`\n\n実装時は以下のメソッドをオーバーライドする:\n\n- `doOpen(Serializable checkpoint)`: 処理対象データをデータベースから抽出する。大量データ取得時はヒープ圧迫を避けるため遅延ロード（`UniversalDao.defer()`）を使用すること。\n- `readItem()`: 次の1レコードを返す。データが存在しない場合・最後まで処理した場合は `null` を返す。\n- `doClose()`: リソース解放が必要な場合に実装する。\n\n```java\n@Dependent\n@Named\npublic class EmployeeSearchReader extends BaseDatabaseItemReader {\n\n  private DeferredEntityList<EmployeeForm> list;\n  private Iterator<EmployeeForm> iterator;\n  private final ProgressManager progressManager;\n\n  @Inject\n  public EmployeeSearchReader(ProgressManager progressManager) {\n    this.progressManager = progressManager;\n  }\n\n  @Override\n  public void doOpen(Serializable checkpoint) throws Exception {\n    progressManager.setInputCount(\n        UniversalDao.countBySqlFile(EmployeeForm.class, \"SELECT_EMPLOYEE\"));\n    list = (DeferredEntityList<EmployeeForm>) UniversalDao.defer()\n            .findAllBySqlFile(EmployeeForm.class, \"SELECT_EMPLOYEE\");\n    iterator = list.iterator();\n  }\n\n  @Override\n  public Object readItem() {\n    if (iterator.hasNext()) {\n      return iterator.next();\n    }\n    return null;\n  }\n\n  @Override\n  public void doClose() throws Exception {\n    list.close();\n  }\n}\n```"
   }
 }

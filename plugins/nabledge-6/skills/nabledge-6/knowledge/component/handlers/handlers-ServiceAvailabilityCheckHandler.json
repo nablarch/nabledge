@@ -9,10 +9,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/ServiceUnavailable.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/threadcontext/InternalRequestIdAttribute.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "overview",
+      "id": "s1",
       "title": "概要",
       "hints": [
         "ServiceAvailability",
@@ -22,7 +21,7 @@
       ]
     },
     {
-      "id": "handler-class",
+      "id": "s2",
       "title": "ハンドラクラス名",
       "hints": [
         "ServiceAvailabilityCheckHandler",
@@ -31,7 +30,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s3",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-common-auth",
@@ -41,7 +40,7 @@
       ]
     },
     {
-      "id": "constraints",
+      "id": "s4",
       "title": "制約",
       "hints": [
         "thread_context_handler",
@@ -52,7 +51,7 @@
       ]
     },
     {
-      "id": "request-service-availability-check",
+      "id": "s5",
       "title": "リクエストに対するサービス提供可否チェック",
       "hints": [
         "ThreadContext",
@@ -65,10 +64,10 @@
     }
   ],
   "sections": {
-    "handler-class": "**クラス名**: `nablarch.common.availability.ServiceAvailabilityCheckHandler`",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth</artifactId>\n</dependency>\n```",
-    "constraints": "- :ref:`thread_context_handler` より後ろに配置すること: スレッドコンテキスト上のリクエストIDを使用するため、:ref:`thread_context_handler` より後ろに配置する必要がある。\n- :ref:`forwarding_handler` より後ろに配置すること: 内部フォーワード時にフォーワード先の :ref:`内部リクエストID <internal_request_id>` でチェックしたい場合。あわせて :ref:`thread_context_handler` の `attributes` に :java:extdoc:`InternalRequestIdAttribute <nablarch.common.handler.threadcontext.InternalRequestIdAttribute>` を追加すること。",
-    "request-service-availability-check": ":java:extdoc:`ThreadContext <nablarch.core.ThreadContext>` からリクエストIDを取得し、:ref:`service_availability` を使用してサービス提供可否をチェックする。\n\n処理フロー:\n1. :java:extdoc:`ThreadContext <nablarch.core.ThreadContext>` からリクエストIDを取得\n2. :ref:`service_availability` を使用してサービス提供可否チェック\n3. OK（サービス提供可）→ 後続ハンドラを呼び出す\n4. NG（サービス提供不可）→ :java:extdoc:`ServiceUnavailable <nablarch.fw.results.ServiceUnavailable>` (503) を送出\n\nフォーワード先のリクエストIDでチェックしたい場合は、:java:extdoc:`ServiceAvailabilityCheckHandler.setUsesInternalRequestId(boolean) <nablarch.common.availability.ServiceAvailabilityCheckHandler.setUsesInternalRequestId(boolean)>` で `true` を指定（デフォルト: `false`）。",
-    "overview": "サービス提供可否チェックは、ライブラリの :ref:`service_availability` を使用して行う。\n\n**前提条件**: 本ハンドラを使用するには、:java:extdoc:`ServiceAvailability <nablarch.common.availability.ServiceAvailability>` を実装したクラスを本ハンドラに設定する必要がある。"
+    "s2": "**クラス名**: `nablarch.common.availability.ServiceAvailabilityCheckHandler`",
+    "s3": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth</artifactId>\n</dependency>\n```",
+    "s4": "- [thread_context_handler](handlers-thread_context_handler.json#s2) より後ろに配置すること: スレッドコンテキスト上のリクエストIDを使用するため、[thread_context_handler](handlers-thread_context_handler.json#s2) より後ろに配置する必要がある。\n- [forwarding_handler](handlers-forwarding_handler.json#s1) より後ろに配置すること: 内部フォーワード時にフォーワード先の [内部リクエストID](handlers-forwarding_handler.json#s5) でチェックしたい場合。あわせて [thread_context_handler](handlers-thread_context_handler.json#s2) の `attributes` に `InternalRequestIdAttribute` を追加すること。",
+    "s5": "`ThreadContext` からリクエストIDを取得し、:ref:`service_availability` を使用してサービス提供可否をチェックする。\n\n処理フロー:\n1. `ThreadContext` からリクエストIDを取得\n2. :ref:`service_availability` を使用してサービス提供可否チェック\n3. OK（サービス提供可）→ 後続ハンドラを呼び出す\n4. NG（サービス提供不可）→ `ServiceUnavailable` (503) を送出\n\nフォーワード先のリクエストIDでチェックしたい場合は、`ServiceAvailabilityCheckHandler.setUsesInternalRequestId(boolean)` で `true` を指定（デフォルト: `false`）。",
+    "s1": "サービス提供可否チェックは、ライブラリの :ref:`service_availability` を使用して行う。\n\n**前提条件**: 本ハンドラを使用するには、`ServiceAvailability` を実装したクラスを本ハンドラに設定する必要がある。"
   }
 }

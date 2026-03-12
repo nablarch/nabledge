@@ -6,9 +6,9 @@
 
 :ref:`二重サブミット(同一リクエストの二重送信)防止 <tag-double_submission_server_side>` のためのトークンを発行するインターセプタ。主にJSP以外のテンプレートエンジンを採用している場合に使用する。
 
-JSPを使用している場合は :ref:`tag-form_tag` のuseToken属性でトークン生成とhiddenへの埋め込みが行われる。
+JSPを使用している場合は [tag-form_tag](../libraries/libraries-tag_reference.md) のuseToken属性でトークン生成とhiddenへの埋め込みが行われる。
 
-トークンをチェックするため、後続のアクションに対して :ref:`on_double_submission_interceptor` を設定する必要がある。
+トークンをチェックするため、後続のアクションに対して [on_double_submission_interceptor](handlers-on_double_submission.md) を設定する必要がある。
 
 **クラス**: `nablarch.common.web.token.UseToken`
 

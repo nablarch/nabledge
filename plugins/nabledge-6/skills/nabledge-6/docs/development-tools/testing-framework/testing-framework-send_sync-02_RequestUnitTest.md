@@ -1,0 +1,191 @@
+# リクエスト単体テストの実施方法(同期応答メッセージ送信処理)
+
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/02_RequestUnitTest/send_sync.html) [2](https://github.com/nablarch/nablarch-testing/blob/main/src/main/java/nablarch/test/core/file/BasicDataTypeMapping.java)
+
+## 出力ライブラリ(同期応答メッセージ送信処理)の構造とテスト範囲
+
+同期応答メッセージ送信処理のリクエスト単体テストは、リクエストID単位で行う。
+
+> **補足**: ここで扱うリクエストIDは、メッセージ送信先の外部システム機能を一意に識別するIDであり、ウェブアプリケーションやバッチ処理で使用するリクエストIDとは意味が異なる。このリクエストIDにより、要求電文・応答電文のフォーマット、送信キュー名、受信キュー名が決まる。
+
+用語:
+- 要求電文: Actionがキューへ送信するメッセージ
+- 応答電文: Actionがキューから受信するメッセージ
+
+テスト実行時の動作:
+1. 自動テストフレームワークがNablarch Application Frameworkを起動する
+2. Nablarch Application FrameworkがActionの入力パラメータ（画面ならばリクエスト、バッチならばファイルやDB）を読み込み、Actionを起動する
+3. ActionはNablarch Application Frameworkのメッセージ同期送信処理を実行する。Nablarch Application FrameworkはActionから受け取ったパラメータを要求電文に変換する
+4. 自動テストフレームワークがテストデータをもとに要求電文をアサートする（キューへはPUTしない）
+5. 自動テストフレームワークがテストデータをもとに応答電文を生成し、Actionへ返却する（キューからはGETしない）
+
+> **補足**: フレームワークは「送信キュー」「受信キュー」を使用せず、キューの手前で要求電文アサートと応答電文生成を行う。特別なミドルウェアのインストールや環境設定は不要。
+
+特徴:
+1. テストデータをExcelに記載でき、外部インターフェース設計書のフォーマット定義に沿って記述できる。同期応答メッセージ送信処理用のテストデータ書式が提供されている。
+2. メッセージ同期送信処理のテストコードを記述する必要がない。要求電文の期待値と応答電文をExcelに記載すると、フレームワークが自動的にアサートと応答電文返却を行う。テスト準備・実行・結果確認が可能なスーパークラスが提供されており、コーディングほぼ不要でテスト実行可能。
+
+<details>
+<summary>keywords</summary>
+
+同期応答メッセージ送信処理, リクエスト単体テスト, 要求電文, 応答電文, キュー, リクエストID, 自動テストフレームワーク, Nablarch Application Framework, メッセージ同期送信, メッセージ同期送信処理
+
+</details>
+
+## テストの実施方法
+
+同期応答メッセージ送信処理のテストは、ウェブアプリケーションやバッチ処理などのテスト方式を踏襲して行われる。テストクラスの書き方や各種準備データの準備方法については、これらのテストの実施方法を参照すること。
+
+本項では、同期応答メッセージ送信処理固有の実施方法についてのみ解説する。
+
+<details>
+<summary>keywords</summary>
+
+テスト実施方法, 同期応答メッセージ, ウェブアプリケーション, バッチ処理
+
+</details>
+
+## テストデータの書き方
+
+テストデータを記載したExcelファイルは、クラス単体テストと同様に、テストソースコードと同じディレクトリに同じ名前（拡張子のみ異なる）で格納する。
+
+テストデータの記述方法詳細は :ref:`how_to_write_excel` を参照。
+
+<details>
+<summary>keywords</summary>
+
+テストデータ, Excelファイル, テストソースコード, ディレクトリ
+
+</details>
+
+## 要求電文の期待値および応答電文の準備
+
+同期応答メッセージ送信処理のテストでは、リクエストIDごとに要求電文および応答電文のヘッダ部・ボディ部のフォーマットとデータを定義する。
+
+テストケースとの対応付けはグループIDで行う。テストケースの `expectedMessage` フィールドと `responseMessage` フィールドに記載したグループIDが、対応する識別子を持つ電文表と紐付く。
+
+> **重要**:
+> - テストケース一覧に `expectedMessage` および `responseMessage` の欄がない場合、検証は行われない
+> - 欄が空欄でメッセージ同期送信処理が実行された場合、テストが失敗する
+> - メッセージ同期送信処理を行う場合は必ず `expectedMessage` と `responseMessage` を記載すること
+
+1テストケースで同一グループID・同一リクエストIDの電文が複数件送信される場合は、その件数分のデータ行を記載する。`no` 列の順番（連番）は送信順に対応する。
+
+テストケースの書き方:
+- ウェブアプリケーション: :ref:`request_test_testcases`
+- バッチ処理: :ref:`batch_test_testcases`
+
+![テストデータ（グループIDの関連）](../../../knowledge/development-tools/testing-framework/assets/testing-framework-send_sync-02_RequestUnitTest/send_sync.png)
+
+> **補足**: Nablarch標準の同期応答メッセージ送信機能では、要求電文と応答電文のヘッダ部は共通フォーマットを使用するため、テストデータのヘッダ部フォーマット定義はリクエスト単位で統一すること。ボディ部は要求電文と応答電文で異なるフォーマットを定義できる。
+
+<details>
+<summary>keywords</summary>
+
+expectedMessage, responseMessage, グループID, 要求電文期待値, 応答電文, テストケース, リクエストID
+
+</details>
+
+## 電文表の書式
+
+要求電文・応答電文の電文表の識別子形式:
+
+| 識別子 | 形式 |
+|---|---|
+| 要求電文ヘッダの期待値 | `EXPECTED_REQUEST_HEADER_MESSAGES[グループID]=リクエストID` |
+| 要求電文本文の期待値 | `EXPECTED_REQUEST_BODY_MESSAGES[グループID]=リクエストID` |
+| 応答電文ヘッダ | `RESPONSE_HEADER_MESSAGES[グループID]=リクエストID` |
+| 応答電文本文 | `RESPONSE_BODY_MESSAGES[グループID]=リクエストID` |
+
+電文表の構造（行の構成）:
+1. 識別子行
+2. ディレクティブ行（ディレクティブ名と設定値を記載; 複数行可）
+3. `no` 行（ディレクティブ行の直下に必ず `no` を記載）
+4. フィールド名称行（フィールド数分）
+5. データ型行（フィールド数分）: 日本語名称で記述（例: 「半角英字」）。マッピングは [BasicDataTypeMapping](https://github.com/nablarch/nablarch-testing/blob/main/src/main/java/nablarch/test/core/file/BasicDataTypeMapping.java) の `DEFAULT_TABLE` を参照
+6. フィールド長行（フィールド数分）
+7. データ行（複数レコードは次の行に続けて記載）
+
+ディレクティブの以下は記述不要:
+
+| 項目 | 理由 |
+|---|---|
+| `file-type` | テスティングフレームワークが固定長のみ対応のため |
+| `record-length` | フィールド長に記載したサイズでパディングされるため |
+
+> **重要**: フィールド名称に重複した名称は許容されない（例: 「氏名」フィールドが2つ以上あってはならない）。
+
+> **補足**: フィールド名称・データ型・フィールド長は外部インタフェース設計書からコピー＆ペーストで効率よく作成できる（ペースト時は「行列を入れ替える」オプションを使用すること）。
+
+要求電文本文の記載例:
+![要求電文本文の記載例](../../../knowledge/development-tools/testing-framework/assets/testing-framework-send_sync-02_RequestUnitTest/send_sync_example.png)
+
+> **補足**: 要求電文のヘッダの期待値および応答電文の本文・ヘッダについても、識別子を除く部分については要求電文の本文の期待値と同様の記載方法となる。
+
+<details>
+<summary>keywords</summary>
+
+電文表, 識別子, EXPECTED_REQUEST_HEADER_MESSAGES, EXPECTED_REQUEST_BODY_MESSAGES, RESPONSE_HEADER_MESSAGES, RESPONSE_BODY_MESSAGES, ディレクティブ, BasicDataTypeMapping, フィールド定義, データ型
+
+</details>
+
+## 複数回送信テスト
+
+要求電文に複数レコードが存在する場合、ヘッダとレコードを交互に記載する必要がある。
+
+> **重要**: ヘッダ1つに複数の業務データを続けて記載してはならない。ヘッダと業務データの数が一致しないためアサーションエラーが発生する。
+>
+> 誤: ヘッダ → 業務データ(1レコード目) → 業務データ(2レコード目) → 業務データ(3レコード目)
+>
+> 正: ヘッダ → 業務データ(1レコード目) → ヘッダ → 業務データ(2レコード目) → ヘッダ → 業務データ(3レコード目)
+
+複数回電文を送信するテストの作成時の注意:
+- 同一データタイプ（例: `RESPONSE_HEADER_MESSAGES` と `RESPONSE_BODY_MESSAGES`）はそれぞれまとめて記述する。詳細は :ref:`tips_groupId` および [auto-test-framework_multi-datatype](testing-framework-01_Abstract.md) を参照。
+- 同一リクエストIDの電文は、`no` の値を変えてまとめて記述する。
+
+複数回送信テストの記載例:
+![複数回送信テストの記載例](../../../knowledge/development-tools/testing-framework/assets/testing-framework-send_sync-02_RequestUnitTest/send_sync_ok_pattern_expected.png)
+
+> **補足**: 送信対象のリクエストIDが複数存在する場合、送信順のテストは不可能。異なるリクエストIDの電文がどの順番で送信されてもテストは成功する。
+
+<details>
+<summary>keywords</summary>
+
+複数レコード, ヘッダ重複, 複数回送信, ヘッダとボディ交互, 送信順, tips_groupId, auto-test-framework_multi-datatype
+
+</details>
+
+## 障害系のテスト
+
+応答電文表のヘッダおよび本文の `no` を除く最初のフィールドに以下の値を設定することで障害系テストが可能。
+
+| 設定値 | 障害内容 | フレームワークの動作 |
+|---|---|---|
+| `errorMode:timeout` | メッセージ送信中にタイムアウトエラーが発生するケースのテスト | **`MessageSendSyncTimeoutException`**（`MessagingException` のサブクラス）を送出する |
+| `errorMode:msgException` | メッセージ送受信エラーが発生するケースのテスト | **`MessagingException`** をスローする |
+
+この値は、応答電文表の**ヘッダおよび本文両方**の `no` を除く最初のフィールドに記載する。
+
+![障害系テスト設定例](../../../knowledge/development-tools/testing-framework/assets/testing-framework-send_sync-02_RequestUnitTest/send_sync_error.png)
+
+> **補足**: 業務アクション内で `MessagingException` を明示的に制御していない場合、個別のリクエスト単体テストで障害系テストを行う必要はない。
+
+<details>
+<summary>keywords</summary>
+
+障害系テスト, errorMode, タイムアウト, MessageSendSyncTimeoutException, MessagingException, errorMode:timeout, errorMode:msgException, タイムアウトエラー, メッセージ送受信エラー
+
+</details>
+
+## テスト結果検証
+
+要求電文の期待値を定義した場合、フレームワークが以下を自動検証する:
+- 要求電文の内容の検証
+- 要求電文の送信件数の検証
+
+<details>
+<summary>keywords</summary>
+
+テスト結果検証, 要求電文検証, 送信件数検証
+
+</details>

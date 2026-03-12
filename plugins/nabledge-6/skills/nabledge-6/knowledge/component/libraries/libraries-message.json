@@ -19,10 +19,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/message/BasicMessageFormatter.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/message/JavaMessageFormatBaseMessageFormatter.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "overview",
+      "id": "s1",
       "title": "機能概要",
       "hints": [
         "メッセージ管理",
@@ -31,11 +30,21 @@
         "メッセージフォーマット",
         "java.text.MessageFormat",
         "MessageFormat",
-        "実行中更新不可"
+        "実行中更新不可",
+        "PropertiesStringResourceLoader",
+        "BasicStringResourceLoader",
+        "BasicStaticDataCache",
+        "StringResourceHolder",
+        "MessageFormatter",
+        "BasicMessageFormatter",
+        "JavaMessageFormatBaseMessageFormatter",
+        "プロパティファイル設定変更",
+        "データベースメッセージ管理",
+        "メッセージフォーマット変更"
       ]
     },
     {
-      "id": "module-list",
+      "id": "s2",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-core",
@@ -46,7 +55,7 @@
       ]
     },
     {
-      "id": "property-file-unit",
+      "id": "s3",
       "title": "プロパティファイルの作成単位",
       "hints": [
         "プロパティファイル作成単位",
@@ -57,7 +66,7 @@
       ]
     },
     {
-      "id": "property-file-definition",
+      "id": "s4",
       "title": "プロパティファイルにメッセージを定義する",
       "hints": [
         "messages.properties",
@@ -69,7 +78,7 @@
       ]
     },
     {
-      "id": "multi-language",
+      "id": "s5",
       "title": "多言語化対応",
       "hints": [
         "PropertiesStringResourceLoader",
@@ -84,7 +93,7 @@
       ]
     },
     {
-      "id": "application-exception",
+      "id": "s6",
       "title": "メッセージを持つ業務例外を送出する",
       "hints": [
         "ApplicationException",
@@ -98,7 +107,7 @@
       ]
     },
     {
-      "id": "message-format",
+      "id": "s7",
       "title": "埋め込み文字を使用する",
       "hints": [
         "MessageFormat",
@@ -110,7 +119,7 @@
       ]
     },
     {
-      "id": "static-text",
+      "id": "s8",
       "title": "画面の固定文言をメッセージから取得する",
       "hints": [
         "messageタグ",
@@ -122,7 +131,7 @@
       ]
     },
     {
-      "id": "message-level",
+      "id": "s9",
       "title": "メッセージレベルを使い分ける",
       "hints": [
         "MessageLevel",
@@ -137,35 +146,17 @@
         "ERROR",
         "notifyMessages"
       ]
-    },
-    {
-      "id": "extension-examples",
-      "title": "拡張例",
-      "hints": [
-        "PropertiesStringResourceLoader",
-        "BasicStringResourceLoader",
-        "BasicStaticDataCache",
-        "StringResourceHolder",
-        "MessageFormatter",
-        "BasicMessageFormatter",
-        "JavaMessageFormatBaseMessageFormatter",
-        "MessageFormat",
-        "プロパティファイル設定変更",
-        "データベースメッセージ管理",
-        "メッセージフォーマット変更"
-      ]
     }
   ],
   "sections": {
-    "overview": "国際化の要件がなければ、画面の固定文言はJSPに直接埋め込んでも問題ない。\n\n> **補足**: メッセージは安易に共通化せず、個別に定義すること。共通化すると他業務の仕様変更で無関係なメッセージが表示される問題が発生する。\n\nメッセージはデータベースまたはプロパティファイルで管理できる。デフォルトはプロパティファイル。プロパティファイルはメッセージの追加・変更・確認が容易なため。\n\n> **補足**: アプリケーション実行中のメッセージ更新機能は提供していない。メッセージを更新する場合はアプリケーションの再起動が必要。\n\nメッセージのフォーマットには :java:extdoc:`java.text.MessageFormat<java.text.MessageFormat>` の拡張機能を使用する。実行時の値を埋め込む場合は :ref:`message-format-spec` のパターン文字列を定義する。",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-message</artifactId>\n</dependency>\n\n<!-- メッセージをデータベースで管理する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-jdbc</artifactId>\n</dependency>\n```",
-    "property-file-unit": "プロパティファイルはアプリケーション単位に作成する。1つのシステムで社内向けとコンシューマ向けのアプリケーションがある場合は、それぞれにプロパティファイルを作成する。これによりメッセージの影響範囲をアプリケーション内に限定できる。\n\n例:\n- コンシューマ向け: `consumer/main/resources/messages.properties`\n- 社員向け: `intra/main/resources/messages.properties`",
-    "property-file-definition": "デフォルトのプロパティファイルパスは `classpath:messages.properties`。\n\n:java:extdoc:`java.util.Properties<java.util.Properties>` でロードする。Nablarch 6はJava 17以上を前提とするため、**UTF-8**で作成すればよい。unicode変換(native2ascii)は不要。\n\n```properties\nlabel.user.register.title=ユーザ登録画面\nerrors.login.alreadyExist=入力されたログインIDは既に登録されています。別のログインIDを入力してください。\nerrors.compare.date={0}は{1}より後の日付を入力してください。\nsuccess.delete.project=プロジェクトの削除が完了しました。\nsuccess.update.project=プロジェクトの更新が完了しました。\n```",
-    "multi-language": "多言語化するには言語ごとのプロパティファイルを作成し、:java:extdoc:`PropertiesStringResourceLoader.locales<nablarch.core.message.PropertiesStringResourceLoader.setLocales(java.util.List)>` にサポート言語を設定する。デフォルトロケールに対応する言語はサポート言語に追加しなくても良い。\n\n> **重要**: デフォルトロケールは :java:extdoc:`PropertiesStringResourceLoader.defaultLocale<nablarch.core.message.PropertiesStringResourceLoader.setDefaultLocale(java.lang.String)>` で必ず設定すること。未設定の場合は :java:extdoc:`Locale.getDefault().getLanguage()<java.util.Locale.getLanguage()>` が使われるが、この値はOS設定によって変化するため障害の原因になる。\n\nメッセージ取得時の言語は :java:extdoc:`ThreadContext#getLanguage<nablarch.core.ThreadContext.getLanguage()>` が返すロケールで決定される。取得できない場合は :java:extdoc:`Locale.getDefault()<java.util.Locale.getDefault()>` が使用される。\n\n**XML設定例** (`en`、`zh`、`de` をサポートし `ja` をデフォルトとする場合):\n\n```xml\n<component class=\"nablarch.core.cache.BasicStaticDataCache\" name=\"messageCache\">\n  <property name=\"loader\">\n    <component class=\"nablarch.core.message.PropertiesStringResourceLoader\">\n      <property name=\"locales\">\n        <list>\n          <value>en</value>\n          <value>zh</value>\n          <value>de</value>\n        </list>\n      </property>\n      <property name=\"defaultLocale\" value=\"ja\" />\n    </component>\n  </property>\n</component>\n\n<component name=\"stringResourceHolder\" class=\"nablarch.core.message.StringResourceHolder\">\n  <property name=\"stringResourceCache\" ref=\"messageCache\" />\n</component>\n\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"messageCache\" />\n    </list>\n  </property>\n</component>\n```\n\n**プロパティファイルのファイル名規則**:\n- デフォルトロケール: `messages.properties`\n- 言語別: `messages_{言語}.properties`（例: `messages_en.properties`）\n- `messages.properties` が存在しない場合はエラーになる",
-    "application-exception": ":java:extdoc:`MessageUtil<nablarch.core.message.MessageUtil>` でメッセージを取得し、:java:extdoc:`ApplicationException<nablarch.core.message.ApplicationException>` を生成して送出する。\n\n```properties\nerrors.login.alreadyExist=入力されたログインIDは既に登録されています。別のログインIDを入力してください。\n```\n\n```java\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"errors.login.alreadyExist\");\nthrow new ApplicationException(message);\n```",
-    "message-format": ":java:extdoc:`java.text.MessageFormat<java.text.MessageFormat>` 形式の埋め込み文字に対応。埋め込み文字に :java:extdoc:`Map<java.util.Map>` **のみ**を指定した場合は、Mapのキー値を使う拡張機能が使用される。\n\n**Map以外を使う場合** (MessageFormat仕様):\n\n```properties\nsuccess.upload.project={0}件のプロジェクトを登録しました。\n```\n\n```java\nMessageUtil.createMessage(MessageLevel.INFO, \"success.upload.project\", projects.size());\n```\n\n**Mapのみを使う場合** (キー名で埋め込み):\n\n```properties\nsuccess.upload.project={projectCount}件のプロジェクトを登録しました。\n```\n\n```java\nMap<String, Object> options = new HashMap<>();\noptions.put(\"projectCount\", projects.size());\nMessageUtil.createMessage(MessageLevel.INFO, \"success.upload.project\", options);\n```\n\n> **重要**: キー名埋め込みはMapのみを指定した場合のみ有効。複数のMapや、Map以外の値と組み合わせた場合はMessageFormatが使われる。\n\nフォーマット方法を変更する場合は :ref:`message-change_formatter` を参照。",
-    "static-text": "画面の固定文言にメッセージを出力するには、カスタムタグライブラリの `message` タグを使用する。詳細は :ref:`tag-write_message` を参照。\n\n```properties\nlogin.title=ログイン\n```\n\n```jsp\n<div class=\"title-nav\">\n  <span><n:message messageId=\"login.title\" /></span>\n</div>\n```",
-    "message-level": "メッセージレベルは :java:extdoc:`MessageLevel<nablarch.core.message.MessageLevel>` に `INFO`、`WARN`、`ERROR` の3種類が定義されている。\n\n> **重要**: errorsタグによるスタイル切り替えは非推奨。理由: (1) カスタムタグのDOM構造がCSSフレームワークと相性が悪い (2) メッセージレベルが3種類のみで細分類不可 (3) JSP以外のテンプレートエンジンで使用不可。代わりに以下を推奨:\n> - サーバサイドで `MessageUtil.createMessage(MessageLevel.INFO, \"key\").formatMessage()` でメッセージ文字列を生成しリクエストスコープに設定する\n> - Viewでは :ref:`write <tag-write_tag>` タグでリクエストスコープのメッセージを出力する\n\nerrorsタグを使う場合、メッセージレベルに応じたCSSクラス（詳細: :ref:`tag-write_error`）:\n\n| メッセージレベル | CSSクラス |\n|---|---|\n| INFO | nablarch_info |\n| WARN | nablarch_warn |\n| ERROR | nablarch_error |\n\n> **補足**: :doc:`バリデーション機能 <validation>` から送出される :java:extdoc:`ApplicationException<nablarch.core.message.ApplicationException>` のメッセージは全てERRORレベル。\n\nerrorsタグで出力するメッセージは :java:extdoc:`WebUtil.notifyMessages<nablarch.common.web.WebUtil.notifyMessages(nablarch.fw.ExecutionContext,nablarch.core.message.Message...)>` でリクエストスコープに格納する。\n\n```java\nWebUtil.notifyMessages(context, MessageUtil.createMessage(MessageLevel.INFO, \"info\"));\nWebUtil.notifyMessages(context, MessageUtil.createMessage(MessageLevel.WARN, \"warn\"));\nWebUtil.notifyMessages(context, MessageUtil.createMessage(MessageLevel.ERROR, \"error\"));\n```\n\nJSPでは `errors` タグを使用して、WebUtilに格納したメッセージを画面表示する。\n\n```jsp\n<n:errors />\n```",
-    "extension-examples": "## プロパティファイル名や格納場所を変更する\n\n:java:extdoc:`PropertiesStringResourceLoader <nablarch.core.message.PropertiesStringResourceLoader>` にはファイル名やディレクトリのパスを変更するためのプロパティが用意されている。デフォルト構成を変更したい場合はこれらのプロパティを使用すること。\n\n## メッセージをデータベースで管理する\n\nメッセージをデータベースで管理するには :java:extdoc:`BasicStringResourceLoader <nablarch.core.message.BasicStringResourceLoader>` を使用する。\n\n```xml\n<component name=\"stringResourceLoader\" class=\"nablarch.core.message.BasicStringResourceLoader\">\n  <property name=\"dbManager\" ref=\"defaultDbManager\"/>\n  <property name=\"tableName\" value=\"MESSAGE\"/>\n  <property name=\"idColumnName\" value=\"ID\"/>\n  <property name=\"langColumnName\" value=\"LANG\"/>\n  <property name=\"valueColumnName\" value=\"MESSAGE\"/>\n</component>\n\n<component name=\"stringResourceCache\" class=\"nablarch.core.cache.BasicStaticDataCache\">\n  <property name=\"loader\" ref=\"stringResourceLoader\"/>\n  <property name=\"loadOnStartup\" value=\"true\"/>\n</component>\n\n<!-- コンポーネント名はstringResourceHolderとすること -->\n<component name=\"stringResourceHolder\" class=\"nablarch.core.message.StringResourceHolder\">\n  <property name=\"stringResourceCache\" ref=\"stringResourceCache\"/>\n</component>\n```\n\n## メッセージのフォーマット方法を変更する\n\n:java:extdoc:`MessageFormatter <nablarch.core.message.MessageFormatter>` の実装クラスを作成しコンポーネント名 `messageFormatter` でコンポーネント定義することでフォーマット方法を変更できる。実装クラスが未定義の場合は :java:extdoc:`BasicMessageFormatter <nablarch.core.message.BasicMessageFormatter>` が使用される。\n\n```java\npublic class SampleMessageFormatter implements MessageFormatter {\n    @Override\n    public String format(final String template, final Object[] options) {\n        return String.format(template, options);\n    }\n}\n```\n\n```xml\n<component name=\"messageFormatter\" class=\"sample.SampleMessageFormatter\" />\n```\n\n提供されている実装クラス:\n\n- :java:extdoc:`BasicMessageFormatter <nablarch.core.message.BasicMessageFormatter>`: :ref:`埋め込み文字の仕様 <message-format-spec>` に従いフォーマット。実装クラスが未定義の場合はこのクラスが使用される。\n- :java:extdoc:`JavaMessageFormatBaseMessageFormatter <nablarch.core.message.JavaMessageFormatBaseMessageFormatter>`: :java:extdoc:`MessageFormat <java.text.MessageFormat>` を使用してフォーマット。"
+    "s1": "国際化の要件がなければ、画面の固定文言はJSPに直接埋め込んでも問題ない。\n\n> **補足**: メッセージは安易に共通化せず、個別に定義すること。共通化すると他業務の仕様変更で無関係なメッセージが表示される問題が発生する。\n\nメッセージはデータベースまたはプロパティファイルで管理できる。デフォルトはプロパティファイル。プロパティファイルはメッセージの追加・変更・確認が容易なため。\n\n> **補足**: アプリケーション実行中のメッセージ更新機能は提供していない。メッセージを更新する場合はアプリケーションの再起動が必要。\n\nメッセージのフォーマットには `java.text.MessageFormat` の拡張機能を使用する。実行時の値を埋め込む場合は [message-format-spec](#) のパターン文字列を定義する。\n\n## プロパティファイル名や格納場所を変更する\n\n`PropertiesStringResourceLoader` にはファイル名やディレクトリのパスを変更するためのプロパティが用意されている。デフォルト構成を変更したい場合はこれらのプロパティを使用すること。\n\n## メッセージをデータベースで管理する\n\nメッセージをデータベースで管理するには `BasicStringResourceLoader` を使用する。\n\n```xml\n<component name=\"stringResourceLoader\" class=\"nablarch.core.message.BasicStringResourceLoader\">\n  <property name=\"dbManager\" ref=\"defaultDbManager\"/>\n  <property name=\"tableName\" value=\"MESSAGE\"/>\n  <property name=\"idColumnName\" value=\"ID\"/>\n  <property name=\"langColumnName\" value=\"LANG\"/>\n  <property name=\"valueColumnName\" value=\"MESSAGE\"/>\n</component>\n\n<component name=\"stringResourceCache\" class=\"nablarch.core.cache.BasicStaticDataCache\">\n  <property name=\"loader\" ref=\"stringResourceLoader\"/>\n  <property name=\"loadOnStartup\" value=\"true\"/>\n</component>\n\n<!-- コンポーネント名はstringResourceHolderとすること -->\n<component name=\"stringResourceHolder\" class=\"nablarch.core.message.StringResourceHolder\">\n  <property name=\"stringResourceCache\" ref=\"stringResourceCache\"/>\n</component>\n```\n\n## メッセージのフォーマット方法を変更する\n\n`MessageFormatter` の実装クラスを作成しコンポーネント名 `messageFormatter` でコンポーネント定義することでフォーマット方法を変更できる。実装クラスが未定義の場合は `BasicMessageFormatter` が使用される。\n\n```java\npublic class SampleMessageFormatter implements MessageFormatter {\n    @Override\n    public String format(final String template, final Object[] options) {\n        return String.format(template, options);\n    }\n}\n```\n\n```xml\n<component name=\"messageFormatter\" class=\"sample.SampleMessageFormatter\" />\n```\n\n提供されている実装クラス:\n\n- `BasicMessageFormatter`: [埋め込み文字の仕様](#) に従いフォーマット。実装クラスが未定義の場合はこのクラスが使用される。\n- `JavaMessageFormatBaseMessageFormatter`: `MessageFormat` を使用してフォーマット。",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-message</artifactId>\n</dependency>\n\n<!-- メッセージをデータベースで管理する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-jdbc</artifactId>\n</dependency>\n```",
+    "s3": "プロパティファイルはアプリケーション単位に作成する。1つのシステムで社内向けとコンシューマ向けのアプリケーションがある場合は、それぞれにプロパティファイルを作成する。これによりメッセージの影響範囲をアプリケーション内に限定できる。\n\n例:\n- コンシューマ向け: `consumer/main/resources/messages.properties`\n- 社員向け: `intra/main/resources/messages.properties`",
+    "s4": "デフォルトのプロパティファイルパスは `classpath:messages.properties`。\n\n`java.util.Properties` でロードする。Nablarch 6はJava 17以上を前提とするため、**UTF-8**で作成すればよい。unicode変換(native2ascii)は不要。\n\n```properties\nlabel.user.register.title=ユーザ登録画面\nerrors.login.alreadyExist=入力されたログインIDは既に登録されています。別のログインIDを入力してください。\nerrors.compare.date={0}は{1}より後の日付を入力してください。\nsuccess.delete.project=プロジェクトの削除が完了しました。\nsuccess.update.project=プロジェクトの更新が完了しました。\n```",
+    "s5": "多言語化するには言語ごとのプロパティファイルを作成し、`PropertiesStringResourceLoader.locales` にサポート言語を設定する。デフォルトロケールに対応する言語はサポート言語に追加しなくても良い。\n\n> **重要**: デフォルトロケールは `PropertiesStringResourceLoader.defaultLocale` で必ず設定すること。未設定の場合は `Locale.getDefault().getLanguage()` が使われるが、この値はOS設定によって変化するため障害の原因になる。\n\nメッセージ取得時の言語は `ThreadContext#getLanguage` が返すロケールで決定される。取得できない場合は `Locale.getDefault()` が使用される。\n\n**XML設定例** (`en`、`zh`、`de` をサポートし `ja` をデフォルトとする場合):\n\n```xml\n<component class=\"nablarch.core.cache.BasicStaticDataCache\" name=\"messageCache\">\n  <property name=\"loader\">\n    <component class=\"nablarch.core.message.PropertiesStringResourceLoader\">\n      <property name=\"locales\">\n        <list>\n          <value>en</value>\n          <value>zh</value>\n          <value>de</value>\n        </list>\n      </property>\n      <property name=\"defaultLocale\" value=\"ja\" />\n    </component>\n  </property>\n</component>\n\n<component name=\"stringResourceHolder\" class=\"nablarch.core.message.StringResourceHolder\">\n  <property name=\"stringResourceCache\" ref=\"messageCache\" />\n</component>\n\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"messageCache\" />\n    </list>\n  </property>\n</component>\n```\n\n**プロパティファイルのファイル名規則**:\n- デフォルトロケール: `messages.properties`\n- 言語別: `messages_{言語}.properties`（例: `messages_en.properties`）\n- `messages.properties` が存在しない場合はエラーになる",
+    "s6": "`MessageUtil` でメッセージを取得し、`ApplicationException` を生成して送出する。\n\n```properties\nerrors.login.alreadyExist=入力されたログインIDは既に登録されています。別のログインIDを入力してください。\n```\n\n```java\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"errors.login.alreadyExist\");\nthrow new ApplicationException(message);\n```",
+    "s7": "`java.text.MessageFormat` 形式の埋め込み文字に対応。埋め込み文字に `Map` **のみ**を指定した場合は、Mapのキー値を使う拡張機能が使用される。\n\n**Map以外を使う場合** (MessageFormat仕様):\n\n```properties\nsuccess.upload.project={0}件のプロジェクトを登録しました。\n```\n\n```java\nMessageUtil.createMessage(MessageLevel.INFO, \"success.upload.project\", projects.size());\n```\n\n**Mapのみを使う場合** (キー名で埋め込み):\n\n```properties\nsuccess.upload.project={projectCount}件のプロジェクトを登録しました。\n```\n\n```java\nMap<String, Object> options = new HashMap<>();\noptions.put(\"projectCount\", projects.size());\nMessageUtil.createMessage(MessageLevel.INFO, \"success.upload.project\", options);\n```\n\n> **重要**: キー名埋め込みはMapのみを指定した場合のみ有効。複数のMapや、Map以外の値と組み合わせた場合はMessageFormatが使われる。\n\nフォーマット方法を変更する場合は [message-change_formatter](#) を参照。",
+    "s8": "画面の固定文言にメッセージを出力するには、カスタムタグライブラリの `message` タグを使用する。詳細は :ref:`tag-write_message` を参照。\n\n```properties\nlogin.title=ログイン\n```\n\n```jsp\n<div class=\"title-nav\">\n  <span><n:message messageId=\"login.title\" /></span>\n</div>\n```",
+    "s9": "メッセージレベルは `MessageLevel` に `INFO`、`WARN`、`ERROR` の3種類が定義されている。\n\n> **重要**: errorsタグによるスタイル切り替えは非推奨。理由: (1) カスタムタグのDOM構造がCSSフレームワークと相性が悪い (2) メッセージレベルが3種類のみで細分類不可 (3) JSP以外のテンプレートエンジンで使用不可。代わりに以下を推奨:\n> - サーバサイドで `MessageUtil.createMessage(MessageLevel.INFO, \"key\").formatMessage()` でメッセージ文字列を生成しリクエストスコープに設定する\n> - Viewでは [write](libraries-tag_reference.json) タグでリクエストスコープのメッセージを出力する\n\nerrorsタグを使う場合、メッセージレベルに応じたCSSクラス（詳細: :ref:`tag-write_error`）:\n\n| メッセージレベル | CSSクラス |\n|---|---|\n| INFO | nablarch_info |\n| WARN | nablarch_warn |\n| ERROR | nablarch_error |\n\n> **補足**: [バリデーション機能](libraries-validation.json) から送出される `ApplicationException` のメッセージは全てERRORレベル。\n\nerrorsタグで出力するメッセージは `WebUtil.notifyMessages` でリクエストスコープに格納する。\n\n```java\nWebUtil.notifyMessages(context, MessageUtil.createMessage(MessageLevel.INFO, \"info\"));\nWebUtil.notifyMessages(context, MessageUtil.createMessage(MessageLevel.WARN, \"warn\"));\nWebUtil.notifyMessages(context, MessageUtil.createMessage(MessageLevel.ERROR, \"error\"));\n```\n\nJSPでは `errors` タグを使用して、WebUtilに格納したメッセージを画面表示する。\n\n```jsp\n<n:errors />\n```"
   }
 }

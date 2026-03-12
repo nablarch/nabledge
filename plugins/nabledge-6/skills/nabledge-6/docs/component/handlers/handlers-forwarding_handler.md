@@ -34,7 +34,7 @@ nablarch-fw-web, com.nablarch.framework, モジュール依存関係
 
 ## 制約
 
-- :ref:`session_store_handler` より後ろに配置すること（理由: :ref:`session_store_handler-error_forward_path` を参照）
+- [session_store_handler](handlers-SessionStoreHandler.md) より後ろに配置すること（理由: [session_store_handler-error_forward_path](handlers-SessionStoreHandler.md) を参照）
 
 <details>
 <summary>keywords</summary>

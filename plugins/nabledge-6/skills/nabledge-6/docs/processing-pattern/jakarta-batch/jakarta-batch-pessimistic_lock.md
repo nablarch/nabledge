@@ -9,7 +9,7 @@ ItemReaderでは処理対象レコードの主キーのみ取得し、ItemProces
 **ポイント**:
 - `ItemReader`: `UniversalDao.defer().findAllBySqlFile()` で主キーのみ取得する
 - `ItemProcessor`: 主キーをもとに `UniversalDao.findBySqlFile()` でロック付き取得する
-- :ref:`universal_dao` を使用した悲観的ロックは :ref:`universal_dao_jpa_pessimistic_lock` を参照
+- [universal_dao](../../component/libraries/libraries-universal_dao.md) を使用した悲観的ロックは :ref:`universal_dao_jpa_pessimistic_lock` を参照
 
 ```java
 @Dependent

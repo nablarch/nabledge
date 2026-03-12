@@ -14,8 +14,8 @@ List of relevant sections (file, section_id, relevance)
 ### Output format
 
 ```
-file: features/libraries/universal-dao.json, section_id: paging, relevance: high
-file: features/libraries/universal-dao.json, section_id: overview, relevance: partial
+file: features/libraries/universal-dao.json, section_id: s3, relevance: high
+file: features/libraries/universal-dao.json, section_id: s1, relevance: partial
 ```
 
 Caller converts to pointer JSON.
@@ -32,9 +32,9 @@ Caller converts to pointer JSON.
 ```bash
 KNOWLEDGE_DIR=".claude/skills/nabledge-6/knowledge"
 
-for pair in "component/libraries/libraries-universal_dao.json:paging" \
-            "component/libraries/libraries-universal_dao.json:overview" \
-            "component/libraries/libraries-database.json:dialect-support"; do
+for pair in "component/libraries/libraries-universal_dao.json:s3" \
+            "component/libraries/libraries-universal_dao.json:s1" \
+            "component/libraries/libraries-database.json:s2"; do
   file="${pair%%:*}"
   section="${pair##*:}"
   hints=$(jq -r --arg sec "$section" \
@@ -60,9 +60,9 @@ done
 **Command**:
 ```bash
 bash scripts/read-sections.sh \
-  "features/libraries/universal-dao.json:paging" \
-  "features/libraries/universal-dao.json:overview" \
-  "features/libraries/database-access.json:query"
+  "features/libraries/universal-dao.json:s3" \
+  "features/libraries/universal-dao.json:s1" \
+  "features/libraries/database-access.json:s2"
 ```
 
 **Output**: Body text of each section

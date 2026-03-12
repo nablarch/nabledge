@@ -26,7 +26,7 @@
 | 使用DB | H2 Database Engine（アプリケーションに組み込み） |
 | 含まれるもの | Nablarchバッチアプリケーション用基本設定、疎通確認用都度起動バッチ、疎通確認用テーブルをキューとして使ったメッセージング、メール送信バッチ設定、Mavenと連動するツールの初期設定 |
 
-メール送信バッチ: :ref:`常駐バッチ<nablarch_batch-resident_batch>` として動作し、SMTPサーバへメール送信。設定ファイルサンプルは `src/main/resources/mail-sender-boot.xml`。初期環境構築時は不要。必要になったタイミングで :ref:`メール送信<mail>` を参照。
+メール送信バッチ: [常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md) として動作し、SMTPサーバへメール送信。設定ファイルサンプルは `src/main/resources/mail-sender-boot.xml`。初期環境構築時は不要。必要になったタイミングで [メール送信](../../component/libraries/libraries-mail.md) を参照。
 
 他プロジェクトとの関係・ディレクトリ構成: [../MavenModuleStructures/index](blank-project-MavenModuleStructures.md) 参照。
 
@@ -159,8 +159,8 @@ docker run, 都度起動バッチ, テーブルをキューとして使ったメ
 
 ## データベースに関する設定を行う
 
-- RDBMSを変更する場合: :ref:`customize-db` を参照。
-- ER図からのDDL生成・実行、Entityクラス自動生成には gsp-dba-maven-plugin の初期設定が必要。:ref:`gsp-maven-plugin` 参照。
+- RDBMSを変更する場合: [customize-db](blank-project-CustomizeDB.md) を参照。
+- ER図からのDDL生成・実行、Entityクラス自動生成には gsp-dba-maven-plugin の初期設定が必要。[gsp-maven-plugin](blank-project-addin_gsp.md) 参照。
 
 <details>
 <summary>keywords</summary>

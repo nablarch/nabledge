@@ -15,7 +15,7 @@
 
 1. **API単位にフォームクラスを作成する**: インタフェース(API)が異なる場合は別のフォームクラスとして作成すること。登録用APIと更新用APIのように似た項目があっても、APIが異なる場合は別々のフォームクラスとする必要がある。インタフェース変更の影響範囲を限定でき、1つのインタフェースに対応したバリデーションロジックだけを持つため、責務が明確で可読性や保守性が高くなる
 2. 相関バリデーションロジックが複数フォームクラスで共通となる場合は、ロジックを別クラスに抽出して共通化すること
-3. **フォームクラスのプロパティは全て `String` で定義する**: 理由は :ref:`Bean Validation <bean_validation-form_property>` を参照
+3. **フォームクラスのプロパティは全て `String` で定義する**: 理由は [Bean Validation](../../component/libraries/libraries-bean_validation.md) を参照
 
 <details>
 <summary>keywords</summary>

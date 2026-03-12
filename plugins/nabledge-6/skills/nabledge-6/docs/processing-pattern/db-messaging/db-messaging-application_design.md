@@ -4,7 +4,7 @@
 
 ## アプリケーションの責務配置
 
-テーブルをキューとして使ったメッセージングの責務配置は、:ref:`nablarch_batch` とまったく同じである。:ref:`Nablarchバッチアプリケーションの責務配置<nablarch_batch-application_design>` を参照。
+テーブルをキューとして使ったメッセージングの責務配置は、[nablarch_batch](../nablarch-batch/nablarch-batch-nablarch_batch.md) とまったく同じである。[Nablarchバッチアプリケーションの責務配置](../nablarch-batch/nablarch-batch-application_design.md) を参照。
 
 <details>
 <summary>keywords</summary>

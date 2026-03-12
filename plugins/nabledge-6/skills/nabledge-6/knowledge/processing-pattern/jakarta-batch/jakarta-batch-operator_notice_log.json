@@ -5,10 +5,9 @@
     "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/feature_details/operator_notice_log.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/operation/OperationLogger.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "operator-log-content",
+      "id": "s1",
       "title": "運用担当者向けログの出力内容",
       "hints": [
         "運用担当者向けログ",
@@ -19,7 +18,7 @@
       ]
     },
     {
-      "id": "operator-log-file-config",
+      "id": "s2",
       "title": "運用担当者向けのログを専用のログファイルに出力するための設定を追加する",
       "hints": [
         "operator",
@@ -32,7 +31,7 @@
       ]
     },
     {
-      "id": "operator-log-output",
+      "id": "s3",
       "title": "運用担当者向けのログを出力する",
       "hints": [
         "OperationLogger",
@@ -49,8 +48,8 @@
     }
   ],
   "sections": {
-    "operator-log-content": "運用担当者向けログには、最低限以下の内容を出力すること:\n- 何が発生したか\n- どのように対処すべきか\n\nこれらが出力されていない場合、運用担当者が対処方法を判断できない。",
-    "operator-log-file-config": "運用担当者向けのログはログカテゴリ名 `operator` で出力する。\n\n:ref:`log` を使用した場合の `log.properties` 設定例:\n\n```properties\n# operation log file\nwriter.operationLog.className=nablarch.core.log.basic.FileLogWriter\nwriter.operationLog.filePath=./log/operation.log\nwriter.operationLog.encoding=UTF-8\nwriter.operationLog.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.operationLog.formatter.format=$date$ -$logLevel$- $message$\n\n# logger list\navailableLoggersNamesOrder=SQL,MON,OPERATOR,ROO\n\n# operation logger setting\nloggers.OPERATOR.nameRegex=operator\nloggers.OPERATOR.level=INFO\nloggers.OPERATOR.writerNames=operationLog\n```\n\n> **注意**: :ref:`log_adaptor` を使用している場合は、アダプタに対応したログライブラリのマニュアルを参照すること。",
-    "operator-log-output": ":java:extdoc:`OperationLogger#write <nablarch.core.log.operation.OperationLogger.write(nablarch.core.log.basic.LogLevel,java.lang.String,java.lang.Throwable)>` を使用してログを出力する。\n\n> **重要**: バッチ処理を異常終了させたい場合は例外を送出すること。\n\n```java\n@Named\n@Dependent\npublic class SampleBatchlet extends AbstractBatchlet {\n\n    @Override\n    public String process() throws Exception {\n\n        try {\n            // 省略\n        } catch (FileNotFoundException e) {\n            OperationLogger.write(\n                    LogLevel.ERROR,\n                    \"ファイルが存在しません。正しく受信できているか確認してください。\",\n                    e);\n            throw e;\n        }\n\n        // 省略\n    }\n}\n```\n\n出力例:\n```bash\nERROR operator ファイルが存在しません。正しく受信できているか確認してください。\n```"
+    "s1": "運用担当者向けログには、最低限以下の内容を出力すること:\n- 何が発生したか\n- どのように対処すべきか\n\nこれらが出力されていない場合、運用担当者が対処方法を判断できない。",
+    "s2": "運用担当者向けのログはログカテゴリ名 `operator` で出力する。\n\n[log](../../component/libraries/libraries-log.json#s1) を使用した場合の `log.properties` 設定例:\n\n```properties\n# operation log file\nwriter.operationLog.className=nablarch.core.log.basic.FileLogWriter\nwriter.operationLog.filePath=./log/operation.log\nwriter.operationLog.encoding=UTF-8\nwriter.operationLog.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.operationLog.formatter.format=$date$ -$logLevel$- $message$\n\n# logger list\navailableLoggersNamesOrder=SQL,MON,OPERATOR,ROO\n\n# operation logger setting\nloggers.OPERATOR.nameRegex=operator\nloggers.OPERATOR.level=INFO\nloggers.OPERATOR.writerNames=operationLog\n```\n\n> **注意**: [log_adaptor](../../component/adapters/adapters-log_adaptor.json#s2) を使用している場合は、アダプタに対応したログライブラリのマニュアルを参照すること。",
+    "s3": "`OperationLogger#write` を使用してログを出力する。\n\n> **重要**: バッチ処理を異常終了させたい場合は例外を送出すること。\n\n```java\n@Named\n@Dependent\npublic class SampleBatchlet extends AbstractBatchlet {\n\n    @Override\n    public String process() throws Exception {\n\n        try {\n            // 省略\n        } catch (FileNotFoundException e) {\n            OperationLogger.write(\n                    LogLevel.ERROR,\n                    \"ファイルが存在しません。正しく受信できているか確認してください。\",\n                    e);\n            throw e;\n        }\n\n        // 省略\n    }\n}\n```\n\n出力例:\n```bash\nERROR operator ファイルが存在しません。正しく受信できているか確認してください。\n```"
   }
 }

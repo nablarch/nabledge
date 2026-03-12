@@ -51,7 +51,7 @@ nablarch-core-transaction, nablarch-core-jdbc, nablarch-core, com.nablarch.frame
 
 ## 制約
 
-- :ref:`database_connection_management_handler` より後ろに配置すること。データベースに対するトランザクションを制御する場合、スレッド上にトランザクション管理対象のDB接続が存在している必要があるため。
+- [database_connection_management_handler](handlers-database_connection_management_handler.md) より後ろに配置すること。データベースに対するトランザクションを制御する場合、スレッド上にトランザクション管理対象のDB接続が存在している必要があるため。
 
 <details>
 <summary>keywords</summary>
@@ -69,9 +69,9 @@ DbConnectionManagementHandler, database_connection_management_handler, ハンド
 | transactionFactory | TransactionFactory | | | トランザクション制御対象を取得するファクトリクラス |
 | transactionName | String | | transaction | スレッド上でトランザクションを識別する名前 |
 
-- 複数トランザクション使用時は `transactionName` への設定が必須（:ref:`transaction_management_handler-multi_transaction` 参照）
+- 複数トランザクション使用時は `transactionName` への設定が必須（[transaction_management_handler-multi_transaction](#s6) 参照）
 
-> **補足**: :ref:`database_connection_management_handler` で設定したDBのトランザクションを制御する場合、`DbConnectionManagementHandler#connectionName` に設定した値と同じ値を `transactionName` に設定すること。`connectionName` 未設定時は `transactionName` の設定を省略可。
+> **補足**: [database_connection_management_handler](handlers-database_connection_management_handler.md) で設定したDBのトランザクションを制御する場合、`DbConnectionManagementHandler#connectionName` に設定した値と同じ値を `transactionName` に設定すること。`connectionName` 未設定時は `transactionName` の設定を省略可。
 
 ```xml
 <component class="nablarch.common.handler.TransactionManagementHandler">

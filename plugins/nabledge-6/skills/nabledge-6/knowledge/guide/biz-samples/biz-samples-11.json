@@ -1,0 +1,83 @@
+{
+  "id": "biz-samples-11",
+  "title": "メッセージング基盤テストシミュレータサンプル",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/11/index.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "用途",
+      "hints": [
+        "疎通テスト",
+        "結合テスト",
+        "負荷テスト",
+        "テスト対向先システム",
+        "メッセージングシミュレータ",
+        "MOMメッセージング",
+        "HTTPメッセージング",
+        "IBM MQ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "hints": [
+        "テストデータ作成",
+        "マルチスレッド送信",
+        "動的レスポンス切り替え",
+        "異常系テスト",
+        "タイムアウトテスト"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "要求",
+      "hints": [
+        "メッセージ受信",
+        "メッセージ送信",
+        "HTTPステータスコード",
+        "応答電文",
+        "要求電文",
+        "ログ出力",
+        "Excelファイル",
+        "送信回数指定"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "使用方法",
+      "hints": [
+        "シミュレータ起動",
+        "ビルド手順",
+        "http-incoming-startup.bat",
+        "mom-incoming-startup.bat",
+        "mvn",
+        "git clone"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "拡張例",
+      "hints": [
+        "HttpIncomingSimulateAction",
+        "getRequestId",
+        "sendCount",
+        "レスポンス遅延",
+        "リクエスト送信回数",
+        "nablarch.fw.launcher.Main",
+        "HttpRequest",
+        "HttpResponse",
+        "ExecutionContext",
+        "TimeUnit"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "> **重要**: 本サンプルではMOMとしてIBM MQ 9.3を使用。IBM MQ 9.3はJava 8以上がサポート対象のため、本サンプルではJava 17を使用する。\n\n[ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-messaging-simulator)\n\n**疎通テスト**: テスト環境構築後のNablarchフレームワーク・ミドルウェア・ハードウェアの設定確認のための簡易的な対向先システムとして使用できる。\n\n**結合テスト**: システム間通信の擬似的な対向先システムとして使用できる。シミュレータに要求電文/応答電文として使用するデータを設定することで、シナリオを用いたテストができる。シミュレータを使用したテストではOSやミドルウェアも含めた動作を確認できる点が取引単体テストと異なる。\n\n**負荷テスト**: 大量のメッセージ送受信が可能。",
+    "s2": "- 取引単体テストと同じ手順でテストデータを作成できるため、追加の学習コストが発生しない。\n- カスタマイズにより特殊・複雑なテストケースに対応可能（メッセージ受信時）:\n  - 要求電文の内容に応じて応答電文の内容を動的に変更するテスト\n  - 意図的な応答遅延によるタイムアウト発生等の異常系テスト\n- マルチスレッドで要求電文を送信可能（メッセージ送信時）: 大量メッセージ送信の負荷テストが可能。",
+    "s3": "### シミュレータがメッセージ受信する場合\n\n- HTTPメッセージ受信、MOM同期応答メッセージ受信用の応答電文を送信できる。\n- 要求電文のログを出力できる。\n- 任意のHTTPステータスコードを返却できる。\n- シミュレータへの要求順序にあわせた応答電文を送信可能（単体テスト時と同様、Excelファイルに記述された内容を上から順に返却する）。\n\n### シミュレータがメッセージ送信する場合\n\n- HTTPメッセージ送信、MOM同期応答メッセージ送信、MOM応答不要メッセージ送信用の要求電文を送信できる。\n- 指定回数、同じ電文を送信する。\n- 応答電文のログを出力できる。\n- Excelファイルに記述された内容を順に送信できる。",
+    "s4": "### シミュレータの取得\n\n```bash\ngit clone https://github.com/nablarch/nablarch-biz-sample-all.git\n```\n\n### 実行モジュールの作成\n\n`nablarch-messaging-simulator/target/build` 配下に実行モジュールを作成する。\n\n```bat\ncd nablarch-messaging-simulator/\nmvn clean dependency:copy-dependencies -DoutputDirectory=target/build/lib package\n```\n\n### シミュレータの起動\n\n実行モジュールに含まれる以下のbatファイルを実行する。\n\n| 種別 | batファイル |\n|---|---|\n| HTTPメッセージ受信 | http-incoming-startup.bat |\n| HTTPメッセージ送信 | http-outgoing-startup.bat |\n| MOMメッセージ受信 | mom-incoming-startup.bat |\n| MOMメッセージ送信 | mom-outgoing-startup.bat |",
+    "s5": "### リクエスト送信回数の指定（メッセージ送信時）\n\nデフォルトはCSVの行数分のリクエストを送信。`-sendCount` オプションで送信回数を指定できる。\n\n```bat\njava <省略> nablarch.fw.launcher.Main <省略> -sendCount 10000\n```\n\n### リクエストの種類に応じたレスポンス切り替え（メッセージ受信時）\n\nアクションクラスの `getRequestId` メソッドを修正してレスポンスを切り替える。\n\n```java\npublic class HttpIncomingSimulateAction implements Handler<HttpRequest, HttpResponse> {\n    protected String getRequestId(HttpRequest request) {\n        // リクエストURIをもとに、レスポンスのリクエストIDを切り替える。\n        return request.getRequestUri().endsWith(\"RM11AC0101\") ? \"RM11AC0201\" : \"RM11AC0202\";\n    }\n}\n```\n\n> **補足**: MOMメッセージ受信時にレスポンスを切り替えたい場合も、同様に `getRequestId` メソッドを修正する。\n\n### 意図的なレスポンス遅延（メッセージ受信時）\n\nアクションクラスの `handle` メソッドに遅延処理を実装する。\n\n```java\npublic class HttpIncomingSimulateAction implements Handler<HttpRequest, HttpResponse> {\n    public HttpResponse handle(HttpRequest request, ExecutionContext context) {\n        try {\n            // 10秒遅延させる\n            TimeUnit.SECONDS.sleep(10);\n        } catch (InterruptedException e) {\n            // 例外処理\n        }\n        // 省略\n    }\n}\n```"
+  }
+}

@@ -10,10 +10,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/interceptor/InjectForm.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Interceptor.Factory.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "main-components",
+      "id": "s1",
       "title": "Nablarchアプリケーションフレームワークの主な構成要素",
       "hints": [
         "Nablarchフレームワーク構成要素",
@@ -23,7 +22,7 @@
       ]
     },
     {
-      "id": "handler-queue",
+      "id": "s2",
       "title": "ハンドラキュー(handler queue)",
       "hints": [
         "ハンドラキュー",
@@ -45,7 +44,7 @@
       ]
     },
     {
-      "id": "library",
+      "id": "s3",
       "title": "ライブラリ(library)",
       "hints": [
         "ライブラリ",
@@ -57,8 +56,8 @@
     }
   ],
   "sections": {
-    "main-components": "> **警告**: 本項で解説するアーキテクチャは、:ref:`jsr352_batch` には該当しない（詳細は :ref:`jsr352_batch` の :ref:`jsr352_architecture` を参照）。\n\n![Nablarchアプリケーションフレームワーク構成要素](assets/about-nablarch-architecture/fw-design.png)",
-    "handler-queue": "ハンドラキューとは、リクエスト/レスポンスへの横断的処理を行うハンドラ群を定められた順序で定義したキュー。サーブレットフィルタのチェーン実行と同様に処理を実行する。\n\n![ハンドラキュー処理](assets/about-nablarch-architecture/handlers.png)\n\n**ハンドラの主な処理**:\n- リクエストのフィルタリング（アクセス権限のあるリクエストのみ受け付ける処理など）\n- リクエスト/レスポンスの変換\n- リソースの取得・解放（DB接続の取得・解放など）\n\n> **補足**: 横断的処理はプロジェクト側でハンドラを実装して対応すること。業務ロジッククラスの親クラスに共通処理を実装するのではなく、個別ハンドラとして実装することを推奨する（個別ハンドラの前後に処理を追加したい場合は :ref:`nablarch_architecture-interceptor` を使用すること）。\n>\n> - **個別ハンドラで実装した場合**: 各ハンドラの責務が明確でテスト容易・保守性高い。共通処理の抜き差しも容易。\n> - **親クラスに共通処理を実装した場合**: 処理増加で親クラスが肥大化し複数責務を持つ。テスト複雑化・不具合の温床。継承漏れが異常終了にならず不具合検知が困難。\n\n**処理フロー**:\n1. Nablarchは受け取ったリクエストに対し、ハンドラキュー上のハンドラを先頭から順に実行する。\n2. レスポンスが返却された場合、これまでに実行されたハンドラを逆順に実行する。\n\nハンドラは前後関係を意識してハンドラキューに設定しないと正常に動作しないものがある。ハンドラキュー構築時は各ハンドラのドキュメントを参照すること。\n\n### インターセプタ(interceptor)\n\nインターセプタとは、実行時に動的にハンドラキューに追加されるハンドラのこと。特定のリクエストのみ処理を追加したい場合や、リクエストごとに設定値を切り替えて処理を実行したい場合に適している。\n\n> **補足**: インターセプタは、Jakarta EEのJakarta Contexts and Dependency Injectionで定義されているインターセプタと同様に処理を実行する。\n\n> **重要**: インターセプタの実行順序は設定ファイルで設定する必要がある。設定がない場合、実行順はJVM依存となる。Nablarchがデフォルトで提供するインターセプタの実行順（この順序で設定すること）:\n> 1. :java:extdoc:`nablarch.common.web.token.OnDoubleSubmission`\n> 2. :java:extdoc:`nablarch.common.web.token.UseToken`\n> 3. :java:extdoc:`nablarch.fw.web.interceptor.OnErrors`\n> 4. :java:extdoc:`nablarch.fw.web.interceptor.OnError`\n> 5. :java:extdoc:`nablarch.common.web.interceptor.InjectForm`\n>\n> インターセプタの実行順設定の詳細は :java:extdoc:`nablarch.fw.Interceptor.Factory` を参照。",
-    "library": "ライブラリとは、データベースアクセスやファイルアクセス、ログ出力などのようにハンドラから呼び出されるコンポーネント群のこと。Nablarchアプリケーションフレームワークが提供するライブラリは :ref:`library` を参照。"
+    "s1": "> **警告**: 本項で解説するアーキテクチャは、[jsr352_batch](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.json) には該当しない（詳細は [jsr352_batch](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.json) の [jsr352_architecture](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.json#s1) を参照）。\n\n![Nablarchアプリケーションフレームワーク構成要素](assets/about-nablarch-architecture/fw-design.png)",
+    "s2": "ハンドラキューとは、リクエスト/レスポンスへの横断的処理を行うハンドラ群を定められた順序で定義したキュー。サーブレットフィルタのチェーン実行と同様に処理を実行する。\n\n![ハンドラキュー処理](assets/about-nablarch-architecture/handlers.png)\n\n**ハンドラの主な処理**:\n- リクエストのフィルタリング（アクセス権限のあるリクエストのみ受け付ける処理など）\n- リクエスト/レスポンスの変換\n- リソースの取得・解放（DB接続の取得・解放など）\n\n> **補足**: 横断的処理はプロジェクト側でハンドラを実装して対応すること。業務ロジッククラスの親クラスに共通処理を実装するのではなく、個別ハンドラとして実装することを推奨する（個別ハンドラの前後に処理を追加したい場合は [nablarch_architecture-interceptor](#s2) を使用すること）。\n>\n> - **個別ハンドラで実装した場合**: 各ハンドラの責務が明確でテスト容易・保守性高い。共通処理の抜き差しも容易。\n> - **親クラスに共通処理を実装した場合**: 処理増加で親クラスが肥大化し複数責務を持つ。テスト複雑化・不具合の温床。継承漏れが異常終了にならず不具合検知が困難。\n\n**処理フロー**:\n1. Nablarchは受け取ったリクエストに対し、ハンドラキュー上のハンドラを先頭から順に実行する。\n2. レスポンスが返却された場合、これまでに実行されたハンドラを逆順に実行する。\n\nハンドラは前後関係を意識してハンドラキューに設定しないと正常に動作しないものがある。ハンドラキュー構築時は各ハンドラのドキュメントを参照すること。\n\n### インターセプタ(interceptor)\n\nインターセプタとは、実行時に動的にハンドラキューに追加されるハンドラのこと。特定のリクエストのみ処理を追加したい場合や、リクエストごとに設定値を切り替えて処理を実行したい場合に適している。\n\n> **補足**: インターセプタは、Jakarta EEのJakarta Contexts and Dependency Injectionで定義されているインターセプタと同様に処理を実行する。\n\n> **重要**: インターセプタの実行順序は設定ファイルで設定する必要がある。設定がない場合、実行順はJVM依存となる。Nablarchがデフォルトで提供するインターセプタの実行順（この順序で設定すること）:\n> 1. `OnDoubleSubmission`\n> 2. `UseToken`\n> 3. `OnErrors`\n> 4. `OnError`\n> 5. `InjectForm`\n>\n> インターセプタの実行順設定の詳細は `Factory` を参照。",
+    "s3": "ライブラリとは、データベースアクセスやファイルアクセス、ログ出力などのようにハンドラから呼び出されるコンポーネント群のこと。Nablarchアプリケーションフレームワークが提供するライブラリは [library](../../component/libraries/libraries-libraries.json) を参照。"
   }
 }

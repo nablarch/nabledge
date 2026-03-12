@@ -10,7 +10,7 @@
   ],
   "index": [
     {
-      "id": "redis-health-check",
+      "id": "s1",
       "title": "Redisのヘルスチェックを行う",
       "hints": [
         "RedisHealthChecker",
@@ -27,6 +27,6 @@
     }
   ],
   "sections": {
-    "redis-health-check": "**クラス**: `nablarch.integration.health.RedisHealthChecker`, `nablarch.fw.web.handler.health.HealthChecker`\n\n`HealthCheckEndpointHandler` の `healthCheckers` プロパティに :java:extdoc:`RedisHealthChecker <nablarch.integration.health.RedisHealthChecker>` を指定することで、Redisのヘルスチェックを実現できる。\n\n:java:extdoc:`RedisHealthChecker <nablarch.integration.health.RedisHealthChecker>` は :java:extdoc:`LettuceRedisClient<nablarch.integration.redisstore.lettuce.LettuceRedisClient>` を使ってキーの存在確認を行い、例外が発生しなければヘルスチェックが成功と判断する。キーは存在しなくてよい。\n\nキーを変更する場合は `key` プロパティに指定する。\n\n```xml\n<component class=\"nablarch.fw.web.handler.HealthCheckEndpointHandler\">\n  <property name=\"healthCheckers\">\n    <list>\n      <component class=\"nablarch.integration.health.RedisHealthChecker\">\n        <property name=\"client\" ref=\"lettuceRedisClient\" />\n      </component>\n    </list>\n  </property>\n</component>\n```\n\nキー変更時の設定例:\n\n```xml\n<component class=\"nablarch.integration.health.RedisHealthChecker\">\n  <property name=\"client\" ref=\"lettuceRedisClient\" />\n  <property name=\"key\" ref=\"pingtest\" />\n</component>\n```\n\nLettuceRedisClientの設定については :ref:`redisstore_redis_client_config_client_classes` を参照。"
+    "s1": "**クラス**: `nablarch.integration.health.RedisHealthChecker`, `nablarch.fw.web.handler.health.HealthChecker`\n\n`HealthCheckEndpointHandler` の `healthCheckers` プロパティに `RedisHealthChecker` を指定することで、Redisのヘルスチェックを実現できる。\n\n`RedisHealthChecker` は `LettuceRedisClient` を使ってキーの存在確認を行い、例外が発生しなければヘルスチェックが成功と判断する。キーは存在しなくてよい。\n\nキーを変更する場合は `key` プロパティに指定する。\n\n```xml\n<component class=\"nablarch.fw.web.handler.HealthCheckEndpointHandler\">\n  <property name=\"healthCheckers\">\n    <list>\n      <component class=\"nablarch.integration.health.RedisHealthChecker\">\n        <property name=\"client\" ref=\"lettuceRedisClient\" />\n      </component>\n    </list>\n  </property>\n</component>\n```\n\nキー変更時の設定例:\n\n```xml\n<component class=\"nablarch.integration.health.RedisHealthChecker\">\n  <property name=\"client\" ref=\"lettuceRedisClient\" />\n  <property name=\"key\" ref=\"pingtest\" />\n</component>\n```\n\nLettuceRedisClientの設定については [redisstore_redis_client_config_client_classes](adapters-redisstore_lettuce_adaptor.json#s2) を参照。"
   }
 }

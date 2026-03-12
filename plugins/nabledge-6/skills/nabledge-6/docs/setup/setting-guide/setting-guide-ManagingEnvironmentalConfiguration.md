@@ -11,7 +11,7 @@
 | 処理方式 | オンライン、バッチ | 処理方式が異なると、コンポーネント定義およびその環境設定値が異なる。 |
 | 環境 | 開発環境、本番環境 | コンポーネント定義の一部を変更する必要がある(モック化など)。 |
 
-![処理方式と環境の設定差異](../../knowledge/setup/setting-guide/assets/setting-guide-ManagingEnvironmentalConfiguration/method_and_staging.png)
+![処理方式と環境の設定差異](../../../knowledge/setup/setting-guide/assets/setting-guide-ManagingEnvironmentalConfiguration/method_and_staging.png)
 
 <details>
 <summary>keywords</summary>
@@ -42,7 +42,7 @@ web/batch
         \---resources              … ユニットテスト環境
 ```
 
-> **補足**: 環境非依存の環境設定ファイル(common.properties)は全ての環境で使用する。環境が不足している場合は :ref:`how_to_add_profile` を参照して環境を追加する。実行基盤のプロジェクトから参照される共通プロジェクトを使用している場合、共通プロジェクト単体の環境毎のアプリケーション設定ファイルは不要である。
+> **補足**: 環境非依存の環境設定ファイル(common.properties)は全ての環境で使用する。環境が不足している場合は [how_to_add_profile](#s4) を参照して環境を追加する。実行基盤のプロジェクトから参照される共通プロジェクトを使用している場合、共通プロジェクト単体の環境毎のアプリケーション設定ファイルは不要である。
 
 <details>
 <summary>keywords</summary>
@@ -64,7 +64,7 @@ mvn -P prod package -DskipTests=true
 - `-P`: プロファイル指定
 - `-DskipTests=true`: ユニットテストのスキップ
 
-![Mavenによるアプリケーション設定切り替えの動作](../../knowledge/setup/setting-guide/assets/setting-guide-ManagingEnvironmentalConfiguration/switch_application_settings.png)
+![Mavenによるアプリケーション設定切り替えの動作](../../../knowledge/setup/setting-guide/assets/setting-guide-ManagingEnvironmentalConfiguration/switch_application_settings.png)
 
 > **重要**: `src/main/resources`と各環境毎のディレクトリでファイル名が重複した場合は、各環境毎のディレクトリのファイルが優先される。
 

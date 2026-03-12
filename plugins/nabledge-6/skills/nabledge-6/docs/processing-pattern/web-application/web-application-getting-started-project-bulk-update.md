@@ -8,7 +8,7 @@
 
 複数プロジェクトの一括更新では2種類のフォームを使用する。
 
-**プロジェクト1件分フォーム** (`InnerProjectForm`): 各プロジェクトの更新値を受け付ける。入れ子フォームにも :ref:`Bean Validation<bean_validation>` を実行するため、`@Required` や `@Domain` 等のバリデーションアノテーションを付与する。
+**プロジェクト1件分フォーム** (`InnerProjectForm`): 各プロジェクトの更新値を受け付ける。入れ子フォームにも [Bean Validation](../../component/libraries/libraries-bean_validation.md) を実行するため、`@Required` や `@Domain` 等のバリデーションアノテーションを付与する。
 
 ```java
 public class InnerProjectForm implements Serializable {
@@ -19,7 +19,7 @@ public class InnerProjectForm implements Serializable {
 }
 ```
 
-**親フォーム** (`ProjectBulkForm`): `@Valid` を付与することで入れ子フォームも :ref:`Bean Validation<bean_validation>` の対象になる。
+**親フォーム** (`ProjectBulkForm`): `@Valid` を付与することで入れ子フォームも [Bean Validation](../../component/libraries/libraries-bean_validation.md) の対象になる。
 
 ```java
 public class ProjectBulkForm implements Serializable {
@@ -38,7 +38,7 @@ public class ProjectListDto implements Serializable {
 }
 ```
 
-> **重要**: 配列やコレクション型を :ref:`セッションストア<session_store>` に登録する場合は、Serializableなbeanのプロパティとして定義し、そのbeanをセッションストアに登録すること。詳細は :ref:`セッションストア使用上の制約<session_store-constraint>` を参照。
+> **重要**: 配列やコレクション型を :ref:`セッションストア<session_store>` に登録する場合は、Serializableなbeanのプロパティとして定義し、そのbeanをセッションストアに登録すること。詳細は [セッションストア使用上の制約](../../component/libraries/libraries-session_store.md) を参照。
 
 ## 一括更新画面表示アクション
 
@@ -121,7 +121,7 @@ public HttpResponse update(HttpRequest request, ExecutionContext context) {
 
 > **重要**: `UniversalDao#batchUpdate` はバッチ実行用であり排他制御を行わない。排他制御が必要な場合は `UniversalDao#update` を使用すること。排他制御エラー（`OptimisticLockException`）発生時は全件の更新がロールバックされる。
 
-> **Tip**: 独自のエラー制御ハンドラを追加することで、`OptimisticLockException` 発生時に排他制御エラー画面へ遷移させることができる。ハンドラによるエラー制御の作成方法は :ref:`ハンドラで例外クラスに対応したエラーページに遷移させる <forward_error_page-handler>` を参照。
+> **Tip**: 独自のエラー制御ハンドラを追加することで、`OptimisticLockException` 発生時に排他制御エラー画面へ遷移させることができる。ハンドラによるエラー制御の作成方法は [ハンドラで例外クラスに対応したエラーページに遷移させる](web-application-forward_error_page.md) を参照。
 
 <details>
 <summary>keywords</summary>

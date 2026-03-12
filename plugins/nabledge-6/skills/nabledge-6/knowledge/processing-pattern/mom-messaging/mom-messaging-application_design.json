@@ -12,7 +12,7 @@
   ],
   "index": [
     {
-      "id": "responsibility-layout",
+      "id": "s1",
       "title": "アプリケーションの責務配置",
       "hints": [
         "FwHeaderReader",
@@ -35,6 +35,6 @@
     }
   ],
   "sections": {
-    "responsibility-layout": "**クラス構成（MOMメッセージング）**:\n- アクションクラス: データリーダからの要求電文を元に業務ロジックを実行し、応答電文を返す\n- フォームクラス: 要求電文をマッピングし、バリデーションアノテーションと相関バリデーションロジックを持つ\n- エンティティクラス: テーブルと1対1対応\n\n**アクションクラス**\n:java:extdoc:`FwHeaderReader<nablarch.fw.messaging.reader.FwHeaderReader>` / :java:extdoc:`MessageReader<nablarch.fw.messaging.reader.MessageReader>` が読み込んだ :java:extdoc:`RequestMessage<nablarch.fw.messaging.RequestMessage>` を元に業務ロジックを実行し、:java:extdoc:`ResponseMessage<nablarch.fw.messaging.ResponseMessage>` を返却する。\n\n要求電文取り込み時の業務ロジック:\n1. 要求電文からフォームクラスを作成してバリデーションを行う\n2. フォームクラスからエンティティクラスを作成してデータベースにデータを追加する\n3. 応答電文を作成して返す\n\n> **補足**: 応答不要メッセージングでは以下が異なる: (1) データ取り込みが目的で、業務ロジックは後続するバッチが行うため、バリデーションを行わない (2) 電文を返さないため処理結果として :java:extdoc:`Success<nablarch.fw.Result.Success>` を返す\n\n**フォームクラス**\n:java:extdoc:`RequestMessage<nablarch.fw.messaging.RequestMessage>` をマッピングするクラス。バリデーション用アノテーションの設定と相関バリデーションロジックを持つ。プロパティは全て `String` で定義する（バイナリ項目のみバイト配列）。`String` とすべき理由は :ref:`bean_validation-form_property` 参照。\n\n**エンティティクラス**\nテーブルと1対1に対応するクラス。カラムに対応するプロパティを持つ。\n\n> **重要**: メッセージングはシステムで共通のデータリーダを使用するため、:ref:`Nablarchバッチアプリケーションの責務配置<nablarch_batch-application_design>` と異なり、アクションはデータリーダを生成する責務を持たない。メッセージングで使用するデータリーダはコンポーネント定義に `dataReader` という名前で追加する。"
+    "s1": "**クラス構成（MOMメッセージング）**:\n- アクションクラス: データリーダからの要求電文を元に業務ロジックを実行し、応答電文を返す\n- フォームクラス: 要求電文をマッピングし、バリデーションアノテーションと相関バリデーションロジックを持つ\n- エンティティクラス: テーブルと1対1対応\n\n**アクションクラス**\n`FwHeaderReader` / `MessageReader` が読み込んだ `RequestMessage` を元に業務ロジックを実行し、`ResponseMessage` を返却する。\n\n要求電文取り込み時の業務ロジック:\n1. 要求電文からフォームクラスを作成してバリデーションを行う\n2. フォームクラスからエンティティクラスを作成してデータベースにデータを追加する\n3. 応答電文を作成して返す\n\n> **補足**: 応答不要メッセージングでは以下が異なる: (1) データ取り込みが目的で、業務ロジックは後続するバッチが行うため、バリデーションを行わない (2) 電文を返さないため処理結果として `Success` を返す\n\n**フォームクラス**\n`RequestMessage` をマッピングするクラス。バリデーション用アノテーションの設定と相関バリデーションロジックを持つ。プロパティは全て `String` で定義する（バイナリ項目のみバイト配列）。`String` とすべき理由は [bean_validation-form_property](../../component/libraries/libraries-bean_validation.json#s5) 参照。\n\n**エンティティクラス**\nテーブルと1対1に対応するクラス。カラムに対応するプロパティを持つ。\n\n> **重要**: メッセージングはシステムで共通のデータリーダを使用するため、[Nablarchバッチアプリケーションの責務配置](../nablarch-batch/nablarch-batch-application_design.json) と異なり、アクションはデータリーダを生成する責務を持たない。メッセージングで使用するデータリーダはコンポーネント定義に `dataReader` という名前で追加する。"
   }
 }

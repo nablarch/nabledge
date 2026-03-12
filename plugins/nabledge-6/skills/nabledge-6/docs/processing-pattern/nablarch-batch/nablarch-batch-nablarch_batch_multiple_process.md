@@ -4,7 +4,7 @@
 
 ## 常駐バッチアプリケーションのマルチプロセス化
 
-基本的な設定は :ref:`db_messaging-multiple_process` と同様。
+基本的な設定は [db_messaging-multiple_process](../db-messaging/db-messaging-multiple_process.md) と同様。
 
 Actionの実装はデータベースをキューとしたメッセージングとは異なる。`DatabaseRecordReader`を使用する場合の実装ポイント:
 

@@ -15,7 +15,7 @@
 
 ## 全体像
 
-![バッチ処理での同期応答メッセージ送信処理の全体像](../../knowledge/development-tools/testing-framework/assets/testing-framework-RequestUnitTest_send_sync/send_sync.png)
+![バッチ処理での同期応答メッセージ送信処理の全体像](../../../knowledge/development-tools/testing-framework/assets/testing-framework-RequestUnitTest_send_sync/send_sync.png)
 
 > **補足**: 同期応答メッセージ送信処理のリクエスト単体テストを行う場合、テストケースの親クラスは以下の2クラスのいずれかを継承する必要がある。
 > - `StandaloneTestSupportTemplate`

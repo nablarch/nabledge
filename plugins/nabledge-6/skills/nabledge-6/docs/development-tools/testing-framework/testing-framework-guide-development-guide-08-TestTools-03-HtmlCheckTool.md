@@ -202,7 +202,7 @@ htmlChecker, HtmlChecker, HttpTestConfiguration, HTMLチェック内容変更, S
 
 リクエスト単体テスト実行時、自動生成されたHTMLファイルに指摘が存在した場合、該当テストケースは失敗する。JUnitコンソールに指摘箇所と指摘内容が出力される。
 
-![JUnitコンソールへの指摘箇所・指摘内容の出力例](../../knowledge/development-tools/testing-framework/assets/testing-framework-guide-development-guide-08-TestTools-03-HtmlCheckTool/how-to-trace-html.png)
+![JUnitコンソールへの指摘箇所・指摘内容の出力例](../../../knowledge/development-tools/testing-framework/assets/testing-framework-guide-development-guide-08-TestTools-03-HtmlCheckTool/how-to-trace-html.png)
 
 該当HTMLの出力元となるJSPを修正し、テストを再実行する。
 

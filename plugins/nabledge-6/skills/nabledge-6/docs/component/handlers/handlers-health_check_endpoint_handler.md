@@ -6,9 +6,9 @@
 
 **クラス名**: `nablarch.fw.web.handler.HealthCheckEndpointHandler`
 
-:ref:`web_application` と :ref:`restful_web_service` のヘルスチェックを行うエンドポイントを提供するハンドラ。本ハンドラはエンドポイントとなるため、後続ハンドラの呼び出しは行わない。
+[web_application](../../processing-pattern/web-application/web-application-web.md) と :ref:`restful_web_service` のヘルスチェックを行うエンドポイントを提供するハンドラ。本ハンドラはエンドポイントとなるため、後続ハンドラの呼び出しは行わない。
 
-デフォルト実装として `DbHealthChecker` と :ref:`lettuce_adaptor` (Redis) のヘルスチェックを提供している。
+デフォルト実装として `DbHealthChecker` と [lettuce_adaptor](../adapters/adapters-lettuce_adaptor.md) (Redis) のヘルスチェックを提供している。
 
 <details>
 <summary>keywords</summary>
@@ -44,7 +44,7 @@ nablarch-fw-web, nablarch-core-jdbc, Maven依存関係, モジュール設定
 
 ## 制約
 
-> **重要**: :ref:`http_response_handler` または :ref:`jaxrs_response_handler` より後ろに配置すること。本ハンドラで生成した `HttpResponse` を :ref:`http_response_handler` または :ref:`jaxrs_response_handler` が処理するため。
+> **重要**: [http_response_handler](handlers-http_response_handler.md) または [jaxrs_response_handler](handlers-jaxrs_response_handler.md) より後ろに配置すること。本ハンドラで生成した `HttpResponse` を [http_response_handler](handlers-http_response_handler.md) または [jaxrs_response_handler](handlers-jaxrs_response_handler.md) が処理するため。
 
 <details>
 <summary>keywords</summary>

@@ -42,7 +42,7 @@ nablarch-fw-web, com.nablarch.framework, モジュール依存関係
 
 > **重要**: 大量のPOSTリクエスト送信時にPOST情報がセッションに蓄積してメモリを圧迫する。連続POSTによるDoS攻撃に対して脆弱。代替手段として業務アクションでリダイレクトのレスポンスを返すことを検討すること。
 
-**配置順序**: :ref:`nablarch_tag_handler` より前に配置すること。カスタムタグ制御ハンドラによる暗号化パラメータの復元前にリダイレクトを行う必要があるため。
+**配置順序**: [nablarch_tag_handler](handlers-nablarch_tag_handler.md) より前に配置すること。カスタムタグ制御ハンドラによる暗号化パラメータの復元前にリダイレクトを行う必要があるため。
 
 <details>
 <summary>keywords</summary>

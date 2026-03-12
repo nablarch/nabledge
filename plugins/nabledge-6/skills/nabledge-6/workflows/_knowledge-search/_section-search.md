@@ -13,8 +13,8 @@ List of candidate sections (file, section_id)
 ### Output format
 
 ```
-features/libraries/universal-dao.json|paging
-features/libraries/universal-dao.json|overview
+features/libraries/universal-dao.json|s3
+features/libraries/universal-dao.json|s1
 ```
 
 Same format as full-text search output.
@@ -41,8 +41,8 @@ done
 
 **Output example**:
 ```
-features/libraries/universal-dao.json|overview|UniversalDao,DAO,O/R mapper,CRUD
-features/libraries/universal-dao.json|paging|paging,paging,per,page,Pagination
+features/libraries/universal-dao.json|s1|UniversalDao,DAO,O/Rマッパー,CRUD
+features/libraries/universal-dao.json|s3|ページング,paging,per,page,Pagination
 ```
 
 ### Step 2: Matching and scoring

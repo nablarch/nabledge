@@ -8,7 +8,7 @@
   ],
   "index": [
     {
-      "id": "delete-implementation",
+      "id": "s1",
       "title": "削除を行う",
       "hints": [
         "UniversalDao",
@@ -27,6 +27,6 @@
     }
   ],
   "sections": {
-    "delete-implementation": "**アノテーション**: `@OnDoubleSubmission`\n\n**業務アクションメソッド** (`ProjectAction.java`):\n\n```java\n@OnDoubleSubmission\npublic HttpResponse delete(HttpRequest request, ExecutionContext context) {\n    // 更新画面を表示する際にセッションにプロジェクト情報を格納している\n    Project project = SessionUtil.delete(context, \"project\");\n    UniversalDao.delete(project);\n    return new HttpResponse(303, \"redirect://completeOfDelete\");\n}\n```\n\n- 主キーを条件とした削除は、主キーが設定されたエンティティを引数に :java:extdoc:`UniversalDao#delete <nablarch.common.dao.UniversalDao.delete(T)>` を実行することで、SQLを作成せずに実行できる。\n- セッションからプロジェクト情報を取得して削除する際は `SessionUtil.delete(context, \"project\")` を使用する。更新画面を表示する際にセッションにプロジェクト情報を格納しているため、削除時にセッションから取得できる。\n\n> **補足**: :ref:`universal_dao` は主キーを条件とする削除のみ提供。主キー以外を条件に削除する場合は別途SQLを作成して :ref:`SQLIDを指定してSQLを実行する<database-execute_sqlid>` で実行する。"
+    "s1": "**アノテーション**: `@OnDoubleSubmission`\n\n**業務アクションメソッド** (`ProjectAction.java`):\n\n```java\n@OnDoubleSubmission\npublic HttpResponse delete(HttpRequest request, ExecutionContext context) {\n    // 更新画面を表示する際にセッションにプロジェクト情報を格納している\n    Project project = SessionUtil.delete(context, \"project\");\n    UniversalDao.delete(project);\n    return new HttpResponse(303, \"redirect://completeOfDelete\");\n}\n```\n\n- 主キーを条件とした削除は、主キーが設定されたエンティティを引数に `UniversalDao#delete` を実行することで、SQLを作成せずに実行できる。\n- セッションからプロジェクト情報を取得して削除する際は `SessionUtil.delete(context, \"project\")` を使用する。更新画面を表示する際にセッションにプロジェクト情報を格納しているため、削除時にセッションから取得できる。\n\n> **補足**: [universal_dao](../../component/libraries/libraries-universal_dao.json#s1) は主キーを条件とする削除のみ提供。主キー以外を条件に削除する場合は別途SQLを作成して [SQLIDを指定してSQLを実行する](../../component/libraries/libraries-database.json#s5) で実行する。"
   }
 }

@@ -4,10 +4,9 @@
   "official_doc_urls": [
     "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/blank_project/beforeFirstStep.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "blank-project-overview",
+      "id": "s1",
       "title": "ブランクプロジェクト（プロジェクトのひな形）について",
       "hints": [
         "ブランクプロジェクト",
@@ -17,7 +16,7 @@
       ]
     },
     {
-      "id": "blank-project-types",
+      "id": "s2",
       "title": "ブランクプロジェクトの種類",
       "hints": [
         "ウェブプロジェクト",
@@ -29,7 +28,7 @@
       ]
     },
     {
-      "id": "blank-project-design-notes",
+      "id": "s3",
       "title": "ブランクプロジェクトの設計思想と留意事項",
       "hints": [
         "プロジェクト構成",
@@ -41,7 +40,7 @@
       ]
     },
     {
-      "id": "initial-setup-prerequisites",
+      "id": "s4",
       "title": "初期セットアップの前提",
       "hints": [
         "Maven 3.9.9",
@@ -54,7 +53,7 @@
       ]
     },
     {
-      "id": "maven-settings",
+      "id": "s5",
       "title": "Mavenの設定",
       "hints": [
         "Mavenリポジトリ",
@@ -65,7 +64,7 @@
       ]
     },
     {
-      "id": "nablarch-version-specification",
+      "id": "s6",
       "title": "使用するNablarchのバージョンの指定",
       "hints": [
         "nablarch-bom",
@@ -77,7 +76,7 @@
       ]
     },
     {
-      "id": "initial-setup-common-notes",
+      "id": "s7",
       "title": "初期セットアップを行う際の共通的な注意点",
       "hints": [
         "マルチバイト文字",
@@ -90,12 +89,12 @@
     }
   ],
   "sections": {
-    "blank-project-overview": "ブランクプロジェクト（プロジェクトのひな形）に関するセクション。「ブランクプロジェクトの種類」および「ブランクプロジェクトの設計思想と留意事項」を含む。",
-    "blank-project-types": "初期セットアップで作成可能なブランクプロジェクトの種類:\n\n- ウェブプロジェクト\n- RESTfulウェブサービスプロジェクト\n- Jakarta Batchに準拠したバッチプロジェクト\n- Nablarchバッチプロジェクト\n- コンテナ用ウェブプロジェクト\n- コンテナ用RESTfulウェブサービスプロジェクト\n- コンテナ用Nablarchバッチプロジェクト",
-    "blank-project-design-notes": "ブランクプロジェクトは初期構築の容易さを重視した設計。1プロジェクトで全アプリケーションをビルドできるよう、全ソースファイルとリソースファイルを1プロジェクトに配置する。最小ハンドラ構成で動作するようにコンポーネントの定義・依存関係が設定されている。\n\n初期セットアップ完了後、アーキテクトはプロジェクト構成を検討すること。以下の場合は共通部品を配置するプロジェクトの要否を検討:\n\n- システムを構成するアプリケーションが複数（ウェブとバッチ等）存在する\n- アプリケーション間で共通の部品（例: Entityクラス）が存在する\n\nプロジェクト構成の検討時は :ref:`mavenModuleStructuresModuleDivisionPolicy` を参照すること。",
-    "initial-setup-prerequisites": "実行環境への前提ソフトウェア:\n\n| カテゴリ | ソフトウェア |\n|---|---|\n| 全プロジェクト共通 | Maven 3.9.9以上 |\n| ウェブ、RESTfulウェブサービス、Jakarta Batchに準拠したバッチ、Nablarchバッチ | JDK17以上 |\n| コンテナ用ウェブ、コンテナ用RESTfulウェブサービス、コンテナ用Nablarchバッチ | JDK17以上 + Docker Desktop 2.2.0.0以上 |\n\n事前準備不要なソフトウェア:\n\n| ソフトウェア | 理由 |\n|---|---|\n| APサーバ | ウェブ・RESTfulプロジェクトの疎通確認にJetty12を使用。mvnコマンドからjetty-ee10-maven-pluginを実行し組み込みJetty12へデプロイ・起動するため事前準備不要 |\n| DBサーバ | アーキタイプにH2 Database Engine（H2）が組み込まれているため別途インストール不要 |",
-    "maven-settings": "初期セットアップ前に、NablarchおよびモジュールのMavenリポジトリへの接続設定をMavenのsettings.xmlに対して行うこと。未設定の場合は :ref:`mvnSetting` を参照して設定すること。\n\n> **重要**: Maven関連と思われるトラブルに遭遇した場合は :ref:`mvnFrequentlyTrouble` を参照すること。",
-    "nablarch-version-specification": "Mavenコマンドでブランクプロジェクトを生成する際、使用するNablarchのバージョンとしてnablarch-bomのバージョンを指定する必要がある。\n\nnablarch-bom定義例（抜粋）:\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    <dependency>\n      <groupId>com.nablarch.framework</groupId>\n      <artifactId>nablarch-core</artifactId>\n      <version>1.2.2</version>\n    </dependency>\n    <dependency>\n      <groupId>com.nablarch.framework</groupId>\n      <artifactId>nablarch-core-applog</artifactId>\n      <version>1.0.1</version>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n```\n\n生成されたブランクプロジェクトのpom.xmlへの反映:\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    <dependency>\n      <groupId>com.nablarch.profile</groupId>\n      <artifactId>nablarch-bom</artifactId>\n      <version>6</version>\n      <type>pom</type>\n      <scope>import</scope>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n```",
-    "initial-setup-common-notes": "初期セットアップ時の注意点:\n\n- ブランクプロジェクトを作成するディレクトリのパスにマルチバイト文字を含めないこと。マルチバイト文字が含まれていると正常に動作しないmaven プラグインが存在するため、エラーが発生する可能性がある。\n- `mvn archetype:generate` はコマンドラインから実行すること。eclipse 4.4.2から実行した場合、意図しないファイルが出力される。\n- 作成したブランクプロジェクトをeclipseで開くとMavenライフサイクル関連エラー（例: `Plugin execution not covered by lifecycle configuration`）が出力されることがある。eclipseがプラグインのインストールを提案するので従うこと。ネットワーク環境が不安定な場合は、予めプラグインをインストールしたeclipseを配付する等の対応を検討すること。"
+    "s1": "ブランクプロジェクト（プロジェクトのひな形）に関するセクション。「ブランクプロジェクトの種類」および「ブランクプロジェクトの設計思想と留意事項」を含む。",
+    "s2": "初期セットアップで作成可能なブランクプロジェクトの種類:\n\n- ウェブプロジェクト\n- RESTfulウェブサービスプロジェクト\n- Jakarta Batchに準拠したバッチプロジェクト\n- Nablarchバッチプロジェクト\n- コンテナ用ウェブプロジェクト\n- コンテナ用RESTfulウェブサービスプロジェクト\n- コンテナ用Nablarchバッチプロジェクト",
+    "s3": "ブランクプロジェクトは初期構築の容易さを重視した設計。1プロジェクトで全アプリケーションをビルドできるよう、全ソースファイルとリソースファイルを1プロジェクトに配置する。最小ハンドラ構成で動作するようにコンポーネントの定義・依存関係が設定されている。\n\n初期セットアップ完了後、アーキテクトはプロジェクト構成を検討すること。以下の場合は共通部品を配置するプロジェクトの要否を検討:\n\n- システムを構成するアプリケーションが複数（ウェブとバッチ等）存在する\n- アプリケーション間で共通の部品（例: Entityクラス）が存在する\n\nプロジェクト構成の検討時は :ref:`mavenModuleStructuresModuleDivisionPolicy` を参照すること。",
+    "s4": "実行環境への前提ソフトウェア:\n\n| カテゴリ | ソフトウェア |\n|---|---|\n| 全プロジェクト共通 | Maven 3.9.9以上 |\n| ウェブ、RESTfulウェブサービス、Jakarta Batchに準拠したバッチ、Nablarchバッチ | JDK17以上 |\n| コンテナ用ウェブ、コンテナ用RESTfulウェブサービス、コンテナ用Nablarchバッチ | JDK17以上 + Docker Desktop 2.2.0.0以上 |\n\n事前準備不要なソフトウェア:\n\n| ソフトウェア | 理由 |\n|---|---|\n| APサーバ | ウェブ・RESTfulプロジェクトの疎通確認にJetty12を使用。mvnコマンドからjetty-ee10-maven-pluginを実行し組み込みJetty12へデプロイ・起動するため事前準備不要 |\n| DBサーバ | アーキタイプにH2 Database Engine（H2）が組み込まれているため別途インストール不要 |",
+    "s5": "初期セットアップ前に、NablarchおよびモジュールのMavenリポジトリへの接続設定をMavenのsettings.xmlに対して行うこと。未設定の場合は :ref:`mvnSetting` を参照して設定すること。\n\n> **重要**: Maven関連と思われるトラブルに遭遇した場合は :ref:`mvnFrequentlyTrouble` を参照すること。",
+    "s6": "Mavenコマンドでブランクプロジェクトを生成する際、使用するNablarchのバージョンとしてnablarch-bomのバージョンを指定する必要がある。\n\nnablarch-bom定義例（抜粋）:\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    <dependency>\n      <groupId>com.nablarch.framework</groupId>\n      <artifactId>nablarch-core</artifactId>\n      <version>1.2.2</version>\n    </dependency>\n    <dependency>\n      <groupId>com.nablarch.framework</groupId>\n      <artifactId>nablarch-core-applog</artifactId>\n      <version>1.0.1</version>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n```\n\n生成されたブランクプロジェクトのpom.xmlへの反映:\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    <dependency>\n      <groupId>com.nablarch.profile</groupId>\n      <artifactId>nablarch-bom</artifactId>\n      <version>6</version>\n      <type>pom</type>\n      <scope>import</scope>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n```",
+    "s7": "初期セットアップ時の注意点:\n\n- ブランクプロジェクトを作成するディレクトリのパスにマルチバイト文字を含めないこと。マルチバイト文字が含まれていると正常に動作しないmaven プラグインが存在するため、エラーが発生する可能性がある。\n- `mvn archetype:generate` はコマンドラインから実行すること。eclipse 4.4.2から実行した場合、意図しないファイルが出力される。\n- 作成したブランクプロジェクトをeclipseで開くとMavenライフサイクル関連エラー（例: `Plugin execution not covered by lifecycle configuration`）が出力されることがある。eclipseがプラグインのインストールを提案するので従うこと。ネットワーク環境が不安定な場合は、予めプラグインをインストールしたeclipseを配付する等の対応を検討すること。"
   }
 }

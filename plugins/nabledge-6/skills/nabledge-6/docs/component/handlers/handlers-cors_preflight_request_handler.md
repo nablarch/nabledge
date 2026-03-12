@@ -34,7 +34,7 @@ nablarch-fw-jaxrs, com.nablarch.framework, Maven依存関係, モジュール依
 
 ## 制約
 
-> **重要**: :ref:`jaxrs_response_handler` より後ろに配置すること。本ハンドラで生成した `HttpResponse` を :ref:`jaxrs_response_handler` が処理するため、本ハンドラは :ref:`jaxrs_response_handler` より後ろに配置する必要がある。
+> **重要**: [jaxrs_response_handler](handlers-jaxrs_response_handler.md) より後ろに配置すること。本ハンドラで生成した `HttpResponse` を [jaxrs_response_handler](handlers-jaxrs_response_handler.md) が処理するため、本ハンドラは [jaxrs_response_handler](handlers-jaxrs_response_handler.md) より後ろに配置する必要がある。
 
 <details>
 <summary>keywords</summary>

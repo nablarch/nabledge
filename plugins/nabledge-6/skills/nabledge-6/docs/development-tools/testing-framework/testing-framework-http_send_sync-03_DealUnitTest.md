@@ -21,9 +21,9 @@ HTTP同期応答メッセージ送信処理, 取引単体テスト, モックア
 
 Excelファイルに定義した応答電文のフォーマットおよびデータは、モックアップクラスが返却する応答電文を生成するために使用される。また要求電文のフォーマットは、モックアップクラスが要求電文のログを出力するために使用される。
 
-電文フォーマットおよびデータの記載方法は :ref:`send_sync_test_data_format` と同じ。ただし、HTTP通信は要求・応答電文ともにヘッダが存在しないため、本文のみ定義する。
+電文フォーマットおよびデータの記載方法は [send_sync_test_data_format](testing-framework-send_sync-03_DealUnitTest.md) と同じ。ただし、HTTP通信は要求・応答電文ともにヘッダが存在しないため、本文のみ定義する。
 
-![Excelファイルの記載例](../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-03_DealUnitTest/http_send_sync_test_data.png)
+![Excelファイルの記載例](../../../knowledge/development-tools/testing-framework/assets/testing-framework-http_send_sync-03_DealUnitTest/http_send_sync_test_data.png)
 
 ## モックアップクラスの設定
 

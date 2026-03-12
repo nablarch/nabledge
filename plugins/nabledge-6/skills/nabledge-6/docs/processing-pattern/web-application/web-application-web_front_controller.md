@@ -49,7 +49,7 @@ WebFrontController, nablarch.fw.web.servlet.WebFrontController, handlerQueue, Ht
 
 `RepositoryBasedWebFrontController` をサーブレットフィルタとして `web.xml` に設定する。このフィルタによって、クライアントから受け取ったリクエストに対する処理は、システムリポジトリに登録したハンドラキューへ委譲される。
 
-> **重要**: システムリポジトリを初期化するため、:ref:`nablarch_servlet_context_listener` をリスナーとして設定すること。
+> **重要**: システムリポジトリを初期化するため、[nablarch_servlet_context_listener](web-application-nablarch_servlet_context_listener.md) をリスナーとして設定すること。
 
 ```xml
 <context-param>

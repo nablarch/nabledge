@@ -4,10 +4,9 @@
   "official_doc_urls": [
     "https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/02_RequestUnitTest/fileupload.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "upload-file-syntax",
+      "id": "s1",
       "title": "アップロードファイルの記述方法",
       "hints": [
         "${attach:ファイルパス}",
@@ -19,7 +18,7 @@
       ]
     },
     {
-      "id": "binary-file",
+      "id": "s2",
       "title": "バイナリファイルの場合",
       "hints": [
         "バイナリファイルアップロード",
@@ -30,7 +29,7 @@
       ]
     },
     {
-      "id": "fixed-length-csv-file",
+      "id": "s3",
       "title": "固定長ファイル、CSVファイルの場合",
       "hints": [
         "固定長ファイル",
@@ -43,8 +42,8 @@
     }
   ],
   "sections": {
-    "upload-file-syntax": "ファイルアップロードのテストはウェブアプリケーションのテストの一種であるため、ファイルアップロードのテストを実施するにはウェブアプリケーションのテスト（index）が前提となる。\n\nHTTPリクエストパラメータにアップロードファイルを指定するには、パラメータ値に以下の記述を使用する。\n\n```text\n${attach:ファイルパス}\n```\n\n> **補足**: ファイルパスは、**テスト実行時のカレントディレクトリからの相対パス**（プロジェクトルートディレクトリからの相対パス）で記述する。",
-    "binary-file": "画像ファイル等のバイナリファイルをアップロードする場合は、事前にファイルを配置しておき、そのファイルへのパスを `${attach:パス}` で指定する。\n\n**例**: `uploadfile` キーで `test/resources/images/picture.png` をアップロードする場合\n\nファイル配置:\n```\n<project_root>\n     + test\n        + resources\n           + images\n              + picture.png\n```\n\n`LIST_MAP=requestParams`\n\n| uploadfile | comment | public |\n|---|---|---|\n| `${attach:test/resources/images/picture.png}` | アップロードします。 | `false` |",
-    "fixed-length-csv-file": ":ref:`固定長ファイル<how_to_setup_fixed_length_file>` や :ref:`CSVファイル<how_to_setup_csv_file>` をアップロードする場合、ファイル内容をテストデータシートに記載する。テスト実行時に自動テストフレームワークがこのデータを元にファイルを作成する。\n\n**例**: `work/member_list.csv` を作成してアップロード対象として指定する場合\n\n`LIST_MAP=requestParams`\n\n| uploadfile | comment |\n|---|---|\n| `${attach:work/member_list.csv}` | 10月度新規会員を登録 |\n\n`SETUP_FIXED=work/member_list.csv`\n\n// ディレクティブ\n\n| プロパティ | 値 |\n|---|---|\n| text-encoding | Windows-31J |\n| record-separator | CRLF |\n\n// データ\n\n| name | age | address |\n|---|---|---|\n| 山田太郎 | 30 | 東京都港区芝浦1-1 |\n| 田中次郎 | 20 | 大阪府門真市東田町2-2 |\n\n> **補足**: 固定長ファイルやCSVファイルのアップロードでも事前にファイルを用意することは可能だが、テストデータの保守容易性を考慮するとテストデータシートに記載すべきである。"
+    "s1": "ファイルアップロードのテストはウェブアプリケーションのテストの一種であるため、ファイルアップロードのテストを実施するにはウェブアプリケーションのテスト（index）が前提となる。\n\nHTTPリクエストパラメータにアップロードファイルを指定するには、パラメータ値に以下の記述を使用する。\n\n```text\n${attach:ファイルパス}\n```\n\n> **補足**: ファイルパスは、**テスト実行時のカレントディレクトリからの相対パス**（プロジェクトルートディレクトリからの相対パス）で記述する。",
+    "s2": "画像ファイル等のバイナリファイルをアップロードする場合は、事前にファイルを配置しておき、そのファイルへのパスを `${attach:パス}` で指定する。\n\n**例**: `uploadfile` キーで `test/resources/images/picture.png` をアップロードする場合\n\nファイル配置:\n```\n<project_root>\n     + test\n        + resources\n           + images\n              + picture.png\n```\n\n`LIST_MAP=requestParams`\n\n| uploadfile | comment | public |\n|---|---|---|\n| `${attach:test/resources/images/picture.png}` | アップロードします。 | `false` |",
+    "s3": ":ref:`固定長ファイル<how_to_setup_fixed_length_file>` や :ref:`CSVファイル<how_to_setup_csv_file>` をアップロードする場合、ファイル内容をテストデータシートに記載する。テスト実行時に自動テストフレームワークがこのデータを元にファイルを作成する。\n\n**例**: `work/member_list.csv` を作成してアップロード対象として指定する場合\n\n`LIST_MAP=requestParams`\n\n| uploadfile | comment |\n|---|---|\n| `${attach:work/member_list.csv}` | 10月度新規会員を登録 |\n\n`SETUP_FIXED=work/member_list.csv`\n\n// ディレクティブ\n\n| プロパティ | 値 |\n|---|---|\n| text-encoding | Windows-31J |\n| record-separator | CRLF |\n\n// データ\n\n| name | age | address |\n|---|---|---|\n| 山田太郎 | 30 | 東京都港区芝浦1-1 |\n| 田中次郎 | 20 | 大阪府門真市東田町2-2 |\n\n> **補足**: 固定長ファイルやCSVファイルのアップロードでも事前にファイルを用意することは可能だが、テストデータの保守容易性を考慮するとテストデータシートに記載すべきである。"
   }
 }

@@ -4,11 +4,11 @@
 
 ## メール送信処理の構造とテスト範囲
 
-:ref:`メール送信 <mail>` を使用した業務アプリケーションはメール送信要求APIを呼び出すだけである。
+[メール送信](../../component/libraries/libraries-mail.md) を使用した業務アプリケーションはメール送信要求APIを呼び出すだけである。
 
 リクエスト単体テストの範囲: メール送信要求が正常に受け付けられデータベースに格納されることを確認するところまで。
 
-![メール送信処理の処理概要と業務アプリケーションのテスト範囲](../../knowledge/development-tools/testing-framework/assets/testing-framework-mail/mail_overview.jpg)
+![メール送信処理の処理概要と業務アプリケーションのテスト範囲](../../../knowledge/development-tools/testing-framework/assets/testing-framework-mail/mail_overview.jpg)
 
 <details>
 <summary>keywords</summary>
@@ -19,7 +19,7 @@
 
 ## テストの実施方法
 
-メール送信に関してリクエスト単体テストで確認すべき内容: :ref:`各テーブル（メール送信要求テーブル、メール送信先テーブル、メール添付ファイルテーブル）<mail>` に正しく格納されること。
+メール送信に関してリクエスト単体テストで確認すべき内容: [各テーブル（メール送信要求テーブル、メール送信先テーブル、メール添付ファイルテーブル）](../../component/libraries/libraries-mail.md) に正しく格納されること。
 
 期待する上記3テーブルの状態をExcelシートに記述する。
 

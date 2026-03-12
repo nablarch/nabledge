@@ -12,10 +12,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/i18n/FilenameBasedResourcePathRule.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/i18n/ResourcePathRule.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "handler-class",
+      "id": "s1",
       "title": "ハンドラクラス名",
       "hints": [
         "HttpResponseHandler",
@@ -24,7 +23,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s2",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-fw-web",
@@ -34,7 +33,7 @@
       ]
     },
     {
-      "id": "constraints",
+      "id": "s3",
       "title": "制約",
       "hints": [
         "制約",
@@ -42,7 +41,7 @@
       ]
     },
     {
-      "id": "response-conversion",
+      "id": "s4",
       "title": "応答の変換方法",
       "hints": [
         "HttpResponse",
@@ -60,7 +59,7 @@
       ]
     },
     {
-      "id": "custom-response-writer",
+      "id": "s5",
       "title": "カスタムレスポンスライター",
       "hints": [
         "CustomResponseWriter",
@@ -71,7 +70,7 @@
       ]
     },
     {
-      "id": "http-status-code-change",
+      "id": "s6",
       "title": "HTTPステータスコードの変更",
       "hints": [
         "HTTPステータスコード変更",
@@ -82,7 +81,7 @@
       ]
     },
     {
-      "id": "content-path-language-switching",
+      "id": "s7",
       "title": "言語毎のコンテンツパスの切り替え",
       "hints": [
         "DirectoryBasedResourcePathRule",
@@ -95,7 +94,7 @@
       ]
     },
     {
-      "id": "fatal-error-handling",
+      "id": "s8",
       "title": "本ハンドラ内で発生した致命的エラーの対応",
       "hints": [
         "ServletException",
@@ -109,13 +108,13 @@
     }
   ],
   "sections": {
-    "handler-class": "**クラス**: :java:extdoc:`nablarch.fw.web.handler.HttpResponseHandler`",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
-    "constraints": "本ハンドラを使用するにあたっての制約事項はなし。",
-    "response-conversion": "応答方法は以下の4通り: サーブレットフォワード、カスタムレスポンスライター、リダイレクト、直接レスポンス（:java:extdoc:`ServletResponse <jakarta.servlet.ServletResponse>` の `getOutputStream` を使用）。\n\nスキームは :java:extdoc:`HttpResponse#getContentPath() <nablarch.fw.web.HttpResponse.getContentPath()>` が返す :java:extdoc:`ResourceLocator <nablarch.fw.web.ResourceLocator>` の :java:extdoc:`getScheme() <nablarch.fw.web.ResourceLocator.getScheme()>` の値。明示的に指定しない場合のデフォルトスキームは `servlet`。ステータスコードは :java:extdoc:`HttpResponse#getStatusCode() <nablarch.fw.web.HttpResponse.getStatusCode()>` の値。\n\n| 変換条件 | 応答の方法 |\n|---|---|\n| スキームが `servlet` の場合 | カスタムレスポンスライターが処理対象と判定した場合はカスタムレスポンスライターに委譲。それ以外はコンテンツパス別サーブレットへフォワード。 |\n| スキームが `redirect` の場合 | 指定URLへリダイレクト |\n| スキームが `http` または `https` の場合 | 指定URLへリダイレクト |\n| スキームが上記以外でステータスコードが400以上の場合 | ステータスコードに合うエラー画面を表示 |\n| 上記以外の場合 | :java:extdoc:`HttpResponse#getBodyStream() <nablarch.fw.web.HttpResponse.getBodyStream()>` の結果を応答 |",
-    "custom-response-writer": "`customResponseWriter` プロパティに :java:extdoc:`CustomResponseWriter <nablarch.fw.web.handler.responsewriter.CustomResponseWriter>` の実装クラスを設定することで、任意のレスポンス出力処理（テンプレートエンジン等による出力）を実行できる。Nablarchが提供する実装として :ref:`web_thymeleaf_adaptor` がある。",
-    "http-status-code-change": "| 変換条件 | エラーコード |\n|---|---|\n| Ajaxのリクエストの場合 | 元のステータスコードをそのまま返す |\n| 元のステータスコードが400の場合 | 200を返す |\n| 上記以外の場合 | 元のステータスコードをそのまま返す |",
-    "content-path-language-switching": "`contentPathRule` プロパティに以下のクラスを設定することで、HTTPリクエストの言語設定に基づいてフォワード先（JSP等）を動的に切り替えられる。\n\n| クラス名 | 説明 |\n|---|---|\n| :java:extdoc:`DirectoryBasedResourcePathRule <nablarch.fw.web.i18n.DirectoryBasedResourcePathRule>` | コンテキストルート直下のディレクトリを言語切り替えに使用（ディレクトリ名=言語名） |\n| :java:extdoc:`FilenameBasedResourcePathRule <nablarch.fw.web.i18n.FilenameBasedResourcePathRule>` | ファイル名のサフィックス「_言語名」を言語切り替えに使用 |\n\n```xml\n<component name=\"resourcePathRule\" class=\"nablarch.fw.web.i18n.DirectoryBasedResourcePathRule\" />\n\n<component class=\"nablarch.fw.web.handler.HttpResponseHandler\">\n  <property name=\"contentPathRule\" ref=\"resourcePathRule\" />\n</component>\n```\n\n上記以外の切り替え方法には :java:extdoc:`ResourcePathRule <nablarch.fw.web.i18n.ResourcePathRule>` を継承したクラスを作成して `contentPathRule` プロパティに設定する。\n\n> **補足**: カスタムレスポンスライターでレスポンス出力を行う場合、本機能は使用できない。テンプレートエンジン等が持つ多言語対応機能と混在させないため。",
-    "fatal-error-handling": "以下の事象が発生した場合、ステータスコード500で固定的なHTMLレスポンスを返す。\n\n- サーブレットフォワード時に `ServletException` が発生した場合\n- `RuntimeException` およびそのサブクラスの例外が発生した場合\n- `Error` およびそのサブクラスの例外が発生した場合\n\n返却されるHTML:\n\n```html\n<html>\n  <head>\n    <title>A system error occurred.</title>\n  </head>\n  <body>\n    <p>\n      We are sorry not to be able to proceed your request.<br/>\n      Please contact the system administrator of our system.\n    </p>\n  </body>\n</html>\n```\n\n> **重要**: 上記HTMLのレスポンスは固定的で設定変更不可。このレスポンスを出してはいけないシステムでは、本ハンドラを参考にハンドラの自作を検討すること。"
+    "s1": "**クラス**: `HttpResponseHandler`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "s3": "本ハンドラを使用するにあたっての制約事項はなし。",
+    "s4": "応答方法は以下の4通り: サーブレットフォワード、カスタムレスポンスライター、リダイレクト、直接レスポンス（`ServletResponse` の `getOutputStream` を使用）。\n\nスキームは `HttpResponse#getContentPath()` が返す `ResourceLocator` の `getScheme()` の値。明示的に指定しない場合のデフォルトスキームは `servlet`。ステータスコードは `HttpResponse#getStatusCode()` の値。\n\n| 変換条件 | 応答の方法 |\n|---|---|\n| スキームが `servlet` の場合 | カスタムレスポンスライターが処理対象と判定した場合はカスタムレスポンスライターに委譲。それ以外はコンテンツパス別サーブレットへフォワード。 |\n| スキームが `redirect` の場合 | 指定URLへリダイレクト |\n| スキームが `http` または `https` の場合 | 指定URLへリダイレクト |\n| スキームが上記以外でステータスコードが400以上の場合 | ステータスコードに合うエラー画面を表示 |\n| 上記以外の場合 | `HttpResponse#getBodyStream()` の結果を応答 |",
+    "s5": "`customResponseWriter` プロパティに `CustomResponseWriter` の実装クラスを設定することで、任意のレスポンス出力処理（テンプレートエンジン等による出力）を実行できる。Nablarchが提供する実装として [web_thymeleaf_adaptor](../adapters/adapters-web_thymeleaf_adaptor.json#s1) がある。",
+    "s6": "| 変換条件 | エラーコード |\n|---|---|\n| Ajaxのリクエストの場合 | 元のステータスコードをそのまま返す |\n| 元のステータスコードが400の場合 | 200を返す |\n| 上記以外の場合 | 元のステータスコードをそのまま返す |",
+    "s7": "`contentPathRule` プロパティに以下のクラスを設定することで、HTTPリクエストの言語設定に基づいてフォワード先（JSP等）を動的に切り替えられる。\n\n| クラス名 | 説明 |\n|---|---|\n| `DirectoryBasedResourcePathRule` | コンテキストルート直下のディレクトリを言語切り替えに使用（ディレクトリ名=言語名） |\n| `FilenameBasedResourcePathRule` | ファイル名のサフィックス「_言語名」を言語切り替えに使用 |\n\n```xml\n<component name=\"resourcePathRule\" class=\"nablarch.fw.web.i18n.DirectoryBasedResourcePathRule\" />\n\n<component class=\"nablarch.fw.web.handler.HttpResponseHandler\">\n  <property name=\"contentPathRule\" ref=\"resourcePathRule\" />\n</component>\n```\n\n上記以外の切り替え方法には `ResourcePathRule` を継承したクラスを作成して `contentPathRule` プロパティに設定する。\n\n> **補足**: カスタムレスポンスライターでレスポンス出力を行う場合、本機能は使用できない。テンプレートエンジン等が持つ多言語対応機能と混在させないため。",
+    "s8": "以下の事象が発生した場合、ステータスコード500で固定的なHTMLレスポンスを返す。\n\n- サーブレットフォワード時に `ServletException` が発生した場合\n- `RuntimeException` およびそのサブクラスの例外が発生した場合\n- `Error` およびそのサブクラスの例外が発生した場合\n\n返却されるHTML:\n\n```html\n<html>\n  <head>\n    <title>A system error occurred.</title>\n  </head>\n  <body>\n    <p>\n      We are sorry not to be able to proceed your request.<br/>\n      Please contact the system administrator of our system.\n    </p>\n  </body>\n</html>\n```\n\n> **重要**: 上記HTMLのレスポンスは固定的で設定変更不可。このレスポンスを出してはいけないシステムでは、本ハンドラを参考にハンドラの自作を検討すること。"
   }
 }

@@ -1,0 +1,134 @@
+{
+  "id": "biz-samples-OnlineAccessLogStatistics",
+  "title": "オンラインアクセスログ集計機能",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/10/contents/OnlineAccessLogStatistics.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "オンラインアクセスログ集計機能",
+      "hints": [
+        "オンラインアクセスログ集計",
+        "リクエスト数集計",
+        "処理時間集計",
+        "閾値超過リクエスト数",
+        "アクセスログ統計"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "サンプル構成",
+      "hints": [
+        "サンプル構成",
+        "解析バッチ",
+        "集計バッチ",
+        "Excelレポートサンプル",
+        "3種類構成"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "処理の流れ",
+      "hints": [
+        "処理フロー",
+        "ログ解析手順",
+        "集計処理",
+        "レポート生成",
+        "セキュリティ推奨"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "各サンプルの仕様及び実行手順",
+      "hints": [
+        "解析バッチ仕様",
+        "集計バッチ仕様",
+        "REQUEST_INFO_YYYYMMDD.csv",
+        "時間別集計",
+        "日別集計",
+        "年月別集計",
+        "CSV出力項目"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "本サンプルを実行するための設定情報（解析バッチ）",
+      "hints": [
+        "OnlineStatisticsDefinition",
+        "please.change.me.statistics.action.settings.OnlineStatisticsDefinition",
+        "accessLogDir",
+        "accessLogFileNamePattern",
+        "accessLogParseDir",
+        "endLogPattern",
+        "includeRequestIdList",
+        "findRequestIdPattern",
+        "findProcessNamePattern",
+        "findStatusCodePattern",
+        "logOutputDateTimeStartPosition",
+        "logOutputDateTimeEndPosition",
+        "logOutputDateTimeFormat",
+        "findExecutionTimePattern",
+        "thresholdExecutionTime",
+        "aggregatePeriod",
+        "requestInfoFormatName",
+        "requestInfo.dir",
+        "requestInfoSummaryBaseName",
+        "requestInfoSummaryFormatName"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "実行方法（解析バッチ）",
+      "hints": [
+        "OnlineAccessLogParseAction",
+        "statistics-batch.xml",
+        "バッチ実行パラメータ",
+        "diConfig",
+        "requestPath"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "本サンプルを実行するための設定情報（集計バッチ）",
+      "hints": [
+        "集計バッチ設定",
+        "OnlineStatisticsDefinition",
+        "共通設定",
+        "statistics-batch.xml"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "実行方法（集計バッチ）",
+      "hints": [
+        "RequestInfoAggregateAction",
+        "statistics-batch.xml",
+        "バッチ実行パラメータ",
+        "diConfig",
+        "requestPath"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "実行方法（レポートサンプル）",
+      "hints": [
+        "Excelマクロ",
+        "レポート出力",
+        "ウェブアプリケーションリクエストレポートツール",
+        "集計結果表"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "オンラインアクセスログ集計機能は、画面機能から出力されるアクセスログを元にリクエストID単位に以下の情報を集計する。\n\n- リクエスト数\n- 閾値を超えた処理時間のリクエスト数\n- 処理時間（平均）\n- 処理時間（中央値）\n- 処理時間（最大値）\n\n> **補足**: リクエストIDは設定ファイルに指定することで、集計対象の機能を絞り込むことができる。",
+    "s2": "| サンプル名 | 概要 |\n|---|---|\n| オンラインアクセスログ解析バッチ | アクセスログを解析し、集計時に必要な情報のみをCSVファイルに出力するバッチ処理 |\n| オンラインアクセスログ解析結果集計バッチ | 解析バッチで出力されたCSVファイルを元に集計処理を行うバッチ処理。集計期間は設定ファイルに指定された日数分 |\n| オンラインアクセスログ集計結果レポートサンプル | 集計バッチで出力した集計結果を元にExcelにレポート（集計結果表）を出力するExcelマクロ |",
+    "s3": "オンラインアクセスログを元にExcelにレポート情報を出力するまでの処理の流れは図を参照。\n\n> **補足**: オンラインログ配置サーバと運用担当者様端末を明示的に分けて記載している。オンラインアクセスログには個人情報が含まれている可能性があるため、セキュリティで保護された環境での実行を推奨する。なお、リクエスト情報集計結果には個人情報等の項目は含まれないため、セキュリティで保護された環境以外で実行することも可能であるが、ログの解析及び集計処理を実行した環境で実行することに特に問題はない。",
+    "s4": "## オンラインアクセスログ解析バッチ\n\n日次で実行することを想定。解析結果CSVファイルは削除せずに蓄積すること（過去分の蓄積により後続集計処理の正確性が担保される）。\n\nCSVファイル名: `REQUEST_INFO_YYYYMMDD.csv`（YYYYMMDD = システム日付8桁）\n\n**CSVファイルへの出力内容**:\n\n| 項目名 | 備考 |\n|---|---|\n| 年 | リクエストの終了(END)ログ出力日時の年 |\n| 月 | リクエストの終了(END)ログ出力日時の月 |\n| 日 | リクエストの終了(END)ログ出力日時の日 |\n| プロセス名 | プロセス名（ログにプロセス名が出力されていない場合はブランク） |\n| リクエストID | リクエストID |\n| 処理時間 | リクエストの処理時間 |\n| ステータスコード | 処理ステータスコード |\n\n## オンラインアクセスログ解析結果集計バッチ\n\n解析バッチで出力されたCSVファイルを元に集計処理を実行。集計期間は設定ファイルに指定された日数分。\n\n> **補足**: 対象日数の判定はファイル名に含まれている日付を使用。解析処理が日次で実行されていない場合（例: 2日に1回）、CSVに複数日分が含まれるため、指定集計期間より前のログも集計結果に含まれる場合がある。\n\n集計結果として以下の3種類のCSVファイルを出力:\n\n| ファイル名 | 出力内容 | 注意事項 |\n|---|---|---|\n| 時間別集計結果 | 時間単位（0〜23）の集計結果 | |\n| 日別集計結果 | 日単位（1〜31）の集計結果 | |\n| 年月別集計結果 | 年月単位の集計結果（システム日次の年月のみ） | 過去分の集計結果は削除せずに蓄積すること |\n\n> **補足**: 集計範囲が1ヶ月未満（例: 10日）の場合、年月集計結果はその期間のみの集計となる。\n\n**集計結果CSVへの出力内容**:\n\n| 項目名 | 備考 |\n|---|---|\n| リクエストID | リクエストID |\n| 集計対象期間 | 時間別: 0〜23、日別: 1〜31、年月別: システム日付の年月 |\n| プロセス名 | プロセス名 |\n| リクエスト数 | 集計対象期間内のリクエスト数 |\n| 処理時間が閾値を超えたリクエスト数 | 設定ファイルで指定された閾値時間を超えたリクエストの数 |\n| 処理時間（平均） | 集計対象期間内での平均値 |\n| 処理時間（中央値） | 集計対象期間内での中央値 |\n| 処理時間（集計対象期間内での最大処理時間） | 集計対象期間内での最大処理時間 |\n\n## オンラインアクセスログ集計結果レポートサンプル\n\n集計バッチで出力した集計結果を元にExcelにレポート（集計結果表）を出力するExcelマクロ。表を元にグラフの作成などをする場合には、Excelの機能を使用してグラフ化を行うこと。",
+    "s5": "解析バッチおよび集計バッチの共通設定。設定値は `please.change.me.statistics.action.settings.OnlineStatisticsDefinition` のプロパティへ設定する（全て必須）。\n\n標準構成の設定値は以下のファイルに用意されているため、環境に応じて変更が必要な項目のみ修正すること:\n- `main/resources/statistics/onlineStatisticsDefinition.xml`\n- `main/resources/statistics/statistics.config`\n\n| 設定プロパティ名 | 設定内容 |\n|---|---|\n| accessLogDir | 解析対象ログのディレクトリパス（絶対パス or 相対パス） |\n| accessLogFileNamePattern | 解析対象ログのファイル名パターン。ワイルドカードに`*`を使用（正規表現とは異なる）。例: `access*` |\n| accessLogParseDir | ログ解析用一時ディレクトリパス（解析対象ログをここにコピーして処理）（絶対パス or 相対パス） |\n| endLogPattern | 終了ログを特定するための正規表現パターン |\n| includeRequestIdList | 解析対象のリクエストIDリスト。リクエストIDが増減した場合は追加・削除すること |\n| findRequestIdPattern | 終了ログからリクエストIDを抽出する正規表現（リクエストID部分をグループ化すること） |\n| findProcessNamePattern | 終了ログからプロセス名を抽出する正規表現（プロセス名部分をグループ化すること） |\n| findStatusCodePattern | 終了ログからステータスコードを抽出する正規表現（ステータスコード部分をグループ化すること） |\n| logOutputDateTimeStartPosition | ログ出力日時の開始位置（0始まりの文字数、`String#substring`と同仕様） |\n| logOutputDateTimeEndPosition | ログ出力日時の終了位置（0始まりの文字数、`String#substring`と同仕様） |\n| logOutputDateTimeFormat | ログ出力日時のフォーマット（SimpleDateFormat形式） |\n| findExecutionTimePattern | 処理時間を抽出する正規表現（処理時間部分をグループ化すること） |\n| thresholdExecutionTime | 処理時間の閾値（ミリ秒）。例: 3000 = 3秒超のリクエスト数を集計 |\n| aggregatePeriod | 集計期間（日数）。年月集計をもれなく行うため最低30を推奨 |\n| requestInfoFormatName | 解析結果CSVのフォーマット定義ファイル名。デフォルト: `main/format/requestInfo.fmt`（解析・集計バッチ共用）。フォーマット拡張時は新規ファイル名を指定すること |\n| requestInfo.dir | 解析結果CSV出力先ディレクトリの論理名（実マッピング: `main/resources/statistics/file.xml`） |\n| requestInfoSummaryBaseName | 集計結果CSV出力先ディレクトリの論理名（実マッピング: `main/resources/statistics/file.xml`） |\n| requestInfoSummaryFormatName | 集計結果CSVのフォーマット定義ファイル名。デフォルト: `main/format/requestInfoAggregate.fmt`。フォーマット拡張時は新規ファイル名を指定すること |",
+    "s6": "本バッチは [Nablarchのバッチ方式](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch_batch.json) で実装。\n\n| パラメータ | 値 |\n|---|---|\n| diConfig | `statistics-batch.xml`（resourcesにクラスパス設定の場合） |\n| requestPath | `OnlineAccessLogParseAction` |\n| userId | バッチユーザID |",
+    "s7": "集計バッチの設定はオンラインアクセスログ解析バッチと共通。設定値は `please.change.me.statistics.action.settings.OnlineStatisticsDefinition` のプロパティへ設定する（全て必須）。設定プロパティの詳細は「本サンプルを実行するための設定情報（解析バッチ）」セクションを参照。",
+    "s8": "本バッチは [Nablarchのバッチ方式](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch_batch.json) で実装。\n\n| パラメータ | 値 |\n|---|---|\n| diConfig | `statistics-batch.xml`（resourcesにクラスパス設定の場合） |\n| requestPath | `RequestInfoAggregateAction` |\n| userId | バッチユーザID |",
+    "s9": "集計結果表を作成するサンプル。表を元にグラフの作成などをする場合には、Excelの機能を使用してグラフ化を行うこと。\n\n実行方法の詳細: `/tool/ウェブアプリケーションリクエストレポートツール.xls`"
+  }
+}

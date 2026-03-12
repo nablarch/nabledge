@@ -10,10 +10,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/date/SystemTimeProvider.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/date/BusinessDateProvider.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "overview",
+      "id": "s1",
       "title": "機能概要",
       "hints": [
         "システム日時切り替え",
@@ -23,7 +22,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s2",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-core",
@@ -33,7 +32,7 @@
       ]
     },
     {
-      "id": "system-time-settings",
+      "id": "s3",
       "title": "システム日時の管理機能を使うための設定",
       "hints": [
         "BasicSystemTimeProvider",
@@ -43,7 +42,7 @@
       ]
     },
     {
-      "id": "system-time-get",
+      "id": "s4",
       "title": "システム日時を取得する",
       "hints": [
         "SystemTimeUtil",
@@ -51,7 +50,7 @@
       ]
     },
     {
-      "id": "business-date-settings",
+      "id": "s5",
       "title": "業務日付管理機能を使うための設定",
       "hints": [
         "BasicBusinessDateProvider",
@@ -68,7 +67,7 @@
       ]
     },
     {
-      "id": "business-date-get",
+      "id": "s6",
       "title": "業務日付を取得する",
       "hints": [
         "BusinessDateUtil",
@@ -76,7 +75,7 @@
       ]
     },
     {
-      "id": "business-date-overwrite",
+      "id": "s7",
       "title": "業務日付を任意の日付に上書く",
       "hints": [
         "BasicBusinessDateProvider",
@@ -87,7 +86,7 @@
       ]
     },
     {
-      "id": "business-date-update",
+      "id": "s8",
       "title": "業務日付を更新する",
       "hints": [
         "BasicBusinessDateProvider",
@@ -97,7 +96,7 @@
       ]
     },
     {
-      "id": "extensions",
+      "id": "s9",
       "title": "拡張例",
       "hints": [
         "SystemTimeProvider",
@@ -109,14 +108,14 @@
     }
   ],
   "sections": {
-    "overview": "コンポーネント定義で指定するクラスを差し替えることで、アプリケーションで使用するシステム日時(OS日時)と業務日付の取得方法を切り替えられる。テストなどで一時的に切り替えたい場合に利用する。\n\n- システム日時を切り替える方法については「拡張例 > システム日時の切り替え」を参照。\n- 業務日付を切り替える方法については「拡張例 > 業務日付の切り替え」を参照。",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n\n<!-- 業務日付管理機能を使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-jdbc</artifactId>\n</dependency>\n```",
-    "system-time-settings": "**クラス**: `nablarch.core.date.BasicSystemTimeProvider`\n\nコンポーネント名には **systemTimeProvider** と指定する。\n\n```xml\n<component name=\"systemTimeProvider\" class=\"nablarch.core.date.BasicSystemTimeProvider\" />\n```",
-    "system-time-get": "**クラス**: `nablarch.core.date.SystemTimeUtil`\n\nシステム日時の取得は `SystemTimeUtil` を使用する。",
-    "business-date-settings": "**クラス**: `nablarch.core.date.BasicBusinessDateProvider`\n\nコンポーネント名には **businessDateProvider** と指定する。初期化が必要なため、初期化対象のリストに設定すること。\n\n業務日付はデータベースで複数管理する。テーブルレイアウト:\n\n| カラム | 説明 |\n|---|---|\n| 区分(PK) | 業務日付を識別する値（文字列型） |\n| 日付 | 業務日付（文字列型、yyyyMMdd形式） |\n\n```xml\n<component name=\"businessDateProvider\" class=\"nablarch.core.date.BasicBusinessDateProvider\">\n  <property name=\"tableName\" value=\"BUSINESS_DATE\" />\n  <property name=\"segmentColumnName\" value=\"SEGMENT\"/>\n  <property name=\"dateColumnName\" value=\"BIZ_DATE\"/>\n  <property name=\"defaultSegment\" value=\"00\"/>\n  <property name=\"transactionManager\" ref=\"transactionManager\" />\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <!-- 他のコンポーネントは省略 -->\n      <component-ref name=\"businessDateProvider\" />\n    </list>\n  </property>\n</component>\n```",
-    "business-date-get": "**クラス**: `nablarch.core.date.BusinessDateUtil`\n\n業務日付の取得は `BusinessDateUtil` を使用する。",
-    "business-date-overwrite": "バッチ処理の障害再実行時など、再実行するプロセスのみ任意の日付を業務日付として実行できる。`repository-overwrite_environment_configuration` を使用してシステムプロパティで指定する。\n\n> **補足**: ウェブアプリケーションのように全機能が1プロセス内で実行される場合は、単純にデータベースで管理されている日付を変更すればよい。\n\nシステムプロパティ形式: `BasicBusinessDateProvider.<区分>=日付`（日付はyyyyMMdd形式）\n\n例: 区分`batch`の日付を`20160317`に設定する場合: `-DBasicBusinessDateProvider.batch=20160317`",
-    "business-date-update": "**クラス**: `nablarch.core.date.BasicBusinessDateProvider`\n\n`SystemRepository` からプロバイダを取得し、`setDate` メソッドで更新する。\n\n```java\n// システムリポジトリからBasicBusinessDateProviderを取得する\nBusinessDateProvider provider = SystemRepository.get(\"businessDateProvider\");\n\n// setDateメソッドを呼び出し、更新する\nprovider.setDate(segment, date);\n```",
-    "extensions": "## システム日時の切り替え\n\nユニットテストなどでシステム日時を切り替える手順:\n\n1. `SystemTimeProvider` (`nablarch.core.date.SystemTimeProvider`) を実装したクラスを作成する。\n2. 「システム日時の管理機能を使うための設定」に従い設定する。\n\n## 業務日付の切り替え\n\nユニットテストなどで業務日付を切り替える手順:\n\n1. `BusinessDateProvider` (`nablarch.core.date.BusinessDateProvider`) を実装したクラスを作成する。\n2. 「業務日付管理機能を使うための設定」に従い設定する。"
+    "s1": "コンポーネント定義で指定するクラスを差し替えることで、アプリケーションで使用するシステム日時(OS日時)と業務日付の取得方法を切り替えられる。テストなどで一時的に切り替えたい場合に利用する。\n\n- システム日時を切り替える方法については「拡張例 > システム日時の切り替え」を参照。\n- 業務日付を切り替える方法については「拡張例 > 業務日付の切り替え」を参照。",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n\n<!-- 業務日付管理機能を使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-jdbc</artifactId>\n</dependency>\n```",
+    "s3": "**クラス**: `nablarch.core.date.BasicSystemTimeProvider`\n\nコンポーネント名には **systemTimeProvider** と指定する。\n\n```xml\n<component name=\"systemTimeProvider\" class=\"nablarch.core.date.BasicSystemTimeProvider\" />\n```",
+    "s4": "**クラス**: `nablarch.core.date.SystemTimeUtil`\n\nシステム日時の取得は `SystemTimeUtil` を使用する。",
+    "s5": "**クラス**: `nablarch.core.date.BasicBusinessDateProvider`\n\nコンポーネント名には **businessDateProvider** と指定する。初期化が必要なため、初期化対象のリストに設定すること。\n\n業務日付はデータベースで複数管理する。テーブルレイアウト:\n\n| カラム | 説明 |\n|---|---|\n| 区分(PK) | 業務日付を識別する値（文字列型） |\n| 日付 | 業務日付（文字列型、yyyyMMdd形式） |\n\n```xml\n<component name=\"businessDateProvider\" class=\"nablarch.core.date.BasicBusinessDateProvider\">\n  <property name=\"tableName\" value=\"BUSINESS_DATE\" />\n  <property name=\"segmentColumnName\" value=\"SEGMENT\"/>\n  <property name=\"dateColumnName\" value=\"BIZ_DATE\"/>\n  <property name=\"defaultSegment\" value=\"00\"/>\n  <property name=\"transactionManager\" ref=\"transactionManager\" />\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <!-- 他のコンポーネントは省略 -->\n      <component-ref name=\"businessDateProvider\" />\n    </list>\n  </property>\n</component>\n```",
+    "s6": "**クラス**: `nablarch.core.date.BusinessDateUtil`\n\n業務日付の取得は `BusinessDateUtil` を使用する。",
+    "s7": "バッチ処理の障害再実行時など、再実行するプロセスのみ任意の日付を業務日付として実行できる。`repository-overwrite_environment_configuration` を使用してシステムプロパティで指定する。\n\n> **補足**: ウェブアプリケーションのように全機能が1プロセス内で実行される場合は、単純にデータベースで管理されている日付を変更すればよい。\n\nシステムプロパティ形式: `BasicBusinessDateProvider.<区分>=日付`（日付はyyyyMMdd形式）\n\n例: 区分`batch`の日付を`20160317`に設定する場合: `-DBasicBusinessDateProvider.batch=20160317`",
+    "s8": "**クラス**: `nablarch.core.date.BasicBusinessDateProvider`\n\n`SystemRepository` からプロバイダを取得し、`setDate` メソッドで更新する。\n\n```java\n// システムリポジトリからBasicBusinessDateProviderを取得する\nBusinessDateProvider provider = SystemRepository.get(\"businessDateProvider\");\n\n// setDateメソッドを呼び出し、更新する\nprovider.setDate(segment, date);\n```",
+    "s9": "## システム日時の切り替え\n\nユニットテストなどでシステム日時を切り替える手順:\n\n1. `SystemTimeProvider` (`nablarch.core.date.SystemTimeProvider`) を実装したクラスを作成する。\n2. 「システム日時の管理機能を使うための設定」に従い設定する。\n\n## 業務日付の切り替え\n\nユニットテストなどで業務日付を切り替える手順:\n\n1. `BusinessDateProvider` (`nablarch.core.date.BusinessDateProvider`) を実装したクラスを作成する。\n2. 「業務日付管理機能を使うための設定」に従い設定する。"
   }
 }

@@ -32,7 +32,7 @@ nablarch.fw.batch.ee.Main, メインクラス, ジョブ名指定, exec:java, zi
 |---|---|
 | `Batchlet` | バッチ処理を実装する。デフォルト実装 `AbstractBatchlet` を継承する。オーバーライドメソッド: `Batchlet#process`, `Batchlet#stop` |
 
-> **補足**: バッチ処理はインタフェース実装に加え、トランザクション制御などの共通処理を提供するリスナーで構成する。:ref:`バッチアプリケーションで使用するリスナー<jsr352-listener>` 及び :ref:`リスナーの指定方法<jsr352-listener_definition>` を参照。
+> **補足**: バッチ処理はインタフェース実装に加え、トランザクション制御などの共通処理を提供するリスナーで構成する。[バッチアプリケーションで使用するリスナー](jakarta-batch-architecture.md) 及び [リスナーの指定方法](jakarta-batch-architecture.md) を参照。
 
 ```java
 @Dependent
@@ -57,7 +57,7 @@ public class TruncateTableBatchlet extends AbstractBatchlet {
 実装ポイント:
 - `AbstractBatchlet` を継承し `process` メソッドで業務処理を実装する。
 - **アノテーション**: `Named` と `Dependent` をクラスに付与してCDI管理Beanにする。ジョブ定義でCDI管理名を使用できる（CDI管理Beanとしない場合はFQCNで記述）。
-- :ref:`データベースアクセス<database>` を使用してTRUNCATE文を実行する。
+- [データベースアクセス](../../component/libraries/libraries-database.md) を使用してTRUNCATE文を実行する。
 
 **ジョブ定義ファイルの作成**
 

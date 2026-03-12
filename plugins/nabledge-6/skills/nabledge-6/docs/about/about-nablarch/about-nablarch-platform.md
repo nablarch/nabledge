@@ -42,7 +42,7 @@ Nablarchフレームワークが動作確認済みの環境:
 **Java**
 - Java SE 17/21
 
-> **補足**: Java 21で使用する場合、別途設定変更が必要。設定方法は [../blank_project/setup_blankProject/setup_Java21](blank-project-setup_Java21.md) を参照。
+> **補足**: Java 21で使用する場合、別途設定変更が必要。設定方法は [../blank_project/setup_blankProject/setup_Java21](../../setup/blank-project/blank-project-setup_Java21.md) を参照。
 
 **データベース**
 - Oracle Database 19c/21c/23ai

@@ -7,10 +7,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/upload/UploadSettings.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpRequest.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "handler-class",
+      "id": "s1",
       "title": "ハンドラクラス名",
       "hints": [
         "MultipartHandler",
@@ -20,7 +19,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s2",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-fw-web",
@@ -30,7 +29,7 @@
       ]
     },
     {
-      "id": "constraints",
+      "id": "s3",
       "title": "制約",
       "hints": [
         "制約",
@@ -38,7 +37,7 @@
       ]
     },
     {
-      "id": "operation-conditions",
+      "id": "s4",
       "title": "このハンドラの動作条件",
       "hints": [
         "Content-Type",
@@ -49,7 +48,7 @@
       ]
     },
     {
-      "id": "temp-storage-config",
+      "id": "s5",
       "title": "アップロードファイルの一時保存先を指定する",
       "hints": [
         "uploadFileTmpDir",
@@ -61,7 +60,7 @@
       ]
     },
     {
-      "id": "file-size-limit",
+      "id": "s6",
       "title": "巨大なファイルのアップロードを防ぐ",
       "hints": [
         "contentLengthLimit",
@@ -74,7 +73,7 @@
       ]
     },
     {
-      "id": "max-file-count",
+      "id": "s7",
       "title": "ファイルの大量アップロードを防ぐ",
       "hints": [
         "maxFileCount",
@@ -86,7 +85,7 @@
       ]
     },
     {
-      "id": "temp-file-cleanup",
+      "id": "s8",
       "title": "一時ファイルの削除（クリーニング）を行う",
       "hints": [
         "autoCleaning",
@@ -98,7 +97,7 @@
       ]
     },
     {
-      "id": "error-page-config",
+      "id": "s9",
       "title": "マルチパート解析エラー及びファイルサイズ上限超過時の遷移先画面を設定する",
       "hints": [
         "web.xml",
@@ -111,7 +110,7 @@
       ]
     },
     {
-      "id": "read-upload-file",
+      "id": "s10",
       "title": "アップロードしたファイルを読み込む",
       "hints": [
         "HttpRequest",
@@ -128,15 +127,15 @@
     }
   ],
   "sections": {
-    "handler-class": "**クラス名**: `nablarch.fw.web.upload.MultipartHandler`",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```\n一時保存先を指定する場合のみ:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n```",
-    "constraints": "なし。",
-    "operation-conditions": "リクエストヘッダの `Content-Type` が `multipart/form-data` と一致する場合のみリクエストボディを解析する。それ以外の場合は何もせず後続ハンドラに委譲する。",
-    "temp-storage-config": "一時保存先ディレクトリは :ref:`file_path_management` に設定する。論理名は `uploadFileTmpDir` とすること。未設定の場合はシステムプロパティ `java.io.tmpdir` の値を使用する。\n\n> **補足**: 保存先ディレクトリの値は環境ごとに異なるため、コンポーネント設定ファイルではなく環境設定ファイルへの設定を推奨する。詳細は :ref:`repository-environment_configuration` 参照。\n\n```xml\n<component name=\"filePathSetting\" class=\"nablarch.core.util.FilePathSetting\">\n  <property name=\"basePathSettings\">\n    <map>\n      <entry key=\"uploadFileTmpDir\" value=\"file:/var/nablarch/uploadTmpDir\" />\n    </map>\n  </property>\n</component>\n```",
-    "file-size-limit": "アップロードサイズの上限を超過した場合、413(Payload Too Large)をクライアントに返却する。設定省略時は無制限となる。DoS攻撃防止のため常に設定すること。\n\n> **補足**: アップロードサイズの上限はファイル単位ではなく1リクエスト全体の上限。複数ファイルの場合はファイルサイズ合計値（Content-Length）でチェックされる。ファイル単位でのサイズチェックが必要な場合はアクション側で実装すること。\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| contentLengthLimit | | | 無制限 | アップロードサイズ(Content-Length)の上限(バイト数) |\n\n```xml\n<component class=\"nablarch.fw.web.upload.MultipartHandler\" name=\"multipartHandler\">\n  <property name=\"uploadSettings\">\n    <component class=\"nablarch.fw.web.upload.UploadSettings\">\n      <property name=\"contentLengthLimit\" value=\"1000000\" />\n    </component>\n  </property>\n</component>\n```",
-    "max-file-count": "上限を超えるファイルがアップロードされた場合、400(Bad Request)を返す。`maxFileCount` に0以上の値を設定するとその値が上限となる。負数を設定した場合は無制限。未設定時のデフォルトは-1（無制限）。\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| maxFileCount | | | -1 | 一度にアップロードできるファイル数の上限。0以上: 上限値、負数: 無制限 |\n\n```xml\n<component class=\"nablarch.fw.web.upload.MultipartHandler\" name=\"multipartHandler\">\n  <property name=\"uploadSettings\">\n    <component class=\"nablarch.fw.web.upload.UploadSettings\">\n      <property name=\"maxFileCount\" value=\"100\" />\n    </component>\n  </property>\n</component>\n```",
-    "temp-file-cleanup": "クリーニング実行条件:\n1. ボディの解析中に例外が発生した場合\n2. ハンドラの復路で自動削除設定が有効な場合\n\n自動削除設定はデフォルトで有効。本番環境で安易に無効にすると大量の一時ファイルがディスク上に残り、ディスクフルの原因となるため注意すること。無効にする場合は :java:extdoc:`UploadSettings#autoCleaning <nablarch.fw.web.upload.UploadSettings.setAutoCleaning(boolean)>` に `false` を設定する。",
-    "error-page-config": "マルチパート解析エラーおよびファイルサイズ上限超過時に400(BadRequest)をクライアントに返却する。`web.xml` に400に対応したエラーページを設定すること。設定を省略した場合は、ウェブアプリケーションサーバが持つデフォルトのページなどがクライアントに返却される。\n\n> **重要**: このハンドラは :ref:`session_store_handler` より手前に設定する必要がある。このため、後続に設定される :ref:`http_error_handler` の :ref:`HttpErrorHandler_DefaultPage` は使用できない。\n\nマルチパート解析エラーが発生するケース:\n- アップロード中にクライアントからの切断要求があり、ボディ部が不完全な場合\n- バウンダリーが存在しない場合",
-    "read-upload-file": ":java:extdoc:`HttpRequest <nablarch.fw.web.HttpRequest>` の :java:extdoc:`HttpRequest#getPart <nablarch.fw.web.HttpRequest.getPart(java.lang.String)>` を呼び出してアップロードファイルを取得する。引数にはパラメータ名を指定する。\n\n```java\npublic HttpResponse upload(HttpRequest request, ExecutionContext context) throws IOException {\n    List<PartInfo> partInfoList = request.getPart(\"uploadFile\");\n\n    if (partInfoList.isEmpty()) {\n        // アップロードファイルが指定されていなかった場合は業務エラー\n    }\n\n    InputStream file = partInfoList.get(0).getInputStream();\n    // 以下アップロードファイルを読み込み処理を行う。\n}\n```\n\nアップロードファイルの処理には :ref:`data_bind` が推奨。扱えない形式の場合は :ref:`data_format` を使用すること。\n\n> **補足**: バイナリファイル（画像等）の場合は以下のようにバイトデータを読み込むこと。\n>\n> ```java\n> File savedFile = partInfo.getSavedFile();\n> try {\n>     byte[] bytes = Files.readAllBytes(savedFile.toPath());\n> } catch (IOException e) {\n>     throw new RuntimeException(e);\n> }\n> ```"
+    "s1": "**クラス名**: `nablarch.fw.web.upload.MultipartHandler`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```\n一時保存先を指定する場合のみ:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n```",
+    "s3": "なし。",
+    "s4": "リクエストヘッダの `Content-Type` が `multipart/form-data` と一致する場合のみリクエストボディを解析する。それ以外の場合は何もせず後続ハンドラに委譲する。",
+    "s5": "一時保存先ディレクトリは [file_path_management](../libraries/libraries-file_path_management.json#s1) に設定する。論理名は `uploadFileTmpDir` とすること。未設定の場合はシステムプロパティ `java.io.tmpdir` の値を使用する。\n\n> **補足**: 保存先ディレクトリの値は環境ごとに異なるため、コンポーネント設定ファイルではなく環境設定ファイルへの設定を推奨する。詳細は [repository-environment_configuration](../libraries/libraries-repository.json) 参照。\n\n```xml\n<component name=\"filePathSetting\" class=\"nablarch.core.util.FilePathSetting\">\n  <property name=\"basePathSettings\">\n    <map>\n      <entry key=\"uploadFileTmpDir\" value=\"file:/var/nablarch/uploadTmpDir\" />\n    </map>\n  </property>\n</component>\n```",
+    "s6": "アップロードサイズの上限を超過した場合、413(Payload Too Large)をクライアントに返却する。設定省略時は無制限となる。DoS攻撃防止のため常に設定すること。\n\n> **補足**: アップロードサイズの上限はファイル単位ではなく1リクエスト全体の上限。複数ファイルの場合はファイルサイズ合計値（Content-Length）でチェックされる。ファイル単位でのサイズチェックが必要な場合はアクション側で実装すること。\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| contentLengthLimit | | | 無制限 | アップロードサイズ(Content-Length)の上限(バイト数) |\n\n```xml\n<component class=\"nablarch.fw.web.upload.MultipartHandler\" name=\"multipartHandler\">\n  <property name=\"uploadSettings\">\n    <component class=\"nablarch.fw.web.upload.UploadSettings\">\n      <property name=\"contentLengthLimit\" value=\"1000000\" />\n    </component>\n  </property>\n</component>\n```",
+    "s7": "上限を超えるファイルがアップロードされた場合、400(Bad Request)を返す。`maxFileCount` に0以上の値を設定するとその値が上限となる。負数を設定した場合は無制限。未設定時のデフォルトは-1（無制限）。\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| maxFileCount | | | -1 | 一度にアップロードできるファイル数の上限。0以上: 上限値、負数: 無制限 |\n\n```xml\n<component class=\"nablarch.fw.web.upload.MultipartHandler\" name=\"multipartHandler\">\n  <property name=\"uploadSettings\">\n    <component class=\"nablarch.fw.web.upload.UploadSettings\">\n      <property name=\"maxFileCount\" value=\"100\" />\n    </component>\n  </property>\n</component>\n```",
+    "s8": "クリーニング実行条件:\n1. ボディの解析中に例外が発生した場合\n2. ハンドラの復路で自動削除設定が有効な場合\n\n自動削除設定はデフォルトで有効。本番環境で安易に無効にすると大量の一時ファイルがディスク上に残り、ディスクフルの原因となるため注意すること。無効にする場合は `UploadSettings#autoCleaning` に `false` を設定する。",
+    "s9": "マルチパート解析エラーおよびファイルサイズ上限超過時に400(BadRequest)をクライアントに返却する。`web.xml` に400に対応したエラーページを設定すること。設定を省略した場合は、ウェブアプリケーションサーバが持つデフォルトのページなどがクライアントに返却される。\n\n> **重要**: このハンドラは [session_store_handler](handlers-SessionStoreHandler.json#s2) より手前に設定する必要がある。このため、後続に設定される [http_error_handler](handlers-HttpErrorHandler.json#s1) の :ref:`HttpErrorHandler_DefaultPage` は使用できない。\n\nマルチパート解析エラーが発生するケース:\n- アップロード中にクライアントからの切断要求があり、ボディ部が不完全な場合\n- バウンダリーが存在しない場合",
+    "s10": "`HttpRequest` の `HttpRequest#getPart` を呼び出してアップロードファイルを取得する。引数にはパラメータ名を指定する。\n\n```java\npublic HttpResponse upload(HttpRequest request, ExecutionContext context) throws IOException {\n    List<PartInfo> partInfoList = request.getPart(\"uploadFile\");\n\n    if (partInfoList.isEmpty()) {\n        // アップロードファイルが指定されていなかった場合は業務エラー\n    }\n\n    InputStream file = partInfoList.get(0).getInputStream();\n    // 以下アップロードファイルを読み込み処理を行う。\n}\n```\n\nアップロードファイルの処理には [data_bind](../libraries/libraries-data_bind.json#s1) が推奨。扱えない形式の場合は [data_format](../libraries/libraries-data_format.json#s1) を使用すること。\n\n> **補足**: バイナリファイル（画像等）の場合は以下のようにバイトデータを読み込むこと。\n>\n> ```java\n> File savedFile = partInfo.getSavedFile();\n> try {\n>     byte[] bytes = Files.readAllBytes(savedFile.toPath());\n> } catch (IOException e) {\n>     throw new RuntimeException(e);\n> }\n> ```"
   }
 }

@@ -4,10 +4,9 @@
   "official_doc_urls": [
     "https://nablarch.github.io/docs/LATEST/doc/application_framework/adaptors/webspheremq_adaptor.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "module-list",
+      "id": "s1",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-wmq-adaptor",
@@ -21,7 +20,7 @@
       ]
     },
     {
-      "id": "setup",
+      "id": "s2",
       "title": "本アダプタを使用するための設定",
       "hints": [
         "WmqMessagingProvider",
@@ -36,7 +35,7 @@
       ]
     },
     {
-      "id": "distributed-transaction",
+      "id": "s3",
       "title": "分散トランザクションを使用する",
       "hints": [
         "WmqXADbConnectionFactoryForXADataSource",
@@ -58,8 +57,8 @@
     }
   ],
   "sections": {
-    "module-list": "NablarchのMOMメッセージング機能でIBM MQを使用するためのアダプタを提供する。\n\n**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-wmq-adaptor</artifactId>\n</dependency>\n```\n\n> **重要**: テストではIBM MQ 9.3ライブラリを使用。バージョン変更時はプロジェクト側でテストを実施すること。",
-    "setup": "本アダプタを有効にする手順:\n\n1. `nablarch.integration.messaging.wmq.provider.WmqMessagingProvider`をコンポーネント設定ファイルに定義する。\n2. 手順1で設定した`WmqMessagingProvider`を:ref:`messaging_context_handler`に設定する。\n3. `WmqMessagingProvider`は初期化が必要なため、初期化対象のリストに設定する。\n\n```xml\n<component name=\"wmqMessagingProvider\"\n    class=\"nablarch.integration.messaging.wmq.provider.WmqMessagingProvider\">\n  <!-- 設定値はJavadocを参照 -->\n</component>\n\n<component class=\"nablarch.fw.messaging.handler.MessagingContextHandler\">\n  <property name=\"messagingProvider\" ref=\"wmqMessagingProvider\" />\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"wmqMessagingProvider\" />\n    </list>\n  </property>\n</component>\n```",
-    "distributed-transaction": "IBM MQをトランザクションマネージャとして分散トランザクションを実現する機能。外部システムとのメッセージ送受信での取り込み漏れや2重取り込みを防止する目的で使用する。\n\n設定手順:\n\n1. 分散トランザクション対応データソース（`javax.sql.XADataSource`を実装したクラス）を定義する。\n2. `nablarch.integration.messaging.wmq.xa.WmqXADbConnectionFactoryForXADataSource`を定義する。\n3. 手順2のファクトリクラスを:ref:`database_connection_management_handler`に設定する。\n4. `nablarch.integration.messaging.wmq.xa.WmqXATransactionFactory`を定義する。\n5. 手順4のファクトリクラスを:ref:`transaction_management_handler`に設定する。\n\n```xml\n<component name=\"xaDataSource\" class=\"oracle.jdbc.xa.client.OracleXADataSource\">\n  <!-- プロパティへの設定は省略 -->\n</component>\n\n<component name=\"xaConnectionFactory\"\n    class=\"nablarch.integration.messaging.wmq.xa.WmqXADbConnectionFactoryForXADataSource\">\n  <property name=\"xaDataSource\" ref=\"xaDataSource\" />\n</component>\n\n<component class=\"nablarch.common.handler.DbConnectionManagementHandler\">\n  <property name=\"connectionFactory\" ref=\"xaConnectionFactory\" />\n</component>\n\n<component name=\"xaTransactionFactory\"\n    class=\"nablarch.integration.messaging.wmq.xa.WmqXATransactionFactory\" />\n\n<component class=\"nablarch.common.handler.TransactionManagementHandler\">\n  <property name=\"transactionFactory\" ref=\"xaTransactionFactory\" />\n</component>\n```\n\n> **重要**: 分散トランザクションを使用するにはIBM MQに対するXAリソース・マネージャーの設定と、データベースへの権限付与が必要。詳細は使用製品のマニュアルを参照すること。"
+    "s1": "NablarchのMOMメッセージング機能でIBM MQを使用するためのアダプタを提供する。\n\n**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-wmq-adaptor</artifactId>\n</dependency>\n```\n\n> **重要**: テストではIBM MQ 9.3ライブラリを使用。バージョン変更時はプロジェクト側でテストを実施すること。",
+    "s2": "本アダプタを有効にする手順:\n\n1. `nablarch.integration.messaging.wmq.provider.WmqMessagingProvider`をコンポーネント設定ファイルに定義する。\n2. 手順1で設定した`WmqMessagingProvider`を[messaging_context_handler](../handlers/handlers-messaging_context_handler.json#s1)に設定する。\n3. `WmqMessagingProvider`は初期化が必要なため、初期化対象のリストに設定する。\n\n```xml\n<component name=\"wmqMessagingProvider\"\n    class=\"nablarch.integration.messaging.wmq.provider.WmqMessagingProvider\">\n  <!-- 設定値はJavadocを参照 -->\n</component>\n\n<component class=\"nablarch.fw.messaging.handler.MessagingContextHandler\">\n  <property name=\"messagingProvider\" ref=\"wmqMessagingProvider\" />\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"wmqMessagingProvider\" />\n    </list>\n  </property>\n</component>\n```",
+    "s3": "IBM MQをトランザクションマネージャとして分散トランザクションを実現する機能。外部システムとのメッセージ送受信での取り込み漏れや2重取り込みを防止する目的で使用する。\n\n設定手順:\n\n1. 分散トランザクション対応データソース（`javax.sql.XADataSource`を実装したクラス）を定義する。\n2. `nablarch.integration.messaging.wmq.xa.WmqXADbConnectionFactoryForXADataSource`を定義する。\n3. 手順2のファクトリクラスを[database_connection_management_handler](../handlers/handlers-database_connection_management_handler.json#s1)に設定する。\n4. `nablarch.integration.messaging.wmq.xa.WmqXATransactionFactory`を定義する。\n5. 手順4のファクトリクラスを[transaction_management_handler](../handlers/handlers-transaction_management_handler.json#s1)に設定する。\n\n```xml\n<component name=\"xaDataSource\" class=\"oracle.jdbc.xa.client.OracleXADataSource\">\n  <!-- プロパティへの設定は省略 -->\n</component>\n\n<component name=\"xaConnectionFactory\"\n    class=\"nablarch.integration.messaging.wmq.xa.WmqXADbConnectionFactoryForXADataSource\">\n  <property name=\"xaDataSource\" ref=\"xaDataSource\" />\n</component>\n\n<component class=\"nablarch.common.handler.DbConnectionManagementHandler\">\n  <property name=\"connectionFactory\" ref=\"xaConnectionFactory\" />\n</component>\n\n<component name=\"xaTransactionFactory\"\n    class=\"nablarch.integration.messaging.wmq.xa.WmqXATransactionFactory\" />\n\n<component class=\"nablarch.common.handler.TransactionManagementHandler\">\n  <property name=\"transactionFactory\" ref=\"xaTransactionFactory\" />\n</component>\n```\n\n> **重要**: 分散トランザクションを使用するにはIBM MQに対するXAリソース・マネージャーの設定と、データベースへの権限付与が必要。詳細は使用製品のマニュアルを参照すること。"
   }
 }

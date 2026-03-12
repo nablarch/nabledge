@@ -6,10 +6,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/interceptor/InjectForm.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnError.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "interceptor-class-name",
+      "id": "s1",
       "title": "インターセプタクラス名",
       "hints": [
         "InjectForm",
@@ -18,7 +17,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s2",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-fw-web",
@@ -30,7 +29,7 @@
       ]
     },
     {
-      "id": "usage",
+      "id": "s3",
       "title": "InjectFormを使用する",
       "hints": [
         "@InjectForm",
@@ -52,7 +51,7 @@
       ]
     },
     {
-      "id": "validation-error-transition",
+      "id": "s4",
       "title": "バリデーションエラー時の遷移先を指定する",
       "hints": [
         "@OnError",
@@ -65,7 +64,7 @@
       ]
     },
     {
-      "id": "bean-validation-group",
+      "id": "s5",
       "title": "Bean Validationのグループを指定する",
       "hints": [
         "@InjectForm",
@@ -78,10 +77,10 @@
     }
   ],
   "sections": {
-    "interceptor-class-name": "**クラス**: `nablarch.common.web.interceptor.InjectForm`",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n\n<!-- 入力値チェックにBeanValidationを使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-validation-ee</artifactId>\n</dependency>\n\n<!-- 入力値チェックにNablarchValidationを使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-validation</artifactId>\n</dependency>\n```",
-    "usage": "業務アクションのリクエスト処理メソッドに :java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` アノテーションを設定することで有効になる。\n\n- `prefix` で指定したプレフィックスから始まるリクエストパラメータに対してバリデーションが実行される\n- バリデーション成功時、リクエストスコープに :java:extdoc:`InjectForm#form <nablarch.common.web.interceptor.InjectForm.form()>` で指定したクラスのオブジェクトが格納される\n- リクエストスコープの変数名は :java:extdoc:`InjectForm#name <nablarch.common.web.interceptor.InjectForm.name()>` で指定。未指定の場合は `form` となる\n- 業務アクションが実行された場合には、必ずリクエストスコープからオブジェクトが取得できる\n\n**入力画面のhtml例**:\n\n```html\n<!-- バリデーション対象外 -->\n<input name=\"flag\" type=\"hidden\" />\n\n<!-- バリデーション対象 -->\n<input name=\"form.userId\" type=\"text\" />\n<input name=\"form.password\" type=\"password\" />\n```\n\n**業務アクションの例**:\n\n```java\n@InjectForm(form = UserForm.class, prefix = \"form\", validate = \"register\")\n@OnError(type = ApplicationException.class, path = \"forward://registerForm.jsp\")\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n  UserForm form = ctx.getRequestScopedVar(\"form\");\n  // formを元に業務処理を行う。\n}\n```\n\n> **補足**: :ref:`bean_validation` を使用する場合、バリデーションエラー時にもリクエストスコープからオブジェクトを取得可能となるよう設定できる。詳細は :ref:`bean_validation_onerror` を参照。",
-    "validation-error-transition": "バリデーションエラー発生時の遷移先は :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` アノテーションで指定する。:java:extdoc:`InjectForm <nablarch.common.web.interceptor.InjectForm>` を設定した業務アクションのメソッドに対して設定する。\n\n> **重要**: :java:extdoc:`OnError <nablarch.fw.web.interceptor.OnError>` が設定されていない場合、バリデーションエラーがシステムエラー扱いとなる。\n\nバリデーションエラー発生時に遷移先画面で表示するデータを取得したい場合は、:ref:`on_error-forward` を参照。",
-    "bean-validation-group": ":ref:`bean_validation` を使用する場合、:java:extdoc:`InjectForm#validationGroup <nablarch.common.web.interceptor.InjectForm.validationGroup()>` にグループを指定できる。\n\n```java\n// UserFormクラス内で設定されたバリデーションルールのうち、Createグループに所属するルールのみを使用して検証する。\n@InjectForm(form = UserForm.class, prefix = \"form\", validationGroup = Create.class)\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n  UserForm form = ctx.getRequestScopedVar(\"form\");\n}\n```"
+    "s1": "**クラス**: `nablarch.common.web.interceptor.InjectForm`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n\n<!-- 入力値チェックにBeanValidationを使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-validation-ee</artifactId>\n</dependency>\n\n<!-- 入力値チェックにNablarchValidationを使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-validation</artifactId>\n</dependency>\n```",
+    "s3": "業務アクションのリクエスト処理メソッドに `InjectForm` アノテーションを設定することで有効になる。\n\n- `prefix` で指定したプレフィックスから始まるリクエストパラメータに対してバリデーションが実行される\n- バリデーション成功時、リクエストスコープに `InjectForm#form` で指定したクラスのオブジェクトが格納される\n- リクエストスコープの変数名は `InjectForm#name` で指定。未指定の場合は `form` となる\n- 業務アクションが実行された場合には、必ずリクエストスコープからオブジェクトが取得できる\n\n**入力画面のhtml例**:\n\n```html\n<!-- バリデーション対象外 -->\n<input name=\"flag\" type=\"hidden\" />\n\n<!-- バリデーション対象 -->\n<input name=\"form.userId\" type=\"text\" />\n<input name=\"form.password\" type=\"password\" />\n```\n\n**業務アクションの例**:\n\n```java\n@InjectForm(form = UserForm.class, prefix = \"form\", validate = \"register\")\n@OnError(type = ApplicationException.class, path = \"forward://registerForm.jsp\")\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n  UserForm form = ctx.getRequestScopedVar(\"form\");\n  // formを元に業務処理を行う。\n}\n```\n\n> **補足**: [bean_validation](../libraries/libraries-bean_validation.json#s1) を使用する場合、バリデーションエラー時にもリクエストスコープからオブジェクトを取得可能となるよう設定できる。詳細は [bean_validation_onerror](../libraries/libraries-bean_validation.json#s14) を参照。",
+    "s4": "バリデーションエラー発生時の遷移先は `OnError` アノテーションで指定する。`InjectForm` を設定した業務アクションのメソッドに対して設定する。\n\n> **重要**: `OnError` が設定されていない場合、バリデーションエラーがシステムエラー扱いとなる。\n\nバリデーションエラー発生時に遷移先画面で表示するデータを取得したい場合は、[on_error-forward](handlers-on_error.json#s3) を参照。",
+    "s5": "[bean_validation](../libraries/libraries-bean_validation.json#s1) を使用する場合、`InjectForm#validationGroup` にグループを指定できる。\n\n```java\n// UserFormクラス内で設定されたバリデーションルールのうち、Createグループに所属するルールのみを使用して検証する。\n@InjectForm(form = UserForm.class, prefix = \"form\", validationGroup = Create.class)\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n  UserForm form = ctx.getRequestScopedVar(\"form\");\n}\n```"
   }
 }

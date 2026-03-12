@@ -4,10 +4,9 @@
   "official_doc_urls": [
     "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/session_store/create_example.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "input-screen-initial-display",
+      "id": "s1",
       "title": "入力画面の初期表示",
       "hints": [
         "SessionUtil",
@@ -19,7 +18,7 @@
       ]
     },
     {
-      "id": "input-to-confirm-screen",
+      "id": "s2",
       "title": "入力画面から確認画面へ遷移",
       "hints": [
         "SessionUtil",
@@ -33,7 +32,7 @@
       ]
     },
     {
-      "id": "confirm-to-input-screen",
+      "id": "s3",
       "title": "確認画面から入力画面へ戻る",
       "hints": [
         "SessionUtil",
@@ -48,7 +47,7 @@
       ]
     },
     {
-      "id": "registration-execution",
+      "id": "s4",
       "title": "登録処理を実行",
       "hints": [
         "SessionUtil",
@@ -62,9 +61,9 @@
     }
   ],
   "sections": {
-    "input-screen-initial-display": "ブラウザを直接閉じた場合などにセッションが残っている場合があるため、初期表示時にセッションを削除する。\n\n```java\nSessionUtil.delete(ctx, \"project\");\n```",
-    "input-to-confirm-screen": "リクエストスコープから入力情報を取得し、FormからEntityへ変換してセッションストアに保存する。\n\n```java\nProjectForm form = context.getRequestScopedVar(\"form\");\nProject project = BeanUtil.createAndCopy(Project.class, form);\nSessionUtil.put(ctx, \"project\", project);\n```",
-    "confirm-to-input-screen": "セッションストアから入力情報を取得し、EntityからFormへ変換してリクエストスコープに設定後、セッションストアから削除する。\n\n```java\nProject project = SessionUtil.get(ctx, \"project\");\nProjectForm form = BeanUtil.createAndCopy(ProjectForm.class, project);\ncontext.setRequestScopedVar(\"form\", form);\nSessionUtil.delete(ctx, \"project\");\n```",
-    "registration-execution": "セッションストアから入力情報を取得し、登録処理後にセッションストアから削除する。\n\n```java\nProject project = SessionUtil.get(ctx, \"project\");\n// 登録処理は省略\nSessionUtil.delete(ctx, \"project\");\n```"
+    "s1": "ブラウザを直接閉じた場合などにセッションが残っている場合があるため、初期表示時にセッションを削除する。\n\n```java\nSessionUtil.delete(ctx, \"project\");\n```",
+    "s2": "リクエストスコープから入力情報を取得し、FormからEntityへ変換してセッションストアに保存する。\n\n```java\nProjectForm form = context.getRequestScopedVar(\"form\");\nProject project = BeanUtil.createAndCopy(Project.class, form);\nSessionUtil.put(ctx, \"project\", project);\n```",
+    "s3": "セッションストアから入力情報を取得し、EntityからFormへ変換してリクエストスコープに設定後、セッションストアから削除する。\n\n```java\nProject project = SessionUtil.get(ctx, \"project\");\nProjectForm form = BeanUtil.createAndCopy(ProjectForm.class, project);\ncontext.setRequestScopedVar(\"form\", form);\nSessionUtil.delete(ctx, \"project\");\n```",
+    "s4": "セッションストアから入力情報を取得し、登録処理後にセッションストアから削除する。\n\n```java\nProject project = SessionUtil.get(ctx, \"project\");\n// 登録処理は省略\nSessionUtil.delete(ctx, \"project\");\n```"
   }
 }

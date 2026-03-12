@@ -71,7 +71,7 @@ SqlResultSet searchResult = searchService.selectByCondition(condition);
 PerformanceLogUtil.end(point, String.valueOf(searchResult.size()));
 ```
 
-> **重要**: `PerformanceLogUtil` は測定対象を :ref:`実行時ID <log-execution_id>` ＋ポイント名で一意に識別する。再帰呼び出しの中で使用すると計測できないため注意すること。
+> **重要**: `PerformanceLogUtil` は測定対象を [実行時ID](libraries-log.md) ＋ポイント名で一意に識別する。再帰呼び出しの中で使用すると計測できないため注意すること。
 
 <details>
 <summary>keywords</summary>
@@ -82,7 +82,7 @@ PerformanceLogUtil, startメソッド, endメソッド, パフォーマンス計
 
 ## パフォーマンスログの設定
 
-設定は :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
+設定は [log-app_log_setting](libraries-log.md) で説明したプロパティファイルに行う。
 
 | プロパティ名 | 必須 | デフォルト値 | 説明 |
 |---|---|---|---|
@@ -133,7 +133,7 @@ PerformanceLogFormatter, performanceLogFormatter.className, performanceLogFormat
 
 ## JSON形式の構造化ログとして出力する
 
-:ref:`log-json_log_setting` 設定でJSON形式出力を有効にした場合、`PerformanceLogFormatter` ではパフォーマンスログの各項目はmessageの値に文字列として出力される。各項目をJSONの値として出力するには `PerformanceJsonLogFormatter` を使用する。設定は :ref:`log-app_log_setting` のプロパティファイルに行う。
+[log-json_log_setting](libraries-log.md) 設定でJSON形式出力を有効にした場合、`PerformanceLogFormatter` ではパフォーマンスログの各項目はmessageの値に文字列として出力される。各項目をJSONの値として出力するには `PerformanceJsonLogFormatter` を使用する。設定は [log-app_log_setting](libraries-log.md) のプロパティファイルに行う。
 
 | プロパティ名 | 必須 | デフォルト値 | 説明 |
 |---|---|---|---|
@@ -141,7 +141,7 @@ PerformanceLogFormatter, performanceLogFormatter.className, performanceLogFormat
 | performanceLogFormatter.targets | | 全項目 | 出力項目（カンマ区切り）: point, result, startTime, endTime, executionTime, maxMemory, startFreeMemory, startUsedMemory, endFreeMemory, endUsedMemory |
 | performanceLogFormatter.datePattern | | yyyy-MM-dd HH:mm:ss.SSS | 開始・終了日時のパターン（SimpleDateFormat構文）。 |
 | performanceLogFormatter.targetPoints | | | 出力対象ポイント名（カンマ区切り）。 |
-| performanceLogFormatter.structuredMessagePrefix | | $JSON$ | `JsonLogFormatter` がメッセージをJSONデータとして処理するためのマーカー文字列。変更する場合は :ref:`log-basic_setting` のLogWriterの `structuredMessagePrefix` にも同じ値を設定すること。 |
+| performanceLogFormatter.structuredMessagePrefix | | $JSON$ | `JsonLogFormatter` がメッセージをJSONデータとして処理するためのマーカー文字列。変更する場合は [log-basic_setting](libraries-log.md) のLogWriterの `structuredMessagePrefix` にも同じ値を設定すること。 |
 
 設定例:
 ```properties

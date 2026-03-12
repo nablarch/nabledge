@@ -21,7 +21,7 @@
 
 運用担当者向けのログはログカテゴリ名 `operator` で出力する。
 
-:ref:`log` を使用した場合の `log.properties` 設定例:
+[log](../../component/libraries/libraries-log.md) を使用した場合の `log.properties` 設定例:
 
 ```properties
 # operation log file
@@ -40,7 +40,7 @@ loggers.OPERATOR.level=INFO
 loggers.OPERATOR.writerNames=operationLog
 ```
 
-> **注意**: :ref:`log_adaptor` を使用している場合は、アダプタに対応したログライブラリのマニュアルを参照すること。
+> **注意**: [log_adaptor](../../component/adapters/adapters-log_adaptor.md) を使用している場合は、アダプタに対応したログライブラリのマニュアルを参照すること。
 
 <details>
 <summary>keywords</summary>

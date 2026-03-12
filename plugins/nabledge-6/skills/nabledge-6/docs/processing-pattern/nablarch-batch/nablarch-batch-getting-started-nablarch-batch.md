@@ -46,9 +46,9 @@ ZIP_CODE_DATA, TRUNCATE, ImportZipCodeFileAction, ImportZipCodeFile, import-zip-
 **クラス**: `ZipCodeForm`
 **アノテーション**: `Csv`, `CsvFormat`, `LineNumber`
 
-- :ref:`data_bind` でCSVをバインドするフォームに `@Csv` と `@CsvFormat` を付与する
+- [data_bind](../../component/libraries/libraries-data_bind.md) でCSVをバインドするフォームに `@Csv` と `@CsvFormat` を付与する
 - `@Csv` の `type` 属性に `CsvType.CUSTOM` を指定し、`@CsvFormat` の `quoteMode` 属性に `QuoteMode.NORMAL` を指定する
-- :ref:`bean_validation` 実施のためバリデーションアノテーション（`@Domain`, `@Required`）を付与する
+- [bean_validation](../../component/libraries/libraries-bean_validation.md) 実施のためバリデーションアノテーション（`@Domain`, `@Required`）を付与する
 - 行数プロパティのゲッタに `@LineNumber` を付与すると対象データの行番号が自動設定される
 
 ## データリーダの作成
@@ -80,7 +80,7 @@ ZipCodeForm, ZipCodeFileReader, ObjectMapperIterator, ObjectMapperFactory, FileP
 - `createReader`: 使用するデータリーダクラス（`ZipCodeFileReader`）のインスタンスを返す
 - `@ValidateData` インターセプタにより、`handle` メソッドには常にバリデーション済みの入力データが引き渡される
 
-> **補足**: :ref:`bean_validation` のロジックはバッチ間で差がないため、インターセプタ（`@ValidateData`）を作成してバリデーション処理を共通化できる
+> **補足**: [bean_validation](../../component/libraries/libraries-bean_validation.md) のロジックはバッチ間で差がないため、インターセプタ（`@ValidateData`）を作成してバリデーション処理を共通化できる
 
 <details>
 <summary>keywords</summary>

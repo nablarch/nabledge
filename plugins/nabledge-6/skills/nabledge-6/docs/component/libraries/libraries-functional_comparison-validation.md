@@ -34,7 +34,7 @@
 
 [7] Bean Validationではプロパティの型は全てStringとして定義するため型変換は行わない。型変換が必要な場合はバリデーション実施後に `BeanUtil` を使って型変換する。
 
-[8] 正規化はBean Validationの機能ではなくハンドラとして提供している。正規化が必要な場合は :ref:`normalize_handler` を使用する。
+[8] 正規化はBean Validationの機能ではなくハンドラとして提供している。正規化が必要な場合は [normalize_handler](../handlers/handlers-normalize_handler.md) を使用する。
 
 <details>
 <summary>keywords</summary>

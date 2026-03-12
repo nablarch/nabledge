@@ -4,10 +4,9 @@
   "official_doc_urls": [
     "https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/08_TestTools/02_MasterDataSetup/02_ConfigMasterDataSetupTool.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "prerequisites",
+      "id": "s1",
       "title": "前提事項",
       "hints": [
         "前提条件",
@@ -21,7 +20,7 @@
       ]
     },
     {
-      "id": "installation-setup",
+      "id": "s2",
       "title": "提供方法・セットアップ手順",
       "hints": [
         "nablarch-testing jar",
@@ -36,7 +35,7 @@
       ]
     },
     {
-      "id": "properties-file-configuration",
+      "id": "s3",
       "title": "プロパティファイルの書き換え",
       "hints": [
         "masterdata.test.backup-schema",
@@ -51,7 +50,7 @@
       ]
     },
     {
-      "id": "ant-view-launch",
+      "id": "s4",
       "title": "Antビュー起動",
       "hints": [
         "Eclipse連携",
@@ -62,7 +61,7 @@
       ]
     },
     {
-      "id": "build-file-registration",
+      "id": "s5",
       "title": "ビルドファイル登録",
       "hints": [
         "master_data-build.xml",
@@ -74,10 +73,10 @@
     }
   ],
   "sections": {
-    "prerequisites": "マスタデータ投入ツールを使用するには以下の前提条件を満たしている必要がある。\n\n- 以下のツールがインストール済みであること\n  - Eclipse\n  - Maven\n- Nablarchのアーキタイプから生成されたプロジェクトであること\n- テーブルが作成済みであること\n- バックアップ用スキーマにテーブルが作成済みであること\n\n> **注意**: バックアップ用スキーマおよびそのテーブルの作成については、マスタデータ自動復旧機能ガイドの `:ref:master_data_backup_settings` を参照。",
-    "installation-setup": "本ツールは `nablarch-testing-XXX.jar` にて提供される。\n\nツール使用前に、プロジェクトのユニットテストと同じDB設定を使用できるようにするため、プロジェクトのコンパイルとツール実行に必要なjarファイルのダウンロードを行う。以下のコマンドを実行する。\n\n```text\nmvn compile\nmvn dependency:copy-dependencies -DoutputDirectory=lib\n```\n\n続いて `master-data-setup-tool.zip` をダウンロードし、プロジェクトのディレクトリ（pom.xmlが存在するディレクトリ）にディレクトリ付きで展開する。",
-    "properties-file-configuration": "`master-data-setup-tool.zip` に含まれる設定ファイル:\n\n| ファイル名 | 説明 |\n|---|---|\n| tool/db/data/master_data-build.properties | 環境設定用プロパティファイル |\n| tool/db/data/master_data-build.xml | Antビルドファイル |\n| tool/db/data/master_data-log.properties | ログ出力プロパティファイル |\n| tool/db/data/master_data-app-log.properties | ログ出力プロパティファイル |\n| tool/db/data/MASTER_DATA.xlsx | マスタデータファイル |\n\n本ツールを実行する前に以下のコマンドを実行する。\n\n```text\nmvn compile\nmvn dependency:copy-dependencies -DoutputDirectory=lib\n```\n\n`master_data-build.properties` にマスタデータ自動復旧機能が使用するバックアップスキーマ名を設定する:\n\n```bash\n# テスト用マスタデータバックアップスキーマ名\nmasterdata.test.backup-schema=nablarch_test_master\n```\n\nその他の設定値はディレクトリ構造が変わらない限り修正不要。",
-    "ant-view-launch": "Eclipse ツールバーから ウィンドウ(Window)→設定(Show View) を選択し、Antビューを開く。\n\n![Antビューを開く操作画面](assets/testing-framework-02_ConfigMasterDataSetupTool/open_ant_view.png)",
-    "build-file-registration": "1. Antビューで＋印のアイコンを押下し、ビルドスクリプトを選択する。\n2. Antビルドファイル（`master_data-build.xml`）を選択する。\n3. Antビューに登録したビルドファイルが表示されていることを確認する。\n\n![ビルドファイル登録操作](assets/testing-framework-02_ConfigMasterDataSetupTool/register_build_file.png)\n\n![ビルドファイル選択画面](assets/testing-framework-02_ConfigMasterDataSetupTool/select_build_file.png)\n\n![登録済みビルドファイルの確認](assets/testing-framework-02_ConfigMasterDataSetupTool/build_file_in_view.png)"
+    "s1": "マスタデータ投入ツールを使用するには以下の前提条件を満たしている必要がある。\n\n- 以下のツールがインストール済みであること\n  - Eclipse\n  - Maven\n- Nablarchのアーキタイプから生成されたプロジェクトであること\n- テーブルが作成済みであること\n- バックアップ用スキーマにテーブルが作成済みであること\n\n> **注意**: バックアップ用スキーマおよびそのテーブルの作成については、マスタデータ自動復旧機能ガイドの `:ref:master_data_backup_settings` を参照。",
+    "s2": "本ツールは `nablarch-testing-XXX.jar` にて提供される。\n\nツール使用前に、プロジェクトのユニットテストと同じDB設定を使用できるようにするため、プロジェクトのコンパイルとツール実行に必要なjarファイルのダウンロードを行う。以下のコマンドを実行する。\n\n```text\nmvn compile\nmvn dependency:copy-dependencies -DoutputDirectory=lib\n```\n\n続いて `master-data-setup-tool.zip` をダウンロードし、プロジェクトのディレクトリ（pom.xmlが存在するディレクトリ）にディレクトリ付きで展開する。",
+    "s3": "`master-data-setup-tool.zip` に含まれる設定ファイル:\n\n| ファイル名 | 説明 |\n|---|---|\n| tool/db/data/master_data-build.properties | 環境設定用プロパティファイル |\n| tool/db/data/master_data-build.xml | Antビルドファイル |\n| tool/db/data/master_data-log.properties | ログ出力プロパティファイル |\n| tool/db/data/master_data-app-log.properties | ログ出力プロパティファイル |\n| tool/db/data/MASTER_DATA.xlsx | マスタデータファイル |\n\n本ツールを実行する前に以下のコマンドを実行する。\n\n```text\nmvn compile\nmvn dependency:copy-dependencies -DoutputDirectory=lib\n```\n\n`master_data-build.properties` にマスタデータ自動復旧機能が使用するバックアップスキーマ名を設定する:\n\n```bash\n# テスト用マスタデータバックアップスキーマ名\nmasterdata.test.backup-schema=nablarch_test_master\n```\n\nその他の設定値はディレクトリ構造が変わらない限り修正不要。",
+    "s4": "Eclipse ツールバーから ウィンドウ(Window)→設定(Show View) を選択し、Antビューを開く。\n\n![Antビューを開く操作画面](assets/testing-framework-02_ConfigMasterDataSetupTool/open_ant_view.png)",
+    "s5": "1. Antビューで＋印のアイコンを押下し、ビルドスクリプトを選択する。\n2. Antビルドファイル（`master_data-build.xml`）を選択する。\n3. Antビューに登録したビルドファイルが表示されていることを確認する。\n\n![ビルドファイル登録操作](assets/testing-framework-02_ConfigMasterDataSetupTool/register_build_file.png)\n\n![ビルドファイル選択画面](assets/testing-framework-02_ConfigMasterDataSetupTool/select_build_file.png)\n\n![登録済みビルドファイルの確認](assets/testing-framework-02_ConfigMasterDataSetupTool/build_file_in_view.png)"
   }
 }

@@ -56,16 +56,7 @@ sqlLogFormatter.startExecuteBatchFormat=$methodName$\n\tSQL = [$sql$]\n\tadditio
 sqlLogFormatter.endExecuteBatchFormat=$methodName$\n\texecute_time(ms) = [$executeTime$] batch_count = [$updateCount$]
 ```
 
-<details>
-<summary>keywords</summary>
-
-SQLログ, SQLログ出力方針, SQL文実行時間, SqlLogFormatter, log.properties, app-log.properties, DEBUGレベル, SQLパラメータ, バインド変数, FileLogWriter, BasicLogFormatter, SqlPStatement, SqlStatement, sqlLogFormatter.startRetrieveFormat, sqlLogFormatter.endRetrieveFormat, sqlLogFormatter.startExecuteFormat, sqlLogFormatter.endExecuteFormat, sqlLogFormatter.startExecuteQueryFormat, sqlLogFormatter.endExecuteQueryFormat, sqlLogFormatter.startExecuteUpdateFormat, sqlLogFormatter.endExecuteUpdateFormat, sqlLogFormatter.startExecuteBatchFormat, sqlLogFormatter.endExecuteBatchFormat
-
-</details>
-
-## SQLログの設定
-
-設定は :ref:`log-app_log_setting` のプロパティファイルに行う。
+設定は [log-app_log_setting](libraries-log.md) のプロパティファイルに行う。
 
 **クラス**: `nablarch.core.db.statement.SqlLogFormatter`
 
@@ -102,13 +93,13 @@ sqlLogFormatter.endExecuteBatchFormat=$methodName$\n\texe:$executeTime$ms count:
 <details>
 <summary>keywords</summary>
 
-SqlLogFormatter, SqlPStatement, SqlStatement, sqlLogFormatter.className, sqlLogFormatter.startRetrieveFormat, sqlLogFormatter.endRetrieveFormat, sqlLogFormatter.startExecuteFormat, sqlLogFormatter.endExecuteFormat, sqlLogFormatter.startExecuteQueryFormat, sqlLogFormatter.endExecuteQueryFormat, sqlLogFormatter.startExecuteUpdateFormat, sqlLogFormatter.endExecuteUpdateFormat, sqlLogFormatter.startExecuteBatchFormat, sqlLogFormatter.endExecuteBatchFormat, SQLログ設定, ログフォーマット, プレースホルダ
+SQLログ, SQLログ出力方針, SQL文実行時間, SqlLogFormatter, log.properties, app-log.properties, DEBUGレベル, SQLパラメータ, バインド変数, FileLogWriter, BasicLogFormatter, SqlPStatement, SqlStatement, sqlLogFormatter.startRetrieveFormat, sqlLogFormatter.endRetrieveFormat, sqlLogFormatter.startExecuteFormat, sqlLogFormatter.endExecuteFormat, sqlLogFormatter.startExecuteQueryFormat, sqlLogFormatter.endExecuteQueryFormat, sqlLogFormatter.startExecuteUpdateFormat, sqlLogFormatter.endExecuteUpdateFormat, sqlLogFormatter.startExecuteBatchFormat, sqlLogFormatter.endExecuteBatchFormat, sqlLogFormatter.className, SQLログ設定, ログフォーマット, プレースホルダ
 
 </details>
 
 ## JSON形式の構造化ログとして出力する
 
-:ref:`log-json_log_setting` でJSON形式ログを出力する場合、`SqlLogFormatter` ではSQLログの各項目はmessageの値に文字列として出力される。各項目もJSONの値として出力するには `SqlJsonLogFormatter` を使用する。設定は :ref:`log-app_log_setting` のプロパティファイルに行う。
+[log-json_log_setting](libraries-log.md) でJSON形式ログを出力する場合、`SqlLogFormatter` ではSQLログの各項目はmessageの値に文字列として出力される。各項目もJSONの値として出力するには `SqlJsonLogFormatter` を使用する。設定は [log-app_log_setting](libraries-log.md) のプロパティファイルに行う。
 
 **クラス**: `nablarch.core.db.statement.SqlJsonLogFormatter`
 
@@ -125,7 +116,7 @@ SqlLogFormatter, SqlPStatement, SqlStatement, sqlLogFormatter.className, sqlLogF
 | sqlLogFormatter.endExecuteUpdateTargets | | 全項目 | executeUpdate終了時の出力項目（カンマ区切り）。指定可能: methodName, executeTime, updateCount |
 | sqlLogFormatter.startExecuteBatchTargets | | 全項目 | executeBatch開始時の出力項目（カンマ区切り）。指定可能: methodName, sql, additionalInfo |
 | sqlLogFormatter.endExecuteBatchTargets | | 全項目 | executeBatch終了時の出力項目（カンマ区切り）。指定可能: methodName, executeTime, batchCount |
-| sqlLogFormatter.structuredMessagePrefix | | `"$JSON$"` | JSON形式であることを識別するマーカー文字列。`JsonLogFormatter` に設定したマーカー文字列と一致させること。変更する場合はLogWriterの `structuredMessagePrefix` プロパティにも同じ値を設定すること（:ref:`log-basic_setting` 参照） |
+| sqlLogFormatter.structuredMessagePrefix | | `"$JSON$"` | JSON形式であることを識別するマーカー文字列。`JsonLogFormatter` に設定したマーカー文字列と一致させること。変更する場合はLogWriterの `structuredMessagePrefix` プロパティにも同じ値を設定すること（[log-basic_setting](libraries-log.md) 参照） |
 
 設定例:
 

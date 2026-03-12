@@ -5,10 +5,9 @@
     "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/post_resubmit_prevent_handler.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/post/PostResubmitPreventHandler.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "handler-class",
+      "id": "s1",
       "title": "ハンドラクラス名",
       "hints": [
         "PostResubmitPreventHandler",
@@ -21,7 +20,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s2",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-fw-web",
@@ -30,7 +29,7 @@
       ]
     },
     {
-      "id": "constraints",
+      "id": "s3",
       "title": "制約",
       "hints": [
         "nablarch_tag_handler",
@@ -42,7 +41,7 @@
       ]
     },
     {
-      "id": "usage",
+      "id": "s4",
       "title": "ポスト再送信防止の使用方法",
       "hints": [
         "preventPostResubmit",
@@ -52,7 +51,7 @@
       ]
     },
     {
-      "id": "forward-path-mapping",
+      "id": "s5",
       "title": "リクエスト先と遷移先パスのマッピングを行う",
       "hints": [
         "forwardPathMapping",
@@ -64,10 +63,10 @@
     }
   ],
   "sections": {
-    "handler-class": "POSTで受け付けたリクエストに対して、リダイレクトを使用し再度リクエストを受け付けなおす処理を行うハンドラ。ブラウザ上のリロード処理などによる誤操作による意図しないPOSTリクエストの再送を防ぐ目的で使用する。\n\n> **重要**: 新規プロジェクトでの使用は推奨しない。\n\n**クラス名**: :java:extdoc:`nablarch.fw.web.post.PostResubmitPreventHandler`\n\nハンドラの動作:\n1. POST再送信防止対象（POSTかつリクエストパラメータに`POST_RESUBMIT_PREVENT_PARAM`が含まれる）の場合: リクエストパラメータをセッションに保存してリダイレクト先にリダイレクトする（`n:form`タグの`preventPostResubmit=\"true\"`設定で`POST_RESUBMIT_PREVENT_PARAM`が自動付与される）。\n2. POST再送信防止によるGETリクエストの場合: セッションからリクエストパラメータを復元してセッションから削除する。セッションにパラメータが存在しない場合は再送信として所定のエラー画面を表示する。",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
-    "constraints": "> **重要**: 大量のPOSTリクエスト送信時にPOST情報がセッションに蓄積してメモリを圧迫する。連続POSTによるDoS攻撃に対して脆弱。代替手段として業務アクションでリダイレクトのレスポンスを返すことを検討すること。\n\n**配置順序**: :ref:`nablarch_tag_handler` より前に配置すること。カスタムタグ制御ハンドラによる暗号化パラメータの復元前にリダイレクトを行う必要があるため。",
-    "usage": "1. 本ハンドラをハンドラキューに設定する。\n2. JSPの`n:form`タグの`preventPostResubmit`属性を`true`に設定する。",
-    "forward-path-mapping": "リクエストIDの前方一致で遷移先パスをマッピングする。複数のキーがマッチした場合、最も文字数が長いキーに対応するパスが選択される。\n\n**プロパティ**: `forwardPathMapping`（Map型）\n\n```xml\n<component name=\"postResubmitPreventHandler\"\n    class=\"nablarch.fw.web.post.PostResubmitPreventHandler\">\n  <property name=\"forwardPathMapping\">\n    <map>\n      <entry key=\"/\"  value=\"redirect:///action/error/index\" />\n      <entry key=\"/action/func1/\" value=\"redirect:///action/error/index2\" />\n      <entry key=\"/action/func2/\" value=\"/error.jsp\" />\n    </map>\n  </property>\n</component>\n```\n\n例: リクエストID「/action/func1/index」は`/`と`/action/func1/`の両方にマッチするが、より長いキー`/action/func1/`に対応する`redirect:///action/error/index2`が選択される。"
+    "s1": "POSTで受け付けたリクエストに対して、リダイレクトを使用し再度リクエストを受け付けなおす処理を行うハンドラ。ブラウザ上のリロード処理などによる誤操作による意図しないPOSTリクエストの再送を防ぐ目的で使用する。\n\n> **重要**: 新規プロジェクトでの使用は推奨しない。\n\n**クラス名**: `PostResubmitPreventHandler`\n\nハンドラの動作:\n1. POST再送信防止対象（POSTかつリクエストパラメータに`POST_RESUBMIT_PREVENT_PARAM`が含まれる）の場合: リクエストパラメータをセッションに保存してリダイレクト先にリダイレクトする（`n:form`タグの`preventPostResubmit=\"true\"`設定で`POST_RESUBMIT_PREVENT_PARAM`が自動付与される）。\n2. POST再送信防止によるGETリクエストの場合: セッションからリクエストパラメータを復元してセッションから削除する。セッションにパラメータが存在しない場合は再送信として所定のエラー画面を表示する。",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "s3": "> **重要**: 大量のPOSTリクエスト送信時にPOST情報がセッションに蓄積してメモリを圧迫する。連続POSTによるDoS攻撃に対して脆弱。代替手段として業務アクションでリダイレクトのレスポンスを返すことを検討すること。\n\n**配置順序**: [nablarch_tag_handler](handlers-nablarch_tag_handler.json#s1) より前に配置すること。カスタムタグ制御ハンドラによる暗号化パラメータの復元前にリダイレクトを行う必要があるため。",
+    "s4": "1. 本ハンドラをハンドラキューに設定する。\n2. JSPの`n:form`タグの`preventPostResubmit`属性を`true`に設定する。",
+    "s5": "リクエストIDの前方一致で遷移先パスをマッピングする。複数のキーがマッチした場合、最も文字数が長いキーに対応するパスが選択される。\n\n**プロパティ**: `forwardPathMapping`（Map型）\n\n```xml\n<component name=\"postResubmitPreventHandler\"\n    class=\"nablarch.fw.web.post.PostResubmitPreventHandler\">\n  <property name=\"forwardPathMapping\">\n    <map>\n      <entry key=\"/\"  value=\"redirect:///action/error/index\" />\n      <entry key=\"/action/func1/\" value=\"redirect:///action/error/index2\" />\n      <entry key=\"/action/func2/\" value=\"/error.jsp\" />\n    </map>\n  </property>\n</component>\n```\n\n例: リクエストID「/action/func1/index」は`/`と`/action/func1/`の両方にマッチするが、より長いキー`/action/func1/`に対応する`redirect:///action/error/index2`が選択される。"
   }
 }

@@ -5,10 +5,9 @@
     "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/http_request_java_package_mapping.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/HttpRequestJavaPackageMapping.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "overview",
+      "id": "s1",
       "title": "概要",
       "hints": [
         "HttpRequestJavaPackageMapping",
@@ -19,7 +18,7 @@
       ]
     },
     {
-      "id": "handler-class-name",
+      "id": "s2",
       "title": "ハンドラクラス名",
       "hints": [
         "HttpRequestJavaPackageMapping",
@@ -28,7 +27,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s3",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-fw-web",
@@ -37,7 +36,7 @@
       ]
     },
     {
-      "id": "constraints",
+      "id": "s4",
       "title": "制約",
       "hints": [
         "ハンドラキュー",
@@ -47,7 +46,7 @@
       ]
     },
     {
-      "id": "dispatch-settings",
+      "id": "s5",
       "title": "ディスパッチの設定",
       "hints": [
         "baseUri",
@@ -58,7 +57,7 @@
       ]
     },
     {
-      "id": "multi-package-settings",
+      "id": "s6",
       "title": "アクションが複数のパッケージに配置される場合の設定",
       "hints": [
         "複数パッケージ",
@@ -69,11 +68,11 @@
     }
   ],
   "sections": {
-    "overview": "URL形式: `/<baseUri>/<className>/<methodName>`\n\n- `baseUri`: コンテキストルートからの相対パス\n- `className`: クラス名\n- `methodName`: HTTPメソッド + メソッド名として実装。`post`メソッドでURLのmethodNameが`register`の場合、アクションクラスのメソッド名は`postRegister`。`get`/`post`の場合は`do`も使用可（例: `doRegister`）\n\n> **重要**: クラス名を元にURLが決まるため柔軟なURLを使用できない。例えば`/user/index`のようなURLを使いたい場合、クラス名を`user`にする必要があり、Javaの一般的なクラス名規約に違反するため推奨されない。このハンドラよりも、URLとアクションクラスとのマッピングを柔軟に設定できる :ref:`router_adaptor` の使用を推奨する。\n\n処理内容: URIを解析し、対応するアクションのメソッドを呼び出す。\n\n![処理の流れ](assets/handlers-http_request_java_package_mapping/flow.png)",
-    "handler-class-name": "**クラス名**: :java:extdoc:`nablarch.fw.web.handler.HttpRequestJavaPackageMapping`",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
-    "constraints": "**ハンドラキューの最後に置くこと**: 本ハンドラは後続のハンドラを呼び出さない。このため、本ハンドラの配置はハンドラキューの最後に置くこと。",
-    "dispatch-settings": "`baseUri`（コンテキストルートからの相対パス）と`basePackage`（アクションを配置するパッケージ）の設定が必須。\n\n```xml\n<component name=\"packageMapping\"\n           class=\"nablarch.fw.web.handler.HttpRequestJavaPackageMapping\">\n  <property name=\"baseUri\" value=\"/action/\"/>\n  <property name=\"basePackage\" value=\"jp.co.tis.nablarch.example\"/>\n</component>\n```\n\nディスパッチ例: URL `/action/UserAction/index` → クラス `jp.co.tis.nablarch.example.UserAction`",
-    "multi-package-settings": "ベースパッケージを全Actionが置かれるパッケージに設定し、URIのクラス名にベースパッケージからActionまでのパスを記載する。\n\n![パッケージマッピング例](assets/handlers-http_request_java_package_mapping/package_mapping.png)"
+    "s1": "URL形式: `/<baseUri>/<className>/<methodName>`\n\n- `baseUri`: コンテキストルートからの相対パス\n- `className`: クラス名\n- `methodName`: HTTPメソッド + メソッド名として実装。`post`メソッドでURLのmethodNameが`register`の場合、アクションクラスのメソッド名は`postRegister`。`get`/`post`の場合は`do`も使用可（例: `doRegister`）\n\n> **重要**: クラス名を元にURLが決まるため柔軟なURLを使用できない。例えば`/user/index`のようなURLを使いたい場合、クラス名を`user`にする必要があり、Javaの一般的なクラス名規約に違反するため推奨されない。このハンドラよりも、URLとアクションクラスとのマッピングを柔軟に設定できる [router_adaptor](../adapters/adapters-router_adaptor.json#s1) の使用を推奨する。\n\n処理内容: URIを解析し、対応するアクションのメソッドを呼び出す。\n\n![処理の流れ](assets/handlers-http_request_java_package_mapping/flow.png)",
+    "s2": "**クラス名**: `HttpRequestJavaPackageMapping`",
+    "s3": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "s4": "**ハンドラキューの最後に置くこと**: 本ハンドラは後続のハンドラを呼び出さない。このため、本ハンドラの配置はハンドラキューの最後に置くこと。",
+    "s5": "`baseUri`（コンテキストルートからの相対パス）と`basePackage`（アクションを配置するパッケージ）の設定が必須。\n\n```xml\n<component name=\"packageMapping\"\n           class=\"nablarch.fw.web.handler.HttpRequestJavaPackageMapping\">\n  <property name=\"baseUri\" value=\"/action/\"/>\n  <property name=\"basePackage\" value=\"jp.co.tis.nablarch.example\"/>\n</component>\n```\n\nディスパッチ例: URL `/action/UserAction/index` → クラス `jp.co.tis.nablarch.example.UserAction`",
+    "s6": "ベースパッケージを全Actionが置かれるパッケージに設定し、URIのクラス名にベースパッケージからActionまでのパスを記載する。\n\n![パッケージマッピング例](assets/handlers-http_request_java_package_mapping/package_mapping.png)"
   }
 }

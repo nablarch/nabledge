@@ -1,0 +1,88 @@
+{
+  "id": "biz-samples-0402_ExtendedFieldType",
+  "title": "データフォーマッタ機能におけるフィールドタイプの拡張",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/04/0402_ExtendedFieldType.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "イントロダクション",
+      "hints": [
+        "データフォーマッタ",
+        "フィールドタイプ拡張",
+        "data_format",
+        "汎用データフォーマット機能"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "概要",
+      "hints": [
+        "EBCDIC",
+        "CP930",
+        "シフトコード",
+        "DoubleByteCharacterString",
+        "ダブルバイト文字列",
+        "シフトコード付き",
+        "シフトコード無し"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "提供パッケージ",
+      "hints": [
+        "please.change.me.core.dataformat.convertor.datatype",
+        "フィールドタイプ",
+        "パッケージ"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "フィールドタイプの構成",
+      "hints": [
+        "EbcdicDoubleByteCharacterString",
+        "EbcdicNoShiftCodeDoubleByteCharacterString",
+        "EBCDIC",
+        "CP930",
+        "フィールドタイプクラス",
+        "シフトコード"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "フィールドタイプの使用方法",
+      "hints": [
+        "EbcdicFixedLengthConvertorFactory",
+        "FixedLengthConvertorFactory",
+        "getDefaultConvertorTable",
+        "フィールドタイプ追加",
+        "ESN",
+        "EN",
+        "data_format-field_type_add",
+        "CaseInsensitiveMap"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "フィールドタイプ・フィールドコンバータ定義一覧",
+      "hints": [
+        "ESN",
+        "EN",
+        "ダブルバイト文字列",
+        "EbcdicDoubleByteCharacterString",
+        "EbcdicNoShiftCodeDoubleByteCharacterString",
+        "バイト長",
+        "シフトコード"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "本サンプルはフォーマッタ機能のフィールドタイプ拡張仕様を提供する。基本となる汎用データフォーマット機能の詳細は [data_format](../../component/libraries/libraries-data_format.json#s1) を参照すること。",
+    "s2": "EBCDIC(CP930)のダブルバイト文字は、接続先システムにより以下の2パターンが存在し、それぞれ対応が必要:\n\n- シフトコード付き: 項目前後にシフトコードを付与するケース\n- シフトコード無し: ホストコンピュータとのデータ連携などで、シフトアウト状態で始まることを想定しシフトコードを付与しないケース\n\n> **重要**: NablarchデフォルトのDoubleByteCharacterStringはShift_JIS/MS932の全角文字フィールド向けであり、EBCDIC(CP930)使用時は各プロジェクトによる拡張が必要。\n\nシフトコードが付与されるかどうかはJDKに依存（CP930はダブルバイト文字に必ずシフトコードを付加）。本サンプルのデータタイプを使用することで、透過的にシフトコードの付加・除去を行い、文字列化やバイトシーケンスへのエンコードが可能となる。",
+    "s3": "**パッケージ**: `please.change.me.core.dataformat.convertor.datatype`",
+    "s4": "EBCDIC(CP930)固定長ファイルの全角文字列項目に対応するデータタイプクラス:\n\n| パッケージ名 | クラス名 | 概要 |\n|---|---|---|\n| `please.change.me.core.dataformat.convertor.datatype` | `EbcdicDoubleByteCharacterString` | EBCDIC(CP930)ダブルバイト文字列対応。固定長フォーマットの全角文字フィールド入出力用。入出力バイトデータに**シフトコードが付与されるケース**向け。 |\n| `please.change.me.core.dataformat.convertor.datatype` | `EbcdicNoShiftCodeDoubleByteCharacterString` | EBCDIC(CP930)ダブルバイト文字列対応。固定長フォーマットの全角文字フィールド入出力用。入出力バイトデータに**シフトコードが付与されないケース**向け。 |",
+    "s5": "フィールドタイプの追加方法は [data_format-field_type_add](../../component/libraries/libraries-data_format.json) を参照。Fixed(固定長)フォーマットのファクトリクラス実装例:\n\n```java\npublic class EbcdicFixedLengthConvertorFactory extends FixedLengthConvertorFactory {\n    @Override\n    protected Map<String, Class<?>> getDefaultConvertorTable() {\n        final Map<String, Class<?>> defaultConvertorTable = new CaseInsensitiveMap<Class<?>>(\n                new ConcurrentHashMap<String, Class<?>>(super.getDefaultConvertorTable()));\n        // EBCDIC(CP930)用のデータタイプ ESN, EN を追加する\n        defaultConvertorTable.put(\"ESN\", EbcdicDoubleByteCharacterString.class);\n        defaultConvertorTable.put(\"EN\", EbcdicNoShiftCodeDoubleByteCharacterString.class);\n        return Collections.unmodifiableMap(defaultConvertorTable);\n    }\n}\n```",
+    "s6": "**フィールドタイプ**\n\n| タイプ識別子 | Java型 | 内容 |\n|---|---|---|\n| ESN | String | ダブルバイト文字列 (バイト長 = 文字数 × 2 + 2(シフトコード分))。全角空白による右トリム・パディング(デフォルト)。入力時: シフトアウト・シフトインコード付き状態のままを文字列化。出力時: シフトアウト・シフトインコードを自動付加。実装クラス: `please.change.me.core.dataformat.converter.datatype.EbcdicDoubleByteCharacterString`。引数: バイト長(数値、必須) |\n| EN | String | ダブルバイト文字列 (バイト長 = 文字数 × 2)。全角空白による右トリム・パディング(デフォルト)。入力時: シフトアウト・シフトインコードを内部で補完して文字列化。出力時: シフトコードを付加しない。実装クラス: `please.change.me.core.dataformat.converter.datatype.EbcdicNoShiftCodeDoubleByteCharacterString`。引数: バイト長(数値、必須) |"
+  }
+}

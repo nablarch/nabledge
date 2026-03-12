@@ -6,12 +6,22 @@
 
 JUnit 5で書かれたテストの中で自動テストフレームワークを使用するための拡張機能。パラメータ化テストなどJUnit 5が提供する機能と自動テストフレームワークを組み合わせて使用できる。
 
-> **補足**: 本拡張機能を導入してもJUnit 4で書かれた既存テストを修正する必要はない。JUnit Vintageを使うことで既存のJUnit 4テストはJUnit 5上で引き続き実行可能（:ref:`run_ntf_on_junit5_with_vintage_engine` 参照）。既存テストはJUnit 4のままにしておき、新規テストのみJUnit 5で実装できる。
+> **補足**: 本拡張機能を導入してもJUnit 4で書かれた既存テストを修正する必要はない。JUnit Vintageを使うことで既存のJUnit 4テストはJUnit 5上で引き続き実行可能（[run_ntf_on_junit5_with_vintage_engine](testing-framework-01_Abstract.md) 参照）。既存テストはJUnit 4のままにしておき、新規テストのみJUnit 5で実装できる。
+
+自動テストフレームワークが提供するクラスを継承し、独自の拡張を加える場合の対応方法について説明する。
+
+> **補足**: ここで説明する手順は、JUnit 4で書かれた既存の独自拡張クラスを本拡張機能用に使用する場合にも適用できる。
+
+独自拡張クラスを作成する場合は、大きく次のようにして対応する:
+
+1. 自動テストフレームワークが提供するクラスを継承し、独自拡張クラスを作成する
+2. 継承元のクラスに対応するExtensionクラスを継承した独自拡張用のExtensionを作成し、独自拡張クラスのインスタンスを生成するように実装する
+3. `@ExtendWith`アノテーションを使って独自ExtensionクラスをテストクラスにApplyする
 
 <details>
 <summary>keywords</summary>
 
-JUnit5拡張機能, 自動テストフレームワーク, JUnit5, JUnit Vintage, パラメータ化テスト, JUnit4互換性
+JUnit5拡張機能, 自動テストフレームワーク, JUnit5, JUnit Vintage, パラメータ化テスト, JUnit4互換性, 独自拡張クラス, Extensionクラス継承, JUnit4移植
 
 </details>
 
@@ -19,10 +29,27 @@ JUnit5拡張機能, 自動テストフレームワーク, JUnit5, JUnit Vintage,
 
 - maven-surefire-plugin 2.22.0以上
 
+フレームワーク提供クラスはインスタンス生成時にテストクラスの`Class`オブジェクトを渡す必要がある。独自拡張クラスにはテストクラスの`Class`オブジェクトを受け取るコンストラクタを定義すること。
+
+`TestSupport`を継承した独自拡張クラスの例:
+
+```java
+public class CustomTestSupport extends TestSupport {
+    // テストクラスの Class インスタンスを TestSupport のコンストラクタに渡せるように実装する
+    public CustomTestSupport(Class<?> testClass) {
+        super(testClass);
+    }
+
+    // 独自の拡張メソッドを実装する
+}
+```
+
+> **補足**: `SimpleRestTestSupport`は、テストクラスの`Class`オブジェクトをコンストラクタで渡さなくても使用できる。
+
 <details>
 <summary>keywords</summary>
 
-maven-surefire-plugin, 前提条件, バージョン要件
+maven-surefire-plugin, 前提条件, バージョン要件, TestSupport, SimpleRestTestSupport
 
 </details>
 
@@ -37,10 +64,27 @@ maven-surefire-plugin, 前提条件, バージョン要件
 </dependency>
 ```
 
+継承元クラスに対応するExtensionクラスを継承し、独自拡張用のExtensionを作成する。`TestSupport`を継承した場合、対応Extensionは`TestSupportExtension`となる。
+
+`createSupport()`をオーバーライドして、作成した独自拡張クラスのインスタンスを返す。生成したインスタンスは`TestEventDispatcherExtension`の`support`フィールド（`protected`の`TestEventDispatcher`型）に保存される。サブクラスから参照可能。
+
+> **補足**: `AbstractHttpRequestTestTemplate`を直接継承した場合、対応Extensionとして`BasicHttpRequestTestExtension`が使用できる。
+
+```java
+public class CustomTestSupportExtension extends TestSupportExtension {
+
+    // createSupport() をオーバーライドし、独自拡張クラスのインスタンスを返すように実装する
+    @Override
+    protected TestEventDispatcher createSupport(Object testInstance, ExtensionContext context) {
+        return new CustomTestSupport(testInstance.getClass());
+    }
+}
+```
+
 <details>
 <summary>keywords</summary>
 
-nablarch-testing-junit5, モジュール, Maven依存関係, com.nablarch.framework
+nablarch-testing-junit5, モジュール, Maven依存関係, com.nablarch.framework, TestSupportExtension, AbstractHttpRequestTestTemplate, BasicHttpRequestTestExtension, TestEventDispatcherExtension, TestEventDispatcher, createSupport
 
 </details>
 
@@ -66,10 +110,29 @@ class YourTest {
 
 > **警告**: インジェクション対象フィールドがnullでない場合、拡張機能はエラー終了するので値は設定しないこと。
 
+作成した独自拡張用のExtensionは、`@ExtendWith`アノテーションを使ってテストクラスに適用できる。
+
+```java
+import org.junit.jupiter.api.extension.ExtendWith;
+
+// 1. ExtendWith で独自拡張用のExtensionをテストクラスに適用する
+@ExtendWith(CustomTestSupportExtension.class)
+class YourTest {
+    // 2. 独自拡張クラスをインスタンス変数で宣言する
+    CustomTestSupport support;
+
+    @Test
+    void test() {
+        // 3. テスト内で独自拡張クラスを使用する
+        support.customMethod();
+    }
+}
+```
+
 <details>
 <summary>keywords</summary>
 
-TestSupport, NablarchTest, TestSupportExtension, インジェクション, 合成アノテーション, Extensionクラス, フィールドインジェクション
+TestSupport, NablarchTest, TestSupportExtension, インジェクション, 合成アノテーション, Extensionクラス, フィールドインジェクション, @ExtendWith, ExtendWith
 
 </details>
 
@@ -104,114 +167,6 @@ class YourTestClass {
     }
 }
 ```
-
-<details>
-<summary>keywords</summary>
-
-TestSupportExtension, NablarchTest, BatchRequestTestExtension, BatchRequestTest, DbAccessTestExtension, DbAccessTest, EntityTestExtension, EntityTest, BasicHttpRequestTestExtension, BasicHttpRequestTest, HttpRequestTestExtension, HttpRequestTest, RestTestExtension, RestTest, SimpleRestTestExtension, SimpleRestTest, IntegrationTestExtension, IntegrationTest, MessagingReceiveTestExtension, MessagingReceiveTest, MessagingRequestTestExtension, MessagingRequestTest, BasicHttpRequestTestTemplate, AbstractHttpRequestTestTemplate, baseUri, 合成アノテーション一覧
-
-</details>
-
-## 独自の拡張を加える
-
-自動テストフレームワークが提供するクラスを継承し、独自の拡張を加える場合の対応方法について説明する。
-
-> **補足**: ここで説明する手順は、JUnit 4で書かれた既存の独自拡張クラスを本拡張機能用に使用する場合にも適用できる。
-
-独自拡張クラスを作成する場合は、大きく次のようにして対応する:
-
-1. 自動テストフレームワークが提供するクラスを継承し、独自拡張クラスを作成する
-2. 継承元のクラスに対応するExtensionクラスを継承した独自拡張用のExtensionを作成し、独自拡張クラスのインスタンスを生成するように実装する
-3. `@ExtendWith`アノテーションを使って独自ExtensionクラスをテストクラスにApplyする
-
-<details>
-<summary>keywords</summary>
-
-独自拡張クラス, Extensionクラス継承, JUnit4移植
-
-</details>
-
-## 独自拡張クラスを作成する
-
-フレームワーク提供クラスはインスタンス生成時にテストクラスの`Class`オブジェクトを渡す必要がある。独自拡張クラスにはテストクラスの`Class`オブジェクトを受け取るコンストラクタを定義すること。
-
-`TestSupport`を継承した独自拡張クラスの例:
-
-```java
-public class CustomTestSupport extends TestSupport {
-    // テストクラスの Class インスタンスを TestSupport のコンストラクタに渡せるように実装する
-    public CustomTestSupport(Class<?> testClass) {
-        super(testClass);
-    }
-
-    // 独自の拡張メソッドを実装する
-}
-```
-
-> **補足**: `SimpleRestTestSupport`は、テストクラスの`Class`オブジェクトをコンストラクタで渡さなくても使用できる。
-
-<details>
-<summary>keywords</summary>
-
-TestSupport, SimpleRestTestSupport
-
-</details>
-
-## 独自拡張用のExtensionを作成する
-
-継承元クラスに対応するExtensionクラスを継承し、独自拡張用のExtensionを作成する。`TestSupport`を継承した場合、対応Extensionは`TestSupportExtension`となる。
-
-`createSupport()`をオーバーライドして、作成した独自拡張クラスのインスタンスを返す。生成したインスタンスは`TestEventDispatcherExtension`の`support`フィールド（`protected`の`TestEventDispatcher`型）に保存される。サブクラスから参照可能。
-
-> **補足**: `AbstractHttpRequestTestTemplate`を直接継承した場合、対応Extensionとして`BasicHttpRequestTestExtension`が使用できる。
-
-```java
-public class CustomTestSupportExtension extends TestSupportExtension {
-
-    // createSupport() をオーバーライドし、独自拡張クラスのインスタンスを返すように実装する
-    @Override
-    protected TestEventDispatcher createSupport(Object testInstance, ExtensionContext context) {
-        return new CustomTestSupport(testInstance.getClass());
-    }
-}
-```
-
-<details>
-<summary>keywords</summary>
-
-TestSupportExtension, AbstractHttpRequestTestTemplate, BasicHttpRequestTestExtension, TestEventDispatcherExtension, TestEventDispatcher, createSupport
-
-</details>
-
-## ExtendWithでテストクラスに適用する
-
-作成した独自拡張用のExtensionは、`@ExtendWith`アノテーションを使ってテストクラスに適用できる。
-
-```java
-import org.junit.jupiter.api.extension.ExtendWith;
-
-// 1. ExtendWith で独自拡張用のExtensionをテストクラスに適用する
-@ExtendWith(CustomTestSupportExtension.class)
-class YourTest {
-    // 2. 独自拡張クラスをインスタンス変数で宣言する
-    CustomTestSupport support;
-
-    @Test
-    void test() {
-        // 3. テスト内で独自拡張クラスを使用する
-        support.customMethod();
-    }
-}
-```
-
-<details>
-<summary>keywords</summary>
-
-@ExtendWith, ExtendWith
-
-</details>
-
-## BasicHttpRequestTestTemplateを拡張する場合はアノテーションも作成する
 
 `BasicHttpRequestTestTemplate`または`AbstractHttpRequestTestTemplate`を拡張する場合、`baseUri`を独自拡張クラスのインスタンスに連携する必要がある。`@ExtendWith`ではパラメータの連携ができないため、合成アノテーションも独自に作成する必要がある。
 
@@ -288,7 +243,7 @@ class YourTest {
 <details>
 <summary>keywords</summary>
 
-BasicHttpRequestTestTemplate, AbstractHttpRequestTestTemplate, findAnnotation, 合成アノテーション, baseUri
+TestSupportExtension, NablarchTest, BatchRequestTestExtension, BatchRequestTest, DbAccessTestExtension, DbAccessTest, EntityTestExtension, EntityTest, BasicHttpRequestTestExtension, BasicHttpRequestTest, HttpRequestTestExtension, HttpRequestTest, RestTestExtension, RestTest, SimpleRestTestExtension, SimpleRestTest, IntegrationTestExtension, IntegrationTest, MessagingReceiveTestExtension, MessagingReceiveTest, MessagingRequestTestExtension, MessagingRequestTest, BasicHttpRequestTestTemplate, AbstractHttpRequestTestTemplate, baseUri, 合成アノテーション一覧, findAnnotation, 合成アノテーション
 
 </details>
 

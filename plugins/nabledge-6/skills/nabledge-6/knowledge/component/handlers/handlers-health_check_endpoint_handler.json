@@ -9,10 +9,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/health/HealthChecker.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/health/HealthCheckResponseBuilder.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "handler-class",
+      "id": "s1",
       "title": "ハンドラクラス名",
       "hints": [
         "HealthCheckEndpointHandler",
@@ -24,7 +23,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s2",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-fw-web",
@@ -34,7 +33,7 @@
       ]
     },
     {
-      "id": "constraints",
+      "id": "s3",
       "title": "制約",
       "hints": [
         "http_response_handler",
@@ -45,7 +44,7 @@
       ]
     },
     {
-      "id": "health-check-endpoint",
+      "id": "s4",
       "title": "ヘルスチェックのエンドポイントを作る",
       "hints": [
         "HealthCheckEndpointHandler",
@@ -62,7 +61,7 @@
       ]
     },
     {
-      "id": "add-health-checker",
+      "id": "s5",
       "title": "ヘルスチェックを追加する",
       "hints": [
         "HealthChecker",
@@ -76,7 +75,7 @@
       ]
     },
     {
-      "id": "change-response",
+      "id": "s6",
       "title": "ヘルスチェック結果のレスポンスを変更する",
       "hints": [
         "HealthCheckResponseBuilder",
@@ -96,11 +95,11 @@
     }
   ],
   "sections": {
-    "handler-class": "**クラス名**: `nablarch.fw.web.handler.HealthCheckEndpointHandler`\n\n:ref:`web_application` と :ref:`restful_web_service` のヘルスチェックを行うエンドポイントを提供するハンドラ。本ハンドラはエンドポイントとなるため、後続ハンドラの呼び出しは行わない。\n\nデフォルト実装として :java:extdoc:`DbHealthChecker <nablarch.fw.web.handler.health.DbHealthChecker>` と :ref:`lettuce_adaptor` (Redis) のヘルスチェックを提供している。",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```\n\nDBのヘルスチェックを行う場合:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-jdbc</artifactId>\n</dependency>\n```",
-    "constraints": "> **重要**: :ref:`http_response_handler` または :ref:`jaxrs_response_handler` より後ろに配置すること。本ハンドラで生成した :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` を :ref:`http_response_handler` または :ref:`jaxrs_response_handler` が処理するため。",
-    "health-check-endpoint": "ハンドラ構成に追加するとヘルスチェックエンドポイントとなる。`nablarch.fw.RequestHandlerEntry` を使用して特定パスのみ実行するよう設定する。\n\n```xml\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.HttpResponseHandler\"/>\n      <component class=\"nablarch.fw.RequestHandlerEntry\">\n        <property name=\"requestPattern\" value=\"/action/healthcheck\" />\n        <property name=\"handler\">\n          <component class=\"nablarch.fw.web.handler.HealthCheckEndpointHandler\"/>\n        </property>\n      </component>\n    </list>\n  </property>\n</component>\n```\n\nデフォルト（`healthCheckers` 未設定）ではステータスコード200で以下のJSONを返す:\n```json\n{\"status\":\"UP\"}\n```\n\nDBなどリソースのヘルスチェックは :java:extdoc:`HealthChecker <nablarch.fw.web.handler.health.HealthChecker>` の継承クラスを `healthCheckers` プロパティに指定する。\n\nDBヘルスチェックの設定例:\n```xml\n<component class=\"nablarch.fw.web.handler.HealthCheckEndpointHandler\">\n  <property name=\"healthCheckers\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.health.DbHealthChecker\">\n        <property name=\"dataSource\" ref=\"dataSource\" />\n        <property name=\"dialect\" ref=\"dialect\" />\n      </component>\n    </list>\n  </property>\n</component>\n```\n\nレスポンス:\n- 成功時（ステータスコード200）: `{\"status\":\"UP\",\"targets\":[{\"name\":\"DB\",\"status\":\"UP\"}]}`\n- 失敗時（ステータスコード503）: `{\"status\":\"DOWN\",\"targets\":[{\"name\":\"DB\",\"status\":\"DOWN\"}]}`\n\n`status` にヘルスチェック全体の結果、`targets` に対象ごとの結果を出力する。`targets` の1つでも失敗の場合、全体結果が失敗となる。",
-    "add-health-checker": ":java:extdoc:`HealthChecker <nablarch.fw.web.handler.health.HealthChecker>` を継承したクラスを作成し、`healthCheckers` プロパティに指定するとヘルスチェックを追加できる。\n\n```java\npublic class CustomHealthChecker extends HealthChecker {\n\n    public CustomHealthChecker() {\n        setName(\"Custom\"); // 対象を表す名前を指定\n    }\n\n    @Override\n    protected boolean tryOut(HttpRequest request, ExecutionContext context) throws Exception {\n        // ヘルスチェックが失敗した場合は false を返すか例外を送出\n        CustomClient client = ...;\n        client.execute();\n        return true;\n    }\n}\n```\n\n```xml\n<component class=\"nablarch.fw.web.handler.HealthCheckEndpointHandler\">\n  <property name=\"healthCheckers\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.health.DbHealthChecker\">\n        <!-- 省略 -->\n      </component>\n      <component class=\"com.example.CustomHealthChecker\"/>\n    </list>\n  </property>\n</component>\n```",
-    "change-response": ":java:extdoc:`HealthCheckResponseBuilder <nablarch.fw.web.handler.health.HealthCheckResponseBuilder>` がレスポンスを作成する。\n\nデフォルトのレスポンス:\n- ステータスコード: 成功200 / 失敗503\n- Content-Type: `application/json`\n- ヘルスチェック結果ラベル: 成功`UP` / 失敗`DOWN`\n- レスポンスボディのJSONは実際には改行なしの1行で出力される（フォーマット例は可読性のために整形したもの）\n- `targets` 配列には、設定した :java:extdoc:`HealthChecker <nablarch.fw.web.handler.health.HealthChecker>` の数だけエントリが含まれる\n\nステータスコード・ラベル・レスポンスボディ出力有無は設定で変更可能:\n\n```xml\n<component class=\"nablarch.fw.web.handler.HealthCheckEndpointHandler\">\n  <property name=\"healthCheckers\"><!-- 省略 --></property>\n  <property name=\"healthCheckResponseBuilder\">\n    <component class=\"nablarch.fw.web.handler.health.HealthCheckResponseBuilder\">\n      <property name=\"healthyStatusCode\" value=\"201\" />\n      <property name=\"healthyStatus\" value=\"OK\" />\n      <property name=\"unhealthyStatusCode\" value=\"500\" />\n      <property name=\"unhealthyStatus\" value=\"NG\" />\n      <property name=\"writeBody\" value=\"false\" />\n    </component>\n  </property>\n</component>\n```\n\n| プロパティ名 | 説明 |\n|---|---|\n| healthyStatusCode | ヘルスチェック成功時のステータスコード（デフォルト: 200） |\n| healthyStatus | ヘルスチェック成功時のラベル（デフォルト: UP） |\n| unhealthyStatusCode | ヘルスチェック失敗時のステータスコード（デフォルト: 503） |\n| unhealthyStatus | ヘルスチェック失敗時のラベル（デフォルト: DOWN） |\n| writeBody | レスポンスボディを出力するか否か。出力しない場合は false を指定 |\n\nレスポンスボディの内容を変更する場合は :java:extdoc:`HealthCheckResponseBuilder <nablarch.fw.web.handler.health.HealthCheckResponseBuilder>` を継承し、`getContentType()` と `buildResponseBody()` をオーバーライドする。`buildResponseBody()` では `HealthCheckResult` および `HealthCheckResult.Target` を使用して各ヘルスチェック対象の結果を取得できる。\n\n```java\npublic class CustomHealthCheckResponseBuilder extends HealthCheckResponseBuilder {\n    @Override\n    protected String getContentType() {\n        return \"text/plain\";\n    }\n    @Override\n    protected String buildResponseBody(\n            HttpRequest request, ExecutionContext context, HealthCheckResult result) {\n        StringBuilder builder = new StringBuilder();\n        builder.append(\"All=\" + getStatus(result.isHealthy()));\n        for (HealthCheckResult.Target target : result.getTargets()) {\n            builder.append(\", \" + target.getName() + \"=\" + getStatus(target.isHealthy()));\n        }\n        return builder.toString();\n    }\n}\n```\n\n```xml\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/action/healthcheck\" />\n  <property name=\"handler\">\n    <component class=\"nablarch.fw.web.handler.HealthCheckEndpointHandler\">\n      <property name=\"healthCheckers\"><!-- 省略 --></property>\n      <property name=\"healthCheckResponseBuilder\">\n        <component class=\"com.nablarch.example.app.web.handler.health.CustomHealthCheckResponseBuilder\" />\n      </property>\n    </component>\n  </property>\n</component>\n```"
+    "s1": "**クラス名**: `nablarch.fw.web.handler.HealthCheckEndpointHandler`\n\n[web_application](../../processing-pattern/web-application/web-application-web.json) と :ref:`restful_web_service` のヘルスチェックを行うエンドポイントを提供するハンドラ。本ハンドラはエンドポイントとなるため、後続ハンドラの呼び出しは行わない。\n\nデフォルト実装として `DbHealthChecker` と [lettuce_adaptor](../adapters/adapters-lettuce_adaptor.json#s2) (Redis) のヘルスチェックを提供している。",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```\n\nDBのヘルスチェックを行う場合:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-jdbc</artifactId>\n</dependency>\n```",
+    "s3": "> **重要**: [http_response_handler](handlers-http_response_handler.json#s1) または [jaxrs_response_handler](handlers-jaxrs_response_handler.json#s2) より後ろに配置すること。本ハンドラで生成した `HttpResponse` を [http_response_handler](handlers-http_response_handler.json#s1) または [jaxrs_response_handler](handlers-jaxrs_response_handler.json#s2) が処理するため。",
+    "s4": "ハンドラ構成に追加するとヘルスチェックエンドポイントとなる。`nablarch.fw.RequestHandlerEntry` を使用して特定パスのみ実行するよう設定する。\n\n```xml\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.HttpResponseHandler\"/>\n      <component class=\"nablarch.fw.RequestHandlerEntry\">\n        <property name=\"requestPattern\" value=\"/action/healthcheck\" />\n        <property name=\"handler\">\n          <component class=\"nablarch.fw.web.handler.HealthCheckEndpointHandler\"/>\n        </property>\n      </component>\n    </list>\n  </property>\n</component>\n```\n\nデフォルト（`healthCheckers` 未設定）ではステータスコード200で以下のJSONを返す:\n```json\n{\"status\":\"UP\"}\n```\n\nDBなどリソースのヘルスチェックは `HealthChecker` の継承クラスを `healthCheckers` プロパティに指定する。\n\nDBヘルスチェックの設定例:\n```xml\n<component class=\"nablarch.fw.web.handler.HealthCheckEndpointHandler\">\n  <property name=\"healthCheckers\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.health.DbHealthChecker\">\n        <property name=\"dataSource\" ref=\"dataSource\" />\n        <property name=\"dialect\" ref=\"dialect\" />\n      </component>\n    </list>\n  </property>\n</component>\n```\n\nレスポンス:\n- 成功時（ステータスコード200）: `{\"status\":\"UP\",\"targets\":[{\"name\":\"DB\",\"status\":\"UP\"}]}`\n- 失敗時（ステータスコード503）: `{\"status\":\"DOWN\",\"targets\":[{\"name\":\"DB\",\"status\":\"DOWN\"}]}`\n\n`status` にヘルスチェック全体の結果、`targets` に対象ごとの結果を出力する。`targets` の1つでも失敗の場合、全体結果が失敗となる。",
+    "s5": "`HealthChecker` を継承したクラスを作成し、`healthCheckers` プロパティに指定するとヘルスチェックを追加できる。\n\n```java\npublic class CustomHealthChecker extends HealthChecker {\n\n    public CustomHealthChecker() {\n        setName(\"Custom\"); // 対象を表す名前を指定\n    }\n\n    @Override\n    protected boolean tryOut(HttpRequest request, ExecutionContext context) throws Exception {\n        // ヘルスチェックが失敗した場合は false を返すか例外を送出\n        CustomClient client = ...;\n        client.execute();\n        return true;\n    }\n}\n```\n\n```xml\n<component class=\"nablarch.fw.web.handler.HealthCheckEndpointHandler\">\n  <property name=\"healthCheckers\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.health.DbHealthChecker\">\n        <!-- 省略 -->\n      </component>\n      <component class=\"com.example.CustomHealthChecker\"/>\n    </list>\n  </property>\n</component>\n```",
+    "s6": "`HealthCheckResponseBuilder` がレスポンスを作成する。\n\nデフォルトのレスポンス:\n- ステータスコード: 成功200 / 失敗503\n- Content-Type: `application/json`\n- ヘルスチェック結果ラベル: 成功`UP` / 失敗`DOWN`\n- レスポンスボディのJSONは実際には改行なしの1行で出力される（フォーマット例は可読性のために整形したもの）\n- `targets` 配列には、設定した `HealthChecker` の数だけエントリが含まれる\n\nステータスコード・ラベル・レスポンスボディ出力有無は設定で変更可能:\n\n```xml\n<component class=\"nablarch.fw.web.handler.HealthCheckEndpointHandler\">\n  <property name=\"healthCheckers\"><!-- 省略 --></property>\n  <property name=\"healthCheckResponseBuilder\">\n    <component class=\"nablarch.fw.web.handler.health.HealthCheckResponseBuilder\">\n      <property name=\"healthyStatusCode\" value=\"201\" />\n      <property name=\"healthyStatus\" value=\"OK\" />\n      <property name=\"unhealthyStatusCode\" value=\"500\" />\n      <property name=\"unhealthyStatus\" value=\"NG\" />\n      <property name=\"writeBody\" value=\"false\" />\n    </component>\n  </property>\n</component>\n```\n\n| プロパティ名 | 説明 |\n|---|---|\n| healthyStatusCode | ヘルスチェック成功時のステータスコード（デフォルト: 200） |\n| healthyStatus | ヘルスチェック成功時のラベル（デフォルト: UP） |\n| unhealthyStatusCode | ヘルスチェック失敗時のステータスコード（デフォルト: 503） |\n| unhealthyStatus | ヘルスチェック失敗時のラベル（デフォルト: DOWN） |\n| writeBody | レスポンスボディを出力するか否か。出力しない場合は false を指定 |\n\nレスポンスボディの内容を変更する場合は `HealthCheckResponseBuilder` を継承し、`getContentType()` と `buildResponseBody()` をオーバーライドする。`buildResponseBody()` では `HealthCheckResult` および `HealthCheckResult.Target` を使用して各ヘルスチェック対象の結果を取得できる。\n\n```java\npublic class CustomHealthCheckResponseBuilder extends HealthCheckResponseBuilder {\n    @Override\n    protected String getContentType() {\n        return \"text/plain\";\n    }\n    @Override\n    protected String buildResponseBody(\n            HttpRequest request, ExecutionContext context, HealthCheckResult result) {\n        StringBuilder builder = new StringBuilder();\n        builder.append(\"All=\" + getStatus(result.isHealthy()));\n        for (HealthCheckResult.Target target : result.getTargets()) {\n            builder.append(\", \" + target.getName() + \"=\" + getStatus(target.isHealthy()));\n        }\n        return builder.toString();\n    }\n}\n```\n\n```xml\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/action/healthcheck\" />\n  <property name=\"handler\">\n    <component class=\"nablarch.fw.web.handler.HealthCheckEndpointHandler\">\n      <property name=\"healthCheckers\"><!-- 省略 --></property>\n      <property name=\"healthCheckResponseBuilder\">\n        <component class=\"com.nablarch.example.app.web.handler.health.CustomHealthCheckResponseBuilder\" />\n      </property>\n    </component>\n  </property>\n</component>\n```"
   }
 }

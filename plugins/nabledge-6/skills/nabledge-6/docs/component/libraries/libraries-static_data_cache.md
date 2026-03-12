@@ -4,7 +4,7 @@
 
 ## 機能概要
 
-データベースやファイルなどに格納した静的データへのアクセスを高速化するキャッシュ機能を提供する。この機能は単体では動作しない。静的データをキャッシュしたい場合には、:ref:`static_data_cache-load_data` を参照しデータのロード処理を実装すること。
+データベースやファイルなどに格納した静的データへのアクセスを高速化するキャッシュ機能を提供する。この機能は単体では動作しない。静的データをキャッシュしたい場合には、[static_data_cache-load_data](#) を参照しデータのロード処理を実装すること。
 
 > **重要**: キャッシュしたデータをヒープ上に保持する。大量のデータをキャッシュした場合、Full GCが頻発しパフォーマンスに悪影響を与える可能性があるため注意すること。
 
@@ -50,7 +50,7 @@ nablarch-core, モジュール依存関係, com.nablarch.framework
 | getValue | idに対応するデータをロード。キャッシュにデータが存在しない場合に呼び出される |
 | 上記以外 | `return null` で良い（インデックス毎の管理機能は原則使用しない） |
 
-> **重要**: `BasicStaticDataCache` は必ず初期化対象に設定すること（:ref:`repository-initialize_object` 参照）。
+> **重要**: `BasicStaticDataCache` は必ず初期化対象に設定すること（[repository-initialize_object](libraries-repository.md) 参照）。
 
 キャッシュを使用するクラスの例:
 
@@ -68,7 +68,7 @@ public class SampleService {
 }
 ```
 
-設定ファイル例（:ref:`static_data_cache-config_sample`）:
+設定ファイル例（[static_data_cache-config_sample](#)）:
 
 ```xml
 <component name="sampleLoader" class="sample.SampleLoader" />
@@ -100,7 +100,7 @@ StaticDataLoader, BasicStaticDataCache, StaticDataCache, BasicApplicationInitial
 
 ## データのキャッシュタイミングを制御する
 
-データのキャッシュタイミングは以下の2パターンから選択できる（:ref:`static_data_cache-cache_timing`）:
+データのキャッシュタイミングは以下の2パターンから選択できる（[static_data_cache-cache_timing](#)）:
 
 - **一括ロード**: 起動時に全データをキャッシュ
 - **オンデマンドロード**: 初めて取得要求があった時にキャッシュ

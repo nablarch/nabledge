@@ -7,7 +7,7 @@
   ],
   "index": [
     {
-      "id": "how-to-enable-distributed-tracing",
+      "id": "s1",
       "title": "Azureで分散トレーシングを行う方法",
       "hints": [
         "分散トレーシング",
@@ -22,6 +22,6 @@
     }
   ],
   "sections": {
-    "how-to-enable-distributed-tracing": "AzureではAzure Application Insightsを使用して分散トレーシングを行う。Javaアプリケーションからの有効化には**Java 3.0 エージェント**（コード不要）を使用する。\n\n> **重要**: Java 3.0 エージェントは初期化処理中に大量のjarファイルをロードするためGCが頻発する。アプリケーション起動後しばらくは性能が一時的に劣化する可能性がある。また、高負荷時はエージェントの処理によるオーバーヘッドが性能に影響する可能性があるため、性能試験では本番同様にJava 3.0 エージェントを導入し、想定内の性能になることを確認すること。\n\nコンテナ用アーキタイプを使用した場合のセットアップ手順:\n\n1. [Azureの公式サイト](https://learn.microsoft.com/ja-jp/azure/azure-monitor/app/opentelemetry-enable?tabs=java#install-the-client-library)からエージェントをダウンロードし、`src/main/jib`以下の任意のディレクトリに格納する。\n2. エージェントを格納したディレクトリに`applicationinsights.json`を配置する。`connectionString`にはAzure Application Insightsの**リソースを作成したあとに発行される**インストルメンテーションキーを含む接続文字列を指定する。その他の構成オプションは[ガイド](https://learn.microsoft.com/ja-jp/azure/azure-monitor/app/java-standalone-config)を参照。\n3. `pom.xml`の`jib-maven-plugin`に環境変数`CATALINA_OPTS`としてエージェントのパスを指定する。\n\n`applicationinsights.json`:\n```json\n{\n  \"connectionString\": \"InstrumentationKey=XXXXX\"\n}\n```\n\n`pom.xml`（`jib-maven-plugin`）:\n```xml\n<plugin>\n    <groupId>com.google.cloud.tools</groupId>\n    <artifactId>jib-maven-plugin</artifactId>\n    <configuration>\n        <container>\n            <appRoot>/usr/local/tomcat/webapps/ROOT</appRoot>\n            <ports>\n                <port>8080</port>\n            </ports>\n            <environment>\n                <CATALINA_OPTS>-javaagent:/applicationInsights/applicationinsights-agent-3.0.2.jar</CATALINA_OPTS>\n            </environment>\n        </container>\n    </configuration>\n</plugin>\n```"
+    "s1": "AzureではAzure Application Insightsを使用して分散トレーシングを行う。Javaアプリケーションからの有効化には**Java 3.0 エージェント**（コード不要）を使用する。\n\n> **重要**: Java 3.0 エージェントは初期化処理中に大量のjarファイルをロードするためGCが頻発する。アプリケーション起動後しばらくは性能が一時的に劣化する可能性がある。また、高負荷時はエージェントの処理によるオーバーヘッドが性能に影響する可能性があるため、性能試験では本番同様にJava 3.0 エージェントを導入し、想定内の性能になることを確認すること。\n\nコンテナ用アーキタイプを使用した場合のセットアップ手順:\n\n1. [Azureの公式サイト](https://learn.microsoft.com/ja-jp/azure/azure-monitor/app/opentelemetry-enable?tabs=java#install-the-client-library)からエージェントをダウンロードし、`src/main/jib`以下の任意のディレクトリに格納する。\n2. エージェントを格納したディレクトリに`applicationinsights.json`を配置する。`connectionString`にはAzure Application Insightsの**リソースを作成したあとに発行される**インストルメンテーションキーを含む接続文字列を指定する。その他の構成オプションは[ガイド](https://learn.microsoft.com/ja-jp/azure/azure-monitor/app/java-standalone-config)を参照。\n3. `pom.xml`の`jib-maven-plugin`に環境変数`CATALINA_OPTS`としてエージェントのパスを指定する。\n\n`applicationinsights.json`:\n```json\n{\n  \"connectionString\": \"InstrumentationKey=XXXXX\"\n}\n```\n\n`pom.xml`（`jib-maven-plugin`）:\n```xml\n<plugin>\n    <groupId>com.google.cloud.tools</groupId>\n    <artifactId>jib-maven-plugin</artifactId>\n    <configuration>\n        <container>\n            <appRoot>/usr/local/tomcat/webapps/ROOT</appRoot>\n            <ports>\n                <port>8080</port>\n            </ports>\n            <environment>\n                <CATALINA_OPTS>-javaagent:/applicationInsights/applicationinsights-agent-3.0.2.jar</CATALINA_OPTS>\n            </environment>\n        </container>\n    </configuration>\n</plugin>\n```"
   }
 }

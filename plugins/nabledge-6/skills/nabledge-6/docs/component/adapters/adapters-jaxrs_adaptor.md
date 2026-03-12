@@ -4,7 +4,7 @@
 
 ## モジュール一覧
 
-> **補足**: Nablarch5では「JAX-RSアダプタ」という名称だったが、Java EEのEclipse Foundation移管に伴い「Jakarta RESTful Web Servicesアダプタ」に名称変更。機能的な差はない。名称変更された他の機能は:ref:`renamed_features_in_nablarch_6`を参照。
+> **補足**: Nablarch5では「JAX-RSアダプタ」という名称だったが、Java EEのEclipse Foundation移管に伴い「Jakarta RESTful Web Servicesアダプタ」に名称変更。機能的な差はない。名称変更された他の機能は[renamed_features_in_nablarch_6](../../about/about-nablarch/about-nablarch-jakarta_ee.md)を参照。
 
 :ref:`restful_web_service`で使用するための以下のアダプタを提供する。
 
@@ -48,7 +48,7 @@ nablarch-jackson-adaptor, nablarch-jersey-adaptor, nablarch-resteasy-adaptor, Ja
 
 ウェブアプリケーションサーバの[Jakarta RESTful Web Services](https://jakarta.ee/specifications/restful-ws/)実装が[Jersey](https://eclipse-ee4j.github.io/jersey/)の場合、`JaxRsMethodBinderFactory#handlerList`に`JerseyJaxRsHandlerListFactory`をファクトリインジェクションする。これによりJersey用の以下のハンドラ構成が自動設定される。
 
-**:ref:`body_convert_handler` の設定（自動設定されるコンバータ）**:
+**[body_convert_handler](../handlers/handlers-body_convert_handler.md) の設定（自動設定されるコンバータ）**:
 
 | コンテントタイプ | コンバータクラス |
 |---|---|
@@ -59,7 +59,7 @@ nablarch-jackson-adaptor, nablarch-jersey-adaptor, nablarch-resteasy-adaptor, Ja
 
 > **補足**: JSONコンバータはDate and Time API使用のため、[jackson-modules-java8](https://github.com/FasterXML/jackson-modules-java8)のJava 8 Date/timeモジュールを追加・設定済み。
 
-- :ref:`jaxrs_bean_validation_handler`
+- [jaxrs_bean_validation_handler](../handlers/handlers-jaxrs_bean_validation_handler.md)
 
 ```xml
 <component name="packageMapping" class="nablarch.integration.router.RoutesMapping">
@@ -88,7 +88,7 @@ JerseyJaxRsHandlerListFactory, JaxRsMethodBinderFactory, Jackson2BodyConverter, 
 
 ウェブアプリケーションサーバの[Jakarta RESTful Web Services](https://jakarta.ee/specifications/restful-ws/)実装が[RESTEasy](https://resteasy.dev/)の場合、`JaxRsMethodBinderFactory#handlerList`に`ResteasyJaxRsHandlerListFactory`をファクトリインジェクションする。これによりRESTEasy用の以下のハンドラ構成が自動設定される。
 
-**:ref:`body_convert_handler` の設定（自動設定されるコンバータ）**:
+**[body_convert_handler](../handlers/handlers-body_convert_handler.md) の設定（自動設定されるコンバータ）**:
 
 | コンテントタイプ | コンバータクラス |
 |---|---|
@@ -99,7 +99,7 @@ JerseyJaxRsHandlerListFactory, JaxRsMethodBinderFactory, Jackson2BodyConverter, 
 
 > **補足**: JSONコンバータはDate and Time API使用のため、[jackson-modules-java8](https://github.com/FasterXML/jackson-modules-java8)のJava 8 Date/timeモジュールを追加・設定済み。
 
-- :ref:`jaxrs_bean_validation_handler`
+- [jaxrs_bean_validation_handler](../handlers/handlers-jaxrs_bean_validation_handler.md)
 
 ```xml
 <component name="packageMapping" class="nablarch.integration.router.RoutesMapping">

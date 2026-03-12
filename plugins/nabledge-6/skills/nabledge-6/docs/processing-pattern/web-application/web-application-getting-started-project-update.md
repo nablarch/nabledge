@@ -50,10 +50,10 @@ public HttpResponse edit(HttpRequest request, ExecutionContext context) {
 }
 ```
 
-- 編集フォームの初期値取得には`UniversalDao#findBySqlFile`で一意キー検索を行う。:ref:`テーブルJOIN結果<universal_dao-join>`のため結果はBeanで受け取る。対象データ不在時は`NoDataException`が送出される。
+- 編集フォームの初期値取得には`UniversalDao#findBySqlFile`で一意キー検索を行う。[テーブルJOIN結果](../../component/libraries/libraries-universal_dao.md)のため結果はBeanで受け取る。対象データ不在時は`NoDataException`が送出される。
 - :ref:`楽観的ロック<universal_dao_jpa_version>`のため、編集開始時点のエンティティを:ref:`session_store`に登録する。
 
-> **補足**: NoDataException発生時は独自エラー制御ハンドラで404エラー画面へ遷移する。:ref:`ハンドラで例外クラスに対応したエラーページに遷移させる<forward_error_page-handler>`を参照。
+> **補足**: NoDataException発生時は独自エラー制御ハンドラで404エラー画面へ遷移する。[ハンドラで例外クラスに対応したエラーページに遷移させる](web-application-forward_error_page.md)を参照。
 
 ## 更新内容確認アクションメソッド（confirmOfUpdate）
 
@@ -85,7 +85,7 @@ public HttpResponse confirmOfUpdate(HttpRequest request, ExecutionContext contex
 }
 ```
 
-- データベース検索が必要なバリデーションは業務アクションメソッドに記述する。存在確認には`UniversalDao#exists`を使用する。詳細は:ref:`データベース検索が必要なバリデーション<bean_validation-database_validation>`を参照。
+- データベース検索が必要なバリデーションは業務アクションメソッドに記述する。存在確認には`UniversalDao#exists`を使用する。詳細は[データベース検索が必要なバリデーション](../../component/libraries/libraries-bean_validation.md)を参照。
 - :ref:`フォームを直接セッションストアに格納すべきではない<session_store-form>`ため、Beanへ詰め替える。
 - 確認画面表示用に`ProjectProfit`オブジェクトを生成してリクエストスコープにセットする。
 
@@ -107,7 +107,7 @@ WHERE
 
 ## 更新確認画面のJSP（update.jsp）
 
-更新画面を確認画面として使い回す。:ref:`tag-submit_tag`の`allowDoubleSubmission="false"`で二重サブミット防止JSを追加する。詳細は:ref:`tag-double_submission`を参照。
+更新画面を確認画面として使い回す。[tag-submit_tag](../../component/libraries/libraries-tag_reference.md)の`allowDoubleSubmission="false"`で二重サブミット防止JSを追加する。詳細は:ref:`tag-double_submission`を参照。
 
 ```jsp
 <n:form useToken="true">
@@ -142,7 +142,7 @@ public HttpResponse update(HttpRequest request, ExecutionContext context) {
 
 - エンティティに更新値を設定し、`UniversalDao#update`でDB更新する。更新処理では:ref:`楽観的ロック<universal_dao_jpa_version>`が実行される。
 - 二重サブミット防止のため`@OnDoubleSubmission`を付与する。
-- ブラウザ更新での再実行防止のためレスポンスをリダイレクトする。リソースパスの書式は`ResourceLocator`を参照。リダイレクトのステータスコードは:ref:`web_feature_details-status_code`を参照。
+- ブラウザ更新での再実行防止のためレスポンスをリダイレクトする。リソースパスの書式は`ResourceLocator`を参照。リダイレクトのステータスコードは[web_feature_details-status_code](web-application-feature_details.md)を参照。
 
 ## 楽観的ロック用エンティティ定義
 

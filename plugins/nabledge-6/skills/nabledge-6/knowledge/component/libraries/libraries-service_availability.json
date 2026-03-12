@@ -6,10 +6,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/availability/BasicServiceAvailability.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/availability/ServiceAvailabilityUtil.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "overview",
+      "id": "s1",
       "title": "機能概要",
       "hints": [
         "ServiceAvailabilityCheckHandler",
@@ -22,7 +21,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s2",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-common-auth",
@@ -32,7 +31,7 @@
       ]
     },
     {
-      "id": "usage",
+      "id": "s3",
       "title": "使用方法",
       "hints": [
         "BasicServiceAvailability",
@@ -49,7 +48,7 @@
       ]
     },
     {
-      "id": "extensions",
+      "id": "s4",
       "title": "拡張例",
       "hints": [
         "拡張例",
@@ -58,9 +57,9 @@
     }
   ],
   "sections": {
-    "overview": "> **重要**: 本機能はアプリケーション要件が合致する場合のみ使用すること。DBを使用してリクエスト単位でサービス提供可否を管理するため、ウェブの登録機能（初期表示/確認/戻る/登録など複数リクエスト構成）では非常に細かいデータ設計が必要となり、開発時の生産性低下やリリース後の運用負荷が高まる可能性がある。\n\nこの機能を使うことで以下が実現できる:\n\n- **ウェブ**: 一部機能へのアクセスを遮断し、503エラーを返す。\n- **常駐バッチ**: 空回り（処理せずに待機する状態）を行う。\n\n:ref:`ServiceAvailabilityCheckHandler` をハンドラキューに設定することで、ウェブ・常駐バッチの両方でリクエスト単位のサービス提供可否チェックが可能。処理方式（ウェブ/常駐バッチ）に非依存。",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth-jdbc</artifactId>\n</dependency>\n```",
-    "usage": "DBテーブルレイアウト:\n\n| カラム | 型 | 説明 |\n|---|---|---|\n| リクエストID (PK) | 文字列 | リクエストを識別する値 |\n| サービス提供可否状態 | 文字列 | 可の場合は \"1\"（設定で値を変更可） |\n\n**クラス**: `nablarch.common.availability.BasicServiceAvailability`\n\nコンポーネント名は `serviceAvailability` で定義し、初期化対象リストへの追加が必要。\n\n```xml\n<component name=\"serviceAvailability\" class=\"nablarch.common.availability.BasicServiceAvailability\">\n  <property name=\"tableName\" value=\"REQUEST\"/>\n  <property name=\"requestTableRequestIdColumnName\" value=\"REQUEST_ID\"/>\n  <property name=\"requestTableServiceAvailableColumnName\" value=\"SERVICE_AVAILABLE\"/>\n  <property name=\"requestTableServiceAvailableOkStatus\" value=\"1\"/>\n  <property name=\"dbManager\" ref=\"serviceAvailabilityDbManager\"/>\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"serviceAvailability\" />\n    </list>\n  </property>\n</component>\n```\n\nサービス提供可否チェックには :java:extdoc:`ServiceAvailabilityUtil <nablarch.common.availability.ServiceAvailabilityUtil>` を使用する。\n\nサービス提供可否に応じたボタン・リンクの非表示（非活性）制御は :ref:`tag-submit_display_control` を参照。",
-    "extensions": "なし。"
+    "s1": "> **重要**: 本機能はアプリケーション要件が合致する場合のみ使用すること。DBを使用してリクエスト単位でサービス提供可否を管理するため、ウェブの登録機能（初期表示/確認/戻る/登録など複数リクエスト構成）では非常に細かいデータ設計が必要となり、開発時の生産性低下やリリース後の運用負荷が高まる可能性がある。\n\nこの機能を使うことで以下が実現できる:\n\n- **ウェブ**: 一部機能へのアクセスを遮断し、503エラーを返す。\n- **常駐バッチ**: 空回り（処理せずに待機する状態）を行う。\n\n:ref:`ServiceAvailabilityCheckHandler` をハンドラキューに設定することで、ウェブ・常駐バッチの両方でリクエスト単位のサービス提供可否チェックが可能。処理方式（ウェブ/常駐バッチ）に非依存。",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth-jdbc</artifactId>\n</dependency>\n```",
+    "s3": "DBテーブルレイアウト:\n\n| カラム | 型 | 説明 |\n|---|---|---|\n| リクエストID (PK) | 文字列 | リクエストを識別する値 |\n| サービス提供可否状態 | 文字列 | 可の場合は \"1\"（設定で値を変更可） |\n\n**クラス**: `nablarch.common.availability.BasicServiceAvailability`\n\nコンポーネント名は `serviceAvailability` で定義し、初期化対象リストへの追加が必要。\n\n```xml\n<component name=\"serviceAvailability\" class=\"nablarch.common.availability.BasicServiceAvailability\">\n  <property name=\"tableName\" value=\"REQUEST\"/>\n  <property name=\"requestTableRequestIdColumnName\" value=\"REQUEST_ID\"/>\n  <property name=\"requestTableServiceAvailableColumnName\" value=\"SERVICE_AVAILABLE\"/>\n  <property name=\"requestTableServiceAvailableOkStatus\" value=\"1\"/>\n  <property name=\"dbManager\" ref=\"serviceAvailabilityDbManager\"/>\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"serviceAvailability\" />\n    </list>\n  </property>\n</component>\n```\n\nサービス提供可否チェックには `ServiceAvailabilityUtil` を使用する。\n\nサービス提供可否に応じたボタン・リンクの非表示（非活性）制御は :ref:`tag-submit_display_control` を参照。",
+    "s4": "なし。"
   }
 }

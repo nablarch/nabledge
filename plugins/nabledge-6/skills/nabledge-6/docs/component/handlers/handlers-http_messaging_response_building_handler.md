@@ -47,7 +47,7 @@ nablarch-fw-messaging-http, com.nablarch.framework, モジュール, Maven依存
 
 ## 制約
 
-- :ref:`http_response_handler` よりも後ろに設定すること。:ref:`http_response_handler` がこのハンドラで生成した `HTTPレスポンスオブジェクト` をクライアントに返却するため。
+- [http_response_handler](handlers-http_response_handler.md) よりも後ろに設定すること。[http_response_handler](handlers-http_response_handler.md) がこのハンドラで生成した `HTTPレスポンスオブジェクト` をクライアントに返却するため。
 
 <details>
 <summary>keywords</summary>
@@ -81,7 +81,7 @@ Status-Code, Content-Type, X-Correlation-Id, CorrelationId, InterSystemMessage, 
 
 応答電文内のフレームワーク制御ヘッダの定義を変更する場合、`fwHeaderDefinition` プロパティにプロジェクトで拡張したフレームワーク制御ヘッダ定義を設定する。未設定時はデフォルトの `StructuredFwHeaderDefinition` が使用される。
 
-フレームワーク制御ヘッダの詳細は :ref:`フレームワーク制御ヘッダ <http_system_messaging-fw_header>` を参照。
+フレームワーク制御ヘッダの詳細は [フレームワーク制御ヘッダ](../libraries/libraries-http_system_messaging.md) を参照。
 
 ```xml
 <component class="nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler">

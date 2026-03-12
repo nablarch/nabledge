@@ -32,8 +32,8 @@ nablarch-fw-messaging-http, モジュール, Maven依存関係, com.nablarch.fra
 
 ## 制約
 
-- :ref:`http_response_handler` より後ろに配置すること: 変換処理に失敗した場合にステータスコードを指定したレスポンスをクライアントに返すため。
-- :ref:`thread_context_handler` より後ろに配置すること: スレッドコンテキスト上のリクエストIDをもとに `DataRecordFormatter` を取得するため。
+- [http_response_handler](handlers-http_response_handler.md) より後ろに配置すること: 変換処理に失敗した場合にステータスコードを指定したレスポンスをクライアントに返すため。
+- [thread_context_handler](handlers-thread_context_handler.md) より後ろに配置すること: スレッドコンテキスト上のリクエストIDをもとに `DataRecordFormatter` を取得するため。
 
 <details>
 <summary>keywords</summary>
@@ -56,11 +56,11 @@ http_response_handler, thread_context_handler, DataRecordFormatter, ハンドラ
 | 残りのリクエストヘッダ | 要求電文のプロトコルヘッダ | |
 | リクエストボディ | フレームワーク制御ヘッダとデータレコード | |
 
-**リクエストボディの変換**: :ref:`data_format` により行う。フォーマット定義ファイルの論理名:
+**リクエストボディの変換**: [data_format](../libraries/libraries-data_format.md) により行う。フォーマット定義ファイルの論理名:
 - 受信時: `<リクエストID>_RECEIVE`
 - 送信時: `<リクエストID>_SEND`
 
-デフォルトでは構造化データとして扱うが、フレームワーク制御ヘッダへの各項目は設定しない。フレームワーク制御ヘッダを設定する場合は `StructuredFwHeaderDefinition` をコンポーネント設定ファイルに追加する。`fwHeaderKeys` プロパティにはキーにフィールド名、値に電文上の位置（構造化データをMapに変換後のキー、詳細は :ref:`data_format-structured_data` 参照）を指定する。
+デフォルトでは構造化データとして扱うが、フレームワーク制御ヘッダへの各項目は設定しない。フレームワーク制御ヘッダを設定する場合は `StructuredFwHeaderDefinition` をコンポーネント設定ファイルに追加する。`fwHeaderKeys` プロパティにはキーにフィールド名、値に電文上の位置（構造化データをMapに変換後のキー、詳細は [data_format-structured_data](../libraries/libraries-data_format.md) 参照）を指定する。
 
 固定長・可変長データの場合は `nablarch.fw.messaging.StandardFwHeaderDefinition` を指定する。
 

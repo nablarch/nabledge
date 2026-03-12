@@ -27,7 +27,7 @@ Nablarchバッチプロジェクトの初期セットアップでは以下を行
 | 使用DB | H2 Database Engine（アプリケーションに組み込み） |
 | 含まれるもの | Nablarchバッチアプリケーション用の基本的な設定、疎通確認用の都度起動バッチアプリケーション、テーブルをキューとして使ったメッセージング、メール送信バッチの設定、Mavenと連動して動作するツールの初期設定 |
 
-メール送信バッチは:ref:`常駐バッチ<nablarch_batch-resident_batch>`として動作し、SMTPサーバにメールを送信する。コンポーネント設定ファイルのサンプルは`src/main/resources/mail-sender-boot.xml`にある。初期環境構築時には不要だが、使用時は:ref:`メール送信<mail>`の解説を参照すること。
+メール送信バッチは[常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md)として動作し、SMTPサーバにメールを送信する。コンポーネント設定ファイルのサンプルは`src/main/resources/mail-sender-boot.xml`にある。初期環境構築時には不要だが、使用時は[メール送信](../../component/libraries/libraries-mail.md)の解説を参照すること。
 
 他プロジェクトとの関係・ディレクトリ構成は[../MavenModuleStructures/index](blank-project-MavenModuleStructures.md)を参照。
 
@@ -197,9 +197,9 @@ mvn exec:java -Dexec.mainClass=nablarch.fw.launcher.Main ^
 
 ## データベースに関する設定を行う
 
-ブランクプロジェクトの初期状態ではH2 Database Engineを使用するよう設定されている。使用するRDBMSを変更する場合は:ref:`customize-db`を参照。
+ブランクプロジェクトの初期状態ではH2 Database Engineを使用するよう設定されている。使用するRDBMSを変更する場合は[customize-db](blank-project-CustomizeDB.md)を参照。
 
-ER図からのDDL生成・実行、Entityクラスの自動生成を行う場合はgsp-dba-maven-pluginの初期設定が必要。詳細は:ref:`gsp-maven-plugin`を参照。
+ER図からのDDL生成・実行、Entityクラスの自動生成を行う場合はgsp-dba-maven-pluginの初期設定が必要。詳細は[gsp-maven-plugin](blank-project-addin_gsp.md)を参照。
 
 <details>
 <summary>keywords</summary>

@@ -4,10 +4,9 @@
   "official_doc_urls": [
     "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/session_store/update_example.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "initial-display",
+      "id": "s1",
       "title": "入力画面の初期表示",
       "hints": [
         "SessionUtil",
@@ -20,7 +19,7 @@
       ]
     },
     {
-      "id": "transition-to-confirmation",
+      "id": "s2",
       "title": "入力画面から確認画面へ遷移",
       "hints": [
         "SessionUtil",
@@ -33,7 +32,7 @@
       ]
     },
     {
-      "id": "return-to-input",
+      "id": "s3",
       "title": "確認画面から入力画面へ戻る",
       "hints": [
         "SessionUtil",
@@ -46,7 +45,7 @@
       ]
     },
     {
-      "id": "execute-update",
+      "id": "s4",
       "title": "更新処理を実行",
       "hints": [
         "SessionUtil",
@@ -57,9 +56,9 @@
     }
   ],
   "sections": {
-    "initial-display": "ブラウザを直接閉じた場合などにセッションが残っている場合があるため、入力画面初期表示時は最初にセッションを削除してから保存する。\n\n```java\n// ブラウザを直接閉じた場合などにセッションが残っている場合があるので削除\nSessionUtil.delete(ctx, \"project\");\n\n// 更新対象データの取得処理は省略\n\n// 更新対象データをセッションストアに保存\nSessionUtil.put(ctx, \"project\", project);\n\n// EntityからFormへ変換\nProjectForm form = BeanUtil.createAndCopy(ProjectForm.class, project);\n\n// 更新対象データをリクエストスコープに設定\ncontext.setRequestScopedVar(\"form\", form);\n```",
-    "transition-to-confirmation": "```java\n// リクエストスコープから入力情報を取得\nProjectForm form = context.getRequestScopedVar(\"form\");\n\n// 更新対象データをセッションストアから取得\nProject project = SessionUtil.get(context, \"project\");\n\n// 入力情報を更新対象データに上書き\nBeanUtil.copy(form, project);\n```",
-    "return-to-input": "```java\n// セッションストアから更新対象データを取得\nProject project = SessionUtil.get(ctx, \"project\");\n\n// EntityからFormへ変換\nProjectForm form = BeanUtil.createAndCopy(ProjectForm.class, project);\n\n// 更新対象データをリクエストスコープに設定\ncontext.setRequestScopedVar(\"form\", form);\n```",
-    "execute-update": "```java\n// セッションストアから更新対象データを取得\nProject project = SessionUtil.get(ctx, \"project\");\n\n// 更新処理は省略\n\n// セッションストアから更新対象データを削除\nSessionUtil.delete(ctx, \"project\");\n```"
+    "s1": "ブラウザを直接閉じた場合などにセッションが残っている場合があるため、入力画面初期表示時は最初にセッションを削除してから保存する。\n\n```java\n// ブラウザを直接閉じた場合などにセッションが残っている場合があるので削除\nSessionUtil.delete(ctx, \"project\");\n\n// 更新対象データの取得処理は省略\n\n// 更新対象データをセッションストアに保存\nSessionUtil.put(ctx, \"project\", project);\n\n// EntityからFormへ変換\nProjectForm form = BeanUtil.createAndCopy(ProjectForm.class, project);\n\n// 更新対象データをリクエストスコープに設定\ncontext.setRequestScopedVar(\"form\", form);\n```",
+    "s2": "```java\n// リクエストスコープから入力情報を取得\nProjectForm form = context.getRequestScopedVar(\"form\");\n\n// 更新対象データをセッションストアから取得\nProject project = SessionUtil.get(context, \"project\");\n\n// 入力情報を更新対象データに上書き\nBeanUtil.copy(form, project);\n```",
+    "s3": "```java\n// セッションストアから更新対象データを取得\nProject project = SessionUtil.get(ctx, \"project\");\n\n// EntityからFormへ変換\nProjectForm form = BeanUtil.createAndCopy(ProjectForm.class, project);\n\n// 更新対象データをリクエストスコープに設定\ncontext.setRequestScopedVar(\"form\", form);\n```",
+    "s4": "```java\n// セッションストアから更新対象データを取得\nProject project = SessionUtil.get(ctx, \"project\");\n\n// 更新処理は省略\n\n// セッションストアから更新対象データを削除\nSessionUtil.delete(ctx, \"project\");\n```"
   }
 }

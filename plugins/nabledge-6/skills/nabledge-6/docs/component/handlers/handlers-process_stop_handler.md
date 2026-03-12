@@ -6,7 +6,7 @@
 
 **クラス**: `nablarch.fw.handler.BasicProcessStopHandler`
 
-:ref:`process_resident_handler`、:ref:`loop_handler`、:ref:`request_thread_loop_handler` などのループ制御ハンドラの後続に配置することで、ループを中断してプロセス停止要求を示す例外を送出する。
+[process_resident_handler](handlers-process_resident_handler.md)、[loop_handler](handlers-loop_handler.md)、[request_thread_loop_handler](handlers-request_thread_loop_handler.md) などのループ制御ハンドラの後続に配置することで、ループを中断してプロセス停止要求を示す例外を送出する。
 
 処理の流れ:
 1. プロセス停止可否のチェック（プロセス停止フラグが"1"であればプロセス停止対象と判定）
@@ -47,7 +47,7 @@ nablarch-fw-standalone, nablarch-fw-batch, モジュール依存関係
 
 ## 制約
 
-:ref:`thread_context_handler` より後ろに設定すること。本ハンドラはスレッドコンテキスト上のリクエストIDをもとに停止処理を行うため、:ref:`thread_context_handler` より後ろに配置する必要がある。
+[thread_context_handler](handlers-thread_context_handler.md) より後ろに設定すること。本ハンドラはスレッドコンテキスト上のリクエストIDをもとに停止処理を行うため、[thread_context_handler](handlers-thread_context_handler.md) より後ろに配置する必要がある。
 
 <details>
 <summary>keywords</summary>

@@ -8,10 +8,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/retry/CountingRetryContext.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/retry/TimeRetryContext.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "handler-class-name",
+      "id": "s1",
       "title": "ハンドラクラス名",
       "hints": [
         "RetryHandler",
@@ -30,7 +29,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s2",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-fw-standalone",
@@ -39,7 +38,7 @@
       ]
     },
     {
-      "id": "constraints",
+      "id": "s3",
       "title": "制約",
       "hints": [
         "ハンドラ配置順序",
@@ -49,7 +48,7 @@
       ]
     },
     {
-      "id": "retry-limit-configuration",
+      "id": "s4",
       "title": "リトライの上限を設定する",
       "hints": [
         "CountingRetryContext",
@@ -69,9 +68,9 @@
     }
   ],
   "sections": {
-    "handler-class-name": "**クラス名**: `nablarch.fw.handler.RetryHandler`\n\nデータベースアクセス時のデッドロックのように、単純リトライによってリカバリ可能なエラーについて、自動的なリトライを制御するハンドラ。\n\n:java:extdoc:`Retryable <nablarch.fw.handler.retry.Retryable>` を実装した実行時例外をリトライ可能なエラーとみなし、後続ハンドラを再実行する。\n\nリトライ上限判定は :java:extdoc:`RetryContext <nablarch.fw.handler.RetryHandler.RetryContext>` の実装クラスとして外部化されており、デフォルトで以下の実装が提供されている：\n- :java:extdoc:`リトライ回数による上限設定 <nablarch.fw.handler.retry.CountingRetryContext>`\n- :java:extdoc:`経過時間による上限設定 <nablarch.fw.handler.retry.TimeRetryContext>`",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-standalone</artifactId>\n</dependency>\n```",
-    "constraints": "リトライ対象例外を送出するハンドラは、本ハンドラより後ろに設定すること。本ハンドラより手前でリトライ対象の例外を送出しても、単に例外として処理される。",
-    "retry-limit-configuration": "本ハンドラを使用する際には必ずリトライ上限の設定が必要。上限に達しても処理が成功しない場合は異常終了させる。\n\n上限設定は以下の2種類から選択（プロジェクト要件に合わない場合はプロジェクト側で実装を追加）：\n- :java:extdoc:`リトライ回数による上限設定 <nablarch.fw.handler.retry.CountingRetryContext>`\n- :java:extdoc:`経過時間による上限設定 <nablarch.fw.handler.retry.TimeRetryContext>`\n\nリトライ回数による上限設定の例：\n```xml\n<component name=\"retryHandler\" class=\"nablarch.fw.handler.RetryHandler\">\n  <property name=\"retryContextFactory\">\n    <component class=\"nablarch.fw.handler.retry.CountingRetryContextFactory\">\n      <property name=\"retryCount\" value=\"3\" />          <!-- 最大3回リトライを行う -->\n      <property name=\"retryIntervals\" value=\"5000\" />   <!-- リトライを実行するまで5秒待機する -->\n    </component>\n  </property>\n</component>\n```\n\n> **補足**: 上限値は想定する最大の復旧時間プラスアルファに設定すること。例えば、DB切り替えに最大5分かかる場合は7分等を設定する。複数の例外に対するリトライを実現する場合は、最も復旧まで時間を要するものをベースに上限値を設定すること。"
+    "s1": "**クラス名**: `nablarch.fw.handler.RetryHandler`\n\nデータベースアクセス時のデッドロックのように、単純リトライによってリカバリ可能なエラーについて、自動的なリトライを制御するハンドラ。\n\n`Retryable` を実装した実行時例外をリトライ可能なエラーとみなし、後続ハンドラを再実行する。\n\nリトライ上限判定は `RetryContext` の実装クラスとして外部化されており、デフォルトで以下の実装が提供されている：\n- `リトライ回数による上限設定`\n- `経過時間による上限設定`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-standalone</artifactId>\n</dependency>\n```",
+    "s3": "リトライ対象例外を送出するハンドラは、本ハンドラより後ろに設定すること。本ハンドラより手前でリトライ対象の例外を送出しても、単に例外として処理される。",
+    "s4": "本ハンドラを使用する際には必ずリトライ上限の設定が必要。上限に達しても処理が成功しない場合は異常終了させる。\n\n上限設定は以下の2種類から選択（プロジェクト要件に合わない場合はプロジェクト側で実装を追加）：\n- `リトライ回数による上限設定`\n- `経過時間による上限設定`\n\nリトライ回数による上限設定の例：\n```xml\n<component name=\"retryHandler\" class=\"nablarch.fw.handler.RetryHandler\">\n  <property name=\"retryContextFactory\">\n    <component class=\"nablarch.fw.handler.retry.CountingRetryContextFactory\">\n      <property name=\"retryCount\" value=\"3\" />          <!-- 最大3回リトライを行う -->\n      <property name=\"retryIntervals\" value=\"5000\" />   <!-- リトライを実行するまで5秒待機する -->\n    </component>\n  </property>\n</component>\n```\n\n> **補足**: 上限値は想定する最大の復旧時間プラスアルファに設定すること。例えば、DB切り替えに最大5分かかる場合は7分等を設定する。複数の例外に対するリトライを実現する場合は、最も復旧まで時間を要するものをベースに上限値を設定すること。"
   }
 }

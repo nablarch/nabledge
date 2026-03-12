@@ -5,10 +5,9 @@
     "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/keitai_access_handler.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/KeitaiAccessHandler.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "handler-class",
+      "id": "s1",
       "title": "ハンドラクラス名",
       "hints": [
         "KeitaiAccessHandler",
@@ -19,7 +18,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s2",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-fw-web",
@@ -28,7 +27,7 @@
       ]
     },
     {
-      "id": "constraints",
+      "id": "s3",
       "title": "制約",
       "hints": [
         "配置制約",
@@ -38,7 +37,7 @@
       ]
     },
     {
-      "id": "javascript-suppressed-tags",
+      "id": "s4",
       "title": "JavaScript出力が抑制されるタグ",
       "hints": [
         "JavaScript抑制",
@@ -51,7 +50,7 @@
       ]
     },
     {
-      "id": "url-mapping",
+      "id": "s5",
       "title": "URLの関連付け",
       "hints": [
         "URL関連付け",
@@ -64,10 +63,10 @@
     }
   ],
   "sections": {
-    "handler-class": "JavaScriptが動作しない環境（フィーチャーフォン等）でウェブアプリケーションを動作させるハンドラ。下記を実現する:\n\n1. 画面で押されたボタンのボタン名から、想定されるURLにディスパッチ\n2. JSP上にJavaScriptを出力しないよう変数を設定\n\n**クラス名**: :java:extdoc:`KeitaiAccessHandler<nablarch.fw.web.handler.KeitaiAccessHandler>`",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
-    "constraints": "- :ref:`http_response_handler` より後ろに配置すること: JSPへのフォワード処理を行う :ref:`http_response_handler` より後に配置する必要がある。\n- :ref:`thread_context_handler` より前に配置すること: URIを決定する処理があるため、URIを使用する :ref:`thread_context_handler` より前に配置する必要がある。",
-    "javascript-suppressed-tags": "携帯端末アクセスハンドラを使用したURLにアクセスした際、下記NablarchタグライブラリのJavaScript出力が抑制される:\n\n- :ref:`n:form タグ <tag-form_tag>`\n- :ref:`n:script タグ <tag-script_tag>`\n- :ref:`サブミット関連のタグ <tag_reference_submit>`\n\n> **重要**: 下記タグは機能が実現できないため使用不可。\n> - :ref:`n:submitLink タグ <tag-submit_link_tag>`\n>\n> n:submitLink タグの代替として n:a タグを使用すること。リクエストパラメータはGETメソッドのパラメータで送信する必要がある。",
-    "url-mapping": "フォームのURI属性の書き換えをサーバサイドで実施する仕組み。\n\n**JSP表示時**:\n\n1. n:submit、n:button が出力するinputタグのname属性に `nablarch_uri_override_<JSP上のname属性>|<サブミット先のURI>` を設定\n2. n:form タグはJavaScriptなしで単純に `<form>` タグを出力（ボタン押下時にformのaction URLに押下ボタンのname属性が送られる）\n\n**フォームサブミット時**:\n\n1. KeitaiAccessHandler が、押下ボタンのname属性（`nablarch_uri_override_` から始まる文字列）から元のURI属性を取得\n2. リクエストパラメータに `nablarch_submit` キーで取得したURI属性を設定（JavaScriptで行うformのURI属性書き換えをサーバサイドで実施）\n3. 後続処理に委譲する（以降、ボタンに対応するURIが指定された場合と同じ動作）"
+    "s1": "JavaScriptが動作しない環境（フィーチャーフォン等）でウェブアプリケーションを動作させるハンドラ。下記を実現する:\n\n1. 画面で押されたボタンのボタン名から、想定されるURLにディスパッチ\n2. JSP上にJavaScriptを出力しないよう変数を設定\n\n**クラス名**: `KeitaiAccessHandler`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "s3": "- [http_response_handler](handlers-http_response_handler.json#s1) より後ろに配置すること: JSPへのフォワード処理を行う [http_response_handler](handlers-http_response_handler.json#s1) より後に配置する必要がある。\n- [thread_context_handler](handlers-thread_context_handler.json#s2) より前に配置すること: URIを決定する処理があるため、URIを使用する [thread_context_handler](handlers-thread_context_handler.json#s2) より前に配置する必要がある。",
+    "s4": "携帯端末アクセスハンドラを使用したURLにアクセスした際、下記NablarchタグライブラリのJavaScript出力が抑制される:\n\n- [n:form タグ](../libraries/libraries-tag_reference.json#s3)\n- [n:script タグ](../libraries/libraries-tag_reference.json)\n- [サブミット関連のタグ](../libraries/libraries-tag_reference.json#s1)\n\n> **重要**: 下記タグは機能が実現できないため使用不可。\n> - [n:submitLink タグ](../libraries/libraries-tag_reference.json)\n>\n> n:submitLink タグの代替として n:a タグを使用すること。リクエストパラメータはGETメソッドのパラメータで送信する必要がある。",
+    "s5": "フォームのURI属性の書き換えをサーバサイドで実施する仕組み。\n\n**JSP表示時**:\n\n1. n:submit、n:button が出力するinputタグのname属性に `nablarch_uri_override_<JSP上のname属性>|<サブミット先のURI>` を設定\n2. n:form タグはJavaScriptなしで単純に `<form>` タグを出力（ボタン押下時にformのaction URLに押下ボタンのname属性が送られる）\n\n**フォームサブミット時**:\n\n1. KeitaiAccessHandler が、押下ボタンのname属性（`nablarch_uri_override_` から始まる文字列）から元のURI属性を取得\n2. リクエストパラメータに `nablarch_submit` キーで取得したURI属性を設定（JavaScriptで行うformのURI属性書き換えをサーバサイドで実施）\n3. 後続処理に委譲する（以降、ボタンに対応するURIが指定された場合と同じ動作）"
   }
 }

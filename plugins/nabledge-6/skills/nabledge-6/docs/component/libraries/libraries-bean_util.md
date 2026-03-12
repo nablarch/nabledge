@@ -110,9 +110,9 @@ BeanUtil, nablarch.core.beans.BeanUtil, getProperty, setProperty, createAndCopy,
 
 型変換ルールは `Converter` 実装クラス（`nablarch.core.beans.converter` パッケージ配下）を参照。
 
-> **重要**: デフォルトの型変換ルールでは、精度の小さい型へ変換した場合（例: LongからIntegerへの変換）に変換先の精度を超える値でも正常終了する。BeanUtilでコピーする前に :ref:`validation` で値を事前に検証すること。検証しなかった場合、不正な値がシステムに取り込まれ障害の原因となる可能性がある。
+> **重要**: デフォルトの型変換ルールでは、精度の小さい型へ変換した場合（例: LongからIntegerへの変換）に変換先の精度を超える値でも正常終了する。BeanUtilでコピーする前に [validation](libraries-validation.md) で値を事前に検証すること。検証しなかった場合、不正な値がシステムに取り込まれ障害の原因となる可能性がある。
 
-> **重要**: 型変換ルールはアプリケーション共通の設定。特定の処理のみ異なる型変換ルールを適用したい場合は :ref:`bean_util-format_logical` を参照し、特定のプロパティや型に対して `Converter` 実装を適用すること。
+> **重要**: 型変換ルールはアプリケーション共通の設定。特定の処理のみ異なる型変換ルールを適用したい場合は [bean_util-format_logical](#s5) を参照し、特定のプロパティや型に対して `Converter` 実装を適用すること。
 
 <details>
 <summary>keywords</summary>
@@ -176,9 +176,9 @@ ConversionManager, nablarch.core.beans.ConversionManager, BasicConversionManager
 型変換時に許容するフォーマットを指定することで日付や数値のフォーマットを解除できる（例: カンマ編集された"1,000,000"を数値1000000に変換）。
 
 許容するフォーマットの指定方法（優先順位が高い順）:
-1. :ref:`bean_util-format_logical` - BeanUtil呼び出し時に設定
-2. :ref:`bean_util-format_property_setting` - プロパティ単位にアノテーションで設定
-3. :ref:`bean_util-format_default_setting` - デフォルト設定（システム共通）
+1. [bean_util-format_logical](#s5) - BeanUtil呼び出し時に設定
+2. [bean_util-format_property_setting](#s5) - プロパティ単位にアノテーションで設定
+3. [bean_util-format_default_setting](#s5) - デフォルト設定（システム共通）
 
 <details>
 <summary>keywords</summary>
@@ -213,7 +213,7 @@ ConversionManager, nablarch.core.beans.ConversionManager, BasicConversionManager
 </component>
 ```
 
-> **重要**: `yyyy/MM/dd` と `yyyy/MM/dd HH:mm:ss` のように日付と日時のフォーマットを両方デフォルト指定した場合、日時形式の値も `yyyy/MM/dd` でパースされ時間情報が欠落するケースがある。デフォルトには日付フォーマットのみ指定し、日時形式の項目は :ref:`bean_util-format_property_setting` でオーバーライドすること。
+> **重要**: `yyyy/MM/dd` と `yyyy/MM/dd HH:mm:ss` のように日付と日時のフォーマットを両方デフォルト指定した場合、日時形式の値も `yyyy/MM/dd` でパースされ時間情報が欠落するケースがある。デフォルトには日付フォーマットのみ指定し、日時形式の項目は [bean_util-format_property_setting](#s5) でオーバーライドすること。
 
 <details>
 <summary>keywords</summary>
@@ -224,7 +224,7 @@ BasicConversionManager, nablarch.core.beans.BasicConversionManager, conversionMa
 
 ## コピー対象のプロパティに対して許容するフォーマットを設定する
 
-特定機能だけ :ref:`bean_util-format_default_setting` を適用せずに異なるフォーマットを指定したい場合、コピー元またはコピー先のフィールドに `CopyOption` アノテーションを指定して許容するフォーマットを上書きする。
+特定機能だけ [bean_util-format_default_setting](#s5) を適用せずに異なるフォーマットを指定したい場合、コピー元またはコピー先のフィールドに `CopyOption` アノテーションを指定して許容するフォーマットを上書きする。
 
 アノテーションはコピー元・コピー先どちらに指定しても動作するが、フォーマットした値を持つString型プロパティのフィールドへの指定が推奨。コピー元とコピー先の両方に指定されている場合はコピー元の設定を使用する。
 
@@ -279,7 +279,7 @@ CopyOptions, nablarch.core.beans.CopyOptions, CopyOptions.Builder, nablarch.core
 
 ## BeanUtilでレコードを使用する
 
-Java 16以降のレコードを `BeanUtil` でJava Beansと同様に取り扱うことができる。使用方法は :ref:`bean_util-use_java_beans` に準ずる。
+Java 16以降のレコードを `BeanUtil` でJava Beansと同様に取り扱うことができる。使用方法は [bean_util-use_java_beans](#s1) に準ずる。
 
 > **重要**: レコードは一度生成すると後から変更できない。`BeanUtil.setProperty` や `BeanUtil.copy` の引数に変更対象オブジェクトとしてレコードを渡した場合、実行時例外が発生する。
 

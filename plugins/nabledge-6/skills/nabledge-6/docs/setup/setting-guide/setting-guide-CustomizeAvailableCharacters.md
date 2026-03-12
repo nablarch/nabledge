@@ -6,7 +6,7 @@
 
 使用可能な文字集合は複数の文字集合から構成される（包含関係が存在する）。
 
-![](../../knowledge/setup/setting-guide/assets/setting-guide-CustomizeAvailableCharacters/charset.png)
+![](../../../knowledge/setup/setting-guide/assets/setting-guide-CustomizeAvailableCharacters/charset.png)
 
 <details>
 <summary>keywords</summary>

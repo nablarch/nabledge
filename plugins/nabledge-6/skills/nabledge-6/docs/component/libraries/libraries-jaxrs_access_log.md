@@ -65,7 +65,7 @@ HTTPアクセスログ出力方針, ログレベル INFO, HTTP_ACCESS, log.prope
 
 ## HTTPアクセスログの設定
 
-設定は :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
+設定は [log-app_log_setting](libraries-log.md) で説明したプロパティファイルに行う。
 
 **クラス**: `nablarch.fw.jaxrs.JaxRsAccessLogFormatter`
 
@@ -93,7 +93,7 @@ HTTPアクセスログ出力方針, ログレベル INFO, HTTP_ACCESS, log.prope
 
 > **補足**: `$parameters$` で出力されるリクエストパラメータにはリクエストボディが含まれない。リクエストボディを出力する場合は `$requestBody$` を使用する。
 
-> **重要**: リクエストIDとユーザIDは `BasicLogFormatter` が出力する項目と重複するが、HTTPアクセスログのフォーマットの自由度を高めるために設けている。リクエストID、ユーザIDを出力する場合、取得元が `ThreadContext` なので、ハンドラ構成に :ref:`thread_context_handler` が含まれている必要がある。ユーザIDについては :ref:`thread_context_handler-user_id_attribute_setting` を参照してアプリケーションでセッションに値を設定する必要がある。
+> **重要**: リクエストIDとユーザIDは `BasicLogFormatter` が出力する項目と重複するが、HTTPアクセスログのフォーマットの自由度を高めるために設けている。リクエストID、ユーザIDを出力する場合、取得元が `ThreadContext` なので、ハンドラ構成に [thread_context_handler](../handlers/handlers-thread_context_handler.md) が含まれている必要がある。ユーザIDについては [thread_context_handler-user_id_attribute_setting](../handlers/handlers-thread_context_handler.md) を参照してアプリケーションでセッションに値を設定する必要がある。
 
 > **重要**: デフォルトの `JaxRsBodyMaskingFilter` はJSON形式のみサポートしている。
 
@@ -123,7 +123,7 @@ JaxRsAccessLogFormatter, jaxRsAccessLogFormatter.className, jaxRsAccessLogFormat
 
 ## JSON形式の構造化ログとして出力する
 
-HTTPアクセスログの各項目をJSON値として出力するには `JaxRsAccessJsonLogFormatter` を使用する（デフォルトの `JaxRsAccessLogFormatter` では各項目はmessageの値に文字列として出力される）。設定は :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
+HTTPアクセスログの各項目をJSON値として出力するには `JaxRsAccessJsonLogFormatter` を使用する（デフォルトの `JaxRsAccessLogFormatter` では各項目はmessageの値に文字列として出力される）。設定は [log-app_log_setting](libraries-log.md) で説明したプロパティファイルに行う。
 
 **クラス**: `nablarch.fw.jaxrs.JaxRsAccessJsonLogFormatter`
 
@@ -139,7 +139,7 @@ HTTPアクセスログの各項目をJSON値として出力するには `JaxRsAc
 | jaxRsAccessLogFormatter.endOutputEnabled | | `true` | `false` を指定するとリクエスト処理終了時に出力しない |
 | jaxRsAccessLogFormatter.beginLabel | | `"HTTP ACCESS BEGIN"` | リクエスト処理開始時ログのlabelに出力する値 |
 | jaxRsAccessLogFormatter.endLabel | | `"HTTP ACCESS END"` | リクエスト処理終了時ログのlabelに出力する値 |
-| jaxRsAccessLogFormatter.structuredMessagePrefix | | `"$JSON$"` | JSON形式であることを識別するマーカー文字列。`JsonLogFormatter` に設定しているマーカー文字列と一致させる必要がある（LogWriterの `structuredMessagePrefix` プロパティも同じ値に設定すること。LogWriterのプロパティは :ref:`log-basic_setting` 参照）。 |
+| jaxRsAccessLogFormatter.structuredMessagePrefix | | `"$JSON$"` | JSON形式であることを識別するマーカー文字列。`JsonLogFormatter` に設定しているマーカー文字列と一致させる必要がある（LogWriterの `structuredMessagePrefix` プロパティも同じ値に設定すること。LogWriterのプロパティは [log-basic_setting](libraries-log.md) 参照）。 |
 
 **beginTargetsに指定可能な出力項目（デフォルトで出力される項目に「デフォルト」と記載）:**
 `label` デフォルト, `requestId` デフォルト, `userId` デフォルト, `sessionId` デフォルト, `sessionStoreId`, `url` デフォルト, `port` デフォルト, `method` デフォルト, `queryString`, `parameters`, `sessionScope`, `clientIpAddress` デフォルト, `clientHost` デフォルト, `clientUserAgent`, `requestBody`
@@ -168,7 +168,7 @@ JaxRsAccessJsonLogFormatter, JSON構造化ログ, jaxRsAccessLogFormatter.beginT
 
 セッションストアIDを出力に含めた場合、:ref:`session_store` が発行するセッションを識別するIDが出力される。
 
-> **重要**: セッションストアIDは :ref:`session_store_handler` の往路で記録された値が使用される。セッションストアIDをログに出力する場合、:ref:`jaxrs_access_log_handler` は :ref:`session_store_handler` より後に配置しなければならない。
+> **重要**: セッションストアIDは [session_store_handler](../handlers/handlers-SessionStoreHandler.md) の往路で記録された値が使用される。セッションストアIDをログに出力する場合、[jaxrs_access_log_handler](../handlers/handlers-jaxrs_access_log_handler.md) は [session_store_handler](../handlers/handlers-SessionStoreHandler.md) より後に配置しなければならない。
 
 セッションストアIDはリクエスト処理開始時の状態で固定されるため、以下の仕様となる:
 

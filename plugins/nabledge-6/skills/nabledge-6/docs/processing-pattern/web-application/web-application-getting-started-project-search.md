@@ -9,7 +9,7 @@
 **クラス**: `ProjectSearchForm extends SearchFormBase`
 **アノテーション**: `@Domain`
 
-- 入力値を受け付けるプロパティは全てString型で宣言する（:ref:`バリデーションルールの設定方法 <bean_validation-form_property>` 参照）
+- 入力値を受け付けるプロパティは全てString型で宣言する（[バリデーションルールの設定方法](../../component/libraries/libraries-bean_validation.md) 参照）
 
 ```java
 public class ProjectSearchForm extends SearchFormBase implements Serializable {
@@ -23,7 +23,7 @@ public class ProjectSearchForm extends SearchFormBase implements Serializable {
 
 **検索条件入力JSP（GETフォーム）**
 
-- GETリクエストで送信する場合は :ref:`tag-form_tag` の `method` 属性に `GET` を指定する
+- GETリクエストで送信する場合は [tag-form_tag](../../component/libraries/libraries-tag_reference.md) の `method` 属性に `GET` を指定する
 - GETの場合、ボタン・リンクにカスタムタグを使用できないため、HTMLで作成する（:ref:`tag-using_get` 参照）
 
 ```jsp
@@ -39,8 +39,8 @@ public class ProjectSearchForm extends SearchFormBase implements Serializable {
 **クラス**: `ProjectSearchDto`
 
 - `BeanUtil` でフォームから検索条件Beanに値を移送する。プロパティ名が同一の項目を移送するため、フォームとBeanのプロパティ名を一致させる必要がある
-- 互換性のある型であれば型変換して移送できる（:ref:`BeanUtilの型変換ルール<utility-conversion>` 参照）
-- Beanのプロパティは対応するDBカラムの型に合わせたJavaの型で定義する（:ref:`universal_dao-search_with_condition` 参照）
+- 互換性のある型であれば型変換して移送できる（[BeanUtilの型変換ルール](../../component/libraries/libraries-bean_util.md) 参照）
+- Beanのプロパティは対応するDBカラムの型に合わせたJavaの型で定義する（[universal_dao-search_with_condition](../../component/libraries/libraries-universal_dao.md) 参照）
 
 ```java
 public class ProjectSearchDto implements Serializable {
@@ -51,10 +51,10 @@ public class ProjectSearchDto implements Serializable {
 
 **検索SQL**
 
-- SQLインジェクション防止のため、SQLは外部ファイルに記述する（:ref:`database-use_sql_file` 参照）
-- Beanのプロパティ名でSQLに値をバインドする（:ref:`database-input_bean` 参照）
-- 入力された項目のみを条件とする場合は `$if` 構文を使用する（:ref:`database-use_variable_condition` 参照）
-- ソートキーを画面から選択可能とする場合は `$sort` 構文を使用する（:ref:`database-make_order_by` 参照）
+- SQLインジェクション防止のため、SQLは外部ファイルに記述する（[database-use_sql_file](../../component/libraries/libraries-database.md) 参照）
+- Beanのプロパティ名でSQLに値をバインドする（[database-input_bean](../../component/libraries/libraries-database.md) 参照）
+- 入力された項目のみを条件とする場合は `$if` 構文を使用する（[database-use_variable_condition](../../component/libraries/libraries-database.md) 参照）
+- ソートキーを画面から選択可能とする場合は `$sort` 構文を使用する（[database-make_order_by](../../component/libraries/libraries-database.md) 参照）
 
 ```sql
 SEARCH_PROJECT =
@@ -97,8 +97,8 @@ $sort(sortId){
 - 外部からの入力値はバリデーションのため `InjectForm` を付与する
 - `InjectForm` によるバリデーション済みのフォームはリクエストスコープから取り出せる
 - `BeanUtil` でフォームの値を検索条件Beanにコピーする
-- `UniversalDao#findAllBySqlFile` の第二引数に :ref:`SQLID <database-execute_sqlid>` を指定してSQL検索を実行する
-- ページング検索は `UniversalDao#page` と `UniversalDao#per` を使用する（:ref:`universal_dao-paging` 参照）
+- `UniversalDao#findAllBySqlFile` の第二引数に [SQLID](../../component/libraries/libraries-database.md) を指定してSQL検索を実行する
+- ページング検索は `UniversalDao#page` と `UniversalDao#per` を使用する（[universal_dao-paging](../../component/libraries/libraries-universal_dao.md) 参照）
 
 ```java
 @InjectForm(form = ProjectSearchForm.class, prefix = "searchForm", name = "searchForm")
@@ -139,8 +139,8 @@ private List<Project> searchProject(ProjectSearchDto searchCondition,
 </routes>
 ```
 
-- 値の出力には :ref:`tag-write_tag` を使用する。日付・金額等をフォーマットする場合は `valueFormat` 属性で形式を指定する（:ref:`tag-format_value` 参照）
-- `<app:listSearchResult>` の使用方法は :ref:`list_search_result` 参照
+- 値の出力には [tag-write_tag](../../component/libraries/libraries-tag_reference.md) を使用する。日付・金額等をフォーマットする場合は `valueFormat` 属性で形式を指定する（:ref:`tag-format_value` 参照）
+- `<app:listSearchResult>` の使用方法は [list_search_result](../../guide/biz-samples/biz-samples-03.md) 参照
 
 ```jsp
 <app:listSearchResult>

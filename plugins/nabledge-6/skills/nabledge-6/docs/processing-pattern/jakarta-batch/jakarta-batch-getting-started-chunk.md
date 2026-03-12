@@ -43,7 +43,7 @@
 
 バッチ処理は、JSR352で規定されたインターフェースの実装に加えて、トランザクション制御などの共通的な処理を提供するリスナーによって構成する。
 
-リスナーの詳細は:ref:`バッチアプリケーションで使用するリスナー<jsr352-listener>`および:ref:`リスナーの指定方法<jsr352-listener>`を参照。
+リスナーの詳細は[バッチアプリケーションで使用するリスナー](jakarta-batch-architecture.md)および[リスナーの指定方法](jakarta-batch-architecture.md)を参照。
 
 <details>
 <summary>keywords</summary>
@@ -83,7 +83,7 @@ public class EmployeeForm {
 実装のポイント:
 
 - `open`メソッドで処理対象データを読み込む
-- 大量データを扱う場合は`UniversalDao#defer`で:ref:`遅延ロード<universal_dao-lazy_load>`し、メモリ逼迫を防ぐ
+- 大量データを扱う場合は`UniversalDao#defer`で[遅延ロード](../../component/libraries/libraries-universal_dao.md)し、メモリ逼迫を防ぐ
 - `readItem`は一行分のデータを返却する。返却オブジェクトは後続の`ItemProcessor`の`processItem`の引数になる
 
 ```java
@@ -115,7 +115,7 @@ public class EmployeeSearchReader extends AbstractItemReader {
 }
 ```
 
-SQLファイル（:ref:`universal_dao-sql_file`参照）:
+SQLファイル（[universal_dao-sql_file](../../component/libraries/libraries-universal_dao.md)参照）:
 
 ```sql
 SELECT_EMPLOYEE=

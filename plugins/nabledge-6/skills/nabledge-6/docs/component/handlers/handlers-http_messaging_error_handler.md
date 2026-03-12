@@ -32,7 +32,7 @@ nablarch-fw-messaging-http, com.nablarch.framework, Mavenモジュール, 依存
 
 ## 制約
 
-- :ref:`http_response_handler` より後ろに配置すること。本ハンドラが生成した `HttpResponse` を :ref:`http_response_handler` が処理するため。
+- [http_response_handler](handlers-http_response_handler.md) より後ろに配置すること。本ハンドラが生成した `HttpResponse` を [http_response_handler](handlers-http_response_handler.md) が処理するため。
 
 <details>
 <summary>keywords</summary>

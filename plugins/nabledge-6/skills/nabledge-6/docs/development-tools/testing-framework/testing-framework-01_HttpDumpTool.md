@@ -29,7 +29,7 @@
 ## 前提条件
 
 - 開発環境構築ガイドに従い開発環境を構築済みであること
-- [02_SetUpHttpDumpTool](testing-framework-02_SetUpHttpDumpTool.md) の :ref:`http_dump_tool_prerequisite` 参照
+- [02_SetUpHttpDumpTool](testing-framework-02_SetUpHttpDumpTool.md) の [http_dump_tool_prerequisite](testing-framework-02_SetUpHttpDumpTool.md) 参照
 
 <details>
 <summary>keywords</summary>

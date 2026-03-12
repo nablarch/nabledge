@@ -6,7 +6,7 @@
 
 > **補足**: Nablarch5までは「JAX-RS BeanValidationハンドラ」という名称だった。名称のみ変更され、機能的な差はない。
 
-リソース(アクション)クラスが受け取るForm(Bean)に対して :ref:`bean_validation` を実行するハンドラ。バリデーションエラー発生時は後続ハンドラへ処理を委譲せず、`ApplicationException` を送出する。
+リソース(アクション)クラスが受け取るForm(Bean)に対して [bean_validation](../libraries/libraries-bean_validation.md) を実行するハンドラ。バリデーションエラー発生時は後続ハンドラへ処理を委譲せず、`ApplicationException` を送出する。
 
 **クラス名**: `nablarch.fw.jaxrs.JaxRsBeanValidationHandler`
 
@@ -42,7 +42,7 @@ nablarch-fw-jaxrs, nablarch-core-validation-ee, モジュール依存関係, Mav
 
 ## 制約
 
-:ref:`body_convert_handler` よりも後ろに設定すること。このハンドラは :ref:`body_convert_handler` がリクエストボディから変換したForm(Bean)に対してバリデーションを行うため。
+[body_convert_handler](handlers-body_convert_handler.md) よりも後ろに設定すること。このハンドラは [body_convert_handler](handlers-body_convert_handler.md) がリクエストボディから変換したForm(Bean)に対してバリデーションを行うため。
 
 <details>
 <summary>keywords</summary>

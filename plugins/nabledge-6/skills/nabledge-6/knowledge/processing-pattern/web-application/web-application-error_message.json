@@ -8,7 +8,7 @@
   ],
   "index": [
     {
-      "id": "validation-error-message-display",
+      "id": "s1",
       "title": "バリデーションエラーのメッセージを画面表示する",
       "hints": [
         "ErrorMessages",
@@ -26,6 +26,6 @@
     }
   ],
   "sections": {
-    "validation-error-message-display": "サーバサイドバリデーションのエラーメッセージは :ref:`http_error_handler` によってリクエストスコープに格納される。テンプレートエンジンからリクエストスコープの :java:extdoc:`ErrorMessages <nablarch.fw.web.message.ErrorMessages>` にアクセスしてエラーメッセージを表示する。リクエストスコープの変数名は :ref:`http_error_handler-error_messages` 参照。\n\n> **補足**: JSPのカスタムタグ（:ref:`tag-write_error`）はDOM構造の制約でCSSフレームワークと相性が悪い。リクエストスコープ上のオブジェクトを直接使用することでDOM構造の制約がなくなるため、JSPでもリクエストスコープ上のオブジェクトに直接アクセスしてエラーメッセージを表示できる。\n\n**クラス**: `nablarch.fw.web.message.ErrorMessages`\n\n**特定プロパティのエラーメッセージを表示する場合**:\n- :java:extdoc:`ErrorMessages#hasError <nablarch.fw.web.message.ErrorMessages.hasError(java.lang.String)>` でプロパティ（入力項目のname属性値）に対応するエラー有無を確認\n- :java:extdoc:`ErrorMessages#getMessage <nablarch.fw.web.message.ErrorMessages.getMessage(java.lang.String)>` でプロパティに対応するメッセージを取得\n\n```html\n<input type='text' name='form.txt' />\n<span class=\"error\" th:if=\"${errors.hasError('form.userName')}\"\n    th:text=\"${errors.getMessage('form.userName')}\">入力してください。</span>\n```\n\n**グローバルメッセージ（プロパティに紐付かないメッセージ）を表示する場合**:\n:java:extdoc:`ErrorMessages#getGlobalMessages() <nablarch.fw.web.message.ErrorMessages.getGlobalMessages()>` を使用。\n\n```html\n<ul>\n  <li th:each=\"message : ${errors.globalMessages}\" th:text=\"${message}\"></li>\n</ul>\n```\n\n**全メッセージを表示する場合**:\n:java:extdoc:`ErrorMessages#getAllMessages() <nablarch.fw.web.message.ErrorMessages.getAllMessages()>` を使用。\n\n```html\n<ul>\n  <li th:each=\"message : ${errors.allMessages}\" th:text=\"${message}\">エラーメッセージ</li>\n</ul>\n```"
+    "s1": "サーバサイドバリデーションのエラーメッセージは [http_error_handler](../../component/handlers/handlers-HttpErrorHandler.json#s1) によってリクエストスコープに格納される。テンプレートエンジンからリクエストスコープの `ErrorMessages` にアクセスしてエラーメッセージを表示する。リクエストスコープの変数名は :ref:`http_error_handler-error_messages` 参照。\n\n> **補足**: JSPのカスタムタグ（:ref:`tag-write_error`）はDOM構造の制約でCSSフレームワークと相性が悪い。リクエストスコープ上のオブジェクトを直接使用することでDOM構造の制約がなくなるため、JSPでもリクエストスコープ上のオブジェクトに直接アクセスしてエラーメッセージを表示できる。\n\n**クラス**: `nablarch.fw.web.message.ErrorMessages`\n\n**特定プロパティのエラーメッセージを表示する場合**:\n- `ErrorMessages#hasError` でプロパティ（入力項目のname属性値）に対応するエラー有無を確認\n- `ErrorMessages#getMessage` でプロパティに対応するメッセージを取得\n\n```html\n<input type='text' name='form.txt' />\n<span class=\"error\" th:if=\"${errors.hasError('form.userName')}\"\n    th:text=\"${errors.getMessage('form.userName')}\">入力してください。</span>\n```\n\n**グローバルメッセージ（プロパティに紐付かないメッセージ）を表示する場合**:\n`ErrorMessages#getGlobalMessages()` を使用。\n\n```html\n<ul>\n  <li th:each=\"message : ${errors.globalMessages}\" th:text=\"${message}\"></li>\n</ul>\n```\n\n**全メッセージを表示する場合**:\n`ErrorMessages#getAllMessages()` を使用。\n\n```html\n<ul>\n  <li th:each=\"message : ${errors.allMessages}\" th:text=\"${message}\">エラーメッセージ</li>\n</ul>\n```"
   }
 }

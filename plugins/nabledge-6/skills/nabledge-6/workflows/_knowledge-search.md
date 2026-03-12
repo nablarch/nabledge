@@ -17,12 +17,12 @@ Pointer JSON
   "results": [
     {
       "file": "features/handlers/common/db-connection-management-handler.json",
-      "section_id": "setup",
+      "section_id": "s1",
       "relevance": "high"
     },
     {
       "file": "features/libraries/universal-dao.json",
-      "section_id": "configuration",
+      "section_id": "s2",
       "relevance": "partial"
     }
   ]
@@ -32,7 +32,7 @@ Pointer JSON
 | Field | Type | Description |
 |---|---|---|
 | file | string | Relative path from knowledge directory |
-| section_id | string | Section identifier |
+| section_id | string | Section identifier (s1, s2, s3... format) |
 | relevance | "high" \| "partial" | high: can directly answer / partial: partially relevant |
 
 results sorted by relevance descending (high → partial). Empty array means no match.

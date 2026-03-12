@@ -15,43 +15,13 @@
 
 > **重要**: この機能では静的なコード情報（値と名称のマッピング）を管理する。「商品コード」「企業コード」のように値に紐づく情報が動的に変化するものは管理対象外。そのような情報はアプリケーションでマスタテーブルを作成して対処すること。
 
-> **重要**: この機能を使用すると、コードの名称を持つテーブルとコード値を持つテーブルにRDBMSの参照整合性制約を設定できない。制約チェックには :ref:`code-validation` を使用すること。
+> **重要**: この機能を使用すると、コードの名称を持つテーブルとコード値を持つテーブルにRDBMSの参照整合性制約を設定できない。制約チェックには [code-validation](#) を使用すること。
 
-> **補足**: 静的なコード情報はenumで表現した方が良い。理由：(1) DBを使用したコード定義は大掛かりでメンテナンスコストが高い (2) Javaでコード値を扱うための数値型定数定義と二重メンテナンスが発生する。NablarchはenumとDBの相互変換機能を持っていないが、Domaを使用することでenumの値をDB登録できる。設定は :ref:`doma_adaptor` を参照。
+> **補足**: 静的なコード情報はenumで表現した方が良い。理由：(1) DBを使用したコード定義は大掛かりでメンテナンスコストが高い (2) Javaでコード値を扱うための数値型定数定義と二重メンテナンスが発生する。NablarchはenumとDBの相互変換機能を持っていないが、Domaを使用することでenumの値をDB登録できる。設定は [doma_adaptor](../adapters/adapters-doma_adaptor.md) を参照。
 
-**国際化対応**: 言語ごとに名称を管理可能。詳細は :ref:`code-use_multilingualization` を参照。
+**国際化対応**: 言語ごとに名称を管理可能。詳細は [code-use_multilingualization](#) を参照。
 
-**テーブル管理**: 値および名称の情報をDBで管理する。事前にテーブルを作成し、静的なコード情報を登録しておく必要がある。詳細は :ref:`code-setup_table` を参照。
-
-<details>
-<summary>keywords</summary>
-
-コード管理, コード値名称マッピング, 値, 名称, 略称, 国際化対応, 多言語化, 参照整合性制約, code-validation, doma_adaptor, テーブル管理
-
-</details>
-
-## モジュール一覧
-
-**モジュール**:
-```xml
-<dependency>
-  <groupId>com.nablarch.framework</groupId>
-  <artifactId>nablarch-common-code</artifactId>
-</dependency>
-<dependency>
-  <groupId>com.nablarch.framework</groupId>
-  <artifactId>nablarch-common-code-jdbc</artifactId>
-</dependency>
-```
-
-<details>
-<summary>keywords</summary>
-
-nablarch-common-code, nablarch-common-code-jdbc, モジュール依存関係, Maven
-
-</details>
-
-## コード管理機能を使用する為の初期設定
+**テーブル管理**: 値および名称の情報をDBで管理する。事前にテーブルを作成し、静的なコード情報を登録しておく必要がある。詳細は [code-setup_table](#) を参照。
 
 ## コード管理機能を使用する為の初期設定
 
@@ -72,7 +42,7 @@ nablarch-common-code, nablarch-common-code-jdbc, モジュール依存関係, Ma
 
 **設定ポイント**:
 - `BasicCodeManager` のコンポーネント名は **codeManager** とすること
-- `BasicStaticDataCache` の `loadOnStartup` 設定は :ref:`static_data_cache-cache_timing` を参照すること
+- `BasicStaticDataCache` の `loadOnStartup` 設定は [static_data_cache-cache_timing](libraries-static_data_cache.md) を参照すること
 - `BasicCodeLoader` および `BasicStaticDataCache` は初期化が必要なため初期化リストに設定すること
 
 ```xml
@@ -111,17 +81,29 @@ nablarch-common-code, nablarch-common-code-jdbc, モジュール依存関係, Ma
 <details>
 <summary>keywords</summary>
 
-BasicCodeManager, BasicStaticDataCache, BasicCodeLoader, CodePatternSchema, CodeNameSchema, BasicApplicationInitializer, コード管理機能設定, コードパターンテーブル, コード名称テーブル, 初期設定, codeManager, loadOnStartup
+コード管理, コード値名称マッピング, 値, 名称, 略称, 国際化対応, 多言語化, 参照整合性制約, code-validation, doma_adaptor, テーブル管理, BasicCodeManager, BasicStaticDataCache, BasicCodeLoader, CodePatternSchema, CodeNameSchema, BasicApplicationInitializer, コード管理機能設定, コードパターンテーブル, コード名称テーブル, 初期設定, codeManager, loadOnStartup
 
 </details>
 
-## 機能毎に使用するコード情報を切り替える
+## モジュール一覧
+
+**モジュール**:
+```xml
+<dependency>
+  <groupId>com.nablarch.framework</groupId>
+  <artifactId>nablarch-common-code</artifactId>
+</dependency>
+<dependency>
+  <groupId>com.nablarch.framework</groupId>
+  <artifactId>nablarch-common-code-jdbc</artifactId>
+</dependency>
+```
 
 ## 機能毎に使用するコード情報を切り替える
 
 コードパターンテーブルにパターン列を定義し、パターンを切り替えることで機能ごとに表示・非表示を切り替えられる。
 
-パターン列は `CodePatternSchema.patternColumnNames` に設定する（設定方法は :ref:`code-setup_table` を参照）。
+パターン列は `CodePatternSchema.patternColumnNames` に設定する（設定方法は [code-setup_table](#) を参照）。
 
 パターン指定でコード情報を取得（Java）:
 
@@ -146,7 +128,7 @@ List<String> pattern2 = CodeUtil.getValues("GENDER", "PATTERN2");
 <details>
 <summary>keywords</summary>
 
-CodeUtil, パターン切り替え, CodePatternSchema, patternColumnNames, getValues, codeSelect, pattern属性, PATTERN1, PATTERN2
+nablarch-common-code, nablarch-common-code-jdbc, モジュール依存関係, Maven, CodeUtil, パターン切り替え, CodePatternSchema, patternColumnNames, getValues, codeSelect, pattern属性, PATTERN1, PATTERN2
 
 </details>
 
@@ -192,7 +174,7 @@ SORT_ORDER, ソート順定義, コード名称テーブル, codeSelect
 
 ## 名称、略称以外の名称を定義する
 
-オプション名称カラムをコード名称テーブルに追加して対応する。オプション名称カラム名は `CodePatternSchema.patternColumnNames` に設定する（設定方法は :ref:`code-setup_table` を参照）。
+オプション名称カラムをコード名称テーブルに追加して対応する。オプション名称カラム名は `CodePatternSchema.patternColumnNames` に設定する（設定方法は [code-setup_table](#) を参照）。
 
 ```java
 CodeUtil.getOptionalName("GENDER", "MALE", "KANA_NAME"); // -> おとこ
@@ -218,14 +200,14 @@ CodeUtil, getOptionalName, オプション名称, OPTIONAL_NAME, optionColumnNam
 
 **アノテーション**: `nablarch.common.code.validator.ee.CodeValue`（Bean Validation用）、`nablarch.common.code.validator.CodeValue`（Nablarch Validation用）
 
-Bean Validation（:ref:`bean_validation`）:
+Bean Validation（[bean_validation](libraries-bean_validation.md)）:
 
 ```java
 @CodeValue(codeId = "GENDER")
 private String gender;
 ```
 
-Nablarch Validation（:ref:`nablarch_validation`）:
+Nablarch Validation（[nablarch_validation](libraries-nablarch_validation.md)）:
 
 ```java
 @CodeValue(codeId = "GENDER")
@@ -241,7 +223,7 @@ public void setGender(String gender) {
 private String gender;
 ```
 
-> **補足**: :ref:`ドメインバリデーション <bean_validation-domain_validation>` を使用した場合、1つのドメインに対して1つのパターンしか指定できない。複数パターンに対応するには、パターンごとにドメインを定義する必要がある（バリデーションで必要なドメインのみ定義すればよい）。
+> **補足**: [ドメインバリデーション](libraries-bean_validation.md) を使用した場合、1つのドメインに対して1つのパターンしか指定できない。複数パターンに対応するには、パターンごとにドメインを定義する必要がある（バリデーションで必要なドメインのみ定義すればよい）。
 
 ```java
 public class SampleDomainBean {

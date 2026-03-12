@@ -10,11 +10,11 @@ URL形式: `/<baseUri>/<className>/<methodName>`
 - `className`: クラス名
 - `methodName`: HTTPメソッド + メソッド名として実装。`post`メソッドでURLのmethodNameが`register`の場合、アクションクラスのメソッド名は`postRegister`。`get`/`post`の場合は`do`も使用可（例: `doRegister`）
 
-> **重要**: クラス名を元にURLが決まるため柔軟なURLを使用できない。例えば`/user/index`のようなURLを使いたい場合、クラス名を`user`にする必要があり、Javaの一般的なクラス名規約に違反するため推奨されない。このハンドラよりも、URLとアクションクラスとのマッピングを柔軟に設定できる :ref:`router_adaptor` の使用を推奨する。
+> **重要**: クラス名を元にURLが決まるため柔軟なURLを使用できない。例えば`/user/index`のようなURLを使いたい場合、クラス名を`user`にする必要があり、Javaの一般的なクラス名規約に違反するため推奨されない。このハンドラよりも、URLとアクションクラスとのマッピングを柔軟に設定できる [router_adaptor](../adapters/adapters-router_adaptor.md) の使用を推奨する。
 
 処理内容: URIを解析し、対応するアクションのメソッドを呼び出す。
 
-![処理の流れ](../../knowledge/component/handlers/assets/handlers-http_request_java_package_mapping/flow.png)
+![処理の流れ](../../../knowledge/component/handlers/assets/handlers-http_request_java_package_mapping/flow.png)
 
 <details>
 <summary>keywords</summary>
@@ -87,7 +87,7 @@ baseUri, basePackage, ディスパッチ設定, URLマッピング設定, packag
 
 ベースパッケージを全Actionが置かれるパッケージに設定し、URIのクラス名にベースパッケージからActionまでのパスを記載する。
 
-![パッケージマッピング例](../../knowledge/component/handlers/assets/handlers-http_request_java_package_mapping/package_mapping.png)
+![パッケージマッピング例](../../../knowledge/component/handlers/assets/handlers-http_request_java_package_mapping/package_mapping.png)
 
 <details>
 <summary>keywords</summary>

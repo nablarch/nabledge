@@ -8,7 +8,7 @@
 
 > **補足**: ブラウザが閉じられた場合などにテーブル上にトークンが残ることがある。期限切れのトークンは定期的に削除する必要がある。
 
-> **重要**: HTTPセッションを使用した :ref:`二重サブミット防止 <tag-double_submission>` はCSRF対策に使用できたが、本機能はユーザを識別せずにトークンをDBに格納しているためCSRF対策に使用できない。本機能を使用する場合は、CSRF対策に :ref:`csrf_token_verification_handler` を使用すること。
+> **重要**: HTTPセッションを使用した :ref:`二重サブミット防止 <tag-double_submission>` はCSRF対策に使用できたが、本機能はユーザを識別せずにトークンをDBに格納しているためCSRF対策に使用できない。本機能を使用する場合は、CSRF対策に [csrf_token_verification_handler](../handlers/handlers-csrf_token_verification_handler.md) を使用すること。
 
 <details>
 <summary>keywords</summary>
@@ -47,7 +47,7 @@ nablarch-fw-web-doublesubmit-jdbc, データベース二重サブミット防止
 
 テーブル名およびカラム名は変更可能。変更する場合は `DbTokenManager.dbTokenSchema` に `DbTokenSchema` のコンポーネントを定義する。
 
-`tokenManager` という名前でコンポーネント定義を追加する（:ref:`初期化<repository-initialize_object>` が必要）。これによりトークンがデータベースで管理される。
+`tokenManager` という名前でコンポーネント定義を追加する（[初期化](libraries-repository.md) が必要）。これによりトークンがデータベースで管理される。
 
 ```xml
 <component name="tokenManager" class="nablarch.common.web.token.DbTokenManager">
@@ -81,7 +81,7 @@ nablarch-fw-web-doublesubmit-jdbc, データベース二重サブミット防止
 <component name="tokenGenerator" class="nablarch.common.web.token.UUIDV4TokenGenerator" />
 ```
 
-> **重要**: :ref:`テスティングフレームワークのトークン発行<how_to_set_token_in_request_unit_test>` はトークンのDB保存に対応していない。自動テスト実行時には `HttpSessionTokenManager` に差し替えてテストする必要がある。
+> **重要**: [テスティングフレームワークのトークン発行](../../development-tools/testing-framework/testing-framework-02_RequestUnitTest.md) はトークンのDB保存に対応していない。自動テスト実行時には `HttpSessionTokenManager` に差し替えてテストする必要がある。
 >
 > ```xml
 > <!-- トークンをHTTPセッションに保存する -->

@@ -32,7 +32,7 @@ nablarch-fw-batch, com.nablarch.framework, Maven依存関係, モジュール依
 
 ## 制約
 
-:ref:`thread_context_handler` よりも後ろに設定すること。本ハンドラはスレッドコンテキスト上のリクエストIDを元にプロセス多重起動チェックを行うため。
+[thread_context_handler](handlers-thread_context_handler.md) よりも後ろに設定すること。本ハンドラはスレッドコンテキスト上のリクエストIDを元にプロセス多重起動チェックを行うため。
 
 <details>
 <summary>keywords</summary>
@@ -92,7 +92,7 @@ BasicDuplicateProcessChecker, nablarch.fw.handler.BasicDuplicateProcessChecker, 
 
 ## 多重起動防止チェック処理をカスタマイズする
 
-`DuplicateProcessChecker` の実装クラスを作成することでカスタマイズ可能。実装クラスは :ref:`duplicate_process_check_handler-configuration` の設定方法に従い、本ハンドラの `duplicateProcessChecker` プロパティに設定して使用する。
+`DuplicateProcessChecker` の実装クラスを作成することでカスタマイズ可能。実装クラスは [duplicate_process_check_handler-configuration](#s3) の設定方法に従い、本ハンドラの `duplicateProcessChecker` プロパティに設定して使用する。
 
 <details>
 <summary>keywords</summary>

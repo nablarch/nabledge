@@ -4,7 +4,7 @@
 
 ## 環境構築手順
 
-> **補足**: ExampleはNablarchアプリケーションフレームワークの機能使用方法を示した実装例。本格的なアプリケーション作成には使用しないこと。本格的なアプリケーションは :ref:`blank_project` から作成すること。
+> **補足**: ExampleはNablarchアプリケーションフレームワークの機能使用方法を示した実装例。本格的なアプリケーション作成には使用しないこと。本格的なアプリケーションは [blank_project](../../setup/blank-project/blank-project-blank_project.md) から作成すること。
 
 ExampleはApache Mavenを使用してビルド・実行する。Apache MavenのPCへのインストール及び必要な設定は :ref:`maven` を参照すること。
 
@@ -40,7 +40,7 @@ Java 21, Java 17, JDK設定, Java 21セットアップ
 ## ウェブアプリケーション
 
 - [ウェブアプリケーション (JSP)](https://github.com/nablarch/nablarch-example-web) (:ref:`解説 <getting_started>`)
-- [ウェブアプリケーション (Thymeleaf)](https://github.com/nablarch/nablarch-example-thymeleaf-web) (:ref:`解説 <web_thymeleaf_adaptor>`)
+- [ウェブアプリケーション (Thymeleaf)](https://github.com/nablarch/nablarch-example-thymeleaf-web) ([解説](../../component/adapters/adapters-web_thymeleaf_adaptor.md))
 
 <details>
 <summary>keywords</summary>
@@ -53,7 +53,7 @@ JSP, Thymeleaf, ウェブアプリケーション, nablarch-example-web, nablarc
 
 - [RESTfulウェブサービス](https://github.com/nablarch/nablarch-example-rest) (:ref:`解説 <rest_getting_started>`)
 - [HTTPメッセージング (受信)](https://github.com/nablarch/nablarch-example-http-messaging) (:ref:`解説 <http-messaging_getting_started>`)
-- [HTTPメッセージング (送信)](https://github.com/nablarch/nablarch-example-http-messaging-send) (:ref:`解説 <http_system_messaging-message_send>`)
+- [HTTPメッセージング (送信)](https://github.com/nablarch/nablarch-example-http-messaging-send) ([解説](../../component/libraries/libraries-http_system_messaging.md))
 
 <details>
 <summary>keywords</summary>
@@ -76,12 +76,12 @@ Jakarta Batch, Nablarchバッチ, バッチアプリケーション, nablarch-ex
 
 ## メッセージング
 
-- MOMによるメッセージング ([解説](mom-messaging-getting_started.md))
+- MOMによるメッセージング (:ref:`解説 <mom_messaging_getting_started>`)
   - [応答不要メッセージ送信](https://github.com/nablarch/nablarch-example-mom-delayed-send)
   - [同期応答メッセージ送信](https://github.com/nablarch/nablarch-example-mom-sync-send-batch)
   - [応答不要メッセージ受信](https://github.com/nablarch/nablarch-example-mom-delayed-receive)
   - [同期応答メッセージ受信](https://github.com/nablarch/nablarch-example-mom-sync-receive)
-- [テーブルをキューとして使ったメッセージング](https://github.com/nablarch/nablarch-example-db-queue) ([解説](db-messaging-getting_started.md))
+- [テーブルをキューとして使ったメッセージング](https://github.com/nablarch/nablarch-example-db-queue) (:ref:`解説 <db_messaging_getting_started>`)
 
 <details>
 <summary>keywords</summary>

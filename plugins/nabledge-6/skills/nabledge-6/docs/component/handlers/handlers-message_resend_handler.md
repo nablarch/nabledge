@@ -41,8 +41,8 @@ nablarch-fw-messaging, com.nablarch.framework, Mavenモジュール
 
 ## 制約
 
-- :ref:`message_reply_handler` よりも後ろに設定すること: 作成した応答電文を送信するために、:ref:`message_reply_handler` より後ろに配置する必要がある。
-- :ref:`transaction_management_handler` よりも後ろに設定すること: 応答電文をDBに保存するため、:ref:`transaction_management_handler` より後ろに配置する必要がある。
+- [message_reply_handler](handlers-message_reply_handler.md) よりも後ろに設定すること: 作成した応答電文を送信するために、[message_reply_handler](handlers-message_reply_handler.md) より後ろに配置する必要がある。
+- [transaction_management_handler](handlers-transaction_management_handler.md) よりも後ろに設定すること: 応答電文をDBに保存するため、[transaction_management_handler](handlers-transaction_management_handler.md) より後ろに配置する必要がある。
 
 <details>
 <summary>keywords</summary>
@@ -78,7 +78,7 @@ SentMessageTableSchema, nablarch.fw.messaging.tableschema.SentMessageTableSchema
 - フレームワーク制御ヘッダの再送要求フラグに値が設定されている
 - 受信した要求電文のリクエストIDとメッセージIDに紐づくデータが応答電文保存テーブルに存在している
 
-フレームワーク制御ヘッダの詳細は :ref:`フレームワーク制御ヘッダ <mom_system_messaging-fw_header>` を参照。
+フレームワーク制御ヘッダの詳細は [フレームワーク制御ヘッダ](../libraries/libraries-mom_system_messaging.md) を参照。
 
 > **重要**: 相手先システムが要求電文を再送する際は以下の制約を満たす必要がある。満たせない場合は本ハンドラを使用できないため、プロジェクト側で再送制御ハンドラを新規作成すること。
 > - 再送電文の相関メッセージIDには、初回送信時の要求電文のメッセージIDを設定すること

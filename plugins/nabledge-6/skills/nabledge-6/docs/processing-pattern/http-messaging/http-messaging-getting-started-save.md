@@ -6,7 +6,7 @@
 
 ## フォーマットファイルの作成
 
-HTTPメッセージングのリクエストは :ref:`data_format` で解析する。フォーマットファイル名は「リクエストID + `_RECEIVE`」形式にする。
+HTTPメッセージングのリクエストは [data_format](../../component/libraries/libraries-data_format.md) で解析する。フォーマットファイル名は「リクエストID + `_RECEIVE`」形式にする。
 
 ```bash
 file-type:        "JSON"
@@ -31,7 +31,7 @@ text-encoding:    "UTF-8"
 
 ## フォームの作成
 
-:ref:`bean_validation` アノテーションをフィールドに設定する。
+[bean_validation](../../component/libraries/libraries-bean_validation.md) アノテーションをフィールドに設定する。
 
 ```java
 public class ProjectForm {
@@ -47,9 +47,9 @@ public class ProjectForm {
 
 `MessagingAction` を継承し、`MessagingAction#onReceive` に受信時処理を実装する。
 
-リクエストボディの値は :ref:`data_format` で解析済みの状態で `RequestMessage` が保持しており、`getParamMap` メソッドで取得する。
+リクエストボディの値は [data_format](../../component/libraries/libraries-data_format.md) で解析済みの状態で `RequestMessage` が保持しており、`getParamMap` メソッドで取得する。
 
-:ref:`bean_validation` でバリデーション後、`UniversalDao` でDBに登録する。処理結果のレスポンスコードを `ResponseMessage` に設定して返却する。
+[bean_validation](../../component/libraries/libraries-bean_validation.md) でバリデーション後、`UniversalDao` でDBに登録する。処理結果のレスポンスコードを `ResponseMessage` に設定して返却する。
 
 ```java
 public class ProjectSaveAction extends MessagingAction {
@@ -69,7 +69,7 @@ public class ProjectSaveAction extends MessagingAction {
 }
 ```
 
-> **補足**: 業務例外が送出された場合は、:ref:`http_messaging_error_handler` の処理によってレスポンスコード「400」が設定される。
+> **補足**: 業務例外が送出された場合は、[http_messaging_error_handler](../../component/handlers/handlers-http_messaging_error_handler.md) の処理によってレスポンスコード「400」が設定される。
 
 <details>
 <summary>keywords</summary>

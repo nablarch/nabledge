@@ -7,7 +7,7 @@
   ],
   "index": [
     {
-      "id": "general-rules",
+      "id": "s1",
       "title": "全般的なルール",
       "hints": [
         "設定項目名ルール",
@@ -17,7 +17,7 @@
       ]
     },
     {
-      "id": "common-prefix",
+      "id": "s2",
       "title": "共通プレフィックス",
       "hints": [
         "nablarch.",
@@ -28,7 +28,7 @@
       ]
     },
     {
-      "id": "single-component-property",
+      "id": "s3",
       "title": "単一のコンポーネント内でのみ使用される設定項目",
       "hints": [
         "nablarch.<コンポーネント名>.<プロパティ名>",
@@ -39,7 +39,7 @@
       ]
     },
     {
-      "id": "multi-component-property",
+      "id": "s4",
       "title": "複数のコンポーネント定義に跨る設定項目",
       "hints": [
         "nablarch.commonProperty",
@@ -48,7 +48,7 @@
       ]
     },
     {
-      "id": "db-table-schema",
+      "id": "s5",
       "title": "DBテーブルのスキーマ情報",
       "hints": [
         "nablarch.<テーブル名>Table.<設定値>",
@@ -60,10 +60,10 @@
     }
   ],
   "sections": {
-    "general-rules": "設定項目の命名ルール:\n\n- 項目名はlowerCamelCaseで記述する\n- 区切り文字に`.`（ドット）を使用する",
-    "common-prefix": "Nablarchがデフォルトで用意する設定項目の項目名には、プレフィックス`nablarch.`が付与される。これにより名前空間となり、適用PJとの項目名重複を防止できる。また、ある設定項目がNablarchデフォルトのものか、PJで個別に作成したものかを判別できる。\n\n> **補足**: PJが個別に作成する項目についても、所定のプレフィックスを付与することを推奨する。これはPJ個別の項目を検索しやすくするためである。",
-    "single-component-property": "単一のコンポーネント内でのみ使用される設定項目の命名ルール:\n\n```\nnablarch.<コンポーネント名>.<プロパティ名>\n```\n\n**例**:\n\n```bash\n# コードを起動時に読み込むかどうか\nnablarch.codeCache.loadOnStartUp=true\n```\n\nこの設定項目は、実際は以下のコンポーネント定義で使用される。\n\n```xml\n<!-- コンポーネント名は 'codeCache' -->\n<component name=\"codeCache\"\n           class=\"nablarch.core.cache.BasicStaticDataCache\">\n\n  <!-- プロパティ名は 'loadOnStartUp' -->\n  <property name=\"loadOnStartup\" value=\"${nablarch.codeCache.loadOnStartUp}\"/>\n\n  <!-- 中略 -->\n</component>\n```\n\nこの場合、`codeCache`がコンポーネント名、`loadOnStartUp`がそのコンポーネントのプロパティ名であり、共通プレフィックス`nablarch.`が付与されるので、`nablarch.codeCache.loadOnStartUp`となる。このルールにより、ある項目がどのコンポーネントで使用されるものかを調査しやすくなる。",
-    "multi-component-property": "複数のコンポーネント定義に跨る設定項目の命名ルール:\n\n```\nnablarch.commonProperty.<項目名>\n```",
-    "db-table-schema": "Nablarch Application Frameworkが使用するテーブルのスキーマ情報の命名ルール:\n\n```\nnablarch.<Nablarchデフォルトのテーブル名>Table.<各種設定値>\n```\n\n**例**（メッセージ機能のデフォルトテーブル名`MESSAGE`の場合）:\n\n```bash\n# メッセージテーブルのテーブル物理名\nnablarch.messageTable.tableName=MESSAGE\n# メッセージテーブルのIDカラム物理名\nnablarch.messageTable.idColumnName=MESSAGE_ID\n# メッセージテーブルの言語カラム物理名\nnablarch.messageTable.langColumnName=LANG\n# メッセージテーブルのメッセージカラム物理名\nnablarch.messageTable.valueColumnName=MESSAGE\n```\n\n> **補足**: Nablarch Application Frameworkが使用するテーブルをデフォルト値のまま使用する場合は、この設定値を意識する必要はない。"
+    "s1": "設定項目の命名ルール:\n\n- 項目名はlowerCamelCaseで記述する\n- 区切り文字に`.`（ドット）を使用する",
+    "s2": "Nablarchがデフォルトで用意する設定項目の項目名には、プレフィックス`nablarch.`が付与される。これにより名前空間となり、適用PJとの項目名重複を防止できる。また、ある設定項目がNablarchデフォルトのものか、PJで個別に作成したものかを判別できる。\n\n> **補足**: PJが個別に作成する項目についても、所定のプレフィックスを付与することを推奨する。これはPJ個別の項目を検索しやすくするためである。",
+    "s3": "単一のコンポーネント内でのみ使用される設定項目の命名ルール:\n\n```\nnablarch.<コンポーネント名>.<プロパティ名>\n```\n\n**例**:\n\n```bash\n# コードを起動時に読み込むかどうか\nnablarch.codeCache.loadOnStartUp=true\n```\n\nこの設定項目は、実際は以下のコンポーネント定義で使用される。\n\n```xml\n<!-- コンポーネント名は 'codeCache' -->\n<component name=\"codeCache\"\n           class=\"nablarch.core.cache.BasicStaticDataCache\">\n\n  <!-- プロパティ名は 'loadOnStartUp' -->\n  <property name=\"loadOnStartup\" value=\"${nablarch.codeCache.loadOnStartUp}\"/>\n\n  <!-- 中略 -->\n</component>\n```\n\nこの場合、`codeCache`がコンポーネント名、`loadOnStartUp`がそのコンポーネントのプロパティ名であり、共通プレフィックス`nablarch.`が付与されるので、`nablarch.codeCache.loadOnStartUp`となる。このルールにより、ある項目がどのコンポーネントで使用されるものかを調査しやすくなる。",
+    "s4": "複数のコンポーネント定義に跨る設定項目の命名ルール:\n\n```\nnablarch.commonProperty.<項目名>\n```",
+    "s5": "Nablarch Application Frameworkが使用するテーブルのスキーマ情報の命名ルール:\n\n```\nnablarch.<Nablarchデフォルトのテーブル名>Table.<各種設定値>\n```\n\n**例**（メッセージ機能のデフォルトテーブル名`MESSAGE`の場合）:\n\n```bash\n# メッセージテーブルのテーブル物理名\nnablarch.messageTable.tableName=MESSAGE\n# メッセージテーブルのIDカラム物理名\nnablarch.messageTable.idColumnName=MESSAGE_ID\n# メッセージテーブルの言語カラム物理名\nnablarch.messageTable.langColumnName=LANG\n# メッセージテーブルのメッセージカラム物理名\nnablarch.messageTable.valueColumnName=MESSAGE\n```\n\n> **補足**: Nablarch Application Frameworkが使用するテーブルをデフォルト値のまま使用する場合は、この設定値を意識する必要はない。"
   }
 }

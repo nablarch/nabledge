@@ -26,7 +26,7 @@
 | 3 | 登録画面に戻る | /action/client/back | ClientAction#back | POST |
 | 4 | 登録処理の実行 | /action/client/create | ClientAction#create | POST |
 
-![テーブル定義](../../knowledge/processing-pattern/web-application/assets/web-application-getting-started-client-create/client_table.png)
+![テーブル定義](../../../knowledge/processing-pattern/web-application/assets/web-application-getting-started-client-create/client_table.png)
 
 <details>
 <summary>keywords</summary>

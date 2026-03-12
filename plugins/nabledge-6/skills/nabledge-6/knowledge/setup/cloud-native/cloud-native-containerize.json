@@ -4,10 +4,9 @@
   "official_doc_urls": [
     "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/cloud_native/containerize/index.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "cloud-native-requirements",
+      "id": "s1",
       "title": "クラウド環境に適したシステムに必要なこと",
       "hints": [
         "クラウドネイティブ",
@@ -18,7 +17,7 @@
       ]
     },
     {
-      "id": "web-app-modifications",
+      "id": "s2",
       "title": "Nablarchウェブアプリケーションに必要な修正",
       "hints": [
         "ステートレス化",
@@ -31,7 +30,7 @@
       ]
     },
     {
-      "id": "batch-app-modifications",
+      "id": "s3",
       "title": "Nablarchバッチアプリケーションに必要な修正",
       "hints": [
         "バッチアプリケーション",
@@ -41,7 +40,7 @@
       ]
     },
     {
-      "id": "container-archetype",
+      "id": "s4",
       "title": "コンテナ用のアーキタイプ",
       "hints": [
         "Jib",
@@ -54,9 +53,9 @@
     }
   ],
   "sections": {
-    "cloud-native-requirements": "**クラウドネイティブ**とは、AWSなどのクラウド環境で動かすことを前提とし、クラウド環境に最適化して開発されたシステムのことを指す。スケーラビリティを持たせるため、アプリケーションが状態を持たないようにするといった対応が必要となる。\n\n**[The Twelve-Factor App](https://12factor.net/ja/)** は、クラウド環境に適したシステムを開発するときに考慮すべきことを12の要素にまとめた方法論（[Heroku](https://jp.heroku.com/)のエンジニアが提唱）。本章で説明するNablarchアプリケーションの修正内容は、The Twelve-Factor Appの方法をもとにしている。",
-    "web-app-modifications": ":ref:`標準のウェブアプリケーションのブランクプロジェクト <firstStepGenerateWebBlankProject>` を使ったNablarchウェブアプリケーションには、以下の修正が必要。\n\n**ステートレス化**\n[The Twelve-Factor App VI. プロセス](https://12factor.net/ja/processes)では、アプリケーションはステートレスでなければならないとされている。標準ブランクプロジェクトはHTTPセッションを使った状態管理が有効なため、この方針に反している。\n設定方法: :ref:`stateless_web_app`\n\n**ログ出力**\n[The Twelve-Factor App XI. ログ](https://12factor.net/ja/logs)では、ログはすべて標準出力に書き出し、ファイルには出力すべきでないとされている。標準ブランクプロジェクトはロガーの出力先にファイルが指定されているため、この方針に反している。\n設定方法: :ref:`log-basic_setting`\n\n**環境変数を使った設定**\n[The Twelve-Factor App III. 設定](https://12factor.net/ja/config)では、環境ごとに切り替える設定（他サービスとの接続設定など）は環境変数から設定すべきとされている。標準ブランクプロジェクトはMavenのプロファイルで切り替えているため、この方針に反している。\n設定方法: :ref:`repository-overwrite_environment_configuration_by_os_env_var`",
-    "batch-app-modifications": "The Twelve-Factor AppはSaaSアプリケーションを開発するための方法論であるが、その要素の多くは、クラウド環境に適したバッチアプリケーションを開発するときにおいても適用できる。\n\n:ref:`標準のバッチアプリケーションのブランクプロジェクト <firstStepGenerateBatchBlankProject>` を使ったNablarchバッチアプリケーションには、以下の修正が必要。\n\n**ログ出力**: ウェブアプリケーションと同様に、ログの出力先をファイルから標準出力に変更する。設定方法: :ref:`log-basic_setting`\n\n**環境変数を使った設定**: ウェブアプリケーションと同様に、Mavenプロファイルから環境変数による設定切り替えに変更する。設定方法: :ref:`repository-overwrite_environment_configuration_by_os_env_var`",
-    "container-archetype": "NablarchはDockerコンテナ上で動かすことを前提としたウェブアプリケーションとバッチアプリケーションのアーキタイプを提供している。このアーキタイプで生成されたブランクプロジェクトには、:ref:`modify_nablarch_app_for_cloud_native` および :ref:`modify_nablarch_batch_for_cloud_native` で説明した修正があらかじめ適用されている。また、[Jib](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin)（JavaアプリケーションのDockerコンテナイメージ作成に特化したMavenプラグイン）が組み込まれているため、開発者はすぐにDockerコンテナ用のNablarchアプリケーション開発を始めることができる。\n\n> **補足**: JibはDockerfileを書かなくてもコンテナイメージを作成できる。Javaアプリケーション向けに抽象化されており、特別な設定なしにベストプラクティスを考慮したコンテナイメージを作成できる。Dockerfileを直接使う場合はレイヤ構造など高い知識が必要だが、Jibはその複雑さを吸収している。\n\n詳細:\n- :ref:`前提条件 <firstStepPreamble>`\n- :ref:`プロジェクトの構成 <container_web_project_summary>`\n- :ref:`環境ごとの設定の切り替えについて <container_production_config>`\n- :ref:`初期セットアップ手順 <first_step_container>`"
+    "s1": "**クラウドネイティブ**とは、AWSなどのクラウド環境で動かすことを前提とし、クラウド環境に最適化して開発されたシステムのことを指す。スケーラビリティを持たせるため、アプリケーションが状態を持たないようにするといった対応が必要となる。\n\n**[The Twelve-Factor App](https://12factor.net/ja/)** は、クラウド環境に適したシステムを開発するときに考慮すべきことを12の要素にまとめた方法論（[Heroku](https://jp.heroku.com/)のエンジニアが提唱）。本章で説明するNablarchアプリケーションの修正内容は、The Twelve-Factor Appの方法をもとにしている。",
+    "s2": ":ref:`標準のウェブアプリケーションのブランクプロジェクト <firstStepGenerateWebBlankProject>` を使ったNablarchウェブアプリケーションには、以下の修正が必要。\n\n**ステートレス化**\n[The Twelve-Factor App VI. プロセス](https://12factor.net/ja/processes)では、アプリケーションはステートレスでなければならないとされている。標準ブランクプロジェクトはHTTPセッションを使った状態管理が有効なため、この方針に反している。\n設定方法: :ref:`stateless_web_app`\n\n**ログ出力**\n[The Twelve-Factor App XI. ログ](https://12factor.net/ja/logs)では、ログはすべて標準出力に書き出し、ファイルには出力すべきでないとされている。標準ブランクプロジェクトはロガーの出力先にファイルが指定されているため、この方針に反している。\n設定方法: [log-basic_setting](../../component/libraries/libraries-log.json#s3)\n\n**環境変数を使った設定**\n[The Twelve-Factor App III. 設定](https://12factor.net/ja/config)では、環境ごとに切り替える設定（他サービスとの接続設定など）は環境変数から設定すべきとされている。標準ブランクプロジェクトはMavenのプロファイルで切り替えているため、この方針に反している。\n設定方法: [repository-overwrite_environment_configuration_by_os_env_var](../../component/libraries/libraries-repository.json)",
+    "s3": "The Twelve-Factor AppはSaaSアプリケーションを開発するための方法論であるが、その要素の多くは、クラウド環境に適したバッチアプリケーションを開発するときにおいても適用できる。\n\n:ref:`標準のバッチアプリケーションのブランクプロジェクト <firstStepGenerateBatchBlankProject>` を使ったNablarchバッチアプリケーションには、以下の修正が必要。\n\n**ログ出力**: ウェブアプリケーションと同様に、ログの出力先をファイルから標準出力に変更する。設定方法: [log-basic_setting](../../component/libraries/libraries-log.json#s3)\n\n**環境変数を使った設定**: ウェブアプリケーションと同様に、Mavenプロファイルから環境変数による設定切り替えに変更する。設定方法: [repository-overwrite_environment_configuration_by_os_env_var](../../component/libraries/libraries-repository.json)",
+    "s4": "NablarchはDockerコンテナ上で動かすことを前提としたウェブアプリケーションとバッチアプリケーションのアーキタイプを提供している。このアーキタイプで生成されたブランクプロジェクトには、[modify_nablarch_app_for_cloud_native](#s1) および [modify_nablarch_batch_for_cloud_native](#s2) で説明した修正があらかじめ適用されている。また、[Jib](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin)（JavaアプリケーションのDockerコンテナイメージ作成に特化したMavenプラグイン）が組み込まれているため、開発者はすぐにDockerコンテナ用のNablarchアプリケーション開発を始めることができる。\n\n> **補足**: JibはDockerfileを書かなくてもコンテナイメージを作成できる。Javaアプリケーション向けに抽象化されており、特別な設定なしにベストプラクティスを考慮したコンテナイメージを作成できる。Dockerfileを直接使う場合はレイヤ構造など高い知識が必要だが、Jibはその複雑さを吸収している。\n\n詳細:\n- :ref:`前提条件 <firstStepPreamble>`\n- [プロジェクトの構成](../blank-project/blank-project-MavenModuleStructures.json)\n- [環境ごとの設定の切り替えについて](../blank-project/blank-project-CustomizeDB.json#s15)\n- [初期セットアップ手順](../blank-project/blank-project-FirstStepContainer.json)"
   }
 }

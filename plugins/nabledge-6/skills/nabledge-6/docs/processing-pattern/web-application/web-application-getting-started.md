@@ -6,7 +6,7 @@
 
 本章を通読することで、Nablarchを用いたウェブアプリケーション開発のイメージを掴むことができる。
 
-> **補足**: ExampleはNablarchの機能の使用方法を示した実装例であり、Exampleを改修して本格的なアプリケーションを作成することは想定していない。本格的なアプリケーションを作成する場合は :ref:`blank_project` から作成すること。
+> **補足**: ExampleはNablarchの機能の使用方法を示した実装例であり、Exampleを改修して本格的なアプリケーションを作成することは想定していない。本格的なアプリケーションを作成する場合は [blank_project](../../setup/blank-project/blank-project-blank_project.md) から作成すること。
 
 <details>
 <summary>keywords</summary>

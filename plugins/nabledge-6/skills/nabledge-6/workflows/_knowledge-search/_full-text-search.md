@@ -13,8 +13,8 @@ List of matched sections (file, section_id)
 ### Output format
 
 ```
-features/libraries/universal-dao.json|paging
-features/libraries/universal-dao.json|overview
+features/libraries/universal-dao.json|s3
+features/libraries/universal-dao.json|s1
 ```
 
 Each line: `relative-file-path|section-id`

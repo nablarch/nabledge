@@ -15,7 +15,7 @@
 
 ## 全体像
 
-![バッチリクエスト単体テストクラス構成図](../../knowledge/development-tools/testing-framework/assets/testing-framework-RequestUnitTest_batch/batch_request_test_class.png)
+![バッチリクエスト単体テストクラス構成図](../../../knowledge/development-tools/testing-framework/assets/testing-framework-RequestUnitTest_batch/batch_request_test_class.png)
 
 <details>
 <summary>keywords</summary>

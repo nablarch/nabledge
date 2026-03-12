@@ -10,20 +10,20 @@
 
 | 機能 | Jakarta RESTful Web Servicesサポート | HTTPメッセージング | Jakarta RESTful Web Services |
 |---|---|---|---|
-| リクエストとリソースメソッドのマッピング | :ref:`△ <rest-action_mapping>` | :ref:`○ <http_messaging-action_mapping>` | ○ |
-| リクエストとパラメータのマッピング | :ref:`△ <rest-path_query_param>` | × [1] | ○ |
-| HTTPメソッドのマッチング | :ref:`△ <rest-action_mapping>` | × [1] | ○ |
-| メディアタイプに応じたリクエスト/レスポンスの変換 | :ref:`△ <body_convert_handler>` | × [1] | ○ |
-| エンティティのバリデーション | :ref:`○ <rest-request_validation>` | :ref:`○ <http_messaging-request_validation>` | ○ |
+| リクエストとリソースメソッドのマッピング | [△](restful-web-service-feature_details.md) | [○](../http-messaging/http-messaging-feature_details.md) | ○ |
+| リクエストとパラメータのマッピング | [△](restful-web-service-feature_details.md) | × [1] | ○ |
+| HTTPメソッドのマッチング | [△](restful-web-service-feature_details.md) | × [1] | ○ |
+| メディアタイプに応じたリクエスト/レスポンスの変換 | [△](../../component/handlers/handlers-body_convert_handler.md) | × [1] | ○ |
+| エンティティのバリデーション | [○](restful-web-service-feature_details.md) | [○](../http-messaging/http-messaging-feature_details.md) | ○ |
 | リソースクラスへのインジェクション（Jakarta Contexts and Dependency Injection） | × [2] | × [2] | ○ |
 | リクエスト/レスポンスに対するフィルタ | × [3] | × [3] | ○ |
 | ボディの読み書きに対するインターセプタ | × [4] | × [5] | ○ |
-| クライアントAPI | × [6] | :ref:`○ <http_system_messaging-message_send>` | ○ |
+| クライアントAPI | × [6] | [○](../../component/libraries/libraries-http_system_messaging.md) | ○ |
 | 非同期処理 | × [7] | × [7] | ○ |
-| エラー時ログ出力 | :ref:`○ <jaxrs_response_handler-error_log>` | :ref:`○ <http_messaging_error_handler-error_response_and_log>` | — |
-| リクエストボディの最大容量チェック | × [8] | :ref:`○ <http_messaging_request_parsing_handler-limit_size>` | — |
-| 証跡ログの出力 | × [9] | :ref:`○ <messaging_log>` | — |
-| 再送制御 | × [9] | :ref:`○ <message_resend_handler>` | — |
+| エラー時ログ出力 | [○](../../component/handlers/handlers-jaxrs_response_handler.md) | [○](../../component/handlers/handlers-http_messaging_error_handler.md) | — |
+| リクエストボディの最大容量チェック | × [8] | [○](../../component/handlers/handlers-http_messaging_request_parsing_handler.md) | — |
+| 証跡ログの出力 | × [9] | [○](../../component/libraries/libraries-messaging_log.md) | — |
+| 再送制御 | × [9] | [○](../../component/handlers/handlers-message_resend_handler.md) | — |
 | サービス提供の可否チェック | × [10] | × [10] | — |
 | トランザクション制御 | × [11] | × [11] | — |
 | 業務処理エラー時のコールバック | × [12] | `○` | — |

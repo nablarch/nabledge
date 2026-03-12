@@ -7,10 +7,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailRequester.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/TemplateEngineProcessedResult.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "module-list",
+      "id": "s1",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-mail-sender-thymeleaf-adaptor",
@@ -21,7 +20,7 @@
       ]
     },
     {
-      "id": "configuration",
+      "id": "s2",
       "title": "E-mail Thymeleafアダプタを使用するための設定を行う",
       "hints": [
         "ThymeleafMailProcessor",
@@ -35,7 +34,7 @@
       ]
     },
     {
-      "id": "template-creation",
+      "id": "s3",
       "title": "メールのテンプレートを作成する",
       "hints": [
         "TemplateEngineProcessedResult",
@@ -49,7 +48,7 @@
       ]
     },
     {
-      "id": "mail-request",
+      "id": "s4",
       "title": "メール送信要求を登録する",
       "hints": [
         "メール送信要求",
@@ -59,9 +58,9 @@
     }
   ],
   "sections": {
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-mail-sender-thymeleaf-adaptor</artifactId>\n</dependency>\n```\n\n> **補足**: Thymeleaf 3.1.1.RELEASEでテスト済み。バージョンを変更する場合はプロジェクト側でテストを行うこと。",
-    "configuration": ":java:extdoc:`ThymeleafMailProcessor<nablarch.integration.mail.thymeleaf.ThymeleafMailProcessor>` を :java:extdoc:`MailRequester<nablarch.common.mail.MailRequester>` に設定する。`ThymeleafMailProcessor` にはThymeleafの `TemplateEngine` を設定する必要がある。\n\n```xml\n<component name=\"templateEngine\" class=\"org.thymeleaf.TemplateEngine\" autowireType=\"None\">\n  <property name=\"templateResolver\">\n    <component class=\"org.thymeleaf.templateresolver.ClassLoaderTemplateResolver\" autowireType=\"None\">\n      <property name=\"prefix\" value=\"com/example/template/\" />\n    </component>\n  </property>\n</component>\n\n<component name=\"templateEngineMailProcessor\"\n  class=\"nablarch.integration.mail.thymeleaf.ThymeleafMailProcessor\" autowireType=\"None\">\n  <property name=\"templateEngine\" ref=\"templateEngine\" />\n</component>\n\n<component name=\"mailRequester\" class=\"nablarch.common.mail.MailRequester\">\n  <property name=\"templateEngineMailProcessor\" ref=\"templateEngineMailProcessor\"/>\n</component>\n```",
-    "template-creation": "件名と本文を1つのテンプレートに記述する。デリミタ行（デフォルト: `---`、半角ハイフン3つ）で件名と本文を分割する。\n\n```\n[(${title})]について[(${option})]\n---\n[(${title})]は、申請番号[(${requestId})]で申請されました。\n[(${approver})]は速やかに[(${title})]を承認してください。[(${option})]\n```\n\n詳細な分割ルールは :java:extdoc:`TemplateEngineProcessedResult#valueOf<nablarch.common.mail.TemplateEngineProcessedResult.valueOf(java.lang.String)>` を参照。\n\nテンプレートファイルの配置場所は `TemplateEngine` の設定に依存する。上記設定例では `ClassLoaderTemplateResolver` の `prefix` に `com/example/template/` を設定しているため、クラスパス上の `com/example/template/` ディレクトリにテンプレートファイルを配置する。",
-    "mail-request": "定型メールの送信要求を登録するだけでよい。詳細は :ref:`mail-request` を参照。"
+    "s1": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-mail-sender-thymeleaf-adaptor</artifactId>\n</dependency>\n```\n\n> **補足**: Thymeleaf 3.1.1.RELEASEでテスト済み。バージョンを変更する場合はプロジェクト側でテストを行うこと。",
+    "s2": "`ThymeleafMailProcessor` を `MailRequester` に設定する。`ThymeleafMailProcessor` にはThymeleafの `TemplateEngine` を設定する必要がある。\n\n```xml\n<component name=\"templateEngine\" class=\"org.thymeleaf.TemplateEngine\" autowireType=\"None\">\n  <property name=\"templateResolver\">\n    <component class=\"org.thymeleaf.templateresolver.ClassLoaderTemplateResolver\" autowireType=\"None\">\n      <property name=\"prefix\" value=\"com/example/template/\" />\n    </component>\n  </property>\n</component>\n\n<component name=\"templateEngineMailProcessor\"\n  class=\"nablarch.integration.mail.thymeleaf.ThymeleafMailProcessor\" autowireType=\"None\">\n  <property name=\"templateEngine\" ref=\"templateEngine\" />\n</component>\n\n<component name=\"mailRequester\" class=\"nablarch.common.mail.MailRequester\">\n  <property name=\"templateEngineMailProcessor\" ref=\"templateEngineMailProcessor\"/>\n</component>\n```",
+    "s3": "件名と本文を1つのテンプレートに記述する。デリミタ行（デフォルト: `---`、半角ハイフン3つ）で件名と本文を分割する。\n\n```\n[(${title})]について[(${option})]\n---\n[(${title})]は、申請番号[(${requestId})]で申請されました。\n[(${approver})]は速やかに[(${title})]を承認してください。[(${option})]\n```\n\n詳細な分割ルールは `TemplateEngineProcessedResult#valueOf` を参照。\n\nテンプレートファイルの配置場所は `TemplateEngine` の設定に依存する。上記設定例では `ClassLoaderTemplateResolver` の `prefix` に `com/example/template/` を設定しているため、クラスパス上の `com/example/template/` ディレクトリにテンプレートファイルを配置する。",
+    "s4": "定型メールの送信要求を登録するだけでよい。詳細は :ref:`mail-request` を参照。"
   }
 }

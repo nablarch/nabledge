@@ -6,7 +6,7 @@
 
 リクエスト単体テスト（メッセージ受信処理）では、要求電文1件を受信したときの動作を擬似的に再現し、テストを行う。
 
-![リクエスト単体テスト（メッセージ受信処理）クラス構造図](../../knowledge/development-tools/testing-framework/assets/testing-framework-RequestUnitTest_real/real_request_test_class.png)
+![リクエスト単体テスト（メッセージ受信処理）クラス構造図](../../../knowledge/development-tools/testing-framework/assets/testing-framework-RequestUnitTest_real/real_request_test_class.png)
 
 | クラス/リソース | 役割 | 作成単位 |
 |---|---|---|

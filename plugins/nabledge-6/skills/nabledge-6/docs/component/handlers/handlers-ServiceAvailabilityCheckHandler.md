@@ -45,8 +45,8 @@ nablarch-common-auth, com.nablarch.framework, モジュール依存関係, Maven
 
 ## 制約
 
-- :ref:`thread_context_handler` より後ろに配置すること: スレッドコンテキスト上のリクエストIDを使用するため、:ref:`thread_context_handler` より後ろに配置する必要がある。
-- :ref:`forwarding_handler` より後ろに配置すること: 内部フォーワード時にフォーワード先の :ref:`内部リクエストID <internal_request_id>` でチェックしたい場合。あわせて :ref:`thread_context_handler` の `attributes` に `InternalRequestIdAttribute` を追加すること。
+- [thread_context_handler](handlers-thread_context_handler.md) より後ろに配置すること: スレッドコンテキスト上のリクエストIDを使用するため、[thread_context_handler](handlers-thread_context_handler.md) より後ろに配置する必要がある。
+- [forwarding_handler](handlers-forwarding_handler.md) より後ろに配置すること: 内部フォーワード時にフォーワード先の [内部リクエストID](handlers-forwarding_handler.md) でチェックしたい場合。あわせて [thread_context_handler](handlers-thread_context_handler.md) の `attributes` に `InternalRequestIdAttribute` を追加すること。
 
 <details>
 <summary>keywords</summary>

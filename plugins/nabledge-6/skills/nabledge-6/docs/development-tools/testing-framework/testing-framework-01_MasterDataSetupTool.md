@@ -11,7 +11,7 @@
 
 > **重要**: 本ツールはマルチスレッド機能に対応していない。マルチスレッド機能のテストは、テスティングフレームワークを使用しないテスト（結合テストなど）で行うこと。
 
-設定の前提条件については [02_ConfigMasterDataSetupTool](testing-framework-02_ConfigMasterDataSetupTool.md) の :ref:`master_data_setup_prerequisite` を参照。
+設定の前提条件については [02_ConfigMasterDataSetupTool](testing-framework-02_ConfigMasterDataSetupTool.md) の [master_data_setup_prerequisite](testing-framework-02_ConfigMasterDataSetupTool.md) を参照。
 
 <details>
 <summary>keywords</summary>
@@ -22,7 +22,7 @@
 
 ## データ作成方法
 
-投入したいデータをMASTER_DATA.xlsxに記載する。記載方法は自動テストと同じ形式。データの記載方法については :ref:`how_to_write_setup_table` を参照。
+投入したいデータをMASTER_DATA.xlsxに記載する。記載方法は自動テストと同じ形式。データの記載方法については [how_to_write_setup_table](testing-framework-02_DbAccessTest.md) を参照。
 
 <details>
 <summary>keywords</summary>
@@ -33,7 +33,7 @@ MASTER_DATA.xlsx, マスタデータ記述形式, 自動テストと同じ形式
 
 ## 実行方法
 
-AntビューからターゲットをダブルクリックしてAntを実行する。Antビューの設定は :ref:`how_to_setup_ant_view_in_eclipse` を参照。
+AntビューからターゲットをダブルクリックしてAntを実行する。Antビューの設定は [how_to_setup_ant_view_in_eclipse](testing-framework-02_ConfigMasterDataSetupTool.md) を参照。
 
 | ターゲット名 | 説明 |
 |---|---|

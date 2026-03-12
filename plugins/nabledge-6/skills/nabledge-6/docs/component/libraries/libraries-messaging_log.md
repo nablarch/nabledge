@@ -4,7 +4,7 @@
 
 ## メッセージングログの出力方針
 
-メッセージングログは :ref:`system_messaging` のメッセージ送受信時に出力する。アプリケーション全体のアプリケーションログに出力する。
+メッセージングログは [system_messaging](libraries-system_messaging.md) のメッセージ送受信時に出力する。アプリケーション全体のアプリケーションログに出力する。
 
 | ログレベル | ロガー名 |
 |---|---|
@@ -53,7 +53,7 @@ messagingLogFormatter.httpReceivedMessageFormat=@@@@ HTTP RECEIVED MESSAGE @@@@\
 
 ## メッセージングログの設定
 
-設定ファイルは :ref:`log-app_log_setting` で説明したプロパティファイル。
+設定ファイルは [log-app_log_setting](libraries-log.md) で説明したプロパティファイル。
 
 | プロパティ名 | 必須 | デフォルト値 | 説明 |
 |---|---|---|---|
@@ -144,7 +144,7 @@ MessagingLogFormatter, messagingLogFormatter.className, messagingLogFormatter.ma
 
 ## JSON形式の構造化ログとして出力する
 
-`MessagingLogFormatter` のデフォルト動作ではメッセージングログの各項目は `message` の値に文字列として出力される。各項目をJSONの値として出力するには `MessagingJsonLogFormatter` を使用する。設定は :ref:`log-app_log_setting` で説明したプロパティファイルに行う。
+`MessagingLogFormatter` のデフォルト動作ではメッセージングログの各項目は `message` の値に文字列として出力される。各項目をJSONの値として出力するには `MessagingJsonLogFormatter` を使用する。設定は [log-app_log_setting](libraries-log.md) で説明したプロパティファイルに行う。
 
 | プロパティ名 | 必須 | デフォルト値 | 説明 |
 |---|---|---|---|
@@ -169,7 +169,7 @@ MessagingLogFormatter, messagingLogFormatter.className, messagingLogFormatter.ma
 
 > **注意**: messageBody は電文をISO-8859-1固定でエンコードした結果を出力する。messageBodyHex は messageBody のヘキサダンプ。
 
-> **注意**: `structuredMessagePrefix` を変更する場合は、:ref:`log-basic_setting` のLogWriterの `structuredMessagePrefix` プロパティを使用して `JsonLogFormatter` にも同じ値を設定すること。
+> **注意**: `structuredMessagePrefix` を変更する場合は、[log-basic_setting](libraries-log.md) のLogWriterの `structuredMessagePrefix` プロパティを使用して `JsonLogFormatter` にも同じ値を設定すること。
 
 **設定例**:
 

@@ -1,0 +1,62 @@
+{
+  "id": "biz-samples-09",
+  "title": "bouncycastleを使用した電子署名つきメールの送信サンプルの使用方法",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/09/index.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "環境準備",
+      "hints": [
+        "bcjmail-jdk18on",
+        "org.bouncycastle",
+        "bouncycastle",
+        "電子署名",
+        "証明書準備",
+        "Maven依存設定"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "電子署名付きメール送信機能の構造",
+      "hints": [
+        "nablarch.common.mail.MailSender",
+        "電子署名付きメール",
+        "メール送信パターンID",
+        "テーブル設計"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定ファイルの準備",
+      "hints": [
+        "please.change.me.common.mail.smime.CertificateWrapper",
+        "certificateList",
+        "証明書設定",
+        "PKCS12",
+        "JKS",
+        "keyStoreType",
+        "certificateFileName",
+        "password",
+        "keyPassword"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "実行方法",
+      "hints": [
+        "please.change.me.common.mail.smime.SMIMESignedMailSender",
+        "メール送信バッチ",
+        "メール送信パターンID",
+        "バッチ起動"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "本機能はサンプル実装のため、使用する際はソースコード（プロダクション・テストコード共に）をプロジェクトに取り込むこと。\n\n[ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-smime-integration)\n\n**モジュール**:\n```xml\n<dependency>\n  <groupId>org.bouncycastle</groupId>\n  <artifactId>bcjmail-jdk18on</artifactId>\n  <version>1.78.1</version>\n</dependency>\n```\n\n> **補足**: テストはRelease1.78.1で実施。[bouncycastleのサイト](https://www.bouncycastle.org/)で最新リリースを必ず確認し、1.78.1より新しいバージョンがあればプロジェクトに適用すること。\n\n証明書は認証局から発行してもらい、メール送信機能（バッチ）からアクセス可能なディレクトリに配置すること。ディレクトリへのアクセス権限は必要最小限にし、不要なユーザが証明書にアクセスできないようにすること。",
+    "s2": "**クラス**: `nablarch.common.mail.MailSender` の拡張機能。\n\nメール送信パターンIDを元に証明書を特定し、電子署名を付加する。本機能を使用する場合、必ずメール送信パターンIDを使用できるテーブル設計とすること。\n\n詳細は [メール送信機能](../../component/libraries/libraries-mail.json#s1) を参照。",
+    "s3": "証明書に関する設定以外はNablarchのメール送信機能の設定と同じ。\n\n**クラス**: `please.change.me.common.mail.smime.CertificateWrapper`（証明書ファイル単位でコンポーネントを設定する）\n\n```xml\n<component name=\"certificate_1\" class=\"please.change.me.common.mail.smime.CertificateWrapper\">\n  <property name=\"password\" value=\"password\" />\n  <property name=\"keyPassword\" value=\"password\" />\n  <property name=\"certificateFileName\" value=\"classpath:please/change/me/common/mail/smime/data/certificate_1.p12\" />\n  <property name=\"keyStoreType\" value=\"PKCS12\" />\n</component>\n<component name=\"certificate_2\" class=\"please.change.me.common.mail.smime.CertificateWrapper\">\n  <property name=\"password\" value=\"keystorePass\" />\n  <property name=\"keyPassword\" value=\"testAliasPass\" />\n  <property name=\"certificateFileName\" value=\"classpath:please/change/me/common/mail/smime/data/certificate_2.p12\" />\n  <property name=\"keyStoreType\" value=\"JKS\" />\n</component>\n\n<map name=\"certificateList\">\n  <entry key=\"01\" value-name=\"certificate_1\" />\n  <entry key=\"02\" value-name=\"certificate_2\" />\n</map>\n```\n\n| プロパティ名 | 説明 |\n|---|---|\n| password | 証明書ファイルへアクセスするためのパスワード |\n| keyPassword | 証明書に格納された秘密鍵にアクセスするためのパスワード |\n| certificateFileName | 証明書ファイルのパス |\n| keyStoreType | キーストアタイプ（PKCS12またはJKS） |",
+    "s4": "アクションクラスに `please.change.me.common.mail.smime.SMIMESignedMailSender` を指定してバッチプロセスを起動する。プロセス起動時に処理すべきメールを特定できるメール送信パターンIDを引数として指定する。"
+  }
+}

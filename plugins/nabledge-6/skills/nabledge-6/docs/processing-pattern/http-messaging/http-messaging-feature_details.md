@@ -4,7 +4,7 @@
 
 ## Nablarchの初期化
 
-:ref:`ウェブアプリケーションのNablarchの初期化 <web_feature_details-nablarch_initialization>` を参照。
+[ウェブアプリケーションのNablarchの初期化](../web-application/web-application-feature_details.md) を参照。
 
 <details>
 <summary>keywords</summary>
@@ -15,7 +15,7 @@ Nablarch初期化, ウェブアプリケーション初期化, web_feature_detai
 
 ## 入力値のチェック
 
-- :ref:`入力値のチェック <validation>`
+- [入力値のチェック](../../component/libraries/libraries-validation.md)
 
 <details>
 <summary>keywords</summary>
@@ -26,7 +26,7 @@ Nablarch初期化, ウェブアプリケーション初期化, web_feature_detai
 
 ## データベースアクセス
 
-- :ref:`データベースアクセス <database_management>`
+- [データベースアクセス](../../component/libraries/libraries-database_management.md)
 
 <details>
 <summary>keywords</summary>
@@ -37,11 +37,11 @@ Nablarch初期化, ウェブアプリケーション初期化, web_feature_detai
 
 ## 排他制御
 
-- :ref:`universal_dao`
+- [universal_dao](../../component/libraries/libraries-universal_dao.md)
   - :ref:`universal_dao_jpa_optimistic_lock`
   - :ref:`universal_dao_jpa_pessimistic_lock`
 
-> **重要**: :ref:`exclusive_control` 機能はクライアント（taglib）との連動が前提であるため、HTTPメッセージングでは使用できない。
+> **重要**: [exclusive_control](../../component/libraries/libraries-exclusive_control.md) 機能はクライアント（taglib）との連動が前提であるため、HTTPメッセージングでは使用できない。
 
 <details>
 <summary>keywords</summary>
@@ -52,9 +52,9 @@ Nablarch初期化, ウェブアプリケーション初期化, web_feature_detai
 
 ## URIとアクションクラスのマッピング
 
-- :ref:`http_request_java_package_mapping`
+- [http_request_java_package_mapping](../../component/handlers/handlers-http_request_java_package_mapping.md)
 
-> **補足**: HTTPメッセージングでは :ref:`router_adaptor` を使用できない。HTTPメッセージングは :ref:`mom_system_messaging` が提供する `MessagingAction` でアクションクラスを作成するため、URIに応じてアクションクラスのメソッドを呼び分ける想定がない。
+> **補足**: HTTPメッセージングでは [router_adaptor](../../component/adapters/adapters-router_adaptor.md) を使用できない。HTTPメッセージングは [mom_system_messaging](../../component/libraries/libraries-mom_system_messaging.md) が提供する `MessagingAction` でアクションクラスを作成するため、URIに応じてアクションクラスのメソッドを呼び分ける想定がない。
 
 <details>
 <summary>keywords</summary>
@@ -65,8 +65,8 @@ URIマッピング, アクションクラス, MessagingAction, mom_system_messag
 
 ## 国際化対応
 
-- :ref:`メッセージの多言語化 <message-multi_lang>`
-- :ref:`コード名称の多言語化 <code-use_multilingualization>`
+- [メッセージの多言語化](../../component/libraries/libraries-message.md)
+- [コード名称の多言語化](../../component/libraries/libraries-code.md)
 
 <details>
 <summary>keywords</summary>
@@ -99,7 +99,7 @@ URIマッピング, アクションクラス, MessagingAction, mom_system_messag
 
 ## エラー時に返却するレスポンス
 
-- :ref:`http_messaging_error_handler`
+- [http_messaging_error_handler](../../component/handlers/handlers-http_messaging_error_handler.md)
 
 <details>
 <summary>keywords</summary>

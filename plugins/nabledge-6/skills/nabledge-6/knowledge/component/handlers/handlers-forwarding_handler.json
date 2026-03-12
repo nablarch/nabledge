@@ -5,10 +5,9 @@
     "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/forwarding_handler.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/ForwardingHandler.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "handler-class",
+      "id": "s1",
       "title": "ハンドラクラス名",
       "hints": [
         "ForwardingHandler",
@@ -19,7 +18,7 @@
       ]
     },
     {
-      "id": "module-list",
+      "id": "s2",
       "title": "モジュール一覧",
       "hints": [
         "nablarch-fw-web",
@@ -28,7 +27,7 @@
       ]
     },
     {
-      "id": "constraints",
+      "id": "s3",
       "title": "制約",
       "hints": [
         "配置順序制約",
@@ -38,7 +37,7 @@
       ]
     },
     {
-      "id": "forward-response",
+      "id": "s4",
       "title": "内部フォーワードを示すレスポンスを返却する",
       "hints": [
         "forward://",
@@ -49,7 +48,7 @@
       ]
     },
     {
-      "id": "forward-path-rules",
+      "id": "s5",
       "title": "内部フォーワードに指定するパスのルール",
       "hints": [
         "相対パス",
@@ -60,7 +59,7 @@
       ]
     },
     {
-      "id": "internal-request-id",
+      "id": "s6",
       "title": "内部リクエストIDについて",
       "hints": [
         "内部リクエストID",
@@ -71,11 +70,11 @@
     }
   ],
   "sections": {
-    "handler-class": "後続ハンドラからのレスポンスが内部フォーワードを示している場合に、指定されたリクエストパスで後続ハンドラを再実行する。内部フォーワードは、遷移先の画面でチェックボックスやドロップダウンリストなどの選択肢をサーバサイドで取得する場合に使用する（例: 入力チェックエラー時に、単純な再表示ではなく選択肢を再取得して入力画面を再表示する場合）。\n\n**クラス名**: `nablarch.fw.web.handler.ForwardingHandler`",
-    "module-list": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
-    "constraints": "- :ref:`session_store_handler` より後ろに配置すること（理由: :ref:`session_store_handler-error_forward_path` を参照）",
-    "forward-response": "内部フォーワードを示すレスポンスは、コンテンツパスを `forward://` から開始する。\n\n```java\npublic HttpResponse sample(HttpRequest request, ExecutionContext context) {\n  // 同一業務アクションのinitializeに内部フォーワード\n  return new HttpResponse(\"forward://initialize\");\n}\n```\n\n> **補足**: ステータスコードはフォーワード時とフォーワード後を比較し、大きい値をレスポンス時のステータスコードとする。例: フォーワード時200・フォーワード後500 → クライアントには500を返却。フォーワード時400・フォーワード後200 → クライアントには400を返却。",
-    "forward-path-rules": "内部フォーワードのパスには相対パスと絶対パスが指定可能。\n\n- **相対パス**: 現在のリクエストURIを起点としたパス\n- **絶対パス**: サーブレットコンテキスト名を起点としたパス。`/` から開始する\n\n現在のリクエストURIが `action/users/save` の場合の例（両者は同一のフォーワード先を示す）:\n\n```java\n// 相対パス\nnew HttpResponse(\"forward://initialize\");\n\n// 絶対パス\nnew HttpResponse(\"forward:///action/users/initialize\");\n```",
-    "internal-request-id": "内部フォーワード時、フォーワード先のリクエストIDを内部リクエストIDとしてスレッドコンテキストに保持する。"
+    "s1": "後続ハンドラからのレスポンスが内部フォーワードを示している場合に、指定されたリクエストパスで後続ハンドラを再実行する。内部フォーワードは、遷移先の画面でチェックボックスやドロップダウンリストなどの選択肢をサーバサイドで取得する場合に使用する（例: 入力チェックエラー時に、単純な再表示ではなく選択肢を再取得して入力画面を再表示する場合）。\n\n**クラス名**: `nablarch.fw.web.handler.ForwardingHandler`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "s3": "- [session_store_handler](handlers-SessionStoreHandler.json#s2) より後ろに配置すること（理由: [session_store_handler-error_forward_path](handlers-SessionStoreHandler.json#s7) を参照）",
+    "s4": "内部フォーワードを示すレスポンスは、コンテンツパスを `forward://` から開始する。\n\n```java\npublic HttpResponse sample(HttpRequest request, ExecutionContext context) {\n  // 同一業務アクションのinitializeに内部フォーワード\n  return new HttpResponse(\"forward://initialize\");\n}\n```\n\n> **補足**: ステータスコードはフォーワード時とフォーワード後を比較し、大きい値をレスポンス時のステータスコードとする。例: フォーワード時200・フォーワード後500 → クライアントには500を返却。フォーワード時400・フォーワード後200 → クライアントには400を返却。",
+    "s5": "内部フォーワードのパスには相対パスと絶対パスが指定可能。\n\n- **相対パス**: 現在のリクエストURIを起点としたパス\n- **絶対パス**: サーブレットコンテキスト名を起点としたパス。`/` から開始する\n\n現在のリクエストURIが `action/users/save` の場合の例（両者は同一のフォーワード先を示す）:\n\n```java\n// 相対パス\nnew HttpResponse(\"forward://initialize\");\n\n// 絶対パス\nnew HttpResponse(\"forward:///action/users/initialize\");\n```",
+    "s6": "内部フォーワード時、フォーワード先のリクエストIDを内部リクエストIDとしてスレッドコンテキストに保持する。"
   }
 }

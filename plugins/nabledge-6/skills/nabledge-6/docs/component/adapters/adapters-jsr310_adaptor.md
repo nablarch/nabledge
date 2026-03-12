@@ -4,7 +4,7 @@
 
 ## モジュール一覧
 
-> **重要**: Nablarch 6u2以降、本アダプタの機能はフレームワーク本体に取り込まれているため、本アダプタを使用しなくても :ref:`bean_util` でJSR310(Date and Time API)を使用できる。本アダプタは後方互換維持のために残している。
+> **重要**: Nablarch 6u2以降、本アダプタの機能はフレームワーク本体に取り込まれているため、本アダプタを使用しなくても [bean_util](../libraries/libraries-bean_util.md) でJSR310(Date and Time API)を使用できる。本アダプタは後方互換維持のために残している。
 
 > **重要**: 本アダプタが対応する型は `LocalDate` と `LocalDateTime` のみ。これら以外の型を扱う場合はプロジェクト側でConverterを追加する必要がある。
 
@@ -25,7 +25,7 @@ nablarch-jsr310-adaptor, LocalDate, LocalDateTime, JSR310アダプタ, Date and 
 
 ## 使用方法
 
-:ref:`repository` のコンポーネント設定ファイルに以下を追加することで有効化：
+[repository](../libraries/libraries-repository.md) のコンポーネント設定ファイルに以下を追加することで有効化：
 
 ```xml
 <import file="JSR310.xml" />

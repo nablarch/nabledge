@@ -11,10 +11,9 @@
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html",
     "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/EntityResponse.html"
   ],
-  "processing_patterns": [],
   "index": [
     {
-      "id": "method-signature",
+      "id": "s1",
       "title": "リソースクラスのメソッドのシグネチャ",
       "hints": [
         "JaxRsHttpRequest",
@@ -30,7 +29,7 @@
       ]
     },
     {
-      "id": "path-param",
+      "id": "s2",
       "title": "パスパラメータを扱う",
       "hints": [
         "JaxRsHttpRequest",
@@ -43,7 +42,7 @@
       ]
     },
     {
-      "id": "query-param",
+      "id": "s3",
       "title": "クエリーパラメータを扱う",
       "hints": [
         "JaxRsHttpRequest",
@@ -57,7 +56,7 @@
       ]
     },
     {
-      "id": "response-header",
+      "id": "s4",
       "title": "レスポンスヘッダを設定する",
       "hints": [
         "HttpResponse",
@@ -73,9 +72,9 @@
     }
   ],
   "sections": {
-    "method-signature": "## メソッド引数\n\n| 引数定義 | 説明 |\n|---|---|\n| 引数無し | パラメータやリクエストボディが不要な場合 |\n| フォーム(Java Beans) | リクエストボディから変換したフォームで処理する場合 |\n| :java:extdoc:`JaxRsHttpRequest <nablarch.fw.jaxrs.JaxRsHttpRequest>` | :ref:`rest_feature_details-path_param`、:ref:`rest_feature_details-query_param`、HTTPヘッダを取得する場合 |\n| :java:extdoc:`ExecutionContext <nablarch.fw.ExecutionContext>` | スコープ変数にアクセスする場合 |\n| 組み合わせ | 上記の型を任意に組み合わせ可能 |\n\n> **補足**: HttpRequestも後方互換性維持のため使用できるが、原則 :java:extdoc:`JaxRsHttpRequest <nablarch.fw.jaxrs.JaxRsHttpRequest>` を使用すること。\n\n組み合わせ例:\n```java\npublic HttpResponse sample(SampleForm form, JaxRsHttpRequest request) {\n  // 省略\n}\n```\n\n## メソッド戻り値\n\n| 戻り値の型 | 説明 |\n|---|---|\n| void | `204: NoContent` をクライアントに返却 |\n| フォーム(Java Beans) | :ref:`body_convert_handler` でレスポンスボディに変換してクライアントに返却 |\n| :java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` | HttpResponseの情報をそのままクライアントに返却 |",
-    "path-param": "パスパラメータは :java:extdoc:`JaxRsHttpRequest <nablarch.fw.jaxrs.JaxRsHttpRequest>` から取得する。メソッドの引数に :java:extdoc:`JaxRsHttpRequest <nablarch.fw.jaxrs.JaxRsHttpRequest>` を定義し、ルーティング設定で指定したパスパラメータ名を `getPathParam()` に渡す。\n\nルーティング設定（詳細は :ref:`router_adaptor` を参照）:\n```xml\n<routes>\n  <get path=\"users/:id\" to=\"UsersResource#find\">\n    <requirements>\n      <requirement name=\"id\" value=\"\\d+$\" />\n    </requirements>\n  </get>\n</routes>\n```\n\n実装例:\n```java\n@Produces(MediaType.APPLICATION_JSON)\npublic User delete(JaxRsHttpRequest req) {\n  Long id = Long.valueOf(req.getPathParam(\"id\"));\n  return UniversalDao.findById(User.class, id);\n}\n```\n\n> **重要**: Jakarta RESTful Web Servicesで規定されている :java:extdoc:`PathParam <jakarta.ws.rs.PathParam>` は使用できない。",
-    "query-param": "クエリパラメータは :java:extdoc:`JaxRsHttpRequest <nablarch.fw.jaxrs.JaxRsHttpRequest>` から取得する。メソッドの引数に :java:extdoc:`JaxRsHttpRequest <nablarch.fw.jaxrs.JaxRsHttpRequest>` を定義し、`getParamMap()` で取得後、:java:extdoc:`BeanUtil <nablarch.core.beans.BeanUtil>` でFormにマッピングする。\n\nルーティング設定（クエリパラメータを除いたパスでマッピング）:\n```xml\n<routes>\n  <get path=\"users/search\" to=\"Users#search\"/>\n</routes>\n```\n\n実装例:\n```java\npublic HttpResponse search(JaxRsHttpRequest req) {\n  UserSearchForm form = BeanUtil.createAndCopy(UserSearchForm.class, req.getParamMap());\n  ValidatorUtil.validate(form);\n  // 業務ロジックを実行する(省略)\n}\n```\n\n> **重要**: Jakarta RESTful Web Servicesで規定されている :java:extdoc:`QueryParam <jakarta.ws.rs.QueryParam>` は使用できない。",
-    "response-header": "> **重要**: アプリケーション全体で共通のレスポンスヘッダはハンドラで設定すること。セキュリティ関連のレスポンスヘッダは :ref:`secure_handler` を使用すること。\n\n:java:extdoc:`HttpResponse <nablarch.fw.web.HttpResponse>` を返す場合は `setHeader()` で指定する:\n```java\npublic HttpResponse something(JaxRsHttpRequest request) {\n    HttpResponse response = new HttpResponse();\n    response.setHeader(\"Cache-Control\", \"no-store\");\n    return response;\n}\n```\n\n`@Produces` アノテーションを使用してエンティティ（Bean）を返す場合、レスポンスヘッダを直接指定できない。代わりに :java:extdoc:`EntityResponse <nablarch.fw.jaxrs.EntityResponse>` を使用する:\n```java\n@Produces(MediaType.APPLICATION_JSON)\npublic EntityResponse<List<Client>> something(JaxRsHttpRequest request, ExecutionContext context) {\n    List<Client> clients = service.findClients(condition);\n    EntityResponse<List<Client>> response = new EntityResponse<>();\n    response.setEntity(clients);\n    response.setStatusCode(HttpResponse.Status.OK.getStatusCode());\n    response.setHeader(\"Cache-Control\", \"no-store\");\n    return response;\n}\n```"
+    "s1": "## メソッド引数\n\n| 引数定義 | 説明 |\n|---|---|\n| 引数無し | パラメータやリクエストボディが不要な場合 |\n| フォーム(Java Beans) | リクエストボディから変換したフォームで処理する場合 |\n| `JaxRsHttpRequest` | [rest_feature_details-path_param](#s1)、[rest_feature_details-query_param](#s2)、HTTPヘッダを取得する場合 |\n| `ExecutionContext` | スコープ変数にアクセスする場合 |\n| 組み合わせ | 上記の型を任意に組み合わせ可能 |\n\n> **補足**: HttpRequestも後方互換性維持のため使用できるが、原則 `JaxRsHttpRequest` を使用すること。\n\n組み合わせ例:\n```java\npublic HttpResponse sample(SampleForm form, JaxRsHttpRequest request) {\n  // 省略\n}\n```\n\n## メソッド戻り値\n\n| 戻り値の型 | 説明 |\n|---|---|\n| void | `204: NoContent` をクライアントに返却 |\n| フォーム(Java Beans) | [body_convert_handler](../../component/handlers/handlers-body_convert_handler.json#s1) でレスポンスボディに変換してクライアントに返却 |\n| `HttpResponse` | HttpResponseの情報をそのままクライアントに返却 |",
+    "s2": "パスパラメータは `JaxRsHttpRequest` から取得する。メソッドの引数に `JaxRsHttpRequest` を定義し、ルーティング設定で指定したパスパラメータ名を `getPathParam()` に渡す。\n\nルーティング設定（詳細は [router_adaptor](../../component/adapters/adapters-router_adaptor.json#s1) を参照）:\n```xml\n<routes>\n  <get path=\"users/:id\" to=\"UsersResource#find\">\n    <requirements>\n      <requirement name=\"id\" value=\"\\d+$\" />\n    </requirements>\n  </get>\n</routes>\n```\n\n実装例:\n```java\n@Produces(MediaType.APPLICATION_JSON)\npublic User delete(JaxRsHttpRequest req) {\n  Long id = Long.valueOf(req.getPathParam(\"id\"));\n  return UniversalDao.findById(User.class, id);\n}\n```\n\n> **重要**: Jakarta RESTful Web Servicesで規定されている `PathParam` は使用できない。",
+    "s3": "クエリパラメータは `JaxRsHttpRequest` から取得する。メソッドの引数に `JaxRsHttpRequest` を定義し、`getParamMap()` で取得後、`BeanUtil` でFormにマッピングする。\n\nルーティング設定（クエリパラメータを除いたパスでマッピング）:\n```xml\n<routes>\n  <get path=\"users/search\" to=\"Users#search\"/>\n</routes>\n```\n\n実装例:\n```java\npublic HttpResponse search(JaxRsHttpRequest req) {\n  UserSearchForm form = BeanUtil.createAndCopy(UserSearchForm.class, req.getParamMap());\n  ValidatorUtil.validate(form);\n  // 業務ロジックを実行する(省略)\n}\n```\n\n> **重要**: Jakarta RESTful Web Servicesで規定されている `QueryParam` は使用できない。",
+    "s4": "> **重要**: アプリケーション全体で共通のレスポンスヘッダはハンドラで設定すること。セキュリティ関連のレスポンスヘッダは [secure_handler](../../component/handlers/handlers-secure_handler.json#s1) を使用すること。\n\n`HttpResponse` を返す場合は `setHeader()` で指定する:\n```java\npublic HttpResponse something(JaxRsHttpRequest request) {\n    HttpResponse response = new HttpResponse();\n    response.setHeader(\"Cache-Control\", \"no-store\");\n    return response;\n}\n```\n\n`@Produces` アノテーションを使用してエンティティ（Bean）を返す場合、レスポンスヘッダを直接指定できない。代わりに `EntityResponse` を使用する:\n```java\n@Produces(MediaType.APPLICATION_JSON)\npublic EntityResponse<List<Client>> something(JaxRsHttpRequest request, ExecutionContext context) {\n    List<Client> clients = service.findClients(condition);\n    EntityResponse<List<Client>> response = new EntityResponse<>();\n    response.setEntity(clients);\n    response.setStatusCode(HttpResponse.Status.OK.getStatusCode());\n    response.setHeader(\"Cache-Control\", \"no-store\");\n    return response;\n}\n```"
   }
 }

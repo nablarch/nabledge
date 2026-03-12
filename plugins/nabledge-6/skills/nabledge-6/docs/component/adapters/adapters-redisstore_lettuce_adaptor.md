@@ -27,7 +27,7 @@
 
 > **重要**: `redisstore-lettuce.config` はアプリの環境設定ファイル（`env.properties` 等）より**前**に読み込むこと。これによりアプリ側でデフォルト値を上書きできる。
 
-:ref:`repository-overwrite_environment_configuration_by_os_env_var` の方法を用いることで、実行環境ごとに接続先のRedisを切り替えられる。
+[repository-overwrite_environment_configuration_by_os_env_var](../libraries/libraries-repository.md) の方法を用いることで、実行環境ごとに接続先のRedisを切り替えられる。
 
 > **補足**: デフォルトでは `localhost:6379` の単一Redisインスタンスに接続する設定になっている。
 
@@ -46,7 +46,7 @@
 </component>
 ```
 
-`BasicApplicationDisposer` の `disposableList` にも追加する（:ref:`repository-dispose_object` 参照）:
+`BasicApplicationDisposer` の `disposableList` にも追加する（[repository-dispose_object](../libraries/libraries-repository.md) 参照）:
 
 ```xml
 <component name="disposer"
@@ -67,10 +67,27 @@ nablarch.sessionManager.defaultStoreName=redis
 
 > **補足**: :ref:`ウェブのアーキタイプ <firstStepGenerateWebBlankProject>` でプロジェクトを生成している場合、`src/main/resources/common.properties` に `nablarch.sessionManager.defaultStoreName` が宣言されている。
 
+各クライアントクラスは `Disposable` を実装しており、`dispose()` でRedisへの接続を閉じることができる。
+
+`BasicApplicationDisposer` の `disposableList` プロパティに使用するクライアントクラスのコンポーネントを設定することで、アプリケーション終了時にRedisとの接続を閉じることができる。
+
+```xml
+<component name="disposer"
+           class="nablarch.core.repository.disposal.BasicApplicationDisposer">
+  <property name="disposableList">
+    <list>
+      <component-ref name="lettuceRedisClientProvider"/>
+    </list>
+  </property>
+</component>
+```
+
+`BasicApplicationInitializer` の `initializeList` と同様で、`disposableList` プロパティに `LettuceRedisClientProvider` コンポーネントを指定することで、実際に使用されるクライアントクラスの廃棄処理が実行される。
+
 <details>
 <summary>keywords</summary>
 
-LettuceRedisClientProvider, lettuceRedisClientProvider, BasicApplicationInitializer, BasicApplicationDisposer, initializeList, disposableList, nablarch.sessionManager.defaultStoreName, redisstore-lettuce.config, redisstore-lettuce.xml, Redisストア最小構成, セッションストア設定, コンポーネント定義修正, 環境設定値
+LettuceRedisClientProvider, lettuceRedisClientProvider, BasicApplicationInitializer, BasicApplicationDisposer, initializeList, disposableList, nablarch.sessionManager.defaultStoreName, redisstore-lettuce.config, redisstore-lettuce.xml, Redisストア最小構成, セッションストア設定, コンポーネント定義修正, 環境設定値, Disposable, dispose, Redisコネクション廃棄, アプリケーション終了処理
 
 </details>
 
@@ -175,10 +192,21 @@ public class CustomClusterRedisClient extends LettuceClusterRedisClient {
 
 > **補足**: `uriList` プロパティは `redisstore-lettuce.xml` の設定をそのまま流用すること。他のクライアントクラスを拡張する場合も同様。Lettuceの詳細は [Lettuceのドキュメント](https://redis.github.io/lettuce/advanced-usage/#cluster-specific-options) を参照。
 
+Redisに保存されたセッション情報のキー形式: `nablarch.session.<セッションID>`
+
+```shell
+127.0.0.1:6379> keys *
+1) "nablarch.session.8b00bce5-d19f-4f63-b1fe-d14ecca9a4f6"
+```
+
+セッション情報（`SessionEntry` のリスト）は、デフォルトで `JavaSerializeStateEncoder` でエンコードされたバイナリ形式で保存される。
+
+エンコーダーの変更: `serializeEncoder` という名前で別のエンコーダーコンポーネントを定義することで変更できる。
+
 <details>
 <summary>keywords</summary>
 
-LettuceSimpleRedisClient, LettuceMasterReplicaRedisClient, LettuceClusterRedisClient, LettuceRedisClient, lettuceSimpleRedisClient, lettuceMasterReplicaRedisClient, lettuceClusterRedisClient, nablarch.lettuce.clientType, nablarch.lettuce.simple.uri, nablarch.lettuce.masterReplica.uri, nablarch.lettuce.cluster.uriList, Redis構成設定, Sentinel, Cluster構成, Master-Replica構成, カスタムクライアントクラス, createClient, createConnection, RedisClient, RedisClusterClient, StatefulRedisConnection, StatefulRedisMasterReplicaConnection, StatefulRedisClusterConnection, ClusterTopologyRefreshOptions, ClusterClientOptions
+LettuceSimpleRedisClient, LettuceMasterReplicaRedisClient, LettuceClusterRedisClient, LettuceRedisClient, lettuceSimpleRedisClient, lettuceMasterReplicaRedisClient, lettuceClusterRedisClient, nablarch.lettuce.clientType, nablarch.lettuce.simple.uri, nablarch.lettuce.masterReplica.uri, nablarch.lettuce.cluster.uriList, Redis構成設定, Sentinel, Cluster構成, Master-Replica構成, カスタムクライアントクラス, createClient, createConnection, RedisClient, RedisClusterClient, StatefulRedisConnection, StatefulRedisMasterReplicaConnection, StatefulRedisClusterConnection, ClusterTopologyRefreshOptions, ClusterClientOptions, JavaSerializeStateEncoder, SessionEntry, serializeEncoder, セッションキー形式, セッション情報エンコード, nablarch.session
 
 </details>
 
@@ -206,10 +234,19 @@ LettuceSimpleRedisClient, LettuceMasterReplicaRedisClient, LettuceClusterRedisCl
 
 `LettuceRedisClientProvider` は `ComponentFactory` を実装しており、`createObject()` は決定された `LettuceRedisClient` のコンポーネントを返す。
 
+本アダプタはセッションの有効期限管理にRedisの有効期限の仕組みを使用している。有効期限が切れたセッション情報は自動的に削除されるため、ゴミデータを削除するバッチを用意する必要はない。
+
+有効期限の確認は [pttl コマンド（外部サイト、英語）](https://redis.io/docs/latest/commands/pttl/) で行える。
+
+```shell
+127.0.0.1:6379> pttl "nablarch.session.8b00bce5-d19f-4f63-b1fe-d14ecca9a4f6"
+(integer) 879774
+```
+
 <details>
 <summary>keywords</summary>
 
-LettuceRedisClientProvider, ComponentFactory, LettuceRedisClient, clientType, clientList, getType, createObject, クライアントクラス決定
+LettuceRedisClientProvider, ComponentFactory, LettuceRedisClient, clientType, clientList, getType, createObject, クライアントクラス決定, Redis有効期限, TTL, セッション有効期限管理, 自動削除, pttl, 有効期限切れセッション
 
 </details>
 
@@ -217,7 +254,7 @@ LettuceRedisClientProvider, ComponentFactory, LettuceRedisClient, clientType, cl
 
 3つのクライアントクラスはいずれも `Initializable` を実装しており、`initialize()` メソッドの実行によりRedisへの接続が確立される。使用するクライアントクラスのコンポーネントを `BasicApplicationInitializer` の `initializeList` に設定する必要がある。
 
-`initializeList` には個別のクライアントクラスではなく `lettuceRedisClientProvider` を使用する。こうすることで、コンポーネント定義を変更することなく :ref:`redisstore_mechanism_to_decide_client` で決定されたクライアントクラスを初期化できる:
+`initializeList` には個別のクライアントクラスではなく `lettuceRedisClientProvider` を使用する。こうすることで、コンポーネント定義を変更することなく [redisstore_mechanism_to_decide_client](#s2) で決定されたクライアントクラスを初期化できる:
 
 ```xml
 <component name="initializer"
@@ -234,69 +271,5 @@ LettuceRedisClientProvider, ComponentFactory, LettuceRedisClient, clientType, cl
 <summary>keywords</summary>
 
 Initializable, initialize, BasicApplicationInitializer, LettuceRedisClientProvider, initializeList, クライアント初期化, Redis接続確立
-
-</details>
-
-## クライアントクラスの廃棄処理
-
-各クライアントクラスは `Disposable` を実装しており、`dispose()` でRedisへの接続を閉じることができる。
-
-`BasicApplicationDisposer` の `disposableList` プロパティに使用するクライアントクラスのコンポーネントを設定することで、アプリケーション終了時にRedisとの接続を閉じることができる。
-
-```xml
-<component name="disposer"
-           class="nablarch.core.repository.disposal.BasicApplicationDisposer">
-  <property name="disposableList">
-    <list>
-      <component-ref name="lettuceRedisClientProvider"/>
-    </list>
-  </property>
-</component>
-```
-
-`BasicApplicationInitializer` の `initializeList` と同様で、`disposableList` プロパティに `LettuceRedisClientProvider` コンポーネントを指定することで、実際に使用されるクライアントクラスの廃棄処理が実行される。
-
-<details>
-<summary>keywords</summary>
-
-Disposable, BasicApplicationDisposer, BasicApplicationInitializer, LettuceRedisClientProvider, disposableList, dispose, Redisコネクション廃棄, アプリケーション終了処理
-
-</details>
-
-## セッション情報の保存方法
-
-Redisに保存されたセッション情報のキー形式: `nablarch.session.<セッションID>`
-
-```shell
-127.0.0.1:6379> keys *
-1) "nablarch.session.8b00bce5-d19f-4f63-b1fe-d14ecca9a4f6"
-```
-
-セッション情報（`SessionEntry` のリスト）は、デフォルトで `JavaSerializeStateEncoder` でエンコードされたバイナリ形式で保存される。
-
-エンコーダーの変更: `serializeEncoder` という名前で別のエンコーダーコンポーネントを定義することで変更できる。
-
-<details>
-<summary>keywords</summary>
-
-JavaSerializeStateEncoder, SessionEntry, serializeEncoder, セッションキー形式, セッション情報エンコード, nablarch.session
-
-</details>
-
-## 有効期限の管理方法
-
-本アダプタはセッションの有効期限管理にRedisの有効期限の仕組みを使用している。有効期限が切れたセッション情報は自動的に削除されるため、ゴミデータを削除するバッチを用意する必要はない。
-
-有効期限の確認は [pttl コマンド（外部サイト、英語）](https://redis.io/docs/latest/commands/pttl/) で行える。
-
-```shell
-127.0.0.1:6379> pttl "nablarch.session.8b00bce5-d19f-4f63-b1fe-d14ecca9a4f6"
-(integer) 879774
-```
-
-<details>
-<summary>keywords</summary>
-
-Redis有効期限, TTL, セッション有効期限管理, 自動削除, pttl, 有効期限切れセッション
 
 </details>

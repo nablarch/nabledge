@@ -21,7 +21,7 @@ public HttpResponse delete(HttpRequest request, ExecutionContext context) {
 - 主キーを条件とした削除は、主キーが設定されたエンティティを引数に `UniversalDao#delete` を実行することで、SQLを作成せずに実行できる。
 - セッションからプロジェクト情報を取得して削除する際は `SessionUtil.delete(context, "project")` を使用する。更新画面を表示する際にセッションにプロジェクト情報を格納しているため、削除時にセッションから取得できる。
 
-> **補足**: :ref:`universal_dao` は主キーを条件とする削除のみ提供。主キー以外を条件に削除する場合は別途SQLを作成して :ref:`SQLIDを指定してSQLを実行する<database-execute_sqlid>` で実行する。
+> **補足**: [universal_dao](../../component/libraries/libraries-universal_dao.md) は主キーを条件とする削除のみ提供。主キー以外を条件に削除する場合は別途SQLを作成して [SQLIDを指定してSQLを実行する](../../component/libraries/libraries-database.md) で実行する。
 
 <details>
 <summary>keywords</summary>

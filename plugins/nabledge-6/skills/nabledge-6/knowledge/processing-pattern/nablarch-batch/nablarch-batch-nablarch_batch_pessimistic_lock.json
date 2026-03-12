@@ -7,7 +7,7 @@
   ],
   "index": [
     {
-      "id": "pessimistic-lock",
+      "id": "s1",
       "title": "Nablarchバッチアプリケーションの悲観的ロック",
       "hints": [
         "BatchAction",
@@ -31,6 +31,6 @@
     }
   ],
   "sections": {
-    "pessimistic-lock": "以下に示す例を参考に実装することで、ロック時間が短縮され他プロセスへの影響を抑えることができる。\n\n**ポイント**:\n- データリーダでは処理対象レコードの主キーのみ取得する\n- `handle` メソッド内で悲観的ロックを行う\n- :ref:`universal_dao` を使用した悲観的ロックについては :ref:`universal_dao_jpa_pessimistic_lock` を参照\n\n```java\npublic class SampleAction extends BatchAction<SqlRow> {\n\n    @Override\n    public DataReader<SqlRow> createReader(final ExecutionContext ctx) {\n        final DatabaseRecordReader reader = new DatabaseRecordReader();\n        final SqlPStatement statement = DbConnectionContext.getConnection()\n                .prepareParameterizedSqlStatementBySqlId(\n                        Project.class.getName() + \"#GET_ID\");\n\n        // 検索条件の取得処理は省略\n\n        reader.setStatement(statement, condition);\n        return reader;\n    }\n\n    @Override\n    public Result handle(final SqlRow inputData, final ExecutionContext ctx) {\n        final Project project =\n                UniversalDao.findBySqlFile(Project.class, \"FIND_BY_ID_WITH_LOCK\", inputData);\n\n        // 業務処理のため省略\n\n        UniversalDao.update(project);\n        return new Success();\n    }\n}\n```"
+    "s1": "以下に示す例を参考に実装することで、ロック時間が短縮され他プロセスへの影響を抑えることができる。\n\n**ポイント**:\n- データリーダでは処理対象レコードの主キーのみ取得する\n- `handle` メソッド内で悲観的ロックを行う\n- [universal_dao](../../component/libraries/libraries-universal_dao.json#s1) を使用した悲観的ロックについては :ref:`universal_dao_jpa_pessimistic_lock` を参照\n\n```java\npublic class SampleAction extends BatchAction<SqlRow> {\n\n    @Override\n    public DataReader<SqlRow> createReader(final ExecutionContext ctx) {\n        final DatabaseRecordReader reader = new DatabaseRecordReader();\n        final SqlPStatement statement = DbConnectionContext.getConnection()\n                .prepareParameterizedSqlStatementBySqlId(\n                        Project.class.getName() + \"#GET_ID\");\n\n        // 検索条件の取得処理は省略\n\n        reader.setStatement(statement, condition);\n        return reader;\n    }\n\n    @Override\n    public Result handle(final SqlRow inputData, final ExecutionContext ctx) {\n        final Project project =\n                UniversalDao.findBySqlFile(Project.class, \"FIND_BY_ID_WITH_LOCK\", inputData);\n\n        // 業務処理のため省略\n\n        UniversalDao.update(project);\n        return new Success();\n    }\n}\n```"
   }
 }
