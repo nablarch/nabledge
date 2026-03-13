@@ -10,4 +10,4 @@ nabledge-5プラグインの主な変更内容を記録しています。
 
 - Nablarch 5の全ドキュメントをカバーする知識ファイルを追加しました。
 
-[0.1]: https://github.com/nablarch/nabledge/releases/tag/0.1
+[0.1]: https://github.com/nablarch/nabledge/releases/tag/0.6
