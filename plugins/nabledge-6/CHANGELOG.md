@@ -4,7 +4,7 @@ nabledge-6プラグインの主な変更内容を記録しています。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に基づいています。
 
-## [Unreleased]
+## [0.6] - 2026-03-13
 
 ### 追加
 - 知識ファイルの閲覧用マークダウンに公式ドキュメントのURLを追加しました。各ページから対応する公式ドキュメントに直接アクセスできるようになりました。
@@ -45,6 +45,7 @@ nabledge-6プラグインの主な変更内容を記録しています。
 ### 追加
 - 評価版として、Nablarch 6のバッチ処理に関する基礎知識とコード分析ワークフローを提供
 
+[0.6]: https://github.com/nablarch/nabledge/releases/tag/0.6
 [0.5]: https://github.com/nablarch/nabledge/releases/tag/0.5
 [0.4]: https://github.com/nablarch/nabledge/releases/tag/0.4
 [0.3]: https://github.com/nablarch/nabledge/releases/tag/0.3
