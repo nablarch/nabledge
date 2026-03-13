@@ -1,0 +1,93 @@
+{
+  "id": "jakarta-batch-getting-started-chunk",
+  "title": "データを導出するバッチの作成(Chunkステップ)",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/getting_started/chunk/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/api/chunk/ItemReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/api/chunk/AbstractItemReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/inject/Named.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/enterprise/context/Dependent.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/api/chunk/ItemProcessor.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/api/chunk/ItemWriter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/api/chunk/AbstractItemWriter.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "入力データソースからデータを読み込む",
+      "hints": [
+        "AbstractItemReader",
+        "ItemReader",
+        "DeferredEntityList",
+        "UniversalDao",
+        "@Named",
+        "@Dependent",
+        "ItemReader実装",
+        "遅延ロード",
+        "大量データ読み込み",
+        "フォーム",
+        "Chunkステップ入力",
+        "open",
+        "readItem",
+        "close",
+        "EmployeeSearchReader",
+        "EmployeeForm"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "業務ロジックを実行する",
+      "hints": [
+        "ItemProcessor",
+        "業務ロジック実装",
+        "Chunkステップ処理",
+        "processItem",
+        "BonusCalculateProcessor",
+        "@Named",
+        "@Dependent",
+        "Bonus",
+        "EmployeeForm"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "永続化処理を行う",
+      "hints": [
+        "ItemWriter",
+        "AbstractItemWriter",
+        "UniversalDao",
+        "batchInsert",
+        "一括登録",
+        "トランザクションコミット",
+        "永続化処理",
+        "writeItems",
+        "BonusWriter",
+        "@Named",
+        "@Dependent"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "JOB設定ファイルを作成する",
+      "hints": [
+        "ジョブ定義XML",
+        "batch-jobs",
+        "item-count",
+        "META-INF/batch-jobs",
+        "chunk要素",
+        "nablarchJobListenerExecutor",
+        "nablarchStepListenerExecutor",
+        "nablarchItemWriteListenerExecutor",
+        "ジョブ名称"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## フォームの作成\n\nItemReaderとItemProcessorとのデータ連携にはフォームを使用する。\n\n```java\npublic class EmployeeForm {\n\n    //一部のみ抜粋\n\n    /** 社員ID */\n    private Long employeeId;\n\n    public Long getEmployeeId() {\n        return employeeId;\n    }\n\n    public void setEmployeeId(Long employeeId) {\n        this.employeeId = employeeId;\n    }\n}\n```\n\n## ItemReaderの作成\n\n`AbstractItemReader` を継承して実装する。**アノテーション**: `@Named`, `@Dependent` をクラスに付与する。\n\n実装するメソッド:\n\n| メソッド | 責務 |\n|---|---|\n| `open` | 処理対象データの読み込み |\n| `readItem` | 一行分のデータを返却（nullを返すと処理終了） |\n| `close` | リソースのクローズ |\n\n```java\n@Dependent\n@Named\npublic class EmployeeSearchReader extends AbstractItemReader {\n    private DeferredEntityList<EmployeeForm> list;\n    private Iterator<EmployeeForm> iterator;\n\n    @Override\n    public void open(Serializable checkpoint) throws Exception {\n        list = (DeferredEntityList<EmployeeForm>) UniversalDao.defer()\n                .findAllBySqlFile(EmployeeForm.class, \"SELECT_EMPLOYEE\");\n        iterator = list.iterator();\n    }\n\n    @Override\n    public Object readItem() {\n        if (iterator.hasNext()) {\n            return iterator.next();\n        }\n        return null;\n    }\n\n    @Override\n    public void close() throws Exception {\n        list.close();\n    }\n}\n```\n\nSQLファイル例 (EmployeeForm.sql):\n\n```sql\nSELECT_EMPLOYEE=\nSELECT\n    EMPLOYEE.EMPLOYEE_ID, EMPLOYEE.FULL_NAME, EMPLOYEE.BASIC_SALARY,\n    EMPLOYEE.GRADE_CODE, GRADE.BONUS_MAGNIFICATION, GRADE.FIXED_BONUS\nFROM EMPLOYEE\nINNER JOIN GRADE ON EMPLOYEE.GRADE_CODE = GRADE.GRADE_CODE\n```\n\n- 大量データの場合は `UniversalDao#defer` で [遅延ロード](../../component/libraries/libraries-universal_dao.json#s5) する（メモリ逼迫防止）\n- `readItem` で返却したオブジェクトが後続の `ItemProcessor` の `processItem` の引数になる",
+    "s2": "`ItemProcessor` を実装して業務ロジックを実行する。永続化処理は `ItemWriter` の責務のため、ItemProcessorでは実施しない。\n\n実装するメソッド:\n\n| メソッド | 責務 |\n|---|---|\n| `processItem` | 一行分のデータに対する業務処理 |\n\n```java\n@Dependent\n@Named\npublic class BonusCalculateProcessor implements ItemProcessor {\n    @Override\n    public Object processItem(Object item) {\n        EmployeeForm form = (EmployeeForm) item;\n        Bonus bonus = new Bonus();\n        bonus.setEmployeeId(form.getEmployeeId());\n        bonus.setPayments(calculateBonus(form));\n        return bonus;\n    }\n}\n```\n\n- `processItem` で一定数（`item-count` 属性で設定）のエンティティを返却した時点で、後続の `ItemWriter` の `writeItems` が実行される",
+    "s3": "`ItemWriter` を実装してデータを永続化する。\n\n実装するメソッド:\n\n| メソッド | 責務 |\n|---|---|\n| `writeItems` | データの永続化 |\n\n```java\n@Dependent\n@Named\npublic class BonusWriter extends AbstractItemWriter {\n    @Override\n    public void writeItems(List<Object> items) {\n        UniversalDao.batchInsert(items);\n    }\n}\n```\n\n- `UniversalDao#batchInsert` でエンティティリストを一括登録する\n- `writeItems` 実行後にトランザクションがコミットされ、新たなトランザクションが開始される\n- `writeItems` 実行後、バッチ処理は `readItem` から繰り返される",
+    "s4": "ジョブ定義XMLファイルを `/src/main/resources/META-INF/batch-jobs/` に配置する。\n\n- `job` 要素の `id` 属性でジョブ名称を指定する\n- `chunk` 要素の `item-count` 属性で `writeItems` 一回当たりの処理件数を設定する\n\n```xml\n<job id=\"bonus-calculate\" xmlns=\"http://xmlns.jcp.org/xml/ns/javaee\" version=\"1.0\">\n  <listeners>\n    <listener ref=\"nablarchJobListenerExecutor\" />\n  </listeners>\n  <step id=\"step1\">\n    <listeners>\n      <listener ref=\"nablarchStepListenerExecutor\" />\n      <listener ref=\"nablarchItemWriteListenerExecutor\" />\n    </listeners>\n    <chunk item-count=\"1000\">\n      <reader ref=\"employeeSearchReader\" />\n      <processor ref=\"bonusCalculateProcessor\" />\n      <writer ref=\"bonusWriter\" />\n    </chunk>\n  </step>\n</job>\n```"
+  }
+}

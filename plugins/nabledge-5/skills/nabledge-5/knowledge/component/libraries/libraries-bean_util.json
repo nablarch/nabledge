@@ -1,0 +1,104 @@
+{
+  "id": "libraries-bean_util",
+  "title": "BeanUtil",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/bean_util.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/Converter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/ExtensionConverter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/ConversionManager.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BasicConversionManager.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/CopyOption.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/CopyOptions.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/CopyOptions.Builder.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "hints": [
+        "BeanUtil",
+        "nablarch-core-beans",
+        "com.nablarch.framework",
+        "モジュール依存関係"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "使用方法",
+      "hints": [
+        "BeanUtil",
+        "getProperty",
+        "setProperty",
+        "createAndCopy",
+        "createMapAndCopy",
+        "プロパティコピー",
+        "Bean間データ移送",
+        "Map変換",
+        "List型パラメータ制限",
+        "nablarch.core.beans.BeanUtil"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "BeanUtilの型変換ルール",
+      "hints": [
+        "BeanUtil",
+        "Converter",
+        "ConversionManager",
+        "型変換ルール",
+        "nablarch.core.beans.converter",
+        "nablarch.core.beans.Converter",
+        "精度変換",
+        "validation"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "型変換ルールを追加する",
+      "hints": [
+        "ConversionManager",
+        "Converter",
+        "ExtensionConverter",
+        "BasicConversionManager",
+        "型変換ルール追加",
+        "conversionManager",
+        "nablarch.core.beans.ConversionManager",
+        "nablarch.core.beans.Converter",
+        "nablarch.core.beans.ExtensionConverter"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "型変換時に許容するフォーマットを指定する",
+      "hints": [
+        "BasicConversionManager",
+        "CopyOption",
+        "CopyOptions",
+        "datePatterns",
+        "numberPatterns",
+        "datePattern",
+        "numberPattern",
+        "フォーマット設定",
+        "日付変換",
+        "数値変換",
+        "nablarch.core.beans.BasicConversionManager",
+        "nablarch.core.beans.CopyOption",
+        "nablarch.core.beans.CopyOptions",
+        "nablarch.core.beans.CopyOptions.Builder",
+        "bean_util-format_logical",
+        "bean_util-format_property_setting",
+        "bean_util-format_default_setting",
+        "datePatternByName",
+        "converterByName"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-beans</artifactId>\n</dependency>\n```",
+    "s2": "`BeanUtil` が提供するAPI:\n\n- `getProperty(bean, \"propertyName\")`: getter経由でプロパティ値を取得\n- `setProperty(bean, \"propertyName\", value)`: setter経由でプロパティ値を設定\n- `createAndCopy(DestClass.class, sourceBean)`: 名前が一致するプロパティに値を移送。移送先に存在しないプロパティは無視。型が異なる場合はConversionUtilで変換\n- `createMapAndCopy(bean)`: BeanをMapに変換。ネストしたBeanは「.」区切りでフラット化（例: `address.postNo`）。Map→Mapのネストはしない\n- `createAndCopy(Class, map)`: MapをBeanに変換。「.」区切りキーはネストオブジェクトのプロパティとして設定。Map→Mapのネストは扱えない\n\n> **重要**: BeanUtilはList型の型パラメータに対応していない。List型の型パラメータを使いたい場合は具象クラスでgetterをオーバーライドして対応すること。オーバーライドしない場合、`createAndCopy` 呼び出し時に実行時例外が発生する。\n\n```java\n// 具象クラスでオーバーライドした場合のみ正常動作する\npublic static class GoodSampleForm extends ItemsForm<Item> {\n    @Override\n    public List<Item> getItems() {\n        return super.getItems();\n    }\n}\n```",
+    "s3": "Java BeansオブジェクトやMapオブジェクトから別のJava Beansオブジェクトにデータ移行する際にプロパティを型変換する。Mapオブジェクトのキーにドット（`.`）が含まれていればネストオブジェクトとして扱う。\n\n型変換ルールは `nablarch.core.beans.converter` パッケージ配下の `Converter` 実装クラスを参照。\n\n> **重要**: 精度の小さい型への変換（例: LongからIntegerへ）で変換先の精度を超える値を指定しても正常終了する。BeanUtilでコピーする前に [validation](libraries-validation.json) で値を検証すること。未検証の場合、不正な値がシステムに取り込まれ障害の原因となる。\n\n> **重要**: 型変換ルールはアプリケーション共通設定。特定の処理のみ異なる型変換ルールを適用したい場合は [bean_util-format_logical](#s5) を参照し、`Converter` 実装を適用すること。",
+    "s4": "型変換ルールを追加する手順:\n\n1. 必要に応じて以下のインタフェースを実装する:\n   - `Converter`\n   - `ExtensionConverter`\n\n2. `ConversionManager` の実装クラスを作成する。標準の変換ルールに追加する場合は、既存の `ConversionManager` をプロパティとして持つ実装クラスを作成する。\n\n```java\npublic class SampleConversionManager implements ConversionManager {\n    private ConversionManager delegateManager;\n\n    @Override\n    public Map<Class<?>, Converter<?>> getConverters() {\n        Map<Class<?>, Converter<?>> converters = new HashMap<Class<?>, Converter<?>>();\n        converters.putAll(delegateManager.getConverters());\n        converters.put(BigInteger.class, new CustomConverter());\n        return Collections.unmodifiableMap(converters);\n    }\n\n    @Override\n    public List<ExtensionConverter<?>> getExtensionConvertor() {\n        final List<ExtensionConverter<?>> extensionConverters =\n            new ArrayList<ExtensionConverter<?>>(delegateManager.getExtensionConvertor());\n        extensionConverters.add(new CustomExtensionConverter());\n        return extensionConverters;\n    }\n\n    public void setDelegateManager(ConversionManager delegateManager) {\n        this.delegateManager = delegateManager;\n    }\n}\n```\n\n3. コンポーネント設定ファイルに設定する。**コンポーネント名は `conversionManager`** とすること。\n\n```xml\n<component name=\"conversionManager\" class=\"sample.SampleConversionManager\">\n  <property name=\"delegateManager\">\n    <component class=\"nablarch.core.beans.BasicConversionManager\" />\n  </property>\n</component>\n```",
+    "s5": "許容するフォーマットの指定方法（優先順位の高い順）:\n1. [BeanUtil呼び出し時に設定](#s5)\n2. [プロパティ単位にアノテーションで設定](#s5)\n3. [デフォルト設定(システム共通設定)](#s5)\n\n### デフォルト(システム共通)の設定\n\nコンポーネント名 `conversionManager` で `BasicConversionManager` を定義し、`datePatterns`（日付・日時フォーマット）と `numberPatterns`（数値フォーマット）を設定する。\n\n```xml\n<component name=\"conversionManager\" class=\"nablarch.core.beans.BasicConversionManager\">\n  <property name=\"datePatterns\">\n    <list>\n      <value>yyyy/MM/dd</value>\n      <value>yyyy-MM-dd</value>\n    </list>\n  </property>\n  <property name=\"numberPatterns\">\n    <list>\n      <value>#,###</value>\n    </list>\n  </property>\n</component>\n```\n\n> **重要**: `yyyy/MM/dd` と `yyyy/MM/dd HH:mm:ss` を両方指定した場合、日時形式の値も `yyyy/MM/dd` でパースされ時間情報が欠落するケースがある。デフォルト設定では日付フォーマットのみ指定し、日時形式の項目は [プロパティ単位にアノテーションで設定](#s5) でオーバーライドすること。\n\n### プロパティ単位のアノテーション設定\n\nコピー元またはコピー先のBeanの該当フィールドに `CopyOption` アノテーションを指定する。コピー元とコピー先の両方に指定されている場合はコピー元の設定を使用する。許容するフォーマットはString型のプロパティに対応するフィールドに指定するのが好ましい。\n\n```java\npublic class Bean {\n    @CopyOption(datePattern = \"yyyy/MM/dd HH:mm:ss\")\n    private String timestamp;\n\n    @CopyOption(numberPattern = \"#,###\")\n    private String number;\n}\n```\n\n### BeanUtil呼び出し時の設定\n\nOSSなどでBeanが自動生成されてアノテーション設定できない場合や、特定プロパティのみ異なる型変換ルールを適用したい場合に使用する。`CopyOptions` を使用してプロパティに設定し（構築方法は `CopyOptions.Builder` を参照）、`BeanUtil` 呼び出し時に渡す。\n\n```java\nfinal CopyOptions copyOptions = CopyOptions.options()\n        .datePatternByName(\"timestamp\", \"yyyy年MM月dd日 HH時mm分ss秒\")\n        .converterByName(\"custom\", Date.class, new CustomDateConverter())\n        .build();\n\nfinal DestBean copy = BeanUtil.createAndCopy(DestBean.class, bean, copyOptions);\n```"
+  }
+}

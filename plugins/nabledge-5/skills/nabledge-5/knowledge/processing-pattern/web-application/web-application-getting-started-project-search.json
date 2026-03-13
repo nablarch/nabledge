@@ -1,0 +1,42 @@
+{
+  "id": "web-application-getting-started-project-search",
+  "title": "検索機能の作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/project_search/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/interceptor/InjectForm.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "検索する",
+      "hints": [
+        "ProjectSearchForm",
+        "SearchFormBase",
+        "ProjectSearchDto",
+        "BeanUtil",
+        "InjectForm",
+        "UniversalDao",
+        "@InjectForm",
+        "@OnError",
+        "@Domain",
+        "ApplicationException",
+        "LoginUserPrincipal",
+        "SessionUtil",
+        "プロジェクト検索",
+        "検索条件フォーム",
+        "UniversalDao検索",
+        "ページング",
+        "動的SQL",
+        "$if構文",
+        "$sort構文",
+        "ドメインバリデーション"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "### フォームの作成\n\n**クラス**: `ProjectSearchForm extends SearchFormBase implements Serializable`\n\n入力値プロパティは全てString型で宣言する（[bean_validation-form_property](../../component/libraries/libraries-bean_validation.json#s5) 参照）。ドメインバリデーションには `@Domain` アノテーションを使用する。\n\n```java\n@Domain(\"projectName\")\nprivate String projectName;\n\n@Domain(\"date\")\nprivate String projectStartDateBegin;\n```\n\n### 検索条件入力JSPの作成\n\nGETリクエストには [tag-form_tag](../../component/libraries/libraries-tag_reference.json#s3) の`method`属性に`GET`を指定する。GETの場合、ボタン/リンクにNablarchカスタムタグは使用できないためHTMLで作成する（:ref:`tag-using_get` 参照）。\n\n```jsp\n<n:form method=\"GET\" action=\"list\">\n    <n:text id=\"projectName\" name=\"searchForm.projectName\" size=\"25\" maxlength=\"64\"\n            cssClass=\"form-control\" errorCss=\"input-error form-control\" placeholder=\"プロジェクト名\"/>\n    <n:error errorCss=\"message-error\" name=\"searchForm.projectName\" />\n    <input type=\"submit\" value=\"検索\" />\n</n:form>\n```\n\n### 検索条件Beanの作成\n\n**クラス**: `ProjectSearchDto implements Serializable`\n\nフォームから検索条件Beanへの値移送には `BeanUtil` を使用する。プロパティ名が同一の項目を移送するため、フォームと検索条件Beanのプロパティ名を一致させる必要がある。型互換があれば型変換した上で移送可能（[utility-conversion](../../component/libraries/libraries-bean_util.json#s2) 参照）。Beanのプロパティはカラムの型に合わせたJava型で定義する（例: `java.sql.Date`）。\n\n### 検索SQLの作成\n\nSQLインジェクション防止のためSQLは外部ファイルに記述する（[database-use_sql_file](../../component/libraries/libraries-database.json#s4) 参照）。Beanのプロパティ名でSQLに値をバインドする（[database-input_bean](../../component/libraries/libraries-database.json#s8) 参照）。\n\n- 入力された項目のみをWHERE句に含める場合: [$if構文を使用](../../component/libraries/libraries-database.json)\n- ソートキーを画面から選択可能とする場合: [$sort構文を使用](../../component/libraries/libraries-database.json)\n\n```sql\nSEARCH_PROJECT =\nSELECT PROJECT_ID, PROJECT_NAME, PROJECT_TYPE, PROJECT_CLASS,\n       PROJECT_START_DATE, PROJECT_END_DATE, VERSION\nFROM PROJECT\nWHERE\n    USER_ID = :userId\n    AND $if(clientId)     {CLIENT_ID = :clientId}\n    AND $if(projectName) {PROJECT_NAME LIKE  :%projectName%}\n    AND $if(projectType) {PROJECT_TYPE = :projectType}\n    AND $if(projectClass) {PROJECT_CLASS IN (:projectClass[])}\n    AND $if(projectStartDateBegin) {PROJECT_START_DATE >= :projectStartDateBegin}\n    AND $if(projectStartDateEnd) {PROJECT_START_DATE <= :projectStartDateEnd}\n    AND $if(projectEndDateBegin) {PROJECT_END_DATE >= :projectEndDateBegin}\n    AND $if(projectEndDateEnd) {PROJECT_END_DATE <= :projectEndDateEnd}\n$sort(sortId){\n    (idAsc PROJECT_ID)\n    (idDesc PROJECT_ID DESC)\n    (nameAsc PROJECT_NAME, PROJECT_ID)\n    (nameDesc PROJECT_NAME DESC, PROJECT_ID DESC)\n    (startDateAsc PROJECT_START_DATE, PROJECT_ID)\n    (startDateDesc PROJECT_START_DATE DESC, PROJECT_ID DESC)\n    (endDateAsc PROJECT_END_DATE, PROJECT_ID)\n    (endDateDesc PROJECT_END_DATE DESC, PROJECT_ID DESC)\n}\n```\n\n### 業務アクションの実装\n\n**アノテーション**: `@InjectForm`, `@OnError`\n\n外部入力値のため `InjectForm` でバリデーション必須。バリデーション済みフォームはリクエストスコープから取得する。`BeanUtil` でフォームの値を検索条件Beanにコピーする。\n\n```java\n@InjectForm(form = ProjectSearchForm.class, prefix = \"searchForm\", name = \"searchForm\")\n@OnError(type = ApplicationException.class, path = \"/WEB-INF/view/project/index.jsp\")\npublic HttpResponse list(HttpRequest request, ExecutionContext context) {\n    ProjectSearchForm searchForm = context.getRequestScopedVar(\"searchForm\");\n    ProjectSearchDto searchCondition = BeanUtil.createAndCopy(ProjectSearchDto.class, searchForm);\n    List<Project> searchList = searchProject(searchCondition, context);\n    context.setRequestScopedVar(\"searchResult\", searchList);\n    return new HttpResponse(\"/WEB-INF/view/project/index.jsp\");\n}\n```\n\n`UniversalDao#findAllBySqlFile` の第二引数にSQLID（例: `\"SEARCH_PROJECT\"`）を指定する。ページング検索は `UniversalDao#per` と `UniversalDao#page` を使用する（[universal_dao-paging](../../component/libraries/libraries-universal_dao.json#s8) 参照）。セッションからログインユーザーコンテキストを取得し、検索条件Beanの`userId`に設定する（`USER_ID = :userId`は必須条件のため必須）。\n\n```java\nprivate List<Project> searchProject(ProjectSearchDto searchCondition,\n                                    ExecutionContext context) {\n    LoginUserPrincipal userContext = SessionUtil.get(context, \"userContext\");\n    searchCondition.setUserId(userContext.getUserId());\n    return UniversalDao\n        .page(searchCondition.getPageNumber())\n        .per(20L)\n        .findAllBySqlFile(Project.class, \"SEARCH_PROJECT\", searchCondition);\n}\n```\n\n### 検索結果JSPの作成\n\nGETリクエストのURLにパラメータを付与する場合はJSTLの`<c:url>`タグやEL式を使用する。値の出力には [tag-write_tag](../../component/libraries/libraries-tag_reference.json) を使用し、`valueFormat`属性で日付等のフォーマットを指定できる（:ref:`tag-format_value` 参照）。`<app:listSearchResult>`の使用方法は [list_search_result](../../guide/biz-samples/biz-samples-03.json) を参照。\n\n```jsp\n<n:write name=\"row.projectStartDate\" valueFormat=\"dateTime{yyyy/MM/dd}\"/>\n```"
+  }
+}

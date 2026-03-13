@@ -1,0 +1,362 @@
+# フォーマット定義ファイルの記述ルール
+
+**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/data_io/data_format/format_definition.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/java/util/Map.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/FixedLengthConvertorSetting.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/InvalidDataFormatException.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/datatype/SignedNumberStringDecimal.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/convertor/VariableLengthConvertorSetting.html)
+
+## フォーマット定義ファイルの共通の記法
+
+## 文字コード
+
+フォーマット定義ファイルの文字コードは `UTF-8`。
+
+## リテラル表記
+
+| リテラル型 | 説明 |
+|---|---|
+| 文字列 | `"` で値を囲む。Unicodeエスケープ・8進数エスケープは非対応。例: `"Nablarch"`, `"\\r\\n"` |
+| 10進整数 | Javaの数値リテラルと同じ形式。小数は非対応。例: `123`, `-123` |
+| 真偽値 | `true` または `false`（大文字可）|
+
+## コメント
+
+行中の `#` 以降はコメントとして扱われる。
+
+```bash
+file-type:     "Fixed"  # 固定長
+text-encoding: "ms932"  # 文字コードはms932
+record-length:  120     # 各業の長さは120バイト
+```
+
+レコードタイプ名は`[`と`]`で囲んで定義し、フォーマット定義ファイル内で一意であること。レコードタイプ名の次行からフィールド定義を記述する。
+
+```bash
+[data]              # レコードタイプ名:data
+1 name  N(100)      # 名前
+2 age   X9(3)       # 年齢
+```
+
+> **重要**: JSONおよびXMLデータ形式で、同一フィールド名に対してフィールドタイプ`OB`のものとそうでないものを混在させてはいけない。混在すると、OBの定義が優先されてOB以外のフィールドタイプが無視される。その結果、本来OBでないフィールドの読み書き時にOB型として取り扱われ、データが正しく読み書きできない問題が発生する。
+
+**不適切な例（OBとN混在）:**
+
+```bash
+[order]
+1 id     N
+2 data   OB  # フィールドタイプ:OB
+3 detail OB
+
+[data]
+1 value  N
+
+[detail]
+1 data   N   # フィールドタイプ:N  ← 不適切な記述：フィールドタイプにOBを指定したものとして取り扱われる。
+```
+
+## フィールド定義
+
+フィールド定義の書式:
+
+```
+<フィールド開始位置> <フィールド名> <多重度> <フィールドタイプ> <フィールドコンバータ>
+```
+
+| 要素 | 必須 | 説明 |
+|---|---|---|
+| フィールド開始位置 | ○ | Fixed(固定長): 開始バイト数(1起算)。Variable(可変長)/JSON/XML: 項目通番/要素通番 |
+| フィールド名 | ○ | `java.util.Map`のキー。`?`プレフィックスで入力時に読み込み除外（filler等に使用）。XMLでは`@`プレフィックスで属性値として扱う |
+| 多重度 | | JSON/XMLのみ有効。`[lower..upper]`形式。`*`=上限なし。省略時は`[1]` |
+| フィールドタイプ | ○ | [data_format-field_type_list](#) 参照 |
+| フィールドコンバータ | | [data_format-field_convertor_list](#) 参照。複数設定可能 |
+
+> **重要**: 数字のみのフィールド名は定義できない。
+
+**多重度の指定例（JSON/XMLのみ）:**
+
+```bash
+address [1..3]    # 1から3
+address           # 省略=1つのみ
+address [0..*]    # 0から無制限
+address [*]       # 0から無制限
+address [1..*]    # 1以上
+```
+
+以下のXMLの場合、`address`フィールドの定義数は`2`となる。
+
+```xml
+<person>
+  <address>自宅住所</address>
+  <address>勤務先住所</address>
+</person>
+```
+
+以下のJSONの場合、`address`フィールドの要素数は`3`となる。
+
+```json
+{
+  "address" : ["自宅住所", "勤務先住所", "送付先住所"]
+}
+```
+
+**XML属性値としてフィールドを定義する例:**
+
+```bash
+[tagName]
+@attr
+```
+
+対応するXML:
+
+```xml
+<tagName attr="val">
+</tagName>
+```
+
+## Fixed(固定長)データ形式フィールドタイプ一覧
+
+| タイプ | Java型 | 説明 |
+|---|---|---|
+| X | String | シングルバイト文字列(バイト長 = 文字列長)。デフォルト: 半角空白による右トリム・パディング。引数: バイト長(数値) 必須。出力値null→空文字変換して処理。読み込み空文字列→null変換。null変換を無効化する場合は`convertEmptyToNull`にfalseを設定 |
+| N | String | ダブルバイト文字列(バイト長 = 文字数 ÷ 2)。デフォルト: 全角空白による右トリム・パディング。引数: バイト長(数値) 必須。バイト長が2の倍数でない場合は構文エラー。null/空文字扱いは:ref:`data_format-field_type-single_byte_character_string`と同じ |
+| XN | String | マルチバイト文字列(UTF-8等バイト長の異なる文字が混在するフィールド、または全角文字列のパディングに半角スペースを使用する場合に指定)。デフォルト: 半角空白による右トリム・パディング。引数: バイト長(数値) 必須。null/空文字扱いは:ref:`data_format-field_type-single_byte_character_string`と同じ |
+| Z | BigDecimal | ゾーン数値(バイト長 = 桁数)。デフォルト: 0による左トリム・パディング。引数1: バイト長(数値) 必須、引数2: 小数点以下桁数(数値) 任意(デフォルト: 0)。出力値null→0変換。読み込みバイト数0→null変換。null変換を無効化する場合は`convertEmptyToNull`にfalseを設定 |
+| SZ | BigDecimal | 符号付きゾーン数値(バイト長 = 桁数)。デフォルト: 0による左トリム・パディング。引数1: バイト長(数値) 必須、引数2: 少数点以下桁数(数値) 任意(デフォルト: 0)、引数3: ゾーン部正符号(16進表記) 任意、引数4: ゾーン部負符号(16進表記) 任意。引数3・4は:ref:`data_format-positive_zone_sign_nibble`/:ref:`data_format-negative_zone_sign_nibble`を上書きする場合に設定。null/バイト数0の扱いは:ref:`data_format-field_type-zoned_decimal`と同じ |
+| P | BigDecimal | パック数値(バイト長 = 桁数 ÷ 2 [端数切り上げ])。デフォルト: 0による左トリム・パディング。引数1: バイト長(数値) 必須、引数2: 少数点以下桁数(数値) 任意(デフォルト: 0)。null/バイト数0の扱いは:ref:`data_format-field_type-zoned_decimal`と同じ |
+| SP | BigDecimal | 符号付きパック数値(バイト長 = (桁数 + 1) ÷ 2 [端数切り上げ])。デフォルト: 0による左トリム・パディング。引数1: バイト長(数値) 必須、引数2: 少数点以下桁数(数値) 任意(デフォルト: 0)、引数3: 符号ビット正符号(16進表記) 任意、引数4: 符号ビット負符号(16進表記) 任意。引数3・4は:ref:`data_format-positive_pack_sign_nibble`/:ref:`data_format-negative_pack_sign_nibble`を上書きする場合に設定。null/バイト数0の扱いは:ref:`data_format-field_type-zoned_decimal`と同じ |
+| B | byte[] | バイナリ列。パディング・トリムなし。引数: バイト長(数値) 必須。出力値nullの場合は変換を行わず`InvalidDataFormatException`を送出。アプリケーション側で明示的に値を設定すること |
+| X9 | BigDecimal | 符号無し数値文字列(バイト長 = 文字数)。Xフィールドを数値として扱う。デフォルト: 0による左トリム・パディング。文字列中に小数点記号(.)を含めることができる。引数1: バイト長(数値) 必須、引数2: 固定小数点の小数点以下桁数(数値) 任意(デフォルト: 0)。出力値nullの扱いは:ref:`data_format-field_type-zoned_decimal`と同じ。読み込み空文字列の扱いは:ref:`data_format-field_type-single_byte_character_string`と同じ |
+| SX9 | BigDecimal | 符号付き数値文字列(バイト長 = 文字数)。Xフィールドを符号付き数値として扱う。デフォルト: 0による左トリム・パディング。引数1: バイト長(数値) 必須、引数2: 固定小数点の小数点以下桁数(数値) 任意(デフォルト: 0)。出力値nullの扱いは:ref:`data_format-field_type-zoned_decimal`と同じ。読み込み空文字列の扱いは:ref:`data_format-field_type-single_byte_character_string`と同じ。符号文字(+/-)変更時は`SignedNumberStringDecimal`を参考にプロジェクト固有フィールドタイプを作成。フィールドタイプ追加は[data_format-field_type_add](libraries-data_format.md)参照 |
+
+## Variable(可変長)データ形式フィールドタイプ一覧
+
+| タイプ | Java型 | 説明 |
+|---|---|---|
+| X / N / XN / X9 / SX9 | String | 可変長データ形式では全フィールドをStringとして読み書きする。タイプ識別子による動作の違いはない。フィールド長の概念がないため引数不要。BigDecimalとして読み書きする場合は:ref:`numberコンバータ <data_format-number_convertor>`または:ref:`signed_numberコンバータ <data_format-signed_number_convertor>`を使用。出力値null→空文字変換。読み込み空文字列→null変換。null変換を無効化する場合は`convertEmptyToNull`にfalseを設定 |
+
+## JSONおよびXMLデータ形式フィールドタイプ一覧
+
+| タイプ | Java型 | 説明 |
+|---|---|---|
+| X / N / XN | String | 文字列データタイプ。パディング等の編集なし。JSON出力時は値がダブルクォートで括られる。出力値null: JSONは変換なし、XMLは空文字に変換 |
+| X9 / SX9 | String | 数値文字列タイプ。パディング等のデータ編集なし。出力時は値がそのまま出力される。BigDecimalとして読み書きする場合は:ref:`numberコンバータ <data_format-number_convertor>`または:ref:`signed_numberコンバータ <data_format-signed_number_convertor>`を使用。出力値nullの扱いは:ref:`data_format-field_type-nullable_string`と同じ |
+| BL | String | boolean値(true/falseを文字列で表したもの)。パディング等の編集なし。出力時は値がそのまま出力される。出力値nullの扱いは:ref:`data_format-field_type-nullable_string`と同じ |
+| OB | - | ネストされたレコードタイプ指定に使用。フィールド名に対応したレコードタイプがネスト要素として入出力される。出力値nullの扱いは:ref:`data_format-field_type-nullable_string`と同じ |
+
+OBタイプの使用例:
+
+```json
+{
+  "users": [
+    {
+      "name"    : "名前",
+      "age"     : 30,
+      "address" : "住所"
+    }
+  ]
+}
+```
+
+```xml
+<users>
+  <user>
+    <name>名前</name>
+    <age>30</age>
+    <address>住所</address>
+  </user>
+</users>
+```
+
+対応するフォーマット定義ファイル:
+
+```
+[users]       # ルート要素
+1 user [1..*] OB
+
+[user]        # ネストした要素
+1 name    N   # 最下層の要素
+2 age     X9
+3 address N
+```
+
+標準フィールドコンバータ一覧:
+
+| コンバータ名 | 型変換仕様 | 説明 |
+|---|---|---|
+| `pad` | 型変換無し | パディング・トリム文字を設定する。フィールドタイプ別動作: X/N/XN=右トリム・右パディング、Z/SZ/P/SP/X9/SX9=左トリム・左パディング。引数: パディング・トリム対象値（必須）。フィールドタイプ詳細は [data_format-field_type_list](#) 参照。 |
+| `encoding` | 型変換なし | 文字列型フィールドの文字エンコーディングを設定。共通設定（:ref:`text-encoding <data_format-directive_text_encoding>`）を特定フィールドのみ上書きする場合に使用。X/N/XNフィールドのみ有効。他のフィールドタイプに設定した場合は無視される。引数: エンコーディング名（必須）。 |
+| リテラル値 | 型変換なし | 出力時のデフォルト値を設定。出力時に値が未設定の場合に指定リテラル値を出力。入力時には使用しない。 |
+| `number` | String <-> BigDecimal | 数字文字列をBigDecimalに変換。入力: 符号なし数値形式チェック後にBigDecimal変換。出力: 文字列変換後に符号なし数値形式チェックして出力。 |
+| `signed_number` | String <-> BigDecimal | 符号付き数字文字列をBigDecimalに変換。符号が許可される点以外は :ref:`numberコンバータ <data_format-number_convertor>` と同仕様。 |
+| `replacement` | 型変換なし | 入出力とも置換え対象文字を変換先文字に置換して返す。引数: 置き換えタイプ名（任意）。詳細は [data_format-replacement](libraries-data_format.md) 参照。 |
+
+<details>
+<summary>keywords</summary>
+
+フォーマット定義ファイル, 文字コード, UTF-8, リテラル表記, コメント, 文字列リテラル, 10進整数, 真偽値, コメント記号, java.util.Map, フィールド定義書式, フィールド開始位置, フィールド名, 多重度, フィールドタイプ, フィールドコンバータ, OBフィールドタイプ混在禁止, XML属性値定義, 数字のみフィールド名禁止, 固定長フィールドタイプ, 可変長フィールドタイプ, JSONフィールドタイプ, XMLフィールドタイプ, ゾーン数値, パック数値, バイナリ列, ネストレコード, convertEmptyToNull, FixedLengthConvertorSetting, VariableLengthConvertorSetting, InvalidDataFormatException, SignedNumberStringDecimal, X, N, XN, Z, SZ, P, SP, B, X9, SX9, BL, OB, pad, encoding, number, signed_number, replacement, パディング, トリム, エンコーディング, BigDecimal, BigDecimal変換, 数値変換, 文字置換
+
+</details>
+
+## フォーマット定義ファイルの構造
+
+フォーマット定義ファイルは以下の2つの要素で構成される。
+
+- **ディレクティブ宣言部**: 使用するデータ形式（固定長、JSONなど）やエンコーディングなどの共通設定を定義する。詳細は [data_format-definition_directive](#s2) を参照。
+- **レコードフォーマット定義部**: レコード内のフィールド定義、フィールドごとのデータ型・データ変換ルールを定義する。詳細は [data_format-definition_record](#) を参照。
+
+マルチフォーマット形式のデータでは、フォーマット定義ファイルに複数のレコードフォーマットを定義する。入出力データのレコードタイプは、特定フィールドの値によって自動判定される。どのレコードタイプにもマッチしない場合は、不正データとして処理を異常終了する。
+
+**定義ルール:**
+- レコード識別フィールドを`[Classifier]`レコードタイプで定義する
+- 各レコード定義のレコードタイプ名直下に、レコード判定条件を定義する
+- `[Classifier]`に定義したフィールドは、各レコード定義内に存在する必要がある
+
+```bash
+file-type:        "Fixed"
+text-encoding:    "MS932"
+record-length:    40
+record-separator: "\r\n"
+
+# レコード識別条件の定義
+[Classifier]
+1 dataKbn X(1)
+
+# ヘッダレコードの定義
+[header]
+dataKbn = "1"         # dataKbnが"1"の場合ヘッダレコード
+1 dataKbn X(1)
+2 data    X(39)
+
+# データレコードの定義
+[data]
+dataKbn = "2"         # dataKbnが"2"の場合データレコード
+1 dataKbn X(1)
+2 data    X(39)
+```
+
+> **補足**: JSON/XMLデータ形式にはレコードの概念が存在しないため、マルチフォーマット形式のフォーマット定義には対応していない。
+
+フォーマット定義ファイルの項目定義と実際のデータの項目定義が合わない場合の振る舞い:
+
+**固定長・可変長データ**: 実際のデータとフォーマット定義の項目定義は厳密に一致させる必要がある。アプリケーションで不要な項目が存在する場合でも、フォーマット定義ファイル上に項目を定義する必要がある。
+
+**JSON・XMLデータ**: フォーマット定義ファイル上に定義されていない項目は読み取り対象外となる。実際のデータ上に存在する項目でも、アプリケーションで不要であれば定義しなくてよい。
+
+<details>
+<summary>keywords</summary>
+
+フォーマット定義ファイル構造, ディレクティブ宣言部, レコードフォーマット定義部, フィールド定義, データ型, データ変換ルール, マルチフォーマット, Classifier, レコード識別, レコード判定条件, 異常終了, JSON/XMLマルチフォーマット非対応, 項目定義省略, 固定長, 可変長, JSON, XML, フォーマット定義, 項目定義不一致
+
+</details>
+
+## 共通で使用可能なディレクティブ一覧
+
+全てのデータ形式で使用するディレクティブは以下のとおり。
+
+| ディレクティブ | 必須/任意 | 説明 |
+|---|---|---|
+| file-type | 必須 | データ形式を指定。`Fixed`（固定長）、`Variable`（CSV/TSVなど可変長）、`JSON`、`XML` |
+| text-encoding | 必須 | 文字列フィールドの読み書き時のエンコーディング。使用JVMで利用可能な文字エンコーディングのみ指定可能。`file-type` がJSONの場合はUTF-8/UTF-16(BE or LE)/UTF-32(BE or LE)のみ指定可能。`file-type` がXMLの場合はXML宣言部のエンコーディングが本設定値より優先される。 |
+| record-separator | 任意 | レコード終端文字（改行文字）を指定。`file-type` がVariable（可変長）の場合は必須。JSON/XMLでは使用しない。 |
+
+<details>
+<summary>keywords</summary>
+
+file-type, text-encoding, record-separator, ディレクティブ宣言部, 共通ディレクティブ, ディレクティブ定義
+
+</details>
+
+## Fixed（固定長）形式で指定可能なディレクティブ一覧
+
+Fixed（固定長）形式のデータで使用するディレクティブは以下のとおり。
+
+| ディレクティブ | 必須/任意 | 説明 |
+|---|---|---|
+| record-length | 必須 | 1レコードのバイト長 |
+| positive-zone-sign-nibble | 任意 | 符号付きゾーン数値のゾーン部の正符号（16進数文字列）。デフォルト: ASCII互換=`0x3`、EBCDIC互換=`0xC` |
+| negative-zone-sign-nibble | 任意 | 符号付きゾーン数値のゾーン部の負符号（16進数文字列）。デフォルト: ASCII互換=`0x7`、EBCDIC互換=`0xD` |
+| positive-pack-sign-nibble | 任意 | 符号付きパック数値の符号ビットの正符号（16進数文字列）。デフォルト: ASCII互換=`0x3`、EBCDIC互換=`0xC` |
+| negative-pack-sign-nibble | 任意 | 符号付きパック数値の符号ビットの負符号（16進数文字列）。デフォルト: ASCII互換=`0x7`、EBCDIC互換=`0xD` |
+| required-decimal-point | 任意 | 符号無し・符号付き数値の小数点付与要否。`true`=小数点付与（デフォルト）、`false`=固定小数点（小数点なし） |
+| fixed-sign-position | 任意 | 符号付き数値の符号位置を固定するかの要否。`true`=項目の先頭に固定（デフォルト）、`false`=パディング前の数値の先頭に付加。例: 固定=`-000123456`、非固定=`000-123456` |
+| required-plus-sign | 任意 | 正の符号の要否。`true`=読み込み時に正符号（`+`）必須、書き込み時に正符号付加。デフォルト=`false`（付加しない） |
+
+```bash
+file-type:                      "Fixed"
+text-encoding:                  "ms932"
+record-length:                  120
+positive-zone-sign-nibble:      "C"
+negative-zone-sign-nibble:      "D"
+positive-pack-sign-nibble:      "C"
+negative-pack-sign-nibbleL      "D"
+required-decimal-point:         true
+fixed-sign-position:            true
+required-plus-sign:             false
+```
+
+<details>
+<summary>keywords</summary>
+
+record-length, positive-zone-sign-nibble, negative-zone-sign-nibble, positive-pack-sign-nibble, negative-pack-sign-nibble, required-decimal-point, fixed-sign-position, required-plus-sign, Fixed固定長, ゾーン数値, パック数値, 符号付き数値
+
+</details>
+
+## Variable（可変長）形式で指定可能なディレクティブ一覧
+
+Variable（可変長）形式のデータで使用するディレクティブは以下のとおり。
+
+| ディレクティブ | 必須/任意 | 説明 |
+|---|---|---|
+| field-separator | 必須 | フィールドの区切り文字。CSVは `,`、TSVは `\t` |
+| quoting-delimiter | 任意 | フィールド値をクォートする文字（例: `"` や `'`）。出力時は設定すると全フィールドがクォートされる。入力時はフィールド前後のクォート文字が除去される。デフォルト=クォートなし。改行やフィールド内クォート文字の扱いはRFC4180を参照。 |
+| ignore-blank-lines | 任意 | データ読み込み時に空行（改行のみ）を無視するか。`true`=空行を無視（デフォルト） |
+| requires-title | 任意 | 最初のレコードをタイトルとして読み書きするか。`true`=タイトルとして扱う。デフォルト=`false`。タイトルレコードのレイアウト定義は :ref:`data_format-title_type_name` を参照。 |
+| title-record-type-name | 任意 | タイトルのレコードタイプ名。デフォルト=`Title`。指定したレコードタイプ名に紐づくレコードフォーマット定義に従いタイトルレコードが編集される。 |
+| max-record-length | 任意 | 読み込みを許容する1レコードの最大文字数。区切り文字が存在しないデータ（壊れたデータ）を読み込んだ際のヒープ不足によるプロセス異常終了を防ぐ。デフォルト=1,000,000文字 |
+
+```bash
+file-type:                  "Variable"
+text-encoding:              "utf-8"
+record-separator:           "\\r\\n"
+field-separator:            ","
+quoting-delimiter:          "\""
+ignore-blank-lines:         true
+requires-title:             false
+max-record-length:          1000
+```
+
+<details>
+<summary>keywords</summary>
+
+field-separator, quoting-delimiter, ignore-blank-lines, requires-title, title-record-type-name, max-record-length, Variable可変長, CSV, TSV
+
+</details>
+
+## JSON形式で指定可能なディレクティブ一覧
+
+JSON固有のディレクティブは存在しない。`file-type` と `text-encoding` のみ指定する。
+
+```bash
+file-type:      "JSON"
+text-encoding:  "utf-8"
+```
+
+<details>
+<summary>keywords</summary>
+
+JSON, JSON形式, ディレクティブ
+
+</details>
+
+## XML形式で指定可能なディレクティブ一覧
+
+XML固有のディレクティブは存在しない。`file-type` と `text-encoding` のみ指定する。なお、`text-encoding` よりもXML宣言部に指定されたエンコーディングが優先される。
+
+```bash
+file-type:      "XML"
+text-encoding:  "utf-8"
+```
+
+<details>
+<summary>keywords</summary>
+
+XML, XML形式, ディレクティブ
+
+</details>

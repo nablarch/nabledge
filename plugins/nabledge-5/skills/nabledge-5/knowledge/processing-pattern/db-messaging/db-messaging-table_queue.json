@@ -1,0 +1,77 @@
+{
+  "id": "db-messaging-table_queue",
+  "title": "テーブルキューを監視し未処理データを取り込むアプリケーションの作成",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/getting_started/table_queue.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchAction.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/statement/SqlRow.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseTableQueueReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseRecordReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/statement/SqlPStatement.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseRecordListener.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.Success.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchActionBase.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "アクションクラスを作成する",
+      "hints": [
+        "BatchAction",
+        "SqlRow",
+        "アクションクラス作成",
+        "テーブルキュー",
+        "DBメッセージング"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "テーブルを監視するためのリーダを生成する",
+      "hints": [
+        "DatabaseTableQueueReader",
+        "DatabaseRecordReader",
+        "DatabaseRecordListener",
+        "SqlPStatement",
+        "SimpleDbTransactionManager",
+        "SimpleDbTransactionExecutor",
+        "AppDbConnection",
+        "テーブル監視",
+        "悲観ロック",
+        "未処理データ検索",
+        "createReader"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "未処理データを元に業務処理を実行する",
+      "hints": [
+        "handle",
+        "Result.Success",
+        "ApplicationException",
+        "MessageUtil",
+        "MessageLevel",
+        "業務処理実装",
+        "UniversalDao",
+        "例外送出"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "処理済みデータのステータスを更新する",
+      "hints": [
+        "transactionSuccess",
+        "transactionFailure",
+        "BatchActionBase",
+        "StatusUpdateDto",
+        "ステータス更新",
+        "コールバック"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "`BatchAction` を継承したアクションクラスを作成する。\n\n- テーブルをキューとして扱うため、入力データはテーブルの検索結果となる。`BatchAction` の型パラメータには `SqlRow` を指定する。\n\n```java\npublic class ProjectCreationServiceAction extends BatchAction<SqlRow> {\n    // 中身の作成方法は後述\n}\n```",
+    "s2": "`createReader` を実装し、`DatabaseTableQueueReader` を生成する。\n\n**`DatabaseTableQueueReader` の指定項目**:\n- データベースから検索するためのリーダ（`DatabaseRecordReader`）\n- 未処理データが存在しない場合の待機時間（ミリ秒）\n- 主キーのカラム名のリスト\n\n**`DatabaseRecordReader` の指定項目**:\n- 未処理データを検索するための `SqlPStatement`\n- 悲観ロックを行う `DatabaseRecordListener` の実装クラス（詳細: [db_messaging-multiple_process](db-messaging-multiple_process.json)）\n\n**SQLファイルで定義するSQL**:\n- 他プロセスの処理対象となることを防ぐため、未処理データの `PROCESS_ID` に自プロセスIDを設定して悲観ロックするSQL\n- `STATUS = '0'` かつ `PROCESS_ID` が自プロセスIDのレコードを取得するSQL\n\nSQLの記述ルール: [database-use_sql_file](../../component/libraries/libraries-database.json#s4)\n\n```java\n@Override\npublic DataReader<SqlRow> createReader(final ExecutionContext context) {\n    final DatabaseRecordReader databaseRecordReader = new DatabaseRecordReader();\n    databaseRecordReader.setStatement(\n            getParameterizedSqlStatement(\"FIND_RECEIVED_PROJECTS\"), PROCESS_MAP);\n    databaseRecordReader.setListener(() -> {\n        final SimpleDbTransactionManager transactionManager =\n                SystemRepository.get(\"redundancyTransaction\");\n        new SimpleDbTransactionExecutor<Void>(transactionManager) {\n            @Override\n            public Void execute(final AppDbConnection appDbConnection) {\n                appDbConnection\n                        .prepareParameterizedSqlStatementBySqlId(\n                                SQL_ID_PREFIX + \"UPDATE_PROCESS_ID\")\n                        .executeUpdateByMap(PROCESS_MAP);\n                return null;\n            }\n        }.doTransaction();\n    });\n    return new DatabaseTableQueueReader(\n            databaseRecordReader, 1000, \"RECEIVED_MESSAGE_SEQUENCE\");\n}\n```\n\n```sql\n-- 未処理の受信データを悲観ロックするSQL\nUPDATE_PROCESS_ID=\nupdate ins_project_receive_message\nset process_id = :processId\nwhere status = '0' and process_id is null\n\n-- 未処理の受信データを取得するSQL\nFIND_RECEIVED_PROJECTS=\nselect received_message_sequence\nfrom ins_project_receive_message\nwhere status = '0' and process_id = :processId\n```",
+    "s3": "`handle` メソッドに業務処理を実装する。\n\n- 処理が失敗した場合は例外を送出するため、正常処理時は常に `Result.Success` を返却する。\n\n```java\n@Override\npublic Result handle(final SqlRow inputData, final ExecutionContext context) {\n    final Project project = UniversalDao.findBySqlFile(\n        Project.class,\n        SQL_ID + \"GET_RECEIVED_PROJECT\",\n        inputData);\n    if (!isValidProjectPeriod(project)) {\n        throw new ApplicationException(\n            MessageUtil.createMessage(MessageLevel.ERROR, \"abnormal.project.period\"));\n    }\n    UniversalDao.insert(project);\n    return new Result.Success();\n}\n```",
+    "s4": "処理成否に応じてNablarchがコールバックするメソッドにステータス更新処理を実装する。\n\n- 正常処理（例外なし完了）: `transactionSuccess` にステータス正常終了更新を実装する。Nablarchが例外なし完了時にコールバックする。\n- 異常処理（例外/エラー発生）: `transactionFailure` にステータス異常終了更新を実装する。Nablarchが例外/エラー発生時にコールバックする。\n- `updateStatus` プライベートメソッドは `transactionSuccess` / `transactionFailure` の両メソッドから呼び出され、`getParameterizedSqlStatement(\"UPDATE_STATUS\").executeUpdateByObject(function.apply(inputData.getString(\"RECEIVED_MESSAGE_SEQUENCE\")))` でステータスを更新する。\n\nSQLの記述ルール: [database-use_sql_file](../../component/libraries/libraries-database.json#s4)\n\n```java\n@Override\nprotected void transactionSuccess(final SqlRow inputData, final ExecutionContext context) {\n    updateStatus(inputData, StatusUpdateDto::createNormalEnd);\n}\n\n@Override\nprotected void transactionFailure(final SqlRow inputData, final ExecutionContext context) {\n    updateStatus(inputData, StatusUpdateDto::createAbnormalEnd);\n}\n\nprivate void updateStatus(\n    final SqlRow inputData, final Function<String, StatusUpdateDto> function) {\n    getParameterizedSqlStatement(\"UPDATE_STATUS\")\n        .executeUpdateByObject(\n            function.apply(inputData.getString(\"RECEIVED_MESSAGE_SEQUENCE\")));\n}\n\npublic static final class StatusUpdateDto {\n    private static StatusUpdateDto createNormalEnd(String id) {\n        return new StatusUpdateDto(id, \"1\");\n    }\n    private static StatusUpdateDto createAbnormalEnd(String id) {\n        return new StatusUpdateDto(id, \"2\");\n    }\n}\n```\n\n```sql\nUPDATE_STATUS =\nupdate ins_project_receive_message\nset status = :newStatus\nwhere received_message_sequence = :id\n```"
+  }
+}

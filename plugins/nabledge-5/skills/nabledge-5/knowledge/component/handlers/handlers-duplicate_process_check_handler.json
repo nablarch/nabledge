@@ -1,0 +1,77 @@
+{
+  "id": "handlers-duplicate_process_check_handler",
+  "title": "プロセス多重起動防止ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/standalone/duplicate_process_check_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/DuplicateProcessCheckHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/BasicDuplicateProcessChecker.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/DuplicateProcessChecker.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "DuplicateProcessCheckHandler",
+        "nablarch.fw.handler.DuplicateProcessCheckHandler",
+        "プロセス多重起動防止",
+        "バッチプロセス重複実行防止",
+        "起動中フラグ",
+        "リクエストID"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-batch",
+        "com.nablarch.framework",
+        "モジュール依存"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "hints": [
+        "スレッドコンテキスト変数管理ハンドラ",
+        "thread_context_handler",
+        "ハンドラ設定順序",
+        "リクエストID",
+        "多重起動チェック順序"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "多重起動防止チェックを行うための設定",
+      "hints": [
+        "BasicDuplicateProcessChecker",
+        "duplicateProcessChecker",
+        "tableName",
+        "processIdentifierColumnName",
+        "processActiveFlgColumnName",
+        "dbTransactionManager",
+        "exitCode",
+        "多重起動防止設定",
+        "BATCH_REQUEST",
+        "BasicApplicationInitializer"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "多重起動防止チェック処理をカスタマイズする",
+      "hints": [
+        "DuplicateProcessChecker",
+        "nablarch.fw.handler.DuplicateProcessChecker",
+        "多重起動防止カスタマイズ",
+        "インターフェース実装"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "同一バッチプロセスが同時に複数起動された場合に、後から起動されたプロセスを異常終了させるハンドラ。同一プロセスの識別にはスレッドコンテキスト上のリクエストIDを使用する。同一バッチアクションでも、リクエストIDが異なる場合は別プロセスとして扱われる。\n\n> **重要**: 原則JP1などのジョブスケジューラ側で多重起動を制御すること。ジョブスケジューラ側で制御できない場合に限り、本ハンドラをアプリケーションレイヤーの制御として使用する。\n\n処理フロー:\n1. プロセスの多重起動チェック（起動中フラグを「起動中」に変更）\n2. 起動中フラグを「未起動」に初期化\n\n**クラス名**: `nablarch.fw.handler.DuplicateProcessCheckHandler`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-batch</artifactId>\n</dependency>\n```",
+    "s3": "[thread_context_handler](handlers-thread_context_handler.json#s1) より後ろに設定すること。本ハンドラはスレッドコンテキスト上のリクエストIDを使用して多重起動チェックを行うため、スレッドコンテキスト変数管理ハンドラが先に実行されている必要がある。",
+    "s4": "`BasicDuplicateProcessChecker` を多重起動防止チェッククラスとして使用する。`BasicDuplicateProcessChecker` は初期化が必要なため、初期化対象リストへの追加が必要。\n\n```xml\n<component name=\"duplicateProcessChecker\" class=\"nablarch.fw.handler.BasicDuplicateProcessChecker\">\n  <!-- データベースへアクセスするためのトランザクション設定 -->\n  <property name=\"dbTransactionManager\" ref=\"transaction\" />\n  <!-- チェックで使用するテーブルの定義情報 -->\n  <property name=\"tableName\" value=\"BATCH_REQUEST\" />\n  <property name=\"processIdentifierColumnName\" value=\"REQUEST_ID\" />\n  <property name=\"processActiveFlgColumnName\" value=\"PROCESS_ACTIVE_FLG\" />\n</component>\n\n<component name=\"duplicateProcessCheckHandler\"\n    class=\"nablarch.fw.handler.DuplicateProcessCheckHandler\">\n  <property name=\"duplicateProcessChecker\" ref=\"duplicateProcessChecker\" />\n  <!-- 終了コードを設定する（任意） -->\n  <property name=\"exitCode\" value=\"10\" />\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"duplicateProcessChecker\" />\n    </list>\n  </property>\n</component>\n```",
+    "s5": "`DuplicateProcessChecker` の実装クラスを作成することでカスタマイズ可能。実装したクラスは [duplicate_process_check_handler-configuration](#s3) の設定方法に従い、本ハンドラの `duplicateProcessChecker` プロパティに設定して使用する。"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "testing-framework-spec_layout",
+  "title": "画面レイアウト定義用ウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_jsp_widgets/spec_layout.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "spec:layout",
+        "画面レイアウト定義ウィジェット",
+        "JSPウィジェット",
+        "設計成果物ローカル動作",
+        "レイアウトグループ定義"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "name",
+        "nablarch_spec_layout",
+        "画面レイアウト表示非表示切り替え",
+        "設計書ビュー反映",
+        "属性値一覧"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "layout.tag",
+        "SpecSheetTemplate.xlsx",
+        "SpecSheetInterpreter.js",
+        "SpecSheetView.js",
+        "設計書ビュー内部構造"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## コードサンプル\n\n[spec_layout](testing-framework-spec_layout.json) は業務画面内の各UI要素の論理的なグループ（レイアウト）を設計情報として記述するための部品。\n\n> **補足**: JSPのサーバ表示の内容には一切影響しないため、実装工程以降も削除する必要はない。\n\n設計成果物（ローカル動作）のコードサンプル:\n\n```jsp\n<spec:layout name=\"検索条件入力欄\">\n<n:form windowScopePrefixes=\"11AC_W11AC01\">\n  <field:block\n    title=\"検索条件\"\n    id=\"search_condition\">\n    <field:text\n      title     = \"ログインID\"\n      domain    = \"USER_ID\"\n      maxlength = \"20\"\n      name      = \"11AC_W11AC01.loginId\"\n      comment   = \"コメントです。\">\n    </field:text>\n    <field:text\n      title     = \"漢字氏名\"\n      domain    = \"KANJI_NAME\"\n      maxlength = \"20\"\n      name      = \"11AC_W11AC01.kanjiName\">\n    </field:text>\n</n:form>\n</spec:layout>\n```",
+    "s2": "## 仕様\n\n**ローカル動作時の挙動**\n\n- 通常はタグの内容をそのまま表示する。\n- URLにクエリパラメータ `nablarch_spec_layout` が含まれる場合、レイアウト名がその値に含まれているものは非表示となる。\n\n**設計書ビュー上の表示**\n\n1. 「画面レイアウト」欄に各レイアウトの表示・非表示を切り替えるリンクを表示する（[spec_condition](testing-framework-spec_condition.json) を参照）。\n2. 「画面項目定義」欄にレイアウト内の各項目をグルーピングする見出しを表示する。\n\n**属性値一覧** （◎必須属性 ○任意属性 ×無効）\n\n| 名称 | 内容 | タイプ | サーバ | ローカル |\n|---|---|---|---|---|\n| name | レイアウト名 | 文字列 | × | ◎ |",
+    "s3": "## 内部構造・改修時の留意点\n\n- サーバ表示で動作するタグファイル `layout.tag` は、JSPコンパイルを通すためだけのダミー（`<jsp:doBody>` のみを記述）。\n- 設計書ビューはテンプレートファイル `SpecSheetTemplate.xlsx` と、表示内容を制御する `SpecSheetInterpreter.js` によって構成される。\n\n**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/spec/layout.tag | [spec_layout](testing-framework-spec_layout.json) のタグファイル |\n| /js/jsp/taglib/spec.js | ローカル表示用スタブ |\n| /js/devtool/SpecSheetView.js | 設計書ビューJavaScriptUI部品 |\n| /js/devtool/SpecSheetInterpreter.js | 設計書ビュー表示内容制御スクリプト |\n| /tools/specsheet_template/SpecSheetTemplate.xlsx | 設計書ビューテンプレートファイル |\n| /tools/specsheet_template/SpecSheetTemplate.files | 設計書ビューテンプレートファイル（HTML形式で保存したもの） |"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "nablarch-batch-getting-started-nablarch-batch",
+  "title": "ファイルをDBに登録するバッチの作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/getting_started/nablarch_batch/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/Csv.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/CsvFormat.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/LineNumber.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/DataReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/ObjectMapper.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchAction.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ファイルをDBに登録する",
+      "hints": [
+        "ZipCodeForm",
+        "ZipCodeFileReader",
+        "ImportZipCodeFileAction",
+        "DataReader",
+        "BatchAction",
+        "ObjectMapper",
+        "ObjectMapperIterator",
+        "UniversalDao",
+        "BeanUtil",
+        "ZipCodeData",
+        "ExecutionContext",
+        "FilePathSetting",
+        "ObjectMapperFactory",
+        "Result",
+        "CsvType",
+        "QuoteMode",
+        "FileInputStream",
+        "FileNotFoundException",
+        "@Csv",
+        "@CsvFormat",
+        "@LineNumber",
+        "@ValidateData",
+        "@Domain",
+        "@Required",
+        "CSVファイル読み込み",
+        "データリーダ実装",
+        "バッチアクション実装",
+        "DB登録"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "住所ファイル登録バッチ実行手順",
+      "hints": [
+        "nablarch.fw.launcher.Main",
+        "requestPath",
+        "ImportZipCodeFileAction/ImportZipCodeFile",
+        "diConfig",
+        "import-zip-code-file.xml",
+        "userId",
+        "ZIP_CODE_DATA",
+        "TRUNCATE",
+        "mvn exec:java",
+        "バッチ起動",
+        "requestPathフォーマット"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "CSVファイルをDBに登録するバッチは「フォーム → データリーダ → バッチアクション」の3コンポーネントで構成する。処理フローは [Nablarchバッチの処理フロー](nablarch-batch-architecture.json#s2) 、責務配置は [Nablarchバッチの責務配置](nablarch-batch-application_design.json) を参照。\n\n### フォーム作成（CSVバインディング）\n\n[data_bind](../../component/libraries/libraries-data_bind.json#s1) でCSVをバインドするフォームには `Csv` および `CsvFormat` を付与する。[bean_validation](../../component/libraries/libraries-bean_validation.json#s1) 用のバリデーションアノテーションも付与する。行番号を取得するにはゲッタに `LineNumber` を付与する。\n\n```java\n@Csv(properties = {/** プロパティ定義 **/}, type = CsvType.CUSTOM)\n@CsvFormat(charset = \"UTF-8\", fieldSeparator = ',',\n        ignoreEmptyLine = true, lineSeparator = \"\\r\\n\", quote = '\"',\n        quoteMode = QuoteMode.NORMAL, requiredHeader = false, emptyToNull = true)\npublic class ZipCodeForm {\n    @Domain(\"localGovernmentCode\")\n    @Required\n    private String localGovernmentCode;\n\n    @LineNumber\n    public Long getLineNumber() { return lineNumber; }\n}\n```\n\n### データリーダ作成\n\n`DataReader` を実装し、`read()`・`hasNext()`・`close()` の3メソッドを実装する。\n\n- `read()`: 1行分のデータを業務アクションへ引き渡す\n- `hasNext()`: `false` を返すとファイル読み込みが終了する\n- `close()`: ストリームのクローズ処理を実装する\n\n```java\npublic class ZipCodeFileReader implements DataReader<ZipCodeForm> {\n    private static final String FILE_NAME = \"importZipCode\";\n    private ObjectMapperIterator<ZipCodeForm> iterator;\n\n    @Override\n    public ZipCodeForm read(ExecutionContext ctx) {\n        if (iterator == null) initialize();\n        return iterator.next();\n    }\n\n    @Override\n    public boolean hasNext(ExecutionContext ctx) {\n        if (iterator == null) initialize();\n        return iterator.hasNext();\n    }\n\n    @Override\n    public void close(ExecutionContext ctx) { iterator.close(); }\n\n    private void initialize() {\n        File zipCodeFile = FilePathSetting.getInstance().getFileWithoutCreate(\"csv-input\", FILE_NAME);\n        try {\n            iterator = new ObjectMapperIterator<>(ObjectMapperFactory.create(ZipCodeForm.class,\n                new FileInputStream(zipCodeFile)));\n        } catch (FileNotFoundException e) {\n            throw new IllegalStateException(e);\n        }\n    }\n}\n```\n\n> **補足**: `ObjectMapper` のように `hasNext()` を持たないクラスからデータを読む場合、イテレータを作成することでデータリーダをシンプルに実装できる。\n\n### バッチアクション作成\n\n`BatchAction` を継承し、`handle()` と `createReader()` を実装する。\n\n- `handle()`: データリーダから渡された1行分のデータを処理する\n- `createReader()`: 使用するデータリーダのインスタンスを返却する\n- `UniversalDao#insert` でエンティティをDBに登録する\n\n```java\npublic class ImportZipCodeFileAction extends BatchAction<ZipCodeForm> {\n    @Override\n    @ValidateData\n    public Result handle(ZipCodeForm inputData, ExecutionContext ctx) {\n        ZipCodeData data = BeanUtil.createAndCopy(ZipCodeData.class, inputData);\n        UniversalDao.insert(data);\n        return new Result.Success();\n    }\n\n    @Override\n    public DataReader<ZipCodeForm> createReader(ExecutionContext ctx) {\n        return new ZipCodeFileReader();\n    }\n}\n```\n\n> **補足**: [bean_validation](../../component/libraries/libraries-bean_validation.json#s1) のロジックはバッチ間で共通のため、インターセプタ（`@ValidateData`）を作成してバリデーション処理を共通化できる。",
+    "s2": "住所ファイル登録バッチの実行手順は以下の通り。\n\n### 手順1: 登録対象テーブルのデータを削除する\n\nH2のコンソールから下記SQLを実行し、データ登録対象テーブルのデータを削除する。\n\n```sql\nTRUNCATE TABLE ZIP_CODE_DATA;\n```\n\n### 手順2: 住所ファイル登録バッチを実行する\n\nコマンドプロンプトから下記コマンドを実行する。`-requestPath` の形式は `アクションクラス名/リクエストID`、`-diConfig` にはDIコンテナの設定ファイルを指定する。\n\n```bash\n$cd {nablarch-example-batchリポジトリ}\n$mvn exec:java -Dexec.mainClass=nablarch.fw.launcher.Main ^\n    -Dexec.args=\"'-requestPath' 'ImportZipCodeFileAction/ImportZipCodeFile' '-diConfig' 'classpath:import-zip-code-file.xml' '-userId' '105'\"\n```\n\n主なパラメータ:\n- `-requestPath`: `ImportZipCodeFileAction/ImportZipCodeFile`（アクションクラス名/リクエストID形式）\n- `-diConfig`: `classpath:import-zip-code-file.xml`（DIコンテナ設定ファイル）\n- `-userId`: `105`\n\n### 手順3: ファイルの内容がDBに登録されたことを確認する\n\nH2のコンソールから下記SQLを実行し、住所情報が登録されていることを確認する。\n\n```sql\nSELECT * FROM ZIP_CODE_DATA;\n```"
+  }
+}

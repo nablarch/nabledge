@@ -1,0 +1,40 @@
+{
+  "id": "jakarta-batch-application_design",
+  "title": "アプリケーションの責務配置",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/application_design.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "Batchletステップの場合",
+      "hints": [
+        "Batchlet",
+        "バッチレットステップ",
+        "業務ロジック実行",
+        "終了ステータス",
+        "insert～select"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Chunkステップの場合",
+      "hints": [
+        "ItemReader",
+        "ItemProcessor",
+        "ItemWriter",
+        "チャンクステップ",
+        "フォーム",
+        "エンティティ",
+        "入力値チェック",
+        "bean_validation-form_property",
+        "JSR352",
+        "標準インタフェース"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## Batchletステップの場合\n\n**Batchlet class**: 業務ロジックを実行し、ステップの処理結果を表す文字列（バッチレットの終了ステータス）を返却する。\n\n用途例: インターネット上のファイルのダウンロード、`insert～select`のみで完結するSQL実行。",
+    "s2": "## Chunkステップの場合\n\n**ItemReader class**: データソース（ファイル・データベース等）からデータを読み込み、フォームに変換して返却する。ItemReaderはJSR352で規定されているインタフェースであるため、実装方法などの詳細はJSR352 Specificationを参照。\n\n**ItemProcessor class**: ItemReaderが読み込んだデータを元に業務ロジックを実行し、出力対象データを生成する。DB出力の場合はエンティティに変換、それ以外は出力用フォームに変換する。ItemProcessorはJSR352で規定されているインタフェースであるため、実装方法などの詳細はJSR352 Specificationを参照。\n\n> **補足**: ItemReaderで読み込んだデータが外部から取得したデータの場合は、業務ロジック実行前に入力値のチェック（[validation](../../component/libraries/libraries-validation.json)）を行うこと。\n\n**ItemWriter class**: ItemProcessorで変換したエンティティ（フォーム）をデータベースやファイルに出力する。ItemWriterはJSR352で規定されているインタフェースであるため、実装方法などの詳細はJSR352 Specificationを参照。\n\n**フォーム(form class)**: ItemReaderが読み込んだデータを保持するクラス。DB以外の出力の場合に出力データも保持する。外部から受け付けた信用できない値を保持するフォームの場合、プロパティの型は全て`String`とする（[Bean Validation](../../component/libraries/libraries-bean_validation.json#s5) 参照）。ただし、バイナリ項目はバイト配列で定義する。\n\n**エンティティ(entity class)**: テーブルと1対1で対応するクラス。カラムに対応するプロパティを持つ。"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "id": "handlers-on_error",
+  "title": "OnErrorインターセプタ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web_interceptor/on_error.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnError.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpErrorResponse.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "インターセプタクラス名",
+      "hints": [
+        "nablarch.fw.web.interceptor.OnError",
+        "OnError",
+        "インターセプタクラス名"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "com.nablarch.framework",
+        "モジュール依存関係",
+        "Maven依存設定"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "OnErrorを使用する",
+      "hints": [
+        "@OnError",
+        "ApplicationException",
+        "例外処理",
+        "エラーレスポンス",
+        "バリデーションエラー対応",
+        "インターセプタ設定",
+        "type属性",
+        "path属性",
+        "RuntimeException"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "エラー時の遷移先画面に表示するデータを取得する",
+      "hints": [
+        "@InjectForm",
+        "@OnError",
+        "内部フォワード",
+        "エラー画面データ取得",
+        "forward://",
+        "リクエストスコープ",
+        "初期表示データ"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "複数のレスポンスを指定する",
+      "hints": [
+        "HttpErrorResponse",
+        "nablarch.fw.web.HttpErrorResponse",
+        "複数レスポンス",
+        "例外ハンドリング",
+        "ApplicationException"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス**: `nablarch.fw.web.interceptor.OnError`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "s3": "業務アクションでの例外発生時に指定したレスポンスを返却するインターセプタ。[inject_form_interceptor](handlers-InjectForm.json#s1) よりも前に実行されるように設定することで、バリデーションエラーに対するレスポンスも指定可能。\n\n> **補足**: 複数の例外に対するレスポンスを指定したい場合は [on_errors_interceptor](handlers-on_errors.json#s1) を使用すること。\n\n> **重要**: 単一の例外に対して複数のレスポンスは指定できない。複数のレスポンスを指定したい場合は [on_error-multiple](#s4) を参照。\n\n**アノテーション**: `@OnError`\n\n業務アクションのリクエストを処理するメソッドに設定する。\n\n- `type` 属性: `RuntimeException` およびそのサブクラスを指定可能。指定した例外のサブクラスも処理対象となる。\n- `path` 属性: エラー時の遷移先パス。\n\n```java\n@OnError(type = ApplicationException.class, path = \"/WEB-INF/view/project/index.jsp\")\npublic HttpResponse handle(HttpRequest request, ExecutionContext context) {\n    // 業務処理は省略\n}\n```",
+    "s4": "エラー時の遷移先画面に表示するデータ（プルダウン選択肢など）をDBから取得したい場合は、内部フォワードを使用する。\n\n- `path` 属性に内部フォワード用パス（`forward://メソッド名`）を設定する。\n- フォワード先メソッドで初期表示データを取得してリクエストスコープに設定する。\n\n詳細は [forwarding_handler](handlers-forwarding_handler.json#s1) を参照。\n\n```java\n/**\n * 入力値のチェックを行う業務アクションのメソッド。\n */\n@InjectForm(form = PersonForm.class, prefix = \"form\")\n@OnError(type = ApplicationException.class, path = \"forward://initializeRegisterPage\")\npublic HttpResponse confirmForRegister(HttpRequest request, ExecutionContext context) {\n  PersonForm form = context.getRequestScopedVar(\"form\");\n  return new HttpResponse(\"/WEB-INF/view/person/confirmForRegister.jsp\");\n}\n\n/**\n * 登録画面の初期表示データを取得するメソッド。\n */\npublic HttpResponse initializeRegisterPage(HttpRequest request, ExecutionContext context) {\n  // 画面表示データをデータベースなどから取得し、リクエストスコープに設定する\n  return new HttpResponse(\"/WEB-INF/view/person/inputForRegister.jsp\");\n}\n```",
+    "s5": "本インターセプタでは単一の例外に対して複数のレスポンスは指定できない。複数のレスポンスを指定したい場合は、業務アクションのメソッド内で個別に `HttpErrorResponse` を生成する。\n\n```java\npublic HttpResponse handle(HttpRequest request, ExecutionContext context) {\n    try {\n        // 業務処理は省略\n    } catch (ApplicationException e) {\n        if (/* 条件式を記述 */) {\n            return new HttpErrorResponse(\"/WEB-INF/view/project/index.jsp\");\n        } else {\n            return new HttpErrorResponse(\"/WEB-INF/view/error.jsp\");\n        }\n    }\n}\n```"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "restful-web-service-getting-started-update",
+  "title": "更新機能の作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/rest/getting_started/update/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/ws/rs/Consumes.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/validation/Valid.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/ErrorResponseBuilder.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/NoDataException.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/persistence/OptimisticLockException.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "プロジェクト情報を更新する",
+      "hints": [
+        "ProjectUpdateForm",
+        "Project",
+        "@Required",
+        "@Domain",
+        "@Consumes",
+        "@Valid",
+        "@Path",
+        "@PUT",
+        "NoDataException",
+        "OptimisticLockException",
+        "BeanUtil",
+        "UniversalDao",
+        "HttpResponse",
+        "ErrorResponseBuilder",
+        "RESTful更新機能",
+        "JSONリクエストボディ",
+        "バリデーション",
+        "UniversalDao更新",
+        "URLマッピング"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "RESTful WebサービスのPUTリクエストによる更新機能の実装パターン。\n\n## フォームの作成\n\n**クラス**: `ProjectUpdateForm`\n\n```java\npublic class ProjectUpdateForm implements Serializable {\n    @Required\n    @Domain(\"id\")\n    private String projectId;\n\n    @Required\n    @Domain(\"projectName\")\n    private String projectName;\n\n    @Required\n    @Domain(\"projectType\")\n    private String projectType;\n    // ゲッタ及びセッタは省略\n}\n```\n\nプロパティは全てString型で宣言する（ [bean_validation-form_property](../../component/libraries/libraries-bean_validation.json#s5) 参照）。\n\n## 業務アクションメソッドの実装\n\n```java\n@Consumes(MediaType.APPLICATION_JSON)\n@Valid\npublic HttpResponse update(ProjectUpdateForm form) {\n    Project project = BeanUtil.createAndCopy(Project.class, form);\n    UniversalDao.update(project);\n    return new HttpResponse(HttpResponse.Status.OK.getStatusCode());\n}\n```\n\n- JSONリクエストボディを受け付けるため、`Consumes` アノテーションに `MediaType.APPLICATION_JSON` を指定する。\n- `Valid` アノテーションでリクエストのバリデーションを行う（ [jaxrs_bean_validation_handler](../../component/handlers/handlers-jaxrs_bean_validation_handler.json#s1) 参照）。\n- `BeanUtil` でフォームからエンティティを作成し、[universal_dao](../../component/libraries/libraries-universal_dao.json#s1) でプロジェクト情報を更新する。\n- 更新成功時はステータスコード200の `HttpResponse` を返却する。\n\n> **補足**: Exampleアプリケーションでは `ErrorResponseBuilder` を独自に拡張しており、`NoDataException` が発生した場合は404、`OptimisticLockException` が発生した場合は409のレスポンスを生成してクライアントに返却している。\n\n## URLマッピングの定義\n\n[router_adaptor](../../component/adapters/adapters-router_adaptor.json#s1) を使用し、[JAX-RSのPathアノテーション](../../component/adapters/adapters-router_adaptor.json#s3) でURLマッピングを行う。\n\n```java\n@Path(\"/projects\")\npublic class ProjectAction {\n    @PUT\n    @Consumes(MediaType.APPLICATION_JSON)\n    @Valid\n    public HttpResponse update(ProjectUpdateForm form) {\n        ...\n    }\n}\n```\n\n`@Path` アノテーションと `@PUT` アノテーションを組み合わせて、PUTリクエスト時にマッピングする業務アクションメソッドを定義する。"
+  }
+}

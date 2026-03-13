@@ -1,0 +1,65 @@
+{
+  "id": "testing-framework-field_listbuilder",
+  "title": "リストビルダー入力項目ウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_jsp_widgets/field_listbuilder.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "field:listbuilder",
+        "リストビルダー",
+        "JSPコードサンプル",
+        "ローカル動作",
+        "サーバ動作",
+        "listbuilder"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "domain",
+        "readonly",
+        "disabled",
+        "id",
+        "cssClass",
+        "nameAlias",
+        "listName",
+        "size",
+        "elementLabelProperty",
+        "elementValueProperty",
+        "elementLabelPattern",
+        "sample",
+        "dataFrom",
+        "comment",
+        "initialValueDesc",
+        "属性一覧",
+        "リストビルダー仕様",
+        "ローカル動作",
+        "サーバ動作"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "listbuilder.tag",
+        "base.tag",
+        "nablarch.js",
+        "base.less",
+        "部品一覧",
+        "内部構造",
+        "改修"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**設計成果物(ローカル動作)**:\n```jsp\n<field:listbuilder\n    title=\"認可チェック単位\"\n    sample=\"認可チェック単位１|[認可チェック単位２]\">\n</field:listbuilder>\n```\n\n**実装成果物(サーバ動作)**:\n```jsp\n<field:listbuilder\n  title=\"認可チェック単位\"\n  name=\"formdata.permissionUnits\"\n  id=\"permissionUnit\"\n  listName=\"allPermissionUnit\"\n  elementLabelProperty=\"permissionUnitName\"\n  elementValueProperty=\"permissionUnitId\">\n</field:listbuilder>\n```",
+    "s2": "[field_base](testing-framework-field_base.json) を用いて実装している。[field_base](testing-framework-field_base.json) の共通属性はここでは記述しない。\n\n**ローカル動作時の挙動**:\n- 入力画面: `sample` に指定した項目を選択候補とするリストビルダーを表示。`\"[]\"` で囲われた項目は選択済みとして表示される。\n- 確認画面: 選択済み項目（`\"[]\"` で囲われた項目）のラベル一覧を表示する。\n\n**属性値一覧** (◎ 必須属性 / ○ 任意属性 / × 無効)\n\n| 属性名 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| domain | 項目のドメイン型 | 文字列 | ○ | ○ | |\n| readonly | 編集可能かどうか | 真偽値 | ○ | ○ | デフォルト: false |\n| disabled | サーバへの入力値送信を抑制するかどうか | 真偽値 | ○ | ○ | デフォルト: false |\n| id | HTMLのid属性値（省略時はname属性と同じ値を使用） | 文字列 | ◎ | ○ | |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ | |\n| nameAlias | 複数の入力項目を一つのエラーメッセージでハイライトする場合に指定 | 文字列 | ○ | × | |\n| listName | 選択項目のリストの属性名 | 文字列 | ◎ | × | |\n| size | リストに一度に表示する件数 | 数値 | ○ | ○ | デフォルト: 6 |\n| elementLabelProperty | リスト要素から値を取得するためのプロパティ名 | 文字列 | ◎ | × | |\n| elementValueProperty | リスト要素からラベルを取得するためのプロパティ名 | 文字列 | ◎ | × | |\n| elementLabelPattern | ラベルを整形するためのフォーマットパターン | 文字列 | ○ | × | デフォルト: '$LABEL$' |\n| sample | ローカル動作時に表示するリストビルダーの項目ラベル | 文字列 | × | ○ | `\\|` 区切りで複数指定。`[]` で囲われた項目は選択状態で表示。 |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 「表示情報取得元」.「表示項目名」形式で設定 |\n| comment | リストビルダーについての備考 | 文字列 | × | × | 設計書表示時、画面項目定義の備考列に表示 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書表示時、画面項目定義の備考列に表示 |",
+    "s3": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/listbuilder.tag | [field_listbuilder](testing-framework-field_listbuilder.json) |\n| /WEB-INF/tags/widget/field/base.tag | [field_base](testing-framework-field_base.json) |\n| /js/jsp/taglib/nablarch.js | `<n:select>` のエミュレーション機能を実装するタグライブラリスタブJS |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義。プルダウンに関する定義もここに含まれる。 |"
+  }
+}

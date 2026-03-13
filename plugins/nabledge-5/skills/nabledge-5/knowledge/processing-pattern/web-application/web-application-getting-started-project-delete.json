@@ -1,0 +1,32 @@
+{
+  "id": "web-application-getting-started-project-delete",
+  "title": "削除機能の作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/project_delete/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "削除を行う",
+      "hints": [
+        "UniversalDao",
+        "SessionUtil",
+        "@OnDoubleSubmission",
+        "nablarch.common.dao.UniversalDao.delete(T)",
+        "削除機能",
+        "データベース削除",
+        "主キー削除",
+        "セッションデータ削除",
+        "HttpResponse",
+        "HttpRequest",
+        "ExecutionContext",
+        "Project"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**アノテーション**: `@OnDoubleSubmission`  \n**クラス**: `SessionUtil`, `UniversalDao`\n\n```java\n@OnDoubleSubmission\npublic HttpResponse delete(HttpRequest request, ExecutionContext context) {\n    // 更新画面を表示する際にセッションにプロジェクト情報を格納している\n    Project project = SessionUtil.delete(context, \"project\");\n    UniversalDao.delete(project);\n    return new HttpResponse(303, \"redirect://completeOfDelete\");\n}\n```\n\n主キーが設定されたエンティティを引数に `UniversalDao#delete` を実行することで、SQLを作成せずに主キー条件での削除が可能。\n\n> **補足**: [universal_dao](../../component/libraries/libraries-universal_dao.json#s1) は主キーを条件とする削除のみ提供。主キー以外の条件で削除する場合は、別途SQLを作成して実行する必要がある（[SQLIDを指定してSQLを実行する](../../component/libraries/libraries-database.json#s5) 参照）。"
+  }
+}

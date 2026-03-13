@@ -1,0 +1,63 @@
+{
+  "id": "handlers-jaxrs_access_log_handler",
+  "title": "HTTPアクセスログ（RESTfulウェブサービス用）ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/rest/jaxrs_access_log_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsAccessLogHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/ThreadContext.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "JaxRsAccessLogHandler",
+        "nablarch.fw.jaxrs.JaxRsAccessLogHandler",
+        "HTTPアクセスログハンドラ",
+        "RESTfulウェブサービス用アクセスログ",
+        "リクエスト処理開始時",
+        "リクエスト処理完了時",
+        "アクセスログ出力"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-jaxrs",
+        "com.nablarch.framework",
+        "モジュール依存関係",
+        "Maven依存設定"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "hints": [
+        "ハンドラ配置順序",
+        "thread_context_handler",
+        "http_error_handler",
+        "session_store_handler",
+        "ThreadContext",
+        "セッションストアID",
+        "配置制約"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "アクセスログ出力内容の切り替え",
+      "hints": [
+        "アクセスログ出力内容",
+        "ログ設定切り替え",
+        "jaxrs_access_log",
+        "log設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.jaxrs.JaxRsAccessLogHandler`\n\nこのハンドラでは、以下の処理を行う:\n\n- リクエスト処理開始時のアクセスログを出力する\n- リクエスト処理完了時のアクセスログを出力する",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-jaxrs</artifactId>\n</dependency>\n```",
+    "s3": "ハンドラの配置順序に関する制約:\n\n- [thread_context_handler](handlers-thread_context_handler.json#s1) より後ろに配置すること。ログ出力処理内では、通常 ThreadContext に保持する内容が必要となるため。\n- [http_error_handler](handlers-HttpErrorHandler.json#s1) より前に配置すること。完了時のログ出力にエラーコードが必要なため。\n- セッションストアIDを出力する場合は [session_store_handler](handlers-SessionStoreHandler.json#s1) より後ろに配置すること。詳細は [jaxrs_access_log-session_store_id](../libraries/libraries-jaxrs_access_log.json) を参照。",
+    "s4": "アクセスログの出力内容の切り替え方法は [log](../libraries/libraries-log.json) および [jaxrs_access_log](../libraries/libraries-jaxrs_access_log.json#s1) を参照すること。"
+  }
+}

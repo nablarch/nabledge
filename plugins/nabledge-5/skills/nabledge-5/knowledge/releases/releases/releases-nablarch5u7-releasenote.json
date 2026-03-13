@@ -1,0 +1,84 @@
+{
+  "id": "releases-nablarch5u7-releasenote",
+  "title": "Nablarch 5u7 リリースノート",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://fintan.jp/page/252/"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "アプリケーションフレームワーク 変更点",
+      "hints": [
+        "5u7",
+        "リリースノート",
+        "ResourceLocator",
+        "StackOverflowError",
+        "SYNTAX",
+        "isValidPath",
+        "LogUtil",
+        "ClassCastException",
+        "プリミティブ配列",
+        "n:textarea",
+        "先頭改行",
+        "汎用データフォーマット",
+        "bodyフィールド",
+        "BeanUtil",
+        "null配列コピー",
+        "Interceptor",
+        "Interceptor.Impl",
+        "バイトコード",
+        "Java6",
+        "nablarch-fw-web",
+        "nablarch-fw-web-tag",
+        "nablarch-core-dataformat",
+        "nablarch-core-beans",
+        "nablarch-core",
+        "nablarch-profiles",
+        "nablarch-wmq-adaptor",
+        "nablarch-core-validation-ee",
+        "nablarch-etl",
+        "nablarch-fw-batch-ee",
+        "nablarch-fw-jaxrs",
+        "nablarch-jackson-adaptor",
+        "nablarch-jersey-adaptor",
+        "nablarch-resteasy-adaptor",
+        "アプリケーションへの影響",
+        "ウェブアプリケーション",
+        "ログ出力",
+        "JSPカスタムタグ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "テスティングフレームワーク 変更点",
+      "hints": [
+        "5u7",
+        "テスティングフレームワーク",
+        "HttpResponse",
+        "パスアサート",
+        "ホスト名",
+        "nablarch-testing",
+        "アプリケーションへの影響",
+        "期待値"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "バージョンアップ手順",
+      "hints": [
+        "5u7",
+        "バージョンアップ",
+        "pom.xml",
+        "nablarch-bom",
+        "dependencyManagement",
+        "Maven"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## Nablarch 5u7 アプリケーションフレームワーク 変更点\n\n5u6からの変更点。アプリケーションへの影響が「あり」の項目は個別に対処が必要。\n\n### 1. ResourceLocatorで発生する可能性のあるStackOverflowErrorへの対応\n\n- **分類**: ウェブアプリケーション / 不具合\n- **修正モジュール**: nablarch-fw-web 1.2.3（起因バージョン: 1.0.0）\n- **アプリケーションへの影響**: あり\n\n> **重要**: 複雑な正規表現を削除したため以下が削除（仕様変更）された。\n> - publicフィールド `SYNTAX` を削除\n> - メソッド `isValidPath` を削除\n>\n> これらを使用している場合は、旧バージョンのソースコードから実装をプロジェクト側に移植すること。\n\n### 2. プリミティブ配列を値に持つMapをログにダンプできるように変更\n\n- **分類**: ログ出力 / 不具合\n- **修正モジュール**: nablarch-core 1.2.3（起因バージョン: 1.0.0）\n- **アプリケーションへの影響**: なし\n\nLogUtilを使ってプリミティブ配列を値に持つMapをダンプすると`ClassCastException`が発生する問題を修正。\n\n### 3. 複数の値を出力するタグでプリミティブ配列を扱えるように修正\n\n- **分類**: JSPカスタムタグ / 不具合\n- **修正モジュール**: nablarch-fw-web-tag 1.0.4（起因バージョン: 1.0.0）\n- **アプリケーションへの影響**: なし\n\n複数値出力タグで対象がプリミティブ配列として保持されている場合に`ClassCastException`が発生する問題を修正。\n\n### 4. n:textareaで表示するデータの先頭改行が削除されないように修正\n\n- **分類**: JSPカスタムタグ / 不具合\n- **修正モジュール**: nablarch-fw-web-tag 1.0.4（起因バージョン: 1.0.0）\n- **アプリケーションへの影響**: あり\n\n> **重要**: n:textareaタグで先頭の改行が削除されることを前提にアプリケーションで何らかの処理を入れている場合は、その処理を削除する必要がある。\n\n### 5. 配列要素の孫要素を出力できない問題に対応\n\n- **分類**: 汎用データフォーマット / 不具合\n- **修正モジュール**: nablarch-core-dataformat 1.0.2（起因バージョン: 1.0.0）\n- **アプリケーションへの影響**: なし\n\n`element(配列)->child->grandchild` のように配列要素から孫要素があるXMLを出力すると子要素が見つからないエラーが発生していた問題を修正。\n\n### 6. 属性を持つ要素にコンテンツを定義できない問題に対応\n\n- **分類**: 汎用データフォーマット / 不具合\n- **修正モジュール**: nablarch-core-dataformat 1.0.2（起因バージョン: 1.0.0）\n- **アプリケーションへの影響**: あり\n\nフォーマット定義ファイルでコンテンツを表すフィールドのフィールド名を `body` とすることで属性を持つ要素にコンテンツを定義できるようになった。\n\n> **重要**: 要素名が `body` となる要素を持つXMLの入出力を想定している場合に対処が必要。例：\n> ```xml\n> <root>\n>   <child>\n>     <body>value</body>\n>   </child>\n> </root>\n> ```\n> このようなXMLを扱う場合は参照先ドキュメント（汎用データフォーマット: XMLで属性を持つ要素にコンテンツを定義する）を参照して変更すること。\n\nフォーマット定義ファイル例:\n```\n[root]\n1 child OB\n[child]\n1 @attr X\n2 body X\n```\n\n対応するXML例:\n```xml\n<root>\n  <child attr=\"value1\">value2</child>\n</root>\n```\n\n### 7. BeanUtilでnullの要素を１つだけ持つプロパティの値をコピーできない不具合に対応\n\n- **分類**: 汎用ユーティリティ / 不具合\n- **修正モジュール**: nablarch-core-beans 1.1.3（起因バージョン: 1.0.0）\n- **アプリケーションへの影響**: なし（条件によっては影響あり）\n\n以下の条件に該当する場合にコピーできない問題を修正（コピー先にnullをコピーするよう対応）:\n- コピー元の型が配列型\n- コピー先が非配列型\n- コピー元の配列の値がサイズ1でnull\n\n> **注意**: BeanUtilを使用しており、アプリケーションでリクエストパラメータの値をnullに変更している処理がある場合は影響を受ける可能性がある。影響を受ける処理がある場合は処理を見直すこと。\n\n### 8. Interceptor.Implを公開APIに変更\n\n- **分類**: インターセプタ / 変更\n- **修正モジュール**: nablarch-core 1.2.3\n- **アプリケーションへの影響**: なし\n\n`Interceptor.Impl`は非公開APIだったが、アプリケーションでInterceptorを作成する際に継承が必要なため公開APIに変更した。\n\n### 9. nablarch-bomに定義されているnablarch-wmq-adaptorのバージョンが誤っていたので修正\n\n- **分類**: Mavenプロファイル / 不具合\n- **修正モジュール**: nablarch-profiles 5u7（起因バージョン: 5u6）\n- **アプリケーションへの影響**: なし\n\n修正前: nablarch-wmq-adaptor 1.0.0 → 修正後: 1.0.1\n\n### 10. モジュールのバイトコードをJava6に準拠するように修正\n\n- **分類**: フレームワーク / 不具合\n- **アプリケーションへの影響**: あり（アプリケーション側の対処は不要）\n\n以下モジュールのバイトコードがJava7準拠だったためJava6準拠に修正:\n\n| モジュール | 修正後バージョン | 起因バージョン |\n|---|---|---|\n| nablarch-core-validation-ee | 1.0.4 | 1.0.3 |\n| nablarch-etl | 1.0.2 | 1.0.1 |\n| nablarch-fw-batch-ee | 1.0.2 | 1.0.1 |\n| nablarch-fw-jaxrs | 1.0.2 | 1.0.1 |\n| nablarch-jackson-adaptor | 1.0.2 | 1.0.1 |\n| nablarch-jersey-adaptor | 1.0.2 | 1.0.1 |\n| nablarch-resteasy-adaptor | 1.0.2 | 1.0.1 |\n\n### 11. XML、JSONで使用可能なデータタイプ名が誤っていたので修正（解説書）\n\n- **分類**: 汎用データフォーマット / 不具合（解説書）\n- **起因バージョン**: 5u6\n- **アプリケーションへの影響**: なし\n\nXML及びJSONで使用可能なデータタイプ名の記載を修正: 誤 `XS9` → 正 `SX9`\n\n### 12. 空白を含むパスを使用できない仕様を追記（解説書）\n\n- **分類**: ファイルパス管理 / 不具合（解説書）\n- **起因バージョン**: 5u6\n- **アプリケーションへの影響**: なし\n\n空白を含むパスを使用できない仕様をドキュメントに追記（「ディレクトリと拡張子を設定する」のポイントに追記）。",
+    "s2": "## Nablarch 5u7 テスティングフレームワーク 変更点\n\n### 13. アクションの返すパスのアサート方法を変更\n\n- **分類**: テスティングフレームワーク / 不具合\n- **修正モジュール**: nablarch-testing 1.0.7（起因バージョン: 1.0.0）\n- **アプリケーションへの影響**: あり\n\nWebアプリケーションのアクションが返す`HttpResponse`のパスアサート方法を変更:\n- **変更前**: http(https)を示すパスの場合、ホスト名を除いた部分をアサート\n- **変更後**: ホスト名を含む全体をアサート\n\n> **重要**: 期待値のパスだけではなくホストを含む完全なパスに変更すること。\n>\n> 例: アクションが `return new HttpResponse(\"https://calendar.google.com/calendar\");` を返す場合、期待値は `https://calendar.google.com/calendar` と完全なパスで設定する。",
+    "s3": "## Nablarch 5u7 バージョンアップ手順\n\n1. `pom.xml`の`<dependencyManagement>`セクションに指定されている`nablarch-bom`のバージョンを`5u7`に書き換える\n2. Mavenのビルドを再実行する"
+  }
+}

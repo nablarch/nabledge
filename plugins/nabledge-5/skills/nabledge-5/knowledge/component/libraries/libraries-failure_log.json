@@ -1,0 +1,131 @@
+{
+  "id": "libraries-failure_log",
+  "title": "障害ログの出力",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/log/failure_log.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/FailureLogUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/TransactionAbnormalEnd.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/launcher/ProcessAbnormalEnd.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/ThreadContext.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/FailureLogFormatter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/LogItem.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/FailureLogFormatter.DataItem.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/FailureJsonLogFormatter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/JsonLogFormatter.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "障害ログの出力方針",
+      "hints": [
+        "障害通知ログ",
+        "障害解析ログ",
+        "MONITOR",
+        "ログレベル",
+        "ロガー名",
+        "log.properties",
+        "app-log.properties",
+        "FailureLogFormatter",
+        "障害ログ出力方針",
+        "fwFailureCodeFilePath",
+        "障害コード変更",
+        "フレームワーク障害コード",
+        "パッケージ名単位",
+        "前方一致",
+        "降順ソート",
+        "failure-log-fw-codes.properties"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "障害ログを出力する",
+      "hints": [
+        "FailureLogUtil",
+        "TransactionAbnormalEnd",
+        "ProcessAbnormalEnd",
+        "障害コード",
+        "障害ログ出力",
+        "バッチ障害処理",
+        "例外ハンドラ",
+        "メッセージ取得失敗",
+        "$data$",
+        "派生元実行時情報",
+        "データ連携",
+        "前段処理",
+        "後段処理",
+        "analysisFormat",
+        "処理対象データ"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "障害ログの設定",
+      "hints": [
+        "failureLogFormatter.defaultFailureCode",
+        "failureLogFormatter.defaultMessage",
+        "failureLogFormatter.language",
+        "failureLogFormatter.notificationFormat",
+        "failureLogFormatter.analysisFormat",
+        "failureLogFormatter.contactFilePath",
+        "failureLogFormatter.fwFailureCodeFilePath",
+        "failureLogFormatter.className",
+        "failureLogFormatter.derivedRequestIdPropName",
+        "failureLogFormatter.derivedUserIdPropName",
+        "derivedRequestIdPropName",
+        "derivedUserIdPropName",
+        "$failureCode$",
+        "$message$",
+        "$data$",
+        "$contact$",
+        "FailureLogFormatter",
+        "障害ログ設定",
+        "個人情報マスク",
+        "派生元実行時情報",
+        "LogItem",
+        "DataItem",
+        "getLogItems",
+        "CustomDataItem",
+        "CustomDataFailureLogFormatter",
+        "$data$カスタマイズ",
+        "マスク処理",
+        "プレースホルダカスタマイズ",
+        "MaskingMapValueEditor",
+        "MapValueEditor",
+        "FailureLogContext"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "障害ログに連絡先情報を追加する",
+      "hints": [
+        "ThreadContext",
+        "連絡先情報",
+        "前方一致",
+        "リクエストID",
+        "failure-log-contact.properties",
+        "contactFilePath",
+        "$contact$",
+        "障害ログ連絡先",
+        "FailureJsonLogFormatter",
+        "JsonLogFormatter",
+        "failureLogFormatter.className",
+        "failureLogFormatter.notificationTargets",
+        "failureLogFormatter.analysisTargets",
+        "failureLogFormatter.structuredMessagePrefix",
+        "failureLogFormatter.language",
+        "failureLogFormatter.contactFilePath",
+        "failureLogFormatter.fwFailureCodeFilePath",
+        "failureLogFormatter.defaultFailureCode",
+        "failureLogFormatter.defaultMessage",
+        "JSON構造化ログ",
+        "障害ログJSON出力"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 障害ログの出力方針\n\n| ログの種類 | ログレベル | ロガー名 |\n|---|---|---|\n| 障害通知ログ | FATAL、ERROR | MONITOR |\n| 障害解析ログ | FATAL、ERROR | クラス名 |\n\n障害通知ログはログ監視ツールで障害を検知するための専用ファイルに出力する（ロガー名: MONITOR）。障害解析ログはアプリケーション全体のログを出力するアプリケーションログに出力する。\n\nlog.propertiesの設定例:\n```properties\nwriterNames=monitorLog,appLog\n\n# 障害通知ログの出力先\nwriter.monitorLog.className=nablarch.core.log.basic.FileLogWriter\nwriter.monitorLog.filePath=/var/log/app/monitor.log\nwriter.monitorLog.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.monitorLog.formatter.format=$date$ -$logLevel$- $runtimeLoggerName$ [$executionId$] boot_proc = [$bootProcess$] proc_sys = [$processingSystem$] req_id = [$requestId$] usr_id = [$userId$] $message$\n\n# アプリケーションログの出力先\nwriter.appLog.className=nablarch.core.log.basic.FileLogWriter\nwriter.appLog.filePath=/var/log/app/app.log\nwriter.appLog.maxFileSize=10000\nwriter.appLog.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.appLog.formatter.format=$date$ -$logLevel$- $runtimeLoggerName$ [$executionId$] boot_proc = [$bootProcess$] proc_sys = [$processingSystem$] req_id = [$requestId$] usr_id = [$userId$] $message$$information$$stackTrace$\n\navailableLoggersNamesOrder=MON,ROO\n\n# アプリケーションログの設定\nloggers.ROO.nameRegex=.*\nloggers.ROO.level=INFO\nloggers.ROO.writerNames=appLog\n\n# 障害通知ログの出力設定\nloggers.MON.nameRegex=MONITOR\nloggers.MON.level=ERROR\nloggers.MON.writerNames=monitorLog\n```\n\napp-log.propertiesの設定例:\n```properties\nfailureLogFormatter.defaultFailureCode=MSG99999\nfailureLogFormatter.defaultMessage=an unexpected exception occurred.\nfailureLogFormatter.language=ja\nfailureLogFormatter.notificationFormat=fail_code = [$failureCode$] $message$\nfailureLogFormatter.analysisFormat=fail_code = [$failureCode$] $message$\\nInput Data :\\n$data$\n```\n\n> **補足**: 大規模システムで障害時の連絡先が複数存在する場合、[failure_log-add_contact](#s3) を使用することで、リクエストID毎に連絡先情報をログに含めることができる。\n\nフレームワークが送出した例外は全てデフォルトの障害コードで障害ログが出力される。障害コードは、スタックトレースのルート要素（例外が送出されたクラス）のFQCNに対してプロパティファイルで前方一致指定できる。\n\n> **補足**: クラス毎の設定は細かすぎるため、基本はパッケージ名単位で障害コードを指定する。\n\nプロパティファイルはキー名の長さの降順にソートされ、より限定的なパッケージ名から順に検索される。\n\n**failure-log-fw-codes.properties 設定例**:\n\n```properties\n# フレームワークのパッケージ名=障害コード\nnablarch=FW_ERROR\nnablarch.core.cache=FW_CACHE_ERROR\nnablarch.core.date=FW_DATE_ERROR\nnablarch.core.db=FW_DB_ERROR\nnablarch.core.message=FW_MESSAGE_ERROR\nnablarch.core.repository=FW_REPOSITORY_ERROR\nnablarch.core.transaction=FW_TRANSACTION_ERROR\n```\n\n読み込み後のソート順（上から順に検索）:\n\n```properties\nnablarch.core.transaction=FW_TRANSACTION_ERROR\nnablarch.core.repository=FW_REPOSITORY_ERROR\nnablarch.core.message=FW_MESSAGE_ERROR\nnablarch.core.cache=FW_CACHE_ERROR\nnablarch.core.date=FW_DATE_ERROR\nnablarch.core.db=FW_DB_ERROR\nnablarch=FW_ERROR\n```\n\n`failureLogFormatter.fwFailureCodeFilePath` にclasspathパスを指定してプロパティファイルを設定する。\n\n**app-log.properties 設定例**:\n\n```properties\nfailureLogFormatter.fwFailureCodeFilePath=classpath:failure-log-fw-codes.properties\n```",
+    "s2": "## 障害ログを出力する\n\n障害ログの出力には `FailureLogUtil` を使用する。\n\n```java\ntry {\n    // 業務処理\n} catch (UserNotFoundException e) {\n    // 捕捉した例外、処理対象データ、障害コードを指定している。\n    FailureLogUtil.logError(e, inputData, \"USER_NOT_FOUND\");\n}\n```\n\nバッチ・メッセージングで障害検知時に業務処理を終了したい場合は、 `TransactionAbnormalEnd` または `ProcessAbnormalEnd` を送出し、例外ハンドラ（[global_error_handler](../handlers/handlers-global_error_handler.json#s1) や [request_thread_loop_handler](../handlers/handlers-request_thread_loop_handler.json#s1)）に障害ログの出力を依頼する。\n\n```java\n// 自ら例外を生成する場合\nif (user == null) {\n    // 終了コード、障害コードを指定している。\n    throw new TransactionAbnormalEnd(100, \"USER_NOT_FOUND\");\n}\n\n// 例外を捕捉した場合\ntry {\n    // 業務処理\n} catch (UserNotFoundException e) {\n    // 終了コード、捕捉した例外、障害コードを指定している。\n    throw new ProcessAbnormalEnd(100, e, \"USER_NOT_FOUND\");\n}\n```\n\n> **補足**: 上記例のように、障害ログの出力では、ログから障害内容を特定するために障害コードを指定する。障害コードのコード体系は、プロジェクト毎に規定すること。\n\n障害ログに出力されるメッセージは [message](libraries-message.json#s1) を使用して障害コードに対応するメッセージを取得する。メッセージが見つからない場合は、メッセージ取得処理で発生した例外をWARNレベルでログ出力し、障害ログには以下を出力する:\n\n```\nfailed to get the message to output the failure log. failureCode = [<障害コード>]\n```\n\n障害コードの指定がない場合（例外ハンドラで例外を捕捉した場合など）は、設定で指定するデフォルトの :ref:`障害コード <failure_log-prop_default_failure_code>` と :ref:`メッセージ <failure_log-prop_default_message>` を出力する。\n\n`$data$` プレースホルダを障害解析ログのフォーマットに指定すると、データリーダで読み込まれた処理対象データが障害ログに出力される。前段処理の実行時情報をデータに含めておくことで、後段処理の障害発生時に前段処理の追跡が可能になる。\n\n**app-log.properties 設定例**:\n\n```properties\nfailureLogFormatter.analysisFormat=fail_code = [$failureCode$] $message$\\nInput Data :\\n$data$\n```\n\nデータベース連携の場合、処理対象データ（`Input Data:`）に前段処理の実行時情報（例: `INSERT_REQUEST_ID`、`INSERT_EXECUTION_ID`、`UPDATED_USER_ID`）が出力される。",
+    "s3": "## 障害ログの設定\n\n設定は [log-app_log_setting](libraries-log.json) で説明したプロパティファイルに行う。\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| failureLogFormatter.className | | `FailureLogFormatter` を実装したクラス。差し替える場合に指定する。 |\n| failureLogFormatter.defaultFailureCode | ○ | デフォルトの障害コード。障害コードの指定がない場合に使用する。 |\n| failureLogFormatter.defaultMessage | ○ | デフォルトのメッセージ。デフォルト障害コード使用時に出力する。 |\n| failureLogFormatter.language | | メッセージ取得時の言語。未指定の場合は `ThreadContext` に設定されている言語を使用する。 |\n| failureLogFormatter.notificationFormat | | 障害通知ログのフォーマット。デフォルト: `fail_code = [$failureCode$] $message$` |\n| failureLogFormatter.analysisFormat | | 障害解析ログのフォーマット。プレースホルダとデフォルトは通知ログと同じ。 |\n| failureLogFormatter.contactFilePath | | 連絡先情報を指定したプロパティファイルのパス。[failure_log-add_contact](#s3) 参照。 |\n| failureLogFormatter.fwFailureCodeFilePath | | フレームワーク障害コードの変更情報を指定したプロパティファイルのパス。[failure_log-change_fw_failure_code](#s4) 参照。 |\n\nフォーマットに指定可能なプレースホルダ:\n\n| プレースホルダ | 説明 |\n|---|---|\n| $failureCode$ | 障害を一意に識別するコード |\n| $message$ | 障害コードに対応するメッセージ |\n| $data$ | 障害発生時の処理対象データ（toStringメソッドの出力） |\n| $contact$ | 連絡先情報 |\n\n> **補足**: `$data$`（処理対象データ）の出力により、障害ログに派生元実行時情報を出力できる。派生元実行時情報とは、例えば、ウェブからバッチ処理にデータ連携する場合であれば、画面処理を実行した時点の実行時情報（リクエストIDや実行時IDなど）がバッチ処理での派生元実行時情報となる。派生元実行時情報の出力方法は、[failure_log-output_src_exe_info](#) を参照。\n\n> **重要**: システムのセキュリティ要件により、障害解析ログであっても個人情報や機密情報の出力が許されない場合は、[failure_log-placeholder_customize](#) を参照しプロジェクトでカスタマイズすること。\n\n設定例:\n```properties\nfailureLogFormatter.className=nablarch.core.log.app.FailureLogFormatter\nfailureLogFormatter.defaultFailureCode=UNEXPECTED_ERROR\nfailureLogFormatter.defaultMessage=an unexpected exception occurred.\nfailureLogFormatter.language=en\nfailureLogFormatter.notificationFormat=fail_code = [$failureCode$] $message$\nfailureLogFormatter.analysisFormat=fail_code = [$failureCode$] $message$\nfailureLogFormatter.derivedRequestIdPropName=insertRequestId\nfailureLogFormatter.derivedUserIdPropName=updatedUserId\nfailureLogFormatter.contactFilePath=classpath:failure-log-contact.properties\nfailureLogFormatter.fwFailureCodeFilePath=classpath:failure-log-fw-codes.properties\n```\n\n`$data$` はデフォルトで `toString` メソッドにより全データ項目が出力される。特定項目のマスクなどカスタマイズが必要な場合は以下の手順で対応する。\n\n1. `LogItem` を実装したクラスを作る（`DataItem` を継承して拡張することも可能）\n2. `FailureLogFormatter` を継承し `FailureLogFormatter#getLogItems` をオーバーライドして `$data$` にカスタムクラスを設定する\n3. `app-log.properties` で `failureLogFormatter.className` にカスタムクラスを指定する\n\n**カスタム FailureLogFormatter 実装例**:\n\n```java\npublic class CustomDataFailureLogFormatter extends FailureLogFormatter {\n\n    @Override\n    protected Map<String, LogItem<FailureLogContext>> getLogItems(Map<String, String> props) {\n        Map<String, LogItem<FailureLogContext>> logItems = super.getLogItems(props);\n        // CustomDataItemで$data$を上書き設定する\n        logItems.put(\"$data$\", new CustomDataItem());\n        return logItems;\n    }\n\n    private static final class CustomDataItem extends DataItem {\n        private static final char MASKING_CHAR = '*';\n        private static final Pattern[] MASKING_PATTERNS\n                = new Pattern[] { Pattern.compile(\".*MOBILE_PHONE_NUMBER.*\"),\n                                  Pattern.compile(\".*MAIL.*\")};\n        // フレームワークが提供するMap編集用のユーティリティ\n        private MapValueEditor mapValueEditor\n            = new MaskingMapValueEditor(MASKING_CHAR, MASKING_PATTERNS);\n\n        @Override\n        @SuppressWarnings(\"unchecked\")\n        public String get(FailureLogContext context) {\n            // FailureLogContextのgetDataメソッドを呼び出し処理対象データを取得する\n            Object data = context.getData();\n            // Mapでない場合はフレームワークのデフォルト実装を呼び出す\n            if (!(data instanceof Map)) {\n                return super.get(context);\n            }\n            // Mapをマスクした文字列を返す（TreeMapでキーをソートして出力）\n            Map<String, String> editedMap = new TreeMap<String, String>();\n            for (Map.Entry<Object, Object> entry : ((Map<Object, Object>) data).entrySet()) {\n                String key = entry.getKey().toString();\n                editedMap.put(key, mapValueEditor.edit(key, entry.getValue()));\n            }\n            return editedMap.toString();\n        }\n    }\n}\n```\n\n**app-log.properties での設定**:\n\n```properties\nfailureLogFormatter.className=nablarch.core.log.app.CustomDataFailureLogFormatter\n```",
+    "s4": "## 障害ログに連絡先情報を追加する\n\nリクエストID毎に連絡先情報を障害ログに出力できる。連絡先情報はプロパティファイルに「リクエストID=連絡先情報」形式で指定する。\n\nキーに指定されたリクエストIDは `ThreadContext` から取得したリクエストIDに対して前方一致で検索する。プロパティファイルは読み込み後、キー名の長さの降順にソートされ、より限定的なリクエストIDから検索する。\n\nfailure-log-contact.propertiesの設定例:\n```properties\n# リクエストID=連絡先情報\n/users/=USRMGR999\n/users/index=USRMGR300\n/users/list=USRMGR301\n/users/new=USRMGR302\n/users/edit=USRMGR303\n```\n\n上記プロパティファイルは読み込み後、以下の順にソートされる（キー名の長さが等しいものは実行毎に順番が変わる）:\n```properties\n/users/index=USRMGR300\n/users/list=USRMGR301\n/users/edit=USRMGR303\n/users/new=USRMGR302\n/users/=USRMGR999\n```\n\nフォーマットに `$contact$` プレースホルダを指定し、`failureLogFormatter.contactFilePath` でプロパティファイルのパスを指定する:\n\n```properties\nfailureLogFormatter.defaultFailureCode=UNEXPECTED_ERROR\nfailureLogFormatter.defaultMessage=an unexpected exception occurred.\nfailureLogFormatter.notificationFormat=[$failureCode$:$message$] <$contact$>\nfailureLogFormatter.analysisFormat=fail_code = [$failureCode$] $message$ <$contact$>\nfailureLogFormatter.contactFilePath=classpath:failure-log-contact.properties\n```\n\nリクエストIDが `/users/new` の場合の出力例:\n```\n# 障害通知ログ\n2011-02-15 15:09:57.691 -FATAL- [APUSRMGR0001201102151509320020009] R[/users/new] U[0000000001] [UNEXPECTED_ERROR:an unexpected exception occurred.] <USRMGR302>\n\n# 障害解析ログ\n2011-02-15 15:09:57.707 -FATAL- [APUSRMGR0001201102151509320020009] R[/users/new] U[0000000001] fail_code = [UNEXPECTED_ERROR] an unexpected exception occurred. <USRMGR302>\n```\n\nリクエストIDに対応する連絡先情報が見つからない場合はnullが出力される。\n\n`FailureLogFormatter` では障害ログの各項目はmessageの文字列として出力される。各項目をJSONの値として出力するには `FailureJsonLogFormatter` を使用する（[log-json_log_setting](libraries-log.json) 設定と組み合わせて使用）。\n\n| プロパティ名 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|\n| failureLogFormatter.className | ○ | | `nablarch.core.log.app.FailureJsonLogFormatter` を指定する |\n| failureLogFormatter.defaultFailureCode | ○ | | デフォルトの障害コード |\n| failureLogFormatter.defaultMessage | ○ | | デフォルトの障害コード使用時のメッセージ |\n| failureLogFormatter.language | | ThreadContextの言語 | 障害コードからメッセージ取得時の言語（`ThreadContext` 参照） |\n| failureLogFormatter.notificationTargets | | failureCode,message | 障害通知ログの出力項目（カンマ区切り）。指定可能値: `failureCode`, `message`, `data`, `contact` |\n| failureLogFormatter.analysisTargets | | failureCode,message | 障害解析ログの出力項目（カンマ区切り）。指定可能値はnotificationTargetsと同じ |\n| failureLogFormatter.contactFilePath | | | 障害連絡先情報のプロパティファイルのパス（[failure_log-add_contact](#s3) 参照） |\n| failureLogFormatter.fwFailureCodeFilePath | | | フレームワーク障害コード変更情報のプロパティファイルのパス（[failure_log-change_fw_failure_code](#s4) 参照） |\n| failureLogFormatter.structuredMessagePrefix | | `$JSON$` | JSON形式識別用のメッセージ先頭マーカー文字列。`JsonLogFormatter` にも同じ値を設定すること（[log-basic_setting](libraries-log.json#s4) 参照） |\n\n**設定例**:\n\n```properties\nfailureLogFormatter.className=nablarch.core.log.app.FailureJsonLogFormatter\nfailureLogFormatter.structuredMessagePrefix=$JSON$\nfailureLogFormatter.notificationTargets=failureCode,message,contact\nfailureLogFormatter.analysisTargets=failureCode,message,data\nfailureLogFormatter.defaultFailureCode=UNEXPECTED_ERROR\nfailureLogFormatter.defaultMessage=an unexpected exception occurred.\n```"
+  }
+}

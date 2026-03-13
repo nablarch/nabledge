@@ -1,0 +1,85 @@
+{
+  "id": "handlers-message_resend_handler",
+  "title": "再送電文制御ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/mom_messaging/message_resend_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/handler/MessageResendHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/tableschema/SentMessageTableSchema.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/InterSystemMessage.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/ResponseMessage.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/StandardFwHeaderDefinition.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "MessageResendHandler",
+        "nablarch.fw.messaging.handler.MessageResendHandler",
+        "再送電文制御",
+        "応答電文自動送信",
+        "2重取り込み防止"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-messaging",
+        "com.nablarch.framework",
+        "モジュール依存関係"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "hints": [
+        "message_reply_handler",
+        "transaction_management_handler",
+        "ハンドラ設定順序",
+        "ハンドラ制約"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "応答電文の保存先について",
+      "hints": [
+        "SentMessageTableSchema",
+        "nablarch.fw.messaging.tableschema.SentMessageTableSchema",
+        "sentMessageTableSchema",
+        "応答電文保存テーブル",
+        "InterSystemMessage",
+        "ResponseMessage"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "同一電文(再送電文)の判定方法",
+      "hints": [
+        "再送要求フラグ",
+        "相関メッセージID",
+        "フレームワーク制御ヘッダ",
+        "同一電文判定",
+        "再送電文条件"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "フレームワーク制御ヘッダの設定",
+      "hints": [
+        "fwHeaderDefinition",
+        "StandardFwHeaderDefinition",
+        "nablarch.fw.messaging.StandardFwHeaderDefinition",
+        "フレームワーク制御ヘッダ定義カスタマイズ"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "再送電文制御ハンドラは、同一の電文を繰り返し受信した際の再送制御を行う。応答電文が既に作成済みの場合、業務処理をスキップして保存済み応答電文を自動送信する。\n\n> **補足**: (1) 既に応答電文が作成済みの場合、業務処理を省略しシステム負荷を低減できる。(2) DB登録処理の場合、業務処理省略により2重取り込み防止ロジックの実装が不要になる。\n\n処理の流れ:\n1. 応答電文の保存処理\n2. 再送電文の場合: 保存した応答電文を送信\n3. 再送電文以外または保存済み応答電文がない場合: 後続ハンドラへ処理を委譲\n\n**クラス名**: `nablarch.fw.messaging.handler.MessageResendHandler`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-messaging</artifactId>\n</dependency>\n```",
+    "s3": "- [message_reply_handler](handlers-message_reply_handler.json#s1) よりも後ろに設定すること: 本ハンドラで作成した応答電文を送信するために [message_reply_handler](handlers-message_reply_handler.json#s1) が必要なため。\n- [transaction_management_handler](handlers-transaction_management_handler.json#s1) よりも後ろに設定すること: 本ハンドラはDBに応答電文を保存するため、トランザクション制御を行う [transaction_management_handler](handlers-transaction_management_handler.json#s1) よりも後ろに設定が必要。",
+    "s4": "後続ハンドラで作成された応答電文はDBテーブルに保存する。デフォルトのテーブル名・カラム名は `SentMessageTableSchema` を参照。\n\n| カラム名 | 制約等 | 格納する値 |\n|---|---|---|\n| リクエストID | 主キー、文字列型 | 要求電文のリクエストID |\n| メッセージID | 主キー、文字列型 | 要求電文のメッセージID（再送電文の場合は相関メッセージIDを使用。詳細は [message_resend_handler-resent_message](#s4)） |\n| 宛先キューの論理名 | 文字列型 | 応答電文の宛先キュー論理名（`InterSystemMessage#getDestination()`） |\n| 処理結果コード | 文字列型 | `ResponseMessage#getStatusCode()` |\n| 応答電文 | バイナリ型 | `ResponseMessage#getBodyBytes()` |\n\nテーブル名・カラム名の変更は `SentMessageTableSchema` および `sentMessageTableSchemaプロパティ` で設定可能。",
+    "s5": "以下の条件を両方満たす電文を処理済み要求電文（再送電文）と判断し、保存済み応答電文を返却する:\n1. フレームワーク制御ヘッダの再送要求フラグに値が設定されている\n2. 受信した要求電文のリクエストIDとメッセージIDに紐づくデータが応答電文保存テーブルに存在する\n\nフレームワーク制御ヘッダの詳細は [フレームワーク制御ヘッダ](../libraries/libraries-mom_system_messaging.json) を参照。\n\n> **重要**: 相手先システムが電文を再送する際は以下の制約を満たすこと。満たせない場合、本ハンドラは使用不可のため、プロジェクト側で再送制御ハンドラを新たに作成すること。\n> - 再送電文の相関メッセージIDに初回送信時の要求電文のメッセージIDを設定すること\n> - フレームワーク制御ヘッダの再送要求フラグに値を設定すること",
+    "s6": "フレームワーク制御ヘッダの定義を変更する場合は `fwHeaderDefinition` プロパティにプロジェクト拡張の定義を設定する。未設定時はデフォルトの `StandardFwHeaderDefinition` が使用される。\n\n```xml\n<component class=\"nablarch.fw.messaging.handler.MessageResendHandler\">\n  <property name=\"fwHeaderDefinition\">\n    <component class=\"sample.SampleFwHeaderDefinition\" />\n  </property>\n</component>\n```\n\nフレームワーク制御ヘッダの詳細は [フレームワーク制御ヘッダ](../libraries/libraries-mom_system_messaging.json) を参照。"
+  }
+}

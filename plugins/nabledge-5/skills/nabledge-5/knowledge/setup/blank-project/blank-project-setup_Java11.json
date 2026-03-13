@@ -1,0 +1,75 @@
+{
+  "id": "blank-project-setup_Java11",
+  "title": "Java11で使用する場合のセットアップ方法",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Java11.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "Java11で使用する場合のセットアップ方法",
+      "hints": [
+        "Java11",
+        "ブランクプロジェクト",
+        "セットアップ手順",
+        "コンテナ用ブランクプロジェクト",
+        "疎通確認"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "依存モジュールの追加",
+      "hints": [
+        "javax.activation",
+        "jaxb-api",
+        "jaxb-core",
+        "jaxb-impl",
+        "javax.annotation-api",
+        "JAXB",
+        "依存モジュール追加",
+        "Java11"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "gsp-dba-maven-pluginが使用する依存モジュールの追加",
+      "hints": [
+        "gsp-dba-maven-plugin",
+        "Java11設定",
+        "依存モジュール"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "自動テストで使用するJettyのモジュール変更(ウェブプロジェクト または RESTfulウェブサービスプロジェクトの場合のみ)",
+      "hints": [
+        "Jetty",
+        "nablarch-testing-jetty9",
+        "nablarch-testing-jetty6",
+        "HttpServerFactoryJetty9",
+        "HttpServerFactoryJetty6",
+        "自動テスト",
+        "ウェブプロジェクト",
+        "RESTfulウェブサービス",
+        "unit-test.xml"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "Javaバージョンの変更",
+      "hints": [
+        "java.version",
+        "Javaバージョン設定",
+        "pom.xml",
+        "Java11"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "Java 11でブランクプロジェクトを使用する場合、疎通確認前に以下の手順が必要:\n\n1. 依存モジュールの追加\n2. gsp-dba-maven-pluginが使用する依存モジュールの追加\n3. 自動テストで使用するJettyのモジュール変更(ウェブプロジェクト または RESTfulウェブサービスプロジェクトの場合のみ)\n4. Javaバージョンの変更\n\n> **補足**: コンテナ用のブランクプロジェクトはJava11を前提としており、本章の修正があらかじめ適用されている。コンテナ用ブランクプロジェクトでは本章の手順は不要。",
+    "s2": "Java 11でJAXBなど一部のモジュールが標準ライブラリから削除されたため、POMに以下を追加する:\n\n```xml\n<dependency>\n  <groupId>com.sun.activation</groupId>\n  <artifactId>javax.activation</artifactId>\n  <version>1.2.0</version>\n</dependency>\n<dependency>\n  <groupId>javax.xml.bind</groupId>\n  <artifactId>jaxb-api</artifactId>\n  <version>2.3.0</version>\n</dependency>\n<dependency>\n  <groupId>com.sun.xml.bind</groupId>\n  <artifactId>jaxb-core</artifactId>\n  <version>2.3.0</version>\n</dependency>\n<dependency>\n  <groupId>com.sun.xml.bind</groupId>\n  <artifactId>jaxb-impl</artifactId>\n  <version>2.3.0</version>\n</dependency>\n<dependency>\n  <groupId>javax.annotation</groupId>\n  <artifactId>javax.annotation-api</artifactId>\n  <version>1.3.2</version>\n</dependency>\n```",
+    "s3": "gsp-dba-maven-pluginのJava 11対応設定は以下を参照:\n\n[Java 11 での設定](https://github.com/coastland/gsp-dba-maven-plugin/tree/4.x.x-main?tab=readme-ov-file#java11%E3%81%A7%E3%81%AE%E8%A8%AD%E5%AE%9A)",
+    "s4": "ブランクプロジェクトのデフォルトJettyはJava11非対応。ウェブプロジェクトまたはRESTfulウェブサービスプロジェクトの場合、以下2ファイルを変更する:\n\n**pom.xml** (`nablarch-testing-jetty6`を以下に変更):\n\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-testing-jetty9</artifactId>\n  <scope>test</scope>\n</dependency>\n```\n\n**src/test/resources/unit-test.xml** (`HttpServerFactoryJetty6`を以下に変更):\n\n```xml\n<component name=\"httpServerFactory\" class=\"nablarch.fw.web.httpserver.HttpServerFactoryJetty9\"/>\n```",
+    "s5": "ブランクプロジェクトのデフォルトはJava8設定。pom.xmlのJavaバージョンを以下に変更する:\n\n```xml\n<java.version>11</java.version>\n```"
+  }
+}

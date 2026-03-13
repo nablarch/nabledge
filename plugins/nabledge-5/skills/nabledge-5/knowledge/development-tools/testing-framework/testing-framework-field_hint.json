@@ -1,0 +1,47 @@
+{
+  "id": "testing-framework-field_hint",
+  "title": "入力内容注記表示ウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_jsp_widgets/field_hint.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "field_hint",
+        "入力内容注記表示",
+        "hintウィジェット",
+        "任意マークアップ",
+        "field_text"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "gridSize",
+        "入力画面表示",
+        "確認画面非表示",
+        "注記マーク",
+        "multicol_mode"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "hint.tag",
+        "タグファイル",
+        "内部構造",
+        "部品一覧"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[field_hint](testing-framework-field_hint.json) は入力フォームの各項目の入力内容に関する注記を表示するウィジェット。[field_text](testing-framework-field_text.json) などの各入力フィールドに **hint** 属性を指定する場合とほぼ等価だが、任意のマークアップを含めることができる点が異なる。\n\n```jsp\n<field:password title=\"パスワード\"\n                domain=\"パスワード\"\n                required=\"true\"\n                maxlength=\"20\"\n                name=\"W11AC02.newPassword\"\n                sample=\"password\">\n</field:password>\n<field:password title=\"パスワード（確認用）\"\n                domain=\"パスワード\"\n                required=\"true\"\n                maxlength=\"20\"\n                name=\"W11AC02.confirmPassword\"\n                sample=\"password\">\n</field:password>\n<field:hint>半角英数記号20文字以内</field:hint>\n```",
+    "s2": "入力画面ではボディ部に指定された内容の先頭に既定のマーク **(※ )** を追加して表示する。確認画面では何も表示しない。ローカル動作とサーバ動作の挙動は同じ。\n\n**属性値一覧** [◎ 必須属性 ○ 任意属性 × 無効]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| gridSize | 幅(グリッド数) | 数値 | ○ | ○ | [multicol_mode](testing-framework-multicol_css_framework.json) で使用する |",
+    "s3": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/hint.tag | [field_hint](testing-framework-field_hint.json) の実体となるタグファイル |"
+  }
+}

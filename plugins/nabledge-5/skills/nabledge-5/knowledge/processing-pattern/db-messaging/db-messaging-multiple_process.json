@@ -1,0 +1,33 @@
+{
+  "id": "db-messaging-multiple_process",
+  "title": "マルチプロセス化",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/feature_details/multiple_process.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "マルチプロセス化の実装手順",
+      "hints": [
+        "マルチプロセス化",
+        "2重取り込み防止",
+        "悲観ロック",
+        "PROCESS_ID",
+        "DatabaseRecordReader",
+        "DatabaseRecordListener",
+        "DatabaseTableQueueReader",
+        "SimpleDbTransactionManager",
+        "SimpleDbTransactionExecutor",
+        "AppDbConnection",
+        "SystemRepository",
+        "DataReader",
+        "SqlRow",
+        "ExecutionContext"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "マルチプロセス化の実装手順（同一DBキューのメッセージングを複数プロセスで起動する場合）:\n\n> **警告**: 対応なしで同一データベースをキューとしたメッセージングを複数起動すると、複数プロセスが同一データを処理し2重取り込みが発生する。\n\n1. **悲観ロック用カラムを処理対象テーブルに追加する**\n\n   通常のステータスカラムのみでは複数プロセスが同一データを取得してしまうため、`PROCESS_ID` カラムを追加する。\n\n   | カラム名 | 説明 |\n   |---|---|\n   | ID | 主キー |\n   | STATUS | 未処理データかどうかを判断するためのステータスカラム |\n   | PROCESS_ID | 各プロセスがレコードを悲観ロックするために使用するカラム |\n\n2. **処理対象レコードを悲観ロックするSQLを作成する**\n\n   `PROCESS_ID` が null（他プロセスにロックされていない）かつ未処理のレコードを自プロセスIDで更新する。\n\n   ```sql\n   UPDATE SAMPLE_TABLE\n   SET PROCESS_ID = :processId\n   WHERE STATUS = '0'\n    AND PROCESS_ID IS NULL\n   ```\n\n3. **悲観ロックしたレコードを抽出するSQLを作成する**\n\n   条件は未処理かつ `PROCESS_ID` が自身のプロセスIDであること。\n\n   ```sql\n   SELECT\n     *\n   FROM\n     SAMPLE_TABLE\n   WHERE\n     STATUS = '0'\n     AND PROCESS_ID = :processId\n   ```\n\n4. **Actionを実装する**\n\n   `DatabaseRecordReader` に悲観ロックSQL（`DatabaseRecordListener.beforeReadRecords()` で実行）とレコード抽出SQLを設定する。\n\n   > **重要**: 悲観ロック処理（UPDATE）は別トランザクションで実行する必要がある。`SystemRepository.get(\"redundancyTransaction\")` でトランザクションマネージャを取得し、`SimpleDbTransactionExecutor` の `execute` メソッドの引数 `AppDbConnection` を通じてSQLを実行する。\n\n   ```java\n   private static final String PROCESS_ID = UUID.randomUUID().toString();\n\n   @Override\n   public DataReader<SqlRow> createReader(ExecutionContext context) {\n       final Map<String, String> param = new HashMap<>();\n       param.put(\"processId\", PROCESS_ID);\n\n       final DatabaseRecordReader reader = new DatabaseRecordReader();\n       reader.setStatement(getParameterizedSqlStatement(\"FIND_RECEIVED_PROJECTS\"), param);\n\n       databaseRecordReader.setListener(new DatabaseRecordListener() {\n           @Override\n           public void beforeReadRecords() {\n               final SimpleDbTransactionManager transactionManager = SystemRepository.get(\"redundancyTransaction\");\n               new SimpleDbTransactionExecutor<Void>(transactionManager) {\n                   @Override\n                   public Void execute(final AppDbConnection appDbConnection) {\n                       appDbConnection\n                               .prepareParameterizedSqlStatementBySqlId(SQL_ID_PREFIX + \"UPDATE_PROCESS_ID\")\n                               .executeUpdateByMap(PROCESS_MAP);\n                       return null;\n                   }\n               }.doTransaction();\n           }\n       });\n\n       return new DatabaseTableQueueReader(reader, 1000, \"RECEIVED_MESSAGE_SEQUENCE\");\n   }\n   ```"
+  }
+}

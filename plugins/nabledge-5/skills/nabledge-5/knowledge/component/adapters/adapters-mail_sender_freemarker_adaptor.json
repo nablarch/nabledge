@@ -1,0 +1,66 @@
+{
+  "id": "adapters-mail_sender_freemarker_adaptor",
+  "title": "E-mail FreeMarkerアダプタ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/adaptors/mail_sender_freemarker_adaptor.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/mail/freemarker/FreeMarkerMailProcessor.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailRequester.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/repository/di/ComponentFactory.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/TemplateEngineProcessedResult.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-mail-sender-freemarker-adaptor",
+        "FreeMarker",
+        "メール送信",
+        "モジュール依存関係",
+        "バージョン確認"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "E-mail FreeMarkerアダプタを使用するための設定を行う",
+      "hints": [
+        "FreeMarkerMailProcessor",
+        "MailRequester",
+        "ComponentFactory",
+        "Configuration",
+        "ConfigurationFactory",
+        "コンポーネント設定",
+        "templateEngineMailProcessor",
+        "定型メール設定"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "メールのテンプレートを作成する",
+      "hints": [
+        "FreeMarker",
+        "テンプレート",
+        "件名",
+        "本文",
+        "デリミタ",
+        "TemplateEngineProcessedResult",
+        "basePackagePath"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "メール送信要求を登録する",
+      "hints": [
+        "メール送信要求",
+        "定型メール",
+        "mail-request"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-mail-sender-freemarker-adaptor</artifactId>\n</dependency>\n```\n\n> **補足**: FreeMarkerのバージョン2.3.27-incubatingを使用してテストを行っている。バージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。",
+    "s2": "`FreeMarkerMailProcessor` をコンポーネント設定ファイルで `MailRequester` の `templateEngineMailProcessor` プロパティに設定する。\n\n`FreeMarkerMailProcessor` にはFreeMarkerの `Configuration` を設定する必要がある。`Configuration` の設定には `ComponentFactory` 実装クラスを作成して使用することを推奨。理由: (1) `Configuration` のデフォルトコンストラクタが非推奨 (2) Javaコードで設定する方がコンポーネント設定ファイルより容易。\n\n`ConfigurationFactory` 実装例:\n```java\npackage com.example;\n\nimport freemarker.template.Configuration;\nimport nablarch.core.repository.di.ComponentFactory;\n\npublic class ConfigurationFactory implements ComponentFactory<Configuration> {\n\n    private String basePackagePath;\n    private String encoding;\n\n    @Override\n    public Configuration createObject() {\n        Configuration cfg = new Configuration(Configuration.getVersion());\n        ClassLoader classLoader = getClass().getClassLoader();\n        cfg.setClassLoaderForTemplateLoading(classLoader, basePackagePath);\n        cfg.setDefaultEncoding(encoding);\n        //必要に応じてConfigurationへその他の設定を行う\n        return cfg;\n    }\n\n    public void setBasePackagePath(String basePackagePath) {\n        this.basePackagePath = basePackagePath;\n    }\n\n    public void setEncoding(String encoding) {\n        this.encoding = encoding;\n    }\n}\n```\n\nコンポーネント設定ファイル例:\n```xml\n<component name=\"templateEngineMailProcessor\"\n           class=\"nablarch.integration.mail.freemarker.FreeMarkerMailProcessor\" autowireType=\"None\">\n  <property name=\"configuration\">\n    <component class=\"com.example.ConfigurationFactory\">\n      <property name=\"basePackagePath\" value=\"com/example/template/\"/>\n      <property name=\"encoding\" value=\"UTF-8\"/>\n    </component>\n  </property>\n</component>\n\n<!-- メール送信要求API -->\n<component name=\"mailRequester\" class=\"nablarch.common.mail.MailRequester\">\n  <property name=\"templateEngineMailProcessor\" ref=\"templateEngineMailProcessor\"/>\n  <!-- その他の設定は省略 -->\n</component>\n```",
+    "s3": "FreeMarkerを使用した定型メール処理では件名と本文を1つのテンプレートに記述する。件名と本文はデリミタ行で分割される。デフォルトのデリミタは `---`（半角ハイフン3つ）。\n\nテンプレート例:\n```\n${title}について${option}\n---\n${title}は、申請番号${requestId}で申請されました。\n${approver}は速やかに${title}を承認してください。${option}\n```\n\n詳細な件名と本文の分割ルールは `TemplateEngineProcessedResult#valueOf` を参照。\n\nテンプレートファイルの配置場所は `Configuration` の設定によって異なる。`basePackagePath` に `com/example/template/` を設定した場合、クラスパス上の `com/example/template/` ディレクトリにテンプレートファイルを配置する。",
+    "s4": "FreeMarkerアダプタを使用した定型メール送信要求の登録方法は通常の定型メール送信要求と同様。:ref:`mail-request` を参照。"
+  }
+}

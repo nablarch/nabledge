@@ -1,0 +1,64 @@
+{
+  "id": "handlers-data_read_handler",
+  "title": "データリードハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/standalone/data_read_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/DataReader.NoMoreRecord.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/ExecutionContext.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/DataReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/DataReadHandler.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "DataReadHandler",
+        "nablarch.fw.handler.DataReadHandler",
+        "NoMoreRecord",
+        "データリードハンドラ",
+        "入力データ読み込み",
+        "実行時ID採番"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-standalone",
+        "com.nablarch.framework",
+        "モジュール依存関係"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "hints": [
+        "ExecutionContext",
+        "DataReader",
+        "nablarch.fw.ExecutionContext",
+        "nablarch.fw.DataReader",
+        "NoMoreRecord",
+        "DataReader設定制約",
+        "処理対象データなし"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "最大処理件数の設定",
+      "hints": [
+        "maxCount",
+        "NoMoreRecord",
+        "最大処理件数",
+        "バッチ分割処理",
+        "DataReadHandler"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.DataReadHandler`\n\n[データリーダ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.json) を使用して入力データを1件ずつ読み込み、後続ハンドラに処理を委譲するハンドラ。`DataReader` の終端到達時は後続ハンドラを実行せず `NoMoreRecord` を返却する。\n\n処理内容:\n1. データリーダを使用して入力データの読み込み\n2. [実行時ID](../libraries/libraries-log.json) の採番",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-standalone</artifactId>\n</dependency>\n```",
+    "s3": "本ハンドラより手前で `ExecutionContext` に `DataReader` を設定する必要がある。未設定の場合、処理対象データ無しとして `NoMoreRecord` を返却し処理を終了する。",
+    "s4": "`maxCount` プロパティで最大処理件数を設定できる。最大件数到達後は `NoMoreRecord` を返却する。大量データを数日に分けて処理する場合に使用（例: 100万件を日次10万件ずつ10日間で処理）。\n\n```xml\n<component class=\"nablarch.fw.handler.DataReadHandler\">\n  <!-- 処理する件数は、最大1万レコード -->\n  <property name=\"maxCount\" value=\"10000\" />\n</component>\n```"
+  }
+}

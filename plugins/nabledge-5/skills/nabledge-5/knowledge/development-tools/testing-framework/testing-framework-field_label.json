@@ -1,0 +1,66 @@
+{
+  "id": "testing-framework-field_label",
+  "title": "表示項目ウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_jsp_widgets/field_label.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "field:label",
+        "field:block",
+        "field:text",
+        "field:checkbox",
+        "表示項目ウィジェット",
+        "ローカル動作",
+        "サーバ動作",
+        "更新画面",
+        "変更対象外項目",
+        "JSPウィジェット"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "field:label属性一覧",
+        "title",
+        "name",
+        "id",
+        "cssClass",
+        "domain",
+        "sample",
+        "valueFormat",
+        "unit",
+        "dataFrom",
+        "comment",
+        "formatSpec",
+        "initialValueDesc",
+        "n:write",
+        "表示項目仕様",
+        "サーバ動作",
+        "ローカル動作"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "label.tag",
+        "nablarch.js",
+        "タグファイル",
+        "タグライブラリスタブ",
+        "n:writeエミュレーション",
+        "内部構造"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[field_label](testing-framework-field_label.json) は [field_text](testing-framework-field_text.json) や [field_checkbox](testing-framework-field_checkbox.json) などの入力項目と並べて表示項目を出力するウィジェット。更新画面で変更対象でない項目（ユーザIDなど）を他の更新可能なフィールドと並べて表示する場合に使用する。\n\n**設計成果物（ローカル動作）**\n\n```jsp\n<field:block title=\"ユーザ基本情報\">\n  <field:label\n      title=\"ログインID\"\n      sample=\"nablarch\">\n  </field:label>\n\n  <field:text\n      title=\"漢字氏名\"\n      required=\"true\"\n      sample=\"名部　楽太郎\">\n  </field:text>\n</field:block>\n```\n\n**実装成果物（サーバ動作）**\n\n```jsp\n<field:block title=\"ユーザ基本情報\">\n  <field:label\n      title=\"ログインID\"\n      name=\"W11AC03.systemAccount.loginId\"\n      sample=\"nablarch\">\n  </field:label>\n\n  <field:text\n      title=\"漢字氏名\"\n      name=\"W11AC03.users.kanjiName\"\n      required=\"true\"\n      maxlength=\"50\"\n      hint=\"全角50文字以内\"\n      sample=\"名部　楽太郎\">\n  </field:text>\n</field:block>\n```",
+    "s2": "**サーバ動作時の挙動**: 入力画面・確認画面ともに `name` 属性に指定した変数の値を出力する。変数が存在しない場合は空文字を出力する。\n\n**ローカル動作時の挙動**: 入力画面・確認画面ともに `sample` に指定した文字列をそのまま出力する。\n\n**属性値一覧** [◎ 必須属性 ○ 任意属性 × 無効（指定しても効果なし）]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | 項目名 | 文字列 | ◎ | ◎ | |\n| name | 出力対象の値を変数スコープから取得するための名前 | 文字列 | ◎ | ○ | |\n| id | HTMLのid属性値 | 文字列 | ○ | ○ | 省略時はname属性と同じ値 |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ | |\n| domain | 項目のドメイン型 | 文字列 | ○ | ○ | |\n| sample | ローカル動作時に表示する文字列 | 文字列 | × | ○ | |\n| valueFormat | 出力時のフォーマット（n:writeタグ参照） | 文字列 | ○ | × | |\n| unit | 値の右側に表示する単位。出力対象の値が空の場合は単位を表示しない | 文字列 | ○ | ○ | |\n| dataFrom | 表示するデータの取得元。「表示情報取得元」.「表示項目名」の形式で設定 | 文字列 | × | × | 画面項目定義に記載 |\n| comment | 表示項目についての備考 | 文字列 | × | × | 設計書の画面項目定義の備考に表示 |\n| formatSpec | 編集仕様に関する説明 | 文字列 | × | × | 設計書の画面項目定義の編集仕様に表示 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の画面項目定義の備考に表示 |\n\n> **補足**: ローカル表示で `unit` 属性を使用する場合は `name` 属性に値を設定すること。`name` 属性が未設定（ブランク）の場合、単位はブランク表示となる。",
+    "s3": "| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/label.tag | [field_label](testing-framework-field_label.json) の実体となるタグファイル |\n| /js/jsp/taglib/nablarch.js | `<n:write>` のエミュレーション機能を実装するタグライブラリスタブJS |"
+  }
+}

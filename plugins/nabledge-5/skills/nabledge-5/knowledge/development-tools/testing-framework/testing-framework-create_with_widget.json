@@ -1,0 +1,157 @@
+{
+  "id": "testing-framework-create_with_widget",
+  "title": "業務画面テンプレートとUI部品を使用して業務画面JSPを作成する",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/guide/widget_usage/create_with_widget.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "画面のテンプレートを用意する",
+      "hints": [
+        "JSPテンプレート作成",
+        "taglibディレクティブ",
+        "業務画面テンプレート",
+        "DOCTYPE宣言",
+        "page_template",
+        "tagdir",
+        "ローカルJSPレンダリング",
+        "taglib宣言"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "画面をブラウザで表示する",
+      "hints": [
+        "ブラウザ表示確認",
+        "IE設定",
+        "ローカル画面確認",
+        "ブラウザモード",
+        "ドキュメントモード",
+        "project_structure"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "UI部品（ウィジェット）を配置していく",
+      "hints": [
+        "ウィジェット配置",
+        "自己終了エレメント",
+        "field:label",
+        "JSPウィジェット記述"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ウィジェットに定義されている属性について",
+      "hints": [
+        "name属性",
+        "sample属性",
+        "key属性",
+        "domain属性",
+        "dataFrom属性",
+        "hint属性",
+        "column:label",
+        "field:label",
+        "column:link",
+        "コード値定義",
+        "codeId",
+        "pattern",
+        "optionColumnName"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "画面遷移について",
+      "hints": [
+        "dummyUri",
+        "画面遷移",
+        "buttonウィジェット",
+        "紙芝居",
+        "遷移先JSP"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "ウィジェットの作成について",
+      "hints": [
+        "カスタムウィジェット作成",
+        "field:text",
+        "内線番号ウィジェット",
+        "共通ウィジェット"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "入力画面と確認画面の共用",
+      "hints": [
+        "入力画面確認画面共用",
+        "n:confirmationPage",
+        "n:forInputPage",
+        "n:forConfirmationPage",
+        "confirmationPage"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "業務画面JSPの例",
+      "hints": [
+        "業務画面JSP例",
+        "入力画面",
+        "確認画面",
+        "一覧検索画面",
+        "詳細画面"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "入力画面",
+      "hints": [
+        "入力画面サンプル",
+        "W11AC0201.jsp",
+        "入力画面JSP例"
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "確認画面",
+      "hints": [
+        "確認画面サンプル",
+        "W11AC0202.jsp",
+        "確認画面JSP例"
+      ]
+    },
+    {
+      "id": "s11",
+      "title": "一覧・検索画面",
+      "hints": [
+        "一覧検索画面サンプル",
+        "W11AC0101.jsp",
+        "一覧画面JSP例"
+      ]
+    },
+    {
+      "id": "s12",
+      "title": "詳細画面",
+      "hints": [
+        "詳細画面サンプル",
+        "W11AC0102.jsp",
+        "詳細画面JSP例"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "業務画面JSPに業務画面テンプレート・UI部品を使用するための必須記述内容:\n\n1. **DOCTYPE宣言**:\n```html\n<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n```\n\n2. **ローカルJSPレンダリング機能スクリプトタグ**（本番稼働時はコメントアウトすること）:\n```jsp\n<!-- <%/* --> <script src=\"js/devtool.js\"></script><meta charset=\"utf-8\"><body> <!-- */%> -->\n```\n\n3. **JSPディレクティブ**:\n```jsp\n<%@page language=\"java\" contentType=\"text/html; charset=UTF-8\" pageEncoding=\"UTF-8\" %>\n```\n\n4. **タグライブラリ宣言**:\n\n| prefix | tagdir/uri | 提供されるUI部品 |\n|---|---|---|\n| `t` | `/WEB-INF/tags/template` | 業務画面テンプレート |\n| `field` | `/WEB-INF/tags/widget/field` | 入力項目・表示項目 |\n| `button` | `/WEB-INF/tags/widget/button` | ボタン |\n| `table` | `/WEB-INF/tags/widget/table` | 検索結果等テーブル表示 |\n| `column` | `/WEB-INF/tags/widget/column` | 表の列 |\n| `tab` | `/WEB-INF/tags/widget/tab` | タブ形式 |\n| `link` | `/WEB-INF/tags/widget/link` | リンク |\n| `spec` | `/WEB-INF/tags/widget/spec` | 画面状態設計情報（[spec_condition_widget](testing-framework-spec_condition.json) 参照） |\n| `n` | `http://tis.co.jp/nablarch` | Nablarchタグライブラリ（`nablarch.jar`同梱） |\n\n5. **業務画面テンプレートの使用** (`t:テンプレート名`):\n```jsp\n<t:page_template\n    title=\"画面タイトル\"\n    confirmationPageTitle=\"確認画面タイトル（入力・確認画面でJSPを共用しない場合は不要）\">\n  <jsp:attribute name=\"contentHtml\">\n      <%-- 業務領域 --%>\n  </jsp:attribute>\n</t:page_template>\n```\n\nサンプルファイル: [このファイル](assets/testing-framework-create_with_widget/sample_template.jsp)",
+    "s2": "作成した業務画面JSPは業務JSP作成用プロジェクトのサブシステムIDのディレクトリ配下に配置する（[project_structure](testing-framework-project_structure.json) 参照）。ローカル画面確認.batを実行すると作成した画面に遷移してレイアウト確認が可能。\n\n> **重要**: IEを使用する場合は開発者ツールで以下の設定を確認すること。\n> - **ブラウザモード**: 使用しているIEのバージョンと同じ\n> - **ドキュメントモード**: 標準\n>\n> 開発者ツールを開いた状態では画面表示が崩れる場合があるため、設定確認後はツールを閉じること。\n\n![IE開発者ツール設定例（IE10）](assets/testing-framework-create_with_widget/display_settings_for_ie.png)",
+    "s3": "業務画面テンプレートのJSPにウィジェットをタグ形式で記述して配置する。具体的なウィジェット使用方法は [example](#s7) を参照。\n\n> **重要**: ウィジェットは自己終了エレメントとして記述しないこと。自己終了エレメントとして記述すると、そのタグ以降の内容がブラウザで表示されなくなる。\n>\n> OK（正しい記述）:\n> ```jsp\n> <field:label title=\"ログインID\" sample=\"login-id\"></field:label>\n> ```\n>\n> NG（自己終了エレメント）:\n> ```jsp\n> <field:label title=\"ログインID\" sample=\"login-id\" />\n> ```",
+    "s4": "**name属性**:\n- PG・UT工程で定義するため設計段階では空で定義可\n- ローカル表示でname属性が必要なウィジェットが一部あるため各ウィジェットのガイドを確認\n- 設計時に物理名の設定が困難な場合は項目論理名を指定（PG担当者が実装開始時に物理名へ変換必要）\n\n**sample属性**:\n- ブラウザ表示時のダミー値を設定\n- 複数値は `|` 区切りで記載（プルダウン・チェックボックス・ラジオボタン・テーブル等）\n- `[]` で囲んだ値は初期表示時の選択状態になる\n- sample属性未指定時: `codeId`・`pattern`・`optionColumnName`属性値を元に `js/devtool/resource/コード値定義.js` からコード名称を取得\n\n**key属性**（`<column:label>` 等）:\n- レコードセットのキー名を指定する属性。PG・UT工程で決定するため設計段階では指定不要\n- key属性未指定かつsample属性が未指定または空文字の場合、別項目のsample値が表示される問題あり → keyに適当な文字列を指定するか、sampleにスペース文字を指定\n\n**domain属性**:\n- 画面項目定義出力のためにドメイン物理名を記載\n- `field:label`・`column:label`・`column:link` ではHTMLのclass属性にドメイン物理名を出力し表示レイアウトを制御\n- デフォルト動作: `Number`ドメインが指定された項目は右寄せ表示\n\n**dataFrom属性**:\n- 表示データ取得元を `表示情報取得元.表示項目名` の形式で記載\n\n**hint属性**:\n- 指定した文言が項目に対する備考として表示\n\n設計段階で決定できない必須属性は空で定義しておけばよい。",
+    "s5": "buttonウィジェットの `dummyUri` 属性を使用して、JSPをブラウザで直接開いた場合のボタンクリック時の遷移先JSPを指定できる。\n\n- 顧客への説明をより容易にするための属性であり、条件によって遷移先を変えるなど実際の遷移の忠実な再現はできない\n- 実際の遷移はPG・UT工程で実装される\n- 不要な場合は `dummyUri` 属性の指定は不要",
+    "s6": "「住所」「電話番号」「氏名」など典型的で複数画面で使用されうる項目については、内線番号ウィジェット（`field:text`ウィジェットの組み合わせで作成）のように各プロジェクトでカスタムウィジェットを作成することを推奨。\n\n作成方法の詳細はUI開発基盤用プロジェクトテンプレートの内線番号ウィジェットの実装を参照。",
+    "s7": "`field`ウィジェットの入力項目は入力画面と確認画面で自動的に切り替わる（入力画面: テキストボックス、確認画面: 表示のみ）。\n\n入力画面と確認画面を同一JSPで共用する場合、確認画面は以下のように作成:\n```jsp\n<!DOCTYPE html>\n<!-- <%/* --> <script src=\"js/devtool.js\"></script><meta charset=\"utf-8\"><body> <!-- */%> -->\n<%@ taglib prefix=\"n\" uri=\"http://tis.co.jp/nablarch\" %>\n<n:confirmationPage path=\"./W11AC0201.jsp\" />\n```\n\n入力画面と確認画面で異なる項目を表示する場合:\n- 入力画面専用項目: `<n:forInputPage>` で囲む\n- 確認画面専用項目: `<n:forConfirmationPage>` で囲む",
+    "s8": "業務画面JSPの作成例:\n\n- [入力画面](#)\n- [確認画面](#)\n- [検索・一覧画面](#)\n- [詳細画面](#)",
+    "s9": "入力画面サンプル: [W11AC0201.jsp](assets/testing-framework-create_with_widget/W11AC0201.jsp)\n\n![入力画面表示例](assets/testing-framework-create_with_widget/view_input.png)",
+    "s10": "確認画面サンプル: [W11AC0202.jsp](assets/testing-framework-create_with_widget/W11AC0202.jsp)\n\n![確認画面表示例](assets/testing-framework-create_with_widget/view_confirm.png)",
+    "s11": "一覧・検索画面サンプル: [W11AC0101.jsp](assets/testing-framework-create_with_widget/W11AC0101.jsp)\n\n![一覧・検索画面表示例](assets/testing-framework-create_with_widget/view_search.png)",
+    "s12": "詳細画面サンプル: [W11AC0102.jsp](assets/testing-framework-create_with_widget/W11AC0102.jsp)\n\n![詳細画面表示例](assets/testing-framework-create_with_widget/view_detail.png)"
+  }
+}

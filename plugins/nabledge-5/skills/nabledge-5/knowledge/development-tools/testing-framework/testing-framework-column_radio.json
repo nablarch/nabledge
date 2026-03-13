@@ -1,0 +1,64 @@
+{
+  "id": "testing-framework-column_radio",
+  "title": "テーブル行選択用ラジオボタンカラムウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_jsp_widgets/column_radio.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "column:radio",
+        "table_search_result",
+        "table_plain",
+        "table_treelist",
+        "ラジオボタンカラム",
+        "テーブル行選択",
+        "JSPウィジェット"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "key",
+        "title",
+        "cssClass",
+        "name",
+        "value",
+        "disabled",
+        "readonly",
+        "width",
+        "colspan",
+        "rowspan",
+        "dataFrom",
+        "comment",
+        "initialValueDesc",
+        "属性値一覧",
+        "ラジオボタン属性",
+        "行選択"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "radio.tag",
+        "listSearchResult",
+        "nablarch.js",
+        "nablarch.less",
+        "base.less",
+        "タグファイル",
+        "内部構造",
+        "部品一覧"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[column_radio](testing-framework-column_radio.json) は、[table_search_result](testing-framework-table_search_result.json)、[table_plain](testing-framework-table_plain.json)、[table_treelist](testing-framework-table_treelist.json) と組み合わせて使用し、一覧テーブルから後続処理の対象行を複数行選択するためのラジオボタンから成るカラムを出力する。\n\n**設計成果物（ローカル動作）**:\n```jsp\n<table:search_result\n  title         = \"検索結果\"\n  sampleResults = \"15\">\n  <column:radio\n    title = \"選択\">\n  </column:radio>\n</table:search_result>\n```\n\n**実装成果物（サーバ動作）**:\n```jsp\n<table:search_result\n  title               = \"検索結果\"\n  searchUri           = \"/action/ss11AC/W11AC01Action/RW11AC0102\"\n  listSearchInfoName  = \"11AC_W11AC01\"\n  resultSetName       = \"searchResult\"\n  sampleResults       = \"15\">\n  <column:radio\n    title    = \"選択\"\n    key      = \"userId\"\n    name     = \"W11AC05.userId\">\n  </column:radio>\n</table:search_result>\n```",
+    "s2": "入力画面ではラジオボタンが出力され、確認画面では選択行に「●」マークが表示される。\n\n属性値凡例: ◎ 必須属性、○ 任意属性、× 無効（指定しても効果なし）\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| key | 選択状態の場合にサーバに送信する値を行データから取得するキー | 文字列 | ◎ | × | |\n| title | カラムヘッダに表示する文字列 | 文字列 | ◎ | ◎ | |\n| cssClass | 各カラムに指定するCSSクラス | 文字列 | ○ | ○ | |\n| name | ラジオボタンのname属性 | 文字列 | ◎ | ○ | |\n| value | ラジオボタン選択時に送信する値 | 文字列 | ○ | × | 指定されない場合、行データからkey属性に指定した名前で取得した値を使用する |\n| disabled | サーバに対する入力値の送信を抑制するかどうか | 真偽値 | ○ | ○ | デフォルト値は'false' |\n| readonly | 編集可能かどうか | 真偽値 | ○ | ○ | デフォルト値は'false' |\n| width | カラムの横幅の指定 | 文字列 | ○ | ○ | |\n| colspan | 横方向に結合するカラム数 | 数値 | ○ | ○ | 使用方法は [table_row](testing-framework-table_row.json) を参照 |\n| rowspan | 縦方向に結合するカラム数 | 数値 | ○ | ○ | 使用方法は [table_row](testing-framework-table_row.json) を参照 |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 「表示情報取得元」.「表示項目名」の形式で設定する |\n| comment | ラジオボタンについての備考 | 文字列 | × | × | 設計書表示時に画面項目定義の「備考」に表示される |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書表示時に画面項目定義の「備考」に表示される |",
+    "s3": "| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/column/radio.tag | [column_radio](testing-framework-column_radio.json) |\n| /WEB-INF/tags/listSearchResult/*.tag | Nablarch検索結果テーブルタグファイル |\n| /js/jsp/taglib/nablarch.js | `<n:radioButton>` のエミュレーション機能を実装するタグライブラリスタブJS |\n| /css/style/nablarch.less | Nablarch関連スタイル定義（テーブルの配色などを定義） |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義（ラジオボタンに関する定義を含む） |"
+  }
+}

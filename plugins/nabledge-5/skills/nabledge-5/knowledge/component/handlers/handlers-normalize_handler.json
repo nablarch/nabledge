@@ -1,0 +1,70 @@
+{
+  "id": "handlers-normalize_handler",
+  "title": "ノーマライズハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/normalize_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/NormalizationHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/normalizer/TrimNormalizer.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/normalizer/Normalizer.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "NormalizationHandler",
+        "nablarch.fw.web.handler.NormalizationHandler",
+        "ノーマライズハンドラ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "モジュール依存関係",
+        "com.nablarch.framework"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "hints": [
+        "multipart_handler",
+        "ハンドラ配置順序",
+        "リクエストパラメータアクセス",
+        "ノーマライズハンドラ配置"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "標準で提供しているノーマライズ処理",
+      "hints": [
+        "TrimNormalizer",
+        "nablarch.fw.web.handler.normalizer.TrimNormalizer",
+        "ホワイトスペース除去",
+        "リクエストパラメータノーマライズ"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "ノーマライズ処理を追加する",
+      "hints": [
+        "Normalizer",
+        "nablarch.fw.web.handler.normalizer.Normalizer",
+        "canNormalize",
+        "normalize",
+        "カスタムノーマライザ",
+        "ノーマライザ追加",
+        "SampleNormalizer"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.web.handler.NormalizationHandler`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "s3": "[multipart_handler](handlers-multipart_handler.json#s1) より後ろに配置すること。このハンドラはリクエストパラメータにアクセスするため、[multipart_handler](handlers-multipart_handler.json#s1) よりも後ろに設定する必要がある。",
+    "s4": "リクエストパラメータの前後のホワイトスペースを除去する `TrimNormalizer` を標準で提供している。ホワイトスペースの定義は `Character#isWhitespace` を参照。",
+    "s5": "デフォルトで `TrimNormalizer` (前後のホワイトスペース除去) が有効。\n\nプロジェクト要件で追加が必要な場合は `Normalizer` を実装してハンドラに設定する。複数設定した場合は上から順に実行される。順序性がある場合は設定順に注意すること。\n\nノーマライザの実装例:\n\n```java\npublic class SampleNormalizer implements Normalizer {\n    @Override\n    public boolean canNormalize(final String key) {\n        return key.contains(\"num\");\n    }\n    @Override\n    public String[] normalize(final String[] value) {\n        final String[] result = new String[value.length];\n        for (int i = 0; i < value.length; i++) {\n            result[i] = value[i].replace(\",\", \"\");\n        }\n        return result;\n    }\n}\n```\n\nコンポーネント設定例:\n\n```xml\n<component class=\"nablarch.fw.web.handler.NormalizationHandler\">\n  <property name=\"normalizers\">\n    <list>\n      <component class=\"sample.SampleNormalizer\" />\n      <component class=\"nablarch.fw.web.handler.normalizer.TrimNormalizer\" />\n    </list>\n  </property>\n</component>\n```\n\n> **補足**: ノーマライザを設定しない場合、デフォルトのTrimNormalizerが自動的に適用される。\n> ```xml\n> <component class=\"nablarch.fw.web.handler.NormalizationHandler\" />\n> ```"
+  }
+}

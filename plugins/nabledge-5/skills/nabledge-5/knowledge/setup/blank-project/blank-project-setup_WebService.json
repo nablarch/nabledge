@@ -1,0 +1,94 @@
+{
+  "id": "blank-project-setup_WebService",
+  "title": "RESTfulウェブサービスプロジェクトの初期セットアップ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_WebService.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "RESTfulウェブサービスプロジェクトの初期セットアップ",
+      "hints": [
+        "RESTfulウェブサービスプロジェクト初期セットアップ",
+        "プロジェクト生成",
+        "動作確認",
+        "JAX-RS",
+        "ウェブサービス初期化"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "事前準備",
+      "hints": [
+        "事前準備",
+        "Firefox",
+        "Chrome",
+        "ブラウザインストール",
+        "起動確認"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "生成するプロジェクトの概要",
+      "hints": [
+        "プロジェクト概要",
+        "Mavenプロジェクト",
+        "H2 Database",
+        "Jersey用アダプタ",
+        "ルーティングアダプタ",
+        "単一プロジェクト構成",
+        "jaxrs_adaptor",
+        "router_adaptor"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ブランクプロジェクト作成",
+      "hints": [
+        "ブランクプロジェクト作成",
+        "Maven archetype",
+        "nablarch-jaxrs-archetype",
+        "archetypeVersion",
+        "mvn archetype:generate",
+        "groupId",
+        "artifactId",
+        "5u25",
+        "5u24"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "疎通確認",
+      "hints": [
+        "疎通確認",
+        "自動テスト",
+        "SampleActionTest",
+        "mvn test",
+        "waitt:run-headless",
+        "起動確認",
+        "localhost:9080",
+        "JSON",
+        "XML",
+        "SampleAction"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "補足",
+      "hints": [
+        "補足",
+        "H2データ確認",
+        "ブランクプロジェクト組み込みツール",
+        "firststep_complement"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "RESTfulウェブサービスプロジェクトの初期セットアップで行う内容:\n\n1. RESTfulウェブサービスプロジェクトの生成\n2. RESTfulウェブサービスプロジェクトの動作確認",
+    "s2": ":ref:`setup_webService_startup_test` で使用するため、以下のいずれかをインストールする。\n\n- Firefox\n- Chrome",
+    "s3": "| 項目 | 説明 |\n|---|---|\n| プロジェクト種別 | Mavenプロジェクト |\n| プロジェクト構成 | 単一プロジェクト構成 |\n| 使用DB | H2 Database Engine（アプリケーションに組み込み） |\n| 組み込まれているアダプタ | Jersey用アダプタ（[jaxrs_adaptor](../../component/adapters/adapters-jaxrs_adaptor.json#s1)）、ルーティングアダプタ（[router_adaptor](../../component/adapters/adapters-router_adaptor.json#s1)） |\n| 含まれるもの | NablarchのRESTfulウェブサービス用の基本設定、疎通確認用RESTfulウェブサービス、Mavenと連動して動作するツールの初期設定（[about_maven_parent_module](blank-project-MavenModuleStructures.json#s3)） |\n\nディレクトリ構成は [../MavenModuleStructures/index](blank-project-MavenModuleStructures.json) を参照。",
+    "s4": "Nablarchが提供するアーキタイプを使用してブランクプロジェクトを生成する。\n\nまず、カレントディレクトリをブランクプロジェクトを作成したいディレクトリ（任意のディレクトリで可）に変更する。\n\nその後、以下のコマンドを実行する。\n\n```bat\nmvn archetype:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArtifactId=nablarch-jaxrs-archetype -DarchetypeVersion={nablarch_version}\n```\n\n| 設定値 | 説明 |\n|---|---|\n| archetypeVersion | 使用したいアーキタイプのバージョン（Nablarch 5u25以降を指定すること） |\n\n> **補足**: Nablarch 5u24以前でブランクプロジェクトを生成する場合は、`archetype:generate` を `org.apache.maven.plugins:maven-archetype-plugin:2.4:generate` に変更して実行すること。例: `mvn org.apache.maven.plugins:maven-archetype-plugin:2.4:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArtifactId=nablarch-jaxrs-archetype -DarchetypeVersion=5u24`\n\nコマンド実行後、以下の項目の入力が求められる:\n\n| 入力項目 | 説明 | 設定例 |\n|---|---|---|\n| groupId | グループID（通常はパッケージ名） | `com.example` |\n| artifactId | アーティファクトID | `myapp-jaxrs` |\n| version | バージョン番号 | `0.1.0` |\n| package | パッケージ（通常はグループIDと同じ） | `com.example` |\n\n> **重要**: groupIdおよびpackageはJavaのパッケージ名にマッピングされる。英小文字・数字・ドットのみ使用し、ハイフンは使用不可。\n\nプロジェクト情報の入力が終わると、`Y: :` と表示される。\n\n- 入力した内容をもとにひな形を生成する場合は「Y」を入力する。\n- プロジェクト情報の入力をやり直したい場合は「N」を入力する。\n\nコマンドが正常終了した場合、ブランクプロジェクトがカレントディレクトリ配下に作成される。",
+    "s5": "## 自動テスト\n\nアーキタイプから生成したプロジェクトに含まれるユニットテスト:\n\n| ユニットテストのクラス | テスト内容 |\n|---|---|\n| SampleActionTest | DBアクセスを伴うテストが可能かを確認する |\n\n```\ncd myapp-jaxrs\nmvn test\n```\n\n成功時のログ例:\n```\n[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0\n[INFO] BUILD SUCCESS\n```\n\n## 起動確認\n\n生成したプロジェクトに含まれるサービス:\n\n| クラス | 内容 |\n|---|---|\n| SampleAction | RESTfulウェブサービス動作確認用。JSONレスポンスとXMLレスポンスのサービスが存在する。 |\n\nサービスの起動手順:\n\n```\ncd myapp-jaxrs\nmvn compile\nmvn waitt:run-headless\n```\n\n起動成功時のログ: `initialization completed.`\n\n**JSONサービス確認**: `http://localhost:9080/find/json`（末尾「/」不要）\n\n成功時のレスポンス例:\n```json\n[{\"userId\":1,\"kanjiName\":\"名部楽太郎\",\"kanaName\":\"なぶらくたろう\"},{\"userId\":2,\"kanjiName\":\"名部楽次郎\",\"kanaName\":\"なぶらくじろう\"}]\n```\n\n> **注意**: FireFoxまたはChromeの代わりにInternet Explorer 11を使用すると、ダウンロードするか否かの確認メッセージが表示される。\n\n**XMLサービス確認**: `http://localhost:9080/find/xml`（末尾「/」不要）\n\n成功時のレスポンス例:\n```xml\n<userList>\n  <sampleUser>\n    <kanaName>なぶらくたろう</kanaName>\n    <kanjiName>名部楽太郎</kanjiName>\n    <userId>1</userId>\n  </sampleUser>\n  <sampleUser>\n    <kanaName>なぶらくじろう</kanaName>\n    <kanjiName>名部楽次郎</kanjiName>\n    <userId>2</userId>\n  </sampleUser>\n</userList>\n```\n\n疎通確認に失敗する場合は :ref:`firstStepGenerateJaxrsBlankProject` からやり直すこと。",
+    "s6": "H2のデータ確認方法やブランクプロジェクトに組み込まれているツールについては [../firstStep_appendix/firststep_complement](blank-project-firststep_complement.json) を参照。"
+  }
+}

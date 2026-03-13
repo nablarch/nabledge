@@ -1,0 +1,35 @@
+{
+  "id": "web-application-client_create1",
+  "title": "登録画面初期表示の作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/client_create/client_create1.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "登録画面初期表示の作成",
+      "hints": [
+        "HttpResponse",
+        "HttpRequest",
+        "ExecutionContext",
+        "EntityList",
+        "UniversalDao",
+        "Industry",
+        "ClientAction",
+        "登録画面初期表示",
+        "プルダウン実装",
+        "URLマッピング",
+        "業務アクション",
+        "リクエストスコープ",
+        "routes.xml",
+        "n:select",
+        "n:text",
+        "n:form"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "### JSP実装\n\n:ref:`tag` を使用してフォームを作成する。\n\n- `n:text`: テキスト入力フォーム（:ref:`tag-input_form` 参照）\n- `n:select`: プルダウン。`listName` 属性にリクエストスコープの業種リスト名を指定（:ref:`tag-selection` 参照）\n\n```jsp\n<n:form>\n    <n:text name=\"tmp\" cssClass=\"form-control input-text\"/>\n    <n:select\n            listName=\"industries\"\n            elementValueProperty=\"industryCode\"\n            elementLabelProperty=\"industryName\"\n            name=\"tmp\"\n            withNoneOption=\"true\"\n            cssClass=\"btn dropdown-toggle\"/>\n    <n:button uri=\"tmp\" cssClass=\"btn btn-raised btn-success\">登録</n:button>\n</n:form>\n```\n\n### 業務アクションメソッド\n\n業務アクションメソッドのシグネチャが以下を満たさない場合、**404エラーが発生する**:\n\n```java\npublic HttpResponse methodName(HttpRequest request, ExecutionContext context)\n```\n\nプルダウン用データは [universal_dao](../../component/libraries/libraries-universal_dao.json#s1) で全件取得し、リクエストスコープに登録してJSPに渡す:\n\n```java\npublic HttpResponse input(HttpRequest request, ExecutionContext context) {\n    EntityList<Industry> industries = UniversalDao.findAll(Industry.class);\n    context.setRequestScopedVar(\"industries\", industries);\n    return new HttpResponse(\"/WEB-INF/view/client/create.jsp\");\n}\n```\n\n### URLマッピング（routes.xml）\n\n`http_request_router` でURLと業務アクションをマッピングする。\n\n> **補足**: routes.xmlは上から評価されるため、他のマッピングより前に設定する。\n\n```xml\n<routes>\n  <get path=\"/action/client\" to=\"Client#input\"/>\n</routes>\n```\n\n### メニューリンク\n\n`/src/main/webapp/WEB-INF/view/common/menu.jsp` に [tag-a_tag](../../component/libraries/libraries-tag_reference.json) を使用してリンクを追加する:\n\n```jsp\n<ul class=\"nav navbar-nav\">\n  <!-- その他のリンクは省略 -->\n  <li>\n    <n:a href=\"/action/client\">顧客登録</n:a>\n  </li>\n</ul>\n```"
+  }
+}

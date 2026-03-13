@@ -1,0 +1,101 @@
+{
+  "id": "nablarch-batch-architecture",
+  "title": "アーキテクチャ概要",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/architecture.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/DataReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/DispatchHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/StatusCodeConvertHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseRecordReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/FileDataReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/ValidatableFileDataReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/ResumeDataReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchAction.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/FileBatchAction.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/NoInputDataBatchAction.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/action/AsyncMessageSendAction.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/ProcessStopHandler.ProcessStop.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "Nablarchバッチアプリケーションの構成",
+      "hints": [
+        "都度起動バッチ",
+        "常駐バッチ",
+        "db_messaging推奨",
+        "スタンドアロン",
+        "Main",
+        "アーキテクチャ構成",
+        "取り込み遅延",
+        "マルチスレッド",
+        "ハンドラキュー",
+        "最小ハンドラ構成",
+        "StatusCodeConvertHandler",
+        "GlobalErrorHandler",
+        "DatabaseConnectionManagementHandler",
+        "TransactionManagementHandler",
+        "RequestPathJavaPackageMapping",
+        "MultiThreadExecutionHandler",
+        "LoopHandler",
+        "DblessLoopHandler",
+        "RetryHandler",
+        "ProcessResidentHandler",
+        "ProcessStopHandler",
+        "DataReadHandler",
+        "ThreadContextHandler",
+        "ThreadContextClearHandler",
+        "DuplicateProcessCheckHandler",
+        "FileRecordWriterDisposeHandler"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "リクエストパスによるアクションとリクエストIDの指定",
+      "hints": [
+        "-requestPath",
+        "リクエストパス",
+        "アクションクラス",
+        "リクエストID",
+        "コマンドライン引数",
+        "データリーダ",
+        "DatabaseRecordReader",
+        "FileDataReader",
+        "ValidatableFileDataReader",
+        "ResumeDataReader",
+        "DataReader",
+        "data_format",
+        "data_bind"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Nablarchバッチアプリケーションの処理の流れ",
+      "hints": [
+        "DataReader",
+        "DispatchHandler",
+        "StatusCodeConvertHandler",
+        "Result",
+        "処理フロー",
+        "ハンドラキュー",
+        "nablarch.fw.DataReader",
+        "nablarch.fw.handler.DispatchHandler",
+        "nablarch.fw.Result",
+        "nablarch.fw.handler.StatusCodeConvertHandler",
+        "バッチアクション",
+        "BatchAction",
+        "FileBatchAction",
+        "NoInputDataBatchAction",
+        "AsyncMessageSendAction",
+        "data_format",
+        "data_bind"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "Nablarchバッチアプリケーションは以下の2種別に分かれる。\n\n**都度起動バッチ**: 日次・月次など定期的にプロセスを起動してバッチ処理を実行する。\n\n**常駐バッチ**: プロセスを起動し続け、一定間隔でバッチ処理を実行する。オンライン処理で作成された要求データを定期的に一括処理する場合などに使用する。\n\n> **重要**: 常駐バッチはマルチスレッド実行時に、処理が遅いスレッドの終了を他のスレッドが待つことで、要求データの取り込み遅延が発生する可能性がある。新規開発プロジェクトでは常駐バッチではなく :ref:`db_messaging` を使用することを推奨する。既存プロジェクトで上記問題が発生する可能性がある場合（既に発生している場合）は :ref:`db_messaging` への変更を検討すること。\n\nNablarchバッチアプリケーションはjavaコマンドから直接起動するスタンドアロンアプリケーションとして実行する。\n\n![アプリケーション構成](assets/nablarch-batch-architecture/application_structure.png)\n\n**:ref:`main` (Main)**: 起点となるメインクラス。javaコマンドから直接起動し、システムリポジトリやログの初期化処理を行い、ハンドラキューを実行する。\n\n## 提供ハンドラ一覧\n\n| カテゴリ | ハンドラ |\n|---|---|\n| リクエスト/レスポンス変換 | [status_code_convert_handler](../../component/handlers/handlers-status_code_convert_handler.json#s1), [data_read_handler](../../component/handlers/handlers-data_read_handler.json#s1) |\n| バッチ実行制御 | [duplicate_process_check_handler](../../component/handlers/handlers-duplicate_process_check_handler.json#s1), [request_path_java_package_mapping](../../component/handlers/handlers-request_path_java_package_mapping.json#s1), [multi_thread_execution_handler](../../component/handlers/handlers-multi_thread_execution_handler.json#s1), [loop_handler](../../component/handlers/handlers-loop_handler.json#s1), [dbless_loop_handler](../../component/handlers/handlers-dbless_loop_handler.json#s1), [retry_handler](../../component/handlers/handlers-retry_handler.json#s1), [process_resident_handler](../../component/handlers/handlers-process_resident_handler.json#s1), [process_stop_handler](../../component/handlers/handlers-process_stop_handler.json#s1) |\n| データベース関連 | [database_connection_management_handler](../../component/handlers/handlers-database_connection_management_handler.json#s1), [transaction_management_handler](../../component/handlers/handlers-transaction_management_handler.json#s1) |\n| エラー処理 | [global_error_handler](../../component/handlers/handlers-global_error_handler.json#s1) |\n| その他 | [thread_context_handler](../../component/handlers/handlers-thread_context_handler.json#s1), [thread_context_clear_handler](../../component/handlers/handlers-thread_context_clear_handler.json#s1), :ref:`ServiceAvailabilityCheckHandler`, [file_record_writer_dispose_handler](../../component/handlers/handlers-file_record_writer_dispose_handler.json#s1) |\n\n## 都度起動バッチの最小ハンドラ構成\n\n### DB接続有り\n\n| No. | ハンドラ | スレッド | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|---|\n| 1 | [status_code_convert_handler](../../component/handlers/handlers-status_code_convert_handler.json#s1) | メイン | — | ステータスコードをプロセス終了コードに変換 | — |\n| 2 | [global_error_handler](../../component/handlers/handlers-global_error_handler.json#s1) | メイン | — | — | 実行時例外/エラー時にログ出力 |\n| 3 | [database_connection_management_handler](../../component/handlers/handlers-database_connection_management_handler.json#s1)（初期処理/終了処理用） | メイン | DB接続を取得 | DB接続を解放 | — |\n| 4 | [transaction_management_handler](../../component/handlers/handlers-transaction_management_handler.json#s1)（初期処理/終了処理用） | メイン | トランザクション開始 | トランザクションコミット | トランザクションロールバック |\n| 5 | [request_path_java_package_mapping](../../component/handlers/handlers-request_path_java_package_mapping.json#s1) | メイン | コマンドライン引数をもとに呼び出すアクションを決定 | — | — |\n| 6 | [multi_thread_execution_handler](../../component/handlers/handlers-multi_thread_execution_handler.json#s1) | メイン | サブスレッドを作成し後続ハンドラを並行実行 | 全スレッドの正常終了まで待機 | 処理中スレッドが完了するまで待機し起因例外を再送出 |\n| 7 | [database_connection_management_handler](../../component/handlers/handlers-database_connection_management_handler.json#s1)（業務処理用） | サブ | DB接続を取得 | DB接続を解放 | — |\n| 8 | [loop_handler](../../component/handlers/handlers-loop_handler.json#s1) | サブ | 業務トランザクション開始 | コミット間隔毎に業務トランザクションをコミット。データリーダに処理対象データが残っていればループ継続 | 業務トランザクションをロールバック |\n| 9 | [data_read_handler](../../component/handlers/handlers-data_read_handler.json#s1) | サブ | データリーダでレコードを1件読み込み後続ハンドラに渡す。[実行時ID](../../component/libraries/libraries-log.json)を採番 | — | 読み込んだレコードをログ出力後、元例外を再送出 |\n\n### DB接続無し\n\n| No. | ハンドラ | スレッド | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|---|\n| 1 | [status_code_convert_handler](../../component/handlers/handlers-status_code_convert_handler.json#s1) | メイン | — | ステータスコードをプロセス終了コードに変換 | — |\n| 2 | [global_error_handler](../../component/handlers/handlers-global_error_handler.json#s1) | メイン | — | — | 実行時例外/エラー時にログ出力 |\n| 3 | [request_path_java_package_mapping](../../component/handlers/handlers-request_path_java_package_mapping.json#s1) | メイン | コマンドライン引数をもとに呼び出すアクションを決定 | — | — |\n| 4 | [multi_thread_execution_handler](../../component/handlers/handlers-multi_thread_execution_handler.json#s1) | メイン | サブスレッドを作成し後続ハンドラを並行実行 | 全スレッドの正常終了まで待機 | 処理中スレッドが完了するまで待機し起因例外を再送出 |\n| 5 | [dbless_loop_handler](../../component/handlers/handlers-dbless_loop_handler.json#s1) | サブ | — | データリーダに処理対象データが残っていればループ継続 | — |\n| 6 | [data_read_handler](../../component/handlers/handlers-data_read_handler.json#s1) | サブ | データリーダでレコードを1件読み込み後続ハンドラに渡す。[実行時ID](../../component/libraries/libraries-log.json)を採番 | — | 読み込んだレコードをログ出力後、元例外を再送出 |\n\n## 常駐バッチの最小ハンドラ構成\n\n都度起動バッチに加えて、以下のハンドラがメインスレッド側に追加される:\n- [thread_context_handler](../../component/handlers/handlers-thread_context_handler.json#s1)（[process_stop_handler](../../component/handlers/handlers-process_stop_handler.json#s1)のために必要）\n- [thread_context_clear_handler](../../component/handlers/handlers-thread_context_clear_handler.json#s1)\n- [retry_handler](../../component/handlers/handlers-retry_handler.json#s1)\n- [process_resident_handler](../../component/handlers/handlers-process_resident_handler.json#s1)\n- [process_stop_handler](../../component/handlers/handlers-process_stop_handler.json#s1)\n\n| No. | ハンドラ | スレッド | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|---|\n| 1 | [status_code_convert_handler](../../component/handlers/handlers-status_code_convert_handler.json#s1) | メイン | — | ステータスコードをプロセス終了コードに変換 | — |\n| 2 | [thread_context_clear_handler](../../component/handlers/handlers-thread_context_clear_handler.json#s1) | メイン | — | [thread_context_handler](../../component/handlers/handlers-thread_context_handler.json#s1)でスレッドローカルに設定した値を全て削除 | — |\n| 3 | [global_error_handler](../../component/handlers/handlers-global_error_handler.json#s1) | メイン | — | — | 実行時例外/エラー時にログ出力 |\n| 4 | [thread_context_handler](../../component/handlers/handlers-thread_context_handler.json#s1) | メイン | コマンドライン引数からリクエストID・ユーザID等のスレッドコンテキスト変数を初期化 | — | — |\n| 5 | [retry_handler](../../component/handlers/handlers-retry_handler.json#s1) | メイン | — | — | リトライ可能な実行時例外を捕捉し、リトライ上限未達の場合は後続ハンドラを再実行 |\n| 6 | [process_resident_handler](../../component/handlers/handlers-process_resident_handler.json#s1) | メイン | データ監視間隔ごとに後続ハンドラを繰り返し実行 | ループを継続 | ログ出力後、実行時例外はリトライ可能例外にラップして送出。エラーはそのまま再送出 |\n| 7 | [process_stop_handler](../../component/handlers/handlers-process_stop_handler.json#s1) | メイン | リクエストテーブルの処理停止フラグがオンの場合、後続ハンドラを実行せず`ProcessStop`を送出 | — | — |\n| 8 | [database_connection_management_handler](../../component/handlers/handlers-database_connection_management_handler.json#s1)（初期処理/終了処理用） | メイン | DB接続を取得 | DB接続を解放 | — |\n| 9 | [transaction_management_handler](../../component/handlers/handlers-transaction_management_handler.json#s1)（初期処理/終了処理用） | メイン | トランザクション開始 | トランザクションコミット | トランザクションロールバック |\n| 10 | [request_path_java_package_mapping](../../component/handlers/handlers-request_path_java_package_mapping.json#s1) | メイン | コマンドライン引数をもとに呼び出すアクションを決定 | — | — |\n| 11 | [multi_thread_execution_handler](../../component/handlers/handlers-multi_thread_execution_handler.json#s1) | メイン | サブスレッドを作成し後続ハンドラを並行実行 | 全スレッドの正常終了まで待機 | 処理中スレッドが完了するまで待機し起因例外を再送出 |\n| 12 | [database_connection_management_handler](../../component/handlers/handlers-database_connection_management_handler.json#s1)（業務処理用） | サブ | DB接続を取得 | DB接続を解放 | — |\n| 13 | [loop_handler](../../component/handlers/handlers-loop_handler.json#s1) | サブ | 業務トランザクション開始 | コミット間隔毎に業務トランザクションをコミット。データリーダに処理対象データが残っていればループ継続 | 業務トランザクションをロールバック |\n| 14 | [data_read_handler](../../component/handlers/handlers-data_read_handler.json#s1) | サブ | データリーダでレコードを1件読み込み後続ハンドラに渡す。[実行時ID](../../component/libraries/libraries-log.json)を採番 | — | 読み込んだレコードをログ出力後、元例外を再送出 |",
+    "s2": "コマンドライン引数 `-requestPath` で実行するアクションクラスとリクエストIDを指定する。\n\n```properties\n# 書式\n-requestPath=アクションのクラス名/リクエストID\n\n# 指定例\n-requestPath=com.sample.SampleBatchAction/BATCH0001\n```\n\nリクエストIDは各バッチプロセスの識別子として用いられる。同一の業務アクションクラスを実行するプロセスを複数起動する場合などは、リクエストIDが識別子となる。\n\n標準で提供されるデータリーダ:\n\n- `DatabaseRecordReader (データベース読み込み)`\n- `FileDataReader (ファイル読み込み)`\n- `ValidatableFileDataReader (バリデージョン機能付きファイル読み込み)`\n- `ResumeDataReader (レジューム機能付き読み込み)`\n\n> **補足**: 要件を満たせない場合は、`DataReader`インタフェースを実装したカスタムクラスを作成すること。\n\n> **重要**: `FileDataReader`および`ValidatableFileDataReader`はデータアクセスに[data_format](../../component/libraries/libraries-data_format.json#s1)を使用する。[data_bind](../../component/libraries/libraries-data_bind.json#s1)を使用する場合はこれらのデータリーダを使用しないこと。",
+    "s3": "1. :ref:`共通起動ランチャ(Main) <main>` がハンドラキューを実行する。\n2. `データリーダ(DataReader)` が入力データを読み込み、データレコードを1件ずつ提供する。\n3. `ディスパッチハンドラ(DispatchHandler)` がコマンドライン引数（-requestPath）で指定するリクエストパスを元にアクションクラスを特定し、ハンドラキューの末尾に追加する。\n4. アクションクラスはフォームクラスやエンティティクラスを使用して、データレコード1件ごとの業務ロジックを実行する。\n5. アクションクラスは処理結果を示す `Result` を返却する。\n6. 処理対象データがなくなるまで2〜5を繰り返す。\n7. `ステータスコード→プロセス終了コード変換ハンドラ(StatusCodeConvertHandler)` が処理結果のステータスコードをプロセス終了コードに変換し、バッチアプリケーションの処理結果として返す。\n\n標準で提供されるアクションクラス:\n\n- `BatchAction (汎用的なバッチアクションのテンプレートクラス)`\n- `FileBatchAction (ファイル入力のバッチアクションのテンプレートクラス)`\n- `NoInputDataBatchAction (入力データを使用しないバッチアクションのテンプレートクラス)`\n- `AsyncMessageSendAction (応答不要メッセージ送信用のアクションクラス)`\n\n> **重要**: `FileBatchAction`はデータアクセスに[data_format](../../component/libraries/libraries-data_format.json#s1)を使用する。[data_bind](../../component/libraries/libraries-data_bind.json#s1)を使用する場合は他のアクションクラスを使用すること。"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "id": "libraries-file_path_management",
+  "title": "ファイルパス管理",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/file_path_management.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/util/FilePathSetting.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "機能概要",
+      "hints": [
+        "FilePathSetting",
+        "ファイルパス管理",
+        "論理名管理",
+        "ディレクトリ管理",
+        "拡張子管理"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-core",
+        "com.nablarch.framework",
+        "モジュール依存関係"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "使用方法",
+      "hints": [
+        "FilePathSetting",
+        "basePathSettings",
+        "fileExtensions",
+        "fileスキーム",
+        "classpathスキーム",
+        "コンポーネント設定",
+        "ファイルパス設定",
+        "filePathSetting"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "論理名が示すファイルパスを取得する",
+      "hints": [
+        "FilePathSetting",
+        "getFileWithoutCreate",
+        "getBaseDirectory",
+        "ファイルパス取得",
+        "論理名"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "ディレクトリや拡張子を論理名で管理する機能。ファイルの入出力機能では、論理名を指定するだけでそのディレクトリ配下のファイルへの入出力が実現できる。",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n```",
+    "s3": "`FilePathSetting` をコンポーネント設定ファイルに定義する。\n\n設定ポイント:\n- コンポーネント名は `filePathSetting` とすること\n- `basePathSettings` にディレクトリを設定する\n- `fileExtensions` に拡張子を設定する\n- 1つのディレクトリに複数の拡張子を設定する場合は論理名を複数設定する\n- 拡張子なしのファイルはその論理名の拡張子設定を省略する\n- スキームは `file` または `classpath` が使用可能。省略時は `classpath`\n- `classpath` スキームはパスがディレクトリとして存在している必要がある（jarなどのアーカイブ内のパスは指定不可）\n- パスにスペースを含めない\n\n> **重要**: classpathスキームは一部のWebアプリケーションサーバでは使用できない。JBoss/Wildflyではvfsというバーチャルファイルシステムが使用されるためclasspathスキームは使用不可。**fileスキームの使用を推奨する**。\n\n```xml\n<component name=\"filePathSetting\" class=\"nablarch.core.util.FilePathSetting\">\n  <property name=\"basePathSettings\">\n    <map>\n      <entry key=\"csv-input\" value=\"file:/var/nablarch/input\" />\n      <entry key=\"csv-output\" value=\"file:/var/nablarch/output\" />\n      <entry key=\"dat-input\" value=\"file:/var/nablarch/input\" />\n      <entry key=\"fixed-file-input\" value=\"file:/var/nablarch/input\" />\n    </map>\n  </property>\n  <property name=\"fileExtensions\">\n    <map>\n      <entry key=\"csv-input\" value=\"csv\" />\n      <entry key=\"csv-output\" value=\"csv\" />\n      <entry key=\"dat-input\" value=\"dat\" />\n      <!-- fixed-file-inputは拡張子が存在しないので設定しない -->\n    </map>\n  </property>\n</component>\n```",
+    "s4": "`FilePathSetting` を使用して論理名に対応するファイルパスを取得する。\n\n```java\n// /var/nablarch/input/users.csv\nFile users = filePathSetting.getFileWithoutCreate(\"csv-input\", \"users\")\n\n// /var/nablarch/output\nFile csvOutputDir = filePathSetting.getBaseDirectory(\"csv-output\");\n\n// /var/nablarch/input/users\nFile users = filePathSetting.getFileWithoutCreate(\"fixed-file-input\", \"users\")\n```"
+  }
+}

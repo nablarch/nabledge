@@ -1,0 +1,69 @@
+{
+  "id": "testing-framework-field_calendar",
+  "title": "カレンダー日付入力ウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_jsp_widgets/field_calendar.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "field:calendar",
+        "JSPウィジェット",
+        "カレンダー日付入力",
+        "ローカル動作",
+        "サーバ動作",
+        "title属性",
+        "name属性",
+        "required属性",
+        "hint属性",
+        "sample属性"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "field_calendar",
+        "field_base",
+        "id",
+        "domain",
+        "format",
+        "locale",
+        "sample",
+        "maxlength",
+        "readonly",
+        "disabled",
+        "example",
+        "cssClass",
+        "nameAlias",
+        "dataFrom",
+        "comment",
+        "initialValueDesc",
+        "日付フォーマット",
+        "属性値一覧",
+        "ローカル動作挙動",
+        "カレンダー日付入力ウィジェット属性"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "calendar.tag",
+        "base.tag",
+        "nablarch.js",
+        "base.less",
+        "部品一覧",
+        "タグライブラリスタブJS"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## コードサンプル\n\n**設計成果物(ローカル動作)**\n\n```jsp\n<field:calendar\n    title=\"日付\"\n    name=\"date1\"\n    required=\"true\"\n    hint=\"(入力例 ： 2012/05/12)\"\n    sample=\"2013/09/30\">\n</field:calendar>\n```\n\n**実装成果物(サーバ動作)**\n\n```jsp\n<field:calendar\n    title=\"日付\"\n    name=\"W99ZZ64.date1\"\n    required=\"true\"\n    hint=\"(入力例 ： 2012/05/12)\"\n    sample=\"2013/09/30\">\n</field:calendar>\n```",
+    "s2": "## 仕様\n\n[field_base](testing-framework-field_base.json) を用いて実装。共通仕様は [field_base](testing-framework-field_base.json) を参照。\n\n**ローカル動作時の挙動**:\n- 入力画面: `sample` に指定した値をテキストボックスの初期表示値として表示する\n- 確認画面: `sample` に指定した値をラベルとして表示する\n\n**属性値一覧** (◎ 必須属性 ○ 任意属性 × 無効)\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| id | htmlのid属性 | 文字列 | ○ | ○ | 省略時はname属性と同じ値。ローカル動作においてもid属性かname属性のいずれかは必須。 |\n| domain | 項目のドメイン型 | 文字列 | ○ | ○ | |\n| readonly | 編集可能かどうか | 真偽値 | ○ | ○ | デフォルトは 'false' |\n| disabled | サーバに対する入力値の送信を抑制するかどうか | 真偽値 | ○ | ○ | デフォルトは 'false' |\n| example | 具体的な入力例(placeholderなどの形式で表示) | 文字列 | ○ | ○ | |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ | |\n| nameAlias | 一つのエラーメッセージに対して複数の入力項目をハイライト表示する場合に指定 | 文字列 | ○ | × | |\n| format | 日付のフォーマット | 文字列 | ○ | ○ | デフォルトは 'yyyy/MM/dd' |\n| locale | 言語設定 | 文字列 | ○ | ○ | デフォルトは 'ja' |\n| sample | ローカル動作時に表示する日付 | 文字列 | × | ○ | |\n| maxlength | 入力文字数の上限 | 数値 | ○ | ○ | formatが未指定の場合は \"10\" |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 「表示情報取得元」.「表示項目名」の形式で設定 |\n| comment | カレンダーについての備考 | 文字列 | × | × | 設計書の画面項目定義の備考に表示される |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の画面項目定義の備考に表示される |",
+    "s3": "## 内部構造・改修時の留意点\n\n**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/calendar.tag | [field_calendar](testing-framework-field_calendar.json) |\n| /WEB-INF/tags/widget/field/base.tag | [field_base](testing-framework-field_base.json) |\n| /js/jsp/taglib/nablarch.js | `<n:text>` のエミュレーション機能を実装するタグライブラリスタブJS |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義。カレンダーに関する定義もここに含まれる。 |"
+  }
+}

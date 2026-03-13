@@ -1,0 +1,281 @@
+# Nablarch 5u6 リリースノート
+
+**公式ドキュメント**: [Nablarch 5u6 リリースノート](https://fintan.jp/page/252/)
+
+## Nablarch 5u6 リリースノート（変更・追加・不具合修正）
+
+## Nablarch 5u6 リリースノート
+
+Nablarch 5u5からの変更点。
+
+### バージョンアップ手順
+
+1. `pom.xml`の`<dependencyManagement>`セクションの`nablarch-bom`バージョンを`5u6`に変更する
+2. Mavenビルドを再実行する
+
+---
+
+## アプリケーションへの影響がある変更点（影響「あり」）
+
+### セキュアハンドラ追加・HTTPレスポンスハンドラからの移動（No.3）
+
+HTTPレスポンスハンドラから`XFrameOptions`プロパティが削除された。
+
+> **重要**: セキュアハンドラをHTTPレスポンスの後続ハンドラとして設定すること。X-Frame-OptionsにSAMEORIGIN以外の値を設定する場合は設定ファイルを別途作成すること。
+
+セキュアハンドラのデフォルトレスポンスヘッダ:
+- `X-Frame-Options: SAMEORIGIN`
+- `X-XSS-Protection: 1; mode=block`
+- `X-Content-Type-Options: nosniff`
+
+**モジュール**: `nablarch-fw-web 1.2.2`
+
+### マルチパートリクエストのヘッダサイズチェック追加（No.5）
+
+boundary内のヘッダ行が10KBを超えると400レスポンスを返すように変更（起因: `nablarch-fw-web 1.0.0`）。アプリケーション側の対処は不要。
+
+**モジュール**: `nablarch-fw-web 1.2.2`
+
+### ログマスキング変更（No.10）
+
+マスキング後の値の長さが元の値の長さに関係なく一律5文字になった（従来は元の値と同じ長さ）。アプリケーション側の対処は不要。
+
+**モジュール**: `nablarch-core 1.2.2`
+
+### BeanValidationStrategyのFQCN変更（No.15）
+
+`BeanValidationStrategy`が`nablarch-validation-ee`から`nablarch-fw-web`に移動したため、コンポーネント設定ファイルのFQCNを変更する必要がある。
+
+```xml
+<!-- 変更前 -->
+<component name="validationStrategy" class="nablarch.core.validation.ee.BeanValidationStrategy" />
+<!-- 変更後 -->
+<component name="validationStrategy" class="nablarch.common.web.validator.BeanValidationStrategy" />
+```
+
+**モジュール**: `nablarch-fw-web 1.2.2`, `nablarch-validation-ee 1.0.3`
+
+### 範囲バリデーション系メッセージのデフォルト変更（No.17）
+
+以下のアノテーションのデフォルトメッセージが変更された: `@Length`, `@Digits`, `@NumberRange`, `@DecimalRange`, `@Size`。
+
+> **重要**: No.16の対応により、BeanValidationのメッセージはNablarchのメッセージ管理から取得されるため、メッセージテンプレート内でEL式は使用不可。
+
+**モジュール**: `nablarch-validation-ee 1.0.3`
+
+### BeanValidationグループシーケンス機能の削除（No.19）
+
+`BeanValidationStrategy`のグループシーケンス機能が削除された。
+
+> **重要**: バージョンアップ後もグループシーケンス機能を使用したい場合は、旧バージョンの`BeanValidationStrategy`を参考にグループシーケンス機能を持った`ValidationStrategy`実装を作成し、`validationStrategy`という名前でコンポーネント設定ファイルに設定すること。
+
+**モジュール**: `nablarch-fw-web 1.2.2`, `nablarch-validation-ee 1.0.3`
+
+### InjectFormアノテーションのプレフィックス修正（No.21）
+
+プレフィックスから始まらないリクエストパラメータがフォームにコピーされる不具合を修正（起因: `nablarch-fw-web 1.2.1`）。
+
+> **重要**: アプリケーションで誤ったprefix指定をしている場合、バージョンアップ後に該当パラメータが受け取れなくなる（例: prefix="form"の場合、`id`パラメータが受け取れなくなる）。正しいprefix指定に修正すること。
+
+**モジュール**: `nablarch-fw-web 1.2.2`
+
+### @Digits小数部バリデーション修正（No.22）
+
+`@Digits`の`fraction`属性が0または未指定の場合でも小数部の桁数チェックが行われるように変更。`integer`属性が必須になった（起因: `nablarch-core-validation-ee 1.0.0`）。アプリケーション側の対処は不要。
+
+**モジュール**: `nablarch-core-validation-ee 1.0.3`
+
+### BigDecimal指数表現修正（No.23）
+
+`BigDecimal#toString()`で"0E-7"のような指数表現となるBigDecimalに対して`@Digits`での入力チェックが失敗する不具合を修正（起因: `nablarch-core-validation 1.0.0`）。アプリケーション側の対処は不要。
+
+**モジュール**: `nablarch-common-databind 1.0.1`, `nablarch-core 1.2.2`, `nablarch-core-beans 1.1.2`, `nablarch-core-dataformat 1.0.1`, `nablarch-core-jdbc 1.1.2`, `nablarch-core-validation 1.0.3`, `nablarch-fw 1.1.1`, `nablarch-fw-messaging-http 1.0.1`, `nablarch-fw-web-tag 1.0.3`
+
+### ValidationContextコンストラクタ変更（No.24）
+
+`ValidationContext`のコンストラクタから`StringResourceHolder`引数が削除された。コンストラクタを直接呼び出している場合は引数の`StringResourceHolder`を削除すること。
+
+**モジュール**: `nablarch-core-validation 1.0.3`
+
+### セッション追跡クッキーのセッションクッキー化（No.28）
+
+セッション追跡クッキーが有効期限付きクッキーからセッションクッキー（ブラウザを閉じると削除）に変更された。アプリケーション側の対処は不要。
+
+**モジュール**: `nablarch-fw-web 1.2.2`
+
+### セッションID改竄チェック削除（No.29）
+
+セッションIDに付与していたSHA-256ハッシュ値が削除された。
+
+> **重要**: セッションIDが変更されたため、バージョンアップ後も有効期限内の既存セッションはすべて無効になる。改竄されたセッションIDが送信されても改竄エラーが発生しなくなった。
+
+**モジュール**: `nablarch-fw-web 1.2.2`
+
+### BeanUtil BeansException変更（No.32）
+
+`BeansException`が`BeansException`をラップして例外送出しなくなった（性能改善）。
+
+> **重要**: `BeansException`がラップされていることを期待した例外処理をしている場合は修正が必要。
+
+**モジュール**: `nablarch-core-beans 1.1.2`
+
+### MailUtil#getMailRequesterがnullを返さなくなった（No.34）
+
+必須コンポーネントがコンポーネント定義に指定されなかった場合に適切なエラーメッセージを出すように変更。`MailUtil#getMailRequester`がnullを返さなくなったため、戻り値のnullを扱う実装をしている場合は修正すること。
+
+**モジュール**: `nablarch-mail-sender 1.0.1`, `nablarch-fw-web 1.2.1`, `nablarch-core 1.2.1`, `nablarch-common-auth 1.1.1`, `nablarch-common-code 1.2.1`
+
+### webプロファイル/batchプロファイル更新（No.36）
+
+bomを更新するとプロファイルのバージョン番号も更新される。過去バージョンのプロファイルを使用したい場合は明示的にバージョン番号を指定すること。
+
+主な変更: 汎用データフォーマット→データバインドに変更、BeanValidation追加、ユニバーサルDAO追加。
+
+**モジュール**: `nablarch-web 5u6`, `nablarch-batch 5u6`
+
+### 文字集合初期設定値追加（No.40）
+
+> **重要**: アプリケーションの設定ファイル（configファイル）が以下のファイルより先に読み込んでいる場合は、これらのファイルより後に読み込むように変更すること: `nablarch/core/validation/charset-definition.xml`, `nablarch/core/validation.xml`, `nablarch/core.xml`
+
+**モジュール**: `nablarch-main-default-configuration 1.0.3`
+
+### nablarch-testing-default-configuration のメッセージID修正（No.41）
+
+`nablarch-testing-default-configuration`の`entityTestConfiguration`コンポーネントの`maxAndMinMessageId`・`underLimitMessageId`プロパティに不適切なメッセージIDが設定されていたため修正された（起因: `nablarch-testing-default-configuration 1.0.0`）。
+
+本番稼働アプリケーションへの影響はないが、テスト設定の動作を変えたくない場合は、アプリケーションの設定ファイルに以下の定義を追加すること。
+
+```xml
+<component name="entityTestConfiguration" class="nablarch.test.core.entity.EntityTestConfiguration">
+  <property name="maxMessageId" value="${nablarch.lengthValidator.maxMessageId}"/>
+  <property name="maxAndMinMessageId" value="${nablarch.numberRangeValidator.maxAndMinMessageId}"/>
+  <property name="fixLengthMessageId" value="${nablarch.lengthValidator.fixLengthMessageId}"/>
+  <property name="underLimitMessageId" value="${nablarch.lengthValidator.fixLengthMessageId}"/>
+  <property name="emptyInputMessageId" value="${nablarch.requiredValidator.messageId}"/>
+  <property name="characterGenerator">
+    <component name="characterGenerator" class="nablarch.test.core.util.generator.BasicJapaneseCharacterGenerator"/>
+  </property>
+</component>
+```
+
+**モジュール**: `nablarch-testing-default-configuration 1.0.2`
+
+### テスティングフレームワーク ログ設定ファイル削除（No.78）
+
+テスティングフレームワークのJARから`app-log.properties`が削除された（起因: `nablarch-testing 1.0.0`）。
+
+> **重要**: テスティングフレームワーク使用時にログの設定ファイル（`app-log.properties`）の指定が必要になった。ただし、テスト対象のプロダクション側リソースとして設定ファイルが指定されている場合は対応不要。アプリケーションフレームワークを使わずテスティングフレームワーク単体で使用している場合は対応が必要。
+
+**モジュール**: `nablarch-testing 1.0.6`
+
+### テスティングフレームワーク BigDecimal指数表現修正（No.79）
+
+BigDecimalの指数表現によりデータセットアップやアサート時に正しく動作しない問題を修正（起因: `nablarch-testing 1.0.0`）。アプリケーション側の対処は不要。
+
+**モジュール**: `nablarch-testing 1.0.6`
+
+### ツールボックスOSS版分離（No.82）
+
+以下の機能がtoolboxのJARから「開発プロセス支援ツール」に移動された:
+- 認可データ設定ツール
+- 外部インターフェース用Form自動生成ツール
+
+> **重要**: これらの機能を使用する場合、実行時のクラスパスに`nablarch-process-support-tools-1.0.0.jar`を追加すること。
+
+**モジュール**: `nablarch-toolbox-1.0.2`
+
+---
+
+## 主な新機能
+
+| 機能 | モジュール |
+|---|---|
+| ノーマライズハンドラ（リクエストパラメータの前後ホワイトスペース除去） | `nablarch-fw-web 1.2.2` |
+| `FileResponse`クラス（データバインドで作成したCSVファイルのダウンロード用） | `nablarch-fw-web-extension 1.0.1` |
+| RESTfulウェブサービス実行制御基盤（JAX-RS形式で業務アクションを使ったREST） | `nablarch-fw-jaxrs 1.0.0` |
+| JSR352バッチアプリケーション実行制御基盤 | `nablarch-fw-batch-ee 1.0.1` |
+| データバインド（CSV/TSVをJava Bean/Mapにバインド） | `nablarch-common-databind 1.0.0` |
+| Bean Validation（JSR349準拠） | `nablarch-validation-ee 1.0.3` |
+| ルーティングアダプタ（http-request-routerをWeb/RESTで使用） | `nablarch-router-adaptor 1.0.0` |
+| JAX-RSアダプタ（RESTEasy/Jersey/Jackson対応） | `nablarch-jersey-adaptor 1.0.0`, `nablarch-resteasy-adaptor 1.0.0`, `nablarch-jackson-adaptor 1.0.0` |
+| log4jアダプタ | `nablarch-log4j-adaptor 1.0.0` |
+| IBM WebSphere MQアダプタ | `nablarch-wmq-adaptor 1.0.0` |
+| ETL（SQLベース、Extract/Transform/Load） | `nablarch-etl 1.0.0` |
+| ETL Mavenプラグイン（SQL*Loaderコントロールファイル自動生成） | `nablarch-etl-maven-plugin 1.0.0` |
+| RESTful/JSR352アーキタイプ | `nablarch-jaxrs-archetype 5u6`, `nablarch-batch-ee-archetype 5u6` |
+| Exampleアプリケーション（チュートリアル廃止、下記7種追加: ウェブ・RESTfulウェブサービス・HTTPメッセージング・JSR352バッチ・Nablarchバッチ・MOMメッセージング・テーブルキューメッセージング） | `nablarch-example-web 1.0.0`, `nablarch-example-rest 1.0.0`, `nablarch-example-http-messaging 1.0.0`, `nablarch-example-batch-ee 1.0.0`, `nablarch-example-batch 1.0.0`, `nablarch-example-mom-delayed-send 1.0.0` 他 |
+| 開発プロセス支援ツール（toolboxから分離） | `nablarch-process-support-tools-1.0.0` |
+| 帳票ライブラリ（オブジェクトコードリリース、pom.xmlへの参照追加と設定の2点でプロジェクトに適用可能） | `nablarch-report-1.0.0` |
+| ワークフローライブラリ（オブジェクトコードリリース、pom.xmlへの参照追加と設定の2点でプロジェクトに適用可能） | `nablarch-workflow-1.0.0` |
+
+---
+
+## その他の変更
+
+- **H2ダイアレクト追加**: `nablarch-core-jdbc 1.1.2`
+- **`ObjectMapper`がtry-with-resources対応**（Closeableを継承）: `nablarch-common-databind 1.0.2`
+- **BeanValidationエラーメッセージをNablarchメッセージ管理から取得**: `nablarch-validation-ee 1.0.3`
+- **`ValidatorUtil#validate(Object bean, String... propertyNames)` 追加**（指定項目のみバリデーション）: `nablarch-core-validation-ee 1.0.3`
+- **バリデーションエラーメッセージへの項目名付加機能追加**: `nablarch-validation-ee 1.0.3`
+- **メッセージ定義場所にプロパティファイルを追加**（DBとプロパティファイル両方対応、設定なし時はデフォルトでプロパティファイルを使用）: `nablarch-core 1.2.2`, `nablarch-core-message 1.0.1`
+- **`CodeUtil`のパターン/オプション名称カラム名で大文字小文字を区別しないように変更**: `nablarch-common-code-jdbc 1.0.1`, `nablarch-common-code 1.2.1`
+- **`SessionUtil#delete`で削除した値を返すように変更**: `SessionUtil.delete(context, "project")`で削除と同時に値取得可能（削除対象なしの場合はnull）: `nablarch-fw-web 1.2.2`
+- **セッションストア同時リクエスト時の無効化不具合修正（No.31）**: 複数リクエストが同時送信された場合にセッションストアの無効化が復元されてしまう不具合を修正（起因: `nablarch-fw-web 1.0.0`）: `nablarch-fw-web 1.2.2`
+- **スレッドコンテキスト非依存化**: 言語・タイムゾーンが取得できない場合に`java.util.Locale#getDefault`と`java.util.TimeZone#getDefault`を使用: `nablarch-core 1.2.2`
+- **bom/ブランクプロジェクトのバージョン体系変更**: `1.0.x`形式から`5u6`形式（Nablarchバージョンを表す形式）に変更
+- **ブランクプロジェクトServlet APIバージョン変更**: 2.5→3.1
+- **ブランクプロジェクトのメッセージソース変更**: DBからプロパティファイルに変更
+- **JSPカスタムタグ textタグのvalueFormat属性制約（No.44）**: ウィンドウスコープを使用しない場合、`text`タグの`valueFormat`属性（`yyyymmdd`形式）のみを指定したバリデーションができない制約がある。詳細はドキュメント「JSPカスタムタグ:フォーマットして値を出力する」のvalueFormat属性 yyyymmdd の末尾にある「重要」を参照。
+- **テスティングフレームワーク BOOLEAN型/BIT型カラムへのデータ投入不具合修正（No.77）**: テストシートでBOOLEAN/BIT型カラムにtrue/false/0/1を入力しても例外が発生してデータ投入できない状態を修正（起因: `nablarch-testing 1.0.0`）: `nablarch-testing 1.0.6`
+
+---
+
+## バリデーションアノテーションのメッセージID分割（No.17詳細）
+
+### @Length
+
+| 条件 | メッセージID |
+|---|---|
+| min属性のみ指定 | `nablarch.core.validation.ee.Length.min.message`（例: {min}文字以上で入力してください。） |
+| max属性のみ指定 | `nablarch.core.validation.ee.Length.max.message`（例: {max}文字以内で入力してください。） |
+| min=maxの場合 | `nablarch.core.validation.ee.Length.fixed.message`（例: {max}文字で入力してください。） |
+| min≠maxの場合 | `nablarch.core.validation.ee.Length.min.max.message`（例: {min}文字以上、{max}文字以内で入力してください。） |
+
+### @Digits
+
+| 条件 | メッセージID |
+|---|---|
+| integer属性のみ指定 | `nablarch.core.validation.ee.Digits.integer.message`（例: 整数部は{integer}桁以内で入力してください。） |
+| fraction属性のみ指定 | `nablarch.core.validation.ee.Digits.fraction.message`（例: 小数部は{fraction}桁以内で入力してください。） |
+| 両方指定 | `nablarch.core.validation.ee.Digits.message`（例: 整数部は{integer}桁以内、小数部は{fraction}桁以内で入力してください。） |
+
+### @NumberRange
+
+| 条件 | メッセージID |
+|---|---|
+| min属性のみ指定 | `nablarch.core.validation.ee.NumberRange.min.message`（例: {min}以上で入力してください。） |
+| max属性のみ指定 | `nablarch.core.validation.ee.NumberRange.max.message`（例: {max}以下で入力してください。） |
+| 両方指定 | `nablarch.core.validation.ee.NumberRange.min.max.message`（例: {min}以上{max}以下で入力してください。） |
+
+### @DecimalRange
+
+| 条件 | メッセージID |
+|---|---|
+| min属性のみ指定 | `nablarch.core.validation.ee.DecimalRange.min.message`（例: {min}以上で入力してください。） |
+| max属性のみ指定 | `nablarch.core.validation.ee.DecimalRange.max.message`（例: {max}以下で入力してください。） |
+| 両方指定 | `nablarch.core.validation.ee.DecimalRange.min.max.message`（例: {min}以上{max}以下で入力してください。） |
+
+### @Size
+
+| 条件 | メッセージID |
+|---|---|
+| min属性のみ指定 | `nablarch.core.validation.ee.Size.min.message`（例: {min}以上で入力してください。） |
+| max属性のみ指定 | `nablarch.core.validation.ee.Size.max.message`（例: {max}以下で入力してください。） |
+| 両方指定 | `nablarch.core.validation.ee.Size.min.max.message`（例: {min}以上{max}以下で入力してください。） |
+
+<details>
+<summary>keywords</summary>
+
+5u6, リリースノート, バージョンアップ, 破壊的変更, アプリケーションへの影響, セキュアハンドラ, XFrameOptions, nablarch-fw-web, BeanValidationStrategy, BeanValidation, InjectForm, セッションストア, セッションクッキー, セッションID改竄チェック, BigDecimal, ログマスキング, BeanUtil, BeansException, ValidatorUtil, ValidationContext, StringResourceHolder, ノーマライズハンドラ, RESTfulウェブサービス, JSR352, データバインド, ETL, ルーティングアダプタ, JAX-RSアダプタ, nablarch-common-databind, nablarch-fw-jaxrs, nablarch-fw-batch-ee, nablarch-validation-ee, nablarch-etl, テスティングフレームワーク, app-log.properties, ObjectMapper, SessionUtil, FileResponse, ツールボックス, 開発プロセス支援ツール, Length, Digits, NumberRange, DecimalRange, Size, nablarch-router-adaptor, nablarch-testing, nablarch-core-beans, MailUtil, nablarch-report, nablarch-workflow, 帳票ライブラリ, ワークフローライブラリ, CodeUtil, entityTestConfiguration, nablarch-testing-default-configuration, Exampleアプリケーション, valueFormat, textタグ, JSPカスタムタグ
+
+</details>

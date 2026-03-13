@@ -1,0 +1,24 @@
+{
+  "id": "testing-framework-real",
+  "title": "取引単体テストの実施方法（同期応答メッセージ受信処理)",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/03_DealUnitTest/real.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "取引単体テストの実施方法（同期応答メッセージ受信処理）",
+      "hints": [
+        "MessagingRequestTestSupport",
+        "同期応答メッセージ受信処理",
+        "取引単体テスト",
+        "テストクラス作成ルール",
+        "メッセージング取引テスト"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 取引単体テストの実施方法（同期応答メッセージ受信処理）\n\n- １リクエスト＝１取引の場合、取引単体テストを実施する必要はない。\n- 複数のメッセージにより取引が成立する場合は、リクエスト毎のテストを連続実行することにより取引単体テストが実施可能（バッチと同様）。\n\nテストクラス作成ルール:\n- テストクラスが継承するスーパークラスは `MessagingRequestTestSupport` を使用する（バッチと異なる点）。\n- パッケージはテスト対象取引のパッケージとする。\n- クラス名は `<取引ID>Test` とする。\n\n```java\npackage nablarch.sample.ss21AA03\n\nimport nablarch.test.core.messaging.MessagingRequestTestSupport;\n\npublic class M21AA03Test extends MessagingRequestTestSupport {\n```\n\n実施方法の詳細: [./batch](testing-framework-batch.json)"
+  }
+}

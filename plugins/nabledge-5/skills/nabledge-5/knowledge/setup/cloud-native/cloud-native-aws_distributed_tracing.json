@@ -1,0 +1,81 @@
+{
+  "id": "cloud-native-aws_distributed_tracing",
+  "title": "AWSにおける分散トレーシング",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/cloud_native/distributed_tracing/aws_distributed_tracing.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "AWSにおける分散トレーシング（概要）",
+      "hints": [
+        "分散トレーシング",
+        "AWS X-Ray",
+        "自動計測エージェント",
+        "AWS Distro for OpenTelemetry",
+        "Nablarch制約"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "依存関係の追加",
+      "hints": [
+        "aws-xray-recorder-sdk-bom",
+        "aws-xray-recorder-sdk-core",
+        "aws-xray-recorder-sdk-apache-http",
+        "aws-xray-recorder-sdk-sql",
+        "Maven依存関係",
+        "pom.xml"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "受信HTTPリクエスト",
+      "hints": [
+        "AWSXRayServletFilter",
+        "受信HTTPリクエスト",
+        "X-Rayサーブレットフィルタ",
+        "web.xml",
+        "filter-mapping"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "送信HTTP呼び出し",
+      "hints": [
+        "JerseyHttpClientWithAWSXRayFactory",
+        "ApacheConnectorProvider",
+        "ApacheHttpClientBuilderConfigurator",
+        "jersey-apache-connector",
+        "送信HTTP呼び出し",
+        "HttpClientBuilder",
+        "@SystemRepositoryComponent",
+        "@ComponentRef",
+        "@ConfigValue",
+        "HttpProductRepository",
+        "SystemRepository",
+        "ClientConfig"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "SQLクエリ",
+      "hints": [
+        "TracingDataSource",
+        "TracingDataSourceFactory",
+        "SQLクエリトレース",
+        "dataSource",
+        "rawDataSource",
+        "HikariDataSource"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "Nablarchはフレームワークの構造上、自動計測エージェントが使用できない。そのためAWS X-Ray SDK for Javaをアプリケーションに組み込む方法を使用する。\n\n> **重要**: 2020年10月にAWS Distro for OpenTelemetryが発表された。2021年3月現在production-readyだが正式リリースはされていない。Nablarchでの動作確認がとれた場合、本章はAWS Distro for OpenTelemetryを使用した手順に差し替わる可能性がある。\n\n[xray_configuration_incoming_request](#) の設定だけでサービス間の関連はトレースできる。[xray_configuration_outgoing_http_calls](#) と [xray_configuration_sql_queries](#) はアプリケーションの要件に応じて設定する。",
+    "s2": "**モジュール** (BOM: `com.amazonaws:aws-xray-recorder-sdk-bom:2.4.0`):\n\n```xml\n<dependency>\n  <groupId>com.amazonaws</groupId>\n  <artifactId>aws-xray-recorder-sdk-core</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.amazonaws</groupId>\n  <artifactId>aws-xray-recorder-sdk-apache-http</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.amazonaws</groupId>\n  <artifactId>aws-xray-recorder-sdk-sql</artifactId>\n</dependency>\n```\n\n> **補足**: AWS公式ドキュメントではSQLクエリのトレースに`aws-xray-recorder-sdk-sql-postgres`または`aws-xray-recorder-sdk-sql-mysql`を推奨しているが、本手順では任意のJDBCデータソースをトレース可能な`aws-xray-recorder-sdk-sql`を使用する。",
+    "s3": "`AWSXRayServletFilter`を`src/main/webapp/WEB-INF/web.xml`に追加する。`AWSXRayServletFilter`のfilter-mappingは既存のfilter-mappingより上に配置する必要がある。\n\n```xml\n<filter>\n  <filter-name>AWSXRayServletFilter</filter-name>\n  <filter-class>com.amazonaws.xray.javax.servlet.AWSXRayServletFilter</filter-class>\n  <init-param>\n    <param-name>fixedName</param-name>\n    <!-- サービスマップでアプリケーションを識別する名前を指定する -->\n    <param-value>example-app</param-value>\n  </init-param>\n</filter>\n<filter-mapping>\n  <filter-name>AWSXRayServletFilter</filter-name>\n  <url-pattern>/*</url-pattern>\n</filter-mapping>\n<!-- ↑既存のfilter-mappingより上に記載する -->\n```",
+    "s4": "JerseyはデフォルトでHTTP通信に`java.net.HttpURLConnection`を使用するため、Apache HttpComponentsを利用するには`ConnectorProvider`の設定が必要。`org.glassfish.jersey.apache.connector.ApacheConnectorProvider`を`ConnectorProvider`として使用し、`org.glassfish.jersey.apache.connector.ApacheHttpClientBuilderConfigurator`で`HttpClientBuilder`をAWS SDKの`com.amazonaws.xray.proxies.apache.http.HttpClientBuilder`に差し替える。\n\n**モジュール** (BOM: `org.glassfish.jersey:jersey-bom:2.32`):\n\n```xml\n<dependency>\n  <groupId>org.glassfish.jersey.core</groupId>\n  <artifactId>jersey-client</artifactId>\n</dependency>\n<dependency>\n  <groupId>org.glassfish.jersey.connectors</groupId>\n  <artifactId>jersey-apache-connector</artifactId>\n</dependency>\n<dependency>\n  <groupId>org.glassfish.jersey.media</groupId>\n  <artifactId>jersey-media-json-jackson</artifactId>\n</dependency>\n<dependency>\n  <groupId>org.glassfish.jersey.inject</groupId>\n  <artifactId>jersey-hk2</artifactId>\n</dependency>\n```\n\n**クラス**: `com.example.JerseyHttpClientWithAWSXRayFactory` (`nablarch.core.repository.di.ComponentFactory<Client>`実装):\n\n```java\npublic class JerseyHttpClientWithAWSXRayFactory implements ComponentFactory<Client> {\n    @Override\n    public Client createObject() {\n        ApacheHttpClientBuilderConfigurator clientBuilderConfigurator\n                = (httpClientBuilder) -> HttpClientBuilder.create();\n        Configuration config = new ClientConfig()\n                .register(clientBuilderConfigurator)\n                .connectorProvider(new ApacheConnectorProvider());\n        return ClientBuilder.newClient(config);\n    }\n}\n```\n\n`src/main/resources/rest-component-configuration.xml`に登録:\n\n```xml\n<component name=\"httpClient\" class=\"com.example.system.httpclient.JerseyHttpClientWithAWSXRayFactory\" />\n```\n\nHTTPクライアントの利用方法: `@SystemRepositoryComponent`クラスで`@ComponentRef(\"httpClient\")`によるコンストラクタインジェクション、またはシステムリポジトリから直接取得 (`SystemRepository.get(\"httpclient\")`) が可能。\n\n```java\n@SystemRepositoryComponent\npublic class HttpProductRepository {\n    private final Client httpClient;\n    private final String productAPI;\n\n    public HttpProductRepository(@ComponentRef(\"httpClient\") Client httpClient,\n                                @ConfigValue(\"${api.product.url}\") String productAPI) {\n        this.httpClient = httpClient;\n        this.productAPI = productAPI;\n    }\n}\n```",
+    "s5": "データソースを`com.amazonaws.xray.sql.TracingDataSource`でデコレートすることでSQLクエリの計測が可能。Nablarchは`dataSource`という名前でデータソースコンポーネントを取得するため、`TracingDataSourceFactory`を`dataSource`という名前で定義する。\n\n**クラス**: `com.example.TracingDataSourceFactory` (`nablarch.core.repository.di.ComponentFactory<DataSource>`実装):\n\n```java\npublic class TracingDataSourceFactory implements ComponentFactory<DataSource> {\n    private DataSource dataSource;\n\n    @Override\n    public DataSource createObject() {\n        return TracingDataSource.decorate(dataSource);\n    }\n\n    public void setDataSource(DataSource dataSource) {\n        this.dataSource = dataSource;\n    }\n}\n```\n\n`src/main/resources/data-source.xml`の変更手順:\n1. `com.zaxxer.hikari.HikariDataSource`コンポーネントの名前を`dataSource`から`rawDataSource`に変更する\n2. `TracingDataSourceFactory`を`dataSource`という名前で定義し、`rawDataSource`を`dataSource`プロパティに設定する\n\n```xml\n<component name=\"rawDataSource\" class=\"com.zaxxer.hikari.HikariDataSource\" autowireType=\"None\">\n  <property name=\"driverClassName\" value=\"${nablarch.db.jdbcDriver}\"/>\n  <property name=\"jdbcUrl\" value=\"${nablarch.db.url}\"/>\n  <property name=\"username\" value=\"${nablarch.db.user}\"/>\n  <property name=\"password\" value=\"${nablarch.db.password}\"/>\n  <property name=\"maximumPoolSize\" value=\"${nablarch.db.maxPoolSize}\"/>\n  <property name=\"minimumIdle\" value=\"${nablarch.db.minimumIdle}\"/>\n  <property name=\"connectionTimeout\" value=\"${nablarch.db.connectionTimeout}\"/>\n  <property name=\"idleTimeout\" value=\"${nablarch.db.idleTimeout}\"/>\n  <property name=\"maxLifetime\" value=\"${nablarch.db.maxLifetime}\"/>\n  <property name=\"validationTimeout\" value=\"${nablarch.db.validationTimeout}\"/>\n</component>\n<component name=\"dataSource\" class=\"com.example.system.awsxray.TracingDataSourceFactory\">\n  <property name=\"dataSource\" ref=\"rawDataSource\" />\n</component>\n```"
+  }
+}

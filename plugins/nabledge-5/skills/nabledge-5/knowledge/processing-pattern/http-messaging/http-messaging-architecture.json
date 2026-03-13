@@ -1,0 +1,89 @@
+{
+  "id": "http-messaging-architecture",
+  "title": "アーキテクチャ概要",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/http_messaging/architecture.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/RequestMessage.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/action/MessagingAction.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "HTTPメッセージングの構成",
+      "hints": [
+        "HTTPメッセージング構成",
+        "RESTfulウェブサービス推奨",
+        "web_application-structure",
+        "ウェブサービス構築"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "HTTPメッセージングの処理の流れ",
+      "hints": [
+        "WebFrontController",
+        "DispatchHandler",
+        "ResponseMessage",
+        "HTTPメッセージング処理フロー",
+        "アクションクラス",
+        "ハンドラキュー"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "HTTPメッセージングで使用するハンドラ",
+      "hints": [
+        "http_response_handler",
+        "http_messaging_request_parsing_handler",
+        "http_messaging_response_building_handler",
+        "message_resend_handler",
+        "service_availability",
+        "permission_check_handler",
+        "database_connection_management_handler",
+        "transaction_management_handler",
+        "global_error_handler",
+        "http_messaging_error_handler",
+        "http_request_java_package_mapping",
+        "thread_context_handler",
+        "thread_context_clear_handler",
+        "http_access_log_handler",
+        "ハンドラキュー構築"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "HTTPメッセージングの最小ハンドラ構成",
+      "hints": [
+        "最小ハンドラ構成",
+        "thread_context_clear_handler",
+        "global_error_handler",
+        "http_response_handler",
+        "thread_context_handler",
+        "http_messaging_error_handler",
+        "request_path_java_package_mapping",
+        "http_messaging_request_parsing_handler",
+        "database_connection_management_handler",
+        "http_messaging_response_building_handler",
+        "transaction_management_handler",
+        "RequestMessage"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "HTTPメッセージングで使用するアクション",
+      "hints": [
+        "MessagingAction",
+        "nablarch.fw.messaging.action.MessagingAction",
+        "同期応答メッセージング",
+        "アクションクラス"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "> **重要**: 本機能ではなく、:ref:`RESTfulウェブサービス <restful_web_service>` の使用を推奨する。詳細は、[RESTfulウェブサービスを推奨する理由](../restful-web-service/restful-web-service-web_service.json) を参照。\n\nNablarchウェブアプリケーションと同じ構成となる。詳細は、[web_application-structure](../web-application/web-application-architecture.json#s1) を参照。",
+    "s2": "HTTPメッセージング機能がリクエストを処理し、レスポンスを返却するまでの処理の流れ:\n\n1. [WebFrontController](../web-application/web-application-web_front_controller.json#s1) (`javax.servlet.Filter` の実装クラス)がrequestを受信する。\n2. [WebFrontController](../web-application/web-application-web_front_controller.json#s1) は、requestに対する処理をハンドラキュー(handler queue)に委譲する。\n3. ハンドラキューに設定されたディスパッチハンドラ(`DispatchHandler`) が、URIを元に処理すべきアクションクラス(action class)を特定しハンドラキューの末尾に追加する。\n4. アクションクラス(action class)は、フォームクラス(form class)やエンティティクラス(entity class)を使用して業務ロジック(business logic) を実行する。各クラスの詳細は、:ref:`http_messaging-design` を参照。\n5. アクションクラス(action class)は、処理結果を示す `ResponseMessage` を作成し返却する。\n6. ハンドラキュー内の [http_messaging_response_building_handler](../../component/handlers/handlers-http_messaging_response_building_handler.json#s1) が、`ResponseMessage` をクライアントに返却するレスポンス(jsonやxmlなど)に変換し、クライアントへ応答を返す。",
+    "s3": "**リクエストやレスポンスの変換を行うハンドラ**\n- [http_response_handler](../../component/handlers/handlers-http_response_handler.json#s1)\n- [http_messaging_request_parsing_handler](../../component/handlers/handlers-http_messaging_request_parsing_handler.json#s1)\n- [http_messaging_response_building_handler](../../component/handlers/handlers-http_messaging_response_building_handler.json#s1)\n- [message_resend_handler](../../component/handlers/handlers-message_resend_handler.json#s1)\n\n**リクエストのフィルタリングを行うハンドラ**\n- :ref:`service_availability`\n- :ref:`permission_check_handler`\n\n**データベースに関連するハンドラ**\n- [database_connection_management_handler](../../component/handlers/handlers-database_connection_management_handler.json#s1)\n- [transaction_management_handler](../../component/handlers/handlers-transaction_management_handler.json#s1)\n\n**エラー処理に関するハンドラ**\n- [global_error_handler](../../component/handlers/handlers-global_error_handler.json#s1)\n- [http_messaging_error_handler](../../component/handlers/handlers-http_messaging_error_handler.json#s1)\n\n**その他のハンドラ**\n- [http_request_java_package_mapping](../../component/handlers/handlers-http_request_java_package_mapping.json#s1)\n- [thread_context_handler](../../component/handlers/handlers-thread_context_handler.json#s1)\n- [thread_context_clear_handler](../../component/handlers/handlers-thread_context_clear_handler.json#s1)\n- [http_access_log_handler](../../component/handlers/handlers-http_access_log_handler.json#s1)",
+    "s4": "| No. | ハンドラ | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|\n| 1 | [thread_context_clear_handler](../../component/handlers/handlers-thread_context_clear_handler.json#s1) | — | [thread_context_handler](../../component/handlers/handlers-thread_context_handler.json#s1) でスレッドローカル上に設定した値を全て削除する。 | — |\n| 2 | [global_error_handler](../../component/handlers/handlers-global_error_handler.json#s1) | — | — | 実行時例外、またはエラーの場合、ログ出力を行う。 |\n| 3 | [http_response_handler](../../component/handlers/handlers-http_response_handler.json#s1) | — | サーブレットフォーワード、リダイレクト、レスポンス書き込みのいずれかを行う。 | 実行時例外、またはエラーの場合、既定のエラーページを表示する。 |\n| 4 | [thread_context_handler](../../component/handlers/handlers-thread_context_handler.json#s1) | リクエストの情報からリクエストIDなどのスレッドコンテキスト変数を初期化する。 | — | — |\n| 5 | [http_messaging_error_handler](../../component/handlers/handlers-http_messaging_error_handler.json#s1) | — | 後続ハンドラで生成したレスポンスのボディが空の場合、ステータスコードに応じたデフォルトのボディを設定する。 | ログ出力及び、例外に応じたレスポンスを生成する。 |\n| 6 | [request_path_java_package_mapping](../../component/handlers/handlers-request_path_java_package_mapping.json#s1) | リクエストパスから処理対象の業務アクションを特定し、ハンドラキューの末尾に追加する。 | — | — |\n| 7 | [http_messaging_request_parsing_handler](../../component/handlers/handlers-http_messaging_request_parsing_handler.json#s1) | httpリクエストのボディを解析し `RequestMessage` を生成し、後続のハンドラにリクエストオブジェクトとして引き渡す。 | — | — |\n| 8 | [database_connection_management_handler](../../component/handlers/handlers-database_connection_management_handler.json#s1) | DB接続を取得する。 | DB接続を解放する。 | — |\n| 9 | [http_messaging_response_building_handler](../../component/handlers/handlers-http_messaging_response_building_handler.json#s1) | — | — | 業務アクションが生成したエラー用のメッセージを元に、エラー用のhttpスポンスを生成する。 |\n| 10 | [transaction_management_handler](../../component/handlers/handlers-transaction_management_handler.json#s1) | トランザクションを開始する。 | トランザクションをコミットする。 | トランザクションをロールバックする。 |\n| 11 | [http_messaging_response_building_handler](../../component/handlers/handlers-http_messaging_response_building_handler.json#s1) | — | 業務アクションが生成したメッセージを元に、http用のレスポンスを生成する。 | 後続ハンドラで発生した例外を元にエラー用のhttpレスポンスを生成する。 |",
+    "s5": "- `MessagingAction (同期応答メッセージング用アクションのテンプレートクラス)`"
+  }
+}

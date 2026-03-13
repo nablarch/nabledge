@@ -1,0 +1,30 @@
+{
+  "id": "testing-framework-event_listen_subwindow",
+  "title": "サブウィンドウ内イベント定義",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_jsp_widgets/event_listen_subwindow.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "サブウィンドウ内イベント定義",
+      "hints": [
+        "event:listen_subwindow",
+        "SubwindowListener",
+        "サブウィンドウイベント監視",
+        "openTrigger",
+        "watchTarget",
+        "windowName",
+        "event属性",
+        "listen_subwindow.tag",
+        "title",
+        "operation",
+        "comment"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "`event:listen_subwindow` ウィジェットは、サブウィンドウ内で発生したイベントに対してあらかじめ登録したJavaScript処理を実行する。仕様の多くは [event_listen](testing-framework-event_listen.json) と共通であり、以下はその差分のみを記載する。\n\n**コードサンプル:**\n\n```jsp\n<event:listen_subwindow\n  openTrigger = \"#openSelectUserWindow\"\n  watchTarget = \"table tr\"\n  event       = \"a.select click\">\n  <event:write_to\n    target = \".user_name\"\n    format = \"{td.userName}\">\n  </event:write_to>\n  <event:write_to\n    target = \".user_id input\"\n    format = \"{td.userId}\">\n  </event:write_to>\n</event:listen_subwindow>\n```\n\n**属性値一覧** (◎ 必須属性 ○ 任意属性 × 無効)\n\n| 名称 | 型 | サーバ | ローカル | 説明 | 備考 |\n|---|---|---|---|---|---|\n| event | 文字列 | ◎ | ◎ | 監視対象イベントの定義式 | |\n| watchTarget | 文字列 | ◎ | ◎ | 監視対象とするサブウィンドウ内の要素を指定するセレクタ式 | |\n| windowName | 文字列 | ○ | ○ | 監視対象ウィンドウ名 | デフォルト: \"subwindow\" |\n| openTrigger | 文字列 | ○ | ○ | 監視対象ウィンドウを開くボタン・リンクを指定するセレクタ式。指定した場合、合致するボタン・リンクから開かれたサブウィンドウのみが監視対象となる | |\n| title | 文字列 | × | × | 監視するイベントの簡単な説明 | 設計書表示用 |\n| operation | 文字列 | × | × | 監視イベントが発生する画面操作の説明 | 設計書表示用 |\n| comment | 文字列 | × | × | このイベントに対する補足説明 | 設計書表示用 |\n\n**部品一覧:**\n\n| パス | 内容 |\n|---|---|\n| `/WEB-INF/tags/widget/event/listen_subwindow.tag` | このウィジェットの実体となるタグファイル |\n| `/js/nablarch/ui/event/SubwindowListener.js` | イベント監視機能を実装するJS部品 |"
+  }
+}

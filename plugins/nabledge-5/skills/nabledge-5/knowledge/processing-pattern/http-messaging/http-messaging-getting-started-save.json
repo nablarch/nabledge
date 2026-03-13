@@ -1,0 +1,40 @@
+{
+  "id": "http-messaging-getting-started-save",
+  "title": "登録機能の作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/http_messaging/getting_started/save/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/action/MessagingAction.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/RequestMessage.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/ResponseMessage.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "登録を行う",
+      "hints": [
+        "MessagingAction",
+        "RequestMessage",
+        "UniversalDao",
+        "ResponseMessage",
+        "@Required",
+        "@Domain",
+        "HTTPメッセージング登録処理",
+        "フォーマットファイル作成",
+        "バリデーション",
+        "DB登録",
+        "onReceive",
+        "getParamMap",
+        "BeanUtil",
+        "ValidatorUtil",
+        "HttpResponse",
+        "ExecutionContext",
+        "Project"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## リクエスト仕様\n\nHTTPメッセージングによる登録機能を呼び出す際のリクエスト仕様:\n\n- **URL**: `http://localhost:9080/ProjectSaveAction`\n- **HTTPメソッド**: POST\n- **HTTPヘッダ**:\n  - `Content-Type: application/json`\n  - `X-Message-Id: 1`\n- **リクエストボディ**:\n```json\n{\n    \"projectName\": \"プロジェクト９９９\",\n    \"projectType\": \"development\",\n    \"projectClass\": \"ss\",\n    \"projectManager\": \"山田\",\n    \"projectLeader\": \"田中\",\n    \"clientId\": 10,\n    \"projectStartDate\": \"20160101\",\n    \"projectEndDate\": \"20161231\",\n    \"note\": \"備考９９９\",\n    \"sales\": 10000,\n    \"costOfGoodsSold\": 20000,\n    \"sga\": 30000,\n    \"allocationOfCorpExpenses\": 40000\n}\n```\n\n## フォーマットファイルの作成\n\nHTTPメッセージングでは、リクエストされたHTTPメッセージを [data_format](../../component/libraries/libraries-data_format.json#s1) を使用して解析する。\n\nフォーマットファイルの名称は「リクエストID + `_RECEIVE`」形式にする。フォーマットファイルの記述方法は :ref:`data_format-definition` を参照。\n\n**フォーマットファイル例** (`ProjectSaveAction_RECEIVE.fmt`):\n```\nfile-type:        \"JSON\"\ntext-encoding:    \"UTF-8\"\n\n[project]\n1  projectName                       N\n2  projectType                       N\n3  projectClass                      N\n4  projectStartDate[0..1]            N\n5  projectEndDate[0..1]              N\n6  clientId                          X9\n7  projectManager[0..1]              N\n8  projectLeader[0..1]               N\n9  note[0..1]                        N\n10 sales[0..1]                       X9\n11 costOfGoodsSold[0..1]             X9\n12 sga[0..1]                         X9\n13 allocationOfCorpExpenses[0..1]    X9\n14 userId[0..1]                      X9\n```\n\n## フォームの作成\n\n[bean_validation](../../component/libraries/libraries-bean_validation.json#s1) を用いてバリデーションを行うため、バリデーション用のアノテーションを設定する。\n\n```java\npublic class ProjectForm {\n    @Required\n    @Domain(\"projectName\")\n    private String projectName;\n    // getter/setter省略\n}\n```\n\n## 業務アクションの作成\n\n- `MessagingAction` を継承し、業務メソッドを作成する。\n- `MessagingAction#onReceive` にリクエスト受信時の処理を実装する。\n- リクエストボディの値は [data_format](../../component/libraries/libraries-data_format.json#s1) で解析された状態で `RequestMessage` オブジェクトが保持している。`getParamMap` メソッドで取得する。\n- [bean_validation](../../component/libraries/libraries-bean_validation.json#s1) でリクエスト値のバリデーションを行う。\n- `UniversalDao` でプロジェクトをDBに登録する。\n- 処理結果を表すレスポンスコードを `ResponseMessage` に設定して返却する。\n\n> **補足**: 業務例外が送出された場合は、[http_messaging_error_handler](../../component/handlers/handlers-http_messaging_error_handler.json#s1) の処理によってレスポンスコード「400」が設定される。\n\n```java\npublic class ProjectSaveAction extends MessagingAction {\n    @Override\n    protected ResponseMessage onReceive(RequestMessage requestMessage,\n                                        ExecutionContext executionContext) {\n        ProjectForm form = BeanUtil.createAndCopy(ProjectForm.class,\n                requestMessage.getParamMap());\n        ValidatorUtil.validate(form);\n        UniversalDao.insert(BeanUtil.createAndCopy(Project.class, form));\n        requestMessage.setFormatterOfReply(createFormatter());\n        Map<String, String> map = new HashMap<>();\n        map.put(\"statusCode\", String.valueOf(HttpResponse.Status.CREATED.getStatusCode()));\n        return requestMessage.reply()\n               .setStatusCodeHeader(String.valueOf(HttpResponse.Status.CREATED.getStatusCode()))\n               .addRecord(\"data\", map);\n    }\n}\n```"
+  }
+}

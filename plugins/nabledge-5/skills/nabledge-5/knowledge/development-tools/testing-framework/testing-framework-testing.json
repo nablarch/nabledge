@@ -1,0 +1,140 @@
+{
+  "id": "testing-framework-testing",
+  "title": "基盤部品のテスト実施項目",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/testing.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "テスト実施方針",
+        "カスタマイズ対応テスト",
+        "テスト自動化計画",
+        "リグレッションテスト"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "テスト方針",
+      "hints": [
+        "ブラックボックステスト",
+        "テスト方針",
+        "jsp_widgets",
+        "js_framework",
+        "css_framework",
+        "ホワイトボックステスト"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "テスト実施環境",
+      "hints": [
+        "テスト実施環境",
+        "対応ブラウザ",
+        "IE11",
+        "Firefox",
+        "Chrome",
+        "Safari",
+        "mobile safari",
+        "テストパターン",
+        "Windows",
+        "iOS",
+        "Android",
+        "Macintosh",
+        "iPhone 5",
+        "iPad",
+        "Nexus 7"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "実施テスト内容",
+      "hints": [
+        "実施テスト内容",
+        "UIテスト種別",
+        "テスト分類"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "UI部品ウィジェット機能テスト",
+      "hints": [
+        "UI部品ウィジェット機能テスト",
+        "外部仕様検証",
+        "属性値確認",
+        "HTMLインスペクタ",
+        "単体テスト",
+        "目視確認"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "UI部品ウィジェット性能テスト",
+      "hints": [
+        "UI部品ウィジェット性能テスト",
+        "300ウィジェット",
+        "画面ロード1秒以内",
+        "パフォーマンステスト",
+        "JavaScriptスレッド"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "UI部品ウィジェット組み合わせテスト",
+      "hints": [
+        "UI部品ウィジェット組み合わせテスト",
+        "タブ",
+        "開閉可能領域",
+        "readonly",
+        "プレースホルダー",
+        "干渉テスト"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "結合テスト",
+      "hints": [
+        "結合テスト",
+        "サンプルアプリケーション",
+        "ストーリーテスト",
+        "サーバサイド"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "ローカル表示テスト",
+      "hints": [
+        "ローカル表示テスト",
+        "inbrowser_jsp_rendering",
+        "ローカル表示",
+        "JSPローカル表示"
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "表示方向切替えテスト",
+      "hints": [
+        "表示方向切替えテスト",
+        "縦横切替",
+        "モバイルデバイス",
+        "表示モード",
+        "縦持ち",
+        "横持ち"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "> **補足**: 既存部品の修正・新規追加時は、基本的に以下と同等の観点でテストを実施する必要がある。\n\n> **補足**: 現状のテストは打鍵作業に大きく依存している。今後サポートデバイス増加に伴うリグレッション工数削減のためテスト自動化を計画中のため、以下の作業内容は変更される可能性がある。自動化されたテストケースはプロジェクト側カスタマイズ時のリグレッションテストとして流用可能となる予定。",
+    "s2": "基本的に [internals/jsp_widgets](testing-framework-jsp_widgets.json) に対するブラックボックステストを実施する。\n\nテスト目的:\n- 各ウィジェットが [reference_jsp_widgets/index](testing-framework-ui-dev-doc-reference-jsp-widgets.json) で定義される外部仕様を満たすこと\n- **UI標準** に準拠した表示となること\n\n[internals/js_framework](testing-framework-js_framework.json) ・ [internals/css_framework](testing-framework-css_framework.json) は [internals/jsp_widgets](testing-framework-jsp_widgets.json) のテストにより間接的に検証するため個別テストは行わない。\n\n上記に加え、性能テストおよびサンプルアプリを用いた結合テストも実施する。\n\n> **補足**: ホワイトボックス的なテストケース抽出を行っていない理由:\n> - [internals/js_framework](testing-framework-js_framework.json) / [internals/inbrowser_jsp_rendering](testing-framework-inbrowser_jsp_rendering.json): JavaScriptのカバレッジ集計方法が未確立のため効率的なテストケース抽出・網羅性評価ができない。今後テスト基盤を整備して実施予定。\n> - [internals/jsp_widgets](testing-framework-jsp_widgets.json): 各ウィジェットの実体はJSPタグファイルであり複雑なロジックは記述できないため、ブラックボックステストで十分な網羅性が得られる。",
+    "s3": "| 端末 | OS | ブラウザ | 表示モード | 実施テストパターン |\n|---|---|---|---|---|\n| PC | Windows 10 Pro (ビルド番号16299) | IE11 | ワイド | **A** |\n| PC | Windows 10 Pro (ビルド番号16299) | Firefox | ワイド | **A** |\n| PC | Windows 10 Pro (ビルド番号16299) | Chrome | ワイド | **A** |\n| Macintosh | OSX 10.9.5 | safari | ワイド | **A** |\n| iPhone 5 | iOS 10.3.3 | mobile safari | ナロー(縦、横) | **B** |\n| iPad (第4世代) | iOS 10.3.3 | mobile safari | コンパクト(縦)、ワイド(横) | **B** |\n| Nexus 7 (2012) | Android 5.1.1 | Chrome | ナロー(縦)、コンパクト(横) | **B** |\n\n| 実施テストパターン | 実施テスト |\n|---|---|\n| **A** | UI部品ウィジェット機能テスト、UI部品ウィジェット性能テスト、UI部品ウィジェット組み合わせテスト、結合テスト、ローカル表示テスト |\n| **B** | UI部品ウィジェット機能テスト、UI部品ウィジェット性能テスト、UI部品ウィジェット組み合わせテスト、結合テスト、表示方向切替えテスト |",
+    "s4": "実施テストの種別:\n- UI部品ウィジェット機能テスト\n- UI部品ウィジェット性能テスト\n- UI部品ウィジェット組み合わせテスト\n- 結合テスト\n- ローカル表示テスト\n- 表示方向切替えテスト",
+    "s5": "[internals/jsp_widgets](testing-framework-jsp_widgets.json) に対して以下の観点で単体テストを行う:\n- 各ウィジェットの挙動が [reference_jsp_widgets/index](testing-framework-ui-dev-doc-reference-jsp-widgets.json) の外部仕様に準拠していること\n- 各ウィジェットの表示が **UI標準** に記載されている対応UI部品仕様に準拠すること\n\n機能テストは各ウィジェットに定義されている属性値ごとに実施し、以下を確認する:\n1. HTMLの属性値が期待通りに設定されているか（画面ソースコードまたはインスペクタで確認）\n2. ウィジェットの表示が仕様に従っているか（目視確認）\n\n> **補足**: 一部テストケースでは属性値確認（上記1）を自動化。その場合は表示確認（上記2）のみ実施。",
+    "s6": "300個のウィジェットを配置した画面で以下の基準を満たすことを検証する:\n\n1. 画面ロードが完了しユーザ操作可能になるまで **1秒以内**（リクエスト発行からloadイベント発火まで。ブラウザのデフォルトプロファイラで計測。**サーバ処理は単に折り返すのみとし**、ローカルサーバを使用する）\n2. 画面ロード後の操作でJavaScriptスレッドの処理待ち（カーソルが渦巻き型に変化）が発生しないこと\n\n> **補足**: テスト基準値300個の根拠: **UI標準** で1画面の入力項目上限を100件程度と規定しており、これに安全率3倍をかけた値。",
+    "s7": "他のUI部品と干渉する可能性のある部品を組み合わせて使用しても問題が発生しないことを検証する。\n\n例: タブと開閉可能領域、readonly機能とプレースホルダー機能",
+    "s8": "Nablarchのサンプルアプリケーションを用いて、サーバサイドの完全な実装を含むアプリケーションとしてのストーリーテストを実施する。",
+    "s9": "[internals/inbrowser_jsp_rendering](testing-framework-inbrowser_jsp_rendering.json) によるローカル表示のテストを行う。\n\nUIウィジェット機能テストのテストJSPをローカル表示し、 [reference_jsp_widgets/index](testing-framework-ui-dev-doc-reference-jsp-widgets.json) で記載されている仕様どおりに動作することを検証する。",
+    "s10": "各モバイルデバイスについて、縦持ち・横持ちを切り替えた際に、画面の表示モードが **UI標準** で定義された表示モードに切り替わることを確認する。"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "id": "testing-framework-column_label",
+  "title": "ラベル表示用カラムウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_jsp_widgets/column_label.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "column:label",
+        "table_search_result",
+        "table_plain",
+        "table_treelist",
+        "JSPウィジェット",
+        "ラベル表示",
+        "カラムウィジェット",
+        "sample属性"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "key",
+        "title",
+        "value",
+        "domain",
+        "cssClass",
+        "sortable",
+        "valueFormat",
+        "sample",
+        "width",
+        "additional",
+        "colspan",
+        "rowspan",
+        "autospan",
+        "tree_indent",
+        "tree_toggler",
+        "dataFrom",
+        "comment",
+        "formatSpec",
+        "initialValueDesc",
+        "属性一覧",
+        "ローカル動作",
+        "narrow表示モード"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "label.tag",
+        "nablarch.less",
+        "base.less",
+        "部品一覧",
+        "内部構造"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[column_label](testing-framework-column_label.json) は、カラムの値をラベル出力する行をテーブル中に追加するウィジェット。[table_search_result](testing-framework-table_search_result.json)、[table_plain](testing-framework-table_plain.json)、[table_treelist](testing-framework-table_treelist.json) と組み合わせて使用する。\n\n**設計成果物（ローカル動作）**:\n\n```jsp\n<table:search_result title=\"検索結果\" sampleResults=\"15\">\n  <column:checkbox title=\"選択\"></column:checkbox>\n  <column:label title=\"ログインID\" sample=\"user001|user002|user003\"></column:label>\n</table:search_result>\n```\n\n**実装成果物（サーバ動作）**:\n\n```jsp\n<table:search_result\n  title=\"検索結果\"\n  searchUri=\"/action/ss11AC/W11AC01Action/RW11AC0102\"\n  listSearchInfoName=\"11AC_W11AC01\"\n  resultSetName=\"searchResult\"\n  sampleResults=\"15\">\n  <column:checkbox title=\"選択\" key=\"userId\" name=\"W11AC05.systemAccountEntityArray[${count-1}].userId\" offValue=\"0000000000\"></column:checkbox>\n  <column:label title=\"ログインID\" key=\"loginId\" sample=\"user001|user002|user003\"></column:label>\n</table:search_result>\n```",
+    "s2": "**ローカル動作時の挙動**: `sample` 属性に指定した `|` 区切りの文字列を順に表示する。テーブルの `sampleResults` に指定された件数の方が多い場合はループする。\n\n**属性値一覧** (◎ 必須属性 / ○ 任意属性 / × 無効)\n\n| プロパティ名 | タイプ | サーバ | ローカル | 説明 |\n|---|---|---|---|---|\n| key | 文字列 | ◎ | × | 行データから表示する文字列を取得するキー |\n| title | 文字列 | ◎ | × | カラムヘッダに表示する文字列 |\n| value | 文字列 | ○ | ○ | カラムの表示内容。指定なし時はkeyで取得した値を使用 |\n| domain | 文字列 | ○ | ○ | データのドメイン型。設計書ビューの当該項目に表示され、`<td>` 要素のCSSクラス属性に追加される |\n| cssClass | 文字列 | ○ | ○ | 各カラムに指定するCSSクラス |\n| sortable | 文字列 | ○ | ○ | ソートリンクを表示するかどうか。デフォルト'false'。[table_search_result](testing-framework-table_search_result.json) でのみ使用可能 |\n| valueFormat | 文字列 | ○ | × | 出力する値のフォーマット指定 |\n| sample | 文字列 | × | ○ | テスト用ダミー表示値。\"|\" 区切りで複数指定 |\n| width | 文字列 | ○ | ○ | カラムの横幅 |\n| additional | 真偽値 | ○ | ○ | 付加情報として扱うかどうか。trueの場合narrow表示モードでインラインに展開するパネルに表示される。デフォルトfalse |\n| colspan | 数値 | ○ | ○ | 横方向に結合するカラム数。使用方法は[table_row](testing-framework-table_row.json)参照 |\n| rowspan | 数値 | ○ | ○ | 縦方向に結合するカラム数。使用方法は[table_row](testing-framework-table_row.json)参照 |\n| autospan | 真偽値 | ○ | ○ | 隣接する行の値が同じ場合に上下方向にセルを自動連結。データのソートはサーバ側で事前に行う必要あり |\n| tree_indent | 文字列 | ○ | ○ | 階層の深さに応じたインデントで表示するかどうか。デフォルト'false'。[table_treelist](testing-framework-table_treelist.json) でのみ有効 |\n| tree_toggler | 文字列 | ○ | ○ | 各階層を開閉するボタンをこのカラム内に表示するかどうか。デフォルト'false'。[table_treelist](testing-framework-table_treelist.json) でのみ有効 |\n| dataFrom | 文字列 | × | × | 表示するデータの取得元（「表示情報取得元.表示項目名」の形式） |\n| comment | 文字列 | × | × | 設計書の画面項目定義「備考」に表示される表示項目についての備考 |\n| formatSpec | 文字列 | × | × | 設計書の画面項目定義「編集仕様」に表示される編集仕様の説明 |\n| initialValueDesc | 文字列 | × | × | 設計書の画面項目定義「備考」に表示される初期表示内容の説明 |\n\n> **重要**: `autospan`/`rowspan` 属性を使用しているテーブルでは `additional` 属性を使用することはできない。\n\n> **補足**: `autospan` で連結された各セルの背景色は、その中で一番上のセルの背景色に一致する。",
+    "s3": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/column/label.tag | [column_link](testing-framework-column_link.json) |\n| /WEB-INF/tags/listSearchResult/*.tag | Nablarch検索結果テーブルタグファイル |\n| /css/style/nablarch.less | Nablarch関連スタイル定義（テーブルの配色などを定義） |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義（リンクに関する定義を含む） |"
+  }
+}

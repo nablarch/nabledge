@@ -1,0 +1,122 @@
+{
+  "id": "biz-samples-01",
+  "title": "データベースを用いたパスワード認証機能サンプル",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/01/index.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "提供パッケージ",
+      "hints": [
+        "please.change.me.common.authentication",
+        "パッケージ",
+        "common.authentication"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "概要",
+      "hints": [
+        "PBKDF2",
+        "パスワード暗号化",
+        "ユーザ認証",
+        "ストレッチング",
+        "ソルト",
+        "0101_PBKDF2PasswordEncryptor"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "構成 - クラス図",
+      "hints": [
+        "クラス図",
+        "Authentication_ClassDiagram"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "構成 - クラスの責務",
+      "hints": [
+        "PasswordAuthenticator",
+        "PasswordEncryptor",
+        "SystemAccountAuthenticator",
+        "PBKDF2PasswordEncryptor",
+        "AuthenticationUtil",
+        "SystemAccount",
+        "インタフェース定義",
+        "クラス定義",
+        "gsp-maven-plugin"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "構成 - 例外クラスとテーブル定義",
+      "hints": [
+        "AuthenticationException",
+        "AuthenticationFailedException",
+        "PasswordExpiredException",
+        "UserIdLockedException",
+        "SYSTEM_ACCOUNT",
+        "テーブル定義",
+        "USER_ID",
+        "LOGIN_ID",
+        "USER_PASSWORD",
+        "FAILED_COUNT",
+        "PASSWORD_EXPIRATION_DATE",
+        "USER_ID_LOCKED",
+        "EFFECTIVE_DATE_FROM",
+        "EFFECTIVE_DATE_TO",
+        "LAST_LOGIN_DATE_TIME"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "使用方法 - 概要と特徴",
+      "hints": [
+        "パスワード認証",
+        "有効日",
+        "有効期限チェック",
+        "ユーザIDロック",
+        "最終ログイン日時",
+        "AuthenticationUtil"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "SystemAccountAuthenticatorの使用方法",
+      "hints": [
+        "SystemAccountAuthenticator",
+        "passwordEncryptor",
+        "dbManager",
+        "failedCountToLock",
+        "SimpleDbTransactionManager",
+        "dbTransactionName",
+        "authenticator"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "AuthenticationUtilの使用方法と使用例",
+      "hints": [
+        "AuthenticationUtil",
+        "encryptPassword",
+        "authenticate",
+        "AuthenticationException",
+        "AuthenticationFailedException",
+        "PasswordExpiredException",
+        "UserIdLockedException"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**パッケージ**: `please.change.me.common.authentication`",
+    "s2": "ウェブアプリケーションのユーザ認証（ユーザID/パスワード）の実装サンプル。ログイン処理の業務処理内で使用する想定。\n\n> **補足**: Nablarch導入プロジェクトでは、要件を満たすよう本サンプル実装を修正し使用すること。\n\nログイン処理を実行する業務処理は本機能では提供しない。Nablarch導入プロジェクトにて、要件に応じてログイン処理を作成すること。\n\nデフォルトで[PBKDF2](https://www.ietf.org/rfc/rfc2898.txt)を使用してパスワードを暗号化する。各プロジェクトで、ストレッチング回数やソルトなどを設定する必要がある。設定内容の詳細については [0101_PBKDF2PasswordEncryptor](biz-samples-0101_PBKDF2PasswordEncryptor.json) を参照。",
+    "s3": "![クラス図](assets/biz-samples-01/Authentication_ClassDiagram.png)",
+    "s4": "**インタフェース**:\n\n| インタフェース名 | 概要 |\n|---|---|\n| `PasswordAuthenticator` | ユーザを認証するインタフェース |\n| `PasswordEncryptor` | パスワードを暗号化するインタフェース |\n\n**クラス**:\n\n| クラス名 | 概要 |\n|---|---|\n| `SystemAccountAuthenticator` | PasswordAuthenticatorの実装。データベースのアカウント情報に対してパスワード認証する |\n| `PBKDF2PasswordEncryptor` | PasswordEncryptorの実装。PBKDF2を使用してパスワードを暗号化する |\n| `AuthenticationUtil` | システムリポジトリからPasswordAuthenticatorおよびPasswordEncryptorを取得し、ユーザ認証・パスワード暗号化を行うユーティリティ |\n| `SystemAccount` | ユーザのアカウント情報を保持するエンティティクラス（ユニバーサルDAOの検索結果を格納） |\n\n> **補足**: エンティティクラスは [gsp-dba-maven-plugin(DBA作業支援ツール)](../../setup/blank-project/blank-project-addin_gsp.json#s1) を使用して自動生成する。本サンプルのエンティティクラスをそのまま使用せず、各プロジェクトで自動生成したものを使用すること。",
+    "s5": "**例外クラス**:\n\n| クラス名 | 概要 |\n|---|---|\n| `AuthenticationException` | 認証失敗例外の基底クラス。認証方式に応じてサブクラスを作成する |\n| `AuthenticationFailedException` | アカウント情報不一致による認証失敗例外。対象ユーザのユーザIDを保持 |\n| `PasswordExpiredException` | パスワード有効期限切れ例外。ユーザID、有効期限、チェックに使用した業務日付を保持 |\n| `UserIdLockedException` | ユーザIDロック例外。ユーザIDとロックする認証失敗回数を保持 |\n\n**テーブル定義（SYSTEM_ACCOUNT）**:\n\n| 論理名 | 物理名 | Javaの型 | 制約 |\n|---|---|---|---|\n| ユーザID | USER_ID | `java.lang.Integer` | 主キー |\n| ログインID | LOGIN_ID | `java.lang.String` | |\n| パスワード | USER_PASSWORD | `java.lang.String` | |\n| ユーザIDロック | USER_ID_LOCKED | `boolean` | ロックしている場合はtrue |\n| パスワード有効期限 | PASSWORD_EXPIRATION_DATE | `java.util.Date` | |\n| 認証失敗回数 | FAILED_COUNT | `java.lang.Short` | |\n| 有効日(From) | EFFECTIVE_DATE_FROM | `java.util.Date` | |\n| 有効日(To) | EFFECTIVE_DATE_TO | `java.util.Date` | |\n| 最終ログイン日時 | LAST_LOGIN_DATE_TIME | `java.util.Date` | |\n\n> **補足**: 本サンプル導入時には、導入プロジェクトのテーブル定義に従いSQLファイルおよびソースコードを修正すること。必要なユーザ属性を追加したり、1対1で紐づくユーザ情報テーブルを作成するなど、要件を満たすようテーブル設計すること。",
+    "s6": "パスワード認証の特徴:\n\n- 認証時にアカウント情報の有効日（From/To）をチェックする\n- 認証時にパスワードの有効期限をチェックする\n- 連続で指定回数認証失敗するとユーザIDをロックする。認証成功すると失敗回数をリセット\n- 暗号化されたパスワード（デフォルトはPBKDF2）を使用して認証する\n- 認証成功時のみシステム日時で最終ログイン日時を更新する\n\n業務機能（ログイン、ユーザ登録等）からは `AuthenticationUtil` を使用すること。",
+    "s7": "```xml\n<component name=\"authenticator\" class=\"please.change.me.common.authentication.SystemAccountAuthenticator\">\n  <property name=\"passwordEncryptor\" ref=\"passwordEncryptor\" />\n  <property name=\"dbManager\">\n    <component class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">\n      <property name=\"dbTransactionName\" value=\"authenticator\"/>\n      <property name=\"connectionFactory\" ref=\"connectionFactory\"/>\n      <property name=\"transactionFactory\" ref=\"transactionFactory\"/>\n    </component>\n  </property>\n  <property name=\"failedCountToLock\" value=\"5\"/>\n</component>\n```\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| passwordEncryptor | ○ | パスワード暗号化に使用するPasswordEncryptor。[0101_PBKDF2PasswordEncryptor](biz-samples-0101_PBKDF2PasswordEncryptor.json) を参照して設定したコンポーネント名をrefに指定すること |\n| dbManager | ○ | SimpleDbTransactionManagerのインスタンスを指定する |\n| failedCountToLock | | ユーザIDをロックする認証失敗回数。未指定時は0（ロック機能無効） |\n\n> **重要**: SystemAccountAuthenticatorのトランザクション制御が個別アプリケーションの処理に影響を与えないよう、個別アプリケーションとは別のトランザクションを使用すること。設定例では`dbTransactionName`に\"authenticator\"を指定しているため、個別アプリケーションでは同じ名前を使用しないこと。",
+    "s8": "AuthenticationUtilでは、以下のユーティリティメソッドを実装している。コンポーネント名はシステムリポジトリの登録名と一致させる必要がある。\n\n| メソッド | 説明 |\n|---|---|\n| `encryptPassword` | コンポーネント名`passwordEncryptor`でPasswordEncryptorを取得し、`PasswordEncryptor#encrypt(String, String)`を呼び出す |\n| `authenticate` | コンポーネント名`authenticator`でPasswordAuthenticatorを取得し、`PasswordAuthenticator#authenticate(String, String)`を呼び出す |\n\n**使用例**:\n\n```java\ntry {\n    AuthenticationUtil.authenticate(userId, password);\n} catch (AuthenticationFailedException e) {\n    // 認証失敗\n} catch (UserIdLockedException e) {\n    // ユーザIDロック\n} catch (PasswordExpiredException e) {\n    // パスワード有効期限切れ\n}\n```\n\n細かく処理を分ける必要がない場合は基底クラスで捕捉可能:\n\n```java\ntry {\n    AuthenticationUtil.authenticate(userId, password);\n} catch (AuthenticationException e) {\n    // 例外処理\n}\n```"
+  }
+}

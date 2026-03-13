@@ -1,0 +1,29 @@
+{
+  "id": "http-messaging-application_design",
+  "title": "アプリケーションの責務配置",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/http_messaging/application_design.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/RequestMessage.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/ResponseMessage.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "アプリケーションの責務配置",
+      "hints": [
+        "RequestMessage",
+        "ResponseMessage",
+        "アクションクラス",
+        "フォームクラス",
+        "エンティティクラス",
+        "HTTPメッセージング",
+        "バリデーション",
+        "責務配置"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "HTTPメッセージングのクラス構成と責務:\n\n**アクションクラス**: `RequestMessage` を受け取り、業務ロジックを実行し `ResponseMessage` を返すクラス\n\n- リクエスト取り込み処理の例: (1) リクエストメッセージからフォームクラスを作成しバリデーション (2) フォームからエンティティを作成しDB登録 (3) レスポンスメッセージを作成して返却\n\n**フォームクラス**: `RequestMessage` をマッピングするクラス\n\n- バリデーションアノテーションの設定・相関バリデーションロジックを持つ\n- プロパティは全て `String` で定義（理由: [Bean Validation](../../component/libraries/libraries-bean_validation.json#s5) 参照）\n- バイナリ項目の場合はバイト配列で定義\n\n**エンティティクラス**: テーブルと1対1で対応するクラス。カラムに対応するプロパティを持つ。"
+  }
+}

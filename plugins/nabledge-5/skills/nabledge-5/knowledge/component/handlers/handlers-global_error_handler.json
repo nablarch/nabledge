@@ -1,0 +1,83 @@
+{
+  "id": "handlers-global_error_handler",
+  "title": "グローバルエラーハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/common/global_error_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/GlobalErrorHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/ServiceError.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.Error.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/InternalError.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/java/lang/ThreadDeath.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/java/lang/StackOverflowError.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/java/lang/OutOfMemoryError.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/java/lang/VirtualMachineError.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "GlobalErrorHandler",
+        "nablarch.fw.handler.GlobalErrorHandler",
+        "グローバルエラーハンドラ",
+        "未捕捉例外処理",
+        "エラーハンドラ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw",
+        "com.nablarch.framework",
+        "モジュール依存関係"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "hints": [
+        "ハンドラキュー配置順序",
+        "thread_context_clear_handler",
+        "スレッドコンテキスト",
+        "ハンドラキュー先頭配置"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "例外及びエラーに応じた処理内容",
+      "hints": [
+        "ServiceError",
+        "nablarch.fw.results.ServiceError",
+        "Result.Error",
+        "nablarch.fw.Result.Error",
+        "InternalError",
+        "nablarch.fw.results.InternalError",
+        "ThreadDeath",
+        "StackOverflowError",
+        "OutOfMemoryError",
+        "VirtualMachineError",
+        "例外処理",
+        "FATALログ",
+        "リスロー"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "グローバルエラーハンドラでは要件を満たせない場合",
+      "hints": [
+        "カスタムエラーハンドラ",
+        "プロジェクト固有ハンドラ",
+        "ログレベルカスタマイズ",
+        "エラー処理ハンドラ作成"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "後続ハンドラで発生した未捕捉の例外及びエラーを捕捉し、ログ出力及び結果を返すハンドラ。\n\n**クラス名**: `nablarch.fw.handler.GlobalErrorHandler`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw</artifactId>\n</dependency>\n```",
+    "s3": "- できるだけハンドラキューの先頭に配置すること。このハンドラより手前で例外が発生した場合は、ウェブアプリケーションサーバやJVMにより例外処理が行われる。\n- スレッドコンテキストの情報をログに出力したい場合は、 [thread_context_clear_handler](handlers-thread_context_clear_handler.json#s1) より後に配置すること。",
+    "s4": "## 例外に応じた処理内容\n\n| 例外クラス | 処理内容 |\n|---|---|\n| `ServiceError` (サブクラス含む) | `ServiceError#writeLog` を呼び出しログ出力。ログレベルはServiceErrorの実装クラスにより異なる。処理結果としてServiceErrorを返却。 |\n| `Result.Error` (サブクラス含む) | FATALレベルのログ出力後、Result.Errorを返却。 |\n| 上記以外の例外クラス | FATALレベルのログ出力後、捕捉した例外を原因に持つ `InternalError` を生成し返却。 |\n\n## エラーに応じた処理内容\n\n| エラークラス | 処理内容 |\n|---|---|\n| `ThreadDeath` (サブクラス含む) | INFOレベルのログ出力後、捕捉したエラーをリスロー。 |\n| `StackOverflowError` (サブクラス含む) | FATALレベルのログ出力後、捕捉したエラーを原因に持つ `InternalError` を生成し返却。 |\n| `OutOfMemoryError` (サブクラス含む) | FATALレベルのログ出力（失敗する可能性があるため、ログ出力前に標準エラー出力にOutOfMemoryError発生を出力）後、捕捉したエラーを原因に持つ `InternalError` を生成し返却。 |\n| `VirtualMachineError` (サブクラス含む。StackOverflowError・OutOfMemoryError除く) | FATALレベルのログ出力後、捕捉したエラーをリスロー。 |\n| 上記以外のエラークラス | FATALレベルのログ出力後、捕捉したエラーを原因に持つ `InternalError` を生成し返却。 |",
+    "s5": "このハンドラは設定などで実装を切り替えることができない。要件を満たせない場合（例：ログレベルを細かく切り替えたい場合）は、プロジェクト固有のエラー処理用ハンドラを作成すること。"
+  }
+}

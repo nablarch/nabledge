@@ -1,0 +1,48 @@
+{
+  "id": "testing-framework-field_label_block",
+  "title": "表示ブロックウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_jsp_widgets/field_label_block.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "field:label_block",
+        "表示ブロックウィジェット",
+        "JSPコードサンプル",
+        "ローカル動作",
+        "サーバ動作"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "title",
+        "dataFrom",
+        "comment",
+        "initialValueDesc",
+        "属性値一覧",
+        "表示ブロックウィジェット仕様"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "label_block.tag",
+        "タグファイル",
+        "部品一覧",
+        "内部構造"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## コードサンプル\n\n設計成果物（ローカル動作）:\n\n```jsp\n<field:block title=\"配送予定\">\n  <field:calendar\n      title=\"配送希望日\"\n      required=\"true\"\n      sample=\"\">\n  </field:calendar>\n  <field:label_block\n      title=\"配送オプション\">\n      <p>配送オプションの指定はプレミアム会員の方のみ可能です。</p>\n  </field:label_block>\n</field:block>\n```\n\n実装成果物（サーバ動作）:\n\n```jsp\n<field:block title=\"配送設定\">\n  <field:calendar\n      title=\"配送希望日\"\n      required=\"true\"\n      name=\"W11AC03.deliveryDate\"\n      sample=\"\">\n  </field:calendar>\n  <field:label_block\n      title=\"配送オプション\">\n      <p>配送オプションの指定はプレミアム会員の方のみ可能です。</p>\n  </field:label_block>\n</field:block>\n```",
+    "s2": "## 仕様\n\nボディ部に指定された内容をそのまま出力する。ローカル動作とサーバ動作での挙動は同じ。\n\n属性値一覧（◎ 必須属性 ○ 任意属性 × 無効）:\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | 項目名 | 文字列 | ◎ | ◎ | |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 画面項目定義に記載する、「表示情報取得元」.「表示項目名」の形式で設定する。 |\n| comment | ラベル表示についての備考 | 文字列 | × | × | 設計書の表示時に、画面項目定義の項目定義一覧で、「備考」に表示される。 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の表示時に、画面項目定義の項目定義一覧で、「備考」に表示される。 |",
+    "s3": "## 内部構造・改修時の留意点\n\n部品一覧:\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/label_block.tag | [field_label_block](testing-framework-field_label_block.json) の実体となるタグファイル |"
+  }
+}

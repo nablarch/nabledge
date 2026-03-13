@@ -1,0 +1,37 @@
+{
+  "id": "mom-messaging-application_design",
+  "title": "アプリケーションの責務配置",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/mom/application_design.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/reader/FwHeaderReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/reader/MessageReader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/RequestMessage.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/ResponseMessage.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.Success.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "アプリケーションの責務配置",
+      "hints": [
+        "FwHeaderReader",
+        "MessageReader",
+        "RequestMessage",
+        "ResponseMessage",
+        "Success",
+        "アクションクラス",
+        "フォームクラス",
+        "エンティティクラス",
+        "MOMメッセージング責務配置",
+        "データリーダ",
+        "応答不要メッセージング",
+        "バリデーション",
+        "dataReader"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "![MOMメッセージングのクラス構成](assets/mom-messaging-application_design/mom_messaging_design.png)\n\n**アクションクラス**\n\n`FwHeaderReader` / `MessageReader` が読み込んだ `RequestMessage` を元に業務ロジックを実行し、`ResponseMessage` を返却する。\n\n要求電文取り込みの業務ロジック:\n1. 要求電文からフォームクラスを作成してバリデーションを行う\n2. フォームクラスからエンティティクラスを作成してDBにデータを追加する\n3. 応答電文を作成して返す\n\n> **補足**: 応答不要メッセージングでは以下が異なる。(1) データ取り込みが目的で後続バッチが業務ロジックを行うため、バリデーションを行わない。(2) 電文を返さないので処理結果として `Success` を返す。\n\n**フォームクラス**\n\nデータリーダが読み込んだ `RequestMessage` をマッピングするクラス。バリデーション用アノテーションの設定と相関バリデーションのロジックを持つ。プロパティは全て `String` で定義する（バイナリ項目はバイト配列）。`String` とすべき理由は [Bean Validation](../../component/libraries/libraries-bean_validation.json#s5) を参照。\n\n**エンティティクラス**\n\nテーブルと1対1で対応するクラス。カラムに対応するプロパティを持つ。\n\n> **重要**: メッセージングではシステムで共通のデータリーダを使うことを想定しているため、[Nablarchバッチアプリケーションの責務配置](../nablarch-batch/nablarch-batch-application_design.json) と異なり、アクションがデータリーダを生成する責務を持っていない。メッセージングで使用するデータリーダは、コンポーネント定義に `dataReader` という名前で追加する。"
+  }
+}

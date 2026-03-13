@@ -1,0 +1,92 @@
+{
+  "id": "testing-framework-02_componentUnitTest",
+  "title": "Action/Componentのクラス単体テスト",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/01_ClassUnitTest/02_componentUnitTest.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "Component単体テスト",
+        "Action単体テスト",
+        "クラス単体テスト",
+        "テストクラス名の違い"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Action/Component単体テストの書き方",
+      "hints": [
+        "テストケース実行パターン",
+        "テストケース分類",
+        "検索処理",
+        "更新処理",
+        "メッセージID確認"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "テストデータの作成",
+      "hints": [
+        "テストデータ格納場所",
+        "Excelファイル",
+        "静的マスタデータ",
+        "テストデータ作成ルール"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "テストクラスの作成",
+      "hints": [
+        "DbAccessTestSupport",
+        "テストクラス命名規則",
+        "テストクラス作成",
+        "クラス単体テスト継承クラス"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "事前準備データの作成処理",
+      "hints": [
+        "setThreadContextValues",
+        "setUpDb",
+        "事前データ投入",
+        "スレッドコンテキスト設定",
+        "採番テーブル初期化"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "処理終了後のデータベースの状況を確認しなければならないもの",
+      "hints": [
+        "commitTransactions",
+        "assertTableEquals",
+        "getListMap",
+        "トランザクションコミット",
+        "DB検証"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "メッセージIDを確認しなければならないもの",
+      "hints": [
+        "ApplicationException",
+        "メッセージID検証",
+        "異常系テスト",
+        "例外クラス指定",
+        "エラー処理テスト"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "Action/ComponentのクラスのComponent単体テストを説明する。Action単体テストとの違いはテストクラス名のみ。",
+    "s2": "テストケースは以下の4パターンに分類し、パターンに応じてテストクラスとデータの作成方法が異なる:\n\n| パターン | 当てはまる処理の例 |\n|---|---|\n| 戻り値(DBの検索結果)を確認 | 検索処理 |\n| 戻り値(DB検索結果以外)を確認 | 計算、判定処理 |\n| 処理終了後のDBの状況を確認 | 更新(挿入、削除含む)処理 |\n| メッセージIDを確認 | エラー処理 |\n\nDB挿入処理と2重登録時のエラー処理がある場合は、「処理終了後のDBの状況を確認」と「メッセージIDを確認」の2パターンに分類される。",
+    "s3": "- テストデータ(Excelファイル)はテストソースコードと同じディレクトリに同名で格納(拡張子のみ異なる)\n- 全テストデータは同一Excelシートに記載する前提\n- メッセージデータやコードマスタなどの静的マスタデータはプロジェクトで管理されたデータがあらかじめ投入されている前提とし、個別のテストデータとして作成しない\n\n詳細: [../../06_TestFWGuide/01_Abstract](testing-framework-01_Abstract.json)、[../../06_TestFWGuide/02_DbAccessTest](testing-framework-02_DbAccessTest.json)",
+    "s4": "Component単体テストのテストクラス作成ルール:\n1. パッケージはテスト対象のAction/Componentと同じ\n2. クラス名は`<Action/Componentクラス名>Test`\n3. `nablarch.test.core.db.DbAccessTestSupport`を継承\n\n**クラス**: `nablarch.test.core.db.DbAccessTestSupport`\n\n```java\npackage nablarch.sample.management.user;\n// ...\npublic class UserComponentTest extends DbAccessTestSupport {\n```\n\n詳細: [../../06_TestFWGuide/02_DbAccessTest](testing-framework-02_DbAccessTest.json)",
+    "s5": "事前データ投入に使用するメソッド:\n- `setThreadContextValues(sheetName, \"threadContext\")`: スレッドコンテキストの設定\n- `setUpDb(sheetName)`: 事前データの投入。各テストケースごとに初期化するためループ内で実行\n\n採番テーブル(ID_GENERATE)は事前に初期化すること。初期化しないとテスト実行時の採番結果が不定になり、挿入結果の検証ができなくなる。\n\n```java\nsetThreadContextValues(sheetName, \"threadContext\");\n// ...\nsetUpDb(sheetName); // 各ケースごとに初期化するためループ中で実行\n```\n\n![事前準備データ設定例](assets/testing-framework-02_componentUnitTest/componentUnitTest_Setup.png)",
+    "s6": "## 入力データの取得\n\n`getListMap(sheetName, \"dataName\")`でExcelシートからデータを読み込む。配列型プロパティはIDをキーに別表のデータを取得して配列を構築し、エンティティのコンストラクタに渡す。\n\n![入力データ設定例](assets/testing-framework-02_componentUnitTest/componentUnitTest_inputData.png)\n\n## トランザクションのコミット\n\n> **重要**: クラス単体テストではフレームワークによるトランザクション制御は行われない。処理終了後のDBの状況を確認する場合は`commitTransactions()`を呼び出してコミットすること。コミットしない場合、テスト結果の確認が正常に行われない。参照系テストはコミット不要。\n\n```java\ntarget.registerUser(sysAcct, users, grpSysAcct);\ncommitTransactions();\n```\n\n## 想定結果の検証\n\n`assertTableEquals(expectedGroupId, sheetName, expectedGroupId)`でDB内容を検証する。アプリケーションで設定する項目だけでなく、自動設定項目([database-common_bean](../../component/libraries/libraries-database.json) 参照)も想定結果を用意すること。グループIDを定義したデータ(expected)を用意し`assertTableEquals`の引数に渡すことで複数の想定結果に対応できる。\n\n![想定結果データ例](assets/testing-framework-02_componentUnitTest/componentUnitTest_expectedDataNormal.png)",
+    "s7": "異常系テストデータは正常系と同一Excelシートに混載する。入力データのIDの末尾に\"Err\"を付加して識別する。\n\n> **重要**: キャッチする例外は発生を想定する具体的な例外クラスを指定すること。`RuntimeException`などの上位例外クラスは使わないこと。メッセージIDは正しいが例外クラスが誤っているバグを検出できなくなる。\n\n```java\ntry {\n    target.registerUser(sysAcct, users, grpSysAcct);\n    fail();\n} catch (ApplicationException ae) {\n    assertEquals(expected.get(i).get(\"messageId\"), ae.getMessages().get(0).getMessageId());\n}\n```\n\n![異常系想定結果データ例](assets/testing-framework-02_componentUnitTest/componentUnitTest_expectedDataAbnormal.png)"
+  }
+}

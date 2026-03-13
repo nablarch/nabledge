@@ -1,0 +1,42 @@
+{
+  "id": "restful-web-service-getting-started-create",
+  "title": "登録機能の作成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/rest/getting_started/create/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/ws/rs/Consumes.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/validation/Valid.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "プロジェクト情報を登録する",
+      "hints": [
+        "ProjectForm",
+        "ProjectAction",
+        "Project",
+        "BeanUtil",
+        "HttpResponse",
+        "UniversalDao",
+        "MediaType",
+        "Serializable",
+        "@Required",
+        "@Domain",
+        "@Consumes",
+        "@Valid",
+        "@Path",
+        "@POST",
+        "JSON登録",
+        "RESTful POST",
+        "フォームバリデーション",
+        "ユニバーサルDAO登録",
+        "HTTPレスポンス201"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## フォームの作成\n\nフォームのプロパティは全てString型で宣言する（詳細: [bean_validation-form_property](../../component/libraries/libraries-bean_validation.json#s5)）。\n\n**クラス**: `ProjectForm`\n\n```java\npublic class ProjectForm implements Serializable {\n    @Required\n    @Domain(\"projectName\")\n    private String projectName;\n    // ゲッタ及びセッタは省略\n}\n```\n\n## 業務アクションメソッドの実装\n\n- JSON形式でリクエストを受け付けるため、`Consumes` に `MediaType.APPLICATION_JSON` を指定する。\n- `Valid` アノテーションでリクエストのバリデーションを行う（詳細: [jaxrs_bean_validation_handler](../../component/handlers/handlers-jaxrs_bean_validation_handler.json#s1)）。\n- `BeanUtil` でフォームをエンティティに変換し、[universal_dao](../../component/libraries/libraries-universal_dao.json#s1) でDB登録する。\n- 戻り値はリソース作成完了（ステータスコード `201`）を表す `HttpResponse` を返す。\n\n```java\n@Consumes(MediaType.APPLICATION_JSON)\n@Valid\npublic HttpResponse save(ProjectForm project) {\n    UniversalDao.insert(BeanUtil.createAndCopy(Project.class, project));\n    return new HttpResponse(HttpResponse.Status.CREATED.getStatusCode());\n}\n```\n\n## URLとのマッピングを定義\n\n[router_adaptor](../../component/adapters/adapters-router_adaptor.json#s1) を使用してURLマッピングを行う（[JAX-RSのPathアノテーション](../../component/adapters/adapters-router_adaptor.json#s3) 使用）。`@Path` と `@POST` でPOSTリクエスト時にマッピングする業務アクションメソッドを定義する。\n\n```java\n@Path(\"/projects\")\npublic class ProjectAction {\n    @POST\n    @Consumes(MediaType.APPLICATION_JSON)\n    @Valid\n    public HttpResponse save(ProjectForm project) {\n        UniversalDao.insert(BeanUtil.createAndCopy(Project.class, project));\n        return new HttpResponse(HttpResponse.Status.CREATED.getStatusCode());\n    }\n}\n```"
+  }
+}

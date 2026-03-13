@@ -1,0 +1,137 @@
+{
+  "id": "toolbox-JspVerifier",
+  "title": "業務画面JSP検証ツール",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/toolbox/JspVerifier/JspVerifier.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "JSP検証ツール",
+        "使用可能タグ検証",
+        "必須構造検証",
+        "禁止構造検証",
+        "タグ属性検証",
+        "業務画面JSP"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "初期環境構築",
+      "hints": [
+        "Node.js",
+        "npm install",
+        "npm test",
+        "verification_config.json",
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "http_proxy",
+        "https_proxy",
+        "TagAttributeVerifier",
+        "依存パッケージ",
+        "プロキシ環境"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "ツールの使用方法",
+      "hints": [
+        "jsp_verifier.bat",
+        "Drag&Drop",
+        "node bin/jsp_verifier",
+        "Verification Succeeded",
+        "Verification Failed",
+        "コマンドライン実行",
+        "violations.log"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "設定方法",
+      "hints": [
+        "verification_config.json",
+        "verifiers",
+        "TagUsageVerifier",
+        "RegexpBasedVerifier",
+        "SelectorBasedVerifier",
+        "WrappingTagVerifier",
+        "TagAttributeVerifier",
+        "設定ファイル"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "使用可能タグ検証",
+      "hints": [
+        "TagUsageVerifier",
+        "使用可能タグ",
+        "n:form",
+        "n:write",
+        "n:hidden",
+        "button",
+        "table",
+        "spec",
+        "許可タグ一覧"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "正規表現検証",
+      "hints": [
+        "RegexpBasedVerifier",
+        "正規表現検証",
+        "自己終了エレメント",
+        "/>",
+        "禁止パターン"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "DOMツリー検証",
+      "hints": [
+        "SelectorBasedVerifier",
+        "DOMツリー検証",
+        "table id",
+        "listSearchInfoName",
+        "禁止構造"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "親タグ検証",
+      "hints": [
+        "WrappingTagVerifier",
+        "親タグ検証",
+        "n:form",
+        "spec:layout",
+        "必須構造",
+        "囲みタグ"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "タグ属性検証",
+      "hints": [
+        "TagAttributeVerifier",
+        "タグ属性検証",
+        "tagファイル",
+        "属性定義",
+        "directory",
+        "encoding"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "JSPファイルに対して以下の検証を行うツール。検証内容は設定ファイルで変更・追加可能。\n\n**実装済み**:\n- 使用許可タグのみが使用されていること\n- 必須構造が満たされていること\n- 禁止構造を使用していないこと\n- 各タグの属性がタグに定義済みの属性であること\n\n**未実装**:\n- 各タグの属性値が、その属性のtypeにあった値であること",
+    "s2": "## Node.jsのインストール\n\n[Node.js](https://nodejs.org/en) をインストールする。\n\n## 環境変数（プロキシ環境）\n\n| 環境変数名 | 値 |\n|---|---|\n| HTTP_PROXY | HTTP用プロキシサーバのURL |\n| HTTPS_PROXY | HTTPS用プロキシサーバのURL |\n\n## 依存パッケージのインストール\n\nルートディレクトリ（`package.json`のあるディレクトリ）で実行:\n\n```\nnpm install\n```\n\n実行後、`node_modules`ディレクトリが作成されることを確認。\n\n> **重要**: インターネット接続が必要。プロキシ環境では以下の環境変数を設定すること:\n> - `http_proxy=http://proxy.example.com:8080`\n> - `https_proxy=http://proxy.example.com:8080`\n>\n> オフライン環境へのインストール: インターネット接続環境で`npm install`を実行後、生成された`node_modules`ディレクトリを対象環境のルートディレクトリにコピーする。\n\n## 動作確認\n\nルートディレクトリで`npm test`を実行し、すべてのテストが成功することを確認。\n\n## 環境依存設定値の修正\n\n`verification_config.json`の`TagAttributeVerifier.directory`をタグファイルの実際のディレクトリに修正:\n\n```json\n{\n  \"TagAttributeVerifier\": {\n    \"directory\": \"C:\\\\nablarch\\\\workspace\\\\tutorial\\\\main\\\\web\\\\WEB-INF\\\\tags\\\\widget\",\n    \"encoding\": \"utf-8\"\n  }\n}\n```",
+    "s3": "## batファイルでの実行\n\n`jsp_verifier.bat`に検証対象のJSPファイルをDrag&Dropして実行。\n\n## コマンドラインからの実行\n\nルートディレクトリで実行:\n\n```sh\nnode bin/jsp_verifier <検証対象JSPファイルパス（複数可）>\n```\n\n## 出力内容\n\n- エラー0件: `Verification Succeeded.`\n- エラーあり: `Verification Failed!!` + エラー件数 + ログファイル名（例: `violations-1390366626297.log`）",
+    "s4": "設定ファイルは`verification_config.json`（ルートディレクトリ）。`verifiers`セクションに実施する検証を列挙する。定義されていない検証は実施されない。\n\n```json\n{\n  \"verifiers\": {\n    \"TagUsageVerifier\": {},\n    \"RegexpBasedVerifier\": {},\n    \"SelectorBasedVerifier\": {},\n    \"WrappingTagVerifier\": {},\n    \"TagAttributeVerifier\": {}\n  }\n}\n```\n\n> **重要**: JSONファイルにはコメントを記載できない。",
+    "s5": "`TagUsageVerifier`: 以下の許可タグのみ使用可能。\n\n- `n:form`, `n:set`, `n:write`, `n:ConfirmationPage`, `n:forConfirmationPage`, `n:forInputPage`, `n:param`, `n:hidden`\n- `t:page_template`, `t:errorpage_template`\n- `box:.*`, `button:.*`, `field:.*`, `link:.*`, `tab:.*`, `table:.*`, `column:.*`, `spec:.*`\n- `c:if`, `jsp:attribute`\n- `%--`, `%@page`, `%@taglib`",
+    "s6": "`RegexpBasedVerifier`: 以下の正規表現にマッチする文字列が存在しないこと（大文字・小文字区別なし）。\n\n- `/>` — 自己終了エレメント。使用するとその要素以降の記述内容が描画されなくなるため禁止。",
+    "s7": "`SelectorBasedVerifier`: 以下の禁止構造を使用しないこと。\n\n- `table:not([id])` — テーブルを複数表示する場合にIDが必須となるため、すべてのテーブルにIDを付与すること。\n- `table:not([listSearchInfoName])` — `listSearchInfoName`がないと結果件数が表示されないため、すべてのテーブルに`listSearchInfoName`を付与すること。",
+    "s8": "`WrappingTagVerifier`: 以下の必須構造が満たされていること。\n\n- `table`ウィジェットは`n:form`で囲む必要がある。\n- `button`ウィジェットは`n:form`で囲む必要がある。\n- 設計書ビューで画面項目定義に表示されるウィジェットは`spec:layout`で囲む必要がある。",
+    "s9": "`TagAttributeVerifier`: JSPで使用されているタグの属性が、タグファイルに実際に定義されている属性であること。\n\n対象タグファイルは`verification_config.json`の`TagAttributeVerifier.directory`で指定したディレクトリ配下に格納されているtagファイル。"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "id": "testing-framework-02_SetUpHttpDumpTool",
+  "title": "リクエスト単体データ作成ツール インストールガイド",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/08_TestTools/01_HttpDumpTool/02_SetUpHttpDumpTool.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "前提条件・インストール・設定画面起動",
+      "hints": [
+        "nablarch-testing",
+        "nablarch-testing-jetty6",
+        "nablarch-testing-jetty9",
+        "インストール前提条件",
+        "Maven依存関係",
+        "Eclipseファイル関連付け設定",
+        "httpDump"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "外部プログラム選択",
+      "hints": [
+        "外部プログラム選択",
+        "Eclipse設定",
+        "エディタ設定",
+        "httpDump連携"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "起動用バッチファイル（シェルスクリプト）選択",
+      "hints": [
+        "httpDump.bat",
+        "httpDump.sh",
+        "バッチファイル",
+        "シェルスクリプト",
+        "Windows",
+        "Linux"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "HTMLファイルからの起動方法",
+      "hints": [
+        "HTMLファイル起動",
+        "パッケージエクスプローラ",
+        "httpDump起動方法",
+        "Eclipse右クリック"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 前提条件\n\n- Java、Mavenがインストール済みであること\n- プロジェクトがMavenで管理されていること\n- HTMLファイルがブラウザに関連付けされていること\n- ブラウザのプロキシ設定でlocalhostが除外されていること\n\n**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-testing</artifactId>\n  <scope>test</scope>\n</dependency>\n<!-- Java 8 以前 -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-testing-jetty6</artifactId>\n  <scope>test</scope>\n</dependency>\n<!-- Java 11 以降 -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-testing-jetty9</artifactId>\n  <scope>test</scope>\n</dependency>\n```\n\njarダウンロードコマンド: `mvn dependency:copy-dependencies -DoutputDirectory=lib`\n\n`httpDump.bat` をpom.xmlと同じディレクトリに配置する。\n\n## 設定画面起動手順\n\nツールバー: ウィンドウ(Window) → 設定(Preferences) → 一般(General) → エディタ(Editors) → ファイルの関連付け(File Associations) → 右ペインで`*.html`を選択 → 追加(Add)ボタン押下",
+    "s2": "ラジオボタンから外部プログラム(External program)を選択し、参照(Browse)ボタンを押下する。",
+    "s3": "OSに応じて以下のファイルを選択する。\n\n- Windows: httpDump.bat\n- Linux: httpDump.sh",
+    "s4": "EclipseのパッケージエクスプローラからHTMLファイルを右クリックし、「httpDumpで開く」を選択するとツールが起動する。"
+  }
+}

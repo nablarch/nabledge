@@ -1,0 +1,76 @@
+{
+  "id": "handlers-http_messaging_response_building_handler",
+  "title": "HTTPメッセージングレスポンス変換ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/http_messaging/http_messaging_response_building_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/handler/HttpMessagingResponseBuildingHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/InterSystemMessage.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/dataformat/DataRecordFormatterSupport.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/reader/StructuredFwHeaderDefinition.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "HttpMessagingResponseBuildingHandler",
+        "nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler",
+        "HTTPメッセージングレスポンス変換ハンドラ",
+        "ハンドラクラス"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-messaging-http",
+        "com.nablarch.framework",
+        "モジュール依存関係",
+        "Maven依存設定"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "hints": [
+        "http_response_handler",
+        "ハンドラ順序制約",
+        "HTTPレスポンスハンドラより後ろに設定",
+        "HttpResponse"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "レスポンスヘッダに設定される値",
+      "hints": [
+        "Status-Code",
+        "Content-Type",
+        "X-Correlation-Id",
+        "CorrelationId",
+        "InterSystemMessage",
+        "DataRecordFormatterSupport",
+        "レスポンスヘッダ設定",
+        "Content-Type設定"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "フレームワーク制御ヘッダのレイアウトを変更する",
+      "hints": [
+        "StructuredFwHeaderDefinition",
+        "nablarch.fw.messaging.reader.StructuredFwHeaderDefinition",
+        "fwHeaderDefinition",
+        "フレームワーク制御ヘッダ",
+        "ヘッダレイアウト変更"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-messaging-http</artifactId>\n</dependency>\n```",
+    "s3": "[http_response_handler](handlers-http_response_handler.json#s1) よりも後ろに設定すること。このハンドラで生成した `HTTPレスポンスオブジェクト` を [http_response_handler](handlers-http_response_handler.json#s1) がクライアントに返却するため。",
+    "s4": "後続のハンドラで作成された応答電文オブジェクトをもとに以下のレスポンスヘッダを設定する。\n\n| ヘッダ | 設定値 |\n|---|---|\n| Status-Code | 応答電文オブジェクトのステータスコード |\n| Content-Type | `InterSystemMessage.getFormatter()` から取得したMIME(`DataRecordFormatterSupport#getMimeType()`) + charset(`DataRecordFormatterSupport#getDefaultEncoding()`)。例: `application/json;charset=utf-8` |\n| X-Correlation-Id | 応答電文オブジェクトのヘッダに設定された `CorrelationId` の値 |\n\n> **重要**: このハンドラでは、上記以外のレスポンスヘッダを設定できない。上記外のレスポンスヘッダを使用したい場合は、プロジェクトでハンドラを作成し対応すること。",
+    "s5": "応答電文内のフレームワーク制御ヘッダの定義を変更する場合、プロジェクトで拡張したフレームワーク制御ヘッダの定義を設定する必要がある。設定しない場合はデフォルトの `StructuredFwHeaderDefinition` が使用される。\n\nフレームワーク制御ヘッダの詳細は [フレームワーク制御ヘッダ](../libraries/libraries-http_system_messaging.json#s5) を参照。\n\n```xml\n<component class=\"nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler\">\n  <property name=\"fwHeaderDefinition\">\n    <component class=\"sample.SampleFwHeaderDefinition\" />\n  </property>\n</component>\n```"
+  }
+}

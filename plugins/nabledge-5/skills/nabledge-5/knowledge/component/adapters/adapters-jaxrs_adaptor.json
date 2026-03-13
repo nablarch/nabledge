@@ -1,0 +1,76 @@
+{
+  "id": "adapters-jaxrs_adaptor",
+  "title": "JAX-RSアダプタ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/adaptors/jaxrs_adaptor.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsMethodBinderFactory.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/jaxrs/jersey/JerseyJaxRsHandlerListFactory.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/jaxrs/jackson/Jackson2BodyConverter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxbBodyConverter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/FormUrlEncodedConverter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/jaxrs/resteasy/ResteasyJaxRsHandlerListFactory.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsHandlerListFactory.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-jackson-adaptor",
+        "nablarch-jersey-adaptor",
+        "nablarch-resteasy-adaptor",
+        "Jacksonアダプタ",
+        "Jerseyアダプタ",
+        "RESTEasyアダプタ",
+        "Jackson1系廃止",
+        "モジュール依存関係"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Jersey環境下でRESTfulウェブサービスを使用する",
+      "hints": [
+        "JerseyJaxRsHandlerListFactory",
+        "JaxRsMethodBinderFactory",
+        "Jackson2BodyConverter",
+        "JaxbBodyConverter",
+        "FormUrlEncodedConverter",
+        "Jersey設定",
+        "ファクトリインジェクション",
+        "ボディコンバータ自動設定"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "RESTEasy環境下でRESTfulウェブサービスを使用する",
+      "hints": [
+        "ResteasyJaxRsHandlerListFactory",
+        "JaxRsMethodBinderFactory",
+        "Jackson2BodyConverter",
+        "JaxbBodyConverter",
+        "FormUrlEncodedConverter",
+        "RESTEasy設定",
+        "ファクトリインジェクション",
+        "ボディコンバータ自動設定"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "各環境下で使用するボディコンバータを変更（追加）したい",
+      "hints": [
+        "JaxRsHandlerListFactory",
+        "JerseyJaxRsHandlerListFactory",
+        "ResteasyJaxRsHandlerListFactory",
+        "カスタムボディコンバータ",
+        "MIMEタイプ追加",
+        "ハンドラリストカスタマイズ"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**モジュール**:\n```xml\n<!-- jacksonアダプタを使う場合 -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-jackson-adaptor</artifactId>\n</dependency>\n\n<!-- Jersey用アダプタを使う場合 -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-jersey-adaptor</artifactId>\n</dependency>\n\n<!-- RESTEasy用アダプタを使う場合 -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-resteasy-adaptor</artifactId>\n</dependency>\n```\n\n> **補足**: Jackson 2.12.7.1でテスト済み。バージョンを変更する場合はプロジェクト側でテストを行い問題ないことを確認すること。\n\n> **補足**: Nablarch5u16よりJackson1系のサポートを廃止（セキュリティ脆弱性への対応が行われなくなったため）。Jackson1系を使用していた場合はJackson2系へ移行すること。参考: [JVNDB-2019-012258](https://jvndb.jvn.jp/ja/contents/2019/JVNDB-2019-012258.html)、[GHSA-r6j9-8759-g62w](https://github.com/advisories/GHSA-r6j9-8759-g62w)",
+    "s2": "JAX-RSの実装がJerseyの場合、Jersey用アダプタを使用する。\n\n`JaxRsMethodBinderFactory#handlerList` に対して `JerseyJaxRsHandlerListFactory` をファクトリインジェクションする。これにより以下のハンドラ構成が自動的に設定される:\n\n- [body_convert_handler](../handlers/handlers-body_convert_handler.json#s1)（以下のコンバータが設定される）:\n  - JSONコンバータ: `Jackson2BodyConverter`\n  - XMLコンバータ: `JaxbBodyConverter`\n  - application/x-www-form-urlencodedコンバータ: `FormUrlEncodedConverter`\n- [jaxrs_bean_validation_handler](../handlers/handlers-jaxrs_bean_validation_handler.json#s1)\n\n```xml\n<component name=\"packageMapping\" class=\"nablarch.integration.router.RoutesMapping\">\n  <property name=\"methodBinderFactory\">\n    <component class=\"nablarch.fw.jaxrs.JaxRsMethodBinderFactory\">\n      <property name=\"handlerList\">\n        <!-- handlerListプロパティにJerseyのハンドラキューをファクトリインジェクションする -->\n        <component class=\"nablarch.integration.jaxrs.jersey.JerseyJaxRsHandlerListFactory\"/>\n      </property>\n    </component>\n  </property>\n</component>\n```\n\n> **補足**: 使用するウェブアプリケーションサーバにJacksonがバンドルされていない場合は、Jacksonのモジュールをアプリケーションモジュールとセットでデプロイすること。",
+    "s3": "JAX-RSの実装がRESTEasyの場合、RESTEasy用アダプタを使用する。\n\n`JaxRsMethodBinderFactory#handlerList` に対して `ResteasyJaxRsHandlerListFactory` をファクトリインジェクションする。これにより以下のハンドラ構成が自動的に設定される:\n\n- [body_convert_handler](../handlers/handlers-body_convert_handler.json#s1)（以下のコンバータが設定される）:\n  - JSONコンバータ: `Jackson2BodyConverter`\n  - XMLコンバータ: `JaxbBodyConverter`\n  - application/x-www-form-urlencodedコンバータ: `FormUrlEncodedConverter`\n- [jaxrs_bean_validation_handler](../handlers/handlers-jaxrs_bean_validation_handler.json#s1)\n\n```xml\n<component name=\"packageMapping\" class=\"nablarch.integration.router.RoutesMapping\">\n  <property name=\"methodBinderFactory\">\n    <component class=\"nablarch.fw.jaxrs.JaxRsMethodBinderFactory\">\n      <property name=\"handlerList\">\n        <!-- handlerListプロパティにRESTEasyのハンドラキューをファクトリインジェクションする -->\n        <component class=\"nablarch.integration.jaxrs.resteasy.ResteasyJaxRsHandlerListFactory\"/>\n      </property>\n    </component>\n  </property>\n</component>\n```\n\n> **補足**: 使用するウェブアプリケーションサーバにJacksonがバンドルされていない場合は、Jacksonのモジュールをアプリケーションモジュールとセットでデプロイすること。",
+    "s4": "プロジェクトで対応すべきMIMEが増えた場合は、`JaxRsHandlerListFactory` を実装して対応する。実装時は `JerseyJaxRsHandlerListFactory` または `ResteasyJaxRsHandlerListFactory` を参考にすること。"
+  }
+}

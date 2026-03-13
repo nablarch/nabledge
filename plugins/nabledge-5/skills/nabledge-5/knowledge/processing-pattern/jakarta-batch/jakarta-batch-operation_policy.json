@@ -1,0 +1,46 @@
+{
+  "id": "jakarta-batch-operation_policy",
+  "title": "運用方針",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/feature_details/operation_policy.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/JobExecutor.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/Main.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "障害監視",
+      "hints": [
+        "JobExecutor",
+        "Main",
+        "障害監視",
+        "終了ステータス",
+        "正常終了",
+        "異常終了",
+        "警告終了",
+        "運用担当者向けログ",
+        "進捗ログ",
+        "リカバリ",
+        "運用負荷",
+        "終了予定時間",
+        "リターンコード"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ログの出力方針",
+      "hints": [
+        "運用担当者向けログ",
+        "進捗ログ",
+        "ログ出力方針",
+        "スタックトレース",
+        "全てのログ",
+        "障害対応"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "JSR352バッチアプリケーションで推奨する障害監視・ログ出力方針:\n\n- 障害監視はバッチの終了ステータスで行う（[jsr352-failure_monitoring](#s1)）\n- 予期できる障害（取り込みファイルが存在しない等）発生時のリカバリ用に、運用担当者向けログを出力する\n- 予期できない障害（アプリケーションの不具合等）発生時の調査用に、全てのログを出力する\n- バッチ処理の遅延時に終了時刻を予測するため、進捗ログを出力する\n\nこれらの方針に従うことで以下のメリットが得られる。障害発生時や顧客の問い合わせ対応に対して運用担当者のみで対応できることが増え、開発者の運用負荷の軽減が期待できる。\n\n- 障害発生時に運用担当者向けログにリカバリ手順を出力しておけば、運用担当者がリカバリを行うことができる\n- 進捗ログを出力しておけば、開発者が別の手段で進捗状況を確認する必要がなくなり、運用担当者は進捗ログを参照して終了予定時間を顧客に回答できる\n\n> **重要**: バッチの設計者は、予期できる障害とその対処方法を洗い出し、[運用担当者向けログ](jakarta-batch-operator_notice_log.json) に出力するようにバッチを設計すること。\n\n![障害検知時のログ参照イメージ](assets/jakarta-batch-operation_policy/operation-image.png)\n![バッチ処理遅延時のログ参照イメージ](assets/jakarta-batch-operation_policy/progress-image.png)\n\nバッチの終了ステータスをもとに障害監視する。\n\n| 終了ステータス | 意味 | 運用対応 |\n|---|---|---|\n| 正常終了 | バッチ処理が正常に終了 | — |\n| 異常終了 | バッチが異常終了し後続ジョブが実行できない | 運用担当者はログを参照し障害対応 |\n| 警告終了 | 問題が発生したが後続ジョブは実行できる | 運用担当者はログを参照し問題内容を確認 |\n\nバッチアプリケーションの終了ステータス（Javaプロセスから戻されるリターンコード）の詳細: `JobExecutor` および `Main`\n\n> **補足**: 終了コードをより細かく分類したい場合は、起動クラス(Main)を作成して対応すること。",
+    "s2": "**運用担当者向けログ**: 発生した障害とその対処方法を記載したメッセージを出力する。詳細情報（スタックトレース）は運用担当者には不要なため出力しない。詳細: [operator_notice_log](jakarta-batch-operator_notice_log.json)\n\n**進捗ログ**: バッチ処理の進捗状況を出力する。バッチ処理遅延時に現在の処理の終了を予測し、続行・停止の判断に使用する。詳細: [progress_log](jakarta-batch-progress_log.json)\n\n**全てのログ**: 進捗ログを除く全てのログを出力する。運用担当者向けログに対応した詳細情報（スタックトレース）も含む。"
+  }
+}

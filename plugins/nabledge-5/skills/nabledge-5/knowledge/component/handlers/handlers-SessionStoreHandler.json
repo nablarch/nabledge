@@ -1,0 +1,130 @@
+{
+  "id": "handlers-SessionStoreHandler",
+  "title": "セッション変数保存ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/SessionStoreHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/session/SessionStoreHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/session/SessionManager.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpErrorResponse.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/session/HttpSessionManagedExpiration.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/session/DbManagedExpiration.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/session/store/UserSessionSchema.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "SessionStoreHandler",
+        "nablarch.common.web.session.SessionStoreHandler",
+        "セッション変数保存",
+        "マルチスレッド後勝ち",
+        "セッションストアハンドラ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "nablarch-fw-web-dbstore",
+        "DBストアモジュール",
+        "Maven依存"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "hints": [
+        "配置順制約",
+        "http_response_handler",
+        "multipart_handler",
+        "forwarding_handler",
+        "HIDDENストア",
+        "ハンドラ配置順"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "セッションストアを使用するための設定",
+      "hints": [
+        "SessionManager",
+        "sessionManager",
+        "セッションストア設定",
+        "availableStores",
+        "セッションストア構成"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "セッション変数を直列化してセッションストアに保存する",
+      "hints": [
+        "直列化",
+        "シリアライズ",
+        "セッション変数保存",
+        "session_store-serialize"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "セッションストアの改竄をチェックする",
+      "hints": [
+        "改竄チェック",
+        "HttpErrorResponse",
+        "HIDDENストア改竄",
+        "ステータスコード400",
+        "セッション改竄検知"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "改竄エラー時の遷移先を設定する",
+      "hints": [
+        "改竄エラー遷移先",
+        "web.xml設定",
+        "エラーページ",
+        "forwarding_handler",
+        "HttpErrorHandler_DefaultPage"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "セッションIDを保持するクッキーの名前や属性を変更する",
+      "hints": [
+        "クッキー設定",
+        "NABLARCH_SID",
+        "cookieName",
+        "cookieSecure",
+        "HttpOnly属性",
+        "Secure属性",
+        "セッションクッキー",
+        "cookiePath",
+        "cookieDomain"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "有効期間をデータベースに保存する",
+      "hints": [
+        "DbManagedExpiration",
+        "HttpSessionManagedExpiration",
+        "expiration",
+        "UserSessionSchema",
+        "有効期間DB保存",
+        "SESSION_OBJECT",
+        "userSessionSchema"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.common.web.session.SessionStoreHandler`\n\n後続のハンドラやライブラリで追加・更新・削除されたセッション変数をセッションストアに保存するハンドラ。\n\n> **重要**: 同一セッションの処理が複数スレッドで実行された場合（例：タブブラウザで複数タブから同時リクエスト）、使用ストアによっては後勝ちとなる。使用するストアの特性をよく理解し、要件にあったストアを選択すること。ストアの詳細は [session_store-future_of_store](../libraries/libraries-session_store.json#s10) を参照。",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n\n<!-- DBストア・有効期間のDB保存を使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web-dbstore</artifactId>\n</dependency>\n```",
+    "s3": "ハンドラの配置順に関する制約:\n\n- [http_response_handler](handlers-http_response_handler.json#s1) より**後ろ**に配置すること: サーブレットフォワード時にフォワード先でセッションストアの値にアクセスできるようにするため。\n- [multipart_handler](handlers-multipart_handler.json#s1) より**後ろ**に配置すること: HIDDENストア使用時にリクエストパラメータにアクセスできるようにするため。\n- [forwarding_handler](handlers-forwarding_handler.json#s1) より**前**に配置すること: [forwarding_handler](handlers-forwarding_handler.json#s1) を本ハンドラより前に設定すると、HIDDENストアはリクエストパラメータからセッション変数を読み込みリクエストスコープに保存するため、内部フォワード時に最新のセッション変数を取得できない問題が発生する。",
+    "s4": "`SessionManager` を本ハンドラの `sessionManager` プロパティに設定する。\n\n設定に必要な内容:\n- アプリケーションで使用するセッションストア（複数指定可）\n- デフォルトで使用するセッションストア名\n\n```xml\n<component class=\"nablarch.common.web.session.SessionStoreHandler\">\n  <property name=\"sessionManager\" ref=\"sessionManager\"/>\n</component>\n\n<!-- \"sessionManager\"というコンポーネント名で設定する -->\n<component name=\"sessionManager\" class=\"nablarch.common.web.session.SessionManager\">\n  <!-- プロパティの設定は省略 -->\n</component>\n```\n\nSessionManagerのプロパティ詳細は [session_store-use_config](../libraries/libraries-session_store.json) を参照。",
+    "s5": "セッション変数をセッションストアに保存する際、直列化の仕組みを選択できる。選択可能な直列化の仕組みの詳細は [session_store-serialize](../libraries/libraries-session_store.json#s1) を参照。",
+    "s6": "セッションストアからセッション変数を読み込む際に改竄チェックを実施する。\n\n- **HIDDENストアの改竄を検知した場合**: ステータスコード400の `HttpErrorResponse` を送出する。\n- **それ以外のストアの改竄を検知した場合**: セッションストアの復号処理時に発生した例外をそのまま送出する。",
+    "s7": "セッションストアの改竄を検知した場合に表示するエラーページは `web.xml` に記載する必要がある。\n\n理由: 本ハンドラは [forwarding_handler](handlers-forwarding_handler.json#s1) よりも前に設定する必要があり（[session_store_handler-constraint](#s2) 参照）、[forwarding_handler](handlers-forwarding_handler.json#s1) は [http_error_handler](handlers-HttpErrorHandler.json#s1) よりも手前に設定する必要がある。この結果、本ハンドラで発生した例外に対しては :ref:`HttpErrorHandler_DefaultPage` の設定値が適用できないため、`web.xml` への設定が必要となる。",
+    "s8": "セッションIDを保持するクッキーのデフォルト設定:\n\n| 属性 | デフォルト値 |\n|---|---|\n| クッキー名 | NABLARCH_SID |\n| Path属性 | ホスト配下のすべてのパス |\n| Domain属性 | 指定しない |\n| Secure属性 | 使用しない（HTTPS環境では「使用する」に設定すること） |\n| MaxAge属性 | 指定しない |\n| HttpOnly属性 | ServletAPIバージョン3.0以上であれば使用する |\n\n> **重要**: セッションIDを保持するクッキーをセッションクッキー（ブラウザを閉じれば破棄されるクッキー）とするため、MaxAge属性は使用しない。セッションストアの有効期間はHTTPセッションに保存する。複数ストア間で異なる有効期間を設定した場合は、最も期間の長い値をHTTPセッションに保存する。\n\n> **補足**: HttpOnly属性の値はアプリケーションで使用しているServletAPIのバージョンによって決定されるため、設定ファイルから任意の値は指定できない。\n\nクッキー名や属性を変更する場合の設定例:\n```xml\n<component class=\"nablarch.common.web.session.SessionStoreHandler\">\n  <property name=\"cookieName\" value=\"NABLARCH_SID\" />\n  <property name=\"cookiePath\" value=\"/\" />\n  <property name=\"cookieDomain\" value=\"\" />\n  <property name=\"cookieSecure\" value=\"false\" />\n  <property name=\"sessionManager\" ref=\"sessionManager\"/>\n</component>\n\n<component name=\"sessionManager\" class=\"nablarch.common.web.session.SessionManager\">\n  <property name=\"availableStores\">\n    <list>\n      <component class=\"nablarch.common.web.session.store.DbStore\">\n        <property name=\"expires\" value=\"1800\" />\n      </component>\n    </list>\n  </property>\n</component>\n```",
+    "s9": "デフォルトでは `HttpSessionManagedExpiration` が使用され、セッションの有効期間はHTTPセッションに保存される。本ハンドラの `expiration` プロパティを `DbManagedExpiration` に差し替えることでデータベースに保存できる。\n\n> **重要**: 有効期間をデータベースに保存する場合、SESSION_OBJECTカラムを必須属性にしてはならない。ログアウト時などにセッションオブジェクトがNullのレコードが登録され得るため、必ずNull許容で定義すること。5u15以前のアーキタイプから作成したプロジェクトではデフォルトで必須属性として定義されているため、ALTER文の発行またはテーブルの再作成が必要。\n\nテーブル名・カラム名を変更する場合は `DbManagedExpiration` の `userSessionSchema` プロパティに `UserSessionSchema` のコンポーネントを定義する（DBストアも同じテーブル・カラムに変更すること）。また、有効期間は [初期化](../libraries/libraries-repository.json) が必要。\n\n設定例:\n```xml\n<component name=\"sessionStoreHandler\" class=\"nablarch.common.web.session.SessionStoreHandler\">\n  <property name=\"expiration\" ref=\"expiration\" />\n</component>\n\n<component name=\"expiration\" class=\"nablarch.common.web.session.DbManagedExpiration\">\n  <property name=\"dbManager\">\n    <component class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">\n      <property name=\"dbTransactionName\" value=\"expirationTransaction\"/>\n    </component>\n  </property>\n  <!-- テーブル定義変更時のみ -->\n  <property name=\"userSessionSchema\" ref=\"userSessionSchema\" />\n</component>\n\n<!-- テーブル定義変更時はDBストアも変更する -->\n<component name=\"dbStore\" class=\"nablarch.common.web.session.store.DbStore\">\n  <property name=\"userSessionSchema\" ref=\"userSessionSchema\" />\n</component>\n\n<!-- テーブル定義変更時のみ -->\n<component name=\"userSessionSchema\" class=\"nablarch.common.web.session.store.UserSessionSchema\">\n  <property name=\"tableName\" value=\"USER_SESSION_DB\" />\n  <property name=\"sessionIdName\" value=\"SESSION_ID_COL\" />\n  <property name=\"sessionObjectName\" value=\"SESSION_OBJECT_COL\" />\n  <property name=\"expirationDatetimeName\" value=\"EXPIRATION_DATETIME_COL\" />\n</component>\n\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"expiration\"/>\n    </list>\n  </property>\n</component>\n```"
+  }
+}

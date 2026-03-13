@@ -1,0 +1,91 @@
+{
+  "id": "libraries-http_access_log",
+  "title": "HTTPアクセスログの出力",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/log/http_access_log.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/HttpAccessLogFormatter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/HttpAccessJsonLogFormatter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/BasicLogFormatter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/ThreadContext.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/JsonLogFormatter.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/session/SessionUtil.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "HTTPアクセスログの出力方針",
+      "hints": [
+        "HTTPアクセスログ",
+        "HttpAccessLogFormatter",
+        "HTTP_ACCESS",
+        "http_access_log_handler",
+        "nablarch_tag_handler",
+        "http_request_java_package_mapping",
+        "ログ出力設定",
+        "httpAccessLogFormatter.beginFormat",
+        "httpAccessLogFormatter.endFormat",
+        "httpAccessLogFormatter.maskingPatterns",
+        "証跡ログ兼用",
+        "アクセスログ設定",
+        "FileLogWriter",
+        "BasicLogFormatter",
+        "nablarch.fw.web.handler.HttpAccessLogFormatter",
+        "nablarch.core.log.basic.BasicLogFormatter",
+        "ThreadContext",
+        "nablarch.core.ThreadContext",
+        "httpAccessLogFormatter.className",
+        "httpAccessLogFormatter.parametersFormat",
+        "httpAccessLogFormatter.dispatchingClassFormat",
+        "httpAccessLogFormatter.maskingChar",
+        "httpAccessLogFormatter.datePattern",
+        "httpAccessLogFormatter.parametersSeparator",
+        "httpAccessLogFormatter.sessionScopeSeparator",
+        "httpAccessLogFormatter.beginOutputEnabled",
+        "httpAccessLogFormatter.parametersOutputEnabled",
+        "httpAccessLogFormatter.dispatchingClassOutputEnabled",
+        "httpAccessLogFormatter.endOutputEnabled",
+        "HTTPアクセスログ設定",
+        "ログフォーマット設定",
+        "マスキング設定"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "JSON形式の構造化ログとして出力する",
+      "hints": [
+        "HttpAccessJsonLogFormatter",
+        "nablarch.fw.web.handler.HttpAccessJsonLogFormatter",
+        "JsonLogFormatter",
+        "nablarch.core.log.basic.JsonLogFormatter",
+        "httpAccessLogFormatter.className",
+        "httpAccessLogFormatter.beginTargets",
+        "httpAccessLogFormatter.endTargets",
+        "httpAccessLogFormatter.structuredMessagePrefix",
+        "httpAccessLogFormatter.parametersTargets",
+        "httpAccessLogFormatter.dispatchingClassTargets",
+        "httpAccessLogFormatter.beginLabel",
+        "httpAccessLogFormatter.parametersLabel",
+        "httpAccessLogFormatter.dispatchingClassLabel",
+        "httpAccessLogFormatter.endLabel",
+        "JSON構造化ログ出力"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "セッションストアIDについて",
+      "hints": [
+        "SessionUtil",
+        "nablarch.common.web.session.SessionUtil",
+        "セッションストアID",
+        "session_store",
+        "session_store_handler",
+        "http_access_log_handler"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 必要なハンドラ\n\nHTTPアクセスログ出力には以下の3つのハンドラが必要:\n\n- [http_access_log_handler](../handlers/handlers-http_access_log_handler.json#s1): リクエスト処理開始時と終了時のログ出力\n- [nablarch_tag_handler](../handlers/handlers-nablarch_tag_handler.json#s1): hiddenパラメータ復号後のログ出力（:ref:`hidden暗号化<tag-hidden_encryption>` 参照）\n- [http_request_java_package_mapping](../handlers/handlers-http_request_java_package_mapping.json#s1): ディスパッチ先クラス決定後のログ出力\n\nリクエストパラメータを含めたリクエスト情報を出力することで証跡ログの要件を満たせる場合、HTTPアクセスログと証跡ログを兼用可能。\n\n## HTTPアクセスログの出力方針\n\nアプリケーション全体のアプリケーションログに出力する。\n\n| ログレベル | ロガー名 |\n|---|---|\n| INFO | HTTP_ACCESS |\n\n**log.properties設定例:**\n\n```properties\nwriterNames=appLog\n\nwriter.appLog.className=nablarch.core.log.basic.FileLogWriter\nwriter.appLog.filePath=/var/log/app/app.log\nwriter.appLog.encoding=UTF-8\nwriter.appLog.maxFileSize=10000\nwriter.appLog.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.appLog.formatter.format=$date$ -$logLevel$- $runtimeLoggerName$ [$executionId$] boot_proc = [$bootProcess$] proc_sys = [$processingSystem$] req_id = [$requestId$] usr_id = [$userId$] $message$$information$$stackTrace$\n\navailableLoggersNamesOrder=ACC,ROO\n\nloggers.ROO.nameRegex=.*\nloggers.ROO.level=INFO\nloggers.ROO.writerNames=appLog\n\nloggers.ACC.nameRegex=HTTP_ACCESS\nloggers.ACC.level=INFO\nloggers.ACC.writerNames=appLog\n```\n\n**app-log.properties設定例:**\n\n```properties\n# HttpAccessLogFormatter\n#httpAccessLogFormatter.className=\n#httpAccessLogFormatter.datePattern=\n#httpAccessLogFormatter.maskingChar=\n#httpAccessLogFormatter.maskingPatterns=\n#httpAccessLogFormatter.parametersSeparator=\n#httpAccessLogFormatter.sessionScopeSeparator=\n#httpAccessLogFormatter.beginOutputEnabled=\n#httpAccessLogFormatter.parametersOutputEnabled=\n#httpAccessLogFormatter.dispatchingClassOutputEnabled=\n#httpAccessLogFormatter.endOutputEnabled=\nhttpAccessLogFormatter.beginFormat=@@@@ BEGIN @@@@ rid = [$requestId$] uid = [$userId$] sid = [$sessionId$]\\\n                                      \\n\\turl          = [$url$$query$]\\\n                                      \\n\\tmethod      = [$method$]\\\n                                      \\n\\tport        = [$port$]\\\n                                      \\n\\tclient_ip   = [$clientIpAddress$]\\\n                                      \\n\\tclient_host = [$clientHost$]\nhttpAccessLogFormatter.parametersFormat=@@@@ PARAMETERS @@@@\\n\\tparameters  = [$parameters$]\nhttpAccessLogFormatter.dispatchingClassFormat=@@@@ DISPATCHING CLASS @@@@ class = [$dispatchingClass$]\nhttpAccessLogFormatter.endFormat=@@@@ END @@@@ rid = [$requestId$] uid = [$userId$] sid = [$sessionId$] url = [$url$$query$] method = [$method$] status_code = [$statusCode$] content_path = [$contentPath$]\\\n                                    \\n\\tstart_time     = [$startTime$]\\\n                                    \\n\\tend_time       = [$endTime$]\\\n                                    \\n\\texecution_time = [$executionTime$]\\\n                                    \\n\\tmax_memory     = [$maxMemory$]\\\n                                    \\n\\tfree_memory    = [$freeMemory$]\n```\n\n## HTTPアクセスログの設定（テキスト形式）\n\n**クラス**: `nablarch.fw.web.handler.HttpAccessLogFormatter`\n\n設定は [log-app_log_setting](libraries-log.json) で説明したプロパティファイルに行う。\n\n| プロパティ名 | デフォルト値 | 説明 |\n|---|---|---|\n| httpAccessLogFormatter.className | | `HttpAccessLogFormatter` を実装したクラス。差し替える場合に指定する |\n| httpAccessLogFormatter.beginFormat | (後述) | リクエスト処理開始時のログフォーマット |\n| httpAccessLogFormatter.parametersFormat | (後述) | hiddenパラメータ復号後のログフォーマット |\n| httpAccessLogFormatter.dispatchingClassFormat | (後述) | ディスパッチ先クラス決定後のログフォーマット |\n| httpAccessLogFormatter.endFormat | (後述) | リクエスト処理終了時のログフォーマット |\n| httpAccessLogFormatter.datePattern | `yyyy-MM-dd HH:mm:ss.SSS` | 開始・終了日時のパターン（SimpleDateFormat形式） |\n| httpAccessLogFormatter.maskingPatterns | | マスク対象パラメータ名または変数名（正規表現・カンマ区切り・大文字小文字不区別）。例: `password` と指定すると `password` `newPassword` `password2` 等にマッチ |\n| httpAccessLogFormatter.maskingChar | `*` | マスク文字 |\n| httpAccessLogFormatter.parametersSeparator | `\\n\\t\\t` | リクエストパラメータのセパレータ |\n| httpAccessLogFormatter.sessionScopeSeparator | `\\n\\t\\t` | セッションスコープ情報のセパレータ |\n| httpAccessLogFormatter.beginOutputEnabled | `true` | リクエスト処理開始時の出力有無 |\n| httpAccessLogFormatter.parametersOutputEnabled | `true` | hiddenパラメータ復号後の出力有無 |\n| httpAccessLogFormatter.dispatchingClassOutputEnabled | `true` | ディスパッチ先クラス決定後の出力有無 |\n| httpAccessLogFormatter.endOutputEnabled | `true` | リクエスト処理終了時の出力有無 |\n\n**beginFormatのプレースホルダ**: `$requestId$`, `$userId$`, `$url$`, `$query$`, `$port$`, `$method$`, `$sessionId$`, `$sessionStoreId$`, `$parameters$`, `$sessionScope$`, `$clientIpAddress$`, `$clientHost$`, `$clientUserAgent$`\n\nデフォルト:\n```bash\n@@@@ BEGIN @@@@ rid = [$requestId$] uid = [$userId$] sid = [$sessionId$]\n    \\n\\turl         = [$url$]\n    \\n\\tmethod      = [$method$]\n    \\n\\tport        = [$port$]\n    \\n\\tclient_ip   = [$clientIpAddress$]\n    \\n\\tclient_host = [$clientHost$]\n```\n\n> **補足**: リクエストパラメータは :ref:`hidden暗号化<tag-hidden_encryption>` の復号前の状態となる。\n\n> **重要**: リクエストIDとユーザIDは `BasicLogFormatter` が出力する項目と重複するが、HTTPアクセスログのフォーマットの自由度を高めるために設けている。これらは `ThreadContext` から取得するため、ハンドラ構成に [thread_context_handler](../handlers/handlers-thread_context_handler.json#s1) が必要。ユーザIDは [thread_context_handler-user_id_attribute_setting](../handlers/handlers-thread_context_handler.json#s4) を参照してセッションに値を設定すること。\n\n**parametersFormatのプレースホルダ**: beginFormatと同じ。\n\nデフォルト:\n```bash\n@@@@ PARAMETERS @@@@\n    \\n\\tparameters  = [$parameters$]\n```\n\n**dispatchingClassFormatのプレースホルダ**: `$dispatchingClass$`, `$sessionStoreId$`\n\nデフォルト:\n```bash\n@@@@ DISPATCHING CLASS @@@@ class = [$dispatchingClass$]\n```\n\n**endFormatのプレースホルダ**: `$dispatchingClass$`, `$statusCode$`, `$responseStatusCode$`, `$contentPath$`, `$startTime$`, `$endTime$`, `$executionTime$`, `$maxMemory$`, `$freeMemory$`, `$sessionStoreId$`\n\nデフォルト:\n```bash\n@@@@ END @@@@ rid = [$requestId$] uid = [$userId$] sid = [$sessionId$] url = [$url$] status_code = [$statusCode$] content_path = [$contentPath$]\n    \\n\\tstart_time     = [$startTime$]\n    \\n\\tend_time       = [$endTime$]\n    \\n\\texecution_time = [$executionTime$]\n    \\n\\tmax_memory     = [$maxMemory$]\n    \\n\\tfree_memory    = [$freeMemory$]\n```\n\n> **補足**: ステータスコード(内部)は [http_access_log_handler](../handlers/handlers-http_access_log_handler.json#s1) の復路時点のコード。ステータスコード(クライアント)は [http_response_handler](../handlers/handlers-http_response_handler.json#s1) でクライアントに返却するコード（変換ルール: [http_response_handler-convert_status_code](../handlers/handlers-http_response_handler.json#s4)）。ステータスコード(クライアント)はログ出力時点では確定していないが、 [http_response_handler](../handlers/handlers-http_response_handler.json#s1) と同じ機能を使い導出して出力する。\n\n> **重要**: ステータスコード(クライアント)は、HTTPアクセスログハンドラの処理後にJSPのエラー等のシステムエラーが発生した場合、実際の内部コードと異なることがある。障害監視ログが発生した際はこの値が正しくない可能性を考慮してログを検証すること。\n\n設定例:\n```properties\nhttpAccessLogFormatter.className=nablarch.fw.web.handler.HttpAccessLogFormatter\nhttpAccessLogFormatter.beginFormat=> sid = [$sessionId$] @@@@ BEGIN @@@@\\n\\turl = [$url$]\\n\\tmethod = [$method$]\nhttpAccessLogFormatter.parametersFormat=> sid = [$sessionId$] @@@@ PARAMETERS @@@@\\n\\tparameters  = [$parameters$]\nhttpAccessLogFormatter.dispatchingClassFormat=> sid = [$sessionId$] @@@@ DISPATCHING CLASS @@@@ class = [$dispatchingClass$]\nhttpAccessLogFormatter.endFormat=< sid = [$sessionId$] @@@@ END @@@@ url = [$url$] status_code = [$statusCode$] content_path = [$contentPath$]\nhttpAccessLogFormatter.datePattern=\"yyyy-MM-dd HH:mm:ss.SSS\"\nhttpAccessLogFormatter.maskingChar=#\nhttpAccessLogFormatter.maskingPatterns=password,mobilePhoneNumber\nhttpAccessLogFormatter.parametersSeparator=,\nhttpAccessLogFormatter.sessionScopeSeparator=,\nhttpAccessLogFormatter.beginOutputEnabled=true\nhttpAccessLogFormatter.parametersOutputEnabled=true\nhttpAccessLogFormatter.dispatchingClassOutputEnabled=true\nhttpAccessLogFormatter.endOutputEnabled=true\n```",
+    "s2": "## JSON形式の構造化ログとして出力する\n\n**クラス**: `nablarch.fw.web.handler.HttpAccessJsonLogFormatter`\n\n[log-json_log_setting](libraries-log.json) によりJSON出力する場合、デフォルトの `HttpAccessLogFormatter` ではHTTPアクセスログの各項目はmessageの値に文字列として出力される。各項目もJSONの値として出力するには `HttpAccessJsonLogFormatter` を使用する。設定は [log-app_log_setting](libraries-log.json) で説明したプロパティファイルに行う。\n\n| プロパティ名 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|\n| httpAccessLogFormatter.className | ○ | | `nablarch.fw.web.handler.HttpAccessJsonLogFormatter` を指定 |\n| httpAccessLogFormatter.beginTargets | | (後述) | リクエスト処理開始時の出力項目（カンマ区切り） |\n| httpAccessLogFormatter.parametersTargets | | `label,parameters` | hiddenパラメータ復号後の出力項目（カンマ区切り） |\n| httpAccessLogFormatter.dispatchingClassTargets | | (後述) | ディスパッチ先クラス決定後の出力項目（カンマ区切り） |\n| httpAccessLogFormatter.endTargets | | (後述) | リクエスト処理終了時の出力項目（カンマ区切り） |\n| httpAccessLogFormatter.datePattern | | `yyyy-MM-dd HH:mm:ss.SSS` | 日時パターン（SimpleDateFormat形式） |\n| httpAccessLogFormatter.maskingPatterns | | | マスク対象（正規表現・カンマ区切り・大文字小文字不区別） |\n| httpAccessLogFormatter.maskingChar | | `*` | マスク文字 |\n| httpAccessLogFormatter.beginOutputEnabled | | `true` | リクエスト処理開始時の出力有無 |\n| httpAccessLogFormatter.parametersOutputEnabled | | `true` | hiddenパラメータ復号後の出力有無 |\n| httpAccessLogFormatter.dispatchingClassOutputEnabled | | `true` | ディスパッチ先クラス決定後の出力有無 |\n| httpAccessLogFormatter.endOutputEnabled | | `true` | リクエスト処理終了時の出力有無 |\n| httpAccessLogFormatter.beginLabel | | `\"HTTP ACCESS BEGIN\"` | リクエスト処理開始時ログのlabel値 |\n| httpAccessLogFormatter.parametersLabel | | `\"PARAMETERS\"` | hiddenパラメータ復号後ログのlabel値 |\n| httpAccessLogFormatter.dispatchingClassLabel | | `\"DISPATCHING CLASS\"` | ディスパッチ先クラス決定後ログのlabel値 |\n| httpAccessLogFormatter.endLabel | | `\"HTTP ACCESS END\"` | リクエスト処理終了時ログのlabel値 |\n| httpAccessLogFormatter.structuredMessagePrefix | | `\"$JSON$\"` | JSONメッセージ識別マーカー文字列。 `JsonLogFormatter` の同プロパティと一致させること（[log-basic_setting](libraries-log.json#s4) 参照） |\n\n**beginTargetsの指定可能項目**: `label`（デフォルト）, `requestId`（デフォルト）, `userId`（デフォルト）, `sessionId`（デフォルト）, `url`（デフォルト）, `port`（デフォルト）, `method`（デフォルト）, `clientIpAddress`（デフォルト）, `clientHost`（デフォルト）, `sessionStoreId`, `queryString`, `parameters`, `sessionScope`, `clientUserAgent`\n\n**dispatchingClassTargetsの指定可能項目**: `label`（デフォルト）, `dispatchingClass`（デフォルト）, `sessionId`, `sessionStoreId`\n\n**endTargetsの指定可能項目**: `label`（デフォルト）, `requestId`（デフォルト）, `userId`（デフォルト）, `sessionId`（デフォルト）, `url`（デフォルト）, `statusCode`（デフォルト）, `contentPath`（デフォルト）, `startTime`（デフォルト）, `endTime`（デフォルト）, `executionTime`（デフォルト）, `maxMemory`（デフォルト）, `freeMemory`（デフォルト）, `sessionStoreId`, `dispatchingClass`, `responseStatusCode`\n\n設定例:\n```properties\nhttpAccessLogFormatter.className=nablarch.fw.web.handler.HttpAccessJsonLogFormatter\nhttpAccessLogFormatter.structuredMessagePrefix=$JSON$\nhttpAccessLogFormatter.beginTargets=sessionId,url,method\nhttpAccessLogFormatter.parametersTargets=sessionId,parameters\nhttpAccessLogFormatter.dispatchingClassTargets=sessionId,dispatchingClass\nhttpAccessLogFormatter.endTargets=sessionId,url,statusCode,contentPath\nhttpAccessLogFormatter.beginLabel=HTTP ACCESS BEGIN\nhttpAccessLogFormatter.parametersLabel=PARAMETERS\nhttpAccessLogFormatter.dispatchingClassLabel=DISPATCHING CLASS\nhttpAccessLogFormatter.endLabel=HTTP ACCESS END\n```",
+    "s3": "## セッションストアIDについて\n\nセッションストアIDを出力に含めた場合、 :ref:`session_store` が発行するセッションを識別するIDが出力される。値は [session_store_handler](../handlers/handlers-SessionStoreHandler.json#s1) の往路で記録されたものを使用する。\n\n> **重要**: セッションストアIDをログに出力する場合、 [http_access_log_handler](../handlers/handlers-http_access_log_handler.json#s1) は [session_store_handler](../handlers/handlers-SessionStoreHandler.json#s1) より後に配置しなければならない。\n\nセッションストアIDはリクエスト処理開始時の状態で固定されるため:\n- セッションストアIDが発行されていないリクエストでは、途中でIDが発行されても同一リクエスト内で出力されるセッションストアIDは全て空になる\n- 途中で `セッションを破棄` または `IDを変更` しても、ログに出力される値はリクエスト処理開始時のものから変化しない"
+  }
+}

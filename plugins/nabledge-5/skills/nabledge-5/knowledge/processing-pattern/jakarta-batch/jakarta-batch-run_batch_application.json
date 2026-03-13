@@ -1,0 +1,57 @@
+{
+  "id": "jakarta-batch-run_batch_application",
+  "title": "JSR352バッチアプリケーションの起動",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/feature_details/run_batch_application.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/Main.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/operations/JobOperator.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/runtime/BatchStatus.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/runtime/context/JobContext.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "バッチアプリケーションを起動する",
+      "hints": [
+        "nablarch.fw.batch.ee.Main",
+        "JSR352",
+        "バッチアプリケーション起動",
+        "ジョブ実行",
+        "起動オプション",
+        "jobParameters",
+        "JobOperator"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "バッチアプリケーションの終了コード",
+      "hints": [
+        "BatchStatus",
+        "JobContext",
+        "終了コード",
+        "警告終了",
+        "異常終了",
+        "exitStatus",
+        "WARNING",
+        "BatchStatus.COMPLETED",
+        "JobContext#setExitStatus"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "システムリポジトリを初期化する",
+      "hints": [
+        "nablarchJobListenerExecutor",
+        "batch-boot.xml",
+        "システムリポジトリ初期化",
+        "ジョブリスナー",
+        "diConfigFilePath"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## バッチアプリケーションを起動する\n\nJSR352準拠バッチアプリケーションの起動はJSR352で規定されたAPIを使用する。\n\n**クラス**: `nablarch.fw.batch.ee.Main`\n\n実行引数: 対象JOBのXMLファイル名（`.xml`を除いたファイル名）を指定する。\n\nジョブ実行時にパラメータを指定する場合は起動オプション（`--名前 値`形式）で指定する。指定した値は `JobOperator#start` のjobParametersに設定される。\n\n```bash\n# option1=value1 と option2=value2 の2つのjobParametersが設定される\njava nablarch.fw.batch.ee.Main jobName --option1 value1 --option2 value2\n```\n\n> **補足**: プロジェクト独自の起動クラス作成時には `Main` を参考に実装できる。",
+    "s2": "## バッチアプリケーションの終了コード\n\n`Main` の終了コード:\n\n| 終了種別 | コード | 条件 |\n|---|---|---|\n| 正常終了 | 0 | 終了ステータスが\"WARNING\"以外、かつバッチステータスが `BatchStatus.COMPLETED` |\n| 異常終了 | 1 | 終了ステータスが\"WARNING\"以外、かつバッチステータスが `BatchStatus.COMPLETED` 以外 |\n| 警告終了 | 2 | 終了ステータスが\"WARNING\" |\n\nJOB終了待ちの間に中断された場合は異常終了コード（1）を返す。\n\n警告終了させる方法: chunkまたはbatchlet内で `JobContext#setExitStatus(String)` を呼び出し `\"WARNING\"` を終了ステータスとして設定する。警告終了時はバッチステータスが `BatchStatus.COMPLETED` 以外（例外送出）の場合でも、終了ステータスに`\"WARNING\"`を設定していれば警告終了となる。",
+    "s3": "## システムリポジトリを初期化する\n\n[repository](../../component/libraries/libraries-repository.json#s1) はジョブリスナーに `nablarchJobListenerExecutor` を設定することで初期化できる。\n\n- システムリポジトリのルートXMLファイル名: `batch-boot.xml`（クラスパス直下に配置）\n- ファイル名・配置場所を変更する場合: `nablarchJobListenerExecutor` のパラメータ `diConfigFilePath` で指定する\n\nデフォルトの `batch-boot.xml` を使用する場合:\n```xml\n<job id=\"sample-job\" xmlns=\"http://xmlns.jcp.org/xml/ns/javaee\" version=\"1.0\">\n  <listeners>\n    <listener ref=\"nablarchJobListenerExecutor\" />\n  </listeners>\n</job>\n```\n\nデフォルト以外の設定ファイルを使用する場合:\n```xml\n<job id=\"sample-job\" xmlns=\"http://xmlns.jcp.org/xml/ns/javaee\" version=\"1.0\">\n  <listeners>\n    <listener ref=\"nablarchJobListenerExecutor\">\n      <properties>\n        <property name=\"diConfigFilePath\" value=\"sample_project/batch-boot.xml\" />\n      </properties>\n    </listener>\n  </listeners>\n</job>\n```"
+  }
+}

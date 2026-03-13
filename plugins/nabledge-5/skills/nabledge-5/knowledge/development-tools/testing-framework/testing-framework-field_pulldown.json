@@ -1,0 +1,67 @@
+{
+  "id": "testing-framework-field_pulldown",
+  "title": "プルダウン入力項目ウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_jsp_widgets/field_pulldown.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "field:pulldown",
+        "field_code_pulldown",
+        "プルダウンリスト",
+        "コードサンプル",
+        "ローカル動作",
+        "サーバ動作",
+        "JSPウィジェット"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "listName",
+        "elementLabelProperty",
+        "elementValueProperty",
+        "elementLabelPattern",
+        "withNoneOption",
+        "sample",
+        "readonly",
+        "disabled",
+        "domain",
+        "id",
+        "cssClass",
+        "nameAlias",
+        "multiple",
+        "size",
+        "dataFrom",
+        "comment",
+        "initialValueDesc",
+        "プルダウン属性",
+        "ローカル動作挙動",
+        "field_base"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "pulldown.tag",
+        "base.tag",
+        "nablarch.js",
+        "base.less",
+        "部品一覧",
+        "タグライブラリ",
+        "内部構造"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "バリエーション: [field_code_pulldown](testing-framework-field_code_pulldown.json) はNablarchコード定義の内容をもとにしたプルダウンリストを表示する場合に使用する。\n\n**設計成果物（ローカル動作）**:\n```jsp\n<field:pulldown\n  title=\"性別\"\n  sample=\"[男性]|女性\">\n</field:pulldown>\n```\n\n**実装成果物（サーバ動作）**:\n```jsp\n<field:pulldown\n  title=\"性別\"\n  name=\"formdata.gender\"\n  cssClass=\"gender\"\n  readonly=\"false\"\n  listName=\"gender\"\n  elementLabelPattern=\"$LABEL$\"\n  elementLabelProperty=\"name\"\n  elementValueProperty=\"id\"\n  sample=\"[男性]|女性\">\n</field:pulldown>\n```",
+    "s2": "[field_base](testing-framework-field_base.json) を用いて実装。共通仕様は [field_base](testing-framework-field_base.json) を参照。\n\n**ローカル動作時の挙動**:\n- 入力画面: `sample` に指定した項目を選択候補とするプルダウンリストを表示する\n- 確認画面: 選択済み項目（`\"[]\"` で囲われた項目）のラベルの一覧を表示する\n\n**属性値一覧**（◎=必須 ○=任意 ×=無効）（[field_base](testing-framework-field_base.json) の共通属性は省略）\n\n| 属性名 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| domain | 項目のドメイン型 | 文字列 | ○ | ○ | |\n| readonly | 編集可能かどうか | 真偽値 | ○ | ○ | デフォルト: `false` |\n| disabled | サーバに対する入力値の送信を抑制するかどうか | 真偽値 | ○ | ○ | デフォルト: `false` |\n| id | HTMLのid属性値（省略時はname属性と同じ値） | 文字列 | ○ | ○ | |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ | |\n| nameAlias | 一つのエラーメッセージに対して複数の入力項目をハイライト表示する場合に指定 | 文字列 | ○ | × | |\n| listName | 選択項目のリストの属性名 | 文字列 | ◎ | × | |\n| elementLabelProperty | リスト要素から値を取得するためのプロパティ名 | 文字列 | ◎ | × | |\n| elementValueProperty | リスト要素からラベルを取得するためのプロパティ名 | 文字列 | ◎ | × | |\n| elementLabelPattern | ラベルを整形するためのフォーマットパターン | 文字列 | ○ | × | デフォルト: `$LABEL$` |\n| multiple | xhtmlのmultiple属性 | 真偽値 | ○ | ○ | |\n| size | xhtmlのsize属性 | 数値 | ○ | ○ | |\n| withNoneOption | リスト先頭に選択なしのオプションを追加するか否か | 真偽値 | ○ | ○ | デフォルト: `false` |\n| sample | ローカル動作時に表示するプルダウン項目のラベル | 文字列 | × | ○ | `\"|\"` 区切りで複数指定。`\"[]\"` で囲われた項目は選択状態で表示 |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 「表示情報取得元」.「表示項目名」の形式で設定 |\n| comment | プルダウンについての備考 | 文字列 | × | × | 設計書の画面項目定義の「備考」に表示 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の画面項目定義の「備考」に表示 |",
+    "s3": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/pulldown.tag | [field_pulldown](testing-framework-field_pulldown.json) |\n| /WEB-INF/tags/widget/field/base.tag | [field_base](testing-framework-field_base.json) |\n| /js/jsp/taglib/nablarch.js | `<n:select>` のエミュレーション機能を実装するタグライブラリスタブJS |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義。プルダウンに関する定義もここに含まれる。 |"
+  }
+}

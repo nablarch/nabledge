@@ -1,0 +1,125 @@
+{
+  "id": "report-report",
+  "title": "帳票ライブラリ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/extension_components/report/index.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "JasperReports",
+        "PDF帳票出力",
+        "iTextAsian",
+        "依存ライブラリ入手困難",
+        "メンテナンス終了",
+        "代替手段",
+        "帳票ライブラリ",
+        "BasicReportCreator",
+        "BasicReportTemplateResolver",
+        "BasicReportExporter",
+        "BasicReportOutputResolver",
+        "ReportParam",
+        "ReportContext",
+        "ReportManager",
+        "FilePathSetting",
+        "帳票テンプレート配置",
+        "reportCreator",
+        "帳票出力"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "要求",
+      "hints": [
+        "PDF帳票出力",
+        "ストリーム出力",
+        "言語切り替え",
+        "帳票連結",
+        "BasicReportOutputResolver",
+        "PDF定期削除",
+        "未実装機能",
+        "帳票サーバ",
+        "プリンタ直接印刷",
+        "BasicReportTemplateResolver",
+        "java.util.Locale",
+        "Locale",
+        "ロケール指定",
+        "i18n",
+        "多言語"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "構造 — クラス図",
+      "hints": [
+        "クラス図",
+        "帳票ライブラリ構造",
+        "jrxmlコンパイル",
+        "JRAntCompileTask",
+        "jasper",
+        "jrxml",
+        "Ant",
+        "パッケージング"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "構造 — インターフェース定義",
+      "hints": [
+        "ReportCreator",
+        "ReportExporter",
+        "ReportOutputResolver",
+        "ReportTemplateResolver",
+        "インターフェース定義",
+        "帳票生成処理パッケージ",
+        "帳票出力処理パッケージ",
+        "帳票出力先解決パッケージ",
+        "帳票テンプレートファイルパス解決パッケージ"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "構造 — クラス定義",
+      "hints": [
+        "ReportManager",
+        "ReportContext",
+        "ReportParam",
+        "ReportException",
+        "SqlRowIteratorDataSourceSupport",
+        "SqlResultSetDataSource",
+        "ResultSetIteratorDataSource",
+        "ReportCreatorSupport",
+        "BasicReportCreator",
+        "VirtualizerReportCreator",
+        "ReportExporterSupport",
+        "BasicReportExporter",
+        "BasicReportOutputResolver",
+        "BasicReportTemplateResolver",
+        "クラス定義"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "実装例",
+      "hints": [
+        "帳票テンプレート",
+        "jrxml",
+        "jasperファイル",
+        "コンパイル",
+        "テンプレート配置",
+        "BasicReportTemplateResolver",
+        "帳票アプリケーションガイド"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 概要\n\nJasperReportsを利用したPDF帳票出力ライブラリ。JasperReports 5.6.1 (GNU LESSER GENERAL PUBLIC LICENSE version 3) を使用。\n\nURL: [https://community.jaspersoft.com/download-jaspersoft/community-edition/](https://community.jaspersoft.com/download-jaspersoft/community-edition/) (2014/12/16時点)\n\n> **重要**: `com.lowagie:iTextAsian:1.0.0` が現在入手困難なため、今後メンテナンスは行われない。帳票出力機能が必要な場合は以下の代替手段を検討すること。\n> - 商用製品を利用する\n> - ブラウザやOfficeのPDF出力機能を利用する\n\n## リソースの配置\n\n帳票テンプレートのルートは `FilePathSetting` で `report` キーとして指定する。\n\n```bash\nsrc/main/resource/\n└─ report/           # FilePathSettingで\"report\"として指定\n    └─ R001/         # REPORT ID = R001用ディレクトリ（業務コードで指定）\n        ├─ index.jasper      # デフォルトテンプレート\n        └─ userdata.jasper   # テンプレート名指定で利用\n```\n\n## 実装例\n\n**クラス**: `ReportParam`, `ReportContext`, `ReportManager`\n\nテンプレート名未指定の場合は `index.jasper` を使用:\n\n```java\nReportParam param = new ReportParam(data);\nReportContext ctx = new ReportContext(\"R001\");\nctx.addReportParam(param);\nreturn ReportManager.createReport(ctx);\n```\n\n`ReportParam` の第1引数でテンプレート名を指定した場合はそのテンプレートを使用:\n\n```java\nReportParam param = new ReportParam(\"userdata\", data);\nReportContext ctx = new ReportContext(\"R001\");\nctx.addReportParam(param);\nreturn ReportManager.createReport(ctx);\n```\n\n> **補足**: 帳票のテストは出力結果のPDFファイルを目視で確認すること。\n\n## コンポーネント設定\n\n**クラス**: `nablarch.integration.report.creator.BasicReportCreator`, `nablarch.integration.report.templateresolver.BasicReportTemplateResolver`, `nablarch.integration.report.exporter.BasicReportExporter`, `nablarch.integration.report.outputresolver.BasicReportOutputResolver`\n\nデフォルトのコンポーネント名は `reportCreator`:\n\n```xml\n<component name=\"reportCreator\" class=\"nablarch.integration.report.creator.BasicReportCreator\">\n  <property name=\"reportTemplateResolver\">\n    <component class=\"nablarch.integration.report.templateresolver.BasicReportTemplateResolver\" />\n  </property>\n  <property name=\"reportExporter\">\n    <component class=\"nablarch.integration.report.exporter.BasicReportExporter\">\n      <property name=\"reportOutputResolver\">\n        <component class=\"nablarch.integration.report.outputresolver.BasicReportOutputResolver\" />\n      </property>\n    </component>\n  </property>\n</component>\n```\n\n`FilePathSetting` でレポートベースフォルダを設定:\n\n```properties\nfile.path.report=classpath:report\n```\n\n```xml\n<component name=\"filePathSetting\" class=\"nablarch.core.util.FilePathSetting\" autowireType=\"None\">\n  <property name=\"basePathSettings\">\n    <map>\n      <entry key=\"report\" value=\"${file.path.report}\" />\n    </map>\n  </property>\n</component>\n```",
+    "s2": "## 要求\n\n### 実装済み機能\n\n1. PDF形式の帳票を作成し、ファイルまたはストリーム形式で出力できる\n2. 帳票テンプレートをプログラム内で指定した言語のものに切り替えることができる\n3. 異なる帳票フォーマットのPDFを連結して1つのファイルとして出力できる\n\n> **補足**: ディレード処理制御、同時実行制御、流量制御、タイムアウト設計、使用可能文字集合、使用フォント、帳票の参照権限、帳票テンプレートの管理方式、帳票データの管理・帳票クリーニング機能についてはPJにて検討すること。\n\n> **補足**: `BasicReportOutputResolver` はPDFを帳票テンプレートと同一フォルダに一意なファイル名で作成するため、実行のたびにPDFが増えていく。対象システムの帳票出力の頻度とディスク容量より、出力後不要となった帳票ファイルを定期的に削除する処理を検討する必要がある。\n\n> **補足**: JasperReportsの標準機能を用いることでPDFにパスワードや暗号化、ブックマーク、作成者などの各種ドキュメントプロパティを設定することが出来る。その場合には本ライブラリの修正が必要となる。\n\n### 未実装機能\n\n- **帳票サーバ機能**: 帳票の作成・出力を行うWebサービスを公開する機能\n- **プリンタ直接印刷機能**: PDF出力を介することなく、直接プリンタに印刷要求を発行する機能\n\n## 帳票テンプレートの言語指定\n\n言語ごとに帳票テンプレートを用意し、プログラム側で `java.util.Locale` を指定することで、使用する帳票テンプレートを切り替える。\n\n`BasicReportTemplateResolver` は `java.util.Locale#getLanguage` の値をアンダースコア付きで末尾に付与したファイル名を探す。\n\n| 指定前 | 指定後（`java.util.Locale.US` の場合） |\n|--------|----------------------------------------|\n| index.jasper | index_en.jasper |\n\n`index_en.jasper` が見つからない場合は、`index.jasper` にフォールバックする。\n\nロケール設定方法は「帳票アプリケーション開発ガイド」を参照すること。",
+    "s3": "## 構造 — クラス図\n\n![クラス図](assets/report-report/Report_ClassDiagram.png)\n\n## 帳票テンプレートのコンパイル（Antタスク）\n\nアプリケーションパッケージング時、全ての `.jrxml` は `.jasper` ファイルにコンパイルしておく必要がある。\n\n`net.sf.jasperreports.ant.JRAntCompileTask` を使ったAntタスク実装例（`[...]` 箇所はプロジェクトに適したパスに置き換える）:\n\n```xml\n<path id=\"classpath\">\n    <fileset dir=\"[JasperReportsライブラリ格納フォルダ]\">\n        <include name=\"**/*.jar\" />\n    </fileset>\n</path>\n\n<target name=\"compile\">\n    <taskdef name=\"jrc\" classname=\"net.sf.jasperreports.ant.JRAntCompileTask\">\n        <classpath refid=\"classpath\" />\n    </taskdef>\n    <jrc destdir=\"[コンパイルファイル出力先]\" tempdir=\"[コンパイルファイル出力先]\" keepjava=\"false\">\n        <src>\n            <fileset dir=\"[帳票テンプレート(jrxml)格納先ルートフォルダ]\">\n                <include name=\"**/*.jrxml\" />\n            </fileset>\n        </src>\n        <classpath refid=\"classpath\" />\n    </jrc>\n</target>\n```",
+    "s4": "## 構造 — インターフェース定義\n\n**a) 帳票生成処理パッケージ**\n- **クラス**: `ReportCreator` — 帳票生成インタフェース\n\n**b) 帳票出力処理パッケージ**\n- **クラス**: `ReportExporter` — 帳票出力インタフェース\n\n**c) 帳票出力先解決パッケージ**\n- **クラス**: `ReportOutputResolver` — 帳票出力先のパス解決インタフェース\n\n**d) 帳票テンプレートファイルパス解決パッケージ**\n- **クラス**: `ReportTemplateResolver` — 帳票テンプレートのパス解決インタフェース",
+    "s5": "## 構造 — クラス定義\n\n**a) 帳票管理パッケージ**\n- **クラス**: `ReportManager` — 業務機能からの要求を受付、システムリポジトリ経由でReportCreatorに処理を委譲\n- **クラス**: `ReportContext` — 帳票出力に関する情報を保持（出力情報・帳票ID・ReportCreatorのキー）\n- **クラス**: `ReportParam` — テンプレート名と帳票テンプレートにバインドする情報を保持\n- **クラス**: `ReportException` — 帳票機能でチェック例外が発生した場合に送出される実行時例外\n\n**b) データソースパッケージ**\n- **クラス**: `SqlRowIteratorDataSourceSupport` — `nablarch.core.db.statement.SqlRow` を用いた帳票テンプレートのフィールド項目バインド処理サポートクラス\n- **クラス**: `SqlResultSetDataSource` — `nablarch.core.db.statement.SqlResultSet` を利用した帳票テンプレートのフィールド項目バインド実装クラス\n- **クラス**: `ResultSetIteratorDataSource` — `nablarch.core.db.statement.ResultSetIterator` を利用した帳票テンプレートのフィールド項目バインド実装クラス\n\n**c) 帳票生成処理パッケージ**\n- **クラス**: `ReportCreatorSupport` — 帳票生成のサポートクラス（実際の帳票出力はReportExporterに委譲）\n- **クラス**: `BasicReportCreator` — 帳票生成の基本実装クラス（帳票出力用データをJasperReportライブラリのインスタンスに変換）\n- **クラス**: `VirtualizerReportCreator` — 大量データ出力をサポートするクラス\n\n**d) 帳票出力処理パッケージ**\n- **クラス**: `ReportExporterSupport` — 帳票出力のサポートクラス\n- **クラス**: `BasicReportExporter` — 帳票出力の基本実装クラス\n\n**e) 帳票出力先解決パッケージ**\n- **クラス**: `BasicReportOutputResolver` — 帳票出力先のパス解決を行う基本実装クラス（帳票テンプレートと同一フォルダに一意なファイル名を生成し作成）\n\n**f) 帳票テンプレートファイルパス解決パッケージ**\n- **クラス**: `BasicReportTemplateResolver` — 帳票テンプレートのパス解決を行う基本実装クラス",
+    "s6": "## 実装例\n\n帳票出力のレイアウトおよびデータの埋め込み箇所を帳票テンプレートで管理する。帳票テンプレートの作成については [帳票アプリケーションガイド](assets/report-report/帳票アプリケーション開発ガイド.docx) を参照すること。（ファイル: `assets/report-report/帳票アプリケーション開発ガイド.docx`）\n\n### 帳票テンプレートのコンパイル\n\n設計時に作成する帳票テンプレート（jrxml）は、実行時にはjasperファイルにコンパイルしておく必要がある。\n\n### 帳票テンプレートの配置\n\n> **補足**: 基本実装クラス（`BasicReportTemplateResolver` など）がベースとなっているため、PJ側でカスタマイズすることでマッピングの変更が可能。"
+  }
+}

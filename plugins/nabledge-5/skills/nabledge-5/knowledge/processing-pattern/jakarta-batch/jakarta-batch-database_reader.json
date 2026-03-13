@@ -1,0 +1,37 @@
+{
+  "id": "jakarta-batch-database_reader",
+  "title": "データベースを入力とするChunkステップ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/feature_details/database_reader.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/chunk/BaseDatabaseItemReader.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "データベースを入力とするChunkステップ",
+      "hints": [
+        "BaseDatabaseItemReader",
+        "nablarch.fw.batch.ee.chunk.BaseDatabaseItemReader",
+        "DeferredEntityList",
+        "UniversalDao",
+        "ProgressManager",
+        "doOpen",
+        "readItem",
+        "doClose",
+        "データベース入力",
+        "Chunkステップ",
+        "遅延ロード",
+        "リーダ専用DB接続",
+        "@Dependent",
+        "@Named",
+        "@Inject",
+        "EmployeeSearchReader",
+        "EmployeeForm"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "データベースから処理対象データを抽出する場合、JSR352提供のリーダではなく `BaseDatabaseItemReader` を実装すること。\n\n`BaseDatabaseItemReader` を実装することで、リーダ専用のDB接続を使用してデータ抽出が可能。トランザクション制御時にカーソルが自動クローズされるDBでも動作する。\n\n**クラス**: `nablarch.fw.batch.ee.chunk.BaseDatabaseItemReader`\n\n実装パターン:\n- `doOpen(Serializable checkpoint)`: 処理対象データを取得する。大量データの場合は遅延ロード（`UniversalDao.defer().findAllBySqlFile()`）を使用してヒープ圧迫を避けること\n- `readItem()`: 次の1レコードを返す。データなし/最後まで処理済みの場合は `null` を返す\n- `doClose()`: リソース解放が必要な場合に実装する\n\n```java\n@Dependent\n@Named\npublic class EmployeeSearchReader extends BaseDatabaseItemReader {\n  private DeferredEntityList<EmployeeForm> list;\n  private Iterator<EmployeeForm> iterator;\n  private final ProgressManager progressManager;\n\n  @Inject\n  public EmployeeSearchReader(ProgressManager progressManager) {\n    this.progressManager = progressManager;\n  }\n\n  @Override\n  public void doOpen(Serializable checkpoint) throws Exception {\n    progressManager.setInputCount(\n        UniversalDao.countBySqlFile(EmployeeForm.class, \"SELECT_EMPLOYEE\"));\n    list = (DeferredEntityList<EmployeeForm>) UniversalDao.defer()\n            .findAllBySqlFile(EmployeeForm.class, \"SELECT_EMPLOYEE\");\n    iterator = list.iterator();\n  }\n\n  @Override\n  public Object readItem() {\n    if (iterator.hasNext()) {\n      return iterator.next();\n    }\n    return null;\n  }\n\n  @Override\n  public void doClose() throws Exception {\n    list.close();\n  }\n}\n```"
+  }
+}

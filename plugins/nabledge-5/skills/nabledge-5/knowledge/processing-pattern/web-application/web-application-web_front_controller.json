@@ -1,0 +1,60 @@
+{
+  "id": "web-application-web_front_controller",
+  "title": "Webフロントコントローラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/feature_details/web_front_controller.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/servlet/WebFrontController.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/HandlerQueueManager.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/servlet/RepositoryBasedWebFrontController.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "com.nablarch.framework",
+        "モジュール依存関係",
+        "WebFrontController モジュール"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラキューを設定する",
+      "hints": [
+        "WebFrontController",
+        "RepositoryBasedWebFrontController",
+        "nablarch.fw.web.servlet.WebFrontController",
+        "nablarch.fw.web.servlet.RepositoryBasedWebFrontController",
+        "NablarchServletContextListener",
+        "handlerQueue",
+        "ハンドラキュー設定",
+        "サーブレットフィルタ設定",
+        "webFrontController",
+        "HttpCharacterEncodingHandler",
+        "GlobalErrorHandler",
+        "ハンドラキューの実行の起点",
+        "リクエスト処理委譲"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "委譲するWebフロントコントローラの名前を変更する",
+      "hints": [
+        "WebFrontController",
+        "RepositoryBasedWebFrontController",
+        "nablarch.fw.web.servlet.RepositoryBasedWebFrontController",
+        "controllerName",
+        "複数ハンドラ構成",
+        "ウェブアプリケーションとウェブサービス併用",
+        "jaxrsController",
+        "init-param"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "s2": "WebFrontControllerはウェブアプリケーションにおけるハンドラキューの実行の起点となるクラス。本クラスを使用することで、クライアントから受け取ったリクエストに対する処理をハンドラキューに委譲できる。\n\n## コンポーネント設定ファイルへの設定\n\n`WebFrontController` をコンポーネント設定ファイルに設定し、`handlerQueue` プロパティにハンドラを順番に追加する。\n\n> **重要**: コンポーネント名は **webFrontController** とすること。\n\n```xml\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\"/>\n      <component class=\"nablarch.fw.handler.GlobalErrorHandler\"/>\n      <!-- 省略 -->\n    </list>\n  </property>\n</component>\n```\n\n## サーブレットフィルタの設定\n\n`RepositoryBasedWebFrontController` をサーブレットフィルタとして `web.xml` に設定する。これにより、リクエスト処理がシステムリポジトリに登録したハンドラキューへ委譲される。\n\n> **重要**: システムリポジトリを初期化するため、[nablarch_servlet_context_listener](web-application-nablarch_servlet_context_listener.json#s1) をリスナーとして設定すること。\n\n```xml\n<context-param>\n  <param-name>di.config</param-name>\n  <param-value>web-boot.xml</param-value>\n</context-param>\n\n<listener>\n  <listener-class>nablarch.fw.web.servlet.NablarchServletContextListener</listener-class>\n</listener>\n\n<filter>\n  <filter-name>entryPoint</filter-name>\n  <filter-class>nablarch.fw.web.servlet.RepositoryBasedWebFrontController</filter-class>\n</filter>\n\n<filter-mapping>\n  <filter-name>entryPoint</filter-name>\n  <url-pattern>/action/*</url-pattern>\n</filter-mapping>\n```",
+    "s3": "ウェブアプリケーションとウェブサービスを併用する場合など、ハンドラ構成の異なるWebFrontControllerを複数定義できる。`RepositoryBasedWebFrontController` はデフォルトで `webFrontController` という名前でシステムリポジトリからWebFrontControllerを取得する。`web.xml` の初期化パラメータ `controllerName` に取得名を設定することで変更可能。\n\nコンポーネント定義例（ウェブアプリケーション用とRESTfulウェブサービス用）:\n\n```xml\n<component name=\"webFrontController\"\n          class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <!-- ウェブアプリケーション用のハンドラ構成 -->\n    </list>\n  </property>\n</component>\n\n<component name=\"jaxrsController\"\n          class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <!-- RESTfulウェブサービス用のハンドラ構成 -->\n    </list>\n  </property>\n</component>\n```\n\n`web.xml` 設定例:\n\n> **重要**: `<init-param>` で `controllerName` パラメータにシステムリポジトリから取得するコントローラ名を設定すること。`<filter-mapping>` でそれぞれのWebFrontControllerが処理対象とするURLパターンを設定すること。\n\n```xml\n<filter>\n  <filter-name>webEntryPoint</filter-name>\n  <filter-class>nablarch.fw.web.servlet.RepositoryBasedWebFrontController</filter-class>\n</filter>\n<filter>\n  <filter-name>jaxrsEntryPoint</filter-name>\n  <filter-class>nablarch.fw.web.servlet.RepositoryBasedWebFrontController</filter-class>\n  <init-param>\n    <param-name>controllerName</param-name>\n    <param-value>jaxrsController</param-value>\n  </init-param>\n</filter>\n\n<filter-mapping>\n  <filter-name>webEntryPoint</filter-name>\n  <url-pattern>/action/*</url-pattern>\n  <url-pattern>/</url-pattern>\n</filter-mapping>\n<filter-mapping>\n  <filter-name>jaxrsEntryPoint</filter-name>\n  <url-pattern>/api/*</url-pattern>\n</filter-mapping>\n```"
+  }
+}

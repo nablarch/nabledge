@@ -1,0 +1,96 @@
+{
+  "id": "handlers-csrf_token_verification_handler",
+  "title": "CSRFトークン検証ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/csrf_token_verification_handler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/csrf/CsrfTokenUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/CsrfTokenGenerator.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/UUIDv4CsrfTokenGenerator.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/VerificationTargetMatcher.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/HttpMethodVerificationTargetMatcher.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/VerificationFailureHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/csrf/BadRequestVerificationFailureHandler.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/test/NopHandler.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "hints": [
+        "CsrfTokenVerificationHandler",
+        "nablarch.fw.web.handler.CsrfTokenVerificationHandler",
+        "CSRFトークン検証ハンドラ",
+        "ハンドラクラス名"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "com.nablarch.framework",
+        "モジュール依存関係",
+        "Maven設定"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "hints": [
+        "配置制約",
+        "ハンドラ順序",
+        "session_store_handler",
+        "nablarch_tag_handler",
+        "tag-hidden_encryption",
+        "セッションストアハンドラより後"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "CSRFトークンの生成と検証",
+      "hints": [
+        "CSRFトークン生成",
+        "CSRFトークン検証",
+        "UUIDv4CsrfTokenGenerator",
+        "HttpMethodVerificationTargetMatcher",
+        "BadRequestVerificationFailureHandler",
+        "CsrfTokenGenerator",
+        "VerificationTargetMatcher",
+        "VerificationFailureHandler",
+        "NopHandler",
+        "nablarch_csrf-token",
+        "X-CSRF-TOKEN",
+        "csrf-token",
+        "csrfTokenHeaderName",
+        "csrfTokenParameterName",
+        "csrfTokenSessionStoredVarName",
+        "csrfTokenSavedStoreName",
+        "WebConfig",
+        "テスト時無効化",
+        "処理フロー",
+        "CsrfTokenUtil",
+        "RESTfulウェブサービス",
+        "クライアントへのCSRFトークン送信"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "CSRFトークンを再生成する",
+      "hints": [
+        "CSRFトークン再生成",
+        "CsrfTokenUtil",
+        "regenerateCsrfToken",
+        "ログイン時のCSRF対策",
+        "セッションID再生成",
+        "セッションストア破棄"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.web.handler.CsrfTokenVerificationHandler`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+    "s3": "- [session_store_handler](handlers-SessionStoreHandler.json#s1) より後ろに配置すること（CSRFトークンをセッションストアに格納するため）\n- :ref:`tag` を使用する場合は [nablarch_tag_handler](handlers-nablarch_tag_handler.json#s1) より後ろに配置すること（:ref:`tag-hidden_encryption` を使用してCSRFトークンを画面に出力するため）",
+    "s4": ":ref:`session_store` の使用が必須（CSRFトークンをセッションストアに格納するため）。\n\n**RESTfulウェブサービスでのCSRF対策**:\nハンドラはリクエストヘッダまたはリクエストパラメータからCSRFトークンを取得するため、:ref:`RESTfulウェブサービス<restful_web_service>` のCSRF対策にも対応している。生成されたCSRFトークンを取得するためのユーティリティクラス `CsrfTokenUtil` が提供されており、プロジェクトのアーキテクチャに合わせてクライアントにCSRFトークンを送る仕組みを実装できる。\n\n**処理フロー**:\n1. セッションストアからCSRFトークンを取得する\n2. 取得できなかった場合はCSRFトークンを生成してセッションストアへ保存する\n3. HTTPリクエストが検証対象か否かを判定する\n4. 検証対象の場合はHTTPリクエストからCSRFトークンを取得して検証する\n5. 検証に失敗した場合はBadRequest(400)のレスポンスを返す\n6. 検証に成功した場合は次のハンドラへ処理を移す\n\n**設定例**（:ref:`tag` 使用時）:\n```xml\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component-ref name=\"sessionStoreHandler\" />\n      <component-ref name=\"nablarchTagHandler\"/>\n      <component-ref name=\"csrfTokenVerificationHandler\"/>\n    </list>\n  </property>\n</component>\n<component name=\"csrfTokenVerificationHandler\"\n           class=\"nablarch.fw.web.handler.CsrfTokenVerificationHandler\" />\n```\n\n**デフォルト動作**:\n\n| 項目 | デフォルト |\n|---|---|\n| セッションストア格納名 | `nablarch_csrf-token` |\n| トークン生成クラス | `UUIDv4CsrfTokenGenerator`（UUID v4使用） |\n| 使用セッションストア | デフォルトのセッションストア（名前指定なし） |\n| 検証対象判定クラス | `HttpMethodVerificationTargetMatcher`：GET/HEAD/TRACE/OPTIONSは検証対象外、それ以外（POST/PUT等）は検証対象 |\n| リクエストヘッダ名 | `X-CSRF-TOKEN` |\n| リクエストパラメータ名 | `csrf-token` |\n| 検証失敗時処理 | `BadRequestVerificationFailureHandler`：BadRequest(400)を返す |\n\n**カスタマイズ設定例**:\n```xml\n<component class=\"nablarch.fw.web.handler.CsrfTokenVerificationHandler\">\n  <property name=\"csrfTokenGenerator\">\n    <component class=\"com.sample.CustomCsrfTokenGenerator\" />\n  </property>\n  <property name=\"verificationTargetMatcher\">\n    <component class=\"com.sample.CustomVerificationTargetMatcher\" />\n  </property>\n  <property name=\"verificationFailureHandler\" />\n    <component class=\"com.sample.CustomVerificationFailureHandler\" />\n  </property>\n</component>\n<component name=\"webConfig\" class=\"nablarch.common.web.WebConfig\">\n  <property name=\"csrfTokenHeaderName\" value=\"X-CUSTOM-CSRF-TOKEN\" />\n  <property name=\"csrfTokenParameterName\" value=\"custom-csrf-token\" />\n  <property name=\"csrfTokenSessionStoredVarName\" value=\"custom-csrf-token\" />\n  <property name=\"csrfTokenSavedStoreName\" value=\"customStore\" />\n</component>\n```\n\n> **重要**: テスティングフレームワークを使用したリクエスト単体テストでは、正しい画面遷移を経由しないためCSRFトークン検証が失敗する。テスト設定でコンポーネントを `NopHandler` に差し替えてCSRF対策を無効化すること。\n>\n> ```xml\n> <!-- コンポーネント名を合わせることで上書き -->\n> <component name=\"csrfTokenVerificationHandler\" class=\"nablarch.test.NopHandler\" />\n> ```",
+    "s5": "ログイン後もCSRFトークンが再生成されていない場合、悪意のある人がCSRFトークンとセッションIDを利用者に送り込み、ログイン後に罠ページから利用者の意図しない攻撃リクエストを送信させることができる。ログイン時にCSRFトークンを再生成すること。\n\nアクション等のリクエスト処理で `CsrfTokenUtil.regenerateCsrfToken` を呼び出すと、ハンドラの戻り処理でCSRFトークンが再生成される。\n\n- ログイン時にセッションストアを破棄して再生成する実装: このメソッドは不要（セッションストア破棄と共にCSRFトークンも破棄され、次ページ表示時に新トークンが生成される）\n- ログイン時にセッションIDの再生成のみの実装: このメソッドを使用してCSRFトークンも再生成すること"
+  }
+}

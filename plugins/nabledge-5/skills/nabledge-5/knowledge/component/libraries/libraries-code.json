@@ -1,0 +1,118 @@
+{
+  "id": "libraries-code",
+  "title": "コード管理",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/code.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/BasicCodeManager.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/cache/BasicStaticDataCache.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/schema/CodePatternSchema.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/CodeUtil.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/schema/CodeNameSchema.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/validator/ee/CodeValue.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/code/validator/CodeValue.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "機能概要",
+      "hints": [
+        "コード管理",
+        "値と名称のマッピング",
+        "国際化対応",
+        "コードテーブル",
+        "参照整合性制約",
+        "DomaAdaptor",
+        "静的コード情報",
+        "enum推奨",
+        "BasicCodeLoader",
+        "BasicCodeManager",
+        "BasicStaticDataCache",
+        "BasicApplicationInitializer",
+        "CodePatternSchema",
+        "CodeNameSchema",
+        "codeManager",
+        "codeDefinitionCache",
+        "loadOnStartup",
+        "コード管理初期設定",
+        "コードパターンテーブル",
+        "コード名称テーブル"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-common-code",
+        "nablarch-common-code-jdbc",
+        "Maven依存関係",
+        "モジュール",
+        "CodeUtil",
+        "CodePatternSchema",
+        "patternColumnNames",
+        "PATTERN",
+        "codeSelect",
+        "コードパターン切り替え",
+        "getValues"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "名称の多言語化対応",
+      "hints": [
+        "CodeUtil",
+        "getName",
+        "getShortName",
+        "Locale",
+        "LANG",
+        "多言語化対応"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "画面などで表示する名称のソート順を定義する",
+      "hints": [
+        "SORT_ORDER",
+        "ソート順定義",
+        "codeSelect"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "名称、略称以外の名称を定義する",
+      "hints": [
+        "CodeUtil",
+        "getOptionalName",
+        "OPTIONAL_NAME",
+        "optionColumnName",
+        "labelPattern",
+        "OPTIONALNAME",
+        "オプション名称",
+        "CodePatternSchema",
+        "patternColumnNames"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "入力値が有効なコード値かチェックする",
+      "hints": [
+        "@CodeValue",
+        "bean_validation",
+        "nablarch_validation",
+        "CodeValue",
+        "pattern",
+        "コードバリデーション",
+        "ドメインバリデーション",
+        "SampleDomainBean",
+        "FLOW_STATUS"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "値と名称（略称）のマッピング情報を管理する機能。\n\n> **重要**: 静的なコード情報（値と名称のマッピング）のみ管理対象。「商品コード」「企業コード」のような動的に変化する情報は管理対象外。動的情報はアプリケーション側でマスタテーブルを作成して対処すること。\n\n> **重要**: この機能を使用すると、コードの名称を持つテーブルとコード値を持つテーブルにRDBMSの参照整合性制約を設定できない。この制約のチェックには [code-validation](#) を使用すること。\n\n> **補足**: 静的コード情報にはenumの使用を推奨。DBを使ったコード定義はメンテナンスコストが高く、Java上のコード値定数との二重メンテナンスが発生する。ただし、NablarchにはenumとDB値の相互変換機能がない。enumをDBに登録するには [doma_adaptor](../adapters/adapters-doma_adaptor.json#s1) を参照して設定すること。\n\n**国際化対応**: 言語ごとに名称を管理できる。\n\n**テーブル管理**: 値と名称の情報をDB上で管理する。事前にDBにテーブルを作成し、静的なコード情報を登録しておくこと。\n\n## コード管理機能を使用する為の初期設定\n\nコードパターンテーブルとコード名称テーブルの2テーブルを使用する。\n\n| カラム | 用途 |\n|---|---|\n| ID | コード情報を一意に識別するID（性別区分・住所区分ごとに一意） |\n| VALUE | コード情報内の名称を識別する値（例: male, female） |\n| PATTERN | 値を使用するか否かのフラグ（0 or 1）。不要な場合省略可能 |\n| LANG | 言語（日本語のみの場合 `ja`） |\n| SORT_ORDER | ソート順（昇順で返される） |\n| NAME | 名称 |\n| SHORT_NAME | 略称 |\n| OPTIONAL_NAME | オプション名称（カラム名・数は必要数定義可） |\n\n設定のポイント:\n- `BasicCodeManager` のコンポーネント名は **codeManager** とすること\n- `BasicStaticDataCache` の `loadOnStartup` 設定は [static_data_cache-cache_timing](libraries-static_data_cache.json) 参照\n- `BasicStaticDataCache` は初期化が必要なため初期化対象リストに設定すること\n\n```xml\n<component name=\"codeLoader\" class=\"nablarch.common.code.BasicCodeLoader\">\n  <property name=\"codePatternSchema\">\n    <component class=\"nablarch.common.code.schema.CodePatternSchema\">\n      <!-- CodePatternSchemaのプロパティにテーブル名及びカラム名を設定する。 -->\n    </component>\n  </property>\n  <property name=\"codeNameSchema\">\n    <component class=\"nablarch.common.code.schema.CodeNameSchema\">\n      <!-- CodeNameSchemaのプロパティにテーブル名及びカラム名を設定する。 -->\n    </component>\n  </property>\n</component>\n\n<component name=\"codeCache\" class=\"nablarch.core.cache.BasicStaticDataCache\">\n  <property name=\"loader\" ref=\"codeLoader\"/>\n  <property name=\"loadOnStartup\" value=\"false\"/>\n</component>\n\n<component name=\"codeManager\" class=\"nablarch.common.code.BasicCodeManager\">\n  <property name=\"codeDefinitionCache\" ref=\"codeCache\"/>\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"codeCache\"/>\n    </list>\n  </property>\n</component>\n```",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-code</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-code-jdbc</artifactId>\n</dependency>\n```\n\n## 機能毎に使用するコード情報を切り替える\n\nコードパターンテーブルのパターンカラムで機能ごとに表示・非表示を切り替える。パターン名は設定ファイルで設定したカラム名と**厳密に一致**させる必要がある。\n\nパターン列は `CodePatternSchema.patternColumnNames` に設定することで使用可能（設定方法は [code-setup_table](#) 参照）。\n\n```java\n// PATTERN1のリスト（OTHERを含む）を取得\nList<String> pattern1 = CodeUtil.getValues(\"GENDER\", \"PATTERN1\");\n// PATTERN2のリスト（OTHERを非表示）を取得\nList<String> pattern2 = CodeUtil.getValues(\"GENDER\", \"PATTERN2\");\n```\n\nJSPでのパターン指定（`pattern`属性）:\n```jsp\n<n:codeSelect name=\"form.gender\" codeId=\"GENDER\" pattern=\"PATTERN2\" cssClass=\"form-control\" />\n```",
+    "s3": "## 名称の多言語化対応\n\nコード名称テーブルにサポートする言語ごとのデータを準備する（LANG列に言語コードを設定）。\n\n```java\nCodeUtil.getName(\"GENDER\", \"MALE\", Locale.JAPANESE);       // -> 男性\nCodeUtil.getName(\"GENDER\", \"MALE\", Locale.ENGLISH);        // -> Male\nCodeUtil.getShortName(\"GENDER\", \"MALE\", Locale.JAPANESE);  // -> 男\nCodeUtil.getShortName(\"GENDER\", \"MALE\", Locale.ENGLISH);   // -> M\n```\n\n> **重要**: JSPカスタムタグライブラリでは言語指定による値の取得はできない。詳細は :ref:`tag-code_input_output` を参照。",
+    "s4": "## 画面などで表示する名称のソート順を定義する\n\nソート順はコード名称テーブルのSORT_ORDERカラムに設定する（昇順で返される）。国ごとに異なる可能性があるため、言語ごとに設定可能。\n\nカスタムタグライブラリの `codeSelect` を使用した場合は、SORT_ORDERの昇順（例: `MALE(男性)` → `FEMALE(女性)` → `OTHER(その他)`）で表示される。",
+    "s5": "## 名称、略称以外の名称を定義する\n\nコード名称テーブルにオプション名称カラムを定義し、 `CodePatternSchema.patternColumnNames` に設定することで使用可能（設定方法は [code-setup_table](#) 参照）。オプション名称取得時は設定ファイルで設定したカラム名と**厳密に一致**させる必要がある。\n\n```java\nCodeUtil.getOptionalName(\"GENDER\", \"MALE\", \"KANA_NAME\");                    // -> おとこ\nCodeUtil.getOptionalName(\"GENDER\", \"FEMALE\", \"FORM_NAME\", Locale.JAPANESE); // -> Female\n```\n\nJSPでのオプショナル名称表示（`optionColumnName`と`labelPattern=\"$OPTIONALNAME$\"`を指定）:\n```jsp\n<n:codeSelect name=\"form.gender\" codeId=\"GENDER\" optionColumnName=\"KANA_NAME\" cssClass=\"form-control\" labelPattern=\"$OPTIONALNAME$\"/>\n```",
+    "s6": "## 入力値が有効なコード値かチェックする\n\nバリデーションアノテーションのみでコードの有効範囲内かをチェックできる。\n\n**[bean_validation](libraries-bean_validation.json#s1) を使用する場合** — **アノテーション**: `nablarch.common.code.validator.ee.CodeValue`\n\n```java\n@CodeValue(codeId = \"GENDER\")\nprivate String gender;\n```\n\n**[nablarch_validation](libraries-nablarch_validation.json#s1) を使用する場合** — **アノテーション**: `nablarch.common.code.validator.CodeValue`\n\n```java\n@CodeValue(codeId = \"GENDER\")\npublic void setGender(String gender) { this.gender = gender; }\n```\n\n`pattern`属性でパターン内の有効値かをチェック可能:\n```java\n@CodeValue(codeId = \"GENDER\", pattern = \"PATTERN2\")\nprivate String gender;\n```\n\n> **補足**: [ドメインバリデーション](libraries-bean_validation.json#s5) では1ドメインに1パターンのみ指定可能。複数パターンに対応する場合は、パターンごとにドメインを定義すること（バリデーションで必要なもののみ定義すれば良い）。\n>\n> ```java\n> public class SampleDomainBean {\n>\n>   // PATTERN1用のドメイン\n>   @CodeValue(codeId = \"FLOW_STATUS\", pattern = \"PATTERN1\")\n>   String flowStatusGeneral;\n>\n>   // PATTERN2用のドメイン\n>   @CodeValue(codeId = \"FLOW_STATUS\", pattern = \"PATTERN2\")\n>   String flowStatusGuest;\n>\n> }\n> ```"
+  }
+}

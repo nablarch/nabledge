@@ -1,0 +1,59 @@
+{
+  "id": "testing-framework-rest-02_RequestUnitTest",
+  "title": "リクエスト単体テストの実施方法",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/02_RequestUnitTest/rest.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "前提条件",
+      "hints": [
+        "RESTfulウェブサービス",
+        "テスト前提条件",
+        "依存モジュール追加",
+        "rest_testing_fw"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "テストクラスの書き方",
+      "hints": [
+        "RestTestSupport",
+        "SimpleRestTestSupport",
+        "RestMockHttpRequest",
+        "HttpResponse",
+        "@Test",
+        "sendRequest",
+        "assertStatusCode",
+        "readTextResource",
+        "JSONAssert",
+        "JSONCompareMode",
+        "JSONException",
+        "テストクラス作成",
+        "スーパークラス継承",
+        "リクエスト送信",
+        "ステータスコード検証"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "テストデータの書き方",
+      "hints": [
+        "テストデータ",
+        "Excelファイル",
+        "データベース初期値",
+        "SETUP_TABLES",
+        "getListMap",
+        "getListParamMap",
+        "getParamMap",
+        "RestTestSupport"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "RESTfulウェブサービス実行基盤向けのテストでは、他の実行基盤向けテスティングフレームワークに加え依存するモジュールを追加する必要がある。詳細は [自動テストフレームワークの使用方法](testing-framework-RequestUnitTest_rest.json#s1) 参照。",
+    "s2": "テストクラスのスーパークラス選択:\n- DBデータ投入・アサートが必要: `nablarch.test.core.http.RestTestSupport` を継承\n- DBデータ投入・アサートが不要: `nablarch.test.core.http.SimpleRestTestSupport` を継承（テストデータの書き方は不要）\n\n各スーパークラスの詳細は [自動テストフレームワークの使用方法](testing-framework-RequestUnitTest_rest.json#s1) 参照。\n\nテスティングフレームワークはJUnit4ベース。テスト対象メソッドに `@Test` アノテーションを付与する。\n\nリクエスト送信・検証のAPI:\n- リクエスト生成: スーパークラスの [事前準備補助機能](testing-framework-RequestUnitTest_rest.json#s1) を使用\n- リクエスト送信: スーパークラスの [リクエスト送信メソッド](testing-framework-RequestUnitTest_rest.json#s1) を呼び出す\n- ステータスコード検証: スーパークラスの [メソッド](testing-framework-RequestUnitTest_rest.json#s1) を呼び出す\n- レスポンスボディ: 任意のライブラリを使用\n\n```java\nimport nablarch.fw.web.HttpResponse;\nimport nablarch.fw.web.RestMockHttpRequest;\nimport nablarch.test.core.http.RestTestSupport;\nimport org.json.JSONException;\nimport org.junit.Test;\nimport org.skyscreamer.jsonassert.JSONAssert;\nimport org.skyscreamer.jsonassert.JSONCompareMode;\nimport static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;\nimport static org.hamcrest.Matchers.hasSize;\nimport static org.junit.Assert.assertThat;\n\npublic class SampleTest extends RestTestSupport {\n    @Test\n    public void プロジェクト一覧が取得できること() throws JSONException {\n        String message = \"プロジェクト一覧取得\";\n        RestMockHttpRequest request = get(\"/projects\");\n        HttpResponse response = sendRequest(request);\n        assertStatusCode(message, HttpResponse.Status.OK, response);\n        assertThat(response.getBodyString(), hasJsonPath(\"$\", hasSize(10)));\n        JSONAssert.assertEquals(message, readTextResource(\"プロジェクト一覧が取得できること.json\"),\n                response.getBodyString(), JSONCompareMode.LENIENT);\n    }\n}\n```",
+    "s3": "テストデータは :ref:`how_to_write_excel` の方法で記述できる。RESTfulウェブサービス実行基盤向けテストでフレームワークが自動読み込みするデータは以下のみ:\n- テストクラスで共通のデータベース初期値\n- テストメソッド毎のデータベース初期値\n\n> **重要**: RESTfulウェブサービス実行基盤向けテストでは、Excelファイルが存在しない場合でもエラーにならず、DBへのデータ投入がスキップされるだけ（他の実行基盤のテストとは異なる）。\n\n> **重要**: 上記以外のテストデータをExcelに記載した場合は、[how_to_get_data_from_excel](testing-framework-03_Tips.json) の方法でテストクラスに値を取得する処理を記述する必要がある。`RestTestSupport` では以下のメソッドを提供する:\n> ```java\n> List<Map<String, String>> getListMap(String sheetName, String id)\n> List<Map<String, String[]>> getListParamMap(String sheetName, String id)\n> Map<String, String[]> getParamMap(String sheetName, String id)\n> ```\n\n**テストクラスで共通のデータベース初期値**: :ref:`request_test_setup_db` 参照。\n\n**テストメソッド毎のデータベース初期値**: テストデータのExcelファイルにテストメソッドの名前でシートを用意し、`SETUP_TABLES` データタイプでデータベース初期値を記載する。フレームワークによりテストメソッド実行時に投入される。"
+  }
+}

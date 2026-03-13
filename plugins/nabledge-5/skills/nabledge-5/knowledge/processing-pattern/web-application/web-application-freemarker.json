@@ -1,0 +1,60 @@
+{
+  "id": "web-application-freemarker",
+  "title": "FreeMarkerを使用した画面開発",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/feature_details/view/freemarker.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "FreeMarkerを依存ライブラリに追加する",
+      "hints": [
+        "freemarker-gae",
+        "org.freemarker",
+        "FreeMarker導入",
+        "Maven依存関係追加",
+        "freemarker-gae 2.3.27-incubating"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "FreeMarkerServletの設定を行う",
+      "hints": [
+        "FreemarkerServlet",
+        "freemarker.ext.servlet.FreemarkerServlet",
+        "TemplatePath",
+        "FreeMarkerServlet設定",
+        "web.xml設定",
+        "*.ftlマッピング"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "テンプレートファイル(ftlファイル)を作成しActionを実装する",
+      "hints": [
+        "HttpResponse",
+        "ftlテンプレート作成",
+        "Action実装",
+        "FreeMarkerレンダリング",
+        "Servlet forward",
+        "http_response_handler"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "2重サブミットを防止する",
+      "hints": [
+        "2重サブミット防止",
+        "use_token_interceptor",
+        "トークン",
+        "ftlファイル"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**モジュール** (動作確認済みバージョン):\n```xml\n<dependency>\n  <groupId>org.freemarker</groupId>\n  <artifactId>freemarker-gae</artifactId>\n  <version>2.3.27-incubating</version>\n</dependency>\n```\n\n> **注**: 上記のバージョンにて動作確認している。",
+    "s2": "`web.xml` に `freemarker.ext.servlet.FreemarkerServlet` を登録し、`*.ftl` にマッピングする。\n\n```xml\n<servlet>\n  <servlet-name>freemarker</servlet-name>\n  <servlet-class>freemarker.ext.servlet.FreemarkerServlet</servlet-class>\n</servlet>\n\n<servlet-mapping>\n  <servlet-name>freemarker</servlet-name>\n  <url-pattern>*.ftl</url-pattern>\n  <init-param>\n    <param-name>TemplatePath</param-name>\n    <param-value>/</param-value>\n    <!-- 上記以外については、ドキュメントを参照し必要なパラメータを設定すること -->\n  </init-param>\n</servlet-mapping>\n```\n\n`TemplatePath`: テンプレートファイル(ftl)の配置ディレクトリ。`/` を指定するとWARのルートディレクトリになる。`TemplatePath` 以外のパラメータが必要な場合は、FreeMarkerのドキュメントを参照して設定する。",
+    "s3": "ActionクラスでHTTPResponseとしてftlファイルへのパスを返す。\n\n```java\nreturn new HttpResponse(\"/WEB-INF/template/index.ftl\");\n```\n\n> **補足**: FreeMarkerによるHTML生成の流れ:\n> 1. [http_response_handler](../../component/handlers/handlers-http_response_handler.json#s1) が `/WEB-INF/template/index.ftl` に対してServlet forwardを行う。\n> 2. 拡張子 `ftl` に反応し `FreeMarkerServlet` が実行され、テンプレートとリクエストスコープ等のデータを元にhtmlを生成する。\n> 3. 生成したhtmlをクライアントに返す。",
+    "s4": "2重サブミットを防止する場合は、[use_token_interceptor](../../component/handlers/handlers-use_token.json#s1) を参照してAction及びテンプレートファイル(ftlファイル)を作成する。"
+  }
+}

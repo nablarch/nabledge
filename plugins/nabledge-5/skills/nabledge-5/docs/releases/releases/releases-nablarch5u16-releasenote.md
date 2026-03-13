@@ -1,0 +1,261 @@
+# Nablarch 5u16 リリースノート
+
+**公式ドキュメント**: [1](https://fintan.jp/page/252/) [2](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/handlers/web/SessionStoreHandler.html#db-managed-expiration) [3](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/libraries/db_double_submit.html#db-double-submit) [4](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/libraries/stateless_web_app.html#id9) [5](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/libraries/repository.html#os) [6](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/libraries/log.html#log-log-format) [7](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/libraries/log/http_access_log.html#http-access-log-setting) [8](https://nablarch.github.io/docs/5u16/javadoc/nablarch/core/util/StringUtil.html) [9](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/libraries/stateless_web_app.html) [10](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/batch/index.html) [11](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/handlers/common/thread_context_handler.html#thread-context-handler-user-id-attribute-setting) [12](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/web/getting_started/index.html) [13](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/nablarch/platform.html#id3) [14](https://jvndb.jvn.jp/ja/contents/2020/JVNDB-2020-002078.html) [15](https://jvndb.jvn.jp/ja/contents/2019/JVNDB-2019-010901.html) [16](https://nablarch.github.io/docs/5u16/doc/application_framework/adaptors/jaxrs_adaptor.html) [17](https://jvndb.jvn.jp/ja/contents/2019/JVNDB-2019-013606.html) [18](https://nablarch.github.io/docs/5u16/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/03_DealUnitTest/send_sync.html) [19](https://nablarch.github.io/docs/5u16/doc/development_tools/toolbox/SqlExecutor/SqlExecutor.html)
+
+## 5u16 変更一覧
+
+## 5u16 変更一覧（5u15からの変更点）
+
+### アプリケーションフレームワーク
+
+#### ステートレスWebアプリケーション対応（No.1〜3）
+
+> **重要**: No.1〜3の機能を組み合わせることで、APサーバのセッション外部化なしにHTTPセッション非依存なステートレスWebアプリケーションを構築できる。
+
+**No.1: セッション有効期間の保存先にDBを追加（セッションストア）**
+- セッション有効期間の保存先として従来のHTTPセッションに加えDBを選択可能
+- モジュール: `nablarch-fw-web 1.6.0`, `nablarch-fw-web-dbstore 1.1.0`
+- 参照: [SessionStoreHandler - DB管理の有効期限](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/handlers/web/SessionStoreHandler.html#db-managed-expiration)
+
+**No.2: トークンの保存先にDBを追加（二重サブミット防止）**
+- サーバ側二重サブミット防止のトークン保存先としてHTTPセッションに加えDBを選択可能
+- モジュール: `nablarch-fw-web 1.6.0`, `nablarch-fw-web-doublesubmit-jdbc 1.0.0`
+- 参照: [DBを使用した二重サブミット防止](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/libraries/db_double_submit.html#db-double-submit)
+
+**No.3: HTTPセッションの誤使用検知機能を追加**
+- ステートレスアプリ設定漏れや実装ミスによるHTTPセッション誤使用を検知する機能を追加
+- モジュール: `nablarch-fw-web 1.6.0`
+- 参照: [ステートレスWebアプリ - 誤使用検知](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/libraries/stateless_web_app.html#id9)
+
+#### その他の機能追加・変更
+
+**No.4: OS環境変数による設定値上書き（システムリポジトリ）**
+- 環境ごとに異なる値の設定方法として、従来のシステムプロパティに加えOS環境変数からも設定値を読み込み可能
+- モジュール: `nablarch-core-repository 1.4.0`
+- 参照: [システムリポジトリ](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/libraries/repository.html#os)
+
+**No.5: ロガー名取得プレースホルダの追加（ログ出力）**
+- プログラム実行時にロガーを取得した名称をログに出力できるプレースホルダを追加（従来はlog.propertiesで設定した名称のみ）
+- モジュール: `nablarch-core-applog 1.1.0`
+- 参照: [ログフォーマット設定](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/libraries/log.html#log-log-format)
+
+**No.6: クエリ文字列プレースホルダの追加（HTTPアクセスログ）**
+- HTTPアクセスログにクエリ文字列を出力するプレースホルダを追加
+- モジュール: `nablarch-fw-web 1.6.0`
+- 参照: [HTTPアクセスログ設定](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/libraries/log/http_access_log.html#http-access-log-setting)
+
+**No.7: null置換可能な文字列結合メソッド追加（汎用ユーティリティ）**
+- `StringUtil.join`に結合対象の値がnullの場合に任意の文字に置換できるオーバーロードメソッドを追加（既存のjoinはnullを"null"と出力）
+- モジュール: `nablarch-core 1.5.0`
+- 参照: [StringUtil Javadoc](https://nablarch.github.io/docs/5u16/javadoc/nablarch/core/util/StringUtil.html)
+
+**No.8: スコープ付きDIコンテナの追加**
+- Struts1/SAStrutsからNablarchへのマイグレーションサービス向け機能（マイグレーションサービスでのみ使用される）
+- モジュール: `nablarch-fw-scoped-dicontainer 1.0.0`, `nablarch-fw 1.3.0`, `nablarch-core-beans 1.4.0`
+
+#### ドキュメント変更
+
+**No.9: Webアプリケーションをステートレスにする方法を追記**
+- No.1、2の機能の導入方法、およびNo.3の機能を有効化する手順を記載
+- 参照: [ステートレスWebアプリケーション](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/libraries/stateless_web_app.html)
+
+**No.10: バッチアプリケーションの推奨方式変更**
+- 5u15まで推奨していたJSR352準拠バッチから**Nablarchバッチアプリケーションへ推奨方式を変更**（2020年現在のJSR352の普及状況と学習コストの高さを考慮）
+- JSR352は引き続きメンテナンス・サポート継続
+- 参照: [バッチアプリケーション](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/batch/index.html)
+
+**No.11: スレッドコンテキスト変数管理ハンドラ - ユーザIDの設定方法を明記**
+- スレッドコンテキスト変数管理ハンドラとログ出力にユーザIDの設定が必要な旨を明記
+- 参照: [スレッドコンテキスト変数管理ハンドラ - ユーザID属性設定](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/handlers/common/thread_context_handler.html#thread-context-handler-user-id-attribute-setting)
+
+**No.12: Getting Started - プロジェクト新規作成時の注意書きを追記**
+- Getting Startedの冒頭に、題材として使用しているExampleは実装例であり改修してアプリケーションを作成することを想定していない旨を追記
+- 参照: [Getting Started](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/web/getting_started/index.html)
+
+**No.13: 稼働環境テスト環境更新**
+- データベース: Oracle Database 12c/19c, IBM Db2 10.5/11.5, SQL Server 2017/2019, PostgreSQL 10.0/11.5/12.2
+- アプリケーションサーバ: Oracle Weblogic Server 12.2.1.3, WebSphere Application Server 9.0.5, WildFly 18.0.1, Apache Tomcat 9.0.24
+- 参照: [Nablarchフレームワークのテスト環境](https://nablarch.github.io/docs/5u16/doc/application_framework/application_framework/nablarch/platform.html#id3)
+
+### アダプタ
+
+**No.17: JAX-RSアダプタ - Jackson1系対応機能の廃止**
+
+> **重要**: Jackson1系(`org.codehaus.jackson:jackson-mapper-asl`)に脆弱性が発見された。Jackson1系は今後も修正バージョンが提供されないため、NablarchでもJackson1系機能を廃止した。**Jackson1系を使用しているプロジェクトはJackson2系に移行必須**（本番システムへの影響あり）。
+
+- Jackson1系使用有無の判断方法は「Jackson1系の使用有無判断方法」セクションを参照
+- 移行方法は「Jackson1系の設定変更方法」セクションを参照
+- モジュール: `nablarch-jaxrs-adaptor 1.0.6`
+- 参照: [JAX-RSアダプタ](https://nablarch.github.io/docs/5u16/doc/application_framework/adaptors/jaxrs_adaptor.html)
+
+**No.18: JAX-RSアダプタ - Jacksonモジュールの脆弱性対応**
+- jackson-databindを2.10.3にバージョンアップ（本番システムへの影響なし）
+- モジュール: `nablarch-jackson-adaptor 1.0.6`, `nablarch-jersey-adaptor 1.0.5`
+
+**No.19: log4jアダプタの廃止**
+
+> **重要**: Nablarchのlog4jアダプタはEOLを迎えたlog4j1.2を使用しており、今後も脆弱性への対応が公開されないため廃止。**log4jアダプタを使用している場合はslf4jアダプタまたはJBoss Loggingアダプタへ移行必須**（本番システムへの影響あり）。
+
+- モジュール: `nablarch-log4j-adaptor 1.0.0`（廃止）
+- 参照: [JVN脆弱性情報](https://jvndb.jvn.jp/ja/contents/2019/JVNDB-2019-013606.html)
+
+### ブランクプロジェクト
+
+**No.14: Jacksonモジュールの脆弱性対応**
+- `jackson-databind`の複数の脆弱性対応のため2.10.3にバージョンアップ（Nablarchでは脆弱性のある機能を使用していないため本番影響なし）
+- モジュール: `nablarch-jaxrs 5u16`
+- 参照: [JVNDB-2020-002078](https://jvndb.jvn.jp/ja/contents/2020/JVNDB-2020-002078.html), [JVNDB-2019-010901](https://jvndb.jvn.jp/ja/contents/2019/JVNDB-2019-010901.html)
+
+**No.15: ログフォーマットの見直し**
+- ログフォーマットの見直しおよびNo.5（ロガー名プレースホルダ）、No.6（クエリ文字列プレースホルダ）の取り込み
+- スレッドコンテキスト変数管理・削除ハンドラ設定、HTTPアクセスログハンドラ設定を追加
+- モジュール: `nablarch-web 5u16`, `nablarch-jaxrs 5u16`, `nablarch-batch 5u16`, `nablarch-batch-ee 5u16`
+
+**No.16: Waitt Maven Pluginのバージョンアップ**
+- Waitt Maven Pluginを最新バージョンにバージョンアップ
+- モジュール: `nablarch-web-archetype 5u16`, `nablarch-jaxrs-archetype 5u16`
+
+### Example
+
+**No.20: ウェブアプリケーション - Webアプリケーションをステートレスにする設定に変更**
+- No.1、2の機能を使用するようアプリケーション設定を変更
+- モジュール: `nablarch-example-web 5u16`
+
+**No.21: HTTPメッセージングウェブサービス - Jacksonモジュールの脆弱性対応**
+- 変更内容はNo.14と同じ（本番システムへの影響なし）
+- モジュール: `nablarch-example-http-messaging 5u16`
+
+**No.22: ウェブアプリケーション - Waitt Maven Pluginのバージョンアップ**
+- 変更内容はNo.16と同じ
+- モジュール: `nablarch-example-web 5u16`, `nablarch-example-thymeleaf-web 5u16`
+
+**No.23: RESTfulウェブサービス - Waitt Maven Pluginのバージョンアップ**
+- 変更内容はNo.16と同じ
+- モジュール: `nablarch-example-rest 5u16`
+
+### ETL基盤
+
+**No.24: ETL - Jacksonモジュールの脆弱性対応**
+- jackson-databindを2.10.3にバージョンアップ（No.14と同内容、本番システムへの影響なし）
+- モジュール: `nablarch-etl 1.2.3`
+
+### テスティングフレームワーク
+
+**No.25: 「同期応答メッセージ送信処理を伴う取引単体テストの実施方法」に手順を追加**
+- テストデータ解析クラスの設定、ライブラリの追加の手順が漏れていたため追記
+- 参照: [同期応答メッセージ送信処理を伴う取引単体テスト](https://nablarch.github.io/docs/5u16/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/03_DealUnitTest/send_sync.html)
+
+### Nablarch開発ツール（SQL Executor）
+
+**No.26〜28: Nablarch SQL Executor機能追加**
+- **配布用zip作成機能追加**: Java/DB環境構築なしでSQL Executorを実行可能なzipを作成できる
+- **IN句対応**: IN句が使用可能に。配列を入力する際は`[]`で項目を囲む必要あり
+- **PostgreSQL対応**: 数値型や真偽値型カラムの検索が可能に
+- モジュール: `sql-executor 1.2.0`
+- 参照: [Nablarch SQL Executor](https://nablarch.github.io/docs/5u16/doc/development_tools/toolbox/SqlExecutor/SqlExecutor.html)
+
+<details>
+<summary>keywords</summary>
+
+Nablarch 5u16, リリースノート, ステートレスWebアプリケーション, セッションストア DB保存, 二重サブミット防止 DB, HTTPセッション誤使用検知, OS環境変数 設定値上書き, ロガー名プレースホルダ, クエリ文字列 HTTPアクセスログ, StringUtil join null置換, スコープ付きDIコンテナ, バッチアプリケーション推奨方式変更, Jackson1系廃止, log4jアダプタ廃止, SQL Executor, Getting Started 注意書き, ETL Jackson脆弱性, nablarch-fw-web, nablarch-fw-web-dbstore, nablarch-fw-web-doublesubmit-jdbc, nablarch-core-repository, nablarch-core-applog, nablarch-core, nablarch-fw-scoped-dicontainer, nablarch-fw, nablarch-core-beans, nablarch-jaxrs-adaptor, nablarch-jaxrs, nablarch-web, nablarch-batch, nablarch-batch-ee, nablarch-web-archetype, nablarch-jaxrs-archetype, nablarch-jackson-adaptor, nablarch-jersey-adaptor, nablarch-log4j-adaptor, nablarch-etl, sql-executor, jackson-databind脆弱性, nablarch-example-web, nablarch-example-http-messaging, nablarch-example-thymeleaf-web, nablarch-example-rest
+
+</details>
+
+## バージョンアップ手順
+
+## バージョンアップ手順
+
+5u16の適用手順:
+
+1. `pom.xml`の`<dependencyManagement>`セクションに指定されている`nablarch-bom`のバージョンを`5u16`に書き換える
+2. Mavenのビルドを再実行する
+
+<details>
+<summary>keywords</summary>
+
+バージョンアップ, nablarch-bom, pom.xml, dependencyManagement, 5u16適用手順
+
+</details>
+
+## Jackson1系の使用有無判断方法
+
+## Jackson1系の使用有無判断方法
+
+プロジェクトの`pom.xml`の`<dependencies>`に以下のJackson1系ライブラリがある場合はJackson1系を使用している:
+
+```xml
+<dependency>
+  <groupId>org.codehaus.jackson</groupId>
+  <artifactId>jackson-mapper-asl</artifactId>
+  <version>1.9.13</version>
+</dependency>
+```
+
+<details>
+<summary>keywords</summary>
+
+Jackson1系, org.codehaus.jackson, jackson-mapper-asl, 依存ライブラリ確認, Jackson使用有無判断
+
+</details>
+
+## Jackson1系の設定変更方法
+
+## Jackson1系の設定変更方法（Jackson2系への移行）
+
+以下の2つの作業を行う:
+
+### 1. 依存ライブラリの変更（pom.xml）
+
+`pom.xml`の`<dependencies>`からJackson1系ライブラリを削除する:
+
+```xml
+<!-- 削除対象 -->
+<dependency>
+  <groupId>org.codehaus.jackson</groupId>
+  <artifactId>jackson-mapper-asl</artifactId>
+  <version>1.9.13</version>
+</dependency>
+```
+
+### 2. Nablarchのコンポーネント設定ファイルの変更
+
+`nablarch.fw.jaxrs.JaxRsMethodBinderFactory`のプロパティ`handlerList`に設定する`nablarch.fw.jaxrs.JaxRsHandlerListFactory`実装クラスを差し替える。
+
+**修正前（Jackson1BodyConverterを使用するJaxRsHandlerListFactory実装クラス）**:
+
+```xml
+<!-- パッケージマッピングの設定 -->
+<component name="packageMapping" class="nablarch.integration.router.RoutesMapping">
+  <property name="basePackage" value="${nablarch.commonProperty.basePackage}" />
+  <property name="methodBinderFactory">
+    <component class="nablarch.fw.jaxrs.JaxRsMethodBinderFactory">
+      <property name="handlerList">
+        <component class="myproject.Jackson1HandlerListFactory"/>
+      </property>
+    </component>
+  </property>
+</component>
+```
+
+**修正後（Jackson2BodyConverterを使用するJaxRsHandlerListFactory実装クラスに変更）**:
+
+```xml
+<!-- パッケージマッピングの設定 -->
+<component name="packageMapping" class="nablarch.integration.router.RoutesMapping">
+  <property name="basePackage" value="${nablarch.commonProperty.basePackage}" />
+  <property name="methodBinderFactory">
+    <component class="nablarch.fw.jaxrs.JaxRsMethodBinderFactory">
+      <property name="handlerList">
+        <component class="nablarch.integration.jaxrs.jersey.JerseyJaxRsHandlerListFactory"/>
+      </property>
+    </component>
+  </property>
+</component>
+```
+
+<details>
+<summary>keywords</summary>
+
+Jackson1系 Jackson2系 移行, Jackson2BodyConverter, Jackson1BodyConverter, JerseyJaxRsHandlerListFactory, JaxRsMethodBinderFactory, JaxRsHandlerListFactory, jackson-mapper-asl 削除, コンポーネント設定ファイル変更, RoutesMapping, nablarch.integration.router.RoutesMapping
+
+</details>

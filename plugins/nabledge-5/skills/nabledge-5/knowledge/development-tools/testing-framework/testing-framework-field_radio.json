@@ -1,0 +1,65 @@
+{
+  "id": "testing-framework-field_radio",
+  "title": "ラジオボタン入力項目ウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_jsp_widgets/field_radio.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "field:radio",
+        "field_code_radio",
+        "ラジオボタン入力項目ウィジェット",
+        "コードサンプル",
+        "JSPウィジェット",
+        "ローカル動作",
+        "サーバ動作"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "listName",
+        "elementLabelProperty",
+        "elementValueProperty",
+        "listFormat",
+        "sample",
+        "readonly",
+        "disabled",
+        "cssClass",
+        "nameAlias",
+        "domain",
+        "elementLabelPattern",
+        "dataFrom",
+        "comment",
+        "initialValueDesc",
+        "ラジオボタン属性一覧",
+        "入力画面",
+        "確認画面",
+        "ローカル動作挙動"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "radio.tag",
+        "base.tag",
+        "nablarch.js",
+        "base.less",
+        "内部構造",
+        "タグライブラリスタブ",
+        "部品一覧"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "バリエーション: Nablarchコード定義をもとにしたラジオボタンリストを表示する場合は [field_code_radio](testing-framework-field_code_radio.json) を使用する。\n\n**設計成果物（ローカル動作）**\n\n```jsp\n<field:radio\n  title=\"性別\"\n  listFormat=\"sp\"\n  sample=\"[男性]|女性\">\n</field:radio>\n```\n\n**実装成果物（サーバ動作）**\n\n```jsp\n<field:radio\n  title=\"性別\"\n  name=\"formdata.gender\"\n  cssClass=\"gender\"\n  readonly=\"false\"\n  listName=\"gender\"\n  listFormat=\"sp\"\n  elementLabelPattern=\"$LABEL$\"\n  elementLabelProperty=\"name\"\n  elementValueProperty=\"id\"\n  sample=\"[男性]|女性\">\n</field:radio>\n```",
+    "s2": "**ローカル動作時の挙動**\n- 入力画面: `sample` に指定したラベル分のラジオボタンとラベルを `listFormat` 形式で表示（デフォルトは改行区切り）\n- 確認画面: `\"[]\"` で囲われた選択済み項目のラベル一覧を表示\n\n**属性値一覧** [◎ 必須属性 ○ 任意属性 × 無効]\n\n（[field_base](testing-framework-field_base.json) の共通属性は省略）\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| domain | 項目のドメイン型 | 文字列 | ○ | ○ | |\n| readonly | 編集可能かどうか | 真偽値 | ○ | ○ | デフォルト: `false` |\n| disabled | サーバに対する入力値の送信を抑制するかどうか | 真偽値 | ○ | ○ | デフォルト: `false` |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ | |\n| nameAlias | 一つのエラーメッセージに対して複数の入力項目をハイライト表示する場合に指定する | 文字列 | ○ | × | |\n| listName | 選択項目のリストの属性名 | 文字列 | ◎ | × | |\n| elementLabelProperty | リスト要素から値を取得するためのプロパティ名 | 文字列 | ◎ | × | |\n| elementValueProperty | リスト要素からラベルを取得するためのプロパティ名 | 文字列 | ◎ | × | |\n| elementLabelPattern | ラベルを整形するためのフォーマットパターン | 文字列 | ○ | × | |\n| listFormat | リスト表示時に使用するフォーマット | 文字列 | ○ | ○ | デフォルト: `span` |\n| sample | ローカル動作時に表示するラジオボタンのラベル | 文字列 | × | ○ | `\"|\"` 区切りで複数指定。`\"[]\"` で囲われた項目は選択状態で表示 |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 「表示情報取得元」.「表示項目名」の形式で設定 |\n| comment | ラジオボタンについての備考 | 文字列 | × | × | 設計書の画面項目定義の「備考」に表示 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の画面項目定義の「備考」に表示 |",
+    "s3": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/radio.tag | [field_radio](testing-framework-field_radio.json) |\n| /WEB-INF/tags/widget/field/base.tag | [field_base](testing-framework-field_base.json) |\n| /js/jsp/taglib/nablarch.js | `<n:radioButtons>` のエミュレーション機能を実装するタグライブラリスタブJS |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義。ラジオボタンに関する定義も含まれる。 |"
+  }
+}

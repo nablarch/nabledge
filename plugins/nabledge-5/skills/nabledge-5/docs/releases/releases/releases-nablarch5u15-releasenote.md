@@ -1,0 +1,175 @@
+# Nablarch 5u15 リリースノート
+
+**公式ドキュメント**: [1](https://fintan.jp/page/252/) [2](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/nablarch/platform.html#id3) [3](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Java11.html) [4](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/libraries/repository.html#java-beans) [5](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/libraries/validation/nablarch_validation.html#nablarch-validation-domain-validation) [6](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/libraries/log/messaging_log.html#messaging-log-setting) [7](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/configuration/index.html) [8](https://nablarch.github.io/docs/5u15/doc/extension_components/workflow/tool/index.html#java11) [9](https://nablarch.github.io/docs/5u15/doc/development_tools/ui_dev/doc/development_environment/update_bundle_plugin.html) [10](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Java11.html#jetty-restful) [11](https://www.eclipse.org/jetty/documentation/current/what-jetty-version.html)
+
+## 5u15 変更点一覧
+
+## アプリケーションフレームワーク
+
+### バグ修正
+
+**No.1 セッションストア**: セッションストアにネストしたクラスを格納すると`ClassNotFoundException`が発生する問題を修正。`nablarch-fw-web 1.5.2`で対応。起因バージョン: 1.0.0。
+
+### 変更
+
+**No.2 Java11対応**: アプリケーションフレームワークのJava11対応。テスト環境: Java SE 6/8/11、JBeret 1.3.4.Final。Java11使用時は[セットアップ方法](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Java11.html)を参照。
+
+**No.3 テスト環境更新**:
+- DB: Oracle Database 12c/19c、IBM Db2 10.5/11.5、SQL Server 2017、PostgreSQL 10.0/11.5
+- APサーバ: Oracle WebLogic Server 12.2.1.3、WebSphere Application Server 9.0.5、WildFly 17.0.1、Apache Tomcat 9.0.24
+
+詳細: [Nablarchフレームワークのテスト環境](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/nablarch/platform.html#id3)
+
+**No.4 システムリポジトリ**: システムリポジトリに登録するコンポーネントはアプリケーションスコープのためスレッドセーフである必要がある旨の注釈と実装例を修正。詳細: [Java Beansオブジェクトを設定する](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/libraries/repository.html#java-beans)
+
+**No.5 Nablarch Validation**: ドメインバリデーションに複数のバリデーションルールを設定した場合、一つの入力項目に複数エラーがあっても最初のエラーで処理を打ち切る仕様を追記。詳細: [ドメインバリデーションを使う](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/libraries/validation/nablarch_validation.html#nablarch-validation-domain-validation)
+
+**No.6 ログ出力**: メッセージングログのプレースホルダ仕様を追記。`$messageBody$`（メッセージボディの内容）、`$messageBodyHex$`（メッセージボディのヘキサダンプ）。詳細: [メッセージングログの設定](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/libraries/log/messaging_log.html#messaging-log-setting)
+
+**No.7 ブランクプロジェクトJava11対応**: `nablarch-web-archetype 5u15`、`nablarch-batch-archetype 5u15`、`nablarch-batch-ee-archetype 5u15`、`nablarch-jaxrs-archetype 5u15`。デフォルトはJava8想定。Java11使用時は[セットアップ方法](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Java11.html)を参照。
+
+**No.8 脆弱性対応（ブランクプロジェクト）**: `com.fasterxml.jackson.core:jackson-databind`の脆弱性対応バージョンに変更。`nablarch-jaxrs-archetype 5u15`。Nablarchでは脆弱性のある機能を使用していない。
+
+**No.9 コネクションプール変更**: デフォルトのコネクションプールをApache Commons DBCPからHikariCPへ変更。理由: 常駐バッチでDBアクセスを繰り返した場合にStatementがメモリに溜まり続ける問題を検知したため。対象: `nablarch-jaxrs-archetype 5u15`、`nablarch-batch-ee-archetype 5u15`、`nablarch-batch-archetype 5u15`、`nablarch-web-archetype 5u15`。詳細: [デフォルト設定一覧](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/configuration/index.html)
+
+## アダプタ
+
+**No.10 RESTfulウェブサービス脆弱性対応**: `jackson-databind`の脆弱性対応（No.8と同様）。更新モジュール: `nablarch-jackson-adaptor 1.0.5`、`nablarch-jersey-adaptor 1.0.4`、`nablarch-resteasy-adaptor 1.0.4`。
+
+## Example
+
+**No.11 ExampleのJava11対応**: 全ExampleをJava11対応（No.7と同様）。`nablarch-example-web 5u15`、`nablarch-example-thymeleaf-web 5u15`、`nablarch-example-rest 5u15`、`nablarch-example-http-messaging-send 5u15`、`nablarch-example-http-messaging 5u15`、`nablarch-example-batch-ee 5u15`、`nablarch-example-batch 5u15`、`nablarch-example-mom-*`各種 5u15、`nablarch-example-db-queue 5u15`、`nablarch-example-workflow 5u15`。
+
+**No.12 ExampleのコネクションプールをHikariCPに変更**: コネクションプールをApache Commons DBCPからHikariCPに変更（No.9と同様）。対象: `nablarch-example-web 5u15`、`nablarch-example-thymeleaf-web 5u15`、`nablarch-example-rest 5u15`、`nablarch-example-http-messaging-send 5u15`、`nablarch-example-batch-ee 5u15`、`nablarch-example-batch 5u15`、`nablarch-example-mom-delayed-send 5u15`、`nablarch-example-mom-delayed-receive 5u15`、`nablarch-example-mom-sync-send-batch 5u15`、`nablarch-example-mom-sync-receive 5u15`、`nablarch-example-db-queue 5u15`、`nablarch-example-workflow 5u15`。（`nablarch-example-http-messaging`は対象外）
+
+**No.13 Example脆弱性対応**: `nablarch-example-rest 5u15`、`nablarch-example-http-messaging 5u15`（No.8と同様）。
+
+**No.14 RESTfulウェブサービス Example 実行手順改善**: READMEに記載している実行手順について、実行後の実行結果が見やすくなるよう改善。`nablarch-example-rest 5u15`。
+
+**No.15 Nablarchバッチアプリケーション Example 実行手順改善**: READMEに記載しているPDF出力バッチの実行手順が分かりにくかったため改善。`nablarch-example-batch 5u15`。
+
+**No.16 HTTPメッセージング Example 実行手順改善**: READMEに記載している動作確認用クライアントアプリケーションの実行手順が分かりにくかったため改善。`nablarch-example-http-messaging 5u15`。
+
+**No.17 HTTPメッセージングExample バグ修正**: `BeanValidation`を使用した相関バリデーションの実装で、バリデーション対象の値が不正な場合に実行時エラーが発生する問題を修正。`nablarch-example-http-messaging 5u15`。起因バージョン: 5u6。
+
+## ETL基盤
+
+**No.18 ETL脆弱性対応**: `jackson-databind`の脆弱性対応（No.8と同様）。`nablarch-etl 1.2.2`。
+
+## ワークフローライブラリ
+
+**No.19 ワークフロー定義データ生成ツールJava11対応**: Java11で使用する場合の設定方法をドキュメントに追記。詳細: [Java11で使用する場合の設定](https://nablarch.github.io/docs/5u15/doc/extension_components/workflow/tool/index.html#java11)
+
+## UI開発基盤
+
+**No.20 脆弱性対応**: jQueryの脆弱性対応バージョンに変更。Nablarchでは脆弱性のある機能を使用していない。`nablarch-plugins-bundle 1.0.3`、`nablarch-ui-development-template 1.1.2`。
+
+## テスティングフレームワーク
+
+> **重要**: No.21は開発環境への影響あり。バージョンアップ時は設定変更が必要。
+
+**No.21 テスティングフレームワークJava11対応**: JettyはJavaバージョンにより提供モジュールが異なり後方互換性もないため、Jetty依存部分を2モジュールに分割。
+- `com.nablarch.framework:nablarch-testing-jetty6`（Java6〜8用）
+- `com.nablarch.framework:nablarch-testing-jetty9`（Java11用）
+
+更新モジュール: `nablarch-testing 1.3.0`、`nablarch-testing-jetty6 1.0.0`、`nablarch-testing-jetty9 1.0.0`、`sql-executor 1.2.0`、`nablarch-messaging-simulator 1.2.0`。
+
+> **警告**: `HttpServer`クラスが具象クラスから抽象クラスに変更。`HttpServer`を直接インスタンス化しているテストコードはコンパイルエラーになる。`HttpServer`のサブクラスをインスタンス化するよう修正が必要。
+
+## Nablarch開発ツール
+
+**No.22 Java静的チェック**: ブラックリストの設定方法をREADMEに追記。ソースコード変更なし。`nablarch-intellij-plugin 1.0.0`のまま。
+
+<details>
+<summary>keywords</summary>
+
+セッションストア, ClassNotFoundException, ネストしたクラス, nablarch-fw-web, Java11対応, コネクションプール, HikariCP, Apache Commons DBCP, 脆弱性対応, jackson-databind, jQuery, ドメインバリデーション, メッセージングログ, nablarch-testing-jetty6, nablarch-testing-jetty9, HttpServer, nablarch-jackson-adaptor, nablarch-jersey-adaptor, nablarch-resteasy-adaptor, nablarch-etl, 5u15, 実行手順, RESTfulウェブサービス Example, バッチアプリケーション Example, HTTPメッセージング Example, BeanValidation, nablarch-testing, sql-executor, nablarch-messaging-simulator
+
+</details>
+
+## バージョンアップ手順
+
+## バージョンアップ手順
+
+5u15の適用手順:
+
+1. `pom.xml`の`<dependencyManagement>`セクションに指定されている`nablarch-bom`のバージョンを`5u15`に書き換える
+2. Mavenのビルドを再実行する
+
+<details>
+<summary>keywords</summary>
+
+バージョンアップ手順, pom.xml, nablarch-bom, dependencyManagement, Maven
+
+</details>
+
+## UI開発基盤（標準プラグイン）の変更点
+
+## UI開発基盤（標準プラグイン）の変更点
+
+5u14からの変更内容とプラグインの対応:
+
+| 変更実施バージョン | No. | タイトル | 標準プラグイン | プラグインバージョン | 変更概要 |
+|---|---|---|---|---|---|
+| 5u15 | 1 | jQueryのバージョンをアップデート | UI開発基盤 | 1.0.3 | 依存するjQueryを3.3.1から3.4.1に変更 |
+
+> **注意**: 5u14より前のバージョンから5u15にアップデートする場合は、対象バージョンから今回のバージョンまでの全リリースノートの「UI開発基盤（標準プラグイン）の変更点」を全て確認してからバージョンアップを実施すること。
+
+標準プラグインの取込方法: [Nablarch 標準プラグインの更新](https://nablarch.github.io/docs/5u15/doc/development_tools/ui_dev/doc/development_environment/update_bundle_plugin.html)
+
+<details>
+<summary>keywords</summary>
+
+標準プラグイン, UI開発基盤, jQuery, nablarch-plugins-bundle, プラグインバージョン
+
+</details>
+
+## テスティングフレームワークの設定変更方法
+
+## モジュール選択
+
+Java11対応のため、テスティングフレームワークのJetty依存部分を2モジュールに分割:
+- `com.nablarch.framework:nablarch-testing-jetty6`: Java6〜8用
+- `com.nablarch.framework:nablarch-testing-jetty9`: Java11用
+
+使用するJettyバージョンに応じてモジュールを選択し、テスト用コンポーネント設定ファイルにモジュールに応じたコンポーネントを登録する必要がある。
+
+| ケース | 選択モジュール |
+|---|---|
+| Java6〜8のまま既存テスト資産への影響を最小限に抑えてNablarchバージョンアップ | `nablarch-testing-jetty6` |
+| NablarchバージョンアップとJava11へのアップを同時に行う | `nablarch-testing-jetty9`（Java11ではJetty6は動作不可） |
+| Java8または11でServlet API 3.0以降の機能をリクエスト単体テストで使用 | `nablarch-testing-jetty9` |
+
+## 対応方法
+
+Jetty6を継続使用する場合: `pom.xml`に`nablarch-testing-jetty6`の依存ライブラリを追加し、コンポーネント定義ファイル(`src/test/resources/unit-test.xml`)に対応するコンポーネントを登録する。
+
+Jetty9を使用する場合: [Java11セットアップ手順（Jetty/RESTful）](https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Java11.html#jetty-restful)を参照。
+
+参考: [Jettyバージョン互換性情報](https://www.eclipse.org/jetty/documentation/current/what-jetty-version.html)
+
+<details>
+<summary>keywords</summary>
+
+テスティングフレームワーク, nablarch-testing-jetty6, nablarch-testing-jetty9, Jetty, Java11, リクエスト単体テスト, Servlet API, モジュール選択
+
+</details>
+
+## HttpServerクラスを使っている場合の対応方法
+
+## 概要
+
+テスティングフレームワークのモジュール分割に伴い、`HttpServer`クラスが具象クラスから抽象クラスに変更された。Jettyバージョンに合わせた`HttpServer`のサブクラスが具象クラスとして追加されている。
+
+> **重要**: `HttpServer`クラスを直接インスタンス化しているテストコードやツールは、テスティングフレームワークのバージョンアップ後にコンパイルエラーになる。`HttpServer`のサブクラスをインスタンス化するよう修正が必要。クラス単体テストやリクエスト単体テストで通常のテスティングフレームワークAPIを使用している場合は影響なし。
+
+## 対応方法
+
+`HttpServer`をインスタンス化している箇所を、選択したモジュール（`nablarch-testing-jetty6`または`nablarch-testing-jetty9`）に対応する`HttpServer`サブクラスのインスタンス化に変更する。使用するJavaバージョンとモジュールにより生成するクラスが異なる。
+
+<details>
+<summary>keywords</summary>
+
+HttpServer, 抽象クラス, コンパイルエラー, テスティングフレームワーク, Jetty, サブクラス
+
+</details>

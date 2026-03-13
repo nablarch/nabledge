@@ -1,0 +1,238 @@
+{
+  "id": "workflow-doc",
+  "title": "ワークフローライブラリ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/extension_components/workflow/doc/index.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/workflow/WorkflowManager.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/workflow/WorkflowInstance.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/workflow/condition/FlowProceedCondition.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/workflow/condition/package-summary.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/integration/workflow/condition/CompletionCondition.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "機能概要",
+      "hints": [
+        "ワークフロー",
+        "ステートマシン",
+        "状態遷移",
+        "差し戻し",
+        "再申請",
+        "取り消し",
+        "却下",
+        "引き戻し",
+        "バージョン管理",
+        "サブプロセス",
+        "ワークフロー引き戻し",
+        "境界イベント",
+        "申請者タスク返戻",
+        "フロー強制返戻",
+        "workflow-cancel"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-workflow",
+        "com.nablarch.workflow",
+        "Maven依存",
+        "WorkflowInstance",
+        "WorkflowManager",
+        "triggerEvent",
+        "findInstance",
+        "ステートマシン状態遷移",
+        "境界イベントMessage Name",
+        "workflow-flow_condition"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "ワークフロー(ステートマシン)の定義及び進行に必要なテーブルの作成と設定",
+      "hints": [
+        "テーブル定義",
+        "WorkflowConfig",
+        "WorkflowDefinitionHolder",
+        "DatabaseWorkflowDefinitionLoader",
+        "WorkflowInstanceDao",
+        "BasicWorkflowInstanceFactory",
+        "SequenceIdGenerator",
+        "BasicApplicationInitializer",
+        "workflowDefinitionSchema",
+        "workflowInstanceSchema",
+        "ワークフロー定義テーブル",
+        "アクティブフローノードテーブル",
+        "サブプロセス定義",
+        "ステートマシン",
+        "BPMN",
+        "サブタスク状態遷移",
+        "workflow-statemachine_trigger"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ワークフローやステートマシンを定義する",
+      "hints": [
+        "BPMNモデリング",
+        "workflow_tool",
+        "Camunda",
+        "ワークフロー定義",
+        "テーブル投入",
+        "WorkflowInstance",
+        "WorkflowManager",
+        "isActive",
+        "isCompleted",
+        "findInstance",
+        "ワークフロー状態取得",
+        "アクティブタスク確認",
+        "完了確認"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "ワークフロー(ステートマシン)を開始する",
+      "hints": [
+        "WorkflowManager",
+        "startInstance",
+        "WorkflowInstance",
+        "getInstanceId",
+        "インスタンスID",
+        "ワークフロー開始",
+        "getVersion",
+        "ワークフロー定義バージョン管理",
+        "旧バージョン継続実行",
+        "バージョン切り替え",
+        "date-system_time_settings"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "ワークフローのタスクに担当者やグループを割り当てる",
+      "hints": [
+        "WorkflowInstance",
+        "assignUser",
+        "assignGroup",
+        "タスク担当者割り当て",
+        "タスクグループ割り当て",
+        "FlowProceedCondition",
+        "XORゲートウェイ",
+        "フロー進行条件",
+        "シーケンスフロー",
+        "FlowProceedCondition実装",
+        "isMatch",
+        "SequenceFlow"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "ワークフローのタスクに担当者やグループを複数割り当てる",
+      "hints": [
+        "assignUsers",
+        "assignGroups",
+        "マルチインスタンス",
+        "OR承認",
+        "AND承認",
+        "並行処理",
+        "順次処理",
+        "Completion Condition",
+        "workflow-multi_completion",
+        "WorkflowManager",
+        "WorkflowInstance",
+        "CompletionCondition",
+        "isCompletedUserTask",
+        "isCompletedGroupTask",
+        "マルチインスタンス完了条件",
+        "CompletionCondition実装",
+        "ユーザタスク完了判定",
+        "グループタスク完了判定",
+        "Task"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "ワークフローの状態を遷移(タスクを完了)させる",
+      "hints": [
+        "completeUserTask",
+        "completeGroupTask",
+        "findInstance",
+        "WorkflowManager",
+        "タスク完了",
+        "状態遷移",
+        "ThreadContext"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "アプリケーションでの処理結果に応じて遷移先のタスクを変更する",
+      "hints": [
+        "XORゲートウェイ",
+        "isActive",
+        "条件分岐",
+        "workflow-xor_flow",
+        "進行条件",
+        "completeGroupTask",
+        "workflow-status",
+        "WorkflowManager",
+        "findInstance"
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "ワークフローの状態を元の状態に戻す（差し戻し）",
+      "hints": [
+        "差し戻し",
+        "XORゲートウェイ",
+        "遷移先分岐",
+        "再申請タスク"
+      ]
+    },
+    {
+      "id": "s11",
+      "title": "ワークフローの申請を再度行う（再申請）",
+      "hints": [
+        "再申請",
+        "再申請タスク",
+        "completeUserTask",
+        "差し戻し後再申請"
+      ]
+    },
+    {
+      "id": "s12",
+      "title": "ワークフロー申請の取り消しを行う",
+      "hints": [
+        "境界イベント",
+        "triggerEvent",
+        "WorkflowInstance",
+        "取り消し",
+        "停止イベント",
+        "Message Name"
+      ]
+    },
+    {
+      "id": "s13",
+      "title": "ワークフロー申請を却下する",
+      "hints": [
+        "却下",
+        "XORゲートウェイ",
+        "停止イベント",
+        "遷移先分岐"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "申請フロー・承認フローの進行状況管理、タスク担当者/グループの割り当て・管理を行うワークフロー機能と、状態のみを遷移させるステートマシン機能を提供する。\n\n**ワークフローが実現できる機能**:\n- [状態遷移](#s7)\n- [条件に応じた遷移先切り替え](#s8)\n- [差し戻し](#s9)\n- [再申請](#s10)\n- [取り消し](#s11)\n- [却下](#s12)\n- [引き戻し](#s13)\n- [ワークフロー定義のバージョン管理](#)\n\n**ステートマシンが実現できる機能**:\n- [状態遷移](#)\n- [条件に応じた遷移先切り替え](#s8)\n- [サブプロセス定義](#)\n- [ステートマシン定義のバージョン管理](#)\n\nワークフロー申請の引き戻しは、進行中の承認処理の途中で申請者が自身のタスクにフローを強制的に戻す場合に使用する。\n\n[取り消し](#s11) と同様に、引き戻し可能なタスクに対して境界イベントを設定する。境界イベントの遷移先には、申請者が処理可能なタスク（例: 再申請タスク）を指定する。\n\n**ワークフロー定義**: 境界イベントを設定し遷移先を申請者のタスクとする。詳細な定義方法や実装例は [取り消し](#s11) を参照。\n\n![引き戻し定義例](assets/workflow-doc/pullback.png)",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n    <groupId>com.nablarch.workflow</groupId>\n    <artifactId>nablarch-workflow</artifactId>\n</dependency>\n```\n\nステートマシンの状態を遷移させるには `WorkflowInstance#triggerEvent` を使用する。対象の `WorkflowInstance` は、ワークフロー開始時にアプリケーション側で保持したインスタンスIDを使用して事前に取得する必要がある。\n\n`WorkflowInstance#triggerEvent` にパラメータを指定することで [workflow-flow_condition](#s8) を実現できる。\n\n**ステートマシン定義**: タスクから遷移するシーケンスフローは全て境界イベントとして定義する。境界イベントの `Message Name` に定義した値が `triggerEvent` に指定する値となる。\n\n![ステートマシントリガー定義例](assets/workflow-doc/statemachine-trigger.png)\n\n```java\n// 対象のWorkflowInstanceを取得する。\nfinal WorkflowInstance workflowInstance = WorkflowManager.findInstance(instanceId);\n\n// triggerEventを呼び出し状態を遷移させる\nworkflowInstance.triggerEvent(\"return\");\n```",
+    "s3": "ワークフロー(ステートマシン)の定義情報、状態遷移、タスク担当者/グループをテーブルで管理する。テーブルを事前作成し、コンポーネント設定ファイルにテーブル名・カラム名を設定すること。カラム定義の詳細は [workflow_model.edm](assets/workflow-doc/workflow_model.edm) を参照（Oracle用のため、使用するDBや要件に合わせて型・サイズを変更すること）。\n\n**定義管理テーブル**:\n- ワークフロー定義テーブル: ワークフロー/ステートマシンの定義情報\n- レーンテーブル: レーン管理\n- フローノードテーブル: フローノード管理\n- タスクテーブル: タスク管理\n- イベントテーブル: 開始/停止イベント管理\n- ゲートウェイテーブル: XORゲートウェイ管理\n- 境界イベントテーブル: 境界イベント定義\n- 境界イベントトリガーテーブル: 境界イベントトリガー定義\n- シーケンスフローテーブル: シーケンスフロー定義\n\n**進行状況管理テーブル**:\n- ワークフローインスタンステーブル: 進行中のワークフロー/ステートマシン\n- インスタンスフローノードテーブル: 進行中インスタンスのタスク情報\n- タスク担当ユーザテーブル: タスクの担当ユーザ（ユーザ割当なしのステートマシンでは不要）\n- タスク担当グループテーブル: タスクの担当グループ（グループ割当なしのステートマシンでは不要）\n- アクティブフローノードテーブル: アクティブフローノード情報\n- アクティブユーザタスクテーブル: ユーザが実行可能なタスク（ユーザ割当なしのステートマシンでは不要）\n- アクティブグループタスクテーブル: グループが実行可能なタスク（グループ割当なしのステートマシンでは不要）\n\nコンポーネント設定ファイルは [workflow-schema.xml](assets/workflow-doc/workflow-schema.xml) をダウンロードして利用可能。\n\n**コンポーネント設定例**:\n```xml\n<!-- ワークフロー(ステートマシン)全体の設定 -->\n<component name=\"workflowConfig\"\n    class=\"nablarch.integration.workflow.WorkflowConfig\">\n  <property name=\"workflowDefinitionHolder\" ref=\"workflowDefinitionHolder\" />\n  <property name=\"workflowInstanceDao\" ref=\"workflowInstanceDao\" />\n  <property name=\"workflowInstanceFactory\">\n    <component class=\"nablarch.integration.workflow.BasicWorkflowInstanceFactory\" />\n  </property>\n</component>\n\n<component name=\"workflowDefinitionHolder\"\n    class=\"nablarch.integration.workflow.definition.WorkflowDefinitionHolder\">\n  <property name=\"workflowDefinitionLoader\" ref=\"workflowLoader\" />\n  <property name=\"systemTimeProvider\" ref=\"systemTimeProvider\" />\n</component>\n\n<component name=\"workflowLoader\"\n    class=\"nablarch.integration.workflow.definition.loader.DatabaseWorkflowDefinitionLoader\">\n  <property name=\"transactionManager\" ref=\"defaultDbTransactionManager\" />\n  <property name=\"workflowDefinitionSchema\" ref=\"workflowDefinitionSchema\" />\n</component>\n\n<component name=\"workflowInstanceDao\"\n    class=\"nablarch.integration.workflow.dao.WorkflowInstanceDao\">\n  <property name=\"instanceIdGenerator\" ref=\"idGenerator\" />\n  <property name=\"workflowInstanceSchema\" ref=\"workflowInstanceSchema\" />\n  <property name=\"instanceIdGenerateId\" value=\"WF_INSTANCE_ID\" />\n</component>\n\n<component name=\"idGenerator\" class=\"nablarch.common.idgenerator.SequenceIdGenerator\" />\n\n<!-- 初期化が必要なコンポーネントの定義 -->\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"workflowInstanceDao\" />\n      <component-ref name=\"workflowDefinitionHolder\" />\n    </list>\n  </property>\n</component>\n```\n\nステートマシンではサブプロセスを使用することで、状態���移の流れの見通しを良くできる。\n\n- サブプロセスはBPMNのモデリングツールでの定義でのみ使用する。本ライブラリはステートマシンの進行時にサブプロセスを意識しない。\n- アプリケーションの実装時もサブプロセスを意識する必要はなく、状態遷移は [workflow-statemachine_trigger](#) を使用して行えば良い。\n\n**サブプロセスの状態遷移**:\n1. タスク１からサブプロセスに遷移すると、サブタスク１がアクティブ状態となる\n2. サブプロセス内で停止イベントに遷移すると、タスク２がアクティブ状態となる\n\n![サブプロセス定義例](assets/workflow-doc/subprocess.png)",
+    "s4": "テーブルへの直接投入は誤りが発生しやすいため、BPMNモデリングツール（[Camunda](https://camunda.com/) など）でワークフロー/ステートマシンを定義し、[workflow_tool](workflow-tool.json#s1) を使ってBPMNモデルからテーブル投入データを作成する手順を推奨する。\n\nワークフロー（ステートマシン）の状態遷移後の状態を取得できる。[分岐](#s8) を使用した場合に、どのタスクがアクティブとなったかやワークフローが完了したかを判断できる。\n\n- `WorkflowInstance#isActive`: 指定タスクIDがアクティブかどうかを判定\n- `WorkflowInstance#isCompleted`: ワークフローが完了したかどうかを判定\n\n![状態定義例](assets/workflow-doc/status.png)\n\n```java\n// 対象のWorkflowInstanceを取得��る。\nfinal WorkflowInstance instance = WorkflowManager.findInstance(instanceId);\n\n// 再申請がアクティブの場合trueとなる。\nif (instance.isActive(\"task1\")) {\n}\n\n// 承認がアクティブの場合trueとなる。\nif (instance.isActive(\"task2\")) {\n}\n\n// 却下となり停止イベントに遷移した場合trueとなる\nif (instance.isCompleted()) {\n}\n```",
+    "s5": "`WorkflowManager#startInstance` を使用してワークフロー(ステートマシン)を開始する。引数には開始するワークフローのIDを指定する。\n\n> **補足**: 戻り値の `WorkflowInstance` からインスタンスIDを取得し、アプリケーション側のテーブル等で保持すること。インスタンスIDは状態遷移に必要なため、必ずアプリケーション側で保持する必要がある。\n\n開始後、最初のタスクがアクティブ状態となる。\n\n**実装例**:\n```java\n// ワークフローIDを引数に指定して開始\nfinal WorkflowInstance instance = WorkflowManager.startInstance(\"new-card\");\n\n// インスタンスIDを取得してアプリケーションのテーブルに登録\nString instanceId = instance.getInstanceId();\n```\n\nワークフロー（ステートマシン）の定義を変更する際、既に進行中のものについては旧バージョンの定義に従い進行できる。これにより、進行中のフローに影響を与えることなく、ある日時点から新しいバージョンのフローを進行できる。\n\nバージョンはワークフロー開始時点で有効なものが自動的に適用される。ワークフロー定義テーブルの適用日が [システム日付](../../component/libraries/libraries-date.json) 以前で最もバージョンの大きいものが自動的に適用される。\n\n> **補足**: 定義変更によってアプリケーションのロジックに影響を与える場合は、アプリケーション側で進行中のフローのバージョンを取得しロジックを切り替える必要がある。\n\n```java\n// 対象のWorkflowInstanceを取得する。\nfinal WorkflowInstance instance = WorkflowManager.findInstance(instanceId);\n\nif (instance.getVersion() == 1L) {\n  // バージョン1の処理を行う\n} else {\n  // バージョン2以降の処理を行う\n}\n```",
+    "s6": "- `WorkflowInstance#assignUser`: タスクに担当者を割り当てる\n- `WorkflowInstance#assignGroup`: タスクにグループを割り当てる\n\n既に担当者(グループ)が割り当て済みの場合、既存の割り当てを削除して再割り当てする。割り当ては任意のタイミングで行える（タスク完了時に次タスクへ割り当てることも可能）。\n\n**実装例**:\n```java\nfinal WorkflowInstance instance = WorkflowManager.startInstance(\"new-card\");\n\n// 担当者を割り当てる\ninstance.assignUser(\"task\", \"admin-user\");\n\n// グループを割り当てる\ninstance.assignGroup(\"task\", \"group\");\n```\n\nXORゲートウェイの進行先ノードは、シーケンスフローテーブルのフロー進行条件により判定する。フロー進行条件には、条件を判定するクラスの完全修飾名を格納する。\n\n条件クラスは `FlowProceedCondition` を実装して作成する。提供クラスは `condition` パッケージ配下に格納されている。\n\n- 実装クラスはコンストラクタでパラメータを受け取ることができる（パラメータはString限定）\n- パラメータを受け取るクラスを使用する場合、テーブルのフロー進行条件に `sample.SampleFlowProceedCondition(\"key\", \"value\")` のように引数を含めて格納する必要がある\n- `isMatch` で指定シーケンスフローへの遷移可否を返す\n\n```java\npublic class SampleFlowProceedCondition implements FlowProceedCondition {\n\n  // パラメータを受け取る場合は、文字列型(String)で定義する。\n  public StringEqualFlowProceedCondition(String paramKey, String expectedValue) {\n  }\n\n  @Override\n  public boolean isMatch(String instanceId, Map<String, ?> param, SequenceFlow sequenceFlow) {\n  }\n}\n```",
+    "s7": "1つのタスクに対して複数のユーザ/グループを割り当て可能。並行処理または順次処理を選択できる。Completion Condition（完了条件）の設定でOR承認・AND承認を実現できる。完了条件の詳細は [workflow-multi_completion](#) を参照。\n\nワークフロー定義でユーザタスクをマルチインスタンス(①)として設定し、Completion Condition(②)に完了条件を設定する。上記の定義は平行処理となる。順次処理の場合は、タスクを別の方法で定義する必要がある。\n\n割り当ては [workflow-assign](#s5) と同様、タスクが開始される前であれば任意のタイミングで行える。\n\n**実装例**:\n```java\nfinal WorkflowInstance instance = WorkflowManager.startInstance(\"new-card\");\n\n// 複数担当者を割り当てる（順次処理の場合はList順に処理）\ninstance.assignUsers(\"task1\", Arrays.asList(\"user1\", \"user2\"));\n\n// 複数グループを割り当てる（順次処理の場合はList順に処理）\ninstance.assignGroups(\"task1\", Arrays.asList(\"group1\", \"group2\"));\n```\n\nマルチインスタンスの完了は、タスクテーブルの完了条件により判定する。完了条件には、条件を判定するクラスの完全修飾名を格納する。\n\n条件クラスは `CompletionCondition` を実装して作成する。提供クラスは `condition` パッケージ配下に格納されている。\n\n- 実装クラスはコンストラクタでパラメータを受け取ることができる（パラメータはString限定）\n- パラメータを受け取るクラスを使用する場合、テーブルのフロー進行条件には `sample.SampleCompletionCondition(\"1\")` のように引数に設定する値を含めて格納する必要がある\n- `isCompletedUserTask`: ユーザタスクの完了判定\n- `isCompletedGroupTask`: グループタスクの完了判定\n\n```java\npublic class OrCompletionCondition implements CompletionCondition {\n\n  // パラメータを受け取る場合は、文字列型(String)で定義する。\n  public OrCompletionCondition(String threshold) {\n  }\n\n  @Override\n  public boolean isCompletedUserTask(Map<String, ?> param, String instanceId, Task task) {\n  }\n\n  @Override\n  public boolean isCompletedGroupTask(Map<String, ?> param, String instanceId, Task task) {\n  }\n}\n```",
+    "s8": "`WorkflowInstance#completeUserTask` または `WorkflowInstance#completeGroupTask` でタスクを完了し、次タスクへ状態を遷移させる。\n\n事前に [ワークフロー開始時](#s4) に保持したインスタンスIDで `WorkflowManager.findInstance()` を呼び出し、WorkflowInstanceを取得すること。タスク完了後のワークフロー状態取得は [workflow-status](#) を参照。\n\n**実装例**:\n```java\nfinal String instanceId = findInstanceId();\nWorkflowInstance instance = WorkflowManager.findInstance(instanceId);\n\n// 現在ログイン中のユーザ(ThreadContext.getUserId())でタスクを完了\ninstance.completeUserTask();\n\n// ユーザを明示的に指定して完了\ninstance.completeUserTask(\"user1\");\n\n// グループの場合、必ずグループを指定\ninstance.completeGroupTask(\"group\");\n```",
+    "s9": "XORゲートウェイを使用して進行条件と遷移先フローノードを定義する。XORゲートウェイから伸びるシーケンスフローに遷移条件を設定する。進行条件の定義方法は [workflow-xor_flow](#) を参照。\n\nタスク完了後の状態（アクティブなタスクの判断、ワークフロー終了の判断）は [workflow-status](#) を参照。\n\n**実装例**（`condition=0` で「確認OK」へ遷移し承認タスクがアクティブとなる場合）:\n```java\n// 進行先を判定するパラメータをMapで定義\nMap<String, Object> parameter = new HashMap<String, Object>();\nparameter.put(\"condition\", \"0\");\n\nWorkflowInstance workflow = WorkflowManager.findInstance(instanceId);\nworkflow.completeGroupTask(parameter, groupId);\n\n// isActiveでアクティブなタスクを判断（引数にタスクIDを指定）\nif (workflow.isActive(\"task1\")) {\n  // タスク1がアクティブとなった場合の処理\n} else {\n  // タスク1以外がアクティブとなった場合の処理\n}\n```",
+    "s10": "[遷移先の条件分岐](#s8) (XORゲートウェイ)を使用して差し戻しを実現する。条件に応じて再申請用タスクへ遷移させるようにワークフローを定義する。\n\n![差し戻しのワークフロー定義例](assets/workflow-doc/return.png)",
+    "s11": "[差し戻し](#s9) や [引き戻し](#s13) 後の再申請は、ワークフロー定義に再申請用タスクを作成することで対応する。再申請タスクは [通常のタスク完了](#s7) で次タスクへ遷移させる。",
+    "s12": "取り消し可能なタスクに境界イベントを関連付けることで実現する。境界イベントの実行は `WorkflowInstance#triggerEvent` を使用する。\n\n境界イベントの `Message Name` に設定した値が `triggerEvent` の引数となる。取り消し時にフローを終了させるため、境界イベントの遷移先は停止イベントを指定する。\n\n**実装例**:\n```java\nfinal WorkflowInstance instance = WorkflowManager.findInstance(instanceId);\ninstance.triggerEvent(\"cancel\");\n```",
+    "s13": "XORゲートウェイを使用して遷移先を分岐させ、却下の場合は停止イベントへ遷移させることで却下を実現する。[差し戻し](#s9) と同様の手法を使用する。\n\n![却下のワークフロー定義例](assets/workflow-doc/reject.png)"
+  }
+}

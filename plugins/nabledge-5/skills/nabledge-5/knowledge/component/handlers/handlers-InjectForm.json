@@ -1,0 +1,74 @@
+{
+  "id": "handlers-InjectForm",
+  "title": "InjectForm インターセプタ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web_interceptor/InjectForm.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/interceptor/InjectForm.html",
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnError.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "インターセプタクラス名",
+      "hints": [
+        "nablarch.common.web.interceptor.InjectForm",
+        "InjectForm",
+        "インターセプタクラス名"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "hints": [
+        "nablarch-fw-web",
+        "nablarch-core-validation-ee",
+        "nablarch-core-validation",
+        "Maven依存関係",
+        "モジュール設定"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "InjectFormを使用する",
+      "hints": [
+        "@InjectForm",
+        "InjectForm",
+        "InjectForm#form",
+        "InjectForm#name",
+        "InjectForm#prefix",
+        "InjectForm#validate",
+        "バリデーション",
+        "リクエストスコープ",
+        "フォームオブジェクト"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "バリデーションエラー時の遷移先を指定する",
+      "hints": [
+        "@OnError",
+        "OnError",
+        "ApplicationException",
+        "バリデーションエラー遷移先",
+        "システムエラー"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "Bean Validationのグループを指定する",
+      "hints": [
+        "InjectForm#validationGroup",
+        "@InjectForm",
+        "Bean Validationグループ",
+        "バリデーショングループ"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス**: `nablarch.common.web.interceptor.InjectForm`",
+    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```\n\n入力値チェックにBeanValidationを使用する場合のみ:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-validation-ee</artifactId>\n</dependency>\n```\n\n入力値チェックにNablarchValidationを使用する場合のみ:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-validation</artifactId>\n</dependency>\n```",
+    "s3": "`InjectForm` アノテーションを業務アクションのリクエスト処理メソッドに設定する。\n\n- `prefix` で指定したプレフィックスで始まるリクエストパラメータがバリデーション対象となる。\n- バリデーション成功時、`InjectForm#form` で指定したクラスのオブジェクトがリクエストスコープに格納される。\n- リクエストスコープの変数名は `InjectForm#name` で指定。未指定時は `\"form\"` 。\n- 業務アクションが実行された場合、必ずリクエストスコープからオブジェクトが取得できる。\n\n入力画面のHTML例:\n```html\n<!-- バリデーション対象外 -->\n<input name=\"flag\" type=\"hidden\" />\n\n<!-- バリデーション対象 -->\n<input name=\"form.userId\" type=\"text\" />\n<input name=\"form.password\" type=\"password\" />\n```\n\n`form` プレフィックスを持つフィールド（`form.userId`、`form.password`）はバリデーション対象となり、プレフィックスを持たないフィールド（`flag`）はバリデーション対象外となる。\n\n業務アクションの例:\n```java\n@InjectForm(form = UserForm.class, prefix = \"form\", validate = \"register\")\n@OnError(type = ApplicationException.class, path = \"forward://registerForm.jsp\")\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n  UserForm form = ctx.getRequestScopedVar(\"form\");\n}\n```\n\n> **補足**: バリデーションに [bean_validation](../libraries/libraries-bean_validation.json#s1) を使用する場合、バリデーションエラー時にもリクエストスコープからオブジェクトを取得可能となるよう設定できる。詳細は [bean_validation_onerror](../libraries/libraries-bean_validation.json) を参照。",
+    "s4": "バリデーションエラー発生時の遷移先は `OnError` アノテーションで設定する。`InjectForm` を設定した業務アクションのメソッドに対して設定する。\n\n> **警告**: `OnError` が設定されていない場合、バリデーションエラーがシステムエラー扱いとなる。\n\nバリデーションエラー発生時に遷移先画面で表示するデータを取得したい場合は、[on_error-forward](handlers-on_error.json#s3) を参照。",
+    "s5": "バリデーションに [bean_validation](../libraries/libraries-bean_validation.json#s1) を使用する場合、`InjectForm#validationGroup` にグループを指定できる。指定したグループに所属するバリデーションルールのみが適用される。\n\n```java\n// UserFormクラス内で設定されたバリデーションルールのうち、Createグループに所属するルールのみを使用して検証する。\n@InjectForm(form = UserForm.class, prefix = \"form\", validationGroup = Create.class)\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n  UserForm form = ctx.getRequestScopedVar(\"form\");\n}\n```"
+  }
+}

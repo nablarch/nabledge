@@ -1,0 +1,66 @@
+{
+  "id": "testing-framework-event_alert",
+  "title": "アラートダイアログ表示イベントアクション",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_jsp_widgets/event_alert.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "event:alert",
+        "event:listen",
+        "アラートダイアログ",
+        "イベントプロパゲーション抑止",
+        "changeイベント入力値リセット",
+        "ブラウザネイティブダイアログ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "コードサンプル",
+      "hints": [
+        "event:alert",
+        "event:listen",
+        "condition",
+        "チェックボックス条件ダイアログ表示",
+        "JSPコード例"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "仕様（属性値一覧）",
+      "hints": [
+        "title",
+        "message",
+        "condition",
+        "target",
+        "stop",
+        "revert",
+        "アラートダイアログ属性",
+        "セレクタ式",
+        "必須属性",
+        "デフォルト値"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "alert.tag",
+        "dialog.tag",
+        "ShowDialogAction.js",
+        "イベントアクション実装部品",
+        "event:confirm"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[event_alert](testing-framework-event_alert.json) は [event_listen](testing-framework-event_listen.json) で定義したイベントが発生した際に、アラートダイアログを表示させるイベントアクション。\n\n- ダイアログ表示時: イベントのプロパゲーションおよびデフォルトアクションを抑止する\n- **change** イベントが発生元の場合: 変更内容をもとの入力内容に戻す\n- ダイアログはブラウザのネイティブ部品を使用するため、CSSによる見た目の制御やタイトル・ボタンに表示される文字列の変更は不可",
+    "s2": "特定のチェックボックスにチェックが入っていない場合にダイアログを表示する例:\n\n```jsp\n<event:listen event='button.submit click'>\n  <event:alert\n    title=\"契約内容確認チェック\"\n    message=\"ご契約内容を確認の上 「契約内容に同意する」をチェックしてください。\"\n    condition=\"input.confirmation:checked\">\n  </event:alert>\n</event:listen>\n```",
+    "s3": "属性値の必須/任意は「サーバ」「ローカル」列で示す（◎ 必須、○ 任意、× 無効）。\n\n| 属性名 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | 処理内容の簡単な説明 | 文字列 | × | × | 設計書表示用 |\n| message | ダイアログに表示する文言 | 文字列 | ◎ | ◎ | |\n| condition | ダイアログを表示させる条件を表すセレクタ式 | 文字列 | ○ | ○ | 省略した場合は必ず表示される |\n| target | condition属性で指定した条件判定の対象となる要素を表すセレクタ式 | 文字列 | ○ | ○ | 省略した場合はイベントが発生した要素 |\n| stop | ダイアログ表示後にイベントのプロパゲーションおよびデフォルトアクションを抑制するかどうか | 真偽値 | ○ | ○ | デフォルト: `true` |\n| revert | ダイアログ表示後に各入力値の状態をイベント発生前の状態に戻すかどうか | 真偽値 | ○ | ○ | changeイベント発生時のみ有効。デフォルト: `true` |",
+    "s4": "| パス | 内容 |\n|---|---|\n| `/WEB-INF/tags/widget/event/alert.tag` | このイベントアクションの実体となるタグファイル |\n| `/WEB-INF/tags/widget/event/dialog.tag` | [event_alert](testing-framework-event_alert.json) と [event_confirm](testing-framework-event_confirm.json) とで共通の内容を実装するタグファイル |\n| `/js/nablarch/ui/event/ShowDialogAction.js` | ダイアログ表示機能を実装するJS部品 |"
+  }
+}

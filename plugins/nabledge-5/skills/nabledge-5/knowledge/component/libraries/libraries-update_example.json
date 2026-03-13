@@ -1,0 +1,71 @@
+{
+  "id": "libraries-update_example",
+  "title": "更新機能での実装例",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/session_store/update_example.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "入力画面の初期表示",
+      "hints": [
+        "SessionUtil",
+        "BeanUtil",
+        "ProjectForm",
+        "Project",
+        "セッションストア初期表示",
+        "更新画面初期化",
+        "セッション削除",
+        "SessionUtil.delete",
+        "SessionUtil.put",
+        "BeanUtil.createAndCopy"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "入力画面から確認画面へ遷移",
+      "hints": [
+        "SessionUtil",
+        "BeanUtil",
+        "ProjectForm",
+        "Project",
+        "入力画面確認画面遷移",
+        "セッションストアデータ取得",
+        "SessionUtil.get",
+        "BeanUtil.copy"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "確認画面から入力画面へ戻る",
+      "hints": [
+        "SessionUtil",
+        "BeanUtil",
+        "ProjectForm",
+        "Project",
+        "確認画面戻る処理",
+        "セッションストアデータ取得",
+        "SessionUtil.get",
+        "BeanUtil.createAndCopy"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "更新処理を実行",
+      "hints": [
+        "SessionUtil",
+        "Project",
+        "セッションストア削除",
+        "更新処理後セッションクリア",
+        "SessionUtil.get",
+        "SessionUtil.delete"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 入力画面の初期表示\n\nブラウザを直接閉じた場合などにセッションが残っている場合があるので、初期表示時に既存セッションを削除してから新たに保存する。\n\n```java\n// ブラウザを直接閉じた場合などにセッションが残っている場合があるので削除\nSessionUtil.delete(ctx, \"project\");\n\n// 更新対象データの取得処理は省略\n\n// 更新対象データをセッションストアに保存\nSessionUtil.put(ctx, \"project\", project);\n\n// EntityからFormへ変換\nProjectForm form = BeanUtil.createAndCopy(ProjectForm.class, project);\n\n// 更新対象データをリクエストスコープに設定\ncontext.setRequestScopedVar(\"form\", form);\n```",
+    "s2": "## 入力画面から確認画面へ遷移\n\nリクエストスコープから入力情報を取得し、セッションストアの更新対象データに上書きする。\n\n```java\n// リクエストスコープから入力情報を取得\nProjectForm form = context.getRequestScopedVar(\"form\");\n\n// 更新対象データをセッションストアから取得\nProject project = SessionUtil.get(context, \"project\");\n\n// 入力情報を更新対象データに上書き\nBeanUtil.copy(form, project);\n```",
+    "s3": "## 確認画面から入力画面へ戻る\n\nセッションストアから更新対象データを取得し、Formに変換してリクエストスコープに設定する。\n\n```java\n// セッションストアから更新対象データを取得\nProject project = SessionUtil.get(ctx, \"project\");\n\n// EntityからFormへ変換\nProjectForm form = BeanUtil.createAndCopy(ProjectForm.class, project);\n\n// 更新対象データをリクエストスコープに設定\ncontext.setRequestScopedVar(\"form\", form);\n```",
+    "s4": "## 更新処理を実行\n\n更新処理完了後、セッションストアから更新対象データを削除する。\n\n```java\n// セッションストアから更新対象データを取得\nProject project = SessionUtil.get(ctx, \"project\");\n\n// 更新処理は省略\n\n// セッションストアから更新対象データを削除\nSessionUtil.delete(ctx, \"project\");\n```"
+  }
+}

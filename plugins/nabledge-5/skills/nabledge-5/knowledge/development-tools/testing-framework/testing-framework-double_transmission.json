@@ -1,0 +1,35 @@
+{
+  "id": "testing-framework-double_transmission",
+  "title": "二重サブミット防止機能のテスト実施方法",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/02_RequestUnitTest/double_transmission.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "リクエスト単体テストでの二重サブミット防止機能のテスト実施方法",
+      "hints": [
+        "二重サブミット防止",
+        "リクエスト単体テスト",
+        "isValidToken",
+        "LIST_MAP",
+        "サーバサイドテスト"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "取引単体テストでの二重サブミット防止機能のテスト実施方法",
+      "hints": [
+        "二重サブミット防止",
+        "取引単体テスト",
+        "クライアントサイドテスト",
+        "デバッグモード",
+        "ブレークポイント"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "リクエスト単体テストではサーバサイドでテストを実施する。テストショットのLIST_MAPに`isValidToken`カラムを指定し、`false`に設定した際にエラーが発生すれば二重サブミット防止機能が動作していることを確認できる。",
+    "s2": "取引単体テストではクライアントサイドでテストを実施する。\n\nテスト手順:\n1. デバッグモードでアプリケーションを起動する\n2. テスト対象リクエストのアクション処理にブレークポイントを設定する\n3. 打鍵でテスト対象リクエストのボタンを選択する\n4. ブレークポイントで処理を停止した状態で、再度テスト対象リクエストのボタンを選択し、リクエストが送信されないことを確認する"
+  }
+}
