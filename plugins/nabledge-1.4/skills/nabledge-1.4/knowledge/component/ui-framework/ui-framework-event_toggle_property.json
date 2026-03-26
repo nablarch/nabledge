@@ -1,0 +1,54 @@
+{
+  "id": "ui-framework-event_toggle_property",
+  "title": "属性値の動的切替",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "event:toggle_property",
+        "event:listen",
+        "チェックボックス全選択",
+        "属性値動的切替",
+        "JSPタグ",
+        "allCheck"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "type",
+        "title",
+        "target",
+        "condition",
+        "reverse",
+        "disabled",
+        "readonly",
+        "checked",
+        "selected",
+        "CSSセレクタ",
+        "属性値切替条件",
+        "toggle_property属性"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "TogglePropertyAction",
+        "toggle_property.tag",
+        "TogglePropertyAction.js",
+        "実装ファイル",
+        "イベントアクション実装"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[event_toggle_property](ui-framework-event_toggle_property.json) は、チェックボックス・ラジオボタン・プルダウン要素の内容に応じて特定の要素の真偽値型DOM属性値（`readonly`/`disabled`/`checked`/`selected`）を動的に切替えるイベントアクション。\n\nイベントは [event_listen](ui-framework-event_listen.json) （または [event_listen_subwindow](ui-framework-event_listen_subwindow.json) ）で定義する。\n\n**使用例**: `allCheck` CSSクラスを持つチェックボックスクリック時に、フォーム内の他の全チェックボックスをON/OFFする\n\n```jsp\n<n:form>\n  <event:listen\n    event=\"input[type='checkbox'].allCheck click\">\n    <event:toggle_property\n      title=\"全てチェック/クリア\"\n      type=\"checked\"\n      toggleTarget=\"input[type='checkbox']:not('.allCheck')\"\n      condition=\".allCheck\">\n    </event:toggle_property>\n  </event:listen>\n  ...\n</n:form>\n```",
+    "s2": "切替え対象属性は真偽値型のDOM属性値（`readonly`/`disabled`/`checked`/`selected`）に限る。\n\n**属性値一覧** （◎ 必須属性 / ○ 任意属性 / × 無効）\n\n| 属性名 | 内容 | 型 | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| type | 切替え対象属性 | 文字列 | ◎ | ◎ | `disabled` / `readonly` / `checkbox` / `selected` のいずれかを指定 |\n| title | 実行する処理の簡単な説明 | 文字列 | × | × | 設計書表示用 |\n| target | 属性を切替える対象要素を指定するセレクタ式 | 文字列 | ◎ | ◎ | |\n| condition | 属性値をtrueに設定する条件を、イベント発生元要素が満たすべきセレクタ式で指定 | 文字列 | ◎ | ◎ | |\n| reverse | 要素を指定するセレクタ式 | 文字列 | ○ | ○ | |",
+    "s3": "| パス | 内容 |\n|---|---|\n| `/WEB-INF/tags/widget/event/toggle_property.tag` | このウィジェットの実体となるタグファイル |\n| `/js/nablarch/ui/event/TogglePropertyAction.js` | 属性値の切替え機能を実装するイベントアクション |"
+  }
+}

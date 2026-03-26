@@ -1,0 +1,57 @@
+{
+  "id": "handlers-PostResubmitPreventHandler",
+  "title": "POST再送信防止ハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "PostResubmitPreventHandler",
+        "nablarch.fw.web.post.PostResubmitPreventHandler",
+        "NablarchTagHandler",
+        "POST再送信防止",
+        "preventPostResubmit",
+        "multipart非対応",
+        "セッション",
+        "非推奨",
+        "F12開発者ツール",
+        "戻るボタン",
+        "セキュリティ脅威",
+        "WebView_NoCacheTag",
+        "システム的回避",
+        "WebView_FormTag"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "POST再送信防止ハンドラ処理フロー",
+        "リダイレクト",
+        "セッションスコープ復元",
+        "GETリクエスト複数回",
+        "システムエラー",
+        "往路処理",
+        "復路処理",
+        "例外処理"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "forwardPathMapping",
+        "POST再送信防止設定",
+        "リクエストIDマッピング",
+        "遷移先パス",
+        "GETリクエスト複数回遷移先"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "> **警告**: 新規プロジェクトにおける本ハンドラの使用は推奨されていません。\n\n> **警告**: DoS攻撃等により大量のリクエストが送信された場合、リダイレクト処理が実行されずPOST情報がセッションに蓄積され、メモリを圧迫する可能性がある。本ハンドラを使用せず、業務アクションにてリダイレクトのレスポンスを返すことでPOST再送信を防止すること。\n\n**クラス名**: `nablarch.fw.web.post.PostResubmitPreventHandler`\n\nPOSTリクエストに対してリダイレクトを使用して再リクエストを受け付けることで、ブラウザからのPOSTデータ再送信を防止する。\n\n**使用が必要となるセキュリティ脅威シナリオ**\n\n:ref:`WebView_NoCacheTag` をJSPに指定していても、ブラウザの戻るボタンを押下して前画面に戻った場合、F12開発者ツールなどで前画面で入力した内容を盗み見ることが可能である。これは、正規ユーザが操作した端末を操作直後に悪意ある者に操作された場合にセキュリティ上の脅威となりうる。\n\n通常は、端末を入室に認証が必要な区画に設置する、ログイン時にパスワードを入力させる、他人に端末を操作させないなど、物理的なセキュリティを高めることでこの脅威は回避できる。システム的にこれを回避したい場合に本ハンドラを使用する。\n\n- multipartリクエストには対応していない\n- 保護する情報を入力する :ref:`WebView_FormTag` のpreventPostResubmit属性をtrueに設定すること（「POST再送信防止が指示されたリクエスト」の条件）\n- POST再送信防止が指示されたリクエストでリダイレクト後のGETリクエストが複数送信された場合、2回目以降は設定パスに遷移する\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [NablarchTagHandler](handlers-NablarchTagHandler.json) | 本ハンドラは [NablarchTagHandler](handlers-NablarchTagHandler.json) の上位に配置する必要がある |",
+    "s2": "**往路処理**\n\n1. POST再送信防止が指示されたリクエストか判定\n   - 該当する場合（1a）: リクエスト情報をセッションスコープに格納し、同一URIにリダイレクト\n2. POST後にリダイレクトされたリクエストか判定\n   - 該当する場合（2a）: セッションスコープのリクエスト情報を復元し削除\n   - セッションに復元対象が存在しない場合: GETが複数回送信されたと判断し設定パスへ遷移。遷移先パス未設定の場合はシステムエラー\n3. 後続ハンドラを呼び出す\n\n**復路処理**\n\n4. 後続ハンドラの結果をリターンして終了\n\n**例外処理**\n\n3a. 後続ハンドラ実行中の例外はそのまま再送出して終了",
+    "s3": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| forwardPathMapping | Map | | | リダイレクト後のGETが複数回送信された場合の遷移先パスマッピング。キーはリクエストID、値は遷移先パス。複数マッチする場合は最も文字数が長いキーのパスに遷移 |\n\n```xml\n<component name=\"postResubmitPreventHandler\"\n    class=\"nablarch.fw.web.post.PostResubmitPreventHandler\">\n  <property name=\"forwardPathMapping\">\n    <map>\n      <entry key=\"R\"  value=\"redirect:///action/ErrorAction/index\" />\n      <entry key=\"R2\" value=\"redirect:///action/ErrorAction/index2\" />\n      <entry key=\"R3\" value=\"/error.jsp\" />\n    </map>\n  </property>\n</component>\n```"
+  }
+}

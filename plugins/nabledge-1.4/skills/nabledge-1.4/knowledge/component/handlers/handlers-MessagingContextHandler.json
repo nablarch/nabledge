@@ -1,0 +1,48 @@
+{
+  "id": "handlers-MessagingContextHandler",
+  "title": "メッセージングコンテキスト管理ハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "MessagingContextHandler",
+        "nablarch.fw.messaging.handler.MessagingContextHandler",
+        "メッセージングコンテキスト管理",
+        "DataReadHandler",
+        "MessageReplyHandler",
+        "ハンドラ配置順序",
+        "スレッドローカル"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "メッセージングコンテキスト取得",
+        "スレッドローカル設定",
+        "終端処理",
+        "コネクションプール返却",
+        "例外時終端処理",
+        "ハンドラ処理フロー"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "messagingProvider",
+        "MessagingProvider",
+        "メッセージングプロバイダ設定",
+        "XML設定例",
+        "必須プロパティ"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.messaging.handler.MessagingContextHandler`\n\nリクエストスレッド毎にメッセージングコンテキストの初期化とスレッドローカル変数への格納、および終端処理を行う。\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [DataReadHandler](handlers-DataReadHandler.json) (MessageReader使用時) | [../reader/MessageReader](../readers/readers-MessageReader.json) を使用して受信電文を読み込む際、本ハンドラが初期化するメッセージングコンテキストを使用する。そのため、[DataReadHandler](handlers-DataReadHandler.json) は本ハンドラの後続に配置する必要がある。 |\n| [MessageReplyHandler](handlers-MessageReplyHandler.json) | メッセージ応答処理で本ハンドラが初期化するメッセージングコンテキストを使用するため、本ハンドラの後続に配置する必要がある。 |",
+    "s2": "**[往路処理]**\n\n1. 設定された**メッセージングプロバイダ**からメッセージングコンテキストを取得する。\n2. 取得したインスタンスをスレッドローカルに保持する。\n3. 後続ハンドラに処理を委譲し、結果を取得する。\n\n**[復路処理]**\n\n4. メッセージングコンテキストをクローズし、メッセージングサーバへの接続をコネクションプールに返却する。スレッドローカル上からメッセージングコンテキストへの参照を除去する。\n5. 処理結果をリターンして終了する。\n\n**[例外処理]**\n\n3a. 本ハンドラおよび後続ハンドラの処理中に実行時例外/エラーが発生した場合でも、終端処理（手順4）を実行してからエラーを再送出する。",
+    "s3": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| messagingProvider | MessagingProvider | ○ | | メッセージングプロバイダ |\n\nメッセージングプロバイダの設定については、[../core_library/enterprise_messaging_mom](../libraries/libraries-enterprise_messaging_mom.json) を参照すること。\n\n```xml\n<component class=\"nablarch.fw.messaging.handler.MessagingContextHandler\">\n  <property name=\"messagingProvider\" ref=\"messagingProvider\" />\n</component>\n```"
+  }
+}

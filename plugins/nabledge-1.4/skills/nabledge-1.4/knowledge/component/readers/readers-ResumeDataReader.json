@@ -1,0 +1,45 @@
+{
+  "id": "readers-ResumeDataReader",
+  "title": "レジュームデータリーダ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "レジュームデータリーダ",
+      "hints": [
+        "ResumeDataReader",
+        "nablarch.fw.reader.ResumeDataReader",
+        "FileDataReader",
+        "ValidatableFileDataReader",
+        "FileBatchAction",
+        "LoopHandler",
+        "FileLayoutValidatorAction",
+        "レジューム機能",
+        "バッチ再実行",
+        "レジュームポイント",
+        "リクエスト管理テーブル",
+        "レジューム処理概要"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "設定項目",
+      "hints": [
+        "ResumePointManager",
+        "nablarch.fw.reader.ResumePointManager",
+        "tableName",
+        "requestIdColumnName",
+        "resumePointColumnName",
+        "resumable",
+        "excludingRequestList",
+        "dbTransactionName",
+        "レジューム設定",
+        "リクエスト管理テーブル設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.reader.ResumeDataReader`\n\nファイルを読み込むデータリーダにレジューム機能を追加するラッパーデータリーダ。レジューム機能を追加したいデータリーダを本クラスでラップすることで有効になる。レジューム機能により、バッチが途中終了した場合に未処理レコードから業務処理を再開できる。再実行時、正常処理済みレコードはスキップされる。\n\n**使用例**\n\n[FileDataReader](readers-FileDataReader.json) をラップする場合:\n\n```java\nDataReader<DataRecord> reader = new FileDataReader()\n        .setDataFile(\"record.dat\")\n        .setLayoutFile(\"record\");\nreturn new ResumeDataReader<DataRecord>().setSourceReader(reader);\n```\n\n[ValidatableFileDataReader](readers-ValidatableFileDataReader.json) をラップする場合:\n\n```java\nDataReader<DataRecord> reader = new ValidatableFileDataReader()\n        .setValidatorAction(new FileLayoutValidatorAction())\n        .setDataFile(\"record.dat\").setLayoutFile(\"record\");\nreturn new ResumeDataReader<DataRecord>().setSourceReader(reader);\n```\n\n> **補足**: [../handler/FileBatchAction](../handlers/handlers-FileBatchAction.json) を継承したバッチ業務アクションを作成する場合、FileBatchAction がデフォルトで [ValidatableFileDataReader](readers-ValidatableFileDataReader.json) をラップしたレジュームデータリーダを生成するため、アプリケーションプログラマが実装する必要はない。\n\n**レジューム処理概要**\n\nレジュームポイントはリクエスト管理テーブルに保存される。値は最後に成功した処理のread()実行回数（上書き方式）。\n\n1回目（障害発生時）:\n1. ファイル先頭から読み込み\n2. バッチ業務アクション実行\n3. レジュームポイントをリクエスト管理テーブルに保存（[../handler/LoopHandler](../handlers/handlers-LoopHandler.json) でコミット設定時はコミット前最後の処理のみ）\n4. 障害発生で途中終了\n\n2回目（再実行時）:\n1. リクエスト管理テーブルからレジュームポイントを読み込む\n2. ファイルからレコードを読み込む\n3. レジュームポイントに到達していない場合は、レジュームポイントに到達するまでファイル読み込み（No2）を繰り返す\n4. バッチ業務アクションを実行する\n5. レジュームポイントをリクエスト管理テーブルに保存する\n\n（ファイル終端まで No2〜5 の処理を繰り返す）\n\n> **注意**: レジュームデータリーダはread()メソッドの実行回数をレジュームポイントとして保存する。この値はファイルの物理的なレコード番号と一致しない場合がある。障害発生ポイントの特定には、アプリケーション実装で物理レコード番号やキー情報をログに出力すること。物理レコード数とレジュームポイントが一致していなくてもレジューム機能は問題なく動作する（同じファイルを何度読んでもデータリーダが返す値は変わらないため）。\n\n> **警告**: 障害発生ポイント以前のデータ（既に正常処理済み）にパッチを当てた場合は、レジュームポイントを0クリアして1レコード目から再処理する必要がある。\n\n**テーブル構成**\n\nリクエスト管理テーブル:\n\n| 論理名 | データ型 | 備考 |\n|---|---|---|\n| リクエストID | VARCHAR PK | プロセスを特定するためのID |\n| レジュームポイント | NUMBER(10) | ラップしたデータリーダの実行回数 |\n\n**ジョブの設計時に考慮すべきこと**\n\nレジュームポイントは自動的にクリアされない。レジュームを使用するバッチジョブ作成時は、レジュームポイントをゼロクリアするバッチジョブもセットで作成し、事前にゼロクリアを行うよう設計すること。",
+    "s2": "`ResumePointManager` クラスを使用してリクエスト管理テーブルのテーブル名・カラム名やレジューム要否などを設定する。\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| tableName | String | ○ | | リクエスト管理テーブル名 |\n| requestIdColumnName | String | ○ | | リクエストIDカラム名 |\n| resumePointColumnName | String | ○ | | レジュームポイントカラム名 |\n| resumable | boolean | | false | レジュームを有効にするかどうか |\n| excludingRequestList | List\\<String\\> | | 空のリスト | レジューム機能を無効にするリクエストIDのリスト |\n| dbTransactionName | String | | \"transaction\" | データベースリソース名 |\n\n```xml\n<component name=\"resumePointManager\"\n    class=\"nablarch.fw.reader.ResumePointManager\">\n    <property name=\"tableName\" value=\"BATCH_REQUEST\" />\n    <property name=\"requestIdColumnName\" value=\"REQUEST_ID\" />\n    <property name=\"resumePointColumnName\" value=\"RESUME_POINT\" />\n    <!-- 以下のプロパティは省略可能 -->\n    <property name=\"resumable\" value=\"true\" />\n    <property name=\"excludingRequestList\">\n      <list>\n         <value>RB11AC0150</value>\n      </list>\n    </property>\n    <property name=\"dbTransactionName\" value=\"transaction\" />\n</component>\n```"
+  }
+}

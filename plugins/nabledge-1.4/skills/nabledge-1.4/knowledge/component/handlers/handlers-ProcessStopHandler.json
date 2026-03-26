@@ -1,0 +1,59 @@
+{
+  "id": "handlers-ProcessStopHandler",
+  "title": "プロセス停止制御ハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "ProcessStopHandler",
+        "nablarch.fw.handler.ProcessStopHandler",
+        "ProcessResidentHandler",
+        "ThreadContextHandler",
+        "LoopHandler",
+        "RequestThreadLoopHandler",
+        "ループ中断",
+        "プロセス停止",
+        "DBフラグ制御",
+        "処理停止フラグ",
+        "リクエスト管理テーブル"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "ProcessStopHandler.ProcessStop",
+        "ハンドラ処理フロー",
+        "停止フラグ確認",
+        "ロールバック",
+        "プロセス停止制御",
+        "往路処理",
+        "復路処理",
+        "例外処理"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "checkInterval",
+        "tableName",
+        "requestIdColumnName",
+        "processHaltColumnName",
+        "dbTransactionManager",
+        "exitCode",
+        "SimpleDbTransactionManager",
+        "設定項目",
+        "DBトランザクション",
+        "停止フラグ確認間隔"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.ProcessStopHandler`\n\n[ProcessResidentHandler](handlers-ProcessResidentHandler.json) などループ制御ハンドラの後続に配置し、DBのフラグ変更によってループを中断させ、プロセスを正常終了させるハンドラ。\n\n> **警告**: 本ハンドラは処理停止フラグの初期化を行わない。停止フラグを立ててプロセスを停止させた後、再度同じプロセスを実行する際には停止フラグをクリアする必要がある。\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [ThreadContextHandler](handlers-ThreadContextHandler.json) | スレッドコンテキスト上のリクエストID属性を使用するため、本ハンドラより前に配置する必要がある |\n| [LoopHandler](handlers-LoopHandler.json) | [../architectural_pattern/batch_single_shot](../../processing-pattern/nablarch-batch/nablarch-batch-batch_single_shot.json) 実行中に停止させる場合は後続に配置 |\n| [ProcessResidentHandler](handlers-ProcessResidentHandler.json) | [../architectural_pattern/batch_resident_thread_sync](../../processing-pattern/nablarch-batch/nablarch-batch-batch_resident_thread_sync.json) では後続に配置。停止時の終了コードは0（正常終了） |\n| [RequestThreadLoopHandler](handlers-RequestThreadLoopHandler.json) | [../architectural_pattern/messaging_request_reply](../../processing-pattern/mom-messaging/mom-messaging-messaging_request_reply.json) では後続に配置。停止時の終了コードは0（正常終了） |\n\n**リクエスト管理テーブル構造**\n\n| 論理名 | データ型 | 備考 |\n|---|---|---|\n| リクエストID | VARCHAR PK | プロセスを特定するためのID |\n| 処理停止フラグ | CHAR(1) | \"0\": 通常、\"1\": 停止 |",
+    "s2": "**[往路処理]**\n\n1. **(停止フラグ確認のスキップ)** 総実行回数が停止フラグ確認間隔の倍数でない場合、後続ハンドラに処理委譲してリターン\n2. **(停止フラグ確認)** 総実行回数が確認間隔の倍数の場合、リクエストテーブルに以下の条件でクエリ発行: `リクエストID = (スレッドコンテキストのリクエストID属性値) AND 処理停止フラグ = '1'`\n   - **2a.** 結果セットが空でない場合、後続ハンドラを実行せず `ProcessStopHandler.ProcessStop` を送出。ループ中断、運用ログ出力後にプロセス停止。未コミットの例外はすべてロールバック\n3. **(後続ハンドラへの処理移譲)** 結果セットが空の場合、後続ハンドラに処理委譲して結果を取得\n\n**[復路処理]**\n\n4. **(正常終了)** 3. で取得した処理結果をリターンして終了\n\n**[例外処理]**\n\n- **3a.** 後続ハンドラ処理中のエラーはそのまま再送出",
+    "s3": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| checkInterval | int | | 1 | 停止フラグ確認間隔 |\n| tableName | String | ○ | | リクエストテーブル名 |\n| requestIdColumnName | String | ○ | | リクエストIDカラム名 |\n| processHaltColumnName | String | ○ | | 処理停止フラグカラム名 |\n| dbTransactionManager | SimpleDbTransactionManager | ○ | | DBトランザクションマネージャ |\n| exitCode | int | | 1 | プロセス停止時終了コード |\n\n**基本設定**\n\n```xml\n<component\n  name=\"processStopHandler\"\n  class=\"nablarch.fw.handler.ProcessStopHandler\">\n  <property name=\"tableName\" value=\"BATCH_REQUEST\" />\n  <property name=\"requestIdColumnName\" value=\"REQUEST_ID\" />\n  <property name=\"processHaltColumnName\" value=\"PROCESS_HALT_FLG\" />\n  <property name=\"dbTransactionManager\" ref=\"simpleDbTransactionManager\" />\n</component>\n```\n\n**任意設定項目も含む例**\n\n```xml\n<component\n  name=\"processStopHandler\"\n  class=\"nablarch.fw.handler.ProcessStopHandler\">\n  <property name=\"checkInterval\" value=\"1\" />\n  <property name=\"tableName\" value=\"BATCH_REQUEST\" />\n  <property name=\"requestIdColumnName\" value=\"REQUEST_ID\" />\n  <property name=\"processHaltColumnName\" value=\"PROCESS_HALT_FLG\" />\n  <property name=\"dbTransactionManager\" ref=\"simpleDbTransactionManager\" />\n  <property name=\"exitCode\" value=\"50\" />\n</component>\n```"
+  }
+}

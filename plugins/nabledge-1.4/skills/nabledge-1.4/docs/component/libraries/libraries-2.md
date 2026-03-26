@@ -1,0 +1,12 @@
+# 精査エラーのメッセージを、任意の項目に対応させて画面表示させる方法を教えてください
+
+## 精査エラーのメッセージを任意の項目に対応させて表示する方法
+
+EntityやFormの外部（DBアクセスを伴う精査など）でエラーが発生した場合に、エラーメッセージを特定の画面項目または画面の任意の箇所に表示するには、`ValidationUtil.createMessageForProperty` を使用する。このメソッドを使うと、エラー発生箇所を示すプロパティ名をメッセージの属性に追加できる。
+
+<details>
+<summary>keywords</summary>
+
+ValidationUtil.createMessageForProperty, 精査エラーメッセージ, 任意項目へのエラー表示, プロパティ名指定, DBアクセスを伴う精査
+
+</details>

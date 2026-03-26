@@ -25,7 +25,7 @@ set -e
 # ============================================================
 
 # Available versions
-ALL_VERSIONS=(6 5)
+ALL_VERSIONS=(6 5 1.4)
 
 # Parse options
 VERSIONS_ARG="all"

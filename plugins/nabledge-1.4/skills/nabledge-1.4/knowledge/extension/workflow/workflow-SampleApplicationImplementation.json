@@ -1,0 +1,86 @@
+{
+  "id": "workflow-SampleApplicationImplementation",
+  "title": "ワークフローライブラリの基本的な使用方法",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ワークフローの開始",
+      "hints": [
+        "WorkflowManager",
+        "WorkflowInstance",
+        "startInstance",
+        "assignUser",
+        "assignGroup",
+        "getInstanceId",
+        "ワークフロー開始",
+        "インスタンスID格納",
+        "担当者割り当て"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ワークフローの進行",
+      "hints": [
+        "WorkflowManager",
+        "WorkflowInstance",
+        "completeUserTask",
+        "completeGroupTask",
+        "findInstance",
+        "ワークフロー進行",
+        "XORゲートウェイ",
+        "フロー進行条件"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "境界イベントの実行",
+      "hints": [
+        "WorkflowManager",
+        "WorkflowInstance",
+        "triggerEvent",
+        "findInstance",
+        "境界イベント",
+        "引き戻し"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ワークフローの検索",
+      "hints": [
+        "WF_ACTIVE_USER_TASK",
+        "WF_ACTIVE_GROUP_TASK",
+        "ワークフロー検索",
+        "アクティブタスク検索",
+        "UNION ALL",
+        "INNER JOIN",
+        "WF_INSTANCE_ID"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "排他制御についての注意事項",
+      "hints": [
+        "WorkflowInstance",
+        "completeUserTask",
+        "completeGroupTask",
+        "triggerEvent",
+        "assignUser",
+        "assignGroup",
+        "changeAssignedUser",
+        "changeAssignedGroup",
+        "HttpExclusiveControlUtil",
+        "OptimisticLockException",
+        "排他制御",
+        "ワークフロー排他制御"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "`WorkflowManager#startInstance(workflowId)` を呼び出してワークフローを開始する。返された `WorkflowInstance` を使って各タスクへの担当者/グループ割り当てを行う。\n\n> **注意**: ワークフロー開始時に採番されるインスタンスIDは、以降のリクエストでワークフローインスタンスを取得できるよう、業務データのテーブルに格納すること。\n\n**クラス**: `WorkflowManager`, `WorkflowInstance`\n\n```java\n// ワークフローを開始する\nWorkflowInstance workflow = WorkflowManager.startInstance(TRANS_EXPENSE_APPLICATION_WORKFLOW_ID);\n\n// 各タスクに担当ユーザを割り当てる\nworkflow.assignUser(CONFIRMATION_TASK, confirmUserId);\nworkflow.assignUser(AUTHORIZATION_TASK, authorizeUserId);\nworkflow.assignUser(REAPPLICATION_TASK, ThreadContext.getUserId());\n\n// 業務データにインスタンスIDを格納する\nentity.setWfInstanceId(workflow.getInstanceId());\n```",
+    "s2": "`WorkflowInstance#completeUserTask` または `WorkflowInstance#completeGroupTask` を呼び出してワークフローを進行させる。進行後に処理履歴の追加や業務データのステータス更新を行う。\n\n> **注意**: ワークフロー進行後にそのワークフローが完了する場合にも、追加の処理は不要。\n\nXORゲートウェイを通過する場合は `completeUserTask` に `Map<String, Object>` 型のパラメータを渡す必要がある。パラメータのキーと値はワークフロー定義ファイルのフロー進行条件に対応させる。\n\n**クラス**: `WorkflowManager`, `WorkflowInstance`\n\n```java\n// ワークフローインスタンスを取得し、パラメータを渡してタスクを完了する\nMap<String, Object> parameter = new HashMap<String, Object>();\nparameter.put(\"condition\", FORWARD_CONDITION);\nWorkflowManager.findInstance(application.getString(\"WF_INSTANCE_ID\")).completeUserTask(parameter);\n\n// 業務データのステータスを更新\napplicationEntity.setTransExpeAppliStatusCd(CONFIRM_COMPLETE);\nupdateApplicationStatus(applicationEntity);\n\n// 処理履歴の追加\nhistoryEntity.setTransExpeAppliActionCd(CONFIRM);\nhistoryEntity.setTransExpeAppliResultCd(FORWARD_RESULT);\nregisterHistory(historyEntity);\n```",
+    "s3": "`WorkflowInstance#triggerEvent(triggerId)` を呼び出すことで境界イベントを実行する。呼び出すAPI以外は「ワークフローの進行」セクションと同様。\n\n**クラス**: `WorkflowManager`, `WorkflowInstance`\n\n```java\n// 境界イベントを実行する\nWorkflowManager.findInstance(application.getString(\"WF_INSTANCE_ID\")).triggerEvent(CANCEL_TRIGGER);\n\n// ワークアイテムの更新\napplicationEntity.setTransExpeAppliStatusCd(CONFIRM_CANCEL);\nupdateApplicationStatus(applicationEntity);\n\n// 履歴情報の登録\nhistoryEntity.setTransExpeAppliActionCd(CANCEL);\nhistoryEntity.setTransExpeAppliResultCd(FORWARD_RESULT);\nregisterHistory(historyEntity);\n```",
+    "s4": "ワークフローの検索は、`WF_ACTIVE_USER_TASK`（ユーザ割り当て済みアクティブタスク）や `WF_ACTIVE_GROUP_TASK`（グループ割り当て済みアクティブタスク）テーブルに対して通常のSQL検索を実装する。業務テーブルとアクティブタスクを `WF_INSTANCE_ID = ACTIVE_TASK.INSTANCE_ID` で INNER JOIN することで、アクティブなワークフロータスクに絞り込む。\n\n```sql\n-- 進行可能申請一覧検索用SQL\nWITH\n    ACTIVE_TASK AS\n    (\n    SELECT  -- アクティブユーザタスク\n        WF_ACTIVE_USER_TASK.INSTANCE_ID,\n        WF_ACTIVE_USER_TASK.FLOW_NODE_ID\n    FROM WF_ACTIVE_USER_TASK\n    WHERE WF_ACTIVE_USER_TASK.ASSIGNED_USER_ID = :loginUserId\n    UNION ALL\n    SELECT  -- アクティブグループタスク\n        WF_ACTIVE_GROUP_TASK.INSTANCE_ID,\n        WF_ACTIVE_GROUP_TASK.FLOW_NODE_ID\n    FROM WF_ACTIVE_GROUP_TASK\n    WHERE WF_ACTIVE_GROUP_TASK.ASSIGNED_GROUP_ID = :ugroupId\n    )\nSELECT\n    WORK_ITEM.BUSINESS_TYPE,\n    WORK_ITEM.APPLICATION_ID,\n    WORK_ITEM.APPLICATION_DATE,\n    USERS.KANJI_NAME APPLICATION_USER_NAME,\n    WORK_ITEM.STATUS_CD\nFROM\n    (\n    SELECT  -- 交通費申請\n        TRANS_EXPE_APPLICATION.WF_INSTANCE_ID,\n        '2' BUSINESS_TYPE,\n        TRANS_EXPE_APPLICATION.TRANS_EXPE_APPLI_ID APPLICATION_ID,\n        TRANS_EXPE_APPLICATION.INSERT_DATE_TIME APPLICATION_DATE,\n        TRANS_EXPE_APPLICATION.INSERT_USER_ID APPLICATION_USER_ID,\n        TRANS_EXPE_APPLICATION.TRANS_EXPE_APPLI_STATUS_CD STATUS_CD\n    FROM\n        TRANS_EXPE_APPLICATION\n    INNER JOIN\n        ACTIVE_TASK\n    ON\n        TRANS_EXPE_APPLICATION.WF_INSTANCE_ID = ACTIVE_TASK.INSTANCE_ID\n    UNION ALL\n    SELECT  -- ローン申請\n        LOAN_APPLICATION.WF_INSTANCE_ID,\n        '1',\n        LOAN_APPLICATION.LOAN_APPLI_ID,\n        LOAN_APPLICATION.INSERT_DATE_TIME,\n        LOAN_APPLICATION.INSERT_USER_ID,\n        LOAN_APPLICATION.LOAN_APPLI_STATUS_CD\n    FROM\n        LOAN_APPLICATION\n    INNER JOIN\n        ACTIVE_TASK\n    ON\n        LOAN_APPLICATION.WF_INSTANCE_ID = ACTIVE_TASK.INSTANCE_ID\n    ) WORK_ITEM\nINNER JOIN USERS ON WORK_ITEM.APPLICATION_USER_ID = USERS.USER_ID\nWHERE\n    $if(businessType) {WORK_ITEM.BUSINESS_TYPE = :businessType}\n    AND $if(applicationUserId) {WORK_ITEM.APPLICATION_USER_ID = :applicationUserId}\n```",
+    "s5": "> **重要**: ワークフローインスタンスの状態を変更する場合には、**必ず**業務データで排他制御を行う必要がある。\n\n排他制御が必要なAPI:\n- ワークフローの進行: `WorkflowInstance#completeUserTask`, `WorkflowInstance#completeGroupTask`\n- 境界イベントによる進行: `WorkflowInstance#triggerEvent`\n- ユーザ/グループの割り当て: `WorkflowInstance#assignUser`, `WorkflowInstance#assignGroup`\n- 割り当て済みの変更: `WorkflowInstance#changeAssignedUser`, `WorkflowInstance#changeAssignedGroup`\n\n排他制御の実装方法は通常の画面オンライン処理と同じ。\n\n**クラス**: `HttpExclusiveControlUtil`\n\n画面表示時（排他制御開始）:\n```java\n// 排他制御開始\nHttpExclusiveControlUtil.prepareVersion(context,\n        new ExclusiveCtrlTransExpeApplicationContext(applicationId));\n```\n\n処理実行時（排他チェック）:\n```java\n// 排他制御チェック（OptimisticLockException が発生した場合は @OnError でハンドリング）\nHttpExclusiveControlUtil.updateVersionsWithCheck(request);\n```"
+  }
+}

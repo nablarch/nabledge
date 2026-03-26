@@ -1,0 +1,74 @@
+{
+  "id": "java-static-analysis-02_JspStaticAnalysisInstall",
+  "title": "JSP静的解析ツール インストールガイド",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "前提条件",
+      "hints": [
+        "JSP静的解析ツール",
+        "インストール前提条件",
+        "Nablarchサンプルアプリケーション"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "インストール",
+      "hints": [
+        "インストール方法",
+        "jspanalysis",
+        "ツール配置",
+        "プロジェクトルート"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "ツール構成",
+      "hints": [
+        "jsp-analysis-build.properties",
+        "jsp-analysis-build.xml",
+        "config.txt",
+        "transform-to-html.xsl",
+        "ツール構成ファイル"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Antビルドファイル用設定ファイルの書き換え",
+      "hints": [
+        "project.test",
+        "project.test.lib",
+        "checkjspdir",
+        "xmloutput",
+        "htmloutput",
+        "checkconfig",
+        "charset",
+        "lineseparator",
+        "xsl",
+        "additionalext",
+        "excludePatterns",
+        "Ant設定プロパティ",
+        "JSP解析設定"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "Eclipseとの連携設定",
+      "hints": [
+        "Eclipse連携",
+        "Antビュー",
+        "ビルドファイル登録",
+        "jsp_analysis_build.xml",
+        "Eclipse起動手順"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "Nablarch開発環境構築ガイドに従ってNablarchサンプルアプリケーションがインストールされていること。",
+    "s2": "本ツールは `<プロジェクトルート>/tool/jspanalysis` 直下に配置した状態で配布されている。ディレクトリごと任意の場所にコピーすればインストール完了。",
+    "s3": "| ファイル名 | 説明 |\n|---|---|\n| jsp-analysis-build.properties | Antビルドファイル用設定ファイル |\n| jsp-analysis-build.xml | Antビルドファイル |\n| config.txt | JSP静的解析ツール設定ファイル |\n| transform-to-html.xsl | JSP静的解析結果XMLをHTMLに変換する際の定義ファイル |",
+    "s4": "`jsp-analysis-build.properties` を実行環境に合わせて修正する。\n\n| 設定プロパティ | 説明 | 例 |\n|---|---|---|\n| project.test | プロジェクトのテストディレクトリのパス | `./test` |\n| project.test.lib | テスト用ライブラリが配置されたディレクトリ | `${project.test}/lib` |\n| checkjspdir | チェック対象JSPディレクトリパスもしくはファイルパス。CI環境など一括チェック時はディレクトリパスを設定。ディレクトリ指定時は再帰的にチェックが実行される。 | `./main/web` |\n| xmloutput | チェック結果のXMLレポートファイルの出力パス | `./build/reports/jsp/report.xml` |\n| htmloutput | チェック結果のHTMLレポートファイルの出力パス | `./build/reports/jsp/report.html` |\n| checkconfig | JSP静的解析ツール設定ファイルのパス | `./tool/jspanalysis/config.txt` |\n| charset | チェック対象JSPファイルの文字コード | `utf-8` |\n| lineseparator | チェック対象JSPファイルの改行コード | `\\n` |\n| xsl | XSLTファイルパス（XMLをHTMLに変換） | `./tool/jspanalysis/transform-to-html.xsl` |\n| additionalext | チェック対象とする追加拡張子（カンマ区切り）。`jsp` は設定不要で必ずチェック対象。 | `tag` |\n| excludePatterns | チェック対象外とするディレクトリ（ファイル）名の正規表現（カンマ区切り） | `ui_local,ui_test,ui_test/.*/set.tag` |\n\n> **注意**: ファイルパス（ディレクトリパス）は絶対パスでの指定も可能。",
+    "s5": "EclipseのAntビューにビルドファイルを登録してツールを起動する手順:\n\n1. ツールバーから「ウィンドウ (Window)」→「設定 (Show View)」を選択し、Antビューを開く。\n2. Antビューで「+」アイコンを押下し、ビルドスクリプトを選択する。\n3. `jsp_analysis_build.xml` を選択する。\n4. AntビューにAntビルドファイルが表示されることを確認する。"
+  }
+}

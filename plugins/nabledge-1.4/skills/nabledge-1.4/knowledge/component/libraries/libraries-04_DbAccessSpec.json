@@ -1,0 +1,165 @@
+{
+  "id": "libraries-04_DbAccessSpec",
+  "title": "データベースアクセス(検索、更新、登録、削除)機能",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "JNDI接続",
+        "DataSource接続",
+        "データベース接続方式",
+        "NablarchServletContextListener",
+        "データベース接続初期化",
+        "javax.sql.DataSource",
+        "プール機能",
+        "データベース接続",
+        "oracle.jdbc.pool.OracleDataSource",
+        "oracle.ucp.jdbc.PoolDataSourceImpl",
+        "SQLインジェクション対策",
+        "SQL文外部化",
+        "prepareStatementBySqlId",
+        "PreparedStatement",
+        "バインド変数",
+        "AppDbConnection",
+        "DbConnectionContext"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "JDBCのAPIを踏襲した機能",
+      "hints": [
+        "JDBC",
+        "データベースアクセス",
+        "実装済み",
+        "未実装",
+        "サポート機能",
+        "非サポート機能",
+        "LOB",
+        "BYTE型",
+        "バイナリ",
+        "プリフェッチ",
+        "SQLStatement",
+        "setFetchSize",
+        "バッチ更新",
+        "addBatch",
+        "重複エラー",
+        "共通項目",
+        "IN句",
+        "LIKEエスケープ",
+        "SQL外部化",
+        "トランザクションタイムアウト",
+        "PL/SQL",
+        "DBパスワード暗号化"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "頻繁に使用するデータベースリソースの自動解放機能",
+      "hints": [
+        "java.sql.Connection",
+        "java.sql.Statement",
+        "java.sql.ResultSet",
+        "データベースリソース自動解放",
+        "リソース解放",
+        "クラス図",
+        "全体構造",
+        "全体クラス設計",
+        "DBアクセス機能"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "SQL文の実行ログ(以降SQLログ)の出力する機能",
+      "hints": [
+        "SQLログ",
+        "SQLロガー",
+        "ログ出力レベル",
+        "本番環境SQLログ無効化",
+        "04_Connection",
+        "04_Statement",
+        "04_ObjectSave",
+        "04_TransactionTimeout",
+        "04_QueryCache",
+        "機能構造",
+        "サブモジュール"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "件数指定でデータを取得(簡易検索機能)できる機能",
+      "hints": [
+        "ページング",
+        "件数指定",
+        "簡易検索",
+        "開始位置指定"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "Javaオブジェクトのフィールドの値を容易にデータベースに登録できる機能",
+      "hints": [
+        "executeUpdateByObject",
+        "オブジェクト登録",
+        "ログインユーザID自動設定",
+        "タイムスタンプ自動設定",
+        "FormオブジェクトDB登録"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "LIKE検索を簡易的に実装出来る機能",
+      "hints": [
+        "LIKE検索",
+        "エスケープ処理自動",
+        "部分一致検索",
+        "ParameterizedSqlPStatement"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "条件が可変のSQL文を組み立てる機能",
+      "hints": [
+        "動的SQL",
+        "可変条件",
+        "$if構文",
+        "prepareParameterizedSqlStatement",
+        "ParameterizedSqlPStatement",
+        "SqlResultSet"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "データベーストランザクションのタイムアウト機能",
+      "hints": [
+        "トランザクションタイムアウト",
+        "処理遅延",
+        "DB接続プール枯渇防止",
+        "ロック解放待ち"
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "SQLクエリ結果のキャッシュ",
+      "hints": [
+        "SQLキャッシュ",
+        "クエリキャッシュ",
+        "QueryCache",
+        "参照系クエリ"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "データベースアクセス機能は、以下2種類の接続方法を提供する。\n\n**接続方式**:\n- **JNDI接続**: Webアプリケーションサーバに登録したデータベース接続を使用する方式。Webアプリケーションの場合に推奨。\n- **DataSource接続**: `javax.sql.DataSource`の実装クラスを使用する方式。バッチアプリケーションなどWebアプリケーションサーバのDataSourceを使用できない場合に使用。\n\n上記以外の接続方法を使用したい場合には、データベース接続を取得する部品（例：`java.sql.DriverManager`から取得する部品）を追加することにより実現可能である。\n\n> **注意**: 自動テストなどWebアプリケーションサーバが不要な場合、DataSource接続を使用することでWebアプリケーションサーバを起動しなくてもテスト実行が可能。接続方式の切り替えは設定ファイルで行えるため、アプリケーションコードに影響を与えない。\n\nWebアプリケーションでは、:ref:`NablarchServletContextListener` によりデータベース接続が初期化される。\n\n## データベース接続のプール機能について\n\n本機能ではDB接続のプール機能を提供しない。使用する場合は以下の方法で有効化すること。\n\n- **JNDI接続の場合**: WebアプリケーションサーバのDB接続プール機能を有効にする。\n- **DataSource接続の場合**: プール機能を有するDataSource実装クラスを使用する。\n\n> **注意**: Oracleの場合、`oracle.jdbc.pool.OracleDataSource` または `oracle.ucp.jdbc.PoolDataSourceImpl` を使用してプール用プロパティを設定することでプール機能を利用できる。\n\n> **警告**: データベースベンダーによってはプール機能を有するDataSourceが提供されていない場合がある。各データベースベンダーのJDBCマニュアルを参照すること。\n\n## SQLインジェクション対策について\n\nPreparedStatementのバインド変数化だけでは対策として不十分（アプリケーションプログラマによる脆弱な実装を防げない）。\n\n本機能のSQL文外部化機能を使用することで、業務ロジックからSQL文への直接アクセスを遮断し、SQL文と入力値の文字列連結を完全に防止できる。これがSQLインジェクション対策として最も有効な手段。業務ロジックで使用する値はSQL文ではなくSQL IDのみ。\n\n> **警告**: 以下のような入力値を文字列連結してSQL文を構築する実装はSQLインジェクションの脆弱性があるため実装してはならない。\n\nSQLインジェクション脆弱性のある実装例（禁止）:\n```java\npublic List getUserName(String userId) {\n    // 入力値を連結しているため、SQLインジェクションの脆弱性を含んだ実装となる。\n    String sql = \n         \"SELECT \"\n           + \"USER_NAME\"\n       + \"FROM \"\n           + \"USER_MTR \"\n       + \"WHERE \"\n           + \"ID = \" + userId;\n\n    AppDbConnection connection = DbConnectionContext.getConnection();\n    connection.prepareStatement(sql);\n    // 以下省略\n}\n```\n\nSQL文外部化使用時（安全な実装）:\n```java\nprivate final String sqlResource = this.getClass().getName() + \"#\";\n\npublic List getUserName(String userId) {\n    // ステートメントを生成する際にSQL文ではなくSQLを識別するためのIDを指定する。\n    // このため、SQL文を直接編集（文字連結）することができないので、SQLインジェクション対策となる。\n    AppDbConnection connection = DbConnectionContext.getConnection();\n    connection.prepareStatementBySqlId(sqlResource + \"SQL_ID\");\n    // 以下省略\n}\n```",
+    "s2": "JDBCのAPIを踏襲（ラップ）しているため、JDBCプログラミング経験者はスムーズに開発できる。\n\nJDBCのAPIを拡張している機能は、以下の特徴を参照すること。\n- 件数指定でデータを取得（簡易検索機能）できる機能\n- Javaオブジェクトのフィールドの値を容易にデータベースに登録できる機能\n- LIKE検索を簡易的に実装出来る機能\n- 条件が可変のSQL文を組み立てる機能\n\n## 要求\n\n### 実装済み\n\n以下の機能は実装済み：\n\n- データベースへの接続\n- SQL文の実行\n- SQL文の実行ログの出力\n- 各種リソース（Connection、Statement、ResultSet）の解放\n- バイナリ（LOBやBYTE型）型の検索・更新\n- プリフェッチ（`SQLStatement#setFetchSize`）\n- バッチ更新（`SQLStatement#addBatch`）\n- 重複エラー等のアプリケーションによるハンドリング\n- 共通項目（最終更新者、最終更新日時など）への値の自動設定\n- 条件が可変の場合のSQL文生成（IN句の項目数が可変の場合を含む）\n- LIKE検索時のエスケープ処理\n- SQL文の外部ファイル定義（Javaコードとの分離）\n- データベースアクセス時のトランザクションタイムアウトチェック\n\n### 未実装\n\n以下の機能は**未実装**（使用不可）：\n\n- PL/SQLの実行\n- 1トランザクション内でのSQL文の実行回数チェック\n- テーブル更新順序のチェック\n- テーブル更新順序に違反した場合の振る舞い（警告または例外）の指定\n- SQL文の実行ログを指定機能（リクエストID）のみ出力\n- データベース接続パスワードの暗号化管理",
+    "s3": "以下のリソースはアプリケーションで解放処理を実装する必要はない。\n\n- `java.sql.Connection`\n- `java.sql.Statement`\n- `java.sql.ResultSet`（Statementを解放することで自動解放される）\n\n> **重要**: BLOB型から取得した`InputStream`や、バイナリファイル登録時のファイルリソース等は自動解放対象外。各アプリケーションで解放処理を実装すること。\n\n## クラス図\n\n本機能の全体構造図。\n\n![DBアクセス機能 全体クラス図](assets/libraries-04_DbAccessSpec/DbAccessSpec_AllClassDesign.jpg)",
+    "s4": "SQLログはロガー名「SQL」（SQLロガー）でログ出力される。SQLログを出力する場合は、このSQLロガーをログ出力対象に含める必要がある。\n\n**ログレベルと出力内容**:\n- **DEBUGレベル**: 実行されたSQL、SELECT文の取得件数、実行時間、SQL ID（外部ファイル化した場合）\n- **TRACEレベル**: バインド変数に設定した値\n\n> **警告**: 性能劣化（ディスクI/O起因）やディスクリソースの圧迫（ログサイズ増加起因）の原因となるため、SQLログは本番環境では出力すべきでない。\n\nロガー名でのログ出力制御の設定方法は、[./01_Log](libraries-01_Log.json) を参照。SQLログの詳細については、:ref:`SQLログの出力<SqlLog>` を参照。\n\n各機能単位の構造は以下のサブモジュールで構成される：\n\n- 04/04_Connection\n- 04/04_Statement\n- 04/04_ObjectSave\n- 04/04_TransactionTimeout\n- 04/04_QueryCache",
+    "s5": "開始位置と取得件数を指定してデータを取得できる。ページ切り替え機能をもつ画面で、アプリケーションで表示データをフィルタリングする必要がなくなる。",
+    "s6": "オブジェクト自体を指定してデータベースへフィールドの値を登録できる（1項目ずつ指定不要）。\n\n**対応するデータ**:\n- 任意のオブジェクト（主にFormオブジェクト）のフィールドの値\n- Map実装クラスのvalue\n\nログインユーザIDとタイムスタンプは、オブジェクトに設定されていなくても`executeUpdateByObject`内で自動設定される。処理後にはこれらの値を参照できる。\n\n> **注意**: 自動設定項目は各開発プロジェクトで追加・変更可能（例：アノテーション不要でカラム名（フィールド名）で判断して値を設定することも可能）。\n\n**使用例**:\n```java\nUserEntity entity = new UserEntity();\nentity.setName(\"名前\");\nentity.setAddress(\"住所\");\n// ログインユーザID、タイムスタンプは自動設定されるため事前設定不要\nstatement.executeUpdateByObject(entity);\n```\n\n詳細は、[オブジェクトのフィールドの値のデータベースへの登録例](libraries-04_ObjectSave.json) を参照。",
+    "s7": "部分一致検索（LIKE）を簡易的に実装できる機能。\n\n- LIKE条件に設定する文字列のエスケープ処理は実装不要（フレームワークが自動処理するためエスケープ漏れが発生しない）\n- Javaコードで「%」を付加する必要はない（SQL文に記述するため、SQLレビューで仕様確認が可能）\n- escape句はフレームワークで自動挿入されるため、SQL文への記述不要\n\n**使用例**:\n```java\nParameterizedSqlPStatement st = dbConnection.prepareParameterizedSqlStatement(\n    \"SELECT USER_ID, USER_NAME FROM USER_MTR WHERE USER_NAME LIKE :userName%\");\nst.retrieve(entity); // エスケープ処理は実装不要\n```",
+    "s8": "可変条件（画面で入力された場合のみ検索条件に含める）のSQL文を自動生成できる機能。\n\n- Javaコードで入力判定を行い、SQL文を組み立てる必要がない\n- オブジェクトのフィールドの値を条件に設定できる\n\n`$if(フィールド名) {SQL条件式}` の構文を使用。`prepareParameterizedSqlStatement`の呼び出し時に検索条件オブジェクトを指定することでSQL文の組み立てが行われる。\n\n**使用例**:\n```java\nParameterizedSqlPStatement sqlPStatement = dbConnection.prepareParameterizedSqlStatement(\n    \"SELECT USER_ID, USER_NAME, USER_KANA_NAME FROM USER_MST \"\n    + \"WHERE $if(userName) {user_name LIKE :userName%} \"\n    + \"AND $if(userKanaName) {user_kana_name LIKE :userKanaName%}\", entity);\nSqlResultSet resultSet = sqlPStatement.retrieve(entity);\n```",
+    "s9": "データベースアクセス時にトランザクションの有効期限内かをチェックする機能。\n\n処理遅延（データベースのロック解放待ち、SQL文の応答待ち等）によりトランザクションの有効期限を過ぎた場合、トランザクションタイムアウトが発生したことを示す例外を送出する。これにより遅延した処理が強制終了され、遅延処理が大量に残存することを防止できる。\n\nWeb画面処理に適用した場合、Webアプリケーションサーバ上のDB接続プールやリクエスト要求を処理するスレッドの枯渇を防止できる。\n\n> **注意**: DB接続プール等が枯渇すると、クライアントからの処理要求がプールの解放待ちとなり、後続リクエストが全て待機状態となる。",
+    "s10": "SQL IDとパラメータが等価な参照系クエリに対して、キャッシュした結果を返却できる（DBアクセスが発生しない）。\n\n本機能を適用できるクエリには制限がある。詳細は、[./04/04_QueryCache](libraries-04_QueryCache.json) を参照。"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "id": "testing-framework-http_send_sync-02_RequestUnitTest",
+  "title": "リクエスト単体テストの実施方法(HTTP同期応答メッセージ送信処理)",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "HTTP同期応答メッセージ送信処理",
+        "リクエスト単体テスト",
+        "送信キュー",
+        "受信キュー",
+        "通信先",
+        "読み替え"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "テストデータの書き方",
+      "hints": [
+        "テストデータ",
+        "Excelテストデータ",
+        "HTTP同期応答",
+        "テストデータ形式"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "",
+      "hints": [
+        "expectedMessageByClient",
+        "responseMessageByClient",
+        "モックアップ",
+        "testShots",
+        "グループID"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "",
+      "hints": [
+        "MOM",
+        "HTTP同期応答メッセージ送信処理",
+        "同時使用",
+        "expectedMessage",
+        "responseMessage",
+        "expectedMessageByClient",
+        "responseMessageByClient"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "",
+      "hints": [
+        "グループID",
+        "MOM",
+        "HTTP同期応答",
+        "結果検証",
+        "同一グループID",
+        "グループID重複"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "",
+      "hints": [
+        "file-type",
+        "要求電文",
+        "アサート方法",
+        "ディレクティブ行"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "フレームワークで使用するクラスの設定",
+      "hints": [
+        "defaultMessageSenderClient",
+        "RequestTestingMessagingClient",
+        "モックアップクラス",
+        "コンポーネント設定",
+        "nablarch.test.core.messaging.RequestTestingMessagingClient"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "リクエスト単体テストの実施方法は :ref:`message_sendSyncMessage_test` に準じる。ただし「送信キュー」「受信キュー」は「通信先」と読み替えること。",
+    "s2": "![HTTP同期応答メッセージ送信処理のテストデータ例](assets/testing-framework-http_send_sync-02_RequestUnitTest/http_send_sync.png)",
+    "s3": "モックアップを使用する場合、testShotsの\"expectedMessageByClient\"および\"responseMessageByClient\"にグループIDを設定する。\n\n![モックアップ使用時のtestShots設定例](assets/testing-framework-http_send_sync-02_RequestUnitTest/http_send_sync_shot.png)",
+    "s4": "同一アクション内でMOMによる同期応答メッセージ送信処理とHTTP同期応答メッセージ送信処理が同時に行われる場合:\n- \"expectedMessage\"、\"responseMessage\"にMOM用グループIDを指定\n- \"expectedMessageByClient\"、\"responseMessageByClient\"にHTTP用グループIDを指定\n\n![MOM+HTTP同時使用時のtestShots設定例](assets/testing-framework-http_send_sync-02_RequestUnitTest/http_mom_send_sync_shot.png)",
+    "s5": "> **注意**: グループIDはMOMによる同期応答メッセージ送信処理とHTTP同期応答メッセージ送信処理でそれぞれ別の値を設定すること。同一グループIDを指定した場合、正しく結果検証が行われない。",
+    "s6": "テストデータのディレクティブ行に設定されたfile-typeの値により、要求電文のアサート方法が変化する。",
+    "s7": "通常、アーキテクトが設定する（アプリケーションプログラマの設定は不要）。\n\n**モックアップクラスの設定**\n\n**クラス**: `nablarch.test.core.messaging.RequestTestingMessagingClient`\n\n```xml\n<component name=\"defaultMessageSenderClient\"\n           class=\"nablarch.test.core.messaging.RequestTestingMessagingClient\">\n</component>\n```"
+  }
+}

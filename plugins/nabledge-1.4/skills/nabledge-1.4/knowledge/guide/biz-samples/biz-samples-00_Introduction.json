@@ -1,0 +1,54 @@
+{
+  "id": "biz-samples-00_Introduction",
+  "title": "iOS ライブラリについて",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ビルド設定",
+      "hints": [
+        "-ObjC",
+        "Other Linker Flags",
+        "リンカフラグ",
+        "ビルド設定",
+        "iOSリフレクション"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "iOSエラー処理実装方針",
+      "hints": [
+        "NSError",
+        "NMMessage",
+        "NSJSONSerialization",
+        "エラーハンドリング",
+        "エラーオブジェクト",
+        "プロトコル実装",
+        "戻り値判定",
+        "NMJsonBodyConvertorException"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "initWithDictionaryメソッド実装方法",
+      "hints": [
+        "initWithDictionary",
+        "NSDictionary",
+        "NMAesEncryption",
+        "keyManager",
+        "nmMode",
+        "nmPaddingType",
+        "synthesize",
+        "プロパティリスト",
+        "initializeList",
+        "connectionFWpropertyList",
+        "encryptionPropertyList"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "> **重要**: iOSのリフレクションを利用しているため、コンパイルのリンカフラグに「-ObjC」を設定しなければ動作しない。Other Linker Flagsに必ず「-ObjC」を追加すること。\n\n![Other Linker Flags設定](assets/biz-samples-00_Introduction/warning_LinkerFlags.png)",
+    "s2": "Appleの方針として、異常が発生した場合は例外を投げるのではなくエラーオブジェクトを生成して処理を終了する。iOS ライブラリもこの方針に従い、戻り値の判定によるエラーハンドリングを前提として実装している。\n\n> **重要**: エラー判定は `response == nil` で行うこと。`error != nil` を判定条件にしないこと。\n\n```objective-c\nNSError *error = nil;\nNMMessage *response = [sender send:@\"destination\" sendMessage:sendMessage error:&error];\n\n// error != nilという判定条件にしないこと\nif (response == nil) {\n    [self outputErrorInfo:error];\n}\n```\n\nプロトコルを実装する場合: エラー情報を引数に持つメソッドでエラーが発生した場合、必ずエラー情報を設定し、戻り値がNOまたはnilとなるように実装すること。エラー情報には各プロジェクトの方針に合ったドメイン、エラーコード、ユーザ情報を格納する。\n\n```objective-c\n- (NSData *)convertSend:(NMMessage *)message error:(NSError *__autoreleasing *)error {\n    NSDictionary *jsonMap = [message convertDictionary];\n    if ([NSJSONSerialization isValidJSONObject:jsonMap]) {\n        return [NSJSONSerialization dataWithJSONObject:jsonMap options:NSJSONWritingPrettyPrinted error:error];\n    } else {\n        *error = [NSError errorWithDomain:@\"NMJsonBodyConvertorException\" code:0 userInfo:nil];\n        return nil;\n    }\n}\n```",
+    "s3": "iOS ライブラリのプロトコルの中にはinitWithDictionaryメソッドを持つものがある。引数のNSDictionaryオブジェクトには、プロパティリスト（connectionFWpropertyList や encryptionPropertyList など）のinitializeListに記入された値が格納されている。これにより初期化時にパラメータに任意の値を設定できる。\n\n![プロパティリスト設定例](assets/biz-samples-00_Introduction/encryption_example_aesPropertyList.png)\n\n```objective-c\n@implementation NMAesEncryption\n\n@synthesize keyManager;\n@synthesize nmMode;\n@synthesize nmPaddingType;\n\n- (id)initWithDictionary:(NSDictionary *)dict {\n    self = [super init];\n    if (self != nil) {\n        self.nmMode = dict[@\"mode\"];           // 設定書のmode欄の値\n        self.nmPaddingType = dict[@\"padding\"]; // 設定書のpadding欄の値\n    }\n    return self;\n}\n```"
+  }
+}

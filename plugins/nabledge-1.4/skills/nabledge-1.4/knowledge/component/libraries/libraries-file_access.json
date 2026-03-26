@@ -1,0 +1,66 @@
+{
+  "id": "libraries-file_access",
+  "title": "ファイルアクセス機能",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "論理パス",
+        "ファイルアクセスAPI",
+        "ファイルシステムアクセス",
+        "record_format",
+        "ファイル読み書き"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "論理パス",
+      "hints": [
+        "FilePathSetting",
+        "論理パス設定",
+        "物理パス",
+        "論理パス名",
+        "output",
+        "input",
+        "format",
+        "拡張子設定"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "論理パス設定方法",
+      "hints": [
+        "FilePathSetting",
+        "basePathSettings",
+        "fileExtensions",
+        "classpath",
+        "file:",
+        "物理パス",
+        "論理パス設定例"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ファイルアクセスAPI",
+      "hints": [
+        "FileRecordWriterHolder",
+        "FileDataReader",
+        "ファイルレコードライタ",
+        "ファイルデータリーダ",
+        "ファイル出力",
+        "ファイル入力",
+        "FileRecordWriterDisposeHandler",
+        "DataRecord",
+        "data_reader"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "- **論理パス**: アプリケーションが動作環境に依存することを回避するため、処理対象ファイルを指定する際に使用する文字列。\n- **ファイルアクセスAPI**: データファイルの内容を [record_format](libraries-record_format.json) を用いて解析し、各レコードをMapとしてアクセスする。",
+    "s2": "**クラス**: `nablarch.core.util.FilePathSetting`\n\n各論理パスの物理パスは`FilePathSetting`クラスに設定し、キー名 **filePathSetting** でリポジトリに登録する。\n\n**既定論理パス名**\n\n| 論理パス名 | 内容 |\n|---|---|\n| output | 業務処理の結果として生成されるファイルを出力するディレクトリ |\n| input | 業務処理の入力となるファイルを格納したディレクトリ |\n| format | [フォーマット定義ファイル](libraries-record_format.json) を格納したディレクトリ |\n\n各論理パスにはファイルの拡張子を定義可能。この場合、ファイル名には拡張子を除いた文字列を指定する。",
+    "s3": "`FilePathSetting`クラスの設定項目と設定例。\n\n**設定項目**\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| basePathSettings | Map\\<String, String\\> | ○ | | 論理パス名と物理パスの組み合わせ。物理パスはURLの形式（`file:パス` or `classpath:パス`）で指定。**パスにスペースを含めないこと** |\n| fileExtensions | Map\\<String, String\\> | | 空のMap | 論理パス名とファイル拡張子の組み合わせ |\n\n> **重要**: `classpath:`を指定する場合、そのディレクトリが存在している必要がある（存在しない場合は例外スロー）。`file:`を指定する場合、ディレクトリが存在しなければ自動作成する。\n\n```xml\n<component name=\"filePathSetting\" class=\"nablarch.core.util.FilePathSetting\">\n  <property name=\"fileExtensions\">\n    <map>\n      <entry key=\"format\" value=\"fmt\" />\n      <entry key=\"csv-output\" value=\"csv\" />\n      <entry key=\"tsv-input\" value=\"tsv\" />\n    </map>\n  </property>\n  <property name=\"basePathSettings\">\n    <map>\n      <entry key=\"format\" value=\"file:./main/format\" />\n      <entry key=\"input\" value=\"file:./work/input\" />\n      <entry key=\"output\" value=\"file:./work/output\" />\n    </map>\n  </property>\n</component>\n```",
+    "s4": "### ファイルレコードライタ\n\n**クラス**: `FileRecordWriterHolder`\n\nプロセスレベルで入出力対象ファイルを管理し、並行スレッドからの同一ファイルへの出力の同期制御が自動的に行われる。[../handler/FileRecordWriterDisposeHandler](../handlers/handlers-FileRecordWriterDisposeHandler.json) と組み合わせることで、ファイルクローズ等の終端処理をハンドラに委譲可能。\n\n論理パス名を省略した場合、出力ファイルの論理パス名は **\"output\"**、フォーマット定義ファイルの論理パス名は **\"format\"** が使用される。\n\n```java\n// ファイルを開く\nFileRecordWriterHolder.open(\"output\", \"results.dat\", \"results.fmt\");\n\nMap<String, Object> results = new DataRecord();\nresults.put(\"status\", status);\nresults.put(\"processedData\", processedData);\n\n// レコードを出力する\nFileRecordWriterHolder.write(results, \"output\", \"results.dat\");\n```\n\n### ファイルデータリーダ\n\n本フレームワークでは、アプリケーションに対するデータ入力は全て [data_reader](../../about/about-nablarch/about-nablarch-concept-architectural_pattern.json) インターフェースによって抽象化されている。ファイルの読込みには専用のデータリーダ [../reader/FileDataReader](../readers/readers-FileDataReader.json) を使用すること。"
+  }
+}

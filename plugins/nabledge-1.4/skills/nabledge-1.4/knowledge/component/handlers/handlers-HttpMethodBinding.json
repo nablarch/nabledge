@@ -1,0 +1,127 @@
+{
+  "id": "handlers-HttpMethodBinding",
+  "title": "画面オンライン処理用業務アクションハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "HttpMethodBinding",
+        "nablarch.fw.web.HttpMethodBinding",
+        "業務アクションハンドラ",
+        "画面オンライン処理",
+        "HTTPメソッドディスパッチ",
+        "リクエストスコープ",
+        "HTTPServletRequest",
+        "変数スコープ",
+        "リクエスト単位のデータ管理",
+        "バリデーションエラーメッセージ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "概要",
+      "hints": [
+        "業務アクションハンドラ概要",
+        "ファイルダウンロード",
+        "ファイルアップロード",
+        "画面オンライン処理実装",
+        "ウィンドウスコープ",
+        "HttpRequest",
+        "setParam",
+        "@Published",
+        "複数ウィンドウ並行操作",
+        "楽観ロック",
+        "hiddenタグ暗号化",
+        "ヒストリバック"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "",
+      "hints": [
+        "HttpResponseHandler",
+        "HttpErrorHandler",
+        "TransactionManagementHandler",
+        "ハンドラキュー",
+        "ハンドラ処理概要",
+        "関連するハンドラ",
+        "セッションスコープ",
+        "セッション同期",
+        "セッションアフィニティ",
+        "セッションパーシステント",
+        "ログインユーザデータ",
+        "HTTPSession"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "業務アクションハンドラの実装内容",
+      "hints": [
+        "HttpResponse",
+        "HttpRequest",
+        "ExecutionContext",
+        "HttpErrorResponse",
+        "AuthenticationFailedException",
+        "メソッドディスパッチ",
+        "ビジネスメソッド命名規則",
+        "URIリソース名",
+        "ディスパッチ条件"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "",
+      "hints": [
+        "コンテンツパス",
+        "サーブレットフォーワード",
+        "内部フォーワード",
+        "HTTPリダイレクション",
+        "ForwardingHandler",
+        "WebFrontController",
+        "servlet://",
+        "forward://",
+        "redirect://",
+        "file://",
+        "classpath://"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "",
+      "hints": [
+        "@OnError",
+        "@OnErrors",
+        "HttpErrorResponse",
+        "ApplicationException",
+        "OptimisticLockException",
+        "例外制御",
+        "インターセプタ実行順",
+        "interceptorsOrder",
+        "OnDoubleSubmission"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "画面オンライン処理における変数スコープの利用",
+      "hints": [
+        "リクエストスコープ",
+        "セッションスコープ",
+        "ウィンドウスコープ",
+        "変数スコープ",
+        "hidden項目",
+        "スコープ使い分け"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.web.HttpMethodBinding`\n\n[../architectural_pattern/web_gui](../../processing-pattern/web-application/web-application-web_gui.json) における標準的な業務アクションハンドラ。`Handler`インターフェースの実装不要で、HTTPリクエストの内容に従い動的にビジネスメソッドをディスパッチする。\n\n## リクエストスコープ\n\n3つの変数スコープのうち最も維持期間が短い。各HTTPリクエストごとに作成され、レスポンス処理が完了するまで維持される。単一のリクエスト間で完結し、次画面以降に引き継ぐ必要のないデータを保持する。\n\n画面オンライン処理方式におけるリクエストスコープは `HTTPServletRequest#getAttribute()/setAttribute()` のラッパーである。\n\n**リクエストスコープに保持するデータ**\n\n- 画面に表示するデータオブジェクト（次画面以降に引き継がないもの）\n- バリデーションエラー等のメッセージ\n- JSP側で表示用に使用するフラグ",
+    "s2": "[../architectural_pattern/web_gui](../../processing-pattern/web-application/web-application-web_gui.json) における標準的な業務アクションハンドラの実装方法を提供する。\n\n関連ドキュメント:\n- ファイルダウンロードを行う場合: [../02_FunctionDemandSpecifications/02_Fw/01_Web/05_FileDownload](../libraries/libraries-05_FileDownload.json)\n- ファイルアップロードを伴う場合: [../common_library/file_upload_utility](../libraries/libraries-file_upload_utility.json)\n\n## ウィンドウスコープ\n\nブラウザのウィンドウ・タブ・フレームごとに作成される。各ウィンドウが閉じられるか、セッションが終了するまで維持される。\n\nウィンドウ間で同一の値を共有しなければならない一部のデータ（ログインユーザIDやショッピングカート内の商品一覧など）を除き、画面遷移を跨って使用するデータは全てウィンドウスコープ上に保持する。これにより、複数ウィンドウを用いた並行操作やブラウザのヒストリバックによる遷移が可能となる。\n\n**ウィンドウスコープに保持するデータ**\n\n- 画面の入力項目（入力項目復帰が必要なもの）\n- 他業務画面からの引き継ぎデータ\n- 画面遷移履歴情報\n- 楽観ロック用バージョン番号（あるデータに対する複数ユーザからの変更に対して、複数のリクエスト(画面)を跨いだトランザクションを実装する場合に使用する制御情報）\n\n**使用方法**\n\nウィンドウスコープ変数は hidden属性のinputタグとして各ウィンドウの画面内に維持される。ウィンドウスコープ上の変数は通常のリクエストパラメータと同等に扱われる。ウィンドウスコープ変数を含むリクエストパラメータにアクセスするには validation 機能のAPIを使用する。\n\nリクエストパラメータはフレームワークによって自動的にhiddenタグとして画面に出力される。ウィンドウスコープに変数を追加するには `HttpRequest#setParam()` を使用する。\n\n```java\npublic class HttpRequest extends Request {\n    /**\n     * リクエストパラメータを設定する。\n     */\n    @Published\n    public HttpRequest setParam(String name, String... params);\n}\n```\n\n**セキュリティ上の考慮**\n\nフレームワークが出力したhiddenタグの値は、リクエストURIおよびname属性のハッシュ値とともに暗号化される。暗号化に使用する共通鍵はユーザログイン時に作成してメモリ上に保持され、ログアウトまたはセッションタイムアウト時に廃棄される。",
+    "s3": "**ハンドラキュー配置順**:\n1. HttpResponseHandler\n2. HttpErrorHandler\n3. TransactionManagementHandler\n4. HttpMethodBinding\n\n**関連するハンドラ**:\n\n| ハンドラ | 内容 |\n|---|---|\n| [HttpResponseHandler](handlers-HttpResponseHandler.json) | 業務アクションが返却/送出したHTTPレスポンスオブジェクトをもとにレスポンス処理を行う |\n| [HttpErrorHandler](handlers-HttpErrorHandler.json) | 業務アクションが送出した実行時例外を対応するエラー遷移先のHTTPレスポンスオブジェクトに変換する |\n| [TransactionManagementHandler](handlers-TransactionManagementHandler.json) | 業務アクションが実行時例外を送出することで業務トランザクションをロールバックする |\n\n## セッションスコープ\n\nログインユーザごとに作成されるスコープで、複数のウィンドウで共有されるデータを保持する。ユーザがログインした時点で作成され、ログアウトまたはセッションタイムアウトが発生するまで維持される。\n\nセッションスコープ上のデータは複数のウィンドウから同時にアクセスされる可能性があるため、適切に同期化しなければならない。\n\n**セッションスコープに保持するデータ**\n\n- ログインユーザに紐づくデータ（ログインユーザID、認証・認可情報）\n- ウィンドウ間で同一のデータを参照・更新する必要があるデータ（ショッピングカート内の商品情報など）\n\n**セッションスコープの実装方式**\n\nHTTPSessionオブジェクトを使用する方式とデータベースを使用した独自実装の2通りがある。\n\n- **HTTPSession方式**: 同じログインユーザからのリクエストをセッションスコープが存在するサーバインスタンスに振り分ける（セッションアフィニティ方式）か、クラスタ内全サーバインスタンスでセッションスコープを同期する（セッションパーシステント方式）必要がある。\n- **DB独自実装方式**: アプリケーションサーバをほぼ制約なくスケールアップできるが、データベースへの負荷が増加する。\n\n> **注意**: データベースを使用したHTTPセッション実装は現時点では提供されていない。",
+    "s4": "業務アクションハンドラでは`Handler`インターフェースの実装不要で、HTTPリクエストの内容に従い動的にメソッドがディスパッチされる。\n\n```java\npublic class LoginAction {\n    public HttpResponse getLoginHtml(HttpRequest request, ExecutionContext context) {\n        context.invalidateSession();\n        return new HttpResponse(\"./login.jsp\");\n    }\n\n    public HttpResponse doLogin(HttpRequest request, ExecutionContext context) {\n        try {\n            authenticate(request, context);\n            return new HttpResponse(\"forward:///app/MainMenu\");\n        } catch(AuthenticationFailedException e) {\n            throw new HttpErrorResponse(403, \"forward://login.html\", e);\n        }\n    }\n}\n```\n\n**① ビジネスメソッドのディスパッチ条件**:\n1. 戻り値の型が`HttpResponse`、引数が`HttpRequest`と`ExecutionContext`の2つであること\n2. メソッド名が `(HTTPメソッド名 もしくは \"do\") + (リクエストURIのリソース名)` に一致すること\n\n一致判定条件:\n- メソッド名の大文字小文字は区別しない\n- リクエストURIのリソース名に含まれる \".\" は無視される\n- 委譲先クラスのメソッド名に含まれる \"_\" は無視される\n\n| HTTPリクエスト | 委譲対象となるメソッドシグニチャ例 |\n|---|---|\n| GET /app/index.html | `HttpResponse getIndexHtml(HttpRequest, ExecutionContext)`, `HttpResponse getIndexhtml(HttpRequest, ExecutionContext)`, `HttpResponse get_index_html(HttpRequest, ExecutionContext)`, `HttpResponse do_index_html(HttpRequest, ExecutionContext)`, `HttpResponse doIndexHtml(HttpRequest, ExecutionContext)` |\n| POST /app/message | `HttpResponse postMessage(HttpRequest, ExecutionContext)`, `HttpResponse doMessage(HttpRequest, ExecutionContext)`, `HttpResponse do_message(HttpRequest, ExecutionContext)` |\n\n条件に該当するメソッドが存在しない場合、ステータスコード404の`HttpErrorResponse`が送出される。",
+    "s5": "**② ビジネスロジックの実行とHTTPレスポンスオブジェクトの返却**\n\n各メソッドの処理:\n1. ビジネスロジックを実行する\n2. 後続処理で参照する情報を各種スコープに設定する\n3. 遷移先を指定するコンテンツパスが設定された`HttpResponse`オブジェクトを返却する\n\nレスポンスボディの指定方法は2種類:\n- `HttpResponse`オブジェクトに直接設定: 主に [../02_FunctionDemandSpecifications/02_Fw/01_Web/05_FileDownload](../libraries/libraries-05_FileDownload.json) で使用\n- [コンテンツパス](#s4) 文字列で指定: 通常の業務機能で主に使用\n\n**コンテンツパスの書式**\n\n| 種別 | 書式 | 説明 |\n|---|---|---|\n| サーブレットフォーワード | `servlet://(パス)` | 指定パスへのサーブレットフォーワード。ハンドラキュー上の処理を再実行しない |\n| 内部フォーワード | `forward://(パス)` | 指定パスを使いハンドラキューの処理を再実行する |\n| HTTPリダイレクション | `redirect://(パス)` または `http(s)://(URL)` | クライアントにリダイレクションを指示。`redirect://`はサーブレットコンテキスト配下、`http://`は外部URL指定可能 |\n| ファイルシステムリソース | `file://(パス)` | ファイルシステム上の静的ファイルを出力する |\n| クラスパスリソース | `classpath://(パス)` | コンテキストクラスローダ上のリソースを出力する。相対パスと絶対パスの区別はなく同じ結果となる |\n\n> **注意**: `servlet://`(サーブレットフォーワード)は指定サーブレットを実行するのみで、ハンドラキュー上の処理を再実行しない。[WebFrontController](handlers-WebFrontController.json) がサーブレットフィルタとして実装されているため、再実行すると無限ループになる。ハンドラキュー含めたフォワードが必要な場合は[ForwardingHandler](handlers-ForwardingHandler.json)による`forward://`(内部フォーワード)を使用すること。\n\nパス指定例:\n```bash\nservlet://index.jsp                  # サーブレットフォーワード（相対パス）\nservlet:///appContext/jsp/index.jsp  # サーブレットフォーワード（絶対パス）\nforward://registerForm.html            # 内部フォーワード（相対パス）\nforward:///app/user/registerForm.html  # 内部フォーワード（絶対パス）\nredirect://login                       # HTTPリダイレクション（相対パス）\nredirect:///UserAction/login           # HTTPリダイレクション（絶対パス）\nhttp://www.example.com/login           # 外部サイトへのリダイレクション\nfile://webapps/style/common.css        # ファイルシステム（相対パス）\nfile:///www/docroot/style/common.css   # ファイルシステム（絶対パス）\nclasspath://nablarch/sample/webapp/common.css   # クラスパス（相対・絶対は等価）\n```",
+    "s6": "**③ 例外制御**\n\n`HttpErrorResponse`以外の実行時例外が送出された場合、デフォルトでHTTPステータス500のレスポンスが返る。それ以外の応答を行うには、以下のいずれかの方法を使用する:\n\n1. **正常終了させる**: リクエストハンドラ内で明示的に例外を捕捉したうえで`HttpResponse`オブジェクトを生成して正常終了させる\n2. **再送出する**: `HttpErrorResponse`でラップして再送出する\n\nまた、`@OnError`アノテーションを使うことで方法2を簡略化できる。\n\n```java\n// HttpErrorResponseを使う場合（方法2）\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n    try {\n        UserForm form = validateUser(req);\n        registerUser(form);\n        return new HttpResponse(200, \"servlet://registrationCompleted.jsp\");\n    } catch(ApplicationException ae) {\n        throw new HttpErrorResponse(400, \"forward://registerForm.html\", ae);\n    }\n}\n```\n\n**アノテーション**: `@OnError`, `@OnErrors`\n\n`@OnError`による簡略化:\n```java\n@OnError(\n    type = ApplicationException.class,\n    path = \"forward://registerForm.html\"\n)\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n    UserForm form = validateUser(req);\n    registerUser(form);\n    return new HttpResponse(200, \"servlet://registrationCompleted.jsp\");\n}\n```\n\n`@OnErrors`で複数例外を指定する場合、**定義順（上から順）に処理されるためサブクラスを先に定義すること**:\n```java\n// 正しい定義順: OptimisticLockException（サブクラス）をApplicationExceptionより先に定義\n@OnErrors({\n    @OnError(type = OptimisticLockException.class, path = \"forward://searchForm.html\"),\n    @OnError(type = ApplicationException.class, path = \"forward://updatingForm.html\")\n})\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) { ... }\n```\n\n> **重要**: `@OnErrors`は定義順（上から順）に例外を処理する。`OptimisticLockException`は`ApplicationException`のサブクラスなので、必ず`ApplicationException`より上に定義すること。逆の順で定義すると`OptimisticLockException`送出時にも`ApplicationException`の処理が行われる。\n\n**インターセプタの実行順** (:ref:`interceptors-order`)\n\n設定ファイルの`interceptorsOrder`リストコンポーネントにFQCNを実行順に定義する:\n```xml\n<list name=\"interceptorsOrder\">\n  <value>nablarch.common.web.token.OnDoubleSubmission</value>\n  <value>nablarch.fw.web.interceptor.OnErrors</value>\n  <value>nablarch.fw.web.interceptor.OnError</value>\n</list>\n```\n\n- 設定ファイルに未定義のインターセプタが利用された場合、実行時例外を送出する\n- `interceptorsOrder`が未定義の場合は`Method#getDeclaredAnnotations`の逆順で実行されるが、アノテーションリストの順序はJVM保証がないためJVMバージョン等により実行順が変わる可能性がある",
+    "s7": "画面オンライン処理では、リクエストスコープ・セッションスコープに加えて、各画面内に自動的に出力されるhidden項目で実装される**ウィンドウスコープ**が定義されている。ウィンドウスコープはウィンドウ・タブごとに個別の変数を保持するため、複数ウィンドウからの並行操作でも矛盾なく業務処理を遂行できる。\n\n| スコープ名称 | 用途 | 作成単位 | 維持期間 |\n|---|---|---|---|\n| リクエストスコープ | 単一のHTTPリクエスト内でのみ使用するデータ（画面間で共有不要なデータ）を保持 | HTTPリクエストごと | HTTPリクエストの開始から終了まで |\n| ウィンドウスコープ | 画面間で共有するデータのうち、ウィンドウ間で共有不要なデータを保持 | ブラウザのウィンドウ・タブ・フレームごと | ウィンドウを開いてから閉じるまで（またはセッションスコープ終了まで） |\n| セッションスコープ | 画面間で共有するデータのうち、ウィンドウ間で共有が必要なデータを保持 | ユーザのログインごと | ユーザログインからログアウトまで（またはセッションタイムアウトまで） |\n\n![スコープ概念図](assets/handlers-HttpMethodBinding/web_scope.png)"
+  }
+}

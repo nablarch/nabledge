@@ -1,0 +1,139 @@
+{
+  "id": "testing-framework-batch",
+  "title": "各種期待値",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "可変長ファイル（CSVファイル）の準備",
+      "hints": [
+        "SETUP_VARIABLE",
+        "可変長ファイル",
+        "CSVファイル",
+        "フィールド区切り文字",
+        "field-separator",
+        "TSVファイル",
+        "可変長ファイル定義",
+        "text-encoding",
+        "record-separator"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "空のファイルを定義する方法",
+      "hints": [
+        "空ファイル",
+        "0バイトファイル",
+        "SETUP_VARIABLE",
+        "ディレクティブ",
+        "空ファイル定義"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "期待するデータベースの状態",
+      "hints": [
+        "期待値",
+        "データベース",
+        "expectedTable",
+        "テストケース一覧",
+        "DB期待値"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "期待する固定長ファイル",
+      "hints": [
+        "EXPECTED_FIXED",
+        "固定長ファイル",
+        "期待値",
+        "ファイルアサート",
+        "期待ファイル"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "期待する可変長ファイル",
+      "hints": [
+        "EXPECTED_VARIABLE",
+        "可変長ファイル",
+        "期待値",
+        "ファイルアサート",
+        "期待ファイル"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "",
+      "hints": [
+        "セクション区切り"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "テストメソッドの書き方",
+      "hints": [
+        "BatchRequestTestSupport",
+        "execute",
+        "テストメソッド",
+        "スーパクラス",
+        "JUnit",
+        "バッチテストメソッド",
+        "@Test"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "",
+      "hints": [
+        "セクション区切り"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "テスト起動方法",
+      "hints": [
+        "JUnit",
+        "テスト実行",
+        "バッチリクエスト単体テスト",
+        "テスト起動"
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "",
+      "hints": [
+        "セクション区切り"
+      ]
+    },
+    {
+      "id": "s11",
+      "title": "テスト結果検証",
+      "hints": [
+        "expectedTable",
+        "expectedFile",
+        "expectedLog",
+        "EXPECTED_FIXED",
+        "EXPECTED_VARIABLE",
+        "logLevel",
+        "グループID",
+        "ログ検証",
+        "結果検証",
+        "LIST_MAP"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 可変長ファイル（CSVファイル）の準備\n\n固定長との違い: フィールド長を記載しない。`SETUP_VARIABLE=ファイルパス` で可変長ファイル（CSV）を定義する。\n\nテストシートでの定義例（`SETUP_VARIABLE=work/members.csv`）:\n\n| ディレクティブ | 値 |\n|---|---|\n| text-encoding | Windows-31J |\n| record-separator | CRLF |\n\nレコード定義: ヘッダ・データ・トレーラ・エンドの各レコード種別を行単位で定義する。各行は「フィールド名行（型定義）」と「値行」をセットで記述する。固定長と異なりフィールド長の列は不要。\n\n> **注意**: フィールド区切り文字を変更する場合はディレクティブで明示的に指定する。タブ区切り（TSVファイル）にする場合: `field-separator=\\t`",
+    "s2": "## 空のファイルを定義する方法\n\n準備データや期待値として空ファイル（0バイトファイル）を定義する方法: テストシート上でディレクティブ行を定義し、レコードの定義を省略する。\n\n空ファイル定義例（`SETUP_VARIABLE=work/members.csv`）:\n\n```\ntext-encoding  | Windows-31J\nrecord-separator | CRLF\n//空ファイル\n```\n\nディレクティブ行（`text-encoding`、`record-separator` 等）を定義したうえでレコード定義を省略することで、0バイトファイルとして定義される。",
+    "s3": "## 期待するデータベースの状態\n\n:ref:`オンライン<request_test_expected_tables>` と同様に、期待するデータベースの状態をテストケース一覧とリンクさせる。",
+    "s4": "## 期待する固定長ファイル\n\nテスト対象バッチが出力する固定長ファイルをアサートする。\n\n- データタイプ: `EXPECTED_FIXED`（準備データの `SETUP_FIXED` の代わりに使用）\n- その他の記述方法は固定長ファイルの準備と同様。",
+    "s5": "## 期待する可変長ファイル\n\nテスト対象バッチが出力する可変長ファイルをアサートする。\n\n- データタイプ: `EXPECTED_VARIABLE`（準備データの `SETUP_VARIABLE` の代わりに使用）\n- その他の記述方法は可変長ファイルの準備と同様。",
+    "s6": "なし",
+    "s7": "## テストメソッドの書き方\n\n### スーパクラス\n\n**クラス**: `BatchRequestTestSupport` を継承する。このクラスが準備したテストデータを元にリクエスト単体テストを実行する。\n\n### テストメソッド作成\n\n準備したテストシートに対応するメソッドを `@Test` アノテーションを付与して作成する。\n\n```java\n@Test\npublic void testRegisterUser() {\n}\n```\n\n### スーパクラスのメソッド呼び出し\n\nテストメソッド内でスーパクラスの以下いずれかを呼び出す:\n\n- `void execute()` — 引数なし: テストメソッド名をシート名として使用（通常はこちらを使用）\n- `void execute(String sheetName)` — テストデータのシート名を明示指定\n\n引数なしの `execute()` は `execute(テストメソッド名)` と等価。\n\n```java\n@Test\npublic void testResigster() {\n    execute();   // execute(\"testRegisterUser\") と等価\n}\n```",
+    "s8": "なし",
+    "s9": "## テスト起動方法\n\n通常のJUnitテストと同じように実行する。クラス単体テストの起動方法と同様。",
+    "s10": "なし",
+    "s11": "## テスト結果検証\n\n### データベースの結果検証\n\nテストケース一覧の `expectedTable` 欄にグループIDを記載することで、そのグループIDのテストデータで実際のDB状態を確認する。\n\n### ファイルの結果検証\n\nテストケース一覧の `expectedFile` 欄にグループIDを記載することで、そのグループIDのテストデータで実際のファイル出力結果を確認する。\n\n| ファイル種別 | グループID指定なし | グループID指定あり |\n|---|---|---|\n| 固定長ファイル | `EXPECTED_FIXED=比較対象ファイルのパス` | `EXPECTED_FIXED[グループID]=比較対象ファイルのパス` |\n| 可変長ファイル | `EXPECTED_VARIABLE=比較対象ファイルのパス` | `EXPECTED_VARIABLE[グループID]=比較対象ファイルのパス` |\n\n### ログの結果検証\n\nテストケース一覧の `expectedLog` 欄にグループIDを記載することで、そのグループIDのテストデータで実際のログ出力結果を確認する。\n\n`LIST_MAP=expectedLogMessages` に以下のカラムで期待値を記載する:\n\n| カラム名 | 内容 |\n|---|---|\n| logLevel | 期待するログのログレベル |\n| message**N** | 期待するログに含まれる文言（Nは1以上の整数、複数指定可、連続する値であること） |\n\n> **注意**: 全条件はAND条件。(1) 期待文言がログ出力されていてもログレベルが期待通りでない場合、(2) ログレベルが合致していても期待文言が1つでも出力されていない場合、は期待するログが出力されたとは見なされない。\n\n> **警告**: `expectedLog` 欄にグループIDを記載した場合は必ず期待メッセージを1行以上設定すること。期待メッセージが0行の場合、またはグループIDに紐付くLIST_MAP要素が存在しない場合、フレームワークは例外を送出する。"
+  }
+}

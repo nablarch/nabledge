@@ -1,0 +1,76 @@
+{
+  "id": "handlers-FileBatchAction",
+  "title": "ファイル入力のバッチ業務アクションハンドラのテンプレートクラス",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "FileBatchAction",
+        "nablarch.fw.action.FileBatchAction",
+        "ファイル入力バッチ",
+        "業務アクションハンドラ",
+        "テンプレートクラス"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "概要",
+      "hints": [
+        "FileBatchAction",
+        "BatchAction",
+        "ファイル入力バッチ",
+        "レコード種別",
+        "DataRecord",
+        "ExecutionContext",
+        "事前検証",
+        "再開機能"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "",
+      "hints": [
+        "do[レコード種別名]",
+        "getFormatFileName",
+        "getDataFileDirName",
+        "getFormatFileDirName",
+        "getValidatorAction",
+        "transactionSuccess",
+        "transactionFailure",
+        "initialize",
+        "error",
+        "terminate",
+        "ValidatableFileDataReader",
+        "FileValidatorAction",
+        "Result.Success",
+        "テンプレートメソッド"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "MultiThreadExecutionHandler",
+        "FileDataReader",
+        "ValidatableFileDataReader",
+        "ResumeDataReader",
+        "TransactionManagementHandler",
+        "Result.NotFound",
+        "initialize",
+        "transactionSuccess",
+        "transactionFailure",
+        "ハンドラ処理フロー",
+        "ファイルデータリーダ生成",
+        "getDataFileName"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "ファイルを入力とするバッチ業務アクションハンドラのテンプレートクラス。\n\n**クラス名**: `nablarch.fw.action.FileBatchAction`",
+    "s2": "ファイルを入力とした [../architectural_pattern/batch](../../processing-pattern/nablarch-batch/nablarch-batch-batch-architectural_pattern.json) における業務アクションハンドラのテンプレートクラス。[BatchAction](handlers-BatchAction.json) と同様の構造だが、業務処理は `handler()` ではなく、レコード種別ごとに以下シグニチャのメソッドに実装する:\n\n```java\npublic Result do[レコード種別名](DataRecord record, ExecutionContext context);\n```\n\n- ファイル内容の事前検証の実行\n- バッチ処理エラー時の再開機能",
+    "s3": "| メソッド名 | 必須/任意 | 内容 |\n|---|---|---|\n| do[レコード種別名]() | 必須 | 各レコード種別の業務処理。正常終了時は `Result.Success` を返す |\n| getFormatFileName() | 必須 | 入力ファイルのファイル名を返す |\n| getFormatFileName() | 必須 | レコードフォーマット定義ファイルのファイル名を返す |\n| getDataFileDirName() | 任意 | 入力ファイル格納ディレクトリの論理パス名。デフォルト: `\"input\"` |\n| getFormatFileDirName() | 任意 | フォーマット定義ファイル格納ディレクトリの論理パス名。デフォルト: `\"format\"` |\n| getValidatorAction() | 任意 | 入力ファイルの事前検証処理オブジェクト（`ValidatableFileDataReader.FileValidatorAction`）を返す。デフォルトは事前検証なし。事前検証が必要な場合にオーバーライドする |\n| transactionSuccess() | 任意 | 業務トランザクションのコミット完了後にコールバック。デフォルト: 何もしない |\n| transactionFailure() | 任意 | 業務トランザクションのロールバック後にコールバック。デフォルト: 何もしない |\n| initialize() | 任意 | バッチ処理開始前に1回だけ呼ばれる。デフォルト: 何もしない |\n| error() | 任意 | 実行時例外/エラーでバッチがエラー終了した場合に1回コールバック。デフォルト: 何もしない |\n| terminate() | 任意 | バッチ処理が全件終了/エラー終了後に1回コールバック（エラー終了時も `error()` の後で呼ばれる）。デフォルト: 何もしない |",
+    "s4": "1. **[コールバック] バッチ処理開始前初期処理**: [MultiThreadExecutionHandler](handlers-MultiThreadExecutionHandler.json) 処理開始時に `initialize()` を実行\n2. **[コールバック] ファイルデータリーダ生成**: [MultiThreadExecutionHandler](handlers-MultiThreadExecutionHandler.json) 処理開始時:\n   1. `getFormatFileName()`、`getFormatFileDirName()`、`getDataFileName()`、`getDataFileDirName()` をもとに [../reader/FileDataReader](../readers/readers-FileDataReader.json) を作成\n   2. `getValidatorAction()` の結果がnull以外の場合、`ValidatableFileDataReader` を作成し検証アクションと前段のファイルリーダを設定\n   3. `ResumeDataReader` を作成し前段までのデータリーダを設定\n3. **[往路処理] 入力レコードのレコード種別取得**: `getRecordType()` でレコード種別名を取得\n4. **[往路処理] 業務処理の実行**: `do[レコード種別名](DataRecord record, ExecutionContext context)` を呼び出す\n5. **[復路処理] 正常終了**: 4. の結果をリターン\n\n**例外処理**:\n- **4a. ディスパッチエラー**: 該当メソッドが未定義の場合、実行時例外（`Result.NotFound`: ステータスコード404）を送出\n- **4b. エラー終了**: 業務処理中の例外はそのまま再送出\n\n6. **[コールバック] 業務トランザクション正常終了時**: [TransactionManagementHandler](handlers-TransactionManagementHandler.json) でコミット後、`transactionSuccess()` を実行\n6a. **[コールバック] 業務トランザクションロールバック時** (6. の代替): [TransactionManagementHandler](handlers-TransactionManagementHandler.json) でロールバック後、`transactionFailure()` を実行\n7. **[コールバック] バッチエラー終了時**: [MultiThreadExecutionHandler](handlers-MultiThreadExecutionHandler.json) のサブスレッドがエラーで停止した場合、`error()` を実行\n8. **[コールバック] バッチ終了時**: [MultiThreadExecutionHandler](handlers-MultiThreadExecutionHandler.json) のサブスレッド終了時に `terminate()` を実行（エラー終了時も7. の後で呼ばれる）"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "id": "web-application-10",
+  "title": "出力するHTMLの文字コードを変更したいのですが",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "HTML文字コードの変更設定",
+      "hints": [
+        "HttpCharacterEncodingHandler",
+        "MimeBDownloadFileNameEncoder",
+        "UrlDownloadFileNameEncoder",
+        "HttpTestConfiguration",
+        "defaultEncoding",
+        "charset",
+        "htmlResourcesCharset",
+        "HTML文字コード変更",
+        "ファイルダウンロードエンコーディング",
+        "Windows-31J設定",
+        "テスト設定文字コード"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "HTML出力の文字コードをUTF-8から変更するには、コンポーネント定義ファイルの以下の箇所を変更する。\n\n**HttpCharacterEncodingHandler**（Nablarch Application Framework）\n\n**クラス**: `nablarch.fw.web.handler.HttpCharacterEncodingHandler`\n\n`HttpServletRequest`/`HttpServletResponse`のエンコーディング設定を変更する。`defaultEncoding`プロパティに使用する文字コードを指定する。\n\n```xml\n<component name=\"httpCharacterEncodingHandler\"\n            class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\">\n  <property name=\"defaultEncoding\" value=\"Windows-31J\"/>\n</component>\n```\n\n**ファイルダウンロード**（Nablarch Application Framework）\n\nダウンロードファイル名のエンコーディングに使用する文字コードを変更する。`charset`プロパティを変更する。\n\n**クラス**: `nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoder`, `nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoder`\n\n```xml\n<!-- MIME-Bエンコーダの設定 -->\n<component name=\"mimeBEncoder\" class=\"nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoder\">\n  <property name=\"charset\" value=\"Windows-31J\" />\n</component>\n\n<!-- URLエンコーダの設定 -->\n<component name=\"urlEncoder\" class=\"nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoder\">\n  <property name=\"charset\" value=\"Windows-31J\" />\n</component>\n```\n\n**HttpTestConfiguration**（Nablarch Testing Framework）\n\n静的リソースの文字コード設定を変更する。`htmlResourcesCharset`プロパティを変更する。\n\n**クラス**: `nablarch.test.core.http.HttpTestConfiguration`\n\n```xml\n<component name=\"httpTestConfiguration\"\n    class=\"nablarch.test.core.http.HttpTestConfiguration\">\n  <property name=\"htmlResourcesCharset\" value=\"Windows-31J\" />\n</component>\n```"
+  }
+}

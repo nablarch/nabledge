@@ -1,0 +1,68 @@
+{
+  "id": "libraries-03_TransactionManager",
+  "title": "トランザクション管理",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "トランザクション管理",
+        "TransactionManagementHandler",
+        "アプリケーションプログラマ直接使用不可"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "hints": [
+        "任意リソースへのトランザクション制御追加",
+        "分散トランザクション",
+        "ユーザトランザクション"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "要求",
+      "hints": [
+        "RDBMSトランザクション管理",
+        "アイソレーションレベル設定",
+        "トランザクションタイムアウト",
+        "分散トランザクション未実装",
+        "トランザクションリトライ未実装",
+        "SQLState",
+        "SQLエラーコード"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "構造",
+      "hints": [
+        "TransactionFactory",
+        "Transaction",
+        "JdbcTransactionFactory",
+        "JdbcTransaction",
+        "TransactionContext",
+        "ThreadLocal",
+        "トランザクション制御クラス設計",
+        "transactionTimeoutSettings",
+        "db-connection-name-label"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "使用例",
+      "hints": [
+        "データベーストランザクション管理使用例",
+        "DbAccessSpec"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "様々なリソース（データベース、メッセージキューなど）に対するトランザクション管理機能。\n\n本機能はフレームワーク内部から使用される。Webアプリケーションでは [../../handler/TransactionManagementHandler](../handlers/handlers-TransactionManagementHandler.json) が本機能を使用する。アプリケーションプログラマが直接使用することはない。",
+    "s2": "- トランザクション制御部品を追加することで、任意のリソースへのトランザクション制御を追加可能。\n- 分散トランザクション機能（未実装）: Webコンテナが提供するユーザトランザクション機能を使用した分散トランザクション。設定ファイルの記述のみで切り替え可能。",
+    "s3": "**実装済み**:\n- RDBMSのトランザクション管理\n- アイソレーションレベルの設定\n- トランザクション開始時の任意SQL文実行\n- トランザクションタイムアウト処理\n\n**未実装**:\n- 分散トランザクション対応\n- トランザクションリトライ（デッドロック・ロックタイムアウト発生時）。リトライ対象エラーはSQLStateまたはベンダー依存SQLエラーコードで設定可能。",
+    "s4": "**インタフェース**:\n\n- **インタフェース**: `nablarch.core.transaction.TransactionFactory` — トランザクション制御オブジェクト（Transaction）を取得するインタフェース。\n- **インタフェース**: `nablarch.core.transaction.Transaction` — トランザクション制御オブジェクト。新たなトランザクション方式を追加する場合は、このインタフェースの実装クラスを新たに追加する必要がある。\n\n**クラス**:\n\n- **クラス**: `nablarch.core.db.transaction.JdbcTransactionFactory` — JdbcTransactionを生成するクラス。トランザクションタイムアウトの設定は本クラスに行う。設定詳細は :ref:`transactionTimeoutSettings` を参照。\n- **クラス**: `nablarch.core.db.transaction.JdbcTransaction` — JDBCのトランザクション機能を使用してトランザクション制御を行うクラス。\n- **クラス**: `nablarch.core.transaction.TransactionContext` — ThreadLocalにTransactionを保持するクラス。任意の名前（トランザクション名）を付加できる。トランザクション名の詳細は :ref:`データベースコネクション名とトランザクション名 <db-connection-name-label>` を参照。\n\n> **警告**: ThreadLocalでTransactionが管理されるため、アプリケーションのスレッドと同一のスレッドでTransactionを設定する必要がある。マルチスレッド環境では各スレッドに対してTransactionを設定する必要があるため注意が必要。",
+    "s5": "データベースに対するトランザクション管理の使用例は [./04_DbAccessSpec](libraries-04_DbAccessSpec.json) を参照。"
+  }
+}

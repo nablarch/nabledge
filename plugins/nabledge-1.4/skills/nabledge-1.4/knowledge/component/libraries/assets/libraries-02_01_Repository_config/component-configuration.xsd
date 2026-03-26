@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://tis.co.jp/nablarch/component-configuration"
+	elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://tis.co.jp/nablarch/component-configuration">
+
+	<element name="component-configuration">
+        <annotation>
+        	<documentation>コンポーネント設定のルート要素。</documentation>
+        </annotation>
+        <complexType>
+			<choice maxOccurs="unbounded" minOccurs="1">
+				<element name="import" type="tns:Import" maxOccurs="unbounded" minOccurs="0">
+                    <annotation>
+                    	<documentation>他の設定ファイルのインポートを設定する。
+コンテナは設定に従い再帰的に他の設定ファイルの読み込みを行なう。</documentation>
+                    </annotation>
+				</element>
+				<element name="config-file"
+					type="tns:ConfigFile" maxOccurs="unbounded" minOccurs="0">
+                    <annotation>
+                    	<documentation>プロパティファイルの読み込みを設定する。
+コンテナは設定に従い再帰的にプロパティファイルの読み込みを行なう。
+
+プロパティファイルに記述された文字列は、XMLファイル内で"${propName}"のように参照できる。</documentation>
+                    </annotation>
+				</element>
+				<element name="component" type="tns:Component" maxOccurs="unbounded" minOccurs="0">
+                    <annotation>
+                    	<documentation>コンポーネントを設定する。
+コンテナはこの設定に従い、コンポーネントの生成とインジェクションを行いコンテナ内に登録する。</documentation>
+                    </annotation>
+				</element>
+				<element name="list" type="tns:List" maxOccurs="unbounded" minOccurs="0">
+                    <annotation>
+                    	<documentation>Listをコンポーネントとして設定する。
+コンテナはこの設定に従い、Listインタフェースを実装したインスタンスを生成、構築しコンポーネントとしてコンテナ内に登録する。</documentation>
+                    </annotation>
+				</element>
+				<element name="map" type="tns:Map" maxOccurs="unbounded" minOccurs="0">
+                    <annotation>
+                    	<documentation>Mapをコンポーネントとして設定する。
+コンテナはこの設定に従い、Mapインタフェースを実装したインスタンスを生成、構築しコンポーネントとしてコンテナ内に登録する。</documentation>
+                    </annotation>
+				</element>
+			</choice>
+		</complexType>
+	</element>
+
+	<complexType name="Component">
+        <annotation>
+        	<documentation>コンポーネント定義を行う型。</documentation>
+        </annotation>
+        <sequence>
+			<element name="property" type="tns:Property"
+				maxOccurs="unbounded" minOccurs="0">
+                <annotation>
+                	<documentation>コンポーネントのプロパティを設定する。
+コンテナはこの要素に設定された値に従い、コンポーネントにプロパティを設定する。</documentation>
+                </annotation>
+			</element>
+		</sequence>
+		<attribute name="name" type="string">
+			<annotation>
+				<documentation>コンポーネントの名称を設定する。
+コンテナはこの属性で設定した名称でこのコンポーネントを登録する。
+
+
+</documentation>
+			</annotation></attribute>
+		<attribute name="class" type="string" use="required">
+			<annotation>
+				<documentation>コンポーネントのクラス名を設定する。
+コンテナはこの属性に設定したクラス名を使用してコンポーネントを作成する。
+</documentation>
+			</annotation></attribute>
+		<attribute name="autowireType" type="tns:AutowireType" default="ByType">
+			<annotation>
+				<documentation>コンポーネントに対して適用する自動インジェクションのタイプを設定する。
+コンテナはこの設定を参照して自動インジェクションを行う。
+
+省略した場合、ByTypeを選択した場合と同様の動作となる。</documentation>
+			</annotation></attribute>
+	</complexType>
+
+	<complexType name="Property">
+        <annotation>
+        	<documentation>コンポーネントにプロパティを設定する際に使用する型。</documentation>
+        </annotation>
+        <choice >
+			<element name="component" type="tns:Component" maxOccurs="1"
+				minOccurs="0">
+                <annotation>
+                	<documentation>プロパティにセットするコンポーネントを設定する。
+コンテナはこの要素のコンポーネントを生成し、プロパティにセットする。
+
+この要素にname属性を設定した場合、コンポーネントの名称は上位に位置するコンポーネントの名称の後に「.」を付けてname属性に指定した文字列を結合したものとなる。</documentation>
+                </annotation>
+			</element>
+			<element name="list" type="tns:List" maxOccurs="1"
+				minOccurs="0">
+                <annotation>
+                	<documentation>プロパティにセットするListを設定する。
+コンテナはこの要素で定義したListをコンポーネントとして生成し、プロパティにセットする。
+
+この要素にname属性を設定した場合、コンポーネントの名称は上位に位置するコンポーネントの名称の後に「.」を付けてname属性に指定した文字列を結合したものとなる。</documentation>
+                </annotation>
+			</element>
+			<element name="map" type="tns:Map" maxOccurs="1" minOccurs="0">
+				<annotation>
+					<documentation>プロパティにセットするMapを設定する。
+コンテナはこの要素で定義したMapをコンポーネントとして生成し、プロパティにセットする。
+
+この要素にname属性を設定した場合、コンポーネントの名称は上位に位置するコンポーネントの名称の後に「.」を付けてname属性に指定した文字列を結合したものとなる。</documentation>
+				</annotation></element>
+		</choice>
+		<attribute name="name" type="string" use="required">
+			<annotation>
+				<documentation>コンポーネントのプロパティ名を設定する。
+コンテナはこの設定値に合致するセッタを検索し、プロパティを設定する。</documentation>
+			</annotation></attribute>
+		<attribute name="value" type="string">
+			<annotation>
+				<documentation>プロパティにセットする値を設定する。
+コンテナはここに設定した文字列を、プロパティの型に併せて変換し、コンポーネントにセットする。
+
+この属性はプロパティの型が下記いずれかの型の場合のみ設定できる。
+ * int
+ * long
+ * boolean
+ * java.lang.String
+ * java.lang.Integer
+ * java.lang.Long
+ * java.lang.Boolean
+ * java.lang.String[]
+</documentation>
+			</annotation></attribute>
+		<attribute name="ref" type="string">
+			<annotation>
+				<documentation>プロパティにセットする他のコンポーネントの名称を設定する。
+コンテナはこの属性に設定された文字列に合致するコンポーネントをプロパティにセットする。</documentation>
+			</annotation></attribute>
+	</complexType>
+
+
+	<complexType name="List">
+        <annotation>
+        	<documentation>Listをコンポーネントとして設定する際に使用する型。</documentation>
+        </annotation>
+        <choice maxOccurs="unbounded" minOccurs="1">
+        	<element name="component" type="tns:Component"
+        		maxOccurs="unbounded" minOccurs="0">
+        		<annotation>
+        			<documentation>
+        				Listに含まれるコンポーネントを設定する。
+        				コンテナはこの要素に従いコンポーネントを生成し、上位の要素で設定したlistに追加する。
+        			</documentation>
+        		</annotation>
+        	</element>
+        	<element name="value" type="string" minOccurs="0"
+        		maxOccurs="unbounded">
+        		<annotation>
+        			<documentation>
+        				Listに含まれる文字列を設定する。
+        				コンテナはこの設定に従い、この要素の文字列を上位の要素で設定したlistに追加する。
+        			</documentation>
+        		</annotation>
+        	</element>
+        	<element name="component-ref" type="tns:ComponentRef" minOccurs="0" maxOccurs="unbounded">
+        		<annotation>
+        			<documentation>Listに含まれる別定義したコンポーネントを設定する。
+コンテナはこの設定に従い、この要素で参照されるコンポーネントをlistに追加する。
+        			</documentation>
+        		</annotation></element>
+        </choice>
+        <attribute name="name" type="string">
+			<annotation>
+				<documentation>Listのコンポーネント名を設定する。
+コンテナはこの属性で設定した名称でこのListをコンポーネントとして登録する。
+</documentation>
+			</annotation></attribute>
+	</complexType>
+
+	<complexType name="Map">
+        <annotation>
+        	<documentation>Mapをコンポーネントとして設定する際に使用する型。</documentation>
+        </annotation>
+        <sequence>
+			<element name="entry" type="tns:Entry" maxOccurs="unbounded" minOccurs="0">
+				<annotation>
+					<documentation>Mapのエントリを設定する。
+コンテナはこの要素の設定に従い、Mapにエントリを追加する。</documentation>
+				</annotation></element>
+		</sequence>
+		<attribute name="name" type="string">
+			<annotation>
+				<documentation>Mpaのコンポーネント名を設定する。
+コンテナはこの属性で設定した名称でこのMapをコンポーネントとして登録する。
+</documentation>
+			</annotation></attribute>
+	</complexType>
+	
+    <complexType name="Entry">
+        <annotation>
+        	<documentation>Mapのエントリを設定する型。</documentation>
+        </annotation>
+        <sequence>
+    		<element name="key-component" type="tns:Component"
+    			maxOccurs="1" minOccurs="0">
+                <annotation>
+                	<documentation>エントリのキーとなるコンポーネントを設定する。
+コンテナはこの要素で設定されたコンポーネントをキーとするエントリを上位の要素で設定したmapに追加する。
+</documentation>
+                </annotation>
+    		</element>
+    		<element name="value-component" type="tns:Component" maxOccurs="1" minOccurs="0">
+    			<annotation>
+    				<documentation>エントリの値となるコンポーネントを設定する。
+コンテナはこの要素で設定されたコンポーネントを値とするエントリを上位の要素で設定したmapに追加する。</documentation>
+    			</annotation></element>
+    	</sequence>
+    	<attribute name="key" type="string">
+    		<annotation>
+    			<documentation>エントリのキーを設定する。
+コンテナはこの属性で設定された文字列をキーとするエントリを上位の要素で設定したmapに追加する。</documentation>
+    		</annotation></attribute>
+    	<attribute name="key-name" type="string">
+    		<annotation>
+    			<documentation>エントリのキーとなるコンポーネント名を設定する。
+コンテナはこの属性で設定された名称に合致するコンポーネントをキーとするエントリを上位の要素で設定したmapに追加する。
+
+</documentation>
+    		</annotation></attribute>
+    	<attribute name="value" type="string">
+    		<annotation>
+    			<documentation>エントリの値を設定する。
+コンテナはこの属性で設定された文字列を値とするエントリを上位の要素で設定したmapに追加する。</documentation>
+    		</annotation></attribute>
+    	<attribute name="value-name" type="string">
+    		<annotation>
+    			<documentation>エントリの値となるコンポーネントを設定する。
+コンテナはこの属性で設定された名称に合致するコンポーネントを値とするエントリを上位の要素で設定したmapに追加する。</documentation>
+    		</annotation></attribute>
+    </complexType>
+
+    <complexType name="ConfigFile">
+        <annotation>
+        	<documentation>プロパティファイルの読み込みを設定する際に使用する型。</documentation>
+        </annotation>
+        <attribute name="file" type="string" use="required">
+        	<annotation>
+        		<documentation>読み込みを行うプロパティファイルのファイル名を設定する。
+コンテナはこの属性に記述されたプロパティファイルをの読み込みを行う。
+
+属性dirを指定した場合、この属性にはワイルドカードを使用できる。
+例えば"*.properties"を指定した場合、属性dirに指定したディレクトリ直下の拡張子"properties"のファイルが全てプロパティファイルとして読み込まれる。</documentation>
+        	</annotation></attribute>
+    	<attribute name="encoding" type="string">
+    		<annotation>
+    			<documentation>プロパティファイルの文字コードを指定する。
+コンテナはこの指定に従いプロパティファイルをロードする。</documentation>
+    		</annotation></attribute>
+    	<attribute name="dir" type="string">
+    		<annotation>
+    			<documentation>プロパティファイルを配置するディレクトリを設定する。
+コンテナはこの属性に記述されたディレクトリ以下にあるプロパティファイルを読み込む。
+</documentation>
+    		</annotation></attribute>
+    </complexType>
+
+    <complexType name="Import">
+        <annotation>
+        	<documentation>コンポーネントのインポート設定に使用する型。</documentation>
+        </annotation>
+        <attribute name="file" type="string" use="required">
+        	<annotation>
+        		<documentation>インポートする設定ファイルのファイル名を設定する。
+コンテナはこの属性に記述された設定ファイルの読み込みを行う。
+
+属性dirを指定した場合、この属性にはワイルドカードを使用できる。
+例えば"*.xml"を指定した場合、属性dirに指定したディレクトリ直下の拡張子"xml"のファイルが全て設定ファイルとして読み込まれる。</documentation>
+        	</annotation></attribute>
+    	<attribute name="dir" type="string">
+    		<annotation>
+    			<documentation>インポートするファイルのディレクトリを設定する。
+コンテナはこの属性に記述されたディレクトリ以下にある設定ファイルを読み込む。
+</documentation>
+    		</annotation></attribute>
+    </complexType>
+
+    <simpleType name="AutowireType">
+    	<annotation>
+    		<documentation>自動インジェクションの種類を意味する型。
+
+ByType: 型による自動インジェクションを行う。
+ByName: 名前による自動インジェクションを行う。
+None: 自動インジェクションを行わない。</documentation>
+    	</annotation>
+    	<restriction base="string">
+    		<enumeration value="ByType"></enumeration>
+    		<enumeration value="ByName"></enumeration>
+    		<enumeration value="None"></enumeration>
+    	</restriction>
+    </simpleType>
+
+
+    <complexType name="ComponentRef">
+    	<attribute name="name" type="string">
+    		<annotation>
+    			<documentation>コンポーネントの名称を設定する。
+コンテナはこの属性で設定した名称でこのコンポーネントを参照する。
+
+
+</documentation>
+    		</annotation></attribute>
+    </complexType>
+</schema>

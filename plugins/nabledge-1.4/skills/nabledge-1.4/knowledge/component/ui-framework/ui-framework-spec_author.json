@@ -1,0 +1,45 @@
+{
+  "id": "ui-framework-spec_author",
+  "title": "設計書作成者情報ウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "設計書作成者情報ウィジェット",
+      "hints": [
+        "設計書作成者情報",
+        "spec:author",
+        "spec:updated_by",
+        "spec:created_date",
+        "spec:updated_date",
+        "設計書ビュー",
+        "author.tag",
+        "作成者欄",
+        "JSPタグ",
+        "SpecSheetTemplate",
+        "SpecSheetInterpreter",
+        "SpecSheetView"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "author.tag",
+        "空ファイル",
+        "JSPコンパイル",
+        "SpecSheetTemplate.xlsx",
+        "SpecSheetInterpreter.js",
+        "SpecSheetView.js",
+        "spec.js",
+        "部品一覧",
+        "改修"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[spec_author](ui-framework-spec_author.json) は設計書ビューのヘッダー「作成」欄に設計者情報を表示するタグ。\n\n> **注意**: このタグはJSPのサーバ表示に一切影響しない。実装工程以降も削除不要。\n\n**仕様**: 属性値なし。ボディに設定した文字列を設計書ビューの作成者欄にそのまま表示する。\n\n**使用例**:\n```jsp\n<spec:author>TIS 田嶋 岩魚</spec:author>\n<spec:updated_by>TIS 名部 楽太郎</spec:updated_by>\n<spec:created_date>2014/01/04</spec:created_date>\n<spec:updated_date>2014/01/08</spec:updated_date>\n```",
+    "s2": "サーバ表示で動作するタグファイル `author.tag` は、JSPコンパイルを通すためだけの空ファイルである。\n\n設計書ビューはテンプレートファイルである `SpecSheetTemplate.xlsx` と、各項目の表示内容を制御する `SpecSheetInterpreter.js` によって構成される。\n\n**部品一覧**:\n\n| パス | 内容 |\n|------|------|\n| /WEB-INF/tags/widget/spec/author.tag | spec_author のタグファイル |\n| /js/jsp/taglib/spec.js | ローカル表示用スタブ |\n| /js/devtool/SpecSheetView.js | 設計書ビューJavaScriptUI部品 |\n| /js/devtool/SpecSheetInterpreter.js | 設計書ビュー表示内容制御スクリプト |\n| /tools/specsheet_template/SpecSheetTemplate.xlsx | 設計書ビューテンプレートファイル |\n| /tools/specsheet_template/SpecSheetTemplate.files | 設計書ビューテンプレートファイル（上記ファイルをHTML形式で保存したもの） |"
+  }
+}

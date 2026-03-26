@@ -1,0 +1,58 @@
+{
+  "id": "handlers-LoopHandler",
+  "title": "トランザクションループ制御ハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "nablarch.fw.handler.LoopHandler",
+        "LoopHandler",
+        "TransactionManagementHandler.Callback",
+        "transactionNormalEnd",
+        "transactionAbnormalEnd",
+        "ExecutionContext",
+        "RequestThreadLoopHandler",
+        "DbConnectionManagementHandler",
+        "トランザクション制御",
+        "ループ制御",
+        "バッチ処理スループット",
+        "コミット間隔",
+        "コールバックイベント"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "nablarch.fw.DataReader.NoMoreRecord",
+        "nablarch_LoopHandler_is_about_to_commit",
+        "transactionNormalEnd",
+        "transactionAbnormalEnd",
+        "コミット実施予告フラグ",
+        "ループ処理フロー",
+        "コミット判定",
+        "ロールバック",
+        "例外処理"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "commitInterval",
+        "transactionFactory",
+        "transactionName",
+        "TransactionFactory",
+        "コミット間隔設定",
+        "DIコンテナ設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.LoopHandler`\n\nデータリーダ上に処理対象データが存在する間、後続ハンドラを繰り返し実行し、一定件数ごとにトランザクションをコミットする。\n\n> **警告**: 複数業務処理の一括コミットを許容しているため、業務アクションハンドラが正常終了しても、後続レコードの処理でエラーが発生した場合にロールバックされる可能性がある。\n\n[TransactionManagementHandler](handlers-TransactionManagementHandler.json) および [RequestThreadLoopHandler](handlers-RequestThreadLoopHandler.json) とは排他利用。\n\n**関連ハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [DbConnectionManagementHandler](handlers-DbConnectionManagementHandler.json) | 上位に配置することで、本ハンドラが管理するトランザクションにDB接続を参加させることができる。 |\n\n**コールバックイベント** (`TransactionManagementHandler.Callback` を実装したハンドラが受け取る)\n\n1. 業務処理正常終了時: `TransactionManagementHandler.Callback<TData>#transactionNormalEnd(TData data, ExecutionContext context): void`\n\n   > **警告**: このコールバックはレコード1件の業務処理が正常終了した場合に呼ばれるが、[TransactionManagementHandler](handlers-TransactionManagementHandler.json) とは異なり、この時点ではトランザクションのコミットが確定していない。コミット単位を任意に設定できることに起因する制約。\n\n2. トランザクションロールバック直後: `TransactionManagementHandler.Callback<TData>#transactionAbnormalEnd(TData data, ExecutionContext context): void`",
+    "s2": "**[往路処理]**\n\n1. **(トランザクション取得と開始)**: 設定されたトランザクションファクトリからトランザクションオブジェクトを取得・開始し、スレッドローカル変数に格納する。\n2. **(ループ開始前の初期化)**: (1) ハンドラキューのシャローコピー作成 (2) 未コミット件数を0に初期化 (3) コミット実施予告フラグ (`nablarch_LoopHandler_is_about_to_commit`) をfalseで初期化\n3. **(ループ開始)**: ハンドラキューをループ開始前の状態に戻す。\n4. **(後続ハンドラの実行)**\n\n**[復路処理]**\n\n5. **(正常終了)**: 未コミット件数を1増加。`TransactionManagementHandler.Callback` を実装したハンドラに `transactionNormalEnd` コールバックを呼び出す。\n5a. **(データリーダ終端の場合)**: 処理結果が `nablarch.fw.DataReader.NoMoreRecord` の場合、コールバックをスキップ。\n6. **(コミット判定)**: 未コミット件数がコミット間隔と一致したらトランザクションをコミット。\n6a. **(コミット実施予告フラグ設定)**: 未コミット件数がコミット間隔より1少ない場合、`nablarch_LoopHandler_is_about_to_commit` フラグをtrueに設定。\n7. **(ループ継続)**: データリーダが終端でなければ3.以降を再実行。\n7a. **(ループ終端)**: データリーダが終端の場合、残未コミット処理をコミットし処理結果をリターン。\n\n**[例外処理]**\n\n5b. **(例外制御)**: 後続ハンドラから未捕捉例外が送出された場合、トランザクションをロールバック（未コミット処理も含む）し、`transactionAbnormalEnd` コールバックを呼び出し、例外を再送出してループを終了。",
+    "s3": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| commitInterval | int | | 1 | コミット間隔回数 |\n| transactionFactory | TransactionFactory | ○ | | トランザクション取得機能 |\n| transactionName | String | | \"transaction\" | 使用DBコネクション名 |\n\n> **補足**: コミット間隔は運用状況に応じて変更される可能性があるため、埋め込みパラメータとして定義することを推奨。\n\n```xml\n<component class=\"nablarch.fw.handler.LoopHandler\">\n  <property name=\"commitInterval\" value=\"${commitInterval}\" />\n  <property name=\"transactionFactory\" ref=\"transactionFactory\" />\n</component>\n```"
+  }
+}

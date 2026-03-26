@@ -1,0 +1,27 @@
+{
+  "id": "web-application-13",
+  "title": "テストケース毎に言語を設定する方法を教えてください",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "テストケース毎に言語を設定する方法",
+      "hints": [
+        "LanguageAttributeInHttpCookie",
+        "ThreadContextHandler",
+        "cookieName",
+        "defaultLanguage",
+        "supportedLanguages",
+        "cookieMaxAge",
+        "リクエスト単体テスト言語設定",
+        "Cookie言語変更",
+        "テストケース言語切り替え",
+        "多言語テスト"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "リクエスト単体テストでケースごとに言語を変更するには、Cookieに設定される言語を変更する。テストデータシートにCookieに設定する値を準備し、Cookie名称は設定ファイルの `cookieName` プロパティのvalue値を使用すること。\n\n> **注意**: Cookieから言語を設定するためのハンドラーがリポジトリに設定されている必要がある（各プロジェクトのアーキテクトが実施）。\n\n**クラス**: `nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpCookie`\n\n```xml\n<component name=\"threadContextHandler\"\n    class=\"nablarch.common.handler.threadcontext.ThreadContextHandler\">\n  <property name=\"attributes\">\n    <list>\n      <component name=\"languageAttribute\"\n          class=\"nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpCookie\">\n        <property name=\"cookieName\" value=\"lang\" />\n        <property name=\"defaultLanguage\" value=\"ja\" />\n        <property name=\"supportedLanguages\" value=\"ja,en\" />\n        <property name=\"cookieMaxAge\" value=\"7776000\" />\n      </component>\n    </list>\n  </property>\n</component>\n```\n\n| プロパティ名 | 説明 |\n|---|---|\n| cookieName | 言語を保持しているCookie名称 |"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "id": "ui-framework-table_plain",
+  "title": "一覧テーブルウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "table:plain",
+        "table_plain",
+        "table_search_result",
+        "一覧テーブル",
+        "UI部品",
+        "ページング",
+        "ソート",
+        "検索結果件数"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "コードサンプル",
+      "hints": [
+        "table:plain",
+        "column:checkbox",
+        "column:link",
+        "sampleResults",
+        "searchUri",
+        "resultSetName",
+        "n:param",
+        "JSPコードサンプル",
+        "ローカル動作",
+        "サーバ動作"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "仕様",
+      "hints": [
+        "title",
+        "showTitle",
+        "id",
+        "resultSetName",
+        "resultNumName",
+        "resultSetCss",
+        "sampleResults",
+        "multipleRowLayout",
+        "comment",
+        "estimatedMaxSearchResults",
+        "属性値一覧"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "listSearchResult:table",
+        "plain.tag",
+        "nablarch.less",
+        "content.less",
+        "ページングリスト",
+        "カラムウィジェット",
+        "部品一覧"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[table_plain](ui-framework-table_plain.json) は簡素な一覧テーブルを表示するUI部品。\n\n以下の機能が必要な場合は [table_search_result](ui-framework-table_search_result.json) を使用すること:\n- 検索結果件数の自動表示\n- ページング処理\n- 各カラムの値に沿ったソート処理\n\nカラムウィジェット: [column_label](ui-framework-column_label.json), [column_code](ui-framework-column_code.json), [column_link](ui-framework-column_link.json), [column_checkbox](ui-framework-column_checkbox.json), [column_radio](ui-framework-column_radio.json)",
+    "s2": "**設計成果物（ローカル動作）**:\n```jsp\n<table:plain\n  title         = \"アカウント選択\"\n  sampleResults = \"15\">\n\n  <column:checkbox\n    title = \"選択\">\n  </column:checkbox>\n\n  <column:link\n    title  = \"ログインID\"\n    sample = \"user001|user002|user003\">\n  </column:link>\n\n</table:plain>\n```\n\n**実装成果物（サーバ動作）**:\n```jsp\n<table:plain\n  title         = \"アカウント選択\"\n  searchUri     = \"/action/ss11AC/W11AC01Action/RW11AC0102\"\n  resultSetName = \"searchResult\"\n  sampleResults = \"15\">\n\n  <column:checkbox\n    title    = \"選択\"\n    key      = \"userId\"\n    name     = \"W11AC05.systemAccountEntityArray[${count-1}].userId\"\n    offValue = \"0000000000\">\n  </column:checkbox>\n\n  <column:link\n    title  = \"ログインID\"\n    key    = \"loginId\"\n    uri    = \"/action/ss11AC/W11AC01Action/RW11AC0103\"\n    sample = \"user001|user002|user003\">\n    <n:param paramName=\"11AC_W11AC01.systemAccount.userId\" name=\"row.userId\"></n:param>\n  </column:link>\n\n</table:plain>\n```",
+    "s3": "**ローカル動作時の挙動**:\n- `sampleResults` に指定した件数分のデータ行を表示。カラム内容は各カラムウィジェットの `sample` 属性の `\"|\"` 区切り文字列を順に表示（レコード件数が多い場合はループ）。\n- `sampleResults` の値が1ページの表示総件数を超えた場合でも、ページ遷移リンクの表示は常に1。\n\n**属性値一覧** [◎ 必須属性 ○ 任意属性 × 無効]:\n\n| 属性名 | 内容 | 型 | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | 見出し文字列 | 文字列 | ◎ | ◎ | |\n| showTitle | 見出し文字列を表示するか否か | 真偽値 | ○ | ○ | デフォルト: `true` |\n| id | テーブルを一意に識別するid | 文字列 | ○ | ○ | ページ内に複数テーブルが存在する場合は必須。tableをラップするdivタグに設定される。 |\n| resultSetName | 検索結果を格納する変数名 | 文字列 | ○ | × | resultSetNameとresultNumNameのどちらか一方は必ず設定すること |\n| resultNumName | 検索結果件数を格納する変数名 | 文字列 | ○ | × | resultSetNameとresultNumNameのどちらか一方は必ず設定すること |\n| resultSetCss | 検索結果表示領域に適用するCSSクラス | 文字列 | ○ | ○ | |\n| sampleResults | サンプルで表示する件数 | 数値 | × | ◎ | |\n| multipleRowLayout | 複数行レイアウト機能を有効にするかどうか | 真偽値 | ○ | ○ | 詳細は [table_row](ui-framework-table_row.json) を参照 |\n| comment | テーブルについての備考 | 文字列 | × | × | 設計書の画面概要一覧の「備考」に表示 |\n| estimatedMaxSearchResults | 検索結果として想定される最大件数 | 文字列 | × | × | 設計書の画面概要一覧の「想定検索最大件数」に表示 |\n\n> **注意**: `resultSetName` と `resultNumName` はどちらか一方は必ず設定する必要がある。",
+    "s4": "テーブル機能は内部的に `<listSearchResult:table>` タグで実装されており、Nablarch側の設定変更でページングリストの出力パターンなどを変更可能。\n\n**部品一覧**:\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/table/plain.tag | 一覧テーブルウィジェット |\n| /WEB-INF/tags/widget/column/*.tag | テーブルカラムウィジェット群 |\n| /WEB-INF/tags/listSearchResult/*.tag | Nablarch検索結果テーブルタグファイル |\n| /css/style/nablarch.less | Nablarch関連スタイル定義（テーブルの配色など） |\n| /css/style/content.less | 業務画面領域スタイル定義（テーブルサイズ定義） |"
+  }
+}

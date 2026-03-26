@@ -1,0 +1,97 @@
+{
+  "id": "testing-framework-02_componentUnitTest",
+  "title": "Action/Componentのクラス単体テスト",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "Component単体テスト",
+        "Action単体テスト",
+        "DbAccessTestSupport",
+        "クラス単体テスト"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Action/Component単体テストの書き方",
+      "hints": [
+        "テストケースパターン分類",
+        "戻り値確認",
+        "DB更新確認",
+        "メッセージID確認",
+        "クラス単体テスト"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "テストデータの作成",
+      "hints": [
+        "テストデータExcel",
+        "テストデータ配置",
+        "静的マスタデータ",
+        "DbAccessTest",
+        "同一ディレクトリ"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "テストクラスの作成",
+      "hints": [
+        "DbAccessTestSupport",
+        "テストクラス作成条件",
+        "Component単体テスト",
+        "DbAccessTestSupportを継承"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "事前準備データの作成処理",
+      "hints": [
+        "事前準備データ",
+        "setUpDb",
+        "setThreadContextValues",
+        "スレッドコンテキスト",
+        "採番テーブル初期化",
+        "ID_GENERATE"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "処理終了後のデータベースの状況を確認しなければならないもの",
+      "hints": [
+        "commitTransactions",
+        "assertTableEquals",
+        "getListMap",
+        "トランザクションコミット",
+        "DB検証",
+        "how_to_get_data_from_excel",
+        "insert_auto_setting_item",
+        "SystemAccountEntity",
+        "UsersEntity",
+        "UgroupSystemAccountEntity"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "メッセージIDを確認しなければならないもの",
+      "hints": [
+        "ApplicationException",
+        "メッセージID検証",
+        "fail()",
+        "異常系テスト",
+        "例外クラス指定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "Component単体テストとAction単体テストの違いはテストクラス名のみ。\n\nサンプルファイル:\n- [テストケース一覧(ユーザ登録_ UserComponent_クラス単体テストケース.xls)](assets/testing-framework-02_componentUnitTest/ユーザ登録_UserComponent_クラス単体テストケース.xls)\n- [テストクラス(UserComponentTest.java)](assets/testing-framework-02_componentUnitTest/UserComponentTest.java)\n- [テストデータ(UserComponentTest.xls)](assets/testing-framework-02_componentUnitTest/UserComponentTest.xls)\n- :download:`テスト対象クラス(UserComponent.java)<../../04_Explanation/_source/download/UserComponent.java>`",
+    "s2": "テストケースは処理内容によって以下の4パターンに分類し、パターンごとにテストクラス・データ作成方法が異なる。\n\n| パターン | 当てはまる処理の例 |\n|---|---|\n| 戻り値(DBの検索結果)を確認 | 検索処理 |\n| 戻り値(DB検索結果以外)を確認 | 計算、判定処理 |\n| 処理終了後のDBの状況を確認 | 更新(挿入、削除含む)処理 |\n| メッセージIDを確認 | エラー処理 |",
+    "s3": "- テストデータExcelファイルはテストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。\n- 全テストデータは同じExcelシートに記載する前提。\n- メッセージデータやコードマスタなどの静的マスタデータはプロジェクト管理データが事前投入済みの前提（個別にテストデータとして作成しない）。\n\n参照: [../../06_TestFWGuide/01_Abstract](testing-framework-01_Abstract.json)、[../../06_TestFWGuide/02_DbAccessTest](testing-framework-02_DbAccessTest.json)",
+    "s4": "Component単体テストのテストクラス作成条件（詳細: [../../06_TestFWGuide/02_DbAccessTest](testing-framework-02_DbAccessTest.json)）:\n\n1. テストクラスのパッケージはテスト対象のAction/Componentと同じにする。\n2. クラス名は`<Action/Componentクラス名>Test`とする。\n3. `nablarch.test.core.db.DbAccessTestSupport`を継承する。\n\n```java\npackage nablarch.sample.management.user; // パッケージはUserComponentと同じ\npublic class UserComponentTest extends DbAccessTestSupport {\n    // クラス名はUserComponentTest、DbAccessTestSupportを継承\n}\n```",
+    "s5": "テスト実行前に以下のデータを準備する:\n\n- スレッドコンテキスト設定（USER_ID、REQUEST_IDなど）\n- 挿入対象テーブルの初期化（既知の初期状態にセット）\n- 採番テーブル（ID_GENERATE）の初期化 — 採番テーブルを初期化しないとテスト実行時の採番結果が不確定になり挿入結果の検証ができなくなる。\n\n![事前準備データのExcelシート構成](assets/testing-framework-02_componentUnitTest/componentUnitTest_Setup.png)\n\n```java\nsetThreadContextValues(sheetName, \"threadContext\"); // スレッドコンテキストの設定\n// ...\nsetUpDb(sheetName); // 事前データの投入（各ケースごとに初期化するためループ中で実行）\n```",
+    "s6": "クラス単体テストではフレームワークのトランザクション制御が行われないため、テストクラスにてトランザクションをコミットする必要がある。スーパクラスの`commitTransactions()`を呼び出すこと。コミットしない場合はテスト結果の確認が正常に行われない（参照系はコミット不要）。\n\n**テストデータ(入力値)**\n\n`getListMap(sheetName, \"listName\")`でExcelシートからデータを読み込む（[how_to_get_data_from_excel](testing-framework-03_Tips.json) 参照）。同じ行のデータで1ケース分のテストデータを構成する。配列型プロパティ（SystemAccountEntityのuseCaseIdなど）は別表のデータを参照して配列を構築してから設定する。\n\n![テストデータ(入力値)のExcelシート構成](assets/testing-framework-02_componentUnitTest/componentUnitTest_inputData.png)\n\n**テストデータ(想定結果)**\n\n自動設定項目（[insert_auto_setting_item](../../guide/web-application/web-application-07_insert.json#s7) 参照）も想定結果を用意する。`assertTableEquals`で検証する。グループIDを定義したデータ（expected）を用意し`assertTableEquals`の引数に渡すことで複数の想定結果に対応できる。\n\n![テストデータ(想定結果)のExcelシート構成](assets/testing-framework-02_componentUnitTest/componentUnitTest_expectedDataNormal.png)\n\n```java\nSystemAccountEntity sysAcct = new SystemAccountEntity(work);\nUsersEntity users = new UsersEntity(work);\nUgroupSystemAccountEntity grpSysAcct = new UgroupSystemAccountEntity(work);\n\ntarget.registerUser(sysAcct, users, grpSysAcct);\ncommitTransactions(); // 全トランザクションをコミット\n\n// 検証: グループIDで想定結果を指定\nString expectedGroupId = getListMap(sheetName, \"expected\").get(i).get(\"caseNo\");\nassertTableEquals(expectedGroupId, sheetName, expectedGroupId);\n```",
+    "s7": "> **警告**: キャッチする例外は発生を想定する具体的な例外クラスを指定すること。`RuntimeException`などの上位例外クラスを使うと、メッセージIDは合っているが例外クラスが間違っているバグを検出できなくなる。\n\n- テストデータのIDの末尾に\"Err\"を付加することで、同一Excelシートに正常系と異常系のデータを混載できる。\n- 想定値はメッセージIDとする。\n\n![異常系テストデータのExcelシート構成](assets/testing-framework-02_componentUnitTest/componentUnitTest_expectedDataAbnormal.png)\n\n```java\ntry {\n    target.registerUser(sysAcct, users, grpSysAcct);\n    fail(); // 例外が発生しなかったらテスト失敗\n} catch (ApplicationException ae) { // 発生するはずの例外をキャッチ\n    assertEquals(expected.get(i).get(\"messageId\"), ae.getMessages().get(0).getMessageId());\n}\n```"
+  }
+}

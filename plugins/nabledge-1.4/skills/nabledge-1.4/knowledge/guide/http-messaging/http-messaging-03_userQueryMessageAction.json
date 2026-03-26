@@ -1,0 +1,46 @@
+{
+  "id": "http-messaging-03_userQueryMessageAction",
+  "title": "HTTP同期応答型メッセージ受信処理",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "電文受信時の処理",
+      "hints": [
+        "MessagingAction",
+        "RequestMessage",
+        "ExecutionContext",
+        "ResponseMessage",
+        "RM11AC0102Action",
+        "RM11AC0102RequestForm",
+        "RM11AC0102ResponseForm",
+        "UserInfoTempEntity",
+        "onReceive",
+        "HTTP同期応答型メッセージ受信",
+        "電文受信処理",
+        "MOMメッセージング"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "エラー時の処理",
+      "hints": [
+        "ApplicationException",
+        "RM11AC0102ResponseForm",
+        "onError",
+        "Throwable",
+        "NR11AC4001",
+        "NR11AC5000",
+        "障害コード",
+        "ステータスコード",
+        "エラー応答電文",
+        "MessagingAction"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "業務Actionの実装は、MOMによるメッセージング処理と同様の実装でHTTPメッセージングを実現できる。\n\n**処理フロー**:\n1. 要求電文を精査しEntityへ変換する\n2. Entityを使用して要求電文の内容をデータベースに登録する\n3. 応答電文を作成し返却する\n\n**クラス**: `MessagingAction` を継承し、`onReceive(RequestMessage request, ExecutionContext context): ResponseMessage` をオーバーライドする。\n\n```java\n@Override\nprotected ResponseMessage onReceive(RequestMessage request,\n                                    ExecutionContext context) {\n    // 要求電文を精査しEntityに変換する\n    RM11AC0102RequestForm reqForm = RM11AC0102RequestForm.validate(request.getParamMap(), \"insert\");\n    UserInfoTempEntity entity = reqForm.getUserInfoTempEntity();\n\n    // Entityをデータベースに登録する\n    String userInfoId = registerRecord(entity);\n\n    // 応答電文を作成して返却する\n    RM11AC0102ResponseForm resForm = new RM11AC0102ResponseForm();\n    resForm.setDataKbn(\"0\");\n    resForm.setUserInfoId(userInfoId);\n\n    return request.reply()\n                  .setStatusCodeHeader(\"200\")\n                  .addRecord(resForm);\n}\n```",
+    "s2": "`onError(Throwable e, RequestMessage request, ExecutionContext context): ResponseMessage` をオーバーライドして、例外の種類に応じた応答電文を返す。\n\n**処理結果コード/障害コード仕様**:\n\n| 終了コード | 障害コード | 原因 |\n|---|---|---|\n| 200 | (空白) | 正常終了 |\n| 400 | NR11AC4001 | 要求電文のデータレコード部項目精査エラー |\n| 500 | NR11AC5000 | その他の意図しないエラーにより業務処理が失敗した場合 |\n\n> **注意**: 要求電文データレコード部レイアウト不正の場合、FWでエラー(ステータスコード400)となるため、本処理まで到達しない。\n\n```java\n@Override\nprotected ResponseMessage onError(Throwable e,\n                                  RequestMessage request,\n                                  ExecutionContext context) {\n    String statusCode = \"500\";\n    String failureCode = \"NR11AC5000\";\n\n    // 要求電文のデータレコード精査エラーが発生した場合\n    if (e instanceof ApplicationException) {\n        statusCode = \"400\";\n        failureCode = \"NR11AC4001\";\n    }\n\n    RM11AC0102ResponseForm resForm = new RM11AC0102ResponseForm();\n    resForm.setDataKbn(\"0\");\n    resForm.setFailureCode(failureCode);\n\n    return request.reply()\n                  .setStatusCodeHeader(statusCode)\n                  .addRecord(resForm);\n}\n```"
+  }
+}

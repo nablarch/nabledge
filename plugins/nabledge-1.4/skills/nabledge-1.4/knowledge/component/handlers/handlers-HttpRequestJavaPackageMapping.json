@@ -1,0 +1,56 @@
+{
+  "id": "handlers-HttpRequestJavaPackageMapping",
+  "title": "HTTPリクエストディスパッチハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "HttpRequestJavaPackageMapping",
+        "nablarch.fw.web.handler.HttpRequestJavaPackageMapping",
+        "HTTPリクエストディスパッチ",
+        "ディスパッチハンドラ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "概要",
+      "hints": [
+        "RequestPathJavaPackageMapping",
+        "HTTPアクセスログ",
+        "リクエストパスマッピング",
+        "ベースURI",
+        "Javaパッケージマッピング",
+        "setBaseUri"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "",
+      "hints": [
+        "HttpRequestJavaPackageMapping",
+        "ハンドラ処理概要",
+        "ハンドラキュー"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "baseUri",
+        "basePackage",
+        "optionalPackageMappingEntries",
+        "JavaPackageMappingEntry",
+        "設定項目",
+        "ディスパッチ設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.web.handler.HttpRequestJavaPackageMapping`",
+    "s2": "画面オンライン処理のリクエストパス中のベースURI（部分文字列）をJavaパッケージ階層にマッピングし、委譲先ハンドラを動的に決定するディスパッチハンドラ。\n\n実装は [RequestPathJavaPackageMapping](handlers-RequestPathJavaPackageMapping.json) に委譲。[RequestPathJavaPackageMapping](handlers-RequestPathJavaPackageMapping.json) との相違点:\n1. ディスパッチ対象クラス確定時に、HTTPアクセスログへその内容を出力する\n2. `#setBaseUri()` でベースパス設定時にURLの書式精査を行う",
+    "s3": "**ハンドラ処理概要**\n\nハンドラキュー: `HttpRequestJavaPackageMapping`",
+    "s4": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| baseUri | String | | \"\" | ベースURI |\n| basePackage | String | | \"\" | ベースパッケージ |\n| optionalPackageMappingEntries | nablarch.fw.handler.JavaPackageMappingEntry | | null | リクエストパスパターンとマッピング先Javaパッケージの組み合わせ |\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpRequestJavaPackageMapping\">\n  <property name=\"baseUri\"    value=\"/webapp/sample\" />\n  <property name=\"basePackage\" value=\"nablarch.sample.apps\" />\n</component>\n```\n\nディスパッチ例（baseUri=`/webapp/sample`、basePackage=`nablarch.sample.apps`）:\n\n| リクエストパス | ディスパッチ対象クラス |\n|---|---|\n| /webapp/sample/AdminApp | nablarch.sample.apps.AdminApp |\n| /webapp/sample/user/UserApp | nablarch.sample.apps.user.UserApp |"
+  }
+}

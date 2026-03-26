@@ -1,0 +1,93 @@
+{
+  "id": "libraries-enterprise_messaging_http",
+  "title": "HTTPメッセージング",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "HTTPメッセージング",
+        "システム間メッセージング",
+        "HTTP同期通信",
+        "MessageSender",
+        "SyncMessage",
+        "HttpMessagingClient",
+        "HttpProtocolBasicClient",
+        "HttpProtocolClient",
+        "CustomHttpMessagingClient",
+        "CustomHttpProtocolBasicClient",
+        "HttpURLConnection",
+        "HttpRequestMethodEnum",
+        "MessageSenderSettings",
+        "HTTP メッセージ送信",
+        "同期送信",
+        "通信クライアント",
+        "リダイレクト無効化",
+        "HTTPヘッダー設定",
+        "タイムアウト補償処理"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "要求",
+      "hints": [
+        "HTTP同期通信",
+        "HTTPメソッド",
+        "タイムアウト設定",
+        "proxy接続",
+        "データ加工",
+        "BASIC認証未実装",
+        "クエリストリング未実装"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "全体構成",
+      "hints": [
+        "メッセージング基盤API",
+        "HTTP通信クライアント",
+        "MessagingAction",
+        "HTTPメッセージ受信",
+        "HTTPメッセージ送信",
+        "messaging_sender_util"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "データモデル",
+      "hints": [
+        "プロトコルヘッダー",
+        "X-Message-Id",
+        "X-Correlation-Id",
+        "メッセージボディ",
+        "フレームワーク制御ヘッダー",
+        "requestId",
+        "userId",
+        "resendFlag",
+        "statusCode",
+        "NablarchHeader"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "フレームワーク機能",
+      "hints": [
+        "MessagingAction",
+        "ReceivedMessage",
+        "HTTPメッセージ受信",
+        "onReceive",
+        "ResponseMessage",
+        "RequestMessage",
+        "ExecutionContext"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "HTTPメッセージングは、本フレームワークが提供するシステム間メッセージング機能のうち、HTTPを使用した同期通信を行う機能。\n\n**クラス**: `MessageSender`, `SyncMessage`, `HttpMessagingClient`\n\n- **`MessageSender`**: 同期送信機能を実装したクラス\n- **`SyncMessage`**: 送受信電文情報を格納するクラス\n- **`HttpMessagingClient`** (`nablarch.fw.messaging.realtime.http.client.HttpMessagingClient`): HTTP通信プロトコル向けのHTTP通信インターフェース実装\n\n### HTTPメッセージ送信\n\n処理フロー:\n1. 要求電文（`SyncMessage`）を作成\n2. `MessageSender.sendSync()` で送信\n3. 応答受信を待機（タイムアウトまで）\n4. タイムアウト時は補償処理を実施\n\n> **重要**: 規定時間内に応答を受信できずタイムアウトした場合は、補償処理を行う必要がある。\n\nコード例（送信）:\n```java\nSyncMessage requestMessage = new SyncMessage(\"RM11AC0202\")\n    .addDataRecord(new HashMap() {{\n        put(\"FIcode\",     \"9999\");\n        put(\"FIname\",     \"ﾅﾌﾞﾗｰｸｷﾞﾝｺｳ\");\n        put(\"officeCode\", \"111\");\n    }});\nSyncMessage responseMessage = MessageSender.sendSync(requestMessage);\n```\n\nHTTPヘッダーに独自項目を追加する場合:\n```java\nrequestMessage.getHeaderRecord().put(\"Accept-Charset\", \"UTF-8\");\n```\n\n### HTTP通信クライアント設定\n\nコンポーネント定義:\n```xml\n<component\n  name=\"defaultMessageSenderClient\"\n  class=\"nablarch.fw.messaging.realtime.http.client.HttpMessagingClient\">\n</component>\n```\n\n> **注意**: `HttpMessagingClient.sendSync(MessageSenderSettings, SyncMessage)` を用いたHTTPメッセージングにおいて、通信先からHTTPステータスコード「302」が返却された場合、フレームワーク側でリダイレクト処理が自動実施される。リダイレクト処理を無効化したい場合は、カスタム実装が必要。\n\nリダイレクト無効化のカスタム実装:\n\nコンポーネント定義にカスタムクライアントを設定:\n```xml\n<component\n  name=\"defaultMessageSenderClient\"\n  class=\"please.change.me.common.CustomHttpMessagingClient\">\n</component>\n```\n\n`HttpMessagingClient` を継承したカスタムクライアント:\n```java\npublic class CustomHttpMessagingClient extends HttpMessagingClient {\n  protected HttpProtocolClient createHttpProtocolClient() {\n    return new CustomHttpProtocolBasicClient();\n  }\n}\n```\n\n`HttpProtocolBasicClient` を継承してリダイレクトを無効化:\n```java\npublic class CustomHttpProtocolBasicClient extends HttpProtocolBasicClient {\n  @Override\n  protected HttpURLConnection createHttpConnection(String targetUrl, HttpRequestMethodEnum method, Map<String, List<String>> headerInfo)\n      throws IOException {\n    HttpURLConnection httpConnection = super.createHttpConnection(targetUrl, method, headerInfo);\n    httpConnection.setInstanceFollowRedirects(false);\n    return httpConnection;\n  }\n}\n```",
+    "s2": "## 実装済み\n\n- HTTP(S)を使用して同期通信可能\n- 任意のHTTPメソッド、任意のHTTPヘッダ、メッセージボディにJSON/XML形式を使用した送受信\n- HTTP接続タイムアウト設定（接続タイムアウト、読み取りタイムアウト）\n- proxy経由接続\n- 送受信時のデータ加工実装の差し込み（例：特定項目の暗号化/復号）\n\n## 未実装\n\n- BASIC認証、Digest認証は使用不可\n- HTTPSのプライベート認証局発行証明書による通信は不可\n- パラメータをURLの一部またはクエリストリングとした送受信は不可\n- HTTPヘッダ以外（クエリパラメータや電文本文など）からのメッセージID/関連ID取得は不可\n\n## 未検討\n\n- マルチパート形式のメッセージボディ送信\n- FORM認証\n- HTTPリクエストの自動再送（NAF側での自動再送なし。actionでの再送処理実装は可能）\n- Keep Alive対応\n- 仕向け通信レスポンスの正常時/エラー時フォーマット切り替え",
+    "s3": "本機能は以下の2つのレイヤで構成される。\n\n**レイヤ（フレームワーク機能）**\n\nメッセージング基盤APIを使用した機能。フレームワーク制御ヘッダーの利用を前提として設計されている。\n\n- [../architectural_pattern/messaging](../../processing-pattern/mom-messaging/mom-messaging-messaging.json): 外部から送信される要求電文に対して適切な業務アプリケーションを実行する制御基盤。MOMを使用した場合と同一のインタフェースでメッセージ受信アプリケーションを実装可能。HTTPメッセージ受信処理を担う。\n- [messaging_sender_util](libraries-messaging_sender_util.json): 対外システムへのメッセージ同期送信ユーティリティ。MOMを使用した場合と同一のインタフェースでメッセージ同期送信可能。\n\n**レイヤ（通信クライアント）**\n\n- HTTP通信クライアント: HTTP通信インターフェースの実装系を使用したHTTP通信の実装。HTTPメッセージ送信処理を担う。",
+    "s4": "**プロトコルヘッダー**\n\nWebコンテナによるメッセージ送受信処理において使用される情報を格納するヘッダー領域。Mapインターフェースでアクセス可能。\n\n**共通プロトコルヘッダー**\n\nプロトコルヘッダーのうち、特定のキー名でアクセス可能なヘッダー。\n\n| ヘッダー論理名 | キー名 | 内容 | HTTP通信実装の場合 |\n|---|---|---|---|\n| メッセージID | X-Message-Id | 電文ごとに一意採番される文字列。送信時は採番した値が設定される。受信時は送信側の発番した値が設定される。 | HTTPヘッダーの値を設定 |\n| 関連メッセージID | X-Correlation-Id | 電文が関連する電文のメッセージID。応答電文では要求電文のメッセージIDを設定。再送要求では応答再送を要求する要求電文のメッセージIDを設定。 | HTTPヘッダーの値を設定 |\n\n**メッセージボディ**\n\nHTTPリクエストのデータ領域。フレームワーク機能はプロトコルヘッダー領域のみを使用し、それ以外のデータ領域は未解析のバイナリデータとして扱う。メッセージボディの解析は [record_format](libraries-record_format.json) で行い、フィールド名をキーとするMap形式で読み書き可能。\n\n**フレームワーク制御ヘッダー**\n\nフレームワーク機能の多くは、電文中に特定の制御項目（フレームワーク制御ヘッダ）が定義されていることを前提として設計されている。\n\nフレームワーク制御ヘッダーと使用する主要ハンドラの対応:\n\n| フレームワーク制御ヘッダ | 役割 | 使用する主要ハンドラ |\n|---|---|---|\n| リクエストID | 実行すべき業務処理を識別するID | [../handler/RequestPathJavaPackageMapping](../handlers/handlers-RequestPathJavaPackageMapping.json), [../handler/RequestHandlerEntry](../handlers/handlers-RequestHandlerEntry.json), [../handler/ServiceAvailabilityCheckHandler](../handlers/handlers-ServiceAvailabilityCheckHandler.json), [../handler/PermissionCheckHandler](../handlers/handlers-PermissionCheckHandler.json), [../reader/FwHeaderReader](../readers/readers-FwHeaderReader.json) など |\n| ユーザID | 実行権限を表す文字列 | [../handler/PermissionCheckHandler](../handlers/handlers-PermissionCheckHandler.json) |\n| 再送要求フラグ | 再送要求電文送信時に設定されるフラグ | [../handler/MessageResendHandler](../handlers/handlers-MessageResendHandler.json) |\n| ステータスコード | 要求電文に対する処理結果を表すコード値（応答電文に設定） | [../handler/MessageReplyHandler](../handlers/handlers-MessageReplyHandler.json) |\n\nデフォルト設定でのフィールド名:\n\n| フレームワーク制御ヘッダ | フィールド名 |\n|---|---|\n| リクエストID | requestId |\n| ユーザID | userId |\n| 再送要求フラグ | resendFlag |\n| ステータスコード | statusCode |\n\nフレームワーク制御ヘッダの定義例:\n\n```\n[NablarchHeader]\n1   requestId   X(10)       # リクエストID\n11  userId      X(10)       # ユーザID\n21  resendFlag  X(1)  \"0\"   # 再送要求フラグ (0: 初回送信 1: 再送要求)\n22  statusCode  X(4)  \"200\" # ステータスコード\n26 ?filler      X(25)       # 予備領域\n```\n\n> **補足**: フォーマット定義にフレームワーク制御ヘッダ以外の項目を含めた場合、任意ヘッダ項目としてアクセスでき、PJ毎のフレームワーク制御ヘッダの簡易的な拡張に利用できる。将来的な任意項目の追加やヘッダ追加に備えて予備領域を設けることを強く推奨する。",
+    "s5": "使用するクラス:\n\n- **クラス**: `MessagingAction` — メッセージ受信時に実行されるアクションクラスの基底クラス。業務アプリケーションは本クラスを継承する必要がある。\n- **クラス**: `ReceivedMessage` — 受信した電文に関する情報を格納するクラス。\n\n**HTTPメッセージ受信**\n\n通信先システムからメッセージを受信し、その応答を送信する処理パターン。受信処理はフレームワーク機能により自動的に業務アプリケーションクラスが実行されるため、明示的に受信処理を行うコードを記述する必要はない。\n\n```java\npublic class SampleAction extends MessagingAction {\n    protected ResponseMessage onReceive(RequestMessage request,\n                                        ExecutionContext context) {\n        // 受信データ処理\n        Map<String, Object> reqData = request.getParamMap();\n        \n        // 応答データ返却\n        return request.reply()\n                .setStatusCodeHeader(\"200\")\n                .addRecord(new HashMap() {{\n                     put(\"FIcode\",     \"9999\");\n                     put(\"FIname\",     \"ﾅﾌﾞﾗｰｸｷﾞﾝｺｳ\");\n                     put(\"officeCode\", \"111\");\n                  }});\n    }\n}\n```"
+  }
+}

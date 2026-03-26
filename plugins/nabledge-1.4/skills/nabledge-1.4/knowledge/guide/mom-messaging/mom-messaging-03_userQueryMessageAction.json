@@ -1,0 +1,43 @@
+{
+  "id": "mom-messaging-03_userQueryMessageAction",
+  "title": "同期応答型メッセージ受信処理",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "電文受信時の処理",
+      "hints": [
+        "MessagingAction",
+        "RequestMessage",
+        "ExecutionContext",
+        "ResponseMessage",
+        "M11AC01Form",
+        "UserInfoTempEntity",
+        "onReceive",
+        "同期応答型メッセージ受信",
+        "電文受信処理",
+        "応答電文作成",
+        "Entityへの変換"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "エラー時の処理",
+      "hints": [
+        "InvalidDataFormatException",
+        "ApplicationException",
+        "onError",
+        "エラー応答",
+        "ステータスコード",
+        "障害コード",
+        "例外ハンドリング",
+        "MessagingAction"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス**: `MessagingAction`（継承クラス例: `RM11AC0101Action`）\n\n`onReceive` メソッドで電文受信時の処理を実装する。\n\n処理フロー:\n1. 要求電文を精査しEntityへ変換する（`M11AC01Form.validate` を使用）\n2. Entityを使用してデータベースに登録する\n3. 応答電文を作成し返却する\n\n![ユーザ登録メッセージ処理フロー](assets/mom-messaging-03_userQueryMessageAction/userRegisterMessage.png)\n\n```java\npublic class RM11AC0101Action extends MessagingAction {\n    @Override\n    protected ResponseMessage onReceive(RequestMessage request, ExecutionContext context) {\n        M11AC01Form form = M11AC01Form.validate(request.getParamMap(), \"insert\");\n        UserInfoTempEntity entity = form.getUserInfoTempEntity();\n        String userInfoId = registerRecord(entity);\n\n        Map<String, Object> resultRecord = new HashMap<String, Object>();\n        resultRecord.put(\"dataKbn\",    \"0\");\n        resultRecord.put(\"userInfoId\", userInfoId);\n\n        return request.reply()\n                      .setStatusCodeHeader(\"200\")\n                      .addRecord(resultRecord);\n    }\n}\n```",
+    "s2": "`onError` メソッドでエラー時の応答電文を作成・返却する。例外の種別によってステータスコードと障害コードを切り替える。\n\n| No | 終了コード | 障害コード | 原因 |\n|---|---|---|---|\n| 1 | 200 | （空白） | 正常終了 |\n| 2 | 400 | NR11AA4001 | 要求電文のデータレコード部項目精査エラー |\n| 3 | 500 | NR11AA5001 | 要求電文のデータレコード部レイアウト不正 |\n| 4 | 500 | NR11AA5000 | その他の意図しないエラー |\n\n例外処理の分岐:\n- `InvalidDataFormatException` → ステータスコード `500`、障害コード `NR11AC5001`\n- `ApplicationException` → ステータスコード `400`、障害コード `NR11AC4001`\n- その他 → ステータスコード `500`、障害コード `NR11AC5000`\n\n```java\n@Override\nprotected ResponseMessage onError(Throwable e, RequestMessage request, ExecutionContext context) {\n    String statusCode = \"500\";\n    String failureCode = \"NR11AC5000\";\n\n    if (e instanceof InvalidDataFormatException) {\n        statusCode = \"500\";\n        failureCode = \"NR11AC5001\";\n    }\n    if (e instanceof ApplicationException) {\n        statusCode = \"400\";\n        failureCode = \"NR11AC4001\";\n    }\n\n    Map<String, Object> resultRecord = new HashMap<String, Object>();\n    resultRecord.put(\"dataKbn\",    0);\n    resultRecord.put(\"failureCode\", failureCode);\n\n    return request.reply()\n                  .setStatusCodeHeader(statusCode)\n                  .addRecord(resultRecord);\n}\n```"
+  }
+}

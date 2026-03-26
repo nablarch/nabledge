@@ -1,0 +1,73 @@
+{
+  "id": "ui-framework-field_code_pulldown",
+  "title": "コード値プルダウン入力項目ウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "field:code_pulldown",
+        "code_pulldown",
+        "コードサンプル",
+        "プルダウン実装例",
+        "JSP",
+        "codeId",
+        "labelPattern",
+        "optionColumnName"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "codeId",
+        "pattern",
+        "optionColumnName",
+        "labelPattern",
+        "withNoneOption",
+        "sample",
+        "nameAlias",
+        "コード値プルダウン仕様",
+        "コードパターン",
+        "ラベル表示書式",
+        "コード管理機能",
+        "プルダウン属性",
+        "$NAME$",
+        "$OPTIONALNAME$",
+        "$SHORTNAME$",
+        "$VALUE$",
+        "id",
+        "domain",
+        "readonly",
+        "disabled",
+        "cssClass",
+        "multiple",
+        "size",
+        "dataFrom",
+        "comment",
+        "initialValueDesc"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "code_pulldown.tag",
+        "nablarch.js",
+        "n:codeSelect",
+        "base.tag",
+        "base.less",
+        "部品一覧",
+        "内部構造",
+        "タグライブラリ"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[field_code_pulldown](ui-framework-field_code_pulldown.json) は [field_pulldown](ui-framework-field_pulldown.json) について、Nablarchのコード管理機能で取得したラベル・値をもとにしたプルダウンリストを出力できるように改修したものである。表示仕様など上記以外の仕様は [field_pulldown](ui-framework-field_pulldown.json) と同じである。\n\n**設計成果物（ローカル動作）**:\n```jsp\n<field:code_pulldown\n  title = \"ユーザIDロック\">\n</field:code_pulldown>\n```\n\n**実装成果物（サーバ動作）**:\n```jsp\n<field:code_pulldown\n  title            = \"ユーザIDロック\"\n  name             = \"11AC_W11AC01.userIdLocked\"\n  codeId           = \"C0000001\"\n  pattern          = \"PATTERN01\"\n  optionColumnName = \"OPTION01\"\n  labelPattern     = \"$OPTIONALNAME$\">\n</field:code_pulldown>\n```",
+    "s2": "本ウィジェットの仕様は [field_pulldown](ui-framework-field_pulldown.json) とほぼ同じ。以下では差分となる内容を示す。\n\n**ローカル動作時の挙動**:\n- `codeId` 属性にコードIDを指定した場合、`/js/devtool/resource/コード値定義.js` 内のエントリーから該当コードの名称を取得して表示する。`pattern` 属性によるパターン指定・`optionColumnName` 属性によるオプション名称指定も利用可能。\n- `codeId` と `sample` を両方指定した場合は **`sample` の値を優先する**。\n\n**属性値一覧** [◎=必須属性 ○=任意属性 ×=無効（指定しても効果なし）]\n（[field_base](ui-framework-field_base.json) との共通属性は省略）\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| id | HTMLのid属性値 | 文字列 | ○ | ○ | デフォルトは `name` 属性値と同じ値 |\n| domain | 項目のドメイン型 | 文字列 | ○ | ○ | |\n| readonly | 編集可能かどうか | 真偽値 | ○ | ○ | デフォルト: `false` |\n| disabled | サーバへの入力値送信を抑制するか | 真偽値 | ○ | ○ | デフォルト: `false` |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ | |\n| nameAlias | 複数の入力項目をハイライト表示する場合のname属性（カンマ区切り） | 文字列 | ○ | × | |\n| sample | ローカル動作時に表示するプルダウンのラベル | 文字列 | × | ○ | `\"|\"` 区切りで複数指定。`\"[]\"` で囲われた項目は選択状態で表示 |\n| codeId | コード定義ID | 文字列 | ◎ | ○ | |\n| pattern | 使用するコードパターンのカラム名 | 文字列 | ○ | ○ | デフォルト: `PATTERN01` |\n| optionColumnName | 取得するオプション名称のカラム名 | 文字列 | ○ | ○ | デフォルト: `OPTION01` |\n| labelPattern | ラベル表示書式 | 文字列 | ○ | ○ | プレースホルダ: `$NAME$`（コード名称）、`$SHORTNAME$`（略称）、`$OPTIONALNAME$`（オプション名称、`optionColumnName` 必須）、`$VALUE$`（コード値）。デフォルト: `\"$NAME$\"` |\n| withNoneOption | リスト先頭に選択なしオプションを追加するか | 真偽値 | ○ | ○ | デフォルト: `false` |\n| multiple | xhtmlのmultiple属性 | 真偽値 | ○ | ○ | |\n| size | xhtmlのsize属性 | 数値 | ○ | ○ | |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 「表示情報取得元」.「表示項目名」の形式 |\n| comment | プルダウンについての備考 | 文字列 | × | × | 設計書の画面項目定義「備考」に表示 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の画面項目定義「備考」に表示 |",
+    "s3": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| `/WEB-INF/tags/widget/field/code_pulldown.tag` | [field_code_pulldown](ui-framework-field_code_pulldown.json) |\n| `/WEB-INF/tags/widget/field/base.tag` | [field_base](ui-framework-field_base.json) |\n| `/js/jsp/taglib/nablarch.js` | `<n:codeSelect>` のエミュレーション機能を実装するタグライブラリスタブJS |\n| `/css/style/base.less` | 基本HTMLの要素のスタイル定義（プルダウンに関する定義を含む） |"
+  }
+}

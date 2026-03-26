@@ -1,0 +1,102 @@
+{
+  "id": "testing-framework-RequestUnitTest_send_sync",
+  "title": "リクエスト単体テスト（同期応答メッセージ送信処理）",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "全体像",
+      "hints": [
+        "StandaloneTestSupportTemplate",
+        "AbstractHttpRequestTestTemplate",
+        "MessageSender",
+        "RequestTestingMessagingProvider",
+        "TestDataConvertor",
+        "MockMessagingContext",
+        "同期応答メッセージ送信処理",
+        "全体像",
+        "主なクラス",
+        "要求電文",
+        "キュー送信",
+        "同期受信"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "StandaloneTestSupportTemplate",
+      "hints": [
+        "StandaloneTestSupportTemplate",
+        "MockMessagingContext",
+        "同期応答メッセージ送信処理",
+        "リクエスト単体テスト",
+        "テストケース継承"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "AbstractHttpRequestTestTemplate",
+      "hints": [
+        "AbstractHttpRequestTestTemplate",
+        "MockMessagingContext",
+        "同期応答メッセージ送信処理",
+        "リクエスト単体テスト",
+        "HTTPリクエストテスト"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "RequestTestingMessagingProvider",
+      "hints": [
+        "RequestTestingMessagingProvider",
+        "要求電文アサート",
+        "応答電文生成",
+        "MockMessagingContext",
+        "テストデータ読み込み",
+        "一括アサート"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "MessageSender",
+      "hints": [
+        "MessageSender",
+        "同期応答メッセージ送信",
+        "MockMessagingContext",
+        "要求電文生成",
+        "応答電文パース"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "TestDataConvertor",
+      "hints": [
+        "TestDataConvertor",
+        "TestDataConverter",
+        "テストデータ変換",
+        "URLエンコーディング",
+        "コンポーネント定義",
+        "レイアウト定義"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "同期応答メッセージ送信処理（テストデータ）",
+      "hints": [
+        "同期応答メッセージ送信処理",
+        "テストデータ",
+        "パディング",
+        "バイナリデータ",
+        "固定長ファイル"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "リクエスト単体テスト（同期応答メッセージ送信処理）では、要求電文1件をキューに送信し、結果を同期的に受信する際の動作を擬似的に再現し、テストを行う。\n\n![同期応答メッセージ送信処理の全体像](assets/testing-framework-RequestUnitTest_send_sync/send_sync.png)\n\n> **注意**: 同期応答メッセージ送信処理のリクエスト単体テストを行う場合、テストケースの親クラスは `StandaloneTestSupportTemplate` または `AbstractHttpRequestTestTemplate` のいずれかを継承する必要がある。\n\n| 名称 | 役割 | 作成単位 |\n|---|---|---|\n| リクエスト単体テストクラス | テストロジックを実装する | テスト対象クラス(Action)につき１つ |\n| Excelファイル（テストデータ） | 要求電文の期待値および応答電文などのテストデータを記載する | テストクラスにつき１つ |\n| StandaloneTestSupportTemplate | Action実行後にMockMessagingContextを用いて要求電文のアサートを実行する | — |\n| AbstractHttpRequestTestTemplate | Action実行後にMockMessagingContextを用いて要求電文のアサートを実行する | — |\n| MessageSender | 同期応答メッセージ送信を行う際に使用するコンポーネント | — |\n| RequestTestingMessagingProvider | 要求電文のアサート機能および応答電文の生成・返却機能を提供する | — |\n| TestDataConvertor | Excelから読み込んだテストデータを編集するためのインタフェース（必要に応じてアーキテクトが実装） | — |",
+    "s2": "**クラス**: `StandaloneTestSupportTemplate`\n\nAction実行後に `MockMessagingContext` を用いて要求電文のアサートを行う機能を提供する。\n\n同期応答メッセージ送信処理のリクエスト単体テストでは、処理の形態に合わせて本クラスまたは `AbstractHttpRequestTestTemplate` のいずれかを実装したテストケースを使用する必要がある。",
+    "s3": "**クラス**: `AbstractHttpRequestTestTemplate`\n\nAction実行後に `MockMessagingContext` を用いて要求電文のアサートを行う機能を提供する。\n\n同期応答メッセージ送信処理のリクエスト単体テストでは、処理の形態に合わせて本クラスまたは `StandaloneTestSupportTemplate` のいずれかを実装したテストケースを使用する必要がある。",
+    "s4": "**クラス**: `RequestTestingMessagingProvider`\n\n要求電文のアサートおよび応答電文の生成・返却機能を提供する。Excelに記載された要求電文の期待値と応答電文の読み込みも実行する。\n\n| 準備処理 | 結果確認 |\n|---|---|\n| 応答電文の生成 | 要求電文のアサート |\n\n> **注意**: 要求電文のアサートは、要求電文が送信されるたびに行うのではなく、Action実行後に一括で行う。",
+    "s5": "**クラス**: `MessageSender`\n\n同期応答メッセージ送信処理で使用するコンポーネント。主な機能:\n\n1. 呼び出し元から渡されたパラメータから要求電文を生成する\n2. 要求電文を元に `MockMessagingContext` を実行する\n3. `MockMessagingContext` から返却された応答電文をパースする\n4. パース結果のオブジェクトを呼び出し元に返却する",
+    "s6": "**インタフェース**: `TestDataConvertor`\n\nExcelから読み込んだテストデータを編集するためのインタフェース。XMLやJSONなどのデータ種別ごとにアーキテクトが実装する。\n\n実装クラスで実装する機能:\n1. Excelから読み込んだデータに対し任意の編集を行う（例: 日本語データのURLエンコーディング）\n2. 編集を行ったデータを読み込むためのレイアウト定義データを動的に生成する\n\n> **注意**: 実装クラスは `\"TestDataConverter_<データ種別>\"` というキー名でテスト用のコンポーネント定義ファイルに登録する必要がある。",
+    "s7": "同期応答メッセージ送信処理固有のテストデータの記述方法は、:ref:`send_sync_request_write_test_data` を参照。\n\n> **注意**: パディングおよびバイナリデータの扱いは、:ref:`about_fixed_length_file` と同様。"
+  }
+}

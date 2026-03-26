@@ -1,0 +1,66 @@
+{
+  "id": "web-application-Web_Log",
+  "title": "ログ出力の設定方法とログの見方(画面オンライン処理編)",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "HTTPアクセスログ",
+        "SQLログ",
+        "開発ログ",
+        "ログの種類",
+        "証跡ログ",
+        "パフォーマンスチューニング",
+        "DEBUGレベル"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "開発時のログ出力の設定方法",
+      "hints": [
+        "標準出力設定",
+        "ログ出力設定",
+        "Eclipse Console",
+        "HTTPアクセスログ設定",
+        "SQLログ設定",
+        "開発ログ設定"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "開発時のログの見方",
+      "hints": [
+        "ログの見方",
+        "デバッグケース",
+        "ログ確認方法",
+        "開発ログ読み方"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "各ケースのログ出力例",
+      "hints": [
+        "リクエスト処理",
+        "JSP例外",
+        "アクション未発見",
+        "ディスパッチ",
+        "スタックトレース",
+        "method not found",
+        "DISPATCHING CLASS",
+        "DISPATCHING METHOD",
+        "HttpRequest",
+        "ExecutionContext",
+        "HttpResponse",
+        "UserSearchAction"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "画面オンライン処理の開発時は、以下の3種類のログを出力する。開発ログとは、アプリケーションプログラマが開発時に必要な情報をDEBUGレベルでログ出力したものを指す。\n\n| ログの種類 | 説明 |\n|---|---|\n| HTTPアクセスログ | アプリケーション実行状況の把握。性能・負荷測定情報の出力も含む。全リクエスト/レスポンス情報を出力する証跡ログとしても使用する。 |\n| SQLログ | SQL文の実行時間とSQL文を出力（パフォーマンスチューニング用）。 |\n| 開発ログ | アプリケーションプログラマが開発時に必要な情報（DEBUGレベル）を出力。 |\n\nHTTPアクセスログとSQLログの出力内容: :ref:`HttpAccessLog`、:ref:`SqlLog` 参照。",
+    "s2": "開発時のログ出力設定では、標準出力（EclipseのConsoleビュー）へのログ出力のために以下を設定する。\n\n1. 出力先として標準出力を追加\n2. デバッグ用ログを標準出力に出力\n3. HTTPアクセスログを標準出力に出力\n4. SQLログを標準出力に出力\n5. 開発ログを標準出力に出力\n\n![ログ出力の設定例](assets/web-application-Web_Log/Web_Log_LogProp.jpg)",
+    "s3": "開発時のログ確認対象ケース:\n\n- リクエスト処理を正常に完了した場合\n- JSPで例外が発生した場合\n- リクエストURLに対応するアクションが見つからない場合\n- リクエストURLに対応するアクションのメソッドが見つからない場合\n\n> **注意**: 上記ケースでエラーが発生するものはあくまで一例であり、全てのケースを網羅していない。実際の開発時は「リクエスト処理を正常に完了した場合」を参考に、デバッグ作業に必要な情報を収集する。",
+    "s4": "## リクエスト処理を正常に完了した場合\n\nログイン処理を例に、1回のリクエスト処理で出力されるログの順番と出力内容を説明する。\n\n画面遷移:\n![ログイン処理の画面遷移](assets/web-application-Web_Log/Web_Log_LoginWindow.jpg)\n\nアクション実行前のログ:\n![アクション実行前](assets/web-application-Web_Log/Web_Log_LoginLogBefore.jpg)\n\nアクション実行中のログ:\n![アクション実行中](assets/web-application-Web_Log/Web_Log_LoginLogRunning.jpg)\n\nアクション実行後のログ:\n![アクション実行後](assets/web-application-Web_Log/Web_Log_LoginLogAfter.jpg)\n\n> **注意**: HTTPアクセスログとSQLログのフォーマットはデフォルトフォーマットを使用した場合の出力例。\n\n## JSPで例外が発生した場合\n\n「リクエスト処理の終了（END）」の後にスタックトレースが出力される。\n\n![JSP例外ログ](assets/web-application-Web_Log/Web_Log_JspErrorLog.jpg)\n\n## リクエストURLに対応するアクションが見つからない場合\n\n「ディスパッチ先クラス（DISPATCHING CLASS）」の後にスタックトレースが出力される。\n\n![アクション未発見ログ](assets/web-application-Web_Log/Web_Log_NoActionLog.jpg)\n\n## リクエストURLに対応するアクションのメソッドが見つからない場合\n\n「ディスパッチ先メソッド（DISPATCHING METHOD）」にエラーメッセージが出力される。\n\n![アクションメソッド未発見ログ](assets/web-application-Web_Log/Web_Log_NoActionMethodLog.jpg)\n\nエラーメッセージ例:\n```bash\nmethod not found. class = [nablarch.sample.management.user.UserSearchAction], method signature = [HttpResponse dousers00101(HttpRequest, ExecutionContext)]\n```"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "ui-framework-event_send_request",
+  "title": "XHRリクエスト送信イベントアクション",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要・コードサンプル・仕様",
+      "hints": [
+        "XHRリクエスト送信",
+        "Ajaxリクエスト",
+        "イベントアクション",
+        "event:send_request",
+        "event:listen",
+        "event:listen_subwindow",
+        "AjaxAction.js",
+        "send_request.tag",
+        "condition属性",
+        "paramNameAlias",
+        "n:param",
+        "n:submitLink",
+        "n:button",
+        "name属性",
+        "uri属性",
+        "target属性"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[event_send_request](ui-framework-event_send_request.json) は、[event_listen](ui-framework-event_listen.json) および [event_listen_subwindow](ui-framework-event_listen_subwindow.json) が監視するイベント発生時に、指定URLへXHR(Ajax)リクエストを送信するイベントアクション。Nablarch本体の機構（ウィンドウスコープ、Nablarchサブミット等）と連動し、`<n:button>` `<n:submitLink>` と同じPOSTリクエストを送信できる。`<n:param>` によるリクエストパラメータの付与も可能。\n\n> **注意**: XHRレスポンスはXMLまたはHTML形式のみ対応。JSONなどの形式には対応していない。\n\n> **注意**: ローカル表示では動作しない。\n\n## コードサンプル\n\n```jsp\n<event:listen\n  title     = \"商品コード入力欄からフォーカスアウトする。\"\n  event     = \"input.productCode blur\">\n  <event:send_request\n    title     = \"入力欄に値が設定されていた場合は、それに合致するコードを検索するAjaxリクエストを送信し、検索結果テーブルを取得する。\"\n    name      = \"product_ajaxRequest\"\n    uri       = \"./product/list\"\n    target    = \"table\"\n    condition = \"input.productCode:is-not-blank\">\n  </event:send_request>\n</event:listen>\n\n<event:listen\n  title = \"Ajaxリクエスト成功\"\n  event = \"ajaxSuccess\">\n  <event:write_to\n    title       = \"入力した商品コードに合致するレコードがDB上に存在すれば商品名を表示する\"\n    target      = \"span.productName\"\n    condition   = \":has(tr td)\"\n    format      = \"商品名: {td.productName}\">\n  </event:write_to>\n</event:listen>\n```\n\n> **補足**: XHRリクエスト完了後の処理は、jQueryのajax関連グローバルイベントを監視する [event_listen](ui-framework-event_listen.json) を作成し、その中にイベントアクションを配置して実装する。ajaxイベント詳細: [Ajax Events](http://api.jquery.com/Ajax_Events/)\n\n## 仕様\n\nこのアクションを実行するイベントは [event_listen](ui-framework-event_listen.json)（または [event_listen_subwindow](ui-framework-event_listen_subwindow.json)）で定義する必要がある。\n\n動作フロー:\n1. イベント発生元要素が `condition` 属性のセレクタにマッチするかをチェック\n2. マッチしない場合: 何もしない\n3. マッチした場合: このタグを包含する **form** 要素に対してサブミット処理を実行（`<n:submitLink>` タグの処理と同等）\n\n`<n:param>` 等のタグも本タグの内側に記述することで `<n:submitLink>` と同様に利用できる。\n\n### 属性値一覧\n\n◎ 必須属性、○ 任意属性、× 無効（指定しても効果なし）\n\n| 属性名 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | 実行する処理の簡単な説明 | 文字列 | × | × | 設計書表示用 |\n| name | サブミット名 | 文字列 | ◎ | × | |\n| uri | リクエスト送信先URI | 文字列 | ◎ | × | |\n| target | レスポンスの内容から取得する要素を指定するセレクタ式 | 文字列 | ◎ | × | |\n| condition | 本アクションを実行する事前条件。イベント発生元要素が満たすべきセレクタ式 | 文字列 | ○ | × | |\n| paramNameAlias | リクエスト送信時にリクエストパラメータの置換を行うルールを定義する | 文字列 | ○ | × | 書式: `置換文字列1/置換後文字列1\\|置換文字列2/置換後文字列2 ...` |\n\n## 内部構造・改修時の留意点\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/event/send_request.tag | このウィジェットの実体となるタグファイル |\n| /js/nablarch/ui/event/AjaxAction.js | XHR処理を実装するイベントアクション |"
+  }
+}

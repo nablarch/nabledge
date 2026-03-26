@@ -1,0 +1,109 @@
+{
+  "id": "libraries-05_MessagingLog",
+  "title": "メッセージングログの出力",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "メッセージングログの出力",
+      "hints": [
+        "MessagingLogUtil",
+        "MessagingLogFormatter",
+        "MessagingContext",
+        "HttpMessagingRequestParsingHandler",
+        "HttpMessagingResponseBuildingHandler",
+        "HttpMessagingClient",
+        "messagingLogFormatter.maskingPatterns",
+        "messagingLogFormatter.maskingChar",
+        "messagingLogFormatter.sentMessageFormat",
+        "messagingLogFormatter.receivedMessageFormat",
+        "messagingLogFormatter.httpSentMessageFormat",
+        "messagingLogFormatter.httpReceivedMessageFormat",
+        "messagingLogFormatter.className",
+        "メッセージングログ設定",
+        "メッセージボディマスク",
+        "MOMメッセージング",
+        "HTTPメッセージング",
+        "個人情報マスク",
+        "MOM応答不要"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "MOM送信メッセージのログ出力に使用するフォーマット",
+      "hints": [
+        "$threadName$",
+        "$messageId$",
+        "$destination$",
+        "$correlationId$",
+        "$replyTo$",
+        "$timeToLive$",
+        "$messageBody$",
+        "$messageBodyHex$",
+        "$messageBodyLength$",
+        "MOM送信メッセージフォーマット",
+        "sentMessageFormat",
+        "SENT MESSAGE"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "MOM受信メッセージのログ出力に使用するフォーマット",
+      "hints": [
+        "$threadName$",
+        "$messageId$",
+        "$destination$",
+        "$correlationId$",
+        "$replyTo$",
+        "$timeToLive$",
+        "$messageBody$",
+        "$messageBodyHex$",
+        "$messageBodyLength$",
+        "MOM受信メッセージフォーマット",
+        "receivedMessageFormat",
+        "RECEIVED MESSAGE"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "HTTP送信メッセージのログ出力に使用するフォーマット",
+      "hints": [
+        "$threadName$",
+        "$messageId$",
+        "$destination$",
+        "$correlationId$",
+        "$messageBody$",
+        "$messageBodyHex$",
+        "$messageBodyLength$",
+        "$messageHeader$",
+        "HTTP送信メッセージフォーマット",
+        "httpSentMessageFormat",
+        "HTTP SENT MESSAGE"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "HTTP受信メッセージのログ出力に使用するフォーマット",
+      "hints": [
+        "$threadName$",
+        "$messageId$",
+        "$destination$",
+        "$correlationId$",
+        "$messageBody$",
+        "$messageBodyHex$",
+        "$messageBodyLength$",
+        "$messageHeader$",
+        "HTTP受信メッセージフォーマット",
+        "httpReceivedMessageFormat",
+        "HTTP RECEIVED MESSAGE"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 出力方針\n\nログレベル: INFO、ロガー名: MESSAGINGとしてアプリケーションログへ出力する。\n\nlog.propertiesの設定例:\n```bash\nwriterNames=appFile\n\nwriter.appFile.className=nablarch.core.log.basic.FileLogWriter\nwriter.appFile.filePath=/var/log/app/app.log\nwriter.appFile.encoding=UTF-8\nwriter.appFile.maxFileSize=10000\nwriter.appFile.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.appFile.formatter.format=<アプリケーションログ用のフォーマット>\n\navailableLoggersNamesOrder=MESSAGING,ROO\n\nloggers.ROO.nameRegex=.*\nloggers.ROO.level=INFO\nloggers.ROO.writerNames=appFile\n\nloggers.MESSAGING.nameRegex=MESSAGING\nloggers.MESSAGING.level=INFO\nloggers.MESSAGING.writerNames=appFile\n```\n\n## 出力項目\n\n| 項目名 | 説明 |\n|---|---|\n| 出力日時 | ログ出力時のシステム日時 |\n| 起動プロセスID | アプリケーションを起動したプロセス名。実行環境の特定に使用する |\n| 処理方式区分 | 処理方式の特定に使用する |\n| リクエストID | 処理を一意に識別するID |\n| 実行時ID | 処理の実行を一意に識別するID |\n| ユーザID | ログインユーザのユーザID |\n| スレッド名 | 処理を実行したスレッド名 |\n| メッセージID | メッセージに設定されているメッセージID |\n| 送信宛先 | メッセージに設定されている送信宛先 |\n| 関連メッセージID | メッセージに設定されている関連メッセージID |\n| 応答宛先 | メッセージに設定されている応答宛先 |\n| 有効期間 | メッセージに設定されている有効期間 |\n| メッセージヘッダ | メッセージに設定されているヘッダ |\n| メッセージボディ | メッセージボディ部のダンプ。個人情報・機密情報はマスクして出力（マスク設定が必要） |\n| メッセージボディのヘキサダンプ | メッセージボディ部のヘキサダンプ。マスク対象部分はマスク文字列のヘキサダンプを出力（マスク設定が必要） |\n| メッセージボディのバイト長 | メッセージボディ部のバイト長 |\n\n個別項目（スレッド名〜メッセージボディのバイト長）以外の共通項目は :ref:`Log_BasicLogFormatter` で指定する。共通項目と個別項目を組み合わせたフォーマットは :ref:`AppLog_Format` を参照。\n\n## 出力に使用するクラス\n\n![メッセージングログクラス図](assets/libraries-05_MessagingLog/Log_MessagingLog_ClassDiagram.jpg)\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.fw.messaging.MessagingContext` | MOMメッセージ送受信処理で要求/応答メッセージの相互変換と送受信を行う。実際の送受信メッセージ内容をログ出力する |\n| `nablarch.fw.messaging.handler.HttpMessagingRequestParsingHandler` | HTTPリクエストを解析して要求メッセージへ変換するハンドラ。受信メッセージ内容をログ出力する |\n| `nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler` | 応答メッセージをHTTPレスポンスへ変換するハンドラ。送信メッセージ内容をログ出力する |\n| `nablarch.fw.messaging.realtime.http.client.HttpMessagingClient` | 要求メッセージからHTTPリクエストへの変換およびHTTPレスポンスの応答メッセージへの変換を行う。送受信メッセージ内容をログ出力する |\n| `nablarch.fw.messaging.logging.MessagingLogUtil` | メッセージング処理中のログ出力内容に関連した処理を行う |\n| `nablarch.fw.messaging.logging.MessagingLogFormatter` | メッセージングログの個別項目をフォーマットする |\n\n各クラスはMessagingLogUtilを使用してメッセージングログを整形し、Loggerを使用してログ出力を行う。\n\n処理シーケンス:\n- MOM同期応答メッセージ受信: ![MOM受信シーケンス図](assets/libraries-05_MessagingLog/Log_MessagingLog_SequenceDiagram_mom_incoming.jpg)\n  - MOM応答不要メッセージ受信処理では、MOM受信ログの出力および業務アクションの呼び出しまでの処理が行われる（シーケンス図省略）\n- MOM同期応答メッセージ送信: ![MOM送信シーケンス図](assets/libraries-05_MessagingLog/Log_MessagingLog_SequenceDiagram_mom_outgoing.jpg)\n  - MOM応答不要メッセージ送信処理では、MOM送信ログの出力および要求キューメッセージの送信までの処理が行われる（シーケンス図省略）\n- HTTPメッセージ受信: ![HTTP受信シーケンス図](assets/libraries-05_MessagingLog/Log_MessagingLog_SequenceDiagram_http_incoming.jpg)\n- HTTPメッセージ送信: ![HTTP送信シーケンス図](assets/libraries-05_MessagingLog/Log_MessagingLog_SequenceDiagram_http_outgoing.jpg)\n\n## 設定方法\n\nMessagingLogUtilはapp-log.propertiesを読み込みMessagingLogFormatterオブジェクトを生成して個別項目のフォーマット処理を委譲する。プロパティファイルのパス指定や実行時設定変更は :ref:`AppLog_Config` を参照。\n\napp-log.propertiesの設定例:\n```bash\nmessagingLogFormatter.className=nablarch.fw.messaging.logging.MessagingLogFormatter\nmessagingLogFormatter.maskingChar=#\nmessagingLogFormatter.maskingPatterns=<password>(.+?)</password>,<mobilePhoneNumber>(.+?)</mobilePhoneNumber>\n\nmessagingLogFormatter.sentMessageFormat=@@@@ SENT MESSAGE @@@@\\n\\tthread_name    = [$threadName$]\\n\\tmessage_id     = [$messageId$]\\n\\tdestination    = [$destination$]\\n\\tcorrelation_id = [$correlationId$]\\n\\treply_to       = [$replyTo$]\\n\\ttime_to_live   = [$timeToLive$]\\n\\tmessage_body   = [$messageBody$]\nmessagingLogFormatter.receivedMessageFormat=@@@@ RECEIVED MESSAGE @@@@\\n\\tthread_name    = [$threadName$]\\n\\tmessage_id     = [$messageId$]\\n\\tdestination    = [$destination$]\\n\\tcorrelation_id = [$correlationId$]\\n\\treply_to       = [$replyTo$]\\n\\tmessage_body   = [$messageBody$]\nmessagingLogFormatter.httpSentMessageFormat=@@@@ HTTP SENT MESSAGE @@@@\\n\\tthread_name    = [$threadName$]\\n\\tmessage_id     = [$messageId$]\\n\\tdestination    = [$destination$]\\n\\tcorrelation_id = [$correlationId$]\\n\\tmessage_header = [$messageHeader$]\\n\\tmessage_body   = [$messageBody$]\nmessagingLogFormatter.httpReceivedMessageFormat=@@@@ HTTP RECEIVED MESSAGE @@@@\\n\\tthread_name    = [$threadName$]\\n\\tmessage_id     = [$messageId$]\\n\\tdestination    = [$destination$]\\n\\tcorrelation_id = [$correlationId$]\\n\\tmessage_header = [$messageHeader$]\\n\\tmessage_body   = [$messageBody$]\n```\n\n| プロパティ名 | 説明 |\n|---|---|\n| messagingLogFormatter.className | MessagingLogFormatterのクラス名。差し替える場合に指定 |\n| messagingLogFormatter.maskingPatterns | メッセージ本文のマスク対象文字列を正規表現で指定。最初のキャプチャ部分（括弧で囲まれた部分）がマスク対象。複数指定はカンマ区切り。Pattern.CASE_INSENSITIVEでコンパイルされる |\n| messagingLogFormatter.maskingChar | マスクに使用する文字。デフォルトは'*' |\n| messagingLogFormatter.sentMessageFormat | MOM送信メッセージのログ出力フォーマット |\n| messagingLogFormatter.receivedMessageFormat | MOM受信メッセージのログ出力フォーマット |\n| messagingLogFormatter.httpSentMessageFormat | HTTP送信メッセージのログ出力フォーマット |\n| messagingLogFormatter.httpReceivedMessageFormat | HTTP受信メッセージのログ出力フォーマット |\n\n## 出力例\n\ncnoタグ内容をマスクするHTTPメッセージ受信処理の例。\n\napp-log.propertiesの設定例:\n```bash\nmessagingLogFormatter.maskingChar=#\nmessagingLogFormatter.maskingPatterns=<cno>(.*?)</cno>\nmessagingLogFormatter.httpSentMessageFormat=@@@@ SENT MESSAGE @@@@\\n\\tthread_name    = [$threadName$]\\n\\tmessage_id     = [$messageId$]\\n\\tdestination    = [$destination$]\\n\\tcorrelation_id = [$correlationId$]\\n\\tmessage_header = [$messageHeader$]\\n\\tmessage_length = [$messageBodyLength$]\\n\\tmessage_body   = [$messageBody$]\\n\\tmessage_bodyhex= [$messageBodyHex$]\nmessagingLogFormatter.httpReceivedMessageFormat=@@@@ RECEIVED MESSAGE @@@@\\n\\tthread_name    = [$threadName$]\\n\\tmessage_id     = [$messageId$]\\n\\tdestination    = [$destination$]\\n\\tcorrelation_id = [$correlationId$]\\n\\tmessage_header = [$messageHeader$]\\n\\tmessage_length = [$messageBodyLength$]\\n\\tmessage_body   = [$messageBody$]\\n\\tmessage_bodyhex= [$messageBodyHex$]\n```\n\nlog.propertiesの設定例:\n```bash\nwriterNames=appFile\n\nwriter.appFile.className=nablarch.core.log.basic.FileLogWriter\nwriter.appFile.filePath=./app.log\nwriter.appFile.encoding=UTF-8\nwriter.appFile.maxFileSize=10000\nwriter.appFile.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.appFile.formatter.format=$date$ -$logLevel$- $loggerName$ [$executionId$] boot_proc = [$bootProcess$] proc_sys = [$processingSystem$] req_id = [$requestId$] usr_id = [$userId$] $message$$information$$stackTrace$\n\navailableLoggersNamesOrder=MESSAGING\n\nloggers.MESSAGING.nameRegex=MESSAGING\nloggers.MESSAGING.level=INFO\nloggers.MESSAGING.writerNames=appFile\n```\n\n出力例（cnoタグの内容はmaskingCharで指定した文字にマスクされ、ヘキサダンプ部分もマスク文字列のヘキサダンプが出力される）:\n```\n2014-06-27 11:07:51.314 -INFO- MESSAGING [null] boot_proc = [] proc_sys = [] req_id = [RM11AC0102] usr_id = [unitTest] @@@@ HTTP RECEIVED MESSAGE @@@@\n    thread_name    = [main]\n    message_id     = [1403834871251]\n    destination    = [null]\n    correlation_id = [null]\n    message_header = [{x-message-id=1403834871251, MessageId=1403834871251, ReplyTo=/action/RM11AC0102}]\n    message_length = [216]\n    message_body   = [<?xml version=\"1.0\" encoding=\"UTF-8\"?><request><_nbctlhdr><userId>unitTest</userId><resendFlag>0</resendFlag></_nbctlhdr><user><id>nablarch</id><name>ナブラーク</name><cno>****************</cno></user></request>]\n    message_bodyhex= [3C3F786D6C...（マスク文字列のヘキサダンプ）]\n2014-06-27 11:07:51.329 -INFO- MESSAGING [null] boot_proc = [] proc_sys = [] req_id = [RM11AC0102] usr_id = [unitTest] @@@@ HTTP SENT MESSAGE @@@@\n    thread_name    = [main]\n    message_id     = [null]\n    destination    = [/action/RM11AC0102]\n    correlation_id = [1403834871251]\n    message_header = [{CorrelationId=1403834871251, Destination=/action/RM11AC0102}]\n    message_length = [145]\n    message_body   = [<?xml version=\"1.0\" encoding=\"UTF-8\"?><response><_nbctlhdr><statusCode>200</statusCode></_nbctlhdr><result><msg>success</msg></result></response>]\n    message_bodyhex= [3C3F786D6C...（ヘキサダンプ）]\n```",
+    "s2": "## プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| スレッド名 | $threadName$ |\n| メッセージID | $messageId$ |\n| 送信宛先 | $destination$ |\n| 関連メッセージID | $correlationId$ |\n| 応答宛先 | $replyTo$ |\n| 有効期間 | $timeToLive$ |\n| メッセージボディの内容 | $messageBody$ |\n| メッセージボディのヘキサダンプ | $messageBodyHex$ |\n| メッセージボディのバイト長 | $messageBodyLength$ |\n\n## デフォルトフォーマット\n\n```bash\n@@@@ SENT MESSAGE @@@@\n    \\n\\tthread_name    = [$threadName$]\n    \\n\\tmessage_id     = [$messageId$]\n    \\n\\tdestination    = [$destination$]\n    \\n\\tcorrelation_id = [$correlationId$]\n    \\n\\treply_to       = [$replyTo$]\n    \\n\\ttime_to_live   = [$timeToLive$]\n    \\n\\tmessage_body   = [$messageBody$]\n```",
+    "s3": "## プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| スレッド名 | $threadName$ |\n| メッセージID | $messageId$ |\n| 送信宛先 | $destination$ |\n| 関連メッセージID | $correlationId$ |\n| 応答宛先 | $replyTo$ |\n| 有効期間 | $timeToLive$ |\n| メッセージボディの内容 | $messageBody$ |\n| メッセージボディのヘキサダンプ | $messageBodyHex$ |\n| メッセージボディのバイト長 | $messageBodyLength$ |\n\n## デフォルトフォーマット\n\n```bash\n@@@@ RECEIVED MESSAGE @@@@\n    \\n\\tthread_name    = [$threadName$]\n    \\n\\tmessage_id     = [$messageId$]\n    \\n\\tdestination    = [$destination$]\n    \\n\\tcorrelation_id = [$correlationId$]\n    \\n\\treply_to       = [$replyTo$]\n    \\n\\tmessage_body   = [$messageBody$]\n```",
+    "s4": "## プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| スレッド名 | $threadName$ |\n| メッセージID | $messageId$ |\n| 送信先 | $destination$ |\n| 関連メッセージID | $correlationId$ |\n| メッセージボディの内容 | $messageBody$ |\n| メッセージボディのヘキサダンプ | $messageBodyHex$ |\n| メッセージボディのバイト長 | $messageBodyLength$ |\n| メッセージのヘッダ | $messageHeader$ |\n\n## デフォルトフォーマット\n\n```bash\n@@@@ HTTP SENT MESSAGE @@@@\n    \\n\\tthread_name    = [$threadName$]\n    \\n\\tmessage_id     = [$messageId$]\n    \\n\\tdestination    = [$destination$]\n    \\n\\tcorrelation_id = [$correlationId$]\n    \\n\\tmessage_header = [$messageHeader$]\n    \\n\\tmessage_body   = [$messageBody$]\n```",
+    "s5": "## プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| スレッド名 | $threadName$ |\n| メッセージID | $messageId$ |\n| 送信先 | $destination$ |\n| 関連メッセージID | $correlationId$ |\n| メッセージボディの内容 | $messageBody$ |\n| メッセージボディのヘキサダンプ | $messageBodyHex$ |\n| メッセージボディのバイト長 | $messageBodyLength$ |\n| メッセージのヘッダ | $messageHeader$ |\n\n## デフォルトフォーマット\n\n```bash\n@@@@ HTTP RECEIVED MESSAGE @@@@\n    \\n\\tthread_name    = [$threadName$]\n    \\n\\tmessage_id     = [$messageId$]\n    \\n\\tdestination    = [$destination$]\n    \\n\\tcorrelation_id = [$correlationId$]\n    \\n\\tmessage_header = [$messageHeader$]\n    \\n\\tmessage_body   = [$messageBody$]\n```"
+  }
+}

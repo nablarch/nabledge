@@ -1,0 +1,51 @@
+{
+  "id": "ui-framework-tab_group",
+  "title": "タブウィジェット",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "<tab:group>",
+      "hints": [
+        "tab:group",
+        "タブウィジェット",
+        "タブグループ",
+        "name属性",
+        "タブ切り替え",
+        "tab:content",
+        "tab:link"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "<tab:content>",
+      "hints": [
+        "tab:content",
+        "title",
+        "value",
+        "selected",
+        "cssClass",
+        "クライアントサイドタブ切り替え",
+        "タブ初期選択"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "<tab:link>",
+      "hints": [
+        "tab:link",
+        "allowDoubleSubmission",
+        "dummyUri",
+        "uri",
+        "サーバリクエストタブ",
+        "ローカル動作",
+        "二重サブミット"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[tab_group](ui-framework-tab_group.json) はUI標準 UI部品 タブの内容に準拠したタブ表示用UI部品。2種類のバリエーション:\n- `<tab:content>`: クライアントサイドでのタブ切り替えタイプ\n- `<tab:link>`: サーバにリクエストを送信するタイプ\n\n**`<tab:group>` 属性** [◎ 必須, ○ 任意, × 無効]\n\n| 属性名 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|\n| name | 文字列 | ◎ | × | タブグループ名。ページ内で一意となる値を指定する |\n\n**コードサンプル（サーバ動作）**\n\n```jsp\n<tab:group name=\"tab\">\n  <tab:content title=\"ユーザ基本情報\" selected=\"true\" value=\"tab_baseinfo\">\n    <field:text title=\"ログインID\" domain=\"ログインID\" required=\"true\" maxlength=\"20\"\n                hint=\"半角英数記号20文字以内\" name=\"formdata.loginId\" sample=\"test01\">\n    </field:text>\n  </tab:content>\n  <tab:link title=\"パスワード変更\" uri=\"/action/ss99ZZ/W99ZZ61Action/RW99ZZ6104\">\n  </tab:link>\n</tab:group>\n```\n\n**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/tab/*.tag | [tab_group](ui-framework-tab_group.json) |\n| /js/jsp/taglib/nablarch.js | タブウィジェットが使用するn:submitLinkのエミュレーション機能を実装するタグライブラリスタブJS |\n| /css/style/base.less | タブに関するスタイル定義を含む基本HTMLの要素スタイル定義 |",
+    "s2": "**`<tab:content>` 属性** [◎ 必須, ○ 任意, × 無効]\n\n| 属性名 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|\n| title | 文字列 | ◎ | ◎ | タブに表示する見出し |\n| value | 文字列 | ◎ | × | タブの識別名。tabグループ内で一意となる値を指定する |\n| selected | 真偽値 | ○ | ○ | タブの初期選択状態。tabグループ内で初期選択状態とするcontentに'true'を設定する |\n| cssClass | 文字列 | ○ | ○ | HTMLのclass属性値 |",
+    "s3": "> **注意**: ローカル動作時、`<tab:link>`タブクリック時はdummyUriで指定されたJSPファイルに遷移する。\n\n**`<tab:link>` 属性** [◎ 必須, ○ 任意, × 無効]\n\n| 属性名 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|\n| id | 文字列 | ○ | ○ | htmlのid属性 |\n| title | 文字列 | ◎ | ◎ | タブに表示する見出し |\n| uri | 文字列 | ◎ | × | 遷移先のuri |\n| cssClass | 文字列 | ○ | ○ | HTMLのclass属性値 |\n| allowDoubleSubmission | 真偽値 | ○ | × | 二重サブミットを許容するか否か。デフォルト: true（許容する） |\n| dummyUri | 文字列 | × | ○ | ローカル動作時の遷移先 |"
+  }
+}
