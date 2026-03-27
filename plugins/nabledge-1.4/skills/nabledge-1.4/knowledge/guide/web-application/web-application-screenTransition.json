@@ -1,0 +1,147 @@
+{
+  "id": "web-application-screenTransition",
+  "title": "ボタン又はリンクによるサブミット",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "ボタン又はリンク",
+        "サブミット",
+        "カスタムタグ",
+        "popupSubmit",
+        "popupButton",
+        "popupLink",
+        "popupOption",
+        "changeParamName",
+        "複数ウィンドウ",
+        "ポップアップ",
+        "パラメータ名変更"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ボタン又はリンクによるサブミット",
+      "hints": [
+        "submitタグ",
+        "buttonタグ",
+        "submitLinkタグ",
+        "popupSubmitタグ",
+        "popupButtonタグ",
+        "popupLinkタグ",
+        "カスタムタグ",
+        "ボタンサブミット",
+        "リンクサブミット",
+        "uri属性",
+        "サブミット先の指定方法",
+        "popupButton",
+        "changeParamName",
+        "別ウィンドウサブミット",
+        "郵便番号検索",
+        "パラメータ名変更",
+        "n:param"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "アプリケーションでonclick属性を指定する場合",
+      "hints": [
+        "onclick属性",
+        "nablarch_submit",
+        "JavaScript関数",
+        "アプリケーション定義関数",
+        "setInputValueToOpener",
+        "window.opener",
+        "別ウィンドウ 元画面 値設定",
+        "JavaScript 外部ファイル",
+        "n:a",
+        "n:button",
+        "n:script",
+        "window.close"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "",
+      "hints": [
+        "Enterキー",
+        "デフォルトボタン",
+        "サブミットボタン設定",
+        "二重サブミット防止",
+        "リクエストの二重送信防止",
+        "処理済リクエストの受信防止",
+        "DBコミット",
+        "クライアント側対策",
+        "サーバ側対策"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "Enterキー押下時にデフォルトで動作するサブミットボタンを設定する方法",
+      "hints": [
+        "Enterキー",
+        "デフォルトサブミットボタン",
+        "n:submitタグ",
+        "n:buttonタグ",
+        "type=submit",
+        "type=button",
+        "複数ボタン",
+        "入力画面と確認画面の共通化",
+        "JSPファイル共通化",
+        "カスタムタグ",
+        "確認画面"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "",
+      "hints": [
+        "一覧照会画面",
+        "詳細画面",
+        "画面遷移",
+        "noCacheタグ",
+        "ブラウザキャッシュ防止",
+        "戻るボタン",
+        "ブラウザの戻るボタン",
+        "履歴バック防止"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "一覧照会画面から詳細画面へ遷移する場合",
+      "hints": [
+        "paramタグ",
+        "paramName",
+        "value",
+        "name",
+        "一覧照会画面",
+        "詳細画面遷移",
+        "submitLinkタグ",
+        "異なるパラメータ送信",
+        "nablarch_hidden",
+        "ValidationContext",
+        "ValidationUtil"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "",
+      "hints": [
+        "マルチウィンドウ",
+        "ポップアップ",
+        "新規ウィンドウ"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "なし\n\n複数ウィンドウを立ち上げたい場合は以下のタグを使用する。新しいウィンドウを開き、そのウィンドウに対してサブミットを行う。\n\n- `popupSubmit`\n- `popupButton`\n- `popupLink`\n\n新しいウィンドウのスタイルは `popupOption` 属性で指定する。\n\n| 属性 | 説明 |\n|---|---|\n| popupOption | ポップアップのオプション情報。`window.open` 関数の第3引数（JavaScript）に指定する。 |\n\nオープンしたウィンドウのアクションと元画面のアクションでパラメータ名が異なる場合は、`changeParamName` タグでパラメータ名を変更する。",
+    "s2": "name属性（フォーム内で一意）とuri属性を指定する必要がある。uri属性の指定は :ref:`uri_specifing` を参照。\n\n| カスタムタグ | 対応するHTMLタグ |\n|---|---|\n| submitタグ | inputタグ（type=submit, button, image） |\n| buttonタグ | buttonタグ |\n| submitLinkタグ | aタグ |\n| popupSubmitタグ | inputタグ（type=submit, button, image） |\n| popupButtonタグ | buttonタグ |\n| popupLinkタグ | aタグ |\n\n「popup」から始まるタグは新しい画面をオープンし、その画面に対してサブミットを行う。\n\n### サブミット先の指定方法\n\nuri属性にコンテキストルートからの相対パスを指定する。\n\n```java\npublic class W11AC02Action {\n    public HttpResponse doRW11AC0201(HttpRequest req, ExecutionContext ctx) {\n        return new HttpResponse(\"/ss11AC/W11AC0201.jsp\");\n    }\n}\n```\n\nJSP実装例（W11AC0201.jsp）:\n\n```jsp\n<n:form>\n  <n:text name=\"W11AC02.systemAccount.loginId\" size=\"22\" maxlength=\"20\" />\n  <n:submit cssClass=\"buttons\" type=\"button\" name=\"confirm\" value=\"確認\"\n    uri=\"/action/ss11AC/W11AC02Action/RW11AC0202\" />\n</n:form>\n```\n\n郵便番号から住所を検索する別ウィンドウにサブミットする場合の実装例を示す。\n\n**JSP実装例:**\n\n```jsp\n<%-- 郵便番号の入力項目以外は省略 --%>\n<tr>\n    <th>\n        <span class=\"essential\">*</span>郵便番号<span class=\"instruct\">(半角数字)</span>\n    </th>\n    <td>\n        <n:text name=\"W11AC01.postalCode\" size=\"7\" maxlength=\"9\"/>\n        <%-- popupButtonタグを指定する。name属性やuri属性の指定は通常のbuttonタグと同じ。 --%>\n        <n:popupButton name=\"searchAddress\" uri=\"/action/ss11AB/W11AB01Action/RW11AB0101\">\n            検索\n            <%-- 郵便番号のパラメータ名を別画面のアクションに合わせて変更する。 --%>\n            <n:changeParamName inputName=\"W11AC01.postalCode\" paramName=\"W11AB01.postalCode\" />\n            <%-- 別画面のアクションに合わせてパラメータを追加する。 --%>\n            <n:param paramName=\"W11AB01.max\" value=\"10\" />\n        </n:popupButton>\n    </td>\n</tr>\n```",
+    "s3": "フレームワークはサブミット処理を行う `nablarch_submit(event, element)` 関数を自動出力する。JSPでonclick属性を指定しない場合は自動でonclick属性として設定される。**JSPでonclick属性を指定した場合は自動設定されない**ため、アプリケーションのJavaScript内で `nablarch_submit` を明示的に呼び出す必要がある。\n\n```javascript\n// フレームワークが自動出力する関数（@return 常にfalse）\nfunction nablarch_submit(event, element) { ... }\n```\n\nJSP実装例（onclick属性指定の場合）:\n\n```jsp\n<script language=\"javascript\">\n    function popUpConfirmation(event, element) {\n      if (window.confirm(\"登録します。よろしいですか？\")) {\n        return nablarch_submit(event, element);\n      } else {\n        return false;\n      }\n    }\n</script>\n<n:form>\n  <n:submit cssClass=\"buttons\" type=\"button\" name=\"register\" value=\"登録\"\n    uri=\"/action/ss11AC/W11AC02Action/RW11AC0204\"\n    onclick=\"return popUpConfirmation(event, this);\" />\n</n:form>\n```\n\n別ウィンドウから元画面に値を設定したい場合はJavaScriptで実現する。JavaScriptは動的な値の埋め込みを防ぐために外部ファイルに記述する。`window.opener` を使用して元画面を参照する。\n\n> **警告**: JavaScriptに対するエスケープ処理はフレームワーク未実装のため、scriptタグのボディやonclick属性など、JavaScriptを記述する部分には動的な値（入力データなど）を埋め込まないこと。\n\n**JavaScript実装例（/js/common.js）:**\n\n```javascript\nfunction setInputValueToOpener(openerInputName, element, prefix, attributeName) {\n    if (attributeName == null) {\n        attributeName = \"name\";\n    }\n    var value = element[attributeName];\n    value = value.substring(prefix.length, value.length);\n    /* window.openerを使用して元画面を参照する。*/\n    var input = window.opener.document.getElementsByName(openerInputName)[0];\n    input.value = value;\n    window.close();\n}\n```\n\n**JSP実装例（リンクで選択させる場合）:**\n\n```jsp\n<%-- 外部ファイルに記述したJavaScriptを読み込む。n:scriptタグはheadタグ内に記述する。 --%>\n<n:script type=\"text/javascript\" src=\"/js/common.js\" />\n\n<%-- name属性にプレフィックス＋郵便番号、onclick属性にJavaScript関数を指定する。 --%>\n<n:form>\n<c:forEach var=\"row\" items=\"${resultSet}\">\n    <div>\n        <n:a href=\"#\" name=\"val_${row.postalCode}\"\n             onclick=\"setInputValueToOpener('W11AC01.postalCode', this, 'val_')\">\n            <n:write name=\"row.postalCode\" />\n        </n:a>\n    </div>\n</c:forEach>\n</n:form>\n```\n\n**JSP実装例（ボタンで選択させる場合）:**\n\n```jsp\n<%-- 外部ファイルに記述したJavaScriptを読み込む。n:scriptタグはheadタグ内に記述する。 --%>\n<n:script type=\"text/javascript\" src=\"/js/common.js\" />\n\n<%-- name属性にプレフィックス＋郵便番号、onclick属性にJavaScript関数を指定する。 --%>\n<n:form>\n<c:forEach var=\"row\" items=\"${resultSet}\">\n    <div>\n        <n:button uri=\"#\" name=\"val_${row.postalCode}\"\n            onclick=\"setInputValueToOpener('W11AC01.postalCode', this, 'val_')\">\n            <n:write name=\"row.postalCode\" />\n        </n:button>\n    </div>\n</c:forEach>\n</n:form>\n```",
+    "s4": "なし\n\nDBコミットを伴う画面では二重サブミットを防止する必要がある。クライアント側の対策（リクエストの二重送信防止）とサーバ側の対策（処理済リクエストの受信防止）の両方を実施する必要がある。",
+    "s5": "1つのフォーム内に複数ボタンがある場合、デフォルトでEnterキー押下時に先頭のボタンがサブミットされる。\n\n- Enterキー押下時にデフォルトで動作させたいボタン: `n:submit` の `type=\"submit\"` を指定\n- デフォルトで動作させないボタン: `n:submit` の `type=\"button\"` を指定\n\n> **注意**: `n:button` タグは `type=\"submit\"` を指定してもEnterキー押下時にサブミットされない。\n\nJSP実装例:\n\n```jsp\n<n:form windowScopePrefixes=\"systemAccount\">\n    <n:submit type=\"button\" name=\"back\" value=\"登録画面へ\"\n              uri=\"/action/ss11AC/W11AC02Action/RW11AC0203\"/>\n    <n:submit type=\"submit\" name=\"register\" value=\"確定\"\n            uri=\"/action/ss11AC/W11AC02Action/RW11AC0204\" />\n</n:form>\n```\n\n入力画面と確認画面が1対1に対応する場合、表示用のJSPファイルを共通化できる。",
+    "s6": "なし\n\nブラウザの戻るボタンが押されても前の画面を表示できないようにするには、`noCacheタグ` を使用する。",
+    "s7": "1つのフォームの複数ボタンやリンクから異なるパラメータを送信する場合は `paramタグ` を使用する。リクエスト送信時に使用するパラメータ名は `paramName属性` で指定する。送信データを指定する属性は指定方法によって以下の2つがある。\n\n| 属性名 | 指定方法 |\n|---|---|\n| value | データを直接指定 |\n| name | リクエストスコープやウィンドウスコープ上のオブジェクトを参照して指定 |\n\nAction実装例:\n\n```java\npublic class W11AC01Action {\n    public HttpResponse doRW11AC0102(HttpRequest req, ExecutionContext ctx) {\n        ValidationContext<W11AC01SearchForm> formCtx =\n            ValidationUtil.validateAndConvertRequest(\"11AC_W11AC01\", W11AC01SearchForm.class, req, \"search\");\n        formCtx.abortIfInvalid();\n        W11AC01SearchForm searchCondition = formCtx.createObject();\n        CM311AC1Component component = new CM311AC1Component();\n        SqlResultSet searchResult = component.selectByCondition(searchCondition);\n        ctx.setRequestScopedVar(\"searchResult\", searchResult);\n        return new HttpResponse(\"/ss11AC/W11AC0101.jsp\");\n    }\n}\n```\n\nJSP実装例（W11AC0101.jsp）:\n\n```jsp\n<n:form>\n  <table>\n    <c:forEach var=\"row\" items=\"${searchResult}\" varStatus=\"status\">\n    <tr>\n      <n:submitLink uri=\"/action/ss11AC/W11AC01Action/RW11AC0103\" name=\"showDetail_${status.index}\">\n        <n:write name=\"row.loginId\"/>\n        <n:param paramName=\"11AC_W11AC01.loginId\" name=\"row.loginId\" />\n      </n:submitLink>\n    </tr>\n    </c:forEach>\n  </table>\n</n:form>\n```\n\nHTML出力: `nablarch_hidden_submit_<name属性>` プレフィックスでリンク毎の変更パラメータが隠しフィールドに出力される。選択されたリンクの変更パラメータはフレームワークのハンドラによりリクエストに設定される（例: U0002リンク選択時 → `11AC_W11AC01.loginId=U0002`）。",
+    "s8": "なし"
+  }
+}

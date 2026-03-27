@@ -1,0 +1,58 @@
+{
+  "id": "web-application-05_create_form",
+  "title": "Formクラスの実装",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "Formクラスの作成",
+      "hints": [
+        "W11AC02Form",
+        "W11AC02FormBase",
+        "Formクラス作成",
+        "FormBase継承",
+        "デフォルトコンストラクタ",
+        "Mapコンストラクタ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Formクラスの精査処理実装",
+      "hints": [
+        "W11AC02Form",
+        "W11AC02FormTest",
+        "ValidationUtil",
+        "@ValidateFor",
+        "validateForRegister",
+        "validateWithout",
+        "ValidationUtil#validateWithout",
+        "SampleEntityTestSupport",
+        "単項目精査",
+        "精査処理実装",
+        "バリデーション"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "精査処理とFormの生成を行うメソッドの実装",
+      "hints": [
+        "W11AC02Form",
+        "ValidationUtil",
+        "ValidationContext",
+        "ApplicationException",
+        "validateAndConvertRequest",
+        "abortIfInvalid",
+        "createObject",
+        "HttpRequest",
+        "精査処理",
+        "フォーム生成",
+        "Formバリデーション"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## Formクラスの作成\n\n**クラス**: `W11AC02Form`（`W11AC02FormBase`を継承）\n\n格納フォルダ: `main/java/nablarch/sample/ss11AC`\n\n```java\npublic class W11AC02Form extends W11AC02FormBase {\n    public W11AC02Form() {}\n\n    public W11AC02Form(Map<String, Object> data) {\n        super(data);\n    }\n}\n```",
+    "s2": "## Formクラスの精査処理実装\n\n### 単体テスト\n\n精査処理の単体テストでは以下を検証する:\n- 精査対象プロパティに対して精査が行われていること\n- 精査対象外プロパティに対して精査が行われていないこと\n\n**テストデータ**:\n\n| データシート格納フォルダ | データシートファイル名 | シート名 |\n|---|---|---|\n| `test/java/nablarch/sample/ss11AC` | `W11AC02FormTest.xlsx` | `testValidateForRegister` |\n\nテストクラス: `W11AC02FormTest`（`SampleEntityTestSupport`を継承）、テストメソッド: `testValidateForRegister`\n\n```java\n@Test\npublic void testValidateForRegister() {\n    testValidateAndConvert(W11AC02Form.class, \"testValidateForRegister\", \"register\");\n}\n```\n\n前画面や別取引からの引継ぎ項目がある場合は、それらプロパティの単項目精査テストも必要（:ref:`entityUnitTest` 参照）。\n\n### Formクラスの単体テストを実行（初回）\n\n精査メソッドを実装する前に単体テストを実行し、テストが失敗することを確認する（精査メソッドを実装していない為）。\n\n### validateForRegisterの実装\n\n**メソッド**: `W11AC02Form#validateForRegister`（`@ValidateFor(\"register\")`付き）\n\n単項目精査対象プロパティを指定して `ValidationUtil#validate` を呼び出す:\n\n```java\n@ValidateFor(\"register\")\npublic static void validateForRegister(ValidationContext<W11AC02Form> context) {\n    ValidationUtil.validate(context, new String[] {\"kanjiName\", \"kanaName\"});\n}\n```\n\n精査対象外プロパティを指定する `ValidationUtil#validateWithout` も利用可能。空配列を渡すと全プロパティが精査対象になる:\n\n```java\nValidationUtil.validateWithout(context, new String[0]);\n```\n\n### Formクラスの単体テストを実行（最終確認）\n\nForm単体テストを実行し、精査対象とするプロパティの精査が行われていることを確認する。",
+    "s3": "## 精査処理とFormの生成を行うメソッドの実装\n\nFormクラスにstaticな `validate` メソッドを実装することで、Actionの実装を簡略化できる。\n\n```java\npublic static W11AC02Form validate(HttpRequest req, String validationName) {\n    ValidationContext<W11AC02Form> context = ValidationUtil.validateAndConvertRequest(\n            \"W11AC02\", W11AC02Form.class, req, validationName);\n    context.abortIfInvalid();   // 精査エラー時はApplicationExceptionをスロー\n    return context.createObject();  // 精査成功時はFormオブジェクトを生成して返す\n}\n```"
+  }
+}

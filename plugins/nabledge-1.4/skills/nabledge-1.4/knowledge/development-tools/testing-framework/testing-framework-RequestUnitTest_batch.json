@@ -1,0 +1,128 @@
+{
+  "id": "testing-framework-RequestUnitTest_batch",
+  "title": "リクエスト単体テスト（バッチ処理）",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "全体像",
+      "hints": [
+        "クラス図",
+        "StandaloneTestSupportTemplate",
+        "BatchRequestTestSupport",
+        "TestShot",
+        "MainForRequestTesting",
+        "DbAccessTestSupport",
+        "FileSupport",
+        "バッチリクエスト単体テスト"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "StandaloneTestSupportTemplate",
+      "hints": [
+        "StandaloneTestSupportTemplate",
+        "テスト実行環境",
+        "TestShot",
+        "コンテナ外処理テスト",
+        "バッチテスト"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "TestShot",
+      "hints": [
+        "TestShot",
+        "テストショット",
+        "データベースセットアップ",
+        "ステータスコード確認",
+        "ログ出力確認"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "BatchRequestTestSupport",
+      "hints": [
+        "BatchRequestTestSupport",
+        "バッチテストスーパークラス",
+        "入力ファイル作成",
+        "出力ファイル確認",
+        "テストクラス継承"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "MainForRequestTesting",
+      "hints": [
+        "MainForRequestTesting",
+        "テスト用メインクラス",
+        "常駐化無効化",
+        "コンポーネント設定ファイル"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "FileSupport",
+      "hints": [
+        "FileSupport",
+        "入力ファイル作成",
+        "出力ファイル比較",
+        "ファイル操作"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "固定長ファイル",
+      "hints": [
+        "固定長ファイル",
+        "パディング",
+        "バイナリデータ",
+        "16進数",
+        "0xプレフィックス"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "可変長ファイル",
+      "hints": [
+        "可変長ファイル",
+        "テストデータ",
+        "batch_request_test"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "常駐バッチのテスト用ハンドラ構成",
+      "hints": [
+        "常駐バッチ",
+        "RequestThreadLoopHandler",
+        "OneShotLoopHandler",
+        "ハンドラ構成変更",
+        "テスト設定"
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "ディレクティブのデフォルト値",
+      "hints": [
+        "ディレクティブ",
+        "defaultDirectives",
+        "fixedLengthDirectives",
+        "variableLengthDirectives",
+        "デフォルト値設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "![リクエスト単体テスト（バッチ処理）クラス図](assets/testing-framework-RequestUnitTest_batch/batch_request_test_class.png)\n\n主なクラスとリソース:\n\n| 名称 | 役割 | 作成単位 |\n|---|---|---|\n| リクエスト単体テストクラス | テストロジックを実装する | テスト対象クラス(Action)につき1つ |\n| Excelファイル（テストデータ） | テーブルに格納する準備データや期待する結果、入力ファイルなどテストデータを記載する | テストクラスにつき1つ |\n| `StandaloneTestSupportTemplate` | バッチやメッセージング処理などコンテナ外で動作する処理のテスト実行環境を提供する | — |\n| `BatchRequestTestSupport` | バッチリクエスト単体テストで必要となるテスト準備機能、各種アサートを提供する | — |\n| `TestShot` | データシートに定義されたテストケース1件分の情報を格納するクラス | — |\n| `MainForRequestTesting` | テスト用メインクラス。テスト実行時の差分を吸収する | — |\n| `DbAccessTestSupport` | DB準備データ投入などデータベースを使用するテストに必要な機能を提供する | — |\n| `FileSupport` | 入力ファイル作成などファイルを使用するテストに必要な機能を提供する | — |",
+    "s2": "**クラス**: `StandaloneTestSupportTemplate`\n\nバッチやメッセージング処理などコンテナ外で動作する処理のテスト実行環境を提供する。テストデータを読み取り、全テストショット（`TestShot`）を実行する。",
+    "s3": "**クラス**: `TestShot`\n\n1テストショットの情報保持とテストショット実行を行う。テストショットは以下の要素で成り立つ:\n1. 入力データの準備\n2. メインクラス起動\n3. 出力結果の確認\n\nバッチやメッセージング処理などコンテナ外で動作する処理のテストで共通の準備処理・結果確認機能を提供する。\n\n| 準備処理 | 結果確認 |\n|---|---|\n| データベースのセットアップ | データベース更新内容確認 |\n| | ログ出力結果確認 |\n| | ステータスコード確認 |\n\n入力データ準備や結果確認ロジックはバッチや各種メッセージング処理ごとに異なるので、方式に応じたカスタマイズが可能となっている。",
+    "s4": "**クラス**: `BatchRequestTestSupport`\n\nバッチ処理テスト用のスーパークラス。アプリケーションプログラマは本クラスを継承してテストクラスを作成する。\n\n`TestShot`が提供する準備処理・結果確認に以下を追加:\n\n| 準備処理 | 結果確認 |\n|---|---|\n| 入力ファイルの作成 | 出力ファイルの内容確認 |",
+    "s5": "**クラス**: `MainForRequestTesting`\n\nリクエスト単体テスト用メインクラス。本番用メインクラスとの差異:\n- テスト用コンポーネント設定ファイルからリポジトリを初期化する\n- 常駐化機能を無効化する",
+    "s6": "**クラス**: `FileSupport`\n\nファイルに関する操作を提供するクラス。主な機能:\n- テストデータから入力ファイルを作成する\n- テストデータの期待値と実際に出力されたファイルの内容を比較する",
+    "s7": "基本的な記述方法は :ref:`batch_request_test` を参照。\n\n**パディング**: フィールド長に対してデータのバイト長が短い場合、データ型に応じたパディングが行われる。アルゴリズムはNablarch Application Framework本体と同様。\n\n**バイナリデータの記述方法**: 16進数形式でテストデータを記述する。\n\n- `0x`プレフィックスあり → 16進数として解釈。例: `0x4AD` → `0x04AD`（2バイトのバイト配列）\n\n> **注意**: `0x`プレフィックスがない場合、データは文字列とみなし、ディレクティブの文字コードでエンコードしてバイト配列に変換する。例: Windows-31Jのファイルでバイナリフィールドに`4AD`と記載した場合、`0x344144`（3バイト）に変換される",
+    "s8": "可変長ファイルのテストデータの基本的な記述方法は :ref:`batch_request_test` を参照。",
+    "s9": "常駐バッチのテスト時はプロダクション用ハンドラ構成をテスト用に変更する必要がある。\n\n> **重要**: 変更を行わずにテストを実施した場合、テスト対象の常駐バッチアプリケーションの処理が終わらないため、テストが正常に実施できなくなる。\n\n| 変更対象のハンドラ | 変更後のハンドラ | 変更理由 |\n|---|---|---|\n| `RequestThreadLoopHandler` | `OneShotLoopHandler` | `RequestThreadLoopHandler`でテストを実施するとバッチ実行が終わらずテストコードに制御が戻らなくなる。`OneShotLoopHandler`に差し替えることで、セットアップした要求データを全件処理後にバッチ実行が終了しテストコードに制御が戻る |\n\nプロダクション用設定:\n\n```xml\n<component name=\"requestThreadLoopHandler\" class=\"nablarch.fw.handler.RequestThreadLoopHandler\">\n  <!-- プロパティへの値設定は省略 -->\n</component>\n```\n\nテスト用設定（同名コンポーネントで上書き）:\n\n```xml\n<component name=\"requestThreadLoopHandler\" class=\"nablarch.test.OneShotLoopHandler\" />\n```",
+    "s10": "ファイルのディレクティブをコンポーネント設定ファイルに記載することで、個々のテストデータでのディレクティブ記述を省略できる。map形式で記載し、name属性のルールは以下の通り:\n\n| 対象ファイル種別 | name属性 |\n|---|---|\n| 共通 | `defaultDirectives` |\n| 固定長ファイル | `fixedLengthDirectives` |\n| 可変長ファイル | `variableLengthDirectives` |\n\n```xml\n<!-- ディレクティブ（共通） -->\n<map name=\"defaultDirectives\">\n  <entry key=\"text-encoding\" value=\"Windows-31J\" />\n</map>\n\n<!-- ディレクティブ（固定長） -->\n<map name=\"variableLengthDirectives\">\n  <entry key=\"record-separator\" value=\"NONE\"/>\n</map>\n\n<!-- ディレクティブ（可変長） -->\n<map name=\"variableLengthDirectives\">\n  <entry key=\"quoting-delimiter\" value=\"\" />\n  <entry key=\"record-separator\" value=\"CRLF\"/>\n</map>\n```"
+  }
+}

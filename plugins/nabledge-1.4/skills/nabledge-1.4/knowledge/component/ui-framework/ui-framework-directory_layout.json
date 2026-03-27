@@ -1,0 +1,27 @@
+{
+  "id": "ui-framework-directory_layout",
+  "title": "標準プロジェクト構成",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "標準プロジェクト構成",
+      "hints": [
+        "ui_demo",
+        "ui_test",
+        "nablarch_plugins_bundle",
+        "ui_plugins",
+        "web_common",
+        "標準プロジェクト構成",
+        "UI開発基盤",
+        "ディレクトリ構成",
+        "プラグイン管理",
+        "業務画面モック"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "| ディレクトリ名 | 概要 | 詳細 |\n|---|---|---|\n| **ui_demo** | 業務画面モック開発用プロジェクト | 外部設計工程で作成したJSP画面モックを格納。ビルドコマンドで各プラグイン成果物を集約・配備。 |\n| **ui_test** | UI開発基盤テスト用プロジェクト | プロジェクト固有UIプラグインのテスト用。ビルドコマンドで成果物およびテスト用リソースを配備。 |\n| **nablarch_plugins_bundle** | Nablarch標準UIプラグイン | リリース物をそのまま格納。**UI基盤のアップデートを行う際に洗い替えを行う。プロジェクト側での改変は禁止。** |\n| **ui_plugins** | プロジェクト固有UIプラグイン | プロジェクトで使用するプラグインを配置。既存プラグインをカスタマイズする場合はここにコピーして修正する。 |\n| **web_common** など | デプロイ対象プロジェクト | サーバ環境にデプロイされる資源を格納。実装工程以降で使用する。ビルドコマンドで、**業務画面モック作成用プロジェクト**と同等のビルド成果物がサーブレットコンテキスト配下に配置される。 |\n\n```bash\nプロジェクトルート/\n  │\n  ├─ nablarch_plugins_bundle/         # Nablarch標準UIプラグイン\n  │     └── node_modules/\n  │              │\n  │              ├── jquery/                         # jqueryプラグイン\n  │              │     └── 1.11.0/\n  │              │\n  │              ├── nablarch_widget_filed_calendar/ # カレンダー日付入力ウィジェットプラグイン\n  │              │     └── 1.0.2/\n  │              │\n  │              └── nablarch-css-color-default/     # カラースキームテーマ(Nablarchブランドカラー)プラグイン\n  │                     └── 1.0.0/\n  │\n  └─ xxx_project/             # プロジェクトトップ\n         │\n         ├── ui_demo/              # 業務画面モック開発用プロジェクト\n         │     ├── ss11AC/         # 業務画面JSP(サブシステム毎)\n         │     ├── ss12AC/\n         │     ├── css/\n         │     ├── fonts/\n         │     ├── img/\n         │     ├── include/\n         │     ├── js/\n         │     └── WEB-INF/\n         │           └── tags/\n         │\n         ├── ui_test/              # UI開発基盤テスト用プロジェクト\n         │     ├── css/\n         │     ├── fonts/\n         │     ├── img/\n         │     ├── include/\n         │     ├── js/\n         │     ├── jsp/\n         │     └── WEB-INF/\n         │           └── tags/\n         │\n         ├── ui_plugins/            # UI開発基盤プロジェクトカスタマイズ用フォルダ\n         │     ├── package.json     # 利用プラグイン定義\n         │     └── node_modules/\n         │           ├── jquery/                         # jqueryプラグイン\n         │           │     ├── dist/\n         │           │     │     └── jquery.js\n         │           │     └── src/\n         │           ├── nablarch-widget-field-calendar/\n         │           │     ├── package.json\n         │           │     ├── bin/\n         │           │     ├── ui_public/\n         │           │     ├── ui_local/\n         │           │     └── ui_test/\n         │           └── xxxproject_css_color/\n         │                 ├── package.json\n         │                 ├── bin/\n         │                 ├── ui_public/\n         │                 ├── ui_local/\n         │                 └── ui_test/\n         │\n         ├── web_common/             # デプロイ対象プロジェクト#1\n         │     └── main/web/\n         │\n         └── web_xxxx/               # デプロイ対象プロジェクト#2\n               └── main/web/\n```"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "id": "ui-framework-event_toggle_readonly",
+  "title": "readonly 項目切替えイベントアクション",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "readonly属性切替え",
+        "イベントアクション",
+        "コードサンプル",
+        "JSP",
+        "event:toggle_readonly",
+        "event:listen"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "チェックボックス",
+        "ラジオボタン",
+        "プルダウン",
+        "トリガー要素",
+        "title",
+        "target",
+        "condition",
+        "reverse",
+        "readonly属性設定",
+        "event:toggle_readonly仕様",
+        "event:listen",
+        "TogglePropertyAction",
+        "セレクタマッチ",
+        "ローカルレンダリング制約"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "toggle_readonly.tag",
+        "TogglePropertyAction.js",
+        "実装ファイル",
+        "ウィジェット構成"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## コードサンプル\n\nラジオボタンの選択状態に応じて入力項目グループのreadonly属性を一括切り替えする例:\n\n```jsp\n<n:form>\n  <event:listen\n    event=\"input[type='radio'].editProfile click\">\n    <event:toggle_readonly\n      condition=\"[value='edit']\"\n      reverse=\"true\"\n      toggleTarget=\"div.profile :input:not('.editProfile')\">\n    </event:toggle_readonly>\n  </event:listen>\n  ...\n</n:form>\n```",
+    "s2": "## 仕様\n\n`event_toggle_readonly` は、チェックボックス・ラジオボタン・プルダウン要素の選択状態に応じて、特定の要素の `readonly` 属性値を動的に切り替えるイベントアクションである。\n\n- このアクションを実行するイベントは [event_listen](ui-framework-event_listen.json)（もしくは [event_listen_subwindow](ui-framework-event_listen_subwindow.json)）を用いて定義する必要がある。\n- アクション実行時、まずイベント発生元要素が `condition` 属性のセレクタにマッチするかをチェックする。\n- **マッチした場合**: 同じ `<event:listen>` タグ内に存在し、`target` 属性のセレクタにマッチする全要素の `readonly` 属性を、イベント発生元要素の選択状態に一致する値に設定する。`reverse` 属性が `true` の場合はその逆の値を設定する。\n- **マッチしなかった場合**: 読取専用を解除する（`reverse` 属性が `true` の場合は読取専用にする）。\n\n**属性値一覧**\n\n| プロパティ名 | 型 | 必須(サーバ) | 必須(ローカル) | デフォルト値 | 説明 |\n|---|---|---|---|---|---|\n| title | 文字列 | × | × | | 実行する処理の簡単な説明（設計書表示用） |\n| target | 文字列 | ◎ | ◎ | | 属性を切替える対象要素を指定するセレクタ式 |\n| condition | 文字列 | ◎ | ◎ | | 本アクションを実行する事前条件。イベント発生元要素が満たすべきセレクタ式の形式で指定する |\n| reverse | 真偽値 | ○ | ○ | false | イベント発生元要素の選択状態を反転した値をreadonly属性に設定する |\n\n> **注意**: `condition` 属性において、ローカルレンダリングでは `value` 属性が利用できないので動作しない。",
+    "s3": "## 内部構造・改修時の留意点\n\n本ウィジェットは以下のファイルによって実装されている。\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/event/toggle_readonly.tag | このウィジェットの実体となるタグファイル |\n| /js/nablarch/ui/event/TogglePropertyAction.js | 属性値の切替え機能を実装するイベントアクション |"
+  }
+}

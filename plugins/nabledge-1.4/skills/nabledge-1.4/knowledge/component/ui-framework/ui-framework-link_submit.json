@@ -1,0 +1,52 @@
+{
+  "id": "ui-framework-link_submit",
+  "title": "リンクウィジェット",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "共通属性",
+      "hints": [
+        "link:submit",
+        "link:popup",
+        "リンクウィジェット",
+        "共通属性",
+        "id",
+        "comment",
+        "label",
+        "uri",
+        "dummyUri",
+        "cssClass",
+        "ローカル動作",
+        "コードサンプル"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "汎用リンクのみの属性",
+      "hints": [
+        "link:submit",
+        "汎用リンク",
+        "allowDoubleSubmission",
+        "二重サブミット"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "ポップアップリンクのみの属性",
+      "hints": [
+        "link:popup",
+        "ポップアップリンク",
+        "popupWindowName",
+        "popupOption",
+        "サブウィンドウ",
+        "ウィンドウ名"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[link_submit](ui-framework-link_submit.json) はUI標準 UI部品 リンクの内容に準拠したリンクを出力する。\n\nバリエーション:\n- 汎用リンク `<link:submit>`\n- ポップアップリンク `<link:popup>`\n\n**ローカル動作時の挙動**: リンクをクリック時、dummyUriで指定されたJSPファイルに遷移する。\n\nコードサンプル（ローカル動作）:\n```jsp\n<%-- 汎用リンクの場合 --%>\n<link:submit\n    uri=\"\"\n    label=\"ユーザ情報一覧照会\"\n    dummyUri=\"./W11AC0101.jsp\">\n</link:submit>\n\n<%-- ポップアップリンクの場合 --%>\n<link:popup\n    uri=\"\"\n    label=\"ポップアップリンク\"\n    dummyUri=\"./index.jsp\">\n</link:popup>\n```\n\nコードサンプル（サーバ動作）:\n```jsp\n<%-- 汎用リンクの場合 --%>\n<link:submit\n    uri=\"/action/ss11AC/W11AC01Action/RW11AC0101\"\n    label=\"ユーザ情報一覧照会\">\n</link:submit>\n\n<%-- ポップアップリンクの場合 --%>\n<link:popup\n    uri=\"/action/ss99ZZ/W99ZZ61Action/RW99ZZ6102\"\n    popupWindowName=\"W99ZZ6101\"\n    label=\"ポップアップリンク\">\n</link:popup>\n```\n\n共通属性 [◎ 必須属性 ○ 任意属性 × 無効(指定しても効果なし)]:\n\n| 属性名 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| id | htmlのid属性 | 文字列 | ○ | ○ | |\n| label | リンクの文言 | 文字列 | ◎ | ◎ | |\n| uri | リンク先のuri | 文字列 | ◎ | × | |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ | |\n| dummyUri | ローカル動作時の遷移先 | 文字列 | × | ○ | |\n| comment | リンククリック時のイベント概要 | 文字列 | × | × | 設計書の表示時に、画面イベント一覧の「画面イベント概要」に表示される |",
+    "s2": "汎用リンク（`<link:submit>`）のみの属性 [◎ 必須属性 ○ 任意属性 × 無効]:\n\n| 属性名 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| allowDoubleSubmission | 二重サブミットを許容するか否か | 真偽値 | ○ | × | デフォルトは `true`（許容する） |",
+    "s3": "ポップアップリンク（`<link:popup>`）のみの属性 [◎ 必須属性 ○ 任意属性 × 無効]:\n\n| 属性名 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| popupWindowName | ウィンドウ名 | 文字列 | ○ | ○ | デフォルトは `subwindow` |\n| popupOption | ウィンドウを開く際のオプション | 文字列 | ○ | ○ | |\n\n> **注意**: popupWindowNameを明示的に指定しない場合、1つの画面から開かれるポップアップウィンドウは1つに固定される。複数回ポップアップを開いた場合、以前のウィンドウが開いたままであれば新たなウィンドウは開かず既存ウィンドウの内容のみ更新される。複数のサブウィンドウを開きたい場合は、それぞれ個別のウィンドウ名を設定すること。"
+  }
+}

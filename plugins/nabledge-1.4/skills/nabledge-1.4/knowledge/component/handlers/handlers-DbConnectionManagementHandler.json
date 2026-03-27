@@ -1,0 +1,53 @@
+{
+  "id": "handlers-DbConnectionManagementHandler",
+  "title": "データベース接続管理ハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "DbConnectionManagementHandler",
+        "nablarch.common.handler.DbConnectionManagementHandler",
+        "TransactionManagementHandler",
+        "データベース接続管理",
+        "スレッドローカル",
+        "DB接続管理",
+        "複数トランザクション制御"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "DbConnectionManagementHandler",
+        "DB接続獲得",
+        "スレッドローカル登録",
+        "DB接続重複登録エラー",
+        "コネクションプール",
+        "終端処理",
+        "往路処理",
+        "復路処理",
+        "例外処理"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "DbConnectionManagementHandler",
+        "connectionFactory",
+        "connectionName",
+        "nablarch.core.db.connection.ConnectionFactory",
+        "DBコネクションファクトリ",
+        "スレッドローカル登録名",
+        "複数DB接続"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.common.handler.DbConnectionManagementHandler`\n\n後続ハンドラの処理で必要となるデータベース接続オブジェクトをスレッドローカル上で管理するハンドラ。複数のハンドラキューに配置することで、1スレッドに複数のDB接続を割り当て可能（複数トランザクション制御に利用）。\n\n**関連ハンドラ**:\n\n| ハンドラ | 内容 |\n|---|---|\n| [TransactionManagementHandler](handlers-TransactionManagementHandler.json) | 後続に配置することで、このハンドラが管理するDB接続をトランザクションに参加させることができる |",
+    "s2": "**[往路処理]**\n\n1. DB接続の獲得: DBコネクションファクトリを用いてDB接続を取得\n2. スレッドローカルへの登録: 取得したDB接続をスレッドローカル変数のMapに登録（キー名はスレッドローカル登録名）\n   - 2a. 同一登録名で他のDB接続が既に設定されていた場合、実行時例外を送出して終了\n3. 後続ハンドラに処理委譲\n\n**[復路処理]**\n\n4. 終端処理: DB接続を開放してコネクションプールに返却、スレッドローカルの参照も除去\n5. 処理結果をリターン\n\n**[例外処理]**\n\n- 3a. 本ハンドラまたは後続ハンドラで例外発生時: 終端処理後に例外を再送出\n- 4a. 終端処理中のエラー: そのまま再送出。ただし後続ハンドラで既に例外が発生していた場合は、WARNINGレベルのログを出力してから再送出",
+    "s3": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| connectionFactory | nablarch.core.db.connection.ConnectionFactory | ○ | | DBコネクションファクトリ |\n| connectionName | String | | \"transaction\" | スレッドローカル登録名。複数のDB接続を利用する場合に指定 |\n\n**基本設定**:\n\n```xml\n<component class=\"nablarch.common.handler.DbConnectionManagementHandler\">\n  <property name=\"connectionFactory\" ref=\"connectionFactory\"/>\n</component>\n```\n\n**複数のDB接続を利用する場合**（各接続をスレッドローカル登録名で識別）:\n\n```xml\n<component class=\"nablarch.common.handler.DbConnectionManagementHandler\">\n  <property name=\"connectionFactory\" ref=\"connectionFactory\"/>\n  <property name=\"connectionName\" value=\"secondDbTransaction\"/>\n</component>\n```"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "id": "ui-framework-field_textarea",
+  "title": "複数行テキスト入力項目ウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "field:textarea",
+        "テキストエリア",
+        "複数行テキスト入力",
+        "JSP",
+        "コードサンプル",
+        "ローカル動作",
+        "サーバ動作"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "domain",
+        "readonly",
+        "disabled",
+        "maxlength",
+        "rows",
+        "sample",
+        "nameAlias",
+        "cssClass",
+        "id",
+        "example",
+        "dataFrom",
+        "comment",
+        "initialValueDesc",
+        "属性値一覧",
+        "テキストエリア仕様",
+        "ローカル動作"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "textarea.tag",
+        "base.tag",
+        "nablarch.js",
+        "base.less",
+        "内部構造",
+        "部品一覧"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## コードサンプル\n\n**設計成果物（ローカル動作）**\n\n```jsp\n<field:textarea\n  title=\"漢字氏名\"\n  hint=\"全角50文字以内で入力してください。\"\n  required=\"true\"\n  maxlength=\"50\">\n</field:textarea>\n```\n\n**実装成果物（サーバ動作）**\n\n```jsp\n<field:textarea\n  title=\"漢字氏名\"\n  required=\"true\"\n  maxlength=\"50\"\n  hint=\"全角50文字以内\"\n  name=\"W11AC02.users.kanjiName\">\n</field:textarea>\n```",
+    "s2": "## 仕様\n\n[field_base](ui-framework-field_base.json) を用いて実装。[field_base](ui-framework-field_base.json) の共通仕様はここでは記述しない。\n\n**ローカル動作時の挙動**\n- 入力画面: `sample` に指定した文字列を初期表示するテキストエリアを表示\n- 確認画面: `sample` に指定した文字列をラベル表示\n\n**属性値一覧** [◎ 必須属性 ○ 任意属性 × 無効]\n\n([field_base](ui-framework-field_base.json) の共通属性は省略)\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| domain | 項目のドメイン型 | 文字列 | ○ | ○ | |\n| readonly | 編集可能かどうか | 真偽値 | ○ | ○ | デフォルト: `false` |\n| disabled | サーバに対する入力値の送信を抑制するかどうか | 真偽値 | ○ | ○ | デフォルト: `false` |\n| id | HTMLのid属性値（省略時はname属性と同じ値） | 文字列 | ○ | ○ | |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ | |\n| maxlength | 入力文字数の上限 | 文字列 | ○ | ○ | |\n| example | 具体的な入力例（placeholderなどの形式で表示） | 文字列 | ○ | ○ | |\n| nameAlias | 一つのエラーメッセージに対して複数の入力項目をハイライト表示する場合に指定 | 文字列 | ○ | × | |\n| sample | ローカル動作時にテキストエリアに表示する文字列 | 文字列 | × | ○ | |\n| rows | 表示行数 | 数値 | ○ | ○ | デフォルト: `4` |\n| dataFrom | 表示するデータの取得元（「表示情報取得元」.「表示項目名」の形式） | 文字列 | × | × | |\n| comment | テキストエリアについての備考（設計書の画面項目定義の備考に表示） | 文字列 | × | × | |\n| initialValueDesc | 初期表示内容に関する説明（設計書の画面項目定義の備考に表示） | 文字列 | × | × | |",
+    "s3": "## 内部構造・改修時の留意点\n\n**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/textarea.tag | [field_textarea](ui-framework-field_textarea.json) |\n| /WEB-INF/tags/widget/field/base.tag | [field_base](ui-framework-field_base.json) |\n| /js/jsp/taglib/nablarch.js | `<n:textarea>` のエミュレーション機能を実装するタグライブラリスタブJS |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義（チェックボックスに関する定義も含む） |"
+  }
+}

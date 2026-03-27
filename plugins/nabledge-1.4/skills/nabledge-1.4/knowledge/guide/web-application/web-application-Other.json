@@ -1,0 +1,108 @@
+{
+  "id": "web-application-Other",
+  "title": "その他実装例集",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "本ページの構成",
+      "hints": [
+        "ログ出力",
+        "設定値取得",
+        "メッセージ取得",
+        "エラーメッセージ通知",
+        "コード値取得",
+        "警告メッセージ",
+        "その他実装例一覧",
+        "CodeUtil",
+        "getName",
+        "getShortName",
+        "getOptionalName",
+        "getValues",
+        "コード名称取得",
+        "コード略称取得",
+        "オプション名称取得",
+        "コード値一覧取得",
+        "パターン別コード値取得"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ログの出力方法",
+      "hints": [
+        "Logger",
+        "LoggerManager",
+        "logDebug",
+        "isDebugEnabled",
+        "ログ出力",
+        "デバッグログ",
+        "WebUtil.notifyMessages",
+        "MessageUtil.createMessage",
+        "n:errors",
+        "警告メッセージ表示",
+        "正常画面遷移でのメッセージ",
+        "MessageLevel",
+        "nablarch_warn",
+        "nablarch_info",
+        "nablarch_error"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定値の取得方法",
+      "hints": [
+        "SystemRepository",
+        "getString",
+        "getBoolean",
+        "環境設定ファイル",
+        "設定値取得",
+        "system.config"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "メッセージの取得方法",
+      "hints": [
+        "MessageUtil",
+        "createMessage",
+        "formatMessage",
+        "MessageLevel",
+        "StringResource",
+        "getStringResource",
+        "メッセージ取得",
+        "国際化"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "エラーメッセージの通知方法",
+      "hints": [
+        "ApplicationException",
+        "MessageUtil",
+        "MessageLevel",
+        "エラーメッセージ通知",
+        "業務エラー"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "エラーメッセージを任意の個所に表示する方法",
+      "hints": [
+        "ValidationUtil",
+        "createMessageForProperty",
+        "ApplicationException",
+        "n:error",
+        "エラーメッセージ表示位置",
+        "フィールドエラー"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "本ページで説明する実装例の一覧:\n\n- :ref:`other_example_log_write`\n- :ref:`other_example_repository_get_settings`\n- :ref:`other_example_message_get`\n- :ref:`other_example_message_notify`\n- :ref:`other_error_message_for_property`\n- :ref:`other_example_code_get`\n- :ref:`other_example_warn_message`\n\n**クラス**: `CodeUtil`\n\n**コードパターンテーブル例**\n\n| ID | VALUE | PATTERN1 | PATTERN2 | PATTERN3 |\n|---|---|---|---|---|\n| 0001 | 1 | 1 | 0 | 0 |\n| 0001 | 2 | 1 | 0 | 0 |\n| 0001 | 9 | 0 | 0 | 0 |\n\n**コード名称テーブル例**\n\n| ID | VALUE | SORT_ORDER | LANG | NAME | SHORT_NAME | NAME_WITH_VALUE |\n|---|---|---|---|---|---|---|\n| 0001 | 1 | 1 | ja | 男性 | 男 | 1:男性 |\n| 0001 | 2 | 2 | ja | 女性 | 女 | 2:女性 |\n| 0001 | 9 | 3 | ja | 不明 | 不 | 9:不明 |\n| 0001 | 1 | 2 | en | Male | M | 1:Male |\n| 0001 | 2 | 1 | en | Female | F | 2:Female |\n| 0001 | 9 | 3 | en | Unknown | U | 9:Unknown |\n\nコード名称取得: `CodeUtil.getName(codeId, value)` — ThreadContextの言語に合わせた名称を返す。\n\n```java\nString name = CodeUtil.getName(\"0001\", \"1\");\n// en -> \"Male\", ja -> \"男性\"\n```\n\nコード略称取得: `CodeUtil.getShortName(codeId, value)` — ThreadContextの言語に合わせた略称を返す。\n\n```java\nString name = CodeUtil.getShortName(\"0001\", \"1\");\n// en -> \"男\", ja -> \"M\"\n```\n\nオプション名称取得: `CodeUtil.getOptionalName(codeId, value, columnName)` — コード名称テーブルの任意カラム（NAME_WITH_VALUE等）からオプション名称を取得する。\n\n```java\nString name = CodeUtil.getOptionalName(\"0001\", \"1\", \"NAME_WITH_VALUE\");\n// en -> \"1:Male\", ja -> \"1:男性\"\n```\n\nコード値一覧取得: `CodeUtil.getValues(codeId)` — SORT_ORDER昇順でコード値のリストを返す。\n\n```java\nList<String> values = CodeUtil.getValues(\"0001\");\n// en -> {\"2\", \"1\", \"9\"}, ja -> {\"1\", \"2\", \"9\"}\n```\n\nパターン別コード値取得: `CodeUtil.getValues(codeId, patternColumn)` — パターン用カラム（PATTERN1等）に\"1\"が設定された行のコード値をSORT_ORDER昇順で返す。\n\n```java\nList<String> values = CodeUtil.getValues(\"0001\", \"PATTERN1\");\n// en -> {\"2\", \"1\"}, ja -> {\"1\", \"2\"}\n```",
+    "s2": "**クラス**: `Logger`, `LoggerManager`\n\nクラス変数にロガーを設定し、`LoggerManager.get(ClassName.class)` で取得する:\n\n```java\nprivate static final Logger LOGGER = LoggerManager.get(CM311AC1Component.class);\n```\n\nログ出力前に `isDebugEnabled()` で出力有無をチェックし、不要なメッセージ生成処理（文字列組み立てなど）による性能劣化を避ける:\n\n```java\nif (LOGGER.isDebugEnabled()) {\n    String message = String.format(\"user was not found. userId = [%s], name = [%s]\",\n                                   user.getUserId(), user.getName());\n    LOGGER.logDebug(message);\n}\n```\n\nログ出力設定方法については :ref:`Web_Log` を参照。\n\n精査エラーではなく業務仕様上のチェック結果として警告メッセージを次画面に表示する場合、ActionでWebUtilのnotifyMessagesメソッドを使用してメッセージを設定し、`n:errors`タグで画面表示する。\n\n**クラス**: `WebUtil`, `MessageUtil`\n\n**Actionでのメッセージ設定**:\n\n```java\npublic HttpResponse doRW11AC0302(HttpRequest req, ExecutionContext ctx) {\n    Message message = MessageUtil.createMessage(MessageLevel.WARN, \"MSG00022\");\n    WebUtil.notifyMessages(ctx, message);\n    return new HttpResponse(\"/ss11AC/W11AC0302.jsp\");\n}\n```\n\n**JSPでのメッセージ出力**:\n\n```jsp\n<n:errors />\n```\n\n`n:errors`タグはMessageLevelに応じたCSSクラス名を出力する。デフォルトでは下記の対応でクラス名が出力される。\n\n| MessageLevel | CSSクラス名（デフォルト） |\n|---|---|\n| INFO | nablarch_info |\n| WARN | nablarch_warn |\n| ERROR | nablarch_error |\n\n```css\nli.nablarch_warn {\n    color: #0000FF;\n}\n```",
+    "s3": "**クラス**: `SystemRepository`\n\nコンポーネント設定ファイルに `<config-file>` タグで環境設定ファイルを読み込ませる:\n\n```xml\n<config-file file=\"application/system.config\" />\n```\n\n取得方法:\n\n```java\n// 文字列\nString messageId = SystemRepository.getString(\"notPermissionMessage\");\n\n// 真偽値\nboolean registerFlg = SystemRepository.getBoolean(\"registerUserPermission\");\n\n// その他の型（文字列取得後に変換）\nint effectiveDateTo = Integer.parseInt(SystemRepository.getString(\"userEffectiveDateTo\"));\n```\n\n> **警告**: キー値にユーザ入力値やDBから取得した値を使用しないこと。キー値が可変になると、設定値が取得できず障害が発生した場合の解析が非常に困難になる。キー値は常に固定値を使用すること。",
+    "s4": "**クラス**: `MessageUtil`, `MessageLevel`, `StringResource`\n\n`MessageUtil.createMessage(MessageLevel, messageId)` で `Message` を取得し、`formatMessage()` で ThreadContext の言語に合わせた文字列を取得する:\n\n```java\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0001\");\nString messageStr = message.formatMessage();\n```\n\nフォーマット引数付きメッセージ: 国際化が必要な場合はオプション引数に `StringResource` または `Message` を指定する。国際化を行わない場合はオプション引数に直接文字列を指定してもよい:\n\n```java\nStringResource nameResource = MessageUtil.getStringResource(\"PRP0002\");\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0002\", nameResource);\nString messageStr = message.formatMessage();\n```",
+    "s5": "**クラス**: `ApplicationException`\n\n業務エラー発生時は `ApplicationException`（またはサブクラス）にメッセージを指定してスローすることで、フレームワークの例外処理機構を使用してエラー内容を使用者に伝えられる:\n\n```java\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0001\");\nthrow new ApplicationException(message);\n```",
+    "s6": "Action内で実装した精査（DBアクセスを伴う精査など）でも、通常のバリデーション結果と同様に特定フィールド近くにエラーを表示したい場合は、`MessageUtil.createMessage` の代わりに `ValidationUtil.createMessageForProperty` を使用する。\n\n**クラス**: `ValidationUtil`\n\n```java\n// 第1引数: JSP の <n:error> タグの name 属性で指定した名称\n// 第2引数: メッセージID\nthrow new ApplicationException(ValidationUtil.createMessageForProperty(\n        \"W11AC02.systemAccount.loginId\", \"MSG00001\"));\n```\n\nJSP側では通常のバリデーション結果のエラー表示と同様に `<n:error>` タグを使用する:\n\n```jsp\n<n:error name=\"W11AC02.systemAccount.loginId\"/>\n```"
+  }
+}

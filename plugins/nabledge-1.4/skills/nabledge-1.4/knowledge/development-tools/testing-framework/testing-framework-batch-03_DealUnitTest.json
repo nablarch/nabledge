@@ -1,0 +1,40 @@
+{
+  "id": "testing-framework-batch-03_DealUnitTest",
+  "title": "取引単体テストの実施方法（バッチ）",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "テストケース分割方針と基本的な記述方法",
+      "hints": [
+        "BatchRequestTestSupport",
+        "nablarch.test.core.batch.BatchRequestTestSupport",
+        "nablarch.test.core.messaging.BatchRequestTestSupport",
+        "execute",
+        "取引単体テスト",
+        "テストケース分割",
+        "複数シート分割",
+        "LIST_MAP",
+        "requestPath",
+        "バッチリクエストテスト",
+        "testShots"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "非常に簡単なテストケースの場合",
+      "hints": [
+        "グループID",
+        "複数テストケース",
+        "1シート複数ケース",
+        "テストケース集約",
+        "tips_groupId",
+        "no列プレフィックス"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "テストクラス作成ルール: (1) テスト対象取引と同一パッケージ (2) クラス名は`{取引ID}Test` (3) `BatchRequestTestSupport`を継承。\n\nimport文: 基本的な1シートテストでは`nablarch.test.core.batch.BatchRequestTestSupport`を使用し、複数シート分割テストでは`nablarch.test.core.messaging.BatchRequestTestSupport`を使用する:\n\n```java\n// 基本的な記述方法（1シート）\nimport nablarch.test.core.batch.BatchRequestTestSupport;\n\n// 複数シート分割の場合\nimport nablarch.test.core.messaging.BatchRequestTestSupport;\n```\n\nテストケース分割方針: 基本は1シート=1テストケース。1シートに複数バッチ実行を記述することで取引単位テストとなる。\n\n## 基本的な記述方法\n\n引数なしの`execute()`でカレントシートの全バッチ行を実行する:\n\n```java\n@Test\npublic void testSuccess() {\n    execute();\n}\n```\n\ntestSuccessシートのLIST_MAP=testShotsに複数バッチを列挙:\n\n| no | description | expectedStatusCode | setUpTable | setUpFile | expectedTable | expectedFile | requestPath |\n|---|---|---|---|---|---|---|---|\n| 1 | ファイル入力 | 100 | default | default | default | | fileInputBatch |\n| 2 | ユーザ削除 | 100 | default | | default | | userDeleteBatch |\n| 3 | ファイル出力 | 100 | default | | fileInputBatch | default | fileOutputBatch |\n\n## 1テストケースを複数シートに分割する場合\n\nテストデータが大量または1取引に含まれる処理が多い場合は、1ケースを複数シートに分割して記述可能。`execute(\"シート名\")`で特定シートを指定して実行する:\n\n```java\n@Test\npublic void testSuccess() {\n    execute(\"testSuccess_fileInput\");\n    execute(\"testSuccess_userDelete\");\n    execute(\"testSuccess_fileOutput\");\n}\n```\n\n各シートに LIST_MAP=testShots を定義。使用可能な列: `no`, `description`/`case`, `expectedStatusCode`, `setUpTable`, `setUpFile`, `expectedTable`, `expectedFile`/`outFile`, `requestPath`",
+    "s2": "テストデータ量が少なく非常に簡単なテストケースの場合は、1シートに全テストケースをまとめて記述可能。\n\n`no`列のプレフィックスでケースをグループ化（例: `1-1`, `1-2`が1つ目のケース、`2-1`, `2-2`が2つ目のケース）:\n\n| no | description | expectedStatusCode | setUpTable | setUpFile | expectedTable | expectedFile | requestPath |\n|---|---|---|---|---|---|---|---|\n| 1-1 | ファイル入力 | 100 | shot1 | shot1 | | | fileInputBatch |\n| 1-2 | ユーザ削除 | 100 | | | shot1 | | userDeleteBatch |\n| 2-1 | ファイル入力（0件） | 100 | shot2 | shot2 | | | fileInputBatch |\n| 2-2 | ユーザ削除（0件） | 100 | | | shot2 | | userDeleteBatch |\n\n> **注意**: グループIDを利用することで1シートに複数ケースのテストデータを記述できる。詳細は:ref:`tips_groupId`を参照。"
+  }
+}

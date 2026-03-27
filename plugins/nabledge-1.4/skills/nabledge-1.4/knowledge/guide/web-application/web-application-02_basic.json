@@ -1,0 +1,116 @@
+{
+  "id": "web-application-02_basic",
+  "title": "画面初期表示",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "画面初期表示",
+        "画面遷移",
+        "ビジネスロジック実行",
+        "データベースアクセス",
+        "リンク・ボタン押下処理"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "本項で説明する内容",
+      "hints": [
+        "CM311AC1Component",
+        "W11AC01Action",
+        "W11AC0101.jsp",
+        "Component",
+        "Action",
+        "View",
+        "ステレオタイプ",
+        "作成内容"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "",
+      "hints": [
+        "CM311AC1Component",
+        "DbAccessSupport",
+        "SqlResultSet",
+        "getUserGroups",
+        "getSqlPStatement",
+        "retrieve",
+        "SELECT_ALL_UGROUPS",
+        "SqlPStatement",
+        "Component作成",
+        "DBアクセス"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Actionのメソッド名命名方法",
+      "hints": [
+        "Actionメソッド名",
+        "リクエストID",
+        "do＋リクエストID",
+        "HTTPメソッド名",
+        "URI対応",
+        "メソッド名命名規則"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "Actionの作成",
+      "hints": [
+        "W11AC01Action",
+        "HttpResponse",
+        "doRW11AC0101",
+        "HttpRequest",
+        "ExecutionContext",
+        "Action作成",
+        "ビジネスロジック呼び出し",
+        "setRequestScopedVar",
+        "servlet://",
+        "forward://",
+        "JSPパス",
+        "リクエストスコープ",
+        "CM311AC1Component"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "",
+      "hints": [
+        "W11AC0101.jsp",
+        "field:pulldown",
+        "カスタムタグ",
+        "JSP作成",
+        "タグファイル",
+        "ネームスペース",
+        "ugroupList",
+        "SqlResultSet",
+        "ugroupName",
+        "ugroupId"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "次に読むもの",
+      "hints": [
+        "データベースアクセス",
+        "HttpMethodBinding",
+        "カスタムタグ",
+        "国際化",
+        "JSP切り替え",
+        "DbAccessSpec"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "- 画面上のリンクやボタンを押下後、ビジネスロジックを実行して次の画面へ遷移するまでの処理\n- 基本的なデータベースアクセス処理",
+    "s2": "作成するソースコード:\n\n| 名称 | ステレオタイプ | 処理内容 |\n|---|---|---|\n| [CM311AC1Component.java](assets/web-application-02_basic/CM311AC1Component.java) | Component | ユーザ一覧照会画面の検索条件グループ欄ドロップダウンリスト用グループ一覧をDBから取得する。SQLファイル: [CM311AC1Component.sql](assets/web-application-02_basic/CM311AC1Component.sql) |\n| [W11AC01Action.java](assets/web-application-02_basic/W11AC01Action.java) | Action | ComponentのメソッドをCallし、結果をリクエストスコープに格納してJSPへ遷移させる |\n| [W11AC0101.jsp](assets/web-application-02_basic/W11AC0101.jsp) | View | ユーザ一覧照会画面を表示する |\n\nステレオタイプについては :ref:`stereoType` を参照。",
+    "s3": "**クラス**: `CM311AC1Component` extends `DbAccessSupport`\n\n追加メソッド: `SqlResultSet getUserGroups()`\n\n> **注意**: 複数の機能（複数のActionクラス）から共用するロジックはComponentで実装する。1つのActionクラスからしか呼ばれないロジックはそのActionクラスに実装すること。\n\n**SQL** (CM311AC1Component.sql):\n```sql\nSELECT_ALL_UGROUPS=\nSELECT\n    UGROUP_ID,\n    UGROUP_NAME\nFROM\n    UGROUP\nORDER BY\n    UGROUP_ID\n```\n\n**Java実装**:\n```java\nclass CM311AC1Component extends DbAccessSupport {\n    SqlResultSet getUserGroups() {\n        SqlPStatement statement = getSqlPStatement(\"SELECT_ALL_UGROUPS\");\n        return statement.retrieve();\n    }\n}\n```\n\n処理手順:\n1. `getSqlPStatement(\"SELECT_ALL_UGROUPS\")` でプリペアドステートメントを作成（`DbAccessSupport` のヘルパーメソッドを使用）\n2. `statement.retrieve()` で検索実行し結果を返す",
+    "s4": "Actionのメソッド名: `\"do\" + リクエストID`\n\n例: リクエストID `RW11AC0101` → メソッド名 `doRW11AC0101`\n\nURIとActionクラス/メソッドの対応:\n- URI: `http://サーバアドレス/action/△△△/・・・/×××/□□□`\n- `/△△△/・・・/×××/` 部分 → Actionのパッケージ名（ss11AA以降）＋Action名\n- `□□□` 部分 → リクエストID。実際に呼ばれるメソッドは `(HTTPメソッド名もしくは\"do\") + □□□`\n\n例:\n- URI: `http://localhost:8080/action/ss11AA/W11AA01Action/RW11AA0101`\n- クラス/メソッド: `nablarch.sample.ss11AC.W11AC01Action#doRW11AC0101`",
+    "s5": "`W11AC01Action` クラスを作成し、:ref:`actionClassMethodName` に従ってメソッドを追加する。\n\n追加するメソッド: `HttpResponse doRW11AC0101(HttpRequest req, ExecutionContext ctx)`\n\n処理手順:\n1. Componentのインスタンス化\n2. ビジネスロジックの呼び出し\n3. ビジネスロジックの戻り値をリクエストスコープに格納\n4. /ss11AC/W11AC0101.jspへ遷移\n\n**クラス**: `W11AC01Action`\n\n```java\npublic HttpResponse doRW11AC0101(HttpRequest req, ExecutionContext ctx) {\n    CM311AC1Component function = new CM311AC1Component();\n    SqlResultSet ugroupList = function.getUserGroups();\n    ctx.setRequestScopedVar(\"ugroupList\", ugroupList);\n    return new HttpResponse(\"/ss11AC/W11AC0101.jsp\");\n}\n```\n\n`ctx.setRequestScopedVar(キー名, オブジェクト)`: 第1引数のキー名でJSPからオブジェクトを取得できる。\n\n> **注意**: `HttpResponse` のパス指定方法:\n> - `servlet://JSPのパス` → JSPへ遷移（デフォルト。`servlet://` を省略してパスのみ記述も可）\n> - `forward://リクエストIDのパス` → 別リクエストIDを実行\n\nJSPファイルのパスは基本的にwebルートからの絶対パス。言語ごとにJSPを切り替える場合は言語フォルダからの絶対パスで記述する（例: `<webルート>/<言語>/ss11AC/W11AC0101.jsp`。`<言語>` にはユーザ選択言語が自動設定される）。\n\n> **注意**: 通常のプロジェクトではプロジェクトが決めた国際化の方針に従いJSPファイルを配置すること。",
+    "s6": "**ファイル**: `W11AC0101.jsp`\n\nJSPの動的部分はフレームワーク提供のカスタムタグライブラリおよびサンプルタグファイルを使用する:\n- カスタムタグライブラリのネームスペース: `n`\n- タグファイルのネームスペース: タグファイルの配置ディレクトリ名\n\n> **注意**: サンプルタグファイル（template, button, column, field, link, tab, table）はNablarch導入プロジェクトのアーキテクトの判断で変更される場合がある。導入プロジェクトではアーキテクトより提供されるガイドに従いJSPを作成すること。\n\nグループ一覧のドロップダウン表示には `field:pulldown` タグファイルを使用する。\n\n検索結果（ugroupList）からは `ugroupName` および `ugroupId` という名前で値を取得する（[DB/01_DbAccessSpec_Example](web-application-01_DbAccessSpec_Example.json) の [how_to_use_sql_result_set](web-application-01_DbAccessSpec_Example.json#s3) 参照）。",
+    "s7": "- [データベースアクセス処理の詳細](../../../fw/reference/02_FunctionDemandSpecifications/01_Core/04_DbAccessSpec.html)\n- [データベースアクセス処理の実例](./DB/01_DbAccessSpec_Example.html)\n- [Actionのメソッド名とURIの関係](../../../fw/reference/handler/HttpMethodBinding.html#http-dispatch)\n- [カスタムタグの使用方法](../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07_WebView.html)\n- [言語ごとのJSP/静的ファイル切り替え](../../../fw/reference/01_SystemConstitution/02_I18N.html)"
+  }
+}

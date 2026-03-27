@@ -1,0 +1,52 @@
+{
+  "id": "handlers-HttpCharacterEncodingHandler",
+  "title": "HTTP文字エンコード制御ハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "HttpCharacterEncodingHandler",
+        "nablarch.fw.web.handler.HttpCharacterEncodingHandler",
+        "HTTP文字エンコード制御",
+        "文字エンコーディング設定",
+        "HttpServletRequest",
+        "HttpServletResponse"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "HttpCharacterEncodingHandler",
+        "ハンドラ処理フロー",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "文字エンコーディング設定",
+        "HttpServletRequest",
+        "HttpServletResponse"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "defaultEncoding",
+        "resolveRequestEncoding",
+        "resolveResponseEncoding",
+        "CustomHttpCharacterEncodingHandler",
+        "文字エンコーディング設定",
+        "拡張ポイント",
+        "Windows-31J",
+        "文字化け防止"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.web.handler.HttpCharacterEncodingHandler`\n\n`HttpServletRequest` および `HttpServletResponse` に対して既定の文字エンコーディングを設定するハンドラ。",
+    "s2": "**[往路処理]**\n\n1. `HttpServletRequest` および `HttpServletResponse` に既定の文字エンコーディングを設定する\n2. 後続ハンドラに処理を委譲し結果を取得する\n\n**[復路処理]**\n\n3. 2. の結果をリターンして終了する\n\n**[例外処理]**\n\n2a. 後続ハンドラでエラーが発生した場合はそのまま再送出して終了する",
+    "s3": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| defaultEncoding | String | | UTF-8 | 既定の文字エンコーディング |\n\n**標準設定**:\n```xml\n<component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\" />\n```\n\n**任意設定の例**:\n```xml\n<component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\">\n  <property name=\"defaultEncoding\" value=\"Windows-31J\" />\n</component>\n```\n\n**拡張ポイント**\n\nリクエスト毎に動的に文字エンコーディングを変更する場合は本ハンドラを継承したハンドラを作成して代わりに設定する。\n\n| メソッド | 引数 | 戻り値 | 処理内容 |\n|---|---|---|---|\n| resolveRequestEncoding | HttpServletRequest | Charset | HTTPリクエストに設定する文字エンコードを返却する |\n| resolveResponseEncoding | HttpServletRequest | Charset | HTTPレスポンスに設定する文字エンコードを返却する |\n\n拡張ハンドラの実装例（URI毎に文字エンコーディングを変更）:\n\n```java\npublic class CustomHttpCharacterEncodingHandler extends HttpCharacterEncodingHandler {\n    @Override\n    protected Charset resolveRequestEncoding(HttpServletRequest req) {\n        return resolveCharacterEncoding(req);\n    }\n    @Override\n    protected Charset resolveResponseEncoding(HttpServletRequest req) {\n        return resolveCharacterEncoding(req);\n    }\n    private Charset resolveCharacterEncoding(HttpServletRequest req) {\n        if (req.getRequestURI().contains(\"/RW99ZZ06\")) {\n            return Charset.forName(\"Windows-31J\");\n        }\n        return getDefaultEncoding();\n    }\n}\n```\n\n```xml\n<component class=\"sample.handler.CustomHttpCharacterEncodingHandler\" />\n```\n\n> **警告**: `resolveRequestEncoding`、`resolveResponseEncoding` の引数として `HttpServletRequest` が渡されるが、文字エンコードを設定する前に `HttpServletRequest` からリクエストパラメータを取得してはならない。取得してしまった場合は文字エンコードの設定ができず文字化けの原因となる。"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "id": "handlers-HttpResponseHandler",
+  "title": "HTTPレスポンスハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "HttpResponseHandler",
+        "nablarch.fw.handler.HttpResponseHandler",
+        "nablarch.fw.web.handler.HttpResponseHandler",
+        "HTTPレスポンスハンドラ",
+        "HTTPレスポンスオブジェクト",
+        "レスポンス処理"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "概要",
+      "hints": [
+        "ResourceMapping",
+        "HttpMethodBinding",
+        "ハンドラキュー",
+        "関連するハンドラ",
+        "コンテンツパス",
+        "レスポンスボディ指定方法"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "",
+      "hints": [
+        "ステータスコード変換",
+        "404から200",
+        "X-Requested-With",
+        "XMLHttpRequest",
+        "AJAXリクエスト",
+        "300系リダイレクション",
+        "http_response_handler_response_code_conversion"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "forward://",
+        "redirect://",
+        "file://",
+        "classpath://",
+        "HTTPリダイレクション",
+        "サーブレットフォーワード",
+        "IOエラー",
+        "HttpResponse#write()"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "",
+      "hints": [
+        "言語切り替え",
+        "ResourcePathRule",
+        "DirectoryBasedResourcePathRule",
+        "FilenameBasedResourcePathRule",
+        "多言語対応",
+        "コンテンツパス切り替え",
+        "i18n",
+        "http_response_handler_i18n",
+        "ThreadContextHandler"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "contentPathRule",
+        "forceFlushAfterWritingHeaders",
+        "xFrameOptions",
+        "Chunkedエンコーディング",
+        "X-Frame-Options",
+        "クリックジャッキング対策",
+        "DirectoryBasedResourcePathRule",
+        "nablarch.fw.web.handler.HttpResponseHandler"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.HttpResponseHandler`\n\n後続ハンドラの処理結果であるHTTPレスポンスオブジェクトの内容に沿って、サーブレットフォーワードやサーバソケットへの出力などのレスポンス処理を行う。HTTPレスポンスオブジェクトは情報格納用クラスであり、実際のレスポンス処理はこのハンドラが実行する。",
+    "s2": "レスポンスボディの指定方法:\n1. HTTPレスポンスオブジェクトに直接設定（[../02_FunctionDemandSpecifications/02_Fw/01_Web/05_FileDownload](../libraries/libraries-05_FileDownload.json) 等で使用）\n2. [コンテンツパス](handlers-HttpMethodBinding.json#s4) 文字列で指定（通常業務機能で主に使用）\n\n**ハンドラキュー**: HttpResponseHandler → ResourceMapping → HttpMethodBinding\n\n**関連するハンドラ**\n\n| ハンドラ | 説明 |\n|---|---|\n| [ResourceMapping](handlers-ResourceMapping.json), [HttpMethodBinding](handlers-HttpMethodBinding.json) | 本ハンドラはこれらのハンドラの上位に配置する必要がある |",
+    "s3": "HTTPレスポンスハンドラは内部で404等のエラー用レスポンスが返された際に、200へステータスコードを変換する（ブラウザのレスポンスコードによる挙動差異を防ぐため）。\n\n以下の場合は例外的に内部のエラーコードをそのままステータスコードとする:\n- 300系リダイレクションレスポンスの場合\n- リクエストヘッダ `X-Requested-With` の値が `XMLHttpRequest` の場合（AJAXリクエスト）",
+    "s4": "**[往路処理]**\n1. 後続ハンドラへ処理委譲（往路では本ハンドラは処理を行わない）\n\n**[復路処理]**\n2. [コンテンツパス](handlers-HttpMethodBinding.json#s4) 文字列を取得\n3. **forward://** で開始: サーブレットフォーワードを実行。レスポンス出力はフォーワード先サーブレットが行う。完了後にHTTPレスポンスオブジェクトをリターン\n4. HTTPレスポンスヘッダーをクライアントに送信（ボディはChunkedエンコーディングで送信）\n5. **redirect://**、**http://**、**https://** で開始: Locationヘッダに設定しリダイレクト送信。**redirect://** かつ絶対パス指定の場合はサーブレットコンテキストルートのパスを補完\n6. **file://** で開始: ファイルシステム上のファイル内容をレスポンスボディとして送信\n7. **classpath://** で開始: コンテキストクラスローダからリソースを取得しレスポンスボディとして送信\n8. InputStreamが直接設定されている場合、または `HttpResponse#write()` でバッファリングされている場合: その内容をレスポンスボディとして送信\n9. 入出力ストリームをクローズ。HTTPレスポンスオブジェクト上にバッファリングされたレスポンス内容を削除\n10. HTTPレスポンスオブジェクトをリターン\n\n**[例外処理]**\n- 後続ハンドラ実行中の例外: 既定のエラー画面をレスポンスし例外を再送出（サーブレットフォーワード処理中の場合はログ出力のみ）\n- フォーワード先JSP/サーブレットでのエラー: システムエラー画面をクライアントに送信して終了\n- サーブレットフォーワード中のIOエラー: WARNレベルのログを出力しHTTPレスポンスオブジェクトをリターン\n- レスポンス処理・終端処理中のIOエラー: WARNレベルのログを出力して処理継続\n- レスポンス処理・終端処理中のその他の例外: システムエラー画面を送信し終端処理後に例外を再送出",
+    "s5": "HTTPリクエストから取得した言語設定に基づき、フォーワード先を動的に切り替える機能。`ResourcePathRule` 抽象クラスのサブクラスを使用。\n\n| クラス名 | 説明 |\n|---|---|\n| `ResourcePathRule` | 言語対応リソースパスのルール基底クラス。言語は :ref:`ThreadContextHandler` で設定されたスレッドコンテキストから取得。言語未取得時、対応ファイルが存在しない場合、または指定されたリソースパスに拡張子を含まない場合は指定パスをそのまま返す |\n| `DirectoryBasedResourcePathRule` | コンテキストルート直下のディレクトリを言語切り替えに使用（例: `/ja/management/user/search.jsp`） |\n| `FilenameBasedResourcePathRule` | ファイル名サフィックスを言語切り替えに使用（例: `search_ja.jsp`, `search_en.jsp`） |",
+    "s6": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| contentPathRule | ResourcePathRule | | DirectoryBasedResourcePathRule | 言語毎コンテンツパスの対応ルール |\n| forceFlushAfterWritingHeaders | boolean | | true | レスポンスをChunkedエンコーディングで送信するかどうか |\n| xFrameOptions | String | | SAMEORIGIN | レスポンスの\"X-Frame-Options\"の設定 |\n\nX-Frame-Optionsの設定値:\n- `DENY`: すべてのページにおいて表示を禁止\n- `SAMEORIGIN`: アドレスバーに表示されたドメインと同じページのみ表示を許可\n- `NONE`: すべてのページにおいて表示を許可（HTTPレスポンスヘッダに\"X-Frame-Options\"項目自体を設定しない）\n\n> **注意**: `xFrameOptions` に `NONE` を設定した場合は `SAMEORIGIN` や `DENY` とは異なり、HTTPレスポンスヘッダに\"X-Frame-Options\"項目自体を設定しない。\n\n**標準設定**:\n```xml\n<component class=\"nablarch.fw.web.handler.HttpResponseHandler\" />\n```\n\n**言語毎のコンテンツパス切り替え設定**:\n```xml\n<component name=\"resourcePathRule\" class=\"nablarch.fw.web.i18n.DirectoryBasedResourcePathRule\" />\n<component class=\"nablarch.fw.web.handler.HttpResponseHandler\">\n  <property name=\"contentPathRule\" ref=\"resourcePathRule\" />\n</component>\n```\n\nスレッドコンテキストの言語とコンテンツパスの例:\n```bash\n# HttpResponseオブジェクトに設定されたコンテンツパス\nservlet:///management/user/search.jsp\n\n# スレッドコンテキストの言語 -> 使用されるコンテンツパス\nja -> /ja/management/user/search.jsp\nen -> /en/management/user/search.jsp\nit -> /management/user/search.jsp\n```\n\n**ChunkedエンコーディングなしのHTTPレスポンス送信設定** (HTTP1.1未対応の通信先の場合):\n```xml\n<component class=\"nablarch.fw.web.handler.HttpResponseHandler\">\n  <property name=\"forceFlushAfterWritingHeaders\" value=\"false\" />\n</component>\n```\n\n> **警告**: 上記設定でChunkedエンコーディングなしに設定した場合でも、APサーバの設定によってChunkedエンコーディングで送信されることがある。その場合はAPサーバの設定を確認・変更すること。\n\n**クリックジャッキング攻撃対策設定** (デフォルト: SAMEORIGIN):\n```xml\n<component class=\"nablarch.fw.web.handler.HttpResponseHandler\">\n  <property name=\"xFrameOptions\" value=\"DENY\" />\n</component>\n```"
+  }
+}

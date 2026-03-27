@@ -1,0 +1,144 @@
+{
+  "id": "biz-samples-02_ExtendedValidation",
+  "title": "バリデーション機能の拡張",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "メールアドレスバリデーション",
+        "日本電話番号バリデーション",
+        "コード値精査",
+        "バリデーション機能拡張",
+        "biz-samples"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "提供パッケージ",
+      "hints": [
+        "please.change.me.core.validation.validator",
+        "バリデーション提供パッケージ"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "",
+      "hints": [
+        "MailAddressValidator",
+        "@MailAddress",
+        "messageId",
+        "VariousValidationUtil",
+        "isValidMailAddress",
+        "メールアドレスバリデーション設定"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "メールアドレスバリデーション",
+      "hints": [
+        "メールアドレス精査仕様",
+        "ローカル部",
+        "ドメイン部",
+        "JavaMail",
+        "メールアドレス有効文字",
+        "64文字",
+        "255文字"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "",
+      "hints": [
+        "日本電話番号バリデーション",
+        "JapaneseTelNumberValidator",
+        "VariousValidationUtil",
+        "isValidJapaneseTelNum",
+        "電話番号入力パターン"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "日本電話番号バリデーション",
+      "hints": [
+        "JapaneseTelNumberValidator",
+        "@JapaneseTelNumber",
+        "messageId",
+        "単項目電話番号精査"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "精査仕様",
+      "hints": [
+        "単項目電話番号精査仕様",
+        "市外局番",
+        "市内局番",
+        "加入者番号",
+        "電話番号桁数パターン",
+        "JapaneseTelNumber"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "精査仕様",
+      "hints": [
+        "VariousValidationUtil",
+        "isValidJapaneseTelNum",
+        "複数項目電話番号精査",
+        "市外局番",
+        "加入者番号",
+        "null空文字警告"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "実装例",
+      "hints": [
+        "電話番号バリデーション実装例",
+        "ValidationUtil",
+        "isValidJapaneseTelNum",
+        "項目間精査",
+        "validateForRegisterCompany"
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "",
+      "hints": [
+        "CodeValidationUtil",
+        "コード値精査",
+        "パターン指定",
+        "validate",
+        "codeId",
+        "pattern"
+      ]
+    },
+    {
+      "id": "s11",
+      "title": "コード値精査",
+      "hints": [
+        "CodeValidationUtil",
+        "コード値精査使用例",
+        "validate",
+        "codeId",
+        "pattern",
+        "messageId上書き"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "バリデーション機能の拡張サンプルが提供する機能: メールアドレスバリデーション、日本電話番号バリデーション、コード値精査。",
+    "s2": "**パッケージ**: `please.change.me.core.validation.validator`",
+    "s3": "**クラス**: `MailAddressValidator`\n**アノテーション**: `@MailAddress`\n\n| プロパティ名 | 設定内容 |\n|---|---|\n| messageId (必須) | 精査エラー時のメッセージID (例: `{0}は有効なメールアドレスではありません。`) |\n\n> **注意**: ローカル部とドメイン部が分かれている場合など、アノテーション精査が利用できない場合は `VariousValidationUtil.isValidMailAddress(value)` を使用する。有効なメールアドレスの場合trueを返す。",
+    "s4": "メールアドレス構成: `\"ローカル部\" @ \"ドメイン部\"`\n\n**全体精査仕様**:\n- 必須精査なし\n- 使用可能文字: アルファベット大小 (A-Z, a-z)、数字 (0-9)、記号 `! # $ % & \\ * + - . / = ? @ ^ _ { | } ~` およびバッククォート\n- `@` が1つのみ存在すること\n- JavaMailの形式チェックでエラーとならないこと\n\n> **注意**: 無効なASCII文字 (使用不可): `\" ( ) , : ; < > [ \\ ]` およびスペース。RFC 5322のquoted-string記法は本機能では無効とする。\n\n**ローカル部精査仕様**:\n- 先頭が `@` ではないこと（ローカル部が存在すること）\n- 64文字以下\n\n**ドメイン部精査仕様**:\n- 末尾が `@` ではないこと（ドメイン部が存在すること）\n- 255文字以下\n- 末尾が `.` ではないこと\n- `.` が1つ以上存在すること\n- 先頭が `.` ではないこと\n- `.` が連続していないこと\n\n> **注意**: メールアドレスの全桁数チェックはプロジェクト毎に決めること（本機能では精査しない）。",
+    "s5": "日本の電話番号入力パターン:\n1. 電話番号を一つの文字列として入力 → 単項目精査 (`JapaneseTelNumberValidator` / `@JapaneseTelNumber`)\n2. 市外局番・市内局番・加入者番号を別々の入力項目として入力 → `VariousValidationUtil.isValidJapaneseTelNum()`",
+    "s6": "**クラス**: `JapaneseTelNumberValidator`\n**アノテーション**: `@JapaneseTelNumber`\n\n| プロパティ名 | 設定内容 |\n|---|---|\n| messageId (必須) | 精査エラー時のメッセージID (例: `{0}は有効な電話番号ではありません。`) |",
+    "s7": "**単項目電話番号精査仕様**:\n- 必須精査なし\n- 先頭が「0」であること\n- ハイフンと数字のみで構成されていること\n- 桁数パターンが下記のいずれかであること\n\n| 市外局番桁数 - 市内局番桁数 - 加入者番号桁数 | 例 |\n|---|---|\n| 3桁 - 3桁 - 4桁 | 012-345-6789 |\n| 3桁 - 4桁 - 4桁 | 012-3456-7890 |\n| 4桁 - 2桁 - 4桁 | 0123-45-6789 |\n| 5桁 - 1桁 - 4桁 | 01234-5-6789 |\n| 2桁 - 4桁 - 4桁 | 01-2345-6789 |\n| 11桁 | 01234567890 |\n| 10桁 | 0123456789 |",
+    "s8": "**クラス**: `VariousValidationUtil`\n**メソッド**: `boolean isValidJapaneseTelNum(areaCode, cityCode, subscriberNumber)`\n- `areaCode`: 市外局番\n- `cityCode`: 市内局番\n- `subscriberNumber`: 加入者番号\n- 戻り値: 有効な日本の電話番号の場合true\n\n> **警告**: 全引数がnullまたは空文字列の場合、trueを返す。3項目すべての入力が必須の場合は、呼び出し元で必須精査を行うこと。\n\n**複数項目電話番号精査仕様**:\n- 全項目入力チェックは行わない\n- 先頭が「0」であること\n- ハイフンと数字のみで構成されていること\n- 桁数パターンが下記のいずれかであること\n\n| 市外局番桁数 - 市内局番桁数 - 加入者番号桁数 | 例 |\n|---|---|\n| 3桁 - 3桁 - 4桁 | 012-345-6789 |\n| 3桁 - 4桁 - 4桁 | 012-3456-7890 |\n| 4桁 - 2桁 - 4桁 | 0123-45-6789 |\n| 5桁 - 1桁 - 4桁 | 01234-5-6789 |\n| 2桁 - 4桁 - 4桁 | 01-2345-6789 |",
+    "s9": "```java\n@ValidateFor(\"registerCompany\")\npublic static void validateForRegisterCompany(\n                      ValidationContext<CompanyEntity> context) {\n    // 単項目精査\n    ValidationUtil.validateWithout(context, REGISTER_COMPANY_SKIP_PROPS);\n    if (!context.isValid()) {\n        return;\n    }\n    // 項目間精査\n    CompanyEntity companyEntity = context.createObject();\n    // 全項目入力チェック（必要な場合のみ）\n    if (StringUtil.isNullOrEmpty(companyEntity.getAreaCode,\n                                 companyEntity.getCityCode,\n                                 companyEntity.getSubscriberNumber)) {\n        // コンテキストにメッセージ追加\n    }\n    // 電話番号精査\n    if (!VariousValidationUtil.isValidJapaneseTelNum(\n                                 companyEntity.getAreaCode,\n                                 companyEntity.getCityCode,\n                                 companyEntity.getSubscriberNumber)) {\n        // コンテキストにメッセージ追加\n    }\n```",
+    "s10": "複数の機能から異なるパターンを指定してコード値精査を行うためのユーティリティ `CodeValidationUtil` を提供する。\n\n**クラス**: `CodeValidationUtil`\n\n提供メソッド:\n\n`void validate(context, codeId, pattern, propertyName)`\n- `context`: 精査コンテキスト\n- `codeId`: コードID\n- `pattern`: パターン\n- `propertyName`: 精査対象のプロパティ\n\n`void validate(context, codeId, pattern, propertyName, messageId)`\n- `messageId`: デフォルトのメッセージIDを上書きする場合に指定",
+    "s11": "```java\n// CodeValidationUtil#validateでコード値精査\nCodeValidationUtil.validate(context, \"0001\", \"PATTERN1\", \"gender\");\n\n// メッセージIDを上書きする場合、第5引数に指定\nCodeValidationUtil.validate(context, \"0001\", \"PATTERN1\", \"gender\", \"message_id\");\n```"
+  }
+}

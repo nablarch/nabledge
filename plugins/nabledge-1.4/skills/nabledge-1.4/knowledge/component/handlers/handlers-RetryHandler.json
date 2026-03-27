@@ -1,0 +1,63 @@
+{
+  "id": "handlers-RetryHandler",
+  "title": "リトライ制御ハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "RetryHandler",
+        "nablarch.fw.handler.RetryHandler",
+        "Retryable",
+        "RetryContext",
+        "CountingRetryContext",
+        "TimeRetryContext",
+        "ProcessResidentHandler",
+        "DbConnectionManagementHandler",
+        "MessagingContextHandler",
+        "リトライ制御",
+        "デッドロック",
+        "自動リトライ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "RetryContext",
+        "Retryable",
+        "ProcessAbnormalEnd",
+        "destroyReader",
+        "リトライ処理フロー",
+        "ハンドラキュースナップショット",
+        "リトライ上限",
+        "データリーダ破棄"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "retryContextFactory",
+        "retryLimitExceededFailureCode",
+        "retryLimitExceededExitCode",
+        "destroyReader",
+        "CountingRetryContextFactory",
+        "nablarch.fw.handler.retry.CountingRetryContextFactory",
+        "TimeRetryContextFactory",
+        "nablarch.fw.handler.retry.TimeRetryContextFactory",
+        "retryIntervals",
+        "retryCount",
+        "retryTime",
+        "maxRetryTime",
+        "リトライ設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.RetryHandler`\n\nデッドロックのような単純リトライでリカバリ可能なエラーについて、自動リトライ制御を行うハンドラ。`Retryable` インターフェースを実装した実行時例外をリトライ可能なエラーとみなし、後続ハンドラの再実行を行う。リトライ上限判定は `RetryContext` インターフェースの実装クラスとして外部化されている。\n\nデフォルト実装:\n- `CountingRetryContext`: リトライ回数に対する上限を設定\n- `TimeRetryContext`: 初回実行時からの経過時間に対する上限を設定\n\n## 関連ハンドラ\n\n| ハンドラ | 内容 |\n|---|---|\n| [ProcessResidentHandler](handlers-ProcessResidentHandler.json) | 後続ハンドラから例外が送出された場合、リトライ可能例外にラップして再送出し、[RetryHandler](handlers-RetryHandler.json) 側でプロセス継続/中止の判断を行う |\n| [DbConnectionManagementHandler](handlers-DbConnectionManagementHandler.json), [MessagingContextHandler](handlers-MessagingContextHandler.json) | DBやメッセージングキューへの接続エラー発生時にリトライ可能例外を送出する。これらのハンドラを [RetryHandler](handlers-RetryHandler.json) の後続に配置しないと再接続が行われない |",
+    "s2": "**[往路処理]**\n\n1. ハンドラキューのスナップショット（シャローコピー）を保存し、`RetryContext` のインスタンスを生成する\n2. 後続ハンドラに処理を委譲し、結果を取得する\n\n**[復路処理]**\n\n3. 正常終了: 結果をリターンして終了する\n\n**[例外処理]**\n\n**2a. リトライ処理**: `Retryable` を実装する実行時例外を捕捉し、リトライ上限未達の場合:\n1. ワーニングレベルのログを出力する\n2. （初回のみ）リトライ処理開始時刻を設定する\n3. リトライ回数を1増加させる\n4. リトライ間隔 (msec) 待機する\n5. ハンドラキューの内容をスナップショットに戻す\n6. `destroyReader` が `true` の場合、実行コンテキスト上のデータリーダを破棄する\n7. 後続ハンドラの処理を再実行する（2. に戻る）\n\n> **注意**: データベースを入力とするデータリーダを使用している場合、リトライ時のデータベース再接続によりデータリーダが使用しているデータベース接続が使用不可となる。このため、`destroyReader=true` を設定してリトライ時に使用不可となったデータリーダを破棄し、新しいデータベース接続でデータリーダを再生成させること（再生成は後続ハンドラが行う）。\n\n**2b. リトライ上限到達**: `Retryable` を実装する実行時例外を捕捉し、リトライ上限に達していた場合、ワーニングログを出力し `ProcessAbnormalEnd` を送出してプロセスを強制停止する。\n\n**2c. リトライ対象外例外の捕捉**: `Retryable` を実装していない実行時例外を捕捉した場合、そのまま再送出して終了する。",
+    "s3": "## RetryHandler 設定項目\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| retryContextFactory | RetryContextFactor | ○ | | リトライコンテキスト生成 |\n| retryLimitExceededFailureCode | TransactionFactory | | | リトライ上限エラー時障害コード |\n| retryLimitExceededExitCode | int | | 180 | リトライ上限エラー時終了コード |\n| destroyReader | boolean | | false | trueの場合、リトライ時に実行コンテキスト上のデータリーダを破棄する |\n\n## CountingRetryContextFactory 設定項目\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| retryIntervals | long | | 0 | リトライ間隔 (msec) |\n| retryCount | int | | 0 | リトライ上限回数 |\n\nCountingRetryContextFactory使用例:\n\n```xml\n<component name=\"retryHandler\" class=\"nablarch.fw.handler.RetryHandler\">\n  <property name=\"retryContextFactory\">\n    <component class=\"nablarch.fw.handler.retry.CountingRetryContextFactory\">\n      <property name=\"retryCount\" value=\"3\" />\n      <property name=\"retryIntervals\" value=\"5000\" />\n    </component>\n  </property>\n</component>\n```\n\n## TimeRetryContextFactory 設定項目\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| retryIntervals | long | | 0 | リトライ間隔 (msec) |\n| retryTime | long | | 0 | リトライ上限時間 (msec) |\n| maxRetryTime | long | | 900000 | 最長リトライ時間 (msec)。ハンドラ構成によっては、処理が正常終了し続ける間、リトライ制御を行う側まで制御が戻ってこないケースが存在する。このような場合に、リトライが成功したか否かをリトライ制御を行う側が判断するために設けられている。リトライ経過時間がこの値を超えている場合はリトライ成功と判断する |\n\nTimeRetryContextFactory使用例:\n\n```xml\n<component name=\"retryHandler\" class=\"nablarch.fw.handler.RetryHandler\">\n  <property name=\"retryContextFactory\">\n    <component class=\"nablarch.fw.handler.retry.TimeRetryContextFactory\">\n      <property name=\"maxRetryTime\" value=\"35000\" />\n      <property name=\"retryTime\" value=\"30000\" />\n      <property name=\"retryIntervals\" value=\"5000\" />\n    </component>\n  </property>\n</component>\n```"
+  }
+}

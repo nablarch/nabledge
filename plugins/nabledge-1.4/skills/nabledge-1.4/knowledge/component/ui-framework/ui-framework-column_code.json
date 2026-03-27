@@ -1,0 +1,70 @@
+{
+  "id": "ui-framework-column_code",
+  "title": "コード値ラベル表示用カラムウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "column:code",
+        "table:search_result",
+        "column:checkbox",
+        "コードサンプル",
+        "JSPウィジェット",
+        "コード値表示",
+        "codeId",
+        "key"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "key",
+        "title",
+        "cssClass",
+        "sortable",
+        "sample",
+        "samplePattern",
+        "codeId",
+        "pattern",
+        "optionColumnName",
+        "labelPattern",
+        "listFormat",
+        "width",
+        "additional",
+        "colspan",
+        "rowspan",
+        "dataFrom",
+        "comment",
+        "initialValueDesc",
+        "コード値ラベル",
+        "属性値一覧",
+        "ローカル動作",
+        "$NAME$",
+        "$SHORTNAME$",
+        "$OPTIONALNAME$",
+        "$VALUE$"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "column/code.tag",
+        "nablarch.js",
+        "nablarch.less",
+        "base.less",
+        "タグファイル",
+        "部品構成"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**設計成果物（ローカル動作）**\n\n```jsp\n<table:search_result\n  title         = \"検索結果\"\n  sampleResults = \"15\">\n\n  <column:checkbox\n    title = \"選択\">\n  </column:checkbox>\n\n  <column:code\n    title=\"性別\">\n  </column:code>\n\n</table:search_result>\n```\n\n**実装成果物（サーバ動作）**\n\n```jsp\n<table:search_result\n  title               = \"検索結果\"\n  searchUri           = \"/action/ss11AC/W11AC01Action/RW11AC0102\"\n  listSearchInfoName  = \"11AC_W11AC01\"\n  resultSetName       = \"searchResult\"\n  sampleResults       = \"15\">\n\n  <column:checkbox\n    title    = \"選択\"\n    key      = \"userId\"\n    name     = \"W11AC05.systemAccountEntityArray[${count-1}].userId\"\n    offValue = \"0000000000\">\n  </column:checkbox>\n\n  <column:code\n    title  = \"性別\"\n    key    = \"gender\"\n    codeId = \"code1\">\n  </column:code>\n\n</table:search_result>\n```",
+    "s2": "**ローカル動作時の挙動**\n\n- `sample` 属性の `\"|\"` 区切り文字列を順に表示（`sampleResults` の件数が多い場合はループ）\n- `codeId` 属性指定時は `/js/devtool/resource/コード値定義.js` からコード名称を取得。`pattern` 属性によるパターン指定や `optionColumnName` 属性によるオプション名称指定も利用可能\n- `codeId` と `sample` を両方指定した場合は `sample` の値を優先\n\n**属性値一覧** [◎ 必須属性 ○ 任意属性 × 無効]\n\n| 属性名 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| key | 行データからコード値を取得するキー | 文字列 | ◎ | × | |\n| title | カラムヘッダーに表示する文字列 | 文字列 | ◎ | ◎ | |\n| cssClass | 各カラムに指定するCSSクラス | 文字列 | ○ | ○ | |\n| sortable | カラムのソートリンクを表示するかどうか | 文字列 | ○ | ○ | デフォルト`'false'`。[table_search_result](ui-framework-table_search_result.json) でのみ利用可能 |\n| sample | テスト用のダミー表示値 | 文字列 | × | ○ | `\"|\"` 区切りで複数指定 |\n| samplePattern | 一行あたりに出力するコード値の件数のパターン | 文字列 | × | ○ | `\",\"` 区切りで指定 |\n| codeId | コード定義ID | 文字列 | ◎ | ○ | |\n| pattern | 使用するコードパターンのカラム名 | 文字列 | ○ | ○ | デフォルト`'PATTERN01'` |\n| optionColumnName | 取得するオプション名称のカラム名 | 文字列 | ○ | ○ | デフォルト`'OPTION01'` |\n| labelPattern | ラベル表示書式 | 文字列 | ○ | ○ | プレースホルダ: `$NAME$`(コード名称)、`$SHORTNAME$`(略称)、`$OPTIONALNAME$`(オプション名称)、`$VALUE$`(コード値)。デフォルト`\"$NAME$\"`。`$OPTIONALNAME$` 使用時は `optionColumnName` の指定が必須 |\n| listFormat | リスト表示時のフォーマット | 文字列 | ○ | ○ | デフォルト`'sp'` |\n| width | カラムの横幅 | 文字列 | ○ | ○ | |\n| additional | 付加情報として扱うかどうか | 真偽値 | ○ | ○ | `true` の場合、narrow表示モードで別形式表示。デフォルト`false`。**autospan/rowspan属性を使用しているテーブルでは使用不可** |\n| colspan | 横方向に結合するカラム数 | 数値 | ○ | ○ | 使用方法は [table_row](ui-framework-table_row.json) を参照 |\n| rowspan | 縦方向に結合するカラム数 | 数値 | ○ | ○ | 使用方法は [table_row](ui-framework-table_row.json) を参照 |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 設計書用（画面項目定義の「表示情報取得元」.「表示項目名」形式） |\n| comment | コード値表示についての備考 | 文字列 | × | × | 設計書用（画面項目定義の「備考」に表示） |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書用（画面項目定義の「備考」に表示） |\n\n![additional属性のnarrow表示モード例](assets/ui-framework-column_code/additional_column.png)\n\n> **警告**: autospan/rowspan属性を使用しているテーブルでは `additional` 属性を使用することはできない。",
+    "s3": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/column/code.tag | [column_code](ui-framework-column_code.json) |\n| /WEB-INF/tags/listSearchResult/*.tag | Nablarch検索結果テーブルタグファイル |\n| /js/jsp/taglib/nablarch.js | `<n:code>` のエミュレーション機能を実装するタグライブラリスタブJS |\n| /css/style/nablarch.less | Nablarch関連スタイル定義（テーブルの配色など） |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義（リンクに関する定義を含む） |"
+  }
+}

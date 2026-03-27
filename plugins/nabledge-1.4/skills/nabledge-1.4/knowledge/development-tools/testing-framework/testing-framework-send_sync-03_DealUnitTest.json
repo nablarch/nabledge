@@ -1,0 +1,65 @@
+{
+  "id": "testing-framework-send_sync-03_DealUnitTest",
+  "title": "同期応答メッセージ送信処理を伴う取引単体テストの実施方法",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "同期応答メッセージ送信処理を伴う取引単体テストの概要",
+      "hints": [
+        "MockMessagingProvider",
+        "モックアップクラス",
+        "同期応答メッセージ送信",
+        "取引単体テスト",
+        "応答電文返却",
+        "要求電文ログ出力",
+        "障害系テスト"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モックアップクラスを使用した取引単体テストの実施方法",
+      "hints": [
+        "EXPECTED_REQUEST_HEADER_MESSAGES",
+        "EXPECTED_REQUEST_BODY_MESSAGES",
+        "RESPONSE_HEADER_MESSAGES",
+        "RESPONSE_BODY_MESSAGES",
+        "file.path.send.sync.test.data",
+        "MessagingException",
+        "errorMode:timeout",
+        "errorMode:msgException",
+        "Excelファイル設定",
+        "障害系テスト",
+        "応答電文フォーマット",
+        "ログ出力設定",
+        "Excelファイル再読み込み",
+        "FileLogWriter",
+        "BasicLogFormatter",
+        "nablarch.core.log.basic.FileLogWriter",
+        "nablarch.core.log.basic.BasicLogFormatter",
+        "sendSync",
+        "log.properties"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "フレームワークで使用するクラスの設定",
+      "hints": [
+        "MockMessagingProvider",
+        "nablarch.test.core.messaging.MockMessagingProvider",
+        "FilePathSetting",
+        "nablarch.core.util.FilePathSetting",
+        "nablarch-tfw.jar",
+        "Apache POI",
+        "sendSyncTestData",
+        "コンポーネント設定",
+        "ライブラリ設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "同期応答メッセージ送信処理を伴う画面オンライン処理の取引単体テストには、Nablarchのモックアップクラスを使用する。モックアップクラスを使用することで、キューのミドルウェアインストールや環境設定なしに取引単体テストが実施できる。\n\nモックアップクラスが提供する機能:\n1. **任意の応答電文を返却**: 送信キュー・受信キューへの接続なしで、テスト用の応答電文を返却する。\n2. **要求電文をログ出力**: 要求電文をMap形式（デバッグ用）・CSV形式（エビデンス用）でログ出力する。\n3. **障害系テスト**: タイムアウトエラーやメッセージ送受信エラーを発生させることができる。",
+    "s2": "応答電文のフォーマットおよびデータをExcelファイルに定義する。要求電文はフォーマットのみ定義する。\n\n- ExcelファイルはリクエストIDごとに用意し、ファイル名をリクエストIDに一致させる（例: リクエストID `RM21AA0101` → ファイル名 `RM21AA0101.xls`）\n- ここでのリクエストIDは、メッセージ送信先システムの機能を一意に識別するID。画面オンライン処理やバッチ処理のリクエストIDとは意味が異なる\n- シート名は `message` 固定\n- Excelファイルの配置ディレクトリは設定ファイルに定義する（[send_sync_test_data_path](#s2) 参照）\n\n**電文フォーマットの識別子**:\n- 要求電文ヘッダ: `EXPECTED_REQUEST_HEADER_MESSAGES=リクエストID`\n- 要求電文本文: `EXPECTED_REQUEST_BODY_MESSAGES=リクエストID`\n- 応答電文ヘッダ: `RESPONSE_HEADER_MESSAGES=リクエストID`\n- 応答電文本文: `RESPONSE_BODY_MESSAGES=リクエストID`\n\n| 項目 | 説明 |\n|---|---|\n| 識別子 | 電文種別ID。テストケース一覧のexpectedMessage/responseMessageのグループIDと紐付く |\n| ディレクティブ行 | ディレクティブ名のセル右に設定値を記載（複数行可） |\n| no | ディレクティブ行の下に必ず記載 |\n| フィールド名称 | フィールドの数だけ記載 |\n| データ型 | フィールドの数だけ記載 |\n| フィールド長 | フィールドの数だけ記載。`-` を指定した場合はデータから自動計算 |\n| データ | 応答電文の場合のみ記載。複数件の場合は次行に続けて記載 |\n\n> **注意**: フィールド名称・データ型・フィールド長は外部インタフェース設計書からコピー&ペースト可能（貼り付け時に「行列を入れ替える」オプションを使用）\n\n**Excelファイルの再読み込み**: タイムスタンプが更新された場合（ファイル編集・上書き）、サーバ起動中でもファイルを再読み込みする。応答電文を返却するたびにnoがインクリメントされ、サーバ起動中はnoの値が初期化されない。\n\n**障害系テスト**: 応答電文の本文の最初のフィールドに以下の値を設定する:\n\n| 設定値 | 障害内容 | 動作 |\n|---|---|---|\n| `errorMode:timeout` | タイムアウトエラー | `sendSync`メソッドの戻り値として`null`を返却 |\n| `errorMode:msgException` | メッセージ送受信エラー | `MessagingException`をスロー |\n\n**Excelファイルの配置場所の設定**: `filepath.config` に `file.path.send.sync.test.data` プロパティでパスを設定する:\n\n```bash\nfile.path.send.sync.test.data=file:///C:/nablarch/workspace/Nablarch_sample/test/message\n```\n\n> **注意**: 配置ディレクトリのパスはクラスパス（`classpath:`）ではなくファイルシステムのパス（`file:`）で指定すること。`file:` を指定することでサーバ起動中に直接Excelファイルを編集してテストできる。\n\n**要求電文のログ出力**: Map形式（デバッグ用、標準出力・アプリログ）とCSV形式（エビデンス用、専用ログファイル）でログ出力される。\n\nログ出力例（Map形式）:\n\n```\n2011-10-26 13:16:10.958 MESSAGING_SEND_MAP request id=[RM11AD0101]. following message has been sent:\n  message fw header = {requestId=RM11AD0101, testCount=, resendFlag=0, reserved=}\n  message body      = {authors=test3, title=test1, publisher=test2}\n```\n\nログ出力例（CSV形式）:\n\n```\n2011-10-26 13:16:10.958 MESSAGING_SEND_CSV request id=[RM11AD0102]. following message has been sent:\nheader:\n\"requestId\",\"testCount\",\"resendFlag\",\"reserved\"\n\"RM11AD0102\",\"\",\"0\",\"\"\nbody:\n\"authors\",\"title\",\"publisher\"\n\"test3\",\"test1\",\"test2\"\n```\n\nログの出力設定は `log.properties` で行う:\n\n```bash\nwriter.MESSAGING_CSV.className=nablarch.core.log.basic.FileLogWriter\nwriter.MESSAGING_CSV.filePath=./messaging-evidence.log\nwriter.MESSAGING_CSV.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.MESSAGING_CSV.formatter.format=$message$\n\nloggers.MESSAGING_CSV.nameRegex=MESSAGING_CSV\nloggers.MESSAGING_CSV.level=DEBUG\nloggers.MESSAGING_CSV.writerNames=MESSAGING_CSV\n\nloggers.MESSAGING_MAP.nameRegex=MESSAGING_MAP\nloggers.MESSAGING_MAP.level=DEBUG\nloggers.MESSAGING_MAP.writerNames=stdout,appFile\n```",
+    "s3": "> **補足**: これらの設定は通常アーキテクトが行うものであり、アプリケーションプログラマが設定する必要はない。\n\n**モックアップクラスの設定** (`nablarch.test.core.messaging.MockMessagingProvider`):\n\n```xml\n<component name=\"messagingProvider\"\n           class=\"nablarch.test.core.messaging.MockMessagingProvider\">\n</component>\n```\n\n**Excelファイルの配置場所のプロパティファイルパス設定**:\n\n```xml\n<config-file file=\"web/filepath.config\" />\n\n<component name=\"filePathSetting\"\n         class=\"nablarch.core.util.FilePathSetting\" autowireType=\"None\">\n   <property name=\"basePathSettings\">\n     <map>\n       <entry key=\"sendSyncTestData\" value=\"${file.path.send.sync.test.data}\" />\n       <entry key=\"format\" value=\"classpath:web/format\" />\n     </map>\n   </property>\n   <property name=\"fileExtensions\">\n     <map>\n       <entry key=\"sendSyncTestData\" value=\"xls\" />\n       <entry key=\"format\" value=\"fmt\" />\n     </map>\n   </property>\n</property>\n```\n\n**必要なライブラリ**: 以下のjarをアプリケーションサーバのクラスパスに通す（単体テスト以外では使用しないため`WEB-INF/lib`ではなく別の場所に配置すること）:\n- `nablarch-tfw.jar`\n- Apache POIのjar"
+  }
+}

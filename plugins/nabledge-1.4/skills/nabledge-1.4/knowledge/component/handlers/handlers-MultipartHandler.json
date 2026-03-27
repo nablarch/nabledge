@@ -1,0 +1,87 @@
+{
+  "id": "handlers-MultipartHandler",
+  "title": "マルチパートリクエストハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "MultipartHandler",
+        "nablarch.fw.web.upload.MultipartHandler",
+        "マルチパートリクエストハンドラ",
+        "ファイルアップロード"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "概要",
+      "hints": [
+        "マルチパートリクエスト解析",
+        "ファイルアップロード",
+        "一時ファイル保存",
+        "MultipartHandler",
+        "マルチパートハンドラ概要"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "",
+      "hints": [
+        "HttpErrorHandler",
+        "NablarchTagHandler",
+        "ハンドラ配置順序",
+        "リクエストボディ読み込み",
+        "MultipartHandler後続配置",
+        "HttpAccessLogHandler",
+        "ThreadContextHandler"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "ハンドラ処理フロー",
+        "uploadFileTmpDir",
+        "java.io.tmpdir",
+        "HttpRequest.getPart",
+        "HttpRequest.getParam",
+        "往路処理",
+        "復路処理"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "",
+      "hints": [
+        "Result.BadRequest",
+        "アップロード上限超過",
+        "マルチパート形式エラー",
+        "例外処理",
+        "ステータスコード400",
+        "ステータスコード413"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "UploadSettings",
+        "contentLengthLimit",
+        "autoCleaning",
+        "アップロードサイズ上限",
+        "uploadFileTmpDir",
+        "一時ファイル保存先",
+        "FilePathSetting"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.web.upload.MultipartHandler`",
+    "s2": "HTTPリクエストボディがマルチパート形式（Content-Type: `multipart/form-data`）の場合に解析し、アップロードされたファイルを一時ファイルとして保存する。保存されたファイルはアップロード用ユーティリティで業務アクションハンドラから参照可能。",
+    "s3": "**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [HttpErrorHandler](handlers-HttpErrorHandler.json) | アップロード上限超過などの例外を適切なエラー画面で処理するため、[HttpErrorHandler](handlers-HttpErrorHandler.json) の後続に配置する必要がある |\n| [NablarchTagHandler](handlers-NablarchTagHandler.json) | [NablarchTagHandler](handlers-NablarchTagHandler.json) はHTTPリクエストオブジェクトのリクエストパラメータを使用するためリクエストボディを読み込む。そのため本ハンドラを [NablarchTagHandler](handlers-NablarchTagHandler.json) より上位に配置する必要がある |\n\n> **注意**: HTTPリクエストのリクエストボディを読み込むハンドラ（[HttpAccessLogHandler](handlers-HttpAccessLogHandler.json) の拡張や [ThreadContextHandler](handlers-ThreadContextHandler.json) のカスタム属性追加など）は、必ず [MultipartHandler](handlers-MultipartHandler.json) の後続に配置する必要がある。",
+    "s4": "**[往路処理]**\n\n1. 非マルチパートリクエストのスキップ: Content-Typeが`multipart/form-data`に一致しない場合、後続ハンドラの結果をリターンして終了\n2. マルチパートリクエストの解析: リクエストボディを読み込み解析。アップロードファイルを論理パス名 **\"uploadFileTmpDir\"** に一時ファイルとして保存（論理パス未設定時はJavaシステムプロパティ **\"java.io.tmpdir\"** の値を使用）。解析結果はHTTPリクエストオブジェクトに格納。アップロードファイルは`HttpRequest.getPart()`で、その他パラメータは`HttpRequest.getParam()`等で取得可能\n3. ログ出力: アップロードファイル情報をINFOレベルでログ出力\n4. 後続ハンドラへの処理委譲\n\n**[復路処理]**\n\n5. 終端処理: アップロードされた一時ファイルを全て削除\n6. 正常終了: 4. の結果をリターン",
+    "s5": "**[例外処理]**\n\n- **2a. マルチパート形式エラー**: 接続切断等でリクエストボディがマルチパートフォーマット違反の場合、実行時例外 `Result.BadRequest` を送出（ステータスコード400）\n- **2b. アップロード上限超過エラー**: データサイズが設定上限値を超過した場合、実行時例外 `Result.BadRequest` を送出（ステータスコード413）\n- **4a. 例外処理**: 後続ハンドラ処理中に例外発生した場合、終端処理（一時ファイル全削除）を実行後に例外を再送出",
+    "s6": "設定値は `UploadSettings` に集約される。\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| contentLengthLimit | int | | 無制限 | 1リクエストでアップロードできるデータの上限値（バイト）。ファイルサイズの上限ではない |\n| autoCleaning | boolean | | true | 一時ファイル自動削除の実施有無。デバッグや障害解析用に無効化可能 |\n\n> **注意**: `autoCleaning` がfalseでも、一時ファイル保存中に例外が発生した場合はファイルを削除する（不正な状態のファイル作成防止）。一時ファイルが正常保存され後続ハンドラに処理委譲できた場合のみ、`autoCleaning=true` の場合にファイルを削除する。\n\nアップロードサイズ上限値の設定を強く推奨。変更可能性があるため外部化すること。\n\n```xml\n<component class=\"nablarch.fw.web.upload.MultipartHandler\" name=\"multipartHandler\">\n  <property name=\"uploadSettings\">\n    <component class=\"nablarch.fw.web.upload.UploadSettings\">\n      <property name=\"contentLengthLimit\" value=\"${uploadSizeLimit}\" />\n    </component>\n  </property>\n</component>\n```\n\nアップロードファイルの一時保存先は論理パス名 **\"uploadFileTmpDir\"** で指定。環境依存値のため外部化すること。\n\n```xml\n<component name=\"filePathSetting\" class=\"nablarch.core.util.FilePathSetting\">\n  <property name=\"basePathSettings\">\n    <map>\n      <entry key=\"uploadFileTmpDir\" value=\"${upload-file-tmp-dir}\" />\n    </map>\n  </property>\n</component>\n```"
+  }
+}

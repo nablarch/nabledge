@@ -1,0 +1,37 @@
+{
+  "id": "web-application-04_generate_form_base",
+  "title": "FormBaseクラスの自動生成",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "業務画面JSPの修正",
+      "hints": [
+        "業務画面JSP修正",
+        "n:formタグ",
+        "windowScopePrefixes",
+        "ウィンドウスコープ",
+        "name属性設定",
+        "field:text",
+        "FormBaseクラス",
+        "画面入力項目",
+        "精査"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "業務画面JSPからFormBaseクラスを自動生成",
+      "hints": [
+        "FormBaseクラス自動生成",
+        "W11AC02FormBase",
+        "ローカル画面確認",
+        "フォームクラス生成",
+        "Nablarch UI開発基盤"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 業務画面JSPの修正\n\nFormBaseクラスは、Nablarch UI開発基盤のフォーム自動生成機能を使用して、業務画面JSPから自動生成する。このクラスは、画面入力項目に対応したプロパティを持ち、それらの入力項目に対する精査を行う。\n\n外部設計で作成されたJSPファイルを `main/web/ss11AC` ディレクトリに移動する:\n- `main/web/W11AC0201.jsp`\n- `main/web/W11AC0202.jsp`\n- `main/web/W11AC0203.jsp`\n\n修正対象は `W11AC0201.jsp` のみ。以下の2点を修正する。\n\n**1. n:formタグの追加**\n\n業務領域（`<jsp:attribute name=\"contentHtml\">` の内側全体）を `n:form` で囲み、`windowScopePrefixes` に値を設定する。登録取引を行う取引IDから `W11AC02` というプレフィックスを使用する。\n\n```jsp\n<n:form windowScopePrefixes=\"W11AC02\">\n```\n\n> **注意**: すでに `n:form` で囲まれている場合は、`windowScopePrefixes` の設定のみ行う。\n\n**2. name属性の指定**\n\n`name` 属性の形式:\n```\n\"ウィンドウスコーププレフィックス\".\"フォーム内のプロパティ名\"\n```\n\nフォーム内のプロパティ名はDBカラム名をキャメルケース変換した文字列に統一する（DB登録処理の実装が容易になるため）。\n\n修正例（漢字氏名）:\n\n修正前:\n```jsp\n<field:text title=\"漢字氏名\"\n            domain=\"KANJI_NAME\"\n            required=\"true\"\n            maxlength=\"50\"\n            hint=\"全角50文字以内\"\n            dataFrom=\"USERS.KANJI_NAME\"\n            name=\"\"\n            sample=\"名部　楽太郎\">\n</field:text>\n```\n\n修正後:\n```jsp\n<field:text title=\"漢字氏名\"\n            domain=\"KANJI_NAME\"\n            required=\"true\"\n            maxlength=\"50\"\n            hint=\"全角50文字以内\"\n            dataFrom=\"USERS.KANJI_NAME\"\n            name=\"W11AC02.kanjiName\"\n            sample=\"名部　楽太郎\">\n</field:text>\n```",
+    "s2": "## 業務画面JSPからFormBaseクラスを自動生成\n\n1. `main/web/tools/ローカル画面確認.bat` を起動する\n2. ブラウザで `ss11AC/W11AC0201.jsp` を選択してユーザ情報登録画面を表示する\n3. 表示された画面を右クリックし、「フォームクラスを生成する」を選択する\n\n![右クリックメニュー](assets/web-application-04_generate_form_base/local_right_click.png)\n\n4. `W11AC02FormBase.java` が生成・ダウンロードされるので、`main/java/nablarch/sample/ss11AC` にコピーする"
+  }
+}

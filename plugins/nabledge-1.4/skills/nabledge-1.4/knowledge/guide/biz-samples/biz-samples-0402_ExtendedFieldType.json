@@ -1,0 +1,82 @@
+{
+  "id": "biz-samples-0402_ExtendedFieldType",
+  "title": "データフォーマッタ機能におけるフィールドタイプの拡張",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "データフォーマッタ",
+        "フィールドタイプ拡張",
+        "EBCDIC",
+        "CP930",
+        "ダブルバイト文字"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "概要",
+      "hints": [
+        "EbcdicDoubleByteCharacterString",
+        "EbcdicNoShiftCodeDoubleByteCharacterString",
+        "DoubleByteCharacterString",
+        "EBCDIC CP930",
+        "シフトコード",
+        "ダブルバイト文字列"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "提供パッケージ",
+      "hints": [
+        "please.change.me.core.dataformat.convertor.datatype",
+        "提供パッケージ",
+        "データタイプクラス"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "フィールドタイプの構成",
+      "hints": [
+        "EbcdicDoubleByteCharacterString",
+        "EbcdicNoShiftCodeDoubleByteCharacterString",
+        "シフトコード付き",
+        "シフトコード無し",
+        "フィールドタイプ構成"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "フィールドタイプの使用方法",
+      "hints": [
+        "FixedLengthConvertorSetting",
+        "convertorTable",
+        "ESN",
+        "EN",
+        "固定長コンバータ設定",
+        "データタイプ登録"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "フィールドタイプ・フィールドコンバータ定義一覧",
+      "hints": [
+        "ESN",
+        "EN",
+        "バイト長",
+        "フィールドタイプ定義",
+        "シフトコード",
+        "タイプ識別子"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "なし",
+    "s2": "EBCDIC(CP930)のダブルバイト文字データ連携では、接続先システムのインターフェースによりシフトコードが付与される場合とされない場合があるため、それぞれに対応するデータタイプクラスが必要。\n\nNablarchデフォルトの`DoubleByteCharacterString`はShift_JIS/MS932の全角文字フィールド用であり、EBCDIC(CP930)を扱う場合は各プロジェクトによる拡張が必要。\n\n本サンプルが提供するデータタイプ:\n- シフトコード付きEBCDIC(CP930)用: `EbcdicDoubleByteCharacterString`\n- シフトコード無しEBCDIC(CP930)用: `EbcdicNoShiftCodeDoubleByteCharacterString`\n\n> **注意**: CP930はダブルバイト文字に対して必ずシフトコードが付加されている必要がある(JDK依存)。本データタイプを使用することで、シフトコードの付加・除去を透過的に行い文字列化・エンコードが可能。",
+    "s3": "**パッケージ**: `please.change.me.core.dataformat.convertor.datatype`",
+    "s4": "EBCDIC(CP930)固定長ファイルの全角文字列項目に対応するフィールドタイプクラス:\n\n| パッケージ名 | クラス名 | 概要 |\n|---|---|---|\n| `please.change.me.core.dataformat.convertor.datatype` | `EbcdicDoubleByteCharacterString` | EBCDIC(CP930)ダブルバイト文字列用。固定長のデータフォーマットの全角文字（ダブルバイト文字）フィールドの入出力に利用する。入出力バイトデータに**シフトコードが付与されるケース**用 |\n| `please.change.me.core.dataformat.convertor.datatype` | `EbcdicNoShiftCodeDoubleByteCharacterString` | EBCDIC(CP930)ダブルバイト文字列用。固定長のデータフォーマットの全角文字（ダブルバイト文字）フィールドの入出力に利用する。入出力バイトデータに**シフトコードが付与されないケース**用 |",
+    "s5": "`FixedLengthConvertorSetting`の`convertorTable`に`ESN`と`EN`のデータタイプを追加する。\n\n```xml\n<component name=\"fixedLengthConvertorSetting\"\n    class=\"nablarch.core.dataformat.convertor.FixedLengthConvertorSetting\">\n  <property name=\"convertorTable\">\n    <map>\n      <!-- EBCDIC(CP930)用のデータタイプ ESN, EN を追加する -->\n      <entry key=\"ESN\" value=\"please.change.me.core.dataformat.convertor.datatype.EbcdicDoubleByteCharacterString\"/>\n      <entry key=\"EN\" value=\"please.change.me.core.dataformat.convertor.datatype.EbcdicNoShiftCodeDoubleByteCharacterString\"/>\n      <!-- 以下はデフォルト設定 -->\n      <entry key=\"X\" value=\"nablarch.core.dataformat.convertor.datatype.SingleByteCharacterString\"/>\n      <entry key=\"N\" value=\"nablarch.core.dataformat.convertor.datatype.DoubleByteCharacterString\"/>\n      <entry key=\"XN\" value=\"nablarch.core.dataformat.convertor.datatype.ByteStreamDataString\"/>\n      <entry key=\"Z\" value=\"nablarch.core.dataformat.convertor.datatype.ZonedDecimal\"/>\n      <entry key=\"SZ\" value=\"nablarch.core.dataformat.convertor.datatype.SignedZonedDecimal\"/>\n      <entry key=\"P\" value=\"nablarch.core.dataformat.convertor.datatype.PackedDecimal\"/>\n      <entry key=\"SP\" value=\"nablarch.core.dataformat.convertor.datatype.SignedPackedDecimal\"/>\n      <entry key=\"B\" value=\"nablarch.core.dataformat.convertor.datatype.Bytes\"/>\n      <entry key=\"X9\" value=\"nablarch.core.dataformat.convertor.datatype.NumberStringDecimal\"/>\n      <entry key=\"SX9\" value=\"nablarch.core.dataformat.convertor.datatype.SignedNumberStringDecimal\"/>\n      <entry key=\"pad\" value=\"nablarch.core.dataformat.convertor.value.Padding\"/>\n      <entry key=\"encoding\" value=\"nablarch.core.dataformat.convertor.value.UseEncoding\"/>\n      <entry key=\"_LITERAL_\" value=\"nablarch.core.dataformat.convertor.value.DefaultValue\"/>\n      <entry key=\"number\" value=\"nablarch.core.dataformat.convertor.value.NumberString\"/>\n      <entry key=\"signed_number\" value=\"nablarch.core.dataformat.convertor.value.SignedNumberString\"/>\n      <entry key=\"replacement\" value=\"nablarch.core.dataformat.convertor.value.CharacterReplacer\"/>\n    </map>\n  </property>\n</component>\n```",
+    "s6": "| タイプ識別子 | Java型 | 内容 |\n|---|---|---|\n| ESN | String | ダブルバイト文字列 (バイト長 = 文字数 × 2 + 2(シフトコード分))。デフォルトで全角空白による右トリム・パディング。入力時はシフトアウト・シフトインコード付きの状態を想定して文字列化、出力時はシフトコードを自動付加。実装クラス: `please.change.me.core.dataformat.converter.datatype.EbcdicDoubleByteCharacterString`。引数: バイト長(数値、必須) |\n| EN | String | ダブルバイト文字列 (バイト長 = 文字数 × 2)。デフォルトで全角空白による右トリム・パディング。入力時はシフトコードを内部で補完して文字列化、出力時はシフトコードを付加しない。実装クラス: `please.change.me.core.dataformat.converter.datatype.EbcdicNoShiftCodeDoubleByteCharacterString`。引数: バイト長(数値、必須) |"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "id": "handlers-ServiceAvailabilityCheckHandler",
+  "title": "開閉局制御ハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "ServiceAvailabilityCheckHandler",
+        "nablarch.common.handler.ServiceAvailabilityCheckHandler",
+        "開閉局制御",
+        "リクエストID",
+        "内部リクエストID",
+        "ThreadContextHandler",
+        "ForwardingHandler",
+        "DataReadHandler"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "ServiceAvailabilityCheckHandler",
+        "開閉局判定",
+        "Result.ServiceUnavailable",
+        "503",
+        "閉局エラー",
+        "サービス開閉局判定オブジェクト"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "ServiceAvailabilityCheckHandler",
+        "serviceAvailability",
+        "usesInternalRequestId",
+        "ServiceAvailability",
+        "開閉局設定",
+        "内部リクエストIDによる判定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.common.handler.ServiceAvailabilityCheckHandler`\n\nリクエストID単位での開閉局制御を行うハンドラ。\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [ThreadContextHandler](handlers-ThreadContextHandler.json) | スレッドコンテキスト上の [内部リクエストID](../../about/about-nablarch/about-nablarch-concept-architectural_pattern.json) をもとに開閉局判定を行うため、本ハンドラの上位に配置する必要がある。 |\n| [ForwardingHandler](handlers-ForwardingHandler.json) | [../architectural_pattern/web_gui](../../processing-pattern/web-application/web-application-web_gui.json) で内部フォーワード時に、フォーワード先のリクエストID（[内部リクエストID](../../about/about-nablarch/about-nablarch-concept-architectural_pattern.json)）で開閉局制御する場合は、本ハンドラを [ForwardingHandler](handlers-ForwardingHandler.json) より下位に配置する必要がある。 |\n| [DataReadHandler](handlers-DataReadHandler.json) | [../architectural_pattern/messaging](../../processing-pattern/mom-messaging/mom-messaging-messaging.json) では、受信電文のフレームワークヘッダ内の **requestId** ヘッダ値で開閉局制御を行う。この場合、[../reader/FwHeaderReader](../readers/readers-FwHeaderReader.json) が **requestId** をスレッドコンテキストに設定するため、[ThreadContextHandler](handlers-ThreadContextHandler.json) は不要。 |",
+    "s2": "**[往路処理]**\n\n1. スレッドコンテキストから [リクエストID](../../about/about-nablarch/about-nablarch-concept-architectural_pattern.json) もしくは [内部リクエストID](../../about/about-nablarch/about-nablarch-concept-architectural_pattern.json) を取得する。\n2. 設定された **サービス開閉局判定オブジェクト** を使用して、取得したリクエストIDに対するサービスが開局中であることを確認する。\n   - 2a. サービスが閉局中の場合は後続ハンドラを実行せず、実行時例外 `Result.ServiceUnavailable`（**ステータスコード: 503**）を送出して終了する。\n3. 開局状態であれば後続ハンドラを実行し、処理結果を取得する。\n\n**[復路処理]**\n\n4. 取得した処理結果をリターンして終了する。\n\n**[例外処理]**\n\n- 3a. 後続ハンドラの実行中にエラーが発生した場合は、そのまま再送出して終了する。",
+    "s3": "**設定項目**\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| serviceAvailability | ServiceAvailability | ○ | | サービス開閉局判定コンポーネント |\n| usesInternalRequestId | boolean | | false | 内部リクエストIDによる判定を行うかどうか |\n\n**標準設定**\n\n```xml\n<component\n  name=\"serviceAvailabilityCheckHandler\"\n  class=\"nablarch.common.handler.ServiceAvailabilityCheckHandler\">\n  <property name=\"serviceAvailability\" ref=\"serviceAvailability\" />\n  <property name=\"usesInternalRequestId\" value=\"true\" />\n</component>\n```"
+  }
+}

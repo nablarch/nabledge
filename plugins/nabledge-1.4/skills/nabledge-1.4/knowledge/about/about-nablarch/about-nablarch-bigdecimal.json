@@ -1,0 +1,26 @@
+{
+  "id": "about-nablarch-bigdecimal",
+  "title": "文字列からBigDecimal変換時に発生する可能性のあるヒープ不足について",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "文字列からBigDecimal変換時のヒープ不足防止機能",
+      "hints": [
+        "BigDecimal",
+        "BigDecimal#scale",
+        "BigDecimal#toPlainString",
+        "java.text.DecimalFormat",
+        "nablarch.max_scale",
+        "ヒープ不足",
+        "指数表現",
+        "スケール設定",
+        "桁数チェック"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "文字列からBigDecimalへの変換時に指数表現（例: `9e100000`）を指定すると以下の問題が発生する可能性がある:\n- `BigDecimal#toPlainString()` の呼び出しで非常に大きい文字列が生成されヒープが圧迫される\n- `java.text.DecimalFormat` を使用してフォーマットする際に非常に大きい文字列が生成されヒープが圧迫される\n\nNablarchでは `BigDecimal#scale` を使用して桁数チェックを行い、ヒープを圧迫するような大きな値の取り込みを防止している。許容するscaleの範囲は `-9999` から `9999` で、この範囲を超える指数表現の値を変換しようとした場合は例外を送出する。\n\n許容するscaleの範囲は設定で変更可能。設定はシステムリポジトリ機能の環境設定ファイルに指定する（[repository_config_load](../../component/libraries/libraries-02_01_Repository_config.json#s1) 参照）。\n\n例えば `-10` から `10` に変更する場合:\n\n```properties\nnablarch.max_scale=10\n```"
+  }
+}

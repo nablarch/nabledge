@@ -1,0 +1,176 @@
+{
+  "id": "testing-framework-02_RequestUnitTest",
+  "title": "リクエスト単体テスト",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "固有の処理を追加する場合",
+      "hints": [
+        "BasicAdvice",
+        "execute",
+        "beforeExecute",
+        "afterExecute",
+        "TestCaseInfo",
+        "ExecutionContext",
+        "固有処理挿入",
+        "プライベートメソッド",
+        "HttpTestConfiguration",
+        "HtmlChecker",
+        "Html4HtmlChecker",
+        "htmlDumpDir",
+        "webBaseDir",
+        "xmlComponentFile",
+        "userIdSessionKey",
+        "exceptionRequestVarKey",
+        "dumpFileExtension",
+        "httpHeader",
+        "sessionInfo",
+        "htmlResourcesExtensionList",
+        "jsTestResourceDir",
+        "backup",
+        "htmlResourcesCharset",
+        "checkHtml",
+        "htmlChecker",
+        "htmlCheckerConfig",
+        "ignoreHtmlResourceDirectory",
+        "tempDirectory",
+        "uploadTmpDirectory",
+        "dumpVariableItem",
+        "コンポーネント設定ファイル",
+        "リクエスト単体テスト設定",
+        "HTMLダンプ設定",
+        "セッション設定"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "リクエストスコープに複数種類の検索結果が格納されている場合の例",
+      "hints": [
+        "assertSqlResultSetEquals",
+        "SqlResultSet",
+        "複数検索結果",
+        "リクエストスコープ検証",
+        "TestCaseInfo",
+        "getRequestScopedVar",
+        "JVMオプション",
+        "リクエスト単体テスト実行速度",
+        "ヒープサイズ設定",
+        "-Xms256m",
+        "-Xmx256m",
+        "-Xverfiy:none",
+        "クラスファイル検証省略",
+        "テスト実行速度向上"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "リクエストスコープに検索結果(SqlResultSet)ではなくFormやエンティティが格納されている場合の例",
+      "hints": [
+        "assertEntity",
+        "Form",
+        "エンティティ",
+        "entityUnitTest_SetterGetterCase",
+        "getRequestScopedVar",
+        "リクエストスコープ検証",
+        "代替JRE",
+        "JavaSE5",
+        "JavaSE6",
+        "テスト実行速度向上",
+        "起動速度"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "リクエストスコープにSqlResultSetではなくSqlRowが格納されている場合の例",
+      "hints": [
+        "assertSqlRowEquals",
+        "SqlRow",
+        "getRequestScopedVar",
+        "リクエストスコープ検証",
+        "HTMLリソースコピー抑止",
+        "nablarch.test.skip-resource-copy",
+        "-Dnablarch.test.skip-resource-copy=true",
+        "HTMLリソース",
+        "HTMLダンプ出力",
+        "システムプロパティ"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "リクエストパラメータの値を検証したい場合",
+      "hints": [
+        "HttpRequest",
+        "getParam",
+        "リクエストパラメータ検証",
+        "ウィンドウスコープ",
+        "getHttpRequest"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "その他の場合",
+      "hints": [
+        "assertListMapEquals",
+        "getListMap",
+        "how_to_get_data_from_excel",
+        "リクエストスコープ検証",
+        "期待値取得"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "ダウンロードファイルのテスト",
+      "hints": [
+        "FileSupport",
+        "assertFile",
+        "ダウンロードファイルテスト",
+        "ダンプファイル命名規則",
+        "batch_request_test"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "テスト起動方法",
+      "hints": [
+        "JUnit",
+        "テスト実行",
+        "テスト起動"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "テスト結果確認（目視）",
+      "hints": [
+        "HTMLダンプ",
+        "html_dump",
+        "HtmlCheckTool",
+        "ダンプファイル命名規則",
+        "テスト結果確認",
+        "dump-dir-label"
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "リクエスト単体テストクラス作成時の注意点",
+      "hints": [
+        "ThreadContext",
+        "トランザクション制御",
+        "テストクラス注意点",
+        "ハンドラ"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "`execute(String sheetName, Advice advice)` でリクエスト送信前後に固有処理を挿入できる。`BasicAdvice`クラスの以下メソッドをオーバーライドする（両方をオーバーライドする必要はない。また、これらのメソッド内のコードが長くなったり、テストメソッド間で共通する処理がある場合は、プライベートメソッドに切り出すこと）:\n\n- `void beforeExecute(TestCaseInfo testCaseInfo, ExecutionContext context)` — 送信前\n- `void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context)` — 送信後\n\n```java\nexecute(\"testMenus00102Normal\", new BasicAdvice() {\n    @Override\n    public void beforeExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {\n        // 準備処理\n    }\n    @Override\n    public void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {\n        // 結果確認処理\n    }\n});\n```\n\n`TestCaseInfo`の主要メソッド: `getTestCaseName()`（失敗メッセージ用）、`getSheetName()`（シート名）、`getTestCaseNo()`（ケース番号）、`getHttpRequest()`（テスト後のHttpRequest）。\n\n**クラス**: `nablarch.test.core.http.HttpTestConfiguration`\n\nコンポーネント設定ファイルで設定可能な項目:\n\n| 設定項目名 | 説明 | デフォルト値 |\n|---|---|---|\n| htmlDumpDir | HTMLダンプファイルの出力ディレクトリ | ./tmp/http_dump |\n| webBaseDir | Webアプリケーションのルートディレクトリ | ../main/web |\n| xmlComponentFile | リクエスト単体テスト実行時に使用するコンポーネント設定ファイル | （なし） |\n| userIdSessionKey | ログイン中ユーザIDを格納するセッションキー | user.id |\n| exceptionRequestVarKey | ApplicationExceptionが格納されるリクエストスコープのキー | nablarch_application_error |\n| dumpFileExtension | ダンプファイルの拡張子 | html |\n| httpHeader | HttpRequestにHTTPリクエストヘッダとして格納される値 | Content-Type: application/x-www-form-urlencoded, Accept-Language: ja JP |\n| sessionInfo | セッションに格納される値 | （なし） |\n| htmlResourcesExtensionList | ダンプディレクトリへコピーされるHTMLリソースの拡張子 | css、jpg、js |\n| jsTestResourceDir | javascript自動テスト実行時のリソースコピー先ディレクトリ名 | ../test/web |\n| backup | ダンプディレクトリのバックアップOn/Off | true |\n| htmlResourcesCharset | CSSファイルの文字コード | UTF-8 |\n| checkHtml | HTMLチェックの実施On/Off | true |\n| htmlChecker | HTMLチェックを行うオブジェクト（`nablarch.test.tool.htmlcheck.HtmlChecker`インタフェース実装が必要。詳細は :ref:`customize_html_check` を参照） | `nablarch.test.tool.htmlcheck.Html4HtmlChecker`のインスタンス（htmlCheckerConfigの設定ファイルが適用される） |\n| htmlCheckerConfig | HTMLチェックツールの設定ファイルパス（htmlCheckerを設定しなかった場合のみ有効） | test/resources/httprequesttest/html-check-config.csv |\n| ignoreHtmlResourceDirectory | HTMLリソースのコピー対象外とするディレクトリ名のリスト | （なし） |\n| tempDirectory | JSPのコンパイル先ディレクトリ | jettyのデフォルト動作（./work、存在しない場合はTempフォルダ） |\n| uploadTmpDirectory | アップロードファイルの一時格納ディレクトリ。テスト時のアップロード対象ファイルはこのディレクトリにコピー後に処理されるため、アクションでファイルを移動した場合でも実態ファイルの移動を防ぐことができる。 | ./tmp |\n| dumpVariableItem | HTMLダンプファイル出力時に可変項目（JSESSIONID、二重サブミット防止トークン）を出力するか否か。これらはテスト実行毎に異なる値が設定される。ダンプ結果を毎回同一にしたい場合はfalse（デフォルト）。 | false |\n\n> **注意**: `xmlComponentFile`を設定した場合、リクエスト送信直前に指定されたコンポーネント設定ファイルで初期化が行われる。クラス単体テストとリクエスト単体テストで設定を変える必要がある場合のみ設定する。通常は設定不要。\n\n> **補足**: `ignoreHtmlResourceDirectory`にバージョン管理用ディレクトリ（.svn、.git）を設定するとHTMLリソースコピー時のパフォーマンスが向上する。\n\nコンポーネント設定ファイル記述例（sessionInfoに`commonHeaderLoginUserName`、`commonHeaderLoginDate`を設定した例）:\n\n```xml\n<component name=\"httpTestConfiguration\" class=\"nablarch.test.core.http.HttpTestConfiguration\">\n    <property name=\"htmlDumpDir\" value=\"./tmp/http_dump\"/>\n    <property name=\"webBaseDir\" value=\"../main/web\"/>\n    <property name=\"xmlComponentFile\" value=\"http-request-test.xml\"/>\n    <property name=\"userIdSessionKey\" value=\"user.id\"/>\n    <property name=\"httpHeader\">\n        <map>\n            <entry key=\"Content-Type\" value=\"application/x-www-form-urlencoded\"/>\n            <entry key=\"Accept-Language\" value=\"ja JP\"/>\n        </map>\n    </property>\n    <property name=\"sessionInfo\">\n        <map>\n            <entry key=\"commonHeaderLoginUserName\" value=\"リクエスト単体テストユーザ\"/>\n            <entry key=\"commonHeaderLoginDate\" value=\"20100914\" />\n        </map>\n    </property>\n    <property name=\"htmlResourcesExtensionList\">\n        <list>\n            <value>css</value>\n            <value>jpg</value>\n            <value>js</value>\n        </list>\n    </property>\n    <property name=\"backup\" value=\"true\" />\n    <property name=\"htmlResourcesCharset\" value=\"UTF-8\" />\n    <property name=\"ignoreHtmlResourceDirectory\">\n        <list>\n            <value>.svn</value>\n        </list>\n    </property>\n    <property name=\"tempDirectory\" value=\"webTemp\" />\n    <property name=\"htmlCheckerConfig\"\n      value=\"test/resources/httprequesttest/html-check-config.csv\" />\n</component>\n```",
+    "s2": "リクエストスコープに「ユーザグループ」と「ユースケース」のような複数種類の検索結果が格納されている場合、それぞれを個別に `assertSqlResultSetEquals` で検証する:\n\n```java\nexecute(\"testMenus00103\", new BasicAdvice() {\n    @Override\n    public void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {\n        String messgae = testCaseInfo.getTestCaseName();\n        String sheetName = testCaseInfo.getSheetName();\n        String no = testCaseInfo.getTestCaseNo();\n\n        // グループ検索結果の検証\n        SqlResultSet actualGroup = (SqlResultSet) context.getRequestScopedVar(\"allGroup\");\n        assertSqlResultSetEquals(message, sheetName, \"expectedUgroup\" + no, actualGroup);\n\n        // ユースケース検索結果の検証\n        SqlResultSet actualUseCase = (SqlResultSet) context.getRequestScopedVar(\"allUseCase\");\n        assertSqlResultSetEquals(message, sheetName, \"expectedUseCase\" + no, actualUseCase);\n    }\n});\n```\n\n> **注意**: Pentium4、Pentinum Dual-Core等の低性能CPUを搭載したPCに有効。それ以降のCPUでは効果は限定的。\n\nリクエスト単体テストの実行速度を向上させるJVMオプション:\n\n- **ヒープサイズ拡張のオーバヘッドを回避**（最大・最小ヒープサイズを同一値に設定）: `-Xms256m -Xmx256m`\n- **クラスファイルの検証省略**（実行速度向上）: `-Xverfiy:none`",
+    "s3": "リクエストスコープにSqlResultSetの代わりにエンティティやFormが格納されている場合、`assertEntity` でアサートする。期待値の書式は :ref:`entityUnitTest_SetterGetterCase` と同様（setterの欄は不要）:\n\n```java\nexecute(\"testUsers00302Normal\", new BasicAdvice() {\n    @Override\n    public void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {\n        String sheetName = testCaseInfo.getSheetName();\n        // システムアカウントを比較\n        String expectedSystemAccountId = \"systemAccount\" + testCaseInfo.getTestCaseNo();\n        Object actualSystemAccount = context.getRequestScopedVar(\"systemAccount\");\n        assertEntity(sheetName, expectedSystemAccountId, actualSystemAccount);\n\n        // ユーザを比較\n        String expectedUsersId = \"users\" + testCaseInfo.getTestCaseNo();\n        Object actualUsers = context.getRequestScopedVar(\"users\");\n        assertEntity(sheetName, expectedUsersId, actualUsers);\n    }\n});\n```\n\n> **注意**: リクエストスコープにFormが格納されている場合、別のFormを設定したプロパティでなければEntityと同様にテストできる。別のFormを設定したプロパティの場合は、そのFormを取得してEntityと同様にテストする（例: `Object actualSystemAccount = actualForm.getSystemAccount(); assertEntity(...)`）。\n\nJavaSE5のJDKで開発している場合、テスト実行時のみJavaSE6のJREを使用することにより実行速度（特に起動速度）が向上する。\n\n> **注意**: 事前にJavaSE6のJDKまたはJREをインストールし、Eclipseに「インストール済みのJRE」として登録しておく必要がある。",
+    "s4": "リクエストスコープに検索結果一覧(SqlResultSet)ではなく検索結果1件分(SqlRow)が格納されている場合、`assertSqlRowEquals` で検証する:\n\n```java\nexecute(\"testUsers00302Normal\", new BasicAdvice() {\n    @Override\n    public void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {\n        String message = testCaseInfo.getTestCaseName();\n        String sheetName = testCaseInfo.getSheetName();\n        String no = testCaseInfo.getTestCaseNo();\n\n        SqlRow actual = (SqlRow) context.getRequestScopedVar(\"user\");\n        assertSqlRowEquals(message, sheetName, \"expectedUser\" + no, actual);\n    }\n});\n```\n\nリクエスト単体テスト実行時に以下のシステムプロパティを指定すると、[HTMLダンプ出力](#) 時にHTMLリソースのコピーを抑止できる。\n\n`-Dnablarch.test.skip-resource-copy=true`\n\nCSSや画像ファイルなど静的なHTMLリソースを頻繁に編集しない場合に設定することで、テスト実行の度にHTMLリソースをコピーする処理をスキップできる。\n\n> **警告**: このシステムプロパティを指定した場合、HTMLリソースのコピーが行われないため、CSSなどのHTMLリソースを編集しても [HTMLダンプ出力](#) に反映されない。\n\n> **注意**: HTMLリソースディレクトリが存在しない場合は、システムプロパティの設定有無に関わらずHTMLリソースのコピーが実行される。",
+    "s5": "ウィンドウスコープの値をリセットするために、テスト対象機能にてリクエストパラメータを書き換える場合がある。テスト対象実行後のリクエストパラメータが期待通りであることを検証するには、`testCaseInfo.getHttpRequest()` でテスト後のHttpRequestを取得する:\n\n```java\nexecute(\"testUsers00302Normal\", new BasicAdvice() {\n    @Override\n    public void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {\n        HttpRequest request = testCaseInfo.getHttpRequest();\n        // リクエストパラメータがリセットされていること\n        assertEquals(\"\", request.getParam(\"resetparameter\"));\n    }\n});\n```",
+    "s6": "SqlResultSetやSqlRow等のよく使用されるオブジェクト以外の場合は、期待値を読み込む処理を自分で記述する。以下の手順で検証する:\n\n1. テストデータをExcelファイルから取得\n2. リクエストスコープ等から実際の値を取得\n3. 自動テストフレームワークまたはJUnitのAPIを用いて結果検証\n\n```java\nexecute(\"testUsers00303Normal\", new BasicAdvice() {\n    @Override\n    public void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {\n        // 期待値をExcelファイルから取得\n        List<Map<String, String>> expected = getListMap(\"doRW25AA0303NormalEnd\", \"result_1\");\n        // テスト実行後のリクエストスコープから実際の値を取得\n        List<Map<String, String>> actual = context.getRequestScopedVar(\"pageData\");\n        // 結果検証\n        assertListMapEquals(expected, actual);\n    }\n});\n```\n\nテストデータの取得方法: [how_to_get_data_from_excel](testing-framework-03_Tips.json) 参照。",
+    "s7": ":ref:`batch_request_test` と同じ方法でExcelにファイルの期待値を記載してテストする。\n\n**期待するファイルの定義例**: ファイルパスにはダンプファイルを指定する。ダウンロード処理の場合、ダウンロードされたファイルがダンプされ、以下の命名規則でダンプファイルが出力される。ダンプ出力先ディレクトリの詳細は [html_dump_dir](testing-framework-02_RequestUnitTest-02_RequestUnitTest.json) 参照。\n\n```\nダンプファイルの命名規則：\n  Excelファイルのシート名＋\"_\"＋テストケース名＋\"_\"＋ダウンロードされたファイル名\n```\n\n**テストメソッドの実装例**: `FileSupport.assertFile(msgOnFail, testCaseName)` でアサートを行う:\n```java\nprivate FileSupport fileSupport = new FileSupport(getClass());\n\n@Test\npublic void testRW11AC0104Download() {\n    execute(\"testRW11AC0104Download\", new BasicAdvice() {\n        @Override\n        public void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {\n            fileSupport.assertFile(\"ダウンロードしたユーザ一覧照会結果のCSVファイルのアサートに失敗しました。\", \"testRW11AC0104Download\");\n        }\n    });\n}",
+    "s8": "通常のJUnitテストと同じように実行する。クラス単体テストと同様の起動方法であり、IDEやビルドツール（Maven/Gradle）から特別な設定なしで実行できる。",
+    "s9": "テスト実行時、1リクエスト毎にHTMLダンプファイルが出力される。ブラウザで開き目視確認を行う。\n\n> **注意**: リクエスト単体テストで生成されたHTMLファイルは自動テストフレームワーク（[../../08_TestTools/03_HtmlCheckTool/index](../toolbox/toolbox-03-HtmlCheckTool.json)）にて自動チェックされる。HTMLファイル内に構文エラー等の違反があった場合は違反内容に応じた例外が発生し、そのテストケースは失敗となる。\n\n**HTMLダンプ出力結果**:\nテスト用プロジェクトのルートディレクトリ配下の `tmp/html_dump` ディレクトリにHTMLダンプファイルが出力される。詳細は [dump-dir-label](#) 参照。\n\nダンプファイル名にはテストケース一覧（testShots）のdescription欄の記述が使用される。",
+    "s10": "**ThreadContextへの値設定は不要**\n\nリクエスト単体テストではWeb FrameworkのハンドラがThreadContextへの値設定を行うため、テストクラスからThreadContextへの値設定は不要。ユーザID設定方法については :ref:`request_test_user_info` 参照。\n\n**テストクラスでのトランザクション制御は不要**\n\nリクエスト単体テストではトランザクション制御はハンドラで行われるため、テストクラス内で明示的にトランザクションコミットを行う必要はない（クラス単体テストとの違い）。"
+  }
+}

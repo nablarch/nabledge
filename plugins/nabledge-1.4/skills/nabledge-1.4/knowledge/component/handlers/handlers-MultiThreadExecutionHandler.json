@@ -1,0 +1,56 @@
+{
+  "id": "handlers-MultiThreadExecutionHandler",
+  "title": "マルチスレッド実行制御ハンドラ",
+  "official_doc_urls": [
+    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/MultiThreadExecutionHandler.html"
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "MultiThreadExecutionHandler",
+        "BatchActionBase",
+        "DataReaderFactory",
+        "Result.MultiStatus",
+        "マルチスレッド実行",
+        "コールバック",
+        "並行実行",
+        "バッチアクション",
+        "データリーダ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "ExecutionContext",
+        "DataReader",
+        "DataReaderFactory",
+        "BatchActionBase",
+        "IllegalStateException",
+        "Handler",
+        "サブスレッド",
+        "実行コンテキストコピー",
+        "ハンドラ処理フロー",
+        "異常終了処理"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "concurrentNumber",
+        "terminationTimeout",
+        "MultiThreadExecutionHandler",
+        "並行実行スレッド数",
+        "スレッド停止タイムアウト"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.MultiThreadExecutionHandler`\n\nサブスレッドを作成し、ハンドラキュー上の後続ハンドラの処理を各サブスレッド上で並行実行する。処理結果は各サブスレッドの実行結果を集約した `Result.MultiStatus` として返る。\n\n**コールバック**\n\n後続ハンドラで以下の抽象クラス／インターフェースを継承／実装することでコールバックを受けられる。\n\n| 抽象クラス／インターフェース | メソッド | イベント |\n|---|---|---|\n| `BatchActionBase` | initialize | マルチスレッド実行開始前に一度だけ呼ばれる |\n| `BatchActionBase` | error | サブスレッドのいずれかが異常終了した場合に一度だけ呼ばれる |\n| `BatchActionBase` | terminate | サブスレッド上の処理完了後に一度だけ呼ばれる（異常終了時はerror後） |\n| `DataReaderFactory` | createReader | 実行コンテキスト上にデータリーダが設定されていなかった場合、`BatchActionBase#initialize()` 呼び出し直後に一度だけ呼ばれる |\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [BatchAction](handlers-BatchAction.json) | バッチアクションでは、本ハンドラのコールバックを利用してバッチの初期処理及び終了処理を実装している |",
+    "s2": "**[往路処理]**\n\n1. 並行実行スレッド数をスレッドコンテキストの属性値として登録する。後続処理でシングルスレッド環境でしか利用できない機能の実行可否判定に参照される。\n2. `BatchActionBase` を継承した後続ハンドラの `BatchActionBase#initialize(Object data, ExecutionContext context)` を呼び出す。\n3. `ExecutionContext` からサブスレッドで使用するデータリーダを取得する。データリーダが未設定の場合はデータリーダファクトリで作成する。\n   - 3a. `ExecutionContext` にデータリーダもデータリーダファクトリも設定されていない場合、`IllegalStateException` を送出する。\n4. 各サブスレッド用に実行コンテキストをコピーする。\n\n| 属性名 | データ型 | コピーされる内容 |\n|---|---|---|\n| ハンドラキュー | List\\<Handler\\> | 現在のListのシャローコピー。各ハンドラはスレッドセーフに作成される必要がある |\n| リクエストコンテキスト | Map\\<String, Object\\> | 新規のMapを作成。メインスレッド側の変数はサブスレッドに引き継がれない |\n| セッションコンテキスト | Map\\<String, Object\\> | 現在のセッションスコープのMapをそのまま設定。各サブスレッドが単一のMapを共有する |\n| データリーダ | DataReader | 現在のデータリーダをそのまま設定 |\n| データリーダファクトリ | DataReaderFactory | 現在のファクトリをそのまま設定 |\n\n5. サブスレッドを作成・実行する。各サブスレッドはコピーした実行コンテキストのハンドラキューに処理を委譲する。メインスレッドは全サブスレッドが終了するまで待機する。\n\n**[復路処理]**\n\n6. `BatchActionBase` を継承した後続ハンドラの `BatchActionBase#terminate(Object data, ExecutionContext context)` を呼び出す。\n7. 各サブスレッドの処理結果を `Result.MultiStatus` に追加してリターンする。\n\n**[例外処理]**\n\n5a. サブスレッドのいずれかが異常終了（未捕捉の実行時例外またはエラーを送出）した場合：\n\n1. `BatchActionBase` を継承した後続ハンドラの `BatchActionBase#error(Throwable e, ExecutionContext context)` を呼び出す。\n2. 現在実行中の各サブスレッドに割り込み要求を行い、全サブスレッドが完了するかスレッド停止タイムアウトを経過するまで待機する。\n3. `BatchActionBase#terminate` のコールバックを呼び出した後、起因例外を再送出する。",
+    "s3": "| プロパティ名 | 型 | デフォルト値 | 説明 |\n|---|---|---|---|\n| concurrentNumber | int | 1 | 並行実行スレッド数 |\n| terminationTimeout | int | 600 | スレッド停止のタイムアウト秒数 |\n\n並行実行スレッド数は運用時に変更する可能性が高いため、埋め込みパラメータとして定義することを推奨する。\n\n```xml\n<component class = \"nablarch.fw.handler.MultiThreadExecutionHandler\">\n  <property name=\"concurrentNumber\" value=\"${threadCount}\" />\n</component>\n```"
+  }
+}

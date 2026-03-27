@@ -1,0 +1,37 @@
+{
+  "id": "testing-framework-http_send_sync-03_DealUnitTest",
+  "title": "HTTP同期応答メッセージ送信処理を伴う取引単体テストの実施方法",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "HTTP同期応答メッセージ送信処理",
+        "取引単体テスト",
+        "モックアップクラス",
+        "送信キュー",
+        "受信キュー",
+        "通信先"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "モックアップクラスを使用した取引単体テストの実施方法",
+      "hints": [
+        "MockMessagingClient",
+        "nablarch.test.core.messaging.MockMessagingClient",
+        "defaultMessageSenderClient",
+        "Excelファイル",
+        "取引単体テスト",
+        "モックアップクラス設定",
+        "HTTP同期応答メッセージ送信処理",
+        "send_sync_test_data_format"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "HTTP同期応答メッセージ送信処理を伴う取引単体テストには、Nablarchが提供するモックアップクラスを使用する。\n\n基本的な実施方法は :ref:`dealUnitTest_send_sync` を参照。ただし「送信キュー」「受信キュー」は「通信先」と読み替えること。",
+    "s2": "## Excelファイルの書き方\n\nテストデータはExcelファイルに定められた記述ルールに従い記載する。\n\n- 応答電文のフォーマット・データ: モックアップクラスが返却する応答電文の生成に使用\n- 要求電文のフォーマット: モックアップクラスが要求電文ログの出力に使用\n\n![Excelファイルの記載例](assets/testing-framework-http_send_sync-03_DealUnitTest/http_send_sync_test_data.png)\n\n電文のフォーマット・データの記載方法は [send_sync_test_data_format](testing-framework-send_sync-03_DealUnitTest.json#s2) と同じ。ただしHTTP通信は要求・応答電文ともにヘッダが存在しないため、本文のみ定義する。\n\n## モックアップクラスの設定\n\n> **注意**: 通常、これらの設定はアーキテクトが行う。アプリケーションプログラマが設定する必要はない。\n\nコンポーネント設定ファイルにモックアップクラスを設定する:\n\n```xml\n<component name=\"defaultMessageSenderClient\"\n           class=\"nablarch.test.core.messaging.MockMessagingClient\">\n</component>\n```"
+  }
+}

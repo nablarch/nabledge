@@ -1,0 +1,51 @@
+{
+  "id": "handlers-HttpAccessLogHandler",
+  "title": "HTTPアクセスログハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "HttpAccessLogHandler",
+        "nablarch.common.web.handler.HttpAccessLogHandler",
+        "HTTPアクセスログ出力",
+        "ThreadContextHandler",
+        "HttpErrorHandler",
+        "ハンドラ配置順序",
+        "上位ハンドラ",
+        "後続ハンドラ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "HTTP_ACCESS",
+        "ログカテゴリ",
+        "HTTPアクセスログ",
+        "HTTPエラーレスポンス",
+        "ログレベルINFO"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "DI設定",
+        "httpAccessLogHandler",
+        "XML設定例",
+        "設定項目なし",
+        "nablarch.common.web.handler.HttpAccessLogHandler"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.common.web.handler.HttpAccessLogHandler`\n\n往路と復路でHTTPリクエスト・レスポンスのアクセスログを出力する。\n\n**関連するハンドラ（配置制約）**\n\n| ハンドラ | 配置制約 |\n|---|---|\n| [ThreadContextHandler](handlers-ThreadContextHandler.json) | 本ハンドラがログに出力する項目には [ThreadContextHandler](handlers-ThreadContextHandler.json) が設定する項目が含まれるため、本ハンドラより**上位**に配置する必要がある。 |\n| [HttpErrorHandler](handlers-HttpErrorHandler.json) | HTTPエラーレスポンス以外の例外は [HttpErrorHandler](handlers-HttpErrorHandler.json) によってHTTPレスポンスオブジェクトに変換されるので、本ハンドラの**後続**に配置する必要がある。 |",
+    "s2": "**[往路での処理]**\n\n1. HTTPリクエストオブジェクトおよび実行コンテキストをもとにHTTPアクセスログを出力する（ログレベル: INFO、ログカテゴリ: HTTP_ACCESS）\n2. 後続ハンドラに処理を委譲し、HTTPレスポンスオブジェクトを取得する\n\n**[復路での処理]**\n\n3. HTTPリクエスト、実行コンテキスト、HTTPレスポンスオブジェクトをもとにHTTPアクセスログを出力する（ログレベル: INFO、ログカテゴリ: HTTP_ACCESS）\n4. HTTPレスポンスオブジェクトをリターンして終了する\n\n**[例外処理]**\n\n- 2a. HTTPエラーレスポンスが送出された場合: エラーレスポンスの内容とHTTPリクエスト、実行コンテキストをもとにHTTPアクセスログを出力した上で、例外を再送出する。\n- 2b. HTTPエラーレスポンス以外の例外が送出された場合: HTTPリクエスト、実行コンテキストをもとにHTTPアクセスログを出力した上で、例外を再送出する。",
+    "s3": "本ハンドラ自体に設定項目は存在しない。ロガー側の設定については [../02_FunctionDemandSpecifications/01_Core/01/04_HttpAccessLog](../libraries/libraries-04_HttpAccessLog.json) を参照すること。\n\n```xml\n<component name=\"httpAccessLogHandler\"\n           class=\"nablarch.common.web.handler.HttpAccessLogHandler\" />\n```"
+  }
+}

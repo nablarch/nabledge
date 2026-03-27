@@ -1,0 +1,80 @@
+{
+  "id": "web-application-05_screenTransition",
+  "title": "画面遷移処理",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "本項で説明する内容",
+      "hints": [
+        "画面遷移処理",
+        "View",
+        "W11AC0201.jsp",
+        "W11AC0202.jsp",
+        "JSP作成"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "作成手順",
+      "hints": [
+        "View作成手順",
+        "JSP",
+        "W11AC0201.jsp",
+        "W11AC0202.jsp",
+        "カスタムタグ"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "画面イメージ",
+      "hints": [
+        "画面イメージ",
+        "キャンセルボタン",
+        "確定ボタン",
+        "画面遷移"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ソースコード(実装方法)",
+      "hints": [
+        "n:form",
+        "button:cancel",
+        "button:confirm",
+        "uri属性",
+        "カスタムタグ",
+        "ボタン出力",
+        "label属性"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "登録画面へ戻る(キャンセルボタン押下)場合の入力値の復元",
+      "hints": [
+        "windowScopePrefixes",
+        "入力値復元",
+        "キャンセルボタン",
+        "n:form",
+        "画面遷移"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "次に読むもの",
+      "hints": [
+        "カスタムタグ",
+        "WebView",
+        "参考資料"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "| ファイル名 | ステレオタイプ | 処理内容 |\n|---|---|---|\n| [W11AC0201.jsp](assets/web-application-05_screenTransition/W11AC0201.jsp), [W11AC0202.jsp](assets/web-application-05_screenTransition/W11AC0202.jsp) | View | ユーザ情報登録画面の入力内容、登録画面に戻るボタン、登録処理ボタンを表示する。W11AC0202.jsp内でW11AC0201.jspを取り込む。|\n\nステレオタイプについては :ref:`stereoType` を参照。",
+    "s2": "View（JSP）を作成する。対象ファイル: W11AC0201.jsp（W11AC0202.jsp内でW11AC0201.jspを取り込む構成）。",
+    "s3": "作成するJSPの画面イメージを以下に示す。画面下の「キャンセル」ボタンと画面下の「確定」ボタンを押下したときの画面遷移処理の書き方を説明する。\n\n![画面イメージ](assets/web-application-05_screenTransition/W11AC0202.png)",
+    "s4": "画面遷移処理の実装にはアプリケーションフレームワーク提供のカスタムタグを使用する。\n\n- `n:form` タグでHTMLフォームを作成する\n- `button:cancel`（キャンセルボタン）タグ、`button:confirm`（確定ボタン）タグでボタンを出力する\n- `uri` 属性にはサブミットするパスを指定する（`button` タグはサンプル提供のタグファイル）\n\n* W11AC0201.jsp\n\n```jsp\n<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n<!-- <%/* --> <script src=\"js/devtool.js\"></script><meta charset=\"utf-8\"><body> <!-- */%> -->\n<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\" %>\n<%@ taglib prefix=\"n\" uri=\"http://tis.co.jp/nablarch\" %>\n<%@ taglib prefix=\"field\" tagdir=\"/WEB-INF/tags/widget/field\" %>\n<%@ taglib prefix=\"button\" tagdir=\"/WEB-INF/tags/widget/button\" %>\n<%@ taglib prefix=\"t\" tagdir=\"/WEB-INF/tags/template\" %>\n<%@ page language=\"java\" contentType=\"text/html; charset=UTF-8\" pageEncoding=\"UTF-8\" %>\n\n～中略～\n\n<%-- 【説明】アプリケーションフレームワーク提供の n:form タグ。action属性は指定しない。 --%>\n<n:form windowScopePrefixes=\"W11AC02,11AC_W11AC01\">\n\n<%-- 【説明】\n  ボタンのuri属性にサブミットするパスを記述する。\n  下記の場合、「キャンセル」ボタンは\"/action/ss11AC/W11AC02Action/RW11AC0203\"、\n  「確定」ボタンは\"/action/ss11AC/W11AC02Action/RW11AC0204\"となる。 --%>\n  <button:cancel\n      uri=\"/action/ss11AC/W11AC02Action/RW11AC0203\">\n  </button:cancel>\n  <button:confirm\n      uri=\"/action/ss11AC/W11AC02Action/RW11AC0204\"\n      allowDoubleSubmission=\"false\">\n  </button:confirm>\n\n～中略～\n\n</n:form>\n\n～後略～\n```\n\n> **注意**: `button:cancel` のデフォルトラベルは「キャンセル」、`button:confirm` は「確定」。一部画面でラベルを変えたい場合は `label` 属性に表示文言を指定する。",
+    "s5": "キャンセルボタン押下で前画面に戻った場合に入力内容を復元するには、以下の2点を実装時に守ること。これにより単純に戻り先へ遷移させるだけで入力内容が復元される。\n\n1. 入力項目（テキストエリア、ラジオボタンなど）はアプリケーションフレームワーク提供のカスタムタグで作成する\n2. `n:form` タグの `windowScopePrefixes` 属性に、入力項目のカスタムタグの `name` 属性に指定したプレフィックス :ref:`(参照)<04_JSPNameAttribute>` を指定する",
+    "s6": "- [カスタムタグの使用方法を詳しく知りたい時](../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07_WebView.html)"
+  }
+}

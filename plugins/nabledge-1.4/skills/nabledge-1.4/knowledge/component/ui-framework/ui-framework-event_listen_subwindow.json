@@ -1,0 +1,53 @@
+{
+  "id": "ui-framework-event_listen_subwindow",
+  "title": "サブウィンドウ内イベント定義",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "event:listen_subwindow",
+        "event:write_to",
+        "openTrigger",
+        "watchTarget",
+        "サブウィンドウイベント監視",
+        "JSPタグ使用例",
+        "親ウィンドウへの値出力"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "event",
+        "watchTarget",
+        "windowName",
+        "openTrigger",
+        "title",
+        "operation",
+        "comment",
+        "サブウィンドウ属性一覧",
+        "イベント監視設定",
+        "event_listen"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "listen_subwindow.tag",
+        "SubwindowListener.js",
+        "タグファイル",
+        "JavaScriptコンポーネント",
+        "内部構造"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**コードサンプル**: サブウィンドウ内テーブルの選択リンククリックイベントを監視し、選択行の値を親ウィンドウの対応項目へ出力する例。\n\n```jsp\n<event:listen_subwindow\n  openTrigger = \"#openSelectUserWindow\"\n  watchTarget = \"table tr\"\n  event       = \"a.select click\">\n  <event:write_to\n    target = \".user_name\"\n    format = \"{td.userName}\">\n  </event:write_to>\n  <event:write_to\n    target = \".user_id input\"\n    format = \"{td.userId}\">\n  </event:write_to>\n  ...\n</event:listen_subwindow>\n```\n\nイベントアクション詳細は [event_write_to](ui-framework-event_write_to.json) を参照。",
+    "s2": "> **注意**: 本ウィジェットの仕様の多くは [event_listen](ui-framework-event_listen.json) と共通。記述のない部分は [event_listen](ui-framework-event_listen.json) を参照すること。\n\n**属性値一覧** (◎ 必須属性 / ○ 任意属性 / × 無効)\n\n| 属性名 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| event | 監視対象イベントの定義式 | 文字列 | ◎ | ◎ | |\n| watchTarget | 監視対象とするサブウィンドウ内の要素を指定するセレクタ式 | 文字列 | ◎ | ◎ | |\n| windowName | 監視対象ウィンドウ名 | 文字列 | ○ | ○ | デフォルト: `\"subwindow\"` |\n| openTrigger | 監視対象ウィンドウを開くボタン・リンクを指定するセレクタ式。指定した場合、合致する要素から開かれたサブウィンドウのみが監視対象となる | 文字列 | ○ | ○ | |\n| title | 監視するイベントの簡単な説明 | 文字列 | × | × | 設計書表示用 |\n| operation | 監視イベントが発生する画面操作の説明 | 文字列 | × | × | 設計書表示用 |\n| comment | このイベントに対する補足説明 | 文字列 | × | × | 設計書表示用 |",
+    "s3": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| `/WEB-INF/tags/widget/event/listen_subwindow.tag` | このウィジェットの実体となるタグファイル |\n| `/js/nablarch/ui/event/SubwindowListener.js` | イベント監視機能を実装するJS部品 |"
+  }
+}

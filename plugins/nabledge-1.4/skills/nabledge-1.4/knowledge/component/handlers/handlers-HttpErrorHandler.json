@@ -1,0 +1,77 @@
+{
+  "id": "handlers-HttpErrorHandler",
+  "title": "HTTPエラー制御ハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "HttpErrorHandler",
+        "nablarch.fw.handler.HttpErrorHandler",
+        "HTTPエラー制御ハンドラ",
+        "クラス名"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "概要",
+      "hints": [
+        "HTTPエラーレスポンス",
+        "例外処理",
+        "障害ログ",
+        "デフォルトエラー画面",
+        "後続ハンドラ"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "",
+      "hints": [
+        "HttpResponseHandler",
+        "ハンドラキュー",
+        "関連するハンドラ",
+        "ハンドラ処理概要"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "NoMoreHandlerException",
+        "HttpErrorResponse",
+        "Result.Error",
+        "StackOverflowError",
+        "ThreadDeath",
+        "VirtualMachineError",
+        "GlobalErrorHandler",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "nablarch_error",
+        "ステータスコード",
+        "デフォルトページ",
+        "HttpResponse"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "defaultPages",
+        "writeFailureLogPattern",
+        "DI設定",
+        "ワイルドカード指定",
+        "デフォルト遷移先",
+        "XML設定例"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.HttpErrorHandler`",
+    "s2": "後続ハンドラの処理中に送出された例外を捕捉し、障害ログを出力後、HTTPエラーレスポンスオブジェクトを作成して返す。\n\n後続ハンドラが正常終了し、遷移先画面も応答内容も設定されていない場合は、既定のエラー画面を遷移先として指定する。",
+    "s3": "ハンドラキュー内の位置: `HttpResponseHandler → HttpErrorHandler`\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [HttpResponseHandler](handlers-HttpResponseHandler.json) | 捕捉した例外に対するHTTPレスポンスオブジェクトを作成するが、レスポンス処理自体はHttpResponseHandler側で行われるため、本ハンドラの上位に配置する必要がある。 |",
+    "s4": "**往路処理**\n\n1. 後続ハンドラへの処理委譲: 往路では特段の処理を行わない。引数をそのまま後続ハンドラに渡す。\n\n**復路処理**\n\n2. レスポンスボディ内容の確認: 以下のいずれかが満たされていれば、HTTPレスポンスオブジェクトを返却して終了する:\n   1. コンテンツパスが設定されている\n   2. `HttpResponse#setInputStream()` によりInputStreamが設定されている\n   3. `HttpResponse#write()` によりレスポンスボディがバッファリングされている\n\n2a. レスポンスボディが設定されていない場合: `HttpResponse#getStatusCode()` の値に合致するデフォルトページへのコンテンツパスを設定して返却する。\n\nデフォルトページ（設定省略時）:\n\n| ステータスコード | コンテンツパス |\n|---|---|\n| 404 | servlet:///jsp/notFound.jsp |\n| 401 | servlet:///jsp/unauthorized.jsp |\n| 3xx（300〜399） | servlet:///jsp/redirecting.jsp |\n| 4xx（400〜499、401/404除く） | servlet:///jsp/userError.jsp |\n| 5xx（500〜599） | servlet:///jsp/systemError.jsp |\n\n**例外処理**\n\n後続ハンドラ実行中に例外が送出された場合、送出された例外はリクエストコンテキストにキー名 `nablarch_error` で設定される。\n\n| 捕捉した例外クラス | ログ出力 | 処理内容 |\n|---|---|---|\n| nablarch.fw.NoMoreHandlerException | Info | ステータスコード404のデフォルトページを設定したHTTPレスポンスを返却 |\n| nablarch.fw.web.HttpErrorResponse | なし | この例外に指定されているHTTPレスポンスオブジェクトを返却 |\n| nablarch.fw.Result.Error | なし | 例外のステータスコードに対応するデフォルトページを遷移先とするHTTPレスポンスを返却 |\n| java.lang.StackOverflowError | Fatal | ステータスコード500のデフォルトページを設定したHTTPレスポンスを返却 |\n| java.lang.ThreadDeath | なし | 何もせずに捕捉した例外を再送出（ログ出力は[GlobalErrorHandler](handlers-GlobalErrorHandler.json)で行われる） |\n| java.lang.VirtualMachineError（StackOverflowError除く） | なし | 何もせずに捕捉した例外を再送出（ログ出力は[GlobalErrorHandler](handlers-GlobalErrorHandler.json)で行われる） |\n| 上記以外の実行時例外・エラー | Fatal | ステータスコード500のデフォルトページを設定したHTTPレスポンスを返却 |\n\n> **注意**: `writeFailureLogPattern`プロパティで指定された正規表現にマッチするステータスコードをもつResult.Errorオブジェクトの場合には、障害ログを出力する。",
+    "s5": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| defaultPages | Map<String, String> | | ハンドラ処理フロー参照 | ステータスコード毎のデフォルト遷移先 |\n| writeFailureLogPattern | String | | 500〜599（503除く） | Result.Error発生時の障害通知ログ出力対象ステータスコード（正規表現で指定） |\n\n> **補足**: `writeFailureLogPattern`で全ステータスコードを対象にする場合は `\".*\"` と指定する。\n\n**標準設定例:**\n```xml\n<!-- HTTPレスポンスハンドラ -->\n<component class=\"nablarch.fw.web.handler.HttpResponseHandler\" />\n```\n\n**ステータスコード毎のデフォルト遷移先を設定する場合:**\n\nステータスコードに `\".\"` を含めることでワイルドカード指定可能。複数の遷移先がマッチする場合は、ワイルドカードの使用桁が少ない方を優先（例: ステータスコード404に対して `\"4..\"` と `\"404\"` がマッチする場合、`\"404\"` が優先）。\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpErrorHandler\">\n    <property name=\"defaultPages\">\n        <map>\n        <entry key=\"4..\" value=\"/USER_ERROR.jsp\" />\n        <entry key=\"404\" value=\"/NOT_FOUND.jsp\" />\n        <entry key=\"5..\" value=\"/ERROR.jsp\" />\n        <entry key=\"503\" value=\"/NOT_IN_SERVICE.jsp\" />\n        </map>\n    </property>\n</component>\n```\n\n**Result.Error発生時の障害通知ログ出力ステータスコードを変更する場合:**\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpErrorHandler\">\n    <property name=\"writeFailureLogPattern\" value=\"5[0-9][0-9]\" />\n</component>\n```"
+  }
+}

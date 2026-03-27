@@ -1,0 +1,53 @@
+{
+  "id": "handlers-HttpMessagingResponseBuildingHandler",
+  "title": "HTTPメッセージングレスポンス変換ハンドラ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "HttpMessagingResponseBuildingHandler",
+        "nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler",
+        "ResponseMessage",
+        "HttpResponse",
+        "HTTPメッセージングレスポンス変換",
+        "TransactionManagementHandler",
+        "MessageResendHandler",
+        "HttpMessagingRequestParsingHandler",
+        "ハンドラ配置順序",
+        "プロトコルヘッダー変換"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "HTTPレスポンス変換",
+        "MessagingException",
+        "InvalidDataFormatException",
+        "contentType",
+        "bodyStream",
+        "statusCode",
+        "ハンドラ処理フロー",
+        "往路処理",
+        "復路処理",
+        "例外処理"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "設定項目",
+        "HttpMessagingRequestParsingHandler",
+        "ハンドラ設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler`\n\n後続ハンドラが作成した応答電文オブジェクト(ResponseMessage)をHTTPレスポンスオブジェクト(HttpResponse)に変換するハンドラ。応答電文中のプロトコルヘッダーの値を対応するHTTPヘッダーに設定し、応答電文に設定されたデータ(Map)をXMLやJSON等の形式に直列化してHTTPレスポンスボディに設定する。\n\n**ハンドラキュー上の位置** (Context: handler sub_thread data_read):\n1. HttpMessagingRequestParsingHandler\n2. HttpMessagingResponseBuildingHandler\n3. TransactionManagementHandler\n4. HttpMessagingResponseBuildingHandler\n5. MessageResendHandler\n6. MessagingAction\n\n> **警告**: 応答電文オブジェクト(ResponseMessage)をリターンするハンドラは全て本ハンドラの後続に配置する必要がある。特にトランザクション制御ハンドラとの位置関係には特に留意が必要である。\n\n**関連するハンドラ**:\n\n| ハンドラ | 内容 |\n|---|---|\n| [TransactionManagementHandler](handlers-TransactionManagementHandler.json) | 本ハンドラはトランザクション制御ハンドラの前後にそれぞれ配置する必要がある。業務アクション側に配置するハンドラはレスポンスメッセージのフォーマットエラー発生時に業務トランザクションをロールバックするために必要。もう一方はエラー時に業務側で作成したエラー応答電文をHTTPレスポンスに変換するために必要。 |\n| [MessageResendHandler](handlers-MessageResendHandler.json) | 応答電文オブジェクトを返却するので、本ハンドラの後続に配置する。 |\n| [HttpMessagingRequestParsingHandler](handlers-HttpMessagingRequestParsingHandler.json) | 本ハンドラでは受信電文が解析済みであることを前提として例外制御を行うため、本ハンドラよりも上位に配置する必要がある。 |",
+    "s2": "**[往路処理]**\n1. ハンドラキュー上の後続ハンドラに処理を委譲し、その結果を取得する。\n\n**[復路処理]**\n2. 処理結果が応答電文オブジェクトであった場合、以下の項目を設定したHTTPレスポンスオブジェクトを作成する。\n\n| 設定項目 | プロパティ名 | 設定内容 |\n|---|---|---|\n| コンテントタイプ | contentType | 利用したデータフォーマッタに設定されたmimeType |\n| 応答電文のボディ部 | bodyStream | 応答電文のボディ部のデータストリーム |\n| ステータスコード | statusCode | 応答電文オブジェクトに設定されているステータスコード |\n\n3. 取得した処理結果または変換したHTTPレスポンスオブジェクトをリターンして終了する。\n\n**[例外処理]**\n- **3a. (メッセージングエラー発生)**: MessagingException または InvalidDataFormatException が発生した場合、内部不具合とみなしINFOレベルのログを出力後、元例外をネストしたステータスコード500のHTTPエラーレスポンスを送出する。\n- **3b. (後続ハンドラがエラー応答電文を送出)**: 後続ハンドラからエラー応答電文が送出された場合、復路処理(2)と同等の処理でHTTPエラーレスポンスオブジェクトを構築して再送出する。このときのステータスコードは元例外のステータスコードと同じ値となる。\n- **3c. (上記以外の実行時例外)**: 上記以外の実行時例外が発生した場合、本ハンドラでは何もせず再送出して終了する。",
+    "s3": "本ハンドラは [HttpMessagingRequestParsingHandler](handlers-HttpMessagingRequestParsingHandler.json) と同じ設定にする必要がある。"
+  }
+}

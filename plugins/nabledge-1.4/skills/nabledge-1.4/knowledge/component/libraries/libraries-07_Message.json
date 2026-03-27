@@ -1,0 +1,153 @@
+{
+  "id": "libraries-07_Message",
+  "title": "メッセージ管理",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "メッセージ管理",
+        "リポジトリ登録",
+        "初期化",
+        "メッセージ取得",
+        "messageResource",
+        "MessageResource",
+        "BasicStringResourceLoader",
+        "StringResourceHolder",
+        "BasicStaticDataCache",
+        "SimpleDbTransactionManager",
+        "loadOnStartup",
+        "メッセージ設定",
+        "コンポーネント登録"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "hints": [
+        "メッセージID",
+        "国際化",
+        "MessageFormat",
+        "StaticDataCache",
+        "StringResource",
+        "BasicStringResource",
+        "StringResourceHolder",
+        "BasicStringResourceLoader",
+        "MessageLevel",
+        "Message",
+        "ApplicationException",
+        "MessageUtil",
+        "キャッシュ",
+        "stringResourceCache",
+        "nablarch.core.message.StringResourceHolder",
+        "メッセージリソース設定"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "メッセージテーブル",
+      "hints": [
+        "メッセージテーブル",
+        "BasicStringResourceLoader",
+        "テーブル定義",
+        "メッセージID",
+        "言語",
+        "文字列リソース",
+        "BasicStaticDataCache",
+        "StringResource",
+        "StaticDataLoader",
+        "nablarch.core.cache.BasicStaticDataCache",
+        "キャッシュ設定",
+        "StaticDataCache"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "テーブル定義の例",
+      "hints": [
+        "テーブル定義の例",
+        "データベース設計",
+        "メッセージテーブル構造",
+        "BasicStringResourceLoader",
+        "dbManager",
+        "tableName",
+        "idColumnName",
+        "langColumnName",
+        "valueColumnName",
+        "nablarch.core.message.BasicStringResourceLoader",
+        "メッセージテーブル設定"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "メッセージの取得",
+      "hints": [
+        "MessageUtil",
+        "createMessage",
+        "MessageLevel",
+        "メッセージ取得"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "メッセージのフォーマット",
+      "hints": [
+        "MessageFormat",
+        "メッセージフォーマット",
+        "createMessage",
+        "formatMessage",
+        "埋め込み文字",
+        "オプションパラメータ"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "国際化",
+      "hints": [
+        "国際化",
+        "formatMessage",
+        "ThreadContext",
+        "Locale",
+        "多言語化",
+        "言語指定"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "オプションパラメータの国際化",
+      "hints": [
+        "オプションパラメータ",
+        "国際化",
+        "StringResource",
+        "Message",
+        "getStringResource",
+        "メッセージネスト",
+        "MessageUtil"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "例外によるメッセージの通知",
+      "hints": [
+        "ApplicationException",
+        "例外",
+        "getMessages",
+        "業務エラー",
+        "メッセージ通知",
+        "throw"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "メッセージ管理機能はリポジトリに登録して使用する。初期化処理は :ref:`repository` が実行する。アプリケーションプログラマはメッセージ取得（画面表示用）に使用する。\n\nリポジトリに `messageResource` というコンポーネント名で `MessageResource` クラスを登録する必要がある。\n\n**設定例**:\n\n```xml\n<!-- SimpleDbTransactionManager の設定 -->\n<component name=\"messageDbManager\" class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">\n    <property name=\"dbTransactionName\" value=\"message\"/>\n</component>\n\n<component name=\"stringResourceLoader\"\n    class=\"nablarch.core.message.BasicStringResourceLoader\">\n  <property name=\"dbManager\" ref=\"messageDbManager\"/>\n  <property name=\"tableName\" value=\"TEST_MESSAGE\"/>\n  <property name=\"idColumnName\" value=\"MESSAGE_ID\"/>\n  <property name=\"langColumnName\" value=\"LANG\"/>\n  <property name=\"valueColumnName\" value=\"MESSAGE\"/>\n</component>\n\n<component name=\"stringResourceHolder\" class=\"nablarch.core.message.StringResourceHolder\">\n  <property name=\"stringResourceCache\">\n    <component class=\"nablarch.core.cache.BasicStaticDataCache\">\n      <!-- loadOnStartup: true=起動時一括ロード, false=オンデマンドロード -->\n      <property name=\"loadOnStartup\" value=\"true\"/>\n      <property name=\"loader\" ref=\"stringResourceLoader\"/>\n    </component>\n  </property>\n</component>\n```",
+    "s2": "## 特徴\n\n- メッセージIDを指定してメッセージを取得できる\n- 国際化: メッセージID1つに対して言語ごとに異なるメッセージを設定できる\n- `java.text.MessageFormat` 形式で可変文字をフォーマット可能\n- メッセージは [./05_StaticDataCache](libraries-05_StaticDataCache.json) の機能を使用してキャッシュされる（アプリ側でキャッシュを意識する必要はない）\n\n## インタフェース/クラス定義\n\n**インタフェース**: `nablarch.core.message.StringResource`\n- ユーザに通知するメッセージの元となる文字列リソースを保持。メッセージIDという単位で管理。国際化アプリではメッセージID1つに言語ごとの複数の文字列が存在する。\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.core.message.BasicStringResource` | StringResourceの基本実装。各言語の文字列リソースをMapで保持 |\n| `nablarch.core.message.StringResourceHolder` | 文字列リソースを管理するクラス。キャッシュに [05_StaticDataCache](libraries-05_StaticDataCache.json) を使用 |\n| `nablarch.core.message.BasicStringResourceLoader` | DBから文字列リソースを取得するローダー。StringResourceにはBasicStringResourceを使用 |\n| `nablarch.core.message.MessageLevel` | メッセージの通知レベルを表す列挙型 |\n| `nablarch.core.message.Message` | メッセージ情報（StringResource、MessageLevel、optionパラメータ）を保持しフォーマットを行う |\n| `nablarch.core.message.ApplicationException` | 処理結果メッセージ通知に使用する例外クラス。Messageのリストを持つ |\n| `nablarch.core.message.MessageUtil` | アプリケーションがメッセージを取得する際に使用するユーティリティクラス |\n\n**クラス**: `nablarch.core.message.StringResourceHolder`\n\n| プロパティ名 | 設定内容 |\n|---|---|\n| stringResourceCache (必須) | StringResourceインタフェースを実装したクラスを保持するStaticDataCacheを設定する |",
+    "s3": "`BasicStringResourceLoader` がDBから文字列リソースをロードするテーブル。テーブル名・カラム名は任意。DBの型はJavaの型に変換可能な型を選択する。\n\n| 定義 | Javaの型 | 制約 |\n|---|---|---|\n| メッセージID | java.lang.String | プライマリキー |\n| 言語 | java.lang.String | プライマリキー |\n| メッセージ | java.lang.String | |\n\n**クラス**: `nablarch.core.cache.BasicStaticDataCache`\n\n詳細は `05_StaticDataCache` を参照。\n\n> **警告**: このプロパティに設定する StaticDataLoader は、必ず `BasicStringResourceLoader` クラスのように、`StringResource` インタフェースを実装したクラスを読み込むように実装すること。",
+    "s4": "メッセージテーブルのデータベース設計例。\n\n![テーブル定義の例](assets/libraries-07_Message/07_Message_DatabaseDiagram.jpg)\n\n**クラス**: `nablarch.core.message.BasicStringResourceLoader`\n\n| プロパティ名 | 設定内容 |\n|---|---|\n| dbManager (必須) | メッセージのロード時に使用するSimpleDbTransactionManagerクラスを指定する |\n| tableName (必須) | メッセージを永続化したテーブル名を指定する |\n| idColumnName (必須) | メッセージを永続化したテーブルのメッセージIDのカラム名を指定する |\n| langColumnName (必須) | メッセージを永続化したテーブルの言語のカラム名を指定する |\n| valueColumnName (必須) | メッセージを永続化したテーブルのメッセージのカラム名を指定する |",
+    "s5": "`MessageUtil` を使用してメッセージを取得する。\n\n```java\n// Message ID \"MSG0001\"の結果メッセージを取得\nMessage message = MessageUtil.createMessage(MessageLevel.INFO, \"MSG0001\");\n```",
+    "s6": "`java.text.MessageFormat` 形式で埋め込み文字をフォーマットできる。DBのメッセージカラムには埋め込み文字の状態で登録しておく。\n\nメッセージテーブル例:\n\n| メッセージID | 言語 | メッセージ |\n|---|---|---|\n| MSG0001 | ja | {0} は {1} から {2} の間で指定してください。 |\n\n```java\n// \"price は 1 から 10 の間で指定してください。\" が取得できる。\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0001\", \"price\", 1, 10);\nString messageStr = message.formatMessage();\n```",
+    "s7": "DBのメッセージテーブルに言語ごとに異なるメッセージを設定することで国際化できる。\n\n- `formatMessage()` 引数なし → ThreadContextに保持した言語のメッセージを取得\n- ThreadContextへの言語設定は通常フレームワークが行うため、アプリで意識する必要はない（[thread-context-label](libraries-thread_context.json) 参照）\n- 特定言語を指定する場合: `formatMessage(Locale.ENGLISH)` のように引数で言語を指定\n\nメッセージテーブル例:\n\n| メッセージID | 言語 | メッセージ |\n|---|---|---|\n| MSG0001 | en | User id is already registered. |\n| MSG0001 | ja | そのユーザIDは既に登録されています。 |\n\n```java\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0001\");\n\nThreadContext.setLanguage(Locale.ENGLISH);\nString messageStr1 = message.formatMessage(); // \"User id is already registered.\"\n\nThreadContext.setLanguage(Locale.JAPANESE);\nString messageStr2 = message.formatMessage(); // \"そのユーザIDは既に登録されています。\"\n\n// 特定の言語を指定\nString messageStr3 = message.formatMessage(Locale.ENGLISH); // \"User id is already registered.\"\n```",
+    "s8": "メッセージフォーマット時のオプションパラメータに `StringResource` または `Message` を使用することで、オプションパラメータも国際化できる。\n\nメッセージテーブル例:\n\n| メッセージID | 言語 | メッセージ |\n|---|---|---|\n| MSG0001 | en | value of {0} is not valid. |\n| MSG0001 | ja | {0}の値が不正です。 |\n| MSG0002 | en | unknown error occur. error message:\"{0}\". |\n| MSG0002 | ja | 原因不明のエラーが発生しました。 エラーメッセージ:「{0}」。 |\n| PRP0001 | en | name |\n| PRP0001 | ja | 名前 |\n\n**StringResourceを使用する場合**: `MessageUtil.getStringResource(id)` でStringResourceを取得し、`createMessage` のオプションに設定する。\n\n```java\nStringResource propertyStringResource = MessageUtil.getStringResource(\"PRP0001\");\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0001\", propertyStringResource);\n\nThreadContext.setLanguage(Locale.ENGLISH);\nString message1 = message.formatMessage(); // \"value of name is not valid.\"\n\nThreadContext.setLanguage(Locale.JAPANESE);\nString message2 = message.formatMessage(); // \"名前の値が不正です。\"\n\nString message3 = message.formatMessage(Locale.ENGLISH); // \"value of name is not valid.\"\n```\n\n**Messageをネストする場合**: `createMessage` のオプションに `Message` を設定することでメッセージをネストできる。\n\n```java\nStringResource propertyStringResource = MessageUtil.getStringResource(\"PRP0001\");\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0001\", propertyStringResource);\n\nThreadContext.setLanguage(Locale.JAPANESE);\nMessage errorMessage = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0002\", message);\nString errorMessage1 = errorMessage.formatMessage();\n// \"原因不明のエラーが発生しました。 エラーメッセージ:「名前の値が不正です。」。\"\n```",
+    "s9": "業務エラーのメッセージ通知には `ApplicationException` クラスを使用する。`ApplicationException` またはそのサブクラスを使用することで、フレームワークが提供する例外処理機構が利用できる。\n\n**例外の送出**:\n\n```java\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0001\");\nthrow new ApplicationException(message);\n```\n\n**例外からメッセージを取得**:\n\n```java\ntry {\n    anyBussinessLogic();\n} catch (ApplicationException e) {\n    List<Message> messages = e.getMessages();\n    showErrorMessage(messages);\n}\n```"
+  }
+}

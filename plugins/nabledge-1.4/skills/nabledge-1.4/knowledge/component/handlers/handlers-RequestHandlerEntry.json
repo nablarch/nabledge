@@ -1,0 +1,50 @@
+{
+  "id": "handlers-RequestHandlerEntry",
+  "title": "リクエストハンドラエントリ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "RequestHandlerEntry",
+        "nablarch.fw.RequestHandlerEntry",
+        "リクエストパスフィルタリング",
+        "Globパターン",
+        "ハンドラ実行制限",
+        "リクエストパスパターン指定"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "ハンドラ処理フロー",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "リクエストパスマッチング",
+        "委譲対象ハンドラ"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "handler",
+        "requestPattern",
+        "RequestPathJavaPackageMapping",
+        "nablarch.fw.handler.RequestPathJavaPackageMapping",
+        "設定項目",
+        "複数パッケージ",
+        "basePackage",
+        "immediate"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.RequestHandlerEntry`\n\n対象ハンドラをラップし、特定の [リクエストパス](../../about/about-nablarch/about-nablarch-concept-architectural_pattern.json) に対してのみ実行するハンドラ。\n\n## リクエストパスのパターン指定\n\nGlob式に似た書式でリクエストパスのパターンを指定する。`*` は `.` と `/` を除く任意文字列にマッチ。末尾の `/` が `//` の場合、それ以前の文字列で前方一致すればマッチ成功と判定する。`//` 以降の文字列（リソース名）については別途マッチ判定が行われる（すなわち「サブディレクトリ全体」にマッチし、さらに `//` 以降のパターンでリソース名もフィルタリングされる）。\n\n### 基本パターン\n\n| requestPattern | リクエストパス | 結果 |\n|---|---|---|\n| `/` | `/` | 呼ばれる |\n| `/` | `/index.jsp` | 呼ばれない |\n| `/*` | `/` | 呼ばれる |\n| `/*` | `/app` | 呼ばれる |\n| `/*` | `/app/` | 呼ばれない（`*` は `/` にマッチしない） |\n| `/*` | `/index.jsp` | 呼ばれない（`*` は `.` にマッチしない） |\n| `/app/*.jsp` | `/app/index.jsp` | 呼ばれる |\n| `/app/*.jsp` | `/app/admin` | 呼ばれない |\n| `/app/*/test` | `/app/admin/test` | 呼ばれる |\n| `/app/*/test` | `/app/test/` | 呼ばれない |\n\n### 前方一致パターン（`//` 使用）\n\n| requestPattern | リクエストパス | 結果 |\n|---|---|---|\n| `/app//` | `/` | 呼ばれない |\n| `/app//` | `/app/` | 呼ばれる |\n| `/app//` | `/app/admin/` | 呼ばれる |\n| `/app//` | `/app/admin/index.jsp` | 呼ばれる |\n| `//*.jsp` | `/app/index.jsp` | 呼ばれる |\n| `//*.jsp` | `/app/admin/index.jsp` | 呼ばれる |\n| `//*.jsp` | `/app/index.html` | 呼ばれない（`*.jsp` がマッチしない） |",
+    "s2": "## 往路処理\n\n1. **ハンドラ実行判定**: リクエストオブジェクトからリクエストパスを取得し、設定された実行対象リクエストパスパターンと合致するか判定\n2. **実行対象外**: パターン不一致の場合、後続ハンドラに処理移譲し結果を取得\n3. **実行対象**: パターン一致の場合、委譲対象ハンドラに処理を委譲し結果を取得\n\n## 復路処理\n\n4. **正常終了**: 往路2または3の結果をリターン\n\n## 例外処理\n\n後続ハンドラまたは委譲対象ハンドラの処理中にエラーが発生した場合、特段の例外処理を行わず、例外をそのまま送出",
+    "s3": "| プロパティ名 | 型 | 必須 | 説明 |\n|---|---|---|---|\n| handler | Handler | ○ | 委譲対象ハンドラ |\n| requestPattern | String | ○ | 委譲対象ハンドラを実行するリクエストパスのパターン |\n\n### 設定例（画面オンライン処理）\n\n宣言的トランザクション制御の対象範囲を `/action` 配下に限定する場合：\n\n```xml\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/action//\"/>\n  <property name=\"handler\" ref=\"transactionManagementHandler\"/>\n</component>\n```\n\n### 設定例（複数パッケージ）\n\n単一のリクエストハンドラエントリでは異なるベースパッケージへのディスパッチが不可。ss11AA をベースパッケージに指定した場合のディスパッチ範囲は以下のとおり：\n\n```\nnablarch\n   +-sample\n       +- ss11AA <-- ベースパッケージ\n       |     +- RM11AA0101Action   <-- 委譲可\n       |     +- RM11AA0102Action   <-- 委譲可\n       +- ss99ZZ\n             +- RM99ZZ0101Action   <-- 委譲不可\n```\n\n複数のリクエストハンドラエントリを使用することで、複数のベースパッケージ配下のクラスへのディスパッチが可能：\n\n```xml\n<!-- サブシステムss11AA向け -->\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/RM11AA*\"/>\n  <property name=\"handler\">\n    <component class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n      <property name=\"basePackage\" value=\"nablarch.sample.ss11AA\" />\n      <property name=\"immediate\" value=\"false\" />\n    </component>\n  </property>\n</component>\n\n<!-- サブシステムss99ZZ向け -->\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/RM99ZZ*\"/>\n  <property name=\"handler\">\n    <component class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n      <property name=\"basePackage\" value=\"nablarch.sample.ss99ZZ\" />\n      <property name=\"immediate\" value=\"false\" />\n    </component>\n  </property>\n</component>\n```"
+  }
+}

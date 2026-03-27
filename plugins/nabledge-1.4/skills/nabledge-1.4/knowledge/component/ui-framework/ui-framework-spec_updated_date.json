@@ -1,0 +1,47 @@
+{
+  "id": "ui-framework-spec_updated_date",
+  "title": "設計書更新日付情報ウィジェット",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "spec:updated_date",
+        "設計書更新日付情報",
+        "設計書ビュー",
+        "更新日付タグ",
+        "JSPサーバ表示非影響"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "属性値なし",
+        "設計書ビュー変更欄表示",
+        "ボディ部文字列",
+        "updated_dateタグ仕様"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "updated_date.tag",
+        "SpecSheetTemplate.xlsx",
+        "SpecSheetTemplate.files",
+        "SpecSheetInterpreter.js",
+        "SpecSheetView.js",
+        "設計書ビュー構成",
+        "部品一覧"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[spec_updated_date](ui-framework-spec_updated_date.json) は当該画面の更新日付情報を記述するタグ。本タグの内容は設計書ビューのヘッダー部分の「変更」欄に表示される。\n\n> **注意**: この部品はJSPのサーバ表示の内容には一切影響しない。実装工程以降も削除する必要はない。\n\n```jsp\n<spec:author>TIS 田嶋 岩魚</spec:author>\n<spec:updated_by>TIS 名部 楽太郎</spec:updated_by>\n<spec:created_date>2014/01/04</spec:created_date>\n<spec:updated_date>2014/01/08</spec:updated_date>\n```",
+    "s2": "本タグに属性値は定義されていない。ボディ部に設定された文字列を設計書ビューの変更欄にそのまま表示する。",
+    "s3": "サーバ表示で動作するタグファイル(`updated_date.tag`)はJSPコンパイルを通すためだけの空ファイル。\n\n設計書ビューはテンプレートファイル`SpecSheetTemplate.xlsx`と各項目の表示内容を制御する`SpecSheetInterpreter.js`によって構成される。\n\n**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/spec/updated_date.tag | [spec_updated_date](ui-framework-spec_updated_date.json) のタグファイル |\n| /js/jsp/taglib/spec.js | ローカル表示用スタブ |\n| /js/devtool/SpecSheetView.js | 設計書ビューJavaScriptUI部品 |\n| /js/devtool/SpecSheetInterpreter.js | 設計書ビュー表示内容制御スクリプト |\n| /tools/specsheet_template/SpecSheetTemplate.xlsx | 設計書ビューテンプレートファイル |\n| /tools/specsheet_template/SpecSheetTemplate.files | 設計書ビューテンプレートファイル(HTML形式保存版) |"
+  }
+}

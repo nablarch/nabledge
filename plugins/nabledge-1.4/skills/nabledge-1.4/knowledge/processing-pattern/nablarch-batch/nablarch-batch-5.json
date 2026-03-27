@@ -1,0 +1,27 @@
+{
+  "id": "nablarch-batch-5",
+  "title": "バッチアプリケーションを自動テスト以外の方法で起動する方法を教えてください",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "バッチアプリケーションのコマンドライン起動方法",
+      "hints": [
+        "nablarch.fw.launcher.Main",
+        "バッチアプリケーション起動",
+        "コマンドライン起動",
+        "Javaコマンド",
+        "クラスパス設定",
+        "diConfig",
+        "requestPath",
+        "userId",
+        "batchArgs",
+        "コンポーネント定義ファイル"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "コマンドプロンプト/ターミナルからバッチアプリケーションを起動する場合、以下のJavaコマンドを使用する。\n\n**クラス**: `nablarch.fw.launcher.Main`\n\n```sh\njava -classpath %CLASSPATH% nablarch.fw.launcher.Main -diConfig %diConfig% -requestPath %requestPath% -userId %userId% %batchArgs%\n```\n\n| 引数 | 説明 |\n|---|---|\n| `-classpath %CLASSPATH%` | Eclipseでプロダクションコードに設定しているクラスパス |\n| `-diConfig %diConfig%` | コンポーネント定義ファイルのルートファイル名。都度起動バッチ: `batch-component-configuration.xml`、常駐バッチ: `resident-batch-component-configuration.xml` |\n| `-requestPath %requestPath%` | リクエストパス（自動テストの `LIST_MAP=testShots` の `requestPath` カラムの値） |\n| `-userId %userId%` | ユーザID（`LIST_MAP=testShots` の `userId` カラムの値） |\n| `%batchArgs%` | バッチアプリケーションで必要な引数やオプション |"
+  }
+}

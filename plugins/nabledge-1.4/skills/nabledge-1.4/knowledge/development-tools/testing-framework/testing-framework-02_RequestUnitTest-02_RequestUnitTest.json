@@ -1,0 +1,109 @@
+{
+  "id": "testing-framework-02_RequestUnitTest-02_RequestUnitTest",
+  "title": "リクエスト単体テストの実施方法",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "テストクラスの書き方",
+      "hints": [
+        "BasicHttpRequestTestTemplate",
+        "DbAccessTestSupport",
+        "リクエスト単体テスト",
+        "テストクラス命名規則",
+        "テストクラス作成"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "テストメソッド分割",
+      "hints": [
+        "テストメソッド分割",
+        "正常系",
+        "異常系",
+        "画面表示検証",
+        "リクエストID"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "テストデータの書き方",
+      "hints": [
+        "testShots",
+        "setUpDb",
+        "LIST_MAP",
+        "requestParams",
+        "expectedStatusCode",
+        "expectedMessageId",
+        "expectedSearch",
+        "expectedTable",
+        "forwardUri",
+        "テストケース一覧",
+        "Cookie情報",
+        "ユーザ情報",
+        "context",
+        "cookie",
+        "isValidToken",
+        "setUpTable",
+        "expectedContentLength",
+        "expectedContentType",
+        "expectedContentFileName",
+        "expectedMessage",
+        "responseMessage",
+        "expectedMessageByClient",
+        "responseMessageByClient"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ひとつのキーに対して複数の値を設定する場合",
+      "hints": [
+        "リクエストパラメータ複数値",
+        "カンマ区切り",
+        "エスケープ",
+        "リクエストパラメータ"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "期待する検索結果",
+      "hints": [
+        "expectedSearch",
+        "searchResult",
+        "検索結果検証",
+        "LIST_MAP"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "期待するデータベースの状態",
+      "hints": [
+        "expectedTable",
+        "データベース検証",
+        "更新系テスト",
+        "グループID"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "テストメソッドの書き方",
+      "hints": [
+        "BasicHttpRequestTestTemplate",
+        "getBaseUri",
+        "execute",
+        "beforeExecuteRequest",
+        "afterExecuteRequest",
+        "テストメソッド作成"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "テストクラス作成ルール: (1) テスト対象Actionクラスと同一パッケージ (2) クラス名は`{Action名}RequestTest` (3) `nablarch.test.core.http.BasicHttpRequestTestTemplate`を継承\n\n> **注意**: `BasicHttpRequestTestTemplate`は`DbAccessTestSupport`の機能も兼ね備えており、データベース設定などもクラス単体テストと同様に実行できる。\n\n```java\npackage nablarch.sample.management.user;\npublic class UserSearchActionRequestTest extends BasicHttpRequestTestTemplate {\n```",
+    "s2": "テストメソッド分割ルール:\n1. リクエストID毎（Actionのメソッド毎）に正常系・異常系でテストメソッドを作成\n2. 異常系がない場合（例: メニューからの単純な画面遷移）は正常系のみ作成\n3. 画面表示検証で同一シート内の条件分岐が煩雑になる場合は画面表示検証用メソッドを別途作成、そうでない場合は正常系または異常系のメソッドに含める\n\nテストデータシートが煩雑になり可読性が下がる場合はシートを分割する。\n\nメソッド分割例:\n\n| リクエストID | Actionメソッド名 | 正常系 | 異常系 | 画面表示検証用 |\n|---|---|---|---|---|\n| USERS00101 | doUsers00101 | testUsers00101Normal | testUsers00101Abnormal | testUsers00101View |",
+    "s3": "テストデータ記述ルール:\n- Excelファイルはテストソースコードと同じディレクトリに同じファイル名（拡張子のみ異なる）で格納\n\n**setUpDb シート**: 共通のデータベース初期値を記載。テストメソッド実行時に自動投入される。\n\n**テストケース一覧 (LIST_MAP=testShots)**:\n\n| カラム名 | 説明 | 必須 |\n|---|---|---|\n| no | テストケース番号（1からの連番） | ○ |\n| description | テストケース説明。HTMLダンプファイル名に使用。OSで規定されたファイル名に利用可能な文字のみ使用可。OSで無効な文字の使用やファイル名長さ上限超過はIOExceptionの原因になる。 | ○ |\n| context | リクエストIDとユーザ情報を指定。詳細は :ref:`request_test_user_info` 参照。 | ○ |\n| cookie | Cookie情報。詳細は :ref:`request_test_cookie_info` 参照。 | |\n| isValidToken | トークンを設定する場合はtrueを指定。 | |\n| setUpTable | テストケース実行前にDBに登録するデータの :ref:`グループID<tips_groupId>` 。 | |\n| expectedStatusCode | 期待するHTTPステータスコード。302と303は同一視してアサートされる。 | ○ |\n| expectedMessageId | 期待するメッセージID（複数はカンマ区切り）。空欄の場合メッセージが出力されるとテスト失敗。 | |\n| expectedSearch | 期待する検索結果のLIST_MAP ID。リクエストスコープからの取得キーは`searchResult`。 | |\n| expectedTable | 期待するDBの状態の :ref:`グループID<tips_groupId>` 。 | |\n| forwardUri | 期待するフォワード先URI。空欄の場合はJSPフォワードが行われないとアサートされる。システムエラー画面や認証エラー画面へ遷移することを想定するテストケースでは、その画面を描画するJSPへのURIを記載する（例: `/jsp/systemError.jsp` はシステムエラー画面のデフォルト値）。 | |\n| expectedContentLength | コンテンツレングスヘッダの期待値（ファイルダウンロード用）。 | |\n| expectedContentType | コンテンツタイプヘッダの期待値（ファイルダウンロード用）。 | |\n| expectedContentFileName | コンテンツディスポジションヘッダのファイル名期待値（ファイルダウンロード用）。 | |\n| expectedMessage | メッセージ同期送信の要求電文の :ref:`グループID<tips_groupId>` 。 | |\n| responseMessage | メッセージ同期送信の応答電文の :ref:`グループID<tips_groupId>` 。 | |\n| expectedMessageByClient | HTTPメッセージ同期送信の要求電文の :ref:`グループID<tips_groupId>` 。 | |\n| responseMessageByClient | HTTPメッセージ同期送信の応答電文の :ref:`グループID<tips_groupId>` 。 | |\n\n> **注意**: `description`はHTMLダンプファイル名に使用されるため、OSで規定されたファイル名に利用可能な文字のみ使用すること。OSで無効な文字（例: 改行コード）の使用やファイル名の長さ上限超過はIOExceptionが発生する。\n\n> **注意**: HTTPステータスコード302と303は同一視してアサートされる（RFC規定のHTTP 1.1では303が推奨だが、主要WebコンテナはレガシーブラウザのためにHTTP 302を使用しているため）。\n\n**ユーザ情報 (LIST_MAP)**: 複数のユーザ情報を使い分けることで、権限によって処理が異なる機能をテスト可能。\n\n**Cookie情報 (LIST_MAP)**: 任意項目。Cookieが不要なケースは空白とする。\n\n**リクエストパラメータ (LIST_MAP=requestParams)**:\n- 各テストケースで送信するHTTPパラメータをLIST_MAPで記載（ID=`requestParams`）\n- テストケース一覧と行単位で関連付けられる\n- :ref:`http_dump_tool` を使用してデータ作成（初期画面表示以外）\n- マーカー列としてテストケース番号を記載すること\n- リクエストパラメータが不要な場合でもLIST_MAP=requestParamsには必ず列を定義し、テストケース数分の行を定義する（パラメータなし時はテストケース番号列のみ）\n- ※`[no]`列はテストケース番号を視覚的に表すマーカー列であり、実際のHTTPリクエストパラメータには含まれない",
+    "s4": "HTTPリクエストパラメータで1つのキーに複数の値を設定する場合、**カンマ区切り**で記述する。\n\n- `foo`に`one`と`two`を設定: `one,two`\n- 値にカンマを含む場合は`\\`でエスケープ（例: `\\,`）\n- 値にバックスラッシュを含む場合は`\\\\`でエスケープ\n- 例: `\\1,000`という値を表すには`\\\\1\\,000`と記述する",
+    "s5": "期待する検索結果をテストケース一覧とリンクさせる。テストケース一覧の`expectedSearch`カラムに、同シート内のLIST_MAP IDを指定する。リクエストスコープから取得する際のキーは`searchResult`。",
+    "s6": "更新系テストケースで期待するデータベースの状態を確認する場合、テストケース一覧の`expectedTable`カラムに期待するテーブルの :ref:`グループID<tips_groupId>` を指定する。",
+    "s7": "**クラス**: `nablarch.test.core.http.BasicHttpRequestTestTemplate`を継承する。\n\nテスト実行フロー:\n1. データシートからtestShots LIST_MAPを取得\n2. 各テストケースについて以下を繰り返し実行:\n   1. データベース初期化\n   2. ExecutionContext、HTTPリクエストを生成\n   3. `beforeExecuteRequest`メソッド呼出\n   4. トークンが必要な場合、トークンを設定\n   5. テスト対象のリクエスト実行\n   6. 実行結果の検証（HTTPステータスコード・メッセージID・HTTPレスポンス値・検索結果・テーブル更新結果）\n   7. `afterExecuteRequest`メソッド呼出\n\nオーバーライド必須の抽象メソッド:\n\n```java\n@Override\nprotected String getBaseUri() {\n    return \"/action/management/user/UserSearchAction/\";\n}\n```\n\nテストメソッド作成: テストシートに対応するメソッドを作成し、スーパクラスの`execute(String sheetName)`（通常）または`execute(String sheetName, Advice advice)`を呼び出す。\n\n```java\n@Test\npublic void testUsers00101Normal() {\n    execute(\"testUsers00101Normal\");\n}\n```"
+  }
+}

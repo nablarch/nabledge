@@ -1,0 +1,72 @@
+{
+  "id": "handlers-Main",
+  "title": "共通起動ランチャ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "Main",
+        "nablarch.fw.launcher.Main",
+        "StatusCodeConvertHandler",
+        "GlobalErrorHandler",
+        "ThreadContextHandler",
+        "RequestPathJavaPackageMapping",
+        "共通起動ランチャ",
+        "ハンドラキュー構成",
+        "起動シーケンス"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "CommandLine",
+        "ExecutionContext",
+        "DataReader",
+        "DataReaderFactory",
+        "handlerQueue",
+        "dataReader",
+        "dataReaderFactory",
+        "起動引数解析",
+        "リポジトリ初期化",
+        "ハンドラキュー実行",
+        "異常終了",
+        "終了コード127"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "コマンドライン起動引数の扱い",
+      "hints": [
+        "CommandLine",
+        "nablarch.fw.launcher.CommandLine",
+        "-diConfig",
+        "-requestPath",
+        "-userId",
+        "getParamMap",
+        "getArgs",
+        "名前付きパラメータ",
+        "無名パラメータ",
+        "必須パラメータ"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "設定項目",
+        "拡張ポイント",
+        "共通起動ランチャ設定",
+        "コマンドライン起動"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.launcher.Main`\n\njavaコマンドから直接起動することで、リポジトリの初期化を行い、定義されたハンドラキューを実行する。本フレームワークの起動シーケンスの起点となるクラス。\n\n**関連ハンドラ**:\n\n| ハンドラ | 内容 |\n|---|---|\n| [StatusCodeConvertHandler](handlers-StatusCodeConvertHandler.json) | ハンドラキューの先頭に配置する。このハンドラが返した整数値をプロセス終了コードとして使用する。終了コードの体系はプロジェクト毎に異なる可能性があるため、Mainから責務を分離している。 |\n| [GlobalErrorHandler](handlers-GlobalErrorHandler.json) | 後続ハンドラで発生した全ての実行時例外・エラーを捕捉する。Mainはこのハンドラが [StatusCodeConvertHandler](handlers-StatusCodeConvertHandler.json) の後続に配置されていることを前提とする。 |\n| [ThreadContextHandler](handlers-ThreadContextHandler.json) | 起動引数 **-requestPath** および **-userId** の値をもとに、スレッドコンテキスト変数のリクエストIDとユーザIDを設定する。 |\n| [RequestPathJavaPackageMapping](handlers-RequestPathJavaPackageMapping.json) | [../architectural_pattern/batch](../../processing-pattern/nablarch-batch/nablarch-batch-batch-architectural_pattern.json) などで、起動引数 **-requestPath** の値をもとに業務アクションクラスへのディスパッチを行う。 |",
+    "s2": "> **注意**: 以下の説明において **異常終了する** と表現されている部分では、障害ログを出力してプロセスを終了させる。\n\n**[往路処理]**\n\n1. **(起動引数の解析)** main関数に渡された起動引数をパースし、コマンドラインオブジェクト(`CommandLine`)に設定する。\n2. **(リポジトリの初期化)** **-diConfig** パラメータのリポジトリ定義ファイルで初期化し、以下のオブジェクトを取得する。\n\n| 論理名 | オブジェクトID | 型 |\n|---|---|---|\n| ハンドラキュー | **handlerQueue** | `List<Handler<?, ?>>` |\n| データリーダ | **dataReader** | `DataReader` |\n| データリーダファクトリ | **dataReaderFactory** | `DataReaderFactory` |\n\n3. **(実行コンテキストの構築)** `ExecutionContext`を生成し、ハンドラキュー・データリーダ/ファクトリを設定、セッションスコープ変数に起動パラメータのMapを設定する。\n4. **(ハンドラキューの実行)** ハンドラキューの最初のハンドラにコマンドラインオブジェクトと実行コンテキストを引数として処理を委譲する。\n\n**[復路処理]**\n\n5. **(正常終了)** 処理結果オブジェクトのステータスコードを終了コードとしてプロセスを終了する。ステータスコードが127を超えた場合の終了コードは127とする。\n\n**[例外処理]**\n\n- **(1a. 必須パラメータ未指定エラー)** **-diConfig**、**-requestPath**、**-userId** のいずれかが未指定の場合、異常終了する（終了コード127）。\n- **(2a. リポジトリ初期化エラー)** リポジトリ初期化時のエラー、またはハンドラキューが取得できない場合、異常終了する（終了コード127）。\n- **(5a. 異常終了)** 後続ハンドラの実行中に実行時例外・エラーが送出された場合、捕捉して異常終了する（ステータスコード127）。\n\n> **注意**: 本ハンドラはグローバルエラーハンドラの手前に配置されるため、基本的にここで例外を捕捉することは無い。",
+    "s3": "起動引数は以下の3種に分類される。以下の実行例をもとに解説する。\n\n```bash\njava                                                 \\\n    -server                                          \\\n    -Xmx128m                                         \\\n    -DcommitInterval=100                             \\\n    -DmaxExecutionCount=100000                       \\\nnablarch.fw.launcher.Main                            \\\n    -diConfig    file:./batch-config.xml             \\\n    -requestPath admin.DataUnloadBatchAction/BC0012  \\\n    -userId      testUser                            \\\n    -namedParam  value                               \\\n    value1 value2 value3\n```\n\n1. **JavaVMパラメータ**（`-server`, `-Xmx128m` など）: フレームワークでは直接使用しない。\n2. **Javaシステムプロパティ**（`-Dkey=value`）: DIリポジトリ設定ファイル中の埋め込みパラメータ（`${key}`）の値として使用される。上記例では `-DcommitInterval=100`、`-DmaxExecutionCount=100000` が該当し、それぞれ `${commitInterval}`、`${maxExecutionCount}` の値を指定している。\n3. **クラス引数**: 以下の形式でパースし、`nablarch.fw.launcher.CommandLine` の属性値として設定する。\n\n**a) 名前付きパラメータ**\n\n書式: `-パラメータ名 パラメータ値`\n\nアクセス方法: `Commandline#getParamMap() : Map<String, String>`\n\n上記例で取得できる値:\n\n```javascript\n{ diConfig   : \"file:./batch-config.xml\",\n  requestPath: \"nablarch.fw.sample.SampleBatchAction\",\n  userId     : \"testUser\",\n  namedParam : \"value\" }\n```\n\n**b) 無名パラメータ**\n\n書式: `パラメータ値`（`-` プレフィックスなし）\n\nアクセス方法: `Commandline#getArgs() : List<String>`\n\n上記例で取得できる値:\n\n```javascript\n[ \"value1\", \"value2\", \"value3\" ]\n```\n\n**必須パラメータ**\n\n以下3パラメータは必ず指定する必要がある。いずれかが欠けた場合は即座に異常終了する（終了コード127）。\n\n| パラメータ | 内容 |\n|---|---|\n| **-diConfig** | リポジトリの設定ファイルのパスを指定する。 |\n| **-requestPath** | `(実行対象アクションハンドラクラス) + '/' + (リクエストID値)` の形式で指定する。[ThreadContextHandler](handlers-ThreadContextHandler.json) と [RequestPathJavaPackageMapping](handlers-RequestPathJavaPackageMapping.json) で使用される。 |\n| **-userId** | プロセスの実行権限ユーザIDを設定する。セッションコンテキスト変数に格納され、後続の [ThreadContextHandler](handlers-ThreadContextHandler.json) によってスレッドコンテキストに保持される。権限制御と関係なく、何らかの識別文字列を設定する必要がある。 |",
+    "s4": "本クラスはJavaコマンドラインから直接実行するため、固有の設定項目は存在しない。"
+  }
+}

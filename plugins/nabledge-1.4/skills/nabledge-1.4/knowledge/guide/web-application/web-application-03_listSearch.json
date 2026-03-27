@@ -1,0 +1,129 @@
+{
+  "id": "web-application-03_listSearch",
+  "title": "一覧検索",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "本項で説明する内容",
+      "hints": [
+        "W11AC01Action",
+        "W11AC0101",
+        "一覧検索",
+        "検索結果表示",
+        "ActionとViewの構成",
+        "DbAccessSupport",
+        "SqlResultSet",
+        "W11AC01SearchForm",
+        "ParameterizedSqlPStatement",
+        "条件可変SQL",
+        "LIKE検索",
+        "動的ORDER BY",
+        "$if条件",
+        "$sort"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "作成手順",
+      "hints": [
+        "ListSearchInfo",
+        "ページング",
+        "検索結果並び替え",
+        "ActionクラスとComponentクラスの使い分け",
+        "一覧検索実装",
+        "W11AC01Form",
+        "W11AC01SearchForm",
+        "TooManyResultException",
+        "ApplicationException",
+        "MessageUtil",
+        "MessageLevel",
+        "HttpResponse",
+        "HttpRequest",
+        "ExecutionContext",
+        "@OnError",
+        "リクエスト処理",
+        "一覧検索結果表示",
+        "カスタムタグ",
+        "JSP"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Formクラスの作成",
+      "hints": [
+        "ListSearchInfo",
+        "W11AC01FormBase",
+        "W11AC01Form",
+        "@PropertyName",
+        "@Required",
+        "@NumberRange",
+        "@Digits",
+        "@ValidateFor",
+        "pageNumber",
+        "sortId",
+        "検索条件バリデーション",
+        "ValidationUtil",
+        "ValidationContext",
+        "StringUtil",
+        "データベースアクセス",
+        "カスタムタグ",
+        "一覧表示",
+        "参照先"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Javaオブジェクトのフィールドの値をバインド変数に設定する機能",
+      "hints": [
+        "ParameterizedSqlPStatement",
+        "SqlPStatement",
+        "DbAccessSupport",
+        "getParameterizedSqlStatement",
+        "retrieve",
+        "バインド変数設定",
+        "フィールド値バインド"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "条件が可変のSQL文を組み立てる機能",
+      "hints": [
+        "$if",
+        "可変条件SQL",
+        "動的WHERE句",
+        "nullチェック",
+        "条件付き検索"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "LIKE検索を簡易的に実装できる機能",
+      "hints": [
+        "LIKE検索",
+        "中間一致検索",
+        "エスケープ処理",
+        "ParameterizedSqlPStatement"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "ORDER BY句を動的に変更する機能",
+      "hints": [
+        "$sort",
+        "ORDER BY動的変更",
+        "並び替え",
+        "sortId"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "作成するファイル:\n\n| ファイル | ステレオタイプ | 処理内容 |\n|---|---|---|\n| [W11AC01Action.java](assets/web-application-03_listSearch/W11AC01Action.java) | Action | 検索条件に一致する情報をDBから取得し、リクエストスコープに格納してJSPに遷移。SQLファイル: [W11AC01Action.sql](assets/web-application-03_listSearch/W11AC01Action.sql) |\n| [W11AC0101.jsp](assets/web-application-03_listSearch/W11AC0101.jsp) | View | ユーザ一覧照会画面に検索結果を表示 |\n\n**クラス**: `W11AC01Action` extends `DbAccessSupport`\n\n条件が可変なSQL文、LIKE検索（自動エスケープ）、動的ORDER BYを組み合わせた一覧検索の実装例。\n\n### SQL定義 (W11AC01Action.sql)\n\n- `$if (field) {条件}`: `search` 実行時に渡されたオブジェクトにフィールドが存在し、nullでも空文字でもなければWHERE句に組み込まれる\n- LIKE検索: `LIKE :%field%` 記法。エスケープ処理は不要（フレームワークが自動処理）\n- `$sort (sortId) {(key ORDER句)...}`: `sortId` フィールドの値に応じたORDER BY句を動的に組み込む\n\n```sql\nSELECT_USER_BY_CONDITION =\nSELECT\n  SA.LOGIN_ID, SA.USER_ID, SA.USER_ID_LOCKED,\n  USR.KANJI_NAME, USR.KANA_NAME, USR.MAIL_ADDRESS,\n  USR.EXTENSION_NUMBER_BUILDING, USR.EXTENSION_NUMBER_PERSONAL,\n  UGRP.UGROUP_ID, UGRP.UGROUP_NAME\nFROM\n    USERS USR\nINNER JOIN UGROUP_SYSTEM_ACCOUNT USA ON USR.USER_ID = USA.USER_ID\nINNER JOIN SYSTEM_ACCOUNT SA ON USR.USER_ID = SA.USER_ID\nINNER JOIN UGROUP UGRP ON UGRP.UGROUP_ID = USA.UGROUP_ID\nWHERE\n    $if (loginId) {SA.LOGIN_ID = :loginId}\n    AND $if (kanjiName) {USR.KANJI_NAME LIKE :%kanjiName%}\n    AND $if (kanaName) {USR.KANA_NAME  LIKE :%kanaName%}\n    AND $if (ugroupId) {UGRP.UGROUP_ID = :ugroupId}\n    AND $if (userIdLocked) {SA.USER_ID_LOCKED = :userIdLocked}\n$sort (sortId) {\n    (loginId_asc    SA.LOGIN_ID)\n    (loginId_desc   SA.LOGIN_ID DESC)\n    (kanjiName_asc  USR.KANJI_NAME, SA.LOGIN_ID)\n    (kanjiName_desc USR.KANJI_NAME DESC, SA.LOGIN_ID)\n    (kanaName_asc   USR.KANA_NAME, SA.LOGIN_ID)\n    (kanaName_desc  USR.KANA_NAME DESC, SA.LOGIN_ID)\n}\n```\n\n### Java実装 (W11AC01Action.java)\n\n`search()` 使用時：\n\n```java\nprivate SqlResultSet selectByCondition(W11AC01SearchForm condition) {\n    return search(\"SELECT_USER_BY_CONDITION\", condition);\n}\n```\n\nLIKE検索のエスケープや `%` 付加のJavaコードは不要。\n\n### getParameterizedSqlStatement を使う場合\n\n> **注意**: `getParameterizedSqlStatement` の第2引数（condition）と `retrieve` の引数には、必ず**同じインスタンス**を渡すこと。異なるインスタンスを渡すと、意図した条件で検索が行われない。\n\n```java\nParameterizedSqlPStatement statement = getParameterizedSqlStatement(\n        \"SELECT_USER_BY_CONDITION\", condition);\nreturn statement.retrieve(condition);\n```",
+    "s2": "**検索条件Form作成のポイント**: `ListSearchInfo`クラスを継承することでページングや検索結果の並び替えを容易に実現できる。\n\n**ビジネスロジック作成のポイント**: 本処理で使用するビジネスロジックは他の処理では使用しないため、ComponentクラスではなくActionクラスに作成する。\n\n使用するデータベースアクセス機能:\n- [03_field](#s3): Javaオブジェクトのフィールドの値をバインド変数に設定する機能\n- :ref:`03_SQL`: 条件が可変のSQL文を組み立てる機能\n- [03_like](#s5): LIKE検索を簡易的に実装できる機能\n- :ref:`03_orderBy`: ORDER BY句を動的に変更する機能\n\n## リクエストに対応するメソッドの作成\n\n**アノテーション**: `@OnError(type = ApplicationException.class, path = \"/ss11AC/W11AC0101.jsp\")`\n\n```java\npublic HttpResponse doRW11AC0102(HttpRequest req, ExecutionContext ctx) {\n    W11AC01Form form = W11AC01Form.validate(req, \"search\");\n\n    W11AC01SearchForm condition = searchConditionCtx.createObject();\n    ctx.setRequestScopedVar(\"11AC_W11AC01\", condition);\n\n    SqlResultSet searchResult;\n    try {\n        searchResult = selectByCondition(condition);\n    } catch (TooManyResultException e) {\n        throw new ApplicationException(\n            MessageUtil.createMessage(MessageLevel.ERROR, \"MSG00035\", e.getMaxResultCount()));\n    }\n\n    ctx.setRequestScopedVar(\"searchResult\", searchResult);\n    ctx.setRequestScopedVar(\"resultCount\", condition.getResultCount());\n    return new HttpResponse(\"/ss11AC/W11AC0101.jsp\");\n}\n```\n\n- `TooManyResultException` をキャッチし、`ApplicationException` に変換すること\n- 検索条件入力チェックは [how_to_validate](web-application-04_validation.json) を参照\n\n## View(JSP)の作成 (W11AC0101.jsp)\n\n- 検索結果はリスト-マップ（1レコードを表す `Map` を要素とする `List`）で取得できる\n- 検索結果一覧表示用のカスタムタグを使用するため、JSP内でループ処理は不要\n- 一覧表示用カスタムタグの使用方法: :ref:`custom_tag_paging`",
+    "s3": "`ListSearchInfo`を継承したFormクラスの実装ポイント:\n\n1. `pageNumber`と`sortId`のセッターをオーバーライドし、バリデーションアノテーションを設定する\n2. `SEARCH_CONDITION_PROPS`にListSearchInfoのプロパティ（`pageNumber`、`sortId`）も含める\n3. `getSearchConditionProps()`メソッドを追加して`SEARCH_CONDITION_PROPS`を返す\n4. 検索条件が少なくとも1つ指定されていることを`isValidSearchCondition()`で確認する\n\n**W11AC01FormBase.java** (`ListSearchInfo`継承):\n\n```java\npublic abstract class W11AC01FormBase extends ListSearchInfo {\n    private String loginId;\n    private String kanjiName;\n    private String kanaName;\n    private String ugroupId;\n    private String userIdLocked;\n\n    @PropertyName(\"開始ページ\")\n    @Required\n    @NumberRange(max = 10, min = 1)\n    @Digits(integer = 2)\n    public void setPageNumber(Integer pageNumber) {\n        super.setPageNumber(pageNumber);\n    }\n\n    @PropertyName(\"ソートID\")\n    @Required\n    public void setSortId(String sortId) {\n        super.setSortId(sortId);\n    }\n}\n```\n\n**W11AC01Form.java**:\n\n```java\npublic class W11AC01Form extends W11AC01FormBase {\n\n    public static W11AC01Form validate(HttpRequest req, String validationName) {\n        ValidationContext<W11AC01Form> context = ValidationUtil.validateAndConvertRequest(\n                \"11AC_W11AC01\", W11AC01Form.class, req, validationName);\n        context.abortIfInvalid();\n        return context.createObject();\n    }\n\n    private static final String[] SEARCH_CONDITION_PROPS = {\n        \"loginId\", \"kanjiName\", \"kanaName\", \"ugroupId\", \"userIdLocked\", \"pageNumber\", \"sortId\"\n    };\n\n    // 【説明】精査対象プロパティのゲッターを追加\n    public String[] getSearchConditionProps() {\n        return SEARCH_CONDITION_PROPS;\n    }\n\n    @ValidateFor(\"search\")\n    public static void validateForSearch(ValidationContext<W11AC01Form> context) {\n        ValidationUtil.validate(context, SEARCH_CONDITION_PROPS);\n        if (!context.isValid()) return;\n        W11AC01Form form = context.createObject();\n        if (!form.isValidSearchCondition()) {\n            context.addMessage(\"MSG00006\");\n        }\n    }\n\n    private boolean isValidSearchCondition() {\n        return StringUtil.hasValue(\n            getLoginId(), getKanjiName(), getKanaName(), getUgroupId(), getUserIdLocked());\n    }\n}\n```\n\n`validate()`メソッドは`ValidationUtil.validateAndConvertRequest`でリクエストを精査・変換し、`context.abortIfInvalid()`で精査エラー時に処理を中断、`context.createObject()`でFormオブジェクトを生成して返す。\n\n- [データベースアクセス処理を詳しく知りたい時](../../../fw/reference/02_FunctionDemandSpecifications/01_Core/04_DbAccessSpec.html)\n- [データベースアクセス処理の実例を知りたい時](./DB/01_DbAccessSpec_Example.html)\n- [カスタムタグの使用方法を詳しく知りたい時](../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07_WebView.html)",
+    "s4": "`DbAccessSupport#getParameterizedSqlStatement`で`ParameterizedSqlPStatement`を取得することで、Javaオブジェクトのフィールド値をバインド変数に一括設定できる。\n\n使用手順:\n1. `DbAccessSupport#getParameterizedSqlStatement`を使用して`ParameterizedSqlPStatement`を取得する（`SqlPStatement`は使用しない）\n2. SQL文のバインド変数は`?`ではなく`:フィールド名`形式で記述する\n3. `ParameterizedSqlPStatement#retrieve`の引数にJavaオブジェクトのインスタンスを渡す（`:フィールド名`に対応するフィールドの値が自動設定される）",
+    "s5": "指定したフィールドの値がnullまたは空文字の場合は検索条件から除外し、値がある場合のみ検索条件を組み込む機能。`DbAccessSupport#getParameterizedSqlStatement`実行時に引き渡すオブジェクトのフィールド値によって条件の組み込みが判断される。\n\n```sql\nWHERE $if (loginId) {LOGIN_ID = :loginId}\n```\n\n上記の例では、引き渡すオブジェクトの`loginId`フィールドがnullまたは空文字でない場合のみ`LOGIN_ID = :loginId`が検索条件に組み込まれる。実際に`:loginId`に設定される値は、`ParameterizedSqlPStatement#retrieve`実行時に引き渡すオブジェクトの`loginId`フィールドの値となる。",
+    "s6": "SQL文に`:%フィールド名%`形式で記述することでLIKE検索を実現できる。エスケープ処理の実装およびJavaコードでの`%`付加が不要。\n\n```sql\nWHERE USR.KANJI_NAME LIKE :%kanjiName%\n```\n\n上記の例では、`ParameterizedSqlPStatement#retrieve`実行時に引き渡すオブジェクトの`kanjiName`フィールドの値で中間一致検索を行う。エスケープ処理は自動で行われ、`%`をJavaコードで付加する必要はない。",
+    "s7": "`$sort`構文でORDER BY句を動的に切り替える機能。SQL実行時、指定したフィールドの値に対応するORDER BY条件が自動的に組み込まれる。\n\n```sql\n$sort (sortId) {\n  (loginId_asc    SA.LOGIN_ID)\n  (loginId_desc   SA.LOGIN_ID DESC)\n  (kanjiName_asc  USR.KANJI_NAME, SA.LOGIN_ID)\n  (kanjiName_desc USR.KANJI_NAME DESC, SA.LOGIN_ID)\n  (kanaName_asc   USR.KANA_NAME, SA.LOGIN_ID)\n  (kanaName_desc  USR.KANA_NAME DESC, SA.LOGIN_ID)\n}\n```\n\n`$sort (フィールド名) {(値 ORDER BY条件) ...}` 形式で定義する。例えば`sortId = loginId_desc`の場合、`ORDER BY SA.LOGIN_ID DESC`が適用される。"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "ui-framework-field_block",
+  "title": "入力フォームブロック",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "hints": [
+        "field:block",
+        "field:text",
+        "field:password",
+        "入力フォームブロック",
+        "JSP実装例",
+        "コードサンプル"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "field:block",
+        "fieldset",
+        "title",
+        "id",
+        "showTitle",
+        "collapsible",
+        "name",
+        "value",
+        "collapsed",
+        "入力フォームブロック",
+        "見出し表示",
+        "開閉機能",
+        "n:plainHidden",
+        "属性値一覧"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "hints": [
+        "block.tag",
+        "タグファイル",
+        "内部構造",
+        "部品一覧",
+        "field:block"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## コードサンプル\n\n```jsp\n<field:block\n  title=\"ユーザ基本情報\"\n  id=\"user\">\n\n  <field:text title=\"ログインID\"\n              domain=\"ログインID\"\n              required=\"true\"\n              maxlength=\"20\"\n              hint=\"半角英数記号20文字以内\"\n              name=\"W11AC02.systemAccount.loginId\"\n              sample=\"test01\">\n  </field:text>\n  <field:password title=\"パスワード\"\n                  domain=\"パスワード\"\n                  required=\"true\"\n                  maxlength=\"20\"\n                  name=\"W11AC02.newPassword\"\n                  sample=\"password\">\n  </field:password>\n</field:block>\n```",
+    "s2": "## 仕様\n\n`field:block` は入力フォームの論理的なまとまりを定義し見出しを表示するウィジェットで、HTMLの `<fieldset>` タグに相当する。\n\n`title` 属性に設定されたタイトルの見出しを表示し、ボディ部に記述されたフォームの内容をそのまま出力する。\n\n- 見出しを非表示にするには `showTitle=\"false\"` を指定する\n- `collapsible=\"true\"` を指定するとフォーム内容を開閉可能にできる（`showTitle=\"true\"` でなければ無効）\n- サーバ動作・ローカル動作で挙動は同一\n\n**属性値一覧**\n\n| プロパティ名 | 内容 | 型 | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | ブロックの見出し文字列 | 文字列 | ○ | ○ | |\n| id | htmlのid属性 | 文字列 | ○ | ○ | |\n| showTitle | ブロックの見出し文字列を表示するかどうか | 真偽値 | ○ | ○ | デフォルトはtrue |\n| collapsible | ブロックを開閉可能とするか | 真偽値 | ○ | ○ | デフォルトはfalse。showTitle=\"true\" でなければ無効 |\n| name | ブロックの開閉状態を保持するフォームの入力要素名 | 文字列 | ○ | ○ | collapsible=\"true\" の場合は必須（falseの場合は無効）。同一form内に `n:plainHidden` で書き出すことで状態が保持される |\n| value | ブロックが開かれていた場合にサーバ側に送信する値 | 文字列 | ○ | ○ | collapsible=\"true\" の場合は必須（falseの場合は無効） |\n| collapsed | 初期表示時にブロックを閉じるかどうか | 真偽値 | ○ | ○ | デフォルトはfalse。collapsible=\"true\" でなければ無効 |\n\n`name` 属性を使って開閉状態を保持する場合は、`field:block` と同一form内に同一name属性を指定した `n:plainHidden` を配置する:\n\n```jsp\n<n:form>\n  <n:plainHidden name=\"block_status\" />\n  <field:block\n    title=\"ユーザ基本情報\"\n    collapsible=\"true\"\n    name=\"block_status\"\n    value=\"basic_info\"\n    collapsed=\"true\">\n  </field:block>\n</n:form>\n```",
+    "s3": "## 内部構造・改修時の留意点\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/block.tag | field:block の実体となるタグファイル |"
+  }
+}

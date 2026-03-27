@@ -1,0 +1,86 @@
+{
+  "id": "libraries-07_CustomTag",
+  "title": "JSPカスタムタグライブラリの使用方法",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ユーザ登録機能の画面遷移",
+      "hints": [
+        "ユーザ登録機能",
+        "画面遷移",
+        "二重サブミット防止",
+        "USERS00302",
+        "WebView_SampleUI"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ディスパッチャの設定",
+      "hints": [
+        "HttpRequestJavaPackageMapping",
+        "ディスパッチャ設定",
+        "URIマッピング",
+        "UserAction",
+        "MenuAction",
+        "baseUri",
+        "basePackage",
+        "nablarch.sample"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "アクションのシグネチャ",
+      "hints": [
+        "UserAction",
+        "MenuAction",
+        "HttpRequest",
+        "ExecutionContext",
+        "HttpResponse",
+        "アクションシグネチャ",
+        "doUSERS00201",
+        "doUSERS00202",
+        "doUSERS00301",
+        "doUSERS00302",
+        "doMENUS00101"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "カスタムタグ全体に関わる仕様",
+      "hints": [
+        "WebView_NablarchTagHandler",
+        "Webフロントコントローラ",
+        "ハンドラ設定",
+        "カスタムタグ共通仕様",
+        "07_BasicRules"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "カスタムタグごとの仕様",
+      "hints": [
+        "入力カスタムタグ",
+        "表示カスタムタグ",
+        "サブミット制御タグ",
+        "二重サブミット防止",
+        "トークン",
+        "07_FormTag",
+        "07_FormTagList",
+        "07_DisplayTag",
+        "07_SubmitTag",
+        "07_FacilitateTag",
+        "07_OtherTag",
+        "code_tag",
+        "web_view_format"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "![ユーザ登録機能の画面遷移](assets/libraries-07_CustomTag/WebView_SampleUI.jpg)\n\n> **重要**: USERS00302の画面遷移はDBへのコミットを伴うリクエストのため、二重サブミットを防止する必要がある。",
+    "s2": "ディスパッチャ設定（[../../../handler/HttpRequestJavaPackageMapping](../handlers/handlers-HttpRequestJavaPackageMapping.json) 参照）:\n\n```xml\n<component name=\"packageMapping\" class=\"nablarch.fw.web.handler.HttpRequestJavaPackageMapping\">\n    <property name=\"baseUri\" value=\"/action/\"/>\n    <property name=\"basePackage\" value=\"nablarch.sample\"/>\n</component>\n```\n\nURI → メソッドのマッピング規則（UserActionの例）:\n- URI: `<コンテキストパス>/action/management/user/UserAction/<リクエストID>`\n- メソッド: `nablarch.sample.management.user.UserAction#do<リクエストID>(HttpRequest req, ExecutionContext ctx)`\n\nURI → メソッドのマッピング規則（MenuActionの例）:\n- URI: `<コンテキストパス>/action/MenuAction/<リクエストID>`\n- メソッド: `nablarch.sample.MenuAction#do<リクエストID>(HttpRequest req, ExecutionContext ctx)`",
+    "s3": "```java\npackage nablarch.sample.management.user;\n\npublic class UserAction {\n    public HttpResponse doUSERS00201(HttpRequest req, ExecutionContext ctx) { /* ユーザ登録画面の初期表示 */ }\n    public HttpResponse doUSERS00202(HttpRequest req, ExecutionContext ctx) { /* ユーザ登録画面の確認ボタン */ }\n    public HttpResponse doUSERS00301(HttpRequest req, ExecutionContext ctx) { /* ユーザ登録確認画面の戻るボタン */ }\n    public HttpResponse doUSERS00302(HttpRequest req, ExecutionContext ctx) { /* ユーザ登録確認画面の登録ボタン */ }\n}\n\npackage nablarch.sample;\n\npublic class MenuAction {\n    public HttpResponse doMENUS00101(HttpRequest req, ExecutionContext ctx) { /* メニュー画面の初期表示 */ }\n}\n```",
+    "s4": "> **重要**: カスタムタグを使用する場合は、Webフロントコントローラのハンドラ設定が必須。設定方法は :ref:`WebView_NablarchTagHandler` を参照。\n\n全カスタムタグ共通仕様: [./07_BasicRules](libraries-07_BasicRules.json)",
+    "s5": "## 入力に関するカスタムタグ\n\n以下の機能を提供:\n- 入力データを保持する\n- 入力データを復元する\n- 入力項目を確認画面用に出力する\n- 値をフォーマットして出力する（[web_view_format](libraries-07_DisplayTag.json) 参照）\n- 値を変数に設定する\n\n詳細: [./07_FormTag](libraries-07_FormTag.json)、タグ一覧: [./07_FormTagList](libraries-07_FormTagList.json)\n\n> **注意**: コードの入力に関するカスタムタグは :ref:`code_tag` を参照。\n\n## 表示に関するカスタムタグ\n\n表示をサポートするカスタムタグ。詳細: [./07_DisplayTag](libraries-07_DisplayTag.json)\n\n## フォームのサブミット制御に関するカスタムタグ\n\n以下の機能を提供:\n- ボタン又はリンクによるフォームのサブミット\n- JavaScriptを使用した二重サブミット防止\n- トークンを使用した二重サブミット防止\n- ブラウザのキャッシュ防止\n\n詳細: [./07_SubmitTag](libraries-07_SubmitTag.json)\n\n## アプリケーション開発を容易にするカスタムタグ\n\n業務アプリケーションで頻出する処理の実装をサポート。詳細: [./07_FacilitateTag](libraries-07_FacilitateTag.json)\n\n## その他のカスタムタグ\n\n詳細: [./07_OtherTag](libraries-07_OtherTag.json)"
+  }
+}

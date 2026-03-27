@@ -1,0 +1,113 @@
+{
+  "id": "libraries-file_upload_utility",
+  "title": "ファイルアップロード業務処理用ユーティリティ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "UploadHelper",
+        "ファイルアップロード",
+        "中間テーブル",
+        "バッチ処理",
+        "DB一時格納"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "要求",
+      "hints": [
+        "ファイル形式チェック",
+        "ApplicationException",
+        "ディレクトリ移動",
+        "トランザクション制御",
+        "未実装機能"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "特徴",
+      "hints": [
+        "UploadHelper",
+        "ファイルデータDB登録",
+        "設定と実行"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "構造（クラス定義）",
+      "hints": [
+        "UploadHelper",
+        "BulkValidator",
+        "BulkValidationDriver",
+        "BulkValidationResult",
+        "ValidatingStrategy",
+        "BasicValidatingStrategy",
+        "InsertionStrategy",
+        "BasicInsertionStrategy",
+        "nablarch.fw.web.upload"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "ファイルを一時ディレクトリから移動する",
+      "hints": [
+        "UploadHelper",
+        "moveFileTo",
+        "PathSettings",
+        "ファイル移動",
+        "論理ディレクトリ名",
+        "PartInfo"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "ファイルをバイナリとして読み込む",
+      "hints": [
+        "UploadHelper",
+        "toByteArray",
+        "バイト配列",
+        "バイナリ読み込み",
+        "PartInfo"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "ファイルをデータベースに登録する",
+      "hints": [
+        "UploadHelper",
+        "BulkValidator",
+        "BulkValidator.MsgIdHolder",
+        "BulkValidationResult",
+        "applyFormat",
+        "setUpMessageIdOnError",
+        "validateWith",
+        "importWith",
+        "importAll",
+        "InsertionStrategy",
+        "ParameterizedSqlPStatement",
+        "ApplicationException",
+        "DbAccessSupport",
+        "フォーマット定義",
+        "精査処理",
+        "一括登録",
+        "形式エラー",
+        "精査エラー",
+        "空ファイル",
+        "@OnError",
+        "PartInfo"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "ファイルアップロードを伴う業務処理向けのユーティリティ。アップロードファイルの内容をDB（中間テーブル等）に一時格納してレスポンスを返し、各レコードへの業務処理を後続バッチで行うパターンの共通処理を提供する。\n\n提供する共通処理:\n- ファイルを一時ディレクトリから移動する\n- ファイルをバイナリとして読み込む\n- ファイルをデータベースに登録する",
+    "s2": "## 実装済み\n\n- アップロードファイルの形式が正しくない場合にアップロードを禁止できる: 固定長ファイル・CSVファイルの形式が不正な場合に例外をスローする。その例外をハンドリングすることでエラー画面への遷移が可能。\n- アップロードファイルを指定のディレクトリに移動する機能\n\n## 未実装機能\n\n- トランザクション制御（1件づつコミット）: ユーティリティがActionとは別のトランザクションを開始し、1件づつコミットする機能は未実装。",
+    "s3": "アプリケーションプログラマは必要な情報をユーティリティに設定して実行するだけで、ファイルデータをDBに登録できる。",
+    "s4": "**クラス**: `nablarch.fw.web.upload` パッケージ\n\n| クラス名 | 概要 |\n|---|---|\n| `UploadHelper` | ユーティリティクラス本体。アプリケーションプログラマが使用する |\n| `BulkValidator` | ファイルの各レコードに対して一括精査処理を行う |\n| `BulkValidationDriver` | 精査処理を呼び出す |\n| `BulkValidationResult` | 全精査結果を保持する。精査済みフォームの一括登録を受け付ける |\n| `ValidatingStrategy` | 1レコード毎の精査処理を行う。アプリケーション開発者が実装する |\n| `BasicValidatingStrategy` | 典型的な精査ロジックを提供するValidationStrategy実装クラス |\n| `InsertionStrategy` | フォーム1件のINSERT処理を行う。アプリケーション開発者が実装する |\n| `BasicInsertionStrategy` | 典型的なINSERT処理を提供するInsertionValidationStrategy実装クラス |\n\n![ファイルをデータベースに登録するシーケンス図](assets/libraries-file_upload_utility/FileUploadUtility_sequence.png)",
+    "s5": "`UploadHelper#moveFileTo(String basePathName, String newFileName)` で一時ディレクトリからファイルを移動する。\n- 第1引数 `basePathName`: 移動先ディレクトリ（PathSettingsで管理されている論理ディレクトリ名）\n- 第2引数 `newFileName`: 移動後のファイル名\n\n```java\nPartInfo part = req.getPart(\"fileToMove\").get(0);\nUploadHelper helper = new UploadHelper(part);\nhelper.moveFileTo(\"basePathName\", \"newFileName\");\n```",
+    "s6": "`UploadHelper#toByteArray()` でファイルをバイト配列に変換する。\n\n```java\nPartInfo part = req.getPart(\"image\").get(0);\nbyte[] bytes = new UploadHelper(part).toByteArray();\n```",
+    "s7": "`UploadHelper` を起点としてメソッドをチェーンし、ファイルの精査および登録を行う。\n\n| 処理 | 説明 | 業務処理側で必要な実装 |\n|---|---|---|\n| フォーマット定義のロード | アップロードファイルのデータフォーマット定義ファイルを読み込む | `applyFormat` でパス指定 |\n| 形式チェック | フォーマット定義の項目数・データ形式と一致するか検証。チェック通過レコードはMap型に変換 | `setUpMessageIdOnError` で形式エラー時メッセージID指定 |\n| 精査処理 | 形式チェック通過レコードへの業務検証（ドメイン単項目精査、DB精査、ビジネスロジック精査が可能） | `validateWith` で精査フォームクラス・メソッド指定 |\n| レコードの登録 | 全レコードが検査通過した場合にDBへ一括登録 | `importWith` または `importAll` |\n\n```java\n@OnError(type = ApplicationException.class, path = \"/path/to/forward\")\npublic void doSaveFile(HttpRequest req, ExecutionContext ctx) {\n    PartInfo part = req.getPart(\"fileToSave\").get(0);\n    UploadHelper helper = new UploadHelper(part);\n    helper.applyFormat(\"FORMAT0001\")\n          .setUpMessageIdOnError(\"MSG_FORMAT_ERR\", \"MSG_VALIDATION_ERROR\", \"MSG_EMPTY_FILE\")\n          .validateWith(HogeForm.class, \"validateUpload\")\n          .importWith(this, \"SQL0001\");\n}\n```\n\n## フォーマット定義ファイルパスの指定\n\n以下のいずれかを使用:\n- `UploadHelper#applyFormat(String layoutFileName)`\n- `UploadHelper#applyFormat(String basePathName, String layoutFileName)`\n\n## 精査エラー発生時のメッセージID指定\n\n`BulkValidator#setUpMessageIdOnError(String messageIdOnFormatError, String messageIdOnValidationError, String messageIdOnEmptyFile)`\n\n各引数に対応するエラー:\n1. 第1引数（形式エラー）: `{0}行目の形式に誤りがあります。` → 出力例: `12行目の形式に誤りがあります。`\n2. 第2引数（精査エラー）: `{0}行目にエラーがあります。[ {1} ]` → 出力例: `1行目にエラーがあります。[ 電話番号は半角数字で入力してください。]`\n3. 第3引数（ファイルが空の場合）: `空のファイルがアップロードされました。 [ {0} ]`（`{0}` はファイル名のみ、パスなし）\n\n> **注意**: 形式エラー・精査エラー発生時は即座に例外は送出されず、Messageが蓄積される。例外の送出は `importWith`/`importAll` のタイミングで判断され、蓄積された全メッセージが `ApplicationException` に設定される。\n\n> **注意**: 空ファイルの場合は `ApplicationException` が即座に送出される（他のエラーとは異なる）。空ファイルメッセージIDは必須（0件登録は業務上無意味であり、ユーザのオペレーションミスと判断するため）。\n\n## 精査処理を実装したクラス・メソッドの指定\n\n`BulkValidator.MsgIdHolder#validateWith(Class<F> formClass, String validateFor)` で精査フォームクラスと精査メソッド名を指定する。精査エラーはMessageに蓄積され、`importWith`/`importAll` まで例外は送出されない。\n\n## データベース一括登録\n\n`BulkValidationResult#importWith(DbAccessSupport dbAccessSupport, String insertSqlId)`\n- 第1引数: `DbAccessSupport` インスタンス（ActionクラスはDbAccessSupportを継承しているので `this` を指定）\n- 第2引数: INSERT文のSQLID\n- 形式エラー・精査エラーが1件でも存在する場合、蓄積された全メッセージを含む `ApplicationException` を送出\n\n## データベース一括登録（独自実装）\n\n単純なINSERT以外の処理が必要な場合は `BulkValidationResult#importAll(InsertionStrategy<FORM> strategy)` を使用。`InsertionStrategy` 実装クラスを引数に指定する。\n\n`InsertionStrategy` の実装メソッド:\n- `prepareStatement(FORM form)`: `ParameterizedSqlPStatement` を返す\n- `addBatch(ParameterizedSqlPStatement statement, FORM form)`: バッチ処理（IDの採番なども可能）\n\n```java\nhelper.applyFormat(\"N11AA002\")\n      .setUpMessageIdOnError(\"MSG00037\", \"MSG00038\")\n      .validateWith(UserInfoTempEntity.class, \"validateRegister\")\n      .importAll(new UserInfoInsertionStrategy());\n```"
+  }
+}
