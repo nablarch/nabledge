@@ -1,0 +1,162 @@
+{
+  "id": "web-application-basic",
+  "title": "Webアプリケーション基本",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "taglibディレクティブの指定方法",
+      "hints": [
+        "taglibディレクティブ",
+        "prefix宣言",
+        "カスタムタグ",
+        "JSP",
+        "uri指定",
+        "http://tis.co.jp/nablarch",
+        "windowScopePrefixes",
+        "n:form",
+        "n:confirmationPage",
+        "ウィンドウスコープ",
+        "hidden出力",
+        "画面間データ引継ぎ",
+        "nablarch_hidden",
+        "Actionクラス実装",
+        "データ引き継ぎ",
+        "バリデーション",
+        "型変換",
+        "フレームワーク自動処理",
+        "セッション"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "URIの指定方法",
+      "hints": [
+        "URI指定方法",
+        "絶対URL",
+        "コンテキストルート相対パス",
+        "n:a",
+        "n:img",
+        "windowScopePrefixes",
+        "複数画面遷移",
+        "ウィンドウスコープ",
+        "n:param",
+        "n:submitLink",
+        "n:listSearchResult",
+        "ValidationUtil",
+        "検索条件引継ぎ",
+        "ValidationContext",
+        "W11AC03Form",
+        "CM311AC1Component",
+        "SqlResultSet",
+        "W11AC03Action",
+        "confirmationPage",
+        "n:form",
+        "validateAndConvertRequest",
+        "createObject",
+        "ApplicationException",
+        "更新確認画面",
+        "更新完了画面",
+        "HttpResponse",
+        "HttpRequest",
+        "ExecutionContext",
+        "n:write",
+        "n:text",
+        "n:submit"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "絶対URLによる指定",
+      "hints": [
+        "絶対URL",
+        "http",
+        "https",
+        "n:a",
+        "URI指定",
+        "n:set",
+        "変数設定",
+        "リクエストスコープ",
+        "value属性",
+        "name属性",
+        "EL式",
+        "c:if"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "コンテキストルートからの相対パスによる指定",
+      "hints": [
+        "コンテキストルート",
+        "相対パス",
+        "スラッシュ",
+        "n:img",
+        "URI指定"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "HTTPとHTTPSの切り替え",
+      "hints": [
+        "secure属性",
+        "HTTPSプロトコル切り替え",
+        "http→https",
+        "https→http",
+        "ポート番号",
+        "n:img"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "JSPとActionクラスの間でデータを受け渡す方法",
+      "hints": [
+        "name属性",
+        "データ受け渡し",
+        "リクエストスコープ",
+        "JSP",
+        "Actionクラス"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "Map型/フォームのプロパティを受け渡す場合",
+      "hints": [
+        "Map型",
+        "フォームプロパティ",
+        "name属性",
+        "リクエストスコープ",
+        "ValidationUtil",
+        "validateAndConvertRequest",
+        "ValidationContext",
+        "ApplicationException",
+        "setRequestScopedVar"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "List型/配列の要素のプロパティを受け渡す場合",
+      "hints": [
+        "List型",
+        "配列",
+        "index",
+        "name属性",
+        "c:forEach",
+        "n:hidden",
+        "任意長配列",
+        "ValidationUtil",
+        "ValidationContext",
+        "ApplicationException"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "JSPでカスタムタグを使用する場合、JSPの先頭でtaglibディレクティブを宣言し、指定したprefixを使ってカスタムタグを使用する。\n\n```jsp\n<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<%@ taglib prefix=\"n\" uri=\"http://tis.co.jp/nablarch\" %>\n<n:form>\n</n:form>\n```\n\n> **注意**: ログイン情報など、全ての取引で使用される情報はセッションで保持する。\n\n`n:form`タグの`windowScopePrefixes`属性にプレフィックスを指定する。入力項目の`name`属性に同プレフィックスを付与することで、ウィンドウスコープに入力データが設定される。設定したデータはHTML出力時に`hidden`タグ（暗号化）として出力される。複数プレフィックスはカンマ区切りで指定可能。\n\n**登録画面（W11AC0201.jsp）**:\n```jsp\n<n:form name=\"insert\" windowScopePrefixes=\"W11AC02\">\n    <n:text name=\"W11AC02.systemAccount.userId\" size=\"15\" maxlength=\"10\" />\n    <n:text name=\"W11AC02.systemUser.kanjiName\" size=\"65\" maxlength=\"25\" />\n    <n:submit cssClass=\"buttons\" type=\"button\" name=\"confirm\" value=\"確認\"\n              uri=\"/action/ss11AC/W11AC02Action/RW11AC0202\" />\n</n:form>\n```\n\n**登録確認画面（W11AC0202.jsp）** - `n:confirmationPage`タグで入力画面のJSPへフォワード:\n```jsp\n<%@ taglib prefix=\"n\" uri=\"http://tis.co.jp/nablarch\" %>\n<n:confirmationPage path=\"./W11AC0201.jsp\" />\n```\n\n**Actionクラス（登録確認画面フォワード）** - ウィンドウスコープが自動的にデータを引き継ぐため、リクエストへの明示的なデータ設定は不要:\n```java\npublic HttpResponse doRW11AC0202(HttpRequest req, ExecutionContext ctx) {\n    return new HttpResponse(\"/ss11AC/W11AC0202.jsp\");\n}\n```\n\nウィンドウスコープデータはhiddenタグ（暗号化）として出力される:\n```html\n<input type=\"hidden\" name=\"nablarch_hidden\" value=\"QkyNL4ld+4izNDC5\" />\n```\n\nウィンドウスコープを使用する場合のActionクラス実装ルール:\n\n- **遷移先へのデータ引き継ぎはフレームワークが自動処理** — Actionクラスで入力データをセッションに明示的に設定する処理は不要。セッション方式と異なり、フレームワークが自動的にデータを引き継ぐ。\n- **ウィンドウスコープのデータ使用時はバリデーション必須** — リクエストから直接取得したデータはString型のため型変換が必要。バリデーション実行後にフォームのプロパティからデータを取得すると、自動で型変換が行われる。",
+    "s2": "カスタムタグでURIを指定する方法は次の2種類ある。\n\n- 絶対URLによる指定\n- コンテキストルートからの相対パスによる指定\n\n実装例では以下のフォルダ構成を想定する。\n\n```\nweb（コンテキストルート）\n +-img\n |  +-header_bar.jpg\n |  +-sample.jpg\n +-app_header.jsp\n +-sample\n    +-sample001.jsp\n    +-sample002.jsp\n```\n\nwindowScopePrefixes属性に指定した複数プレフィックスを使い分けることで、特定データだけを複数画面で引き継ぐことができる。\n\n**遷移フロー**: 一覧照会画面（照会後）→ 更新画面 → 更新確認画面 → 更新完了画面\n\n| 遷移 | 引き継がれるデータ（プレフィックス） |\n|---|---|\n| 一覧照会 → 更新画面 | 検索条件（11AC_W11AC01）、更新対象プライマリキー（W11AC03） |\n| 更新画面 → 更新確認画面 | 検索条件（11AC_W11AC01）、プライマリキー＋更新データ（W11AC03） |\n| 更新確認画面 → 更新完了画面 | 検索条件（11AC_W11AC01）のみ |\n\n**一覧照会画面JSP** - `n:param`タグで更新対象プライマリキーをサブミット:\n```jsp\n<n:form>\n    <n:text name=\"11AC_W11AC01.loginId\" size=\"25\" maxlength=\"20\" />\n    <n:text name=\"11AC_W11AC01.kanjiName\" size=\"25\" maxlength=\"20\" />\n    <n:listSearchResult listSearchInfoName=\"11AC_W11AC01\"\n                        searchUri=\"/action/ss11AC/W11AC01Action/RW11AC0102\"\n                        resultSetName=\"searchResult\" resultSetCss=\"resultList\">\n        <jsp:attribute name=\"bodyRowFragment\">\n            <td><n:submitLink uri=\"/action/ss11AC/W11AC03Action/RW11AC0301\" name=\"showUpdate_${count}\">\n                更新\n                <n:param paramName=\"W11AC03.systemAccount.userId\" name=\"row.userId\" />\n            </n:submitLink></td>\n        </jsp:attribute>\n    </n:listSearchResult>\n</n:form>\n```\n\n**Actionクラス（更新画面への遷移）** - プライマリキーで検索し、Formをリクエストスコープに設定:\n```java\npublic HttpResponse doRW11AC0301(HttpRequest req, ExecutionContext ctx) {\n    ValidationContext<W11AC03Form> userSearchFormContext =\n        ValidationUtil.validateAndConvertRequest(\"W11AC03\", W11AC03Form.class, req, \"selectUserInfo\");\n    String userId = userSearchFormContext.createObject().getSystemAccount().getUserId();\n    CM311AC1Component comp = new CM311AC1Component();\n    SqlResultSet sysAcct = comp.selectSystemAccount(userId);\n    SqlResultSet users = comp.selectUsers(userId);\n    SqlResultSet permissionUnit = comp.selectPermissionUnit(userId);\n    SqlResultSet ugroup = comp.selectUgroup(userId);\n    W11AC03Form form = getWindowScopeObject(sysAcct, users, permissionUnit, ugroup);\n    ctx.setRequestScopedVar(\"W11AC03\", form);\n    return new HttpResponse(\"/ss11AC/W11AC0301.jsp\");\n}\n```\n\n**更新画面JSP** - `windowScopePrefixes=\"11AC_W11AC01,W11AC03\"`で一覧照会画面から検索条件とプライマリキーを引き継ぐ:\n```jsp\n<n:form windowScopePrefixes=\"11AC_W11AC01,W11AC03\">\n    <n:write  name=\"W11AC03.systemAccount.loginId\" />\n    <n:hidden name=\"W11AC03.systemAccount.loginId\" />\n    <n:text name=\"W11AC03.users.kanjiName\" size=\"52\" maxlength=\"50\" />\n    <n:submit cssClass=\"buttons\" type=\"button\" name=\"update\" value=\"確認\"\n              uri=\"/action/ss11AC/W11AC03Action/RW11AC0302\" />\n</n:form>\n```\n\n**Actionクラス（更新確認画面へのフォワード）** - ウィンドウスコープが自動的にプライマリキーと更新データを引き継ぐため、明示的なリクエスト設定は不要:\n```java\npublic HttpResponse doRW11AC0302(HttpRequest req, ExecutionContext ctx) {\n    ValidationContext<W11AC03Form> formContext =\n        ValidationUtil.validateAndConvertRequest(\"W11AC03\", W11AC03Form.class, req, \"updateUser\");\n    return new HttpResponse(\"/ss11AC/W11AC0302.jsp\");\n}\n```\n\n**更新確認画面JSP** - `n:confirmationPage`で入力画面と同じ記述で確認項目出力:\n```jsp\n<n:confirmationPage />\n<n:form windowScopePrefixes=\"11AC_W11AC01,W11AC03\">\n    <n:write  name=\"W11AC03.systemAccount.loginId\"/>\n    <n:hidden name=\"W11AC03.systemAccount.loginId\" />\n    <n:text name=\"W11AC03.users.kanjiName\" size=\"52\" maxlength=\"50\" />\n    <n:submit cssClass=\"buttons\" type=\"button\" name=\"confirm\" value=\"確定\"\n              uri=\"/action/ss11AC/W11AC03Action/RW11AC0304\" allowDoubleSubmission=\"false\" />\n</n:form>\n```\n\n**Actionクラス（更新完了画面への遷移）** - `updateUser`グループでバリデーション後、`createObject()`で`W11AC03Form`を生成して更新完了画面へフォワード:\n```java\npublic HttpResponse doRW11AC0304(HttpRequest req, ExecutionContext ctx) {\n    ValidationContext<W11AC03Form> formContext =\n        ValidationUtil.validateAndConvertRequest(\"W11AC03\", W11AC03Form.class, req, \"updateUser\");\n    W11AC03Form form = formContext.createObject();\n    return new HttpResponse(\"/ss11AC/W11AC0303.jsp\");\n}\n```\n\n**更新完了画面JSP** - 検索条件（11AC_W11AC01）のみ引き継ぎ、一覧照会画面へ遷移時に引き継いだ条件で検索実行:\n```jsp\n<n:form windowScopePrefixes=\"11AC_W11AC01\">\n    <n:write name=\"W11AC03.systemAccount.loginId\"/>\n    <n:write name=\"W11AC03.user.kanjiName\"/>\n    <n:submit cssClass=\"buttons\" type=\"button\" name=\"search\" value=\"一覧照会画面へ\"\n              uri=\"/action/ss11AC/W11AC01Action/RW11AC0102\"/>\n</n:form>\n```\n\n更新確認画面→更新完了画面のウィンドウスコープ引き継ぎ実装例。\n\n**JSP実装例（更新確認画面）**:\n\n```jsp\n<n:confirmationPage />\n<n:form windowScopePrefixes=\"11AC_W11AC01,W11AC03\">\n    <n:write name=\"W11AC03.user.userId\"/>\n    <n:text name=\"W11AC03.user.kanjiName\" size=\"65\" maxlength=\"25\" />\n    <n:submit cssClass=\"mainBtn\" type=\"button\" name=\"confirm\" value=\"確定\" uri=\"/action/ss11AC/W11AC03Action/RW11AC0304\" />\n</n:form>\n```\n\n- `<n:confirmationPage />`: 入力画面（更新画面）と同じ記述で確認項目を出力可能\n- `windowScopePrefixes=\"11AC_W11AC01,W11AC03\"`: 検索条件（11AC_W11AC01）と更新情報（W11AC03）の両方を完了画面に引き継ぐ\n\n**JSP実装例（更新完了画面）**:\n\n```jsp\n<n:form windowScopePrefixes=\"11AC_W11AC01\">\n    <n:submit cssClass=\"mainBtn\" type=\"submit\" name=\"refer\" uri=\"/action/ss11AC/W11AC01Action/RW11AC0102\" value=\"一覧照会画面へ\" />\n</n:form>\n```\n\n**Actionクラス実装例**:\n\n```java\npublic class W11AC03Action {\n  public HttpResponse doRW11AC0304(HttpRequest req, ExecutionContext ctx) {\n    ValidationContext<W11AC03Form> formCtx =\n        ValidationUtil.validateAndConvertRequest(\"W11AC03\", W11AC03Form.class, req, \"updateUser\");\n    if (!formContext.isValid()) {\n        throw new ApplicationException(formContext.getMessages());\n    }\n    W11AC03Form form = formCtx.createObject();\n  }\n}\n```\n\n- `ValidationUtil.validateAndConvertRequest`: リクエストのバリデーションと型変換を一括処理\n- `formCtx.createObject()`: 型変換済みのプロパティが設定されたフォームインスタンスを生成\n- 検索条件（11AC_W11AC01）の処理をActionクラスに記述しなくても、フレームワークが完了画面に自動で引き継ぐ",
+    "s3": "http又はhttpsから始まるパスが**絶対URL**である。この指定方法では、パスがそのままURIとして使用される。\n\n```jsp\n<%-- URIの指定以外は省略 --%>\n<n:a href=\"http://www.tis.co.jp/\">tis</n:a>\n```\n\n上の実装で指定されるURIは以下になる。\n\n```\nhttp://www.tis.co.jp\n```\n\n`<n:set>` タグを使用してJSP上のリクエストスコープに変数を設定する方法。\n\n```html\n<%-- 値を直接設定 --%>\n<n:set var=\"title\" value=\"ユーザ情報登録\" />\n<jsp:include page=\"/html_header.jsp\">\n    <jsp:param name=\"title\" value=\"${title}\"/>\n</jsp:include>\n\n<%-- スコープ上のオブジェクトを参照して設定 --%>\n<n:set var=\"officeLocation\" name=\"W11AC02.systemUser.officeLocation\"/>\n<c:if test=\"${officeLocation == ''}\">\n</c:if>\n```\n\n- `var` 属性: 変数名\n- `value` 属性: 値を直接設定する場合に使用\n- `name` 属性: スコープ上のオブジェクトを参照して値を設定する場合に使用（スコープ上のキーを指定）\n- 変数参照時はEL式（`${title}`）を使用可能\n- `<c:if>`: 変数の値に応じた条件分岐に使用",
+    "s4": "/（スラッシュ）から始まるパスが**コンテキストルートからの相対パス**である。この指定方法では、先頭にコンテキストルートのパスが付加されてURIとして使用される。\n\n```jsp\n<%-- URIの指定以外は省略 --%>\n<n:img src=\"/img/header_bar.jpg\" alt=\"header\" />\n```\n\n上の実装で指定されるURIは以下になる。\n\n```\n<コンテキストルートのパス>/img/header_bar.jpg\n```",
+    "s5": "コンテキストルートからの相対パスでURIを指定しながらプロトコルを**切り替える**場合、カスタムタグのsecure属性を指定する。secure属性使用時はhttp用・https用のポート番号とホストの設定が必要。\n\n> **注意**: secure属性はhttp→httpsまたはhttps→httpのプロトコル切り替え時のみ指定する。切り替えない（http→http、https→https）場合は指定しない。\n\n```jsp\n<%-- secure=\"true\": http→https、secure=\"false\": https→http --%>\n<n:img src=\"/img/sample.jpg\" alt=\"sample\" secure=\"true\" />\n```\n\n出力例（ホスト名:localhost、http:8080、https:443 の設定時）:\n\n```\n# secure=\"true\"の場合\nhttps://localhost:443/img/sample.jpg\n# secure=\"false\"の場合\nhttp://localhost:8080/img/sample.jpg\n```",
+    "s6": "JSPとActionクラスの間でデータを受け渡す場合、カスタムタグのname属性を使用する。この指定法により、データがどのスコープまたはパラメータに設定されているかを意識せずに使用できる。\n\n受け渡し方法は次の2種類ある。\n\n- Map型/フォームのプロパティを受け渡す場合\n- List型/配列の要素のプロパティを受け渡す場合",
+    "s7": "JSPとActionクラスの間でMap型またはフォームのプロパティを受け渡す場合、カスタムタグのname属性に次の形式で値を指定する。\n\n```\n<リクエストスコープ上に設定したオブジェクトの変数名>.<プロパティ名>\n```\n\n```java\n// Action: リクエストスコープに設定\nctx.setRequestScopedVar(\"W11AC03\", userInfo.get(0));\n```\n\n```jsp\n<n:text name=\"W11AC03.kanjiName\" />\n<n:submit cssClass=\"mainBtn\" type=\"button\" name=\"confirm\" value=\"確認\" uri=\"/action/ss11AC/W11AC03Action/RW11AC0302\" />\n```\n\n```java\n// 受信Action: バリデーション\nValidationContext<W11AC03Form> formCtx =\n    ValidationUtil.validateAndConvertRequest(\"W11AC03\", W11AC03Form.class, req, \"updateUser\");\nif (!formCtx.isValid()) {\n    throw new ApplicationException(formCtx.getMessages());\n}\nW11AC03Form form = formCtx.createObject();\n```",
+    "s8": "JSPとActionクラスの間でList型または配列の要素のプロパティを受け渡す場合、カスタムタグのname属性に次の形式で値を指定する。\n\n```\n<リクエストスコープ上に設定したオブジェクトの変数名>[index].<プロパティ名>\n```\n\n```jsp\n<c:forEach begin=\"0\" end=\"${W11AC03.userEmailAddressArraySize}\" var=\"index\">\n  <n:text name=\"W11AC03.userEmailAddressArray[${index}].emailAddress\" />\n</c:forEach>\n<%-- 任意長配列の場合は配列長もサブミットが必要 --%>\n<n:hidden name=\"W11AC03.userEmailAddressArraySize\" />\n```\n\n```java\n// 受信Action: バリデーション\nValidationContext<W11AC03Form> formCtx =\n    ValidationUtil.validateAndConvertRequest(\"W11AC03\", W11AC03Form.class, req, \"updateUser\");\nif (!formCtx.isValid()) {\n    throw new ApplicationException(formCtx.getMessages());\n}\nW11AC03Form form = formCtx.createObject();\n```\n\n> **重要**: フォームのプロパティが任意長配列の場合、入力画面で配列長をサブミットする必要がある。"
+  }
+}

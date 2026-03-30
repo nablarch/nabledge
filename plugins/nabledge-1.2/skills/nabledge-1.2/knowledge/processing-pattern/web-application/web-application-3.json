@@ -1,0 +1,28 @@
+{
+  "id": "web-application-3",
+  "title": "子画面を開くタグのname属性には、何を指定したらいいのでしょうか?",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "popupSubmit / popupButton / popupLink の name 属性指定方法",
+      "hints": [
+        "popupSubmit",
+        "popupButton",
+        "popupLink",
+        "n:listSearchResult",
+        "count変数",
+        "name属性重複",
+        "IllegalArgumentException",
+        "サブミットタグ一意性",
+        "一覧画面サブミット",
+        "連番",
+        "name属性連番"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## popupSubmit / popupButton / popupLink の name 属性指定方法\n\n`popupSubmit`、`popupButton`、`popupLink` タグの `name` 属性にはフォーム内で一意となる名前を設定すること。重複した場合、以下の例外が発生する。\n\n```java\njava.lang.IllegalArgumentException: name attribute of submission tag has duplicated. formName = [xxxx] submissionName = [yyyy]\n// xxxx -> フォーム名称\n// yyyy -> name属性に設定した値\n```\n\n特に一覧画面などでこれらのタグを使用する場合は、`name` 属性に連番を付加して重複しないように注意すること。\n\n一覧画面（`n:listSearchResult` 使用時）でこれらのタグを使用する場合は、行番号を取得できる `count` 変数を name 属性に付加することで一意の名称を設定できる。"
+  }
+}

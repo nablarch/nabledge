@@ -1,0 +1,24 @@
+{
+  "id": "nablarch-batch-7",
+  "title": "バッチ処理を実行するとDuplicateProcessが発生し、処理が異常終了してしまいます。対処方法を教えてください",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "DuplicateProcessエラーの原因と対処法",
+      "hints": [
+        "DuplicateProcess",
+        "多重起動防止",
+        "プロセス管理テーブル",
+        "実行中フラグ",
+        "request_id",
+        "バッチ多重起動",
+        "プロセス多重起動防止ハンドラ"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## DuplicateProcessエラーの原因と対処法\n\n**エラーメッセージ**:\n```\n[500 DuplicateProcess] specified request_id is already used by another process. you can not start two or more processes with same request_id.\n```\n\nNablarchの多重起動防止機能はデータベースの実行中フラグで多重起動チェックを行う。実行中フラグが適切にクリアされないと（例: デバッグ実行中に処理を停止した場合）、何度実行しても *DuplicateProcess* が発生し続ける。\n\n**対処方法**: プロセス管理テーブルの実行中フラグをクリアする。問題のリクエストIDを条件にして実行中フラグを0で更新することで、再度バッチ処理を実行できるようになる。"
+  }
+}

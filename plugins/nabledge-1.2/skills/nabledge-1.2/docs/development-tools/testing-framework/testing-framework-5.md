@@ -1,0 +1,22 @@
+# Windows上で成功していた画面オンライン処理のリクエスト単体テストをLinux上で実行すると、IOExceptionが発生してテストが失敗してしまいます。対処方法を教えてください
+
+## Linux上でリクエスト単体テスト実行時にIOExceptionが発生する場合の対処方法
+
+Linuxでリクエスト単体テスト実行時に `java.io.IOException: File name too long` が発生する場合、「テストケースの説明」（`description` 列の文言）を短くすること。
+
+**原因**: 画面オンライン処理のリクエスト単体テストで出力されるHTMLダンプファイルのファイル名に「テストケースの説明」がそのまま含まれる仕様のため、OSのファイル名長上限を超えるとIOExceptionが発生する。
+
+**WindowsとLinuxのファイル名長さ上限の差異**:
+- Windows: 文字数（255文字）
+- Linux: バイト数（255バイト）
+
+全角文字（マルチバイト文字）を含む「テストケースの説明」は、Windowsでは上限以内でもLinuxではバイト数換算で上限を超えることがある。
+
+> **注意**: 旧バージョンのテスティングフレームワークでは `case` 列、新バージョンでは `description` 列が「テストケースの説明」に該当する。
+
+<details>
+<summary>keywords</summary>
+
+IOException, File name too long, HttpServer, HttpRequestTestSupport, AbstractHttpRequestTestTemplate, リクエスト単体テスト, HTMLダンプファイル, テストケースの説明, ファイル名長さ上限, Linux, 全角文字
+
+</details>

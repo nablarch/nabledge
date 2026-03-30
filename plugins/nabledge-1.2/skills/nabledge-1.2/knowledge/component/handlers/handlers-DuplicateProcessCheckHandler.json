@@ -1,0 +1,54 @@
+{
+  "id": "handlers-DuplicateProcessCheckHandler",
+  "title": "プロセス多重起動防止ハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "DuplicateProcessCheckHandler",
+        "nablarch.fw.handler.DuplicateProcessCheckHandler",
+        "ThreadContextHandler",
+        "プロセス多重起動防止",
+        "バッチ多重起動防止",
+        "プロセス管理テーブル",
+        "アクティブフラグ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "多重起動チェック",
+        "Result.InternalError",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "実行中フラグ",
+        "チェック対象外リクエストID"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "tableName",
+        "requestIdColumnName",
+        "processActiveFlgColumnName",
+        "dbTransactionManager",
+        "exitCode",
+        "permitRequestIds",
+        "SimpleDbTransactionManager",
+        "設定項目",
+        "チェック対象外リクエストID"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.DuplicateProcessCheckHandler`\n\nDB上のプロセス管理テーブルを参照し、同一リクエストIDのプロセスが実行中でないことを確認する。実行中であればエラー終了させることで、バッチの多重起動を防止する。\n\n**プロセス管理テーブルの構造**\n\n| 論理名 | データ型 | 備考 |\n|---|---|---|\n| リクエストID | VARCHAR PK | プロセスを特定するためのID |\n| アクティブフラグ | CHAR(1) | \"0\": 未実行、\"1\": 実行中 |\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| ThreadContextHandler | スレッドコンテキスト上のリクエストIDを使用して同一プロセス判定を行うため、必ず本ハンドラの上位に設置すること |",
+    "s2": "**[往路処理]**\n\n1. スレッドコンテキストからリクエストIDを取得する\n2. 取得したリクエストIDがチェック対象外リスト（`permitRequestIds`）に含まれる場合、何もせず後続ハンドラに委譲してリターンする（1a）\n3. プロセス管理テーブルに対して更新処理を実行する（FW用DB接続使用）\n   - 更新条件: リクエストID = 取得したID AND 実行中フラグ = \"0\"（未実行）\n   - 更新内容: 実行中フラグ = \"1\"（実行中）\n4. 更新対象が0件の場合、多重起動と判断し `Result.InternalError` を送出する（終了コード20）（2a）\n5. 後続ハンドラに処理を委譲する\n\n**[復路処理]**\n\n4. プロセス管理テーブルを更新する\n   - 更新条件: リクエストID = 取得したID AND 実行中フラグ = \"1\"（実行中）\n   - 更新内容: 実行中フラグ = \"0\"（未実行）\n\n**[例外処理]**\n\n3a. 後続ハンドラで例外が発生した場合でも、必ず実行中フラグを\"0\"（未実行）に更新する",
+    "s3": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| tableName | String | ○ | | プロセス管理テーブル名 |\n| requestIdColumnName | String | ○ | | リクエストIDカラム名 |\n| processActiveFlgColumnName | String | ○ | | アクティブフラグカラム名 |\n| dbTransactionManager | SimpleDbTransactionManager | ○ | | DBトランザクションマネージャ |\n| exitCode | Integer | | 127 | 多重起動エラー時の終了コード |\n| permitRequestIds | List<String> | | | チェック対象外リクエストID |\n\n**基本設定**\n\n```xml\n<component name=\"duplicateProcessCheckHandler\"\n  class=\"nablarch.fw.handler.DuplicateProcessCheckHandler\">\n  <property name=\"tableName\" value=\"BATCH_REQUEST\" />\n  <property name=\"requestIdColumnName\" value=\"REQUEST_ID\" />\n  <property name=\"processActiveFlgColumnName\" value=\"PROCESS_ACTIVE_FLG\" />\n  <property name=\"dbTransactionManager\" ref=\"simpleDbTransactionManager\" />\n</component>\n```\n\n**任意設定を含む例**\n\n```xml\n<component name=\"duplicateProcessCheckHandler\"\n  class=\"nablarch.fw.handler.DuplicateProcessCheckHandler\">\n  <property name=\"tableName\" value=\"BATCH_REQUEST\" />\n  <property name=\"requestIdColumnName\" value=\"REQUEST_ID\" />\n  <property name=\"processActiveFlgColumnName\" value=\"PROCESS_ACTIVE_FLG\" />\n  <property name=\"dbTransactionManager\" ref=\"simpleDbTransactionManager\" />\n  <property name=\"exitCode\" value=\"27\" />\n  <property name=\"permitRequestIds\" value=\"BC0010,BC0011\" />\n</component>\n```"
+  }
+}

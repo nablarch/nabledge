@@ -1,0 +1,95 @@
+{
+  "id": "toolbox-01_JspGenerator",
+  "title": "JSP自動生成ツール",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "JSP自動生成",
+        "HTML→JSP変換",
+        "HTMLチェックツール",
+        "JSP静的解析ツール",
+        "HTMLファイル変換"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "要求",
+      "hints": [
+        "HTMLタグ変換",
+        "Nablarchタグ変換",
+        "JSP自動生成",
+        "Eclipse",
+        "不要属性削除"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "仕様",
+      "hints": [
+        "n:form",
+        "n:text",
+        "n:textarea",
+        "n:password",
+        "n:radioButton",
+        "n:checkbox",
+        "n:file",
+        "n:hidden",
+        "n:select",
+        "n:submit",
+        "n:button",
+        "n:submitLink",
+        "n:img",
+        "n:link",
+        "n:script",
+        "n:error",
+        "invalid.html.csv.path",
+        "use.error.tag",
+        "error.tag.position",
+        "use.directive",
+        "directive.content.type.encoding",
+        "directive.page.encoding",
+        "jsp.line.separator",
+        "jsp.charset",
+        "jsp.max.line.columns",
+        "html.charset",
+        "HTMLタグ変換仕様",
+        "ディレクティブ設定",
+        "使用禁止属性定義",
+        "タグ対応"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "前提条件",
+      "hints": [
+        "開発環境構築",
+        "前提条件"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "使用方法",
+      "hints": [
+        "Eclipse設定",
+        "SetUpJspGeneratorTool",
+        "SetUpJspGeneratorTool_howToExecuteFromEclipse",
+        "JSP生成",
+        "HTMLファイル作成",
+        "閉じタグ",
+        "ダブルクォート",
+        "使用方法"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "HTMLファイルからJSPファイルを生成するツール。定型的なHTML→JSP変換を自動化する。\n\n本ツールはHTML・JSPの構文チェックを行わない。構文チェックは [html_check_tool](toolbox-03-HtmlCheckTool.json#s3)（HTMLチェックツール）または `JSP静的解析ツール <../../../guide/development_guide/08_TestTools/04_JspStaticAnalysis/index.html>`_ を参照。",
+    "s2": "- HTMLタグを対応するNablarchタグに変換できること\n- 不要なHTMLタグを変換時に削除できること\n- HTMLファイルを指定してJSPファイルを自動生成できること（例: Eclipse上でHTMLファイルを選択、右クリックから実行）",
+    "s3": "HTMLファイルを先頭から読み込み、HTML要素を順に変換する。一度読み込んだHTML要素・変換で追加したJSPは以降の処理対象に含めない。\n\n**HTML→JSP変換ルール**\n\n1. HTMLタグとNablarchタグが1対1に対応するHTMLタグを変換対象とする\n2. HTMLタグの属性値をNablarchタグの対応する属性にそのまま出力する\n3. 不要なHTMLタグの属性を削除する（HTMLタグ自体は削除しない）。削除対象: 使用禁止HTMLタグの属性、Nablarchタグに存在しない属性\n4. Nablarchタグの必須属性は常に出力する。対応する値がHTMLタグに指定されていない場合はブランク\n5. n:textなどの入力項目の直後にn:errorタグを出力する\n6. JSPファイルの先頭にディレクティブ（taglibディレクティブとpageディレクティブ）を出力する\n7. HTMLコメント（`<!-- xxx -->`）を同内容のJSPコメント（`<%-- xxx --%>`）に置換する（`<script>`内のjavascriptを囲むHTMLコメントを除く）\n\n**HTMLタグとNablarchタグの対応**\n\n| HTMLタグ | Nablarchタグ | 補足 |\n|---|---|---|\n| form | n:form | |\n| input(type=text) | n:text | |\n| textarea | n:textarea | 置き換え後、textareaタグのボディ（値）は削除される |\n| input(type=password) | n:password | |\n| input(type=radio) | n:radioButton | label属性をブランクで出力する |\n| input(type=checkbox) | n:checkbox | label属性をブランクで出力する |\n| input(type=file) | n:file | |\n| input(type=hidden) | n:hidden | |\n| select | n:select | listName属性、elementLabelProperty属性、elementValueProperty属性をブランクで出力する。置き換え後、selectタグのボディ（optionタグ）は削除される |\n| input(type=submit, button, image) | n:submit | uri属性をブランクで出力する |\n| button | n:button | uri属性をブランクで出力する |\n| a | n:submitLink | uri属性をブランクで出力する |\n| img | n:img | |\n| link | n:link | |\n| script | n:script | |\n\n**使用禁止とするHTMLタグの属性**\n\n[html_check_tool](toolbox-03-HtmlCheckTool.json#s3) と同じ形式のCSVファイルに定義する。本ツールとHTMLチェックツールで同じCSVファイルを使用することを推奨。\n\nCSVファイルは [html_check_tool](toolbox-03-HtmlCheckTool.json#s3) と併用することを想定しているため、使用禁止タグ（appletなど）を含めることが可能となっている。デフォルト定義:\n\n```\napplet,\nbasefont,\nbody,alink\nbody,background\nbody,bgcolor\nbody,link\nbody,text\nbody,vlink\nbr,clear\ncaption,align\ncenter,\ndir,\ndl,compact\nfont,\nh1,align\nh2,align\nh3,align\nh4,align\nh5,align\nh6,align\nhr,align\nhr,noshade\nhr,size\nhr,width\nhtml,version\niframe,align\nimg,align\nimg,border\nimg,hspace\nimg,vspace\ninput,align\nisindex,\nlegend,align\nli,type\nli,value\nlisting,\nmenu,\nobject,align\nobject,border\nobject,hspace\nobject,vspace\nol,compact\nol,start\nol,type\np,align\nplaintext,\npre,width\ns,\nscript,language\nstrike,\ntable,align\ntable,bgcolor\ntd,bgcolor\ntd,height\ntd,nowrap\nth,bgcolor\nth,height\nth,nowrap\ntr,bgcolor\nu,\nul,compact\nul,type\nxmp,\ntd,width\nth,width\ndiv,align\n```\n\n**追加するディレクティブ**（デフォルトエンコーディング: UTF-8）\n\n```jsp\n<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\" %>\n<%@ taglib prefix=\"n\" uri=\"http://tis.co.jp/nablarch\" %>\n<%@ page language=\"java\" contentType=\"text/html; charset=UTF-8\" pageEncoding=\"UTF-8\" %>\n```\n\n**デフォルト動作の変更設定**\n\n| キー | 説明 |\n|---|---|\n| invalid.html.csv.path | 使用禁止HTMLタグの属性を定義したCSVファイルのパス。指定がない場合は属性削除を行わない |\n| use.error.tag | 入力項目と一緒にn:errorタグを出力するか否か。デフォルト: true |\n| error.tag.position | n:errorタグの出力位置。\"ABOVE\"（入力項目の直前）または\"BELOW\"（直後）。デフォルト: \"BELOW\" |\n| use.directive | ディレクティブを出力するか否か。デフォルト: true |\n| directive.content.type.encoding | pageディレクティブのcontentTypeのエンコーディング。デフォルト: UTF-8 |\n| directive.page.encoding | pageディレクティブのpageEncodingのエンコーディング。デフォルト: UTF-8 |\n| jsp.line.separator | JSPファイルの改行コード（LF/CR/CRLF）。デフォルト: LF |\n| jsp.charset | JSPファイルの文字コード。デフォルト: UTF-8 |\n| jsp.max.line.columns | JSPファイルの1行の最大桁数。デフォルト: 150 |\n| html.charset | HTMLファイルの文字コード。デフォルト: UTF-8 |",
+    "s4": "開発環境構築ガイドに従って開発環境を構築済みであること。",
+    "s5": "EclipseでツールをするにはEclipseの設定が必要。設定方法は :ref:`SetUpJspGeneratorTool` を参照。設定後はEclipse上からツールを実行できる。実行方法は :ref:`SetUpJspGeneratorTool_howToExecuteFromEclipse` を参照。\n\nHTMLファイルと同じ場所にJSPファイルが生成される。HTMLファイルが含まれるディレクトリをリフレッシュすることでEclipse上で参照できる。\n\n**HTMLファイル作成時の注意点**\n\n> **警告**: selectタグ・textareaタグは変換時にボディを削除するため、閉じタグがない場合はファイルの最後まで削除される。閉じタグを省略しないこと。\n\n- 属性はダブルクォートで囲み値を明確にする"
+  }
+}

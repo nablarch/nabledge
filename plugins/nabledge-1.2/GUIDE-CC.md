@@ -1,0 +1,75 @@
+# Claude Code 利用ガイド
+
+Nabledge-1.2を Claude Code で使用するためのガイドです。
+
+## 前提条件
+
+- Claude Code がインストール済みであること
+- プロジェクトディレクトリで作業していること
+
+## インストール
+
+プロジェクトルートで以下のコマンドを実行：
+
+```bash
+curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-cc.sh | bash -s -- -v 1.2
+```
+
+実行後、`.claude/skills/nabledge-1.2/` ディレクトリが作成され、スキルファイルがコピーされます。Claude Codeを起動するだけですぐにスキルが使えます。
+
+### チーム共有
+
+`.claude/skills/` ディレクトリをGitにコミット・プッシュしてください。チームメンバーがリポジトリをクローンすると、自動的にnabledge-1.2スキルが利用可能になります。
+
+## 使い方
+
+### `/n1.2` コマンド
+
+Nablarchに関する質問やコード分析を実行するには、`/n1.2` コマンドを使用します。
+
+**基本的な使い方**:
+```bash
+/n1.2 UniversalDaoのページングを教えて
+/n1.2 バッチ処理のエラーハンドリング方式を調べて
+/n1.2 トランザクション管理ハンドラの設定方法
+/n1.2 code-analysis LoginActionの構造を理解したい
+```
+
+### コマンドリファレンス
+
+| コマンド | 説明 | 入力形式 | 出力場所・内容 |
+|---------|------|---------|--------------|
+| `/n1.2 <質問>` | 知識検索を実行 | 質問<br>例: `/n1.2 UniversalDaoのページング` | サマリー結果のみメインコンテキストに返る |
+| `/n1.2 code-analysis <対象>` | コード分析を実行 | コマンド<br>例: `/n1.2 code-analysis LoginAction` | サマリー結果のみメインコンテキストに返る<br>詳細: `.nabledge/YYYYMMDD/code-analysis-<target>.md` |
+
+## バージョンアップ
+
+### 最新版へのアップデート（推奨）
+
+セットアップスクリプトを再実行すると、常に最新版がインストールされます：
+
+```bash
+curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-cc.sh | bash -s -- -v 1.2
+```
+
+実行後、更新された `.claude/` ディレクトリをGitにコミット・プッシュしてください。
+
+### 特定バージョンの指定（オプション）
+
+特定のバージョンにしたい場合は、タグを指定できます：
+
+```bash
+# バージョン 0.1 にする場合
+curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-cc.sh -o setup.sh
+NABLEDGE_BRANCH=0.1 bash setup.sh -v 1.2
+```
+
+実行後、`.claude/skills/` ディレクトリをGitにコミット・プッシュしてください。
+
+**注**: 通常は最新版の使用を推奨します。特定バージョンの指定は、動作検証やトラブルシューティングが必要な場合のみ使用してください。
+
+## トラブルシューティング
+
+インストール時に問題が発生した場合は、以下を参照してください。
+
+- プロキシ環境・権限不足でインストールが失敗する場合：nablarch/nabledge#10

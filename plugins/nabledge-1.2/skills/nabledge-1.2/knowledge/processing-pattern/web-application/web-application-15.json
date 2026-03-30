@@ -1,0 +1,26 @@
+{
+  "id": "web-application-15",
+  "title": "送信ボタンやリンクを押すと、IEでのみ「オブジェクトでサポートされていないプロパティまたはメソッドです」と表示され画面が遷移しません。",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "IEでのみ画面遷移しない原因と対処（name属性の競合）",
+      "hints": [
+        "IE",
+        "Internet Explorer",
+        "オブジェクトでサポートされていないプロパティまたはメソッドです",
+        "name属性",
+        "submit",
+        "フォーム",
+        "画面遷移しない",
+        "name属性の競合",
+        "n:submit"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "フォーム内の要素のname属性値がFORMオブジェクトのメソッド・プロパティ名とバッティングする場合、IEで「オブジェクトでサポートされていないプロパティまたはメソッドです」エラーが発生し画面遷移しない。\n\n**対象ブラウザ**: InternetExplorer全般（IE6/IE7/IE8）および旧バージョンのFirefox（4以前）\n\n**問題のある例**:\n```jsp\n<n:submit type=\"submit\" uri=\"RW11BA0102\" name=\"submit\" value=\"登録\"/>\n```\n\n**修正例** (name属性値を別の値に変更):\n```jsp\n<n:submit type=\"submit\" uri=\"RW11BA0102\" name=\"register\" value=\"登録\"/>\n```\n\n> **警告**: 以下の文字列をname属性の値として使用してはいけない。\n> - `action`\n> - `elements`\n> - `enctype`\n> - `length`\n> - `method`\n> - `name`\n> - `target`\n> - `submit`\n> - `reset`\n> - 数値文字列（0, 1, 2 …）"
+  }
+}

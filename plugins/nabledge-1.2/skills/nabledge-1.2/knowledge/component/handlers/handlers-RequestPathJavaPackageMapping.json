@@ -1,0 +1,65 @@
+{
+  "id": "handlers-RequestPathJavaPackageMapping",
+  "title": "リクエストディスパッチハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "RequestPathJavaPackageMapping",
+        "nablarch.fw.handler.RequestPathJavaPackageMapping",
+        "リクエストディスパッチ",
+        "Javaパッケージマッピング",
+        "業務アクションハンドラ",
+        "ディスパッチ",
+        "basePath",
+        "basePackage",
+        "HttpRequestJavaPackageMapping",
+        "DataReadHandler",
+        "FwHeaderReader"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "Result.NotFound",
+        "nablarch.fw.Request",
+        "getRequestPath",
+        "MethodBinder",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "Java識別子",
+        "immediate",
+        "optionalPackageMappingEntries",
+        "classNamePrefix",
+        "classNameSuffix"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "basePath",
+        "basePackage",
+        "classNamePrefix",
+        "classNameSuffix",
+        "immediate",
+        "optionalPackageMappingEntries",
+        "JavaPackageMappingEntry",
+        "nablarch.fw.handler.JavaPackageMappingEntry",
+        "requestPattern",
+        "設定項目",
+        "複雑なマッピング設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.RequestPathJavaPackageMapping`\n\nリクエストパスをJavaパッケージ階層にマッピングし、リクエストパスの値に応じて実行するハンドラを切り替えるハンドラ。主に**業務アクションハンドラ**のディスパッチに使用する。\n\n**ハンドラキュー位置** ([../architectural_pattern/messaging_request_reply](../../processing-pattern/mom-messaging/mom-messaging-messaging_request_reply.json) での構成):\nDataReadHandler → **RequestPathJavaPackageMapping** → MessagingAction\n\n```xml\n<component class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n  <property name=\"basePath\"    value=\"/app/action/\" />\n  <property name=\"basePackage\" value=\"nablarch.application\" />\n</component>\n```\n\n上記設定時のリクエストパスとディスパッチ先クラスの対応:\n\n| リクエストパス | ディスパッチ対象クラス |\n|---|---|\n| /app/action/AdminApp | nablarch.application.AdminApp |\n| /app/action/user/UserApp | nablarch.application.user.UserApp |\n| /app/application/AdminApp | (ディスパッチ対象無し:404エラー) |\n\n**関連するハンドラ**:\n\n| ハンドラ | 内容 |\n|---|---|\n| [Main](handlers-Main.json) | [../architectural_pattern/batch](../../processing-pattern/nablarch-batch/nablarch-batch-batch-architectural_pattern.json) では、プロセス起動引数 `--requestPath` に指定された [リクエストパス](../../about/about-nablarch/about-nablarch-concept.json) の値に応じてディスパッチ |\n| [DataReadHandler](handlers-DataReadHandler.json) | [../architectural_pattern/messaging_request_reply](../../processing-pattern/mom-messaging/mom-messaging-messaging_request_reply.json) では、[../reader/FwHeaderReader](../readers/readers-FwHeaderReader.json) が読み込むリクエストIDヘッダ (項目名:requestId) の値を使用 |\n| [HttpRequestJavaPackageMapping](handlers-HttpRequestJavaPackageMapping.json) | [../architectural_pattern/web_gui](../../processing-pattern/web-application/web-application-web_gui.json) では、本ハンドラを拡張した [HttpRequestJavaPackageMapping](handlers-HttpRequestJavaPackageMapping.json) を使用 |",
+    "s2": "**[往路処理]**\n\n1. **リクエストパスの取得**: `nablarch.fw.Request#getRequestPath()` でリクエストパスを取得\n   - **1a. ベースパス外アクセス**: ベースパスが前方一致しない場合、`Result.NotFound` を送出\n   - **1b. 非Java識別子エラー**: ディレクトリ文字列にJava識別子以外の文字が含まれる場合、`Result.NotFound` を送出（ascii範囲外のマルチバイト文字は許容。ただしマッピング先クラス名にascii範囲外文字が含まれる場合は404エラー）\n2. **ディスパッチ対象クラスの決定**:\n   1. リクエストパス中の `.` を `/` に置換\n   2. ベースパスと一致する部分をベースパッケージ名に置換（`optionalPackageMappingEntries` が設定されている場合は優先。マッチしない場合はベースパスによるマッチング。詳細は :ref:`複雑なマッピング定義<optionalPackageMappingEntries>` 参照）\n   3. 置換後の文字列を `.` で分割し、英大文字で始まるトークンをクラス名、それ以前をパッケージ階層とする\n   4. `classNamePrefix`/`classNameSuffix` が設定されている場合はクラス名の前後に付加\n3. **インスタンス作成**: 完全修飾名のクラスをロードし、デフォルトコンストラクタでインスタンスを作成\n   - **3a. クラスロードエラー**: クラスがクラスパス上に存在しない場合、`Result.NotFound` を送出\n   - **3b. インスタンス生成エラー**: デフォルトコンストラクタ未定義またはコンストラクタ内例外発生の場合、実行時例外を送出\n5. **ハンドラキューへの追加**:\n   - `immediate=true`（デフォルト）: ディスパッチハンドラの直後に挿入\n   - `immediate=false`: ハンドラキューの末尾に追加\n   - ハンドラインターフェース未実装の場合: `MethodBinder` を使用して [メソッド単位のディスパッチ](../../about/about-nablarch/about-nablarch-concept.json) を行うアダプタを作成\n   - **5a. ディスパッチ不可能**: ハンドラインターフェース未実装かつ `MethodBinder` 未設定の場合、`Result.NotFound` を送出\n6. **後続ハンドラの実行**: 後続ハンドラへ処理を委譲し結果を取得\n\n**[復路処理]**\n\n7. **正常終了**: 後続ハンドラの結果をリターンして終了\n\n**[例外処理]**\n\n- **後続ハンドラ処理エラー**: 後続ハンドラ処理中に例外が発生した場合はそのまま再送出して終了",
+    "s3": "**設定項目**:\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| basePath | String |  | \"\" | ベースパス文字列 |\n| basePackage | String |  | \"\" | ベースパッケージ |\n| classNamePrefix | String |  | \"\" | ディスパッチ対象クラス名の接頭辞 |\n| classNameSuffix | String |  | \"\" | ディスパッチ対象クラス名の接尾辞 |\n| immediate | boolean |  | true | ハンドラ追加位置（true=ディスパッチハンドラ直後、false=キュー末尾） |\n| optionalPackageMappingEntries | nablarch.fw.handler.JavaPackageMappingEntry |  | null | リクエストパスのパターンとマッピング先Javaパッケージの組み合わせ |\n\n**基本設定**:\n\n```xml\n<component class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n  <property name=\"basePackage\" value=\"nablarch.sample.batch.action\" />\n  <property name=\"immediate\" value=\"false\" />\n</component>\n```\n\n**クラス名サフィックスに `Action` を付与する場合**:\n\n```xml\n<component class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n  <property name=\"basePackage\"     value=\"nablarch.sample.batch.action\" />\n  <property name=\"immediate\"       value=\"false\" />\n  <property name=\"classNameSuffix\" value=\"Action\" />\n</component>\n```\n\n**複雑なマッピング設定 (`optionalPackageMappingEntries`)**:\n\n`optionalPackageMappingEntries` に設定した順番にリクエストパスのパターンマッチングが行われ、最初にマッチしたJavaパッケージが使用される。マッチしない場合は `basePackage` が使用される。パターンはGlob式に似た書式で指定（:ref:`requestHandlerEntry` と同一記法）。\n\n```xml\n<component class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n    <property name=\"optionalPackageMappingEntries\">\n      <list>\n        <component class=\"nablarch.fw.handler.JavaPackageMappingEntry\">\n          <property name=\"requestPattern\" value=\"/admin//\" />\n          <property name=\"basePackage\" value=\"nablarch.sample.apps1\" />\n        </component>\n        <component class=\"nablarch.fw.handler.JavaPackageMappingEntry\">\n          <property name=\"requestPattern\" value=\"/user//\" />\n          <property name=\"basePackage\" value=\"nablarch.sample.apps2\" />\n        </component>\n      </list>\n    </property>\n    <property name=\"basePackage\" value=\"nablarch.sample.base\" />\n</component>\n```\n\n| リクエストパス | ディスパッチ対象クラス |\n|---|---|\n| /admin/AdminApp | nablarch.sample.apps1.admin.AdminApp |\n| /user/UserApp | nablarch.sample.apps2.user.UserApp |\n| /BaseApp | nablarch.sample.base.BaseApp |\n\n> **注意**: パターンマッチはリクエストパス中のすべての `.` を `/` に置換してから行われる。これはNablarchのバッチ処理で過去に使用していたドット区切りのリクエストパス（例: `ss01A001.B01AA001Action/B01AA0010`）との互換性のため。"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "handlers-NablarchTagHandler",
+  "title": "Nablarchカスタムタグ制御ハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "NablarchTagHandler",
+        "nablarch.common.web.handler.NablarchTagHandler",
+        "MultipartHandler",
+        "CustomTagConfig",
+        "ウィンドウスコープ",
+        "カスタムタグ制御ハンドラ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "ハンドラ処理フロー",
+        "往路処理",
+        "復路処理",
+        "改竄チェック",
+        "CustomTagConfig",
+        "hiddenタグ暗号化",
+        "内部フォーワード"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "改竄検知の判定について",
+      "hints": [
+        "改竄検知",
+        "改竄エラー",
+        "sessionExpirePath",
+        "ウィンドウスコープ暗号化",
+        "セッション無効化",
+        "改竄エラー画面設計"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "path",
+        "statusCode",
+        "sessionExpirePath",
+        "sessionExpireStatusCode",
+        "設定項目",
+        "NablarchTagHandler XML設定例"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.common.web.handler.NablarchTagHandler`\n\nカスタムタグと連動し、ウィンドウスコープをはじめとする各種機能を実現するハンドラ。\n\nカスタムタグの詳細: [../02_FunctionDemandSpecifications/03_Common/07_WebView](../libraries/libraries-07_WebView.json)\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [MultipartHandler](handlers-MultipartHandler.json) | POSTパラメータのためにリクエストボディを読み込む。NablarchTagHandlerの後続に配置すること。 |",
+    "s2": "**[往路処理]**\n\n1. 内部フォーワードによる再実行の場合は処理をスキップし、後続ハンドラに委譲して結果をリターン\n2. カスタムタグ向け処理を実行:\n   - ボタン/リンク毎のパラメータ変更機能のため、リクエストに変更パラメータを設定\n   - checkboxタグのチェックなしに対応する値をリクエストに設定\n   - hiddenタグの暗号化機能に対応する改竄チェックと復号\n   - HTTPアクセスログのリクエストパラメータを出力\n   - `CustomTagConfig` をリクエストスコープに設定（設定可能なデフォルト値の詳細は :ref:`WebView_NablarchTagHandler` 参照）\n\n> **注意**: 改竄チェックと復号は、カスタムタグのデフォルト値設定でhiddenタグの暗号化機能を「使用する」に設定している場合のみ実行される\n\n2a. Hidden項目改竄検知時: 復号されたチャレンジコードがセッションのものと不一致の場合、INFOレベルのログを出力後、設定されたエラー遷移先/ステータスコードでHTTPエラーレスポンスを送出\n\n3. 後続ハンドラに処理委譲\n\n**[復路処理]**\n\n4. 手順3で取得した処理結果をリターン\n\n**[例外制御]**\n\n3a. 後続ハンドラ実行中のエラーはそのまま再送出",
+    "s3": "リクエストの改竄を下記順序で検知する:\n\n1. HTTP POST以外のリクエストは改竄エラーとして処理\n2. セッションからウィンドウスコープ暗号化用の鍵を取得。取得できない場合は改竄エラーまたはセッション無効化時エラーとして処理\n3. ウィンドウスコープデータをセッション上の鍵で復号。リクエストパラメータからウィンドウスコープ値が取得できない場合、または復号失敗の場合は改竄エラーとして処理\n4. 復号データのハッシュ値を検証。一致しない場合は改竄エラーとして処理\n5. ウィンドウスコープの値から前画面で遷移可能なリクエストIDを取得し、処理中のリクエストIDと比較。含まれていない場合は改竄エラーとして処理\n\n**実際の改竄以外に改竄エラーとなるケース:**\n\n- セッションから暗号化キーが取得できない場合（長時間未使用によるセッション無効、ログアウト後の別ウィンドウからのリクエスト等）。ただし `sessionExpirePath` を設定済みの場合はそのフォワード先を使用可能\n- 改竄検知対象のリクエストIDをURL直接指定した場合（ブックマーク含む）\n- Nablarchカスタムタグで作成したサブミットボタン以外の方法でPOSTした場合（アプリケーションバグでも発生しうる）\n\n**エラー画面設計指針:** 改竄エラー画面には実際の改竄者への通知は不要のため、以下のいずれかが発生したことを伝えるメッセージを表示:\n- 既にログアウトしたか、長期間未使用のためログアウトされた\n- 正しくない画面遷移が行われた",
+    "s4": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| path | String | ○ | | 改竄を検知した場合に送信する画面のリソースパス。判定基準は :ref:`detection_logic` 参照 |\n| statusCode | int | | 400 | 改竄を検知した場合のレスポンスステータス |\n| sessionExpirePath | String | | pathと同値 | セッションが無効化されていた際に遷移する画面のリソースパス |\n| sessionExpireStatusCode | int | | 400 | セッションが無効化されていた場合のレスポンスステータス |\n\n```xml\n<component name=\"nablarchTagHandler\"\n           class=\"nablarch.common.web.handler.NablarchTagHandler\">\n  <property name=\"path\" value=\"/TAMPERING-DETECTED.jsp\" />\n  <property name=\"statusCode\" value=\"400\" />\n</component>\n```"
+  }
+}

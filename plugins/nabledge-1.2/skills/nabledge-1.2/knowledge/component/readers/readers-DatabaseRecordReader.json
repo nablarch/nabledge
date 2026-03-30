@@ -1,0 +1,27 @@
+{
+  "id": "readers-DatabaseRecordReader",
+  "title": "データベースレコードリーダ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "データベースレコードリーダ",
+      "hints": [
+        "DatabaseRecordReader",
+        "nablarch.fw.reader.DatabaseRecordReader",
+        "SqlRow",
+        "nablarch.core.db.statement.SqlRow",
+        "SqlPStatement",
+        "ParameterizedSqlPStatement",
+        "statement",
+        "データベースレコードリーダ",
+        "バッチデータ読み込み",
+        "DBクエリ結果セット"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.reader.DatabaseRecordReader`\n\n**読み込むデータの型**: `nablarch.core.db.statement.SqlRow`\n\n初回読み込み時にデータベースへクエリを発行し、結果セットから1レコードずつ返す。\n\n| 設定項目 | プロパティ名 | データ型 | 備考 |\n|---|---|---|---|\n| SQLステートメント | statement | SqlPStatement | 排他利用。いずれか必須 |\n| 引数付きSQLステートメント | statement | ParameterizedSqlPStatement, Object | |\n\n引数付きプリペアステートメント使用例:\n\n```java\nMap<String, Object> condition = new HashMap() {{\n    put(\"param1\", \"value1\");\n    put(\"param2\", \"value2\");\n}};\nParameterizedSqlPStatement statement = getParameterizedSqlStatement(\"GET_DELETE_USER_LIST\");\nDatabaseRecordReader reader = new DatabaseRecordReader()\n                                 .setStatement(statement, condition);\n```"
+  }
+}

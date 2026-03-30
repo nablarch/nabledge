@@ -1,0 +1,55 @@
+{
+  "id": "handlers-MessageReplyHandler",
+  "title": "電文応答制御ハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "MessageReplyHandler",
+        "nablarch.fw.messaging.handler.MessageReplyHandler",
+        "ResponseMessage",
+        "MessagingContextHandler",
+        "TransactionManagementHandler",
+        "DataReadHandler",
+        "電文応答制御",
+        "応答電文送信",
+        "メッセージング",
+        "2相コミット"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "ResponseMessage",
+        "DataReader.NoMoreRecord",
+        "java.lang.ClassCastException",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "ハンドラ処理フロー",
+        "応答キューPUT",
+        "受信待機タイムアウト"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "MessageReplyHandler",
+        "nablarch.fw.messaging.handler.MessageReplyHandler",
+        "XML設定",
+        "設定項目なし",
+        "component"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.messaging.handler.MessageReplyHandler`\n\n後続ハンドラの処理結果である`ResponseMessage`オブジェクトの内容をもとに応答電文を構築し送信する。送信した応答電文オブジェクトを戻り値として返す。\n\n**関連するハンドラ**\n\n> **重要**: 応答電文の内容を編集する必要のあるハンドラは、すべてこのハンドラの後続に配置すること。\n\n| ハンドラ | 配置条件 |\n|---|---|\n| [MessagingContextHandler](handlers-MessagingContextHandler.json) | スレッドローカル上のメッセージングコンテキストを使用するため、本ハンドラより上位に配置すること |\n| [TransactionManagementHandler](handlers-TransactionManagementHandler.json) | **2相コミット使用時**: DBトランザクションとJMSトランザクションをまとめてコミットするため、トランザクション制御ハンドラは本ハンドラより先に実行する。**2相コミット未使用時**: 応答送信前にDBトランザクションを終了させる必要があるため、トランザクション制御ハンドラは本ハンドラの後に実行する |\n| [DataReadHandler](handlers-DataReadHandler.json) | 要求電文フォーマット不正による例外のエラー応答電文を本ハンドラで送信するには、[DataReadHandler](handlers-DataReadHandler.json) を本ハンドラの後続に配置すること |",
+    "s2": "**[往路処理]**\n\n1. 特段の処理を行わず後続ハンドラに委譲し、処理結果を取得する。\n\n**[復路処理]**\n\n2. 処理結果の型が`ResponseMessage`の場合、応答電文オブジェクトにキャストして以降の処理で使用する。\n3. (受信待機タイムアウト) 処理結果が`DataReader.NoMoreRecord`の場合、応答処理を行わずそのままリターンして終了する。\n4. (処理結果タイプエラー) 処理結果が`ResponseMessage`でも`DataReader.NoMoreRecord`でもない場合、`java.lang.ClassCastException`を送出する。\n5. フレームワーク制御ヘッダの処理結果コードが未設定の場合、処理結果オブジェクトのステータスコードを設定する。\n6. スレッドローカル上のメッセージコンテキストを使用して応答電文オブジェクトを応答キュー（PUT）に送信する。\n7. 応答電文オブジェクトをリターンする。後続ハンドラ処理で例外が発生していた場合はその例外を再送出する。\n\n**[例外処理]**\n\n- 後続ハンドラ処理中に例外が発生した場合、エラー内容をもとに応答電文を作成し、送信処理に使用する。元例外はハンドラ処理終了時に再送出する。\n- 応答電文送信中に例外が発生した場合、応答を断念して例外を再送出する。\n- 送信中の例外発生前に後続ハンドラでも例外が発生していた場合、送信中に発生した例外はワーニングレベルのログとして出力し、後続ハンドラで捕捉していた例外を再送出する。",
+    "s3": "設定項目なし。\n\n```xml\n<component class=\"nablarch.fw.messaging.handler.MessageReplyHandler\" />\n```"
+  }
+}

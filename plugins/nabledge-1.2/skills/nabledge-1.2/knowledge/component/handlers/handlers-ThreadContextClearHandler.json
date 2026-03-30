@@ -1,0 +1,47 @@
+{
+  "id": "handlers-ThreadContextClearHandler",
+  "title": "スレッドコンテキスト変数削除ハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "ThreadContextClearHandler",
+        "nablarch.common.handler.threadcontext.ThreadContextClearHandler",
+        "スレッドコンテキスト変数削除",
+        "スレッドローカル変数削除",
+        "ThreadContextHandler",
+        "ハンドラ配置順序"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "ThreadContextClearHandler",
+        "ハンドラ処理フロー",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "スレッドコンテキスト削除"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "ThreadContextClearHandler",
+        "DIリポジトリ設定",
+        "コンポーネント定義",
+        "nablarch.common.handler.threadcontext.ThreadContextClearHandler"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.common.handler.threadcontext.ThreadContextClearHandler`\n\n:ref:`ThreadContextHandler` で設定したスレッドローカル上の変数を削除するハンドラ。\n\n> **注意**: 本ハンドラは極力手前側に配置すること。往路処理では、本ハンドラより手前のハンドラではスレッドコンテキストにアクセスできなくなるため。",
+    "s2": "1. **往路処理**: 何もせずに後続のハンドラに処理を委譲し、その結果を取得する。\n2. **復路処理（正常終了）**: :ref:`ThreadContextHandler` で設定したスレッドローカル上の変数を削除する。\n3. **例外処理（エラー終了）**: 後続ハンドラでエラーが発生した場合も、:ref:`ThreadContextHandler` で設定したスレッドローカル上の変数を削除する。",
+    "s3": "実装内容は変更不要。DIリポジトリ設定ファイルへの記述例:\n\n```xml\n<component class=\"nablarch.common.handler.threadcontext.ThreadContextClearHandler\" />\n```"
+  }
+}

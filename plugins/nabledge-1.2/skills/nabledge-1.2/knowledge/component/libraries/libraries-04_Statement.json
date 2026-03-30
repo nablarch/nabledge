@@ -1,0 +1,119 @@
+{
+  "id": "libraries-04_Statement",
+  "title": "SQL文実行部品の構造とその使用方法",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "SQL文実行部品の構造とその使用方法",
+      "hints": [
+        "SQL文実行部品",
+        "JDBC",
+        "クラス図",
+        "簡易検索",
+        "StatementFactory",
+        "SqlPStatement",
+        "PreparedStatement",
+        "AppDbConnection",
+        "SqlResultSet",
+        "SqlRow",
+        "DbConnectionContext",
+        "SQL文直接指定",
+        "プリペアドステートメント",
+        "retrieve",
+        "setObject"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "各クラスの責務",
+      "hints": [
+        "StatementFactory",
+        "SqlStatement",
+        "SqlPStatement",
+        "ResultSetConvertor",
+        "ParameterizedSqlPStatement",
+        "StatementExceptionFactory",
+        "インタフェース定義",
+        "BasicStatementFactory",
+        "BasicSqlStatementExceptionFactory",
+        "BasicSqlLoader",
+        "StaticDataLoader",
+        "SqlStatementExceptionFactory",
+        "sqlStatementExceptionFactory",
+        "resultSetConvertor",
+        "fetchSize",
+        "queryTimeout",
+        "sqlLoader",
+        "duplicateErrorSqlState",
+        "duplicateErrorErrCode",
+        "fileEncoding",
+        "extension",
+        "StatementFactory設定",
+        "一意制約違反",
+        "SQLファイル読み込み",
+        "setFetchSize",
+        "setQueryTimeout"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "nablarch.core.db.statementパッケージ",
+      "hints": [
+        "BasicStatementFactory",
+        "BasicSqlPStatement",
+        "BasicSqlStatementExceptionFactory",
+        "ResultSetIterator",
+        "SqlResultSet",
+        "SqlRow",
+        "BasicSqlLoader",
+        "DbAccessSupport",
+        "DuplicateStatementException",
+        "SqlStatementException",
+        "SQL_ID",
+        "SQLファイル",
+        "クラス定義",
+        "TooManyResultException",
+        "ListSearchInfo",
+        "getParameterizedSqlStatement",
+        "countByStatementSql",
+        "countByParameterizedSql",
+        "search"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "簡易検索の場合の処理シーケンス",
+      "hints": [
+        "getSqlPStatement",
+        "SqlPStatement",
+        "retrieve",
+        "SqlResultSet",
+        "簡易検索",
+        "処理シーケンス",
+        "DbAccessSupport"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "推奨するJavaの実装例(SQL文を外部ファイル化した場合)",
+      "hints": [
+        "DbAccessSupport",
+        "UserService",
+        "getSqlPStatement",
+        "SqlResultSet",
+        "SQLファイル外部化",
+        "SQL_ID",
+        "setObject",
+        "実装例"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "SQL文実行部品の構造とその使用方法。JDBCのAPIをラップしている機能と簡易検索機能で構成される。\n\n![SQL文実行部品クラス設計図](assets/libraries-04_Statement/DbAccessSpec_StatementClassDesign.jpg)\n\n> **注意**: この実装はフレームワーク内部でテーブルスキーマ情報から動的にSQL文を組み立てる必要がある場合にのみ使用する。通常、SQLインジェクション対策のためSQL文は外部ファイル化するため、各アプリケーション開発者はこの実装を行わない。\n\n**クラス**: `AppDbConnection`, `SqlPStatement`, `SqlResultSet`, `SqlRow`, `DbConnectionContext`\n\n```java\nAppDbConnection connection = DbConnectionContext.getConnection(transaction.getDbTransactionName());\nSqlPStatement statement = connection.prepareStatement(\n        \"SELECT USER_ID, NAME, TEL, AGE FROM USER_MTR WHERE USER_ID = ?\");\n\nstatement.setObject(1, \"00001\");\nSqlResultSet resultSet = statement.retrieve();\n\nfor (SqlRow row : resultSet) {\n    String userId = row.getString(\"user_id\");\n    String name = row.getString(\"name\");\n    String tel = row.getString(\"tel\");\n    String age = row.getString(\"age\");\n}\n```",
+    "s2": "`nablarch.core.db.statement`パッケージのインタフェース定義。\n\n| インタフェース名 | 概要 |\n|---|---|\n| `StatementFactory` | `java.sql.PreparedStatement`のラッパー、`java.sql.CallableStatement`のラッパー、`ParameterizedSqlPStatement`を生成するインタフェース |\n| `SqlStatement` | `SqlPStatement`、`ParameterizedSqlPStatement`の親インタフェース |\n| `SqlPStatement` | `PreparedStatement`のラッパー機能のインタフェース。[簡易検索機能](libraries-04_DbAccessSpec.json) のインタフェースをもつ |\n| `ResultSetConvertor` | `java.sql.ResultSet`から値を取得するインタフェース。`ResultSet#getObject`以外を使用する場合（データベースのデータタイプに応じてJavaオブジェクトのデータ対応を決め打ちたい場合）に実装クラスを追加する |\n| `ParameterizedSqlPStatement` | オブジェクトのフィールド値をデータベースに登録するインタフェース |\n| `StatementExceptionFactory` | `SQLException`発生時に送出する`Exception`を生成するインタフェース |\n\n**a) StatementFactory設定**\n\n**クラス**: `nablarch.core.db.statement.BasicStatementFactory`\n\n```xml\n<component name=\"statementFactory\" class=\"nablarch.core.db.statement.BasicStatementFactory\">\n    <property name=\"sqlStatementExceptionFactory\">\n        <component class=\"nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory\">\n            <property name=\"duplicateErrorSqlState\" value=\"\"/>\n            <property name=\"duplicateErrorErrCode\" value=\"1\"/>\n        </component>\n    </property>\n    <property name=\"fetchSize\" value=\"500\"/>\n    <property name=\"queryTimeout\" value=\"600\" />\n    <property name=\"sqlLoader\">\n        <component class=\"nablarch.core.db.statement.BasicSqlLoader\">\n            <property name=\"fileEncoding\" value=\"utf-8\"/>\n            <property name=\"extension\" value=\"sql\"/>\n        </component>\n    </property>\n</component>\n```\n\n| プロパティ名 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|\n| sqlStatementExceptionFactory | ○ | | `nablarch.core.db.statement.SqlStatementExceptionFactory`を実装したクラスを設定する |\n| resultSetConvertor | | | `nablarch.core.db.statement.ResultSetConvertor`を実装したクラスを設定する。SELECT結果のカラムデータを変換する場合に設定する |\n| fetchSize | | 10 | プリフェッチサイズ。`SqlPStatement#setFetchSize`でStatement単位での変更も可能 |\n| queryTimeout | | 0（無制限） | クエリータイムアウトの秒数。`SqlPStatement#setQueryTimeout`でStatement単位での変更も可能 |\n| sqlLoader | | | `nablarch.core.cache.StaticDataLoader`を実装したクラスを設定する（サンプルでは`BasicSqlLoader`を使用） |\n\n> **注意**: `SqlPStatement#setFetchSize`および`SqlPStatement#setQueryTimeout`で変更した値は、そのインスタンスでのみ有効。新たに`AppDbConnection#prepareStatement`を呼び出した場合は設定ファイルの値に戻る（:ref:`statementReuse<db-dataSourceConnectionFactory-label>`の設定に関わらず同一の振る舞い）。\n\n**b) BasicSqlStatementExceptionFactory設定**\n\n**クラス**: `nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory`\n\n| プロパティ名 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|\n| duplicateErrorSqlState | ※ | | 一意制約違反を示すSqlState（`SQLException#getSqlState`で返却される値） |\n| duplicateErrorErrCode | ※ | | 一意制約違反を示すErrCode（`SQLException#getErrorCode`で返却される値） |\n\n※ `duplicateErrorSqlState`または`duplicateErrorErrCode`のどちらか一方を必ず設定すること。\n\n**c) BasicSqlLoader設定**\n\n**クラス**: `nablarch.core.db.statement.BasicSqlLoader`（`nablarch.core.cache.StaticDataLoader<Map<String, String>>`を実装）\n\n| プロパティ名 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|\n| fileEncoding | | JVMデフォルト | SQLファイルのエンコーディング |\n| extension | | sql | SQLファイルの拡張子 |\n\n`BasicSqlLoader`以外の実装クラスに差し替える場合の仕様:\n- `StaticDataLoader`のgenerics型は`Map<String, String>`とすること（例: `implements StaticDataLoader<Map<String, String>>`）\n- `getValue`メソッドでSQLの読み込み処理を行い、その他のメソッドはnullを返す実装とすること\n- `getValue`が返すMapのKEY=SQL_ID、VALUE=SQL文",
+    "s3": "### a) StatementFactory実装クラス\n\n**クラス**: `nablarch.core.db.statement.BasicStatementFactory`\n\n`StatementFactory`の基本実装。`BasicSqlPStatement`（`java.sql.PreparedStatement`ラッパー）を生成する。\n\n> **注意**: `java.sql.Statement`クラスのラッパークラスの生成機能は提供しない（[SQLインジェクション対策](libraries-04_DbAccessSpec.json)参照）。\n\n### b) SqlPStatement実装クラス\n\n**クラス**: `nablarch.core.db.statement.BasicSqlPStatement`\n\n`SqlPStatement`（`SqlStatement`）、`ParameterizedSqlPStatement`の基本実装クラス。データベースベンダー非依存の実装。ベンダー依存の実装が必要な場合は`SqlPStatement`および`ParameterizedSqlPStatement`の実装クラスを追加して差し替えること。\n\n### c) StatementExceptionFactory実装クラス\n\n**クラス**: `nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory`\n\n一意制約違反の場合は`DuplicateStatementException`を、それ以外は`SqlStatementException`を送出する。判定は`SQLException#getSQLState`または`SQLException#getErrorCode`を元に行う（[設定](#)参照）。\n\n> **注意**: 一意制約違反以外の例外をアプリケーションでハンドリングする場合は、`SqlStatementException`を継承したクラスとそのFactoryクラスを追加すること。\n\n### d) 検索結果クラス\n\n| クラス名 | 概要 |\n|---|---|\n| `ResultSetIterator` | `java.sql.ResultSet`のラッパー。1レコード分のデータを`SqlRow`で取得するインタフェースを提供する |\n| `SqlResultSet` | 簡易検索結果を格納する`ArrayList`のサブクラス。SELECT結果をすべてメモリ上に保持する |\n| `SqlRow` | `ResultSet`の1レコード分データを格納する`Map`実装クラス。`SqlResultSet`の各要素として格納される |\n\n> **警告**: `SqlResultSet`は検索結果を全件メモリ上に保持するため、大量データ検索時はメモリ不足の原因となる。大量データ検索時は`PreparedStatement`ラッパーの`executeQuery`と`ResultSetIterator`を使用すること。\n\n### e) SQL文のロードクラス\n\n**クラス**: `nablarch.core.db.statement.BasicSqlLoader`\n\nクラスパス上の外部ファイルからSQL文を読み込む。読み込んだSQL文は[../05_StaticDataCache](libraries-05_StaticDataCache.json)によりSQLファイル単位にキャッシュされる（KEY: `SQL_ID`、VALUE: SQL文）。`SQL_ID`はSQLファイル内で一意とする必要がある。\n\nSQLファイル記述ルール:\n1. `SQL_ID`とSQL文の1グループは空行で区切る（SQL文中に空行不可、異なるSQL文間には必ず空行を入れる）\n2. SQL文の最初の「`=`」までが`SQL_ID`\n3. コメントは「`--`」で開始（行コメントのみ、ブロックコメント不可）\n4. SQL文の途中改行・スペース/tabによる桁揃え可能\n\n```sql\n-- ＸＸＸＸＸ取得SQL\n-- SQL_ID:GET_XXXX_INFO\nGET_XXXX_INFO =\nSELECT\n   COL1,\n   COL2\nFROM\n   TEST_TABLE\nWHERE\n   COL1 = :col1\n\n\n-- ＸＸＸＸＸ更新SQL\n-- SQL_ID:UPDATE_XXXX\nUPDATE_XXXX =\nUPDATE\n    TEST_TABLE\nSET\n    COL2 = :col2\nWHERE\n    COL1 = :col1\n```\n\n### f) サポートクラス\n\n**クラス**: `nablarch.core.db.support.DbAccessSupport`\n\n`SQL_ID`から`Statement`オブジェクトを生成するサポートクラス。継承してDBアクセスクラスを実装する。\n\nSQLファイル名ルール: 継承クラスの完全修飾名と一致させる。\n\n例: クラス`nablarch.sample.management.user.UserRegisterService` → SQLファイル`nablarch/sample/management/user/UserRegisterService.sql`\n\n> **注意**: 継承できない場合は`DbAccessSupport`を直接インスタンス化する。その際は`DbAccessSupport(Clazz<?> clazz)`コンストラクタを使用すること。デフォルトコンストラクタ使用時は`DbAccessSupport`クラスの完全修飾名でSQLファイルを検索するため注意。\n\n提供メソッド:\n\n| メソッド | 説明 |\n|---|---|\n| `getSqlPStatement(String sqlId)` | SQL_IDを元に`SqlPStatement`を生成する |\n| `getParameterizedSqlStatement(String sqlId)` | SQL_IDを元に`ParameterizedSqlPStatement`を生成する |\n| `getParameterizedSqlStatement(String sqlId, Object condition)` | SQL_IDと条件オブジェクトを元に可変条件SQL文を構築して`ParameterizedSqlPStatement`を生成する |\n| `countByStatementSql(String sqlId)` | 条件不要のSQL文で件数取得を実行する |\n| `countByParameterizedSql(String sqlId, Object condition)` | SQL_IDと条件オブジェクトを元に件数取得を実行する |\n| `search(String sqlId, ListSearchInfo condition) throws TooManyResultException` | 件数取得+検索を実行する（:ref:`WebView_ListSearchResult`参照） |",
+    "s4": "簡易検索の処理シーケンス:\n\n![簡易検索処理シーケンス図](assets/libraries-04_Statement/DbAccessSpec_StatementSequence.jpg)\n\n1. `DbAccessSupport#getSqlPStatement(sqlId)`を呼び出し、`SQL_ID`を元に`SqlPStatement`を取得する。\n2. `SqlPStatement#setString()`等を呼び出してSQL文の実行前に条件を設定する。\n3. `SqlPStatement#retrieve()`を呼び出し、SQL文を実行する。\n4. 返却された`SqlResultSet`から検索結果の値を取得する。",
+    "s5": "`DbAccessSupport`を継承したDBアクセスクラスのクラス名（完全修飾名）でSQLファイルを作成する。拡張子はデフォルト`.sql`（設定で変更可）。SQL文の記述ルールは[SQL文のロードクラス](#s3)を参照。\n\nクラス名`nablarch.sample.user.UserService` → SQLファイル`nablarch/sample/user/UserService.sql`\n\n```sql\nGET_USER_INFO =\nSELECT USER_ID,\n       NAME,\n       TEL,\n       AGE\n  FROM USER_MTR\n WHERE USER_ID = ?\n```\n\n```java\npackage nablarch.sample.user;\n\npublic class UserService extends DbAccessSupport {\n\n    public SqlResultSet getUserInfo(String userId) {\n        SqlPStatement statement = getSqlPStatement(\"GET_USER_INFO\");\n        statement.setObject(1, \"00001\");\n        return statement.retrieve();\n    }\n}\n```"
+  }
+}

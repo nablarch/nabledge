@@ -1,0 +1,48 @@
+{
+  "id": "handlers-StatusCodeConvertHandler",
+  "title": "ステータスコード→プロセス終了コード変換ハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "StatusCodeConvertHandler",
+        "nablarch.fw.handler.StatusCodeConvertHandler",
+        "ステータスコード変換",
+        "プロセス終了コード変換",
+        "Main",
+        "GlobalErrorHandler"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "ステータスコード",
+        "プロセス終了コード",
+        "終了コードマッピング"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "StatusCodeConvertHandler",
+        "DIリポジトリ設定",
+        "XML設定",
+        "終了コードカスタマイズ",
+        "プロジェクト固有実装"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.StatusCodeConvertHandler`\n\nステータスコードをプロセスの終了コードに変換するハンドラ。[Main](handlers-Main.json) の直後のハンドラとして設定する。\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [Main](handlers-Main.json) | 本ハンドラの戻り値を終了コードとして使用する |\n| [GlobalErrorHandler](handlers-GlobalErrorHandler.json) | 本ハンドラでは例外制御を行わないため、後続ハンドラで例外/エラーが送出された場合はそのまま [Main](handlers-Main.json) に送出される。本ハンドラの直後に [GlobalErrorHandler](handlers-GlobalErrorHandler.json) を配置し、本ハンドラへのエラー送出を防ぐこと |",
+    "s2": "**[往路処理]**\n1. 後続ハンドラに処理を委譲し、結果を取得する。\n\n**[復路処理]**\n2. 後続ハンドラから返された処理結果オブジェクトのステータスコード値をもとに、プロセス終了コードを決定して返す。\n\n| ステータスコード | プロセス終了コード |\n|---|---|\n| -1 以下 | 1 |\n| 0 | 0 |\n| 1 ～ 199 | (ステータスコードと同じ) |\n| 200 ～ 399 | 0 |\n| 400 | 10 |\n| 401 | 11 |\n| 403 | 12 |\n| 404 | 13 |\n| 409 | 14 |\n| 上記以外の400～499 | 15 |\n| 500以上 | 20 |\n\n**[例外処理]**\n1a. 後続ハンドラの処理中にエラーが発生した場合は、そのまま再送出して終了する。",
+    "s3": "本ハンドラには特段の設定項目はない。\n\n```xml\n<component class=\"nablarch.fw.handler.StatusCodeConvertHandler\" />\n```\n\n終了コードをプロジェクト固有の体系に変更したい場合は、本ハンドラを別実装に差し替えること。"
+  }
+}

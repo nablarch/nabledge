@@ -1,0 +1,144 @@
+{
+  "id": "libraries-05_FileDownload",
+  "title": "ファイルダウンロード",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "ファイルダウンロード",
+        "HttpResponse",
+        "クライアントダウンロード",
+        "HttpRequest",
+        "ExecutionContext",
+        "setContentType",
+        "write",
+        "setContentDisposition",
+        "文字シーケンスダウンロード",
+        "Shift_JIS",
+        "CSV出力",
+        "Content-Type設定"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "hints": [
+        "HttpResponse",
+        "setContentType",
+        "setContentDisposition",
+        "write",
+        "setBodyStream",
+        "setContentPath",
+        "文字シーケンスエンコード",
+        "大容量ファイル",
+        "一時ファイル切り替え",
+        "メソッド優先順位"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "要求",
+      "hints": [
+        "インライン表示",
+        "ブラウザ対応",
+        "非ASCII文字ファイル名",
+        "ダウンロード要件",
+        "Internet Explorer",
+        "Firefox",
+        "Google Chrome",
+        "Windows版Safari"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "構成",
+      "hints": [
+        "クラス図",
+        "ファイルダウンロード構成",
+        "クラス設計"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "インタフェース定義",
+      "hints": [
+        "DownloadFileNameEncoder",
+        "MimeBDownloadFileNameEncoder",
+        "UrlDownloadFileNameEncoder",
+        "HttpResponseHandler",
+        "HttpResponseSetting",
+        "ResponseBody",
+        "DownloadFileNameEncoderEntry",
+        "DownloadFileNameEncoderFactory",
+        "インタフェース定義"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "nablarch.fw.web.HttpResponseクラスのメソッド",
+      "hints": [
+        "HttpResponse",
+        "setContentType",
+        "setContentDisposition",
+        "write",
+        "setBodyStream",
+        "setContentPath",
+        "シーケンス図",
+        "メソッド詳細"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "設定の記述",
+      "hints": [
+        "HttpResponseSetting",
+        "bufferLimitSizeKb",
+        "tempDirPath",
+        "DownloadFileNameEncoderFactory",
+        "downloadFileNameEncoderEntries",
+        "エンコーダ設定",
+        "User-Agent",
+        "コンポーネント設定"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "設定内容詳細",
+      "hints": [
+        "bufferLimitSizeKb",
+        "tempDirPath",
+        "HttpResponseSetting",
+        "一時ファイル設定",
+        "バッファリングサイズ"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "設定内容詳細",
+      "hints": [
+        "downloadFileNameEncoderFactory",
+        "downloadFileNameEncoderEntries",
+        "defaultEncoder",
+        "userAgentPattern",
+        "encoder",
+        "charset",
+        "MimeBDownloadFileNameEncoder",
+        "UrlDownloadFileNameEncoder",
+        "HttpResposeHandler"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "ファイルをクライアントへダウンロードする機能を提供する。\n\n`HttpResponse` を使用した文字シーケンスデータのファイルダウンロード実装例。\n\n- `HttpResponse.setContentType(String)`: Content-Typeを設定する（例: `\"text/csv; charset=Shift_JIS\"`）\n- `HttpResponse.write(String)`: ダウンロードデータを書き込む（複数回呼び出し可能）\n- `HttpResponse.setContentDisposition(String)`: ダウンロード時のファイル名を設定する\n\n```java\npublic HttpResponse doDownloadCharSequence(HttpRequest req, ExecutionContext context) {\n    HttpResponse res = new HttpResponse();\n    res.setContentType(\"text/csv; charset=Shift_JIS\");\n    res.write(\"ユーザID, ユーザ名\\n\");\n    res.write(\"0000001, nabla\\n\");\n    res.write(\"0000002, arch\\n\");\n    res.write(\"0000003, arch\\n\");\n    res.setContentDisposition(\"サンプルCSVファイル.csv\");\n    return res;\n}\n```",
+    "s2": "## 実装の容易性\n\n`HttpResponse` クラスのメソッドのみでダウンロードを実現できる。バイト配列・文字シーケンス・入力ストリーム・ファイルパス指定の4種類のデータ型に対応。\n\n使用メソッド:\n1. `HttpResponse#setContentType(String)` — Content-Type・文字コード設定\n2. `HttpResponse#setContentDisposition(String)` — ダウンロードファイル名・インライン表示有無設定\n3. レスポンスボディへの書き込み:\n   - `HttpResponse#write(byte[])` — バイト配列\n   - `HttpResponse#write(CharSequence)` — 文字シーケンス\n   - `HttpResponse#setBodyStream(InputStream)` — 入力ストリーム\n   - `HttpResponse#setContentPath(String)` — ファイルパス指定\n\n> **注意**: writeメソッド・setBodyStreamメソッド・setContentPathメソッドが同時に使用された場合の優先順位: 1. setContentPath 2. setBodyStream 3. write。例: setBodyStreamとwriteが同時に呼ばれた場合、setBodyStreamの内容がダウンロードされ、writeの内容は無視される。\n\n> **注意**: writeメソッドで文字シーケンスをダウンロードする場合、Content-Typeヘッダに設定した文字コード（charset）でエンコードされる。writeメソッド実行前に必ず文字コードを設定すること。文字コード未設定時はUTF-8でエンコードされる。\n\nコード例（Shift_JIS文字シーケンスのダウンロード）:\n```java\npublic HttpResponse doDownloadCharSequence(HttpRequest req, ExecutionContext context) {\n    HttpResponse res = new HttpResponse();\n    res.setContentType(\"text/csv; charset=Shift_JIS\");\n    res.write(\"ユーザID, ユーザ名\\n\");\n    res.write(\"0000001, nabla\\n\");\n    res.setContentDisposition(\"サンプルCSVファイル.csv\");\n    return res;\n}\n```\n\n## 大容量ファイルのメモリ管理\n\nwriteメソッドでデータを作成する際、データサイズが一定の閾値を超えると自動的にメモリから一時ファイルに切り替える。データサイズを意識した実装は不要。",
+    "s3": "## 実装済み\n\n- ファイルのダウンロード（テキスト・バイナリ）\n- ダウンロードしたファイルのインライン表示\n\n> **注意**: インライン表示の挙動はブラウザの種類やセキュリティ設定に依存する。\n\n- データサイズが大きい場合、データの保存先を一時ファイルに変更可能\n- ダウンロードファイル名に非ASCII文字（多言語）を使用可能\n\n> **注意**: ファイル名に非ASCII文字をサポートするブラウザ: Internet Explorer、Firefox、Google Chrome。Windows版Safariは非ASCII文字に未対応（ASCII文字は使用可能）。\n\n## 未実装\n\n- ダウンロード履歴を残すことができない",
+    "s4": "ファイルダウンロード機能のクラス構成:\n\n![クラス図](assets/libraries-05_FileDownload/FileDownload_ClassDiagram.png)",
+    "s5": "## インタフェース\n\n| インタフェース名 | 概要 |\n|---|---|\n| `nablarch.fw.web.download.encorder.DownloadFileNameEncoder` | ダウンロードファイル名のエンコーダのインタフェース。URLエンコーディング方式とMIME-Bエンコーディング方式の実装クラスを標準提供。独自エンコーダが必要な場合は本インタフェースを実装する。通常は標準実装クラスで対応可能。 |\n\n## DownloadFileNameEncoderの実装クラス\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoder` | RFC2047のMIME-Bエンコード方式でダウンロードファイル名をエンコード |\n| `nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoder` | URLエンコード方式でダウンロードファイル名をエンコード |\n\n## Handlerの実装クラス\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.fw.web.handler.HttpResponseHandler` | HttpResponseクラスに設定されたダウンロードデータおよびHTTPヘッダ情報をレスポンスに出力するハンドラ。ダウンロードファイル名をエンコードしContent-Dispositionに設定する。一時ファイルはレスポンス出力後に削除される。 |\n\n## その他のクラス\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.fw.web.HttpResponse` | ダウンロードデータおよびHTTPヘッダ情報を設定するHTTPレスポンスオブジェクト |\n| `nablarch.fw.web.ResponseBody` | ダウンロードデータを保持するクラス。データサイズが一定量を超えると保存先をメモリから一時ファイルに変更 |\n| `nablarch.fw.web.HttpResponseSetting` | レスポンス関連設定を保持するクラス（バッファリングサイズ上限、一時ファイル出力先フォルダ、一時ファイル使用有無）。設定の詳細は :ref:`compornentDifinitionResponse` を参照。 |\n| `nablarch.fw.web.download.encorder.DownloadFileNameEncoderEntry` | User-Agentヘッダのパターンとダウンロードファイル名エンコーダの関連を保持するエントリ |\n| `nablarch.fw.web.download.encorder.DownloadFileNameEncoderFactory` | User-Agentヘッダに基づいてダウンロードファイル名エンコーダを取得するクラス。設定の詳細は :ref:`compornentDifinition` を参照。 |",
+    "s6": "| メソッド名 | 概要 |\n|---|---|\n| `setContentType(String contentType)` | Content-Typeヘッダを設定。省略した場合はsetContentDispositionで指定されたファイル名の拡張子から自動設定。writeメソッドで文字シーケンスを使用する場合はwriteメソッド実行前に必ず設定すること（設定したcharsetでエンコードされる）。**バイト配列・入力ストリーム・ファイルパスのデータをダウンロードする場合は、Content-Typeヘッダに設定した文字コードでエンコードは行われず、そのままデータがレスポンスに出力される。** |\n| `setContentDisposition(String fileName)` | Content-Dispositionヘッダを設定。インライン表示は行われない。 |\n| `setContentDisposition(String fileName, boolean inline)` | Content-Dispositionヘッダを設定。インライン表示の有無を指定可能。 |\n| `write(byte[] bytes)` | バイト配列をダウンロードデータとして使用 |\n| `write(CharSequence text)` | 文字シーケンスをダウンロードデータとして使用 |\n| `setBodyStream(InputStream bodyStream)` | 入力ストリームをダウンロードデータとして使用 |\n| `setContentPath(String path)` | ファイルパスを指定してダウンロード（指定パスのファイルがダウンロードされる） |\n\n![シーケンス図](assets/libraries-05_FileDownload/FileDownload_SequenceDiagram.png)",
+    "s7": "## HTTPレスポンスの設定\n\n```xml\n<component name=\"responseSetting\" class=\"nablarch.fw.web.HttpResponseSetting\">\n    <property name=\"bufferLimitSizeKb\" value=\"512\" />\n    <property name=\"tempDirPath\" value=\"/temp/download\" />\n</component>\n```\n\n## ファイル名のエンコーダの設定\n\n> **注意**: コンポーネント設定ファイルの定義をすべて省略した場合、User-Agentヘッダが「.*MSIE.*」または「.*WebKit.*」にマッチする場合はURLエンコーダ、「.*Gecko.*」にマッチする場合はMIME-Bエンコーダ、いずれにもマッチしない場合はURLエンコーダが使用される。独自設定を定義する場合は、初期ハンドラ構成を変更しHttpResponseHandlerにDownloadFileNameEncoderFactoryを設定する必要がある（[web_gui](../../processing-pattern/web-application/web-application-web_gui.json) の標準ハンドラ構成を参照）。\n\n```xml\n<list name=\"handlerQueue\">\n    <component class=\"nablarch.fw.web.handler.HttpResposeHandler\">\n        <property name=\"downloadFileNameEncoderFactory\" ref=\"downloadFileNameEncoderFactory\" />\n    </component>\n</list>\n\n<component name=\"downloadFileNameEncoderFactory\" class=\"nablarch.fw.web.download.encorder.DownloadFileNameEncoderFactory\">\n    <property name=\"downloadFileNameEncoderEntries\" ref=\"downloadFileNameEncoderEntries\" />\n    <property name=\"defaultEncoder\" ref=\"urlEncoder\" />\n</component>\n\n<list name=\"downloadFileNameEncoderEntries\">\n    <component class=\"nablarch.fw.web.download.DownloadFileNameEncoderEntry\">\n        <property name=\"userAgentPattern\" value=\".*MSIE.*\"/>\n        <property name=\"encoder\" ref=\"urlEncoder\" />\n    </component>\n    <component class=\"nablarch.fw.web.download.DownloadFileNameEncoderEntry\">\n        <property name=\"userAgentPattern\" value=\".*WebKit.*\"/>\n        <property name=\"encoder\" ref=\"urlEncoder\" />\n    </component>\n    <component class=\"nablarch.fw.web.download.DownloadFileNameEncoderEntry\">\n        <property name=\"userAgentPattern\" value=\".*Gecko.*\"/>\n        <property name=\"encoder\" ref=\"mimeBEncoder\" />\n    </component>\n</list>\n\n<component name=\"mimeBEncoder\" class=\"nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoder\">\n    <property name=\"charset\" value=\"UTF-8\" />\n</component>\n\n<component name=\"urlEncoder\" class=\"nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoder\">\n    <property name=\"charset\" value=\"UTF-8\" />\n</component>\n```",
+    "s8": "### nablarch.fw.web.HttpResponseSettingの設定\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| bufferLimitSizeKb | | | 1024 | データをメモリにバッファリングするサイズの上限（KB）。このサイズを超えるダウンロードデータは一時ファイルに保存される。 |\n| tempDirPath | | | OSデフォルト一時ディレクトリ（例: Windowsなら `C:\\WINDOWS\\Temp`） | 一時ファイルが作成されるディレクトリパス。指定ディレクトリが存在しない場合は一時ファイル作成時に例外が発生する。本番環境では省略せず、適切なサイズ設計・権限設定済みのディレクトリを指定すること。 |",
+    "s9": "### nablarch.fw.web.handler.HttpResposeHandlerの設定\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| downloadFileNameEncoderFactory | | | DownloadFileNameEncoderFactoryのデフォルト値 | ダウンロードファイル名のエンコーダを取得するクラス。省略時はDownloadFileNameEncoderFactoryが使用される。デフォルト値の詳細は :ref:`downloadFileNameEncoderFactory` を参照。 |\n\n### nablarch.fw.web.download.encorder.DownloadFileNameEncoderFactoryの設定\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| downloadFileNameEncoderEntries | | | 3エントリ（1.「.*MSIE.*」→URLエンコーダ、2.「.*WebKit.*」→URLエンコーダ、3.「.*Gecko.*」→MIME-Bエンコーダ） | User-Agentヘッダパターンとエンコーダの関連エントリリスト |\n| defaultEncoder | | | URLエンコーダ | いずれのUser-Agentパターンにもマッチしない場合に使用するエンコーダ |\n\n### nablarch.fw.web.download.DownloadFileNameEncoderEntryの設定\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| userAgentPattern | | ○ | | User-Agentヘッダにマッチするパターン。未設定時はDIコンテナ起動時に例外がスローされる。 |\n| encoder | | | URLエンコーダ | ダウンロードファイル名をエンコードするクラス |\n\n### nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoderの設定\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| charset | | | UTF-8 | ファイル名のエンコードに使用する文字コード |\n\n### nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoderの設定\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| charset | | | UTF-8 | ファイル名のエンコードに使用する文字コード |"
+  }
+}

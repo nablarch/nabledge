@@ -1,0 +1,89 @@
+{
+  "id": "handlers-HttpResponseHandler",
+  "title": "HTTPレスポンスハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "HttpResponseHandler",
+        "nablarch.fw.handler.HttpResponseHandler",
+        "HTTPレスポンスハンドラ",
+        "コンテンツパス",
+        "サーブレットフォーワード",
+        "レスポンスボディ",
+        "ResourceMapping",
+        "HttpMethodBinding"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "コンテンツパス",
+        "サーブレットフォーワード",
+        "HTTPリダイレクション",
+        "レスポンスボディ送信",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "forward://",
+        "redirect://",
+        "file://",
+        "classpath://",
+        "HttpResponse#write()",
+        "HttpResponse"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "ステータスコードの変換",
+      "hints": [
+        "ステータスコード変換",
+        "エラーレスポンス",
+        "AJAX",
+        "XMLHttpRequest",
+        "X-Requested-With",
+        "404",
+        "200",
+        "300系"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "言語毎のコンテンツパスの切り替え",
+      "hints": [
+        "ResourcePathRule",
+        "DirectoryBasedResourcePathRule",
+        "FilenameBasedResourcePathRule",
+        "言語切り替え",
+        "多言語対応",
+        "コンテンツパス切り替え",
+        "i18n",
+        "ThreadContextHandler"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "contentPathRule",
+        "ResourcePathRule",
+        "DirectoryBasedResourcePathRule",
+        "FilenameBasedResourcePathRule",
+        "nablarch.fw.web.handler.HttpResponseHandler",
+        "nablarch.fw.web.i18n.DirectoryBasedResourcePathRule",
+        "DI設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.HttpResponseHandler`\n\nHTTPレスポンスオブジェクトの内容に沿って、サーブレットフォーワード処理やサーバソケットへの出力等のレスポンス処理を行うハンドラ。HTTPレスポンスオブジェクトを生成しただけではレスポンス処理は行われない。\n\nレスポンスボディの指定方法は2種類:\n1. HTTPレスポンスオブジェクトに直接ボディ内容を設定する方法（主に [../02_FunctionDemandSpecifications/02_Fw/01_Web/05_FileDownload](../libraries/libraries-05_FileDownload.json) で使用）\n2. [コンテンツパス](handlers-HttpMethodBinding.json#s4) と呼ばれる文字列で指定する方法（通常の業務機能では主にこちら）\n\n**関連ハンドラ**: [ResourceMapping](handlers-ResourceMapping.json), [HttpMethodBinding](handlers-HttpMethodBinding.json) — 本ハンドラはこれらの上位に配置する必要がある。",
+    "s2": "**往路処理**\n\n1. 後続ハンドラへ処理を委譲し、HTTPレスポンスオブジェクトを取得する（往路では特段の処理なし）。\n\n**復路処理**\n\n2. HTTPレスポンスオブジェクトに設定された [コンテンツパス](handlers-HttpMethodBinding.json#s4) 文字列を取得する。\n3. [コンテンツパス](handlers-HttpMethodBinding.json#s4) が `forward://` で始まる場合 → サーブレットフォーワードを実行。完了後にHTTPレスポンスオブジェクトをリターンして終了。\n4. HTTPレスポンスに設定されたHTTPヘッダーをクライアントに送信（ボディはChunkedエンコーディング）。\n5. [コンテンツパス](handlers-HttpMethodBinding.json#s4) が `redirect://`, `http://`, `https://` で始まる場合 → Locationヘッダにパスを設定してリダイレクト送信。`redirect://` かつ絶対パスの場合はサーブレットコンテキストルートのパスを補完。\n6. [コンテンツパス](handlers-HttpMethodBinding.json#s4) が `file://` で始まる場合 → ファイルシステム上のファイル内容をレスポンスボディとして送信。\n7. [コンテンツパス](handlers-HttpMethodBinding.json#s4) が `classpath://` で始まる場合 → コンテキストクラスローダからリソースを取得し、その内容をレスポンスボディとして送信。\n8. `HttpResponse` オブジェクトにInputStreamが直接設定されている場合、または `HttpResponse#write()` でバッファリングされている場合 → その内容をレスポンスボディとして送信。\n9. レスポンス処理で使用した入出力ストリームを全てクローズ。バッファリングされているレスポンス内容は削除。\n10. HTTPレスポンスオブジェクトをリターンして終了。\n\n**例外処理**\n\n- 後続ハンドラ実行中に例外送出 → 既定のエラー画面をレスポンス後、例外を再送出。サーブレットフォーワード処理中のエラーはログ出力のみ。\n- フォーワード先のJSP/サーブレットでエラー発生 → システムエラー画面をクライアントに送信して終了。\n- サーブレットフォーワード処理中のIOエラー → WARNログ出力後、HTTPレスポンスオブジェクトをリターンして終了。\n- レスポンス処理・終端処理中のIOエラー → WARNログ出力して処理継続。\n- レスポンス処理・終端処理中のその他の例外 → システムエラー画面をクライアントに送信し、終端処理後に例外を再送出。",
+    "s3": "HTTPレスポンスハンドラは、内部で404などのエラー用レスポンスが返された際に、200にステータスコードを変換する（ブラウザのレスポンスコードによる挙動の差異を防ぐため）。\n\n以下の場合は変換せず、内部のエラーコードをそのままステータスコードとして使用する:\n- 300系（転送用）レスポンスコードの場合\n- リクエストヘッダ `X-Requested-With` の値が `XMLHttpRequest` の場合（AJAXリクエスト）",
+    "s4": "HTTPリクエストから取得した言語設定をもとに、フォーワード先を動的に切り替える機能。`ResourcePathRule` のサブクラスを使用して言語毎のコンテンツパスを取得する。言語は :ref:`ThreadContextHandler` が設定するスレッドコンテキストから取得する。\n\n| クラス名 | 説明 |\n|---|---|\n| `ResourcePathRule` | 言語対応リソースパスのルールを表す抽象クラス。スレッドコンテキストから言語を取得できない場合は指定されたリソースパスをそのまま返す。言語対応ファイルが存在しない場合、または拡張子がない場合も指定パスをそのまま返す |\n| `DirectoryBasedResourcePathRule` | コンテキストルート直下のディレクトリを言語切り替えに使用する |\n| `FilenameBasedResourcePathRule` | ファイル名に `_言語名` サフィックスを付けて言語切り替えを行う |\n\n`DirectoryBasedResourcePathRule` のファイル配置例（`/management/user/search.jsp` を日本語・英語対応する場合）:\n\n```bash\nコンテキストルート\n├─en\n│  └─management\n│      └─user\n│           search.jsp\n└─ja\n    └─management\n        └─user\n             search.jsp\n```\n\n`FilenameBasedResourcePathRule` のファイル配置例:\n\n```bash\nコンテキストルート\n└─management\n        └─user\n             search_en.jsp\n             search_ja.jsp\n```",
+    "s5": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| contentPathRule | ResourcePathRule | | DirectoryBasedResourcePathRule | 言語毎コンテンツパスの対応ルール |\n\n標準設定:\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpResponseHandler\" />\n```\n\n言語毎のコンテンツパス切り替えを行う場合の設定:\n\n```xml\n<component name=\"resourcePathRule\" class=\"nablarch.fw.web.i18n.DirectoryBasedResourcePathRule\" />\n<component class=\"nablarch.fw.web.handler.HttpResponseHandler\">\n  <property name=\"contentPathRule\" ref=\"resourcePathRule\" />\n</component>\n```\n\n言語→使用コンテンツパスの例（`servlet:///management/user/search.jsp` が設定されている場合）:\n\n```bash\nja -> /ja/management/user/search.jsp\nen -> /en/management/user/search.jsp\nit -> /management/user/search.jsp\n```"
+  }
+}

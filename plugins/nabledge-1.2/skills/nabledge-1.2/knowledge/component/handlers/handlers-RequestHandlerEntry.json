@@ -1,0 +1,51 @@
+{
+  "id": "handlers-RequestHandlerEntry",
+  "title": "リクエストハンドラエントリ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "リクエストハンドラエントリ",
+      "hints": [
+        "RequestHandlerEntry",
+        "nablarch.fw.RequestHandlerEntry",
+        "リクエストパスのパターン指定",
+        "Glob式",
+        "ワイルドカード",
+        "リクエストハンドラエントリ",
+        "サブディレクトリ全体マッチ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "ハンドラ処理フロー",
+        "委譲対象ハンドラ",
+        "実行対象リクエストパスパターン",
+        "往路処理",
+        "復路処理",
+        "例外処理"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "handler",
+        "requestPattern",
+        "RequestPathJavaPackageMapping",
+        "nablarch.fw.handler.RequestPathJavaPackageMapping",
+        "設定項目",
+        "複数パッケージ",
+        "basePackage"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.RequestHandlerEntry`\n\n対象ハンドラをラップし、特定の [リクエストパス](../../about/about-nablarch/about-nablarch-concept.json) に対してのみ実行できるハンドラ。\n\n**リクエストパスのパターン指定**\n\n\"/\"で区切られた階層構造（URI、Unixシステムパス、Javaの名前空間等）を想定。ハンドラを実行するリクエストパスのパターンをGlob式に似た書式で指定できる。\n\n1. ワイルドカード指定はUnix/DOSのGlob式に準じる。`*`はワイルドカードで`.`と`/`を除く任意の文字の任意個の列にマッチする。\n\n| requestPattern | リクエストパス | 結果 |\n|---|---|---|\n| `/` | `/` | 呼ばれる |\n| `/` | `/index.jsp` | 呼ばれない |\n| `/*` | `/` | 呼ばれる |\n| `/*` | `/app` | 呼ばれる |\n| `/*` | `/app/` | 呼ばれない（`*`は`/`にはマッチしない） |\n| `/*` | `/index.jsp` | 呼ばれない（`*`は`.`にはマッチしない） |\n| `/app/*.jsp` | `/app/index.jsp` | 呼ばれる |\n| `/app/*.jsp` | `/app/admin` | 呼ばれない |\n| `/app/*/test` | `/app/admin/test` | 呼ばれる |\n| `/app/*/test` | `/app/test/` | 呼ばれない |\n\n2. 最後尾の`/`が`//`と重ねられている場合、それ以前の文字列について前方一致すればマッチ成功（サブディレクトリ全体にマッチ）。リソース名を表す`//`以降の文字列については別途マッチ判定が行われる。\n\n| requestPattern | リクエストパス | 結果 |\n|---|---|---|\n| `/app//` | `/` | 呼ばれない |\n| `/app//` | `/app/` | 呼ばれる |\n| `/app//` | `/app/admin/` | 呼ばれる |\n| `/app//` | `/app/admin/index.jsp` | 呼ばれる |\n| `//*.jsp` | `/app/index.jsp` | 呼ばれる |\n| `//*.jsp` | `/app/admin/index.jsp` | 呼ばれる |\n| `//*.jsp` | `/app/index.html` | 呼ばれない（`*.jsp`がマッチしない） |",
+    "s2": "**往路処理**\n\n1. (ハンドラ実行判定) リクエストパスを取得し、設定された**実行対象リクエストパスパターン**と合致するか判定する。\n2. (実行対象外) パターンが合致しない場合は後続ハンドラに処理移譲し、その結果を取得する。\n3. (実行対象) パターンが合致した場合は**委譲対象ハンドラ**に処理委譲し、その結果を取得する。\n\n**復路処理**\n\n4. (正常終了) 2.または3.の結果をリターンして終了する。\n\n**例外処理**\n\n- (エラー終了) 後続ハンドラまたは委譲対象ハンドラの処理中にエラーが発生した場合、例外処理は行わず例外をそのまま送出する。",
+    "s3": "| プロパティ名 | 型 | 必須 | 備考 |\n|---|---|---|---|\n| handler | Handler | ○ | 委譲対象ハンドラ |\n| requestPattern | String | ○ | 委譲対象ハンドラを実行するリクエストパスのパターン |\n\n**設定例（画面オンライン処理）**\n\n宣言的トランザクション制御の対象範囲を特定パス(`/action`)配下に限定する場合：\n\n```xml\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/action//\"/>\n  <property name=\"handler\" ref=\"transactionManagementHandler\"/>\n</component>\n```\n\n**設定例（複数パッケージ使用）**\n\n単一のリクエストハンドラエントリでは、ベースパッケージが異なるパッケージへのディスパッチはできない。異なるリクエストパスにマッチする複数のリクエストハンドラエントリを使用することで、複数のベースパッケージ配下のクラスにディスパッチできる。\n\n```xml\n<!-- サブシステムss11AA向け -->\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/RM11AA*\"/>\n  <property name=\"handler\">\n    <component class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n      <property name=\"basePackage\" value=\"nablarch.sample.ss11AA\" />\n      <property name=\"immediate\"   value=\"false\" />\n    </component>\n  </property>\n</component>\n\n<!-- サブシステムss99ZZ向け -->\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/RM99ZZ*\"/>\n  <property name=\"handler\">\n    <component class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n      <property name=\"basePackage\" value=\"nablarch.sample.ss99ZZ\" />\n      <property name=\"immediate\"   value=\"false\" />\n    </component>\n  </property>\n</component>\n```"
+  }
+}

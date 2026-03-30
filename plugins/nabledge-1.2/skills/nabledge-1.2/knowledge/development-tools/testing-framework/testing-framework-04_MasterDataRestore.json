@@ -1,0 +1,91 @@
+{
+  "id": "testing-framework-04_MasterDataRestore",
+  "title": "マスタデータ復旧機能",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "マスタデータ復旧機能",
+        "自動テスト",
+        "テストメソッド終了後復旧",
+        "マスタデータ自動復旧"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "hints": [
+        "マスタデータ復旧",
+        "バックアップスキーマ",
+        "テスト実行順序非依存",
+        "高速復旧",
+        "一括復旧"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "動作イメージ",
+      "hints": [
+        "SQLログ監視",
+        "監視対象テーブル",
+        "変更検出",
+        "バックアップからの復旧",
+        "全件削除",
+        "全件挿入"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "環境構築: バックアップ用スキーマの作成・データ投入",
+      "hints": [
+        "バックアップスキーマ作成",
+        "データ投入",
+        "マスタデータ復旧用スキーマ",
+        "自動テスト用スキーマ"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "環境構築: コンポーネント設定ファイルへの設定",
+      "hints": [
+        "MasterDataRestorer",
+        "nablarch.test.core.db.MasterDataRestorer",
+        "backupSchema",
+        "tablesTobeWatched",
+        "testEventListeners",
+        "バックアップスキーマ設定",
+        "コンポーネント設定",
+        "監視対象テーブル設定"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "環境構築: ログ出力設定",
+      "hints": [
+        "SqlLogWatchingFormatter",
+        "nablarch.test.core.db.MasterDataRestorer$SqlLogWatchingFormatter",
+        "NopLogWriter",
+        "nablarch.test.core.log.NopLogWriter",
+        "sqlLogFormatter",
+        "BasicLoggerFactory",
+        "nablarch.core.log.basic.BasicLoggerFactory",
+        "StandardOutputLogWriter",
+        "nablarch.core.log.basic.StandardOutputLogWriter",
+        "ログ出力設定",
+        "app-log.properties",
+        "log.properties"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "マスタメンテナンス機能等のテストでマスタデータを変更した場合に、テストメソッド終了後に自動でマスタデータを元の状態に復旧する機能。テスト実行中にマスタデータが更新されると、テストメソッド終了時点で自動的に復旧が実行される。",
+    "s2": "- テストの実行順序に依存せずに、常に正しい状態のマスタデータでテストできる。\n- マスタデータ復旧は自動で行われるので、各テストクラスで復旧処理・復旧用データを用意する必要がない。\n- バックアップスキーマからテーブル毎に一括で復旧するので、1件ずつINSERTする場合に比べて高速に復旧できる。",
+    "s3": "1. コンポーネント設定ファイルより監視対象テーブル名一覧を取得する。\n2. テスト実行中、SQLログを監視し、監視対象テーブルを変更するSQL文が発行されたかを検出する。\n3. 監視対象テーブルを変更するSQL文が発行された場合、テストメソッド終了後に変更があったテーブルを復旧する。\n4. 復旧処理: テーブル内のレコードを全件削除後、バックアップ用スキーマのテーブルからレコードを全件挿入する。",
+    "s4": "マスタデータ復旧用スキーマを作成し、自動テスト用スキーマと同じテーブルを作成して復旧用データを投入する。\n\n> **注意**: 復旧対象テーブルのみ作成すればよい（全テーブルの作成は不要。復旧対象以外のテーブルが存在しても問題ない）。",
+    "s5": "自動テスト用のコンポーネント設定ファイルに、監視対象テーブルを列挙する。\n\n**クラス**: `nablarch.test.core.db.MasterDataRestorer`\n\n| プロパティ名 | 説明 | デフォルト値 |\n|---|---|---|\n| backupSchema | マスタデータ復旧用スキーマ名 | なし |\n| tablesTobeWatched | 監視対象テーブル名をリスト形式で列挙する | なし |\n| testEventListeners | テストイベントリスナー一覧。`nablarch.test.core.db.MasterDataRestorer`を登録するとテストメソッド終了時にマスタデータが復旧される | なし |\n\n```xml\n<component name=\"masterDataRestorer\"\n           class=\"nablarch.test.core.db.MasterDataRestorer\">\n  <property name=\"backupSchema\" value=\"nablarch_test_master\"/>\n  <property name=\"tablesTobeWatched\">\n    <list>\n      <value>MESSAGE</value>\n      <value>ID_GENERATE</value>\n      <value>BUSINESS_DATE</value>\n      <value>PERMISSION_UNIT</value>\n      <value>REQUEST</value>\n      <value>PERMISSION_UNIT_REQUEST</value>\n    </list>\n  </property>\n</component>\n```",
+    "s6": "本機能はSQLログを監視してマスタデータへの変更を検出するため、以下のログ出力設定が必要。\n\n**app-log.properties**: `sqlLogFormatter.className` に本機能の提供クラスを指定する。\n\n```\nsqlLogFormatter.className=nablarch.test.core.db.MasterDataRestorer$SqlLogWatchingFormatter\n```\n\n**log.properties**: SQLログをDEBUGレベル以上で出力する設定が必要。以下の例ではSQLログを標準出力に表示させないよう専用のロガー（何もしないロガー）を設定している。\n\n```\nloggerFactory.className=nablarch.core.log.basic.BasicLoggerFactory\nwriterNames=stdout,nop\nwriter.stdout.className=nablarch.core.log.basic.StandardOutputLogWriter\nwriter.nop.className=nablarch.test.core.log.NopLogWriter\navailableLoggersNamesOrder=sql,root\nloggers.root.nameRegex=.*\nloggers.root.level=DEBUG\nloggers.root.writerNames=stdout\nloggers.sql.nameRegex=SQL\nloggers.sql.level=DEBUG\nloggers.sql.writerNames=nop\n```"
+  }
+}

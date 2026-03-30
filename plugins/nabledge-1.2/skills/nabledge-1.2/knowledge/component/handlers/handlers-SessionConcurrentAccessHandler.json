@@ -1,0 +1,52 @@
+{
+  "id": "handlers-SessionConcurrentAccessHandler",
+  "title": "セッション並行アクセスハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "SessionConcurrentAccessHandler",
+        "nablarch.fw.handler.SessionConcurrentAccessHandler",
+        "CopyOnReadMap",
+        "nablarch.core.util.map.CopyOnReadMap",
+        "@ErrorOnSessionWriteConflict",
+        "セッション並行アクセス制御",
+        "CONCURRENTポリシー",
+        "楽観ロック",
+        "セッションスナップショット"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "SessionConcurrentAccessHandler",
+        "@ErrorOnSessionWriteConflict",
+        "ハンドラ処理フロー",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "セッション変更反映"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "SessionConcurrentAccessHandler",
+        "concurrentAccessPolicy",
+        "conflictWarningMessageId",
+        "セッション並行アクセスポリシー",
+        "セッション書込エラーメッセージID"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.SessionConcurrentAccessHandler`\n\nセッションスコープに対する並行アクセス制御をフレームワークレベルで実装するハンドラ。\n\n> **警告**: 同期方式のMANUALとSERIALIZEは廃止された。本ハンドラを使用する場合は排他ロックによる同期制御が必要なオブジェクトをセッションに格納しないこと。\n\n現バージョンではCONCURRENT同期ポリシーのみサポート。\n\n**CONCURRENTポリシー**:\n- リクエストスレッドがセッションスコープ変数にアクセスした時点で、スナップショット（ディープコピー）をスレッドローカル変数上に作成。\n- 以降の当該リクエストスレッドからのアクセスはスナップショットに対して行われる。\n- スナップショットに変更を加えた場合、リクエスト終了時にセッションスコープに反映される。\n- セッションスコープが既に他のリクエストスレッドによって変更されていれば、変更反映は行わずワーニングメッセージを登録する。\n- ラッパークラス: `nablarch.core.util.map.CopyOnReadMap`\n\n> **注意**: セッションスコープの変更反映に失敗した場合でも、DBのトランザクションは正常にコミットされる。**@ErrorOnSessionWriteConflict** をリクエストハンドラに付与することで、セッションへの書込み失敗時に実行時例外を送出させDBトランザクションをロールバックさせることができる。\n\n**アノテーション**: `@ErrorOnSessionWriteConflict`\n\n```java\npublic class SampleHandler implements Handler<HttpRequest, HttpResponse> {\n    @ErrorOnSessionWriteConflict\n    public HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n        SampleForm form = validate(req);\n        Map<String, Object> results = doBusiness(form);\n        ctx.setSessionScopedVar(\"results\", results);\n        return new HttpResponse(\"servlet://success.jsp\");\n    }\n}\n```",
+    "s2": "**往路処理**:\n1. セッション同期ポリシー(CONCURRENT)に対応したセッションスコープのラッパーオブジェクト(`nablarch.core.util.map.CopyOnReadMap`)を作成し実行コンテキストに設定。\n2. 後続ハンドラに処理を委譲し結果を取得。\n\n**復路処理**:\n3. 同期ポリシーがCONCURRENTの場合、セッションスコープへの変更内容をセッションスコープ本体に反映。\n4. 実行コンテキスト上のセッションスコープをもとのスコープに差し替え。\n5. 2.で取得した処理結果をリターンして終了。\n\n**例外処理**:\n- 2a. 後続ハンドラ処理中に例外が発生した場合でも、3.と4.の処理を実行した後、例外を再送出する。\n- 3a. CONCURRENTポリシーで、セッション変更反映時に並行スレッドによる同一セッション変更が既に反映されていた場合、リクエストスコープ上にワーニングメッセージを登録する。業務アクションに`@ErrorOnSessionWriteConflict`が付与されていた場合は実行時例外を送出する。",
+    "s3": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| concurrentAccessPolicy | String | | CONCURRENT | セッションスコープ並行アクセスポリシー |\n| conflictWarningMessageId | String | | | セッション書込エラーメッセージID |\n\n```xml\n<component\n  name=\"sessionConcurrentAccessHandler\"\n  class=\"nablarch.fw.handler.SessionConcurrentAccessHandler\">\n  <property\n    name=\"concurrentAccessPolicy\"\n    value=\"CONCURRENT\" />\n</component>\n```"
+  }
+}

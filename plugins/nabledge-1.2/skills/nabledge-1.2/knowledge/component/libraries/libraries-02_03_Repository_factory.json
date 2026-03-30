@@ -1,0 +1,25 @@
+{
+  "id": "libraries-02_03_Repository_factory",
+  "title": "ファクトリーインジェクションの使用手順",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "ファクトリーインジェクションの使用手順",
+      "hints": [
+        "ComponentFactory",
+        "createObject",
+        "SampleComponentFactory",
+        "SampleComponent",
+        "SystemRepository",
+        "ファクトリーインジェクション",
+        "DIコンテナ登録",
+        "コンポーネントファクトリー"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "`ComponentFactory` インタフェースを実装したクラスをコンポーネント設定ファイルに記述すると、DIコンテナは `createObject()` メソッドの戻り値をコンポーネントとして扱う（ファクトリークラス自体ではなく）。\n\n**手順**:\n1. `ComponentFactory<T>` インタフェースを実装したファクトリークラスを作成する\n2. ファクトリークラスを通常のコンポーネントと同様にDIコンテナに登録する\n\n**インタフェース**: `ComponentFactory`\n\n**ファクトリークラス実装例**:\n\n> **注意**: 下記のコードはプロジェクトのアーキテクトが作成するものである。通常、各アプリケーション・プログラマはこのような実装を行わない。\n\n```java\npublic class SampleComponentFactory implements ComponentFactory<SampleComponent> {\n    public SampleComponent createObject() {\n        // この例では単にクラスをnewして返しているが、フレームワーク外のソフトウェアに\n        // 含まれるクラスの場合は、クラスに必要な初期化処理をハードコーディングする。\n        return new SampleComponent();\n    }\n}\n```\n\n**コンポーネント設定ファイル例**:\n```xml\n<component name=\"sampleComponent\" class=\"example.SampleComponentFactory\"/>\n```\n\n**使用例** (`SystemRepository.getObject(\"sampleComponent\")` で `SampleComponentFactory` ではなく `SampleComponent` が返される):\n```java\nSampleComponent comp = (SampleComponent) SystemRepository.getObject(\"sampleComponent\");\n```"
+  }
+}

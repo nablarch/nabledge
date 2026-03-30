@@ -1,0 +1,28 @@
+{
+  "id": "about-nablarch-1",
+  "title": "SqlRow等のMap実装クラスからEntityやFormを生成する方法を教えてください",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "SqlRow等のMap実装クラスからEntityやFormを生成する方法",
+      "hints": [
+        "SqlRow",
+        "Entity生成",
+        "Form生成",
+        "Mapコンストラクタ",
+        "setter",
+        "MapからEntityへの変換",
+        "SampleEntity",
+        "ExecutionContext",
+        "DateUtil",
+        "Result",
+        "Success"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## SqlRow等のMap実装クラスからEntityやFormを生成する方法\n\nMapインタフェースを引数に取るコンストラクタを使用してEntity(Form)を生成することを推奨する。コンストラクタ自体がMapからEntity(Form)への変換責務を持つため、同じ責務を持つロジックを別途作り込む必要はない。\n\nただし、業務仕様として編集が必要な項目はEntity(Form)を生成する側が責務を持つため、コンストラクタではなく個別にsetterを呼び出して値を設定すること。\n\n```java\n@Override\npublic Result handle(SqlRow inputData, ExecutionContext ctx) {\n\n    // SqlRowからEntityの生成\n    SampleEntity entity = new SampleEntity(inputData);\n\n    // 編集が必要な項目は個別設定\n    entity.setDate(DateUtil.addDay(inputData.getString(\"date\"), 1));\n\n    return new Success();\n}\n```"
+  }
+}

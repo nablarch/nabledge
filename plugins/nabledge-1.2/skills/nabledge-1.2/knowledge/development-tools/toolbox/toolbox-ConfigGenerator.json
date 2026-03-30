@@ -1,0 +1,72 @@
+{
+  "id": "toolbox-ConfigGenerator",
+  "title": "環境設定ファイル自動生成ツール",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "環境設定ファイル生成",
+        "*.config",
+        "アプリケーション設定一覧表",
+        "業務設定一覧表",
+        "自動生成ツール"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "入力元となる設計書に関する設定",
+      "hints": [
+        "ConfigurationLoader",
+        "nablarch.tool.configgenerator.ConfigurationLoader",
+        "keyColumnName",
+        "descColumnName",
+        "prefixRowIndex",
+        "prefixColumnIndex",
+        "outputFilePathRowIndex",
+        "outputFilePathColumnIndex",
+        "headerRowIndex",
+        "設計書レイアウト設定",
+        "列名設定"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "ファイル生成に関する設定",
+      "hints": [
+        "ConfigGenSettings",
+        "nablarch.tool.configgenerator.ConfigGenSettings",
+        "lineSeparator",
+        "outputEncoding",
+        "outputBaseDir",
+        "systemSettingsFile",
+        "appSettingsDir",
+        "importFileName",
+        "excludeSheetNames",
+        "出力先ディレクトリ",
+        "ファイル生成設定"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "自動生成ツールの実行手順",
+      "hints": [
+        "configgen-build.xml",
+        "generateマクロ",
+        "ant",
+        "対話形式実行",
+        "処理方式名",
+        "環境名",
+        "実行手順"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "環境設定ファイル自動生成ツールは、以下の入力ファイルからアプリケーションで使用する環境設定ファイル（*.config）を生成する。\n\n- アプリケーション設定一覧表\n- 業務設定一覧表",
+    "s2": "**クラス**: `nablarch.tool.configgenerator.ConfigurationLoader`\n\n設計書のレイアウトや文言を変更しない限り、デフォルト値から変更不要。行番号・列番号は0オリジン。\n\n| プロパティ名 | デフォルト値 | 説明 |\n|---|---|---|\n| keyColumnName | \"キー\" | キーを記載したカラム名 |\n| descColumnName | \"項目名\" | 項目名を記載したカラム名 |\n| prefixRowIndex | 2 | プレフィックスセルの行番号（0オリジン） |\n| prefixColumnIndex | 1 | プレフィックスセルの列番号（0オリジン） |\n| outputFilePathRowIndex | 3 | ファイル出力先セルの行番号（0オリジン） |\n| outputFilePathColumnIndex | 1 | ファイル出力先セルの列番号（0オリジン） |\n| headerRowIndex | 6 | 見出し行の行番号（0オリジン） |\n\n```xml\n<component name=\"configurationLoader\"\n           class=\"nablarch.tool.configgenerator.ConfigurationLoader\">\n  <property name=\"keyColumnName\" value=\"キー\"/>\n  <property name=\"descColumnName\" value=\"項目名\"/>\n  <property name=\"prefixRowIndex\" value=\"2\"/>\n  <property name=\"prefixColumnIndex\" value=\"1\"/>\n  <property name=\"outputFilePathRowIndex\" value=\"3\"/>\n  <property name=\"outputFilePathColumnIndex\" value=\"1\"/>\n  <property name=\"headerRowIndex\" value=\"6\"/>\n</component>\n```",
+    "s3": "**クラス**: `nablarch.tool.configgenerator.ConfigGenSettings`\n\n`systemSettingsFile`、`appSettingsDir`、`importFileName` はデフォルト値なし（必須）。プロジェクトごとに設定が必要。\n\n| プロパティ名 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|\n| lineSeparator | | CRLF | 改行コード（\"CR\"/\"LF\"/\"CRLF\"） |\n| outputEncoding | | UTF-8 | 出力ファイルエンコーディング |\n| outputBaseDir | | ./work | 出力先ディレクトリ |\n| systemSettingsFile | ○ | | アプリケーション設定一覧表のパス |\n| appSettingsDir | ○ | | 業務設定一覧表の配置ディレクトリ |\n| importFileName | ○ | | import用コンポーネント定義ファイルのファイル名 |\n| excludeSheetNames | | \"表紙\", \"変更履歴\", \"目次\" | 読み込み除外シート名 |\n\n```xml\n<component name=\"configGenSettings\"\n           class=\"nablarch.tool.configgenerator.ConfigGenSettings\">\n  <property name=\"lineSeparator\" value=\"CRLF\"/>\n  <property name=\"outputEncoding\" value=\"UTF-8\"/>\n  <property name=\"outputBaseDir\" value=\"./work/config/\"/>\n  <property name=\"systemSettingsFile\"\n            value=\"tool/configgenerator/resources/nablarch/tool/configgenerator/アプリケーション設定一覧表.xls\" />\n  <property name=\"appSettingsDir\"\n            value=\"tool/configgenerator/resources/nablarch/tool/configgenerator/app/\"/>\n  <property name=\"importFileName\" value=\"importConfig.xml\" />\n  <property name=\"excludeSheetNames\">\n    <list>\n      <value>表紙</value>\n      <value>変更履歴</value>\n      <value>目次</value>\n    </list>\n  </property>\n</component>\n```",
+    "s4": "## 「処理方式名」「環境名」を事前に定義して実行する場合\n\n`configgen-build.xml` に `target` タグを追記し、`generate` マクロを起動する。\n\n```xml\n<target name=\"画面オンライン-本番環境\"\n        description=\"画面オンライン-本番環境の環境設定ファイルを生成する。\"\n        depends=\"clean\">\n  <generate processingScheme=\"画面オンライン\"\n            envName=\"本番環境\"/>\n</target>\n```\n\n## 対話形式で生成を実行する場合\n\n```bash\nant -f configgen-build.xml\n```\n\n標準入力から「処理方式名」「環境名」を入力する。生成されたファイルは `ConfigGenSettings` の `outputBaseDir` に出力される。"
+  }
+}

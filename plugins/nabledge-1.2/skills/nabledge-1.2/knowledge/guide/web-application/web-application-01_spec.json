@@ -1,0 +1,65 @@
+{
+  "id": "web-application-01_spec",
+  "title": "説明に使用する機能について",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "実施する作業概要",
+      "hints": [
+        "ユーザ情報更新機能",
+        "画面遷移",
+        "サンプルアプリケーション差し替え"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "前提条件",
+      "hints": [
+        "環境構築",
+        "エンティティオブジェクト",
+        "Nablarch Application Framework"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "既存のユーザ情報更新機能の動作確認",
+      "hints": [
+        "ユーザ情報更新",
+        "画面遷移確認",
+        "更新フロー"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "ユーザ情報更新機能の仕様",
+      "hints": [
+        "USERS",
+        "KANJI_NAME",
+        "KANA_NAME",
+        "漢字氏名バリデーション",
+        "カナ氏名バリデーション",
+        "W11ACXX01",
+        "W11ACXX02",
+        "W11ACXX03",
+        "RW11ACXX01",
+        "RW11ACXX02",
+        "RW11ACXX03",
+        "RW11ACXX04",
+        "精査仕様",
+        "更新機能仕様",
+        "MSG00010",
+        "MSG00017",
+        "MSG00020",
+        "MSG00024"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "サンプルアプリケーションのユーザ情報更新機能を独自実装に差し替える。追加する機能は簡易な更新機能のみ。\n\n作業前の画面遷移:\n![作業前の画面遷移図](assets/web-application-01_spec/beforeScreenTransition.png)\n\n作業後の画面遷移（赤い部分が差し替え箇所）:\n![作業後の画面遷移図](assets/web-application-01_spec/afterScreenTransition.png)",
+    "s2": "- Nablarch Application Frameworkの環境構築が完了していること。環境構築完了後、画面開発に必要なテーブルに対応するエンティティオブジェクトがセットされている。",
+    "s3": "既存のユーザ情報更新機能の画面遷移フロー:\n\n1. ユーザ情報照会画面で一覧検索し、**更新**リンクをクリック\n2. ユーザ情報更新画面で入力値を変更し**確認**ボタン押下\n3. ユーザ情報更新確認画面で更新値を確認後**確定**ボタン押下\n4. ユーザ情報更新完了画面に遷移\n5. 一覧検索でユーザ情報の更新を確認",
+    "s4": "## 機能概要\n\n| 画面 | 動作 |\n|---|---|\n| ユーザ情報更新画面 | 更新対象ユーザの現在の登録内容を表示（表示項目は画面イメージを参照） |\n| ユーザ情報更新確認画面 | 精査OK→変更内容を確認画面に表示。精査NG→更新画面に戻りエラーメッセージを表示 |\n| ユーザ情報更新完了画面 | 更新内容をDBに反映し完了画面を表示 |\n\n## 画面情報\n\n| 画面ID | 画面名称 | リクエストID | リクエスト名称 |\n|---|---|---|---|\n| W11ACXX01 | ユーザ情報更新画面 | RW11ACXX01 | 更新画面初期表示処理 |\n| W11ACXX01 | ユーザ情報更新画面 | RW11ACXX03 | 更新画面戻る処理 |\n| W11ACXX02 | ユーザ情報更新確認画面 | RW11ACXX02 | 更新入力確認処理 |\n| W11ACXX03 | ユーザ情報更新完了画面 | RW11ACXX04 | 更新処理 |\n\n## 画面イメージ\n\n![ユーザ情報更新画面](assets/web-application-01_spec/user_update.png)\n\n![ユーザ情報更新確認画面](assets/web-application-01_spec/user_update_confirm.png)\n\n![ユーザ情報更新完了画面](assets/web-application-01_spec/user_update_complete.png)\n\n## 更新対象テーブル (USERS)\n\n| カラム論理名 | カラム物理名 |\n|---|---|\n| ユーザID | USER_ID |\n| 漢字氏名 | KANJI_NAME |\n| カナ氏名 | KANA_NAME |\n| メールアドレス | MAIL_ADDRESS |\n| 内線電話番号(ビル番号) | EXTENSION_NUMBER_BUILDING |\n| 内線電話番号(個人番号) | EXTENSION_NUMBER_PERSONAL |\n| 携帯電話番号(市外) | MOBILE_PHONE_NUMBER_AREA_CODE |\n| 携帯電話番号(市内) | MOBILE_PHONE_NUMBER_CITY_CODE |\n| 携帯電話番号(加入) | MOBILE_PHONE_NUMBER_SBSCR_CODE |\n| 登録者ID | INSERT_USER_ID |\n| 登録日時 | INSERT_DATE |\n| 更新者ID | UPDATED_USER_ID |\n| 更新日時 | UPDATED_DATE |\n\n## 精査仕様\n\n| プロパティ名 | 精査内容 | メッセージID |\n|---|---|---|\n| 漢字氏名 | 必須 | MSG00010 |\n| 漢字氏名 | 文字種(全角) | MSG00017 |\n| 漢字氏名 | 文字列長(50桁以下) | MSG00024 |\n| カナ氏名 | 必須 | MSG00010 |\n| カナ氏名 | 文字種(全角カナ) | MSG00020 |\n| カナ氏名 | 文字列長(50桁以下) | MSG00024 |\n\n> **Note**: メッセージIDはアプリケーション中でユーザに通知するメッセージを一意に特定するもの。通常の開発では、簡易な精査エラー時のメッセージは共通エラーメッセージとして定義して実装する。上記メッセージIDもサンプルアプリケーションの共通エラーメッセージのメッセージIDであり、プログラマは通常強く意識する必要はない。\n\n## 更新処理仕様\n\n更新対象カラム:\n\n| カラム論理名 | カラム物理名 |\n|---|---|\n| 漢字氏名 | KANJI_NAME |\n| カナ氏名 | KANA_NAME |\n| 更新者ID | UPDATED_USER_ID |\n| 更新日時 | UPDATED_DATE |"
+  }
+}

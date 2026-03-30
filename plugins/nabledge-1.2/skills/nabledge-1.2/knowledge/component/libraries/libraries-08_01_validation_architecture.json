@@ -1,0 +1,83 @@
+{
+  "id": "libraries-08_01_validation_architecture",
+  "title": "バリデーション機能の構造",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "クラス図",
+      "hints": [
+        "ValidationManager",
+        "ValidationContext",
+        "ValidationResultMessage",
+        "ValidationUtil",
+        "Convertor",
+        "Validator",
+        "Validatable",
+        "nablarch.core.validation",
+        "バリデーション クラス構造",
+        "インタフェース定義"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "バリデーションの処理の流れ",
+      "hints": [
+        "ValidationManager",
+        "ValidationUtil",
+        "Convertor",
+        "Validator",
+        "convertors",
+        "validators",
+        "Form",
+        "バリデーション処理フロー",
+        "シーケンス"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定例",
+      "hints": [
+        "validationManager",
+        "ValidationManager",
+        "StringConvertor",
+        "StringArrayConvertor",
+        "LongConvertor",
+        "BigDecimalConvertor",
+        "RequiredValidator",
+        "NumberRangeValidator",
+        "LengthValidator",
+        "formDefinitionCache",
+        "BasicStaticDataCache",
+        "FormValidationDefinitionLoader",
+        "BasicApplicationInitializer",
+        "Initializable",
+        "初期化設定",
+        "バリデーション XML設定"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "設定内容詳細",
+      "hints": [
+        "ValidationManager",
+        "convertors",
+        "validators",
+        "formDefinitionCache",
+        "invalidSizeKeyMessageId",
+        "stringResourceHolder",
+        "useFormPropertyNameAsMessageId",
+        "formArraySizeValueMaxLength",
+        "StringResourceHolder",
+        "プロパティ設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**インタフェース**:\n\n| インタフェース名 | 概要 |\n|---|---|\n| `nablarch.core.validation.Convertor` | 入力値から対応するプロパティの型に変換するインタフェース。実装クラスをコンバータと呼ぶ。 |\n| `nablarch.core.validation.Validator` | プロパティの値のバリデーションを行うインタフェース。実装クラスをバリデータと呼ぶ。 |\n| `nablarch.core.validation.Validatable` | ValidationUtil でバリデーション可能なオブジェクトが実装するインタフェース。 |\n\n**クラス**:\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.core.validation.ValidationManager` | バリデーションおよび変換の処理を実行するクラス。 |\n| `nablarch.core.validation.ValidationContext` | バリデーションの処理に必要な情報を保持するクラス。 |\n| `nablarch.core.validation.ValidationResultMessage` | バリデーション結果のメッセージ表示に必要な情報を保持するクラス。 |\n| `nablarch.core.validation.ValidationUtil` | システムリポジトリから ValidationManager を取得し、呼び出しを行うユーティリティクラス。 |",
+    "s2": "処理フロー:\n\n1. ValidationUtil がリポジトリから ValidationManager を取得し、処理を委譲する。\n2. ValidationManager がコンバータ（Convertor実装クラス）を呼び出し、入力値を型変換する。\n3. ValidationManager がバリデータ（Validator実装クラス）を呼び出し、バリデーションを実行する。\n\nコンバータは `convertors` プロパティ、バリデータは `validators` プロパティに設定することで、ValidationManager から Form に対応付けて自動的に呼び出される。",
+    "s3": "> **重要**: ValidationManager は、リポジトリ上で必ず `validationManager` というコンポーネント名で登録する必要がある。\n\n**ValidationManager 設定例**:\n\n```xml\n<component name=\"validationManager\" class=\"nablarch.core.validation.ValidationManager\">\n    <property name=\"convertors\">\n        <list>\n            <component class=\"nablarch.core.validation.convertor.StringConvertor\">\n                <property name=\"conversionFailedMessageId\" value=\"MSG00001\"/>\n            </component>\n            <component class=\"nablarch.core.validation.convertor.StringArrayConvertor\"/>\n            <component class=\"nablarch.core.validation.convertor.LongConvertor\">\n                <property name=\"invalidDigitsIntegerMessageId\" value=\"MSG00031\"/>\n                <property name=\"multiInputMessageId\" value=\"MSG00001\"/>\n            </component>\n            <component class=\"nablarch.core.validation.convertor.BigDecimalConvertor\">\n                <property name=\"invalidDigitsIntegerMessageId\" value=\"MSG00031\"/>\n                <property name=\"invalidDigitsFractionMessageId\" value=\"MSG00032\"/>\n                <property name=\"multiInputMessageId\" value=\"MSG00001\"/>\n            </component>\n        </list>\n    </property>\n    <property name=\"validators\">\n        <list>\n            <component class=\"nablarch.core.validation.validator.RequiredValidator\">\n                <property name=\"messageId\" value=\"MSG00011\"/>\n            </component>\n            <component class=\"nablarch.core.validation.validator.NumberRangeValidator\">\n                <property name=\"maxMessageId\" value=\"MSG00051\"/>\n                <property name=\"maxAndMinMessageId\" value=\"MSG00052\"/>\n                <property name=\"minMessageId\" value=\"MSG00053\"/>\n            </component>\n            <component class=\"nablarch.core.validation.validator.LengthValidator\">\n                <property name=\"maxMessageId\" value=\"MSG00021\"/>\n                <property name=\"maxAndMinMessageId\" value=\"MSG00022\"/>\n                <property name=\"fixLengthMessageId\" value=\"MSG00023\"/>\n            </component>\n        </list>\n    </property>\n    <property name=\"formDefinitionCache\" ref=\"formDefinitionCache\"/>\n</component>\n\n<component name=\"formDefinitionCache\" class=\"nablarch.core.cache.BasicStaticDataCache\">\n    <property name=\"loader\">\n        <component class=\"nablarch.core.validation.FormValidationDefinitionLoader\"/>\n    </property>\n</component>\n```\n\nValidationManager は Initializable を実装しているため、:ref:`repository_initialize` に従い初期化設定が必要。\n\n**初期化設定例**:\n\n```xml\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n    <property name=\"initializeList\">\n        <list>\n            <component-ref name=\"formDefinitionCache\"/>\n            <component-ref name=\"validationManager\"/>\n        </list>\n    </property>\n</component>\n```",
+    "s4": "**クラス**: `nablarch.core.validation.ValidationManager` の設定プロパティ:\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| convertors | ○ | 使用するコンバータ（`nablarch.core.validation.Convertor` 実装クラス）をListで設定する。 |\n| validators | ○ | 使用するバリデータ（`nablarch.core.validation.Validator` 実装クラス）をListで設定する。 |\n| formDefinitionCache | ○ | FormValidationDefinitionのStaticDataCacheを設定する。通常は `BasicStaticDataCache` と `FormValidationDefinitionLoader` を使用する。 |\n| invalidSizeKeyMessageId | ○ | ValidationTargetアノテーションのsizeKeyに不正な長さを指定した際のエラーメッセージID。詳細は :ref:`form_array_validation` を参照。 |\n| stringResourceHolder | ○ | `nablarch.core.message.StringResourceHolder` のインスタンス。バリデーションエラーメッセージの取得元。通常は :ref:`__autowire` により自動設定されるため設定ファイルへの記載不要。 |\n| useFormPropertyNameAsMessageId | | :ref:`validation_use_form_name_as_message_id` を使用するか否か。未設定時は `false`。 |\n| formArraySizeValueMaxLength | | Formの配列サイズ文字列の最大長。未設定時は `3`（999個まで許容）。配列の最大値ではなく添え字の文字列長を指定する（例：999個まで許容する場合は `3` を設定）。 |\n| invalidSizeKeyMessageId | ○ | `formArraySizeValueMaxLength` を超えた配列の添え字がリクエストとして送られた際のメッセージID。 |"
+  }
+}

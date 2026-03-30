@@ -1,0 +1,42 @@
+{
+  "id": "handlers-HttpRequestJavaPackageMapping",
+  "title": "HTTPリクエストディスパッチハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    ""
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "HttpRequestJavaPackageMapping",
+        "nablarch.fw.handler.HttpRequestJavaPackageMapping",
+        "RequestPathJavaPackageMapping",
+        "setBaseUri",
+        "ディスパッチ",
+        "HTTPアクセスログ",
+        "リクエストパスマッピング"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "baseUri",
+        "basePackage",
+        "immediate",
+        "optionalPackageMappingEntries",
+        "nablarch.fw.handler.JavaPackageMappingEntry",
+        "ベースURI",
+        "ベースパッケージ",
+        "ディスパッチ設定",
+        "XML設定例"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.HttpRequestJavaPackageMapping`\n\n画面オンライン処理のリクエストパス中のベースURIをJavaパッケージ階層にマッピングし、委譲先ハンドラを動的に決定するディスパッチハンドラ。[RequestPathJavaPackageMapping](handlers-RequestPathJavaPackageMapping.json) を直接継承しており、以下2点のみ異なる:\n\n1. ディスパッチ対象クラス確定時にHTTPアクセスログへその内容を出力する\n2. ベースパス設定時にURLの書式精査を行うアクセサ(`#setBaseUri()`)を追加",
+    "s2": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| baseUri | String | | \"\" | ベースURI |\n| basePackage | String | | \"\" | ベースパッケージ |\n| immediate | boolean | | true | ハンドラ追加位置 |\n| optionalPackageMappingEntries | nablarch.fw.handler.JavaPackageMappingEntry | | null | リクエストパスのパターンとマッピング先Javaパッケージの組み合わせ |\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpRequestJavaPackageMapping\">\n  <property name=\"baseUri\"    value=\"/webapp/sample\" />\n  <property name=\"basePackage\" value=\"nablarch.sample.apps\" />\n</component>\n```\n\nディスパッチ例（baseUri=/webapp/sample、basePackage=nablarch.sample.apps の場合）:\n\n| リクエストパス | ディスパッチ対象クラス |\n|---|---|\n| /webapp/sample/AdminApp | nablarch.sample.apps.AdminApp |\n| /webapp/sample/user/UserApp | nablarch.sample.apps.user.UserApp |"
+  }
+}

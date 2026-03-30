@@ -1,0 +1,28 @@
+{
+  "id": "web-application-12",
+  "title": "JavaScriptコードを記述すると静的解析ツールでエラーが発生します。対処方法を教えてください。",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "JSPでのJavaScript記述方法",
+      "hints": [
+        "n:script",
+        "JavaScript",
+        "JSP静的解析",
+        "HTMLチェック",
+        "InvalidHtmlException",
+        "HTMLコメントタグ",
+        "静的解析エラー対処",
+        "HtmlChecker",
+        "HtmlSyntaxChecker",
+        "TokenMgrError",
+        "ParserTokenManager"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "JSPにJavaScriptコードを記述する場合は、HTMLコメントタグ（`<!-- -->`）を使用せず、`<n:script>`タグを使用すること。\n\n- HTMLコメントタグでJavaScriptを囲むと、JSP静的解析ツールで `<!-- (at line=XX column=XX) is forbidden.` エラーが発生する\n- HTMLコメントタグなしで記述すると、HTMLチェックツールで `InvalidHtmlException: Lexical error` が発生する（`HtmlChecker`、`HtmlSyntaxChecker`、`TokenMgrError`、`ParserTokenManager` などのクラスがスタックトレースに現れる）\n\n`<n:script>`タグを使用すると、HTMLには自動的にHTMLコメント（`<!-- -->`）でくくられた`<script>`タグとして出力される。\n\nJSP記述例:\n```jsp\n<n:script type=\"text/javascript\">\n    function clearChnKbn() {\n        var element = document.getElementsByTagName(\"select\")\n        for (var i = 0; i < element.length; i++) {\n          var shnKbn = element[i];\n            shnKbn.selectedIndex = 0;\n        }\n    }\n</n:script>\n```\n\nHTML出力例:\n```html\n<script type=\"text/javascript\">\n<!--\n    function clearChnKbn() {\n        var element = document.getElementsByTagName(\"select\")\n        for (var i = 0; i < element.length; i++) {\n          var shnKbn = element[i];\n            shnKbn.selectedIndex = 0;\n        }\n    }\n-->\n</script>\n```"
+  }
+}

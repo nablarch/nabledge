@@ -1,0 +1,41 @@
+{
+  "id": "web-application-09_confirm_operation",
+  "title": "動作確認をする為のサンプルアプリケーションの修正と動作確認の実施",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "動作確認をする為のサンプルアプリケーションの修正",
+      "hints": [
+        "n:submitLink",
+        "n:param",
+        "W11AC0101.jsp",
+        "JSP修正",
+        "サンプルアプリケーション修正",
+        "更新リンク",
+        "paramName変更",
+        "uri属性変更",
+        "W11AC03Action",
+        "W11ACXXAction"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "動作確認の実施",
+      "hints": [
+        "動作確認",
+        "ユーザ情報更新",
+        "更新確認画面",
+        "更新完了画面",
+        "戻るボタン",
+        "ヘッダ",
+        "フッタ"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 動作確認をする為のサンプルアプリケーションの修正\n\n**修正ファイル**: `W11AC0101.jsp`\n\n`n:submitLink` タグの以下を変更する:\n\n- `uri` 属性: `/action/ss11AC/W11AC03Action/RW11AC0301` → `/action/ss11AC/W11ACXXAction/RW11ACXX01`\n- `n:param` の `paramName` 属性: `W11AC03.systemAccount.userId` → `W11ACXX.operationTargetUserId`\n\n修正後:\n\n```jsp\n<%-- 【説明】更新リンクの遷移先を変更 --%>\n<td><n:submitLink uri=\"/action/ss11AC/W11ACXXAction/RW11ACXX01\" name=\"showUpdate_${count}\">\n                更新\n                <%-- ～中略～ --%>\n                <%-- 【説明】パラメータ名の変更 --%>\n                <n:param paramName=\"W11ACXX.operationTargetUserId\" name=\"row.userId\" />\n            </n:submitLink></td>\n```",
+    "s2": "## 動作確認の実施\n\n1. ユーザ情報照会画面で一覧検索し、検索結果の **更新** リンクをクリック\n2. ユーザ情報更新画面で入力フォームの値を変更して **確認** ボタンを押下\n3. ユーザ情報更新確認画面で更新する値が表示されていることを確認し、**確定** ボタンを押下\n4. ユーザ情報更新完了画面で更新した値が表示されていることを確認\n5. 再度一覧検索を行い、ユーザ情報が更新されていることを確認\n\n> **注意**: ユーザ情報更新確認画面の **戻る** ボタンは実装されていないため動作しない。\n\n> **注意**: ユーザ情報更新完了画面からは、ヘッダまたはフッタのリンクをクリックして別の画面へ移動できる。"
+  }
+}

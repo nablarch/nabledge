@@ -1,0 +1,149 @@
+{
+  "id": "libraries-04_Permission",
+  "title": "認可",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "PermissionCheckHandler",
+        "認可チェック",
+        "認可機能",
+        "ハンドラ",
+        "BasicPermissionFactory",
+        "nablarch.common.handler.PermissionCheckHandler",
+        "nablarch.common.permission.BasicPermissionFactory",
+        "GroupTableSchema",
+        "SystemAccountTableSchema",
+        "GroupSystemAccountTableSchema",
+        "PermissionUnitTableSchema",
+        "PermissionUnitRequestTableSchema",
+        "GroupAuthorityTableSchema",
+        "SystemAccountAuthorityTableSchema",
+        "nablarch.common.permission.schema.GroupTableSchema",
+        "nablarch.common.permission.schema.SystemAccountTableSchema",
+        "nablarch.common.permission.schema.GroupSystemAccountTableSchema",
+        "nablarch.common.permission.schema.PermissionUnitTableSchema",
+        "nablarch.common.permission.schema.PermissionUnitRequestTableSchema",
+        "nablarch.common.permission.schema.GroupAuthorityTableSchema",
+        "nablarch.common.permission.schema.SystemAccountAuthorityTableSchema",
+        "BasicApplicationInitializer",
+        "SimpleDbTransactionManager",
+        "permissionFactory",
+        "dbManager",
+        "groupTableSchema",
+        "systemAccountTableSchema",
+        "groupSystemAccountTableSchema",
+        "permissionUnitTableSchema",
+        "permissionUnitRequestTableSchema",
+        "groupAuthorityTableSchema",
+        "systemAccountAuthorityTableSchema",
+        "businessDateProvider",
+        "tableName",
+        "groupIdColumnName",
+        "userIdColumnName",
+        "userIdLockedColumnName",
+        "failedCountColumnName",
+        "effectiveDateFromColumnName",
+        "effectiveDateToColumnName",
+        "permissionUnitIdColumnName",
+        "requestIdColumnName",
+        "BasicBusinessDateProvider",
+        "BusinessDateProvider",
+        "認可設定",
+        "DIコンテナ認可設定"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "hints": [
+        "グループ権限",
+        "ユーザ権限",
+        "権限設定",
+        "テーブル定義",
+        "イレギュラー権限付与",
+        "ignoreRequestIds",
+        "ignoreRequestIds除外設定",
+        "認可判定",
+        "PermissionCheckHandler",
+        "nablarch.common.handler.PermissionCheckHandler"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "要求",
+      "hints": [
+        "認可判定",
+        "有効日",
+        "リクエストID除外",
+        "画面表示制御",
+        "グループ単位認可",
+        "PermissionUtil",
+        "Permission",
+        "権限チェック",
+        "permit"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "構成 - 概念モデル",
+      "hints": [
+        "概念モデル",
+        "認可単位",
+        "リクエストID",
+        "グループ権限",
+        "ユーザ権限"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "構成 - クラス図",
+      "hints": [
+        "nablarch.common.permission.Permission",
+        "nablarch.common.permission.PermissionFactory",
+        "nablarch.common.permission.BasicPermission",
+        "nablarch.common.permission.BasicPermissionFactory",
+        "nablarch.common.handler.PermissionCheckHandler",
+        "nablarch.common.permission.PermissionUtil",
+        "BasicPermission",
+        "BasicPermissionFactory",
+        "PermissionUtil"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "構成 - シーケンス図",
+      "hints": [
+        "シーケンス図",
+        "PermissionCheckHandler",
+        "PermissionUtil",
+        "スレッドローカル",
+        "ThreadContextHandler",
+        "ignoreRequestIdsSetting"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "構成 - テーブル定義",
+      "hints": [
+        "テーブル定義",
+        "グループシステムアカウント",
+        "システムアカウント権限",
+        "認可単位リクエスト",
+        "システムアカウントテーブル",
+        "グループ権限テーブル"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "リクエストに対して認可チェックを行う機能。ハンドラ（[../../handler/PermissionCheckHandler](../handlers/handlers-PermissionCheckHandler.json)）として使用することを想定。\n\n> **注意**: アーキテクトが認可処理を局所化するために使用するため、アプリケーションプログラマは本機能を直接使用しない。\n\n## BasicPermissionFactoryの設定方法\n\n**クラス**: `nablarch.common.handler.PermissionCheckHandler`, `nablarch.common.permission.BasicPermissionFactory`\n\nPermissionCheckHandlerとBasicPermissionFactoryをDIコンテナで設定する。設定例:\n\n```xml\n<component name=\"webFrontController\"\n           class=\"nablarch.fw.web.servlet.WebFrontController\">\n    <property name=\"handlerQueue\">\n        <list>\n            <component class=\"nablarch.fw.RequestHandlerEntry\">\n                <property name=\"requestPattern\" value=\"/action//\" />\n                <property name=\"handler\">\n                    <component class=\"nablarch.common.handler.PermissionCheckHandler\">\n                        <property name=\"permissionFactory\" ref=\"permissionFactory\" />\n                        <property name=\"ignoreRequestIds\" value=\"RW11AA0101, RW11AA0102, RW99ZZ0601, RW99ZZ0602, RW99ZZ0603, RW99ZZ0604, RW99ZZ0605\" />\n                    </component>\n                </property>\n            </component>\n        </list>\n    </property>\n</component>\n\n<component name=\"permissionFactory\" class=\"nablarch.common.permission.BasicPermissionFactory\">\n    <property name=\"dbManager\">\n        <component class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">\n            <property name=\"dbTransactionName\" value=\"PermissionCheck\" />\n            <property name=\"transactionFactory\" ref=\"transactionFactory\" />\n            <property name=\"connectionFactory\" ref=\"connectionFactory\" />\n        </component>\n    </property>\n    <property name=\"groupTableSchema\">\n        <component class=\"nablarch.common.permission.schema.GroupTableSchema\">\n            <property name=\"tableName\" value=\"UGROUP\" />\n            <property name=\"groupIdColumnName\" value=\"UGROUP_ID\" />\n        </component>\n    </property>\n    <property name=\"systemAccountTableSchema\">\n        <component class=\"nablarch.common.permission.schema.SystemAccountTableSchema\">\n            <property name=\"tableName\" value=\"SYSTEM_ACCOUNT\" />\n            <property name=\"userIdColumnName\" value=\"USER_ID\" />\n            <property name=\"userIdLockedColumnName\" value=\"USER_ID_LOCKED\" />\n            <property name=\"effectiveDateFromColumnName\" value=\"EFFECTIVE_DATE_FROM\" />\n            <property name=\"effectiveDateToColumnName\" value=\"EFFECTIVE_DATE_TO\" />\n        </component>\n    </property>\n    <property name=\"groupSystemAccountTableSchema\">\n        <component class=\"nablarch.common.permission.schema.GroupSystemAccountTableSchema\">\n            <property name=\"tableName\" value=\"UGROUP_SYSTEM_ACCOUNT\" />\n            <property name=\"groupIdColumnName\" value=\"UGROUP_ID\" />\n            <property name=\"userIdColumnName\" value=\"USER_ID\" />\n            <property name=\"effectiveDateFromColumnName\" value=\"EFFECTIVE_DATE_FROM\" />\n            <property name=\"effectiveDateToColumnName\" value=\"EFFECTIVE_DATE_TO\" />\n        </component>\n    </property>\n    <property name=\"permissionUnitTableSchema\">\n        <component class=\"nablarch.common.permission.schema.PermissionUnitTableSchema\">\n            <property name=\"tableName\" value=\"PERMISSION_UNIT\" />\n            <property name=\"permissionUnitIdColumnName\" value=\"PERMISSION_UNIT_ID\" />\n        </component>\n    </property>\n    <property name=\"permissionUnitRequestTableSchema\">\n        <component class=\"nablarch.common.permission.schema.PermissionUnitRequestTableSchema\">\n            <property name=\"tableName\" value=\"PERMISSION_UNIT_REQUEST\" />\n            <property name=\"permissionUnitIdColumnName\" value=\"PERMISSION_UNIT_ID\" />\n            <property name=\"requestIdColumnName\" value=\"REQUEST_ID\" />\n        </component>\n    </property>\n    <property name=\"groupAuthorityTableSchema\">\n        <component class=\"nablarch.common.permission.schema.GroupAuthorityTableSchema\">\n            <property name=\"tableName\" value=\"UGROUP_AUTHORITY\" />\n            <property name=\"groupIdColumnName\" value=\"UGROUP_ID\" />\n            <property name=\"permissionUnitIdColumnName\" value=\"PERMISSION_UNIT_ID\" />\n        </component>\n    </property>\n    <property name=\"systemAccountAuthorityTableSchema\">\n        <component class=\"nablarch.common.permission.schema.SystemAccountAuthorityTableSchema\">\n            <property name=\"tableName\" value=\"SYSTEM_ACCOUNT_AUTHORITY\" />\n            <property name=\"userIdColumnName\" value=\"USER_ID\" />\n            <property name=\"permissionUnitIdColumnName\" value=\"PERMISSION_UNIT_ID\" />\n        </component>\n    </property>\n    <property name=\"businessDateProvider\" ref=\"businessDateProvider\" />\n</component>\n\n<component name=\"businessDateProvider\" class=\"nablarch.core.date.BasicBusinessDateProvider\" />\n```\n\nスキーマ情報クラス一覧:\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.common.permission.schema.GroupTableSchema` | グループテーブルのスキーマ情報 |\n| `nablarch.common.permission.schema.SystemAccountTableSchema` | システムアカウントテーブルのスキーマ情報 |\n| `nablarch.common.permission.schema.GroupSystemAccountTableSchema` | グループシステムアカウントテーブルのスキーマ情報 |\n| `nablarch.common.permission.schema.PermissionUnitTableSchema` | 認可単位テーブルのスキーマ情報 |\n| `nablarch.common.permission.schema.PermissionUnitRequestTableSchema` | 認可単位リクエストテーブルのスキーマ情報 |\n| `nablarch.common.permission.schema.GroupAuthorityTableSchema` | グループ権限テーブルのスキーマ情報 |\n| `nablarch.common.permission.schema.SystemAccountAuthorityTableSchema` | システムアカウント権限テーブルのスキーマ情報 |\n\n### PermissionCheckHandlerの設定\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| permissionFactory | ○ | Permissionを生成するPermissionFactory |\n| ignoreRequestIds | | 認可判定を行わないリクエストID（複数指定はカンマ区切り） |\n\n### BasicPermissionFactoryの設定\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| dbManager | ○ | SimpleDbTransactionManagerのインスタンス（[../01_Core/04_DbAccessSpec](libraries-04_DbAccessSpec.json) 参照） |\n| groupTableSchema | ○ | GroupTableSchemaクラスのインスタンス |\n| systemAccountTableSchema | ○ | SystemAccountTableSchemaクラスのインスタンス |\n| groupSystemAccountTableSchema | ○ | GroupSystemAccountTableSchemaクラスのインスタンス |\n| permissionUnitTableSchema | ○ | PermissionUnitTableSchemaクラスのインスタンス |\n| permissionUnitRequestTableSchema | ○ | PermissionUnitRequestTableSchemaクラスのインスタンス |\n| groupAuthorityTableSchema | ○ | GroupAuthorityTableSchemaクラスのインスタンス |\n| systemAccountAuthorityTableSchema | ○ | SystemAccountAuthorityTableSchemaクラスのインスタンス |\n| businessDateProvider | ○ | BusinessDateProviderのインスタンス。有効日（From/To）のチェックに使用（:ref:`BusinessDateProvider-label` 参照） |\n\n### GroupTableSchemaの設定\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| tableName | ○ | テーブル名 |\n| groupIdColumnName | ○ | グループIDカラムの名前 |\n\n### SystemAccountTableSchemaの設定\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| tableName | ○ | テーブル名 |\n| userIdColumnName | ○ | ユーザIDカラムの名前 |\n| userIdLockedColumnName | ○ | ユーザIDロックカラムの名前 |\n| failedCountColumnName | ○ | 認証失敗回数カラムの名前 |\n| effectiveDateFromColumnName | ○ | 有効日(From)カラムの名前 |\n| effectiveDateToColumnName | ○ | 有効日(To)カラムの名前 |\n\n### GroupSystemAccountTableSchemaの設定\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| tableName | ○ | テーブル名 |\n| groupIdColumnName | ○ | グループIDカラムの名前 |\n| userIdColumnName | ○ | ユーザIDカラムの名前 |\n| effectiveDateFromColumnName | ○ | 有効日(From)カラムの名前 |\n| effectiveDateToColumnName | ○ | 有効日(To)カラムの名前 |\n\n### PermissionUnitTableSchemaの設定\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| tableName | ○ | テーブル名 |\n| permissionUnitIdColumnName | ○ | 認可単位IDカラムの名前 |\n\n### PermissionUnitRequestTableSchemaの設定\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| tableName | ○ | テーブル名 |\n| permissionUnitIdColumnName | ○ | 認可単位IDカラムの名前 |\n| requestIdColumnName | ○ | リクエストIDカラムの名前 |\n\n### GroupAuthorityTableSchemaの設定\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| tableName | ○ | テーブル名 |\n| groupIdColumnName | ○ | グループIDカラムの名前 |\n| permissionUnitIdColumnName | ○ | 認可単位IDカラムの名前 |\n\n### SystemAccountAuthorityTableSchemaの設定\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| tableName | ○ | テーブル名 |\n| userIdColumnName | ○ | ユーザIDカラムの名前 |\n| permissionUnitIdColumnName | ○ | 認可単位IDカラムの名前 |\n\nBasicPermissionFactoryは :ref:`repository_initialize` のInitializableインタフェースを実装しているため、BasicApplicationInitializerで初期化設定が必要:\n\n```xml\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n    <property name=\"initializeList\">\n        <list>\n            <component-ref name=\"permissionFactory\"/>\n        </list>\n    </property>\n</component>\n```",
+    "s2": "## グループ単位とユーザ単位を併用した権限設定\n\nグループに権限を設定しユーザにグループを割り当てることで、グループ単位の権限設定が可能。ユーザへの直接権限設定も可能なため、イレギュラーな権限付与に対応できる。\n\n## 自由度の高いテーブル定義\n\nテーブル名・カラム名は自由に設定可能。フレームワークが規定するJavaの型に変換可能であれば任意のデータ型を使用できるため、プロジェクトの命名規約を使用してテーブル定義を作成できる。\n\n## 特定のリクエストIDを認可判定の対象から除外する方法\n\nログイン処理など一部の処理を認可判定から除外するには、PermissionCheckHandlerの`ignoreRequestIds`プロパティにリクエストIDをカンマ区切りで指定する。\n\n```xml\n<component class=\"nablarch.common.handler.PermissionCheckHandler\">\n    <property name=\"permissionFactory\" ref=\"permissionFactory\" />\n    <property name=\"ignoreRequestIds\" value=\"RW11AA0101, RW11AA0102\" />\n</component>\n```",
+    "s3": "### 実装済み\n\n- 機能（任意のリクエストのかたまり）単位で認可判定の設定を行うことができる。\n- ユーザに対してグループを設定することができ、グループ単位で認可判定の設定を行うことができる。\n- リクエストIDを設定し、特定のリクエストIDを認可判定の対象から除外できる。\n- ユーザに有効日（From/To）を設定できる。\n- ユーザとグループの関連に有効日（From/To）を設定できる。\n- 認可判定の結果に応じて画面項目（メニューやボタンなど）の表示・非表示を切り替えることができる。\n\n### 未実装\n\n- 本機能で使用するマスタデータをメンテナンスできる。\n- 本機能で使用するマスタの初期データを一括登録できる。\n- 認証機能によりユーザIDがロックされているユーザの認可判定を失敗にできる。\n\n### 未検討\n\n- データへのアクセスを制限できる。\n- 機能単位の権限に有効日（From/To）を設定できる。\n\n## 認可判定の使用例\n\n> **注意**: 下記のコードはフレームワークが行う処理であり、通常のアプリケーションでは実装する必要がない。\n\n```java\n// PermissionCheckHandlerにより、スレッドローカルにPermissionが保持されている。\nPermission permission = PermissionUtil.getPermission();\n\nif (permission.permit(\"リクエストID\")) {\n    // 認可に成功した場合の処理\n} else {\n    // 認可に失敗した場合の処理\n}\n```",
+    "s4": "本機能では**リクエストID**を使用して認可判定を行う。リクエストIDの体系はアプリケーション毎に設計する。\n\n**認可単位**: ユーザが機能として認識する最小単位の概念。認可単位には複数のリクエスト（Webアプリケーションであれば画面のイベント）が紐付く。\n\n- **グループ権限**: グループに認可単位を紐付ける\n- **ユーザ権限**: ユーザに認可単位を直接紐付ける\n\n> **注意**: グループ権限とユーザ権限が異なる場合は、双方の権限に紐づく認可単位が足し合わされる。\n\n> **注意**: 通常はグループ権限でメンテナンス性を確保し、ユーザ権限はイレギュラーな権限付与に使用する。\n\n![概念モデル](assets/libraries-04_Permission/Permission_ConceptualModel.jpg)\n\n![認可単位とリクエストの関係](assets/libraries-04_Permission/Permission_Unit.jpg)\n\n![グループ権限とユーザ権限](assets/libraries-04_Permission/Permission_Authority.jpg)",
+    "s5": "![クラス図](assets/libraries-04_Permission/Permission_ClassDiagram.jpg)\n\n### インタフェース\n\n| インタフェース名 | 概要 |\n|---|---|\n| `nablarch.common.permission.Permission` | 認可を行うインタフェース。認可判定の実現方法毎に実装クラスを作成する。 |\n| `nablarch.common.permission.PermissionFactory` | Permissionを生成するインタフェース。認可情報の取得先毎に実装クラスを作成する。 |\n\n### `Permission`の実装クラス\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.common.permission.BasicPermission` | 保持しているリクエストIDを使用して認可を行うPermissionの基本実装クラス。 |\n\n### `PermissionFactory`の実装クラス\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.common.permission.BasicPermissionFactory` | BasicPermissionを生成するPermissionFactoryの基本実装クラス。DBのユーザ・グループ毎の認可単位テーブル構造からユーザに紐付く認可情報を取得する。 |\n\n### その他のクラス\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.common.handler.PermissionCheckHandler` | 認可判定を行うハンドラ。 |\n| `nablarch.common.permission.PermissionUtil` | 権限管理に使用するユーティリティ。 |",
+    "s6": "![シーケンス図](assets/libraries-04_Permission/Permission_SequenceDiagram.jpg)\n\n1. `PermissionCheckHandler`は、リクエストの度にユーザに紐付く`Permission`を取得し、認可判定後にPermissionをスレッドローカルに格納する。\n2. 個別アプリケーションで認可判定が必要な場合は、`PermissionUtil`からPermissionを取得して認可判定を行う。\n3. 認証機能によりユーザIDがロックされている場合は認可失敗となる。\n4. 認可判定の対象リクエストのチェックには、設定で指定されたリクエストIDを使用する（:ref:`ignoreRequestIdsSetting`参照）。\n5. ユーザIDとリクエストIDは、`PermissionCheckHandler`よりも先に処理を行うハンドラにより、ThreadContextに設定しておく必要がある。ThreadContextへの設定は:ref:`ThreadContextHandler`が行う。",
+    "s7": "テーブル名・カラム名はBasicPermissionFactoryの設定で指定するため任意の名前を使用できる。DBの型もJavaの型に変換可能な型であれば任意の型を使用できる。\n\n### グループテーブル\n\n| 定義 | Javaの型 | 制約 |\n|---|---|---|\n| グループID | `java.lang.String` | ユニークキー |\n\n### システムアカウントテーブル\n\n| 定義 | Javaの型 | 制約 |\n|---|---|---|\n| ユーザID | `java.lang.String` | ユニークキー |\n| ユーザIDロック | `boolean` | |\n| 有効日(From) | `java.lang.String` | 書式 yyyyMMdd / 未指定時は\"19000101\" |\n| 有効日(To) | `java.lang.String` | 書式 yyyyMMdd / 未指定時は\"99991231\" |\n\n### グループシステムアカウントテーブル\n\n| 定義 | Javaの型 | 制約 |\n|---|---|---|\n| グループID | `java.lang.String` | ユニークキー |\n| ユーザID | `java.lang.String` | ユニークキー |\n| 有効日(From) | `java.lang.String` | ユニークキー / 書式 yyyyMMdd / 未指定時は\"19000101\" |\n| 有効日(To) | `java.lang.String` | 書式 yyyyMMdd / 未指定時は\"99991231\" |\n\n### 認可単位テーブル\n\n| 定義 | Javaの型 | 制約 |\n|---|---|---|\n| 認可単位ID | `java.lang.String` | ユニークキー |\n\n### 認可単位リクエストテーブル\n\n| 定義 | Javaの型 | 制約 |\n|---|---|---|\n| 認可単位ID | `java.lang.String` | ユニークキー |\n| リクエストID | `java.lang.String` | ユニークキー |\n\n### グループ権限テーブル\n\n| 定義 | Javaの型 | 制約 |\n|---|---|---|\n| グループID | `java.lang.String` | ユニークキー |\n| 認可単位ID | `java.lang.String` | ユニークキー |\n\n### システムアカウント権限テーブル\n\n| 定義 | Javaの型 | 制約 |\n|---|---|---|\n| ユーザID | `java.lang.String` | ユニークキー |\n| 認可単位ID | `java.lang.String` | ユニークキー |\n\n![ER図](assets/libraries-04_Permission/Permission_ERDiagram.jpg)\n\n> **注意**: システムアカウントテーブルは認証機能と同じテーブルを想定しているため、パスワード等の認証機能用データ項目も含まれる。"
+  }
+}

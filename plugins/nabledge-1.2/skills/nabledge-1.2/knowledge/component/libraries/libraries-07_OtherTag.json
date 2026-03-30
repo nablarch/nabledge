@@ -1,0 +1,32 @@
+{
+  "id": "libraries-07_OtherTag",
+  "title": "変数に値を設定するsetタグ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "setタグの属性と使用方法",
+      "hints": [
+        "n:set",
+        "WebView_SetTag",
+        "var",
+        "value",
+        "name",
+        "scope",
+        "bySingleValue",
+        "setタグ",
+        "変数設定",
+        "JSP変数",
+        "スコープ",
+        "ページスコープ",
+        "リクエストスコープ",
+        "HTMLエスケープ",
+        "n:write"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": ":ref:`WebView_SetTag` の属性:\n\n| 属性名 | 説明 |\n|---|---|\n| `var` | 変数名を指定 |\n| `value` | 直接値を指定する場合 |\n| `name` | スコープ上のオブジェクトを参照する場合 |\n| `scope` | 変数を格納するスコープ（`request` または `page`）。未指定時はリクエストスコープ |\n| `bySingleValue` | `false` を指定すると配列・コレクションをそのまま取得（デフォルト: `true` = 先頭要素のみ返す） |\n\n- `scope`未指定時、変数はリクエストスコープに設定される。\n- ページスコープ（`page`）は、共通UIコンポーネント作成時に他JSPの変数との名前衝突を防ぐ場合に使用する。\n- `name`属性指定時、デフォルト（`bySingleValue=true`）では配列・コレクションの先頭要素のみ返す。共通UIコンポーネントで配列・コレクションをそのまま取得する場合は `bySingleValue=false` を指定する。\n\n> **警告**: setタグはHTMLエスケープを実施しない。setタグで設定した変数を出力する場合は必ずwriteタグを使用すること。\n\n```jsp\n<n:set var=\"title\" value=\"ユーザ情報登録\" />\n<head>\n    <title><n:write name=\"title\" /></title>\n</head>\n<body>\n    <h1><n:write name=\"title\" /></h1>\n</body>\n```"
+  }
+}

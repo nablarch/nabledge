@@ -1,0 +1,78 @@
+{
+  "id": "mom-messaging-03_mqDelayedSend",
+  "title": "応答不要メッセージ送信処理",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "アプリケーション開発者が実装する成果物",
+      "hints": [
+        "応答不要メッセージ送信",
+        "一時テーブル",
+        "フォーマット定義ファイル",
+        "SQLファイル",
+        "Formクラス",
+        "AsyncMessageSendActionSettings",
+        "messageDelayedSendDesign"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "フォーマット定義ファイル",
+      "hints": [
+        "フォーマット定義ファイル",
+        "_SEND.fmt",
+        "text-encoding",
+        "record-length",
+        "file-type",
+        "電文レイアウト定義"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "一時テーブル",
+      "hints": [
+        "一時テーブル",
+        "電文送信テーブル",
+        "DELETE_USER_SEND_MESSAGE",
+        "ステータス管理",
+        "SEND_MESSAGE_SEQUENCE",
+        "テーブル定義"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Formクラス",
+      "hints": [
+        "SendMessagingForm",
+        "formClassName",
+        "AsyncMessageSendActionSettings",
+        "@UserId",
+        "@CurrentDateTime",
+        "ステータス更新",
+        "nablarch.fw.messaging.action.AsyncMessageSendActionSettings"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "SQLファイル",
+      "hints": [
+        "SELECT_SEND_DATA",
+        "UPDATE_NORMAL_END",
+        "UPDATE_ABNORMAL_END",
+        "sqlFilePackage",
+        "AsyncMessageSendActionSettings",
+        "SQLファイル命名規則",
+        "STATUS"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "電文を送信するアクションはNablarchの一部として提供される（:ref:`messageDelayedSendDesign` 参照）。アプリケーション開発者が作成する必要がある成果物は以下のみ。\n\n- **一時テーブル**: 送信電文データを保持するテーブル（電文の種類ごとに専用テーブル）\n- **フォーマット定義ファイル**: 電文のレイアウトを定義したファイル\n- **SQLファイル**: 以下3種類のSQL文を含むファイル\n  - 電文送信テーブルからステータスが未送信のデータを取得するSELECT文（条件に未送信ステータスを含めること）\n  - 電文送信後にステータスを処理済みに更新するUPDATE文\n  - 電文送信失敗時にステータスを送信失敗（エラー）に更新するUPDATE文\n- **Formクラス**: 一時テーブルの処理ステータスを更新するクラス\n\n> **注意**: Formクラスは各アプリケーションプログラマが作成する必要はない（:ref:`Formクラスの実装例<sendFormSample>` 参照）。",
+    "s2": "電文の業務電文部のレイアウトを表すフォーマット定義ファイルを作成する。外部インタフェース設計書を入力元として、フォーマット定義ファイル自動生成ツールを使用して作成する。\n\n**ファイル名ルール**: 「送信電文のリクエストID + `_SEND.fmt`」\n\n```bash\ntext-encoding:    \"MS932\" # 文字列型フィールドの文字エンコーディング\nrecord-length:    270     # 各レコードの長さ\nfile-type:        \"Fixed\" # 固定長\n\n[userData] # データレコード\n1   userId                      X(10)       # ユーザID\n11  ?filler1                    X(10)       # 空白領域\n21  kanjiName                   N(100)      # 漢字氏名\n121 kanaName                    N(100)      # カナ氏名\n221 ?filler1                    X(50)       # 空白領域\n```",
+    "s3": "電文の種類ごとに専用の一時テーブルから送信データを取得する。一時テーブルは以下のルールに従い定義すること。\n\n- **主キー**: 電文を一意に識別するID（採番機能などで採番した一意の値）を格納するカラム。格納する値および桁数はプロジェクトの方式設計に従うこと\n- **属性情報**: 送信する電文の各項目に対応するカラムを定義すること\n- **共通項目**: プロジェクトの方式に合わせて（登録ユーザIDや登録日時など）定義すること\n\n**テーブル定義例（サンプルアプリケーション）**\n\n主キー:\n\n| カラム論理名 | 定義 |\n|---|---|\n| 送信電文連番 | CHAR(10) |\n\n属性項目（電文の項目に対応）:\n\n| カラム論理名 | 定義 |\n|---|---|\n| ユーザID | CHAR(10) |\n| 漢字名称 | NVARCHAR2(100) |\n| カナ名称 | NVARCHAR2(100) |\n| ステータス | CHAR(1) |\n\n共通項目:\n\n| カラム論理名 | 定義 |\n|---|---|\n| 登録ユーザID | CHAR(10) |\n| 登録日時 | TIMESTAMP |\n| 更新ユーザID | CHAR(10) |\n| 更新日時 | TIMESTAMP |\n| 登録リクエストID | CHAR(10) |\n| 登録実行時ID | CHAR(29) |",
+    "s4": "Formクラスは一時テーブルのステータスを更新するために使用する。ステータス更新専用クラスのため、一時テーブルの全属性を保持する必要はない。\n\n一時テーブルの主キーとデータ更新時に値を更新する共通項目のカラム名をプロジェクトで統一することで、単一のFormクラスで全ての電文送信処理のステータス更新が可能になる。\n\nFormクラスは **クラス**: `nablarch.fw.messaging.action.AsyncMessageSendActionSettings` の `formClassName` プロパティに指定する（アーキテクトなどが設定する値であり、個々の開発者が設定する必要はない）。\n\n```xml\n<component name=\"asyncMessageSendActionSettings\"\n    class=\"nablarch.fw.messaging.action.AsyncMessageSendActionSettings\">\n  <property name=\"formClassName\"\n      value=\"nablarch.sample.messaging.form.SendMessagingForm\" />\n</component>\n```\n\n**クラス**: `nablarch.sample.messaging.form.SendMessagingForm`\n\n```java\nimport java.sql.Timestamp;\nimport java.util.Map;\n\nimport nablarch.core.db.statement.autoproperty.CurrentDateTime;\nimport nablarch.core.db.statement.autoproperty.UserId;\n\npublic class SendMessagingForm {\n\n    /** 送信電文連番 */\n    private String sendMessageSequence;\n\n    /** 更新ユーザID */\n    @UserId\n    private String updatedUserId;\n\n    /** 更新日時 */\n    @CurrentDateTime\n    private Timestamp updatedDate;\n\n    public SendMessagingForm(Map<String, ?> data) {\n        sendMessageSequence = (String) data.get(\"sendMessageSequence\");\n        updatedUserId = (String) data.get(\"updatedUserId\");\n        updatedDate = (Timestamp) data.get(\"updatedDate\");\n    }\n}\n```",
+    "s5": "[一時テーブル](#s2) を操作するための以下3種類のSQL文を定義すること。\n\n**SQLファイル命名ルール**:\n- ファイル名: 「送信電文のリクエストID + `.sql`」\n- SQL_IDは以下の固定値を使用すること:\n\n| SQLの種類 | SQL_ID |\n|---|---|\n| 未送信データ取得のSELECT文 | `SELECT_SEND_DATA` |\n| ステータスを処理済みに更新するUPDATE文 | `UPDATE_NORMAL_END` |\n| ステータスをエラーに更新するUPDATE文 | `UPDATE_ABNORMAL_END` |\n\n- SQLファイルの配置ディレクトリは `AsyncMessageSendActionSettings` の `sqlFilePackage` プロパティに設定されたディレクトリとすること（アーキテクトが設定する値、個々の開発者が設定する必要はない）\n\n```xml\n<component name=\"asyncMessageSendActionSettings\"\n    class=\"nablarch.fw.messaging.action.AsyncMessageSendActionSettings\">\n  <property name=\"sqlFilePackage\" value=\"nablarch.sample.messaging.sql\" />\n</component>\n```\n\n```sql\nSELECT_SEND_DATA =\nSELECT\n    SEND_MESSAGE_SEQUENCE,\n    USER_ID,\n    KANJI_NAME,\n    KANA_NAME,\n    STATUS,\n    INSERT_USER_ID,\n    INSERT_DATE,\n    INSERT_REQUEST_ID,\n    INSERT_EXECUTION_ID,\n    UPDATED_USER_ID,\n    UPDATED_DATE\nFROM\n    DELETE_USER_SEND_MESSAGE\nWHERE\n    STATUS = '0'\nORDER BY\n    SEND_MESSAGE_SEQUENCE\n\nUPDATE_NORMAL_END =\nUPDATE\n    DELETE_USER_SEND_MESSAGE\nSET\n    STATUS = '1',\n    UPDATED_USER_ID = :updatedUserId,\n    UPDATED_DATE = :updatedDate\nWHERE\n    SEND_MESSAGE_SEQUENCE = :sendMessageSequence\n\nUPDATE_ABNORMAL_END =\nUPDATE\n    DELETE_USER_SEND_MESSAGE\nSET\n    STATUS = '9',\n    UPDATED_USER_ID = :updatedUserId,\n    UPDATED_DATE = :updatedDate\nWHERE\n    SEND_MESSAGE_SEQUENCE = :sendMessageSequence\n```"
+  }
+}

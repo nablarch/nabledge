@@ -1,0 +1,57 @@
+{
+  "id": "handlers-ResourceMapping",
+  "title": "リソースマッピングハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "ResourceMapping",
+        "nablarch.fw.web.handler.ResourceMapping",
+        "リソースマッピング",
+        "静的リソース",
+        "servlet://スキーム",
+        "forward://スキーム",
+        "classpath://スキーム",
+        "file://スキーム",
+        "JSP直接表示",
+        "HttpResponseHandler",
+        "ForwardingHandler",
+        "RequestHandlerEntry"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "往路処理",
+        "404レスポンス",
+        "マッピング対象リクエスト判定",
+        "baseUri前方一致",
+        "コンテンツパス算出",
+        "classpath実在チェック",
+        "200レスポンス"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "baseUri",
+        "basePath",
+        "設定プロパティ",
+        "画像ファイルマッピング",
+        "JSP直接アクセス",
+        "requestPattern",
+        "nablarch.fw.RequestHandlerEntry"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.web.handler.ResourceMapping`\n\n業務アクションを経由せずに、リクエストパスと[コンテンツパス](handlers-HttpMethodBinding.json#s4)のマッピング定義に基づいてレスポンスリソースを決定するハンドラ。ログイン画面（ビジネスロジック不要なJSP）や静的リソース（JavaScript、画像）のレスポンスに使用する。\n\n**サポートするスキーム**（マッピング先に指定可能）:\n1. `servlet://` — サーブレット/JSPフォーワード（**デフォルト**）\n2. `forward://` — 内部フォーワードの実行結果\n3. `classpath://` — コンテキストクラスローダ上のリソース\n\n> **注意**: `file://`スキーム（ファイルシステム上のローカルファイル）はセキュリティ上の理由から指定不可。スキーム省略時は`servlet://`として扱われる。\n\n> **注意**: JSP・画像などのリソースはサーブレットコンテキスト配下に直接配置することを推奨。デフォルトでは全リソースへの直接アクセスは拒否され、業務アクションのレスポンスまたは本ハンドラのマッピング定義対象のリソースのみアクセス可能となる。\n\n**関連ハンドラ**:\n\n| ハンドラ | 内容 |\n|---|---|\n| [HttpResponseHandler](handlers-HttpResponseHandler.json) | 本ハンドラが返却したHTTPレスポンスの[コンテンツパス](handlers-HttpMethodBinding.json#s4)に基づきレスポンス処理 |\n| [ForwardingHandler](handlers-ForwardingHandler.json) | [コンテンツパス](handlers-HttpMethodBinding.json#s4)が`forward://`で始まる場合の内部フォーワード処理 |\n| [RequestHandlerEntry](handlers-RequestHandlerEntry.json) | マッピング対象リクエストを限定するために必ず組み合わせて使用する |",
+    "s2": "**[往路処理]**\n\n1. **マッピング対象リクエスト判定**: 設定した`baseUri`がリクエストパス（サーブレットコンテキストからの相対パス）に前方一致するか判定。\n   - 一致しない場合 → ステータスコード**404**のレスポンスを返し終了。\n2. **マッピング先コンテンツパスの算出**: リクエストパスの前方一致部分を`basePath`に置換。`basePath`にスキームがない場合は`servlet://`を補完。\n3. **マッピング先コンテンツパス実在チェック**: `classpath://`スキームの場合、リソースが実在するか確認。存在しない場合 → ステータスコード**404**のレスポンスを返し終了。\n4. **HTTPレスポンスの返却**: ステータスコード**200**のHTTPレスポンスを作成し、算出した[コンテンツパス](handlers-HttpMethodBinding.json#s4)を設定してリターン。\n\n**[復路処理]**: 後続ハンドラへの処理委譲なし。\n\n**[例外処理]**: 後続ハンドラへの処理委譲なし。",
+    "s3": "**設定プロパティ**:\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| baseUri | String | ○ | | リクエストURIの置換対象となる部分文字列（前方一致） |\n| basePath | String | ○ | | リクエストURI中のbaseUriを置換するコンテンツパス（[コンテンツパス](handlers-HttpMethodBinding.json#s4)）。スキーム省略時は`servlet://`として扱われる |\n\n**画像ファイルへのマッピング設定例**（`/img/`配下のリクエストを`/resources/img/`にマッピング）:\n\n```xml\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/img//*.png\"/>\n  <property name=\"handler\">\n    <component class=\"nablarch.fw.web.handler.ResourceMapping\">\n      <property name=\"baseUri\" value=\"/img/\"/>\n      <property name=\"basePath\" value=\"servlet:///resources/img/\"/>\n    </component>\n  </property>\n</component>\n```\n\n| HTTPリクエストライン | コンテンツパス |\n|---|---|\n| GET /webapp/img/logo.png | servlet:///resource/img/logo.png |\n| GET /webapp/img/page1/figure01.png | servlet:///resource/img/page1/figure01.png |\n\n**直接表示可能なJSP設定例**（末尾が`-public.jsp`のリソースへの直接アクセスを許可）:\n\n```xml\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/jsp//*-public.jsp\"/>\n  <property name=\"handler\">\n    <component class=\"nablarch.fw.web.handler.ResourceMapping\">\n      <property name=\"baseUri\" value=\"/\"/>\n      <property name=\"basePath\" value=\"servlet:///\"/>\n    </component>\n  </property>\n</component>\n```\n\n| HTTPリクエストライン | コンテンツパス |\n|---|---|\n| GET /webapp/jsp/login-public.jsp | servlet:///jsp/login-public.jsp |\n| GET /webapp/jsp/welcome.jsp | (404エラー) |"
+  }
+}

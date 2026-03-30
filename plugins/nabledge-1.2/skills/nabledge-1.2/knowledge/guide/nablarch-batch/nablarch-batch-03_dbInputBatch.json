@@ -1,0 +1,91 @@
+{
+  "id": "nablarch-batch-03_dbInputBatch",
+  "title": "データベースを入力とするバッチ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "初期化処理",
+      "hints": [
+        "ExecutionContext",
+        "SystemTimeUtil",
+        "DateUtil",
+        "initialize",
+        "初期化処理",
+        "削除条件算出"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "リーダ作成",
+      "hints": [
+        "DatabaseRecordReader",
+        "SqlResultSet",
+        "ParameterizedSqlPStatement",
+        "DataReader",
+        "SystemAccountEntity",
+        "createReader",
+        "リーダ作成",
+        "データベース入力バッチ"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "１件ごとの処理",
+      "hints": [
+        "SqlRow",
+        "ExclusiveControlUtil",
+        "ExclusiveCtrlSystemAccountContext",
+        "CM311AC1Component",
+        "DeleteUserReportTempEntity",
+        "DeleteUserSendMessage",
+        "TransactionAbnormalEnd",
+        "BatchAction",
+        "DbAccessSupport",
+        "Success",
+        "handle",
+        "排他制御",
+        "悲観的ロック",
+        "SqlRow値設定"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "エラー発生時の処理",
+      "hints": [
+        "エラー発生時の処理",
+        "BatchAction エラーハンドリング",
+        "バッチエラー処理"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "終了処理",
+      "hints": [
+        "終了処理",
+        "バッチ終了処理",
+        "BatchAction 後処理"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "ログ出力",
+      "hints": [
+        "writeLog",
+        "ログ出力",
+        "メッセージID",
+        "BatchAction ログ",
+        "msgOption"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "`initialize` メソッドで削除条件の日付を算出し、`ExecutionContext` に格納する。\n\n```java\n@Override\nprotected void initialize(CommandLine command, ExecutionContext context) {\n    String today = SystemTimeUtil.getDateString();\n    String deleteDate = DateUtil.addMonth(today, RETENTION_PERIOD);\n    writeLog(\"MB11AA0101\", DateUtil.formatDate(deleteDate, \"yyyy/MM/dd\"));\n    context.setSessionScopedVar(DATE_DATE_SESSION_KEY, deleteDate);\n}\n```\n\nログ出力: :ref:`log_output_in_batch_action` 参照。",
+    "s2": "取得した `SqlResultSet` を `DatabaseRecordReader` に設定することでリーダを作成する。\n\n```java\n@Override\npublic DataReader<SqlRow> createReader(ExecutionContext ctx) {\n    SystemAccountEntity condition = new SystemAccountEntity();\n    condition.setEffectiveDateTo(ctx.<String>getSessionScopedVar(DATE_DATE_SESSION_KEY));\n    int count = countByParameterizedSql(\"GET_DELETE_USER_LIST\", condition);\n    writeLog(\"M000000001\", count);\n    DatabaseRecordReader reader = new DatabaseRecordReader();\n    ParameterizedSqlPStatement statement = getParameterizedSqlStatement(\"GET_DELETE_USER_LIST\");\n    reader.setStatement(statement, condition);\n    return reader;\n}\n```\n\nログ出力: :ref:`log_output_in_batch_action` 参照。",
+    "s3": "処理フロー:\n1. 排他制御（悲観的ロック）: `ExclusiveControlUtil.updateVersion()` で実施\n2. 削除対象ユーザの詳細情報をDBから取得（排他制御済みのためデータが必ず存在するはず）\n3. データ取得失敗時は `TransactionAbnormalEnd` をスローしてエラー終了\n4. 各テーブルからユーザ情報を削除\n5. テンポラリテーブルおよび削除ユーザ情報メッセージ送信テーブルにデータを登録\n\n```java\n@Override\npublic Result handle(SqlRow inputData, ExecutionContext ctx) {\n    ExclusiveControlUtil.updateVersion(\n            new ExclusiveCtrlSystemAccountContext(inputData.getString(\"userId\")));\n    SqlRow userInfo = getUserInfo(inputData.getString(\"userId\"),\n            ctx.<String>getSessionScopedVar(DATE_DATE_SESSION_KEY));\n    if (userInfo == null) {\n        throw new TransactionAbnormalEnd(100, \"NB11AA0101\", inputData.getString(\"userId\"));\n    }\n    CM311AC1Component component = new CM311AC1Component();\n    component.deleteUser(userInfo.getString(\"userId\"));\n    insertDeleteUserReportTemp(new DeleteUserReportTempEntity(userInfo));\n    insertSendMessage(new DeleteUserSendMessage(userInfo));\n    return new Success();\n}\n```\n\n**クラス**: `BatchAction`, `DbAccessSupport`\n\n`BatchAction` は `DbAccessSupport` のサブクラスのため、データベースアクセス機能を備える。\n\n> **注意**: **SqlRowからFormのプロパティへ値を設定する方法**\n>\n> - **精査が必要な場合**: バリデーション機能を使用してプロパティへの値設定を行う。\n> - **精査が不要な場合**: FormのMapを引数に取るコンストラクタでインスタンス生成時にSqlRowの値をプロパティに設定する（例: `new DeleteUserReportTempEntity(userInfo)`）。引数なしコンストラクタでインスタンス生成後に明示的にセッターを呼び出す実装はしないこと（プロパティ数増加でコード量が大幅増加し、実装ミスの原因となる）。\n> - 編集が必要な項目（金額・日付計算等）は明示的にセッターを使用して値を設定する。この場合は、SqlRowを元にインスタンス生成を行い、その後に値の編集およびセッターで値を設定する。\n>\n>   ```java\n>   // SqlRowからEntityを生成\n>   DeleteUserReportTempEntity entity = new DeleteUserReportTempEntity(userInfo)\n>   // 編集が必要な項目は、明示的にセッターを呼び出す。\n>   entity.setSampleItem(DateUtil.addDay(userInfo.getString(\"SampleItem\"), 100));\n>   ```\n\n**TransactionAbnormalEnd** のコンストラクタ引数:\n\n| 引数 | 説明 | 設定値 |\n|---|---|---|\n| exitCode | 終了コード（プロセス終了時に設定する値） | 100 |\n| failureCode | 障害コード | NB11AA0101 |\n| messageOptions | 障害コードからメッセージ取得時のオプション情報 | 取得失敗したユーザのユーザID |\n\n`TransactionAbnormalEnd` をスローした場合のフレームワーク処理:\n1. FATALレベルでの運用ログ出力\n2. 後続の業務処理を停止\n3. 指定された終了コードでプロセスを終了",
+    "s4": "エラー発生時の処理は不要。特別な実装は行わない。",
+    "s5": "終了処理は不要。特別な実装は行わない。",
+    "s6": "スーパークラスで用意された `writeLog` メソッドを使用してログ出力を行う。\n\n```java\nprotected void writeLog(String msgId, Object... msgOption);\n```\n\n- 第1引数: メッセージID（必須）\n- 第2引数: メッセージへの埋め込み用オブジェクト（任意）\n\n> **注意**: `writeLog` を使用する場合、使用するメッセージがメッセージテーブルに登録されている必要がある。"
+  }
+}

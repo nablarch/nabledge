@@ -1,0 +1,50 @@
+{
+  "id": "testing-framework-fileupload",
+  "title": "リクエスト単体テストの実施方法(ファイルアップロード)",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "アップロードファイルの記述方法",
+      "hints": [
+        "ファイルアップロード",
+        "HTTPリクエストパラメータ",
+        "アップロードファイル指定",
+        "${attach:ファイルパス}",
+        "相対パス",
+        "プロジェクトルートからの相対パス"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "バイナリファイルの場合",
+      "hints": [
+        "バイナリファイル",
+        "画像ファイルアップロード",
+        "ファイルパス指定",
+        "uploadfile",
+        "picture.png"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "固定長ファイル、CSVファイルの場合",
+      "hints": [
+        "固定長ファイル",
+        "CSVファイル",
+        "テストデータシート",
+        "SETUP_FIXED",
+        "自動ファイル生成",
+        "テストデータ保守容易性",
+        "text-encoding",
+        "record-separator"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "ファイルアップロードのテストは画面オンライン処理のテストの一種であり、[index](testing-framework-02_RequestUnitTest.json)が前提となる。\n\nHTTPリクエストパラメータの値に以下の記述でアップロードファイルを指定できる。\n\n```text\n${attach:ファイルパス}\n```\n\n> **注意**: ファイルパスはテスト実行時のカレントディレクトリ（プロジェクトルートディレクトリ）からの相対パスで記述する。",
+    "s2": "画像ファイル等のバイナリファイルをアップロードする場合は、事前にファイルを配置しておき、そのファイルへのパスを指定する。\n\nテストデータ例（`LIST_MAP=requestParams`）:\n\n| uploadfile | comment | public |\n|---|---|---|\n| `${attach:test/resources/images/picture.png}` | アップロードします。 | `false` |",
+    "s3": ":ref:`固定長ファイル<how_to_setup_fixed_length_file>`や:ref:`CSVファイル<how_to_setup_csv_file>`をアップロードする場合、そのファイル内容をテストデータシートに記載する。テスト実行時に自動テストフレームワークがこのデータを元にファイルを作成する。\n\nテストデータ例（`LIST_MAP=requestParams`）:\n\n| uploadfile | comment |\n|---|---|\n| `${attach:work/member_list.csv}` | 10月度新規会員を登録 |\n\n`SETUP_FIXED=work/member_list.csv` ディレクティブ:\n\n| プロパティ | 値 |\n|---|---|\n| text-encoding | Windows-31J |\n| record-separator | CRLF |\n\nデータ:\n\n| name | age | address |\n|---|---|---|\n| 山田太郎 | 30 | 東京都港区芝浦1-1 |\n| 田中次郎 | 20 | 大阪府門真市東田町2-2 |\n\n> **注意**: 固定長ファイルやCSVファイルをアップロードする場合でも事前にファイルを用意することは可能だが、テストデータの保守容易性を考慮するとテストデータシートに記載すべきである。"
+  }
+}

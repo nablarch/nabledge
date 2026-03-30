@@ -1,0 +1,27 @@
+{
+  "id": "web-application-04_create_entity",
+  "title": "Entityクラス（精査処理）の実装",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "Entityクラス（精査処理）の実装",
+      "hints": [
+        "UsersEntity",
+        "UsersEntityTest",
+        "ValidationContext",
+        "ValidationUtil",
+        "@ValidateFor",
+        "validateForSimpleUpdate",
+        "バリデーション実装",
+        "単項目精査",
+        "Entityクラス精査",
+        "testValidateAndConvert"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## Entityクラス（精査処理）の実装\n\n> **注意**: Entityクラスは通常 Nablarch Toolbox のEntity自動生成ツールでひな形を作成する。0から実装する場合はプロジェクト規定の作成方法に従うこと。\n\n### 実装の流れ\n\n1. クラス単体テストデータの作成（テストデータシートに更新機能用シートを追加）\n2. クラス単体テストコードの作成（精査メソッドのテストメソッドを追加）\n3. クラス単体テスト実施（精査メソッド未実装のため失敗することを確認）\n4. Entityクラスへ精査処理を実装\n5. クラス単体テスト実施（成功確認）\n\n> **警告**: Entityクラスを初めて使用する機能の場合、コンストラクタ・ゲッター/セッターのテストが必要なため、テストデータの準備が必要。Entityクラスのコンストラクタのテスト、ゲッター/セッターのテストについてはEntityクラスのクラス単体テストに関するドキュメントを参照。\n\n> **注意**: 新規Entityを作成する場合はEntityテストデータ自動作成ツールで初回テストデータ作成を効率化できるが、全テストデータを自動生成できるわけではないため、ツールが作成したテストデータをベースに必要なデータを追加して使用すること。\n\n### テストコード例\n\n**クラス**: `UsersEntity`, `UsersEntityTest`\n**アノテーション**: `@ValidateFor`\n\n```java\n@Test\npublic void testValidateForSimpleUpdate() {\n    Class<?> entityClass = UsersEntity.class;\n    String sheetName = \"testValidateForSimpleUpdate\";\n    String validateFor = \"simpleUpdate\";\n    testValidateAndConvert(entityClass, sheetName, validateFor);\n}\n```\n\n### Entityクラス実装パターン\n\n①単項目精査を実施するプロパティ配列を定義し、②`@ValidateFor`アノテーション付きstaticメソッドで`ValidationUtil.validate()`を呼び出す。\n\n```java\n// ①単項目精査を実施するプロパティを指定\nprivate static final String[] SIMPLE_UPDATE_PROPS =\n    new String[] {\"userId\", \"kanjiName\", \"kanaName\"};\n\n@ValidateFor(\"simpleUpdate\")\npublic static void validateForSimpleUpdate(ValidationContext<UsersEntity> context) {\n    // ②単項目精査対象項目変数を設定する\n    ValidationUtil.validate(context, SIMPLE_UPDATE_PROPS);\n}\n```"
+  }
+}

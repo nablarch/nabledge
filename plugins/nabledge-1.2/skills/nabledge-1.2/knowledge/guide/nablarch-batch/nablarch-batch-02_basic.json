@@ -1,0 +1,155 @@
+{
+  "id": "nablarch-batch-02_basic",
+  "title": "バッチ共通のアプリケーション構造",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要と作業単位",
+      "hints": [
+        "バッチ処理",
+        "ループ制御",
+        "イベントコールバック",
+        "ファイルI/O",
+        "作業単位",
+        "トランザクション",
+        "BatchAction"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "DBを入力とするバッチを実装する場合",
+      "hints": [
+        "BatchAction",
+        "BatchActionBase",
+        "DbAccessSupport",
+        "SqlRow",
+        "DataReader",
+        "createReader",
+        "handle",
+        "initialize",
+        "transactionSuccess",
+        "transactionFailure",
+        "error",
+        "terminate",
+        "DBバッチ",
+        "CommandLine",
+        "ExecutionContext"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "ファイルを入力とするバッチを実装する場合",
+      "hints": [
+        "FileBatchAction",
+        "getDataFileName",
+        "getFormatFileName",
+        "DataRecord",
+        "FileRecordReader",
+        "ファイルバッチ",
+        "ExecutionContext"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "処理の流れ（フレームワーク動作イメージ）",
+      "hints": [
+        "initialize",
+        "createReader",
+        "handle",
+        "transactionSuccess",
+        "transactionFailure",
+        "error",
+        "postProcess",
+        "DatabaseRecordReader",
+        "FileRecordReader",
+        "バッチ処理フロー"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "コマンドライン引数",
+      "hints": [
+        "CommandLine",
+        "getParamMap",
+        "getArgs",
+        "diConfig",
+        "requestPath",
+        "userId",
+        "コマンドライン引数",
+        "バッチ起動",
+        "Main"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "初期化処理（initializeメソッド）",
+      "hints": [
+        "initialize",
+        "CommandLine",
+        "ExecutionContext",
+        "インスタンス変数",
+        "マルチスレッド",
+        "初期化処理"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "リーダ作成（createReaderメソッド）",
+      "hints": [
+        "createReader",
+        "DataReader",
+        "リーダ作成",
+        "DatabaseRecordReader",
+        "FileRecordReader"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "1作業単位毎の処理（handleメソッド）",
+      "hints": [
+        "handle",
+        "Result",
+        "Result.Success",
+        "作業単位",
+        "バッチメイン処理"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "エラー発生時の処理",
+      "hints": [
+        "transactionFailure",
+        "error",
+        "ExecutionException",
+        "エラー処理",
+        "別トランザクション",
+        "マルチスレッド",
+        "Throwable",
+        "ExecutionContext"
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "終了処理（terminateメソッド）",
+      "hints": [
+        "terminate",
+        "終了処理",
+        "リソース解放"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "Nablarch Application Frameworkのバッチ処理機能:\n\n- **ループ制御の代行**: フレームワークが作業単位ごとのループを制御する。\n- **イベントコールバック**: 開始時・エラー発生時・終了時に対応メソッドが起動される。\n- **ファイルI/Oの簡易化**: フォーマット定義ファイルを使用し、物理レイアウトを意識せずフィールド名でデータを取得できる。\n\nバッチ処理はmainメソッドから全処理を実装せず、フレームワーククラスを継承して業務処理を実装する。\n\n### 作業単位\n\n作業単位とは、同一のトランザクションで処理しなければならないデータのまとまりを指す。\n\n- DB入力バッチ: 検索結果1行 = 1作業単位\n- ファイル入力バッチ: 1レコード = 1作業単位\n- コントロールブレイク: 複数件のまとまりが1作業単位となることがある",
+    "s2": "![バッチクラス図](assets/nablarch-batch-02_basic/batch_class_diagram.png)\n\n**クラス**: `BatchAction`（またはそのサブクラス）を継承し、以下のメソッドを実装する。\n\n| メソッド | 概要 | 起動タイミング | 要否 |\n|---|---|---|---|\n| `void initialize(CommandLine command, ExecutionContext context)` | 初期化処理 | メイン処理開始前に1回 | 任意 |\n| `DataReader<D> createReader(ExecutionContext context)` | リーダを作成 | 初回データ読み込み時に1回 | 必須 |\n| `Result handle(D inputData, ExecutionContext context)` | メイン処理 | 1作業単位の入力毎 | 必須 |\n| `void transactionSuccess(D inputData, ExecutionContext context)` | 正常終了時処理 | handleメソッド正常終了時毎 | 任意 |\n| `void transactionFailure(D inputData, ExecutionContext context)` | 異常終了時処理 | handleメソッド異常終了時毎 | 任意 |\n| `void error(Throwable error, ExecutionContext context)` | エラー発生時処理 | メイン処理でエラー発生後に1回 | 任意 |\n| `void terminate(Result result, ExecutionContext context)` | 終了処理 | メイン処理終了後に1回 | 任意 |\n\n> **注意**: `transactionFailure`はメイン処理とは別のトランザクションで実行される（メイン処理のトランザクションはロールバックされるため）。\n\n> **注意**: 型パラメータ`D`はレコードの総称型。DB入力バッチの場合、通常は`SqlRow`となる。\n\n> **注意**: `BatchActionBase`は`DbAccessSupport`を継承しているため、サブクラスでも`DbAccessSupport`の機能でDBアクセス可能。",
+    "s3": "**クラス**: `FileBatchAction`を継承する。\n\nDBバッチのメソッド（`createReader`、`handle`を除く）に加え、以下を実装する。\n\n| メソッド | 概要 | 起動タイミング | 要否 |\n|---|---|---|---|\n| `String getDataFileName()` | 入力ファイル名を返却 | メイン処理開始前に1回 | 必須 |\n| `String getFormatFileName()` | レコードフォーマット定義ファイルを返却 | メイン処理開始前に1回 | 必須 |\n| `Result do+レコードタイプ名(DataRecord inputData, ExecutionContext ctx)` | レコードタイプごとの処理 | 1作業単位の入力毎 | 必須 |\n\n> **注意**: `createReader`は実装不要（スーパークラスにて実装済み）。`handle`も実装不要（代わりに`do+レコードタイプ名`を実装する）。",
+    "s4": "![DBバッチシーケンス図](assets/nablarch-batch-02_basic/db_batch_sequence_diagram.png)\n\n> **注意**: ファイル入力の場合もシーケンス自体は同じ。`DatabaseRecordReader`の代わりに`FileRecordReader`を使用する。\n\nフレームワークの処理制御（擬似コード）:\n\n```java\ninitialize()                //-- 本処理開始前に一度だけ呼ばれる。\ncreateReader()              //-- 初回データ読み込み時に1度だけ呼ばれる。\ntry {\n  while(reader.hasNext()) {\n    try {\n      handle()              //-- 入力データ1件毎に繰り返し呼ばれる。\n      transactionSuccess()  //-- handleが正常に終了した場合に呼ばれる。\n    } catch(e) {\n      transactionFailure()  //-- handleで例外が発生した場合に呼ばれる。\n    }\n  }\n} catch(e) {\n  error()                   //-- 本処理がエラー終了した場合に、一度だけ呼ばれる。\n} finally {\n  postProcess()             //-- 本処理が全て終了した後、一度だけ呼ばれる（エラー終了時でも呼ばれる）。\n}\n```",
+    "s5": "Nablarch Application Frameworkはコマンドライン引数を2種類に解釈する。\n\n| 種別 | 説明 | 取得方法 |\n|---|---|---|\n| オプション | `-キー名=値` 形式のkey-valueペア | `CommandLine#getParamMap()` |\n| 引数 | オプション以外の単一値 | `CommandLine#getArgs()` |\n\nバッチ処理共通のコマンドラインオプション:\n\n| キー名 | 設定値 | 説明 |\n|---|---|---|\n| `diConfig` | コンポーネント設定ファイルへのパス | バッチ処理はここで指定されたファイルの設定で動作する |\n| `requestPath` | リクエストを特定するためのパス | 通常`\"ss\" + (機能ID) + \".\" + (アクションクラス名) + \"/\" + (リクエストID)` |\n| `userId` | ユーザID | バッチ処理はここで指定されたユーザIDで実行される |\n\n```bash\njava <中略> nablarch.fw.launcher.Main -diConfig=file:./config/batch-config.xml \\\n                                      -requestPath=ss11AC.B11AC011Action/RB11AC0110 \\\n                                      -userId=batch_user\n```",
+    "s6": "`initialize`メソッドを実装する（任意）。メイン処理実行前にフレームワークから起動される。\n\n実装すべき処理の例:\n- コマンドライン引数を処理する\n- リソースを取得する\n- 開始ログを出力する\n- インスタンス変数を初期化する\n\n> **警告**: バッチアクションでインスタンス変数を使用する場合の制約:\n> - インスタンス変数を使用するバッチアクションは**マルチスレッド実行できない**。\n> - インスタンス変数は`initialize`メソッドで**明示的に初期化しなければならない**。\n>\n> ただし、`initialize`で初期化され以降値が更新されない（読取専用）場合は、マルチスレッド実行が可能。",
+    "s7": "`createReader`メソッドを実装する（必須）。バッチ処理の入力となるデータを読み込むリーダを返却する。通常、入力データはファイルデータベースいずれかとなる。フレームワークはこのメソッドでリーダを取得し、入力データの読み込みに使用する。",
+    "s8": "`handle`メソッドを実装する（必須）。フレームワークはリーダから読み込んだ作業単位ごとにこのメソッドを起動する。\n\n戻り値は`nablarch.fw.Result`インタフェース実装クラスのインスタンスを返却する。通常は正常終了（`nablarch.fw.Result.Success`）を返却する。",
+    "s9": "### エラーが発生した作業単位に対するエラー処理\n\n`transactionFailure`メソッドを実装する（任意）。`handle`メソッドでエラーが発生するたびに呼び出される。引数にはエラー発生時に処理していたデータが渡される。\n\n> **注意**: このメソッドは`handle`メソッドとは別のトランザクションで実行される。\n\n実装すべき処理の例:\n- エラーが発生したレコードのステータスを異常終了に更新する\n- 専用のエラーファイルにエラーが発生したレコードを出力する\n\n### エラーが発生したリクエストに対するエラー処理\n\n`error`メソッドを実装する（任意）。本処理がエラー終了した場合に一度だけ呼び出される（マルチスレッドで実行している場合でも1回のみ）。引数のThrowableには`java.util.concurrent.ExecutionException`が渡される。メイン処理で発生した例外またはエラーは`ExecutionException#getCause()`で取得できる。",
+    "s10": "`terminate`メソッドを実装する（任意）。リーダから全データを読み取った後にフレームワークから起動される。\n\n実装すべき処理の例:\n- リソースを解放する\n- 処理件数をログ出力する"
+  }
+}

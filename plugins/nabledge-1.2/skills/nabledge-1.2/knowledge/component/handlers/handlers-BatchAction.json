@@ -1,0 +1,60 @@
+{
+  "id": "handlers-BatchAction",
+  "title": "バッチ処理用業務アクションハンドラのテンプレートクラス",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "バッチ処理用アクションハンドラのバリエーション",
+      "hints": [
+        "BatchAction",
+        "FileBatchAction",
+        "NoInputDataBatchAction",
+        "テンプレートクラス選択",
+        "バッチアクション",
+        "nablarch.fw.action.BatchAction"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "概要",
+      "hints": [
+        "BatchAction",
+        "createReader",
+        "handle",
+        "transactionSuccess",
+        "transactionFailure",
+        "initialize",
+        "error",
+        "terminate",
+        "Result.Success",
+        "データリーダ",
+        "バッチ業務アクション実装",
+        "nablarch.fw.action.BatchAction"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "MultiThreadExecutionHandler",
+        "TransactionManagementHandler",
+        "initialize",
+        "createReader",
+        "handle",
+        "transactionSuccess",
+        "transactionFailure",
+        "error",
+        "terminate",
+        "ハンドラ処理フロー",
+        "コールバック"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.action.BatchAction`\n\n要件と照らし合わせて以下のテンプレートクラスから適切なものを選択する。\n\n| テンプレートクラス | 内容 |\n|---|---|\n| [BatchAction](handlers-BatchAction.json) | (本ハンドラ) バッチ処理の実装において汎用的に利用できる標準実装。 |\n| [FileBatchAction](handlers-FileBatchAction.json) | ファイルを入力とし、レコード種別（ヘッダー、データ、トレーラ等）ごとに業務処理を呼び分けたい場合に使用する。 |\n| [NoInputDataBatchAction](handlers-NoInputDataBatchAction.json) | レコード1件ごとに業務処理を行うのではなく、一回だけ特定の処理を実行したい場合に使用する（アンロード処理のような単発処理）。 |",
+    "s2": "**クラス名**: `nablarch.fw.action.BatchAction`\n\n[../architectural_pattern/batch](../../processing-pattern/nablarch-batch/nablarch-batch-batch-architectural_pattern.json) における業務アクションハンドラを実装するテンプレートクラス。フレームワークはデータリーダの `read()` と本クラスの `handle()` を交互に呼び出し、レコードが読み込めなくなった時点で終了する。データリーダは `createReader()` の戻り値が使用される。\n\n| メソッド名 | 必須/任意 | 内容 |\n|---|---|---|\n| createReader() | 必須 | バッチ処理対象レコードの読込みに使用する [データリーダ](../../about/about-nablarch/about-nablarch-concept.json) を生成して返す。 |\n| handle() | 必須 | 処理対象レコード1件ごとに呼び出される。業務処理を実行し、正常終了時は `Result.Success` を返す。 |\n| transactionSuccess() | 任意 | 業務トランザクションのコミット完了後にコールバックされる。デフォルトは何もしない。 |\n| transactionFailure() | 任意 | 業務トランザクションのロールバック後にコールバックされる。デフォルトは何もしない。 |\n| initialize() | 任意 | バッチ処理開始前に一度だけ呼ばれる。デフォルトは何もしない。 |\n| error() | 任意 | 実行時例外/エラーによるバッチエラー終了時に一度だけコールバックされる。デフォルトは何もしない。 |\n| terminate() | 任意 | バッチ処理が全件終了またはエラー終了後に一度だけコールバックされる。デフォルトは何もしない。 |\n\n```java\nCommandLine command;\nExecutionContext ctx;\n\ninitialize(command, ctx);\nDataReader<TData> reader = createReader(ctx);\nResult result = null;\ntry {\n    while(reader.hasNext()) {\n        TData data = reader.read(ctx);\n        try {\n            result = handle(data, ctx);\n            commit();\n            transactionSuccess(data, ctx);\n        } catch(e) {\n            rollback();\n            transactionFailure(data, ctx);\n            throw e;\n        }\n    }\n} catch(e) {\n    error(e, ctx);\n} finally {\n    terminate(result, ctx)\n}\n```\n\n> **注意**: このコードは説明用に単純化したものであり、実際の処理フローはハンドラ構成によって制御されており全く別物である。",
+    "s3": "**コールバック:**\n\n1. **(バッチ処理開始前初期処理)** [MultiThreadExecutionHandler](handlers-MultiThreadExecutionHandler.json) での処理開始時に `initialize()` を実行する。\n2. **(データリーダ生成)** [MultiThreadExecutionHandler](handlers-MultiThreadExecutionHandler.json) での処理開始時に `createReader()` を実行する。返された [データリーダ](../../about/about-nablarch/about-nablarch-concept.json) は実行コンテキストに設定され、以降の処理で使用する。\n\n**往路処理:**\n\n3. **(入力レコード1件に対する業務処理を実行)** 引数として渡された入力レコードに対する業務処理を実行する。\n\n**復路処理:**\n\n4. **(正常終了)** 正常終了を表すマーカーオブジェクト（`Result.Success`）を返す。\n\n**例外処理:**\n\n4a. **(エラー終了)** 業務処理に失敗した場合は、実行時例外を送出する。\n\n**コールバック（トランザクション/終了）:**\n\n5. **(業務トランザクション正常終了時)** [TransactionManagementHandler](handlers-TransactionManagementHandler.json) で業務トランザクションが正常にコミットされた後、`transactionSuccess()` を実行する。\n5a. **(業務トランザクションロールバック時)** [TransactionManagementHandler](handlers-TransactionManagementHandler.json) で業務トランザクションがロールバックされた後、`transactionFailure()` を実行する。\n6. **(バッチエラー終了時)** [MultiThreadExecutionHandler](handlers-MultiThreadExecutionHandler.json) でサブスレッドがエラーにより停止した場合、`error()` を実行する。\n7. **(バッチ終了時)** [MultiThreadExecutionHandler](handlers-MultiThreadExecutionHandler.json) でサブスレッドが終了した場合、`terminate()` を実行する。バッチがエラー終了した場合でも、手順6の後で呼ばれる。"
+  }
+}

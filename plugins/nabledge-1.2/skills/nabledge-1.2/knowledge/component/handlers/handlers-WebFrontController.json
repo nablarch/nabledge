@@ -1,0 +1,51 @@
+{
+  "id": "handlers-WebFrontController",
+  "title": "Webフロントコントローラ (サーブレットフィルタ)",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "WebFrontController",
+        "nablarch.fw.web.servlet.WebFrontController",
+        "NablarchServletContextListener",
+        "サーブレットフィルタ",
+        "ハンドラキュー起点",
+        "Webフロントコントローラ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "処理フロー",
+      "hints": [
+        "処理フロー",
+        "往路処理",
+        "例外処理",
+        "GlobalErrorHandler",
+        "HttpServletRequest",
+        "HttpServletResponse",
+        "ハンドラキュー実行"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "handlerQueue",
+        "設定項目",
+        "nablarch.fw.handler.GlobalErrorHandler",
+        "nablarch.fw.web.handler.HttpCharacterEncodingHandler",
+        "GlobalErrorHandler",
+        "HttpCharacterEncodingHandler",
+        "ハンドラキュー設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.web.servlet.WebFrontController`\n\nサーブレットコンテナからコールバックされ、ハンドラキューの実行の起点となるクラス。サーブレットコンテキスト上にサーブレットフィルタとしてデプロイされる。\n\n**関連ハンドラ**:\n- [NablarchServletContextListener](handlers-NablarchServletContextListener.json) によって初期化される",
+    "s2": "**[往路処理]**\n\n1. `HttpServletRequest`/`HttpServletResponse` をラップしたHTTPリクエストオブジェクトおよび実行コンテキストを生成する\n2. ハンドラキュー内の先頭ハンドラを、生成したHTTPリクエストオブジェクトおよび実行コンテキストを引数として実行する\n\n**[往路処理]**\n\n3. ハンドラキューでの処理が正常終了した時点でリクエスト処理を終了し、サーブレットコンテナに制御を戻す\n\n**[例外処理]**\n\n3a. ハンドラキューでの処理中に例外が送出された場合、特段の例外制御は行わず発生した例外をそのまま送出する。標準ハンドラ構成では直後に [GlobalErrorHandler](handlers-GlobalErrorHandler.json) が配置されるため、致命的エラーを除けばここで例外を捕捉することはない。",
+    "s3": "| 設定項目 | プロパティ名 | データ型 | 備考 |\n|---|---|---|---|\n| ハンドラキュー | handlerQueue | List<Handler> | 必須指定 |\n\n**標準設定**:\n\n```xml\n<component\n  name  =\"webFrontController\"\n  class =\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n  <list>\n    <component class=\"nablarch.fw.handler.GlobalErrorHandler\" />\n    <component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\" />\n    <component-ref name=\"sessionConcurrentAccessHandler\" />\n    <component-ref name=\"httpResponseHandler\" />\n    <!-- 以下ハンドラ定義(略) -->\n  </list>\n  </property>\n</component>\n```"
+  }
+}

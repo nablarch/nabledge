@@ -1,0 +1,103 @@
+{
+  "id": "java-static-analysis-01_JspStaticAnalysis",
+  "title": "JSP静的解析ツール",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "JSP静的解析ツール",
+        "サニタイジング漏れ検出",
+        "保守性向上",
+        "JSPコンパイル",
+        "リクエスト単体テスト"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "hints": [
+        "EL式",
+        "カスタムタグ",
+        "アクションタグ",
+        "ディレクティブ",
+        "スクリプトレット",
+        "チェック対象外",
+        "構文チェック",
+        "HTMLタグ"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "前提条件",
+      "hints": [
+        "前提条件",
+        "開発環境構築",
+        "Nablarch開発環境"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "設定ファイルの準備",
+      "hints": [
+        "config.txt",
+        "transform-to-html.xsl",
+        "jsp-analysis-build.xml",
+        "jsp-analysis-build.properties",
+        "設定ファイル準備"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "JSP静的解析ツール設定ファイルの記述方法",
+      "hints": [
+        "config.txt",
+        "デフォルト設定",
+        "セキュリティホール",
+        "EL式禁止",
+        "カスタムタグ設定",
+        "XMLコメント",
+        "HTMLコメント",
+        "アクションタグ設定",
+        "設定ファイル記述方法"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "実行方法",
+      "hints": [
+        "nablarch-tfw.jar",
+        "common.project.test.lib",
+        "checkjspdir",
+        "jsp-analysis-build.properties",
+        "Antビュー",
+        "Eclipse",
+        "01_customJspAnalysisProp"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "出力結果確認方法",
+      "hints": [
+        "htmloutput",
+        "xmloutput",
+        "HTMLレポート",
+        "XMLレポート",
+        "forbidden",
+        "XSLT",
+        "チェック結果出力"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "JSPで使用を許可する構文とタグを設定ファイルに定義し、定義外の構文・タグの使用箇所を指摘するツール。保守性の向上とサニタイジング漏れの検出が目的。\n\n**前提**: JSPコンパイルが成功するファイルのみ対応。taglibの閉じタグが存在しない等、JSPコンパイルが通らないファイルは正しく解析できない。\n\n> **注意**: リクエスト単体テストが通っている場合、JSPコンパイルが通っていると判断してよい。",
+    "s2": "設定ファイルに使用を許可する構文とタグの一覧を定義する。定義外の構文・タグが使用されている箇所を指摘し、チェック結果をHTMLまたはXML形式で出力する。\n\n**指定可能な構文とタグ**: XMLコメント / HTMLコメント / EL式 / 宣言 / 式 / スクリプトレット / ディレクティブ / アクションタグ / カスタムタグ（HTMLタグ等の上記以外は指定不可）\n\n**チェック対象外**: 使用を許可したタグの属性（属性内のEL式等は指摘しない）\n\nEL式禁止時のチェック動作:\n- 許可タグの属性に指定: **指摘しない**（例: `<jsp:include page=\"${ Expression }\" />`）\n- 許可タグのボディに指定: 指摘する（例: `<jsp:text>` 内の `${ Expression }`）\n- HTMLタグの属性に指定: 指摘する（例: `<td height=\"${ Expression }\">`）\n- HTMLタグのボディに指定: 指摘する\n- JavaScript中に指定: 指摘する（例: `var id = ${user.id}`）",
+    "s3": "Nablarch開発環境構築ガイドに従って開発環境を構築済みであること。",
+    "s4": "任意のディレクトリに以下のファイルを配置する:\n\n- `config.txt` — JSP静的解析ツール設定ファイル\n- `transform-to-html.xsl` — JSP静的解析結果XMLをHTMLに変換する際の定義ファイル\n- `jsp-analysis-build.xml` — Antビルドファイル\n- `jsp-analysis-build.properties` — 環境設定ファイル\n\n詳細は [02_JspStaticAnalysisInstall](java-static-analysis-02_JspStaticAnalysisInstall.json) を参照。",
+    "s5": "> **警告**: 開発時にアプリケーションプログラマの都合に合わせて設定を変えてはいけない。\n\n設定ファイルには使用を許可する構文とタグを記述する。`--` で始まる行はコメント行。\n\n| 構文・タグ | 設定ファイルへの記述方法 |\n|---|---|\n| XMLコメント (`<%-- --%>`) | `<%--` |\n| HTMLコメント (`<!-- -->`) | `<!--` |\n| EL式 (`${...}`) | `${` |\n| 宣言 (`<%! ... %>`) | `<%!` |\n| 式 (`<%= ... %>`) | `<%=` |\n| スクリプトレット (`<% ... %>`) | `<%` |\n| ディレクティブ | `<%@` から始まり最初の空白まで（例: `<%@ taglib`） |\n| アクションタグ | `<jsp:` から始まり最初の空白まで。`<jsp:` のみで全アクションタグ許可（例: `<jsp:attribute`） |\n| カスタムタグ | アクションタグと同じ方法 |\n\n**デフォルトで許可される構文・タグ**:\n\n```\n<n:\n<c:\n<%--\n<%@ include\n<%@ page\n<%@ tag\n<%@ taglib\n<jsp:include\n<jsp:directive.include\n<jsp:directive.page\n<jsp:directive.tag\n<jsp:param\n<jsp:params\n<jsp:attribute\n```\n\n**デフォルトで除外される構文・タグ**（Nablarchカスタムタグに同等機能があるか、セキュリティホールとなりうる）:\n\n```\n<!--\n<%!\n${\n<%\n<%@ attribute\n<%@ variable\n<jsp:declaration\n<jsp:expression\n<jsp:scriptlet\n<jsp:directive.attribute\n<jsp:directive.variable\n<jsp:body\n<jsp:element\n<jsp:doBody\n<jsp:forward\n<jsp:getProperty\n<jsp:invoke\n<jsp:output\n<jsp:plugin\n<jsp:fallback\n<jsp:root\n<jsp:setProperty\n<jsp:text\n<jsp:useBean\n```",
+    "s6": "`jsp-analysis-build.properties` のプロパティを設定して実行する。\n\n1. `nablarch-tfw.jar` の配置ディレクトリ（デフォルト: `<プロジェクトルート>/test/lib`）を確認し、`common.project.test.lib` プロパティにパスを設定する。\n2. チェック対象JSPを変更する場合は `checkjspdir` プロパティを変更する（`jsp-analysis-build.xml` からの相対パスまたは絶対パスで指定、例: `checkjspdir=../../main/web`）。\n3. `jsp-analysis-build.xml` をEclipseのAntビューに追加し、実行したいターゲットを実行する。\n\n> **注意**: 各プロパティの意味は :ref:`01_customJspAnalysisProp` を参照。\n\n![Antビューからの実行](assets/java-static-analysis-01_JspStaticAnalysis/startJspAnalysis.png)",
+    "s7": "**HTML出力（JSP解析 HTMLレポート出力）**:\n- デフォルトの出力先: Ant実行ディレクトリ\n- 出力先変更: `jsp-analysis-build.properties` の `htmloutput` プロパティで指定\n- 許可されていないタグが使用されている場合: `\"構文またはタグ名\" + \"指摘位置\" is forbidden.` が表示される\n- 対処: プロジェクト規約で許可された構文・タグを使用する\n\n![HTMLレポート出力例](assets/java-static-analysis-01_JspStaticAnalysis/how-to-trace-jsp.png)\n\n**XML出力（JSP解析 XMLレポート出力）**:\n- 出力先: `jsp-analysis-build.properties` の `xmloutput` プロパティで指定\n- 出力XMLをXSLT等で整形することで任意のレポート作成可能\n\n| 要素名 | 説明 |\n|---|---|\n| result | ルートノード |\n| item | 各JSPに対して作成されるノード |\n| path | 該当のJSPのパスを表すノード |\n| errors | 該当のJSPに対する指摘を表すノード |\n| error | 個々の指摘内容 |\n\n```xml\n<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<result>\n  <item>\n    <path>C:\\tisdev\\workspace\\Nablarch_sample\\web\\management\\user\\USER-001.jsp</path>\n    <errors>\n      <error>&lt;!-- (at line=17 column=6) is forbidden.</error>\n      <error>&lt;c:if (at line=121 column=2) is forbidden.</error>\n    </errors>\n  </item>\n</result>\n```"
+  }
+}

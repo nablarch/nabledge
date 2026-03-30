@@ -1,0 +1,28 @@
+{
+  "id": "nablarch-batch-4",
+  "title": "入出力ファイルの各項目の項目IDは、対応するテーブルのカラム名と一致させたほうが良いのでしょうか？",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "項目IDとカラム物理名の一致について",
+      "hints": [
+        "SqlRow",
+        "DataRecord",
+        "FileRecordWriterHolder",
+        "ExecutionContext",
+        "Success",
+        "HashMap",
+        "項目ID設計",
+        "カラム物理名一致",
+        "ファイルレコード",
+        "大文字小文字区別なし",
+        "実装負荷軽減"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "> **推奨**: 入出力ファイルの項目IDはテーブルのカラム物理名と一致させること。一致させると実装時の負荷を軽減できる。\n\n`SqlRow`（DBの結果レコード）と`DataRecord`（ファイルのレコード）は、大文字・小文字・アンダースコアの有無を区別しない仕様のため、以下のような対応が可能。\n\n| 項目名 | カラム物理名 | ファイルの項目ID |\n|---|---|---|\n| ユーザID | USER_ID | userId |\n| 漢字名称 | KANJI_NAME | kanjiName |\n| カナ名称 | KANA_NAME | kanaName |\n| 電話番号 | TEL_NO | telNo |\n\nただし、ファイルのレイアウトはテーブルのように正規化されていないため、テーブルのカラム名1に対してファイルの項目が複数となる場合はカラム物理名と一致させることができない。\n\n**カラム物理名と一致させた場合**: `SqlRow`をそのままファイル出力可能。\n\n```java\n@Override\npublic Result handle(SqlRow inputData, ExecutionContext context) {\n    FileRecordWriterHolder.write(\"data\", inputData, \"ファイルID\");\n    return new Success();\n}\n```\n\n**カラム物理名と一致させなかった場合**: ファイル出力用のMapを生成し、値の詰め直しが必要。\n\n```java\n@Override\npublic Result handle(SqlRow inputData, ExecutionContext context) {\n    Map<String, Object> outputData = new HashMap<String, Object>();\n    outputData.put(\"userId\", inputData.get(\"id\"));\n    outputData.put(\"kanjiName\", inputData.get(\"name\"));\n    outputData.put(\"kanaName\", inputData.get(\"kana_name\"));\n    outputData.put(\"telNo\", inputData.get(\"tel\"));\n    FileRecordWriterHolder.write(\"data\", outputData, \"ファイルID\");\n    return new Success();\n}\n```"
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "id": "libraries-06_SystemTimeProvider",
+  "title": "日付の管理機能",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "日付管理",
+        "システム日時",
+        "業務日付",
+        "日付ユーティリティ",
+        "OS日時"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "hints": [
+        "拡張性",
+        "業務日付切り替え",
+        "複数業務日付",
+        "SystemTimeProvider",
+        "BusinessDateProvider"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "要求",
+      "hints": [
+        "システム日付取得",
+        "業務日付取得",
+        "業務日付上書き",
+        "業務日付メンテナンス",
+        "複数業務日付管理"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "システム日時機能",
+      "hints": [
+        "SystemTimeProvider",
+        "BasicSystemTimeProvider",
+        "SystemTimeUtil",
+        "SampleSystemTimeUtil",
+        "システム日時取得",
+        "OS日時",
+        "nablarch.core.date.SystemTimeProvider",
+        "nablarch.core.date.SystemTimeUtil",
+        "nablarch.core.date.BasicSystemTimeProvider"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "業務日付機能",
+      "hints": [
+        "BusinessDateProvider",
+        "BasicBusinessDateProvider",
+        "BusinessDateUtil",
+        "業務日付取得",
+        "業務日付設定",
+        "nablarch.core.date.BusinessDateProvider",
+        "nablarch.core.date.BasicBusinessDateProvider",
+        "nablarch.core.date.BusinessDateUtil"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "業務日付テーブル定義",
+      "hints": [
+        "業務日付テーブル",
+        "tableName",
+        "segmentColumnName",
+        "dateColumnName",
+        "区分",
+        "日付カラム",
+        "yyyyMMdd",
+        "BasicBusinessDateProvider"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "複数の業務日付の設定",
+      "hints": [
+        "複数業務日付",
+        "区分",
+        "defaultSegment",
+        "業務日付管理"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "設定ファイル（BasicBusinessDateProvider）",
+      "hints": [
+        "date_BusinessConfiguration",
+        "businessDateProvider",
+        "tableName",
+        "segmentColumnName",
+        "dateColumnName",
+        "defaultSegment",
+        "cacheEnabled",
+        "dbTransactionName",
+        "transactionManager",
+        "DbConnectionContext",
+        "getConnection",
+        "設定ファイル",
+        "BasicBusinessDateProvider"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "日付の上書き機能",
+      "hints": [
+        "日付の上書き",
+        "BasicBusinessDateProvider",
+        "-D",
+        "起動パラメータ",
+        "障害復旧",
+        "バッチ再実行",
+        "プロセス単位"
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "業務日付のメンテナンス",
+      "hints": [
+        "setDate",
+        "業務日付メンテナンス",
+        "BusinessDateProvider",
+        "SystemRepository",
+        "businessDateProvider"
+      ]
+    },
+    {
+      "id": "s11",
+      "title": "BusinessDateUtilで不足する場合",
+      "hints": [
+        "SampleBusinessDateUtil",
+        "BusinessDateUtil",
+        "プロジェクト固有",
+        "業務日付拡張"
+      ]
+    },
+    {
+      "id": "s12",
+      "title": "日付ユーティリティ",
+      "hints": [
+        "日付ユーティリティ",
+        "date-util-spec",
+        "日付関連機能"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "業務日付とシステム日時（OS日時）の管理・取得機能を提供する。日付ユーティリティも提供する。",
+    "s2": "- 業務日付・システム日時の取得方法は切り替え可能（実装クラスを追加することで要件に応じた取得方法に変更可能）。\n- 複数の業務日付を設定可能（例：オンラインとバッチで別の業務日付を使用）。各業務日付ごとに個別の更新タイミングを指定可能。",
+    "s3": "**実装済み機能:**\n- システム日付を取得できる\n- 業務日付を取得できる\n- 業務日付を複数管理できる\n- 業務日付を任意の日付に上書きできる（バッチ処理の障害時再実行時、再実行プロセスのみ過去日付を業務日付として実行可能）\n- 業務日付をメンテナンスできる",
+    "s4": "システム日時とはOS日時（サーバ日時）のこと。業務日付と異なり、営業日/非営業日の概念を持たない。\n\n**インタフェース**: `nablarch.core.date.SystemTimeProvider`\nシステム日時を取得するインタフェース。実装クラスを追加することでシステム日時の取得方法を切り替え可能。\n\n**クラス**:\n- `nablarch.core.date.BasicSystemTimeProvider`: SystemTimeProviderの基本実装。JVMのシステム日時（`new java.util.Date()`）を取得する。\n- `nablarch.core.date.SystemTimeUtil`: アプリケーションからシステム日時を取得するクラス。\n\n**SystemTimeUtilで不足する場合:** プロジェクト固有のシステム日時取得クラスを追加する（アーキテクトが実装）。SystemTimeUtilの機能はSystemTimeUtilに委譲し、固有機能を追加する。\n\n```java\npublic class SampleSystemTimeUtil {\n    public static Date getDate() {\n        return SystemTimeUtil.getDate();\n    }\n    public static Time getTime() {\n        return new Time(SystemTimeUtil.getDate().getTime());\n    }\n}\n```",
+    "s5": "本章では業務日付機能について説明する。\n\n**インタフェース**: `nablarch.core.date.BusinessDateProvider`\n業務日付を取得・設定するインタフェース。実装クラスを追加することで取得方法の切り替えと設定が可能。\n\n**クラス**:\n- `nablarch.core.date.BasicBusinessDateProvider`: BusinessDateProviderの基本実装。DBから業務日付を取得・設定する。\n- `nablarch.core.date.BusinessDateUtil`: アプリケーションから業務日付を取得するクラス。",
+    "s6": "BasicBusinessDateProviderを使用する場合、以下のデータベーステーブルを用意する。テーブル名・カラム名は任意（設定で指定）。\n\n| 定義 | Javaの型 | 制約 | 備考 |\n|---|---|---|---|\n| 区分 | java.lang.String | プライマリキー | |\n| 日付 | java.lang.String | | 値はyyyyMMdd形式 |",
+    "s7": "区分（プライマリキー）ごとに業務日付を管理することで複数の業務日付を管理する。区分の割り振り方は重複しないこと以外に制限なし。\n\n区分を省略して業務日付を取得した場合は、設定ファイルの`defaultSegment`で設定した区分が使用される。",
+    "s8": "設定ファイルの記述方法を説明する。\n\n**設定例**:\n\n```xml\n<component name=\"businessDateProvider\" class=\"nablarch.core.date.BasicBusinessDateProvider\">\n    <property name=\"tableName\" value=\"BUSINESS_DATE\" />\n    <property name=\"segmentColumnName\" value=\"SEGMENT\"/>\n    <property name=\"dateColumnName\" value=\"BIZ_DATE\"/>\n    <property name=\"defaultSegment\" value=\"00\"/>\n    <property name=\"cacheEnabled\" value=\"true\" />\n    <property name=\"dbTransactionName\" value=\"transaction\" />\n    <property name=\"transactionManager\" ref=\"transactionManager\" />\n</component>\n```\n\n`component`の`name`属性には`\"businessDateProvider\"`を設定する（必須）。\n\n**BasicBusinessDateProviderのプロパティ**:\n\n| プロパティ名 | 必須 | 説明 |\n|---|---|---|\n| tableName | ○ | 業務日付テーブルの物理名 |\n| segmentColumnName | ○ | 区分カラムの物理名 |\n| dateColumnName | ○ | 日付カラムの物理名 |\n| defaultSegment | ○ | 区分省略時に使用する区分 |\n| cacheEnabled | | キャッシュ有無。省略時はキャッシュあり。無効にする場合のみ`false`を設定。バッチ処理では有効化を推奨（無効だと業務日付取得のたびDBアクセスが発生し性能劣化の原因になる）。キャッシュ有効時は最初の取得時に全業務日付データをスレッドコンテキストにキャッシュし、ThreadContextHandlerによってクリアされる。 |\n| dbTransactionName | | トランザクション名。業務アプリケーションと同一DB接続を使用するため、業務アプリと同じトランザクション名を設定する。省略可否は下記のコードで判断する。 |\n| transactionManager | ○ | トランザクションマネージャ |\n\n**dbTransactionNameの設定判断**:\n\n```java\n// 以下のコードでコネクションが取得できる場合は、本プロパティへの設定は省略可能\nAppDbConnection con = DbConnectionContext.getConnection();\n\n// 以下のコードでコネクションを取得する必要がある場合は、\n// 本プロパティには、getConnectionへ設定している引数(\"appTransactionName\")を設定する。\nAppDbConnection con = DbConnectionContext.getConnection(\"appTransactionName\");\n```",
+    "s9": "DBで管理される日付をプロセス単位で上書き可能。主にバッチ処理の障害復旧時（障害発生時の日付で再実行したい場合）に使用。画面処理（全機能が1プロセス内）ではDBの値を直接変更すること。\n\nJavaの「-D」オプションで上書き日付を指定する:\n- キー: `BasicBusinessDateProvider.{区分}`\n- 値: 上書きしたい日付\n\n```bash\njava -DBasicBusinessDateProvider.00=20110710 Main\n```\n\nリポジトリに日付が登録されている区分はリポジトリの値が使用され、登録されていない区分はDBの値が使用される。\n\n```java\n// 20110710が取得される（リポジトリに登録なし → DBの値）\ngetDate(\"00\");\n\n// 20110708が取得される（リポジトリに登録あり → リポジトリの値）\ngetDate(\"01\");\n```",
+    "s10": "`BusinessDateUtil`は`setDate`を意図的に提供しない（アプリケーションプログラマが使えないようにするため）。業務日付のメンテナンスはアーキテクトが実装するクラスから`setDate`メソッドで行う。\n\n```java\n// リポジトリから業務日付を操作するクラスを取得する\nBusinessDateProvider bdp = (BasicBusinessDateProvider) SystemRepository.getObject(\"businessDateProvider\");\n\n// 更新対象の区分値、更新する値を入力し、更新実行\nbdp.setDate(segment, date);\n```",
+    "s11": "BusinessDateUtilで提供される機能に不足がある場合には、プロジェクト固有の業務日付取得クラスを追加する（アーキテクトが実装）。BusinessDateUtilの機能はBusinessDateUtilに委譲し、固有機能を追加する。\n\n```java\npublic class SampleBusinessDateUtil {\n    public static String getDate() {\n        // BusinessDateUtilで実装されている機能については、BusinessDateUtilに処理を移譲する。\n        return BusinessDateUtil.getDate();\n    }\n\n    // プロジェクト固有の実装を行う。\n\n    public static String getBeforeDate() {\n        // 業務日付の前日を取得する処理\n    }\n}\n```",
+    "s12": "システム日時・業務日付に関係しない日付関連機能を日付ユーティリティとして提供する。詳細は [date-util-spec](libraries-99_Utility.json) を参照。"
+  }
+}
