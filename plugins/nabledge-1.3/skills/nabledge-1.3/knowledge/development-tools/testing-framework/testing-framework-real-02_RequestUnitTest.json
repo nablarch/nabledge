@@ -1,0 +1,89 @@
+{
+  "id": "testing-framework-real-02_RequestUnitTest",
+  "title": "リクエスト単体テストの実施方法(同期応答メッセージ受信処理)",
+  "no_knowledge_content": false,
+  "official_doc_urls": [
+    ""
+  ],
+  "index": [
+    {
+      "id": "s1",
+      "title": "テストクラスの書き方",
+      "hints": [
+        "MessagingRequestTestSupport",
+        "テストクラス作成ルール",
+        "リクエスト単体テスト",
+        "クラス命名規則",
+        "パッケージ設定"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "テストメソッド分割",
+      "hints": [
+        "テストメソッド分割",
+        "テストシート分割",
+        "1テストクラス1テストメソッド"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "テストデータの書き方",
+      "hints": [
+        "testShots",
+        "setUpTable",
+        "expectedTable",
+        "expectedLog",
+        "diConfig",
+        "requestPath",
+        "userId",
+        "MESSAGE=setUpMessages",
+        "MESSAGE=expectedMessages",
+        "テストショット一覧",
+        "リクエストメッセージ",
+        "レスポンスメッセージ",
+        "グループID",
+        "テストデータ書き方"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "テストメソッドの書き方",
+      "hints": [
+        "execute",
+        "MessagingRequestTestSupport",
+        "テストメソッド作成",
+        "シート名指定",
+        "void execute"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "テスト起動方法",
+      "hints": [
+        "JUnit",
+        "テスト起動",
+        "テスト実行"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "テスト結果検証",
+      "hints": [
+        "レスポンスメッセージ検証",
+        "データベース検証",
+        "ログ検証",
+        "テスト結果検証",
+        "expectedMessages"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "テストクラス作成ルール: (1) テスト対象Actionと同一パッケージ (2) クラス名は`{Action名}RequestTest` (3) `nablarch.test.core.http.MessagingRequestTestSupport`を継承",
+    "s2": "1テストクラスにつき1テストメソッド、1テストシートが原則。ケースが複雑またはデータ量が多い場合はメソッドやシートを分割しても良い。",
+    "s3": "テストデータファイルは、テストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。\n\n## テストショット一覧\n\nLIST_MAPのデータタイプで１テストメソッド分のテストショット表を記載する。IDは`testShots`固定。\n\n| カラム名 | 説明 | 必須 |\n|---|---|---|\n| no | テストケース番号（1からの連番） | ○ |\n| description | テストケースの説明 | ○ |\n| expectedStatusCode | 期待するステータスコード | ○ |\n| setUpTable | 各ケース実行前にDBに登録するデータの:ref:`グループID<tips_groupId>` | |\n| expectedTable | DB比較時の期待テーブルの:ref:`グループID<tips_groupId>` | |\n| expectedLog | 期待するログメッセージのID | |\n| diConfig | 常駐プロセスのコンポーネント設定ファイルパス（:ref:`about_commandline_argument`参照） | ○ |\n| requestPath | 常駐プロセスのリクエストパス（:ref:`about_commandline_argument`参照） | ○ |\n| userId | 常駐プロセス実行ユーザID（:ref:`about_commandline_argument`参照） | ○ |\n\nグループIDを使わない場合は`default`と記載。デフォルトと個別グループを併用可能で、両方のデータが有効になる。「常駐プロセス」はメッセージ送受信を行うプロセスのこと。\n\n## データベースの準備\n\nグループIDで対応付けを行う。`setUpTable`が空欄または項目なしの場合、DB準備は行われない。\n\n## リクエストメッセージ\n\n要求電文の名前は`MESSAGE=setUpMessages`固定。構成:\n\n1. **共通情報**: ディレクティブ、フレームワーク制御ヘッダをkey-value形式で記載（全メッセージ共通）\n2. **メッセージボディ**: フレームワーク制御ヘッダ以降のメッセージ\n\nメッセージボディの行構成:\n\n| 行 | 記述内容 | 備考 |\n|---|---|---|\n| 1行目 | フィールド名称 | 先頭セルは\"no\" |\n| 2行目 | データタイプ | 先頭セルは空白 |\n| 3行目 | フィールド長 | 先頭セルは空白 |\n| 4行目以降 | データ | 先頭セルは1からの通番 |\n\n> **警告**: フィールド名称に重複した名称は許容されない（同一フィールド名が2つ以上存在してはならない）。\n\nテストショット一覧のnoと対応: テストショットno1の要求電文 → 本表の1行目（no 1）のデータ。\n\n## 各種期待値\n\n**レスポンスメッセージ**: リクエストメッセージと同じ構造。名前は`MESSAGE=expectedMessages`固定。\n\n**期待するデータベースの状態**: データベースの準備と同様に、テストケース一覧とグループIDでリンクさせる。",
+    "s4": "`MessagingRequestTestSupport`を継承する。テストメソッド内でスーパクラスの以下のいずれかのメソッドを呼び出す:\n\n- `void execute()` — テストメソッド名をシート名として使用（`execute(\"testRegisterUser\")` と等価）\n- `void execute(String sheetName)` — テストデータのシート名を明示指定\n\n通常、テストシート名とテストメソッド名は同一であるため、引数なしの`execute()`を使用する。",
+    "s5": "クラス単体テストと同様。通常のJUnitテストと同じように実行する。",
+    "s6": "自動テストフレームワークにより以下の結果検証が行われる:\n\n- レスポンスメッセージの結果検証（必須）\n- データベースの結果検証\n- ログの結果検証\n\nデータベースとログの結果検証は、テストショット一覧に期待値の記載が無い場合（空欄）はスキップされる。"
+  }
+}

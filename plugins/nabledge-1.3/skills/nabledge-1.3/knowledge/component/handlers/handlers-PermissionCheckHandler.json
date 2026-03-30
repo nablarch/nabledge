@@ -1,0 +1,57 @@
+{
+  "id": "handlers-PermissionCheckHandler",
+  "title": "認可制御ハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "PermissionCheckHandler",
+        "nablarch.common.handler.PermissionCheckHandler",
+        "ThreadContextHandler",
+        "ForwardingHandler",
+        "DataReadHandler",
+        "FwHeaderReader",
+        "認可制御",
+        "認可判定",
+        "リクエストID単位の認可",
+        "メッセージング",
+        "受信電文",
+        "フレームワークヘッダ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "PermissionCheckHandler",
+        "Result.Forbidden",
+        "認可処理フロー",
+        "認可対象外リクエストID",
+        "認可情報取得",
+        "認可エラー",
+        "スレッドローカル格納"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "permissionFactory",
+        "ignoreRequestIds",
+        "usesInternalRequestId",
+        "PermissionFactory",
+        "認可設定",
+        "認可判定対象外リクエストIDリスト",
+        "内部リクエストID"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.common.handler.PermissionCheckHandler`\n\nリクエストIDを単位とした認可判定を行うハンドラ。認可通過以降、認可関連情報をスレッドコンテキスト経由で取得可能。\n\n**関連するハンドラ（配置制約）**\n\n| ハンドラ | 配置制約 |\n|---|---|\n| [ThreadContextHandler](handlers-ThreadContextHandler.json) | スレッドコンテキスト上のリクエストID/ユーザIDを使うため、本ハンドラの上位に配置する必要がある |\n| [ForwardingHandler](handlers-ForwardingHandler.json) | 内部フォーワード先のリクエストID（[内部リクエストID](../../about/about-nablarch/about-nablarch-concept.json)）で認可判定する場合、[ForwardingHandler](handlers-ForwardingHandler.json) より下位に配置する必要がある |\n| [DataReadHandler](handlers-DataReadHandler.json) | [../architectural_pattern/messaging](../../processing-pattern/mom-messaging/mom-messaging-messaging.json) では、[../reader/FwHeaderReader](../readers/readers-FwHeaderReader.json) が受信電文中のフレームワークヘッダ部を解析する際に、**requestId** および **userId** ヘッダの値をスレッドコンテキストに設定する |",
+    "s2": "**[往路処理]**\n\n1. スレッドコンテキストから [リクエストID](../../about/about-nablarch/about-nablarch-concept.json) または [内部リクエストID](../../about/about-nablarch/about-nablarch-concept.json) を取得する。\n   - 1a. リクエストIDが **認可対象外リクエストIDリスト** に含まれる場合、後続ハンドラに処理を委譲してリターン（認可処理スキップ）。\n2. スレッドコンテキストからユーザIDを取得する。\n3. **認可情報取得コンポーネント** を用いて、ユーザIDに対する認可情報を取得する。\n4. リクエストIDが認可情報に含まれることを確認し、認可情報をスレッドローカルに格納する。\n   - 4a. リクエストIDが認可情報に含まれない場合、実行時例外 `Result.Forbidden` を送出して終了（認可エラー）。\n5. 後続ハンドラに処理を委譲し、結果を取得する。\n\n**[往路での処理]**\n\n6. 処理結果をリターンし終了する。\n\n**[例外処理]**\n\n5a. 後続ハンドラ実行中にエラーが発生した場合、そのまま再送出して終了する。",
+    "s3": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| permissionFactory | PermissionFactorry | ○ | | 認可情報取得コンポーネント |\n| ignoreRequestIds | String[] | | 空のリスト | 認可判定対象外リクエストIDリスト |\n| usesInternalRequestId | boolean | | false | 内部リクエストIDによる判定を行うかどうか |\n\n> **注意**: `permissionFactory` は必須。認可情報取得コンポーネントの詳細設定は [../02_FunctionDemandSpecifications/03_Common/04_Permission](../libraries/libraries-04_Permission.json) を参照。\n\n**設定例（Webアプリケーション）**: `ignoreRequestIds` にはログイン画面のリクエストIDを設定する必要がある。\n\n```xml\n<component name=\"permissionCheckHandler\"\n           class=\"nablarch.common.handler.PermissionCheckHandler\">\n  <property name=\"permissionFactory\" ref=\"permissionFactory\" />\n  <property name=\"ignoreRequestIds\" value=\"login001, login002\" />\n  <property name=\"usesInternalRequestId\" value=\"true\" />\n</component>\n```"
+  }
+}

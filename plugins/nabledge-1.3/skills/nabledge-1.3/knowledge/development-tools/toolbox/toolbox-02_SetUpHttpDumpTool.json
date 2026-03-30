@@ -1,0 +1,48 @@
+{
+  "id": "toolbox-02_SetUpHttpDumpTool",
+  "title": "リクエスト単体データ作成ツール インストールガイド",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "前提事項",
+      "hints": [
+        "インストール前提条件",
+        "javaコマンド設定",
+        "ブラウザプロキシ設定",
+        "localhost除外",
+        "HTMLファイル関連付け"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "提供方法",
+      "hints": [
+        "ツール構成ファイル",
+        "httpDump.bat",
+        "nablarch-tfw",
+        "インストール",
+        "配置パス"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Eclipseとの連携",
+      "hints": [
+        "Eclipse連携",
+        "ファイル関連付け設定",
+        "外部プログラム設定",
+        "httpDump起動",
+        "HTMLファイル起動方法",
+        "設定画面起動",
+        "バッチファイル選択"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 前提事項\n\n本ツールを使用する際の必須要件:\n\n- `java`コマンドがパスに含まれていること\n- HTMLファイルがブラウザに関連付けされていること\n- ブラウザのプロキシ設定で、localhostが除外されていること",
+    "s2": "## 提供方法\n\nNablarchのサンプルアプリケーションに同梱して提供。ツール構成ファイル:\n\n| ファイル名 | 説明 |\n|---|---|\n| httpDump.bat | 起動バッチファイル（Windows用） |\n| nablarch-tfw-X.X.jar | Nablarch Testing Framework のJARファイル（X.Xはバージョン番号） |\n| poi-X.X.jar | Apache POI のJARファイル（X.Xはバージョン番号） |\n| jetty.jar | Jetty Server のJARファイル |\n| jetty-util.jar | Jetty Utilities のJARファイル |\n| servlet-api.jar | Servlet Specification 2.5 API のJARファイル |\n\n`httpDump.bat`の配置パス:\n\n```bash\n/test/tool/httpDump.bat\n```",
+    "s3": "## Eclipseとの連携\n\nEclipseから本ツールを起動するための設定手順:\n\n1. ツールバー → ウィンドウ(Window) → 設定(Preference) を選択\n2. 左ペイン: 一般(General) → エディタ(Editors) → ファイルの関連付け(File Associations) を選択\n3. 右ペインから `*.html` を選択し、追加(Add)ボタンを押下\n4. ラジオボタンから外部プログラム(External program)を選択し、参照(Browse)ボタンを押下\n5. Windowsの場合は `httpDump.bat`、Linuxの場合は `httpDump.sh` を選択\n\n**HTMLファイルからの起動方法**: Eclipseのパッケージエクスプローラ等からHTMLファイルを右クリックし、「httpDumpで開く」を選択することでツールを起動できる。"
+  }
+}

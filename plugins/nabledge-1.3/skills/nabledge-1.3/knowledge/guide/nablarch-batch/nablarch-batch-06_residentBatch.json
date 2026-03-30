@@ -1,0 +1,30 @@
+{
+  "id": "nablarch-batch-06_residentBatch",
+  "title": "常駐バッチ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "常駐バッチ",
+      "hints": [
+        "DatabaseTableQueueReader",
+        "DatabaseRecordReader",
+        "SqlPStatement",
+        "DataReader",
+        "ExecutionContext",
+        "SqlRow",
+        "常駐バッチ",
+        "データベーステーブルキューリーダ",
+        "入力データ取得",
+        "createReader",
+        "常駐バッチ実装方法",
+        "getSqlPStatement",
+        "GET_BATCH_INPUT_DATA"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "常駐バッチの実装方法は都度起動バッチと基本的に同じ。以下の2点が異なる。\n\n**入力データを取得するためのデータリーダ生成方法が異なる**\n\n常駐バッチではデータベースのテーブルをキューとして扱える`DatabaseTableQueueReader`を使用して入力データを取得する必要がある。\n\n```java\npublic DataReader<SqlRow> createReader(ExecutionContext ctx) {\n    DatabaseRecordReader reader = new DatabaseRecordReader();\n    SqlPStatement statement = getSqlPStatement(\"GET_BATCH_INPUT_DATA\");\n    reader.setStatement(statement);\n    // 待機時間(ms)と主キーを指定してDatabaseTableQueueReaderを生成\n    return new DatabaseTableQueueReader(reader, 1000, \"user_info_id\");\n}\n```\n\n**実行タイミングが異なる**\n\n| 形態 | 実行タイミング例 | 説明 |\n|---|---|---|\n| 都度起動バッチ | 月次 | ジョブスケジューラから起動。入力データ処理完了後にプロセス終了。 |\n| 常駐バッチ | 1秒毎 | データなしの場合のみ待機。入力データの再取得を繰り返すためプロセスは終了しない。 |"
+  }
+}

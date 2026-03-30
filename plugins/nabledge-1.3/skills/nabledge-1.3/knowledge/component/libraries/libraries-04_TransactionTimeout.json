@@ -1,0 +1,52 @@
+{
+  "id": "libraries-04_TransactionTimeout",
+  "title": "トランザクションタイムアウト機能",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "処理シーケンス",
+      "hints": [
+        "java.sql.Statement",
+        "setQueryTimeout",
+        "トランザクションタイムアウト",
+        "クエリタイムアウト",
+        "処理シーケンス",
+        "トランザクション有効期限",
+        "ロールバック",
+        "SQLException"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "トランザクションタイムアウトを使用するための設定",
+      "hints": [
+        "JdbcTransactionFactory",
+        "nablarch.core.db.transaction.JdbcTransactionFactory",
+        "transactionTimeoutSec",
+        "transactionTimeoutErrorCodeList",
+        "トランザクションタイムアウト設定",
+        "タイムアウト有効化"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "注意点",
+      "hints": [
+        "クエリタイムアウト",
+        "データ不整合",
+        "JDBC実装",
+        "無限ループ",
+        "注意点",
+        "トランザクションタイムアウト制限",
+        "DBアクセス"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**処理フロー:**\n\n1. **トランザクション開始**: タイムアウト秒数と現在日時からトランザクション有効期限を算出する。\n2. **SQL実行前チェック (2-1)**: SQL実行前に現在日時が有効期限を超過していればトランザクションタイムアウト例外を送出する。\n3. **クエリタイムアウト設定 (2-2)**: 有効期限までの残り秒数を`java.sql.Statement#setQueryTimeout`でクエリタイムアウトとして設定する。ロック解放待ちやパフォーマンス不良のSQLでも有効期限超過時に強制中止するために設定する。\n4. **SQL実行成功後チェック (2-3-1)**: クエリタイムアウトは設定秒数を超過しても例外が発生せずSQL実行が正常終了する場合があるため、成功後も有効期限超過チェックを行い、超過していればタイムアウト例外を送出する。\n5. **SQL実行失敗時チェック (2-3-2)**: 例外のエラーコード（`SQLException#getErrorCode`）が設定ファイルの対象コードと一致し、かつ有効期限超過の場合にタイムアウト例外を送出する。有効期限内であれば通常のSQL例外として扱う。\n6. **トランザクション終了**: タイムアウトエラー発生時は必ずロールバック。\n\n> **注意**: トランザクション終了時はタイムアウトチェックを行わない。有効期限超過でもクライアントへの応答時間は変わらないため、正常終了を優先する。\n\n> **注意**: `transactionTimeoutErrorCodeList`には、クエリタイムアウト発生時の例外コードを必ず含めること。例外コードはデータベースベンダーのマニュアルを参照すること。",
+    "s2": "**クラス**: `nablarch.core.db.transaction.JdbcTransactionFactory`\n\n```xml\n<component class=\"nablarch.core.db.transaction.JdbcTransactionFactory\">\n  <property name=\"isolationLevel\" value=\"READ_COMMITTED\" />\n  <property name=\"transactionTimeoutSec\" value=\"15\" />\n  <property name=\"transactionTimeoutErrorCodeList\" value=\"1013,30006\" />\n</component>\n```\n\n| プロパティ名 | 説明 |\n|---|---|\n| transactionTimeoutSec | タイムアウト秒数。省略または0以下の場合、タイムアウト機能は有効化されない。 |\n| transactionTimeoutErrorCodeList | タイムアウト対象のベンダー依存例外コード（`SQLException#getErrorCode`の値）。複数指定可能。最低限クエリタイムアウト時の例外コードを設定すること。ロック解放待ちの例外コードも追加可能。 |",
+    "s3": "**クエリタイムアウト時の動作について**\n\nクエリタイムアウトの動作はデータベースベンダーのJDBC実装に依存する。必ず各ベンダーのマニュアルを確認すること。\n\n> **警告**: クエリタイムアウト時にDB側のSQL実行処理が確実に取り消されるか確認すること。取り消されない場合、データ不整合の原因になるためトランザクションタイムアウト機能を使用しないこと。\n\n**アプリケーションロジックでの処理遅延について**\n\nタイムアウトチェックはデータベースアクセス時のみ行われる。DBアクセスを伴わない処理や無限ループが発生した場合はタイムアウトエラーにならない。"
+  }
+}

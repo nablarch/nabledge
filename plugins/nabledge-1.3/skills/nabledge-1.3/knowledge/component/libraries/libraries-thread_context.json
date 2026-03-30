@@ -1,0 +1,180 @@
+{
+  "id": "libraries-thread_context",
+  "title": "同一スレッド内でのデータ共有(スレッドコンテキスト)",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "同一スレッド内でのデータ共有(スレッドコンテキスト)",
+      "hints": [
+        "スレッドコンテキスト",
+        "ThreadContextHandler",
+        "子スレッド",
+        "スレッドローカル変数",
+        "リクエストID",
+        "ユーザID",
+        "データ共有",
+        "HttpLanguageAttribute",
+        "LanguageAttributeInHttpCookie",
+        "LanguageAttributeInHttpSession",
+        "LanguageAttributeInHttpUtil",
+        "I18nHandler",
+        "defaultLanguage",
+        "supportedLanguages",
+        "cookieName",
+        "cookiePath",
+        "cookieDomain",
+        "cookieMaxAge",
+        "cookieSecure",
+        "sessionKey",
+        "keepLanguage",
+        "多言語対応",
+        "言語切り替え",
+        "クッキーで言語保持",
+        "セッションで言語保持"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "インタフェース定義",
+      "hints": [
+        "ThreadContextAttribute",
+        "スレッドコンテキスト属性インタフェース",
+        "TimeZoneAttributeInHttpCookie",
+        "TimeZoneAttributeInHttpSession",
+        "TimeZoneAttributeInHttpUtil",
+        "I18nHandler",
+        "defaultTimeZone",
+        "supportedTimeZones",
+        "cookieName",
+        "cookiePath",
+        "cookieDomain",
+        "cookieMaxAge",
+        "cookieSecure",
+        "sessionKey",
+        "keepTimeZone",
+        "タイムゾーン切り替え",
+        "クッキーでタイムゾーン保持",
+        "セッションでタイムゾーン保持"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "クラス定義",
+      "hints": [
+        "ThreadContextHandler",
+        "RequestIdAttribute",
+        "InternalRequestIdAttribute",
+        "UserIdAttribute",
+        "LanguageAttribute",
+        "TimeZoneAttribute",
+        "ExecutionIdAttribute",
+        "HttpLanguageAttribute",
+        "LanguageAttributeInHttpCookie",
+        "LanguageAttributeInHttpSession",
+        "LanguageAttributeInHttpUtil",
+        "LanguageAttributeInHttpSupport",
+        "TimeZoneAttributeInHttpCookie",
+        "TimeZoneAttributeInHttpSession",
+        "TimeZoneAttributeInHttpUtil",
+        "TimeZoneAttributeInHttpSupport",
+        "設定項目なし",
+        "実行ID"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "使用方法",
+      "hints": [
+        "ThreadContextHandler",
+        "属性更新",
+        "RequestIdAttribute",
+        "InternalRequestIdAttribute",
+        "UserIdAttribute",
+        "ExecutionIdAttribute",
+        "FwHeaderReader",
+        "ForwardingHandler",
+        "設定例"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "LanguageAttributeの選択",
+      "hints": [
+        "LanguageAttribute",
+        "HttpLanguageAttribute",
+        "LanguageAttributeInHttpCookie",
+        "LanguageAttributeInHttpSession",
+        "LanguageAttributeInHttpUtil",
+        "LanguageAttributeInHttpSupport",
+        "言語設定",
+        "国際化",
+        "defaultLanguage"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "TimeZoneAttributeの選択",
+      "hints": [
+        "TimeZoneAttribute",
+        "TimeZoneAttributeInHttpCookie",
+        "TimeZoneAttributeInHttpSession",
+        "TimeZoneAttributeInHttpUtil",
+        "TimeZoneAttributeInHttpSupport",
+        "タイムゾーン設定",
+        "国際化",
+        "defaultTimeZone"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "ThreadContextHandlerの設定",
+      "hints": [
+        "ThreadContextHandler",
+        "attributes",
+        "ThreadContextAttribute設定"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "UserIdAttributeの設定",
+      "hints": [
+        "UserIdAttribute",
+        "sessionKey",
+        "anonymousId",
+        "ユーザID設定",
+        "未ログインユーザ"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "RequestIdAttributeの設定",
+      "hints": [
+        "RequestIdAttribute",
+        "リクエストID設定",
+        "設定プロパティなし"
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "InternalRequestIdAttributeの設定",
+      "hints": [
+        "InternalRequestIdAttribute",
+        "内部リクエストID設定",
+        "設定プロパティなし"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "スレッドコンテキストはスレッドローカル変数上に保持された変数スコープ。ユーザIDやリクエストIDなど、実行コンテキストを経由した引き回しが難しいパラメータを格納する。設定の多くは [../handler/ThreadContextHandler](../handlers/handlers-ThreadContextHandler.json) によって行われるが、それ以外のハンドラでもスレッドコンテキストに変数を設定するものが存在するほか、業務アクションハンドラから任意の変数を設定することも可能。\n\n**子スレッドへの値の引き継ぎ**:\n- 親スレッドで保持する値は暗黙的に子スレッドに引き継がれる\n- 子スレッドで値を変更する場合は、明示的に子スレッドで値を設定する必要がある\n\n## LanguageAttribute\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| defaultLanguage | String | | システムデフォルトロケール | システムで使用するデフォルト言語 |\n\n## HttpLanguageAttribute\n\n**クラス**: `nablarch.common.web.handler.threadcontext.HttpLanguageAttribute`\n\n```xml\n<component class=\"nablarch.common.web.handler.threadcontext.HttpLanguageAttribute\">\n  <property name=\"defaultLanguage\" value=\"ja\" />\n  <property name=\"supportedLanguages\" value=\"ja,en\" />\n</component>\n```\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| defaultLanguage | String | | システムデフォルトロケール | システムで使用するデフォルト言語 |\n| supportedLanguages | String配列 | ○ | | サポート対象言語 |\n\n## LanguageAttributeInHttpCookie\n\n**クラス**: `nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpCookie`\n\n```xml\n<component class=\"nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpCookie\">\n  <property name=\"defaultLanguage\" value=\"ja\" />\n  <property name=\"supportedLanguages\" value=\"ja,en\" />\n  <property name=\"cookieName\" value=\"app_language\" />\n  <property name=\"cookiePath\" value=\"/action/\" />\n  <property name=\"cookieDomain\" value=\"localhost\" />\n  <property name=\"cookieMaxAge\" value=\"300\" />\n</component>\n```\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| defaultLanguage | String | | システムデフォルトロケール | システムで使用するデフォルト言語 |\n| supportedLanguages | String配列 | ○ | | サポート対象言語 |\n| cookieName | String | | `nablarch_language` | 言語保持クッキーの名前 |\n| cookiePath | String | | コンテキストパス | クッキー送信URIのパス階層 |\n| cookieDomain | String | | リクエストURLのドメイン名 | クッキー送信のドメイン階層 |\n| cookieMaxAge | int | | ブラウザ終了まで | クッキーの最長存続期間（秒） |\n| cookieSecure | boolean | | false（secure属性なし） | クッキーのsecure属性有無 |\n\n`LanguageAttributeInHttpUtil`を使用する場合、コンポーネント名を`languageAttribute`にする必要がある。\n\n`keepLanguage(request, context, language)`はクッキーとスレッドコンテキストの両方に言語を設定する。指定言語がサポート対象外の場合は設定されない。\n\n設定例（コンポーネント名`languageAttribute`で登録）：\n```xml\n<component name=\"languageAttribute\"\n           class=\"nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpCookie\">\n  <property name=\"defaultLanguage\" value=\"ja\" />\n  <property name=\"supportedLanguages\" value=\"ja,en\" />\n</component>\n```\n\nJSP実装例（`n:submitLink` + `n:param`でリンクごとに言語送信）：\n```jsp\n<n:submitLink uri=\"/action/MenuAction/MENU00101\" name=\"switchToEnglish\">\n  英語\n  <n:param paramName=\"user.language\" value=\"en\" />\n</n:submitLink>\n<n:submitLink uri=\"/action/MenuAction/MENU00101\" name=\"switchToJapanese\">\n  日本語\n  <n:param paramName=\"user.language\" value=\"ja\" />\n</n:submitLink>\n```\n\nハンドラ実装例：\n```java\npublic class I18nHandler implements HttpRequestHandler {\n    public HttpResponse handle(HttpRequest request, ExecutionContext context) {\n        String language = getLanguage(request, \"user.language\");\n        if (StringUtil.hasValue(language)) {\n            LanguageAttributeInHttpUtil.keepLanguage(request, context, language);\n        }\n        return context.handleNext(request);\n    }\n    private String getLanguage(HttpRequest request, String paramName) {\n        if (!request.getParamMap().containsKey(paramName)) {\n            return null;\n        }\n        return request.getParam(paramName)[0];\n    }\n}\n```\n\n> **注意**: `I18nHandler`は共通ハンドラのため`getParamMap`/`getParam`で直接リクエストパラメータにアクセスしている。業務アクションではバリデーション機能でリクエストパラメータを取得すること。\n\n## LanguageAttributeInHttpSession\n\n**クラス**: `nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpSession`\n\n```xml\n<component class=\"nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpSession\">\n  <property name=\"defaultLanguage\" value=\"ja\" />\n  <property name=\"supportedLanguages\" value=\"ja,en\" />\n  <property name=\"sessionKey\" value=\"app_language\" />\n</component>\n```\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| defaultLanguage | String | | システムデフォルトロケール | システムで使用するデフォルト言語 |\n| supportedLanguages | String配列 | ○ | | サポート対象言語 |\n| sessionKey | String | | `LanguageAttribute.getKey()`の戻り値 | 言語を格納するセッションキー名 |\n\n`LanguageAttributeInHttpUtil`を使用する場合、コンポーネント名を`languageAttribute`にする必要がある。\n\nログイン処理でHTTPセッションに言語を設定する実装例：\n```xml\n<component name=\"languageAttribute\"\n           class=\"nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpSession\">\n  <property name=\"defaultLanguage\" value=\"ja\" />\n  <property name=\"supportedLanguages\" value=\"ja,en\" />\n</component>\n```\n```java\npublic HttpResponse doLOGIN00101(HttpRequest request, ExecutionContext context) {\n    String language = // データベースからの取得処理は省略\n    LanguageAttributeInHttpUtil.keepLanguage(request, context, language);\n    return new HttpResponse(\"/MENU00101.jsp\");\n}\n```",
+    "s2": "**インタフェース**: `nablarch.common.handler.threadcontext.ThreadContextAttribute`\n\nスレッドコンテキストに属性を設定するインタフェース。実装クラスはコンテキストから属性値を取得する責務を持つ。\n\n## TimeZoneAttribute\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| defaultTimeZone | String | | システムデフォルトタイムゾーン | システムで使用するデフォルトタイムゾーン |\n\n## TimeZoneAttributeInHttpCookie\n\n**クラス**: `nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpCookie`\n\n```xml\n<component class=\"nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpCookie\">\n  <property name=\"defaultTimeZone\" value=\"Asia/Tokyo\" />\n  <property name=\"supportedTimeZones\" value=\"Asia/Tokyo,America/New_York\" />\n  <property name=\"cookieName\" value=\"app_timeZone\" />\n  <property name=\"cookiePath\" value=\"/action/\" />\n  <property name=\"cookieDomain\" value=\"localhost\" />\n  <property name=\"cookieMaxAge\" value=\"300\" />\n</component>\n```\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| defaultTimeZone | String | | システムデフォルトタイムゾーン | システムで使用するデフォルトタイムゾーン |\n| supportedTimeZones | String配列 | ○ | | サポート対象タイムゾーン |\n| cookieName | String | | `nablarch_timeZone` | タイムゾーン保持クッキーの名前 |\n| cookiePath | String | | コンテキストパス | クッキー送信URIのパス階層 |\n| cookieDomain | String | | リクエストURLのドメイン名 | クッキー送信のドメイン階層 |\n| cookieMaxAge | int | | ブラウザ終了まで | クッキーの最長存続期間（秒） |\n| cookieSecure | boolean | | false（secure属性なし） | クッキーのsecure属性有無 |\n\n`TimeZoneAttributeInHttpUtil`を使用する場合、コンポーネント名を`timeZoneAttribute`にする必要がある。\n\n`keepTimeZone(request, context, timeZone)`はクッキーとスレッドコンテキストの両方にタイムゾーンを設定する。指定タイムゾーンがサポート対象外の場合は設定されない。\n\n設定例（コンポーネント名`timeZoneAttribute`で登録）：\n```xml\n<component name=\"timeZoneAttribute\"\n           class=\"nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpCookie\">\n  <property name=\"defaultTimeZone\" value=\"Asia/Tokyo\" />\n  <property name=\"supportedTimeZones\" value=\"Asia/Tokyo,America/New_York\" />\n</component>\n```\n\nJSP実装例（`n:submitLink` + `n:param`でリンクごとにタイムゾーン送信）：\n```jsp\n<n:submitLink uri=\"/action/MenuAction/MENU00101\" name=\"switchToNewYork\">\n  ニューヨーク\n  <n:param paramName=\"user.timeZone\" value=\"America/New_York\" />\n</n:submitLink>\n<n:submitLink uri=\"/action/MenuAction/MENU00101\" name=\"switchToTokyo\">\n  東京\n  <n:param paramName=\"user.timeZone\" value=\"Asia/Tokyo\" />\n</n:submitLink>\n```\n\nハンドラ実装例：\n```java\npublic class I18nHandler implements HttpRequestHandler {\n    public HttpResponse handle(HttpRequest request, ExecutionContext context) {\n        String timeZone = getTimeZone(request, \"user.timeZone\");\n        if (StringUtil.hasValue(timeZone)) {\n            TimeZoneAttributeInHttpUtil.keepTimeZone(request, context, timeZone);\n        }\n        return context.handleNext(request);\n    }\n    private String getTimeZone(HttpRequest request, String paramName) {\n        if (!request.getParamMap().containsKey(paramName)) {\n            return null;\n        }\n        return request.getParam(paramName)[0];\n    }\n}\n```\n\n> **注意**: `I18nHandler`は共通ハンドラのため`getParamMap`/`getParam`で直接リクエストパラメータにアクセスしている。業務アクションではバリデーション機能でリクエストパラメータを取得すること。\n\n## TimeZoneAttributeInHttpSession\n\n**クラス**: `nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpSession`\n\n```xml\n<component class=\"nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpSession\">\n  <property name=\"defaultTimeZone\" value=\"Asia/Tokyo\" />\n  <property name=\"supportedTimeZones\" value=\"Asia/Tokyo,America/New_York\" />\n  <property name=\"sessionKey\" value=\"app_timeZone\" />\n</component>\n```\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| defaultTimeZone | String | | システムデフォルトタイムゾーン | システムで使用するデフォルトタイムゾーン |\n| supportedTimeZones | String配列 | ○ | | サポート対象タイムゾーン |\n| sessionKey | String | | `TimeZoneAttribute.getKey()`の戻り値 | タイムゾーンを格納するセッションキー名 |\n\n`TimeZoneAttributeInHttpUtil`を使用する場合、コンポーネント名を`timeZoneAttribute`にする必要がある。\n\nログイン処理でHTTPセッションにタイムゾーンを設定する実装例：\n```xml\n<component name=\"timeZoneAttribute\"\n           class=\"nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpSession\">\n  <property name=\"defaultTimeZone\" value=\"Asia/Tokyo\" />\n  <property name=\"supportedTimeZones\" value=\"Asia/Tokyo,America/New_York\" />\n</component>\n```\n```java\npublic HttpResponse doLOGIN00101(HttpRequest request, ExecutionContext context) {\n    String timeZone = // データベースからの取得処理は省略\n    TimeZoneAttributeInHttpUtil.keepTimeZone(request, context, timeZone);\n    return new HttpResponse(\"/MENU00101.jsp\");\n}\n```",
+    "s3": "## クラス一覧\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.common.handler.threadcontext.ThreadContextHandler` | スレッドコンテキストを初期化するハンドラ |\n| `nablarch.common.handler.threadcontext.RequestIdAttribute` | [リクエストID](../../about/about-nablarch/about-nablarch-concept.json) をスレッドコンテキストに設定するThreadContextAttribute |\n| `nablarch.common.handler.threadcontext.InternalRequestIdAttribute` | [内部リクエストID](../../about/about-nablarch/about-nablarch-concept.json) をリクエストIDと同じ値に初期設定する |\n| `nablarch.common.handler.threadcontext.UserIdAttribute` | ログインユーザのユーザIDをスレッドコンテキストに設定する。未ログイン時は未認証ユーザIDを設定する |\n| `nablarch.common.handler.threadcontext.LanguageAttribute` | 言語をスレッドコンテキストに設定するThreadContextAttribute |\n| `nablarch.common.handler.threadcontext.TimeZoneAttribute` | タイムゾーンをスレッドコンテキストに設定するThreadContextAttribute |\n| `nablarch.common.handler.threadcontext.ExecutionIdAttribute` | 実行時IDをスレッドコンテキストに設定するThreadContextAttribute（[execution_id](../../about/about-nablarch/about-nablarch-concept.json) 参照） |\n\n**LanguageAttributeのサブクラスとユーティリティ**\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.common.web.handler.threadcontext.HttpLanguageAttribute` | HTTPヘッダ(Accept-Language)から言語を取得するThreadContextAttribute |\n| `nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpSupport` | HTTP上で言語の選択と保持を行うThreadContextAttributeの実装サポートクラス |\n| `nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpCookie` | クッキーを使用して言語を保持するThreadContextAttribute |\n| `nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpSession` | HTTPセッションを使用して言語を保持するThreadContextAttribute |\n| `nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpUtil` | ユーザが選択した言語を保持する処理を提供するユーティリティクラス |\n\n**TimeZoneAttributeのサブクラスとユーティリティ**\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpSupport` | HTTP上で選択されたタイムゾーンの保持を行うThreadContextAttributeの実装サポートクラス |\n| `nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpCookie` | クッキーを使用してタイムゾーンを保持するThreadContextAttribute |\n| `nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpSession` | HTTPセッションを使用してタイムゾーンを保持するThreadContextAttribute |\n| `nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpUtil` | ユーザが選択したタイムゾーンを保持する処理を提供するユーティリティクラス |\n\n設定値は存在しない。",
+    "s4": "ThreadContextHandlerはリクエスト毎にスレッドコンテキストを初期化する。実際の属性値取得はThreadContextAttributeインタフェース実装クラスが担う。\n\nフレームワーク提供のThreadContextAttribute実装クラスが設定する属性: [リクエストID](../../about/about-nablarch/about-nablarch-concept.json) / [内部リクエストID](../../about/about-nablarch/about-nablarch-concept.json) / ユーザID / 言語 / タイムゾーン / [実行時ID](../../about/about-nablarch/about-nablarch-concept.json)\n\n**ThreadContextHandler以外による属性更新状況**:\n\n| 属性 | 更新される状況 |\n|---|---|\n| [リクエストID](../../about/about-nablarch/about-nablarch-concept.json) | [../architectural_pattern/messaging](../../processing-pattern/mom-messaging/mom-messaging-messaging.json) のみ、[../reader/FwHeaderReader](../readers/readers-FwHeaderReader.json) によって更新される |\n| [内部リクエストID](../../about/about-nablarch/about-nablarch-concept.json) | [../architectural_pattern/web_gui](../../processing-pattern/web-application/web-application-web_gui.json) では内部フォーワード時に [../handler/ForwardingHandler](../handlers/handlers-ForwardingHandler.json) によって更新される。[../architectural_pattern/messaging](../../processing-pattern/mom-messaging/mom-messaging-messaging.json) では [../reader/FwHeaderReader](../readers/readers-FwHeaderReader.json) によって更新される |\n| ユーザID | [../architectural_pattern/messaging](../../processing-pattern/mom-messaging/mom-messaging-messaging.json) のみ、[../reader/FwHeaderReader](../readers/readers-FwHeaderReader.json) によって更新される |\n\n### RequestIdAttribute\n\nURLの最後の\"/\"から\".\"の間の文字列をリクエストIDと判断する。\n\n### InternalRequestIdAttribute\n\nスレッドコンテキスト変数 [内部リクエストID](../../about/about-nablarch/about-nablarch-concept.json) を [リクエストID](../../about/about-nablarch/about-nablarch-concept.json) と同じ値に初期化する。\n\n### UserIdAttribute\n\nHttpセッションからユーザIDを取得してスレッドコンテキストに設定する。取得できなかった場合は未ログインユーザとして扱い、特別なユーザIDを設定する。\n\n> **注意**: 認証処理ではセッションにユーザIDを設定しておく必要がある。セッションキーと未ログインユーザIDはプロパティで変更可能。\n\n### ExecutionIdAttribute\n\n実行時IDをスレッドコンテキストに設定する。[execution_id](../../about/about-nablarch/about-nablarch-concept.json) 参照。\n\n### 設定例\n\n```xml\n<component class=\"nablarch.common.handler.threadcontext.ThreadContextHandler\">\n  <property name=\"attributes\">\n    <list>\n      <component class=\"nablarch.common.handler.threadcontext.UserIdAttribute\">\n        <property name=\"sessionKey\" value=\"user.id\" />\n        <property name=\"anonymousId\" value=\"guest\" />\n      </component>\n      <component class=\"nablarch.common.handler.threadcontext.RequestIdAttribute\" />\n      <component class=\"nablarch.common.handler.threadcontext.InternalRequestIdAttribute\" />\n      <component class=\"nablarch.common.handler.threadcontext.LanguageAttribute\">\n        <property name=\"defaultLanguage\" value=\"ja\" />\n      </component>\n      <component class=\"nablarch.common.handler.threadcontext.TimeZoneAttribute\">\n        <property name=\"defaultTimeZone\" value=\"Asia/Tokyo\" />\n      </component>\n      <component class=\"nablarch.common.handler.threadcontext.ExecutionIdAttribute\" />\n    </list>\n  </property>\n</component>\n```",
+    "s5": "**LanguageAttributeおよびサブクラスの説明**:\n\n| クラス名 | 説明 |\n|---|---|\n| `LanguageAttribute` | リポジトリの設定で指定された言語をスレッドコンテキストに設定する。未指定の場合、システムデフォルトロケールを使用 |\n| `HttpLanguageAttribute` | HTTPヘッダ(Accept-Language)から取得した言語を設定する。サポート対象言語が取得できない場合はLanguageAttributeに委譲 |\n| `LanguageAttributeInHttpCookie` | クッキーを使用した言語の保持。サポート対象言語が取得できない場合はHttpLanguageAttributeに委譲 |\n| `LanguageAttributeInHttpSession` | HTTPセッションを使用した言語の保持。具体的な処理はLanguageAttributeInHttpCookieと同じ |\n| `LanguageAttributeInHttpUtil` | LanguageAttributeInHttpSupportのサブクラスを使用するアプリに対して、ユーザが選択した言語を保持する処理を提供する |\n\n**選択基準**:\n\n| クラス名 | 言語の選択 | 言語の保存 | 説明 |\n|---|---|---|---|\n| `LanguageAttribute` | なし | なし | 国際化なし。言語は固定。アプリ実装不要 |\n| `HttpLanguageAttribute` | ブラウザの言語設定 | ブラウザの言語設定 | ブラウザの言語設定に応じて切り替え。ログイン前でも有効。アプリ実装不要 |\n| `LanguageAttributeInHttpCookie` | 選択画面やリンクなど | クッキー | アプリが言語選択画面を提供する場合。ログイン前でも有効。ブラウザ毎に保持 |\n| `LanguageAttributeInHttpSession` | 選択画面やリンクなど | データベース | アプリが言語選択画面を提供する場合。ユーザ毎に保持。ログイン後のみ有効 |\n\n> **注意**: `LanguageAttributeInHttpUtil` を使用する場合は、リポジトリにLanguageAttributeInHttpSupportのサブクラスを `\"languageAttribute\"` という名前で登録する必要がある。",
+    "s6": "**TimeZoneAttributeおよびサブクラスの説明**:\n\n| クラス名 | 説明 |\n|---|---|\n| `TimeZoneAttribute` | リポジトリの設定で指定されたタイムゾーンをスレッドコンテキストに設定する。未指定の場合、システムデフォルトタイムゾーンを使用 |\n| `TimeZoneAttributeInHttpCookie` | クッキーを使用したタイムゾーンの保持。サポート対象タイムゾーンが取得できない場合はTimeZoneAttributeに委譲 |\n| `TimeZoneAttributeInHttpSession` | HTTPセッションを使用したタイムゾーンの保持。具体的な処理はTimeZoneAttributeInHttpCookieと同じ |\n| `TimeZoneAttributeInHttpUtil` | TimeZoneAttributeInHttpSupportのサブクラスを使用するアプリに対して、ユーザが選択したタイムゾーンを保持する処理を提供する |\n\n**選択基準**:\n\n| クラス名 | タイムゾーンの選択 | タイムゾーンの保存 | 説明 |\n|---|---|---|---|\n| `TimeZoneAttribute` | なし | なし | 国際化なし。タイムゾーンは固定。アプリ実装不要 |\n| `TimeZoneAttributeInHttpCookie` | 選択画面やリンクなど | クッキー | アプリがタイムゾーン選択画面を提供する場合。ログイン前でも有効。ブラウザ毎に保持 |\n| `TimeZoneAttributeInHttpSession` | 選択画面やリンクなど | データベース | アプリがタイムゾーン選択画面を提供する場合。ユーザ毎に保持。ログイン後のみ有効 |\n\n> **注意**: `TimeZoneAttributeInHttpUtil` を使用する場合は、リポジトリにTimeZoneAttributeInHttpSupportのサブクラスを `\"timeZoneAttribute\"` という名前で登録する必要がある。",
+    "s7": "**クラス**: `nablarch.common.handler.threadcontext.ThreadContextHandler`\n\n| プロパティ名 | 説明 |\n|---|---|\n| attributes | ThreadContextAttributeインタフェースを実装したクラスのリストを設定する |",
+    "s8": "**クラス**: `nablarch.common.handler.threadcontext.UserIdAttribute`\n\n| プロパティ名 | 説明 |\n|---|---|\n| sessionKey | セッションからユーザIDを取得する際のキーを設定する。設定しなかった場合、\"USER_ID\"がキーとして使用される |\n| anonymousId | 未ログインユーザに対して設定するユーザIDを設定する。設定しなかった場合、未ログインユーザに対するユーザIDは設定されない |",
+    "s9": "**クラス**: `nablarch.common.handler.threadcontext.RequestIdAttribute`\n\n設定プロパティなし。",
+    "s10": "**クラス**: `nablarch.common.handler.threadcontext.InternalRequestIdAttribute`\n\n設定プロパティなし。"
+  }
+}

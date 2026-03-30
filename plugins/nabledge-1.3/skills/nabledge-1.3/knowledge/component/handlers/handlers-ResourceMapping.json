@@ -1,0 +1,59 @@
+{
+  "id": "handlers-ResourceMapping",
+  "title": "リソースマッピングハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "ResourceMapping",
+        "nablarch.fw.web.handler.ResourceMapping",
+        "リソースマッピング",
+        "静的リソース",
+        "JSP直接アクセス",
+        "HttpResponseHandler",
+        "ForwardingHandler",
+        "RequestHandlerEntry",
+        "servlet://",
+        "classpath://",
+        "forward://",
+        "file://"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "リソースマッピング処理フロー",
+        "マッピング対象リクエスト判定",
+        "コンテンツパス算出",
+        "classpath://実在チェック",
+        "404レスポンス",
+        "往路処理",
+        "復路処理",
+        "例外処理"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "baseUri",
+        "basePath",
+        "静的リソースマッピング設定",
+        "画像ファイルマッピング",
+        "JSPマッピング",
+        "RequestHandlerEntry",
+        "servlet://",
+        "リクエストパス前方一致"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.web.handler.ResourceMapping`\n\n業務アクションを経由せずに直接レスポンスとして返すリソースを決定するハンドラ。ログイン画面などビジネスロジックなしで表示するJSPや、JavaScriptや画像などの静的リソースのレスポンスに使用する。レスポンスされるリソースは、事前に定義されたリクエストパスと [コンテンツパス](handlers-HttpMethodBinding.json#s4) とのマッピング定義を元に決定される。\n\nマッピング先として指定可能なリソース:\n1. サーブレット/JSPフォーワード (**servlet://** スキーム) **[デフォルト]**\n2. 内部フォーワードの実行結果 (**forward://** スキーム)\n3. コンテキストクラスローダ上のリソース (**classpath://** スキーム)\n\n> **警告**: セキュリティ上の理由から、ファイルシステム上のローカルファイル（**file://** スキーム）はマッピング先に指定不可。スキーム省略時は **servlet://** とみなされる。\n\n> **注意**: JSPや画像などのリソースはサーブレットコンテキスト配下に直接配置することを推奨。デフォルトで全リソースへの直接アクセスは拒否され、業務アクションのレスポンスまたは本ハンドラのマッピング定義対象リソースのみアクセス可能となる。\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [HttpResponseHandler](handlers-HttpResponseHandler.json) | 本ハンドラが返却したHTTPレスポンスオブジェクト中の [コンテンツパス](handlers-HttpMethodBinding.json#s4) の内容に基づいてレスポンス処理を行う |\n| [ForwardingHandler](handlers-ForwardingHandler.json) | [コンテンツパス](handlers-HttpMethodBinding.json#s4) が **forward://** で開始されている場合に内部フォーワード処理を行う |\n| [RequestHandlerEntry](handlers-RequestHandlerEntry.json) | マッピング対象リクエストを限定するために必ず組み合わせて使用する |",
+    "s2": "**[往路処理]**\n\n1. **(マッピング対象リクエスト判定)**: 設定された **マッピング元ベースURI** がリクエストパス（サーブレットコンテキストからの相対パス）に前方一致するかを判定する\n   - 不一致の場合: ステータスコード **404** を返して終了\n2. **(マッピング先コンテンツパスの算出)**: リクエストパス中の前方一致部分を **マッピング先ベースコンテンツパス** に置換して **マッピング先コンテンツパス** とする。スキーム未指定時は **servlet://** を補完する\n3. **(マッピング先コンテンツパス実在チェック)**: スキームが **classpath://** の場合、パス上にリソースが実在するかをチェックし、存在しなければステータスコード **404** を返して終了\n4. **(HTTPレスポンスの返却)**: ステータスコード **200** のHTTPレスポンスを作成し、算出した [コンテンツパス](handlers-HttpMethodBinding.json#s4) を設定してリターンする\n\n**[復路処理]**\n\n後続ハンドラへの処理委譲は行わない。\n\n**[例外処理]**\n\n後続ハンドラへの処理委譲は行わない。",
+    "s3": "| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| baseUri | String | ○ | | リクエストURIの置換対象となる部分文字列（前方一致） |\n| basePath | String | ○ | | リクエストURI中のマッピング元ベースURIを置換する [コンテンツパス](handlers-HttpMethodBinding.json#s4) 。スキーム省略時は **servlet://** とみなされる |\n\n**画像ファイルに対するマッピングの設定例**\n\nリクエストパス **/img/** 配下を **/resources/img/** にマッピングする例:\n\n```xml\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/img//*.png\"/>\n  <property name=\"handler\">\n    <component class=\"nablarch.fw.web.handler.ResourceMapping\">\n      <property name=\"baseUri\" value=\"/img/\"/>\n      <property name=\"basePath\" value=\"servlet:///resources/img/\"/>\n    </component>\n  </property>\n</component>\n```\n\nマッピング結果（コンテキストパス **/webapp/**）:\n\n| HTTPリクエストライン | コンテンツパス |\n|---|---|\n| GET /webapp/img/logo.png | servlet:///resource/img/logo.png |\n| GET /webapp/img/page1/figure01.png | servlet:///resource/img/page1/figure01.png |\n\n**直接表示可能なJSP画面の設定例**\n\nリソース名末尾が **-public.jsp** の場合のみ直接アクセスを許可する例:\n\n```xml\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/jsp//*-public.jsp\"/>\n  <property name=\"handler\">\n    <component class=\"nablarch.fw.web.handler.ResourceMapping\">\n      <property name=\"baseUri\" value=\"/\"/>\n      <property name=\"basePath\" value=\"servlet:///\"/>\n    </component>\n  </property>\n</component>\n```\n\nマッピング結果（コンテキストパス **/webapp/**）:\n\n| HTTPリクエストライン | コンテンツパス |\n|---|---|\n| GET /webapp/jsp/login-public.jsp | servlet:///jsp/login-public.jsp |\n| GET /webapp/jsp/welcome.jsp | (404エラー) |"
+  }
+}

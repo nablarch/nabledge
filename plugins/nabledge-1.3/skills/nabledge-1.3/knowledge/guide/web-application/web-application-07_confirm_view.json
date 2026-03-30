@@ -1,0 +1,47 @@
+{
+  "id": "web-application-07_confirm_view",
+  "title": "確認画面の実装",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "登録確認画面の実装",
+      "hints": [
+        "W11AC02Action",
+        "doRW11AC0202",
+        "@OnError",
+        "ApplicationException",
+        "HttpResponse",
+        "HttpRequest",
+        "ExecutionContext",
+        "登録確認画面",
+        "確認画面JSP",
+        "入力画面と確認画面の共通化"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "精査処理呼び出し実装",
+      "hints": [
+        "ValidationUtil",
+        "ValidationContext",
+        "W11AC02Form",
+        "validateAndConvertRequest",
+        "abortIfInvalid",
+        "@OnError",
+        "validateAndConvertForResister",
+        "HttpRequest",
+        "HttpResponse",
+        "ExecutionContext",
+        "精査処理",
+        "バリデーション",
+        "ApplicationException"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## Actionクラスの実装\n\n確認画面表示のメソッドを既存Actionクラスに追加する。\n\n**クラス**: `W11AC02Action`  \n**アノテーション**: `@OnError`\n\n| Actionクラス名 | メソッド名 |\n|---|---|\n| W11AC02Action | doRW11AC0202（リクエストID: RW11AC0202） |\n\n```java\n// 精査エラー時の遷移先の指定\n@OnError(type = ApplicationException.class, path = \"/ss11AC/W11AC0201.jsp\")\npublic HttpResponse doRW11AC0202(HttpRequest req, ExecutionContext ctx) {\n    return new HttpResponse(\"/ss11AC/W11AC0202.jsp\");\n}\n```\n\n精査エラー（`ApplicationException`）発生時は`@OnError`の`path`に指定した登録画面（W11AC0201.jsp）へ遷移する。\n\n## JSPの実装\n\n確認画面JSPは入力画面と確認画面の共通化機能を利用するため修正不要。外部設計で実装済みのJSPファイルを所定のディレクトリに移動する。\n\n| コピー元 | コピー先 |\n|---|---|\n| main/web/W11AC0202.jsp | main/web/ss11AC/W11AC0202.jsp |",
+    "s2": "## 精査処理の呼び出し実装\n\n`doRW11AC0202`メソッドに精査処理の呼び出しを追加する。\n\n**クラス**: `ValidationUtil`, `ValidationContext`  \n**アノテーション**: `@OnError`\n\n```java\n@OnError(type = ApplicationException.class, path = \"/ss11AC/W11AC0201.jsp\")\npublic HttpResponse doRW11AC0202(HttpRequest req, ExecutionContext ctx) {\n    validateAndConvertForResister(req);\n    return new HttpResponse(\"/ss11AC/W11AC0202.jsp\");\n}\n\nprivate static W11AC02Form validateAndConvertForResister(HttpRequest req) {\n    ValidationContext<W11AC02Form> formCtx = ValidationUtil.validateAndConvertRequest(\"W11AC02\", W11AC02Form.class, req, \"register\");\n    formCtx.abortIfInvalid();\n    return formCtx.createObject();\n}\n```\n\n- `ValidationUtil.validateAndConvertRequest(prefix, formClass, req, validateFor)`: HTTPリクエストパラメータを指定のFormクラスに変換し、`validateFor`（ここでは`\"register\"`）グループの精査を実施する\n- `formCtx.abortIfInvalid()`: 精査エラー項目がある場合に`ApplicationException`を送出する\n- 精査OK → 確認画面（W11AC0202.jsp）へ遷移\n- 精査NG → `ApplicationException`が送出され`@OnError`により登録画面（W11AC0201.jsp）へ遷移"
+  }
+}

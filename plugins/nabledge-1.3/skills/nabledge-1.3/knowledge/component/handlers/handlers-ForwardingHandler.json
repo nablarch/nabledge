@@ -1,0 +1,52 @@
+{
+  "id": "handlers-ForwardingHandler",
+  "title": "内部フォーワードハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "ForwardingHandler",
+        "nablarch.fw.handler.ForwardingHandler",
+        "ServiceAvailabilityCheckHandler",
+        "PermissionCheckHandler",
+        "内部フォーワード",
+        "forward://",
+        "内部リクエストID",
+        "リクエストパス書き換え"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "ForwardingHandler",
+        "内部フォーワード",
+        "forward://",
+        "HttpRequest",
+        "ハンドラキュー",
+        "ステータスコード",
+        "往路処理",
+        "復路処理"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "ForwardingHandler",
+        "nablarch.fw.web.handler.ForwardingHandler",
+        "設定項目なし",
+        "XML設定",
+        "component"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.handler.ForwardingHandler`\n\nHTTPレスポンスのコンテンツパスが `forward://` で始まる場合、指定リクエストパスで後続ハンドラを再実行する（内部フォーワード）。\n\n内部フォーワード後の動作:\n- [リクエストオブジェクト](../../about/about-nablarch/about-nablarch-concept.json) のリクエストパスはフォーワード先パスに書き換えられる\n- スレッドコンテキスト中のリクエストIDはフォーワード後も同じ値を保持\n- フォーワード先のリクエストIDは [内部リクエストID](../../about/about-nablarch/about-nablarch-concept.json) から参照できる\n\n> **重要**: [ServiceAvailabilityCheckHandler](handlers-ServiceAvailabilityCheckHandler.json)、[PermissionCheckHandler](handlers-PermissionCheckHandler.json) の開閉局チェック・認可チェックはフォーワード後のリクエストIDで実施する必要があるため、本ハンドラはこれらのハンドラの上位に配置すること。",
+    "s2": "**[往路処理]**\n1. ハンドラキュー構成のシャローコピーを作成する\n2. 後続ハンドラに処理を委譲し、HTTPレスポンスオブジェクトを取得する\n\n**[復路処理]**\n3. HTTPレスポンスオブジェクトのコンテンツパス文字列を取得する\n   - `forward://` で始まらない場合: そのまま処理結果をリターン\n   - `forward://` で始まる場合: 以下の内部フォーワード処理を実行:\n     1. フォーワード先パスを `HttpRequest` のリクエストパスに設定\n     2. フォーワード先パスから取得したリクエストIDを [内部リクエストID](../../about/about-nablarch/about-nablarch-concept.json) に設定\n     3. ハンドラキューを往路で作成したコピーに差し替えて後続ハンドラを再実行し、HTTPレスポンスオブジェクトを取得\n     4. 初回レスポンスのステータスコードが再実行結果より大きい場合、再実行結果レスポンスにその値を設定\n     5. 再実行結果レスポンスをリターン\n\n**[例外処理]**\n- 後続ハンドラ処理中のエラーはそのまま再送出\n\n**`forward://` 書式**:\n- `forward://(フォーワード先リクエストパス)`\n- 相対パス指定: 現在のリクエストURIを起点とするパス\n- 絶対パス指定: サーブレットコンテキスト名を起点とするパス\n\n```bash\n# 現在のリクエストURIが \"/app/user/success.html\" の場合\nforward://registerForm.html            # 相対パス指定\nforward:///app/user/registerForm.html  # 絶対パス指定\n```",
+    "s3": "設定項目なし。そのまま使用可能。\n\n```xml\n<!-- 内部フォーワード制御ハンドラ -->\n<component class=\"nablarch.fw.web.handler.ForwardingHandler\" />\n```"
+  }
+}

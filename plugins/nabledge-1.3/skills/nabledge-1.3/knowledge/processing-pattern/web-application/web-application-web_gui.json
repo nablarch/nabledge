@@ -1,0 +1,75 @@
+{
+  "id": "web-application-web_gui",
+  "title": "画面オンライン実行制御基盤",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "コンテンツパス",
+        "servlet://",
+        "file://",
+        "classpath://",
+        "ディスパッチ処理",
+        "レスポンス処理",
+        "画面オンライン実行制御基盤",
+        "サーブレットフォーワード"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "業務アクションハンドラの実装",
+      "hints": [
+        "HttpMethodBinding",
+        "ファイルダウンロード",
+        "ファイルアップロード",
+        "業務アクションハンドラ"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "標準ハンドラ構成と主要処理フロー",
+      "hints": [
+        "NablarchServletContextListener",
+        "WebFrontController",
+        "SessionConcurrentAccessHandler",
+        "HttpResponseHandler",
+        "HttpErrorHandler",
+        "ForwardingHandler",
+        "MultipartHandler",
+        "NablarchTagHandler",
+        "DbConnectionManagementHandler",
+        "TransactionManagementHandler",
+        "ServiceAvailabilityCheckHandler",
+        "PermissionCheckHandler",
+        "ResourceMapping",
+        "HttpRequestJavaPackageMapping",
+        "HttpMethodBinding",
+        "ThreadContextHandler_request",
+        "HttpAccessLogHandler",
+        "ThreadContextClearHandler",
+        "GlobalErrorHandler",
+        "HttpCharacterEncodingHandler",
+        "FileRecordWriterDisposeHandler",
+        "正常起動",
+        "業務処理正常終了",
+        "ユーザエラー",
+        "システムエラー",
+        "直接画面遷移",
+        "内部フォーワード",
+        "認可エラー",
+        "開閉局エラー",
+        "アップロードファイル容量超過",
+        "ハンドラキュー構成",
+        "処理フロー"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 概要\n\nHTMLベースのUIを持つ標準的なWebアプリケーション向けの実行制御基盤。テンプレートエンジンはJSP（Webコンテナ上で動作）。\n\nHTTPリクエスト・レスポンス処理:\n- **ディスパッチ処理**: 各HTTPリクエストに対して処理対象の業務機能を呼び出す\n- **レスポンス処理**: 業務機能の結果を元にHTTPレスポンスを構成・送信する\n\nコンテンツパス（業務アクション側で指定する文字列）によるレスポンス処理の振る舞い:\n- `servlet://` で開始 → 当該パスに対するサーブレットフォーワード処理\n- `file://` または `classpath://` → 当該リソースを取得してレスポンス",
+    "s2": "## 業務アクションハンドラの実装\n\n標準的な実装方法: [../handler/HttpMethodBinding](../../component/handlers/handlers-HttpMethodBinding.json) を参照。\n\n特殊ケース:\n- レスポンス時にファイルダウンロードを行う場合: [../02_FunctionDemandSpecifications/02_Fw/01_Web/05_FileDownload](../../component/libraries/libraries-05_FileDownload.json) を参照\n- ファイルアップロードを伴う業務処理を実装する場合: [../02_FunctionDemandSpecifications/02_Fw/01_Web/06_FileUpload](../../component/libraries/libraries-06_FileUpload.json) を参照",
+    "s3": "## 標準ハンドラ構成と主要処理フロー\n\n### ハンドラキュー構成\n\n| No. | ハンドラ |\n|---|---|\n| 1 | NablarchServletContextListener |\n| 2 | WebFrontController |\n| 3 | ThreadContextClearHandler |\n| 4 | GlobalErrorHandler |\n| 5 | HttpCharacterEncodingHandler |\n| 6 | FileRecordWriterDisposeHandler |\n| 7 | SessionConcurrentAccessHandler |\n| 8 | HttpResponseHandler |\n| 9 | ThreadContextHandler_request |\n| 10 | HttpAccessLogHandler |\n| 11 | ForwardingHandler |\n| 12 | HttpErrorHandler |\n| 13 | MultipartHandler |\n| 14 | NablarchTagHandler |\n| 15 | DbConnectionManagementHandler |\n| 16 | TransactionManagementHandler |\n| 17 | ServiceAvailabilityCheckHandler |\n| 18 | PermissionCheckHandler |\n| 19 | ResourceMapping |\n| 20 | HttpRequestJavaPackageMapping |\n| 21 | HttpMethodBinding |\n\n### 処理フロー一覧\n\n| 区分 | 種別 | 処理フロー名 | 概要 |\n|---|---|---|---|\n| アプリケーション初期化 | 正常フロー | 正常起動 | アプリケーションデプロイ時に、リポジトリ、ハンドラキュー等の初期化を行う |\n| リクエストスレッド内制御 | 正常フロー | 業務処理正常終了 | 業務処理が正常に完了し、処理結果に応じた遷移先画面を表示する |\n| リクエストスレッド内制御 | 代替フロー | ユーザエラー | 入力精査処理等でユーザ起因のエラーが発生した場合は、業務トランザクションをロールバックし、エラー時の遷移先画面を表示する |\n| リクエストスレッド内制御 | 異常フロー | システムエラー | 業務ロジック内で不具合等によるエラーが発生した場合は、業務トランザクションをロールバックし、障害ログを出力した上で、システムエラー画面に遷移する |\n| リクエストスレッド内制御 | 正常フロー | 直接画面遷移 | 業務処理の無い画面の単純表示や静的コンテンツへのアクセスでは、業務アクションを介さずにレスポンスを行う |\n| リクエストスレッド内制御 | 代替フロー | 内部フォーワード | 遷移先の画面が業務アクションでの処理を伴う場合は、遷移先JSPパスではなく実行したいリクエストパスを指定する（内部フォーワード処理） |\n| リクエストスレッド内制御 | 異常フロー | 認可エラー | リクエストされた機能に対してログインユーザが権限を持っていない場合は、エラー画面に遷移させる |\n| リクエストスレッド内制御 | 異常フロー | 開閉局エラー | リクエストされた業務機能が閉局中であった場合は、エラー画面に遷移させる |\n| リクエストスレッド内制御 | 代替フロー | アップロードファイル容量超過 | アップロードされたファイルが限界容量を超過した場合は、エラー画面に遷移させる |\n\n### 各フローの詳細\n\n#### 正常起動 (launch)\n1. NablarchServletContextListener (inbound)\n2. WebFrontController (inbound) — 全リクエストを対象とするサーブレットフィルタとしてデプロイされる\n\n#### 業務処理正常終了 (normalend)\n**往路**: WebFrontController → SessionConcurrentAccessHandler → ThreadContextHandler_request → HttpAccessLogHandler → NablarchTagHandler → DbConnectionManagementHandler → TransactionManagementHandler → HttpRequestJavaPackageMapping → HttpMethodBinding\n\n**復路**: HttpMethodBinding → TransactionManagementHandler → DbConnectionManagementHandler → HttpAccessLogHandler → HttpResponseHandler（デフォルトステータスコード: 200）→ SessionConcurrentAccessHandler → WebFrontController\n\n#### ユーザエラー (usererror)\n**往路**: WebFrontController → SessionConcurrentAccessHandler → ThreadContextHandler_request → HttpAccessLogHandler → NablarchTagHandler → DbConnectionManagementHandler → TransactionManagementHandler → HttpRequestJavaPackageMapping → HttpMethodBinding\n\n**例外処理**: HttpMethodBinding（業務精査エラー等のユーザエラーが発生した場合、エラー時遷移先を指定したHTTPエラーレスポンスオブジェクトを送出する）→ TransactionManagementHandler（error）→ DbConnectionManagementHandler（error）→ HttpErrorHandler（error）\n\n**復路**: HttpAccessLogHandler → HttpResponseHandler（HttpErrorResponseに指定されたパスを用いてレスポンス。デフォルトステータスコード: 400）→ SessionConcurrentAccessHandler → WebFrontController\n\n#### システムエラー (systemerror)\n**往路**: WebFrontController → SessionConcurrentAccessHandler → ThreadContextHandler_request → HttpAccessLogHandler → NablarchTagHandler → DbConnectionManagementHandler → TransactionManagementHandler → HttpRequestJavaPackageMapping → HttpMethodBinding（NullPointerException等の実行時例外が送出された場合）\n\n**例外処理**: TransactionManagementHandler（error）→ DbConnectionManagementHandler（error）→ HttpErrorHandler（error、一般の実行時例外を捕捉した場合は障害ログが出力される）\n\n**復路**: HttpAccessLogHandler → HttpResponseHandler（システムエラー画面に遷移。デフォルトステータスコード: 500）→ SessionConcurrentAccessHandler → WebFrontController\n\n#### 直接画面遷移 (directaccess)\n**往路**: WebFrontController → SessionConcurrentAccessHandler → ThreadContextHandler_request → HttpAccessLogHandler → ResourceMapping（\"//*.jsp\"、\"/static/image/*.png\" などリクエストパスのパターンによって処理対象を絞る）\n\n**復路**: HttpAccessLogHandler → HttpResponseHandler → SessionConcurrentAccessHandler → WebFrontController\n\n#### 内部フォーワード (forward)\n**往路**: WebFrontController → SessionConcurrentAccessHandler → ThreadContextHandler_request → HttpAccessLogHandler → NablarchTagHandler → DbConnectionManagementHandler → TransactionManagementHandler → HttpRequestJavaPackageMapping → HttpMethodBinding\n\n**復路**: HttpMethodBinding（レスポンスオブジェクトのコンテンツパスを \"forward://(再実行したいリクエストパス)\" のように指定する）→ TransactionManagementHandler → DbConnectionManagementHandler → ForwardingHandler（レスポンス、アクセスログの出力はフォーワード先で行われる）\n\n#### アップロードファイル容量超過 (exceededlimit)\n1. WebFrontController (inbound)\n2. MultipartHandler（各パートのデータサイズの合計が上限を越えた場合、実行時例外（ステータスコード: 400）を送出する）\n3. HttpErrorHandler (error)\n4. HttpResponseHandler (outbound)\n5. WebFrontController (outbound)"
+  }
+}

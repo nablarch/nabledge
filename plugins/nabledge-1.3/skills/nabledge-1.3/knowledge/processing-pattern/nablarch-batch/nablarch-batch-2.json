@@ -1,0 +1,33 @@
+{
+  "id": "nablarch-batch-2",
+  "title": "データベースをインプットとするバッチ処理の場合で、精査が不要な場合でもEntityは作成する必要はありますか？",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "データベースINSERT/UPDATE時のEntity使用方針",
+      "hints": [
+        "SqlRow",
+        "SqlPStatement",
+        "ParameterizedSqlPStatement",
+        "SampleEntity",
+        "executeUpdateByObject",
+        "ExecutionContext",
+        "Result",
+        "Success",
+        "バッチ処理",
+        "Entity使用",
+        "データベース更新",
+        "共通項目設定",
+        "INSERT",
+        "UPDATE",
+        "保守性",
+        "生産性"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "精査が不要な場合でも、基本的にはEntityを生成してデータベースへのINSERT/UPDATE処理を行うこと。\n\nEntityを使用する理由は2つある:\n1. 保守性や生産性の面で、1項目ずつ値を設定するよりもEntityを使用したデータベース更新（INSERTやUPDATE）のほうがメリットが大きい。\n2. 1項目ずつ値を設定した場合、Nablarchのデータベースアクセス機能が提供する共通項目の設定機能が使用できなくなる。\n\n**非推奨（Entityなし）**:\n```java\n@Override\npublic Result handle(SqlRow inputData, ExecutionContext ctx) {\n    SqlPStatement statement = getSqlPStatement(\"INSERT_SQL\");\n    statement.setString(1, inputData.getString(\"id\"));\n    statement.setString(2, inputData.getString(\"name\"));\n    statement.setString(3, inputData.getString(\"kana_name\"));\n    statement.setString(4, inputData.getString(\"tel\"));\n    statement.executeUpdate();\n    return new Success();\n}\n```\n\n**推奨（Entity使用）**:\n```java\n@Override\npublic Result handle(SqlRow inputData, ExecutionContext ctx) {\n    ParameterizedSqlPStatement statement = getParameterizedSqlStatement(\"INSERT_SQL\");\n    statement.executeUpdateByObject(new SampleEntity(inputData));\n    return new Success();\n}\n```"
+  }
+}

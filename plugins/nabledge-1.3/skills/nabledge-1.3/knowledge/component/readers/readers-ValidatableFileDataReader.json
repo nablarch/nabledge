@@ -1,0 +1,48 @@
+{
+  "id": "readers-ValidatableFileDataReader",
+  "title": "事前精査機能付きファイルデータリーダ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "事前精査機能付きファイルデータリーダ",
+      "hints": [
+        "ValidatableFileDataReader",
+        "FileValidatorAction",
+        "FileDataReader",
+        "validatorAction",
+        "useCache",
+        "事前精査",
+        "ファイルデータリーダ",
+        "DataRecord",
+        "FileBatchAction",
+        "getValidatorAction"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "事前精査処理の実装例",
+      "hints": [
+        "ValidatableFileDataReader.FileValidatorAction",
+        "onFileEnd",
+        "B11AC014Action",
+        "FileBatchAction",
+        "getValidatorAction",
+        "doHeader",
+        "doData",
+        "doTrailer",
+        "doEnd",
+        "事前精査実装",
+        "TransactionAbnormalEnd",
+        "RecordTypeBinding",
+        "FileLayoutValidatorAction",
+        "BusinessDateUtil"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.reader.ValidatableFileDataReader`\n\n**読み込むデータの型**: `nablarch.core.dataformat.DataRecord`\n\n[FileDataReader](readers-FileDataReader.json) に事前ファイル全件読み込み＋精査機能を追加したデータリーダ。事前精査ロジックは **ファイルバリデータアクション**（`ValidatableFileDataReader.FileValidatorAction`）インタフェースに実装する。\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| validatorAction | nablarch.fw.reader.ValidatableFileDataReader.FileValidatorAction | ○ | | ファイルバリデータアクション |\n| useCache | boolean | | false | 事前精査時に読み込んだデータのキャッシュ可否 |\n\n**使用例（データリーダファクトリ内）**:\n\n```java\nFileValidatorAction validatorAction = new FileValidatorAction() {\n    public void onFileEnd(ExecutionContext ctx) { /* (略) */ }\n    // (略)\n};\nDataReader<DataRecord> reader = new ValidatableFileDataReader()\n    .setValidatorAction(validatorAction)\n    .setDataFile(\"record.dat\")\n    .setLayoutFile(\"record\");\n```\n\n`FileBatchAction` を継承したバッチ業務アクションの場合、`getValidatorAction()` メソッドをオーバーライドしてファイルバリデータアクションを返却するだけで事前精査を実現できる。詳細は :ref:`FileValidatorAction_implements` を参照。\n\n**useCacheプロパティ**: `useCache=true` に設定すると事前精査時に読み込んだデータをメモリにキャッシュし、業務処理時にキャッシュデータを使用できる。データ量によってはメモリリソースを大幅に消費するデメリットがある。通常のバッチ処理ではキャッシュ使用は推奨しない。ファイル入力処理がボトルネックになっている場合のみ、メモリ使用量を考慮した上で検討すること。",
+    "s2": "ファイルバリデータアクション（`ValidatableFileDataReader.FileValidatorAction`）には、`onFileEnd()` メソッドに加え、レコードタイプに応じてディスパッチされる精査メソッドを実装する。\n\n**精査メソッド名の規約**: `public Result \"do\" + [レコードタイプ名](DataRecord record, ExecutionContext ctx)`\n\n例: header/data/trailerの3種類のレコードタイプを持つ場合 → `doHeader()`、`doData()`、`doTrailer()` を実装する（:ref:`RecordTypeBinding` 参照）。\n\n`FileBatchAction` を継承する場合は `getValidatorAction()` をオーバーライドしてファイルバリデータアクションを返す。\n\n```java\npublic class B11AC014Action extends FileBatchAction {\n\n    @Override\n    public ValidatableFileDataReader.FileValidatorAction getValidatorAction() {\n        return new FileLayoutValidatorAction();\n    }\n\n    private class FileLayoutValidatorAction\n            implements ValidatableFileDataReader.FileValidatorAction {\n\n        private String preRecordKbn;\n        private int dataRecordCount;\n\n        public Result doHeader(DataRecord inputData, ExecutionContext ctx) {\n            if (preRecordKbn != null) {\n                // 1レコード目以外でヘッダーが来た場合はエラー\n                throw new TransactionAbnormalEnd(FILE_LAYOUT_ERROR_EXIT_CODE,\n                        INVALID_FILE_LAYOUT_FAILURE_CODE, inputData.getRecordNumber());\n            }\n            String date = inputData.getString(\"date\");\n            String businessDate = BusinessDateUtil.getDate();\n            if (!businessDate.equals(date)) {\n                // 日付が業務日付と不一致の場合\n                throw new TransactionAbnormalEnd(102,\n                        HEADER_RECORD_ERROR_FAILURE_CODE,\n                        date, businessDate);\n            }\n            preRecordKbn = HEADER_RECORD;\n            return new Success();\n        }\n\n        public Result doData(DataRecord inputData, ExecutionContext ctx) {\n            dataRecordCount++;\n            if (!HEADER_RECORD.equals(preRecordKbn) && !DATA_RECORD.equals(preRecordKbn)) {\n                throw new TransactionAbnormalEnd(FILE_LAYOUT_ERROR_EXIT_CODE,\n                        INVALID_FILE_LAYOUT_FAILURE_CODE, inputData.getRecordNumber());\n            }\n            preRecordKbn = DATA_RECORD;\n            return new Success();\n        }\n\n        public Result doTrailer(DataRecord inputData, ExecutionContext ctx) {\n            if (!DATA_RECORD.equals(preRecordKbn) && !HEADER_RECORD.equals(preRecordKbn)) {\n                throw new TransactionAbnormalEnd(FILE_LAYOUT_ERROR_EXIT_CODE,\n                        INVALID_FILE_LAYOUT_FAILURE_CODE, inputData.getRecordNumber());\n            }\n            int totalCount = inputData.getBigDecimal(\"totalCount\").intValue();\n            if (dataRecordCount != totalCount) {\n                throw new TransactionAbnormalEnd(101,\n                        TRAILER_RECORD_ERROR_FAILURE_CODE, totalCount, dataRecordCount);\n            }\n            if (dataRecordCount == 0) {\n                throw new TransactionAbnormalEnd(104, \"NB11AA0106\");\n            }\n            preRecordKbn = TRAILER_RECORD;\n            return new Success();\n        }\n\n        public Result doEnd(DataRecord inputData, ExecutionContext ctx) {\n            if (!TRAILER_RECORD.equals(preRecordKbn)) {\n                throw new TransactionAbnormalEnd(FILE_LAYOUT_ERROR_EXIT_CODE,\n                        INVALID_FILE_LAYOUT_FAILURE_CODE, inputData.getRecordNumber());\n            }\n            preRecordKbn = END_RECORD;\n            return new Success();\n        }\n\n        public void onFileEnd(ExecutionContext ctx) {\n            if (!END_RECORD.equals(preRecordKbn)) {\n                // 最終レコードがエンドレコードでない場合はエラー\n                throw new TransactionAbnormalEnd(FILE_LAYOUT_ERROR_EXIT_CODE,\n                        INVALID_FILE_LAYOUT_FAILURE_CODE, ctx.getLastRecordNumber());\n            }\n            // レコード数をログに出力\n            writeLog(\"M000000002\", ctx.getLastRecordNumber());\n            writeLog(\"M000000003\", dataRecordCount);\n        }\n    }\n\n    // 以下、事前精査成功時のみ実行される業務処理\n    public Result doHeader(DataRecord inputData, ExecutionContext ctx) {\n        return new Success(); // 事前精査済みのため処理不要\n    }\n\n    public Result doData(DataRecord inputData, ExecutionContext ctx) {\n        // ファイルデータをDBに登録する処理\n    }\n}\n```"
+  }
+}

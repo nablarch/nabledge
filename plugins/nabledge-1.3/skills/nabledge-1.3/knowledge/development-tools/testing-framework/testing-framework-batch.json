@@ -1,0 +1,67 @@
+{
+  "id": "testing-framework-batch",
+  "title": "取引単体テストの実施方法（バッチ）",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "テストクラスの作成とテストケース分割方針",
+      "hints": [
+        "BatchRequestTestSupport",
+        "取引単体テスト",
+        "テストクラス作成",
+        "テストケース分割方針",
+        "取引ID",
+        "バッチテスト"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "基本的な記述方法",
+      "hints": [
+        "execute",
+        "testShots",
+        "LIST_MAP",
+        "基本的な記述方法",
+        "requestPath",
+        "expectedStatusCode",
+        "取引単位テスト",
+        "setUpTable",
+        "setUpFile",
+        "expectedTable",
+        "expectedFile"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "1テストケースを複数シートに分割する場合",
+      "hints": [
+        "execute シート名指定",
+        "複数シート分割",
+        "testSuccess_fileInput",
+        "testSuccess_userDelete",
+        "testSuccess_fileOutput",
+        "outFile"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "1シートに複数ケースを含める場合",
+      "hints": [
+        "グループID",
+        "tips_groupId",
+        "複数ケース1シート",
+        "グループIDを使った複数ケース",
+        "no列グループ",
+        "expectedFile"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "テストクラス作成ルール: (1) パッケージはテスト対象取引と同一 (2) クラス名は `<取引ID>Test` (3) `BatchRequestTestSupport` を継承\n\n**クラス**: `nablarch.test.core.batch.BatchRequestTestSupport`\n\n```java\npackage nablarch.sample.ss21AC01;\nimport nablarch.test.core.batch.BatchRequestTestSupport;\npublic class B21AC01Test extends BatchRequestTestSupport {\n```\n\nテストケース分割方針: 原則1シート1テストケース。\n\n| ケース | 対応方法 |\n|---|---|\n| テストデータが大量または処理が多い | 1ケースを複数シートに分割可 |\n| 非常に簡単でデータ量が少ない | 1シートに複数ケースを含めてもよい |",
+    "s2": "1テストケース1シート。1シート内に複数のバッチ実行を記述して取引単位テストを実施。\n\n```java\n@Test\npublic void testSuccess() {\n    execute();\n}\n```\n\ntestSuccessシート (LIST_MAP=testShots):\n\n| no | description | expectedStatusCode | setUpTable | setUpFile | expectedTable | expectedFile | requestPath |\n|---|---|---|---|---|---|---|---|\n| 1 | ファイル入力 | 100 | default | default | default | | fileInputBatch |\n| 2 | ユーザ削除 | 100 | default | | default | | userDeleteBatch |\n| 3 | ファイル出力 | 100 | default | | fileInputBatch | default | fileOutputBatch |",
+    "s3": "`execute(\"シート名\")` でシートを指定し、1テストケースを複数シートに分割できる。\n\n```java\n@Test\npublic void testSuccess() {\n    execute(\"testSuccess_fileInput\");\n    execute(\"testSuccess_userDelete\");\n    execute(\"testSuccess_fileOutput\");\n}\n```\n\n各シートの列構成例:\n\ntestSuccess_fileInputシート (LIST_MAP=testShots):\n\n| no | case | expectedStatusCode | setUpTable | setUpFile | requestPath |\n|---|---|---|---|---|---|\n| 1 | ファイル入力 | 100 | default | default | fileInputBatch |\n\ntestSuccess_userDeleteシート (LIST_MAP=testShots):\n\n| no | case | expectedStatusCode | setUpTable | expectedTable | requestPath |\n|---|---|---|---|---|---|\n| 1 | ユーザ削除 | 100 | default | default | userDeleteBatch |\n\ntestSuccess_fileOutputシート (LIST_MAP=testShots):\n\n| no | case | expectedStatusCode | setUpTable | outFile | requestPath |\n|---|---|---|---|---|---|\n| 1 | ファイル出力 | 100 | default | default | fileOutputBatch |",
+    "s4": "グループIDを使い1シートに複数ケースを記述できる (no列に `1-1`, `1-2`, `2-1` 形式)。\n\n```java\n@Test\npublic void testSuccess() {\n    execute();\n}\n```\n\ntestSuccessシート (LIST_MAP=testShots):\n\n| no | description | expectedStatusCode | setUpTable | setUpFile | expectedTable | expectedFile | requestPath |\n|---|---|---|---|---|---|---|---|\n| 1-1 | ファイル入力 | 100 | shot1 | shot1 | | | fileInputBatch |\n| 1-2 | ユーザ削除 | 100 | | | shot1 | | userDeleteBatch |\n| 2-1 | ファイル入力（0件） | 100 | shot2 | shot2 | | | fileInputBatch |\n| 2-2 | ユーザ削除（0件） | 100 | | | shot2 | | userDeleteBatch |\n\n> **注意**: グループIDを利用することで1シートに複数ケースのテストデータを記述できる。詳細は :ref:`tips_groupId` を参照。"
+  }
+}

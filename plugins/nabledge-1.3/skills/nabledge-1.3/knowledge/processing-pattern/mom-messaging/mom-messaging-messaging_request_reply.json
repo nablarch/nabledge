@@ -1,0 +1,85 @@
+{
+  "id": "mom-messaging-messaging_request_reply",
+  "title": "同期応答メッセージング実行制御基盤",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "基本構造",
+      "hints": [
+        "Main",
+        "FwHeaderReader",
+        "MultiThreadExecutionHandler",
+        "MessagingAction",
+        "MessageReplyHandler",
+        "RequestThreadLoopHandler",
+        "プロセス制御部分",
+        "リクエストスレッド",
+        "受信キュー",
+        "フレームワーク制御ヘッダ",
+        "リクエストIDヘッダ",
+        "同期応答メッセージング",
+        "オーソリ業務",
+        "即時応答"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "業務アクションハンドラの実装",
+      "hints": [
+        "MessagingAction",
+        "業務アクションハンドラ",
+        "テンプレートクラス継承",
+        "MessagingAction実装"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "標準ハンドラ構成と主要処理フロー",
+      "hints": [
+        "Main",
+        "StatusCodeConvertHandler",
+        "GlobalErrorHandler",
+        "ThreadContextClearHandler",
+        "ThreadContextHandler_main",
+        "ThreadContextHandler_request",
+        "DuplicateProcessCheckHandler",
+        "MultiThreadExecutionHandler",
+        "RetryHandler",
+        "MessagingContextHandler",
+        "DbConnectionManagementHandler",
+        "RequestThreadLoopHandler",
+        "ProcessStopHandler",
+        "MessageReplyHandler",
+        "DataReadHandler_messaging",
+        "PermissionCheckHandler",
+        "RequestPathJavaPackageMapping",
+        "ServiceAvailabilityCheckHandler",
+        "TransactionManagementHandler",
+        "MessageResendHandler",
+        "ハンドラキュー",
+        "正常起動",
+        "重複起動エラー",
+        "正常受信・正常応答",
+        "再送応答",
+        "受信待機タイムアウト",
+        "業務処理エラー応答",
+        "認可エラー",
+        "開閉局エラー",
+        "DB/MQ接続エラー",
+        "プロセス正常停止",
+        "プロセス異常停止",
+        "DB/MQ接続リトライ失敗",
+        "Retryable",
+        "ProcessAbnormalEnd",
+        "ProcessStop"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "オーソリ業務のような、要求電文に対する即時応答を必要とする業務処理において使用される。\n\n[messaging_request_reply](mom-messaging-messaging_request_reply.json) の構造は **プロセス制御部分** (メインスレッド) と **リクエストスレッド** の2つに分かれる。\n\n**プロセス制御部分** (メインスレッド):\n- Javaコマンドから [../handler/Main](../../component/handlers/handlers-Main.json) を実行して開始\n- リポジトリ初期化処理でハンドラキューとデータリーダ ([../reader/FwHeaderReader](../../component/readers/readers-FwHeaderReader.json)) を生成\n- [../handler/MultiThreadExecutionHandler](../../component/handlers/handlers-MultiThreadExecutionHandler.json) でリクエストスレッドを作成後、完了を待機\n\n**リクエストスレッド**:\n- データリーダを使用し受信キュー上の要求電文を待機\n- 要求電文受信後、:ref:`フレームワーク制御ヘッダ<fw_header>` の **リクエストIDヘッダー** を読み込み、対応する [業務アクションハンドラ](../../component/handlers/handlers-MessagingAction.json) を生成\n- 業務処理を実行し、応答電文オブジェクトを [../handler/MessageReplyHandler](../../component/handlers/handlers-MessageReplyHandler.json) によって要求元に送信\n- [../handler/RequestThreadLoopHandler](../../component/handlers/handlers-RequestThreadLoopHandler.json) により最初の要求電文待機処理に戻り、以降繰り返す\n\n> **注意**: [messaging](mom-messaging-messaging.json) では、リクエストスレッド上のループ処理に [../handler/RequestThreadLoopHandler](../../component/handlers/handlers-RequestThreadLoopHandler.json) を使用する。\n\n> **注意**: [batch](../nablarch-batch/nablarch-batch-batch-architectural_pattern.json) では業務アクションハンドラがデータリーダを作成するが、[messaging](mom-messaging-messaging.json) ではリポジトリで初期化する。",
+    "s2": "業務アクションハンドラはFWが提供するテンプレートクラスを継承して作成する。詳細は [../handler/MessagingAction](../../component/handlers/handlers-MessagingAction.json) を参照。",
+    "s3": "## 処理フロー一覧\n\n| 区分 | 種別 | 処理フロー名 | 概要 |\n|---|---|---|---|\n| プロセス起動制御 | 正常フロー | 正常起動 | Javaコマンドからプロセスを起動し、リクエストスレッドを初期化する。各スレッドは受信キュー上で電文を待機する。|\n| プロセス起動制御 | 異常フロー | 重複起動エラー | プロセス起動時、既に同一プロセスが起動していた場合は異常終了する。|\n| リクエストスレッド内制御 | 正常フロー | 正常受信・正常応答 | 受信電文のリクエストIDヘッダをもとに業務処理を決定し委譲する。業務処理結果をもとに応答電文を構築し送信する。|\n| リクエストスレッド内制御 | 代替フロー | 再送応答 | 要求電文の再送要求フラグヘッダが設定されていた場合、送信済み電文テーブルを参照し、該当する送信済み電文が存在した場合はその内容をもとに応答を作成して送信する。|\n| リクエストスレッド内制御 | 代替フロー | 受信待機タイムアウト | 受信キューでの待機状態が一定時間継続した場合、プロセス管理テーブルの状態確認のため待機を解除してスレッドループの先頭に戻る。|\n| リクエストスレッド内制御 | 代替フロー | 業務処理エラー応答 | 業務処理でエラーが発生した場合、業務トランザクションをロールバックし、業務側で作成した応答電文オブジェクトをもとに電文を作成して送信する。|\n| リクエストスレッド内制御 | 代替フロー | 認可エラー | 要求電文中のリクエストID/ユーザIDヘッダの値をもとに認可チェックを行い、権限が無い場合はエラー応答を送信する。|\n| リクエストスレッド内制御 | 代替フロー | 開閉局エラー | 要求電文中のリクエストIDに対する業務機能が閉局中の場合はエラー応答を送信する。|\n| リクエストスレッド内制御 | 異常フロー | DB/MQ接続エラー | DB/MQへの接続失敗時、エラー応答を送信後に再接続処理を行う。|\n| プロセス停止制御 | 正常フロー | プロセス正常停止 | プロセス管理テーブルのフラグ変更で新規処理受付を停止する。全スレッドの終了を待ってプロセスを正常終了させる。|\n| プロセス停止制御 | 代替フロー | プロセス異常停止 | 致命的なエラーが発生した場合、新規処理受付を停止した上で、全スレッド終了を待ってプロセスを異常終了させる。|\n| プロセス停止制御 | 異常フロー | DB/MQ接続リトライ失敗 | DB/MQ接続リトライが上限回数に達しても成功しなかった場合はプロセスを異常停止させる。|\n\n## 標準ハンドラキュー\n\n1. Main\n2. StatusCodeConvertHandler\n3. GlobalErrorHandler\n4. ThreadContextClearHandler\n5. ThreadContextHandler_main\n6. DuplicateProcessCheckHandler\n7. MultiThreadExecutionHandler\n8. RetryHandler\n9. MessagingContextHandler\n10. DbConnectionManagementHandler\n11. RequestThreadLoopHandler\n12. ThreadContextClearHandler\n13. ThreadContextHandler_request\n14. ProcessStopHandler\n15. MessageReplyHandler\n16. DataReadHandler_messaging\n17. PermissionCheckHandler\n18. RequestPathJavaPackageMapping\n19. ServiceAvailabilityCheckHandler\n20. TransactionManagementHandler\n21. MessageResendHandler\n22. MessagingAction\n\n## 各処理フローの詳細\n\n**正常起動**:\n1. Main (inbound)\n2. ThreadContextHandler_main (inbound)\n3. MultiThreadExecutionHandler (inbound)\n4. DbConnectionManagementHandler (inbound) — 取得したDB接続を以降の処理で使いまわす\n5. MessagingContextHandler (inbound) — 取得したMQ接続を以降の処理で使いまわす\n6. RequestThreadLoopHandler (inbound) — このハンドラ以降の処理をリクエスト毎にループする\n7. DataReadHandler_messaging (inbound) — 各リクエストスレッドはここで受信キュー上の要求電文を待機する。以降は要求電文の受信→業務処理の実行→応答電文の送信を繰り返す\n\n**重複起動エラー**:\n1. Main (inbound)\n2. ThreadContextHandler_main (inbound) — 起動引数-requestPathからリクエストIDを決定する\n3. DuplicateProcessCheckHandler (inbound) — 起動停止時の終了コードはこのハンドラに設定する\n4. GlobalErrorHandler (error) — 障害ログが出力される\n5. StatusCodeConvertHandler (outbound)\n6. Main (outbound) — 異常終了\n\n**正常受信・正常応答**:\n1. RequestThreadLoopHandler (inbound) — リクエストスレッド内での処理の起点\n2. ThreadContextHandler_request (inbound)\n3. DataReadHandler_messaging (inbound)\n4. RequestPathJavaPackageMapping (inbound)\n5. TransactionManagementHandler (inbound)\n6. MessagingAction (inbound)\n7. MessagingAction (outbound)\n8. MessageResendHandler (outbound)\n9. TransactionManagementHandler (outbound)\n10. MessageReplyHandler (outbound)\n11. RequestThreadLoopHandler (outbound) — →① へ\n\n**再送応答**:\n1. RequestThreadLoopHandler (inbound) — リクエストスレッド内での処理の起点\n2. ThreadContextHandler_request (inbound)\n3. DataReadHandler_messaging (inbound)\n4. RequestPathJavaPackageMapping (inbound) — 再送応答時、ディスパッチされた業務アクションは実行されない\n5. TransactionManagementHandler (inbound)\n6. MessageResendHandler (inbound)\n7. TransactionManagementHandler (outbound)\n8. MessageReplyHandler (outbound) — 再送応答\n9. RequestThreadLoopHandler (outbound) — →① へ\n\n**受信待機タイムアウト**:\n1. DataReadHandler_messaging (inbound)\n2. DataReadHandler_messaging (outbound) — タイムアウト間隔を経過してもメッセージを受信できなかった場合、DataReader.NoMoreRecordをリターンする\n3. MessageReplyHandler (outbound) — DataRecord.NoMoreRecordが返された場合は何もせずにリターンする\n4. RequestThreadLoopHandler (outbound) — →⑤ へ\n5. RequestThreadLoopHandler (inbound)\n6. ProcessStopHandler (inbound) — プロセス停止フラグ確認後、再び① にもどる\n\n**業務処理エラー応答**:\n1. RequestThreadLoopHandler (inbound) — リクエストスレッド内での処理の起点\n2. ThreadContextHandler_request (inbound)\n3. DataReadHandler_messaging (inbound)\n4. RequestPathJavaPackageMapping (inbound)\n5. TransactionManagementHandler (inbound)\n6. MessagingAction (inbound)\n7. MessagingAction (error) — 業務処理をエラー終了させる場合は実行時例外を送出する。これによりトランザクションがロールバックされ、障害ログが出力される\n8. TransactionManagementHandler (error) — 業務アクションをコールバックし、その処理結果(エラー応答電文オブジェクト)を送出する。起因例外をネストさせる\n9. TransactionManagementHandler (callback)\n10. MessagingAction (callback)\n11. MessageReplyHandler (error) — 業務アクションが作成したエラー応答電文オブジェクトを送信後、起因例外を再送出する\n12. RequestThreadLoopHandler (error) — 再送出された起因例外を障害ログとして出力後、→① へ\n\n**認可エラー**:\n1. RequestThreadLoopHandler (inbound) — リクエストスレッド内での処理の起点\n2. ThreadContextHandler_request (inbound)\n3. DataReadHandler_messaging (inbound)\n4. PermissionCheckHandler (inbound) — 認可エラー(Result.Forbidden/ステータスコード:403)を送出する\n5. MessageReplyHandler (error) — 業務処理は実行できないので、FW制御ヘッダ部のみを出力して送信し、認可エラーを再送出する\n6. RequestThreadLoopHandler (error) — 再送出された起因例外を障害ログとして出力後、→① へ\n\n**開閉局エラー**:\n1. RequestThreadLoopHandler (inbound) — リクエストスレッド内での処理の起点\n2. ThreadContextHandler_request (inbound)\n3. DataReadHandler_messaging (inbound)\n4. ServiceAvailabilityCheckHandler (inbound) — 閉局エラー(Result.ServiceUnavailable/ステータスコード:503)を送出する\n5. MessageReplyHandler (error) — 業務処理は実行できないので、FW制御ヘッダ部のみを出力して送信し、認可エラーを再送出する\n6. RequestThreadLoopHandler (error) — INFOログを出力し、一定時間waitした後、→① へ\n\n**DB/MQ接続エラー**:\n1. RequestThreadLoopHandler (inbound) — リクエストスレッド内での処理の起点\n2. MessagingAction (inbound) — リクエスト処理実行中にDB/MQ接続エラーが発生した場合、リトライ可能実行時例外(Retryableを実装した例外)が送出される\n3. MessageReplyHandler (error)\n4. RequestThreadLoopHandler (error) — リトライ可能例外はそのまま再送出する\n5. RetryHandler (error)\n6. MessagingContextHandler (inbound) — MQ再接続\n7. DbConnectionManagementHandler (inbound) — DB再接続\n\n**プロセス正常停止**:\n1. RequestThreadLoopHandler (inbound) — リクエストスレッド内での処理の起点\n2. ThreadContextHandler_request (inbound) — リクエストIDの値が起動引数-requestPathで指定された値に戻される\n3. ProcessStopHandler (inbound)\n4. RequestThreadLoopHandler (error) — プロセス停止要求(ProcessStop)を捕捉するとINFOログを出力後、処理結果オブジェクトをリターンする(ステータスコード:200)\n5. MultiThreadExecutionHandler (outbound)\n6. StatusCodeConvertHandler (outbound) — ステータスコード:200 → 終了コード:0\n7. Main (outbound) — 正常終了\n\n**プロセス異常終了**:\n1. MessagingAction (inbound) — リクエスト処理実行中に致命的なエラー(VM系のエラーやProcessAbnormalEnd)が発生\n2. MessageReplyHandler (error)\n3. RequestThreadLoopHandler (error) — 致命的エラーはここで例外を再送出し、リクエストスレッドを停止する\n4. MultiThreadExecutionHandler (error)\n5. GlobalErrorHandler (error)\n6. StatusCodeConvertHandler (outbound)\n7. Main (outbound) — 異常終了\n\n**DB/MQ接続リトライ失敗**:\n1. MessagingAction (inbound) — リクエスト処理実行中にDB/MQ接続エラーが発生し、リトライ可能実行時例外(Retryableを実装した例外)が送出される\n2. MessageReplyHandler (error)\n3. RequestThreadLoopHandler (error) — リトライ可能例外はそのまま再送出する\n4. RetryHandler (error) — リトライ回数が上限値を超過した場合は例外を再送出し、リクエストスレッドを停止する\n5. MultiThreadExecutionHandler (error)\n6. GlobalErrorHandler (error)\n7. StatusCodeConvertHandler (outbound)\n8. Main (outbound) — 異常終了"
+  }
+}

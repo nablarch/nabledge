@@ -1,0 +1,55 @@
+{
+  "id": "web-application-05_create_form",
+  "title": "Formクラスの実装",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "Formクラスのプロパティの実装",
+      "hints": [
+        "W11AC02Form",
+        "UsersEntity",
+        "Formクラス実装",
+        "プロパティ定義",
+        "コンストラクタ",
+        "ゲッター/セッター"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Formクラスの精査処理の単体テスト作成",
+      "hints": [
+        "W11AC02Form",
+        "W11AC02FormTest",
+        "EntityTestSupport",
+        "UsersEntity",
+        "testValidateForRegister",
+        "テストデータ作成",
+        "単体テスト",
+        "精査処理"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Formクラスへの精査処理実装",
+      "hints": [
+        "W11AC02Form",
+        "ValidationUtil",
+        "ValidationContext",
+        "@ValidationTarget",
+        "@ValidateFor",
+        "validateForRegister",
+        "UsersEntity",
+        "単項目精査",
+        "精査処理実装",
+        "user"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `W11AC02Form`\n**ソース格納フォルダ**: `main/java/nablarch/sample/ss11AC`\n\n> **補足**: コンストラクタ、ゲッター/セッターのテストはActionクラスのリクエスト単体テストでカバーできるため、Formクラス単体ではテストを作成しない。\n\n実装手順:\n1. プロパティ `user`（型：`UsersEntity`）を実装\n2. Mapを引数に取るコンストラクタを実装\n3. ゲッター/セッターを実装\n\n```java\npublic class W11AC02Form {\n    private UsersEntity user;\n\n    public W11AC02Form(Map<String, Object> data) {\n        user = (UsersEntity) data.get(\"user\");\n    }\n\n    public UsersEntity getUser() {\n        return user;\n    }\n\n    public void setUser(UsersEntity user) {\n        this.user = user;\n    }\n}\n```",
+    "s2": "精査処理の実装フローは [Entityの精査処理実装フロー](web-application-04_create_entity.json#s1) と同じ。\n\n### テストデータ作成\n\n- ファイル: `test/java/nablarch/sample/ss11AC/W11AC02FormTest.xlsx`\n- シート名: `testValidateForRegister`\n- 確認内容: `user` プロパティの「漢字氏名」と「カナ氏名」の精査（詳細は :ref:`entityUnitTest` 参照）\n\n### テストコード作成\n\n- 格納フォルダ: `test/java/nablarch/sample/ss11AC`\n- クラス名: `W11AC02FormTest`（`EntityTestSupport` 継承）\n- テストメソッド: `testValidateForRegister`\n\n```java\npublic class W11AC02FormTest extends EntityTestSupport {\n    @Test\n    public void testValidateForRegister() {\n        testValidateAndConvert(W11AC02Form.class, \"testValidateForRegister\", \"register\");\n    }\n}\n```\n\n### 単体テスト実行\n\n単体テストを実行し、テストが失敗することを確認する（精査メソッドを実装していないため）。",
+    "s3": "**クラス**: `W11AC02Form`  \n**メソッド**: `validateForRegister`  \n**格納フォルダ**: `main/java/nablarch/sample/ss11AC`\n\n実装手順:\n1. 単項目精査対象プロパティ `user` のセッターに `@ValidationTarget` を付与\n2. `ValidationUtil.validate(context, new String[] {\"user\"})` で単項目精査実行\n\n| プロパティ | アノテーション |\n|---|---|\n| user | `nablarch.core.validation.ValidationTarget` |\n\n```java\n@ValidationTarget\npublic void setUser(UsersEntity user) {\n    this.user = user;\n}\n\n@ValidateFor(\"register\")\npublic static void validateForRegister(ValidationContext<W11AC02Form> context) {\n    ValidationUtil.validate(context, new String[] {\"user\"});\n}\n```\n\n### 単体テスト再実行\n\nForm単体テストを実行し、`UsersEntity` の単項目精査呼び出しが行われていることを確認する。"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "id": "about-nablarch-doc",
+  "title": "開発ポータルサイト テンプレート",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要・コンテンツ・利用方法",
+      "hints": [
+        "開発ポータルサイト",
+        "テンプレート",
+        "利用方法",
+        "相対パス",
+        "ホスト名",
+        "build/html",
+        "source",
+        "Sphinx"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "プロジェクト概要",
+      "hints": [
+        "プロジェクト概要",
+        "マスタスケジュール",
+        "体制図",
+        "開発ポータルサイト リンク先"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設計関連ドキュメント",
+      "hints": [
+        "設計関連ドキュメント",
+        "要件定義書",
+        "外部設計書",
+        "データモデル設計",
+        "UI標準",
+        "DB設計標準",
+        "ID体系",
+        "非機能要件定義書",
+        "方式設計書",
+        "document_format",
+        "design_standard"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "実装関連ドキュメント",
+      "hints": [
+        "実装関連ドキュメント",
+        "開発環境構築ガイド",
+        "業務アプリケーション開発手順",
+        "開発プロセス",
+        "レビュー依頼ルール",
+        "Redmine",
+        "Jenkins",
+        "Subversion",
+        "プログラミング・単体テストガイド",
+        "コーディング規約",
+        "責務配置",
+        "Nablarch Application Framework解説書",
+        "単体テスト標準",
+        "実装FAQ",
+        "Nablarch FAQ",
+        "Javadoc"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**概要**: 各プロジェクトで設計者・実装者が必要とする情報を集約するために、それらの情報・資料へのリンク集となるページのテンプレートをHTMLとして提供します。\n\n確認方法: `build/html/index.html` をブラウザで開いてご確認ください。\n\n**コンテンツ**:\n- `build/html` — 開発ポータルサイトのテンプレートが含まれています\n- `source` — 開発ポータルサイトのHTMLを生成したSphinxソースコードが含まれています\n\n**利用手順**:\n1. `build/html/index.html` のダミーリンクを正しいリンク先に修正する（配布時はすべてダミー）\n2. タイトルとページの説明を修正する\n3. `build/html/` 配下を適切なサーバに配置し、`index.html` へのリンクをプロジェクトメンバーに展開する\n\n> **注意**: リンク先とポータルサイトの配置先が同一サーバの場合、ホスト名は含めず相対パスで記載すること。異なる拠点から異なるホスト名でアクセスする場合も同一ファイルを利用できる。\n\nOK（相対パス）:\n```html\n<a href=\"/svn/\">Subversion</a>\n```\n\nNG（絶対URL）:\n```html\n<a href=\"http://some.example.co.jp/svn/\">Subversion</a>\n```\n\nNablarchコンテンツのパスは、nablarch.zipを解凍したディレクトリからの相対パスで記載されている。",
+    "s2": "| コンテンツ | リンク先 |\n|---|---|\n| プロジェクト概要 | プロジェクトで作成したドキュメント |\n| マスタスケジュール | プロジェクトで作成したドキュメント |\n| 体制図 | プロジェクトで作成したドキュメント |",
+    "s3": "| コンテンツ | リンク先 | 対応Nablarchコンテンツ |\n|---|---|---|\n| 要件定義書 | プロジェクトで作成したドキュメント | — |\n| 外部設計書 | システム機能設計書などの外部設計書ディレクトリ | nablarch/standard/document_format（フォーマット） |\n| データモデル設計 | テーブル定義書などのデータモデル設計書ディレクトリ | nablarch/standard/document_format（フォーマット） |\n| UI標準 | UI標準ドキュメント | nablarch/standard/design_standard（サンプル） |\n| DB設計標準 | DB設計標準ドキュメント | nablarch/standard/design_standard（サンプル） |\n| ID体系 | プロジェクトで作成したドキュメント | — |\n| 非機能要件定義書 | プロジェクトで作成したドキュメント | — |\n| 方式設計書 | プロジェクトで作成したドキュメント | — |",
+    "s4": "| コンテンツ | リンク先 | 対応Nablarchコンテンツ |\n|---|---|---|\n| 開発環境構築ガイド | 開発環境構築手順ドキュメント | nablarch/guide/environment_guide（サンプル） |\n| 業務アプリケーション開発手順 | Nablarchのプログラミング・単体テストガイド | nablarch/guide/development_guide/03_DevelopmentStep/index.html |\n| 開発プロセス | プロジェクトで作成したドキュメント | — |\n| レビュー依頼ルール | プロジェクトで作成したドキュメント（レビュー依頼ルール：開発担当者の実装完了後に、レビュー依頼を行うために必要なチェック事項などを記載してあるドキュメント） | — |\n| Redmine | 課題管理システム | — |\n| Jenkins | 継続的インテグレーションサーバ | — |\n| Subversion | バージョン管理システム | — |\n| 責務配置 | 業務コンポーネントの責務配置ドキュメント。変更がなければ nablarch/library/fw/doc/determining_stereotypes.html（「業務コンポーネント責務配置例」）へのリンクとしてください。 | nablarch/library/fw/doc/determining_stereotypes.html |\n| 単体テスト標準 | 単体テスト標準ドキュメント | nablarch/standard/unit_test（サンプル） |\n| コーディング規約 | Java, SQLなどのコーディング規約ディレクトリ | nablarch/standard/coding_rule（サンプル） |\n| 実装FAQ | アプリケーション実装時参照FAQ。本ドキュメント内でフォーマットを提供していますので、適宜コピーして利用してください。 | — |\n| プログラミング・単体テストガイド | Nablarchのプログラミング・単体テストガイド | nablarch/guide/development_guide/03_DevelopmentStep/index.html |\n| Nablarch Application Framework解説書 | Nablarch AF解説書 | nablarch/library/fw/doc/index.html |\n| Nablarch Application Framework Javadoc | Nablarch AF Javadoc | nablarch/library/fw/javadoc_pg/index.html |\n| Nablarch Testing Framework Javadoc | Nablarch TF Javadoc | nablarch/library/tfw/javadoc_pg/index.html |\n| Nablarch FAQ | Nablarch FAQ | FAQ/index.html |"
+  }
+}

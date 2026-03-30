@@ -1,0 +1,77 @@
+{
+  "id": "libraries-03_PerformanceLog",
+  "title": "パフォーマンスログの出力",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "パフォーマンスログの出力方針",
+      "hints": [
+        "パフォーマンスログ",
+        "DEBUGレベル",
+        "PERFORMANCE",
+        "log.properties",
+        "ロガー名設定",
+        "パフォーマンスログ設定"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "パフォーマンスログの出力項目",
+      "hints": [
+        "パフォーマンスログ出力項目",
+        "ポイント",
+        "処理結果",
+        "実行時間",
+        "メモリ使用量",
+        "開始日時",
+        "終了日時"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "パフォーマンスログの出力方法",
+      "hints": [
+        "PerformanceLogUtil",
+        "PerformanceLogFormatter",
+        "nablarch.core.log.app.PerformanceLogUtil",
+        "nablarch.core.log.app.PerformanceLogFormatter",
+        "performanceLogFormatter.className",
+        "performanceLogFormatter.targetPoints",
+        "performanceLogFormatter.format",
+        "performanceLogFormatter.datePattern",
+        "$point$",
+        "$result$",
+        "$startTime$",
+        "$endTime$",
+        "$executionTime$",
+        "$maxMemory$",
+        "$startFreeMemory$",
+        "$startUsedMemory$",
+        "$endFreeMemory$",
+        "$endUsedMemory$",
+        "パフォーマンスログ出力方法",
+        "再帰呼び出し"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "パフォーマンスログの出力例",
+      "hints": [
+        "パフォーマンスログ出力例",
+        "FileLogWriter",
+        "writerNames",
+        "availableLoggersNamesOrder",
+        "writer.appFile",
+        "BasicLogFormatter"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "パフォーマンスログは開発時の使用を想定しているためDEBUGレベルで出力する。\n\n| ログレベル | ロガー名 |\n|---|---|\n| DEBUG | PERFORMANCE |\n\nlog.propertiesの設定例:\n\n```properties\nloggers.PER.nameRegex=PERFORMANCE\nloggers.PER.level=DEBUG\nloggers.PER.writerNames=<出力先のログライタ>\n```",
+    "s2": ":ref:`Log_BasicLogFormatter` の共通項目は省略する。共通項目と組み合わせたフォーマットは :ref:`AppLog_Format` を参照。\n\n| 項目名 | 説明 |\n|---|---|\n| ポイント | 測定対象を識別するID |\n| 処理結果 | 処理結果を表す文字列 |\n| 開始日時 | 処理の開始日時 |\n| 終了日時 | 処理の終了日時 |\n| 実行時間 | 処理の実行時間（終了日時－開始日時） |\n| 最大メモリ量 | 処理の開始時点のヒープサイズ |\n| 開始時の空きメモリ量 | 処理の開始時点の空きヒープサイズ |\n| 開始時の使用メモリ量 | 処理の開始時点の使用ヒープサイズ |\n| 終了時の空きメモリ量 | 処理の開始時点の空きヒープサイズ |\n| 終了時の使用メモリ量 | 処理の開始時点の使用ヒープサイズ |",
+    "s3": "**クラス**: `nablarch.core.log.app.PerformanceLogUtil`, `nablarch.core.log.app.PerformanceLogFormatter`\n\n| クラス名 | 概要 |\n|---|---|\n| `nablarch.core.log.app.PerformanceLogUtil` | パフォーマンスログを出力するクラス |\n| `nablarch.core.log.app.PerformanceLogFormatter` | パフォーマンスログの個別項目をフォーマットするクラス |\n\n`PerformanceLogUtil`のstartメソッドで計測開始、endメソッドで計測終了・出力を行う。endメソッド呼び出し時にstartメソッドで取得した日時とメモリ使用量を合わせて出力する。\n\n```java\n// startメソッドでは、測定対象を識別するポイントを指定する。\nString point = \"UserSearchAction#doUSERS00101\";\nPerformanceLogUtil.start(point);\n\n// 検索実行\nUserSearchService searchService = new UserSearchService();\nSqlResultSet searchResult = searchService.selectByCondition(condition);\n\n// endメソッドでは、ポイント、処理結果を表す文字列、ログ出力のオプション情報を指定できる。\nPerformanceLogUtil.end(point, String.valueOf(searchResult.size()));\n```\n\n> **警告**: PerformanceLogUtilは実行時ID＋ポイント名で一意識別するため、再帰呼び出し中では使用不可。\n\napp-log.propertiesの設定例:\n\n```properties\nperformanceLogFormatter.className=nablarch.core.log.app.PerformanceLogFormatter\nperformanceLogFormatter.targetPoints=UserSearchAction#doUSERS00101\nperformanceLogFormatter.datePattern=yyyy-MM-dd HH:mm:ss.SSS\nperformanceLogFormatter.format=point:$point$ result:$result$ exe_time:$executionTime$ms\n```\n\n| プロパティ名 | デフォルト値 | 説明 |\n|---|---|---|\n| performanceLogFormatter.className | | PerformanceLogFormatterのクラス名。差し替える場合に指定する |\n| performanceLogFormatter.format | | パフォーマンスログの個別項目のフォーマット |\n| performanceLogFormatter.datePattern | yyyy-MM-dd HH:mm:ss.SSS | 開始・終了日時の日時パターン（java.text.SimpleDateFormat構文） |\n| performanceLogFormatter.targetPoints | | 出力対象ポイント名。複数はカンマ区切り。誤設定による無駄な出力を防ぐためこの設定に基づき出力する |\n\nフォーマットに指定可能なプレースホルダ:\n\n| プレースホルダ | 説明 |\n|---|---|\n| $point$ | 測定対象を識別するID |\n| $result$ | 処理結果を表す文字列 |\n| $startTime$ | 処理の開始日時 |\n| $endTime$ | 処理の終了日時 |\n| $executionTime$ | 処理の実行時間（終了日時－開始日時） |\n| $maxMemory$ | 処理の開始時点のヒープサイズ |\n| $startFreeMemory$ | 処理の開始時点の空きヒープサイズ |\n| $startUsedMemory$ | 処理の開始時点の使用ヒープサイズ |\n| $endFreeMemory$ | 処理の開始時点の空きヒープサイズ |\n| $endUsedMemory$ | 処理の開始時点の使用ヒープサイズ |\n\nデフォルトフォーマット:\n\n```\n\\n\\tpoint = [$point$] result = [$result$]\n\\n\\tstart_time = [$startTime$] end_time = [$endTime$]\n\\n\\texecution_time = [$executionTime$]\n\\n\\tmax_memory = [$maxMemory$]\n\\n\\tstart_free_memory = [$startFreeMemory$] start_used_memory = [$startUsedMemory$]\n\\n\\tend_free_memory = [$endFreeMemory$] end_used_memory = [$endUsedMemory$]\n```",
+    "s4": "log.propertiesの設定例:\n\n```properties\nwriterNames=appFile\n\n# ログの出力先\nwriter.appFile.className=nablarch.core.log.basic.FileLogWriter\nwriter.appFile.filePath=./app.log\nwriter.appFile.encoding=UTF-8\nwriter.appFile.maxFileSize=10000\nwriter.appFile.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.appFile.formatter.format=$date$ -$logLevel$- R[$requestId$] U[$userId$] E[$executionId$] $message$\n\navailableLoggersNamesOrder=PER\n\n# PER\nloggers.PER.nameRegex=PERFORMANCE\nloggers.PER.level=DEBUG\nloggers.PER.writerNames=appFile\n```\n\napp-log.propertiesの設定例:\n\n```properties\n# PerformanceLogFormatterの設定(個別項目のフォーマット)\nperformanceLogFormatter.targetPoints=UserSearchAction#doUSERS00101\nperformanceLogFormatter.format=point:$point$ result:$result$ exe_time:$executionTime$ms\n```\n\n出力結果:\n\n```\n2011-02-15 18:25:50.577 -DEBUG- R[USERS00101] U[0000000001] E[APUSRMGR0001201102151825504990004] point:UserSearchAction#doUSERS00101 result:17 exe_time:16ms\n```"
+  }
+}

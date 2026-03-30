@@ -1,0 +1,27 @@
+{
+  "id": "testing-framework-5",
+  "title": "Windows上で成功していた画面オンライン処理のリクエスト単体テストをLinux上で実行すると、IOExceptionが発生してテストが失敗してしまいます。対処方法を教えてください",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "Linux上でリクエスト単体テストがIOException(File name too long)で失敗する場合の対処",
+      "hints": [
+        "HttpServer",
+        "HttpRequestTestSupport",
+        "AbstractHttpRequestTestTemplate",
+        "IOException",
+        "File name too long",
+        "リクエスト単体テスト",
+        "HTMLダンプファイル",
+        "テストケースの説明",
+        "ファイル名長上限",
+        "Linux Windows 差異"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## Linux上でリクエスト単体テストがIOException(File name too long)で失敗する場合の対処\n\n**症状**: Windows上では正常終了する画面オンライン処理のリクエスト単体テストが、Linux上で `java.io.IOException: File name too long` により失敗する。\n\n**原因**: 画面オンライン処理のリクエスト単体テストで出力されるHTMLダンプファイルのファイル名に「テストケースの説明」（テストケース一覧の `description` フィールド、旧バージョンでは `case` フィールド）がそのまま含まれる仕様のため、OSのファイル名長上限を超えるとIOExceptionが発生する。\n\nWindowsとLinuxではファイル名長上限が異なる:\n- Windows: **255文字**\n- Linux: **255バイト**\n\n全角文字（マルチバイト文字）を含む説明文は、Windows上では255文字以内でも、Linuxでは255バイトを超える場合がある。\n\n**対処方法**: テストケースの説明（`description`）の長さを短くする。特に全角文字を含む場合はバイト数に注意する。\n\n**関連クラス**:\n- `nablarch.fw.web.HttpServer` (`dumpHttpMessage` メソッドでファイル書き出し)\n- `nablarch.test.core.http.HttpRequestTestSupport`\n- `nablarch.test.core.http.AbstractHttpRequestTestTemplate`"
+  }
+}

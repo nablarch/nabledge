@@ -1,0 +1,50 @@
+{
+  "id": "web-application-05_screenTransition",
+  "title": "画面遷移処理",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "本項で説明する内容",
+      "hints": [
+        "W11AC0201.jsp",
+        "W11AC0202.jsp",
+        "画面遷移処理",
+        "ViewJSPファイル",
+        "ステレオタイプ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "作成手順",
+      "hints": [
+        "n:form",
+        "button:cancel",
+        "button:confirm",
+        "windowScopePrefixes",
+        "uri属性",
+        "label属性",
+        "入力値復元",
+        "キャンセルボタン",
+        "確定ボタン",
+        "JSP画面遷移実装",
+        "サンプル提供タグファイル"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "次に読むもの",
+      "hints": [
+        "カスタムタグ",
+        "WebView",
+        "画面遷移参照"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 作成ファイル\n\n| ファイル | ステレオタイプ | 処理内容 |\n|---|---|---|\n| [W11AC0201.jsp](assets/web-application-05_screenTransition/W11AC0201.jsp) | View | ユーザ情報登録画面に入力した内容及び、登録画面に戻るボタンと、登録処理を行うボタンを表示する。W11AC0202.jsp内でW11AC0201.jspを取り込んでいる。|\n| [W11AC0202.jsp](assets/web-application-05_screenTransition/W11AC0202.jsp) | | |\n\nステレオタイプについては :ref:`stereoType` を参照。",
+    "s2": "## View(JSP)の作成\n\n画面遷移の実装にはアプリケーションフレームワーク提供のカスタムタグを使用する。\n\n- `n:form` タグ: HTMLフォームの作成に使用する。`windowScopePrefixes` 属性で入力値の復元を制御する。\n- `button:cancel` タグ: キャンセルボタンを出力する。`uri` 属性にサブミットするパスを指定する。\n- `button:confirm` タグ: 確定ボタンを出力する。`uri` 属性にサブミットするパスを指定する。\n\n> **注意**: `button:cancel` と `button:confirm` はアプリケーションフレームワークのコア機能ではなく、**サンプル提供されるタグファイル**である。\n\n> **注意**: `button:cancel` のデフォルトラベルは「キャンセル」、`button:confirm` は「確定」。一部画面でラベルを変えたい場合は `label` 属性に表示文言を指定する。\n\n## 登録画面へ戻る際の入力値の復元\n\nキャンセルボタン押下で前の画面へ戻った際に入力値を復元するには、以下の2点を実装すること:\n\n1. 入力項目（テキストエリア、ラジオボタンなど）の作成にはアプリケーションフレームワーク提供のカスタムタグを使用する。\n2. `n:form` タグの `windowScopePrefixes` 属性に、入力項目のカスタムタグの `name` 属性で指定したプレフィックス :ref:`(参照)<04_JSPNameAttribute>` を指定する。\n\n実装ファイル: [W11AC0201.jsp](assets/web-application-05_screenTransition/W11AC0201.jsp)",
+    "s3": "なし"
+  }
+}

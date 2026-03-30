@@ -1,0 +1,24 @@
+{
+  "id": "libraries-3",
+  "title": "カンマ編集された値を数値型として精査することは出来ますか?",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "カンマ編集された値を数値型として精査することは出来ますか?",
+      "hints": [
+        "@Digits",
+        "@PropertyName",
+        "commaSeparated",
+        "カンマ編集",
+        "数値型バリデーション",
+        "Digitsアノテーション",
+        "数値精査"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**アノテーション**: `@Digits`\n\n`@Digits` の `commaSeparated = true`（デフォルト）を設定すると、カンマ編集された値（例: `123,123`）を数値項目として精査でき、精査後のエンティティには `123123` が設定される。カンマ編集は必須ではなく、カンマなしの値も精査OK。\n\n```java\n// commaSeparated = true（デフォルト）: カンマ編集を許容\n@PropertyName(\"数値\")\n@Digits(integer = 8, commaSeparated = true)\npublic void setIntVal(Integer intVal) {\n    this.intVal = intVal;\n}\n```\n\nカンマを許容しない場合は `commaSeparated = false` を設定する。\n\n```java\n@PropertyName(\"数値\")\n@Digits(integer = 8, commaSeparated = false)\npublic void setIntVal(Integer intVal) {\n    this.intVal = intVal;\n}\n```\n\n関連情報: [1](libraries-1-FAQ.json)"
+  }
+}

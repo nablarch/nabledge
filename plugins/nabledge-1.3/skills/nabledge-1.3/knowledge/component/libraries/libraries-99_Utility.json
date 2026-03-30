@@ -1,0 +1,37 @@
+{
+  "id": "libraries-99_Utility",
+  "title": "ユーティリティ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "日付ユーティリティ",
+      "hints": [
+        "DateUtil",
+        "nablarch.common.date.DateUtil",
+        "getDate",
+        "formatDate",
+        "addDay",
+        "addMonth",
+        "getDays",
+        "getMonths",
+        "getMonthEndDate",
+        "SimpleDateFormat",
+        "日付ユーティリティ",
+        "日付オブジェクト変換",
+        "日付フォーマット変換",
+        "日数加減算",
+        "月数加減算",
+        "月末日取得",
+        "日付間日数取得",
+        "日付間月数取得",
+        "yyyyMMdd",
+        "yyyyMM"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス**: `nablarch.common.date.DateUtil`\n\n> **注意**: パラメータで指定される日付の妥当性チェック（形式や実在日チェック）は行わない。呼び出し元で正しい日付形式であることを検証してから使用すること。これは、本機能は繰り返し呼び出される機能であるため、都度実在日チェックなどを実施すると性能に与える影響が大きくなるためである。不正な形式や非実在日が指定された場合の実行結果は保証しない。\n\n### 日付オブジェクト変換\n\n`java.util.Date getDate(String date)`\n\n- `date`: 日付（yyyyMMdd形式）\n- 戻り値: `java.util.Date`\n\n```java\nDateUtil.getDate(\"20110302\"); // -> java.util.Dateオブジェクト\n```\n\n### 日付フォーマット変換\n\n`String formatDate(String date, String pattern)`\n\n- `date`: 日付（yyyyMMdd形式）\n- `pattern`: フォーマット（SimpleDateFormatの仕様に準拠）\n- 戻り値: 指定フォーマットに変換した値\n\n```java\nDateUtil.formatDate(\"20110302\", \"yyyy/MM/dd\"); // -> 2011/03/02\nDateUtil.formatDate(\"20110302\", \"yyyy-MM-dd\"); // -> 2011-03-02\n```\n\n### 日数の加減算\n\n`String addDay(String date, int days)`\n\n- `date`: 日付（yyyyMMdd形式）\n- `days`: 加算する日付（負の値の場合は、減算が行われる。）\n- 戻り値: 計算後の日付（yyyyMMdd形式）\n\n```java\nDateUtil.addDay(\"20110302\", 10);  // -> 20110312\nDateUtil.addDay(\"20110302\", -10); // -> 20110220\n```\n\n### 月数の加減算\n\n`String addMonth(String date, int month)`\n\n- `date`: 日付（yyyyMMdd or yyyyMM形式）\n- `month`: 月数（負の値の場合は減算）\n- 戻り値: 計算後の日付（yyyyMMdd or yyyyMM形式）\n\n```java\nDateUtil.addMonth(\"20110302\", 1);  // -> 20110402\nDateUtil.addMonth(\"201103\", 1);    // -> 201104\nDateUtil.addMonth(\"20110302\", -1); // -> 20110202\nDateUtil.addMonth(\"201103\", 1);    // -> 201102\n```\n\n### 日付間の日数取得\n\n`long getDays(String dateFrom, String dateTo)`\n\n- `dateFrom`: 被演算日付（yyyyMMdd形式）\n- `dateTo`: 演算日付（yyyyMMdd形式）\n- 戻り値: 2つの日付間の日数（同日の場合は0、`dateFrom > dateTo` の場合は負の値）\n\n```java\nDateUtil.getDate(\"20110302\", \"20110302\"); // -> 0\nDateUtil.getDays(\"20120229\", \"20120331\"); // -> 31\nDateUtil.getDays(\"20120401\", \"20120101\"); // -> -91\n```\n\n### 日付間の月数取得\n\n`int getMonths(String monthFrom, String monthTo)`\n\n- `dateFrom`: 被演算日付（yyyyMMdd or yyyyMM形式）\n- `dateTo`: 演算日付（yyyyMMdd or yyyyMM形式）\n- 戻り値: 2つの日付間の月数（同日・同月の場合は0、`dateFrom > dateTo` の場合は負の値）\n\n```java\nDateUtil.getMonths(\"20110302\", \"20110302\"); // -> 0\nDateUtil.getMonths(\"201103\", \"201103\");     // -> 0\nDateUtil.getMonths(\"20120229\", \"20120331\"); // -> 1\nDateUtil.getMonths(\"201202\", \"201203\");     // -> 1\nDateUtil.getMonths(\"20120401\", \"20120101\"); // -> -3\nDateUtil.getMonths(\"201204\", \"201201\");     // -> -3\nDateUtil.getMonths(\"20110331\", \"201104\");   // -> 1\nDateUtil.getMonths(\"201103\", \"20100315\");   // -> -12\n```\n\n### 月末日取得\n\n`String getMonthEndDate(String date)`\n\n- `date`: 日付（yyyyMMdd or yyyyMM形式）\n- 戻り値: 月末日（yyyyMMdd形式）\n\n```java\nDateUtil.getMonthEndDate(\"201103\"); // -> 20110331\nDateUtil.getMonthEndDate(\"201104\"); // -> 20110431\nDateUtil.getMonthEndDate(\"200802\"); // -> 20080229\n```"
+  }
+}

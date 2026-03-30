@@ -1,0 +1,69 @@
+{
+  "id": "nablarch-batch-batch_resident",
+  "title": "常駐バッチ実行制御基盤",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "基本構造",
+      "hints": [
+        "MultiThreadExecutionHandler",
+        "RequestThreadLoopHandler",
+        "BatchAction",
+        "DataReadHandler",
+        "常駐バッチ",
+        "マルチスレッド",
+        "プロセス制御部分",
+        "リクエスト処理部分",
+        "要求管理テーブル"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "業務アクションハンドラの実装",
+      "hints": [
+        "BatchAction",
+        "業務アクションハンドラ",
+        "テンプレートクラス継承"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "標準ハンドラ構成と主要処理フロー",
+      "hints": [
+        "Main",
+        "StatusCodeConvertHandler",
+        "ThreadContextClearHandler",
+        "GlobalErrorHandler",
+        "ThreadContextHandler_main",
+        "DuplicateProcessCheckHandler",
+        "RetryHandler",
+        "DbConnectionManagementHandler_main",
+        "TransactionManagementHandler_main",
+        "RequestPathJavaPackageMapping",
+        "MultiThreadExecutionHandler",
+        "DbConnectionManagementHandler",
+        "RequestThreadLoopHandler",
+        "FileRecordWriterDisposeHandler",
+        "ProcessStopHandler",
+        "ServiceAvailabilityCheckHandler",
+        "DataReadHandler",
+        "TransactionManagementHandler",
+        "BatchAction",
+        "ProcessStop",
+        "ProcessAbnormalEnd",
+        "Retryable",
+        "重複起動エラー",
+        "プロセス正常停止",
+        "DB接続リトライ失敗",
+        "常駐バッチハンドラ構成"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "常駐バッチは一定間隔ごとに要求データを検索し随時処理を行う常駐型プロセス。マルチスレッド実行時、各スレッドが一定間隔で要求データの有無をチェックするため、処理遅延が発生したスレッドがあっても残りのスレッドで随時処理を継続できる。\n\n> **注意**: Nablarchバージョン1.4.3でハンドラ構成が大きく変更された。1.4.2以前のハンドラ構成は[batch_resident_thread_sync](nablarch-batch-batch_resident_thread_sync.json)参照。旧ハンドラ構成では処理の遅いスレッドの終了を他スレッドが待つため要求データの取り込み遅延が発生する。新規プロジェクトでは新しいハンドラ構成を推奨。\n\n常駐バッチの構造は **プロセス制御部分(メインスレッド)** と **リクエスト処理部分(サブスレッド)** の2つに分かれる。\n\n**プロセス制御部分(メインスレッド)**\n\nJavaコマンドから[../handler/Main](../../component/handlers/handlers-Main.json)を実行して開始。リポジトリ初期化後、ハンドラキューのハンドラを順次実行し、[業務アクションハンドラ](../../component/handlers/handlers-BatchAction.json)の初期化とDataReaderの生成を行う。[../handler/MultiThreadExecutionHandler](../../component/handlers/handlers-MultiThreadExecutionHandler.json)でサブスレッドを作成後、サブスレッドが終了するまで待機する。\n\n**リクエスト処理部分(サブスレッド)**\n\nプロセス制御部分で生成したDataReaderで要求管理テーブルを検索する。未処理の要求データが存在する場合、そのデータを読み込み[業務アクションハンドラ](../../component/handlers/handlers-BatchAction.json)を実行する。業務処理終了後、[../handler/RequestThreadLoopHandler](../../component/handlers/handlers-RequestThreadLoopHandler.json)により要求管理テーブルの検索処理に戻り繰り返す。\n\n> **注意**: 業務アクションハンドラの指定はバッチプロセス起動時の引数で行う。詳細は[batch_single_shot](nablarch-batch-batch_single_shot.json)参照。",
+    "s2": "業務アクションを実装するには、FW側で提供されるテンプレートクラスを継承して作成する。詳細は[../handler/BatchAction](../../component/handlers/handlers-BatchAction.json)参照。",
+    "s3": "## 標準ハンドラキュー\n\n| No. | ハンドラ |\n|---|---|\n| 1 | Main |\n| 2 | StatusCodeConvertHandler |\n| 3 | ThreadContextClearHandler |\n| 4 | GlobalErrorHandler |\n| 5 | ThreadContextHandler_main |\n| 6 | DuplicateProcessCheckHandler |\n| 7 | RetryHandler |\n| 8 | DbConnectionManagementHandler_main |\n| 9 | TransactionManagementHandler_main |\n| 10 | RequestPathJavaPackageMapping |\n| 11 | MultiThreadExecutionHandler |\n| 12 | DbConnectionManagementHandler |\n| 13 | RequestThreadLoopHandler |\n| 14 | FileRecordWriterDisposeHandler |\n| 15 | ProcessStopHandler |\n| 16 | ServiceAvailabilityCheckHandler |\n| 17 | DataReadHandler |\n| 18 | TransactionManagementHandler |\n| 19 | BatchAction |\n\n## 処理フロー\n\n### 正常起動\n1. Main (inbound)\n2. ThreadContextHandler_main (inbound)\n3. DbConnectionManagementHandler_main: メインスレッドで使用するDB接続を生成\n4. TransactionManagementHandler_main: メインスレッドで使用するDBトランザクションを生成\n5. RequestPathJavaPackageMapping: 起動引数-requestPathを元に業務アクションハンドラを生成\n6. MultiThreadExecutionHandler: 処理開始前・データリーダ作成時にBatchActionへコールバック\n7. BatchAction (callback): リクエストスレッド起動前、データリーダ作成、リクエストスレッド終了後にコールバック\n8. DbConnectionManagementHandler: ここで取得したDB接続を以降の処理で使いまわす\n9. RequestThreadLoopHandler (inbound)\n10. DataReadHandler: 各リクエストスレッドは要求データを検索し、取得→業務処理実行を繰り返す\n\n### 重複起動エラー\n1. Main (inbound)\n2. ThreadContextHandler_main: 起動引数-requestPathからバッチのリクエストIDを決定\n3. DuplicateProcessCheckHandler: 同一プロセスが起動済みの場合に検出（起動停止時の終了コードを設定）\n4. GlobalErrorHandler (error): 障害ログを出力\n5. StatusCodeConvertHandler (outbound)\n6. Main (outbound): 異常終了\n\n### 要求データあり（正常フロー）\n1. RequestThreadLoopHandler (inbound): リクエストスレッド内での処理の起点\n2. DataReadHandler (inbound)\n3. TransactionManagementHandler (inbound)\n4. BatchAction (inbound/outbound)\n5. TransactionManagementHandler (outbound): コミット時にBatchActionへコールバック\n6. BatchAction (callback): 業務トランザクションコミット後のコールバック（処理例: 要求データのステータスを処理済みに変更）\n7. FileRecordWriterDisposeHandler: 現在スレッドでファイル出力のために開かれたリソースを解放\n8. RequestThreadLoopHandler (outbound): ①へ\n\n> **注意**: 要求の2重取り込み防止のため、処理中データをヒープ上で管理する。処理が遅いスレッドが処理中のデータが未処理として要求管理テーブルに残り続けた場合でも、2重取り込みを防止できる。\n\n### 要求データなし（代替フロー）\n1. DataReadHandler (inbound)\n2. DataReadHandler (outbound): 要求データが存在しない場合、DataReader.NoMoreRecordをリターン\n3. RequestThreadLoopHandler (outbound): ④へ（スレッドループの先頭に戻る）\n4. RequestThreadLoopHandler (inbound)\n5. ProcessStopHandler: プロセス停止フラグ確認後、再び①へ\n\nスレッドループ先頭から処理を再実行することで、プロセス管理テーブルの状態が確認され、処理停止や閉局状態への変更が可能となる。\n\n### 閉局中処理待機（代替フロー）\n1. RequestThreadLoopHandler (inbound): リクエストスレッド内での処理の起点\n2. ServiceAvailabilityCheckHandler: サービス閉局例外を送出\n3. RequestThreadLoopHandler (error): 一定時間wait後、①へ\n\n### 業務エラー（異常フロー）\n1. RequestThreadLoopHandler (inbound): リクエストスレッド内での処理の起点\n2. TransactionManagementHandler (inbound)\n3. BatchAction: 業務処理をエラー終了させる場合は実行時例外を送出 → トランザクションロールバック・障害ログ出力\n4. TransactionManagementHandler (error): 業務アクションへコールバック\n5. BatchAction (callback): 業務トランザクションロールバック後のコールバック（処理例: 要求データのステータスを処理失敗に変更）\n6. RequestThreadLoopHandler (error): 起因例外を障害ログとして出力後、リトライ可能例外を送出\n7. RetryHandler (error): リトライ処理を実行\n8. MultiThreadExecutionHandler: リクエストスレッドを再作成し要求データ監視を再開\n\n> **注意**: エラーが発生した要求データはエラーステータスとなり、データメンテを行わない限り再処理されない。\n\n### DB接続エラー→リトライ（異常フロー）\n1. RequestThreadLoopHandler (inbound): リクエストスレッド内での処理の起点\n2. BatchAction: 要求データ処理中にDB接続エラーが発生した場合、リトライ可能実行時例外（Retryableを実装した例外）を送出\n3. RequestThreadLoopHandler (error): リトライ可能例外をそのまま再送出\n4. RetryHandler (error): データリーダを破棄（DB接続エラーの場合、データリーダが使用しているDB接続も使用不可となるため）\n5. DbConnectionManagementHandler_main: DB再接続\n6. MultiThreadExecutionHandler: データリーダを再生成\n7. DbConnectionManagementHandler: DB再接続\n\n### プロセス正常停止（正常フロー）\n1. RequestThreadLoopHandler (inbound): リクエストスレッド内での処理の起点\n2. ProcessStopHandler (inbound): プロセス管理テーブルのフラグを確認\n3. RequestThreadLoopHandler (error): プロセス停止要求(ProcessStop)を捕捉 → INFOログ出力後、処理結果オブジェクトをリターン（ステータスコード:200）\n4. MultiThreadExecutionHandler (outbound)\n5. StatusCodeConvertHandler (outbound): ステータスコード200 → 終了コード0\n6. Main (outbound): 正常終了\n\n### プロセス異常停止（異常フロー）\n1. BatchAction: リクエスト処理実行中に致命的エラー（VM系エラーやProcessAbnormalEnd）が発生\n2. RequestThreadLoopHandler (error): 致命的エラーを再送出しリクエストスレッドを停止\n3. MultiThreadExecutionHandler (error)\n4. BatchAction (callback)\n5. StatusCodeConvertHandler (outbound)\n6. Main (outbound): 異常終了\n\n### DB接続リトライ失敗（異常フロー）\n1. BatchAction: リクエスト処理実行中にDB接続エラーが発生した場合、リトライ可能実行時例外（Retryableを実装した例外）を送出\n2. RequestThreadLoopHandler (error): リトライ可能例外をそのまま再送出\n3. RetryHandler (error): リトライ回数が上限値を超過した場合、例外を再送出しリクエストスレッドを停止\n4. MultiThreadExecutionHandler (error)\n5. GlobalErrorHandler (error)\n6. StatusCodeConvertHandler (outbound)\n7. Main (outbound): 異常終了"
+  }
+}

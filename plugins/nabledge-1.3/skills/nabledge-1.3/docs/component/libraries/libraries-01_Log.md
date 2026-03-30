@@ -1,0 +1,896 @@
+# ログ出力
+
+## 概要
+
+フレームワークとアプリケーションからログ出力を行う機能を提供する。
+
+- 明示的な初期処理は不要
+- ログ出力リソース解放のため終了処理が必要。終了処理はフレームワークの他の機能で行う
+- Webアプリケーションでの終了処理は [../../handler/NablarchServletContextListener](../handlers/handlers-NablarchServletContextListener.md) で行う
+
+**クラス**: `nablarch.core.log.basic.LogLevel`
+
+ログレベルを表す列挙型。
+
+**クラス**: `nablarch.core.log.basic.SynchronousFileLogWriter`（`nablarch.core.log.basic.FileLogWriter`を継承）
+
+ロックファイルを用いた排他制御でファイルにログを書き込む。複数プロセスから同一ファイルへのログ出力を直列化でき、確実にログを出力できる。
+
+設定例（:ref:`propsSettingRules` 参照）:
+
+```bash
+writerNames=monitorFile
+
+writer.monitorFile.className=nablarch.core.log.basic.SynchronousFileLogWriter
+writer.monitorFile.filePath=/var/log/app/monitor.log
+writer.monitorFile.encoding=UTF-8
+writer.monitorFile.outputBufferSize=8
+writer.monitorFile.maxFileSize=50000
+writer.monitorFile.formatter.className=nablarch.core.log.basic.BasicLogFormatter
+writer.monitorFile.level=ERROR
+writer.monitorFile.lockFilePath=/var/log/lock/monitor.lock
+writer.monitorFile.lockRetryInterval=10
+writer.monitorFile.lockWaitTime=3000
+writer.monitorFile.failureCodeCreateLockFile=MSG00101
+writer.monitorFile.failureCodeReleaseLockFile=MSG00102
+writer.monitorFile.failureCodeForceDeleteLockFile=MSG00103
+writer.monitorFile.failureCodeInterruptLockWait=MSG00104
+```
+
+level=ERRORの場合、ERRORレベル未満のログ（初期処理後の初期化ログ等）は出力されない。
+
+| プロパティ名 | 説明 |
+|---|---|
+| filePath | 書き込み先ファイルパス |
+| encoding | 文字エンコーディング |
+| outputBufferSize | 出力バッファサイズ（KB単位、1000バイト=1KB、デフォルト8KB） |
+| maxFileSize | ファイル最大サイズ（KB単位） |
+| formatter.className | ログフォーマッタのクラス名 |
+| level | このレベル以上のログを出力 |
+| lockFilePath | ロックファイルパス |
+| lockRetryInterval | ロック取得再試行間隔（ミリ秒） |
+| lockWaitTime | ロック取得待機時間（ミリ秒） |
+| failureCodeCreateLockFile | ロックファイル生成失敗時の障害通知コード |
+| failureCodeReleaseLockFile | ロックファイル解放失敗時の障害通知コード |
+| failureCodeForceDeleteLockFile | ロックファイル強制削除失敗時の障害通知コード |
+| failureCodeInterruptLockWait | ロック取得待ちで割り込み発生時の障害通知コード |
+
+**障害発生時の動作**（:ref:`FailureLogWriteDetail` 参照）:
+
+1. ロック待機時間超過の場合: ロックファイルを強制削除後、自スレッド用ロックファイルを生成してログ出力
+2. 強制削除不可の場合: ロックなしで強制ログ出力して処理を終了※
+3. ロックファイル生成失敗または割り込み発生の場合: ロックなしで強制ログ出力して処理を終了※
+
+※ 処理を終了とは、ログ出力処理を終了し呼び出し元に処理を正常に戻すことを意味する（例外をスローしない）。
+
+> **警告**: ロックなしで強制ログ出力する場合、複数プロセスからの競合によりログが正常に出力されない場合がある。
+
+障害ログ詳細（全てFATALレベル）:
+
+| 障害の種類 | プロパティ名 | メッセージ設定例（`{0}`にはロックファイルのパスが設定される） | デフォルトメッセージ（障害コード未設定時） |
+|---|---|---|---|
+| ロックファイルが生成できない | failureCodeCreateLockFile | ロックファイルの生成に失敗しました。おそらくロックファイルのパスが間違っています。ロックファイルパス=[{0}]。 | failed to create lock file. perhaps lock file path was invalid. lock file path=[{0}]. |
+| ロックファイルを解放（削除）できない | failureCodeReleaseLockFile | ロックファイルの削除に失敗しました。ロックファイルパス=[{0}]。 | failed to delete lock file. lock file path=[{0}]. |
+| 解放されないロックファイルを強制削除できない | failureCodeForceDeleteLockFile | ロックファイルの強制削除に失敗しました。ロックファイルが不正に開かれています。ロックファイルパス=[{0}]。 | failed to delete lock file forcedly. lock file was opened illegally. lock file path=[{0}]. |
+| ロック取得待ちで割り込みが発生 | failureCodeInterruptLockWait | ロック取得中に割り込みが発生しました。 | interrupted while waiting for lock retry. |
+
+> **警告**: 障害コードを設定した場合、障害通知ログのフォーマットで同一ログファイルにログが出力されるが、障害解析ログは出力されない。障害コードの設定を推奨。
+
+**クラス**: `LogLevelLabelProvider`, `BasicLogFormatter`, `LogLevel`
+
+ログレベルを表す文言のデフォルトはLogLevel列挙型の名称（FATAL, ERRORなど）。`LogLevelLabelProvider`クラスを使用することでプロパティファイルから変更可能。`BasicLogFormatter`はこのクラスを使用して変更をサポートしている。
+
+設定キーの形式: `<ログライタのプレフィックス>.formatter.label.<LogLevel列挙型の名称の小文字>`
+
+設定例（文言変更後）:
+```properties
+writer.appFile.formatter.label.fatal=F
+writer.appFile.formatter.label.error=E
+writer.appFile.formatter.label.warn=W
+writer.appFile.formatter.label.info=I
+writer.appFile.formatter.label.debug=D
+writer.appFile.formatter.label.trace=T
+```
+
+出力例（変更後）:
+```
+2011-02-28 12:33:39.569 -F- root [null] boot_proc = [] req_id = [null] usr_id = [null] FATALメッセージ
+2011-02-28 12:33:39.569 -E- root [null] boot_proc = [] req_id = [null] usr_id = [null] ERRORメッセージ
+```
+
+<details>
+<summary>keywords</summary>
+
+ログ出力機能, 初期処理不要, 終了処理, NablarchServletContextListener, ログリソース解放, LogLevel, nablarch.core.log.basic.LogLevel, ログレベル列挙型, SynchronousFileLogWriter, nablarch.core.log.basic.SynchronousFileLogWriter, FileLogWriter, ロックファイル, 排他制御, 複数プロセス, lockFilePath, lockRetryInterval, lockWaitTime, failureCodeCreateLockFile, failureCodeReleaseLockFile, failureCodeForceDeleteLockFile, failureCodeInterruptLockWait, LogLevelLabelProvider, BasicLogFormatter, ログレベル文言変更, formatter.label, ログレベルカスタマイズ, label.fatal, label.error
+
+</details>
+
+## 特徴
+
+## ログ出力機能の高い拡張性
+
+以下3つの処理から構成され、それぞれ差し替え可能:
+- a) ログの書き込み処理
+- b) ログのフォーマット処理
+- c) アプリケーションからのログ出力要求受付処理
+
+過去のプロジェクトのログ出力ライブラリを使用する場合は c を差し替える。Log4J向けの c 実装（`nablarch.core.log.log4j.Log4JLoggerFactory`）は提供済み。
+
+## 各種ログの出力機能
+
+以下の各種ログ出力機能を提供（フォーマットは設定で変更可能）:
+- :ref:`障害通知ログ<FailureLog>`
+- :ref:`障害解析ログ<FailureLog>`
+- :ref:`SQLログ<SqlLog>`
+- :ref:`パフォーマンスログ<PerformanceLog>`
+- :ref:`HTTPアクセスログ<HttpAccessLog>`
+
+ロガーファクトリの設定と同じプロパティファイルに記述する（パスの指定は :ref:`loggerFactorySetting` を参照）。記述ルールの詳細は :ref:`propsSettingRules` を参照。
+
+設定例:
+
+```bash
+loggerFactory.className=nablarch.core.log.basic.BasicLoggerFactory
+
+writerNames=appFile,sqlFile,monitorFile,stdout
+
+writer.appFile.className=nablarch.core.log.basic.FileLogWriter
+writer.appFile.filePath=/var/log/app/app.log
+
+writer.sqlFile.className=nablarch.core.log.basic.FileLogWriter
+writer.sqlFile.filePath=/var/log/app/sql.log
+
+writer.monitorFile.className=nablarch.core.log.basic.SynchronousFileLogWriter
+writer.monitorFile.filePath=/var/log/app/monitoring.log
+writer.monitorFile.lockFilePath=/var/log/lock/monitor.lock
+writer.monitorFile.failureCodeCreateLockFile=MSG00101
+writer.monitorFile.failureCodeReleaseLockFile=MSG00102
+writer.monitorFile.failureCodeForceDeleteLockFile=MSG00103
+writer.monitorFile.failureCodeInterruptLockWait=MSG00104
+
+writer.stdout.className=nablarch.core.log.basic.StandardOutputLogWriter
+
+availableLoggersNamesOrder=sql,monitoring,access,validation,root
+
+loggers.root.nameRegex=.*
+loggers.root.level=WARN
+loggers.root.writerNames=appFile
+
+loggers.monitoring.nameRegex=MONITOR
+loggers.monitoring.level=ERROR
+loggers.monitoring.writerNames=appFile,monitorFile
+
+loggers.sql.nameRegex=SQL
+loggers.sql.level=DEBUG
+loggers.sql.writerNames=sqlFile
+
+loggers.access.nameRegex=app\\.user\\.UserManager
+loggers.access.level=INFO
+loggers.access.writerNames=appFile,stdout
+
+loggers.validation.nameRegex=nablarch\\.core\\.validation\\.*
+loggers.validation.level=DEBUG
+loggers.validation.writerNames=stdout
+```
+
+> **警告**: `availableLoggersNamesOrder` は記述順に意味がある。ロガー取得時に記述順でマッチングし最初にマッチしたロガーを返す。より限定的な正規表現のロガー設定を先に記述すること（例: `root`（`nameRegex=.*`）を先に置くと全ロガーが `root` にマッチし、`sqlFile` 等への出力が行われなくなる）。
+
+> **警告**: `availableLoggersNamesOrder` と `loggers.*` で指定するロガー設定名は必ず一致させること。`BasicLoggerFactory` 初期処理で不一致チェックが行われ、一致しない場合は例外をスローする。`availableLoggersNamesOrder` から `access` を取り除いた場合は `loggers.access.*` の設定も明示的に取り除くこと。
+
+> **注意**: 全ログ出力にマッチするキャッチオール設定（`nameRegex=.*`）を1つ用意し `availableLoggersNamesOrder` の最後に指定することを推奨。設定漏れによる重要ログの消失を防止できる。
+
+プロパティファイルの設定値はシステムプロパティ（同名キー）で上書き可能。プロセスごとにログ設定を変えるには `-D` オプションを使用する。
+
+```bash
+java -Dloggers.root.level=INFO ...
+```
+
+`BasicLoggerFactory` は初期処理完了後、各ログライタに対してロガー設定の情報をINFOレベルで出力する。
+
+`LogWriterSupport` を継承しているクラスでは、ログライタ単位でレベルに応じた出力制御が可能。
+
+ロガー設定はロガー名毎の設定のため、同じロガー名で異なるレベルで別々のファイルに出力することができない。ログライタにもレベルを設定することで対応可能。
+
+例: ロガー設定でINFOレベルを指定し、通知用ログライタにERRORレベルを設定することで、アプリログ（INFO以上）と通知ログ（ERROR以上）を別ファイルに出力できる。
+
+```bash
+writerNames=appFile,monitorFile
+
+writer.appFile.className=nablarch.core.log.basic.FileLogWriter
+writer.appFile.filePath=/var/log/app/app.log
+
+writer.monitorFile.className=nablarch.core.log.basic.SynchronousFileLogWriter
+writer.monitorFile.filePath=/var/log/app/monitor.log
+writer.monitorFile.level=ERROR
+writer.monitorFile.lockFilePath=/var/log/lock/monitor.lock
+writer.monitorFile.failureCodeCreateLockFile=MSG00101
+writer.monitorFile.failureCodeReleaseLockFile=MSG00102
+writer.monitorFile.failureCodeForceDeleteLockFile=MSG00103
+writer.monitorFile.failureCodeInterruptLockWait=MSG00104
+
+availableLoggersNamesOrder=root
+
+loggers.root.nameRegex=.*
+loggers.root.level=INFO
+loggers.root.writerNames=appFile,monitorFile
+```
+
+- `appFile`: ログレベル未指定 → ロガー設定のINFO以上が出力される
+- `monitorFile`: ログレベルERROR指定 → ERROR以上のみ出力される
+
+なし
+
+<details>
+<summary>keywords</summary>
+
+ログ出力機能の拡張性, Log4JLoggerFactory, 差し替え可能, FailureLog, SqlLog, PerformanceLog, HttpAccessLog, ログ出力要件, BasicLoggerFactory, nablarch.core.log.basic.BasicLoggerFactory, availableLoggersNamesOrder, loggerFactory.className, writerNames, ログ設定, プロパティファイル設定, ロガー順序, システムプロパティ上書き, SynchronousFileLogWriter, StandardOutputLogWriter, LogWriterSupport, ログレベル, 出力制御, 複数ファイル出力, ログライタレベル設定, カスタマイズ, ログライタカスタマイズ, ログフォーマッタカスタマイズ, LogWriter, LogFormatter
+
+</details>
+
+## 要求
+
+## 実装済み
+
+- ログ出力機能の実装差し替え可能
+- ログ毎にログレベルと出力先を設定可能
+- パッケージ/クラス単位で設定対象を絞り込み可能
+- 1つのログを複数出力先に出力可能（障害解析用・監視用などに別々収集可能）
+- ファイルへのログ出力可能（指定サイズ到達時に自動切り替え。出力ファイルをバックアップした後、初期化する）
+- ログフォーマット変更可能（設定のみで変更可能）
+- ログレベルを表す文言変更可能
+- オブジェクト情報（クラス名+フィールド値）をログ出力可能
+- エラー情報（例外メッセージ+スタックトレース）をログ出力可能
+- 性能測定目的のログ集計可能
+- アクセスログ取得可能（リクエストパラメータ出力・特定項目マスク・アクション処理結果出力）
+- ログ監視ツール対応フォーマットでの出力可能
+- 複数プロセスから1つのログファイルへの出力可能
+
+## 未実装
+
+- データベースへのログ出力
+- 日付毎の出力ファイル自動切り替え
+
+## 未検討
+
+- リクエストID単位でのログ出力有無制御（[request_processing](../../about/about-nablarch/about-nablarch-concept.md) 参照）
+- アプリケーション停止なしの設定変更反映
+- ログファイルの改竄防止
+- ファイルパスへの置換文字使用
+- ログ出力スレッドのワーカスレッドからの独立
+- ログ出力機能の部分的差し替え（Log4Jのアペンダだけ使用したい場合など）
+- 外部ツールからのログ出力ファイル切り替え
+- スタックトレース内メッセージのマスク
+- フレームワーク処理実行時間の測定
+- リクエスト処理時間の上限値アラート
+- 1トランザクションのSQL発行回数上限値アラート
+
+ロガー設定で指定する3プロパティ:
+
+| プロパティ名 | 説明 |
+|---|---|
+| `<prefix>.nameRegex` | 対象ロガーを絞り込む正規表現。`LoggerManager#get` に渡したロガー名にマッチング |
+| `<prefix>.level` | ログ出力有無の基準ログレベル |
+| `<prefix>.writerNames` | 出力先ログライタ名（複数可） |
+
+`nameRegex` はロガーの絞り込みに使用し、`level` と `writerNames` は絞り込まれたロガーに対して設定される。
+
+`LoggerManager#get` メソッドでクラスを指定した場合は、FQCNがロガー名となる。そのため、特定クラスやパッケージを対象にする `nameRegex` にはFQCN（例: `nablarch\.core\.validation\.validator\.RequiredValidator`）を使用する。
+
+パッケージ配下全クラスを対象にする例:
+
+```bash
+loggers.sample.nameRegex=nablarch\\.core\\.validation\\.*
+loggers.sample.level=INFO
+loggers.sample.writerNames=xxx,yyy,zzz
+```
+
+特定クラスのみを対象にする例:
+
+```bash
+loggers.sample.nameRegex=nablarch\\.core\\.validation\\.validator\\.RequiredValidator
+loggers.sample.level=DEBUG
+loggers.sample.writerNames=aaa,bbb,ccc
+```
+
+**クラス**: `nablarch.core.log.basic.StandardOutputLogWriter`
+
+標準出力にログを書き込むログライタ。開発時にコンソール上でログを確認する場合に使用できる。
+
+```bash
+writerNames=stdout
+
+writer.stdout.className=nablarch.core.log.basic.StandardOutputLogWriter
+writer.stdout.formatter.className=nablarch.core.log.basic.BasicLogFormatter
+```
+
+> **警告**: 誤って開発時に使用したデバッグ設定のまま、本番運用時に使用しないこと。
+
+**インタフェース/クラス**: `LogWriter`, `LogWriterSupport`
+
+- 新しいログライタを追加する場合: `LogWriter`インタフェースを実装したクラスを作成する
+- ログフォーマッタを使用するログライタを作成する場合: 共通処理を提供する`LogWriterSupport`クラスを継承して作成できる
+
+<details>
+<summary>keywords</summary>
+
+ログ機能一覧, 実装済み機能, 未実装機能, 未検討機能, アクセスログ, 複数プロセス出力, ログレベル設定, nameRegex, level, writerNames, ロガー設定, 正規表現マッチング, LoggerManager, FQCN, 完全修飾クラス名, StandardOutputLogWriter, nablarch.core.log.basic.StandardOutputLogWriter, 標準出力, コンソール出力, 開発時ログ確認, LogWriter, LogWriterSupport, ログライタカスタマイズ, ログライタ追加
+
+</details>
+
+## ログ出力要求受付処理
+
+## ログレベルの定義
+
+FATAL > ERROR > WARN > INFO > DEBUG > TRACE の6段階。指定レベル以上のログをすべて出力。
+
+| レベル | 意味 |
+|---|---|
+| FATAL | アプリケーション継続不可能な深刻な問題。監視必須で即通報・即対応が必要 |
+| ERROR | アプリケーション継続に支障をきたす問題。監視必須だが、通報および対応にFATALレベルほどの緊急性はない |
+| WARN | すぐには影響を与えないが、放置するとアプリケーション継続に支障をきたす恐れがある事象。できれば監視した方がよいが、ERRORレベルほどの緊急性はない |
+| INFO | 本番運用時の情報ログ（アクセスログ、統計ログなど） |
+| DEBUG | 開発時のデバッグ情報（SQLログ、性能ログなど） |
+| TRACE | 開発時にDEBUGよりさらに細かい情報が必要な場合 |
+
+> **警告**: FATAL/ERROR/WARN/INFOは通常フレームワークが出力する。個別アプリケーションはプロジェクト方針に従い必要なログのみ出力すること。DEBUG/TRACEは性能劣化とファイルサイズ肥大化のため本番運用時には出力禁止。
+
+> **注意**: 本番運用時は通常INFOレベルでログ出力。ログファイルサイズが肥大化しないよう各プロジェクトにて出力内容を規定すること。
+
+フレームワークが出力するログについては [fw_log_policy](#) を参照。
+
+## ログ出力
+
+ロガーマネージャ（`nablarch.core.log.LoggerManager`）からロガーを取得してログを出力する。
+
+```java
+private static final Logger LOGGER = LoggerManager.get(UserManager.class);
+
+if (LOGGER.isDebugEnabled()) {
+    String message = "userId[" + user.getId() + "],name[" + user.getName() + "]";
+    LOGGER.logDebug(message);
+}
+```
+
+- ロガー名はクラスのFQCN（`LoggerManager.get(クラス)`）または用途名（SQL、MONITORなど）を指定
+- FQCNを指定するとクラス/パッケージ毎にログ出力設定を変更可能
+- メッセージ組み立て処理が必要な場合は `Logger#is<LogLevel>Enabled()` で事前チェックを行い性能劣化を防ぐ
+- 常に出力するレベル（本番INFOレベル運用ならFATAL〜INFO）は事前チェック不要
+
+## 初期処理と終了処理
+
+- 初期処理：ロガー初回取得時にロガーマネージャが内部的に実行
+- 終了処理：アプリケーション終了時に `LoggerManager#terminate()` を呼び出すこと
+
+> **警告**: 終了処理を呼び出さないとメモリリークが発生する可能性がある。
+
+Webアプリケーションでの終了処理は [../../handler/NablarchServletContextListener](../handlers/handlers-NablarchServletContextListener.md) で行う。
+
+## ロガーファクトリの設定方法
+
+使用するロガーファクトリをプロパティファイルで設定する（`loggerFactory.className`）:
+
+```bash
+# フレームワーク実装
+loggerFactory.className=nablarch.core.log.basic.BasicLoggerFactory
+
+# Log4J
+loggerFactory.className=nablarch.core.log.log4j.Log4JLoggerFactory
+```
+
+プロパティファイルのパスはシステムプロパティ `nablarch.log.filePath` で指定する。このファイルパスは、クラスパスとファイルシステム上のパスのどちらを指定してもよい。未指定時はクラスパス直下の `log.properties` を使用。
+
+```bash
+java -Dnablarch.log.filePath=classpath:nablarch/core/log/log.properties ...
+```
+
+> **注意**: プロパティファイルが存在しない場合、ロガーマネージャが例外を送出する。
+
+- ロガーのインスタンスはロガー設定毎に生成され、複数のログ出力要求元から共有される。
+- ログライタのインスタンスはログライタ設定毎に生成され、複数のロガーから共有される。
+
+![ロガーのインスタンス構造](../../../knowledge/component/libraries/assets/libraries-01_Log/Log_Basic_InstanceImage.jpg)
+
+フレームワーク実装が提供するログフォーマッタとして `nablarch.core.log.basic.BasicLogFormatter` が存在する（:ref:`Log_BasicLogFormatter` 参照）。
+
+**インタフェース/クラス**: `LogFormatter`, `LogLevelLabelProvider`, `Logger`
+
+- 新しいログフォーマッタを追加する場合: `LogFormatter`インタフェースを実装したクラスを作成する
+- ログレベルを表す文言を設定で変更可能にしたい場合: `LogLevelLabelProvider`クラスを使用する
+
+`Logger`インタフェースのログ出力メソッドには`Object...`型の可変長引数`options`が設けられており、ログフォーマッタで受け取るパラメータを増やしたい場合に使用する。
+
+メソッドシグネチャ例（`Logger#logInfo`）:
+```java
+public void logInfo(String message, Object... options)
+public void logInfo(String message, Throwable cause, Object... options)
+```
+
+ログ出力時のパラメータを増やしたい場合は、`options`引数を規定して使用すること。
+
+<details>
+<summary>keywords</summary>
+
+ログレベル定義, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, LoggerManager, Logger, loggerUses, ログ出力方法, LoggerManager#terminate, nablarch.log.filePath, BasicLoggerFactory, Log4JLoggerFactory, ロガーファクトリ設定, fw_log_policy, ロガーインスタンス, ログライタインスタンス, インスタンス共有, Log_Basic_InstanceImage, ログフォーマッタ, BasicLogFormatter, ログフォーマット, LogFormatter, LogLevelLabelProvider, ログフォーマッタカスタマイズ, options引数, logInfo
+
+</details>
+
+## クラス図
+
+![ログ出力要求受付処理クラス図](../../../knowledge/component/libraries/assets/libraries-01_Log/Log_ClassDiagram.jpg)
+
+フレームワーク実装が提供するログライタ: `nablarch.core.log.basic.FileLogWriter`、`nablarch.core.log.basic.SynchronousFileLogWriter`、`nablarch.core.log.basic.StandardOutputLogWriter`。
+
+**クラス**: `nablarch.core.log.basic.BasicLogFormatter`
+
+汎用的に使用できるログフォーマッタ。特徴:
+
+- ログに最低限必要な情報（日時、リクエストID、ユーザIDなど）を出力できる
+- システムプロパティで指定されたプロセス名（[boot_process](#)）をログに出力できる
+- オブジェクトを指定してフィールド情報を出力できる
+- 例外オブジェクトを指定してスタックトレースを出力できる
+- フォーマットを設定のみで変更できる
+
+出力可能な追加項目: 起動プロセス（[boot_process](#)）、処理方式（[processing_system](#)）、実行時ID（[execution_id](../../about/about-nablarch/about-nablarch-concept.md)）。
+
+**インタフェース/クラス**: `BasicLogFormatter`, `LogItem`, `LogContext`, `ObjectSettings`
+
+`BasicLogFormatter`は`LogItem`インタフェースを使用して各プレースホルダに対応する出力項目を取得する。既存プレースホルダの出力内容変更や新規プレースホルダ追加は、`LogItem`を実装したクラスと`BasicLogFormatter`を継承したクラスを作成することで実現できる。
+
+実装手順:
+1. `LogItem<LogContext>`を実装したクラスを作成し、`ObjectSettings`の`getProp`メソッドで設定から値を取得する
+2. `BasicLogFormatter`を継承し、`getLogItems(ObjectSettings)`をオーバーライドして作成したLogItemを登録する
+
+実装例:
+```java
+public class CustomBootProcessItem implements LogItem<LogContext> {
+    private String bootProcess;
+    public CustomBootProcessItem(ObjectSettings settings) {
+        bootProcess = settings.getProp("bootProcess");
+    }
+    public String get(LogContext context) {
+        return bootProcess;
+    }
+}
+
+public class CustomLogFormatter extends BasicLogFormatter {
+    protected Map<String, LogItem<LogContext>> getLogItems(ObjectSettings settings) {
+        Map<String, LogItem<LogContext>> logItems = super.getLogItems(settings);
+        logItems.put("$bootProcess$", new CustomBootProcessItem(settings));
+        return logItems;
+    }
+}
+```
+
+設定例:
+```properties
+writer.appFile.formatter.className=nablarch.core.log.basic.CustomLogFormatter
+writer.appFile.formatter.format=$logLevel$ $loggerName$ [$bootProcess$]
+writer.appFile.formatter.bootProcess=CUSTOM_PROCESS
+```
+
+出力例（上記設定の場合）:
+```bash
+# ロブレベル、ロガー名、起動プロセスが出力される。
+INFO ROO [CUSTOM_PROCESS]
+```
+
+<details>
+<summary>keywords</summary>
+
+クラス図, ログ出力要求受付処理クラス構成, Logger, LoggerFactory, BasicLogger, Log4JLogger, Log_ClassDiagram, FileLogWriter, SynchronousFileLogWriter, StandardOutputLogWriter, ログライタ使用方法, BasicLogFormatter, nablarch.core.log.basic.BasicLogFormatter, ログフォーマット, プレースホルダ, スタックトレース出力, オブジェクトフィールド出力, LogItem, LogContext, ObjectSettings, getLogItems, プレースホルダ追加, ログ出力項目変更, CustomBootProcessItem, CustomLogFormatter
+
+</details>
+
+## 各クラスの責務
+
+ログ出力要求受付処理を構成するクラスの責務。ロガー（`nablarch.core.log.Logger`）、ロガーファクトリ（`nablarch.core.log.LoggerFactory`）、ロガーマネージャ（`nablarch.core.log.LoggerManager`）などで構成される。
+
+**クラス**: `nablarch.core.log.basic.FileLogWriter`
+
+ファイルにログを書き込むログライタ。特徴:
+- ログフォーマッタを設定で指定可能
+- ログファイルが指定サイズに達したら出力ファイルを自動切り替え
+- 初期処理・終了処理・ファイル切り替え時にINFOレベルでメッセージ出力
+
+設定例（記述ルールの詳細は :ref:`propsSettingRules` を参照）:
+
+```bash
+writerNames=appFile
+
+writer.appFile.className=nablarch.core.log.basic.FileLogWriter
+writer.appFile.filePath=/var/log/app/app.log
+writer.appFile.encoding=UTF-8
+writer.appFile.outputBufferSize=8
+writer.appFile.maxFileSize=50000
+writer.appFile.formatter.className=nablarch.core.log.basic.BasicLogFormatter
+writer.appFile.level=INFO
+```
+
+| プロパティ名 | 説明 |
+|---|---|
+| `filePath` | 書き込み先ファイルパス |
+| `encoding` | 文字エンコーディング |
+| `outputBufferSize` | 出力バッファサイズ（KB、1000バイト=1KB、デフォルト8KB） |
+| `maxFileSize` | ファイル最大サイズ（KB、1000バイト=1KB）。指定した場合にファイル自動切り替えが有効 |
+| `formatter.className` | ログフォーマッタクラス名 |
+| `level` | `LogLevel` 列挙型の名称を指定する。ここで指定したレベル以上のログを全て出力する |
+
+ファイル切り替え時の命名規則: `<元ファイル名>.yyyyMMddHHmmssSSS.old`（同一ディレクトリに保存）。
+
+アプリケーションを起動した実行環境を特定するための名前。サーバ名とJOBIDなどの識別文字列を組み合わせて使用する。プロジェクト毎にID体系で規定することを想定している。
+
+- システムプロパティ `nablarch.bootProcess` で指定
+- 指定がない場合はブランク
+
+```bash
+java -Dnablarch.bootProcess=APP0001
+```
+
+なし
+
+<details>
+<summary>keywords</summary>
+
+クラス責務, Logger, LoggerFactory, LoggerManager, LogSettings, ロガー, ロガーファクトリ, ロガーマネージャ, FileLogWriter, nablarch.core.log.basic.FileLogWriter, filePath, encoding, outputBufferSize, maxFileSize, formatter.className, level, ファイルログ, ログファイル自動切り替え, ローテーション, BasicLogFormatter, 起動プロセス, nablarch.bootProcess, システムプロパティ, プロセス識別, boot_process, propsSettingRules, プロパティファイル記述ルール
+
+</details>
+
+## インタフェース定義
+
+| インタフェース名 | 概要 |
+|---|---|
+| `nablarch.core.log.Logger` | ログを出力するインタフェース。ログ出力機能の実装毎に実装クラスを作成する（実装クラス・インスタンスをロガーと呼ぶ） |
+| `nablarch.core.log.LoggerFactory` | ロガーを生成するインタフェース。フレームワーク内部でログ出力機能の実装に対応するロガーを生成するために使用する。ログ出力機能の実装毎に実装クラスを作成する（実装クラス・インスタンスをロガーファクトリと呼ぶ） |
+
+画面オンライン処理、バッチ処理、ディレード処理などを識別するための値。プロジェクト毎に規定して使用する。
+
+- プロパティファイルに `nablarch.processingSystem` で指定（パス指定方法は :ref:`loggerFactorySetting` 参照）
+- 指定がない場合はブランク
+
+```bash
+nablarch.processingSystem=1
+```
+
+## ロガーファクトリの設定
+
+| プロパティ名 | 必須 | 説明 |
+|---|---|---|
+| loggerFactory.className | ○ | LoggerFactoryを実装したクラスのFQCN |
+
+## ログライタの設定
+
+| プロパティ名 | 必須 | 説明 |
+|---|---|---|
+| writerNames | ○ | 使用する全ログライタ名称。カンマ区切りで複数指定可。`"writer." + <名称>`をキープレフィックスとして各ログライタの設定を行う。 |
+| writer.<名称>.className | ○ | LogWriterを実装したクラスのFQCN |
+| writer.<名称>.<プロパティ名> | | ログライタ毎のプロパティ値 |
+
+<details>
+<summary>keywords</summary>
+
+nablarch.core.log.Logger, nablarch.core.log.LoggerFactory, インタフェース定義, ロガーインタフェース, ロガーファクトリインタフェース, 処理方式, nablarch.processingSystem, プロパティファイル設定, processing_system, loggerFactory.className, writerNames, ログライタ設定, ロガーファクトリ設定
+
+</details>
+
+## クラス定義
+
+**ロガー**:
+
+| クラス名 | 概要 |
+|---|---|
+| `nablarch.core.log.basic.BasicLogger` | ロガーの基本実装クラス |
+| `nablarch.core.log.log4j.Log4JLogger` | Log4Jを使用してログ出力を行うクラス |
+
+**ロガーファクトリ**:
+
+| クラス名 | 概要 |
+|---|---|
+| `nablarch.core.log.basic.BasicLoggerFactory` | BasicLoggerを生成するロガーファクトリの基本実装クラス |
+| `nablarch.core.log.log4j.Log4JLoggerFactory` | Log4JLoggerを生成するクラス |
+
+**その他**:
+
+| クラス名 | 概要 |
+|---|---|
+| `nablarch.core.log.LoggerManager` | ログ出力機能の全体を取りまとめるクラス。設定で指定されたロガーファクトリを生成・保持し、初期処理・終了処理・ロガー生成をロガーファクトリに委譲する（ロガーマネージャ） |
+| `nablarch.core.log.LogSettings` | ログ出力機能の設定をロードして保持するクラス |
+
+リクエストIDに対するアプリケーションの個々の実行を識別するID。1つのリクエストIDに対して実行された数だけ発行（1対多の関係）。各処理方式のThreadContextを初期化するタイミングで発行し、ThreadContextに設定される。
+
+複数のログを出力している場合に、出力された複数のログを紐付けるために使用する。
+
+ID体系:
+
+```
+起動プロセス＋システム日時(yyyyMMddHHmmssSSS)＋連番(4桁)
+```
+
+（起動プロセスは指定された場合のみ付加）
+
+## ロガーの設定
+
+| プロパティ名 | 必須 | 説明 |
+|---|---|---|
+| availableLoggersNamesOrder | ○ | 使用する全ロガー設定名称。カンマ区切りで複数指定可。`"loggers." + <名称>`をキープレフィックスとして各ロガーの設定を行う。 |
+| loggers.<名称>.nameRegex | ○ | ロガー名とのマッチングに使用する正規表現。`LoggerManager#get`の引数に対してマッチングを行う。 |
+| loggers.<名称>.level | ○ | LogLevel列挙型の名称。指定レベル以上のログを全て出力。 |
+| loggers.<名称>.writerNames | ○ | 出力先ログライタ名称。カンマ区切りで複数指定可。 |
+
+<details>
+<summary>keywords</summary>
+
+BasicLogger, Log4JLogger, BasicLoggerFactory, Log4JLoggerFactory, LoggerManager, LogSettings, nablarch.core.log.basic.BasicLogger, nablarch.core.log.log4j.Log4JLogger, nablarch.core.log.basic.BasicLoggerFactory, nablarch.core.log.log4j.Log4JLoggerFactory, 実行時ID, ThreadContext, リクエストID識別, execution_id, yyyyMMddHHmmssSSS, availableLoggersNamesOrder, loggers.nameRegex, loggers.level, loggers.writerNames, ロガー設定, nameRegex
+
+</details>
+
+## 書き込み処理とフォーマット処理
+
+ログの書き込み処理（`LogWriter`）とフォーマット処理（`LogFormatter`）の実装について解説する。
+
+- **書き込み処理**: `LogWriter` インタフェースの実装として、ファイル出力（`FileLogWriter`）、複数プロセス対応ファイル出力（`SynchronousFileLogWriter`）、標準出力（`StandardOutputLogWriter`）が提供される
+- **フォーマット処理**: `LogFormatter` インタフェースの実装として、基本実装（`BasicLogFormatter`）が提供される
+- いずれも実装を差し替え可能
+
+プレースホルダを使用してフォーマットを指定する。
+
+| プレースホルダ | 説明 |
+|---|---|
+| $date$ | ログ出力を要求した時点の日時 |
+| $logLevel$ | ログレベル（デフォルトはLogLevel列挙型の名称。文言変更は :ref:`logLevelLabelChanges` 参照） |
+| $loggerName$ | ロガー設定の名称 |
+| $bootProcess$ | [boot_process](#) を識別する名前 |
+| $processingSystem$ | [processing_system](#) を識別する名前 |
+| $requestId$ | リクエストID |
+| $executionId$ | [execution_id](../../about/about-nablarch/about-nablarch-concept.md) |
+| $userId$ | ログインユーザのユーザID |
+| $message$ | メッセージ（指定がない場合はブランク） |
+| $information$ | オプション情報に指定されたオブジェクトのフィールドに対して、Object#toString()メソッドを実行した結果を表示する。基本データ型ラッパクラス/CharSequenceインタフェース/DateクラスはオブジェクトへのObject#toString()結果のみ表示（フィールド単位ではなくオブジェクト単位）。指定がない場合は非表示。 |
+| $stackTrace$ | 例外オブジェクトのスタックトレース（指定がない場合は非表示） |
+
+`$information$` と `$stackTrace$` は出力内容が複数行になるため、先頭に改行コードを付加して出力する。
+
+フォーマットに改行コード・タブ文字を含める場合はJavaと同様の記述を使用する。改行コードはシステムプロパティ `line.separator` から取得するため、OSの改行コードが使用される。`\n` と `\t` という文字列を出力することはできない。
+
+| 含めたい文字 | 記述する文字列 |
+|---|---|
+| 改行コード | \n |
+| タブ文字 | \t |
+
+デフォルトフォーマット:
+
+```
+$date$ -$logLevel$- $loggerName$ [$executionId$] boot_proc = [$bootProcess$] proc_sys = [$processingSystem$] req_id = [$requestId$] usr_id = [$userId$] $message$$information$$stackTrace$
+```
+
+## FileLogWriterの設定
+
+| プロパティ名 | 必須 | デフォルト | 説明 |
+|---|---|---|---|
+| writer.<名称>.level | ○ | 全レベル出力 | LogLevel列挙型の名称。指定レベル以上のみ出力。指定なしは全レベル出力。 |
+| writer.<名称>.formatter.className | | | LogFormatterを実装したクラスのFQCN |
+| writer.<名称>.formatter.<プロパティ名> | | | ログフォーマッタ毎のプロパティ値 |
+| writer.<名称>.filePath | ○ | | 書き込み先のファイルパス |
+| writer.<名称>.encoding | | システムプロパティ file.encoding | 書き込み時の文字エンコーディング（`java.nio.charset.Charset#forName`形式） |
+| writer.<名称>.outputBufferSize | | 8KB | 出力バッファサイズ（KB単位、1000バイト=1KB）。1以上を指定。 |
+| writer.<名称>.maxFileSize | | 自動切替なし | ファイル最大サイズ（KB単位、1000バイト=1KB）。0以下・不正値は自動切替なし。古いファイル名: `<ファイル名>.yyyyMMddHHmmssSSS.old` |
+
+<details>
+<summary>keywords</summary>
+
+書き込み処理, フォーマット処理, LogWriter, LogFormatter, ログライタ, ログフォーマッタ, $date$, $logLevel$, $loggerName$, $bootProcess$, $processingSystem$, $requestId$, $executionId$, $userId$, $message$, $information$, $stackTrace$, フォーマット指定, プレースホルダ, datePattern, FileLogWriter, filePath, maxFileSize, encoding, outputBufferSize, file_log_writer_config, FileLogWriter設定
+
+</details>
+
+## クラス図（書き込み処理とフォーマット処理）
+
+![書き込み処理とフォーマット処理クラス図](../../../knowledge/component/libraries/assets/libraries-01_Log/Log_Basic_ClassDiagram.jpg)
+
+デフォルトフォーマットによるログ出力例:
+
+システムプロパティ設定: `java -Dnablarch.bootProcess=APP0001`
+log.properties設定: `nablarch.processingSystem=1`
+
+```
+2011-02-14 16:01:37.578 -INFO- root [APP001201102041542175080001] boot_proc = [APP001] proc_sys = [1] req_id = [USERS00302] usr_id = [0000000001] テストメッセージ
+Object Information[0]: Class Name = [nablarch.core.log.basic.User]
+    id = [null]
+    name = [山田太郎]
+    age = [28]
+    toString() = [nablarch.core.log.basic.User@10b4199]
+Object Information[1]: null
+Object Information[2]: Class Name = [java.lang.String]
+    toString() = [山田花子]
+Object Information[3]: Class Name = [java.lang.Long]
+    toString() = [2000000]
+Stack Trace Information : 
+java.lang.IllegalArgumentException: error test.
+    at my.log.BasicLogFormatterSample.doSomething(BasicLogFormatterSample.java:50)
+```
+
+カスタムフォーマット設定例（`datePattern`プロパティで日時フォーマット変更可能）:
+
+```bash
+writer.appFile.formatter.className=nablarch.core.log.basic.BasicLogFormatter
+writer.appFile.formatter.datePattern=yyyy/MM/dd HH:mm:ss[SSS]
+writer.appFile.formatter.format=$date$ -$logLevel$- $loggerName$ [$executionId$]\n\tboot_proc = [$bootProcess$]\n\tproc_sys = [$processingSystem$]\n\treq_id = [$requestId$]\n\tusr_id = [$userId$]\n\t$message$$information$$stackTrace$
+```
+
+出力:
+
+```
+2011/02/14 16:08:55[107] -INFO- root [APP001201102041542175080001]
+    boot_proc = [APP001]
+    proc_sys = [1]
+    req_id = [USERS00302]
+    usr_id = [0000000001]
+    テストメッセージ
+```
+
+## SynchronousFileLogWriterの設定
+
+:ref:`file_log_writer_config` に記載のプロパティに加えて以下のプロパティを持つ。
+
+| プロパティ名 | 必須 | デフォルト | 説明 |
+|---|---|---|---|
+| writer.<名称>.lockFilePath | ○ | | ロックファイルのパス |
+| writer.<名称>.lockRetryInterval | | 1ms | ロック取得失敗時の再試行間隔（ミリ秒） |
+| writer.<名称>.lockWaitTime | | 1800ms | ロック取得の待機時間（ミリ秒）。超過した場合は例外をスロー。 |
+| writer.<名称>.failureCodeCreateLockFile | | `"failed to create lock file. perhaps lock file path was invalid. lock file path=[{0}]."` | ロックファイル生成失敗時の障害通知コード。{0}にはロックファイルのパスが設定される。 |
+| writer.<名称>.failureCodeReleaseLockFile | | `"failed to delete lock file. lock file path=[{0}]."` | ロックファイル解放（削除）失敗時の障害通知コード。{0}にはロックファイルのパスが設定される。 |
+| writer.<名称>.failureCodeForceDeleteLockFile | | `"failed to delete lock file forcedly. lock file was opened illegally. lock file path=[{0}]."` | 解放されないロックファイルの強制削除失敗時の障害通知コード。{0}にはロックファイルのパスが設定される。 |
+| writer.<名称>.failureCodeInterruptLockWait | | `"interrupted while waiting for lock retry."` | ロック待ちスリープ中の割り込み発生時の障害通知コード |
+
+<details>
+<summary>keywords</summary>
+
+クラス図, 書き込み処理クラス構成, Log_Basic_ClassDiagram, BasicLogFormatter, ログ出力例, datePattern, フォーマット変更, 出力サンプル, SynchronousFileLogWriter, lockFilePath, lockRetryInterval, lockWaitTime, failureCodeCreateLockFile, failureCodeReleaseLockFile, failureCodeForceDeleteLockFile, failureCodeInterruptLockWait
+
+</details>
+
+## 各クラスの責務（書き込み処理とフォーマット処理）
+
+書き込み処理とフォーマット処理を構成するクラスの責務。ログライタ（`nablarch.core.log.basic.LogWriter`）、ログフォーマッタ（`nablarch.core.log.basic.LogFormatter`）およびその実装クラスで構成される。
+
+## BasicLogFormatterの設定
+
+| プロパティ名 | 必須 | デフォルト | 説明 |
+|---|---|---|---|
+| writer.<名称>.formatter.format | | | フォーマット文字列 |
+| writer.<名称>.formatter.datePattern | | yyyy-MM-dd HH:mm:ss.SSS | 日時フォーマットのパターン |
+| writer.<名称>.formatter.label.<LogLevel小文字> | | LogLevel列挙型の名称 | ログレベルを表す文言 |
+
+<details>
+<summary>keywords</summary>
+
+クラス責務, LogWriter, LogFormatter, LogWriterSupport, FileLogWriter, SynchronousFileLogWriter, StandardOutputLogWriter, BasicLogFormatter, LogContext, LogLevelLabelProvider, formatter.format, formatter.datePattern, formatter.label, BasicLogFormatter設定, datePattern, ログフォーマット設定
+
+</details>
+
+## インタフェース定義（書き込み処理とフォーマット処理）
+
+| インタフェース名 | 概要 |
+|---|---|
+| `nablarch.core.log.basic.LogWriter` | ログを出力先に書き込むインタフェース。出力先の媒体毎に実装クラスを作成する（実装クラス・インスタンスをログライタと呼ぶ） |
+| `nablarch.core.log.basic.LogFormatter` | ログのフォーマットを行うインタフェース。ログのフォーマットの種類毎に実装クラスを作成する（実装クラス・インスタンスをログフォーマッタと呼ぶ） |
+
+なし
+
+<details>
+<summary>keywords</summary>
+
+nablarch.core.log.basic.LogWriter, nablarch.core.log.basic.LogFormatter, インタフェース定義, ログライタインタフェース, ログフォーマッタインタフェース, AppLog_Common, 各種ログ共通項目
+
+</details>
+
+## クラス定義（書き込み処理とフォーマット処理）
+
+**ログライタ**:
+
+| クラス名 | 概要 |
+|---|---|
+| `nablarch.core.log.basic.LogWriterSupport` | ログライタの実装をサポートするクラス。ログレベルに応じた出力制御とログフォーマッタを使用したログのフォーマットを行う。サブクラスでフォーマット済みログの書き込み処理を実装する |
+| `nablarch.core.log.basic.FileLogWriter` | ファイルにログを書き込むクラス。ファイルへのログ出力には基本的にFileLogWriterを使用する。ファイルサイズや日付以外の条件での自動切り替えが必要な場合はサブクラスを作成して入れ替える。**注意**: 本ログライタはプロセス単位にログを出力する。複数プロセスから単一のログファイルに出力したい場合は `SynchronousFileLogWriter` を使用すること |
+| `nablarch.core.log.basic.SynchronousFileLogWriter` | 複数プロセスから単一のファイルにログを書き込むクラス。ロックファイルを使用してプロセス間の同期をとりログ出力を直列化する。**警告**: 頻繁にログ出力が行われる場面で使用するとロック取得待ちによって性能が著しく劣化する。アプリケーションログやアクセスログのような出力頻度の高いログ出力での使用は推奨しない。障害通知ログのように出力頻度が低くサーバ単位でログファイルを一元管理するほうが効率的なログの出力にのみ使用すること |
+| `nablarch.core.log.basic.StandardOutputLogWriter` | 標準出力にログを書き込むクラス |
+
+**ログフォーマッタ**:
+
+| クラス名 | 概要 |
+|---|---|
+| `nablarch.core.log.basic.BasicLogFormatter` | ログフォーマッタの基本実装クラス。ログに最低限必要な情報（日時、ユーザID、リクエストIDなど）、オブジェクトのフィールド情報、例外オブジェクトのスタックトレースなどをフォーマットする。デバッグ情報やアクセスログ、障害解析用のログなど多目的に使用可能 |
+
+**その他**:
+
+| クラス名 | 概要 |
+|---|---|
+| `nablarch.core.log.basic.LogContext` | ログ出力に必要な情報を保持するクラス。メッセージ、エラー情報、日時、ユーザID、リクエストIDなどを保持する。ユーザID・リクエストIDはThreadContextから取得する |
+| `nablarch.core.log.basic.LogLevelLabelProvider` | ログに出力するログレベルを表す文言を提供するクラス |
+
+各種ログの種類:
+
+| ログの種類 | 説明 |
+|---|---|
+| :ref:`障害通知ログ<FailureLog>` | 障害発生時の1次切り分けに必要な情報を出力 |
+| :ref:`障害解析ログ<FailureLog>` | 障害原因の特定に必要な情報を出力 |
+| :ref:`SQLログ<SqlLog>` | SQL文の実行時間とSQL文を出力 |
+| :ref:`パフォーマンスログ<PerformanceLog>` | 任意の処理の実行時間とメモリ使用量を出力 |
+| :ref:`HTTPアクセスログ<HttpAccessLog>` | 実行状況・性能・負荷測定・証跡ログを出力 |
+
+障害通知ログと障害解析ログを合わせて「障害ログ」と呼ぶ。
+
+## 各種ログのフォーマット構成
+
+各種ログのフォーマットは下記2つから構成される:
+- (a) 共通項目のフォーマット（:ref:`Log_BasicLogFormatter` のフォーマット）
+- (b) 個別項目のフォーマット
+
+個別項目をフォーマットした結果を`BasicLogFormatter`の`$message$`プレースホルダに指定することで組み合わせる。HTTPアクセスログを例にしたフォーマット指定のイメージ:
+
+```bash
+# 共通項目のフォーマット（BasicLogFormatterのフォーマット）
+$date$ req_id = [$requestId$] <$message$> usr_id = [$userId$]
+
+# $message$以外の共通項目をフォーマットした結果
+2011-02-07 19:07:30.970 req_id = [USERS00302] <$message$> usr_id = [0000000001]
+```
+
+```bash
+# 個別項目のフォーマット（HTTPアクセスログのフォーマット）
+# $url$: リクエストURL、$port$: ポート番号、$method$: HTTPメソッドが入るプレースホルダとする。
+url:$url$ port:$port$ method:$method$
+
+# 個別項目をフォーマットした結果
+url:/action/management/user/UserRegisterAction/USERS00302 port:8090 method:POST
+```
+
+上記フォーマット指定における最終的なHTTPアクセスログの出力例（`$message$`部分にHTTPアクセスログの個別項目フォーマット結果が入る）:
+
+```bash
+# アクセスログの出力例
+2011-02-07 19:07:30.970 req_id = [USERS00302] <url:/action/management/user/UserRegisterAction/USERS00302 port:8090 method:POST> usr_id = [0000000001]
+```
+
+フレームワーク以外のログ出力実装を使用する場合は、:ref:`Log_BasicLogFormatter` と同等の出力項目が実装できるよう対応が必要。
+
+## 各種ログの設定
+
+設定ファイル: クラスパス直下に`app-log.properties`として配置。配置場所を変更する場合はシステムプロパティ`nablarch.appLog.filePath`で指定する。プロパティファイル内の設定値はプロパティ名と同じキー名のシステムプロパティで上書き可能。
+
+```bash
+java -Dnablarch.appLog.filePath=/var/log/app/app-log.properties ...
+```
+
+<details>
+<summary>keywords</summary>
+
+FileLogWriter, SynchronousFileLogWriter, StandardOutputLogWriter, BasicLogFormatter, LogContext, LogLevelLabelProvider, LogWriterSupport, nablarch.core.log.basic.FileLogWriter, nablarch.core.log.basic.SynchronousFileLogWriter, nablarch.core.log.basic.StandardOutputLogWriter, nablarch.core.log.basic.BasicLogFormatter, nablarch.core.log.basic.LogContext, nablarch.core.log.basic.LogLevelLabelProvider, 複数プロセス単一ファイル, ロックファイル同期, 性能劣化警告, 障害通知ログ, 障害解析ログ, SQLログ, パフォーマンスログ, HTTPアクセスログ, app-log.properties, nablarch.appLog.filePath, 各種ログ, AppLog, AppLog_Format, message$プレースホルダ, 共通項目フォーマット
+
+</details>
+
+## 
+
+なし
+
+<details>
+<summary>keywords</summary>
+
+AppLog_Config, fw_log_policy, フレームワークログ設定
+
+</details>
+
+## フレームワークのログ出力方針
+
+| ログレベル | 出力方針 |
+|---|---|
+| FATAL / ERROR | 原則1件の障害に対して1件の:ref:`障害ログ<FailureLog>`を出力。:ref:`実行制御基盤<executionBase>`では単一ハンドラ（例外を処理するハンドラ）により障害通知ログを出力する方針。詳細は各実行制御基盤のハンドラ構成および例外を処理するハンドラの仕様を参照。 |
+| WARN | 障害発生時に連鎖して例外が発生した場合など、障害ログとして出力できない例外を出力。例: 業務処理とトランザクション終了処理の両方で例外が発生した場合、業務処理の例外を障害ログ、トランザクション終了処理の例外をWARNで出力。 |
+| INFO | URLパラメータの改竄エラーや認可エラーなど、アプリケーションの実行状況に関連するエラーを検知した場合に出力。 |
+| DEBUG | アプリケーション開発時のデバッグ情報。DEBUGレベルを設定することで開発に必要な情報が出力されるよう考慮している。 |
+| TRACE | フレームワーク開発時のデバッグ情報。アプリケーション開発での使用は想定していない。 |
+
+<details>
+<summary>keywords</summary>
+
+FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ログ出力方針, 障害ログ, ログレベル方針
+
+</details>

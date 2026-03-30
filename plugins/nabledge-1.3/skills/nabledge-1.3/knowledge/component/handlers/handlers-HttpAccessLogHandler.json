@@ -1,0 +1,47 @@
+{
+  "id": "handlers-HttpAccessLogHandler",
+  "title": "HTTPアクセスログハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "HttpAccessLogHandler",
+        "nablarch.fw.web.handler.HttpAccessLogHandler",
+        "HTTPアクセスログ",
+        "ThreadContextHandler",
+        "HttpErrorHandler",
+        "ハンドラ配置順序"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "HTTPアクセスログ出力",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "HTTP_ACCESS",
+        "ログレベルINFO"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "XML設定例",
+        "nablarch.common.web.handler.HttpAccessLogHandler",
+        "コンポーネント設定",
+        "httpAccessLogHandler"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.web.handler.HttpAccessLogHandler`\n\n往路と復路でHTTPリクエスト/レスポンスのアクセスログを出力する。ログの詳細・出力形式は [../02_FunctionDemandSpecifications/01_Core/01/04_HttpAccessLog](../libraries/libraries-04_HttpAccessLog.json) を参照。\n\n**関連するハンドラ**\n\n| ハンドラ | 配置要件 |\n|---|---|\n| [ThreadContextHandler](handlers-ThreadContextHandler.json) | ログ出力項目にThreadContextHandlerが設定する項目が含まれるため、本ハンドラより上位に配置する必要がある |\n| [HttpErrorHandler](handlers-HttpErrorHandler.json) | HTTPエラーレスポンス以外の例外はHttpErrorHandlerによってHTTPレスポンスオブジェクトに変換されるため、本ハンドラの後続に配置する必要がある |",
+    "s2": "**[往路での処理]**\n\n1. HTTPリクエストログを出力（ログレベル: INFO、ログカテゴリ: HTTP_ACCESS）\n2. 後続ハンドラに処理を委譲し、HTTPレスポンスオブジェクトを取得\n\n**[復路での処理]**\n\n3. HTTPレスポンスログを出力（ログレベル: INFO、ログカテゴリ: HTTP_ACCESS）\n4. HTTPレスポンスオブジェクトをリターンして終了\n\n**[例外処理]**\n\n2a. HTTPエラーレスポンスが送出された場合: HTTPリクエスト・実行コンテキスト・エラーレスポンスの内容をもとにアクセスログを出力した上で、捕捉した例外を再送出する\n\n2b. HTTPエラーレスポンス以外の例外が送出された場合: HTTPリクエスト・実行コンテキストの内容をもとにアクセスログを出力した上で、例外を再送出する",
+    "s3": "本ハンドラ自体に設定項目は存在しない。ロガー側の設定は [../02_FunctionDemandSpecifications/01_Core/01/04_HttpAccessLog](../libraries/libraries-04_HttpAccessLog.json) を参照。\n\n```xml\n<component name=\"httpAccessLogHandler\"\n           class=\"nablarch.common.web.handler.HttpAccessLogHandler\" />\n```"
+  }
+}

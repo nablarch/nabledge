@@ -1,0 +1,51 @@
+{
+  "id": "handlers-AsyncMessageReceiveAction",
+  "title": "応答不要電文受信処理用アクションハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "AsyncMessageReceiveAction",
+        "nablarch.fw.messaging.action.AsyncMessageReceiveAction",
+        "generateReceivedSequence",
+        "応答不要電文受信",
+        "受信電文保存テーブル",
+        "電文データ登録",
+        "受信テーブル保存"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "RequestMessage",
+        "Result.Success",
+        "往路処理",
+        "例外処理",
+        "フォームクラスロード",
+        "受信電文連番採番",
+        "INSERD_MESSAGE"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "AsyncMessageReceiveActionSettings",
+        "formClassPackage",
+        "receivedSequenceGenerator",
+        "IdGenerator",
+        "設定項目",
+        "採番モジュール"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.messaging.action.AsyncMessageReceiveAction`\n\n[../architectural_pattern/messaging_receive](../../processing-pattern/mom-messaging/mom-messaging-messaging_receive.json) における典型的な業務アクションハンドラ実装。受信電文のデータレコードを指定テーブルに保存する。保存されたデータは後続バッチで処理される。\n\n**受信電文保存テーブル構造**\n\n| 項目 | 内容 |\n|---|---|\n| 受信電文連番 | 主キー。`generateReceivedSequence()` で採番。桁数は任意。 |\n| 業務電文部 | 電文の種類に応じた各項目のカラムを定義する。 |\n| 共通項目部 | プロジェクト方式に応じたカラム（登録情報・更新情報など）。 |\n\n> **注意**: 1電文を1レコードとして保存する前提。複数レコード登録や複数テーブル保存の場合は本クラスを継承した業務アクションハンドラクラスを別途作成すること。",
+    "s2": "**往路処理**\n\n1. デフォルトフォーマッタで要求電文の業務データ領域を解析し、データレコードを取得。\n2. フォームクラスをロード: `[formClassPackage].[受信電文のリクエストIDヘッダ値]Form`\n3. 設定された採番モジュールで受信電文連番を取得。\n4. 下記コンストラクタでフォームインスタンスを生成:\n   ```java\n   public フォームクラス名(String 受信電文通番, RequestMessage 受信電文オブジェクト)\n   ```\n5. 下記SQLリソースのプリペアドステートメントをフォームインスタンスを埋め込みパラメータとして実行:\n   `[SQLファイル配置パッケージ設定値].[受信電文のリクエストIDヘッダ値]#INSERD_MESSAGE`\n\n**往路処理**\n\n`Result.Success` を返して終了（後続ハンドラへの処理移譲なし）。\n\n**例外処理**\n\n- フォームクラスがクラスパス上に存在しない場合: 実行時例外を送出。\n- コンストラクタが存在しない、またはコンストラクタ実行中にエラーが発生した場合: 実行時例外を送出。",
+    "s3": "設定値は `AsyncMessageReceiveActionSettings` に集約されている。\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| formClassPackage | String | ○ | | 電文データ登録に使用するフォームクラスのパッケージ名。 |\n| receivedSequenceGenerator | IdGenerator | | | 受信電文連番発番用オブジェクト。デバッグや障害解析用に無効化可能。デフォルトはtrue（自動削除を実施）。 |"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "libraries-04_TransactionConnectionName",
+  "title": "データベースコネクション名とトランザクション名",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "データベースコネクション名",
+      "hints": [
+        "DbConnectionContext",
+        "AppDbConnection",
+        "TransactionContext",
+        "DEFAULT_TRANSACTION_CONTEXT_KEY",
+        "データベースコネクション名",
+        "データベース接続管理",
+        "無名コネクション",
+        "コネクション登録"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "トランザクション名",
+      "hints": [
+        "TransactionContext",
+        "Transaction",
+        "トランザクション名",
+        "トランザクション登録",
+        "トランザクション取得"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "JdbcTransactionにおけるトランザクション名とデータベースコネクション名の関係",
+      "hints": [
+        "JdbcTransaction",
+        "トランザクション名",
+        "データベースコネクション名",
+        "1対1",
+        "トランザクション制御",
+        "DbConnectionContext",
+        "TransactionContext"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "`DbConnectionContext` に設定する `AppDbConnection`（データベース接続）ごとに設定する名前。スレッド内でユニークにする必要がある。\n\n**名前を分けて登録するケース:**\n- データベースの接続先が異なる場合\n- 同一接続先で異なるトランザクション制御が必要な場合（例: 業務処理内で別トランザクションが必要な場合）\n\n> **注意**: 無名のデータベース接続は1つだけ登録可能。ビジネスロジックのメインDB接続には無名を推奨（名前指定間違いによる不具合を防げる）。内部的には `TransactionContext#DEFAULT_TRANSACTION_CONTEXT_KEY`（値は `\"transaction\"`）として保持される。\n\n> **警告**: `TransactionContext#DEFAULT_TRANSACTION_CONTEXT_KEY` の値は `\"transaction\"`。無名と `\"transaction\"` は同義。無名が登録されている状態で `\"transaction\"` の登録を試みるとエラー。同一スレッドで既に登録されている名前で再登録するとエラー。\n\n**使用例:**\n\n```java\n// 無名のデータベース接続を登録（内部的にDEFAULT_TRANSACTION_CONTEXT_KEY=\"transaction\"として保持）\nDbConnectionContext.setConnection(connection1);\n// 上記と同義\nDbConnectionContext.setConnection(TransactionContext.DEFAULT_TRANSACTION_CONTEXT_KEY, connection1);\nDbConnectionContext.setConnection(\"transaction\", connection1);\n\n// \"user-schema\" という名前でデータベース接続を登録\nDbConnectionContext.setConnection(\"user-schema\", connection2);\n\n// 同一スレッドで既に登録されている名前で登録するとエラー\nDbConnectionContext.setConnection(\"user-schema\", connection3); // エラー\n\n// 無名のデータベース接続を取得\nAppDbConnection connection1 = DbConnectionContext.getConnection();\n\n// \"user-schema\" でデータベース接続を取得\nAppDbConnection connection2 = DbConnectionContext.getConnection(\"user-schema\");\n```\n\n無名と `\"transaction\"` の関係:\n\n```java\n// 無名で登録したコネクションは \"transaction\" でも取得可能\nDbConnectionContext.setConnection(connection);\nDbConnectionContext.getConnection(\"transaction\");\n\n// \"transaction\" で登録したコネクションは無名でも取得可能\nDbConnectionContext.setConnection(\"transaction\", connection);\nDbConnectionContext.getConnection();\n\n// 無名が登録済みの場合、\"transaction\" での登録はエラー\nDbConnectionContext.setConnection(connection1);\nDbConnectionContext.setConnection(\"transaction\", connection); // エラー\n```",
+    "s2": "`TransactionContext` に設定する `Transaction` ごとに設定する名前。スレッド内でユニークにする必要がある。\n\n**使用例:**\n\n```java\n// DEFAULT_TRANSACTION_CONTEXT_KEY でトランザクションを登録\nTransactionContext.setTransaction(TransactionContext.DEFAULT_TRANSACTION_CONTEXT_KEY, transaction);\n\n// \"user_schema\" でトランザクションを登録\nTransactionContext.setTransaction(\"user_schema\", transaction2);\n\n// 同一スレッドで既に登録されている名前で登録するとエラー\nTransactionContext.setTransaction(\"user_schema\", transaction3); // エラー\n\n// トランザクションの取得\n// 基本的にこの処理はフレームワークの責務である。\n// アプリケーションでトランザクションが必要となるケースは、\n// 例外発生時（異常終了）であっても処理を確定する必要がある場合である。\nTransaction tran = TransactionContext.getTransaction(TransactionContext.DEFAULT_TRANSACTION_CONTEXT_KEY);\nTransaction tran = TransactionContext.getTransaction(\"user-schema\");\n```",
+    "s3": "`JdbcTransaction` を使用した場合、トランザクション名とデータベースコネクション名は1対1で紐付く。`JdbcTransaction` は自身のトランザクション名と同一の名前で `DbConnectionContext` に登録されているデータベース接続を使用してトランザクション制御を行う。\n\n**実装コードで見るトランザクション制御:**\n\n```java\n// 無名のデータベース接続とトランザクションを登録\nDbConnectionContext.setConnection(connection1);\nTransactionContext.setTransaction(TransactionContext.DEFAULT_TRANSACTION_CONTEXT_KEY, transaction1);\n\n// \"user-schema\" でデータベース接続とトランザクションを登録\nDbConnectionContext.setConnection(\"user-schema\", connection2);\nTransactionContext.setTransaction(\"user-schema\", transaction2);\n\n// このコミットは connection1 に対して実行。connection2 はこのトランザクション制御の影響を受けない。\nTransaction tran1 = TransactionContext.getTransaction();\ntran1.commit();\n```"
+  }
+}

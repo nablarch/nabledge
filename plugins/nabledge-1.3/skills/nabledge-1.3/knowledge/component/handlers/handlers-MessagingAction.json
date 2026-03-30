@@ -1,0 +1,49 @@
+{
+  "id": "handlers-MessagingAction",
+  "title": "同期応答電文送信処理用業務アクションハンドラのテンプレートクラス",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "MessagingAction",
+        "nablarch.fw.action.MessagingAction",
+        "onReceive",
+        "onError",
+        "usesAutoRead",
+        "RequestMessage",
+        "ResponseMessage",
+        "ExecutionContext",
+        "TransactionManagementHandler",
+        "同期応答電文",
+        "テンプレートクラス",
+        "業務アクションハンドラ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "usesAutoRead",
+        "readRecord",
+        "onReceive",
+        "onError",
+        "InvalidDataFormatException",
+        "RequestMessage",
+        "TransactionManagementHandler",
+        "getParamMap",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "コールバック",
+        "ハンドラ処理フロー"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.action.MessagingAction`\n\n[../architectural_pattern/messaging_request_reply](../../processing-pattern/mom-messaging/mom-messaging-messaging_request_reply.json) の業務アクションハンドラを実装するためのテンプレートクラス。\n\n以下のテンプレートメソッドを必要に応じて実装する。\n\n| メソッド名 | 必須/任意 | 内容 |\n|---|---|---|\n| onReceive() | 必須 | 往路処理内で呼ばれる。`RequestMessage` の内容をもとに業務処理を実行し、`ResponseMessage` に応答内容を格納してリターンする |\n| onError() | 任意 | [TransactionManagementHandler](handlers-TransactionManagementHandler.json) で業務トランザクションがロールバックされた時点でコールバックされる。エラー応答電文を作成してリターンする。オーバーライドしない場合はFW制御ヘッダのみが設定された電文がエラー応答として送信される |\n| usesAutoRead() | 任意 | 要求電文データ部の自動読み込みの有無を指定する。マルチレコード/マルチフォーマット構成の場合はオーバーライドしてfalseをリターンすることで手動解析が可能 |\n\n以下のソースコードは、フレームワークが本クラスの各テンプレートメソッドをどのタイミングで呼び出すかを表したものである。\n\n```java\nRequestMessage   req;\nResponseMessage  res;\nExecutionContext ctx;\n\nreq = receive();                // (フレームワークが要求電文を受信)\n\ntry {\n    if ( usesAutoRead() ) {\n        req.readRecord();       // 要求電文のデータ部からデータレコードを自動的に読み込む。\n                                // (主にシングルレコード形式の電文で使用する。)\n    }\n\n    res = onReceive(req, ctx);  // 要求電文毎に呼ばれる。\n    commit();                   // (フレームワークが業務トランザクションをコミットする。)\n\n} catch(e) {\n    rollback();                 // (業務トランザクションをロールバックする。)\n    res = onError(e, req, ctx); // 業務処理で例外が発生し、業務トランザクションが\n                                // ロールバックされた直後に呼ばれる。\n} finally {\n    send(res);                  // (フレームワークが応答電文を送信)\n}\n```\n\n> **注意**: このコードはあくまで説明用に単純化したものであり、実際の処理フローはハンドラ構成によって制御される。",
+    "s2": "**[往路処理]**\n1. **(業務データ部の自動読み込み)**: `usesAutoRead()` の結果が `true` の場合、`RequestMessage` の `readRecord()` を呼び出して業務データレコードを読み込む。読み込んだレコードは `getParamMap()` 等でフィールド名をキーとするMapとしてアクセス可能\n2. **(業務ロジックの実行)**: `onReceive()` を実行し、応答電文オブジェクトを取得する\n\n**[復路処理]**\n3. **(正常終了)**: 往路処理2で作成した応答電文オブジェクトをリターンして終了\n\n**[例外処理]**\n1a. **(データ終端エラー)**: データレコード読み込み時にデータ部の終端に達しなかった場合は `InvalidDataFormatException` を送出する\n\n> **注意**: 電文内に複数のレコードが格納されうる場合は `usesAutoRead()` をオーバーライドしてfalseを返すこと\n\n**[コールバック]**\n4. **(エラー応答電文の制御)**: ハンドラ処理後に [TransactionManagementHandler](handlers-TransactionManagementHandler.json) で業務トランザクションがロールバックされた場合、`onError()` を実行しエラー応答電文オブジェクトを返す"
+  }
+}

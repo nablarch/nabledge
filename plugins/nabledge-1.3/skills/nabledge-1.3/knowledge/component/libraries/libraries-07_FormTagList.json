@@ -1,0 +1,146 @@
+{
+  "id": "libraries-07_FormTagList",
+  "title": "フォーム内の入力要素を出力するカスタムタグ",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "",
+      "hints": [
+        "WebView_TextTag",
+        "WebView_TextareaTag",
+        "WebView_PasswordTag",
+        "WebView_HiddenTag",
+        "WebView_PlainHiddenTag",
+        "WebView_RadioButtonTag",
+        "WebView_CheckboxTag",
+        "WebView_CompositeKeyRadioButtonTag",
+        "WebView_CompositeKeyCheckboxTag",
+        "WebView_SelectTag",
+        "WebView_RadioButtonsTag",
+        "WebView_CheckboxesTag",
+        "フォーム入力要素",
+        "カスタムタグ一覧",
+        "radioButtonsタグ",
+        "checkboxesタグ",
+        "nablarch_radio",
+        "nablarch_checkbox",
+        "tabindex",
+        "labelタグ",
+        "id属性自動生成",
+        "ラジオボタン一覧",
+        "チェックボックス一覧",
+        "WebView_ListSelectCommon"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "passwordタグ",
+      "hints": [
+        "passwordタグ",
+        "n:password",
+        "restoreValue",
+        "replacement",
+        "確認画面置換文字",
+        "パスワード入力",
+        "selectタグ",
+        "withNoneOption",
+        "noneOptionLabel",
+        "選択なしオプション",
+        "セレクトボックス",
+        "ドロップダウン",
+        "WebView_ListSelectCommon"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "radioButtonタグ",
+      "hints": [
+        "radioButtonタグ",
+        "n:radiobutton",
+        "label",
+        "nablarch_radio",
+        "ラジオボタン",
+        "id属性自動生成"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "",
+      "hints": [
+        "WebView_SingleCheckBoxTag",
+        "checkboxタグアンカー"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "checkboxタグ",
+      "hints": [
+        "checkboxタグ",
+        "n:checkbox",
+        "useOffValue",
+        "offValue",
+        "offLabel",
+        "チェックなし値設定",
+        "nablarch_checkbox",
+        "WebView_SingleCheckBoxTag",
+        "WebView_NablarchTagHandler",
+        "WebView_CustomTagConfig"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "compositeKeyRadioButtonタグ、compositeKeyCheckboxタグ",
+      "hints": [
+        "compositeKeyRadioButtonタグ",
+        "compositeKeyCheckboxタグ",
+        "n:compositeKeyRadioButton",
+        "n:compositeKeyCheckbox",
+        "namePrefix",
+        "keyNames",
+        "valueObject",
+        "CompositeKey",
+        "複合キー"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "",
+      "hints": [
+        "WebView_MultiSelectCustomTag",
+        "WebView_ListSelectCommon",
+        "List型変数タグアンカー"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "List型変数に対応するカスタムタグの共通属性",
+      "hints": [
+        "selectタグ",
+        "radioButtonsタグ",
+        "checkboxesタグ",
+        "listName",
+        "elementLabelProperty",
+        "elementValueProperty",
+        "elementLabelPattern",
+        "listFormat",
+        "List型変数",
+        "n:select",
+        "n:radiobuttons",
+        "n:checkboxes",
+        "WebView_MultiSelectCustomTag",
+        "WebView_ListSelectCommon"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "フォーム内の各入力要素(<input>, <textarea>, <select>)に対応するカスタムタグ一覧:\n\n| カスタムタグ | 出力するHTMLタグ |\n|---|---|\n| :ref:`WebView_TextTag` | inputタグ(type=text) |\n| :ref:`WebView_TextareaTag` | textareaタグ |\n| :ref:`WebView_PasswordTag` | inputタグ(type=password) |\n| :ref:`WebView_HiddenTag` | HTMLタグを出力せず、ウィンドウスコープに値を出力する |\n| :ref:`WebView_PlainHiddenTag` | inputタグ(type=hidden) |\n| :ref:`WebView_RadioButtonTag` | inputタグ(type=radio) |\n| :ref:`WebView_CheckboxTag` | inputタグ(type=checkbox) |\n| :ref:`WebView_CompositeKeyRadioButtonTag` | inputタグ(type=radio) ※複合キーを使用する場合 |\n| :ref:`WebView_CompositeKeyCheckboxTag` | inputタグ(type=checkbox) ※複合キーを使用する場合 |\n| :ref:`WebView_SelectTag` | selectタグ ※List型変数の各要素ごとにoptionタグを出力 |\n| :ref:`WebView_RadioButtonsTag` | 複数のinputタグ(type=radio) ※List型変数の各要素ごとにラジオボタンを出力 |\n| :ref:`WebView_CheckboxesTag` | 複数のinputタグ(type=checkbox) ※List型変数の各要素ごとにチェックボックスを出力 |\n\n追加属性は :ref:`WebView_ListSelectCommon` のみ。\n\nラベル出力時にlabelタグを使用。id属性は「nablarch_<radio|checkbox><連番>」形式でフレームワークが自動生成。<連番>は画面内でのradio（またはcheckbox）タグ出現順（1起算）。tabindex属性値はすべてのinputタグにそのまま出力される。\n\n**使用例 (JSP)**:\n```jsp\n<n:radioButtons name=\"team.color\" tabindex=\"3\"\n          listName=\"allColors\" elementLabelProperty=\"label\" elementValueProperty=\"value\" elementLabelPattern=\"$VALUE$:$LABEL$\" />\n<n:checkboxes name=\"team.titles\" tabindex=\"5\"\n          listName=\"allTitles\" elementLabelProperty=\"label\" elementValueProperty=\"value\" elementLabelPattern=\"$VALUE$:$LABEL$\" />\n```\n\n**出力HTML (入力画面)**:\n```html\n<input id=\"nablarch_radio1\" tabindex=\"3\" type=\"radio\" name=\"team.color\" value=\"001\"><label for=\"nablarch_radio1\">001:red</label><br>\n<input id=\"nablarch_radio2\" tabindex=\"3\" type=\"radio\" name=\"team.color\" value=\"002\"><label for=\"nablarch_radio2\">002:blue</label><br>\n<input id=\"nablarch_radio3\" tabindex=\"3\" type=\"radio\" name=\"team.color\" value=\"003\"><label for=\"nablarch_radio3\">003:green</label><br>\n<input id=\"nablarch_checkbox1\" tabindex=\"5\" type=\"checkbox\" name=\"team.titles\" value=\"01\"><label for=\"nablarch_checkbox1\">01:地区優勝</label><br>\n<input id=\"nablarch_checkbox2\" tabindex=\"5\" type=\"checkbox\" name=\"team.titles\" value=\"02\"><label for=\"nablarch_checkbox2\">02:リーグ優勝</label><br>\n<input id=\"nablarch_checkbox3\" tabindex=\"5\" type=\"checkbox\" name=\"team.titles\" value=\"03\"><label for=\"nablarch_checkbox3\">03:ファイナル優勝</label><br>\n```",
+    "s2": "passwordタグの追加属性:\n\n| 属性 | デフォルト値 | 説明 |\n|---|---|---|\n| restoreValue | false | 入力画面の再表示時に入力データを復元するか否か(true: 復元, false: 復元しない) |\n| replacement | `*` | 確認画面用の出力時に使用する置換文字 |\n\n> **注意**: 入力データと同じ数の置換文字が出力される。固定文字列を出力したい場合はJSPに直接記述する。\n\n使用例(置換文字を\"#\"に変更):\n\n```jsp\n<n:password name=\"systemAccount.newPassword\" replacement=\"#\" />\n```\n\nHTML出力:\n\n```html\n<!-- 入力画面 -->\n<input type=\"password\" name=\"systemAccount.newPassword\" value=\"password\" />\n\n<!-- 確認画面 -->\n########\n```\n\n:ref:`WebView_ListSelectCommon` の属性に加えて、以下の属性を追加。\n\n| プロパティ名 | デフォルト値 | 説明 |\n|---|---|---|\n| withNoneOption | false | リスト先頭に選択なしオプションを追加するか（true: 追加、false: 追加しない） |\n| noneOptionLabel | \"\" | 選択なしオプションのラベル（withNoneOption=trueのみ有効） |\n\n「選択なし」オプションのvalue属性は常に空文字。\n\n**使用例 (JSP)**:\n```jsp\n<n:select name=\"user.groupIds\"\n          listName=\"allGroups\" elementLabelProperty=\"name\" elementValueProperty=\"id\"\n          elementLabelPattern=\"$VALUE$ - $LABEL$\" listFormat=\"ul\"\n          withNoneOption=\"true\" noneOptionLabel=\"選択なし\" />\n```\n\n**出力HTML (入力画面、user.groupIds = \"G002\" の場合)**:\n```html\n<select name=\"user.groupIds\">\n  <option value=\"\">選択なし</option>\n  <option value=\"G001\">G001 - グループA</option>\n  <option value=\"G002\" selected=\"selected\">G002 - グループB</option>\n  <option value=\"G003\">G003 - グループC</option>\n  <option value=\"G004\">G004 - グループD</option>\n  <option value=\"G005\">G005 - グループE</option>\n</select>\n```",
+    "s3": "radioButtonタグの追加属性:\n\n| 属性 | 必須 | 説明 |\n|---|---|---|\n| label | ○ | ラベル |\n\n使用例:\n\n```jsp\n<n:radiobutton name=\"user.sex\" value=\"0\" label=\"0:男性\" />\n<n:radiobutton name=\"user.sex\" value=\"1\" label=\"1:女性\" />\n```\n\nHTML出力(user.sex = 1 の場合):\n\n```html\n<input id=\"nablarch_radio1\" type=\"radio\" name=\"user.sex\" value=\"0\" /><label for=\"nablarch_radio1\">0:男性</label>\n<input id=\"nablarch_radio2\" type=\"radio\" name=\"user.sex\" value=\"1\" checked=\"checked\" /><label for=\"nablarch_radio2\">1:女性</label>\n```\n\nラベル出力時にlabelタグを出力する。id属性指定がない場合、フレームワークが「nablarch_radio<連番>」形式でid属性を生成(画面内radioタグの出現順に1から連番)。",
+    "s4": "RSTアンカー `.. _WebView_SingleCheckBoxTag:` の位置を示す区切り。このセクション自体にコンテンツはなく、checkboxタグの詳細なコンテンツはs5(checkboxタグセクション)を参照。",
+    "s5": "checkboxタグ(:ref:`WebView_SingleCheckBoxTag`)の追加属性:\n\n| 属性 | デフォルト値 | 説明 |\n|---|---|---|\n| value | `1` | チェックありの場合に使用する値(XHTMLのvalue属性) |\n| label | | チェックありの場合のラベル(入力画面に表示) |\n| useOffValue | true | チェックなしの値設定を使用するか否か |\n| offLabel | | チェックなしの場合のラベル |\n| offValue | `0` | チェックなしの場合の値 |\n\nHTMLのcheckboxはチェックなしの場合にリクエストパラメータが送信されない。フレームワークはチェックなしに対応する値をhiddenタグとして出力し、:ref:`WebView_NablarchTagHandler`がチェックなし時のみリクエストパラメータに値を設定する。\n\nvalue属性とoffValue属性のデフォルト値の設定方法は:ref:`WebView_CustomTagConfig`を参照。\n\n> **注意**: チェックなしの値設定が不要な場合(一括削除等での複数選択時など)はuseOffValue属性にfalseを指定する。\n\n使用例:\n\n```jsp\n<n:checkbox name=\"user.useEmail\" label=\"使用する\" offLabel=\"使用しない\" />\n```\n\nHTML出力(入力画面、user.useEmail = 1 の場合):\n\n```html\n<input id=\"nablarch_checkbox1\" type=\"checkbox\" name=\"user.useEmail\" value=\"1\" checked=\"checked\" />\n<label for=\"nablarch_checkbox1\">使用する</label>\n```\n\n確認画面出力:\n- チェックあり: `使用する`(リクエストパラメータuser.useEmail = \"1\")\n- チェックなし: `使用しない`(リクエストパラメータuser.useEmail = \"0\")\n\nラベルがブランクでない場合のみlabelタグを出力。id属性指定がない場合、フレームワークが「nablarch_checkbox<連番>」形式でid属性を生成(checkboxタグ出現順に1から連番)。",
+    "s6": "compositeKeyRadioButtonタグとcompositeKeyCheckboxタグの追加属性:\n\n| 属性 | 説明 |\n|---|---|\n| namePrefix | 選択している名称のプレフィクス。この名称に「.」とkeyNamesで指定したキー名を結合したパスを通常のname属性と同様に取り扱う。例えばnamePrefixに\"form\"、keyNamesに\"key1,key2\"を指定した場合、表示時にはform.key1、form.key2でリクエストスコープに含まれる値を使用してチェックボックスの値を出力する。また、サブミット後のリクエスト処理では、form.key1、form.key2というリクエストパラメータから選択された値が取得できる |\n| keyNames | 複合キーのプロパティのリスト |\n| valueObject | 複合キーを表すオブジェクト。keyNamesで指定したキー名を必ずプロパティに持つ必要がある |\n\n> **注意**: このタグのname属性にはnamePrefix属性とkeyNames属性で指定したキーの組み合わせと異なる名称にしなければならない特殊な制約がある。実装時はこの点に十分注意すること。\n\nradioButtonタグとcheckboxタグで実現できない複合キーを持つ値の選択に使用する。Form上で複合キーをキーの数と同じプロパティ、またはCompositeKeyクラスのプロパティで保持することを前提とする。キーの値はvalueObject属性で指定するオブジェクトに保持する必要がある。\n\n**パターン1: キーの数と同じプロパティで保持する場合**\n\n```java\npublic class SampleForm {\n    private String[] compositeKeyCheckboxValue1;\n    private String[] compositeKeyCheckboxValue2;\n}\n```\n\n```jsp\n<n:compositeKeyCheckbox \n   namePrefix=\"sampleForm\" \n   label=\"\" \n   valueObject=\"${row}\" \n   keyNames=\"compositeKeyCheckboxValue1,compositeKeyCheckboxValue2\" \n   name=\"form.compositeKeyCheckboxValue\" />\n```\n\n> **注意**: name の名称は任意だが、 keyNames の名称と選択された複合キーのプロパティ名は一致させる必要がある。\n\n**パターン2: CompositeKeyクラスのプロパティで保持する場合**\n\n```java\npublic class CompositeKeyForm {\n    private CompositeKey[] compositeKeys;\n}\n```\n\n```jsp\n<n:compositeKeyCheckbox \n   namePrefix=\"compositeKeyForm\" \n   label=\"\" \n   valueObject=\"${row}\" \n   keyNames=\"key1,key2\" \n   name=\"form.compositeKeys\" />\n```\n\n> **注意**: name は必ず CompositeKey を表す名称とする。",
+    "s7": "RSTアンカー `.. _WebView_MultiSelectCustomTag:` および `.. _WebView_ListSelectCommon:` の位置を示す区切り。このセクション自体にコンテンツはなく、List型変数に対応するカスタムタグの詳細なコンテンツはs8を参照。",
+    "s8": ":ref:`WebView_SelectTag`、:ref:`WebView_RadioButtonsTag`、:ref:`WebView_CheckboxesTag`に共通する属性(:ref:`WebView_MultiSelectCustomTag`、:ref:`WebView_ListSelectCommon`):\n\n| 属性 | 必須 | 説明 |\n|---|---|---|\n| name | ○ | 選択された値をリクエストパラメータまたは変数スコープから取得するname属性 |\n| listName | ○ | 選択項目のリストの属性名 |\n| elementLabelProperty | ○ | リスト要素からラベルを取得するプロパティ名 |\n| elementValueProperty | ○ | リスト要素から値を取得するプロパティ名 |\n| elementLabelPattern | | ラベル整形パターン。プレースホルダ: $LABEL$(ラベル)、$VALUE$(値)。例: \"$VALUE$ - $LABEL$\"→ラベル=\"グループ1\"、値=\"G001\"のとき\"G001 - グループ1\"。デフォルト\"$LABEL$\" |\n| listFormat | | リスト表示フォーマット: br/div/span/ul/ol/sp(スペース区切り)。デフォルトbr |\n\n> **注意**: listFormat属性の適用範囲はタグにより異なる。selectタグは確認画面用出力のみ。radioButtonsタグとcheckboxesタグは入力・確認画面の両方で使用する。\n\n使用例:\n\n```java\n// 選択項目クラス(id, nameプロパティを持つGroupクラス)\nList<Group> groups = Arrays.asList(\n    new Group(\"G001\", \"グループA\"), new Group(\"G002\", \"グループB\"),\n    new Group(\"G003\", \"グループC\"), new Group(\"G004\", \"グループD\"),\n    new Group(\"G005\", \"グループE\"));\nctx.setRequestScoped(\"allGroups\", groups);\n```\n\n```jsp\n<n:select name=\"user.groupIds\" multiple=\"true\"\n          listName=\"allGroups\" elementLabelProperty=\"name\" elementValueProperty=\"id\"\n          elementLabelPattern=\"$VALUE$ - $LABEL$\" listFormat=\"ul\" />\n```\n\nHTML出力(入力画面: user.groupIds = \"G002\", \"G003\", \"G004\" の場合):\n\n```html\n<select name=\"user.groupIds\">\n  <option value=\"G001\">G001 - グループA</option>\n  <option value=\"G002\" selected=\"selected\">G002 - グループB</option>\n  <option value=\"G003\" selected=\"selected\">G003 - グループC</option>\n  <option value=\"G004\" selected=\"selected\">G004 - グループD</option>\n  <option value=\"G005\">G005 - グループE</option>\n</select>\n```\n\nHTML出力(確認画面):\n\n```html\n<ul>\n  <li>G002 - グループB</li>\n  <li>G003 - グループC</li>\n  <li>G004 - グループD</li>\n</ul>\n```"
+  }
+}

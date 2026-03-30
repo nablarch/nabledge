@@ -1,0 +1,96 @@
+{
+  "id": "testing-framework-RequestUnitTest_send_sync",
+  "title": "リクエスト単体テスト（同期応答メッセージ送信処理）",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要・全体像",
+      "hints": [
+        "StandaloneTestSupportTemplate",
+        "AbstractHttpRequestTestTemplate",
+        "同期応答メッセージ送信処理",
+        "親クラス選択",
+        "バッチ処理",
+        "要求電文送信"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "主なクラス・リソース",
+      "hints": [
+        "StandaloneTestSupportTemplate",
+        "AbstractHttpRequestTestTemplate",
+        "MessageSender",
+        "RequestTestingMessagingProvider",
+        "MockMessagingContext",
+        "テストクラス",
+        "Excelファイル"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "StandaloneTestSupportTemplate",
+      "hints": [
+        "StandaloneTestSupportTemplate",
+        "MockMessagingContext",
+        "要求電文アサート",
+        "同期応答メッセージ送信テスト"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "AbstractHttpRequestTestTemplate",
+      "hints": [
+        "AbstractHttpRequestTestTemplate",
+        "MockMessagingContext",
+        "要求電文アサート",
+        "同期応答メッセージ送信テスト"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "RequestTestingMessagingProvider",
+      "hints": [
+        "RequestTestingMessagingProvider",
+        "要求電文アサート",
+        "応答電文生成",
+        "MockMessagingContext",
+        "一括アサート",
+        "Excelテストデータ読み込み"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "MessageSender",
+      "hints": [
+        "MessageSender",
+        "要求電文生成",
+        "MockMessagingContext",
+        "応答電文パース",
+        "同期応答メッセージ"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "テストデータ",
+      "hints": [
+        "テストデータ",
+        "同期応答メッセージ送信処理",
+        "パディング",
+        "バイナリデータ",
+        "固定長"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 概要・全体像\n\n要求電文1件をキューに送信し、結果を同期的に受信する際の動作を擬似的に再現してテストを行う。\n\n![バッチ処理での同期応答メッセージ送信処理の全体像](assets/testing-framework-RequestUnitTest_send_sync/send_sync.png)\n\n> **注意**: 同期応答メッセージ送信処理のリクエスト単体テストを行う場合、テストケースの親クラスは以下の２クラスのうちのいずれかを継承する必要がある。\n> - `StandaloneTestSupportTemplate`\n> - `AbstractHttpRequestTestTemplate`",
+    "s2": "## 主なクラス・リソース\n\n| 名称 | 役割 | 作成単位 |\n|---|---|---|\n| リクエスト単体テストクラス | テストロジックを実装する | テスト対象クラス(Action)につき１つ |\n| Excelファイル（テストデータ） | 要求電文の期待値および応答電文などのテストデータを記載する | テストクラスにつき１つ |\n| `StandaloneTestSupportTemplate` | Action実行後に`MockMessagingContext`を用いて要求電文のアサートを実行する | － |\n| `AbstractHttpRequestTestTemplate` | Action実行後に`MockMessagingContext`を用いて要求電文のアサートを実行する | － |\n| `MessageSender` | 同期応答メッセージ送信処理で使用するコンポーネント | － |\n| `RequestTestingMessagingProvider` | 要求電文のアサート機能および応答電文の生成・返却機能を提供する | － |",
+    "s3": "## StandaloneTestSupportTemplate\n\nAction実行後に`MockMessagingContext`を用いて要求電文のアサートを行う機能を持つクラス。\n\n同期応答メッセージ送信処理のリクエスト単体テストを行う場合、処理の形態に合わせて本クラスまたは`AbstractHttpRequestTestTemplate`を実装したテストケースを使用する必要がある。",
+    "s4": "## AbstractHttpRequestTestTemplate\n\nAction実行後に`MockMessagingContext`を用いて要求電文のアサートを行う機能を持つクラス。\n\n同期応答メッセージ送信処理のリクエスト単体テストを行う場合、処理の形態に合わせて本クラスまたは`StandaloneTestSupportTemplate`を実装したテストケースを使用する必要がある。",
+    "s5": "## RequestTestingMessagingProvider\n\n要求電文のアサートおよび応答電文の生成・返却機能を提供するクラス。Excelに記載された要求電文の期待値と応答電文の読み込みも実行する。\n\n| 準備処理 | 結果確認 |\n|---|---|\n| 応答電文の生成 | 要求電文のアサート |\n\n> **注意**: 要求電文のアサートは、要求電文が送信されるたびに行うのではなく、Action実行後に一括で行う。",
+    "s6": "## MessageSender\n\n同期応答メッセージ送信処理で使用するコンポーネント。主な機能:\n\n1. 呼び出し元から渡されたパラメータから要求電文を生成する\n2. 要求電文を元に`MockMessagingContext`を実行する\n3. `MockMessagingContext`から返却された応答電文をパースする\n4. パース結果のオブジェクトを呼び出し元に返却する",
+    "s7": "## テストデータ - 同期応答メッセージ送信処理\n\n基本的な記述方法は、同期応答メッセージ送信処理のテストデータ記述方法に関するドキュメントを参照。\n\n> **注意**: パディングおよびバイナリデータの扱いは、固定長ファイルの取り扱いと同様である。"
+  }
+}

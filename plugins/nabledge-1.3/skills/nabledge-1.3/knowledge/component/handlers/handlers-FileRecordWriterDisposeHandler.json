@@ -1,0 +1,55 @@
+{
+  "id": "handlers-FileRecordWriterDisposeHandler",
+  "title": "出力ファイル開放ハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "FileRecordWriterDisposeHandler",
+        "FileRecordWriterHolder",
+        "出力ファイル開放",
+        "ファイルクローズ",
+        "業務アクションハンドラ"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "IOエラー",
+        "出力ファイル開放フロー",
+        "FileRecordWriterHolder"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "FileRecordWriterDisposeHandler",
+        "DIリポジトリ設定",
+        "コンポーネント設定",
+        "XML設定例"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "未実装機能・要望",
+      "hints": [
+        "未実装機能",
+        "拡張ポイント"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.common.handler.FileRecordWriterDisposeHandler`\n\n業務アクションハンドラで書き込みを行うために開いた全ての出力ファイルを開放（クローズ）するハンドラ。後続ハンドラの処理結果に関わらず全ての出力ファイルを解放する。本ハンドラを使用する場合、業務アクションハンドラ内で出力ファイルを開放する必要はない。\n\n> **警告**: 本ハンドラは `FileRecordWriterHolder` クラス経由で書き込みが行われた出力ファイルのみ開放する。`FileRecordWriterHolder` 以外のクラスを使用して書き込んだ出力ファイルは開放の対象外となるので注意すること。",
+    "s2": "**[往路処理]**\n1. 後続ハンドラに処理を委譲し、その結果を取得する。\n\n**[復路処理]**\n2. `FileRecordWriterHolder` によって書き込みを行った全てのファイルの開放処理を行う。\n3. 開放処理中にIOエラーが発生した場合はワーニングログのみ出力し、再送出は行わない。それ以外のエラーが発生した場合は再送出して終了する。\n4. **1.** で取得した処理結果を返却して終了する。\n\n**[例外処理]**\n- 後続ハンドラの処理中にエラーが発生した場合、出力ファイルの開放を行った後、発生した元例外を再送出して終了する。",
+    "s3": "本ハンドラの実装内容は基本的に変更不要なものであり、そのまま使用できる。\n\n```xml\n<component class=\"nablarch.common.handler.FileRecordWriterDisposeHandler\" />\n```",
+    "s4": "なし"
+  }
+}

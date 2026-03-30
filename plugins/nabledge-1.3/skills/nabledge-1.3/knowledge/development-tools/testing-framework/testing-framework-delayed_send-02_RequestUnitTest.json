@@ -1,0 +1,52 @@
+{
+  "id": "testing-framework-delayed_send-02_RequestUnitTest",
+  "title": "リクエスト単体テストの実施方法（応答不要メッセージ送信処理）",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "応答不要メッセージ送信処理",
+        "フォーマット定義ファイル",
+        "電文送信テーブル",
+        "テスト対象の成果物",
+        "条件網羅不要",
+        "限界値テスト不要"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "テストクラスの書き方",
+      "hints": [
+        "BatchRequestTestSupport",
+        "RequestTest",
+        "テストクラス命名規則",
+        "電文リクエストID",
+        "nablarch.test.core.batch.BatchRequestTestSupport"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "データシートの書き方",
+      "hints": [
+        "AsyncMessageSendAction",
+        "AsyncMessageSendActionForUt",
+        "messageRequestId",
+        "errorCase",
+        "testShots",
+        "応答不要メッセージ",
+        "異常系テスト",
+        "RESPONSE_HEADER_MESSAGES",
+        "RESPONSE_BODY_MESSAGES",
+        "RequestPathJavaPackageMapping"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "応答不要メッセージ送信処理用のアクションクラスはNablarchが提供するため、条件網羅・限界値テストは実施不要。\n\n**テスト対象の成果物**:\n- 電文のレイアウトを定義したフォーマット定義ファイル\n- 電文送信テーブルからステータスが未送信のデータを取得するSELECT文\n- 電文送信後に該当データのステータスを処理済みに更新するUPDATE文\n- 電文送信失敗時に該当データのステータスを送信失敗(エラー)に更新するUPDATE文",
+    "s2": "テストクラス作成ルール:\n1. テスト対象機能と同一パッケージ\n2. クラス名は `<電文のリクエストID>RequestTest`\n3. `nablarch.test.core.batch.BatchRequestTestSupport` を継承",
+    "s3": "データシートの記述方法は :ref:`message_sendSyncMessage_test` を参照。本項では記述方法が異なる箇所のみ説明する。\n\n**正常系ケース**: testShotsの定義に `KEY=messageRequestId`、`VALUE=メッセージのリクエストID` を追加すること。\n\n> **注意**: 以下の設定は不要:\n> - testShots: `responseMessage`\n> - 期待値・準備データ: `RESPONSE_HEADER_MESSAGES`、`RESPONSE_BODY_MESSAGES`\n\n**異常系ケース**: testShotsの定義に `KEY=errorCase`、`VALUE=true` を設定する。異常系では電文が送信されないため送信電文の期待値設定は不要。\n\n> **注意**: 異常系テストケースでは、応答不要メッセージ送信処理用共通アクションをテスト用アクションに切り替える必要がある。\n\n本番用設定:\n```xml\n<component name=\"requestPathJavaPackageMapping\" class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n  <property name=\"basePackage\" value=\"nablarch.fw.messaging.action.AsyncMessageSendAction\" />\n  <property name=\"immediate\" value=\"false\" />\n</component>\n```\n\nテスト用設定（`nablarch.test.core.messaging.AsyncMessageSendActionForUt` で上書き）:\n```xml\n<component name=\"requestPathJavaPackageMapping\" class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n  <property name=\"basePackage\" value=\"nablarch.test.core.messaging.AsyncMessageSendActionForUt\" />\n  <property name=\"immediate\" value=\"false\" />\n</component>\n```"
+  }
+}

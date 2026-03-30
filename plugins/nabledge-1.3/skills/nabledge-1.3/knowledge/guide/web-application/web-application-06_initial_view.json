@@ -1,0 +1,53 @@
+{
+  "id": "web-application-06_initial_view",
+  "title": "登録画面初期表示の実装",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "Actionクラスの実装",
+      "hints": [
+        "W11AC02ActionRequestTest",
+        "BasicHttpRequestTestTemplate",
+        "W11AC02Action",
+        "DbAccessSupport",
+        "AbstractHttpRequestTestTemplate",
+        "HttpResponse",
+        "HttpRequest",
+        "ExecutionContext",
+        "doRW11AC0201",
+        "リクエスト単体テスト",
+        "Actionクラス実装",
+        "ベースURI設定",
+        "setUpDb",
+        "テストクラス作成"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "JSPの実装",
+      "hints": [
+        "n:form",
+        "windowScopePrefixes",
+        "field:text",
+        "field:block",
+        "t:page_template",
+        "button:check",
+        "button:cancel",
+        "button:confirm",
+        "n:forInputPage",
+        "n:forConfirmationPage",
+        "JSP実装",
+        "name属性設定",
+        "ウィンドウスコーププレフィックス",
+        "JSP静的チェック",
+        "jsp_static_analysis_tool"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**テストクラス作成**:\n\n| 項目 | 値 |\n|---|---|\n| 格納フォルダ | `test/java/nablarch/sample/ss11AC` |\n| テストクラス名 | `W11AC02ActionRequestTest` |\n| 親クラス | `BasicHttpRequestTestTemplate` |\n\n**URI形式**: `/action/{パッケージ名}/{アクションクラス名}/{メソッド名からdoを除いた文字列}`\n- `nablarch.sample.` までを無視し、以降の `.` を `/` に置換\n- `nablarch.sample.ss11AC.W11AC02Action` のベースURI: `/action/ss11AC/W11AC02Action/`\n\nテストは `AbstractHttpRequestTestTemplate#execute(String)` にシート名を指定して実行する。\n\n```java\npublic class W11AC02ActionRequestTest extends BasicHttpRequestTestTemplate {\n    @Override\n    protected String getBaseUri() {\n        return \"/action/ss11AC/W11AC02Action/\";\n    }\n\n    @Test\n    public void testRW11AC0201() {\n        execute(\"testRW11AC0201\");\n    }\n}\n```\n\n**テストデータシート**: `W11AC02ActionRequestTest.xlsx` / シート名: `testRW11AC0201` （ :ref:`リクエスト単体テストデータシートの書き方<request_test_testcases>` ）\n\n検証内容:\n- 登録画面の初期表示に必要なパラメータがリクエストに格納されていること\n- 表示するJSPが登録画面のものであること\n- レスポンスのステータスが `OK` であること\n\n> **警告**: リクエスト単体テストでは、テスト共通データシート（シート名：setUpDb）が必須。データのセットアップが不要な場合でもシートを作成すること（シート内は空でよい）。\n\nActionクラスが未作成の場合、ステータスコード404でENDすることを確認する。\n\n**Actionクラス作成**:\n\n| 項目 | 値 |\n|---|---|\n| 格納フォルダ | `main/java/nablarch/sample/ss11AC` |\n| クラス名 | `W11AC02Action` |\n| メソッド名 | `doRW11AC0201`（「do」＋リクエストID `RW11AC0201`） |\n\n**クラス**: `W11AC02Action` extends `DbAccessSupport`\n\n```java\npublic class W11AC02Action extends DbAccessSupport {\n    public HttpResponse doRW11AC0201(HttpRequest req, ExecutionContext ctx) {\n        return new HttpResponse(\"/ss11AC/W11AC0201.jsp\");\n    }\n}\n```\n\nActionクラス作成後のテスト確認:\n- ログに `@@@@ DISPATCHING CLASS @@@@` の次に `BEFORE ACTION` が出力されていればActionまで到達\n- この時点ではJSPが存在しないため `ERROR: PWC6117: File ... not found` エラーが出る\n\n> **注意**: テストを繰り返しながらActionクラスを徐々に完成させる。",
+    "s2": "**JSPファイルの配置**:\n- コピー元: `main/web/W11AC0201.jsp`\n- コピー先: `main/web/ss11AC/W11AC0201.jsp`\n\nJSP修正内容:\n1. `n:form` タグで囲み、ウィンドウスコーププレフィックスを指定する\n2. 入力項目・表示項目のname属性を設定する\n3. ボタン項目・リンク項目のuri属性を設定する\n\n**① n:formタグ**: 業務領域（`<jsp:attribute name=\"contentHtml\">`）の内側全体を `n:form` で囲み、`windowScopePrefixes=\"W11AC02\"` を設定する（取引ID W11AC02 からプレフィックスを決定）。\n\n```jsp\n<n:form windowScopePrefixes=\"W11AC02\">\n```\n\n**② name属性のルール**:\n- 形式: `\"ウィンドウスコーププレフィックス\".\"フォーム内のプロパティ名\"`\n- エンティティを保持する場合: `\"ウィンドウスコーププレフィックス\".\"エンティティのプロパティ名\".\"エンティティ内のプロパティ名\"`\n- 例: `W11AC02.user.kanjiName`（漢字氏名フィールド）\n\n**③ uri属性の形式**: `/{ベースURI}/{リクエストID}`\n\n**JSP実装例**:\n\n```jsp\n<%@ taglib prefix=\"n\" uri=\"http://tis.co.jp/nablarch\" %>\n<%@ taglib prefix=\"t\" tagdir=\"/WEB-INF/tags/template\" %>\n<%@ taglib prefix=\"field\" tagdir=\"/WEB-INF/tags/widget/field\" %>\n<%@ taglib prefix=\"button\" tagdir=\"/WEB-INF/tags/widget/button\" %>\n\n<t:page_template title=\"ユーザ情報登録\" confirmationPageTitle=\"ユーザ情報登録確認\">\n  <jsp:attribute name=\"contentHtml\">\n    <n:form windowScopePrefixes=\"W11AC02\">\n      <field:block title=\"ユーザ情報\">\n        <field:text title=\"漢字氏名\"\n                    name=\"W11AC02.user.kanjiName\"\n                    hint=\"全角50文字以内で入力してください。\"\n                    required=\"true\" maxlength=\"50\">\n        </field:text>\n        <field:text title=\"カナ氏名\"\n                    name=\"W11AC02.user.kanaName\"\n                    hint=\"全角カタカナ50文字以内で入力してください。\"\n                    required=\"true\" maxlength=\"50\">\n        </field:text>\n      </field:block>\n      <button:block>\n        <n:forInputPage>\n          <button:check uri=\"/action/ss11AC/W11AC02Action/RW11AC0202\" dummyUri=\"W11AC0202.jsp\"/>\n        </n:forInputPage>\n        <n:forConfirmationPage>\n          <button:cancel uri=\"/action/ss11AC/W11AC02Action/RW11AC0203\" dummyUri=\"W11AC0201.jsp\"/>\n          <button:confirm uri=\"/action/ss11AC/W11AC02Action/RW11AC0204\" dummyUri=\"W11AC0203.jsp\"/>\n        </n:forConfirmationPage>\n      </button:block>\n    </n:form>\n  </jsp:attribute>\n</t:page_template>\n```\n\n**④ テスト確認**: リクエスト単体テストを実行し、HTMLが出力され、HTTPステータスコード200が返却されることを確認する。出力されたHTMLをWebブラウザで開き、登録画面であることを確認する。\n\nHTMLの出力先フォルダ: `tmp/html_dump/W11AC02ActionRequestTest` 配下\n\n**JSP静的チェックツール**: [jsp_static_analysis_tool](../../development-tools/java-static-analysis/java-static-analysis-01_JspStaticAnalysis.json#s4) を実行し、チェックエラーがないことを確認する。\n\n| Antビルドファイル | 実行するターゲット |\n|---|---|\n| `tool/jspanalysis/jsp-analysis-build.xml` | `JSP解析(HTMLレポート出力)` |\n\n> **警告**: 静的チェックエラーがある実装はXSSの脆弱性を含む可能性があるため、必ず対処すること。機能制約等でどうしても回避できない場合は、プロジェクトのアーキテクトに確認すること。"
+  }
+}

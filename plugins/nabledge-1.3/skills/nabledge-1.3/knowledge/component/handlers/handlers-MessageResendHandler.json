@@ -1,0 +1,64 @@
+{
+  "id": "handlers-MessageResendHandler",
+  "title": "再送電文制御ハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "MessageResendHandler",
+        "nablarch.fw.messaging.handler.MessageResendHandler",
+        "MessageReplyHandler",
+        "TransactionManagementHandler",
+        "MessagingAction",
+        "再送電文制御",
+        "送信済電文テーブル",
+        "再送要求フラグ",
+        "応答電文再送",
+        "送信済電文保存"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "ResponseMessage",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "再送要求フラグ取得",
+        "一意制約違反",
+        "送信済電文テーブル検索",
+        "resendFlag"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "StandardFwHeaderDefinition",
+        "nablarch.fw.messaging.StandardFwHeaderDefinition",
+        "SentMessageTableSchema",
+        "nablarch.fw.messaging.tableschema.SentMessageTableSchema",
+        "fwHeaderDefinition",
+        "sentMessageTableSchema",
+        "tableName",
+        "messageIdColumnName",
+        "requestIdColumnName",
+        "replyQueueColumnName",
+        "statusCodeColumnName",
+        "テーブル名変更",
+        "カラム名変更",
+        "再送要求フラグ定義変更",
+        "フレームワーク制御ヘッダー定義"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.messaging.handler.MessageResendHandler`\n\n応答電文の再送処理制御ハンドラ。:ref:`フレームワーク制御ヘッダ<fw_header>` 上の再送要求フラグで初回電文/再送要求電文を判定する。\n\n**関連ハンドラ**:\n- [MessageReplyHandler](handlers-MessageReplyHandler.json) — 本ハンドラが作成した再送電文オブジェクトを送信する\n- [TransactionManagementHandler](handlers-TransactionManagementHandler.json) — 送信済み電文は業務トランザクションと同じトランザクションでコミットするため、このハンドラの後続に配置する\n- [MessagingAction](handlers-MessagingAction.json) — 業務アクションが応答した電文オブジェクトを応答済み電文テーブルに保存する\n\n**再送制御**: 再送要求電文受信時のシステム状態は4ケースに分類される:\n1. **初回電文が未受信**: 再送要求電文を初回電文として処理する。並行実行の場合、先にコミットされたトランザクションのみ正常終了し、他はロールバック。ロールバックされた要求の応答として先に正常終了した電文の応答を再送する。\n2. **初回電文を処理中**: ケース1と同じ扱い（先に完了したトランザクションをコミット、他はロールバック）。\n3. **業務処理正常終了だが応答電文が未達**: 送信済電文テーブルから該当メッセージIDの電文データを取得し応答電文として送信。業務処理は実行されない。\n4. **業務処理異常終了でエラー応答電文が未達**: 再送要求電文を初回電文として処理する。\n\n**主要機能**:\n- **再送応答機能**: 送信済電文保存機能が保持する過去の応答電文を再送信する。\n- **送信済電文保存機能**: 送信成功メッセージをDBの送信済電文テーブルに保存する。業務トランザクションとともにコミット。業務処理がエラー終了した場合は再送用電文は残らない。\n\n**送信済電文テーブルスキーマ**:\n| 論理名 | データ型 |\n|---|---|\n| メッセージID | VARCHAR PK |\n| リクエストID | VARCHAR PK |\n| 応答宛先キュー | VARCHAR |\n| 処理結果コード | VARCHAR |\n| 電文データ部 | BLOB |\n\n```sql\nCREATE TABLE SENT_MESSAGE (\n  MESSAGE_ID  VARCHAR(64)\n, REQUEST_ID  VARCHAR(64)\n, REPLY_QUEUE VARCHAR(64)\n, STATUS_CODE CHAR(4)\n, BODY_DATA   BLOB\n, CONSTRAINT pk_SENT_MESSAGE \n    PRIMARY KEY(MESSAGE_ID, REQUEST_ID)\n);\n```",
+    "s2": "**[往路処理]**\n1. フレームワーク制御ヘッダから再送要求フラグ(resendFlag)を取得する。\n1a. 再送要求フラグが定義されていない電文の場合、本ハンドラはなにもせず後続ハンドラに委譲してその結果を返す。\n2. メッセージIDとリクエストIDをキーに送信済電文テーブルを検索し、合致する送信済電文が存在した場合は `ResponseMessage` を作成して返す（後続ハンドラへの委譲は行わず、業務処理は実行されない）。\n2a. 送信済電文が存在しない場合は後続ハンドラに処理を委譲し結果を取得する。\n\n**[復路処理]**\n3. 後続ハンドラから返された応答電文を送信済電文テーブルに保存した後、応答電文を返す。\n\n**[例外処理]**\n3a. 応答電文保存時に一意制約違反エラーが発生した場合は、並行トランザクションによって既に正常終了しているため、送信済電文テーブルから応答電文を取得して返す。\n3c. 一意制約違反にもかかわらず送信済電文テーブルに電文が登録されていない場合は元例外を再送出する（通常は発生しない）。\n4. その他の実行時例外・エラーは本ハンドラでは捕捉せず上位ハンドラに再送出する。",
+    "s3": "**基本設定（必須）**: フレームワーク制御ヘッダー定義を使用するため必ず設定する。\n\n```xml\n<component name=\"fwHeaderDefinition\"\n           class=\"nablarch.fw.messaging.StandardFwHeaderDefinition\">\n  <property name=\"formatFileName\" value=\"${headerFileName}\" />\n</component>\n\n<component class=\"nablarch.fw.messaging.handler.MessageResendHandler\">\n  <property name=\"fwHeaderDefinition\" ref=\"fwHeaderDefinition\" />\n</component>\n```\n\n**テーブル名・カラム名の変更**: デフォルト設定と異なる名前を使用する場合は `sentMessageTableSchema` プロパティに `nablarch.fw.messaging.tableschema.SentMessageTableSchema` を設定する。\n\n| プロパティ名 | 説明 |\n|---|---|\n| tableName | テーブル名 |\n| messageIdColumnName | メッセージIDカラム名 |\n| requestIdColumnName | リクエストIDカラム名 |\n| replyQueueColumnName | 応答宛先キューカラム名 |\n| statusCodeColumnName | 処理結果コードカラム名 |\n\n```xml\n<component class=\"nablarch.fw.messaging.handler.MessageResendHandler\">\n  <property name=\"fwHeaderDefinition\" ref=\"fwHeaderDefinition\" />\n  <property name=\"sentMessageTableSchema\">\n    <component class=\"nablarch.fw.messaging.tableschema.SentMessageTableSchema\">\n      <property name=\"tableName\"            value=\"TBL_SENT_MESSAGE\" />\n      <property name=\"messageIdColumnName\"  value=\"CLM_MESSAGE_ID\" />\n      <property name=\"requestIdColumnName\"  value=\"CLM_REQUEST_ID\" />\n      <property name=\"replyQueueColumnName\" value=\"CLM_REPLY_QUEUE\" />\n      <property name=\"statusCodeColumnName\" value=\"CLM_STATUS_CODE\" />\n    </component>\n  </property>\n</component>\n```\n\n**再送要求フラグ定義方法の変更**: デフォルトの再送要求フラグ仕様がプロジェクト要件に合致しない場合は、フレームワーク制御ヘッダー定義を拡張してカスタム実装を設定する。\n\n```xml\n<component name=\"customHeaderDefinition\"\n           class=\"example.CustomFwHeaderDefinition\">\n  <property name=\"formatFileName\" value=\"${headerFileName}\" />\n</component>\n\n<component class=\"nablarch.fw.messaging.handler.MessageResendHandler\">\n  <property name=\"fwHeaderDefinition\" ref=\"customHeaderDefinition\" />\n</component>\n```"
+  }
+}

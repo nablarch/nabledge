@@ -1,0 +1,83 @@
+{
+  "id": "libraries-08_04_validation_form_inheritance",
+  "title": "Form の継承とバリデーション条件の継承",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "Form の継承とバリデーション条件の継承",
+      "hints": [
+        "@PropertyName",
+        "@Required",
+        "@Length",
+        "@Digits",
+        "@NumberRange",
+        "@ValidateFor",
+        "ValidationContext",
+        "ValidationUtil",
+        "UserBase",
+        "ParentEntity",
+        "ChildEntity",
+        "Formの継承",
+        "バリデーション条件の継承",
+        "表示名称変更",
+        "コンバータアノテーション継承",
+        "セッタオーバーライド"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "国際化したプロパティの表示名称の取得方法",
+      "hints": [
+        "@PropertyName",
+        "messageId",
+        "国際化",
+        "プロパティ表示名称",
+        "メッセージ管理"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "@PropertyName の messageId 属性を使用する方法",
+      "hints": [
+        "@PropertyName",
+        "messageId",
+        "国際化メッセージ",
+        "表示名称国際化",
+        "メッセージID",
+        "PROP0001"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "プロパティ名に対応する表示名称を使用する方法",
+      "hints": [
+        "ValidationManager",
+        "useFormPropertyNameAsMessageId",
+        "クラス名+プロパティ名",
+        "国際化表示名称",
+        "nablarch.core.validation.ValidationManager"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "2つの方法の選択基準",
+      "hints": [
+        "@PropertyName",
+        "messageId",
+        "useFormPropertyNameAsMessageId",
+        "方法選択基準",
+        "エンティティ自動生成",
+        "メッセージID体系"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "Formを継承してセッタメソッドに `@PropertyName` を設定することで、画面に合わせてプロパティの表示名称を変更できる。バリデーション条件は継承元のFormから引き継がれる。\n\n継承クラスでセッタをオーバーライドし `@PropertyName` のみ設定した場合（バリデーションアノテーションなし）、親クラスのバリデーションアノテーションがそのまま使用される。バリデーション条件を変更したい場合は、継承クラスのセッタに1つ以上のバリデーションアノテーションを指定する。\n\n**アノテーション**: `@PropertyName`, `@Required`, `@Length`, `@ValidateFor`\n\n継承の例（表示名称のみ変更、バリデーションは親から引き継ぐ）:\n\n```java\npublic class UserBase {\n    @PropertyName(\"ユーザ名\")\n    @Required\n    @Length(max=10)\n    public void setName(String name) { ... }\n}\n\npublic class User extends UserBase {\n    @PropertyName(\"氏名\")  // 表示名称のみ変更\n    public void setName(String name) {\n        super.setName(name);\n    }\n\n    private static final String[] UPDATE_PARAMS = new String[] { \"id\", \"name\", \"remarks\" };\n    @ValidateFor(\"insert\")\n    public static void validateForUpdate(ValidationContext<UserEntity> context) {\n        ValidationUtil.validate(context, UPDATE_PARAMS);\n    }\n}\n```\n\nバリデーション条件も変更する場合（例: 必須チェックを外す）:\n\n```java\n@PropertyName(\"氏名\")\n@Length(max=10)  // バリデーションアノテーションを1つ以上指定すると親の条件を上書き\npublic void setName(String name) {\n    super.setName(name);\n}\n```\n\nコンバータアノテーション（`@Digits` 等）はバリデーションアノテーションとは独立して継承される。継承クラスにバリデーションアノテーションを追加しても、親クラスのコンバータアノテーションはそのまま引き継がれる。\n\n例: `ParentEntity` に `@Digits(integer=5, fraction=3)` が設定されており、`ChildEntity` で `@NumberRange(min=100.0, max=20000.0)` を追加した場合、両方のアノテーションが適用される。\n\n> **警告**: バリデーション条件の変更は、継承元の修正が継承先に反映されない修正漏れバグの原因になりやすい。継承クラスでのバリデーション条件変更は慎重に実施すること。",
+    "s2": "`@PropertyName` の `value` 属性による表示名称指定では国際化メッセージが取得できない。国際化アプリケーションでは :ref:`message_management` のメッセージとして表示名称を言語ごとに登録し、以下いずれかの方法でプロパティと対応付ける。\n\n1. `@PropertyName` アノテーションの `messageId` 属性にメッセージIDを指定する\n2. `<クラス名>.<プロパティ名>` をメッセージIDとして使用する",
+    "s3": "`@PropertyName` の `messageId` 属性に指定したメッセージIDで :ref:`message_management` から表示名称を取得する。`value` 属性は使用しない。\n\n**アノテーション**: `@PropertyName`\n\n```java\n@PropertyName(messageId=\"PROP0001\")\n@Required\n@Length(min=8, max=8)\npublic void setId(String id) { ... }\n\n@PropertyName(messageId=\"PROP0002\")\n@Required\n@Length(max=10)\npublic void setName(String name) { ... }\n\n@PropertyName(messageId=\"PROP0003\")\n@Length(max=100)\npublic void setRemarks(String remarks) { ... }\n```\n\nメッセージテーブル設定例（`@Required` のメッセージIDが `MSG00001` の場合）:\n\n| メッセージID | 言語 | メッセージ |\n|---|---|---|\n| MSG00001 | ja | {0}は必ず入力してください。 |\n| MSG00001 | en | You must input {0}. |\n| PROP0001 | ja | ID |\n| PROP0001 | en | ID |\n| PROP0002 | ja | 氏名 |\n| PROP0002 | en | name |\n| PROP0003 | ja | 備考 |\n| PROP0003 | en | remarks |",
+    "s4": "`<Formクラス名>.<プロパティ名>` をメッセージIDとして使用する。この方法ではFormに `@PropertyName` アノテーションを設定する必要はない。\n\n**クラス**: `ValidationManager` (`nablarch.core.validation.ValidationManager`)\n\n| プロパティ名 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|\n| useFormPropertyNameAsMessageId | | | trueにするとクラス名+プロパティ名をメッセージIDとして使用 |\n\n```xml\n<component name=\"validationManager\" class=\"nablarch.core.validation.ValidationManager\">\n    <property name=\"useFormPropertyNameAsMessageId\" value=\"true\"/>\n</component>\n```\n\nメッセージテーブル設定例（`<Formクラス名>.<プロパティ名>` 形式でIDを登録）:\n\n| メッセージID | 言語 | メッセージ |\n|---|---|---|\n| MSG00001 | ja | {0}は必ず入力してください。 |\n| MSG00001 | en | You must input {0}. |\n| User.id | ja | ID |\n| User.id | en | ID |\n| User.name | ja | 氏名 |\n| User.name | en | name |\n| User.remarks | ja | 備考 |\n| User.remarks | en | remarks |",
+    "s5": "| 方法 | メリット | デメリット |\n|---|---|---|\n| `@PropertyName` の `messageId` 属性指定 | メッセージIDの管理が容易 | IDとプロパティの対応管理が必要、エンティティ自動生成が困難 |\n| `<クラス名>.<プロパティ名>` をIDとして使用 | `@PropertyName` 不要、自動生成エンティティのカスタマイズ不要 | 通常とは異なるID体系のメッセージ登録が必要 |\n\n**通常は `<クラス名>.<プロパティ名>` 方式（2つ目の方法）を選択する。** エンティティ自動生成が生産性と品質に大きく寄与するため。1つ目の方法は顧客指定によりメッセージIDの体系に制約があり、2つ目の方法が使用できない場合のみ選択すること。"
+  }
+}

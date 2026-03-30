@@ -1,0 +1,80 @@
+{
+  "id": "web-application-02_basic",
+  "title": "画面初期表示",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "本項で説明する内容",
+      "hints": [
+        "CM311AC1Component",
+        "W11AC01Action",
+        "W11AC0101.jsp",
+        "Component",
+        "Action",
+        "View",
+        "ステレオタイプ",
+        "画面初期表示",
+        "ビジネスロジック"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ビジネスロジック(Component)の作成",
+      "hints": [
+        "CM311AC1Component",
+        "DbAccessSupport",
+        "SqlResultSet",
+        "SqlPStatement",
+        "getUserGroups",
+        "ビジネスロジック",
+        "Component",
+        "プリペアドステートメント",
+        "データベースアクセス"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "ビジネスロジックを呼び出す処理(Action)の作成",
+      "hints": [
+        "W11AC01Action",
+        "HttpResponse",
+        "HttpRequest",
+        "ExecutionContext",
+        "doRW11AC0101",
+        "setRequestScopedVar",
+        "Actionメソッド命名規則",
+        "リクエストスコープ",
+        "JSP遷移",
+        "servlet://",
+        "forward://",
+        "JSPパス",
+        "webルート",
+        "言語フォルダ",
+        "国際化"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "View(JSP)の作成",
+      "hints": [
+        "W11AC0101.jsp",
+        "field:pulldown",
+        "カスタムタグ",
+        "ネームスペース",
+        "ドロップダウン",
+        "JSP",
+        "ugroupList",
+        "ugroupName",
+        "ugroupId"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "| クラス/ファイル | ステレオタイプ | 処理内容 |\n|---|---|---|\n| [CM311AC1Component.java](assets/web-application-02_basic/CM311AC1Component.java) | Component | ユーザ一覧照会画面のグループ欄ドロップダウン用グループ一覧をDBから取得。SQLファイル: [CM311AC1Component.sql](assets/web-application-02_basic/CM311AC1Component.sql) |\n| [W11AC01Action.java](assets/web-application-02_basic/W11AC01Action.java) | Action | ComponentメソッドをCallし、結果をリクエストスコープに格納してJSPへ遷移。 |\n| [W11AC0101.jsp](assets/web-application-02_basic/W11AC0101.jsp) | View | ユーザ一覧照会画面を表示。 |\n\nステレオタイプについては :ref:`stereoType` を参照。",
+    "s2": "**クラス**: `CM311AC1Component`（`DbAccessSupport`を継承）\n\n**メソッド**: `SqlResultSet getUserGroups()`\n\n> **注意**: 複数のActionから共用するロジックはComponentに実装する。1つのActionクラスからしか使われないロジックは、そのActionクラスに実装すること。\n\n処理内容:\n1. `DbAccessSupport`のヘルパーメソッドでプリペアドステートメントを作成\n2. 検索を実行して結果を返す\n\n**SQL** (`CM311AC1Component.sql`):\n```sql\nSELECT_ALL_UGROUPS=\nSELECT\n    UGROUP_ID,\n    UGROUP_NAME\nFROM\n    UGROUP\nORDER BY\n    UGROUP_ID\n```\n\n**実装例**:\n```java\nclass CM311AC1Component extends DbAccessSupport {\n    SqlResultSet getUserGroups() {\n        SqlPStatement statement = getSqlPStatement(\"SELECT_ALL_UGROUPS\");\n        return statement.retrieve();\n    }\n}\n```",
+    "s3": "**クラス**: `W11AC01Action`\n\n**Actionメソッド名の命名規則**: `\"do\" + リクエストID`\n- 例: リクエストID `RW11AC0101` → メソッド名 `doRW11AC0101`\n\n> **注意**: リクエストURIの構造: `http://{サーバ}/action/{Actionのパッケージ}/{リクエストID}` → `(HTTPメソッド名 or \"do\") + リクエストID` のメソッドが呼ばれる。\n\n**メソッド**: `public HttpResponse doRW11AC0101(HttpRequest req, ExecutionContext ctx)`\n\n処理内容:\n1. Componentをインスタンス化: `new CM311AC1Component()`\n2. ビジネスロジックを呼び出す: `function.getUserGroups()`\n3. 結果をリクエストスコープに格納: `ctx.setRequestScopedVar(\"ugroupList\", ugroupList)`\n4. JSPへ遷移: `return new HttpResponse(\"/ss11AC/W11AC0101.jsp\")`\n\n**レスポンス遷移の指定方法**:\n- JSPへ遷移: `new HttpResponse(\"servlet://{JSPパス}\")` またはデフォルト（`\"servlet://\"` を省略可能）\n- 別リクエストIDへフォワード: `new HttpResponse(\"forward://{リクエストIDのパス}\")`\n\n**JSPパスの記述方法**:\n- 基本的にアプリケーションの web ルートディレクトリからの絶対パスで記述する。\n- 言語によって遷移先のJSPファイルを切り替える場合、web ルート直下に言語フォルダを配置し、その言語フォルダ配下にJSPファイルを配置することがある。この場合は**言語フォルダからの絶対パス**で記述する。\n- 上記コード例 `/ss11AC/W11AC0101.jsp` は後者のケースで、実際のファイルは `<webルート>/<言語>/ss11AC/W11AC0101.jsp` に配置される。`<言語>` にはユーザが選択した言語（`\"ja\"` や `\"en\"` など）が自動的に設定される。\n- **実際のプロジェクトでは、このガイドの例に従うのではなく、プロジェクトが決めた国際化の方針に従いJSPファイルを配置すること。**\n\n**実装例**:\n```java\npublic HttpResponse doRW11AC0101(HttpRequest req, ExecutionContext ctx) {\n    CM311AC1Component function = new CM311AC1Component();\n    SqlResultSet ugroupList = function.getUserGroups();\n    ctx.setRequestScopedVar(\"ugroupList\", ugroupList);\n    return new HttpResponse(\"/ss11AC/W11AC0101.jsp\");\n}\n```",
+    "s4": "**ファイル**: `W11AC0101.jsp`\n\n**カスタムタグライブラリのネームスペース**:\n- フレームワーク提供タグ: `n`（例: `<n:xxx>`）\n- タグファイル: タグファイルの配置ディレクトリ名（例: `field:xxx`）\n\n> **注意**: サンプルタグファイル（template, button, column, field, link, tab, table）はアーキテクトの判断により変更される。Nablarch導入プロジェクトでは本ガイドでなくアーキテクト提供ガイドに従いJSPを作成すること。\n\nグループ一覧のドロップダウン表示には **`field:pulldown`** タグを使用する。\n\n検索結果（`ugroupList`）から値を取得する際は `ugroupName`、`ugroupId` というキーを使用する（詳細は [DB/01_DbAccessSpec_Example](web-application-01_DbAccessSpec_Example.json) の [how_to_use_sql_result_set](web-application-01_DbAccessSpec_Example.json#s3) 参照）。"
+  }
+}

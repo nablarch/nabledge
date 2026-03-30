@@ -1,0 +1,54 @@
+{
+  "id": "handlers-KeitaiAccessHandler",
+  "title": "携帯端末アクセスハンドラ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "KeitaiAccessHandler",
+        "nablarch.fw.web.handler.KeitaiAccessHandler",
+        "携帯端末アクセス",
+        "フィーチャーフォン",
+        "nablarch_jsUnsupported",
+        "JavaScript出力抑制",
+        "リクエストパス置換",
+        "HttpResponseHandler",
+        "ThreadContextHandler",
+        "NablarchTagHandler",
+        "ハンドラ配置制約"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラ処理フロー",
+      "hints": [
+        "nablarch_uri_override",
+        "nablarch_sumit",
+        "nablarch_jsUnsupported",
+        "往路処理",
+        "復路処理",
+        "例外処理",
+        "リクエストパス書き換え"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "RequestHandlerEntry",
+        "nablarch.fw.RequestHandlerEntry",
+        "requestPattern",
+        "携帯対応ハンドラ設定",
+        "リクエストパス限定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.web.handler.KeitaiAccessHandler`\n\n携帯端末（フィーチャーフォン）からのアクセスを処理するハンドラ。以下の処理を行う:\n- リクエストパラメータ中の`nablarch_uri_override`で始まるパラメータでリクエストパスを置換する。これによりJavaScript非対応端末でも、サブミットボタン毎の遷移先切替・ウィンドウスコープ利用が可能になる。\n- JavaScript等の出力を抑制するフラグ（`nablarch_jsUnsupported`）をリクエストスコープ変数に設定する（JSP中の各カスタムライブラリで使用される）。\n\n**関連ハンドラの配置制約**:\n\n| ハンドラ | 配置 | 理由 |\n|---|---|---|\n| [HttpResponseHandler](handlers-HttpResponseHandler.json) | 本ハンドラの上位 | `nablarch_jsUnsupported`フラグの設定がレスポンスに反映されるために必要 |\n| [ThreadContextHandler](handlers-ThreadContextHandler.json) | 本ハンドラの後続 | 書換え後のリクエストパスをもとに[スレッドコンテキスト](../libraries/libraries-thread_context.json)上のリクエストID属性を決定するため |\n| [NablarchTagHandler](handlers-NablarchTagHandler.json) | 本ハンドラの後続 | `nablarch_sumbit`の値をもとに改竄チェックやウィンドウスコープの展開等を行うため |",
+    "s2": "**[往路処理]**\n1. `nablarch_jsUnsupported`をリクエストスコープに設定する。\n2. `nablarch_uri_override`で始まるパラメータが存在する場合、そのパラメータの内容でリクエストパスを置換し、`nablarch_sumit`の値を設定する。\n3. 書き換え後のHTTPリクエストオブジェクトを後続ハンドラに渡して処理を委譲し、HTTPレスポンスオブジェクトを取得する。\n\n**[復路処理]**\n\n4. 取得したHTTPレスポンスオブジェクトをリターンして終了する。\n\n**[例外処理]**\n\n3a. 後続ハンドラ処理中にエラーが発生した場合は、そのまま再送出して終了する。",
+    "s3": "本ハンドラ自体に設定項目はない。携帯対応を行うリクエストパスの範囲を限定するため、通常は[RequestHandlerEntry](handlers-RequestHandlerEntry.json)と組み合わせて使用する。\n\n**設定例**: サーブレットコンテキストからの相対パス `/action/mobile/` 配下のアクセスに本ハンドラを適用する場合。\n\n```xml\n<component class=\"nablarch.fw.RequestHandlerEntry\">\n  <property name=\"requestPattern\" value=\"/action/mobile//\"/>\n  <property name=\"handler\">\n    <component class=\"nablarch.fw.web.handler.KeitaiAccessHandler\" />\n  </property>\n</component>\n```"
+  }
+}

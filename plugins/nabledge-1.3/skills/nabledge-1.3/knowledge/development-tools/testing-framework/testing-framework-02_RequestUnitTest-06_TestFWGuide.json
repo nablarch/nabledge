@@ -1,0 +1,152 @@
+{
+  "id": "testing-framework-02_RequestUnitTest-06_TestFWGuide",
+  "title": "リクエスト単体テスト（画面オンライン処理）",
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "主なクラスとリソース",
+      "hints": [
+        "主なクラス",
+        "リソース",
+        "HttpServer",
+        "内蔵サーバ",
+        "サーブレットコンテナ",
+        "HTTPレスポンスファイル出力",
+        "HttpRequestTestSupport",
+        "DbAccessTestSupport",
+        "AbstractHttpRequestTestSupport",
+        "BasicHttpRequestTestSupport",
+        "TestCaseInfo",
+        "同一JVM",
+        "サーバ側オブジェクト加工",
+        "セッション加工",
+        "リクエスト加工"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "前提事項",
+      "hints": [
+        "前提事項",
+        "シンクライアント",
+        "HTMLダンプ制約",
+        "Ajax不可",
+        "リッチクライアント不可",
+        "１リクエスト１画面遷移",
+        "JSP以外のViewテクノロジ",
+        "サーブレットコンテナ"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "BasicHttpRequestTestTemplate",
+      "hints": [
+        "BasicHttpRequestTestTemplate",
+        "スーパクラス",
+        "テストソース定型化",
+        "テストデータ定型化",
+        "テストソース記述量削減"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "AbstractHttpRequestTestTemplate",
+      "hints": [
+        "AbstractHttpRequestTestTemplate",
+        "自動テストフレームワーク拡張",
+        "テストデータ書き方変更",
+        "アプリケーションプログラマ直接使用不可"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "TestCaseInfo",
+      "hints": [
+        "TestCaseInfo",
+        "テストケース情報",
+        "データシート",
+        "AbstractHttpRequestTestTemplate継承",
+        "テストデータ書き方変更"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "データベース関連機能",
+      "hints": [
+        "HttpRequestTestSupport",
+        "DbAccessTestSupport",
+        "beginTransactions",
+        "commitTransactions",
+        "endTransactions",
+        "setThreadContextValues",
+        "データベース関連機能",
+        "委譲除外メソッド"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "事前準備補助機能",
+      "hints": [
+        "HttpRequestTestSupport",
+        "createHttpRequest",
+        "createExecutionContext",
+        "setValidToken",
+        "setToken",
+        "トークン発行",
+        "二重サブミット防止",
+        "事前準備補助",
+        "Boolean.parseBoolean",
+        "isTokenValid"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "実行",
+      "hints": [
+        "HttpRequestTestSupport",
+        "execute",
+        "HttpResponse",
+        "リポジトリ初期化",
+        "howToConfigureRequestUnitTestEnv",
+        "dump-dir-label",
+        "内蔵サーバ実行"
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "メッセージ",
+      "hints": [
+        "HttpRequestTestSupport",
+        "assertApplicationMessageId",
+        "ExecutionContext",
+        "アプリケーション例外",
+        "メッセージID検証",
+        "メッセージアサート"
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "HTMLダンプ出力ディレクトリ",
+      "hints": [
+        "HTMLダンプ",
+        "tmp/html_dump",
+        "html_dump_bk",
+        "ダンプ出力ディレクトリ",
+        "バックアップ"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "リクエスト単体テスト（画面オンライン処理）で使用する主なクラスとリソースは以下の通り。\n\n| 名称 | 役割 | 作成単位 |\n|------|------|----------|\n| テストクラス | テストロジックを実装する | テスト対象クラス(Action)につき１つ |\n| テストデータ（Excelファイル） | テーブルへの準備データ、期待結果、HTTPパラメータ等を記載 | テストクラスにつき１つ |\n| テスト対象クラス(Action) | テスト対象のクラス（Action以降の業務ロジックを実装する各クラスを含む） | 取引につき1クラス |\n| DbAccessTestSupport | 準備データ投入などデータベースを使用するテストに必要な機能を提供する | － |\n| HttpServer | 内蔵サーバ。サーブレットコンテナとして動作し、HTTPレスポンスをファイル出力する機能を持つ | － |\n| HttpRequestTestSupport | 内蔵サーバの起動やリクエスト単体テストで必要となる各種アサートを提供する | － |\n| AbstractHttpRequestTestSupport / BasicHttpRequestTestSupport | リクエスト単体テストをテンプレート化するクラス。テストソース・テストデータを定型化する | － |\n| TestCaseInfo | データシートに定義されたテストケース情報を格納するクラス | |\n\nこれらのクラス群は、**内蔵サーバも含め全て同一のJVM上で動作する**。このため、リクエストやセッション等のサーバ側のオブジェクトを加工できる。",
+    "s2": "リクエスト単体テスト（画面オンライン処理）は、内蔵サーバを利用してHTMLダンプを出力する方式であり、**１リクエスト１画面遷移のシンクライアント型Webアプリケーション**を対象としている。\n\nAjaxやリッチクライアントを利用したアプリケーションの場合、**HTMLダンプによるレイアウト確認は使用できない**。\n\n> **注意**: 本書ではViewテクノロジにJSPを用いているが、サーブレットコンテナ上で画面全体をレンダリングする方式であれば、JSP以外のViewテクノロジでもHTMLダンプの出力が可能である。",
+    "s3": "`BasicHttpRequestTestTemplate`は各テストクラスのスーパクラスである。\n\n本クラスを使用することで、リクエスト単体テストのテストソース・テストデータを定型化でき、**テストソース記述量を大きく削減できる**。\n\n具体的な使用方法は、リクエスト単体テストガイドを参照。",
+    "s4": "`AbstractHttpRequestTestTemplate`は、**アプリケーションプログラマが直接使用することはない**。\n\nテストデータの書き方を変えたい場合など、**自動テストフレームワークを拡張する際に用いる**クラスである。",
+    "s5": "`TestCaseInfo`はデータシートに定義されたテストケース情報を格納するクラスである。\n\nテストデータの書き方を変えたい場合は、**本クラス及び`AbstractHttpRequestTestTemplate`の両方を継承する**。",
+    "s6": "`HttpRequestTestSupport`はDBアクセス機能を`DbAccessTestSupport`に委譲しているが、以下のメソッドはリクエスト単体テストでは不要なため意図的に委譲していない（呼び出し不可）:\n\n- `public void beginTransactions()`\n- `public void commitTransactions()`\n- `public void endTransactions()`\n- `public void setThreadContextValues(String sheetName, String id)`",
+    "s7": "`HttpRequestTestSupport`は内蔵サーバへのリクエスト送信に必要なオブジェクト生成メソッドを提供する。\n\n**HttpRequest生成**:\n```java\nHttpRequest createHttpRequest(String requestUri, Map<String, String[]> params)\n```\nリクエストURIとパラメータからHTTPメソッドPOSTの`HttpRequest`インスタンスを生成する。URI・パラメータ以外のデータを設定する場合は、返却インスタンスに直接設定する。\n\n**ExecutionContext生成**:\n```java\nExecutionContext createExecutionContext(String userId)\n```\n引数のユーザIDをセッションに格納し、そのユーザIDでログインした状態を作る。\n\n**トークン発行（二重サブミット防止）**:\n\n二重サブミット防止を施しているURIのテストでは、テスト実行前にトークンを発行しセッションに設定しておく必要がある。\n\n```java\nvoid setValidToken(HttpRequest request, ExecutionContext context)\n```\nトークンを発行してセッションに格納する。\n\n```java\nvoid setToken(HttpRequest request, ExecutionContext context, boolean valid)\n```\n- `valid=true`: `setValidToken`と同じ動作（トークンを発行・格納）\n- `valid=false`: セッションからトークン情報を除去\n\nテストデータからトークン設定の要否を制御する場合に使用する。テストクラスにif/else分岐を書かずに済む:\n\n```java\n// テストデータから取得したものとする。\nString isTokenValid;\n\n// \"true\"の場合はトークンが設定される。\nsetToken(req, ctx, Boolean.parseBoolean(isTokenValid));\n```",
+    "s8": "`HttpRequestTestSupport`にある下記のメソッドを呼び出すことで、内蔵サーバが起動されリクエストが送信される。\n\n```java\nHttpResponse execute(String caseName, HttpRequest req, ExecutionContext ctx)\n```\n\n引数:\n- `caseName`: テストケース名（HTMLダンプ出力時のファイル名に使用。`[dump-dir-label](testing-framework-02_RequestUnitTest.json)` 参照）\n- `req`: HttpRequest\n- `ctx`: ExecutionContext\n\n`execute`メソッド内部でリポジトリの再初期化を行う。クラス単体テストとリクエスト単体テストで設定を分けずに連続実行できる。\n\n処理順序:\n1. 現在のリポジトリの状態をバックアップ\n2. テスト対象のWebアプリケーションのコンポーネント設定ファイルを用いてリポジトリを再初期化\n3. `execute`メソッド終了時に、バックアップしたリポジトリを復元\n\nテスト対象Webアプリの設定については `:ref:`howToConfigureRequestUnitTestEnv`` を参照。",
+    "s9": "`HttpRequestTestSupport.assertApplicationMessageId`でアプリケーション例外のメッセージIDを検証する。\n\n```java\nvoid assertApplicationMessageId(String expectedCommaSeparated, ExecutionContext actual)\n```\n\n引数:\n- `expectedCommaSeparated`: 期待するメッセージID（複数の場合はカンマ区切り）\n- `actual`: ExecutionContext\n\n例外が発生しなかった場合、またはアプリケーション例外以外の例外が発生した場合はアサート失敗となる。\n\n> **注意**: メッセージIDの比較はIDをソートして行うため、テストデータの記載順序は問わない。",
+    "s10": "テスト実行時、プロジェクトルートの`tmp/html_dump`ディレクトリにHTMLダンプを出力する。\n\n- `tmp/html_dump/{テストクラス名}/{テストケース名}.html` の形式でファイルが出力される\n- スタイルシート・画像などのリソースも同ディレクトリに出力されるため、ディレクトリごと保存すると他環境でも参照可能\n- `html_dump`が既に存在する場合は`html_dump_bk`としてバックアップされる\n\n![HTMLダンプ出力ディレクトリ](assets/testing-framework-02_RequestUnitTest-06_TestFWGuide/htmlDumpDir.png)"
+  }
+}

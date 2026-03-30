@@ -1,0 +1,67 @@
+{
+  "id": "nablarch-batch-batch_resident_thread_sync",
+  "title": "常駐バッチ実行制御基盤（スレッド同期型）",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "基本構造",
+      "hints": [
+        "ProcessResidentHandler",
+        "ProcessStopHandler",
+        "batch_resident",
+        "batch_single_shot",
+        "常駐バッチ",
+        "スレッド同期型",
+        "要求データ取り込み遅延",
+        "常駐型プロセス",
+        "トランザクションデータ",
+        "定期的に一括処理"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "業務アクションハンドラの実装",
+      "hints": [
+        "BatchAction",
+        "テンプレートクラス",
+        "業務アクション実装"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "標準ハンドラ構成と主要処理フロー",
+      "hints": [
+        "StatusCodeConvertHandler",
+        "ThreadContextClearHandler",
+        "GlobalErrorHandler",
+        "ThreadContextHandler_main",
+        "DuplicateProcessCheckHandler",
+        "RetryHandler",
+        "ProcessResidentHandler",
+        "ProcessStopHandler",
+        "ServiceAvailabilityCheckHandler",
+        "FileRecordWriterDisposeHandler",
+        "DbConnectionManagementHandler",
+        "TransactionManagementHandler",
+        "RequestPathJavaPackageMapping",
+        "MultiThreadExecutionHandler",
+        "LoopHandler",
+        "DataReadHandler",
+        "BatchAction",
+        "ProcessAbnormalEnd",
+        "DataReader",
+        "常駐処理制御",
+        "プロセス停止制御",
+        "ハンドラ構成",
+        "処理フロー"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "[batch_resident_thread_sync](nablarch-batch-batch_resident_thread_sync.json) は、一定間隔ごとにバッチ処理を実行する常駐型プロセスを作成するための制御基盤を提供する。例えば、オンライン処理で作成されたトランザクションデータを定期的に一括処理するような場合に使用される。\n\n> **警告**: 処理が遅いスレッドの終了を他のスレッドが待つことで要求データの取り込み遅延が発生する。新規開発プロジェクトでは [batch_resident_thread_sync](nablarch-batch-batch_resident_thread_sync.json) ではなく [batch_resident](nablarch-batch-batch_resident.json) を使用することを推奨する。既存プロジェクトで問題が発生する（または発生している）場合は [batch_resident](nablarch-batch-batch_resident.json) への変更を検討すること。\n\n[batch_resident_thread_sync](nablarch-batch-batch_resident_thread_sync.json) の構造は [batch_single_shot](nablarch-batch-batch_single_shot.json) と同じだが、メインスレッド側に以下の2ハンドラが追加されている。\n\n1. [../handler/ProcessResidentHandler](../../component/handlers/handlers-ProcessResidentHandler.json): 後続ハンドラキューを一定間隔ごとに繰り返し実行するハンドラ。このハンドラを組み込むことで [batch_single_shot](nablarch-batch-batch_single_shot.json) の処理を定期的に実行するよう拡張したもの。\n2. [../handler/ProcessStopHandler](../../component/handlers/handlers-ProcessStopHandler.json): [../handler/ProcessResidentHandler](../../component/handlers/handlers-ProcessResidentHandler.json) の後続に配置し、プロセスを外部から正常停止できるようにするハンドラ。特定の例外が送出されない限り [../handler/ProcessResidentHandler](../../component/handlers/handlers-ProcessResidentHandler.json) は後続ハンドラを再実行し続けるため、必須。",
+    "s2": "業務アクションは FW提供のテンプレートクラス（[../handler/BatchAction](../../component/handlers/handlers-BatchAction.json)）を継承して作成する。",
+    "s3": "**標準ハンドラ構成**（ハンドラキュー順）:\n\n| No. | ハンドラ |\n|---|---|\n| 1 | StatusCodeConvertHandler |\n| 2 | ThreadContextClearHandler |\n| 3 | GlobalErrorHandler |\n| 4 | ThreadContextHandler_main |\n| 5 | DuplicateProcessCheckHandler |\n| 6 | RetryHandler |\n| 7 | ProcessResidentHandler |\n| 8 | ProcessStopHandler |\n| 9 | ServiceAvailabilityCheckHandler |\n| 10 | FileRecordWriterDisposeHandler |\n| 11 | DbConnectionManagementHandler_main |\n| 12 | TransactionManagementHandler_main |\n| 13 | RequestPathJavaPackageMapping |\n| 14 | MultiThreadExecutionHandler |\n| 15 | DbConnectionManagementHandler |\n| 16 | LoopHandler |\n| 17 | DataReadHandler |\n| 18 | BatchAction |\n\n**主要処理フロー**:\n\n**正常起動**:\n1. Main (inbound)\n2. ThreadContextHandler_main (inbound)\n3. ProcessResidentHandler (inbound): 以降、常駐処理を開始。監視間隔ごとに後続ハンドラキューが繰り返し実行される。\n\n**重複起動エラー**:\n1. Main (inbound)\n2. ThreadContextHandler_main (inbound): 起動引数 `-requestPath` からリクエストIDを決定\n3. DuplicateProcessCheckHandler (inbound): 同一プロセスが既に起動中の場合は異常終了。起動停止時の終了コードをここで設定。\n4. GlobalErrorHandler (error): 障害ログを出力\n5. Main (outbound): 異常終了\n\n**常駐処理正常実行**:\n1. ProcessResidentHandler (inbound): 常駐処理の起点\n2. DbConnectionManagementHandler_main (inbound)\n3. TransactionManagementHandler_main (inbound)\n4. RequestPathJavaPackageMapping (inbound)\n5. MultiThreadExecutionHandler (inbound): 処理開始前・データリーダ作成時に BatchAction へコールバック\n6. BatchAction (callback): コールバックイベント: 処理開始前、データリーダ作成、業務コミット後、全件終了後\n7. DbConnectionManagementHandler (inbound)\n8. LoopHandler (inbound)\n9. DataReadHandler (inbound)\n10. BatchAction (inbound/outbound): 業務処理実行\n11. LoopHandler (outbound): コミット時に BatchAction コールバック。結果セットが空になるまでループ\n12. BatchAction (callback)\n13. DbConnectionManagementHandler (outbound)\n14. MultiThreadExecutionHandler (outbound): 正常終了後に BatchAction コールバック\n15. BatchAction (callback)\n16. TransactionManagementHandler_main (outbound)\n17. DbConnectionManagementHandler_main (outbound)\n18. ProcessResidentHandler (outbound)\n\n**処理対象データ待機**:\n1. ProcessResidentHandler (inbound): 常駐処理の起点\n2. DbConnectionManagementHandler_main (inbound)\n3. TransactionManagementHandler_main (inbound)\n4. RequestPathJavaPackageMapping (inbound)\n5. MultiThreadExecutionHandler (inbound)\n6. DbConnectionManagementHandler (inbound)\n7. LoopHandler (inbound): 処理対象データが0件の場合、後続処理は行わず `DataReader.NoMoreRecord` をリターン\n8. DbConnectionManagementHandler (outbound)\n9. MultiThreadExecutionHandler (outbound)\n10. TransactionManagementHandler_main (outbound)\n11. DbConnectionManagementHandler_main (outbound)\n12. ProcessResidentHandler (outbound): → ① へ\n\n**閉局中処理待機**:\n1. ProcessResidentHandler (inbound): 常駐処理の起点\n2. ServiceAvailabilityCheckHandler (inbound): サービス閉局例外を送出\n3. ProcessResidentHandler (error): サービス閉局例外を捕捉しINFOログ出力。ループ継続 → ① へ\n\n**常駐処理業務エラー**:\n1. ProcessResidentHandler (inbound): 常駐処理の起点\n2. MultiThreadExecutionHandler (inbound): 処理開始前・データリーダ作成時にコールバック\n3. BatchAction (callback): コールバックイベント: 処理開始前、データリーダ作成、エラー終了後、全件終了後\n4. BatchAction (error): 実行時例外を送出するとトランザクションがロールバックされ障害ログが出力される\n5. LoopHandler (error): 複数件コミット使用時は未コミット処理もロールバック。BatchAction コールバック\n6. MultiThreadExecutionHandler (error): 異常終了後に BatchAction コールバック\n7. ProcessResidentHandler (error)\n8. RetryHandler (error): → ① へ（次の実行タイミングまで待機）\n\n> **注意**: 処理が完了していないレコードは、次回以降の実行タイミングで処理される。ただし、エラーが発生したレコードはエラーステータスとなり、データメンテを行わない限り再実行の対象とならない。リトライ可能例外（DBやMQへの接続エラー等）の場合は障害ログではなくワーニングログを出力し処理継続。\n\n**プロセス正常停止**:\nプロセス管理テーブルの停止フラグを設定することで、次回実行タイミングにてプロセスを正常終了させる。\n1. ProcessResidentHandler (inbound): 常駐処理の起点\n2. ProcessStopHandler (inbound): リクエストIDはバッチ起動引数 `-requestPath` の値から決定\n3. ProcessResidentHandler (error): ProcessStop 捕捉でINFOログ出力後、ステータスコード:200でリターン\n4. StatusCodeConvertHandler (outbound): ステータスコード:200 → 終了コード:0\n5. Main (outbound): 正常終了\n\n**プロセス異常停止**:\n`java.lang.Error` のサブクラスが送出された場合:\n1. 各ハンドラ error 経由\n2. ProcessResidentHandler (error): エラーをそのまま再送出（ループ中断）\n3. GlobalErrorHandler (error): 障害ログを出力\n4. StatusCodeConvertHandler (outbound)\n5. Main (outbound): 異常終了\n\n**常駐処理強制終了**:\n業務処理でプロセス全体を終了させる場合は `ProcessAbnormalEnd` 例外を送出:\n1. BatchAction (inbound): `ProcessAbnormalEnd` 例外を送出するとプロセス全体をエラー終了させる\n2. 各ハンドラ error 経由\n3. ProcessResidentHandler (error): `ProcessAbnormalEnd` をそのまま再送出（ループ中断）\n4. GlobalErrorHandler (error): `ProcessAbnormalEnd` 捕捉で障害ログ出力\n5. StatusCodeConvertHandler (outbound)\n6. Main (outbound): 異常終了\n\n**エラー発生頻度上限超過によるプロセス強制停止**:\n一定時間内のエラー回数が上限を超えた場合:\n1. 常駐処理業務エラーと同様に業務処理エラーが発生\n2. RetryHandler (error): リトライ頻度が上限に達した場合は `ProcessAbnormalEnd` を送出\n3. GlobalErrorHandler (error): 障害ログを出力\n4. StatusCodeConvertHandler (outbound)\n5. Main (outbound): 異常終了"
+  }
+}

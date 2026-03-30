@@ -1,0 +1,109 @@
+{
+  "id": "java-static-analysis-UnpublishedApi",
+  "title": "使用不許可APIチェックツール",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "使用不許可APIチェックツール",
+        "FindBugsカスタムルール",
+        "ホワイトリスト",
+        "公開API"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "前提条件",
+      "hints": [
+        "前提条件",
+        "Nablarch開発環境構築ガイド",
+        "開発環境構築"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "仕様",
+      "hints": [
+        "UPU_UNPUBLISHED_API_USAGE",
+        "JavaOpenApi.config",
+        "NablarchApiForProgrammer.config",
+        "NablarchTFWApiForProgrammer.config",
+        "NablarchApiForArchitect.config",
+        "NablarchTFWApiForArchitect.config",
+        "非公開API使用チェック",
+        "バグコード UPU"
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "継承・インタフェース実装に関するチェック仕様",
+      "hints": [
+        "継承チェック仕様",
+        "インタフェース実装チェック",
+        "宣言型によるチェック",
+        "親クラス検索"
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "設定ファイル配置方法",
+      "hints": [
+        "設定ファイルディレクトリ",
+        "プロジェクト用設定ファイル",
+        "プロダクションコード設定",
+        "テストコード設定",
+        "nablarch-findbugs-config"
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "設定ファイル記述方法",
+      "hints": [
+        "パッケージ指定",
+        "クラス指定",
+        "メソッド指定",
+        "ネストクラスコンストラクタ",
+        "ValidationContext",
+        "完全修飾名",
+        "HttpResponse",
+        "HttpRequest",
+        "CodeUtil"
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "Eclipse Pluginとして使用",
+      "hints": [
+        "Eclipse Plugin",
+        "nablarch-findbugs-config",
+        "nablarch-tfw.jar",
+        "FindBugsパースペクティブ",
+        "eclipse.ini"
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "FindBugsのAntタスクとして使用",
+      "hints": [
+        "Antタスク",
+        "nablarch-findbugs-config",
+        "nablarch-tfw.jar",
+        "systemProperty",
+        "findbugsタスク定義"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "Javaコーディング規約で規定された公開API以外の使用をチェックするツール。公開APIはホワイトリスト形式の設定ファイルで指定し、プロジェクトのコーディング規約に合わせてカスタマイズ可能。",
+    "s2": "Nablarch開発環境構築ガイドに従って開発環境を構築済みであること。",
+    "s3": "公開API以外の呼び出しを以下のルールでチェックする:\n- 非公開クラスの参照（インスタンス化、クラスメソッドの呼び出し）\n- 非公開メソッドの呼び出し\n- 非公開例外の補足および送出\n\n設定ファイルには以下の単位で公開APIを指定できる:\n- パッケージ\n- クラスまたはインタフェース\n- コンストラクタまたはメソッド\n\nデフォルト提供設定ファイル:\n\n| 設定ファイル名 | 概要 |\n|---|---|\n| `JavaOpenApi.config` | Java標準ライブラリ使用可能API |\n| `NablarchApiForProgrammer.config` | プログラマ向けNAF使用可能API（業務機能実装） |\n| `NablarchTFWApiForProgrammer.config` | プログラマ向けNTF使用可能API（業務機能テスト） |\n| `NablarchApiForArchitect.config` | アーキテクト向けNAF使用可能API（機能拡張等） |\n| `NablarchTFWApiForArchitect.config` | アーキテクト向けNTF使用可能API（機能拡張等） |\n\nFindBugsカスタムルールとして提供。バグコード: `UPU`、バグタイプ: `UPU_UNPUBLISHED_API_USAGE`。\n実行方法: Antタスクまたは Eclipse Plugin。",
+    "s4": "インタフェースを型として宣言していることを前提とする（Javaコーディング規約に従う）。\n\n宣言型に基づいてチェックを行う:\n```java\nList list = new ArrayList();\nlist.add(test); // Listインタフェースのaddメソッドが公開されているかをチェック\n\nSuperClass varSuper = new SubClass();\nvarSuper.testMethod(); // SuperClass.testMethodが公開されているかをチェック\n\nSubClass varSub = new SubClass();\nvarSub.testMethod(); // SubClass.testMethod()が公開されているかをチェック\n```\n\n宣言されたクラス・インタフェースに対象APIが定義されていない場合、親クラス/インタフェースを自クラスに近い方から順次検索し、最初にAPIが定義されたクラスのメソッドが公開されているか否かを判定する。\n\n継承関係の例:\n```java\nClassC hoge = new ClassC();\nhoge.methodA(); // 使用可能\nhoge.methodB(); // 使用不可\n```",
+    "s5": "設定ファイルの拡張子は `config` とすること。設定ファイルディレクトリには複数の設定ファイルを配置可能。\n\n> **警告**: 本ツールは使用されている全APIをチェックするため、デフォルト設定ファイルのみでは自プロジェクトで宣言しているAPIもチェック対象になる。デフォルトの2つの設定ファイルとは別に、**自プロジェクト用の設定ファイルを設定ファイルディレクトリに配置し、自プロジェクトのパッケージを一意に特定できるパッケージを記述すること。**\n> 例: 全パッケージが `jp.co.tis.sample` で始まる場合、`jp.co.tis.sample` と記述したテキストファイルを設定ファイルディレクトリに配置する。\n\n設定ファイル配置例（プロダクションコード用とテストコード用でディレクトリを分ける）:\n```\n<ワークスペース>\n└─<プロジェクト>\n   └─tool/staticanalysis/\n      ├─production/（プロダクションコード用）\n      │  └─NablarchApiForProgrammer.config\n      └─test/（テストコード用）\n         ├─NablarchApiForProgrammer.config\n         └─NablarchTFWApiForProgrammer.config\n```\n\nフレームワーク拡張コードをチェックする場合は `NablarchApiForArchitect.config`、`NablarchTFWApiForArchitect.config` を使用する。",
+    "s6": "1行につき1つの公開APIを記述。記述順序は問わない。\n\n| 指定レベル | 説明 | 設定例 |\n|---|---|---|\n| パッケージ | 指定パッケージ配下の全API（サブパッケージ含む）を公開 | `java.lang`、`nablarch.fw.web` |\n| クラス・インタフェース | 指定クラス/インタフェースの全APIを公開。完全修飾クラス名を記述 | `nablarch.common.code.CodeUtil`、`nablarch.fw.Result.Success` |\n| コンストラクタ・メソッド | 指定コンストラクタ/メソッドを公開。完全修飾名で記述（参照型引数も完全修飾名） | `java.lang.Boolean.Boolean(boolean)`、`java.lang.String.indexOf(int)` |\n\n**ネストクラスのコンストラクタは通常の完全修飾名とは異なる記述方法が必要**:\n\n```\n// SuccessがResultのネストクラスの場合（引数なしコンストラクタ）\nnablarch.fw.Result.Success.Result.Success()\n// 引数ありコンストラクタ\nnablarch.fw.Result.Success.Result.Success(java.lang.String)\n// メソッドの場合\nnablarch.fw.Result.Success.Result.getStatusCode()\n```\n\n> **注意**: `nablarch.fw.Result.Success.Success()` と設定した場合、Result.Successクラスのコンストラクタは使用可能とはならない。\n\n設定ファイルの記述例:\n```\njava.lang\nnablarch.fw.web\nnablarch.common.code.CodeUtil\njava.lang.Object\njava.lang.Boolean(boolean)\njava.lang.StringBuilder(java.lang.String)\nnablarch.fw.web.HttpResponse.HttpResponse()\njava.lang.String.indexOf(int)\nnablarch.core.validation.ValidationContext.isValid()\nnablarch.fw.web.HttpResponse.write(byte[])\nnablarch.fw.web.HttpRequest.setParam(java.lang.String, java.lang.String...)\n```",
+    "s7": "> **注意**: Eclipseではアーキテクトとプログラマやプロダクションコードとテストコードの分類に従ったチェックができない。CIなどでAntタスクとしても実行し、分類に従ったチェックを定期的に必ず実施すること。\n\n**設定手順**（Nablarch開発環境構築ガイドに従って環境構築済みの場合は不要）:\n\n1. `nablarch-tfw.jar` をFindBugsEclipsePluginホームディレクトリ配下の `plugin` ディレクトリに配置:\n   ```\n   <Eclipseホームディレクトリ>/dropins(またはplugins)/<FindBugsEclipsePluginホームディレクトリ>/plugin/nablarch-tfw.jar\n   ```\n\n2. `eclipse.ini` の `-vmargs` 配下にシステムプロパティ `nablarch-findbugs-config` を設定:\n   ```\n   -vmargs\n   -Dnablarch-findbugs-config=<テストコード用設定ファイルディレクトリの絶対パス>\n   ```\n\n3. Eclipseを再起動する。\n\nチェック結果はエディターの左端のバグマークまたはFindBugsパースペクティブで確認できる。",
+    "s8": "FindBugsをAntから実行する際の設定:\n- `nablarch-tfw.jar` をクラスパスに含める。\n- `systemProperty` 要素にキー `nablarch-findbugs-config` で設定ファイルディレクトリの絶対パスを設定する。\n  - プロダクションコードチェックタスク: プロダクションコード用設定ファイルディレクトリの絶対パス\n  - テストコードチェックタスク: テストコード用設定ファイルディレクトリの絶対パス\n\nfindbugsタスク定義例:\n```xml\n<target name=\"findbugs\">\n  <taskdef name=\"findBugs\" classname=\"edu.umd.cs.findbugs.anttask.FindBugsTask\" classpath=\"tool_lib/findbugs-1.3.9-rc1/findbugs-ant.jar\" />\n  <delete dir=\"reports/findbugs\" />\n  <mkdir dir=\"reports/findbugs\" />\n  <findbugs home=\"reports/findbugs\"\n      output=\"xml\"\n      outputFile=\"nablarch-findbugs.xml\"\n      excludeFilter=\"findbugs-exclude.xml\" >\n      <class location=\"target/main\" />\n      <auxClasspath path=\"main/web/WEB-INF/lib/xxxxx.jar\" />\n      <sourcePath path=\"main/java\" />\n      <systemProperty name=\"nablarch-findbugs-config\" value=\"C:/nablarch/workspace/Nablarch_sample/tool/staticanalysis/published-config\" />\n  </findbugs>\n</target>\n```"
+  }
+}

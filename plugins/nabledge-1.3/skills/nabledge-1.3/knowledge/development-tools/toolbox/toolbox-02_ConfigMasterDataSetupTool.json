@@ -1,0 +1,51 @@
+{
+  "id": "toolbox-02_ConfigMasterDataSetupTool",
+  "title": "マスタデータ投入ツール インストールガイド",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "前提事項",
+      "hints": [
+        "前提事項",
+        "インストール前提",
+        "Eclipse",
+        "バックアップスキーマ",
+        "マスタデータ投入ツール"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "提供方法",
+      "hints": [
+        "master_data-build.xml",
+        "master_data-build.properties",
+        "master_data-log.properties",
+        "MASTER_DATA.xls",
+        "masterdata.test.backup-schema",
+        "ファイル構成",
+        "バックアップスキーマ名設定",
+        "配置パス",
+        "提供方法"
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Eclipseとの連携設定",
+      "hints": [
+        "Antビュー",
+        "Eclipse連携",
+        "ビルドファイル登録",
+        "master_data-build.xml",
+        "Eclipse設定",
+        "Antビュー起動"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "## 前提事項\n\n- Eclipseがインストール済みであること\n- テーブルが作成済みであること\n- バックアップ用スキーマにテーブルが作成済みであること",
+    "s2": "## 提供方法\n\n本ツールはNablarchのサンプルアプリケーションに同梱して提供する。\n\n| ファイル名 | 説明 |\n|---|---|\n| master_data-build.properties | 環境設定用プロパティファイル |\n| master_data-build.xml | Antビルドファイル |\n| master_data-log.properties | ログ出力プロパティファイル |\n| MASTER_DATA.xls | マスタデータファイル |\n\n### プロパティファイルの書き換え\n\nマスタデータ自動復旧機能が使用するバックアップスキーマ名（`masterdata.test.backup-schema`）を設定する:\n\n```bash\nmasterdata.test.backup-schema=nablarch_test_master\n```\n\nその他の設定値はディレクトリ構造が変わらない限り修正不要。\n\n### 配置\n\n`<mainプロジェクト>/tool/db/data` 直下に配置する。",
+    "s3": "## Eclipseとの連携設定\n\nEclipseのAntビューにビルドファイルを登録することで、Eclipseから本ツールを起動できる。\n\n### Antビュー起動\n\nツールバーから ウィンドウ(Window) → 設定(Show View) を選択してAntビューを開く。\n\n### ビルドファイル登録\n\n1. ＋印のアイコンを押下し、ビルドスクリプトを選択する。\n2. Antビルドファイル(`master_data-build.xml`)を選択する。\n3. Antビューに登録したビルドファイルが表示されることを確認する。"
+  }
+}

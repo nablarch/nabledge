@@ -1,0 +1,49 @@
+{
+  "id": "mom-messaging-03_userQueryMessageAction",
+  "title": "同期応答型メッセージ受信処理",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "電文受信時の処理",
+      "hints": [
+        "RM11AC0101Action",
+        "MessagingAction",
+        "ValidationUtil",
+        "validateAndConvertRequest",
+        "UserInfoTempEntity",
+        "ValidationContext",
+        "onReceive",
+        "RequestMessage",
+        "ExecutionContext",
+        "ResponseMessage",
+        "同期応答型メッセージ受信処理",
+        "要求電文バリデーション",
+        "応答電文作成"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "エラー時の処理",
+      "hints": [
+        "InvalidDataFormatException",
+        "ApplicationException",
+        "onError",
+        "エラー応答",
+        "ステータスコード",
+        "障害コード",
+        "NR11AC4001",
+        "NR11AC5001",
+        "NR11AC5000",
+        "NR11AA4001",
+        "NR11AA5001",
+        "NR11AA5000"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス**: `RM11AC0101Action` (`MessagingAction` を継承)\n\n**`onReceive` メソッドの処理フロー**:\n1. `validate(request.getParamMap())` で要求電文を精査し `UserInfoTempEntity` に変換\n2. `registerRecord(entity)` でデータベースに登録\n3. `request.reply().setStatusCodeHeader(\"200\").addRecord(resultRecord)` で応答電文を返却\n\n**バリデーション処理 (`validate` メソッド)**:\n```java\nValidationContext<UserInfoTempEntity> validationContext =\n    ValidationUtil.validateAndConvertRequest(\n        UserInfoTempEntity.class, userRecord, \"validateRegister\");\nvalidationContext.abortIfInvalid();  // 精査エラー時に業務例外を送出\nreturn validationContext.createObject();\n```\n\n**応答電文フィールド**:\n- `dataKbn`: `\"0\"`（正常）\n- `userInfoId`: 登録ユーザID",
+    "s2": "**`onError` メソッドのエラー応答仕様**:\n\n| 終了コード | 障害コード | 原因 |\n|---|---|---|\n| 200 | (空白) | 正常終了 |\n| 400 | NR11AC4001 | 要求電文のデータレコード部項目精査エラー |\n| 500 | NR11AC5001 | 要求電文のデータレコード部レイアウト不正 |\n| 500 | NR11AC5000 | その他の意図しないエラー |\n\n例外の種別による分岐:\n- `InvalidDataFormatException` → ステータスコード `500` / 障害コード `NR11AC5001`\n- `ApplicationException` → ステータスコード `400` / 障害コード `NR11AC4001`\n- その他 → ステータスコード `500` / 障害コード `NR11AC5000`\n\n**エラー応答電文フィールド**:\n- `dataKbn`: `0`（エラー）\n- `failureCode`: 障害コード"
+  }
+}

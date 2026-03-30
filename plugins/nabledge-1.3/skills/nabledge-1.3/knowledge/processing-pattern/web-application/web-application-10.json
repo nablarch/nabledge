@@ -1,0 +1,33 @@
+{
+  "id": "web-application-10",
+  "title": "出力するHTMLの文字コードを変更したいのですが",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "HTMLの文字コード変更方法",
+      "hints": [
+        "WebFrontController",
+        "nablarch.fw.web.servlet.WebFrontController",
+        "MimeBDownloadFileNameEncoder",
+        "nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoder",
+        "UrlDownloadFileNameEncoder",
+        "nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoder",
+        "HttpTestConfiguration",
+        "nablarch.test.core.http.HttpTestConfiguration",
+        "defaultEncoding",
+        "charset",
+        "htmlResourcesCharset",
+        "文字コード変更",
+        "HTMLエンコーディング",
+        "Windows-31J",
+        "ファイルダウンロード文字コード",
+        "テスト設定"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "HTMLのデフォルト文字コードはUTF-8。変更にはコンポーネント定義ファイルの以下を修正する。\n\n**WebFrontController** (`nablarch.fw.web.servlet.WebFrontController`): `defaultEncoding` プロパティを変更\n\n```xml\n<component name=\"webFrontController\"\n            class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"defaultEncoding\" value=\"Windows-31J\"/>\n  <!-- 省略 -->\n</component>\n```\n\n**ファイルダウンロード**: ダウンロードファイル名エンコーディング用の `charset` プロパティを変更（MIME-BエンコーダとURLエンコーダの両方）\n\n```xml\n<!-- MIME-Bエンコーダ -->\n<component name=\"mimeBEncoder\" class=\"nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoder\">\n  <property name=\"charset\" value=\"Windows-31J\" />\n</component>\n\n<!-- URLエンコーダ -->\n<component name=\"urlEncoder\" class=\"nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoder\">\n  <property name=\"charset\" value=\"Windows-31J\" />\n</component>\n```\n\n**Nablarch Testing Framework — HttpTestConfiguration** (`nablarch.test.core.http.HttpTestConfiguration`): 静的リソースの `htmlResourcesCharset` プロパティを変更\n\n```xml\n<component name=\"httpTestConfiguration\"\n    class=\"nablarch.test.core.http.HttpTestConfiguration\">\n  <property name=\"webBaseDir\" value=\"${webBaseDir}\" />\n  <property name=\"htmlResourcesCharset\" value=\"Windows-31J\" />\n  <property name=\"dumpVariableItem\" value=\"false\" />\n</component>\n```"
+  }
+}

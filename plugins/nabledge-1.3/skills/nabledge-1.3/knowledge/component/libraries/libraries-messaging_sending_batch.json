@@ -1,0 +1,56 @@
+{
+  "id": "libraries-messaging_sending_batch",
+  "title": "応答不要メッセージ送信常駐バッチ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "基本構造",
+      "hints": [
+        "MessagingContextHandler",
+        "AsyncMessageSendAction",
+        "SELECT_SEND_DATA",
+        "UPDATE_NORMAL_END",
+        "UPDATE_ABNORMAL_END",
+        "応答不要メッセージ送信",
+        "送信要求テーブル",
+        "フォーマット定義ファイル",
+        "常駐バッチ構成",
+        "メッセージリクエストID"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "標準ハンドラ構成と主要処理フロー",
+      "hints": [
+        "ProcessResidentHandler",
+        "MultiThreadExecutionHandler",
+        "DuplicateProcessCheckHandler",
+        "ProcessStopHandler",
+        "ServiceAvailabilityCheckHandler",
+        "LoopHandler",
+        "DataReadHandler",
+        "StatusCodeConvertHandler",
+        "ProcessAbnormalEnd",
+        "GlobalErrorHandler",
+        "BatchAction",
+        "常駐バッチ標準ハンドラ",
+        "重複起動エラー",
+        "プロセス停止",
+        "DataReader.NoMoreRecord",
+        "ThreadContextHandler_main",
+        "DbConnectionManagementHandler_main",
+        "TransactionManagementHandler_main",
+        "RequestPathJavaPackageMapping",
+        "RetryHandler",
+        "DbConnectionManagementHandler",
+        "MessagingContextHandler"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "利用側からは対象テーブルへのINSERT文を発行するだけでメッセージを送信することができる。\n\n[messaging_sending_batch](libraries-messaging_sending_batch.json) は通常の [../architectural_pattern/batch_resident_thread_sync](../../processing-pattern/nablarch-batch/nablarch-batch-batch_resident_thread_sync.json) に対し、以下のハンドラを追加した構成。\n\n1. [../handler/MessagingContextHandler](../handlers/handlers-MessagingContextHandler.json)\n2. [../handler/AsyncMessageSendAction](../handlers/handlers-AsyncMessageSendAction.json)\n\n業務アクションハンドラの新規作成は不要。[../handler/AsyncMessageSendAction](../handlers/handlers-AsyncMessageSendAction.json) の設定・SQL文・送信電文フォーマット定義のみ作成すればよい。\n\n作成が必要なリソース一覧:\n\n| 内容 | リソース名 |\n|---|---|\n| 送信要求テーブルから送信対象レコードを取得するSQL | `(SQL定義配置パッケージ設定値).(メッセージリクエストID)#SELECT_SEND_DATA` |\n| 送信完了後、処理ステータスを\"送信済み\"に変更するSQL | `(SQL定義配置パッケージ設定値).(メッセージリクエストID)#UPDATE_NORMAL_END` |\n| エラー発生時、処理ステータスを\"エラー\"に変更するSQL | `(SQL定義配置パッケージ設定値).(メッセージリクエストID)#UPDATE_ABNORMAL_END` |\n| フレームワーク制御ヘッダ部フォーマット定義ファイル | `(フォーマット定義ファイル配置先論理パス名)/(フレームワーク制御ヘッダフォーマットファイル名)` |\n| メッセージボディ部フォーマット定義ファイル | `(フォーマット定義ファイル配置先論理パス名)/(メッセージリクエストID)_SEND` |\n\n各種設定値は [../handler/AsyncMessageSendAction](../handlers/handlers-AsyncMessageSendAction.json) を参照。",
+    "s2": "標準ハンドラ構成 (batch residentコンテキスト):\n\n1. Main\n2. StatusCodeConvertHandler\n3. GlobalErrorHandler\n4. ThreadContextHandler_main\n5. DuplicateProcessCheckHandler\n6. ProcessResidentHandler\n7. RetryHandler\n8. ProcessStopHandler\n9. ServiceAvailabilityCheckHandler\n10. DbConnectionManagementHandler_main\n11. TransactionManagementHandler_main\n12. RequestPathJavaPackageMapping\n13. MultiThreadExecutionHandler\n14. MessagingContextHandler\n15. DbConnectionManagementHandler\n16. LoopHandler\n17. DataReadHandler\n18. AsyncMessageSendAction\n\n処理フロー一覧は [../architectural_pattern/batch_resident_thread_sync](../../processing-pattern/nablarch-batch/nablarch-batch-batch_resident_thread_sync.json) を参照。\n\n**正常起動**:\n1. Main → ThreadContextHandler_main → ProcessResidentHandler (inbound): 以降、監視間隔ごとに後続ハンドラキューの処理が繰り返し実行される。\n\n**重複起動エラー**:\n1. ThreadContextHandler_main: 起動引数 `-requestPath` からリクエストIDを決定。\n2. DuplicateProcessCheckHandler: 起動停止時の終了コードはこのハンドラに設定する。\n3. GlobalErrorHandler (error): 障害ログが出力される。\n\n**常駐処理正常実行**:\n1. MultiThreadExecutionHandler: 処理開始前・DataReader作成時にBatchActionへコールバック (イベント: 処理開始前、データリーダ作成、業務コミット後、全件終了後)。\n2. LoopHandler: DataReadHandlerで取得した結果セットが空になるまでループ。コミット時にBatchActionへコールバック。\n3. MultiThreadExecutionHandler: 正常終了後にBatchActionへコールバック。\n\n**処理対象データ待機**:\n- LoopHandler: 要求管理テーブル上の処理対象データが0件の場合、後続処理を行わず `DataReader.NoMoreRecord` をリターン。\n\n**閉局中処理待機**:\n- ServiceAvailabilityCheckHandler: サービス閉局例外を送出。\n- ProcessResidentHandler (error): サービス閉局例外を捕捉した場合、INFOログを出力してループを継続。\n\n**常駐処理異常終了**:\n- BatchAction: 業務処理をエラー終了させる場合は実行時例外を送出 → トランザクションがロールバックされ障害ログが出力される。\n- LoopHandler (error): 複数件コミット使用時は未コミット処理もロールバック。業務アクションをコールバック。\n\n**プロセス正常停止**:\n1. ProcessStopHandler: リクエストIDは起動引数 `-requestPath` の値から決定。\n2. ProcessResidentHandler (error): ProcessStop例外を捕捉するとINFOログ出力後、処理結果オブジェクトをリターン (ステータスコード: 200)。\n3. StatusCodeConvertHandler: ステータスコード 200 → 終了コード 0 に変換。\n\n**強制停止 (プロセス全体のエラー終了)**:\n- BatchAction: `ProcessAbnormalEnd` 例外を送出すると、実行中の処理だけでなくプロセス全体がエラー終了する。\n- ProcessResidentHandler (error): `ProcessAbnormalEnd` はそのまま再送出 (ループ中断)。\n- GlobalErrorHandler: `ProcessAbnormalEnd` を捕捉して障害ログを出力し、例外を処理結果オブジェクトとしてリターン。"
+  }
+}

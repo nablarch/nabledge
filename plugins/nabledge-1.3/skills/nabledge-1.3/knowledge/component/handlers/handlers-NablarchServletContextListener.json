@@ -1,0 +1,38 @@
+{
+  "id": "handlers-NablarchServletContextListener",
+  "title": "Nablarchサーブレットコンテキスト初期化リスナ",
+  "no_knowledge_content": false,
+  "official_doc_urls": [],
+  "index": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "hints": [
+        "NablarchServletContextListener",
+        "WebFrontController",
+        "webFrontController",
+        "サーブレットコンテキスト初期化",
+        "リポジトリ初期化",
+        "ログ初期化",
+        "ハンドラキュー構成"
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "設定項目・拡張ポイント",
+      "hints": [
+        "di.config",
+        "di.duplicate-definition-policy",
+        "コンテキスト変数設定",
+        "web.xml設定",
+        "上書きポリシー",
+        "OVERRIDE",
+        "RepositoryBasedWebFrontController"
+      ]
+    }
+  ],
+  "sections": {
+    "s1": "**クラス名**: `nablarch.fw.web.servlet.NablarchServletContextListener`\n\nサーブレットコンテキストの初期化時（デプロイ時）に呼ばれ、リポジトリの初期化処理、ログの初期化処理および終端処理を行う。\n\n画面オンライン処理において、ハンドラキュー構成とハンドラキューの起点となるサーブレットフィルタ [WebFrontController](handlers-WebFrontController.json) の初期化はここで行われる。\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [WebFrontController](handlers-WebFrontController.json) | 本クラスが初期化するリポジトリ内に、このサーブレットフィルタがオブジェクトキー名 **webFrontController** で定義されている必要がある |",
+    "s2": "サーブレットコンテキストリスナとしてデプロイし、コンテキスト初期化時に以下のコンテキスト変数を参照する。\n\n| 変数名 | 必須 | 説明 |\n|---|---|---|\n| di.config | ○ | リポジトリの設定ファイルのパス。クラスパスリソースから検索。`file://` で始まるパスを指定するとローカルファイルシステム上のファイルを検索できる |\n| di.duplicate-definition-policy | | 設定値の上書き検出時の動作ポリシー。詳細は `リポジトリ`_ を参照。未設定の場合 OVERRIDE |\n\n**web.xml 設定例**:\n\n```xml\n<web-app>\n  <context-param>\n    <param-name>di.config</param-name>\n    <param-value>web-component-configuration.xml</param-value>\n  </context-param>\n\n  <listener>\n    <listener-class>nablarch.fw.web.servlet.NablarchServletContextListener</listener-class>\n  </listener>\n\n  <filter>\n    <filter-name>controller</filter-name>\n    <filter-class>nablarch.fw.web.servlet.RepositoryBasedWebFrontController</filter-class>\n  </filter>\n\n  <filter-mapping>\n    <filter-name>controller</filter-name>\n    <url-pattern>/*</url-pattern>\n  </filter-mapping>\n</web-app>\n```"
+  }
+}
