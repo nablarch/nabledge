@@ -46,6 +46,7 @@ Replace the following placeholders with actual content (using `{{variable}}` for
   - Final value: "約2分30秒", "約45秒", etc. (replaced by workflow Step 3.3-7)
 - `{{target_description}}`: One-line description of the target
 - `{{modules}}`: Affected modules (e.g., "proman-web, proman-common")
+- `{{output_path}}`: Output file path (e.g., `.nabledge/20260210/code-analysis-login-action.md`)
 
 ### Overview Section
 
