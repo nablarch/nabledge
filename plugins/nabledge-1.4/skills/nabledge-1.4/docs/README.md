@@ -1,6 +1,6 @@
-# Nablarch 6 ドキュメント
+# Nablarch 1.4 ドキュメント
 
-456 ページ
+455 ページ
 
 ## about
 
@@ -309,7 +309,6 @@
 - [リクエスト単体テスト（HTTP同期応答メッセージ送信処理）](development-tools/testing-framework/testing-framework-RequestUnitTest_http_send_sync.md)
 - [リクエスト単体テスト（メッセージ受信処理）](development-tools/testing-framework/testing-framework-RequestUnitTest_real.md)
 - [リクエスト単体テスト（同期応答メッセージ送信処理）](development-tools/testing-framework/testing-framework-RequestUnitTest_send_sync.md)
-- [リクエスト単体テストの実施方法(バッチ)](development-tools/testing-framework/testing-framework-batch-02_RequestUnitTest.md)
 - [取引単体テストの実施方法（バッチ）](development-tools/testing-framework/testing-framework-batch-03_DealUnitTest.md)
 - [各種期待値](development-tools/testing-framework/testing-framework-batch.md)
 - [取引単体テストの実施方法（応答不要メッセージ受信処理）](development-tools/testing-framework/testing-framework-delayed_receive.md)

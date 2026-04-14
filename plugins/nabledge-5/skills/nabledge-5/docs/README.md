@@ -1,4 +1,4 @@
-# Nablarch 6 ドキュメント
+# Nablarch 5 ドキュメント
 
 453 ページ
 

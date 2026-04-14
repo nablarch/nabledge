@@ -2,6 +2,8 @@
 
 ## 
 
+SQLログは、パフォーマンスチューニングに使用するために、SQL文の実行時間やSQL文を出力する。
+
 SQLログは開発時の使用を想定しているため、DEBUGレベル以下で出力する。ロガー名：`SQL`
 
 | ログレベル | 出力内容 |
@@ -15,6 +17,7 @@ loggers.SQL.nameRegex=SQL
 loggers.SQL.level=TRACE
 loggers.SQL.writerNames=<出力先のログライタ>
 ```
+
 
 ## SqlPStatement#executeQueryメソッドの検索開始時
 
@@ -308,7 +311,7 @@ sqlLogFormatter.endRetrieveFormat=$methodName$\n\texe:$executeTime$ms ret:$retri
 <details>
 <summary>keywords</summary>
 
-SqlPStatement, executeQuery 検索開始時, SQL文, 付加情報, SQLログ出力項目, SQLログ, 出力例, log.properties, app-log.properties, FileLogWriter, BasicLogFormatter, availableLoggersNamesOrder, loggers.SQL, TRACE, sqlLogFormatter.startRetrieveFormat, sqlLogFormatter.endRetrieveFormat, 設定例
+SqlPStatement, executeQuery 検索開始時, SQL文, 付加情報, SQLログ出力項目, SQLログ, 出力例, log.properties, app-log.properties, FileLogWriter, BasicLogFormatter, availableLoggersNamesOrder, loggers.SQL, TRACE, sqlLogFormatter.startRetrieveFormat, sqlLogFormatter.endRetrieveFormat, 設定例, BasicSqlPStatement, JdbcTransaction
 
 </details>
 
