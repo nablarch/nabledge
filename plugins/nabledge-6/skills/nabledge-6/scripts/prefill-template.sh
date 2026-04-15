@@ -307,10 +307,9 @@ trap 'rm -f "$TEMP_FILE" "$TEMP_FILE.tmp"' EXIT INT TERM
 
 cp "$TEMPLATE_FILE" "$TEMP_FILE"
 
-# Escape special characters for sed
-# Handles: & / \ [ ] * . ^ $ and newlines
+# Escape special characters for sed replacement (& and / only)
 escape_sed() {
-    echo "$1" | sed 's/[&/\[\]*.\^$]/\\&/g; s/\\/\\\\/g'
+    echo "$1" | sed 's/[\/&]/\\&/g'
 }
 
 TARGET_NAME_ESC=$(escape_sed "$TARGET_NAME")

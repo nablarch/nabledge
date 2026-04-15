@@ -4,7 +4,9 @@ Read candidate section content and judge relevance to the search query. Common w
 
 ## Input
 
-- List of candidate sections (file, section_id)
+- List of candidate sections in `file:section_id` format (colon-separated)
+  - **Note**: `full-text-search.sh` outputs `file|section_id` (pipe-separated). Convert `|` to `:` before passing here.
+  - Example: `component/libraries/libraries-universal_dao.json|s3` → `component/libraries/libraries-universal_dao.json:s3`
 - Search keyword list (in caller's memory; used in Step 0)
 
 ## Output
@@ -30,18 +32,7 @@ Caller converts to pointer JSON.
 
 **Command**:
 ```bash
-KNOWLEDGE_DIR=".claude/skills/nabledge-6/knowledge"
-
-for pair in "component/libraries/libraries-universal_dao.json:s3" \
-            "component/libraries/libraries-universal_dao.json:s1" \
-            "component/libraries/libraries-database.json:s2"; do
-  file="${pair%%:*}"
-  section="${pair##*:}"
-  hints=$(jq -r --arg sec "$section" \
-    '.index[] | select(.id == $sec) | .hints | join(",")' \
-    "$KNOWLEDGE_DIR/$file" 2>/dev/null)
-  echo "$file:$section|$hints"
-done
+bash .claude/skills/nabledge-6/scripts/get-hints.sh "component/libraries/libraries-universal_dao.json:s3" "component/libraries/libraries-universal_dao.json:s1" "component/libraries/libraries-database.json:s2"
 ```
 
 **Judgment rules** (agent matches against search keywords in memory):
@@ -59,10 +50,7 @@ done
 
 **Command**:
 ```bash
-bash scripts/read-sections.sh \
-  "features/libraries/universal-dao.json:s3" \
-  "features/libraries/universal-dao.json:s1" \
-  "features/libraries/database-access.json:s2"
+bash .claude/skills/nabledge-6/scripts/read-sections.sh "features/libraries/universal-dao.json:s3" "features/libraries/universal-dao.json:s1" "features/libraries/database-access.json:s2"
 ```
 
 **Output**: Body text of each section

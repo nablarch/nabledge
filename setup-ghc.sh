@@ -109,6 +109,28 @@ for v in "${VERSIONS[@]}"; do
     SPARSE_PATHS+=("plugins/nabledge-${v}")
 done
 
+# Add script auto-approval patterns to .vscode/settings.json
+add_skill_permissions() {
+    local v="$1"
+    local settings_file="$PROJECT_ROOT/.vscode/settings.json"
+
+    echo "Adding script auto-approval for nabledge-${v}..."
+
+    # Create settings.json if it doesn't exist
+    if [ ! -f "$settings_file" ]; then
+        echo '{}' > "$settings_file"
+    fi
+
+    local tmp
+    tmp=$(mktemp)
+    jq --arg pattern "/\\.claude\\/skills\\/nabledge-[^/]+\\/scripts\\//" '
+        .["chat.tools.terminal.autoApprove"] //= {} |
+        .["chat.tools.terminal.autoApprove"][$pattern] = true
+    ' "$settings_file" > "$tmp" && mv "$tmp" "$settings_file"
+
+    echo "Auto-approval configured for nabledge-${v} scripts."
+}
+
 echo "Downloading from $REPO_URL (branch: $BRANCH)..."
 cd "$TEMP_DIR"
 git clone --depth 1 --filter=blob:none --sparse --branch "$BRANCH" "$REPO_URL"
@@ -182,6 +204,9 @@ for v in "${VERSIONS[@]}"; do
     fi
 
     echo "nabledge-${v} installed successfully!"
+
+    # Add script auto-approval patterns to .vscode/settings.json
+    add_skill_permissions "$v"
 done
 
 # Report errors

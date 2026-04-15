@@ -30,7 +30,7 @@ Answer in Japanese
 
 **Command**:
 ```bash
-bash scripts/read-sections.sh \
+bash .claude/skills/nabledge-5/scripts/read-sections.sh \
   "features/handlers/common/db-connection-management-handler.json:setup" \
   "features/libraries/universal-dao.json:paging"
 ```

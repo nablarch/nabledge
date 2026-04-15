@@ -13,25 +13,38 @@ Analyze existing code, trace dependencies, generate structured documentation.
 
 **Output**: Documentation file (Markdown + Mermaid diagrams) in .nabledge/YYYYMMDD/
 
-**Tools**: Read, Glob, Grep, Bash with jq, Write
+**Tools**: Read, Bash with jq, Write
 
 ## Process flow
+
+> **Bash usage: restricted commands only**
+> For file operations (search, read, grep), always use Bash scripts — never raw `find`, `ls`, or `grep` commands.
+
+### Confirm analysis target (required before Step 0)
+
+**Tool**: AskUserQuestion
+
+Check whether the user's invocation explicitly names a specific class or file.
+
+- If specified → save as `target` and proceed to Step 0
+- If not specified → ask now, do not proceed until the user answers:
+
+  "解析対象のクラスまたはファイルを指定してください (例: ImportZipCodeFileAction)"
+
+  Save the user's answer as `target`.
+
+**Do NOT infer or assume a target from context, history, or file system.**
+
+---
 
 ### Step 0: Record start time (CRITICAL)
 
 **Tool**: Bash
 
-**Action** - Store start time with unique session ID in output directory:
+**Action** - Store start time with unique session ID in output directory.
+
 ```bash
-REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-OUTPUT_DIR="$REPO_ROOT/.nabledge/$(date '+%Y%m%d')"
-mkdir -p "$OUTPUT_DIR"
-UNIQUE_ID="$(date '+%s%3N')-$$"
-echo "$UNIQUE_ID" > "$OUTPUT_DIR/.nabledge-code-analysis-id"
-date '+%s' > "$OUTPUT_DIR/.nabledge-code-analysis-start-$UNIQUE_ID"
-echo "Start time recorded: $(date '+%Y-%m-%d %H:%M:%S')"
-echo "Session ID: $UNIQUE_ID"
-echo "Output directory: $OUTPUT_DIR"
+bash .claude/skills/nabledge-1.4/scripts/record-start.sh
 ```
 
 **Output example**:
@@ -56,18 +69,28 @@ Output directory: .nabledge/20260210
 
 ### Step 1: Identify target and analyze dependencies
 
-**Tools**: AskUserQuestion (if needed), Read, Glob, Grep
+**Prerequisite**: `target` must be set from the "Confirm analysis target" step above.
+
+**Tools**: Bash (find-file.sh, read-file.sh)
 
 **Action**:
 
-1. **Parse user request** to understand target scope:
+1. **Parse `target`** to understand target scope:
    - Specific class (e.g., "LoginAction")
    - Specific feature (e.g., "login feature")
    - Package (e.g., "under web.action")
 
-2. **Ask clarifying questions** if scope is unclear
+2. **Find target files**:
+   ```bash
+   bash .claude/skills/nabledge-1.4/scripts/find-file.sh "<TargetClass>.java"
+   ```
+   Replace `<TargetClass>` with the actual class name from `target`. Add more patterns if multiple files are needed (e.g., `"*Form.java"`).
 
-3. **Find target files** using Glob or Grep
+3. **Read target files** (pass paths from step 2):
+   ```bash
+   bash .claude/skills/nabledge-1.4/scripts/read-file.sh "<path/to/file.java>"
+   ```
+   Replace `<path/to/file.java>` with the actual path(s) returned by find-file.sh. Pass paths exactly as output (e.g., `./src/main/java/Foo.java`) — do not modify or normalize the path.
 
 4. **Read target files** and extract dependencies:
    - Imports → External dependencies
@@ -122,13 +145,13 @@ Output directory: .nabledge/20260210
 
 2. **Execute full-text search**:
    ```bash
-   bash .claude/skills/nabledge-1.4/scripts/full-text-search.sh \
-     "UniversalDao" "ExecutionContext" "ValidationUtil" "validation" "transaction"
+   bash .claude/skills/nabledge-1.4/scripts/full-text-search.sh "UniversalDao" "ExecutionContext" "ValidationUtil" "validation" "transaction"
    ```
    - Output: Scored and ranked candidate sections (max 15 results)
 
 3. **Execute section judgement**:
    - Read `workflows/_knowledge-search/_section-judgement.md`
+   - Before passing candidates: convert pipe separators to colons (`file|section_id` → `file:section_id`)
    - Follow the workflow with candidate sections from step 2
    - Output: Filtered sections (High and Partial relevance only)
 
@@ -171,23 +194,15 @@ cat .claude/skills/nabledge-1.4/assets/code-analysis-template.md \
 
 #### 3.2: Pre-fill deterministic placeholders
 
-**Tool**: Bash (.claude/skills/nabledge-1.4/scripts/prefill-template.sh)
+**Tool**: Bash
 
-**Action**: Execute prefill script to pre-populate 9 deterministic placeholders:
+**Action**: Execute prefill script to pre-populate 9 deterministic placeholders.
 
 ```bash
-# Execute prefill script (now calculates output path internally)
-# Capture output path from the script's final "Output: <path>" line
-OUTPUT_PATH=$(.claude/skills/nabledge-1.4/scripts/prefill-template.sh \
-  --target-name "<target-name>" \
-  --target-desc "<one-line-description>" \
-  --modules "<module1, module2>" \
-  --source-files "File1.java,File2.java" \
-  --knowledge-files "libraries-universal_dao,libraries-data_bind" \
-  | grep "^Output: " | cut -d' ' -f2)
-
-echo "Output file: $OUTPUT_PATH"
+bash .claude/skills/nabledge-1.4/scripts/prefill-template.sh --target-name "<target-name>" --target-desc "<one-line-description>" --modules "<module1, module2>" --source-files "File1.java,File2.java" --knowledge-files "libraries-universal_dao,libraries-data_bind"
 ```
+
+After the script completes, find the `Output: <path>` line in the result and save that path as `OUTPUT_PATH`.
 
 **Parameters**:
 - `target-name`: Target code name (e.g., "LoginAction")
@@ -249,17 +264,12 @@ echo "Output file: $OUTPUT_PATH"
 
 **Class Diagram Skeleton**:
 ```bash
-.claude/skills/nabledge-1.4/scripts/generate-mermaid-skeleton.sh \
-  --source-files "<file1.java,file2.java>" \
-  --diagram-type class
+bash .claude/skills/nabledge-1.4/scripts/generate-mermaid-skeleton.sh --source-files "<file1.java,file2.java>" --diagram-type class
 ```
 
 **Sequence Diagram Skeleton**:
 ```bash
-.claude/skills/nabledge-1.4/scripts/generate-mermaid-skeleton.sh \
-  --source-files "<main-file.java>" \
-  --diagram-type sequence \
-  --main-class "<MainClass>"
+bash .claude/skills/nabledge-1.4/scripts/generate-mermaid-skeleton.sh --source-files "<main-file.java>" --diagram-type sequence --main-class "<MainClass>"
 ```
 
 **Output**: Mermaid diagram syntax with:
@@ -527,7 +537,7 @@ mapper.close();
    - Using refined skeletons from Step 3.3 for diagram placeholders
 
    **Placeholders to fill** (LLM-generated content):
-   - `{{DURATION_PLACEHOLDER}}`: Leave as-is (filled after Write completes in Step 5)
+   - `{{DURATION_PLACEHOLDER}}`: Leave as-is (filled after Write completes in Step 5). **CRITICAL: Write the literal string `{{DURATION_PLACEHOLDER}}` exactly as-is. Do NOT replace it with a variable name or value — Step 5 bash command performs the substitution.**
    - `{{overview_content}}`: Overview section (generate)
    - `{{dependency_graph}}`: Mermaid classDiagram (refine skeleton from Step 3.3)
    - `{{component_summary_table}}`: Component table (generate)
@@ -565,7 +575,7 @@ mapper.close();
    - Mermaid diagrams refined from skeletons (not regenerated)
 
 4. **Write complete file**: Use Write tool with full document content
-   - File path: `$OUTPUT_PATH` (captured from Step 3.2)
+   - File path: actual expanded path captured from Step 3.2 output (e.g., `.nabledge/20260414/code-analysis-ImportZipCodeFileAction.md`). DO NOT pass the variable name `$OUTPUT_PATH` literally — use the actual path string.
    - Content: Complete document with all 17 placeholders filled (9 pre-filled + 8 generated)
    - This will overwrite the pre-filled template from Step 3.2 with the complete version
    - Write tool requires prior Read (already done in step 1)
@@ -583,51 +593,13 @@ mapper.close();
 
    **CRITICAL SEQUENCING**: Execute time calculation and file update in a single Bash tool call using `&&` to ensure no operations occur between them.
 
-   Execute single bash script to fill duration placeholder:
    ```bash
-   # Set output directory path
-   REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-   OUTPUT_DIR="$REPO_ROOT/.nabledge/YYYYMMDD"  # Replace with actual date
-
-   # Retrieve session ID from Step 0
-   UNIQUE_ID=$(cat "$OUTPUT_DIR/.nabledge-code-analysis-id" 2>/dev/null || echo "")
-
-   # Get current time
-   end_time=$(date '+%s')
-
-   # Calculate duration with error handling
-   START_TIME_FILE="$OUTPUT_DIR/.nabledge-code-analysis-start-$UNIQUE_ID"
-   if [ -z "$UNIQUE_ID" ] || [ ! -f "$START_TIME_FILE" ]; then
-     echo "WARNING: Start time file not found. Duration will be set to 'unknown'."
-     duration_text="unknown"
-   else
-     start_time=$(cat "$START_TIME_FILE")
-     duration_seconds=$((end_time - start_time))
-
-     # Format duration text
-     if [ $duration_seconds -lt 60 ]; then
-       duration_text="approx. ${duration_seconds}s"
-     else
-       minutes=$((duration_seconds / 60))
-       seconds=$((duration_seconds % 60))
-       duration_text="approx. ${minutes}m ${seconds}s"
-     fi
-   fi
-
-   # Replace duration placeholder in the output file
-   sed -i "s/{{DURATION_PLACEHOLDER}}/$duration_text/g" "$OUTPUT_DIR/code-analysis-<target>.md"
-
-   # Clean up temp files
-   rm -f "$START_TIME_FILE"
-   rm -f "$OUTPUT_DIR/.nabledge-code-analysis-id"
-
-   # Output for user
-   echo "Duration: $duration_text"
+   bash .claude/skills/nabledge-1.4/scripts/finalize-output.sh "<target-name>" "YYYYMMDD"
    ```
 
    **Replace in command**:
-   - `YYYYMMDD`: Actual date directory
-   - `<target>`: Actual target name
+   - `<target-name>`: Actual target name (e.g., `ImportZipCodeFileAction`)
+   - `YYYYMMDD`: Date portion from `$OUTPUT_PATH` captured in Step 3.2 (e.g., if `OUTPUT_PATH` is `.nabledge/20260210/code-analysis-Foo.md`, pass `20260210`)
 
    **IMPORTANT**:
    - Execute immediately after Step 4 with no other operations between them

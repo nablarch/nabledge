@@ -29,7 +29,7 @@ Each line: `relative-file-path|section-id`
 
 **Command**:
 ```bash
-bash scripts/full-text-search.sh "paging" "paging" "UniversalDao"
+bash .claude/skills/nabledge-6/scripts/full-text-search.sh "paging" "paging" "UniversalDao"
 ```
 
 **Search rules**:

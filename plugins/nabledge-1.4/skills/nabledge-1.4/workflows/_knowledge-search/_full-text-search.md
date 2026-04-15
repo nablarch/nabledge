@@ -13,8 +13,8 @@ List of matched sections (file, section_id)
 ### Output format
 
 ```
-features/libraries/universal-dao.json|paging
-features/libraries/universal-dao.json|overview
+features/libraries/universal-dao.json|s3
+features/libraries/universal-dao.json|s1
 ```
 
 Each line: `relative-file-path|section-id`
@@ -29,7 +29,7 @@ Each line: `relative-file-path|section-id`
 
 **Command**:
 ```bash
-bash scripts/full-text-search.sh "paging" "paging" "UniversalDao"
+bash .claude/skills/nabledge-1.4/scripts/full-text-search.sh "paging" "paging" "UniversalDao"
 ```
 
 **Search rules**:

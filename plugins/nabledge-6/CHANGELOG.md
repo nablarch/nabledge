@@ -4,6 +4,11 @@ nabledge-6プラグインの主な変更内容を記録しています。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に基づいています。
 
+## [Unreleased]
+
+### 追加
+- コード分析などのワークフロー実行中にスクリプトが確認プロンプトなしで自動実行されるようになりました（Claude Code・GitHub Copilot 両対応）。
+
 ## [0.7] - 2026-03-27
 
 ### 追加

@@ -79,8 +79,24 @@ NABLEDGE_BRANCH=0.2 bash setup.sh -v 5
 
 **注**: 通常は最新版の使用を推奨します。特定バージョンの指定は、動作検証やトラブルシューティングが必要な場合のみ使用してください。
 
+## コマンドの自動承認について
+
+nabledge-5 が実行するコマンドのうち、`scripts/` 配下のスクリプト（`find-file.sh`、`read-file.sh` など）はインストール時に `.vscode/settings.json` へ自動承認ルールが設定されるため、確認プロンプトなしで実行されます。
+
+それ以外の汎用シェルコマンド（`find | xargs grep` など）は GitHub Copilot のデフォルトルールで承認が必要になる場合があります。nabledge-5 はすべての操作をスクリプト経由で実行するよう設計していますが、汎用コマンドが使われるケースも起こり得ます。その場合は `.vscode/settings.json` の `chat.tools.terminal.autoApprove` に同様のパターンを追加することをご検討ください。
+
 ## トラブルシューティング
 
 インストール時に問題が発生した場合は、以下を参照してください。
 
 - プロキシ環境・権限不足でインストールが失敗する場合：nablarch/nabledge#10
+
+### ワークフロー実行中に「The terminal is awaiting input」と表示される
+
+**症状**: ワークフロー実行中に VS Code のチャットパネルに以下のメッセージが表示される場合がある。
+
+> The terminal is awaiting input. Please provide the required input to the terminal.
+
+**原因**: VS Code の Copilot 拡張に含まれるターミナル出力監視（`chat-terminal-output-monitor`）がコマンドの完了を誤検知する既知の問題です。Nabledge 固有の問題ではありません（microsoft/vscode#309107）。
+
+**対処法**: 操作不要です。そのまま待てばワークフローは正常に完了します。メッセージが消えない場合は「Focus terminal」をクリックしてから Enter を押すと処理が続行します。

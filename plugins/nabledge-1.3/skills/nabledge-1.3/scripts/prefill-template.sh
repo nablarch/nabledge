@@ -20,7 +20,7 @@ Required arguments:
                               Paths are accepted but only basenames are used.
                               If multiple files found, directory path added to label for disambiguation.
   --knowledge-files <files>   Comma-separated knowledge file basenames (e.g., "universal-dao,web-application")
-                              Script searches in .claude/skills/nabledge-1.3/knowledge/ and includes all matches.
+                              Script searches in .claude/skills/nabledge-6/knowledge/ and includes all matches.
                               Extension (.json) is optional. Automatically converts to .md paths.
                               Paths are accepted but only basenames are used.
                               Official documentation URLs are extracted from knowledge JSON files.
@@ -108,7 +108,7 @@ else
 fi
 
 # Template file location
-TEMPLATE_FILE="$PROJECT_ROOT/.claude/skills/nabledge-1.3/assets/code-analysis-template.md"
+TEMPLATE_FILE="$PROJECT_ROOT/.claude/skills/nabledge-6/assets/code-analysis-template.md"
 
 # Validate template file exists and is readable
 if [[ ! -f "$TEMPLATE_FILE" ]]; then
@@ -216,7 +216,7 @@ for file in "${FILES[@]}"; do
     file="${file%.json}"
 
     # Search for files (returns all matches)
-    matches=$(search_files "$file" ".claude/skills/nabledge-1.3/knowledge" "knowledge")
+    matches=$(search_files "$file" ".claude/skills/nabledge-6/knowledge" "knowledge")
 
     # If file not found, skip (warning already printed)
     if [[ -z "$matches" ]]; then
@@ -232,8 +232,8 @@ for file in "${FILES[@]}"; do
         resolved_path=$(echo "$resolved_path" | sed 's|^\./||')
 
         # Convert knowledge JSON paths to docs MD paths
-        # Example: .claude/skills/nabledge-1.3/knowledge/features/X.json
-        #       → .claude/skills/nabledge-1.3/docs/features/X.md
+        # Example: .claude/skills/nabledge-6/knowledge/features/X.json
+        #       → .claude/skills/nabledge-6/docs/features/X.md
         doc_file="${resolved_path/\/knowledge\//\/docs\/}"
         doc_file="${doc_file/.json/.md}"
 
@@ -270,7 +270,7 @@ for file in "${FILES[@]}"; do
     file="${file%.json}"
 
     # Find the JSON file
-    json_path=$(find ".claude/skills/nabledge-1.3/knowledge" -type f -name "${file}.json" 2>/dev/null | head -1)
+    json_path=$(find ".claude/skills/nabledge-6/knowledge" -type f -name "${file}.json" 2>/dev/null | head -1)
 
     if [[ -n "$json_path" ]]; then
         # Extract official_doc_urls using jq (if jq is available)
@@ -307,10 +307,9 @@ trap 'rm -f "$TEMP_FILE" "$TEMP_FILE.tmp"' EXIT INT TERM
 
 cp "$TEMPLATE_FILE" "$TEMP_FILE"
 
-# Escape special characters for sed
-# Handles: & / \ [ ] * . ^ $ and newlines
+# Escape special characters for sed replacement (& and / only)
 escape_sed() {
-    echo "$1" | sed 's/[&/\[\]*.\^$]/\\&/g; s/\\/\\\\/g'
+    echo "$1" | sed 's/[\/&]/\\&/g'
 }
 
 TARGET_NAME_ESC=$(escape_sed "$TARGET_NAME")
@@ -364,9 +363,9 @@ echo "Pre-filled placeholders (9/17):"
 echo "  ✓ target_name: $TARGET_NAME"
 echo "  ✓ generation_date: $GENERATION_DATE"
 echo "  ✓ generation_time: $GENERATION_TIME"
+echo "  ✓ output_path: $OUTPUT_PATH"
 echo "  ✓ target_description: $TARGET_DESC"
 echo "  ✓ modules: $MODULES"
-echo "  ✓ output_path: $OUTPUT_PATH"
 echo "  ✓ source_files_links: $(echo "$SOURCE_FILES" | tr ',' '\n' | wc -l) files"
 echo "  ✓ knowledge_base_links: $(echo "$KNOWLEDGE_FILES" | tr ',' '\n' | wc -l) files"
 echo "  ✓ official_docs_links: $official_docs_count links"
