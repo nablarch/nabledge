@@ -1,0 +1,38 @@
+{
+  "id": "handlers-database-connection-management-handler",
+  "title": "データベース接続管理ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* データベースの接続先を設定する\n* アプリケーションで複数のデータベース接続（トランザクション）を使用する\n\n後続のハンドラ及びライブラリで使用するためのデータベース接続を、スレッド上で管理するハンドラ。\n\nデータベースアクセスの詳細は、 [データベースアクセス(JDBCラッパー)](../../component/libraries/libraries-database.md#database) を参照。\n\n> **Important:**\n> このハンドラを使用する場合は、 [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) をセットで設定すること。\n> トランザクション制御ハンドラが設定されていない場合、トランザクション制御が実施されないため後続で行ったデータベースへの変更は全て破棄される。\n\n本ハンドラでは、以下の処理を行う。\n\n* データベース接続の取得\n* データベース接続の解放\n\n処理の流れは以下のとおり。\n\n![DbConnectionManagementHandler_flow.png](assets/handlers-database-connection-management-handler/DbConnectionManagementHandler_flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.common.handler.DbConnectionManagementHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-jdbc</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-jdbc</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "なし。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "データベースの接続先を設定する",
+      "content": "このハンドラは、 connectionFactory\nプロパティに設定されたファクトリクラス( ConnectionFactory 実装クラス )を使用してデータベース接続を取得する。\n\n以下の設定ファイル例を参考にし、  connectionFactory\nプロパティにファクトリクラスを設定すること。\n\n```xml\n<!-- データベース接続管理ハンドラ -->\n<component class=\"nablarch.common.handler.DbConnectionManagementHandler\">\n  <property name=\"connectionFactory\" ref=\"connectionFactory\" />\n</component>\n\n<!-- データベース接続オブジェクトを取得するファクトリクラスの設定 -->\n<component name=\"connectionFactory\"\n    class=\"nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource\">\n  <!-- プロパティの設定は省略 -->\n</component>\n```\n\n> **Important:**\n> データベース接続オブジェクトを取得するためのファクトリクラスの詳細は、 [データベースに対する接続設定](../../component/libraries/libraries-database.md#database-connect) を参照。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "アプリケーションで複数のデータベース接続（トランザクション）を使用する",
+      "content": "1つのアプリケーションで複数のデータベース接続が必要となるケースが考えられる。\nこの場合は、このハンドラをハンドラキュー上に複数設定することで対応する。\n\nこのハンドラは、データベース接続オブジェクトをスレッド上で管理する際に、データベース接続名をつけて管理している。\nデータベース接続名は、スレッド内で一意とする必要がある。\n\nデータベース接続名は、このハンドラの connectionName プロパティに設定する。\nconnectionName への設定を省略した場合、その接続はデフォルトのデータベース接続となり簡易的に使用できる。\nこのため、最もよく使うデータベース接続をデフォルトとし、それ以外のデータベース接続に対して任意の名前をつけると良い。\n\n以下にデータベース接続名の設定例を示す。\n\n```xml\n<!-- データベース接続を取得するファクトリの設定は省略 -->\n\n<!-- デフォルトのデータベース接続を設定 -->\n<component class=\"nablarch.common.handler.DbConnectionManagementHandler\">\n  <property name=\"connectionFactory\" ref=\"connectionFactory\" />\n</component>\n\n<!-- userAccessLogという名前でデータベース接続を登録 -->\n<component class=\"nablarch.common.handler.DbConnectionManagementHandler\">\n  <property name=\"connectionFactory\" ref=\"userAccessLogConnectionFactory\" />\n  <property name=\"connectionName\" value=\"userAccessLog\" />\n</component>\n```\n\n上記のハンドラ設定の場合の、アプリケーションからのデータベースアクセス例を以下に示す。\nなお、データベースアクセス部品の詳細な使用方法は、 [データベースアクセス(JDBCラッパー)](../../component/libraries/libraries-database.md#database) を参照。\n\nデフォルトのデータベース接続を使用する\nDbConnection#getConnection 呼び出し時に引数を指定する必要が無い。\n引数を指定しないと、自動的にデフォルトのデータベース接続が戻される。\n\n```java\nAppDbConnection connection = DbConnectionContext.getConnection();\n```\nuserAccessLogデータベース接続を使用する\nDbConnection#getConnection(String) を使用し、引数にデータベース接続名を指定する。\nデータベース接続名は connectionName プロパティに設定した値と一致させる必要がある。\n\n```java\nAppDbConnection connection = DbConnectionContext.getConnection(\"userAccessLog\");\n```",
+      "level": 2
+    }
+  ]
+}

@@ -1,79 +1,104 @@
 {
   "id": "biz-samples-05",
   "title": "データベースを用いたファイル管理機能サンプル",
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/05/index.html"
-  ],
-  "index": [
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "概要",
-      "hints": [
-        "FileManagementUtil",
-        "DbFileManagement",
-        "FileManagement",
-        "ファイル管理",
-        "DBファイル管理",
-        "ファイルアップロード",
-        "ファイルダウンロード",
-        "バイナリ格納"
-      ]
+      "content": "業務アプリケーションにて使用するファイルを、DBで一元管理するための機能の実装サンプルを提供する。\n\n[ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-db-file-management)\n\n本サンプルは以下の用途を想定している。\n\n* 画面からのファイルアップロード・ダウンロード。\n* 比較的少数のファイルを扱うファイル転送の送信・受信。例えば、一度に送信/受信するファイルが、数十個程度。\n* 管理対象は、比較的小さなファイルを想定。例えば、証明写真のような小さな画像等。\n\n> **Tip:**\n> 本サンプルはDBとしてH2を使用している。H2以外を使用する場合は、各DBに合わせた実装に修正し使用すること。\n\n下記に例としてファイルアップロード・ダウンロード時の処理イメージを示す。",
+      "level": 2
     },
     {
       "id": "s2",
-      "title": "機能",
-      "hints": [
-        "ファイル登録機能",
-        "ファイル削除機能",
-        "論理削除",
-        "ファイル取得機能",
-        "ファイルサイズチェック",
-        "採番",
-        "FileManagementUtil",
-        "DbFileManagement"
-      ]
+      "title": "ファイルアップロード時",
+      "content": "ブラウザがファイルを送信した際、Nablarchのマルチパートリクエストハンドラはその内容を解析し一時ファイルに保存する。\n\nそのファイルを、本サンプルはバイナリ形式でDBに格納する。\n\n![DbFileManagement_outline01.png](assets/biz-samples-05/DbFileManagement_outline01.png)",
+      "level": 3
     },
     {
       "id": "s3",
-      "title": "構成",
-      "hints": [
-        "FileManagementUtil",
-        "FileManagement",
-        "DbFileManagement",
-        "FILE_CONTROL",
-        "FILE_CONTROL_ID",
-        "FILE_OBJECT",
-        "SAKUJO_SGN",
-        "クラス構成",
-        "テーブル定義",
-        "ファイル管理テーブル"
-      ]
+      "title": "ファイルダウンロード時",
+      "content": "ダウンロードタグのクリックにより、ファイルの要求があった場合、業務ActionクラスはStreamをStreamResponseに設定する必要がある。\n\nそのStreamを、本サンプルはDBから取得する。\n\n![DbFileManagement_outline02.png](assets/biz-samples-05/DbFileManagement_outline02.png)",
+      "level": 3
     },
     {
       "id": "s4",
+      "title": "機能",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "実装済み",
+      "content": "以下の機能を持つ。\n\n* ファイル登録機能\n\n  * ファイルのStreamを元に、ファイルをバイナリのカラムに格納する。格納時には、ユニークなファイル管理IDを採番(Nablarchの採番機能を使用)し、呼び出し元にファイル管理IDを返却する。\n  * ファイルサイズがカラムのサイズを超えないことをチェックする。\n* ファイルの削除機能\n\n  * ファイル管理IDを元にレコードの削除サイン書き換え、論理削除する。\n* ファイルの取得機能\n\n  * ファイル管理IDを元にファイル管理テーブルからファイルを取得し、返却する。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "前提としている仕様",
+      "content": "* 削除は論理削除する仕様である。運用時には、別途、論理削除状態のレコードのクリンナップについて検討する必要がある。\n* テーブル定義には、最小限のカラムしか存在しない。他に情報が必要な場合は、別途業務ごとにテーブルを作成することを想定している。\n* ファイル内容のチェックについて、ファイルサイズがカラムのサイズを超えないことのみチェックする。他にチェック項目が存在する場合は、呼び出し側でチェックを行うことを想定している。\n* ファイルの更新処理は存在しない。ファイルの更新処理相当の処理を行いたい場合は、ファイルの削除処理とファイルの登録処理を順に実行する想定となっている。",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "構成",
+      "content": "本サンプルの構成を示す。",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "クラス図",
+      "content": "![DbFileManagement_classdiagram.png](assets/biz-samples-05/DbFileManagement_classdiagram.png)",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "各クラスの責務",
+      "content": "",
+      "level": 4
+    },
+    {
+      "id": "s10",
+      "title": "クラス定義",
+      "content": "| クラス名 | 概要 |\n|---|---|\n| FileManagementUtil | DBへ格納したファイルを管理するユーティリティクラス。処理はFileManagementを実装するクラスに委譲する。 |\n| FileManagement | ファイル管理を行うクラスが実装するインターフェース。 |\n| DbFileManagement | DBへ格納したファイルを管理するクラスの本体。 |",
+      "level": 5
+    },
+    {
+      "id": "s11",
+      "title": "テーブル定義",
+      "content": "**ファイル管理テーブル(FILE_CONTROL)**\n\nファイル管理テーブルには、ファイル管理IDと共にファイルを格納する。\n\n| 論理名 | 物理名 | 定義 | 制約 | 補足 |\n|---|---|---|---|---|\n| ファイル管理ID | FILE_CONTROL_ID | 文字列 | 主キー | システムで採番した一意なID(Nablarchの採番機能で採番する) |\n| ファイル内容 | FILE_OBJECT | バイナリ |  |  |\n| 削除サイン | SAKUJO_SGN | 文字列 |  | ファイルを削除したか否かを判定するためのサイン  0:未削除  1:削除済 |\n\n> **Important:**\n> 採番にはシーケンスが必要になる。\n> 後述のコンポーネント設定ファイルで指定するfileIdKeyと同名のシーケンスを事前に作成しておくこと。",
+      "level": 5
+    },
+    {
+      "id": "s12",
       "title": "使用方法",
-      "hints": [
-        "FileManagementUtil",
-        "DbFileManagement",
-        "SequenceIdGenerator",
-        "LpadFormatter",
-        "maxFileSize",
-        "fileIdKey",
-        "idGenerator",
-        "idFormatter",
-        "StreamResponse",
-        "PartInfo",
-        "Blob",
-        "コンポーネント設定",
-        "ファイルアップロード実装",
-        "ファイルダウンロード実装"
-      ]
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s13",
+      "title": "FileManagementUtilの使用方法",
+      "content": "FileManagementUtilの使用方法について説明する。",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "FileManagementUtilの使用例(コンポーネント設定ファイル)",
+      "content": "FileManagementUtil使用時に必要となる各コンポーネントのプロパティを、コンポーネント設定ファイルに定義する。\n\n設定対象のコンポーネントを以下に示す。\n\n| 設定対象のコンポーネント | 設定例で使用している論理名 |\n|---|---|\n| ファイル管理機能本体 | fileManagement |\n| 採番機能 | sequenceIdGenerator |\n| 採番時に使用するフォーマッタ | dbFileManagementFormatter |\n\n設定例を以下に示す。\n\n```xml\n<!-- ファイル管理機能(論理名fileManagementのコンポーネントを、FileManagementUtilクラスが使用する) -->\n<component name=\"fileManagement\" class=\"please.change.me.common.file.management.DbFileManagement\">\n\n  <!-- 格納ファイルの最大長(単位：バイト) -->\n  <property name=\"maxFileSize\" value=\"10000000\"/>\n\n  <!-- 採番機能で、DbFileManagement用の採番である旨を識別するためのKey -->\n  <property name=\"fileIdKey\" value=\"FILE_CONTROL_SEQ\" />\n\n  <!-- 採番機能 -->\n  <property name=\"idGenerator\" ref=\"sequenceIdGenerator\" />\n\n  <!-- 採番時に使用するフォーマッタ -->\n  <property name=\"idFormatter\" ref=\"dbFileManagementFormatter\" />\n</component>\n\n<!-- 採番機能(ファイル管理機能から使用) -->\n<component name=\"sequenceIdGenerator\" class=\"nablarch.common.idgenerator.SequenceIdGenerator\" />\n\n<!-- 採番時に使用するフォーマッタ(ファイル管理機能から使用) -->\n<component name=\"dbFileManagementFormatter\" class=\"nablarch.common.idgenerator.formatter.LpadFormatter\">\n  <!-- 桁数 -->\n  <property name=\"length\" value=\"18\" />\n  <!-- 不足している桁を埋める文字 -->\n  <property name=\"paddingChar\" value=\"0\" />\n</component>\n```",
+      "level": 4
+    },
+    {
+      "id": "s15",
+      "title": "FileManagementUtilの使用例(ファイルアップロード時)",
+      "content": "ブラウザからアップロードされたファイルをDBに保存する場合を想定し、本サンプルの使用方法を解説する。\n\n```java\npublic void doSaveFile(HttpRequest req, ExecutionContext ctx) {\n    // 保存対象のパートを取得\n    PartInfo part = req.getPart(\"fileToSave\").get(0);\n\n    //必要であれば、このタイミングで業務個別のファイル精査を実施。\n\n    //DBにファイルを登録\n    String fileId = FileManagementUtil.save(part);\n\n    //以降、必要に応じてfileIdを使用した処理を行う。\n}\n```",
+      "level": 4
+    },
+    {
+      "id": "s16",
+      "title": "FileManagementUtilの使用例(ダウンロード時)",
+      "content": "ファイルをDBから取り出し、ブラウザにダウンロードさせる場合を想定し、本サンプルの使用方法を解説する。\n\n```java\npublic HttpResponse doTempFile(HttpRequest req, ExecutionContext ctx) {\n    //ダウンロードに使用するファイルID\n    String fileId = \"000000000000000001\";\n\n    // ファイルをDBから取得\n    Blob blob = FileManagementUtil.find(fileId);\n\n    // レスポンス情報を設定\n    StreamResponse res = new StreamResponse(blob);\n    res.setContentDisposition(\"temp.png\");\n    res.setContentType(\"image/png\");\n    return res;\n}\n```",
+      "level": 4
     }
-  ],
-  "sections": {
-    "s1": "DBを用いてファイルを一元管理するサンプル実装。[ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-db-file-management)\n\n想定用途:\n- 画面からのファイルアップロード・ダウンロード\n- 一度に送信/受信するファイルが数十個程度の比較的少数のファイル転送\n- 証明写真のような比較的小さなファイルの管理\n\n> **補足**: 本サンプルはDBとしてH2を使用。H2以外を使用する場合は各DBに合わせた実装に修正すること。\n\n**ファイルアップロード時の処理:**\n1. ブラウザからのファイル送信をNablarchのマルチパートリクエストハンドラが解析し一時ファイルに保存\n2. 本サンプルがファイルをバイナリ形式でDBに格納\n\n**ファイルダウンロード時の処理:**\n1. ダウンロードタグのクリックによりファイル要求\n2. 業務ActionクラスがStreamをStreamResponseに設定（本サンプルはStreamをDBから取得）",
-    "s2": "**実装済み機能:**\n\n- **ファイル登録機能**: ファイルのStreamをバイナリカラムに格納。Nablarchの採番機能でユニークなファイル管理IDを採番し、呼び出し元に返却する。ファイルサイズがカラムサイズを超えないことをチェック。\n- **ファイルの削除機能**: ファイル管理IDを元に削除サインを書き換えて論理削除。\n- **ファイルの取得機能**: ファイル管理IDを元にファイル管理テーブルからファイルを取得して返却。\n\n**前提としている仕様:**\n\n- 削除は論理削除のみ。運用時には論理削除状態のレコードのクリーンアップを別途検討すること。\n- テーブル定義には最小限のカラムのみ。追加情報が必要な場合は業務ごとに別テーブルを作成すること。\n- ファイル内容チェックはファイルサイズがカラムサイズを超えないことのみ。他のチェックは呼び出し側で行うこと。\n- ファイルの更新処理は存在しない。更新が必要な場合はファイルの削除処理とファイルの登録処理を順に実行すること。",
-    "s3": "**クラス構成:**\n\n| クラス名 | 概要 |\n|---|---|\n| `FileManagementUtil` | DBへ格納したファイルを管理するユーティリティクラス。処理はFileManagementを実装するクラスに委譲する。 |\n| `FileManagement` | ファイル管理を行うクラスが実装するインターフェース。 |\n| `DbFileManagement` | DBへ格納したファイルを管理するクラスの本体。 |\n\n**ファイル管理テーブル (FILE_CONTROL):**\n\n| 論理名 | 物理名 | 定義 | 制約 | 補足 |\n|---|---|---|---|---|\n| ファイル管理ID | FILE_CONTROL_ID | 文字列 | 主キー | システムで採番した一意なID（Nablarchの採番機能で採番） |\n| ファイル内容 | FILE_OBJECT | バイナリ | | |\n| 削除サイン | SAKUJO_SGN | 文字列 | | 0:未削除、1:削除済 |\n\n> **重要**: 採番にはシーケンスが必要。コンポーネント設定ファイルで指定する`fileIdKey`と同名のシーケンスを事前に作成すること。",
-    "s4": "**FileManagementUtilのコンポーネント設定:**\n\n| 設定対象コンポーネント | 論理名 |\n|---|---|\n| ファイル管理機能本体 | fileManagement |\n| 採番機能 | sequenceIdGenerator |\n| 採番時に使用するフォーマッタ | dbFileManagementFormatter |\n\n```xml\n<!-- ファイル管理機能(論理名fileManagementのコンポーネントを、FileManagementUtilクラスが使用する) -->\n<component name=\"fileManagement\" class=\"please.change.me.common.file.management.DbFileManagement\">\n  <!-- 格納ファイルの最大長(単位：バイト) -->\n  <property name=\"maxFileSize\" value=\"10000000\"/>\n  <!-- 採番機能で、DbFileManagement用の採番である旨を識別するためのKey -->\n  <property name=\"fileIdKey\" value=\"FILE_CONTROL_SEQ\" />\n  <property name=\"idGenerator\" ref=\"sequenceIdGenerator\" />\n  <property name=\"idFormatter\" ref=\"dbFileManagementFormatter\" />\n</component>\n\n<component name=\"sequenceIdGenerator\" class=\"nablarch.common.idgenerator.SequenceIdGenerator\" />\n\n<component name=\"dbFileManagementFormatter\" class=\"nablarch.common.idgenerator.formatter.LpadFormatter\">\n  <property name=\"length\" value=\"18\" />\n  <property name=\"paddingChar\" value=\"0\" />\n</component>\n```\n\n**ファイルアップロード時の使用例:**\n\n```java\npublic void doSaveFile(HttpRequest req, ExecutionContext ctx) {\n    // 保存対象のパートを取得\n    PartInfo part = req.getPart(\"fileToSave\").get(0);\n    \n    //必要であれば、このタイミングで業務個別のファイル精査を実施。\n    \n    //DBにファイルを登録\n    String fileId = FileManagementUtil.save(part);\n    \n    //以降、必要に応じてfileIdを使用した処理を行う。\n}\n```\n\n**ファイルダウンロード時の使用例:**\n\n```java\npublic HttpResponse doTempFile(HttpRequest req, ExecutionContext ctx) {\n    //ダウンロードに使用するファイルID\n    String fileId = \"000000000000000001\";\n    \n    // ファイルをDBから取得\n    Blob blob = FileManagementUtil.find(fileId);\n    \n    // レスポンス情報を設定\n    StreamResponse res = new StreamResponse(blob);\n    res.setContentDisposition(\"temp.png\");\n    res.setContentType(\"image/png\");\n    return res;\n}\n```"
-  }
+  ]
 }

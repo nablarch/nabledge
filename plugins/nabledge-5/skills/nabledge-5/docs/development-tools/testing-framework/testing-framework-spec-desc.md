@@ -1,0 +1,27 @@
+# 設計情報コメントウィジェット
+
+[設計情報コメントウィジェット](../../development-tools/testing-framework/testing-framework-spec-desc.md) は設計時情報としてソースコード中にコメントを残したい場合に
+使用するウィジェットである。
+
+この部品はローカル表示、サーバ表示、解説書の内容のいずれにも影響しない。
+
+> **Tip:**
+> 例外的に<spec:condition>で<c:if>による分岐を切り替える際に、
+> <spec:desc>タグの内容を参照する。
+
+> 詳細は [画面表示パターン定義ウィジェット](../../development-tools/testing-framework/testing-framework-spec-condition.md) を参照すること。
+
+## 仕様
+
+このタグの内容は、JSPプレビュー表示の内容には一切影響しない。
+また、設計書ビューの内容にも影響しない。
+
+## 内部構造・改修時の留意点
+
+サーバ表示で動作するタグファイル(desc.tag) は、JSPコンパイルを通すためのダミーである。
+
+**部品一覧**
+
+| パス | 内容 |
+|---|---|
+| /WEB-INF/tags/widget/spec/desc.tag | [設計情報コメントウィジェット](../../development-tools/testing-framework/testing-framework-spec-desc.md) のタグファイル |

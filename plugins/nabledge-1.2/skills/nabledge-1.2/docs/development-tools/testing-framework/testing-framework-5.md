@@ -1,22 +1,45 @@
 # Windows上で成功していた画面オンライン処理のリクエスト単体テストをLinux上で実行すると、IOExceptionが発生してテストが失敗してしまいます。対処方法を教えてください
 
-## Linux上でリクエスト単体テスト実行時にIOExceptionが発生する場合の対処方法
+> **question:**
+> Windows上では正常終了していたリクエスト単体テストをLinux上で実行すると異常終了します。
 
-Linuxでリクエスト単体テスト実行時に `java.io.IOException: File name too long` が発生する場合、「テストケースの説明」（`description` 列の文言）を短くすること。
+> スタックトレースを見ると、ファイル名が長すぎることが原因でIOExceptionが発生しているようなのですが、原因が分かりません。
 
-**原因**: 画面オンライン処理のリクエスト単体テストで出力されるHTMLダンプファイルのファイル名に「テストケースの説明」がそのまま含まれる仕様のため、OSのファイル名長上限を超えるとIOExceptionが発生する。
+> 対処方法を教えてください。
 
-**WindowsとLinuxのファイル名長さ上限の差異**:
-- Windows: 文字数（255文字）
-- Linux: バイト数（255バイト）
+> ```bash
+> エラーメッセージ
+> 
+> java.io.IOException: File name too long
+> 
+> スタックトレース
+> 
+> java.lang.RuntimeException: java.io.IOException: File name too long
+>     at nablarch.fw.web.HttpServer.dumpHttpMessage(HttpServer.java:549)
+>     at nablarch.fw.web.HttpServer.handle(HttpServer.java:438)
+>     at nablarch.test.core.http.HttpRequestTestSupport.execute(HttpRequestTestSupport.java:272)
+>     at nablarch.test.core.http.HttpRequestTestSupport.execute(HttpRequestTestSupport.java:146)
+>     at nablarch.test.core.http.AbstractHttpRequestTestTemplate.executeTestCase(AbstractHttpRequestTestTemplate.java:229)
+>     at nablarch.test.core.http.AbstractHttpRequestTestTemplate.execute(AbstractHttpRequestTestTemplate.java:169)
+>     at nablarch.test.core.http.AbstractHttpRequestTestTemplate.execute(AbstractHttpRequestTestTemplate.java:144)
+>     at nablarch.test.core.http.AbstractHttpRequestTestTemplate.execute(AbstractHttpRequestTestTemplate.java:120)
+>     at nablarch.sample.ss11AA.W11AA01ActionRequestTest.testRW11AA0101Normal(W11AA01ActionRequestTest.java:31)
+> Caused by: java.io.IOException: File name too long
+>     at java.io.UnixFileSystem.createFileExclusively(Native Method)
+>     at java.io.File.createNewFile(File.java:883)
+>     at nablarch.fw.web.HttpServer.dumpHttpMessage(HttpServer.java:522)
+> ```
 
-全角文字（マルチバイト文字）を含む「テストケースの説明」は、Windowsでは上限以内でもLinuxではバイト数換算で上限を超えることがある。
+> **answer:**
+> 「テストケースの説明」の長さを短くしてください。
 
-> **注意**: 旧バージョンのテスティングフレームワークでは `case` 列、新バージョンでは `description` 列が「テストケースの説明」に該当する。
+> 「テストケースの説明」とは、テストケース一覧の  description に記載した文言（※旧バージョンのテスティングフレームワークではテストケース一覧の case に記載した文言）のことを指します。
 
-<details>
-<summary>keywords</summary>
+> 画面オンライン処理のリクエスト単体テストで出力されるHTMLダンプファイルのファイル名には、
+> 「テストケースの説明」がそのまま含まれる仕様となっております。
+> このファイル名が、OSで規定されたファイル名の長さの上限を超えた場合、IOExceptionが発生するので、上限を超えないように「テストケースの説明」の長さを短くしてください。
 
-IOException, File name too long, HttpServer, HttpRequestTestSupport, AbstractHttpRequestTestTemplate, リクエスト単体テスト, HTMLダンプファイル, テストケースの説明, ファイル名長さ上限, Linux, 全角文字
+> 今回Linuxでのみテストが失敗したのは、WindowsとLinuxでファイル名の長さの上限が異なることが原因となっています。
 
-</details>
+> ファイル名の長さの上限は、Windowsは文字数(255文字)、Linuxはバイト数(255バイト)なので、
+> 「テストケースの説明」に全角文字(マルチバイト文字)が含まれる場合、Windowsでは上限を超えなくてもLinuxではファイル名の上限を超えることがあります。

@@ -1,0 +1,56 @@
+{
+  "id": "libraries-service-availability",
+  "title": "サービス提供可否チェック",
+  "content": "**目次**\n\n* 機能概要\n\n  * リクエスト単位でサービス提供可否をチェックできる\n* モジュール一覧\n* 使用方法\n\n  * サービス提供可否チェックを使うための設定\n  * サービス提供可否をチェックする\n  * サービス提供可否に応じて画面表示を制御する\n* 拡張例\n\nこの機能では、アプリケーションが提供する機能に対して、サービス提供可否をチェックする。\n\nこの機能を使うことで、以下のようなことが実現できる。\n\n* ウェブにおいて一部機能へのアクセスを遮断し、503エラーを返す。\n* 常駐バッチにおいて、空回り(処理せずに待機する状態)を行う。\n\n> **Important:**\n> 本機能は、アプリケーションの要件が合致する場合に限り、使用すること。\n> 本機能は、データベースを使用してサービス提供可否の状態を管理し、\n> リクエスト単位でサービス提供可否を設定する( [サービス提供可否チェックを使うための設定](../../component/libraries/libraries-service-availability.md#service-availability-settings) を参照)。\n> 例えば、ウェブの登録機能といった場合、初期表示/確認/戻る/登録といった複数リクエストで構成されるのが一般的である。\n> そのため、本機能は、細かくサービス提供可否を設定できる反面、非常に細かいデータ設計が必要となり、\n> 開発時の生産性低下やリリース後の運用負荷が高まる可能性がある。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "機能概要",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "リクエスト単位でサービス提供可否をチェックできる",
+      "content": "[サービス提供可否チェックハンドラ](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md#serviceavailabilitycheckhandler) をハンドラキューに設定することで、\nウェブでも常駐バッチでも、リクエスト単位でサービス提供可否をチェックできるようになる。\nこの機能は、ウェブや常駐バッチといった処理方式に依存しない。\n\n詳細は以下を参照。\n\n* [サービス提供可否チェックを使うための設定](../../component/libraries/libraries-service-availability.md#service-availability-settings)\n* [サービス提供可否をチェックする](../../component/libraries/libraries-service-availability.md#service-availability-check)\n* [サービス提供可否に応じて画面表示を制御する](../../component/libraries/libraries-service-availability.md#service-availability-view-control)",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth-jdbc</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "使用方法",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "サービス提供可否チェックを使うための設定",
+      "content": "この機能では、データベースを使用してサービス提供可否の状態を管理する。\nテーブルのレイアウトは以下となる。\n\n| リクエストID(PK) | リクエストを識別するための値。文字列型 |\n|---|---|\n| サービス提供可否状態 | 可の場合は\"1\"。文字列型。設定で値を変更できる。 |\n\nサービス提供可否チェックを使うためには、\nBasicServiceAvailability の定義をコンポーネント設定ファイルに追加する。\nコンポーネント名には **serviceAvailability** と指定する。\n\nまた初期化が必要なので、初期化対象のリストに設定する。\n\n```xml\n<component name=\"serviceAvailability\" class=\"nablarch.common.availability.BasicServiceAvailability\">\n  <!-- テーブル名 -->\n  <property name=\"tableName\" value=\"REQUEST\"/>\n  <!-- リクエストIDのカラム名 -->\n  <property name=\"requestTableRequestIdColumnName\" value=\"REQUEST_ID\"/>\n  <!-- サービス提供可否状態のカラム名 -->\n  <property name=\"requestTableServiceAvailableColumnName\" value=\"SERVICE_AVAILABLE\"/>\n  <!-- サービス提供可を示す値 -->\n  <property name=\"requestTableServiceAvailableOkStatus\" value=\"1\"/>\n  <!-- データベースアクセスに使用するトランザクションマネージャ -->\n  <property name=\"dbManager\" ref=\"serviceAvailabilityDbManager\"/>\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <!-- 他のコンポーネントは省略 -->\n      <component-ref name=\"serviceAvailability\" />\n    </list>\n  </property>\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "サービス提供可否をチェックする",
+      "content": "サービス提供可否チェックは、 ServiceAvailabilityUtil を使用する。",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "サービス提供可否に応じて画面表示を制御する",
+      "content": "サービス提供可否に応じてボタンやリンクの非表示(非活性)を制御したい場合は、カスタムタグを使用する。\n[認可チェック/サービス提供可否に応じてボタン/リンクの表示/非表示を切り替える](../../component/libraries/libraries-tag.md#tag-submit-display-control) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "拡張例",
+      "content": "なし。",
+      "level": 2
+    }
+  ]
+}

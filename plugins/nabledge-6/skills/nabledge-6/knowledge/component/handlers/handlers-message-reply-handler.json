@@ -1,0 +1,32 @@
+{
+  "id": "handlers-message-reply-handler",
+  "title": "電文応答制御ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* フレームワーク制御ヘッダの設定\n\n本ハンドラでは、後続ハンドラの処理結果である ResponseMessage オブジェクトの内容をもとに、\n応答電文を作成し接続先システムに返却(送信)する。\n\n本ハンドラでは、以下の処理を行う。\n\n* 応答電文の送信処理を行う\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-message-reply-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.messaging.handler.MessageReplyHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-messaging</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "[メッセージングコンテキスト管理ハンドラ](../../component/handlers/handlers-messaging-context-handler.md#messaging-context-handler) よりも後ろに設定すること\n本ハンドラは、応答電文を送信(メッセージキューへのプット)する。\nこのため、MQへの接続を確立する [メッセージングコンテキスト管理ハンドラ](../../component/handlers/handlers-messaging-context-handler.md#messaging-context-handler) より後ろに本ハンドラを設定する必要がある。\n[トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) との位置関係について\n[トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) との位置関係は、2相コミットを使用するか否かで変わる。\n\n2相コミットを使用する場合\nデータベースのトランザクションとメッセージキュー(Jakarta Messaging)のトランザクションを、トランザクションマネージャで纏めてコミットする。\nこのため、トランザクション制御前に応答電文を送信する必要があり、 [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) より後ろに本ハンドラを設定する必要がある。\n2相コミットを使用しない場合\n本ハンドラが応答を送信する前に業務処理の結果を確定させる必要がある。\nこのため、 [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) は、本ハンドラより後ろに設定する必要がある。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "フレームワーク制御ヘッダの設定",
+      "content": "応答電文内のフレームワーク制御ヘッダの定義を変更する場合には、プロジェクトで拡張したフレームワーク制御ヘッダの定義を設定する必要がある。\n設定しない場合は、デフォルトの StandardFwHeaderDefinition が使用される。\n\nフレームワーク制御ヘッダの詳細は、 [フレームワーク制御ヘッダ](../../component/libraries/libraries-mom-system-messaging.md#mom-system-messaging-fw-header) を参照。\n\n以下に設定例を示す。\n\n```xml\n<component class=\"nablarch.fw.messaging.handler.MessageReplyHandler\">\n  <!-- フレームワーク制御ヘッダの設定 -->\n  <property name=\"fwHeaderDefinition\">\n    <component class=\"sample.SampleFwHeaderDefinition\" />\n  </property>\n</component>\n```",
+      "level": 2
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "id": "releases-nablarch5-releasenote-別紙_データベースアクセス機能の変更内容",
+  "title": "■データベースアクセス機能の変更内容",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "設定追加",
+      "content": "No: 1\n変更点: 設定追加\n変更内容: RDBMSの差異を吸収するDialectクラスの設定が必須になりました。使用するDBに応じたDialectクラスを設定してください。\n対応内容: 使用しているDbConnectionFactoryのクラスに、Dialectクラスの設定を追加します。 DbConnectionFactoryのクラス BasicDbConnectionFactoryForDataSource BasicDbConnectionFactoryForJndi\n参照先: ■Dialect一覧 データベースアクセス(検索、更新、登録、削除)機能：データベース方言(Dialect)：Dialect一覧 ■Dialectの設定例 データベースアクセス(検索、更新、登録、削除)機能：データベース接続部品の構造：設定ファイル例(DataSourceを使用してデータベース接続を行う場合) データベースアクセス(検索、更新、登録、削除)機能：データベース接続部品の構造：設定ファイル例(JNDIを使用してデータベース接続を行う場合)"
+    },
+    {
+      "id": "s2",
+      "title": "設定削除",
+      "content": "No: 2\n変更点: 設定削除\n変更内容: Dialectクラスの追加に伴い、既存の設定内容のうち、Dialectクラスと重複する設定項目を削除しました。設定が残っていると、アプリケーションの起動時に、対象プロパティが存在しないためエラーとなります。削除された設定項目を設定ファイルから削除してください。\n対応内容: ResultSetから値を取得するための変換クラスの設定を削除します。 クラス BasicStatementFactory プロパティ resultSetConvertor ※プロジェクト独自のResultSetConvertorをバージョンアップ後も使い続けるためには、以下の修正をあわせて行う必要があります。 以下の手順を参考にし、対応を実施してください。 ①プロジェクト独自のDialect実装クラスの作成 プロジェクトで使用するデータベース製品に対応したDialectを継承したプロジェクト用のDialect実装を作成します。(Oracleの場合は、OracleDialectを継承します） ②getResultSetConvertorをOverrideし、プロジェクトで使用しているResultSetConvertorのインスタンスを返します。\n参照先: なし"
+    },
+    {
+      "id": "s3",
+      "title": "3",
+      "content": "No: 3\n対応内容: トランザクションタイムアウトと判定するSQLエラーコードの設定を削除します。 クラス JdbcTransactionFactory プロパティ transactionTimeoutErrorCodeList\n参照先: なし"
+    },
+    {
+      "id": "s4",
+      "title": "4",
+      "content": "No: 4\n対応内容: データベース接続チェックに使用するSQL文の設定を削除します。 クラス BasicDbAccessExceptionFactory プロパティ sql\n参照先: なし"
+    },
+    {
+      "id": "s5",
+      "title": "5",
+      "content": "No: 5\n対応内容: 一意制約違反のSQLState、一意制約違反のベンダー固有エラーコードの設定を削除します。 クラス BasicSqlStatementExceptionFactory プロパティ duplicateErrorSqlState duplicateErrorErrCode\n参照先: なし"
+    },
+    {
+      "id": "s6",
+      "title": "アーキテクト向け公開APIのインタフェース変更 ※データベースアクセス機能を拡張していない場合は対応不要です。",
+      "content": "No: 6\n変更点: アーキテクト向け公開APIのインタフェース変更 ※データベースアクセス機能を拡張していない場合は対応不要です。\n変更内容: Dialectをデータベースアクセス機能に横断的に適用するため、必要最小限の範囲で、アーキテクト向けに公開していたインタフェースを変更しました。 変更したインタフェースを実装している場合は、Nablarchが提供する基本実装クラスを参考に、修正してください。\n対応内容: 変更したインタフェース ConnectionFactory ConnectionFactorySupport StatementFactory SqlStatementExceptionFactory TransactionManagerConnection DbAccessExceptionFactory\n参照先: Javadocを参照しください。"
+    }
+  ],
+  "sheet_type": "P1",
+  "columns": [
+    "",
+    "",
+    "No",
+    "変更点",
+    "変更内容",
+    "対応内容",
+    "参照先"
+  ],
+  "data_rows": [
+    [
+      "",
+      "",
+      "1",
+      "設定追加",
+      "RDBMSの差異を吸収するDialectクラスの設定が必須になりました。使用するDBに応じたDialectクラスを設定してください。",
+      "使用しているDbConnectionFactoryのクラスに、Dialectクラスの設定を追加します。\n\nDbConnectionFactoryのクラス\n　BasicDbConnectionFactoryForDataSource\n　BasicDbConnectionFactoryForJndi",
+      "■Dialect一覧\nデータベースアクセス(検索、更新、登録、削除)機能：データベース方言(Dialect)：Dialect一覧\n\n■Dialectの設定例\nデータベースアクセス(検索、更新、登録、削除)機能：データベース接続部品の構造：設定ファイル例(DataSourceを使用してデータベース接続を行う場合)\n\nデータベースアクセス(検索、更新、登録、削除)機能：データベース接続部品の構造：設定ファイル例(JNDIを使用してデータベース接続を行う場合)"
+    ],
+    [
+      "",
+      "",
+      "2",
+      "設定削除",
+      "Dialectクラスの追加に伴い、既存の設定内容のうち、Dialectクラスと重複する設定項目を削除しました。設定が残っていると、アプリケーションの起動時に、対象プロパティが存在しないためエラーとなります。削除された設定項目を設定ファイルから削除してください。",
+      "ResultSetから値を取得するための変換クラスの設定を削除します。\n\nクラス\n　BasicStatementFactory\nプロパティ\n　resultSetConvertor\n\n\n※プロジェクト独自のResultSetConvertorをバージョンアップ後も使い続けるためには、以下の修正をあわせて行う必要があります。\n以下の手順を参考にし、対応を実施してください。\n\n①プロジェクト独自のDialect実装クラスの作成\n　プロジェクトで使用するデータベース製品に対応したDialectを継承したプロジェクト用のDialect実装を作成します。(Oracleの場合は、OracleDialectを継承します）\n\n②getResultSetConvertorをOverrideし、プロジェクトで使用しているResultSetConvertorのインスタンスを返します。",
+      "なし"
+    ],
+    [
+      "",
+      "",
+      "3",
+      "",
+      "",
+      "トランザクションタイムアウトと判定するSQLエラーコードの設定を削除します。\n\nクラス\n　JdbcTransactionFactory\nプロパティ\n　transactionTimeoutErrorCodeList",
+      "なし"
+    ],
+    [
+      "",
+      "",
+      "4",
+      "",
+      "",
+      "データベース接続チェックに使用するSQL文の設定を削除します。\n\nクラス\n　BasicDbAccessExceptionFactory\nプロパティ\n　sql",
+      "なし"
+    ],
+    [
+      "",
+      "",
+      "5",
+      "",
+      "",
+      "一意制約違反のSQLState、一意制約違反のベンダー固有エラーコードの設定を削除します。\n\nクラス\n　BasicSqlStatementExceptionFactory\nプロパティ\n　duplicateErrorSqlState\n　duplicateErrorErrCode",
+      "なし"
+    ],
+    [
+      "",
+      "",
+      "6",
+      "アーキテクト向け公開APIのインタフェース変更\n\n※データベースアクセス機能を拡張していない場合は対応不要です。",
+      "Dialectをデータベースアクセス機能に横断的に適用するため、必要最小限の範囲で、アーキテクト向けに公開していたインタフェースを変更しました。\n変更したインタフェースを実装している場合は、Nablarchが提供する基本実装クラスを参考に、修正してください。",
+      "変更したインタフェース\n　ConnectionFactory\n　ConnectionFactorySupport\n　StatementFactory\n　SqlStatementExceptionFactory\n　TransactionManagerConnection\n　DbAccessExceptionFactory",
+      "Javadocを参照しください。"
+    ]
+  ]
+}

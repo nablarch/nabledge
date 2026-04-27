@@ -156,6 +156,12 @@ for v in "${VERSIONS[@]}"; do
     # Create .claude/skills directory
     mkdir -p "$PROJECT_ROOT/.claude/skills"
 
+    # Remove previous installation to avoid leftover files from older versions
+    if [ -d "$PROJECT_ROOT/.claude/skills/nabledge-${v}" ]; then
+        echo "Removing existing nabledge-${v} installation..."
+        rm -rf "$PROJECT_ROOT/.claude/skills/nabledge-${v}"
+    fi
+
     # Copy skills/nabledge-{v} directory as-is
     echo "Installing nabledge-${v} skill..."
     cp -r "$TEMP_DIR/$REPO_NAME/$plugin_dir/skills/nabledge-${v}" "$PROJECT_ROOT/.claude/skills/"

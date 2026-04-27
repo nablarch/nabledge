@@ -1,0 +1,206 @@
+{
+  "id": "libraries-02-CodeManager",
+  "title": "コード管理",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "アプリケーションで使用するコード値、コード名称を管理する機能を提供する。\n\n本機能では、例えば性別区分(1:男性、2:女性)や年代区分(01:10歳未満、02:10代、03:20代、04:30代、05:40代以上)のようなコードの値(コード値)とその意味を表わす文字列(コード名称)を容易に扱うための機能を提供する。\n性別区分や年代区分といったコードの種別は、コードIDと呼ぶIDを設定し、コードID毎に別々に定義する。\n\nなお、一般にコードという名称には「商品コード」や「企業コード」といった、コード値に紐付く値が動的に変化する数多くのデータのキー値も含まれる。\nしかし本機能では、これらのコードは対象としない。これらのコードはアプリケーションでマスタ用のテーブルを作成し、対処する。\nまた、本機能を使用する場合、コードの名称を持つテーブルとコード値を持つテーブルにRDBMSの参照整合性制約を設定できない。\nこのような制約のチェックには [コード値の有効性をチェックするバリデーション](../../component/libraries/libraries-02-CodeManager.md#code-manager-validation) を使用すること。\n\n本機能は、あくまで先に示した性別区分や年代区分など、コードに含まれるコード値とコード名称の関係が静的なコードのみに使用すること。\n\n本機能は、リポジトリに登録して使用する。\nこのため、本機能に必要な初期化処理は [リポジトリ](../../component/libraries/libraries-02-Repository.md#repository) が実行する。\n\nアプリケーションプログラマは、本機能を画面表示に使用するコード名称の取得と、コード値の取得に使用する。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "国際化",
+      "content": "国際化対応が必要なアプリケーションでは、言語ごとに異なる名称が取得できる。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "パターン指定によるコード値の取得",
+      "content": "アプリケーションで使用するコード値のうち、一部のコード値のみを取得するパターン指定によるコード値の取得ができる。\nこの機能によって、コード値の入力チェックや特定のコード値のみを表示するコンボボックスを容易に作成できる。",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "高速なコードへのアクセス",
+      "content": "本機能では、コード値とコード名称を [静的データのキャッシュ](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache) の機能を使用してキャッシュする。\nこのため、データベース上に保持しているコード値のデータを何度もロードすることがなく、アプリケーションの動作を高速化できる。\n\nまた、 [静的データのキャッシュ](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache) の機能を使用しているため、\nキャッシュにデータをロードするタイミングを設定変更のみで変更できる。\nこの機能により、下記例のようにアプリケーションの特性に合わせてキャッシュにデータをロードするタイミングを選択できる。\n\nキャッシュをロードするタイミングの選択例\n\n| アプリケーションの種類 | キャッシュにデータをロードするタイミング |\n|---|---|\n| Web アプリケーション | 一括ロードを使用 ※アプリケーション起動中にほぼ全てのコードが使用されるため |\n| バッチアプリケーション | オンデマンドロードを使用 ※処理過程で全てのコードを使用しないため |\n\n> **Note:**\n> [概要](../../component/libraries/libraries-02-CodeManager.md#code-manager-abstract) で述べた通り、本機能は「コード値とコード名称の関係が静的なコード」を前提として設計、実装している。\n\n> この前提では、コード値の意味が変更された際には、アプリケーションにもなんらかの修正が必要となると想定されるため、\n> 本機能ではアプリケーションを再起動せずにコードのキャッシュをリロードすることが想定されていない。\n\n> しかし、 [静的データのキャッシュ](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache) にはキャッシュをリロードする機能が実装されており、実際にはキャッシュのリロードが可能である。\n> このリロードの使用は、プロジェクトの責任で行うこと。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "要求",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "実装済み",
+      "content": "* 国際化ができる。\n* コード値に対応するコード名称が取得できる。\n* 1つのコード値に対して、複数のコード名称が取得できる。\n* コードIDに対応するコード値を全て取得できる。\n* 文字列がコード値として妥当であるかチェックできる。\n* コードが使われるパターンに応じて、そのパターンで使用できるコードを取得する、パターン指定によるコード値の取得ができる。\n* コード値がパターンに含まれるかチェックできる。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "未検討",
+      "content": "* 外部システム用にコード変換できる。(自システムのコード値⇔外部システムのコード値ができる機能)\n* コード値の有効期限を管理できる。",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "構造",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s10",
+      "title": "クラス図",
+      "content": "![02_CodeManager_ClassDiagram.jpg](assets/libraries-02-CodeManager/02_CodeManager_ClassDiagram.jpg)",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "インタフェース定義",
+      "content": "| インタフェース名 | 概要 |\n|---|---|\n| nablarch.common.code.CodeManager | コードの値と名称を取り扱うインタフェース。 コード値、コード名称を取得するメソッドとコード値の存在チェックを行うメソッドを持つ。 |\n| nablarch.common.code.Code | 単一のコードデータ(コードIDに紐づくデータ)にアクセスするインタフェース。 |",
+      "level": 4
+    },
+    {
+      "id": "s12",
+      "title": "クラス定義",
+      "content": "| クラス名 | 概要 |\n|---|---|\n| nablarch.common.code.BasicCodeManager | コードの値と名称を取り扱うクラス。 |\n| nablarch.common.code.BasicCodeLoader | データベースからコードをロードするクラス。 |\n| nablarch.common.code.BasicCode | Codeの基本実装クラス。 BasicCodeLoaderの内部クラスとして実現する。 |\n| nablarch.common.code.CodeUtil | コードの値と名称の取り扱いに使用するユーティリティクラス。 |",
+      "level": 4
+    },
+    {
+      "id": "s13",
+      "title": "テーブル定義",
+      "content": "本機能では、コード値と名称のマスタはデータベースのテーブル上に持つ。\nデータベースのテーブルは、コードの値とパターンを持つコードパターンテーブルとコード名称を持つコード名称テーブルから成る。\nこれらテーブルのテーブル名およびカラム名には制約はなく、設定により任意の名称が使用できる。",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "コードパターンテーブルの定義",
+      "content": "| 定義 | Javaの型 | 制約 |\n|---|---|---|\n| コードID | java.lang.String | ユニークキー |\n| コード値 | java.lang.String | ユニークキー |\n| パターン  [1] | java.lang.String | パターンに含める場合 \"1\" 、含めない場合 \"0\" を設定する。 |\n\nパターンに使用するカラム名は任意に設定可能であり、プロジェクトで必要な数だけパターンを定義できる。\n複数のパターンを使用する場合、パターンの数だけ別々のカラム名でパターンカラムをテーブルに持たせることになる。",
+      "level": 4
+    },
+    {
+      "id": "s15",
+      "title": "コード名称テーブルの定義",
+      "content": "| 定義 | Javaの型 | 制約 |\n|---|---|---|\n| コードID | java.lang.String | ユニークキー |\n| コード値 | java.lang.String | ユニークキー |\n| 言語 | java.lang.String | ユニークキー |\n| ソート順 | java.lang.String |  |\n| 名称 | java.lang.String | コードの名称 |\n| 略称 | java.lang.String | コードの略称 |\n| オプション名称  [2] | java.lang.String | コードのオプション名称 |\n\nコードのオプション名称は、1つのコード値に対して複数持つことができる。\n1つのコード値に対して持つことのできるオプション名称の数は、任意に設定できる。\nまた、オプション名称を設定するカラムの名称も任意のカラム名が使用できる。",
+      "level": 4
+    },
+    {
+      "id": "s16",
+      "title": "テーブル定義の例",
+      "content": "以下にテーブル定義の例を示す。\n\nこの例では、1つのコードIDごとに取得できるパターンの数を3種類設定している。\nコード名称には、名称を NAME 、略称 を SHORT_NAME のカラムに持ち、さらにコード名称にコード値を含めた NAME_WITH_VALUE というオプション名称のカラムを持つ。\n\n![02_CodeManager_DatabaseDiagram.jpg](assets/libraries-02-CodeManager/02_CodeManager_DatabaseDiagram.jpg)",
+      "level": 4
+    },
+    {
+      "id": "s17",
+      "title": "コード値とコード名称のデータ",
+      "content": "以下にコード値とコード名称のデータ保持の例を示す。\n\n例えば、性別の区分(性別区分)を表すコードID \"0001\" のコードと、バッチの処理状態を表すコードID \"0002\" のコードを考える。\n\nこれら2つのコードを [テーブル定義の例](../../component/libraries/libraries-02-CodeManager.md#codemanager-tabledefinitionexample) で示したテーブルで保持する場合、下記のようにデータを作成する。\n\nCODE_PATTERN テーブルのデータ例\n\n| ID | VALUE | PATTERN1 | PATTERN2 | PATTERN3 |\n|---|---|---|---|---|\n| 0001 | 1 | 1 | 0 | 0 |\n| 0001 | 2 | 1 | 0 | 0 |\n| 0001 | 9 | 0 | 0 | 0 |\n| 0002 | 01 | 1 | 0 | 0 |\n| 0002 | 02 | 1 | 0 | 0 |\n| 0002 | 03 | 0 | 1 | 0 |\n| 0002 | 04 | 0 | 1 | 0 |\n| 0002 | 05 | 1 | 0 | 0 |\n\nCODE_NAME テーブルのデータ例\n\n| ID | VALUE | SORT_ORDER | LANG | NAME | SHORT_NAME | NAME_WITH_VALUE |\n|---|---|---|---|---|---|---|\n| 0001 | 1 | 1 | ja | 男性 | 男 | 1:男性 |\n| 0001 | 2 | 2 | ja | 女性 | 女 | 2:女性 |\n| 0001 | 9 | 3 | ja | 不明 | 不 | 9:不明 |\n| 0002 | 01 | 1 | ja | 初期状態 | 初期 |  |\n| 0002 | 02 | 2 | ja | 処理開始待ち | 待ち |  |\n| 0002 | 03 | 3 | ja | 処理実行中 | 実行 |  |\n| 0002 | 04 | 4 | ja | 処理実行完了 | 完了 |  |\n| 0002 | 05 | 5 | ja | 処理結果確認完了 | 確認 |  |\n| 0001 | 1 | 2 | en | Male | M | 1:Male |\n| 0001 | 2 | 1 | en | Female | F | 2:Female |\n| 0001 | 9 | 3 | en | Unknown | U | 9:Unknown |\n| 0002 | 01 | 1 | en | Initial State | Initial |  |\n| 0002 | 02 | 2 | en | Waiting For Batch Start | Waiting |  |\n| 0002 | 03 | 3 | en | Batch Running | Running |  |\n| 0002 | 04 | 4 | en | Batch Execute Completed Checked | Completed |  |\n| 0002 | 05 | 5 | en | Batch Result Checked | Checked |  |\n\n以降の実装例では、上記データがテーブルに入っていることを前提にして説明する。",
+      "level": 2
+    },
+    {
+      "id": "s18",
+      "title": "コード名称の取得",
+      "content": "コード名称は、CodeUtilのgetNameメソッドで取得できる。\n\n例えば [コード値とコード名称のデータ](../../component/libraries/libraries-02-CodeManager.md#codemanager-tabledataexample) で設定した性別区分に対応するコード名称を取得する場合、下記のように実装する。\n\n```java\n// 性別区分(コードID:0001)、コード値 \"1\"に対応する文字列を取得する。\n// ThreadContextに持つ言語によって、 \"男性\" または \"Male\" が取得できる。\nString maleDisplayName = CodeUtil.getName(\"0001\", \"1\");\n\n// 言語を指定して 性別区分(コードID:0001)のコード値 \"1\"に対応する文字列を取得する。\n// \"男性\" が取得できる。\nString japaneseMaleDisplayName = CodeUtil.getName(\"0001\", \"1\", Locale.JAPANESE);\n```\n\nコード名称を画面表示する際は、詳細画面では完全な名称、一覧画面では略称で表示することがある。\n\nこのように使用する箇所に応じてコード値の表示を変更するために、本機能では1つのコード値に対して複数のコード名称を持たせることができる。\nこれらのコード名称の別名を取得するため、 CodeUtil には getName 以外にコードの略称を取得するメソッドとコードのオプション名称を取得するメソッドを持つ。\nこれらメソッドの使用例を下記に示す。\n\n```java\n// コード略称を取得する。\n// ThreadContextに持つ言語によって、 \"男\" または \"M\" が取得できる。\nString shortMaleDisplayName = CodeUtil.getShortName(\"0001\", \"1\");\n\n// コードのオプション名称を取得する。\n// ThreadContextに持つ言語によって、 \"1:男性\" または \"1:Male\" が取得できる。\nString shortMaleDisplayName = CodeUtil.getOptionalName(\"0001\", \"1\", \"NAME_WITH_VALUE\");\n```\n\n名称を取得するメソッドの一覧は下記の通り。\n\n| メソッド名 | 説明 |\n|---|---|\n| getName | コード名称を取得する。 |\n| getShortName | コードの略称を取得する。 |\n| getOptionalName | コードのオプション名称を取得する。 取得するオプション名称のカラムは、このメソッドの第3引数で指定する。 |",
+      "level": 2
+    },
+    {
+      "id": "s19",
+      "title": "コード値の取得",
+      "content": "コードが取り得る全てのコード値は、CodeUtilの下記メソッドで取得できる。\n* getValues(String codeId)\n* getValues(String codeId, Locale locale)\n\n上記メソッドで取得したコード値の配列は、コード名称テーブルのソート順カラムとして設定したカラム(この例では SORT_ORDER カラム)\nの昇順でソートされた順序で取得できる。\nソート順をコード名称テーブルに持つため、例えば言語ごとのコード名称の表示名にあわせてソートを行うことができる。\nこの機能を使用することで、例えば国名を選択する場面で、日本語では「アメリカ」「カナダ」「日本」とアイウエオ順で表示し、\n英語では「Canada」「Japan」「United States」のようにアルファベット順に表示するという表示の変更ができる。\n\n例えば [コード値とコード名称のデータ](../../component/libraries/libraries-02-CodeManager.md#codemanager-tabledataexample) で設定した性別区分とバッチの処理状態を意味するコード値を取得する場合、下記のように実装する。\n\n```java\n// 性別区分(コードID:0001) に対応するコード値を全て取得する。\n// ThreadContextに持つ言語によって、{\"1\", \"2\", \"9\" } または {\"2\", \"1\", \"9\"} の文字列のリストが取得できる。\nList<String> genderCodeValues = CodeUtil.getValues(\"0001\");\n\n// バッチの処理状態(コードID:0002) に対応するコード値を全て取得する。\n// \"01\" 、 \"02\" 、 \"03\" 、 \"04\" 、 \"05\" の文字列のリストが取得できる。\nList<String> executionStateCodeValues = CodeUtil.getValues(\"0002\");\n```",
+      "level": 2
+    },
+    {
+      "id": "s20",
+      "title": "コード値の有効性チェック",
+      "content": "画面やバッチ処理におけるファイルからの入力では、コード値として有効であるかチェックする必要がある。\nこのようなチェックは CodeUtil の contains メソッドで行える。\n\n例えば [コード値とコード名称のデータ](../../component/libraries/libraries-02-CodeManager.md#codemanager-tabledataexample) で設定した性別区分として有効であるかチェックする場合、下記のようにコードが有効であるかチェックできる。\n\n```java\n// 性別区分(コードID:0001) のコード値として有効であるかどうかチェックする\n\n// 性別区分として、 \"1\" は有効であるため、true\nCodeUtil.contains(\"0001\", \"1\");\n\n// 性別区分として、 \"3\" は有効でないため、false\nCodeUtil.contains(\"0001\", \"3\");\n```",
+      "level": 2
+    },
+    {
+      "id": "s21",
+      "title": "コード値のパターン",
+      "content": "[コード値とコード名称のデータ](../../component/libraries/libraries-02-CodeManager.md#codemanager-tabledataexample) のデータの例で示した、コードID 0001 の性別区分のうち、コード値 \"9\" \n(不明)は外部システムから入力したデータに性別区分がなかった場合に使用する特殊なコード値を表わしている。\nこのコード値は、画面から入力してほしくない。\n\n本機能では、このようなケースのために、コード値の集合に「パターン」を設定し、パターンに含まれるコード値の集合のみを取得する機能を持つ。\n例えば上記の性別区分の例では、全てのコード値（1:男性、2:女性、9:不明） のうち、画面入力に使用するコード値のみを集めたパターン1(1:男性、2:女性) を用意している。\n\nパターンに含まれるコード値のみを取得するには、 CodeUtilの下記メソッドを使用する。\npattern引数には、使用するパターンのカラム名を指定する。\n\n* getValues(String codeId, String pattern)\n* getValues(String codeId, String pattern, Locale locale)\n\n下記に実装例を示す。\n\n```java\n// 性別区分(コードID:0001) のコード値のうち、 \"PATTERN1\" に対応するコード値を取得する。\n// ThreadContextに持つ言語によって、 {\"1\" , \"2\"} または {\"2\" , \"1\"} の文字列のリストが取得できる。\nList<String> executionStateCodeValues = CodeUtil.getValues(\"0001\", \"PATTERN1\");\n```\n\nまた、パターンに対して有効であるかチェックするために、containsメソッドにもパターンが指定できる。\n下記に例を示す。\n\n```java\n// 性別区分(コードID:0001) のコード値として有効であるかどうかチェックする\n\n// 性別区分のうち、 \"1\" は \"PATTERN1\" で有効であるため、 true が取得できる。\nCodeUtil.contains(\"0001\", \"1\", \"PATTERN1\");\n\n// 性別区分として、 \"3\" は \"PATTERN1\" で有効でないため、 false が取得できる。\nCodeUtil.contains(\"0001\", \"3\", \"PATTERN1\");\n```",
+      "level": 2
+    },
+    {
+      "id": "s22",
+      "title": "設定方法",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s23",
+      "title": "設定ファイル例",
+      "content": "コード管理を使用する際は、リポジトリに \"codeManager\" というコンポーネント名で CodeManager インタフェースを実装したクラスを登録する必要がある。\n\n以下に CodeManager インタフェースのデフォルト実装である、BasicCodeManagerクラスを使用した設定例を示す。\n\n```xml\n<!-- DbManagerの設定 -->\n<component name=\"codeDbManager\" class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">\n    <property name=\"dbTransactionName\" value=\"code\"/>\n</component>\n\n<component name=\"codeLoader\"\n           class=\"nablarch.common.code.BasicCodeLoader\">\n\n    <property name=\"dbManager\" ref=\"codeDbManager\"/>\n\n    <!-- コードパターンテーブルのスキーマ情報 -->\n    <property name=\"codePatternSchema\">\n        <component class=\"nablarch.common.code.schema.CodePatternSchema\">\n            <property name=\"tableName\" value=\"CODE_PATTERN\"/>\n            <property name=\"idColumnName\" value=\"ID\"/>\n            <property name=\"valueColumnName\" value=\"VALUE\"/>\n            <property name=\"patternColumnNames\" value=\"PATTERN1,PATTERN2,PATTERN3\"/>\n        </component>\n    </property>\n\n    <!-- コード名称テーブルのスキーマ情報 -->\n    <property name=\"codeNameSchema\">\n        <component class=\"nablarch.common.code.schema.CodeNameSchema\">\n            <property name=\"tableName\" value=\"CODE_NAME\"/>\n            <property name=\"idColumnName\" value=\"ID\"/>\n            <property name=\"valueColumnName\" value=\"VALUE\"/>\n            <property name=\"langColumnName\" value=\"LANG\"/>\n            <property name=\"sortOrderColumnName\" value=\"SORT_ORDER\"/>\n            <property name=\"nameColumnName\" value=\"NAME\"/>\n            <property name=\"shortNameColumnName\" value=\"SHORT_NAME\"/>\n            <property name=\"optionNameColumnNames\" value=\"NAME_WITH_VALUE,OPTION01\"/>\n        </component>\n    </property>\n</component>\n\n<component name=\"codeCache\"\n           class=\"nablarch.core.cache.BasicStaticDataCache\" >\n\n    <property name=\"loader\" ref=\"codeLoader\"/>\n\n    <property name=\"loadOnStartup\" value=\"false\"/>\n</component>\n\n<component name=\"codeManager\"\n    class=\"nablarch.common.code.BasicCodeManager\" autowireType=\"None\">\n    <property name=\"codeDefinitionCache\" ref=\"codeCache\"/>\n</component>\n\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n    <property name=\"initializeList\">\n        <list>\n            <component-ref name=\"codeCache\"/>\n        </list>\n    </property>\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s24",
+      "title": "設定内容詳細",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s25",
+      "title": "nablarch.common.code.BasicCodeManager の設定",
+      "content": "| property名 | 設定内容 |\n|---|---|\n| codeDefinitionCache(必須) | Code インタフェースを実装したクラスを保持する StaticDataCache を設定する。 |",
+      "level": 4
+    },
+    {
+      "id": "s26",
+      "title": "nablarch.core.cache.BasicStaticDataCache クラスの設定",
+      "content": "[静的データのキャッシュ](../../component/libraries/libraries-05-StaticDataCache.md) を参照。\n\n> **Warning:**\n> このプロパティに設定する StaticDataLoader は、 BasicCodeLoader クラスのように、 StaticDataLoader<Code> を実装すること。",
+      "level": 4
+    },
+    {
+      "id": "s27",
+      "title": "nablarch.common.code.BasicCodeLoader クラスの設定",
+      "content": "| property名 | 設定内容 |\n|---|---|\n| dbManager(必須) | コードのロード時に使用する SimpleDbTransactionManager クラスを指定する。 |\n| codePatternSchema(必須) | コードパターンテーブルのスキーマ情報。 CodePatternSchema クラスのインスタンス。 |\n| codeNameSchema(必須) | コード名称テーブルのスキーマ情報。 CodeNameSchema クラスのインスタンス。 |",
+      "level": 4
+    },
+    {
+      "id": "s28",
+      "title": "nablarch.common.code.schema.CodePatternSchema クラスの設定",
+      "content": "| property名 | 設定内容 |\n|---|---|\n| tableName(必須) | テーブル名。 |\n| idColumnName(必須) | コードIDカラムの名前。 |\n| valueColumnName(必須) | コード値カラムの名前。 |\n| patternColumnNames | パターンに使用するカラム名の文字列を配列で設定する。 パターン機能を使用する場合、設定必須。 |",
+      "level": 4
+    },
+    {
+      "id": "s29",
+      "title": "nablarch.common.code.schema.CodeNameSchema クラスの設定",
+      "content": "| property名 | 設定内容 |\n|---|---|\n| tableName(必須) | テーブル名。 |\n| idColumnName(必須) | コードIDカラムの名前。 |\n| valueColumnName(必須) | コード値カラムの名前。 |\n| langColumnName(必須) | 言語カラムの名前。 |\n| sortOrderColumnName(必須) | ソート順カラムの名前。 |\n| nameColumnName(必須) | 名称カラムの名前。 |\n| shortNameColumnName(必須) | 略称カラムの名前。 |\n| optionNameColumnNames | コードのオプション名称に使用するカラム名の文字列を配列で設定する。 指定しなかった場合、オプション名称が取得ができない。 |",
+      "level": 4
+    },
+    {
+      "id": "s30",
+      "title": "コード値の有効性をチェックするバリデーション",
+      "content": "性別区分等、データベース上に永続化するコード値は、通常の文字列による画面入力値と同様にバリデーションを行う必要がある。\n本機能では [バリデーションの機能](../../component/libraries/libraries-core-library-validation.md#validation) を使用して、コード値が有効であるか(つまり contains メソッドの戻り値が true であるか)をチェックする機能を持つ。",
+      "level": 2
+    },
+    {
+      "id": "s31",
+      "title": "エンティティの実装",
+      "content": "バリデーションは、通常のバリデーション同様にEntityのプロパティに対してアノテーションを付けることで実現できる。\n\n例えば、コードID \"0001\"、パターン \"PATTERN1\" に含まれる文字列のみを受けつけるプロパティ gender を持つエンティティは下記のように実装する。\npattern属性には、使用するパターンのカラム名を指定する。\n\n```java\npublic class Customer {\n\n    // その他のプロパティは省略\n    private String gender;\n\n    @PropertyName(\"性別\")\n    @CodeValue(codeId=\"0001\", pattern=\"PATTERN1\")\n    public String setGender(String gender) {\n        this.gender = gender;\n    }\n}\n```\n\n上記実装を行った上で、 [バリデーションの実行と入力値の変換](../../component/libraries/libraries-08-02-validation-usage.md#validation-and-convert) で記述した方法で ValidationUtil クラスの validateAndConvertRequest メソッドを呼び出すことで、 gender に \"1\",\n\"2\"以外の文字を設定した際のバリデーション結果はエラーになる。\n\nなお、上記例はパターンに含まれるかまでをチェックするバリデーションであるため、 @CodeValue アノテーションの pattern 属性を指定しているが、 pattern 属性の指定を省略することで、\nコード値として有効であるかのみチェックするバリデーションも実装できる。",
+      "level": 3
+    },
+    {
+      "id": "s32",
+      "title": "Validatorの設定",
+      "content": "@CodeValue アノテーションで指定されたコード値のチェックは、 CodeValueValidator クラス が行う。\n\nCodeValueValidator クラス は、 [バリデーションの設定](../../component/libraries/libraries-08-01-validation-architecture.md#validation-config) で記述した他のバリデータと同様に ValidationManager クラスの validators プロパティに追加することで使用できる。\n設定例を以下に示す。\n\n```xml\n<component name=\"validationManager\" class=\"nablarch.core.validation.ValidationManager\">\n    <property name=\"validators\" >\n        <list>\n            <!-- その他のバリデータ設定は省略。 -->\n            <component class=\"nablarch.common.code.validator.CodeValueValidator\">\n                <property name=\"messageId\" value=\"MSGXXXXX\"/>\n\n            </component>\n        </list>\n    </property>\n    <!-- その他のプロパティは省略。 -->\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s33",
+      "title": "設定内容詳細",
+      "content": "CodeValueValidator の設定値の意味は下記の通り。\n\n| property名 | 設定内容 |\n|---|---|\n| messageId(必須) | コード値のパターンに含まれない文字列が入力された場合のデフォルトのエラーメッセージのメッセージIDを設定する。 メッセージに使用できる置き換え文字は下記の通り。 * 0 : 設定するプロパティの名称 * 1 : 使用できるコード値の一覧 メッセージの例 : \"{0}には'{'{1}'}'のいずれかの値を指定してください。\" フォーマット後のメッセージの例 : \"性別には{\"01\" , \"02\"}のいずれかの値を指定してください。\"  ※本メッセージはコンボボックスで入力するコードをを改竄した場合と、テキストボックスでコード値を入力する場合 (コードの性質上、テキストで入力することは非常にまれである) という特殊なケースでのみ使用される。 メッセージはこの使用状況を考慮して設計すること。 |",
+      "level": 3
+    }
+  ]
+}

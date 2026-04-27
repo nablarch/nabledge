@@ -1,0 +1,38 @@
+{
+  "id": "web-application-08-complete",
+  "title": "完了画面の実装",
+  "content": "更新完了画面は、以下のステップで実装する。\n\n* 登録完了画面の表示\n\n  * Actionクラスの実装\n  * JSPの実装\n* DB更新処理実装\n\n  * Actionクラスの実装",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "登録完了画面の表示",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "Actionクラスの実装",
+      "content": "1. リクエスト単体テストコードの追加\n\n  登録画面初期表示の実装- [Actionクラスの作成](../../guide/web-application/web-application-06-initial-view.md#register-view-action) で作成した以下のテストクラスに対して完了画面表示リクエストのテスト実行メソッドを追加する。\n\n  | テストクラス名 | メソッド名 |\n  |---|---|\n  | W11AC02ActionRequestTest | void testRW11AC0204() |\n\n  ```java\n  // ～前略～\n  \n  @Test\n  public void testRW11AC0204() {\n      execute(\"testRW11AC0204\");\n  }\n  \n  // ～後略～\n  ```\n2. リクエスト単体テストデータシートの作成\n\n  登録画面初期表示の実装- [Actionクラスの作成](../../guide/web-application/web-application-06-initial-view.md#register-view-action) で作成したリクエスト単体テストデータシート(Excelファイル)に完了画面表示リクエスト用のシートを追加する。（ [リクエスト単体テストデータシートの書き方](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-testcases) ）\n\n  | ブック名 | シート名 |\n  |---|---|\n  | W11AC02ActionRequestTest.xlsx | setUpDb |\n\n  ![action_test_setupdb.png](assets/web-application-08-complete/action_test_setupdb.png)\n\n  | ブック名 | シート名 |\n  |---|---|\n  | W11AC02ActionRequestTest.xlsx | testRW11AC0204 |\n\n  ![action_test_complete.png](assets/web-application-08-complete/action_test_complete.png)\n3. リクエスト単体テスト実施\n\n  リクエスト単体テストを実施し、テストが失敗することを確認する。（Actionクラスにメソッドを追加していない為）\n4. Actionクラスの修正\n\n  登録画面初期表示の実装- [Actionクラスの作成](../../guide/web-application/web-application-06-initial-view.md#register-view-action) で作成したActionクラスに完了画面表示のメソッドを追加する。\n\n  | Actionクラス名 | メソッド名 |\n  |---|---|\n  | W11AC02Action | \"do\" ＋ RW11AC0204（完了画面表示のリクエストID） |\n\n  ```java\n  // ～前略～\n  \n  /**\n   * 登録内容をデータベースへ反映し、登録完了画面を表示する。\n   *\n   * @param req HTTPリクエスト\n   * @param ctx 実行時コンテキスト\n   * @return HTTPレスポンス\n   */\n  @OnError(type = ApplicationException.class, path = \"forward:///action/ss11AC/W11AC02Action/RW11AC0201\")\n  @OnDoubleSubmission(path = \"forward:///action/ss11AC/W11AC02Action/RW11AC0201\")\n  public HttpResponse doRW11AC0204(HttpRequest req, ExecutionContext ctx) {\n  \n      return new HttpResponse(\"/ss11AC/W11AC0203.jsp\");\n  }\n  \n  // ～後略～\n  ```\n5. リクエスト単体テスト実施\n\nリクエスト単体テストを実施し、Actionクラスまで処理が到達していることを確認する。\n\nコンソールログに以下の内容が出力されれば良い。\n\n* Actionクラスまで処理到達\n\n  ログ中の「@@@@ DISPATCHING CLASS @@@@」の次に「BEFORE ACTION」が出力されていれば、Actionまで処理が到達している。\n* JSPファイルNOT FOUND\n\n  ＜出力内容＞\n\n  ```none\n  ERROR: PWC6117: File \"C:\\tisdev\\workspace\\Nablarch_sample\\main\\web\\ss11AC\\W11AC0203.jsp\" not found\n  ```",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "JSPの実装",
+      "content": "1. JSPの作成\n\nJSPの実装については、登録画面初期表示の実装時と同じ手順のため、 [JSPの実装](../../guide/web-application/web-application-06-initial-view.md#register-view-jsp) を参照して行う。\n\n| コピー元 | コピー先 |\n|---|---|\n| main/web/W11AC0203.jsp | main/web/ss11AC/W11AC0203.jsp |\n\n1. 登録完了画面の表示確認\n\nリクエスト単体テストを実行し、登録完了画面が出力されることを確認する。\n\nただし、この時点では更新処理を実装していない為、DBの更新は行われていない。\n\n1. JSP静的チェックツールの実行\n\n[JSP静的解析ツール](../../development-tools/java-static-analysis/java-static-analysis-01-JspStaticAnalysis.md#jsp-static-analysis-tool) を実行し、該当ファイルに静的チェックエラーがないことを確認する。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "DB更新処理実装",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "Actionクラスの実装",
+      "content": "1. リクエスト単体テストデータシートの作成\n\n  登録完了画面の表示- [Actionクラスの実装](../../guide/web-application/web-application-08-complete.md#register-complete-action) で作成した以下のテストデータシートに対して、登録結果のデータを追加する。（ [リクエスト単体テストデータシートの書き方](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-testcases) ）\n\n  | ブック名 | シート名 |\n  |---|---|\n  | W11AC02ActionRequestTest.xlsx | testRW11AC0204 |\n\n  ![action_test_complete_register.png](assets/web-application-08-complete/action_test_complete_register.png)\n\n  > **Note:**\n> 更新結果の期待値では、漢字氏名、カナ氏名以外にも、登録ユーザID(INSERT_USER_ID)、登録日付(INSERT_DATE)、\n  > 更新ユーザID(REGISTER_USER_ID)と更新日付(UPDATE_DATE)も更新対象としている。\n\n  > **登録ユーザID・更新ユーザID**\n  > 事前準備データのUSER_ID欄に記載したユーザIDで更新される。\n  > **登録日付・更新日付**\n  > コンポーネント設定ファイルに記載された固定のシステム日付で更新される（実行タイミングによって日付が変わると検証ができない為、固定値を使用）。\n2. リクエスト単体テスト実施\n\n  リクエスト単体テストを実施し、テストが失敗することを確認する。（Actionクラスに登録処理を実装していない為）\n3. 登録処理の実装\n\n  登録確認画面に表示した内容をUsersテーブルに登録する処理をActionクラスに実装する。\n\n  なお、今回はチュートリアルであることと、非常に簡易なSQLでありリクエスト単体テストで十分にテスト可能であることから、\n  Componentクラスは作成していない。\n\n  ①ユーザテーブル登録用のSQL文の追加\n\n  | 格納ディレクトリ | SQLファイル名 |\n  |---|---|\n  | main/java/nablarch/sample/ss11AC | W11AC01Action.sql |\n\n  ＜登録SQL文＞\n\n  ```sql\n  -- ユーザテーブル更新SQL\n  REGISTER_USERS=\n  INSERT INTO\n      USERS (\n          USER_ID,\n          KANJI_NAME,\n          KANA_NAME,\n          INSERT_USER_ID,\n          INSERT_DATE,\n          UPDATED_USER_ID,\n          UPDATED_DATE\n      )\n      VALUES (\n          :userId,\n          :kanjiName,\n          :kanaName,\n          :insertUserId,\n          :insertDate,\n          :updatedUserId,\n          :updatedDate\n      )\n  ```\n\n  ②ActionクラスでSQL実行\n\n  | Actionクラス名 | メソッド名 |\n  |---|---|\n  | W11AC02Action | \"do\" ＋ RW11AC0204（完了画面表示のリクエストID） |\n\n  ①前画面より渡されるパラメータ(ユーザID、漢字氏名、カナ氏名）の単項目精査\n\n  ②①のパラメータを保持するFormの生成\n\n  ③ユーザIDを自動採番し、FormにユーザIDを設定\n\n  ④登録SQLの実行\n\n  ```java\n  // ～前略～\n  \n  /**\n   * 登録内容をデータベースへ反映し、登録完了画面を表示する。\n   *\n   * @param req HTTPリクエスト\n   * @param ctx 実行時コンテキスト\n   * @return HTTPレスポンス\n   */\n  @OnError(type = ApplicationException.class, path = \"forward:///action/ss11AC/W11AC02Action/RW11AC0201\")\n  @OnDoubleSubmission(path = \"forward:///action/ss11AC/W11AC02Action/RW11AC0201\")\n  public HttpResponse doRW11AC0204(HttpRequest req, ExecutionContext ctx) {\n  \n      // 【説明】①精査処理の呼び出し実装\n      // 【説明】②登録パラメータを持つFormを生成\n      W11AC02Form form = validateAndConvertForResister(req);\n  \n      UsersEntity users = form.getUser();\n      // 【説明】③ユーザIDを自動採番し、FormのユーザIDに設定。\n      users.setUserId(IdGeneratorUtil.generateUserId());\n      // 【説明】④登録実行\n      getParameterizedSqlStatement(\"REGISTER_USERS\").executeUpdateByObject(users);\n  \n      return new HttpResponse(\"/ss11AC/W11AC0203.jsp\");\n  }\n  \n  // ～後略～\n  ```\n\n  > **Note:**\n> @OnDoubleSubmissionを指定することで、\n  >  [二重サブミット](../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07/07_SubmitTag.html#prevent-double-submission)  を防ぐことができる。\n\n1. リクエスト単体テスト実施\n\n  リクエスト単体テストを実行し、登録結果のアサートが成功することを確認する。",
+      "level": 3
+    }
+  ]
+}

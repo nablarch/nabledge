@@ -1,86 +1,38 @@
 {
   "id": "workflow-SampleApplicationImplementation",
   "title": "ワークフローライブラリの基本的な使用方法",
-  "official_doc_urls": [],
-  "index": [
+  "content": "本章では、ワークフローライブラリの使用時に、あわせて業務データについても処理を行う必要がある場合について、\n基本的な使用方法を記載する。\n\n下記以外のAPIについては、「ワークフローライブラリ解説書」を参照すること。",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "ワークフローの開始",
-      "hints": [
-        "WorkflowManager",
-        "WorkflowInstance",
-        "startInstance",
-        "assignUser",
-        "assignGroup",
-        "getInstanceId",
-        "ワークフロー開始",
-        "インスタンスID格納",
-        "担当者割り当て"
-      ]
+      "content": "ワークフローは、 `WorkflowManager#startInstance` を呼び出すことで開始される。\n\nワークフローを開始するとワークフローインスタンスが返却されるので、\nそのワークフローインスタンスを使用して担当者やグループの割り当てを行う。\n\nこのとき、ワークフローインスタンスを一意に識別するID(インスタンスID)が採番されるので、\n以降のリクエストでもワークフローインスタンスを取得できるように業務データのテーブルにインスタンスIDを格納する。\n\n**実装例(CM111001Component.java)**\n\n以下は、ワークフローサンプルアプリケーションのワークフロー開始処理\n（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#trans-expence-appliance-definition) の①に対応）のコードである。\n\n```java\n/**\n * 交通費を申請する。<br/>\n * 申請IDは自動採番される。\n *\n * @param entity 登録する交通費申請情報を設定したEntity\n * @param confirmUserId 確認者ユーザID\n * @param authorizeUserId 承認者ユーザID\n * @return 採番した交通費申請ID\n */\npublic String applyTransExpense(TransExpeApplicationEntity entity, String confirmUserId, String authorizeUserId) {\n\n    // ワークフローを開始する。\n    WorkflowInstance workflow = WorkflowManager.startInstance(TRANS_EXPENSE_APPLICATION_WORKFLOW_ID);\n\n    // ワークフローの各タスクに、担当ユーザを割り当てる。\n    workflow.assignUser(CONFIRMATION_TASK, confirmUserId);\n    workflow.assignUser(AUTHORIZATION_TASK, authorizeUserId);\n    workflow.assignUser(REAPPLICATION_TASK, ThreadContext.getUserId());\n\n    // 申請登録\n    String applicationId = IdGeneratorUtil.generateTransExpeAppliId();\n    entity.setTransExpeAppliId(applicationId);\n    entity.setWfInstanceId(workflow.getInstanceId());\n    entity.setTransExpeAppliStatusCd(REGISTER_COMPLETE);\n    ParameterizedSqlPStatement statement = getParameterizedSqlStatement(\"REGISTER_TRANS_EXPENCE_APPLICATION\");\n    statement.executeUpdateByObject(entity);\n\n    // 履歴登録\n    TransExpeAppliHistoryEntity historyEntity = new TransExpeAppliHistoryEntity();\n    historyEntity.setTransExpeAppliId(applicationId);\n    historyEntity.setTransExpeAppliActionCd(REGISTER);\n    historyEntity.setTransExpeAppliResultCd(FORWARD_RESULT);\n    registerHistory(historyEntity);\n\n    return applicationId;\n}\n```",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "ワークフローの進行",
-      "hints": [
-        "WorkflowManager",
-        "WorkflowInstance",
-        "completeUserTask",
-        "completeGroupTask",
-        "findInstance",
-        "ワークフロー進行",
-        "XORゲートウェイ",
-        "フロー進行条件"
-      ]
+      "content": "ワークフローインスタンスに対して `WorkflowInstance#completeUserTask` 、\nまたは `WorkflowInstance#completeGroupTask` を呼び出すことでワークフローを進行させることができる。\n\nアプリケーションではワークフローの進行後に、処理履歴の追加や、業務データのステータスの更新を行う。\n\n> **Note:**\n> ワークフローの進行後にそのワークフローが完了する場合にも、特に追加の処理は必要ない。\n\n**実装例(CM111001Component.java)**\n\n以下は、交通費申請の確認タスクを承認タスクへ進行させる処理\n（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#trans-expence-appliance-definition) の②に対応）のコードである。\n\n確認タスク後のXORゲートウェイから承認タスクに進行させる必要があるので、 `completeUserTask` にパラメータを\n渡す必要がある。XORゲートウェイから承認タスクに進行するシーケンスフローのフロー進行条件には、\n`eq(condition,0)` が設定されているので、 `completeUserTask` のパラメータに `condition` として `FORWARD_CONDITION`\n（ `\"0\"` ）を設定している。\n\n> **Note:**\n> ワークフロー定義ファイルのフロー進行条件に設定されている値と、具体的なパラメータとの関連は\n> 「ワークフロー設計ガイド」を参照。\n\n確認タスクから承認タスクにワークフローが進行する際に、業務データについても合わせて以下の処理を行っている。\n\n* 業務データのステータスを「確認完了」に更新。\n* 処理履歴の追加\n\n```java\n/**\n * 確認タスクを承認タスクへ進める。\n *\n * @param applicationEntity 交通費申請情報を保持するEntity\n * @param historyEntity 交通費申請履歴情報を保持するEntity\n */\npublic void executeConfirmation(TransExpeApplicationEntity applicationEntity, TransExpeAppliHistoryEntity historyEntity) {\n\n    // アプリケーションデータを取得\n    SqlRow application = getApplication(applicationEntity.getTransExpeAppliId());\n\n    // ワークフローインスタンスを取得し、承認タスクに進行するようにパラメータを渡してタスクを完了する。\n    Map<String, Object> parameter = new HashMap<String, Object>();\n    parameter.put(\"condition\", FORWARD_CONDITION);\n    WorkflowManager.findInstance(application.getString(\"WF_INSTANCE_ID\")).completeUserTask(parameter);\n\n    // 業務データのステータスを更新\n    applicationEntity.setTransExpeAppliStatusCd(CONFIRM_COMPLETE);\n    updateApplicationStatus(applicationEntity);\n\n    // 処理履歴の追加\n    historyEntity.setTransExpeAppliActionCd(CONFIRM);\n    historyEntity.setTransExpeAppliResultCd(FORWARD_RESULT);\n    registerHistory(historyEntity);\n}\n```",
+      "level": 2
     },
     {
       "id": "s3",
       "title": "境界イベントの実行",
-      "hints": [
-        "WorkflowManager",
-        "WorkflowInstance",
-        "triggerEvent",
-        "findInstance",
-        "境界イベント",
-        "引き戻し"
-      ]
+      "content": "境界イベントは、ワークフローインスタンスに対して `WorkflowInstance#triggerEvent` を呼び出すことで実行される。\n呼び出すAPI以外は、前述のワークフローの進行と同様である。\n\n**実装例(CM111001Component.java)**\n\n以下は、ワークフローサンプルアプリケーションの境界イベント\n（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#trans-expence-appliance-definition) の③に対応）を実行するコードである。\n\n```java\n/**\n * 確認タスクを引戻す。\n *\n * @param applicationEntity 交通費申請情報を保持するEntity\n * @param historyEntity 交通費申請履歴情報を保持するEntity\n */\npublic void cancelConfirmation(TransExpeApplicationEntity applicationEntity, TransExpeAppliHistoryEntity historyEntity) {\n\n    SqlRow application = getApplication(applicationEntity.getTransExpeAppliId());\n\n    // 境界イベントを実行する。\n    WorkflowManager.findInstance(application.getString(\"WF_INSTANCE_ID\")).triggerEvent(CANCEL_TRIGGER);\n\n    // ワークアイテムの更新\n    applicationEntity.setTransExpeAppliStatusCd(CONFIRM_CANCEL);\n    updateApplicationStatus(applicationEntity);\n\n    // 履歴情報の登録\n    historyEntity.setTransExpeAppliActionCd(CANCEL);\n    historyEntity.setTransExpeAppliResultCd(FORWARD_RESULT);\n    registerHistory(historyEntity);\n}\n```",
+      "level": 2
     },
     {
       "id": "s4",
       "title": "ワークフローの検索",
-      "hints": [
-        "WF_ACTIVE_USER_TASK",
-        "WF_ACTIVE_GROUP_TASK",
-        "ワークフロー検索",
-        "アクティブタスク検索",
-        "UNION ALL",
-        "INNER JOIN",
-        "WF_INSTANCE_ID"
-      ]
+      "content": "ワークフローの検索処理では、通常の業務アプリケーションと同様に、\nアクティブユーザタスクテーブルなどのワークフローライブラリが利用するテーブルに対して検索処理を実装する。\n\n**実装例(CM211AB1Component.sql)**\n\n以下は、承認情報の一覧検索を行うコードである。\n\n```sql\n-- 進行可能申請一覧検索用SQL\n-- 各ワークアイテムを、ユーザまたはグループが割り当てられているアクティブタスクで絞りこんでから結合する。\nSELECT_ACTIVE_APPLICATION_BY_CONDITION=\nWITH\n    ACTIVE_TASK AS\n    (\n    SELECT    -- アクティブユーザタスク\n        WF_ACTIVE_USER_TASK.INSTANCE_ID,\n        WF_ACTIVE_USER_TASK.FLOW_NODE_ID\n    FROM\n        WF_ACTIVE_USER_TASK\n    WHERE\n        WF_ACTIVE_USER_TASK.ASSIGNED_USER_ID = :loginUserId\n    UNION ALL\n    SELECT    -- アクティブグループタスク\n        WF_ACTIVE_GROUP_TASK.INSTANCE_ID,\n        WF_ACTIVE_GROUP_TASK.FLOW_NODE_ID\n    FROM\n        WF_ACTIVE_GROUP_TASK\n    WHERE\n        WF_ACTIVE_GROUP_TASK.ASSIGNED_GROUP_ID = :ugroupId\n    )\nSELECT\n    WORK_ITEM.BUSINESS_TYPE,\n    WORK_ITEM.APPLICATION_ID,\n    WORK_ITEM.APPLICATION_DATE,\n    USERS.KANJI_NAME APPLICATION_USER_NAME,\n    WORK_ITEM.STATUS_CD\nFROM\n    (\n    SELECT  -- 交通費申請\n        TRANS_EXPE_APPLICATION.WF_INSTANCE_ID,\n        '2' BUSINESS_TYPE,\n        TRANS_EXPE_APPLICATION.TRANS_EXPE_APPLI_ID APPLICATION_ID,\n        TRANS_EXPE_APPLICATION.INSERT_DATE_TIME APPLICATION_DATE,\n        TRANS_EXPE_APPLICATION.INSERT_USER_ID APPLICATION_USER_ID,\n        TRANS_EXPE_APPLICATION.TRANS_EXPE_APPLI_STATUS_CD STATUS_CD\n    FROM\n        TRANS_EXPE_APPLICATION\n    INNER JOIN\n        ACTIVE_TASK\n    ON\n        TRANS_EXPE_APPLICATION.WF_INSTANCE_ID = ACTIVE_TASK.INSTANCE_ID\n    UNION ALL\n    SELECT  -- ローン申請\n        LOAN_APPLICATION.WF_INSTANCE_ID,\n        '1',\n        LOAN_APPLICATION.LOAN_APPLI_ID,\n        LOAN_APPLICATION.INSERT_DATE_TIME,\n        LOAN_APPLICATION.INSERT_USER_ID,\n        LOAN_APPLICATION.LOAN_APPLI_STATUS_CD\n    FROM\n        LOAN_APPLICATION\n    INNER JOIN\n        ACTIVE_TASK\n    ON\n        LOAN_APPLICATION.WF_INSTANCE_ID = ACTIVE_TASK.INSTANCE_ID\n    ) WORK_ITEM\nINNER JOIN\n    USERS\nON\n    WORK_ITEM.APPLICATION_USER_ID = USERS.USER_ID\nWHERE\n    $if(businessType) {WORK_ITEM.BUSINESS_TYPE = :businessType}\n    AND $if(applicationUserId) {WORK_ITEM.APPLICATION_USER_ID = :applicationUserId}\nORDER BY\n    WORK_ITEM.APPLICATION_DATE\n```",
+      "level": 2
     },
     {
       "id": "s5",
       "title": "排他制御についての注意事項",
-      "hints": [
-        "WorkflowInstance",
-        "completeUserTask",
-        "completeGroupTask",
-        "triggerEvent",
-        "assignUser",
-        "assignGroup",
-        "changeAssignedUser",
-        "changeAssignedGroup",
-        "HttpExclusiveControlUtil",
-        "OptimisticLockException",
-        "排他制御",
-        "ワークフロー排他制御"
-      ]
+      "content": "ワークフローを進行する場合など、ワークフローインスタンスの状態を変更する場合には、 **必ず**\n業務データで排他制御を行う必要がある。\n\n例えば、以下のようなAPIを使用する場合には、業務データで排他制御を行わなくてはならない。\n\n* ワークフローの進行(`WorkflowInstance#completeUserTask`, `WorkflowInstance#completeGroupTask`)\n* 境界イベントによるワークフローの進行(`WorkflowInstance#triggerEvent`)\n* ユーザ/グループの割り当て(`WorkflowInstance#assignUser`, `WorkflowInstance#assignGroup`, ...)\n* 割り当て済みユーザ/グループの変更(`WorkflowInstance#changeAssignedUser`, `WorkflowInstance#changeAssignedGroup`)\n\n**実装例**\n\n排他制御処理の実装方法は、通常の画面オンライン処理と同じである。\n\n以下は、ワークフローサンプルアプリケーションの交通費申請承認画面の表示処理を行うコードと、\n交通費申請の承認タスクを完了する処理を行うコードである。\n\n交通費申請承認画面の表示（W11AD02Action.java）\n\n```java\n/**\n * 交通費申請承認画面を表示する。<br/>\n * （交通費承認一覧画面からの遷移）\n *\n * @param request リクエストコンテキスト\n * @param context HTTPリクエストの処理に関連するサーバ側の情報\n * @return HTTPレスポンス\n */\n@OnError(type = ApplicationException.class, path = \"forward:///action/ss11AB/W11AB01Action/RW11AB0102\")\npublic HttpResponse doRW11AD0201(HttpRequest request, ExecutionContext context) {\n\n    // ワークアイテムのキーを取得\n    W11AD02Form form = W11AD02Form.validate(\"W11AD02\", request, \"initial\");\n    String applicationId = form.getApplicationId();\n\n    // 排他制御開始\n    HttpExclusiveControlUtil.prepareVersion(context,\n            new ExclusiveCtrlTransExpeApplicationContext(applicationId));\n\n    // 後略\n}\n```\n\n承認タスクの完了処理（W11AD02Action.java）\n\n```java\n/**\n * 交通費申請の承認タスクを完了する。\n *\n * @param request リクエストコンテキスト\n * @param context HTTPリクエストの処理に関連するサーバ側の情報\n * @return HTTPレスポンス\n */\n@OnErrors({\n    @OnError(type = OptimisticLockException.class,\n             path = \"forward:///action/ss11AB/W11AB01Action/RW11AB0102\"),\n    @OnError(type = ApplicationException.class,\n             path = \"forward:///action/ss11AD/W11AD02Action/RW11AD0210\")\n})\npublic HttpResponse doRW11AD0205(HttpRequest request, ExecutionContext context) {\n\n    // 排他制御\n    HttpExclusiveControlUtil.updateVersionsWithCheck(request);\n\n    W11AD02Form form = W11AD02Form.validate(\"W11AD02\", request, \"authorize\");\n\n    // ワークフローの進行、業務処理の実施\n    CM111001Component component = new CM111001Component();\n    component.executeAuthorization(form.getApplicationEntity(), form.getHistoryEntity());\n\n    // 後略\n}\n```",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "`WorkflowManager#startInstance(workflowId)` を呼び出してワークフローを開始する。返された `WorkflowInstance` を使って各タスクへの担当者/グループ割り当てを行う。\n\n> **注意**: ワークフロー開始時に採番されるインスタンスIDは、以降のリクエストでワークフローインスタンスを取得できるよう、業務データのテーブルに格納すること。\n\n**クラス**: `WorkflowManager`, `WorkflowInstance`\n\n```java\n// ワークフローを開始する\nWorkflowInstance workflow = WorkflowManager.startInstance(TRANS_EXPENSE_APPLICATION_WORKFLOW_ID);\n\n// 各タスクに担当ユーザを割り当てる\nworkflow.assignUser(CONFIRMATION_TASK, confirmUserId);\nworkflow.assignUser(AUTHORIZATION_TASK, authorizeUserId);\nworkflow.assignUser(REAPPLICATION_TASK, ThreadContext.getUserId());\n\n// 業務データにインスタンスIDを格納する\nentity.setWfInstanceId(workflow.getInstanceId());\n```",
-    "s2": "`WorkflowInstance#completeUserTask` または `WorkflowInstance#completeGroupTask` を呼び出してワークフローを進行させる。進行後に処理履歴の追加や業務データのステータス更新を行う。\n\n> **注意**: ワークフロー進行後にそのワークフローが完了する場合にも、追加の処理は不要。\n\nXORゲートウェイを通過する場合は `completeUserTask` に `Map<String, Object>` 型のパラメータを渡す必要がある。パラメータのキーと値はワークフロー定義ファイルのフロー進行条件に対応させる。\n\n**クラス**: `WorkflowManager`, `WorkflowInstance`\n\n```java\n// ワークフローインスタンスを取得し、パラメータを渡してタスクを完了する\nMap<String, Object> parameter = new HashMap<String, Object>();\nparameter.put(\"condition\", FORWARD_CONDITION);\nWorkflowManager.findInstance(application.getString(\"WF_INSTANCE_ID\")).completeUserTask(parameter);\n\n// 業務データのステータスを更新\napplicationEntity.setTransExpeAppliStatusCd(CONFIRM_COMPLETE);\nupdateApplicationStatus(applicationEntity);\n\n// 処理履歴の追加\nhistoryEntity.setTransExpeAppliActionCd(CONFIRM);\nhistoryEntity.setTransExpeAppliResultCd(FORWARD_RESULT);\nregisterHistory(historyEntity);\n```",
-    "s3": "`WorkflowInstance#triggerEvent(triggerId)` を呼び出すことで境界イベントを実行する。呼び出すAPI以外は「ワークフローの進行」セクションと同様。\n\n**クラス**: `WorkflowManager`, `WorkflowInstance`\n\n```java\n// 境界イベントを実行する\nWorkflowManager.findInstance(application.getString(\"WF_INSTANCE_ID\")).triggerEvent(CANCEL_TRIGGER);\n\n// ワークアイテムの更新\napplicationEntity.setTransExpeAppliStatusCd(CONFIRM_CANCEL);\nupdateApplicationStatus(applicationEntity);\n\n// 履歴情報の登録\nhistoryEntity.setTransExpeAppliActionCd(CANCEL);\nhistoryEntity.setTransExpeAppliResultCd(FORWARD_RESULT);\nregisterHistory(historyEntity);\n```",
-    "s4": "ワークフローの検索は、`WF_ACTIVE_USER_TASK`（ユーザ割り当て済みアクティブタスク）や `WF_ACTIVE_GROUP_TASK`（グループ割り当て済みアクティブタスク）テーブルに対して通常のSQL検索を実装する。業務テーブルとアクティブタスクを `WF_INSTANCE_ID = ACTIVE_TASK.INSTANCE_ID` で INNER JOIN することで、アクティブなワークフロータスクに絞り込む。\n\n```sql\n-- 進行可能申請一覧検索用SQL\nWITH\n    ACTIVE_TASK AS\n    (\n    SELECT  -- アクティブユーザタスク\n        WF_ACTIVE_USER_TASK.INSTANCE_ID,\n        WF_ACTIVE_USER_TASK.FLOW_NODE_ID\n    FROM WF_ACTIVE_USER_TASK\n    WHERE WF_ACTIVE_USER_TASK.ASSIGNED_USER_ID = :loginUserId\n    UNION ALL\n    SELECT  -- アクティブグループタスク\n        WF_ACTIVE_GROUP_TASK.INSTANCE_ID,\n        WF_ACTIVE_GROUP_TASK.FLOW_NODE_ID\n    FROM WF_ACTIVE_GROUP_TASK\n    WHERE WF_ACTIVE_GROUP_TASK.ASSIGNED_GROUP_ID = :ugroupId\n    )\nSELECT\n    WORK_ITEM.BUSINESS_TYPE,\n    WORK_ITEM.APPLICATION_ID,\n    WORK_ITEM.APPLICATION_DATE,\n    USERS.KANJI_NAME APPLICATION_USER_NAME,\n    WORK_ITEM.STATUS_CD\nFROM\n    (\n    SELECT  -- 交通費申請\n        TRANS_EXPE_APPLICATION.WF_INSTANCE_ID,\n        '2' BUSINESS_TYPE,\n        TRANS_EXPE_APPLICATION.TRANS_EXPE_APPLI_ID APPLICATION_ID,\n        TRANS_EXPE_APPLICATION.INSERT_DATE_TIME APPLICATION_DATE,\n        TRANS_EXPE_APPLICATION.INSERT_USER_ID APPLICATION_USER_ID,\n        TRANS_EXPE_APPLICATION.TRANS_EXPE_APPLI_STATUS_CD STATUS_CD\n    FROM\n        TRANS_EXPE_APPLICATION\n    INNER JOIN\n        ACTIVE_TASK\n    ON\n        TRANS_EXPE_APPLICATION.WF_INSTANCE_ID = ACTIVE_TASK.INSTANCE_ID\n    UNION ALL\n    SELECT  -- ローン申請\n        LOAN_APPLICATION.WF_INSTANCE_ID,\n        '1',\n        LOAN_APPLICATION.LOAN_APPLI_ID,\n        LOAN_APPLICATION.INSERT_DATE_TIME,\n        LOAN_APPLICATION.INSERT_USER_ID,\n        LOAN_APPLICATION.LOAN_APPLI_STATUS_CD\n    FROM\n        LOAN_APPLICATION\n    INNER JOIN\n        ACTIVE_TASK\n    ON\n        LOAN_APPLICATION.WF_INSTANCE_ID = ACTIVE_TASK.INSTANCE_ID\n    ) WORK_ITEM\nINNER JOIN USERS ON WORK_ITEM.APPLICATION_USER_ID = USERS.USER_ID\nWHERE\n    $if(businessType) {WORK_ITEM.BUSINESS_TYPE = :businessType}\n    AND $if(applicationUserId) {WORK_ITEM.APPLICATION_USER_ID = :applicationUserId}\n```",
-    "s5": "> **重要**: ワークフローインスタンスの状態を変更する場合には、**必ず**業務データで排他制御を行う必要がある。\n\n排他制御が必要なAPI:\n- ワークフローの進行: `WorkflowInstance#completeUserTask`, `WorkflowInstance#completeGroupTask`\n- 境界イベントによる進行: `WorkflowInstance#triggerEvent`\n- ユーザ/グループの割り当て: `WorkflowInstance#assignUser`, `WorkflowInstance#assignGroup`\n- 割り当て済みの変更: `WorkflowInstance#changeAssignedUser`, `WorkflowInstance#changeAssignedGroup`\n\n排他制御の実装方法は通常の画面オンライン処理と同じ。\n\n**クラス**: `HttpExclusiveControlUtil`\n\n画面表示時（排他制御開始）:\n```java\n// 排他制御開始\nHttpExclusiveControlUtil.prepareVersion(context,\n        new ExclusiveCtrlTransExpeApplicationContext(applicationId));\n```\n\n処理実行時（排他チェック）:\n```java\n// 排他制御チェック（OptimisticLockException が発生した場合は @OnError でハンドリング）\nHttpExclusiveControlUtil.updateVersionsWithCheck(request);\n```"
-  }
+  ]
 }

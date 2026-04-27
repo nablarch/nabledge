@@ -1,0 +1,32 @@
+{
+  "id": "handlers-nablarch-tag-handler",
+  "title": "Nablarchカスタムタグ制御ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* 復号に失敗(改竄エラー、セッション無効化エラー)した場合のエラーページを設定する\n\nNablarchの [Jakarta Server Pagesカスタムタグ](../../component/libraries/libraries-tag.md#tag) に必要なリクエスト処理を行うハンドラ。\n\n本ハンドラでは、以下の処理を行う。\n\n* カスタムタグのデフォルト値をJSPで参照できるように、\n  CustomTagConfig をリクエストスコープに設定する。\n* [hidden暗号化](../../component/libraries/libraries-tag.md#tag-hidden-encryption) に対応する改竄チェックと復号処理を行う。\n* [チェックボックスのチェックなしに対する値を指定する](../../component/libraries/libraries-tag.md#tag-checkbox-off-value) ために、リクエストにチェックなしに対応する値を設定する。\n* [ボタン又はリンク毎のパラメータ追加](../../component/libraries/libraries-tag.md#tag-submit-change-parameter) のために、リクエストにパラメータを追加する。\n* [HTTPアクセスログの出力](../../component/libraries/libraries-http-access-log.md#http-access-log) のリクエストパラメータを出力する。\n* [複合キーを扱える](../../component/libraries/libraries-tag.md#tag-composite-key) ようにするため、複合キーを復元する。\n\n> **Tip:**\n> GETリクエストの場合、カスタムタグではhiddenパラメータを出力しない。\n> hiddenパラメータを出力しない理由は、 [GETリクエストを使用する](../../component/libraries/libraries-tag.md#tag-using-get) を参照。\n\n> カスタムタグに合わせて、本ハンドラでも、GETリクエストの場合はhiddenパラメータに関連する処理を行わず、\n> 複合キーの復元処理のみを行う。\n\n処理の流れは以下のとおり。\n\n![NablarchTagHandler_flow.png](assets/handlers-nablarch-tag-handler/NablarchTagHandler_flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.common.web.handler.NablarchTagHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web-tag</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "[マルチパートリクエストハンドラ](../../component/handlers/handlers-multipart-handler.md#multipart-handler) より後ろに設定すること\n本ハンドラは、 [Jakarta Server Pagesカスタムタグ](../../component/libraries/libraries-tag.md#tag) に必要なリクエスト処理でリクエストパラメータにアクセスするため。\n[hidden暗号化](../../component/libraries/libraries-tag.md#tag-hidden-encryption) 使用時は、[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに設定すること\nhidden暗号化対象のリクエストか否かを判定するために、スレッドコンテキストからリクエストIDを取得するため。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "復号に失敗(改竄エラー、セッション無効化エラー)した場合のエラーページを設定する",
+      "content": "[hidden暗号化](../../component/libraries/libraries-tag.md#tag-hidden-encryption) の復号処理は、次の2つのケースにおいて失敗する可能性がある。\n改竄の判定基準は、 [復号処理](../../component/libraries/libraries-tag.md#tag-hidden-encryption-decryption) を参照。\n\n* 暗号化したデータが改竄された場合(改竄エラー)\n* セッションから復号に使う鍵を取得できない場合(セッション無効化エラー)\n\nそれぞれ、\nNablarchTagHandler の設定で、\nエラー発生時のエラーページとステータスコードを指定できる。\n\n```xml\n<component name=\"nablarchTagHandler\"\n           class=\"nablarch.common.web.handler.NablarchTagHandler\">\n  <!--\n    改竄エラー発生時の設定\n  -->\n  <property name=\"path\" value=\"/TAMPERING-DETECTED.jsp\" />\n  <property name=\"statusCode\" value=\"400\" />\n  <!--\n    セッション無効化エラー発生時の設定\n    省略した場合は改竄エラー発生時の設定が使用される。\n  -->\n  <property name=\"sessionExpirePath\" value=\"/SESSION-EXPIRED.jsp\" />\n  <property name=\"sessionExpireStatusCode\" value=\"400\" />\n\n</component>\n```",
+      "level": 2
+    }
+  ]
+}

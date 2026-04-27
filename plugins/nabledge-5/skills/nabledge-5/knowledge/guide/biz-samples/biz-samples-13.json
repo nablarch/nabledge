@@ -1,103 +1,62 @@
 {
   "id": "biz-samples-13",
   "title": "Logbookを用いたリクエスト/レスポンスログ出力サンプル",
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/13/index.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/basic/StandardOutputLogWriter.html"
-  ],
-  "index": [
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "提供パッケージ",
-      "hints": [
-        "提供パッケージ",
-        "ソースコード",
-        "please.change.me.common.log.logbook",
-        "nablarch-biz-sample-all",
-        "biz-sample"
-      ]
+      "content": "[ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/v5-main)\n\n本サンプルは、以下のパッケージで提供される。\n\n*please.change.me.* **common.log.logbook**",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "概要",
-      "hints": [
-        "Logbook",
-        "HTTPリクエストログ",
-        "HTTPレスポンスログ",
-        "SLF4Jアダプタ",
-        "JAX-RSクライアント",
-        "Jersey",
-        "JsonPath",
-        "マスク処理",
-        "Java 11"
-      ]
+      "content": "本サンプルは、 [Logbook](https://github.com/zalando/logbook) を用いてHTTPリクエストおよびレスポンスのログ出力を行うサンプルである。\n\n> **Important:**\n> Logbook を使用するためには、Javaのバージョンを 11 以上にする必要がある。\n> そのため、本サンプルでは Java 11を使用する。",
+      "level": 2
     },
     {
       "id": "s3",
-      "title": "依存ライブラリの追加",
-      "hints": [
-        "依存ライブラリ",
-        "logbook-core",
-        "logbook-jaxrs",
-        "logbook-json",
-        "jersey-client",
-        "jersey-media-json-jackson",
-        "jersey-hk2",
-        "slf4j-nablarch-adaptor"
-      ]
+      "title": "本サンプルで取り扱う範囲",
+      "content": "Logbookは様々なメッセージ形式や出力方法に対応しているが、本サンプルでは以下の実装を取り扱う。\n\n* Logbookのログ出力には、Nablarchのログ出力機能を使用する\n\n  * Nablarchとの連携は [SLF4Jアダプタ](../../component/adapters/adapters-slf4j-adaptor.md#slf4j-adaptor) を使用して実現する\n  * ログは標準出力に出力する\n* リクエスト送信にはJAX-RSクライアントを使用し、メッセージの形式にはJSONを使用する\n\n  * JAX-RSクライアントの実装として Jersey を使用する\n* [JsonPath](https://github.com/json-path/JsonPath) を使用して、JSON形式の特定項目に対してマスク処理を行う",
+      "level": 3
     },
     {
       "id": "s4",
-      "title": "log.propertiesの設定",
-      "hints": [
-        "log.properties設定",
-        "StandardOutputLogWriter",
-        "BasicLogFormatter",
-        "TRACEレベル",
-        "ログ出力設定",
-        "LOGBOOK",
-        "availableLoggersNamesOrder"
-      ]
+      "title": "使用方法",
+      "content": "",
+      "level": 2
     },
     {
       "id": "s5",
-      "title": "Logbookの構成",
-      "hints": [
-        "Logbook構成",
-        "BodyFilter",
-        "jsonPath",
-        "JsonPathBodyFilters",
-        "マスク処理設定"
-      ]
+      "title": "依存ライブラリの追加",
+      "content": "Logbook、Jersey、SLF4Jアダプタを使用可能にするため、プロジェクトの依存関係設定に以下の依存関係を追加する。\nLogbookでは使用環境に応じたモジュールがいくつか公開されているため、それらも合わせて追加する。\n\n```xml\n<dependencies>\n  ...\n  <!-- SLF4Jアダプタ -->\n  <dependency>\n    <groupId>com.nablarch.integration</groupId>\n    <artifactId>slf4j-nablarch-adaptor</artifactId>\n    <scope>runtime</scope>\n  </dependency>\n\n  <!-- Logbook -->\n  <dependency>\n    <groupId>org.zalando</groupId>\n    <artifactId>logbook-core</artifactId>\n    <version>2.16.0</version>\n  </dependency>\n  <dependency>\n    <groupId>org.zalando</groupId>\n    <artifactId>logbook-jaxrs</artifactId>\n    <version>2.16.0</version>\n  </dependency>\n  <dependency>\n    <groupId>org.zalando</groupId>\n    <artifactId>logbook-json</artifactId>\n    <version>2.16.0</version>\n  </dependency>\n\n  <!-- Jersey -->\n  <dependency>\n    <groupId>org.glassfish.jersey.core</groupId>\n    <artifactId>jersey-client</artifactId>\n    <version>2.35</version>\n  </dependency>\n  <dependency>\n    <groupId>org.glassfish.jersey.media</groupId>\n    <artifactId>jersey-media-json-jackson</artifactId>\n    <version>2.35</version>\n  </dependency>\n  <dependency>\n    <groupId>org.glassfish.jersey.inject</groupId>\n    <artifactId>jersey-hk2</artifactId>\n    <version>2.35</version>\n  </dependency>\n  ...\n</dependencies>\n```\n\n> **Tip:**\n> 本サンプルでは、Jerseyは [JAX-RSアダプタ](../../component/adapters/adapters-jaxrs-adaptor.md#jaxrs-adaptor) が使用しているJacksonのバージョンを考慮したバージョンを使用している。\n> 依存関係に指定するバージョンについては、実行環境に合わせて適切なバージョンを設定すること。",
+      "level": 3
     },
     {
       "id": "s6",
-      "title": "JAX-RSクライアントにLogbookを登録",
-      "hints": [
-        "LogbookClientFilter",
-        "JAX-RSクライアント登録",
-        "ClientBuilder"
-      ]
+      "title": "log.propertiesの設定",
+      "content": "Nablarchのログ出力機能でLogbookのログを出力するため、 **log.properties** に以下の設定を行う。\nなお、LogbookはログレベルをTRACEに設定する必要があるため、Logbook用のロガーを定義することを推奨する。\n\n* LogbookはTRACEレベルでログ出力を行うため、ログレベルをTRACEに設定する\n* ログの出力先を設定する\n\n本サンプルでは、出力先に StandardOutputLogWriter (標準出力へ出力) を設定する。\n\n```properties\n...\n# 標準出力\nwriter.stdout.className=nablarch.core.log.basic.StandardOutputLogWriter\nwriter.stdout.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.stdout.formatter.format=$date$ -$logLevel$- $runtimeLoggerName$ [$executionId$] boot_proc = [$bootProcess$] proc_sys = [$processingSystem$] req_id = [$requestId$] usr_id = [$userId$] $message$$information$$stackTrace$\n...\n# 利用可能なロガー名順序\navailableLoggersNamesOrder=DEV,PER,SQL,MON,ACC,LOGBOOK,ROO\n...\n# Logbookの設定\nloggers.LOGBOOK.nameRegex=org\\\\.zalando\\\\.logbook\\\\..*\nloggers.LOGBOOK.level=TRACE\nloggers.LOGBOOK.writerNames=stdout\n...\n```\n\nNablarchのログ出力設定については、 [ログ出力の設定](../../component/libraries/libraries-log.md#log-basic-setting) を参照。",
+      "level": 3
     },
     {
       "id": "s7",
+      "title": "Logbookの構成",
+      "content": "Logbookを使用するには、必要な設定を行った Logbook クラスのインスタンスを生成する。\n\nデフォルト設定では、すべてのリクエストおよびレスポンスのボディを含む情報が出力される。\n\n```java\n// Logbookを生成（デフォルト設定）\nLogbook logbook = Logbook.builder().build();\n```\n\nLogbookには様々な設定があり、出力条件を設定する condition やマスク処理を設定する Filtering 等を設定できる。\n例えばボディのマスク処理を行う場合は、BodyFilterメソッドで値を置換するFilterを設定することで実現できる。\n\n```java\n// Logbookを生成（ボディの id 項目をマスクする設定）\nLogbook logbook = Logbook.builder()\n        .bodyFilter(jsonPath(\"$.id\").replace(\"*****\"))\n        .build();\n```\n\n```java\n// Logbookを生成（ボディにある配列内の id と username 項目をマスクする設定）\nLogbook logbook = Logbook.builder()\n        .bodyFilter(JsonPathBodyFilters.jsonPath(\"$[*].id\").replace(\"*****\"))\n        .bodyFilter(JsonPathBodyFilters.jsonPath(\"$[*].username\").replace(\"*****\"))\n        .build();\n```\n\n各種設定の詳細については、 [LogbookのREADME](https://github.com/zalando/logbook/blob/main/README.md) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "JAX-RSクライアントにLogbookを登録",
+      "content": "生成した Logbook インスタンスは使用するクライアントに登録することで使用できる。\n\nLogbookでは様々なクライアントに登録するためのクラスが提供されており、\n本サンプルではJAX-RSクライアントを使用するため、 LogbookClientFilter クラスを使用する。\n\n```java\n// JAX-RSクライアントにLogbookを登録\nClient client = ClientBuilder.newClient()\n                  .register(new LogbookClientFilter(logbook));\n```",
+      "level": 3
+    },
+    {
+      "id": "s9",
       "title": "リクエスト/レスポンスのログを出力",
-      "hints": [
-        "ログ出力",
-        "リクエストログ",
-        "レスポンスログ",
-        "Outgoing Request",
-        "Incoming Response"
-      ]
+      "content": "Logbookを登録したJAX-RSクライアントでリクエストを送信、およびレスポンスを受信すると、ログが出力される。\n\n```java\nResponse response = client.target(\"http://localhost:3000\")\n                      .path(\"/users\")\n                      .request()\n                      .get();\n```\n\n本サンプルでは出力先を標準出力に設定しているため、標準出力に以下のようなログが出力される。\nNablarchのログ出力機能に設定しているフォーマットで出力され、メッセージ部分だけが Logbook で設定しているフォーマットで出力される。\nLogbookの デフォルトフォーマットでは、メッセージの種類（リクエスト送信かレスポンス受信か）、ヘッダ、ボディが出力される。\n\n* リクエストのログ\n\n```text\n2023-05-11 09:38:06.438 -TRACE- org.zalando.logbook.Logbook [202305110938060580001] boot_proc = [] proc_sys = [jaxrs] req_id = [/logbook/get] usr_id = [guest] Outgoing Request: bb068bcf35bc5226\nRemote: localhost\nGET http://localhost:3000/users HTTP/1.1\n```\n\n* レスポンスのログ\n\n```text\n2023-05-11 09:38:06.496 -TRACE- org.zalando.logbook.Logbook [202305110938060580001] boot_proc = [] proc_sys = [jaxrs] req_id = [/logbook/get] usr_id = [guest] Incoming Response: bb068bcf35bc5226\nDuration: 57 ms\nHTTP/1.1 200 OK\nConnection: keep-alive\nContent-Length: 213\nContent-Type: application/json; charset=utf-8\nDate: Thu, 11 May 2023 00:38:06 GMT\nKeep-Alive: timeout=5\n\n[{\"id\":\"81b8b153-5ed5-4d42-be13-346f257b368d\",\"username\":\"Chasity91\"},{\"id\":\"6b1e7b91-6a1f-4424-be3c-4e3d28dd59c0\",\"username\":\"Felton_Rohan\"},{\"id\":\"622677a4-04e3-4b70-85dd-a0b7f7161678\",\"username\":\"Bella_Purdy\"}]\n```\n\n前述の [Logbookの構成](../../guide/biz-samples/biz-samples-13.md#logbook-settings) で説明したマスク処理を設定している場合は、上記のログにあるボディが変換され、以下のように出力される。\n（ここでは、ボディにある配列内の id と username 項目をマスクする設定にしている）\n\n```text\n2023-05-11 09:48:37.513 -TRACE- org.zalando.logbook.Logbook [202305110948374650002] boot_proc = [] proc_sys = [jaxrs] req_id = [/logbook/get/mask] usr_id = [guest] Incoming Response: e1ba3d95197a4539\nDuration: 9 ms\nHTTP/1.1 200 OK\nConnection: keep-alive\nContent-Length: 213\nContent-Type: application/json; charset=utf-8\nDate: Thu, 11 May 2023 00:48:37 GMT\nKeep-Alive: timeout=5\n\n[{\"id\":\"*****\",\"username\":\"*****\"},{\"id\":\"*****\",\"username\":\"*****\"},{\"id\":\"*****\",\"username\":\"*****\"}]\n```",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s1": "**パッケージ**: `please.change.me.common.log.logbook`\n\n**ソースコード**: [nablarch-biz-sample-all (v5-main)](https://github.com/nablarch/nablarch-biz-sample-all/tree/v5-main)",
-    "s2": "LogbookによるHTTPリクエスト/レスポンスのログ出力サンプル。\n\n> **重要**: LogbookはJava 11以上が必要。\n\n本サンプルの実装範囲:\n- Logbookのログ出力に [SLF4Jアダプタ](../../component/adapters/adapters-slf4j_adaptor.json#s2) を使用してNablarchログ機能と連携。ログは標準出力に出力\n- リクエスト送信はJAX-RSクライアント（Jersey）を使用、メッセージ形式はJSON\n- [JsonPath](https://github.com/json-path/JsonPath)を使用してJSON形式の特定項目にマスク処理",
-    "s3": "Logbook、Jersey、SLF4Jアダプタを使用可能にするため、プロジェクトの依存関係設定に以下の依存関係を追加する。\n\n```xml\n<dependencies>\n  ...\n  <!-- SLF4Jアダプタ -->\n  <dependency>\n    <groupId>com.nablarch.integration</groupId>\n    <artifactId>slf4j-nablarch-adaptor</artifactId>\n    <scope>runtime</scope>\n  </dependency>\n\n  <!-- Logbook -->\n  <dependency>\n    <groupId>org.zalando</groupId>\n    <artifactId>logbook-core</artifactId>\n    <version>2.16.0</version>\n  </dependency>\n  <dependency>\n    <groupId>org.zalando</groupId>\n    <artifactId>logbook-jaxrs</artifactId>\n    <version>2.16.0</version>\n  </dependency>\n  <dependency>\n    <groupId>org.zalando</groupId>\n    <artifactId>logbook-json</artifactId>\n    <version>2.16.0</version>\n  </dependency>\n\n  <!-- Jersey -->\n  <dependency>\n    <groupId>org.glassfish.jersey.core</groupId>\n    <artifactId>jersey-client</artifactId>\n    <version>2.35</version>\n  </dependency>\n  <dependency>\n    <groupId>org.glassfish.jersey.media</groupId>\n    <artifactId>jersey-media-json-jackson</artifactId>\n    <version>2.35</version>\n  </dependency>\n  <dependency>\n    <groupId>org.glassfish.jersey.inject</groupId>\n    <artifactId>jersey-hk2</artifactId>\n    <version>2.35</version>\n  </dependency>\n  ...\n</dependencies>\n```\n\n> **補足**: JerseyはJAX-RSアダプタが使用しているJacksonのバージョンを考慮したバージョンを使用。依存関係のバージョンは実行環境に合わせて設定すること。",
-    "s4": "Nablarchのログ出力機能でLogbookのログを出力するため、**log.properties** に以下の設定を行う。LogbookはTRACEレベルでログ出力するため、Logbook専用ロガーを定義することを推奨。\n\n```properties\n# 標準出力\nwriter.stdout.className=nablarch.core.log.basic.StandardOutputLogWriter\nwriter.stdout.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.stdout.formatter.format=$date$ -$logLevel$- $runtimeLoggerName$ [$executionId$] boot_proc = [$bootProcess$] proc_sys = [$processingSystem$] req_id = [$requestId$] usr_id = [$userId$] $message$$information$$stackTrace$\n\n# 利用可能なロガー名順序\navailableLoggersNamesOrder=DEV,PER,SQL,MON,ACC,LOGBOOK,ROO\n\n# Logbookの設定\nloggers.LOGBOOK.nameRegex=org\\.zalando\\.logbook\\..*\nloggers.LOGBOOK.level=TRACE\nloggers.LOGBOOK.writerNames=stdout\n```\n\nNablarchのログ出力設定については、 [log-basic_setting](../../component/libraries/libraries-log.json#s4) を参照。",
-    "s5": "Logbookを使用するには、必要な設定を行った Logbook クラスのインスタンスを生成する。デフォルト設定ではすべてのリクエスト/レスポンスのボディを含む情報が出力される。BodyFilterでマスク処理を設定可能。\n\n```java\n// デフォルト設定\nLogbook logbook = Logbook.builder().build();\n\n// ボディのid項目をマスク\nLogbook logbook = Logbook.builder()\n        .bodyFilter(jsonPath(\"$.id\").replace(\"*****\"))\n        .build();\n\n// 配列内のidとusername項目をマスク\nLogbook logbook = Logbook.builder()\n        .bodyFilter(JsonPathBodyFilters.jsonPath(\"$[*].id\").replace(\"*****\"))\n        .bodyFilter(JsonPathBodyFilters.jsonPath(\"$[*].username\").replace(\"*****\"))\n        .build();\n```\n\n各種設定の詳細については、[LogbookのREADME](https://github.com/zalando/logbook/blob/main/README.md)を参照。",
-    "s6": "生成した Logbook インスタンスは使用するクライアントに登録することで使用できる。JAX-RSクライアントを使用する場合は `LogbookClientFilter` クラスを使用する。\n\n```java\nClient client = ClientBuilder.newClient()\n                  .register(new LogbookClientFilter(logbook));\n```",
-    "s7": "Logbookを登録したJAX-RSクライアントでリクエスト送信/レスポンス受信するとログが出力される。Nablarchログ出力機能のフォーマットで出力され、メッセージ部分のみLogbookのフォーマット（メッセージ種別・ヘッダ・ボディ）で出力される。\n\n```java\nResponse response = client.target(\"http://localhost:3000\")\n                      .path(\"/users\")\n                      .request()\n                      .get();\n```\n\n出力例（リクエスト）:\n```text\n2023-05-11 09:38:06.438 -TRACE- org.zalando.logbook.Logbook [202305110938060580001] boot_proc = [] proc_sys = [jaxrs] req_id = [/logbook/get] usr_id = [guest] Outgoing Request: bb068bcf35bc5226\nRemote: localhost\nGET http://localhost:3000/users HTTP/1.1\n```\n\n出力例（レスポンス）:\n```text\n2023-05-11 09:38:06.496 -TRACE- org.zalando.logbook.Logbook [202305110938060580001] boot_proc = [] proc_sys = [jaxrs] req_id = [/logbook/get] usr_id = [guest] Incoming Response: bb068bcf35bc5226\nDuration: 57 ms\nHTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n[{\"id\":\"81b8b153-5ed5-4d42-be13-346f257b368d\",\"username\":\"Chasity91\"},...]\n```\n\nマスク処理設定時のレスポンスボディ:\n```text\n[{\"id\":\"*****\",\"username\":\"*****\"},{\"id\":\"*****\",\"username\":\"*****\"},{\"id\":\"*****\",\"username\":\"*****\"}]\n```"
-  }
+  ]
 }

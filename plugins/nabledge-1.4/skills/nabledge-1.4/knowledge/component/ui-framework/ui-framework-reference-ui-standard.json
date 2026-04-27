@@ -1,0 +1,248 @@
+{
+  "id": "ui-framework-reference-ui-standard",
+  "title": "UI標準修正事例一覧",
+  "content": "本章では、UI標準に対する主要な修正要望に関して、以下の観点で解説している。\n\n1. 具体的に何をどのように修正すればよいか。\n2. 修正による影響範囲とコストはどの程度か。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "UI標準1.1. 対応する端末とブラウザ",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "対応ブラウザを追加したい",
+      "content": "この章の冒頭で述べているように、一般的なWEB標準に準拠するブラウザであれば、多少の表示上の差異があっても\n動作上の問題はさほどないと考えられるが、プロジェクト側で対応ブラウザを追加する場合は、\n当該の端末でのテストを十分に実施する必要がある。\n\nテストの結果、修正を要する問題が検出された場合、当該のソースコード(プラグイン)を直接修正すると、\n既存の対応ブラウザ上の挙動に問題を生じさせる危険性がある。\n\nこのため、ブラウザ固有の特性や不具合に起因する問題への対処は [特定端末向けパッチプラグイン](../../component/ui-framework/ui-framework-reference-ui-plugin.md#nablarch-device-fix)\nとしてまとめられている。\nこれらのプラグインでは **nablarch-device-fix-base** が出力する環境固有のCSSクラスや\nグローバル変数を参照することにより、既存コードに影響しない形で特定環境向けの対応を行なっている。\n\n新規対応ブラウザ向けの対処を行う場合は、既存の [特定端末向けパッチプラグイン](../../component/ui-framework/ui-framework-reference-ui-plugin.md#nablarch-device-fix)\nを参考にして新規にプラグインを追加すること。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "どうしてもIE6/7はサポートできないのか?",
+      "content": "現状のUI標準およびUI開発基盤ではIE6/7をサポートしていない。\nだが、プロジェクトの要件としてどうしても必要であれば、\nこれらのブラウザをサポートすることは技術的には可能である。\n\nただし、IE6/7をサポートする場合、対応コストの増大に加えて、以下の制約が発生する。\n\n**1. アイコンが表示できない**\nIE6では Web Font をサポートしていないので、アイコンを表示することができない。\n**2. マウスオーバ時の背景色反転ができない。**\nUI標準ではボタンやメニュー上にマウスが移動した場合に背景表示色を\n反転させるとしているが、IE6ではリンク要素以外での :hover 擬似セレクタをサポートしていないため、\nそのような効果は発生しない。\n\nなお、IE8の制約(ボタンの角丸表現、陰影表現ができない)はIE6/7にも当てはまる。\n実際にIE6のサポートが必要な場合は、ADCのNablarch担当窓口まで問い合わせを行うこと。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "表示モードを変更したい",
+      "content": "[UI標準2.1. 端末の画面サイズと表示モード](../../component/ui-framework/ui-framework-reference-ui-standard.md#ui-standard-2-1) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "UI標準1.2. 使用技術",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "使用するJavaScriptライブラリを追加したい",
+      "content": "外部のスタイルシートおよびJavaScriptを追加する場合は\n下記のプラグインを修正すること。\n\n| 修正内容 | 修正対象プラグイン |\n|---|---|\n| 外部スタイルシートの追加 | **nablarch-template-head** |\n| JavaScriptの追加(minifyなし) | **nablarch-template-js_include** |\n| JavaScriptの追加(minifyあり) | **nablarch-dev-tool-ui-build** |",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "UI標準2. 画面構成",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "画面の配色を変更したい",
+      "content": "画面の全体的な配色は **nablarch-css-color-default** プラグイン内のスタイル定義により\n一括変更することができる。\n\nデフォルトの配色は以下のような設定になっている。\n\n```css\n// Nablarchブランドカラーを基調とした配色設定\n@baseColor  : rgb(255, 255, 255); // 白\n@mainColor1 : rgb(235, 92,  21);  // オレンジ\n@mainColor2 : rgb(76,  42,  26);  // こげ茶\n@subColor   : rgb(170, 10,  10);  // 赤\n```\n\n各パラメータの役割は以下のとおり。\n\n**@baseColor**\n背景色\n**@mainColor1**\n前景色1 : メニューや見出し、入力部品などの主要要素の配色として使用\n**@mainColor2**\n前景色2 : 主に文字色として使用\n**@subColor**\n差し色 : 上記の3色以外で特にアクセントが必要な場合に使用\n\n> **Note:**\n> **[配色のポイント]**\n\n> **@mainColor2** が基本文字色になるので\n> **@mainColor1** の **@baseColor** に対するコントラストよりも、\n> **@mainColor2** の **@baseColor** に対するコントラストのほうが強くなるように設定するとよい。\n\n以下は配色の調整例である。\n左上のロゴは画像なので、別途差し替えが必要である。\n\n```css\n@baseColor  : rgb(255, 255, 255);              // 白\n@mainColor1 : darken(rgb(173, 210,  16), 15%); // 薄い緑\n@mainColor2 : darken(rgb(82,  108,   8), 20%); // 濃い緑\n@subColor   : rgb(348, 99, 8);                 // オレンジ\n```\n\n![ui_standard_color_scheme_sample.png](assets/ui-framework-reference-ui-standard/ui_standard_color_scheme_sample.png)",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "システムロゴ画像を差し替えたい",
+      "content": "画面左上に表示されるシステムロゴ画像は **nablarch-template-app_header** に含まれているので、\nこれを差し替えればよい。",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "ヘッダー領域の表示内容を修正したい",
+      "content": "トップナビゲーション部は **nablarch-template-app_nav** プラグインの内容を、\nそれ以外の部分は **nablarch-template-app_header**  プラグインの内容をそれぞれ修正すること。",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "サイドメニュー領域の表示内容を修正したい",
+      "content": "**nablarch-template-app_aside** プラグインの内容を修正すること。\n\n省スペース化のため、ナロー、コンパクトモード時にサイドメニューをスライド表示したい場合は、\n**nablarch-widget-slide_menu** プラグインをサンプルで提供しているため、必要に応じて利用すること。\n\n> **Attention:**\n> **nablarch-widget-slide_menu** プラグインは **nablarch-template-app_aside** に依存しているため、利用する際には両方のプラグインが必要になる。",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "フッター領域の表示内容を修正したい",
+      "content": "**nablarch-template-app_aside** プラグインの内容を修正すること。",
+      "level": 3
+    },
+    {
+      "id": "s13",
+      "title": "共通エラー・メッセージ表示領域の表示を調整したい",
+      "content": "**共通エラーメッセージの表示スタイル**\n**nablarch-css-common** プラグインの **ui_public/css/common/nablarch.less** を修正する。\n**共通エラーメッセージの表示内容**\n**nablarch-template-page** プラグインの **ui_public/include/app_error.jsp** を修正する。\n**共通エラーメッセージの表示位置**\n**nablarch-template-page** プラグインの **ui_public/WEB-INF/tags/template/page_template.tag** を修正する。\n(上記インクルードファイルの読み込み位置を修正する。)",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "UI標準2.1. 端末の画面サイズと表示モード",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s15",
+      "title": "表示モードの切替条件を変更したい",
+      "content": "デフォルトのUI標準では、デバイスもしくはウィンドウの横幅(論理ピクセル数)によって表示モードを決定する。\n\n表示モードの切替条件は、 **nablarch-device-media_query** プラグイン内のタグファイル\n( **/ui_public/WEB-INF/tags/device/media.tag** )内に **CSS Media Query** の条件として定義されている。\n切替え条件を変更したい場合や特定の表示モードを無効化したい場合などは、\nこのプラグインをカスタマイズすること。\n\n> **Note:**\n> **nablarch-template-head** の **/ui_public/include/html_head.jsp** で使用されることで、\n> htmlのheadタグ内にmedia.tagの内容が出力される。",
+      "level": 3
+    },
+    {
+      "id": "s16",
+      "title": "表示モードの切替えを無効化したい",
+      "content": "PJの要件としてデスクトップ・ラップトップのみをサポートすればよい場合など、\n表示モードの切替え自体が不要な場合は **ui_public/include/html_head.jsp**\nの中で下記の2行以外の全ての **<n:link>** タグとIEコンディショナルコメントを削除すること。\n\nこうすることで、ウィンドウサイズにかかわらず常にワイドモードで表示するようになる。\n\n```jsp\n<n:link rel=\"stylesheet\" type=\"text/css\" href=\"/css/font-awesome.min.css\" />\n<n:link rel=\"stylesheet\" type=\"text/css\" href=\"/css/built/wide-minify.css\" />\n```",
+      "level": 3
+    },
+    {
+      "id": "s17",
+      "title": "UI標準2.2. ワイド表示モードの画面構成",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s18",
+      "title": "ワイドモードにおける画面内の要素のサイズを全体的に調整したい",
+      "content": "ワイドモードにおける画面要素の共通的なサイズは **nablarch-css-conf-wide** プラグイン\nの中で既定されている。\n\n* 1ページ内のグリッド数\n* 1グリッドの横幅\n* グリッド間の間隔\n* フォントサイズ\n* 入力フィールドやテーブルのグリッド数\n\nこれらの設定値を変更することで、全体的なサイズ調整が可能である。",
+      "level": 3
+    },
+    {
+      "id": "s19",
+      "title": "特定の画面要素についてワイドモードでの表示を調整したい",
+      "content": "ファイル名の末尾が **-wide.less** となっているスタイル定義はワイドモードでのみ読み込まれる。\nワイドモードでのみ必要な表示調整を行う場合は、各プラグインに含まれる上記のようなファイルを修正する。\n\n例えば、以下は **nablarch-template-app_header** の内容である。\n\n```bash\nnablarch-template-app_header/\n   ├── package.json\n   └── ui_public\n          ├── css\n          │     └── template\n          │            ├── header-compact.less\n          │            ├── header.less\n          │            ├── header-narrow.less\n          │            └── header-wide.less\n          └── include\n                 ├── app_header.jsp\n                 └── subwindow_app_header.jsp\n```\n\nこのプラグインのスタイル定義は、各表示モードで以下のように読み込まれる。\n\n| 表示モード | 読み込まれるスタイルファイル |\n|---|---|\n| ワイド | header.less header-wide.less |\n| コンパクト | header.less header-compact.less |\n| ナロー | header.less header-narrow.less |",
+      "level": 3
+    },
+    {
+      "id": "s20",
+      "title": "UI標準2.3. コンパクト表示モードの画面構成",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s21",
+      "title": "コンパクトモードでの表示内容を調整したい",
+      "content": "各プラグイン内のスタイルファイルの内、ファイル名の末尾が **-compact.less** で終わるものは\nコンパクト表示モードでしか読み込まれない。\n\nコンパクトモードでの表示調整を行う場合は、当該プラグインの上記条件に合致するスタイルファイルを修正すること。\nもし、そのようなスタイルファイルが無い場合は新たに追加してもよい。",
+      "level": 3
+    },
+    {
+      "id": "s22",
+      "title": "UI標準2.4. ナロー表示モードの画面構成",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s23",
+      "title": "ナローモードでの表示内容を調整したい",
+      "content": "各プラグイン内のスタイルファイルの内、ファイル名の末尾が **-narrow.less** で終わるものは\nナロー表示モードでしか読み込まれない。\n\nナローモードでの表示調整を行う場合は、当該プラグインの上記条件に合致するスタイルファイルを修正すること。\nもし、そのようなスタイルファイルが無い場合は新たに追加すること。",
+      "level": 3
+    },
+    {
+      "id": "s24",
+      "title": "テーブル表示で横スクロールが発生しないようにしたい",
+      "content": "設定により、ナロー表示時に、カラムの一部をデフォルト非表示にし、\nタップ操作で表示・非表示を切り替えることができる。(下図参照)\n\n![additional_column.png](assets/ui-framework-reference-ui-standard/additional_column.png)\n\n詳細は [ラベル表示用カラムウィジェット](../../component/ui-framework/ui-framework-column-label.md)\nの **additional** 属性の解説を参照すること。",
+      "level": 3
+    },
+    {
+      "id": "s25",
+      "title": "UI標準2.5.画面内の入出力項目に関する共通仕様",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s26",
+      "title": "ドメイン型に応じて入出力項目の表示を調整したい",
+      "content": "各入出力項目には設計情報としてドメイン型のIDを指定するための **domain** 属性が定義されている。\n\nこの属性値は当該項目の **class** 属性にそのまま追加されるので、\nドメインIDと同名のスタイルクラスを定義することにより、\nそのドメイン型の入出力項目のスタイルを一括指定できる。\n\n例えば、プロジェクトで定める金額のドメイン型が \"Money\" で、その表示を一律右寄せで表示するのであれば、\n以下のようなスタイル定義を追加すればよい。\n\n```css\n.Money {\n  align: right;\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s27",
+      "title": "タブキーによるフォーカス移動順番を制御したい",
+      "content": "[業務画面ベースレイアウト](../../component/ui-framework/ui-framework-jsp-page-templates.md#base-layout-tag) の **tagIndexOrder** 属性により指定することができる。\n詳細は当該属性の解説を参照すること。\n\n> **Note:**\n> 各画面ごとにタブ移動順序を定義するのは、特にテスト工数への影響が大きいので、\n> 顧客側の特段の要望がない限りは、UI標準どおり、ブラウザ既定の動作とすること。",
+      "level": 3
+    },
+    {
+      "id": "s28",
+      "title": "入力内容の注記部分の表示を調整したい",
+      "content": "注記自体の表示については **nablarch-widget-field-hint** プラグインの各ファイルを修正すること。\nフィールド内での注記の表示位置を調整する場合は、 **nablarch-widget-field-base** プラグインの\n**ui_public/WEB-INF/tags/widget/field/inputbase.tag** を修正すること。\n( **<field:internal_hint>** の配置を変更する。)",
+      "level": 3
+    },
+    {
+      "id": "s29",
+      "title": "必須入力項目の表示形式を変更したい",
+      "content": "必須入力項目の表示は **nablarch-widget-field-base** プラグイン内の\n**ui_public/WEB-INF/tags/widget/base.tag** 内で定義されているので、これを修正すること。",
+      "level": 3
+    },
+    {
+      "id": "s30",
+      "title": "単項目精査エラーメッセージの表示を変更したい",
+      "content": "フィールド内におけるエラーメッセージの表示位置を調整する場合は、\n**nablarch-widget-field-base** プラグインの\n**ui_public/WEB-INF/tags/widget/field/inputbase.tag** を修正すること。\n( **<div class=\"fielderror\">** の配置を変更する。)\n\nまた、エラーメッセージの表示スタイルを変更したい場合は、\n同プラグイン内の **ui_public/css/field/base.less** の当該クラス(**.fielderror**)の内容を修正すること。",
+      "level": 3
+    },
+    {
+      "id": "s31",
+      "title": "ナロー表示モードでのボタン表示順を変更したい",
+      "content": "ナローモードのボタン表示順の制御は **nablarch-widget-button** プラグイン内の\n**ui_public/css/button/base-narrow.less** で行なっているのでこれを修正すること。",
+      "level": 3
+    },
+    {
+      "id": "s32",
+      "title": "認可権限がない場合のボタン／リンクの表示方法を変更したい",
+      "content": "認可権限がない場合のボタン／リンクの表示制御は **nablarch-widet-button** プラグイン内の\n**ui_public/WEB-INF/tags/widget/button/*.tag** にて行っている。\n\n表示制御を変更する場合はtagファイルの **displayMethod** の内容を修正すること。",
+      "level": 3
+    },
+    {
+      "id": "s33",
+      "title": "UI標準2.6. WEB標準に準拠しないブラウザでの表示制約",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s34",
+      "title": "ブラウザ間の表示差異を極小化したい(IE8の表示に他のブラウザをあわせたい)",
+      "content": "IE8でサポートされていない陰影表現および角丸ボックス表示は、\n**nablarch-css-core** プラグイン内の **ui_public/css/core/css3.less** 内に定義されている。\n\nここで定義しているスタイルルール **.border-radius** **.rounded** **.drop-shadow** **.box-shadow**\nの内容をそれぞれ削除することによって、全てのブラウザで陰影表現および角丸ボックス表示が無効化される。",
+      "level": 3
+    },
+    {
+      "id": "s35",
+      "title": "UI標準2.11. 共通エラー画面の構成",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s36",
+      "title": "共通エラー画面の構成を変更したい",
+      "content": "共通エラー画面のテンプレートは **nablarch-template-error** プラグインで定義されているので、\nこのプラグイン内の各ファイルを修正すること。",
+      "level": 3
+    },
+    {
+      "id": "s37",
+      "title": "UI標準3. UI部品 (UI部品カタログ)",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s38",
+      "title": "UI部品の表示・挙動を修正したい",
+      "content": "各UI部品は以下の表にあるプラグインで実装されている。\nUI部品を修正する場合は、対応するプラグインをそれぞれ修正すること。\n\n**データ表示部品**\n\n| UI部品 | UIウィジェット | 修正対象プラグイン |\n|---|---|---|\n| テーブル | [一覧テーブルウィジェット](../../component/ui-framework/ui-framework-table-plain.md) | **nablarch-widget-table-plain** |\n|  | [検索結果テーブルウィジェット](../../component/ui-framework/ui-framework-table-search-result.md) | **nablarch-widget-table-search_result** |\n|  | [マルチレイアウトテーブル](../../component/ui-framework/ui-framework-table-row.md) | **nablarch-widget-table-row** |\n|  | [ラベル表示用カラムウィジェット](../../component/ui-framework/ui-framework-column-label.md) | **nablarch-widget-column-label** |\n|  | [リンク表示用カラムウィジェット](../../component/ui-framework/ui-framework-column-link.md) | **nablarch-widget-column-link** |\n|  | [テーブル複数行選択用チェックボックスカラムウィジェット](../../component/ui-framework/ui-framework-column-checkbox.md) | **nablarch-widget-column-checkbox** |\n|  | [テーブル行選択用ラジオボタンカラムウィジェット](../../component/ui-framework/ui-framework-column-radio.md) | **nablarch-widget-column-radio** |\n| 画像 | [画像表示ウィジェット](../../component/ui-framework/ui-framework-box-img.md) | **nablarch-widget-box-img** |\n| 階層(ツリー)表示 | [階層(ツリー)表示テーブルウィジェット](../../component/ui-framework/ui-framework-table-treelist.md) | **nablarch-widget-table-tree** |\n\n**入力フォーム部品**\n\n| UI部品 | UIウィジェット | 修正対象プラグイン |\n|---|---|---|\n| チェックボックス | [チェックボックス入力項目ウィジェット](../../component/ui-framework/ui-framework-field-checkbox.md) | **nablarch-widget-field-checkbox** |\n|  | [コード値チェックボックス入力項目ウィジェット](../../component/ui-framework/ui-framework-field-code-checkbox.md) |  |\n| ラジオボタン | [ラジオボタン入力項目ウィジェット](../../component/ui-framework/ui-framework-field-radio.md) | **nablarch-widget-field-radio** |\n|  | [コード値ラジオボタン入力項目ウィジェット](../../component/ui-framework/ui-framework-field-code-radio.md) |  |\n| プルダウンリスト | [プルダウン入力項目ウィジェット](../../component/ui-framework/ui-framework-field-pulldown.md) | **nablarch-widget-field-pulldown** |\n|  | [コード値プルダウン入力項目ウィジェット](../../component/ui-framework/ui-framework-field-code-pulldown.md) |  |\n| リストビルダー | [リストビルダー入力項目ウィジェット](../../component/ui-framework/ui-framework-field-listbuilder.md) | **nablarch-widget-field-listbuilder** |\n| 単行テキスト入力 | [単行テキスト入力項目ウィジェット](../../component/ui-framework/ui-framework-field-text.md) | **nablarch-widget-field-text** |\n| 複数行テキスト入力 | [複数行テキスト入力項目ウィジェット](../../component/ui-framework/ui-framework-field-textarea.md) | **nablarch-widget-field-textarea** |\n| パスワード入力 | [パスワード入力ウィジェット](../../component/ui-framework/ui-framework-field-password.md) | **nablarch-widget-field-password** |\n| ファイル選択 | [ファイル選択ウィジェット](../../component/ui-framework/ui-framework-field-file.md) | **nablarch-widget-field-file** |\n| カレンダー日付入力 | [カレンダー日付入力ウィジェット](../../component/ui-framework/ui-framework-field-calendar.md) | **nablarch-widget-field-calendar** |\n| 自動集計 |  | **nablarch-widget-event-autosum** |\n| フォーカス移動制御 | [業務画面ベースレイアウト](../../component/ui-framework/ui-framework-jsp-page-templates.md#base-layout-tag) (**tabIndexOrder** 属性値の解説を参照) | **nablarch-template-base** |\n\n**コントロール部品**\n\n| UI部品 | UIウィジェット | 修正対象プラグイン |\n|---|---|---|\n| ボタン | [ボタン配置ブロック](../../component/ui-framework/ui-framework-button-block.md) [ボタンウィジェット](../../component/ui-framework/ui-framework-button-submit.md) | **nablarch-widget-button** |\n| リンク | [リンクウィジェット](../../component/ui-framework/ui-framework-link-submit.md) | **nablarch-widget-link** |",
+      "level": 3
+    },
+    {
+      "id": "s39",
+      "title": "開閉可能領域",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s40",
+      "title": "精査エラー時の開閉可能領域の制御を変更したい",
+      "content": "開閉可能領域は **nablarch-widget-collapsible** にて実装されている。\n\n入力項目に紐づくエラー(単項目精査エラーなど)がある場合、その入力項目のform内にある開閉可能領域、\n入力項目に紐づかないエラー(ページ上部のエラー表示)がある場合、業務領域にある開閉可能領域が開くようになっている。\n\nこの制御を変更したい場合は、 **nablarch-widget-collapsible** を修正すること。",
+      "level": 3
+    }
+  ]
+}

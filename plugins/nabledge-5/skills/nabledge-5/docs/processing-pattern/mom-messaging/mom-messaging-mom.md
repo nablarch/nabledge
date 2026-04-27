@@ -1,3 +1,8 @@
 # MOMによるメッセージング
 
-**公式ドキュメント**: [MOMによるメッセージング](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/mom/index.html)
+本章ではNablarchアプリケーションフレームワークを使用してMOMを使ったメッセージングを開発するために必要となる情報を提供する。
+
+architecture
+application_design
+getting_started
+feature_details

@@ -1,53 +1,26 @@
 {
   "id": "workflow-SampleApplicationViewImplementation",
   "title": "アクティブタスクの判定と処理の分岐",
-  "official_doc_urls": [],
-  "index": [
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "タスクがアクティブかどうかの判定",
-      "hints": [
-        "WorkflowInstance",
-        "WorkflowManager",
-        "isActive",
-        "アクティブタスク判定",
-        "処理分岐",
-        "ワークフロー進行"
-      ]
+      "content": "現在処理可能なタスク（アクティブタスク）は、 `WorkflowInstance#isActive` を利用して判定することができる。\n\nワークフローの進行後のアクティブタスクに応じて処理を分岐する必要がある場合や、現在のアクティブタスクに応じて処理を\n分岐する必要がある場合には、以下のように `isActive` の結果に応じて分岐すれば良い。\n\n**実装例(W11AD02Action.java)**\n\n```java\n/**\n * 交通費申請処理で精査エラーが発生した際の処理を行う。\n *\n * @param request リクエストコンテキスト\n * @param context HTTPリクエストの処理に関連するサーバ側の情報\n * @return HTTPレスポンス\n */\npublic HttpResponse doRW11AD0210(HttpRequest request, ExecutionContext context) {\n\n    // ～ 中略 ～\n\n    WorkflowInstance workflow = WorkflowManager.findInstance(application.getString(\"WF_INSTANCE_ID\"));\n\n    if (workflow.isActive(REAPPLICATION_TASK)) {\n        // 再申請タスクがアクティブタスクとなっている場合には、再申請用画面に遷移する。\n        setupAssignUserList(context);\n        return new HttpResponse(\"/ss11AD/W11AD0203.jsp\");\n    } else {\n        // それ以外（確認/承認タスクがアクティブタスク）の場合には、確認/承認用画面に遷移する。\n        application.put(\"historyComment\", form.getHistoryComment());\n        context.setRequestScopedVar(\"W11AD02\", application);\n        context.setRequestScopedVar(\"confirmTask\", workflow.isActive(CONFIRMATION_TASK));\n        context.setRequestScopedVar(\"authorizeTask\", workflow.isActive(AUTHORIZATION_TASK));\n        return new HttpResponse(\"/ss11AD/W11AD0201.jsp\");\n    }\n}\n```",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "担当ユーザ/グループへのアクティブタスクの割り当て状況の確認",
-      "hints": [
-        "WorkflowInstance",
-        "WorkflowManager",
-        "hasActiveUserTask",
-        "hasActiveGroupTask",
-        "ThreadContext",
-        "ApplicationException",
-        "MessageUtil",
-        "MessageLevel",
-        "アクティブタスク割り当て確認",
-        "ユーザタスク確認",
-        "グループタスク確認"
-      ]
+      "content": "あるユーザ/グループに割り当てられたアクティブタスクが存在するかどうかは、\n`WorkflowInstance#hasActiveUserTask`, `WorkflowInstance#hasActiveGroupTask` を使用して判定することができる。\n\nたとえば交通費申請の場合、一覧画面から承認画面に遷移する際には、一覧画面からは排他制御を行わないため、\n承認画面に遷移する際に、ユーザに該当のワークフローインスタンスのアクティブタスクが実際に割り当てられているかどうかを\n確認する必要がある。\n\nこのような場合には、以下のように `hasActiveUserTask`, `hasActiveGroupTask` を利用して、\nワークフローインスタンスのアクティブタスクを実際にユーザが処理可能であるかどうかを確認する。\n\n**実装例(W11AD02Action.java)**\n\n```java\n/**\n * 交通費申請承認画面を表示する。<br/>\n * （交通費承認一覧画面からの遷移）\n *\n * @param request リクエストコンテキスト\n * @param context HTTPリクエストの処理に関連するサーバ側の情報\n * @return HTTPレスポンス\n */\n@OnError(type = ApplicationException.class, path = \"forward:///action/ss11AB/W11AB01Action/RW11AB0102\")\npublic HttpResponse doRW11AD0201(HttpRequest request, ExecutionContext context) {\n\n    // ワークアイテムのキーを取得\n    W11AD02Form form = W11AD02Form.validate(\"W11AD02\", request, \"initial\");\n    String applicationId = form.getApplicationId();\n\n    // 排他制御開始\n    HttpExclusiveControlUtil.prepareVersion(context,\n            new ExclusiveCtrlTransExpeApplicationContext(applicationId));\n\n    // ワークアイテム取得\n    SqlRow applicationInfo = getApplication(applicationId);\n    WorkflowInstance workflow = WorkflowManager.findInstance(applicationInfo.getString(\"WF_INSTANCE_ID\"));\n\n    // アクティブタスク割当精査\n    if (!workflow.hasActiveUserTask(ThreadContext.getUserId())) {\n        throw new ApplicationException(MessageUtil.createMessage(MessageLevel.ERROR, \"MSG00034\"));\n    }\n\n    // ～ 後略 ～\n}\n```",
+      "level": 2
     },
     {
       "id": "s3",
       "title": "画面表示項目の切り替え",
-      "hints": [
-        "WorkflowInstance",
-        "isActive",
-        "画面表示切り替え",
-        "リクエストスコープ",
-        "JSP分岐",
-        "setRequestScopedVar"
-      ]
+      "content": "タスクがアクティブかどうかの判定結果や、アクティブタスクの割り当て状況によって画面表示項目を切り替える場合、\n以下の実装例のように、判定結果をリクエストスコープに格納し、その判定結果をJSPで参照して分岐を行うことで実現できる。\n\n**実装例**\n\n業務アクション(W11AD02Action.java)\n\n```java\n/**\n * 交通費申請承認画面を表示する。<br/>\n * （交通費承認一覧画面からの遷移）\n *\n * @param request リクエストコンテキスト\n * @param context HTTPリクエストの処理に関連するサーバ側の情報\n * @return HTTPレスポンス\n */\n@OnError(type = ApplicationException.class, path = \"forward:///action/ss11AB/W11AB01Action/RW11AB0102\")\npublic HttpResponse doRW11AD0201(HttpRequest request, ExecutionContext context) {\n\n    // ～ 中略 ～\n\n    if (workflow.isActive(REAPPLICATION_TASK)) {\n        // ～ 中略 ～\n    } else {\n        context.setRequestScopedVar(\"detail\", applicationInfo);\n    // 確認タスクがアクティブかどうかの判定結果をリクエストスコープに格納\n        context.setRequestScopedVar(\"confirmTask\", workflow.isActive(CONFIRMATION_TASK));\n    // 承認タスクがアクティブかどうかの判定結果をリクエストスコープに格納\n        context.setRequestScopedVar(\"authorizeTask\", workflow.isActive(AUTHORIZATION_TASK));\n        return new HttpResponse(\"/ss11AD/W11AD0201.jsp\");\n    }\n}\n```\n\nJSP(W11AD0201.jsp)\n\n```jsp\n<%-- アクティブタスクごとの値を設定 --%>\n<c:if test=\"${confirmTask}\"><%-- 確認待ち --%>\n  <n:set var=\"pageTitleName\" value=\"交通費申請確認\"/>\n  <n:set var=\"forwardButtonName\" value=\"確認\"/>\n  <n:set var=\"forwardUri\" value=\"/action/ss11AD/W11AD02Action/RW11AD0202\"/>\n  <n:set var=\"rejectUri\" value=\"/action/ss11AD/W11AD02Action/RW11AD0203\"/>\n  <n:set var=\"turnDownUri\" value=\"/action/ss11AD/W11AD02Action/RW11AD0204\"/>\n</c:if>\n<c:if test=\"${authorizeTask}\"><%-- 承認待ち --%>\n  <n:set var=\"pageTitleName\" value=\"交通費申請承認\"/>\n  <n:set var=\"forwardButtonName\" value=\"承認\"/>\n  <n:set var=\"forwardUri\" value=\"/action/ss11AD/W11AD02Action/RW11AD0205\"/>\n  <n:set var=\"rejectUri\" value=\"/action/ss11AD/W11AD02Action/RW11AD0206\"/>\n  <n:set var=\"turnDownUri\" value=\"/action/ss11AD/W11AD02Action/RW11AD0207\"/>\n</c:if>\n```",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "`WorkflowInstance#isActive` でアクティブタスクを判定する。ワークフロー進行後のアクティブタスクや現在のアクティブタスクに応じて処理を分岐する場合、`isActive` の結果に応じて分岐する。\n\n```java\nWorkflowInstance workflow = WorkflowManager.findInstance(application.getString(\"WF_INSTANCE_ID\"));\n\nif (workflow.isActive(REAPPLICATION_TASK)) {\n    // 再申請タスクがアクティブの場合、再申請用画面に遷移\n    setupAssignUserList(context);\n    return new HttpResponse(\"/ss11AD/W11AD0203.jsp\");\n} else {\n    // 確認/承認タスクがアクティブの場合、確認/承認用画面に遷移\n    application.put(\"historyComment\", form.getHistoryComment());\n    context.setRequestScopedVar(\"W11AD02\", application);\n    context.setRequestScopedVar(\"confirmTask\", workflow.isActive(CONFIRMATION_TASK));\n    context.setRequestScopedVar(\"authorizeTask\", workflow.isActive(AUTHORIZATION_TASK));\n    return new HttpResponse(\"/ss11AD/W11AD0201.jsp\");\n}\n```",
-    "s2": "`WorkflowInstance#hasActiveUserTask` / `WorkflowInstance#hasActiveGroupTask` で、ユーザ/グループに割り当てられたアクティブタスクの存在を確認できる。一覧画面から承認画面への遷移時など排他制御を行わない場合、遷移先でアクティブタスクが実際にユーザに割り当てられているか確認が必要。\n\n```java\n// アクティブタスク割当精査\nif (!workflow.hasActiveUserTask(ThreadContext.getUserId())) {\n    throw new ApplicationException(MessageUtil.createMessage(MessageLevel.ERROR, \"MSG00034\"));\n}\n```",
-    "s3": "タスク判定結果をリクエストスコープに格納し、JSPで参照して画面表示項目を切り替える。\n\n業務アクション:\n```java\n// 確認タスクがアクティブかどうかの判定結果をリクエストスコープに格納\ncontext.setRequestScopedVar(\"confirmTask\", workflow.isActive(CONFIRMATION_TASK));\n// 承認タスクがアクティブかどうかの判定結果をリクエストスコープに格納\ncontext.setRequestScopedVar(\"authorizeTask\", workflow.isActive(AUTHORIZATION_TASK));\n```\n\nJSP:\n```jsp\n<c:if test=\"${confirmTask}\">\n  <n:set var=\"pageTitleName\" value=\"交通費申請確認\"/>\n  <n:set var=\"forwardButtonName\" value=\"確認\"/>\n  <n:set var=\"forwardUri\" value=\"/action/ss11AD/W11AD02Action/RW11AD0202\"/>\n  <n:set var=\"rejectUri\" value=\"/action/ss11AD/W11AD02Action/RW11AD0203\"/>\n  <n:set var=\"turnDownUri\" value=\"/action/ss11AD/W11AD02Action/RW11AD0204\"/>\n</c:if>\n<c:if test=\"${authorizeTask}\">\n  <n:set var=\"pageTitleName\" value=\"交通費申請承認\"/>\n  <n:set var=\"forwardButtonName\" value=\"承認\"/>\n  <n:set var=\"forwardUri\" value=\"/action/ss11AD/W11AD02Action/RW11AD0205\"/>\n  <n:set var=\"rejectUri\" value=\"/action/ss11AD/W11AD02Action/RW11AD0206\"/>\n  <n:set var=\"turnDownUri\" value=\"/action/ss11AD/W11AD02Action/RW11AD0207\"/>\n</c:if>\n```"
-  }
+  ]
 }

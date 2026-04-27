@@ -1,56 +1,68 @@
 # 出力するHTMLの文字コードを変更したいのですが
 
-## HTML文字コードの変更設定
+> **question:**
+> HTML出力時、デフォルトではUTF-8が使われるそうですが、
+> Windows-31J等に変更するにはどういう設定変更が必要でしょうか？
 
-HTML出力の文字コードをUTF-8から変更するには、コンポーネント定義ファイルの以下の箇所を変更する。
+> **answer:**
+> コンポーネント定義ファイルの以下の箇所を変更する必要があります。
 
-**HttpCharacterEncodingHandler**（Nablarch Application Framework）
+> **Nablarch Application Framework**
 
-**クラス**: `nablarch.fw.web.handler.HttpCharacterEncodingHandler`
+> *HttpCharacterEncodingHandler*
 
-`HttpServletRequest`/`HttpServletResponse`のエンコーディング設定を変更する。`defaultEncoding`プロパティに使用する文字コードを指定する。
+> HttpServletRequest、HttpServletResponseに対するエンコーディング設定を変更します。
 
-```xml
-<component name="httpCharacterEncodingHandler"
-            class="nablarch.fw.web.handler.HttpCharacterEncodingHandler">
-  <property name="defaultEncoding" value="Windows-31J"/>
-</component>
-```
+> ```xml
+> <component name="httpCharacterEncodingHandler"
+>             class="nablarch.fw.web.handler.HttpCharacterEncodingHandler">
+>   <!-- ここを変更-->
+>   <property name="defaultEncoding" value="Windows-31J"/>
+>   <!-- 省略 -->
+> </component>
+> ```
 
-**ファイルダウンロード**（Nablarch Application Framework）
+> *ファイルダウンロード*
 
-ダウンロードファイル名のエンコーディングに使用する文字コードを変更する。`charset`プロパティを変更する。
+> ダウンロードファイル名のエンコーディングに使用する文字コード設定を変更します。
 
-**クラス**: `nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoder`, `nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoder`
+> ```xml
+> <!-- MIME-Bエンコーダの設定 -->
+> <component name="mimeBEncoder" class="nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoder">
+>   <!-- ここを変更-->
+>   <property name="charset" value="Windows-31J" />
+> </component>
+> 
+> <!-- URLエンコーダの設定 -->
+> <component name="urlEncoder" class="nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoder">
+>   <!-- ここを変更-->
+>   <property name="charset" value="Windows-31J" />
+> </component>
+> ```
 
-```xml
-<!-- MIME-Bエンコーダの設定 -->
-<component name="mimeBEncoder" class="nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoder">
-  <property name="charset" value="Windows-31J" />
-</component>
+> **Nablarch Testing Framework**
 
-<!-- URLエンコーダの設定 -->
-<component name="urlEncoder" class="nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoder">
-  <property name="charset" value="Windows-31J" />
-</component>
-```
+> *HttpTestConfiguration*
 
-**HttpTestConfiguration**（Nablarch Testing Framework）
+> 静的リソースの文字コード設定を変更します。
 
-静的リソースの文字コード設定を変更する。`htmlResourcesCharset`プロパティを変更する。
+> ```xml
+> <component name="httpTestConfiguration"
+>     class="nablarch.test.core.http.HttpTestConfiguration">
+>   <property name="webBaseDir" value="${webBaseDir}" />
+> 
+>   <!-- 中略 -->
+> 
+>   <!-- ここを変更-->
+>   <property name="htmlResourcesCharset" value="Windows-31J" />
+> 
+>   <!-- ダンプHTMLへの可変項目の出力可否 -->
+>   <property name="dumpVariableItem" value="false" />
+> </component>
+> ```
 
-**クラス**: `nablarch.test.core.http.HttpTestConfiguration`
+> 詳細については以下のドキュメントを参照してください。
 
-```xml
-<component name="httpTestConfiguration"
-    class="nablarch.test.core.http.HttpTestConfiguration">
-  <property name="htmlResourcesCharset" value="Windows-31J" />
-</component>
-```
-
-<details>
-<summary>keywords</summary>
-
-HttpCharacterEncodingHandler, MimeBDownloadFileNameEncoder, UrlDownloadFileNameEncoder, HttpTestConfiguration, defaultEncoding, charset, htmlResourcesCharset, HTML文字コード変更, ファイルダウンロードエンコーディング, Windows-31J設定, テスト設定文字コード
-
-</details>
+> * >   **[Nablarch Application Framework解説書]** -> **[リファレンス]** -> **[ハンドラリファレインス]** -> **[HTTP文字エンコード制御ハンドラ]**
+> * >   **[Nablarch Application Framework解説書]** -> **[NAF実行制御基盤]** -> **[画面オンライン実行制御基盤]** -> **[ファイルダウンロード]**
+> * >   **[プログラミング・単体テストガイド]** -> **[自動テストフレームワークの使用方法]** -> **[リクエスト単体テスト（画面オンライン処理）]**

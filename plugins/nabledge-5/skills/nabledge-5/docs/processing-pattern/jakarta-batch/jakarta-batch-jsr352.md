@@ -1,3 +1,9 @@
 # JSR352に準拠したバッチアプリケーション
 
-**公式ドキュメント**: [JSR352に準拠したバッチアプリケーション](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/index.html)
+本章ではJSR352(Batch Applications for the Java Platform)に準拠したバッチアプリケーションフレームワークを使用して
+バッチアプリケーションを開発するために必要となる情報を提供する。
+
+architecture
+application_design
+getting_started/getting_started
+feature_details

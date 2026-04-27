@@ -1,0 +1,32 @@
+{
+  "id": "testing-framework-03-dealunittest-rest",
+  "title": "取引単体テストの実施方法",
+  "content": "ウェブサービスにおいては、取引は1リクエストで完結することがほとんどである。このように、１リクエスト＝１取引である場合は、取引単体テストを実施する必要はない。\n\nただし、複数のリクエストにより取引が成立する場合は、リクエスト毎のテストを連続実行することにより取引単体テストが実施可能である。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "取引単体テストのテストクラス例",
+      "content": "以下の例では更新対象を取得し、取得した情報から更新用のフォームを作成して更新実行、想定通りに更新されていることを検証している。\n\n```java\n@Test\npublic void プロジェクト更新取引() {\n    String message1 = \"変更対象取得\";\n    RestMockHttpRequest request001 = get(\"/projects?projectName=プロジェクト００１\");\n    HttpResponse response001 = sendRequest(request001);\n    assertStatusCode(message1, HttpResponse.Status.OK, response001);\n    // 取得した変更対象を使って更新用フォームを作成\n    Project project = parseProject(response001).setProjectName(\"プロジェクト８８８\");\n    ProjectUpdateForm updateForm = new ProjectUpdateForm(project);\n\n    String message2 = \"プロジェクト更新\";\n    RestMockHttpRequest updateRequest = put(\"/projects\").setBody(updateForm);\n    HttpResponse updateResponse = sendRequest(updateRequest);\n    assertStatusCode(message2, HttpResponse.Status.OK, updateResponse);\n\n    String message3 = \"取得したプロジェクトが変更した内容と一致すること\";\n    RestMockHttpRequest request888 = get(\"/projects?projectName=プロジェクト８８８\");\n    HttpResponse response888 = sendRequest(request888);\n    assertStatusCode(message3, HttpResponse.Status.OK, response888);\n    assertProjectEquals(project, parseProject(response888));\n}\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "Cookieなど前のレスポンスの情報を引き継ぐ方法",
+      "content": "取引単体テストの場合、セッションIDやCSRFトークンなど、先行するリクエストのレスポンスとしてサーバから受け取った値を\n次のリクエストに含めたい場合がある。\nそのような場合は以下の方法で実現できる。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "`RequestResponseProcessor` の実装クラスを作成する",
+      "content": "RESTfulウェブサービス実行基盤向けテスティングフレームワークでは RequestResponseProcessor という\nリクエスト・レスポンスを操作するためのインターフェースを用意している。\n\n各アプリケーションの要件に合わせてこのインタフェースの実装クラスを作成する。\n\nフレームワークではよく使われる実装として RequestResponseCookieManager を提供している。\nこの実装ではレスポンスの `Set-Cookie` ヘッダからプロパティで指定した名前のクッキーを抽出し、リクエストの `Cookie` ヘッダに値を引き継ぐことができる。\n\nクッキーのうち、 [セッションストア](../../component/libraries/libraries-session-store.md#session-store) のセッションIDに特化した実装として NablarchSIDManager も提供している。\nこの実装では、 [セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler) がセッションIDを保持する際のデフォルトのクッキー名 `NABLARCH_SID` で、 `Set-Cookie` ヘッダからクッキーを抽出する。\nセッションIDのクッキー名をデフォルトから変更した場合は、 RequestResponseCookieManager を使用し、クッキー名を明示する。\n\n`RequestResponseProcessor` は1つの取引単体テストケース内で先に受信したレスポンスの値を次のリクエストに受け渡すために使用する。\nこの時、レスポンスから抽出した値をリクエストに受け渡すために内部に状態として持つことになる。\n以下の方法でコンポーネント設定した場合、NablarchのDIコンテナではインスタンスはシングルトンとなってしまうため\n明示的に状態を初期化しないと、複数のテストケース間で状態が引き継がれてしまう。\nこれを防ぐためにフレームワークではテストケースごとに RequestResponseProcessor#reset を呼び出している。\n複数テストケース間で状態を引き継ぎたくない場合は、 `reset()` に初期化する処理を実装する必要がある。\n内部状態を持たない場合や、複数のテストケース間で状態を共有したい場合は、 `reset()` メソッドを何もしないメソッドとしてもよい。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "コンポーネント設定ファイルに `defaultProcessor` という名前で実装クラスを設定する",
+      "content": "```xml\n<component name=\"defaultProcessor\" class=\"nablarch.test.core.http.RequestResponseCookieManager\"/>\n  <property name=\"cookieName\" value=\"JSESSIONID\"/>\n</component>\n```\n\nまた、複数の `RequestResponseProcessor` を設定したい場合は、 ComplexRequestResponseProcessor を\n使用することで実現できる。\n\n```xml\n<component name=\"defaultProcessor\" class=\"nablarch.test.core.http.ComplexRequestResponseProcessor\">\n  <property name=\"processors\">\n    <list>\n      <component class=\"nablarch.test.core.http.RequestResponseCookieManager\"/>\n        <property name=\"cookieName\" value=\"JSESSIONID\"/>\n      </component>\n      <component class=\"nablarch.test.core.http.NablarchSIDManager\"/>\n      <component class=\"com.example.test.CSRFTokenManager\"/>\n    </list>\n  </property>\n</component>\n```\n\n`defaultProcessor` という名前で設定された `RequestResponseProcessor` は、内蔵サーバへのリクエスト送信前に\nRequestResponseProcessor#processRequest が、\nレスポンス受信後に RequestResponseProcessor#processResponse が\nそれぞれ実行される。",
+      "level": 3
+    }
+  ]
+}

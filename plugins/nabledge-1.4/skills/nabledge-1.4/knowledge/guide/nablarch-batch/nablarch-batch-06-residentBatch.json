@@ -1,0 +1,7 @@
+{
+  "id": "nablarch-batch-06-residentBatch",
+  "title": "常駐バッチ",
+  "content": "常駐バッチの場合でも、アプリケーション実装方法は都度実行バッチと基本的には同じである。\n\n以下に、都度起動バッチと異なる実装点について解説する。\n\n**入力データを取得するためのデータリーダ生成方法が異なる**\n\n常駐バッチの場合には、データベースのテーブルをキューのように扱える\n`データベーステーブルキューリーダ` を使用して入力データを取得する必要がある。\n\n以下に `データベーステーブルキューリーダ` の使用例を示す。\n\n```java\npublic DataReader<SqlRow> createReader(ExecutionContext ctx) {\n\n    // 入力データをデータベースから取得するためのDatabaseRecordReaderを生成する。\n    DatabaseRecordReader reader = new DatabaseRecordReader();\n    SqlPStatement statement = getSqlPStatement(\"GET_BATCH_INPUT_DATA\");\n    reader.setStatement(statement);\n\n    // 生成したDatabaseRecordReader及び、データが存在しない場合の待機時間(ms)と\n    // 主キーを指定してDatabaseTableQueueReaderを生成する。\n    return new DatabaseTableQueueReader(reader, 1000, \"user_info_id\");\n}\n```\n\n**実行タイミングが異なる**\n\n都度起動バッチはジョブスケジューラなどから決まったタイミングで実行されることを想定しているが、\n常駐バッチでは起動されるとプロセスは終了せずに入力データを定期的に取得し処理を行う。\n\n以下に例を示す。\n\n| 形態 | 実行タイミング例 | 説明 |\n|---|---|---|\n| 都度起動バッチ | 月次 | 毎月月末にジョブスケジューラから起動される  入力データに対する処理が終了すると、 バッチプロセスは終了する。 |\n| 常駐バッチ | 1秒毎 | データが存在しなかった場合のみ、左記の時間分 待機する。  待機後に入力データの再取得繰り返すため、 バッチプロセスは終了しない。 |",
+  "no_knowledge_content": false,
+  "sections": []
+}

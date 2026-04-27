@@ -1,0 +1,8 @@
+{
+  "id": "releases-nablarch5-releasenote-別紙_分割後jarの取り込み",
+  "title": "別紙_分割後jarの取り込み",
+  "content": "1. 分割後ライブラリの導入\nリリース zip の mvn_repository/com/nablarch/framework/ ディレクトリ以下のjarファイルを、nablarch-testingを除き全てコピーします。\nこれらのjarファイルが、今までのnablarch.jarに相当します。\nこれらのファイルを、今までnablarch.jarが存在した場所に配置し、クラスパスを設定します。\n2. PJ成果物の修正\n上述のjarファイル群には、後方互換性維持用のライブラリが含まれています（nablarch-backward-compatibility)。\nこのライブラリを導入することにより、分割後のライブラリを導入する際に変更点が極小化されます。\n一部、後方互換性維持ライブラリで吸収しきれない変更がありますので、\n以下の対処を行います。\n2-1. コンポーネント定義ファイルの修正\n以下のクラスについて、コンポーネント定義ファイルでの使用箇所を修正してください。（class属性）\n・nablarch.fw.handler.ProcessStopHandler\n【修正例】\n[変更前]\n<component name=\"processStopHandler\" class=\"nablarch.fw.handler.ProcessStopHandler\">\n[変更後]\n<component name=\"processStopHandler\" class=\"nablarch.fw.handler.BasicProcessStopHandler\">\n2-2. Javaソースファイルの修正\n以下のクラスは、パッケージが変更になりました。\n変更前  変更後\nnablarch.fw.Result.ServiceError  nablarch.fw.results.ServiceError\nnablarch.fw.Result.BadRequest  nablarch.fw.results.BadRequest\nnablarch.fw.Result.Unauthorized  nablarch.fw.results.Unauthorized\nnablarch.fw.Result.Conflicted  nablarch.fw.results.Conflicted\nnablarch.fw.Result.Forbidden  nablarch.fw.results.Forbidden\nnablarch.fw.Result.RequestEntityTooLarge  nablarch.fw.results.RequestEntityTooLarge\nnablarch.fw.Result.ServiceUnavailable  nablarch.fw.results.ServiceUnavailable\nnablarch.fw.Result.InternalError  nablarch.fw.results.InternalError\njavaソースファイルで、上記クラスを参照している場合、\n当該ソースファイルに対して修正を行います。\n【修正例】\n[変更前]\nimport nablarch.fw.Result.ServiceError;\n[変更後]\nimport nablarch.fw.results.ServiceError;\n※Eclipse等のIDEにある、import編成機能を使うと効率よく修正できます。",
+  "no_knowledge_content": false,
+  "sections": [],
+  "sheet_type": "P2"
+}

@@ -69,6 +69,6 @@ nabledge-6 code-analysis
 ## Knowledge Structure
 
 **Files**: `knowledge/features/`, `knowledge/checks/`, `knowledge/releases/`
-**Index**: `knowledge/index.toon` (all entries with search hints)
+**Index**: `knowledge/index.toon` (TOON-formatted list of all knowledge files with title, type, category, processing_patterns, path)
 **Schemas**: `schemas/*.json` (JSON validation schemas)
 **Scripts**: `scripts/*.sh` (pre-built processing scripts)

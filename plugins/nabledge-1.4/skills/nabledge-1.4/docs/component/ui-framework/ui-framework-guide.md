@@ -1,62 +1,50 @@
 # JSP/HTML作成ガイド
 
+この文書では、業務画面JSPの作成方法について記載する。
+
 ## 業務画面JSP作成フロー
 
-業務画面JSPはブラウザで開くことで画面遷移を含む動作確認が可能。画面に表示された項目からシステム機能設計書の項目定義を生成できる。なお、PG/UT工程でサーバサイド処理に必要な情報が追加され、本番環境で動作する業務画面JSPとなる。
+UI開発基盤を利用し、業務画面JSPを作成する際の開発概要を以下に示す。
 
-![業務画面JSP作成フロー](../../../knowledge/component/ui-framework/assets/ui-framework-guide/create_jsp.png)
+![create_jsp.png](../../../knowledge/assets/ui-framework-guide/create_jsp.png)
 
-<details>
-<summary>keywords</summary>
+作成する業務画面JSPは、ブラウザで開くことで画面遷移も含めた動作確認を行うことができる。
+また、画面に表示されている項目からシステム機能設計書に記載する項目定義を生成することもできる。
 
-業務画面JSP, UI開発基盤, 動作確認, 画面遷移, 項目定義生成
-
-</details>
+なお、ここで作成された業務画面JSPにPG/UT工程でサーバサイドでの処理に必要な情報が追加され、本番環境で動作する業務画面JSPとなる。
 
 ## 業務画面JSP作成に利用する開発環境
 
-ブラウザでの動作確認には、指定されたディレクトリ構造でファイルを配置する必要がある（[widget_usage/project_structure](ui-framework-project_structure.md)）。
+業務画面JSPを作成する際に、ブラウザで動作確認を行うためには指定されたディレクトリ構造でファイルを配置する必要がある。
 
-業務画面JSPの作成にはIDE（統合開発環境）の利用を推奨（[widget_usage/develop_environment](ui-framework-develop_environment.md)）。
+ディレクトリ構造の詳細については、以下を参照。
 
-Eclipseのテンプレートを導入することで、より効率的な開発が可能（:doc:`widget_usage/template_list.rst`）。
+widget_usage/project_structure
 
-<details>
-<summary>keywords</summary>
+業務画面JSPは、統合開発環境(IDE)を利用して作成することを推奨している。
 
-ディレクトリ構造, IDE, Eclipse, 統合開発環境, テンプレート, project_structure, develop_environment, template_list
+統合開発環境での開発方法は以下を参照。
 
-</details>
+widget_usage/develop_environment
+
+また、下記ドキュメントを参考にEclipseのテンプレートを導入すると、より効率的に開発を行うことができる。
+
+widget_usage/template_list.rst
 
 ## 業務画面JSPの作成方法
 
-業務画面テンプレートとUI部品（JavaScript、ウィジェット）を利用して業務画面JSPを作成する（[widget_usage/create_with_widget](ui-framework-create_with_widget.md)）。
+開発環境を構築した後は、業務画面テンプレートと、UI部品（JavaScript、ウィジェット）を利用して業務画面JSPを作成していく。
 
-<details>
-<summary>keywords</summary>
-
-業務画面テンプレート, UI部品, ウィジェット, JavaScript, create_with_widget
-
-</details>
+widget_usage/create_with_widget
 
 ## 画面項目定義一覧の作成方法
 
-作成した業務画面JSPから、システム機能設計書に貼り付ける画面項目定義を作成できる（[widget_usage/create_screen_item_list](ui-framework-create_screen_item_list.md)）。
+作成した業務画面JSPから、システム機能設計書に張り付ける画面項目定義を作成する。
 
-<details>
-<summary>keywords</summary>
-
-画面項目定義, システム機能設計書, create_screen_item_list
-
-</details>
+widget_usage/create_screen_item_list
 
 ## フォームクラスの自動生成方法
 
-作成した業務画面JSPから、サーバサイド実装時に使用するフォームクラスのJavaソースコードを自動生成できる（[widget_usage/generating_form_class](ui-framework-generating_form_class-widget_usage.md)）。
+作成した業務画面JSPから、サーバサイドの実装時に使用するフォームクラスのJavaソースコードを生成する。
 
-<details>
-<summary>keywords</summary>
-
-フォームクラス, 自動生成, Javaソースコード, generating_form_class
-
-</details>
+widget_usage/generating_form_class

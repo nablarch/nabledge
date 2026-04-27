@@ -1,0 +1,134 @@
+{
+  "id": "testing-framework-02-entityUnitTestWithNablarchValidation",
+  "title": "Nablarch Validationに対応したForm/Entityのクラス単体テスト",
+  "content": "本項では、入力値チェックを [Nablarch Validation](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation) で実施しているFormおよびEntityクラス単体テスト(以下Form単体テストまたはEntity単体テスト)について説明する。\n両者はほぼ同じように単体テストを行えるため、共通する内容についてはEntity単体テストをベースに説明し、特有の処理については個別に説明する。\n\n> **Tip:**\n> Form、Entityの責務については、各処理方式の責務配置を参照すること。\n> 例： [ウェブアプリケーションの責務配置](../../processing-pattern/web-application/web-application-application-design.md#application-design) 、 [Nablarchバッチアプリケーションの責務配置](../../processing-pattern/nablarch-batch/nablarch-batch-application-design.md#nablarch-batch-application-design)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "Form/Entity単体テストの書き方",
+      "content": "本項で例として使用したテストクラスとテストデータは以下のとおり(右クリック->保存でダウンロード)。\n\n* [テストクラス(SystemAccountEntityTest.java)](assets/testing-framework-02-entityUnitTestWithNablarchValidation/SystemAccountEntityTest.java)\n* [テストデータ(SystemAccountEntityTest.xlsx)](assets/testing-framework-02-entityUnitTestWithNablarchValidation/SystemAccountEntityTest.xlsx)\n* [テスト対象クラス(SystemAccountEntity.java)](assets/testing-framework-02-entityUnitTestWithNablarchValidation/SystemAccountEntity.java)",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "テストデータの作成",
+      "content": "テストデータを記載したExcelファイルそのものの作成方法を説明する。テストデータを記載したExcelファイルは、テストソースコードと同じディレクトリに同じ名前で格納する(拡張子のみ異なる)。\nなお、後述する\n [精査のテストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-validationcase) 、\n [コンストラクタのテストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-constructorcase) 、\n [setter、getterに対するテストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-settergettercase)\nのそれぞれが、1シートずつ使用する前提である。\n\nテストデータの記述方法詳細については、 [自動テストフレームワーク](../../development-tools/testing-framework/testing-framework-01-Abstract.md) 、 [データベースを使用するクラスのテスト](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md) を参照。\n\nなお、メッセージデータやコードマスタなどの、データベースに格納する静的マスタデータは、プロジェクトで管理されたデータがあらかじめ投入されている\n(これらのデータを個別のテストデータとして作成しない)前提である。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "テストクラスの作成",
+      "content": "Form/Entity単体テストのテストクラスは、以下の条件を満たすように作成する。\n\n* テストクラスのパッケージは、テスト対象のForm/Entityと同じとする。\n* <Form/Entityクラス名>Testというクラス名でテストクラスを作成する。\n* nablarch.test.core.db.EntityTestSupportを継承する。\n\n```java\npackage nablarch.sample.management.user; // 【説明】パッケージはSystemAccountEntityと同じ\n\nimport java.util.HashMap;\nimport java.util.Map;\n\nimport org.junit.Test;\n\nimport nablarch.test.core.db.EntityTestSupport;\n\nimport static org.junit.Assert.assertArrayEquals;\nimport static org.junit.Assert.assertEquals;\n\n/**\n * SystemAccountEntityクラスに対するテストを実行するクラス。<br/>\n * テスト内容はエクセルシート参照のこと。\n *\n * @author Miki Habu\n * @since 1.0\n */\npublic class SystemAccountEntityTest extends EntityTestSupport {\n// 【説明】クラス名はSystemAccountEntityTestで、EntityTestSupportを継承する\n\n// ～後略～\n```\n\nテストメソッドの記述方法は本項以降に記載されているコード例を参照。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "文字種と文字列長の単項目精査テストケース",
+      "content": "単項目精査に関するテストケースは、入力される文字種および文字列長に関するものがほとんどである。\n例えば、以下のようなプロパティがあるとする。\n\n* プロパティ名「フリガナ」\n* 最大文字列長は50文字\n* 必須項目\n* 全角カタカナのみを許容する\n\nこの場合、以下のようなテストケースを作成することになる。\n\n| ケース | 観点 |\n|---|---|\n| 全角カタカナ50文字を入力し精査が成功する。 | 最大文字列長、文字種の確認 |\n| 全角カタカナ51文字を入力し精査が失敗する。 | 最大文字列長の確認 |\n| 全角カタカナ1文字を入力し精査が成功する。 | 最小文字列長、文字種の確認 |\n| 空文字を入力し、精査が失敗する。 | 必須精査の確認 |\n| 半角カタカナを入力し精査が失敗する。 | 文字種の確認 [1] |\n\n同様に、半角英字、全角ひらがな、漢字...等が入力され精査が失敗するケースが必要である。\n\nこのように、単項目精査のテストケースは、ケース数が多くなりデータ作成の労力がかかる。\nそこで、単項目精査テスト専用のテスト方法を提供する。これにより以下の効果が見込まれる。\n\n* 単項目精査のテストケース作成が容易になる。\n* 保守性の高いテストデータが作成でき、レビューやメンテナンスが容易になる。\n\n> **Tip:**\n> 本テスト方法は、プロパティとして別のFormを保持するFormに対しては使用できない。その場合、独自に精査処理のテストを実装すること。\n> プロパティとして別のFormを保持するFormとは、以下の形式でプロパティにアクセスする親Formのこと。\n\n> ```none\n> <親Form>.<子Form>.<子フォームのプロパティ名>\n> ```",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "テストケース表の作成方法",
+      "content": "以下のカラムを用意する。\n\n| カラム名 | 記載内容 |\n|---|---|\n| propertyName | テスト対象のプロパティ名 |\n| allowEmpty | そのプロパティが未入力を許容するか |\n| min | そのプロパティが入力値として許容する最小文字列長（ 省略可） |\n| max | そのプロパティが入力値として許容する最大文字列長 |\n| messageIdWhenEmptyInput | 未入力時に期待するメッセージID（省略可）  [2] |\n| messageIdWhenInvalidLength | 文字列長不適合時に期待するメッセージID（省略可） [3] |\n| messageIdWhenNotApplicable | 文字種不適合時に期待するメッセージID |\n| 半角英字 | 半角英字を許容するか |\n| 半角数字 | 半角数字を許容するか |\n| 半角記号 | 半角記号を許容するか |\n| 半角カナ | 半角カナを許容するか |\n| 全角英字 | 全角英字を許容するか |\n| 全角数字 | 全角数字を許容するか |\n| 全角ひらがな | 全角ひらがなを許容するか |\n| 全角カタカナ | 全角カタカナを許容するか |\n| 全角漢字 | 全角漢字を許容するか |\n| 全角記号その他 | 全角記号その他を許容するか |\n| 外字 | 外字を許容するか |\n\nmessageIdWhenEmptyInputを省略した場合は、 [自動テストフレームワーク設定値](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-entitytestconfiguration) で設定したemptyInputMessageId\nの値が使用される。\n\nmessageIdWhenInvalidLengthを省略した場合は、 [自動テストフレームワーク設定値](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-entitytestconfiguration) で\n設定したデフォルト値が使用される。省略時にどのデフォルト値が使用されるかは、max欄及びmin欄の記載によって決まり、以下の通り。\n\n| min欄の記載 | maxとminの比較 | 省略時に使用されるデフォルト値 |\n|---|---|---|\n| なし | (該当なし) | maxMessageId |\n| あり | max > min | maxAndMinMessageId（超過時）、underLimitMessageId（不足時） |\n| あり | max = min | fixLengthMessageId |\n\n許容するかどうかを記入するカラムには、以下の値を設定する。\n\n| 設定内容 | 設定値 | 備考 |\n|---|---|---|\n| 許容する | o | 半角英小文字のオー |\n| 許容しない | x | 半角英小文字のエックス |\n\n具体例を以下に示す。\n\n![entityUnitTest_CharsetAndLengthExample.png](assets/testing-framework-02-entityUnitTestWithNablarchValidation/entityUnitTest_CharsetAndLengthExample.png)",
+      "level": 4
+    },
+    {
+      "id": "s6",
+      "title": "テストメソッドの作成方法",
+      "content": "スーパクラスの以下のメソッドを起動する。\n\n```java\nvoid testValidateCharsetAndLength(Class entityClass, String sheetName, String id)\n```\n\n```java\n // 【説明】～前略～\n\npublic class SystemAccountEntityTest extends EntityTestSupport {\n\n     /** テスト対象エンティティクラス */\n     private static final Class<SystemAccountEntity> ENTITY_CLASS = SystemAccountEntity.class;\n\n     /**\n      * 文字種および文字列長のテストケース\n      */\n     @Test\n     public void testCharsetAndLength() {\n          // 【説明】テストデータを記載したシート名\n          String sheetName = \"testCharsetAndLength\";\n\n          // 【説明】テストデータのID\n          String id = \"charsetAndLength\";\n\n          // 【説明】テスト実行\n          testValidateCharsetAndLength(ENTITY_CLASS, sheetName, id);\n     }\n\n     // 【説明】～後略～\n```\n\nこのメソッドを実行すると、テストデータの各行毎に以下の観点でテストが実行される。\n\n| 観点 | 入力値 | 備考 |\n|---|---|---|\n| 文字種 | 半角英字 | max(最大文字列長)欄に記載した長さの文字列で 構成される。 |\n| 文字種 | 半角数字 |  |\n| 文字種 | 半角数字 |  |\n| 文字種 | 半角記号 |  |\n| 文字種 | 半角カナ |  |\n| 文字種 | 全角英字 |  |\n| 文字種 | 全角数字 |  |\n| 文字種 | 全角ひらがな |  |\n| 文字種 | 全角カタカナ |  |\n| 文字種 | 全角漢字 |  |\n| 文字種 | 全角記号その他 |  |\n| 文字種 | 外字 |  |\n| 未入力 | 空文字 | 長さ0の文字列 |\n| 最小文字列 | 最小文字列長の文字列 | 入力値は、o印を付けた文字種で構成される。 min欄が省略された場合は、 文字列長不足のテストは実行されない。 |\n| 最長文字列 | 最長文字列長の文字列 |  |\n| 文字列長不足 | 最小文字列長－１の文字列 |  |\n| 文字列長超過 | 最大文字列長＋１の文字列 |  |",
+      "level": 4
+    },
+    {
+      "id": "s7",
+      "title": "その他の単項目精査のテストケース",
+      "content": "前述の、文字種と文字列長の単項目精査テストケースを使用すれば\n大部分の単項目精査がテストできるが、一部の精査についてはカバーできないものもある。\n例えば、数値入力項目の範囲精査が挙げられる。\n\nこのような単項目精査のテストについても、簡易にテストできる仕組みを用意している。\n各プロパティについて、１つの入力値と期待するメッセージIDのペアを記述することで、\n任意の値で単項目精査のテストができる。\n\n> **Tip:**\n> 本テスト方法は、プロパティとして別のFormを保持するFormに対しては使用できない。その場合は、独自に精査処理のテストを実装すること。\n> プロパティとして別のFormを保持するFormとは、以下の形式でプロパティにアクセスする親Formのこと。\n\n> ```none\n> <親Form>.<子Form>.<子フォームのプロパティ名>\n> ```",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "テストケース表の作成方法",
+      "content": "以下のカラムを用意する。\n\n| カラム名 | 記載内容 |\n|---|---|\n| propertyName | テスト対象のプロパティ名 |\n| case | テストケースの簡単な説明 |\n| input1 [4] | 入力値 [5] |\n| messageId | 上記入力値で単項目精査した場合に、発生すると期待す るメッセージID（精査エラーにならないことを期待する 場合は空欄） |\n\nひとつのキーに対して複数のパラメータを指定する場合は、input2, input3 というようにカラムを増やす。\n\n [セルへの特殊な記述方法](../../development-tools/testing-framework/testing-framework-01-Abstract.md#special-notation-in-cell) の記法を使用することで、効率的に入力値を作成できる。\n\n具体例を以下に示す。\n\n![entityUnitTest_singleValidationDataExample.png](assets/testing-framework-02-entityUnitTestWithNablarchValidation/entityUnitTest_singleValidationDataExample.png)",
+      "level": 4
+    },
+    {
+      "id": "s9",
+      "title": "テストメソッドの作成方法",
+      "content": "スーパクラスの以下のメソッドを起動する。\n\n```java\nvoid testSingleValidation(Class entityClass, String sheetName, String id)\n```\n\n```java\n// 【説明】～前略～\n\npublic class SystemAccountEntityTest extends EntityTestSupport {\n\n     /** テスト対象エンティティクラス */\n     private static final Class<SystemAccountEntity> ENTITY_CLASS = SystemAccountEntity.class;\n\n     /**\n      * 文字種および文字列長の単項目精査テストケース\n      */\n     // 【説明】～中略～\n\n     /**\n      * 単項目精査のテストケース（上記以外）\n      */\n     @Test\n     public void testSingleValidation() {\n         String sheetName = \"testSingleValidation\";\n         String id = \"singleValidation\";\n         testSingleValidation(ENTITY_CLASS, sheetName, id);\n     }\n\n      // 【説明】～後略～\n```",
+      "level": 4
+    },
+    {
+      "id": "s10",
+      "title": "バリデーションメソッドのテストケース",
+      "content": "上記までの単項目精査のテストでは、エンティティのセッターメソッドに付与されたアノテーションが\n正しいかテストされ、エンティティに実装したバリデーションメソッド [6] は実行されていない。\n\nその為、独自のバリデーションメソッドをエンティティに実装した場合は、\n別途テストを作成する必要がある。\n\n`@ValidateFor` アノテーションを付与したstaticメソッドのこと",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "テストケース表の作成",
+      "content": "* IDは\"testShots\"固定とする。\n* 以下のカラムを用意する。\n\n| カラム名 | 記載内容 |\n|---|---|\n| title | テストケースのタイトル |\n| description | テストケースの簡単な説明 |\n| expectedMessageId *ｎ*  [7] | 期待するメッセージ（ *ｎ* は1からの連番 ） |\n| propertyName *ｎ* | 期待するプロパティ（ *ｎ* は1からの連番 ） |\n\n複数のメッセージを期待する場合、expectedMessageId2, propertyName2というように数値を増やして右側に追加していく。\n\n* 入力パラメータ表の作成\n\n  * IDは\"params\"固定とする。\n  * 上記のテストケース表に対応する、入力パラメータ [8] を1行ずつ記載する。\n\n [セルへの特殊な記述方法](../../development-tools/testing-framework/testing-framework-01-Abstract.md#special-notation-in-cell) の記法を使用することで、効率的に入力値を作成できる。\n\n具体例を以下に示す。\n\n![entityUnitTest_validationTestData.png](assets/testing-framework-02-entityUnitTestWithNablarchValidation/entityUnitTest_validationTestData.png)",
+      "level": 4
+    },
+    {
+      "id": "s12",
+      "title": "テストケース、テストデータの作成",
+      "content": "",
+      "level": 4
+    },
+    {
+      "id": "s13",
+      "title": "精査対象確認",
+      "content": "精査対象のプロパティを指定( [Nablarch Validation](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation) 参照)した場合、\nその指定が正しいかどうか確認するケースを作成する。\n\n全てのプロパティに対して、おのおの単項目精査でエラーとなるデータを用意する。\n精査対象プロパティの指定が正しければ、精査対象のプロパティだけが単項目精査になるはずである。\nよって、期待値として、全精査対象プロパティ名と、各プロパティ単項目精査エラー時のメッセージIDを記載する。\n\n> **Tip:**\n> 精査対象プロパティが誤って精査対象から漏れていた場合、\n> 期待したメッセージが出力されない為、メッセージIDのアサートが失敗する。\n> また、精査対象でないプロパティが誤って精査対象となっていた場合は、\n> 入力値が不正により単項目精査が失敗し、予期しないメッセージが出力される。\n> これにより、精査対象の誤りを検知できる。\n\nテストケース表には、全精査対象プロパティのプロパティ名と、\nそのプロパティ単項目精査エラーメッセージIDを記載する。\n\n![entityUnitTest_ValidationPropTestCases.png](assets/testing-framework-02-entityUnitTestWithNablarchValidation/entityUnitTest_ValidationPropTestCases.png)\n\n入力パラメータ表には、全てのプロパティに対してそれぞれ単項目精査エラーとなる値を記載する。\n\n![entityUnitTest_ValidationPropParams.png](assets/testing-framework-02-entityUnitTestWithNablarchValidation/entityUnitTest_ValidationPropParams.png)\n\n> **Tip:**\n> Form単体テストのテストケースやテストデータを作成する際、\n> **プロパティに保持している別のFormのプロパティ** を指定したいことがある。\n> この場合、次のように指定できる。\n\n> * >   Formのコード例\n\n> ```java\n> public class SampleForm {\n> \n>     /** システムユーザ */\n>     private SystemUserEntity systemUser;\n> \n>     /** 電話番号配列 */\n>     private UserTelEntity[] userTelArray;\n> \n>     // 【説明】プロパティ以外は省略\n> \n> }\n> ```\n\n> * >   保持しているFormのプロパティを指定する方法(SystemUserEntity.userIdを指定する場合)\n\n> ```none\n> sampleForm.systemUser.userId\n> ```\n\n> * >   Form配列の要素のプロパティを指定する方法(UserTelEntity配列の先頭要素のプロパティを指定する場合)\n\n> ```none\n> sampleForm.userTelArray[0].telNoArea\n> ```",
+      "level": 5
+    },
+    {
+      "id": "s14",
+      "title": "項目間精査など",
+      "content": "項目間精査など、バリデーションメソッドの [精査対象確認](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-validationmethodspecifynormal)\nで行った精査対象指定以外の動作確認を行うケースを作成する。\n\n下図では、\"newPasswordとconfirmPasswordが等しいこと\"というバリデーションメソッドに対する正常系のケースを作成している。\n\n![entityUnitTest_RelationalValidation.png](assets/testing-framework-02-entityUnitTestWithNablarchValidation/entityUnitTest_RelationalValidation.png)",
+      "level": 5
+    },
+    {
+      "id": "s15",
+      "title": "テストメソッドの作成方法",
+      "content": "これまでに作成したテストケース、データを使用するテストメソッドを以下に示す。\n下記コードの変数内容を変更するだけで、異なるEntityの精査のテストに対応できる。\n\n```java\n // ～前略～\n\n /** テスト対象エンティティクラス */\n private static final Class<SystemAccountEntity> ENTITY_CLASS = SystemAccountEntity.class;\n\n // ～中略～\n /**\n  * {@link SystemAccountEntity#validateForRegisterUser(nablarch.core.validation.ValidationContext)} のテスト。\n  */\n @Test\n public void testValidateForRegisterUser() {\n     // 精査実行\n     String sheetName = \"testValidateForRegisterUser\";\n     String validateFor = \"registerUser\";\n     testValidateAndConvert(ENTITY_CLASS, sheetName, validateFor);\n }\n\n// ～後略～\n```",
+      "level": 4
+    },
+    {
+      "id": "s16",
+      "title": "コンストラクタに対するテストケース",
+      "content": "Nablarch Validationで入力値チェックを実施しているEntityには、 [バリデーションを実行する](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-execute) に記載の通り\n`Map<String, Object>` を引数にとるコンストラクタが実装されており、このコンストラクタに対するテストを作成する必要がある。\n\nコンストラクタに対するテストでは、引数に指定した値が、正しくプロパティに設定されているかを確認するケースを作成する。\nこのとき対象となるプロパティは、Entityに定義されている全てのプロパティである。\nテストデータには、プロパティ名とそれに設定するデータと期待値(getterで取得した値と比較するデータ)を用意する。\n\n下図では、以下のように各プロパティに値を指定している。\nテストでは、コンストラクタにこれらの値の組み合わせを与えたとき、各プロパティに指定した値が設定されているか(getterを呼び出して、想定通りの値が取得できるか)確認している。\n\n実際のテストコードでは、コンストラクタへの値の設定及び値の確認は、自動テストフレームワークで提供されるメソッド内で行われる。\n詳細は、 [テストコード](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#test-constructor-java-label) を参照すること。\n\n> **Tip:**\n> Entityは自動生成されるため、アプリケーションで使用されないコンストラクタが生成される可能性がある。\n> その場合リクエスト単体テストではテストできないため、Entity単体テストでコンストラクタに対するテストを必ず行うこと。\n\n> 一方、一般的なFormの場合、アプリケーションで使用するコンストラクタのみを作成する。\n> したがって、リクエスト単体テストでコンストラクタのテストを行うことができる。\n> そのため、一般的なFormについては、クラス単体テストでコンストラクタのテストを行う必要はない。",
+      "level": 3
+    },
+    {
+      "id": "s17",
+      "title": "Excelへの定義",
+      "content": "![entityUnitTest_Constructor.png](assets/testing-framework-02-entityUnitTestWithNablarchValidation/entityUnitTest_Constructor.png)\n\n上記設定値のテスト内容(抜粋)\n\n| プロパティ | コンストラクタに設定する値 | 期待値(getterから取得される値 |\n|---|---|---|\n| userId | userid | userid |\n| loginId | loginid | loginid |\n| password | password | password |\n\nこのデータを使用するテストメソッドを以下に示す。\n\n```java\n// 【説明】～前略～\n\npublic class SystemAccountEntityTest extends EntityTestSupport {\n\n     /** コンストラクタのテスト */\n     @Test\n     public void testConstructor() {\n         Class<?> entityClass = SystemAccountEntity.class;\n         String sheetName = \"testAccessor\";\n         String id = \"testConstructor\";\n         testConstructorAndGetter(entityClass, sheetName, id);\n     }\n\n}\n```\n\n> **Tip:**\n> testConstructorAndGetterでテスト可能なプロパティの型(クラス)には制限がある。\n> 下記型(クラス)に該当しない場合には、各テストクラスにてコンストラクタとgetterを明示的に呼び出してテストする必要がある。\n\n> * >   String及び、String配列\n> * >   BigDecimal及び、BigDecimal配列\n> * >   java.util.Date及び、java.util.Date配列(Excelへはyyyy-MM-dd形式もしくはyyyy-MM-dd HH:mm:ss形式で記述すること)\n> * >   valueOf(String)メソッドを持つクラス及び、その配列クラス(例えばIntegerやLong、java.sql.Dateやjava.sql.Timestampなど)\n\n> 以下に、個別のテスト実施方法の例を示す。\n> この例では、Formが `List<String>` 型のプロパティ `users` を持っているとしている。\n\n> * >   Excelへのデータ記述例\n\n>   ![entityUnitTest_ConstructorOther.png](assets/testing-framework-02-entityUnitTestWithNablarchValidation/entityUnitTest_ConstructorOther.png)\n> * >   テストコード例\n\n>   ```java\n>   /** コンストラクタのテスト */\n>   @Test\n>   public void testConstructor() {\n>       // 【説明】\n>       // 共通にテストが実施出来る項目は、testConstructorAndGetterを使用してテストを実施する。\n>       Class<?> entityClass = SystemAccountEntity.class;\n>       String sheetName = \"testAccessor\";\n>       String id = \"testConstructor\";\n>       testConstructorAndGetter(entityClass, sheetName, id);\n>   \n>       // 【説明】\n>       // 共通にテストが実施出来ない項目は、個別にテストを実施する。\n>   \n>       // 【説明】\n>       // getParamMapを呼び出し、個別にテストを行うプロパティのテストデータを取得する。\n>       // (テスト対象のプロパティが複数ある場合は、getListParamMapを使用する。)\n>       Map<String, String[]> data = getParamMap(sheetName, \"testConstructorOther\");\n>   \n>       // 【説明】Map<String, String[]>から、Entityのコンストラクタの引数であるMap<String, Object>へ変換する\n>       Map<String, Object> params = new HashMap<String, Object>();\n>       params.put(\"users\", Arrays.asList(data.get(\"set\")));\n>   \n>       // 【説明】上記で生成したMap<String, Object>を引数にEntityを生成する。\n>       SystemAccountEntity entity = new SystemAccountEntity(params);\n>   \n>       // 【説明】getterを呼び出し、期待値通りの値が返却されることを確認する。\n>       assertEquals(entity.getUsers(), Arrays.asList(data.get(\"get\")));\n>   \n>   }\n>   ```",
+      "level": 4
+    },
+    {
+      "id": "s18",
+      "title": "setter、getterに対するテストケース",
+      "content": "[setter、getterに対するテストケース](../../development-tools/testing-framework/testing-framework-01-entityUnitTestWithBeanValidation.md#entityunittest-settergettercase-beanvalidation) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s19",
+      "title": "自動テストフレームワーク設定値",
+      "content": "[文字種と文字列長の単項目精査テストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-validationcase) を実施する際に必要な初期値設定について説明する。",
+      "level": 3
+    },
+    {
+      "id": "s20",
+      "title": "設定項目一覧",
+      "content": "`nablarch.test.core.entity.EntityTestConfiguration` クラスを使用し、\n以下の値をコンポーネント設定ファイルで設定する（全項目必須）。\n\n| 設定項目名 | 説明 |\n|---|---|\n| maxMessageId | 最大文字列長超過時のメッセージID |\n| maxAndMinMessageId | 最長最小文字列長範囲外のメッセージID(可変長) |\n| fixLengthMessageId | 最長最小文字列長範囲外のメッセージID(固定長) |\n| underLimitMessageId | 文字列長不足時のメッセージID |\n| emptyInputMessageId | 未入力時のメッセージID |\n| characterGenerator | 文字列生成クラス  [9] |\n\n`nablarch.test.core.util.generator.CharacterGenerator` の実装クラスを指定する。\nこのクラスがテスト用の入力値を生成する。\n通常は、 `nablarch.test.core.util.generator.BasicJapaneseCharacterGenerator` を使用すれば良い。\n\n設定するメッセージIDは、バリデータの設定値と合致させる。\n\n（以下の記述例を参照）",
+      "level": 4
+    },
+    {
+      "id": "s21",
+      "title": "コンポーネント設定ファイルの記述例",
+      "content": "以下の設定値を使用する場合のコンポーネント設定ファイル記述例を示す。\n\n**【精査クラスのコンポーネント設定ファイル】**\n\n```xml\n<property name=\"validators\">\n  <list>\n    <component class=\"nablarch.core.validation.validator.RequiredValidator\">\n      <property name=\"messageId\" value=\"MSG00010\"/>\n    </component>\n    <component class=\"nablarch.core.validation.validator.LengthValidator\">\n      <property name=\"maxMessageId\" value=\"MSG00011\"/>\n      <property name=\"maxAndMinMessageId\" value=\"MSG00011\"/>\n      <property name=\"fixLengthMessageId\" value=\"MSG00023\"/>\n    </component>\n    <!-- 中略 -->\n</property>\n```\n\n**【テストのコンポーネント設定ファイル】**\n\n```xml\n<!-- エンティティテスト設定 -->\n<component name=\"entityTestConfiguration\" class=\"nablarch.test.core.entity.EntityTestConfiguration\">\n  <property name=\"maxMessageId\"        value=\"MSG00011\"/>\n  <property name=\"maxAndMinMessageId\"  value=\"MSG00011\"/>\n  <property name=\"fixLengthMessageId\"  value=\"MSG00023\"/>\n  <property name=\"underLimitMessageId\" value=\"MSG00011\"/>\n  <property name=\"emptyInputMessageId\" value=\"MSG00010\"/>\n  <property name=\"characterGenerator\">\n    <component name=\"characterGenerator\"\n               class=\"nablarch.test.core.util.generator.BasicJapaneseCharacterGenerator\"/>\n  </property>\n</component>\n```",
+      "level": 4
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "http-messaging-04-explanation-http-real-02-basic",
+  "title": "HTTP同期応答型メッセージ受信処理のアプリケーション構造",
+  "content": "HTTP同期応答型メッセージ受信処理で共通の基本的なクラス構造については、\n [同期応答型メッセージ受信処理のアプリケーション構造](../../guide/mom-messaging/mom-messaging-04-explanation-real-02-basic.md) を参照すること。\n\n本項では、 [同期応答型メッセージ受信処理のアプリケーション構造](../../guide/mom-messaging/mom-messaging-04-explanation-real-02-basic.md) と異なる箇所の解説を行う。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "Nablarch Application Frameworkでは、複雑になりがちなメッセージング処理を簡潔かつ堅牢に作成できるように以下のような機能を備えている。\n\n* Nablarch共通の実装方法\n\n業務Actionの実装内容は、MOMによるメッセージング処理と同様の実装にて、HTTPメッセージングを実現できる。\n\n* データ形式\n\nHTTP同期応答型メッセージングのデータ形式として一般的に用いるJSON/XML形式についても、\n汎用データフォーマッターでサポートしており、従来の固定長ファイルやCSV/TSVと同様に扱うことができる。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "処理の流れ",
+      "content": "WebコンテナからNablarch Application Frameworkへ要求電文が到達する毎に、以下の処理が実行される。\n\n1. Nablarch Application Frameworkはmessaging.configのURIをもとに、業務アクションクラスを起動する。\n2. 業務アクションは、要求電文を受け取り業務処理を実行し、応答電文を戻り値として返却する。\n3. Nablarch Application Frameworkは、返却された応答電文をWebコンテナへ返却する。\n\n![sequence.png](assets/http-messaging-04-explanation-http-real-02-basic/sequence.png)",
+      "level": 2
+    }
+  ]
+}

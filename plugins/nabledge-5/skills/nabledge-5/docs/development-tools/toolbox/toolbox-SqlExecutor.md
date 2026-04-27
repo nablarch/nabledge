@@ -1,200 +1,268 @@
 # Nablarch SQL Executor
 
-**公式ドキュメント**: [Nablarch SQL Executor](https://nablarch.github.io/docs/LATEST/doc/development_tools/toolbox/SqlExecutor/SqlExecutor.html)
+**目次**
+
+* 概要
+* 想定使用方法
+
+  * 本ツールの想定使用方法
+  * DB接続方法の選択
+  * 制約
+* 配布方法
+
+  * 前提条件
+  * ソースコード取得
+  * DB設定変更
+  * 起動確認
+  * 配布ファイル作成
+* 配布されたツールの使用方法
+
+  * 前提条件
+  * 配布されたファイルの起動
+  * 配布時に設定済みのDB以外に接続したい場合
+* 操作方法
+
+  * 基本的な操作方法
+  * SQLExecutorでの記法
+* FAQ
 
 ## 概要
 
-Nablarch特殊構文を含むSQLファイルを対話的に実行するツール。PJにおいて設計者がSQLを設計する際などに使用する。PJで使用するDBを設定してビルドして使う必要がある。
+Nablarch SQL ExecutorはNablarch特殊構文を含むSQLファイルを対話的に実行するツールである。
+PJにおいて設計者がSQLを設計する際などに使用する。
 
-## 基本的な操作方法
-
-初回起動時はカレントディレクトリ配下のSQLファイルの一覧を表示する。SQLファイルが存在しない場合は初期画面が表示される。
-
-右下の入力欄にローカルフォルダのパスを指定して **[再検索]** をクリックすると、配下のSQLファイルとステートメント一覧が表示される。
-
-各ステートメント名をクリックすると内容と操作ボタンが表示される。埋込み変数は入力フィールドになっており、**[Run]** で実行、**[Fill]** で前回入力値を復元できる。
-
-## SQLExecutorでの記法
-
-| 入力値の種類 | 書式 |
-|---|---|
-| 文字列 | `'` で囲む（例: `'value'`） |
-| 文字列以外（数値・真偽値等） | `'` で囲まない |
-| IN句の条件 | `[]` で囲み、複数項目は `,` で区切る |
-| 日付型(DATE) | SQL92 DATEリテラル書式（例: `1970-12-11`）または `SYSDATE`（現在時刻） |
-
-> **警告**: 本ツールにおいて `,` をIN句の検索条件として扱うことはできない。
-
-> **警告**: DATETIMEリテラルを条件とした検索はできない。
-
-`$if` 特殊構文とIN句の条件に同一の変数名を指定している場合は、同一の値を入力する必要がある。
-
-IN句の条件に `[]` が付与されていない場合、以下のエラーが出力される:
-`java.lang.IllegalArgumentException: object type in field is invalid. valid object type is Collection or Array.`
-
-## FAQ
-
-**Q1: 実行時ログの確認方法**
-- `sql.log` → SQL文の実行時ログ
-- `app.log` → 全実行ログ
-
-**Q2: 異常終了時の対処（何も出力されない場合）**
-
-起動時のDBコネクションエラーなどは標準エラー出力ではなく `app.log`（カレントディレクトリ直下）に出力される。`app.log` の内容を確認して対処する。
-
-**Q3: 「パラメータの指定方法が正しくありません」の対処**
-- 文字列を入力する場合は `'` で囲んでいるか確認する
-- 真偽値・日付型を入力する場合はスペルミスや形式ミスがないか確認する
-
-<details>
-<summary>keywords</summary>
-
-SQL Executor, Nablarch特殊構文, SQLファイル実行, 対話的実行, 開発ツール, Nablarch SQL Executor, 設計者, SQL実行, SQLExecutor操作, IN句, 日付型, パラメータ入力, $if特殊構文, DATEリテラル, SYSDATE, app.log, sql.log, IllegalArgumentException, エラー対処, 再検索, Fill, Run, 初回起動
-
-</details>
+本ツールはPJで使用するDBを設定して、ビルドして使う必要がある。
 
 ## 想定使用方法
 
-## 想定使用方法
+### 本ツールの想定使用方法
 
-PJの環境構築担当者がSQL Executorをビルドして配布し、配布したファイルを設計者が使用する。ビルド済みのツールはJavaとDBへの接続環境があれば使用可能。
+本ツールを使用するためには、DBを設定して、Mavenでビルドする必要がある。
+ビルド済みのツールは配布可能であるため、本作業はPJ内で1人が対応すればよい。
 
-## DB接続方法
+本ツールは以下のような使用方法を想定している。
 
-以下2つの方法から選択可能:
-- PJ共通のDBに全員が接続する
-- 各ユーザがローカルのDBに接続する
+* PJの環境構築担当者がSQL Executorをビルドして配布する。
+* 配布したファイルは設計者が使用する。
 
-## 制約
+ビルド済みのツールはJavaとDBへの接続環境があれば使用可能である。
 
-以下のSQLは実行不可。使用する場合はDBに付属のSQL実行環境を使うこと:
-- WITH句で始まるSQL
-- IN句の条件に`,`を含むSQL
-- DATETIMEリテラルを条件とした検索
+![配布イメージ](../../../knowledge/assets/toolbox-SqlExecutor/sql-executor-1.png)
 
-> **補足**: Nablarchでは2-way SQL向け[Doma](https://doma.readthedocs.io/en/stable/)の [アダプタ](../../component/adapters/adapters-doma_adaptor.md) を提供。Domaを使用すると複雑なセットアップ不要で本番環境用SQLをテスト実行可能（動的条件でもSQLを書き換えずに実行可能）。このため、Domaの使用を検討することを推奨。
+[1]
 
-<details>
-<summary>keywords</summary>
+### DB接続方法の選択
 
-制約, WITH句, IN句, DATETIMEリテラル, DB接続方法, Domaアダプタ, doma_adaptor, 共通DB, ローカルDB, 配布モデル
+本ツールは、DBの接続において以下の2つの方法をとることができる。
 
-</details>
+* ツール使用者全員がPJ共通のDBに接続する
+* ツール使用者それぞれがローカルのDBに接続する
+
+本ツールを使用する際、PJ共通のDBを使用できる。
+
+![各ユーザが同じDBに接続するイメージ](../../../knowledge/assets/toolbox-SqlExecutor/sql-executor-db-same.png)
+
+[1]
+
+ツール使用者それぞれがローカルのDBも使用できる。
+
+![各ユーザが別々のDBに接続するイメージ](../../../knowledge/assets/toolbox-SqlExecutor/sql-executor-db-separate.png)
+
+[1]
+
+### 制約
+
+本ツールには以下の制約がある。
+このため、これらのSQLを実行したい場合には、本ツールではなく使用するデータベース付属のSQL実行環境などを用いること。
+
+* WITH句で始まるSQLを実行することが出来ない
+* IN句の条件に `,` を含めることができない
+* DATETIMEリテラルを条件とした検索ができない。
+
+> **Tip:**
+> Nablarchでは2-way SQLとしてSQLを記述できる [Doma(外部サイト、英語)](https://doma.readthedocs.io/en/stable/) 用の [アダプタ](../../component/adapters/adapters-doma-adaptor.md#doma-adaptor) を提供している。
+
+> Domaを使用した場合、本ツールのような複雑なツールのセットアップを行わなくても、本番環境用に定義したSQLを簡単にテスト実行出来る。
+> (動的な条件を構築するような場合でも、SQLを書き換えることなく実行できる)
+
+> このため、Domaの使用を検討することを推奨する。
 
 ## 配布方法
 
-## 前提条件
+### 前提条件
 
-- Firefox または Chrome がインストール済みであること
-- Nablarchの開発環境が設定済みであること
-- Maven Central RepositoryにJDBCドライバが存在しないRDBMSを使用する場合は、Project Local RepositoryまたはLocal RepositoryにJDBCドライバを登録済みであること（:ref:`customizeDBAddFileMavenRepo` 参照）
+本ツールをビルドし配布するための前提条件を以下に示す。
 
-## ソースコード取得
+* FirefoxまたはChromeがインストール済みであること。
+* Nablarchの開発環境が設定済みであること。
+* Maven Central RepositoryにJDBCドライバが存在しないRDBMSを使用する場合は、Project Local RepositoryまたはLocal RepositoryにJDBCドライバを登録済みであること。
+  登録方法は、[Mavenリポジトリへのファイル登録](../../setup/blank-project/blank-project-CustomizeDB.md#customizedbaddfilemavenrepo) を参照。
 
-[https://github.com/nablarch/sql-executor](https://github.com/nablarch/sql-executor) をclone。
+### ソースコード取得
 
-## DB設定変更
+以下のサイトで公開されているリポジトリをcloneする。
 
-### src/main/resources/db.config
+[https://github.com/nablarch/sql-executor](https://github.com/nablarch/sql-executor) (外部サイト)
 
-接続URL、ユーザ、パスワードを設定:
+### DB設定変更
 
-**H2（デフォルト）**:
-```
+使用するRDBMSに応じて設定変更を行う。
+
+#### 基本設定の変更
+
+##### src/main/resources/db.configの修正
+
+接続URLやユーザ、パスワードを変更する場合、src/main/resources/db.configを修正する。
+
+以下に設定例を示す。
+
+**H2の設定例(デフォルト)**
+
+```text
 db.url=jdbc:h2:./h2/db/SAMPLE
 db.user=SAMPLE
 db.password=SAMPLE
 ```
 
-**Oracle**:
-```
+**Oracleの設定例**
+
+```text
+# jdbc:oracle:thin:@ホスト名:ポート番号:データベースのSID
 db.url=jdbc:oracle:thin:@localhost:1521/xe
 db.user=sample
 db.password=sample
 ```
 
-**PostgreSQL**:
-```
+**PostgreSQLの設定例**
+
+```text
+# jdbc:postgresql://ホスト名:ポート番号/データベース名
 db.url=jdbc:postgresql://localhost:5432/postgres
 db.user=sample
 db.password=sample
 ```
 
-**DB2**:
-```
+**DB2の設定例**
+
+```text
+# jdbc:db2://ホスト名:ポート番号/データベース名
 db.url=jdbc:db2://localhost:50000/SAMPLE
 db.user=sample
 db.password=sample
 ```
 
-**SQL Server**:
-```
+**SQL Serverの設定例**
+
+```text
+# jdbc:sqlserver://ホスト名:ポート番号;instanceName=インスタンス名
 db.url=jdbc:sqlserver://localhost:1433;instanceName=SQLEXPRESS
 db.user=SAMPLE
 db.password=SAMPLE
 ```
 
-### pom.xml（JDBCドライバ依存）
+#### JDBCドライバの変更
 
-使用するRDBMSに合わせてJDBCドライバの依存を更新:
+JDBCドライバを変更する場合、以下のファイルを修正する。
 
-**H2（デフォルト）**:
+##### pom.xml
+
+pom.xml中の「使用するRDBMSにあわせて、下記JDBCドライバの dependency を更新してください。」とのコメントがある箇所を修正する。
+
+以下、データベース毎の設定例を記述する。
+
+**H2の設定例(デフォルト)**
+
 ```xml
-<dependency>
-  <groupId>com.h2database</groupId>
-  <artifactId>h2</artifactId>
-  <scope>runtime</scope>
-</dependency>
+<dependencies>
+  <!-- 中略 -->
+
+  <!-- 使用するRDBMSにあわせて、下記JDBCドライバの dependency を更新してください。 -->
+  <dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <scope>runtime</scope>
+  </dependency>
+</dependencies>
 ```
 
-**Oracle**:
+**Oracleの設定例**
+
 ```xml
-<dependency>
-  <groupId>com.oracle.database.jdbc</groupId>
-  <artifactId>ojdbc6</artifactId>
-  <version>11.2.0.4</version>
-  <scope>runtime</scope>
-</dependency>
+<dependencies>
+  <!-- 中略 -->
+
+  <!-- 使用するRDBMSにあわせて、下記JDBCドライバの dependency を更新してください。 -->
+  <dependency>
+    <groupId>com.oracle.database.jdbc</groupId>
+    <artifactId>ojdbc6</artifactId>
+    <version>11.2.0.4</version>
+    <scope>runtime</scope>
+  </dependency>
+</dependencies>
 ```
 
-**PostgreSQL**:
+**PostgreSQLの設定例**
+
 ```xml
-<dependency>
-  <groupId>org.postgresql</groupId>
-  <artifactId>postgresql</artifactId>
-  <version>9.4.1207</version>
-  <scope>runtime</scope>
-</dependency>
+<dependencies>
+  <!-- 中略 -->
+
+  <!-- 使用するRDBMSにあわせて、下記JDBCドライバの dependency を更新してください。 -->
+  <dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>9.4.1207</version>
+    <scope>runtime</scope>
+  </dependency>
+</dependencies>
 ```
 
-**DB2**:
+**DB2の設定例**
+
 ```xml
-<dependency>
-  <groupId>com.ibm</groupId>
-  <artifactId>db2jcc4</artifactId>
-  <version>10.5.0.7</version>
-  <scope>runtime</scope>
-</dependency>
+<dependencies>
+  <!-- 中略 -->
+
+  <!-- 使用するRDBMSにあわせて、下記JDBCドライバの dependency を更新してください。 -->
+  <dependency>
+    <groupId>com.ibm</groupId>
+    <artifactId>db2jcc4</artifactId>
+    <version>10.5.0.7</version>
+    <scope>runtime</scope>
+  </dependency>
+</dependencies>
 ```
 
-### src/main/resources/db.xml
+##### src/main/resources/db.xml
 
-driverClassNameとダイアレクトのクラス名を設定:
+JDBCドライバのクラス名とダイアレクトのクラス名を修正する。
+dataSourceコンポーネントのdriverClassNameプロパティに、ドライバのクラス名を設定する。
+
+該当箇所を以下に示す。
 
 ```xml
+<!-- データソース設定 -->
 <component name="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-  <property name="driverClassName" value="org.h2.Driver" />
+  <!-- JDBCドライバのクラス名設定 -->
+  <!-- TODO: データベース接続情報を変更する場合、ここを修正します -->
+  <property name="driverClassName"
+            value="org.h2.Driver" />
+  <!-- 中略 -->
 </component>
 
+<!-- データベース接続用設定 -->
 <component name="connectionFactory"
     class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
+  <!-- 中略 -->
   <property name="dialect">
+    <!-- ダイアレクトのクラス名設定 -->
+    <!-- TODO: データベースを変更する場合、ここを修正します。-->
     <component class="nablarch.core.db.dialect.H2Dialect"/>
   </property>
 </component>
 ```
 
-DB/JDBCドライバ/ダイアレクト対応表:
+設定値の例を以下に示す。
 
 | データベース | JDBCドライバのクラス名 | ダイアレクトのクラス名 |
 |---|---|---|
@@ -202,72 +270,184 @@ DB/JDBCドライバ/ダイアレクト対応表:
 | Oracle | oracle.jdbc.driver.OracleDriver | nablarch.core.db.dialect.OracleDialect |
 | PostgreSQL | org.postgresql.Driver | nablarch.core.db.dialect.PostgreSQLDialect |
 | DB2 | com.ibm.db2.jcc.DB2Driver | nablarch.core.db.dialect.DB2Dialect |
-| SQL Server | com.microsoft.sqlserver.jdbc.SQLServerDriver | nablarch.core.db.dialect.SqlServerDialect |
+| SQL Server | com.microsoft.sqlserver.jdbc.   SQLServerDriver | nablarch.core.db.dialect.SqlServerDialect |
 
-## 起動確認
+### 起動確認
 
-```
+以下のコマンドを実行する。
+
+```text
 mvn compile exec:java
 ```
 
-ブラウザで http://localhost:7979/index.html を表示。
+その後、ブラウザを起動して、 [http://localhost:7979/index.html](http://localhost:7979/index.html) を表示する。
 
-> **補足**: 初回起動時は時間がかかりブラウザがタイムアウトすることがある。起動完了後にブラウザをリロードすること。
+> **Tip:**
+> * >   初回起動時等、起動に時間がかかる場合、ブラウザがタイムアウトすることがある。
+>   この場合は、起動完了後にブラウザをリロードする。
+> * >   本ツールは、Internet Explorerでは、正常に動作しない。Internet Explorerが起動した場合は、URLをコピーし、FirefoxまたはChromeのアドレス欄に貼り付けること。
 
-> **警告**: Internet Explorerは非対応。Internet Explorerが起動した場合はURLをコピーしてFirefoxまたはChromeのアドレス欄に貼り付けること。
+### 配布ファイル作成
 
-## 配布ファイル作成
+以下のコマンドを実行する。
 
-```
+```text
 mvn package
 ```
 
-target直下に作成された `sql-executor-distribution.zip` を配布することで、Git・Mavenの環境なしでツールを使用可能。
-
-<details>
-<summary>keywords</summary>
-
-db.config, db.xml, pom.xml, JDBCドライバ, BasicDataSource, BasicDbConnectionFactoryForDataSource, H2Dialect, OracleDialect, PostgreSQLDialect, DB2Dialect, SqlServerDialect, customizeDBAddFileMavenRepo, mvn compile exec:java, mvn package, sql-executor-distribution.zip, driverClassName
-
-</details>
+target直下に作成されたsql-executor-distribution.zipを配布することで、Git, Mavenの環境なしでツールを使用できる。
 
 ## 配布されたツールの使用方法
 
-## 前提条件
+### 前提条件
 
-- PJで使用されるバージョンのJavaがインストール済みであること
-- [db-settings](#s3) で設定したDBに接続可能であること
-- Firefox または Chrome がインストール済みであること
+ツールを使用するための前提条件を以下に示す。
 
-## 起動方法
+* PJで使用されるバージョンのJavaがインストール済みであること。
+* [DB設定変更](../../development-tools/toolbox/toolbox-SqlExecutor.md#db-settings) で設定したDBに接続可能であること。
+* FirefoxまたはChromeがインストール済みであること。
 
-`sql-executor-distribution.zip` を解凍し、`sql-executor-distribution/sql-executor/sql-executor.bat` を実行（ダブルクリックまたはコマンドプロンプトから）:
+### 配布されたファイルの起動
+
+配布されたsql-executor-distribution.zipを解凍する。
+
+sql-executor-distribution/sql-executor直下のsql-executor.batを実行する。
+ファイルをダブルクリックするか、コマンドプロンプトから起動する。
 
 ```bat
 sql-executor.bat
 ```
 
-## 配布時に設定済みのDB以外に接続する場合
+### 配布時に設定済みのDB以外に接続したい場合
 
-`sql-executor.bat` を編集する。設定項目:
+`sql-executor.bat` を編集する。設定項目は以下の通り。
 
-| 設定項目 | 説明 |
-|---|---|
+設定項目
+
 | db.url | データベースURL |
+|---|---|
 | db.user | 接続ユーザ |
 | db.password | パスワード |
 
-例（`db.url=jdbc:h2:./h2/db/SAMPLE`、`db.user=SAMPLE`、`db.password=SAMPLE` に接続）:
+例として `db.url=jdbc:h2:./h2/db/SAMPLE` , `db.user=SAMPLE`, `db.password=SAMPLE` へ接続する場合の編集方法を以下に示す。
 
 ```bat
+cd /d %~dp0
+
 start java -Ddb.url=jdbc:h2:./h2/db/SAMPLE -Ddb.user=SAMPLE -Ddb.password=SAMPLE -jar sql-executor.jar （以降略）
+cmd /c start http://localhost:7979/index.html
 ```
 
-実行しても何も出力されずに異常終了する場合は、[faq](#) を参照。
+実行しても何も出力されずに異常終了する場合は、 [FAQ](../../development-tools/toolbox/toolbox-SqlExecutor.md#faq) を参照。
 
-<details>
-<summary>keywords</summary>
+## 操作方法
 
-sql-executor.bat, 配布ファイル起動, DB接続設定変更, db.url, db.user, db.password, faq
+### 基本的な操作方法
 
-</details>
+初回起動時はカレントディレクトリ配下のSQLファイルの一覧を表示するが、
+存在しない場合は以下のような画面が表示される。
+
+![初期画面](../../../knowledge/assets/toolbox-SqlExecutor/initial_screen.png)
+
+初期画面
+
+右下の入力欄にローカルフォルダのパスを指定し、下図のように **[再検索]**
+をクリックすると
+その配下の検索してSQLファイルと各ファイルに記述されているステートメントの
+一覧を表示する。
+
+![検索パス設定](../../../knowledge/assets/toolbox-SqlExecutor/setting_search_root_path.png)
+
+検索パス設定
+
+各ステートメント名をクリックすると、その内容と操作用のボタンが表示される。
+
+![SQLステートメント一覧](../../../knowledge/assets/toolbox-SqlExecutor/browsing_sql_scripts.png)
+
+SQLステートメント一覧
+
+ステートメント内の埋込み変数は入力フィールドになっており、内容を編集して
+**[Run]**
+をクリックすることで、当該ステートメントを実行できる。
+
+また **[Fill]**
+をクリックすると、前回の実行時の入力フィールドの内容を復元する。
+
+![SQL実行結果(クエリ)](../../../knowledge/assets/toolbox-SqlExecutor/running_sql_scripts.png)
+
+SQL実行結果(クエリ)
+
+![SQL実行結果(DML)](../../../knowledge/assets/toolbox-SqlExecutor/running_dml_scripts.png)
+
+SQL実行結果(DML)
+
+### SQLExecutorでの記法
+
+#### 文字列の記述
+
+本ツールにおいて文字列を条件として入力したい場合は、文字列を `'` で囲む必要がある。
+
+#### 文字列以外の記述
+
+文字列以外は `'` で囲まずに記述する。
+
+#### IN句の記述
+
+本ツールにおいてIN句を実行するためには、条件を `[]` で囲む必要がある。また、複数項目を入力する場合は `,` で区切る必要がある。
+
+また、 `$if` 特殊構文とIN句の条件に同一の変数名を指定している場合は、同一の値を入力する必要がある。
+
+下記に例を示す。
+
+![IN句の条件を[]で囲んでいる画像](assets/toolbox-SqlExecutor/in-success.png)
+
+IN句の条件の項目に `[]` が付与されていない場合、以下のエラーが出力される。
+`java.lang.IllegalArgumentException: object type in field is invalid. valid object type is Collection or Array.`
+
+![IllegalArgumentExceptionが出力されている画像](../../../knowledge/assets/toolbox-SqlExecutor/in-fail.png)
+
+> **Warning:**
+> ただし、本ツールにおいて `,` をIN句の検索条件として扱うことはできない。
+
+#### 日付型の設定
+
+日付型(DATE)フィールドへの値の設定は、SQL92のDATEリテラルと同じ書式で記述する。
+
+以下に例を示す。
+
+```
+1970-12-11
+```
+
+また、キーワード `SYSDATE` を指定することで、現在時刻が設定される。
+
+> **Warning:**
+> DATETIMEリテラルを条件とした検索はできない。
+
+## FAQ
+
+**Q1** :実行時のログを見たいが、どのようにすればログを確認できるか？
+
+**A1** :実行時に、以下のログファイルが出力される。
+
+* sql.log → SQL文の実行時ログ
+* app.log → 全実行ログ
+
+-----
+
+**Q2** :実行しても何も出力されずに異常終了してしまう場合、どう対処すればよいか？
+
+**A2** :起動時のDBコネクションエラーなどの一部のエラーは
+標準エラー出力ではなく、実行ログファイルに出力される。
+実行ログは、カレントディレクトリ直下に `app.log` という名前で
+出力されるので、その内容を確認して対処する。
+
+-----
+
+**Q3** : `パラメータの指定方法が正しくありません。` というメッセージが表示されるが、対処方法が分からない。
+
+**A3** :
+文字列を入力したい場合には文字列を `'` で囲んでいるかを確認する。
+真偽値、日付型を入力したい場合には、スペルミスや形式のミスがないかを確認して対処する。
+
+Future Architect, Inc. Japan ( [クリエイティブ・コモンズ・ライセンス（表示4.0 国際）](https://creativecommons.org/licenses/by/4.0/) ） を改変して作成

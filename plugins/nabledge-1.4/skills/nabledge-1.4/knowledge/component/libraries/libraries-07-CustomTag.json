@@ -1,0 +1,74 @@
+{
+  "id": "libraries-07-CustomTag",
+  "title": "JSPカスタムタグライブラリの使用方法",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "解説に使用する実装例の説明",
+      "content": "本機能では、画面作成のイメージを具体的に理解できるように、ユーザ登録機能の実装例を使用して解説を行う。\n以降の解説では、特に断りがない限り、ここで説明した設定とアクションに基づいて実装例を示す。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "ユーザ登録機能の画面遷移",
+      "content": "ユーザ登録機能の画面遷移を下記に示す。\n下図では、画面遷移を示す線上に、画面のイベントに対応するリクエストIDを示している。\nUSERS00302の画面遷移(赤枠)は、データベースへのコミットを伴うリクエストになるため、二重サブミットを防止する。\n\n![WebView_SampleUI.jpg](assets/libraries-07-CustomTag/WebView_SampleUI.jpg)",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "ディスパッチャの設定",
+      "content": "URIとアクションを対応付けるディスパッチャの設定を下記に示す。\nディスパッチャについては、 [HTTPリクエストディスパッチハンドラ](../../component/handlers/handlers-HttpRequestJavaPackageMapping.md) を参照。\n\n```xml\n<component name=\"packageMapping\" class=\"nablarch.fw.web.handler.HttpRequestJavaPackageMapping\">\n    <property name=\"baseUri\" value=\"/action/\"/>\n    <property name=\"basePackage\" value=\"nablarch.sample\"/>\n</component>\n```\n\n上記ディスパッチャの設定により、下記URIとアクションのメソッドが対応する。\nここでは、UserActionクラスとMenuActionクラスの例を示す。\n\n```bash\n# URI(baseUri＋basePackageを除いたクラス名＋リクエストID)\n<コンテキストパス>/action/management/user/UserAction/<リクエストID>\n\n# メソッド\nnablarch.sample.management.user.UserAction#do<リクエストID>(HttpRequest req, ExecutionContext ctx)\n```\n\n```bash\n# URI(baseUri＋basePackageを除いたクラス名＋リクエストID)\n<コンテキストパス>/action/MenuAction/<リクエストID>\n\n# メソッド\nnablarch.sample.MenuAction#do<リクエストID>(HttpRequest req, ExecutionContext ctx)\n```",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "アクションのシグネチャ",
+      "content": "ディスパッチャの設定を踏まえて、リクエストIDに対応するUserActionクラスとMenuActionクラスのシグネチャを下記に示す。\n\n```java\npackage nablarch.sample.management.user;\n\npublic class UserAction {\n    public HttpResponse doUSERS00201(HttpRequest req, ExecutionContext ctx) {\n        /* ユーザ登録画面の初期表示 */\n    }\n    public HttpResponse doUSERS00202(HttpRequest req, ExecutionContext ctx) {\n        /* ユーザ登録画面の確認ボタン */\n    }\n    public HttpResponse doUSERS00301(HttpRequest req, ExecutionContext ctx) {\n        /* ユーザ登録確認画面の戻るボタン */\n    }\n    public HttpResponse doUSERS00302(HttpRequest req, ExecutionContext ctx) {\n        /* ユーザ登録確認画面の登録ボタン */\n    }\n}\n\npackage nablarch.sample;\n\npublic class MenuAction {\n    public HttpResponse doMENUS00101(HttpRequest req, ExecutionContext ctx) {\n        /* メニュー画面の初期表示 */\n    }\n}\n```\n\n以降では、ここで示したユーザ登録機能の実装例から適宜抜粋して解説を行う。",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "カスタムタグ全体に関わる仕様",
+      "content": "全カスタムタグに関係する仕様について説明する。\n\nまた、カスタムタグを使用する場合は、Webフロントコントローラのハンドラの設定が必須となる。\nハンドラの設定方法については、 [NablarchTagHandlerの設定](../../component/libraries/libraries-07-HowToSettingCustomTag.md#webview-nablarchtaghandler) を参照。\n\n./07_BasicRules",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "カスタムタグごとの仕様",
+      "content": "各カスタムタグの仕様について説明する。\n\nカスタムタグの一覧については、 [タグリファレンス](../../component/libraries/libraries-07-TagReference.md#webview-tagreference) を参照。",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "入力に関するカスタムタグ",
+      "content": "入力に関するカスタムタグは、下記の機能を提供する。\n\n* 入力データを保持する。\n* 入力データを復元する。\n* 入力項目を確認画面用に出力する。\n* 値をフォーマットして出力する。\n* 値を変数に設定する。\n\n各機能の詳細については下記を参照。\n値をフォーマットして出力する機能については、 [値のフォーマット出力](../../component/libraries/libraries-07-DisplayTag.md#web-view-format) を参照。\n\n./07_FormTag\n\n本機能が提供するカスタムタグの詳細については、下記を参照。\n\n./07_FormTagList\n\n> **Note:**\n> コードの入力に関するカスタムタグについては、 [コード値の表示](../../component/libraries/libraries-07-DisplayTag.md#code-tag) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "表示に関するカスタムタグ",
+      "content": "表示をサポートするカスタムタグを提供する。\n\n詳細については下記を参照。\n\n./07_DisplayTag",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "フォームのサブミット制御に関するカスタムタグ",
+      "content": "フォームのサブミット制御に関するカスタムタグは、下記の機能を提供する。\n\n* ボタン又はリンクによるフォームのサブミットをサポートする。\n* JavaScriptを使用して二重サブミットを防止する。\n* トークンを使用して二重サブミットを防止する。\n* ブラウザのキャッシュを防止する。\n\n各機能の詳細については下記を参照。\n\n./07_SubmitTag",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "アプリケーション開発を容易にするカスタムタグ",
+      "content": "業務アプリケーションで頻出する処理の実装をサポートするカスタムタグを提供する。\n\n詳細については下記を参照。\n\n./07_FacilitateTag",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "その他のカスタムタグ",
+      "content": "上記以外にNAFが提供するカスタムタグについて説明する。\n\n./07_OtherTag",
+      "level": 3
+    }
+  ]
+}

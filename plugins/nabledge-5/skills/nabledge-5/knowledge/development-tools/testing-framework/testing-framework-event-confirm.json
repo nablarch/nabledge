@@ -1,0 +1,26 @@
+{
+  "id": "testing-framework-event-confirm",
+  "title": "確認ダイアログ表示イベントアクション",
+  "content": "[確認ダイアログ表示イベントアクション](../../development-tools/testing-framework/testing-framework-event-confirm.md) は [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.md) で定義したイベントが発生した際に\n確認ダイアログを表示させるイベントアクションである。\n\nこのアクションが表示したダイアログで **「キャンセル」** を選択した場合は、\nイベントのプロパゲーションおよびデフォルトアクションの発生を抑止する。\nまた、発生元のイベントが **change** イベントであった場合、\nその変更内容をもとの入力内容に戻す。\n\n一方、ダイアログで **「OK 」** を選択した場合は、イベントプロパゲーションを継続し、\n他のイベントハンドラでキャンセルされなければ最終的にデフォルトアクションを実行する。\n\nダイアログはブラウザのネイティブ部品を使用するので、その表示はクライアント環境\nおよびブラウザに依存し、CSSによる見た目の制御やタイトル文字列の変更等はできない。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**プルダウンで特定の項目を選択した場合に確認のダイアログを表示する例する例**\n\n```jsp\n<event:listen event=\"select.amount change\">\n  <event:confirm\n    message=\"この商品の注文をキャンセルしますがよろしいですか？\"\n    condition=\":is-blank\">\n  </event:confirm>\n</event:listen>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | 処理内容の簡単な説明 | 文字列 | × | × | 設計書表示用 |\n| message | ダイアログに表示する文言 | 文字列 | ◎ | ◎ |  |\n| condition | ダイアログを表示させる条件 を表すセレクタ式 | 文字列 | ○ | ○ | 省略した場合は必ず表示される |\n| target | condition属性で指定した 条件判定の対象となる要素を 表すセレクタ式 | 文字列 | ○ | ○ | 省略した場合はイベントが 発生した要素 |\n| stop | ダイアログキャンセル時に イベントのプロパゲーション およびデフォルトアクションを 抑制するかどうか。 | 真偽値 | ○ | ○ | デフォルトは'true'  > **Tip:** > 本属性はローカルでの動作に制約がある。  >  > 詳細は、 > [event:confirmタグの制約事項](../../development-tools/testing-framework/testing-framework-inbrowser-jsp-rendering.md#localrendering-limitation-eventconfirmtag) > を参照。 |\n| revert | ダイアログキャンセル時に 各入力値の状態をイベント発生前 の状態に戻すかどうか。 | 真偽値 | ○ | ○ | changeイベント発生時のみ 意味をもつ。 デフォルトは'true' |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/event/confirm.tag | このイベントアクションの実体となるタグファイル |\n| /WEB-INF/tags/widget/event/dialog.tag | [アラートダイアログ表示イベントアクション](../../development-tools/testing-framework/testing-framework-event-alert.md) と [確認ダイアログ表示イベントアクション](../../development-tools/testing-framework/testing-framework-event-confirm.md)   とで共通の内容を実装するタグファイル。 |\n| /js/nablarch/ui/event/ShowDialogAction.js | ダイアログ表示機能を実装するJS部品。 |",
+      "level": 2
+    }
+  ]
+}

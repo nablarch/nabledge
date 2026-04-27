@@ -1,0 +1,4 @@
+# 取引単体テストの実施方法（応答不要メッセージ送信処理）
+
+取引単体テストの実施方法は、同期応答メッセージ送信処理と同じである。
+実施方法の詳細は [取引単体テストの実施方法（同期応答メッセージ受信処理)](../../development-tools/testing-framework/testing-framework-03-dealunittest-real.md) を参照すること。

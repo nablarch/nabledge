@@ -1,0 +1,26 @@
+{
+  "id": "web-application-web-front-controller",
+  "title": "Webフロントコントローラ",
+  "content": "**目次**\n\n* モジュール一覧\n* ハンドラキューを設定する\n* 委譲するWebフロントコントローラの名前を変更する\n\nウェブアプリケーションにおけるハンドラキューの実行の起点となるクラス。\n\n本クラスを使用することで、クライアントから受け取ったリクエストに対する処理をハンドラキューに委譲できる。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "ハンドラキューを設定する",
+      "content": "リクエストに対する処理をハンドラキューに委譲するための手順を示す。\n\nコンポーネント設定ファイルに設定する\nWebFrontController をコンポーネント設定ファイルに設定し、\nhandlerQueue プロパティに\nアプリケーションで使用するハンドラを順番に追加していく。\n\nコンポーネント設定ファイルの設定例を以下に示す。\n\nポイント\n* コンポーネント名は **webFrontController** とすること。\n\n```xml\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\"/>\n      <component class=\"nablarch.fw.handler.GlobalErrorHandler\"/>\n\n      <!-- 省略 -->\n\n    </list>\n  </property>\n</component>\n```\nサーブレットフィルタを設定する\nRepositoryBasedWebFrontController\nをサーブレットフィルタとして web.xml に設定する。\nこのフィルタによって、クライアントから受け取ったリクエストに対する処理は、先ほどシステムリポジトリに登録したハンドラキューへ委譲される。\n\nweb.xml への設定例を以下に示す。\n\nポイント\n* システムリポジトリを初期化するため、 [Nablarchサーブレットコンテキスト初期化リスナー](../../processing-pattern/web-application/web-application-nablarch-servlet-context-listener.md#nablarch-servlet-context-listener) をリスナーとして設定すること。\n\n```xml\n<context-param>\n  <param-name>di.config</param-name>\n  <param-value>web-boot.xml</param-value>\n</context-param>\n\n<listener>\n  <listener-class>nablarch.fw.web.servlet.NablarchServletContextListener</listener-class>\n</listener>\n\n<filter>\n  <filter-name>entryPoint</filter-name>\n  <filter-class>nablarch.fw.web.servlet.RepositoryBasedWebFrontController</filter-class>\n</filter>\n\n<filter-mapping>\n  <filter-name>entryPoint</filter-name>\n  <url-pattern>/action/*</url-pattern>\n</filter-mapping>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "委譲するWebフロントコントローラの名前を変更する",
+      "content": "ウェブアプリケーションをベースとしたアプリケーションにおいて一部のリクエストをRESTfulウェブサービスとして処理したい場合など、\nウェブアプリケーションとウェブサービスを併用したい場合が考えられる。\nそのような場合は、ハンドラ構成の異なるWebフロントコントローラを複数個定義する必要がある。\nRepositoryBasedWebFrontController はデフォルトでは\n`webFrontController` という名前でシステムリポジトリが委譲するWebフロントコントローラを取得する。\nweb.xml に初期化パラメータを設定することで、システムリポジトリから取得するWebフロントコントローラの名前を変更することができる。\n\nウェブアプリケーション用とRESTfulウェブサービス用2つのハンドラ構成を持つWebフロントコントローラの設定例を以下に示す。\n\nまず、コンポーネント定義で、ウェブアプリケーション用のハンドラ構成をもったWebフロントコントローラを `webFrontController` という名前で定義し、\nRESTfulウェブサービス用のハンドラ構成をもったWebフロントコントローラを `webFrontController` と異なるコンポーネント名で定義する。\n\n```xml\n<component name=\"webFrontController\"\n          class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <!-- ウェブアプリケーション用のハンドラ構成 -->\n    </list>\n  </property>\n</component>\n\n<component name=\"jaxrsController\"\n          class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <!-- RESTfulウェブサービス用のハンドラ構成 -->\n    </list>\n  </property>\n</component>\n```\n\n次に web.xml に上記で設定したWebフロントコントローラを使用するためのサーブレットフィルタを設定する。\n\nポイント\n* `<init-param>` を使い `controllerName` というパラメータにシステムリポジトリから取得する際のコントローラ名を設定する。\n* `<filter-mapping>` でそれぞれのWebフロントコントローラが処理対象とするURLのパターンを設定する。\n\n```xml\n<context-param>\n  <param-name>di.config</param-name>\n  <param-value>web-boot.xml</param-value>\n</context-param>\n\n<listener>\n  <listener-class>nablarch.fw.web.servlet.NablarchServletContextListener</listener-class>\n</listener>\n\n<filter>\n  <filter-name>webEntryPoint</filter-name>\n  <filter-class>nablarch.fw.web.servlet.RepositoryBasedWebFrontController</filter-class>\n</filter>\n<filter>\n  <filter-name>jaxrsEntryPoint</filter-name>\n  <filter-class>nablarch.fw.web.servlet.RepositoryBasedWebFrontController</filter-class>\n  <init-param>\n    <param-name>controllerName</param-name>\n    <param-value>jaxrsController</param-value>\n  </init-param>\n</filter>\n\n<filter-mapping>\n  <filter-name>webEntryPoint</filter-name>\n  <url-pattern>/action/*</url-pattern>\n  <url-pattern>/</url-pattern>\n</filter-mapping>\n<filter-mapping>\n  <filter-name>jaxrsEntryPoint</filter-name>\n  <url-pattern>/api/*</url-pattern>\n</filter-mapping>\n```",
+      "level": 2
+    }
+  ]
+}

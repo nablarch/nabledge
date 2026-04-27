@@ -1,49 +1,45 @@
 # テストケース毎に言語を設定する方法を教えてください
 
-## テストケース毎に言語を設定する方法
+> **question:**
+> ケースごとに言語を変更してリクエスト単体テストを実施したいです。
+> 言語の変更（設定）方法を教えてください。
 
-テストケースごとに言語を変更するには、Cookieに設定される言語を変更する。
+> **answer:**
+> Cookieに設定される言語を変更することにより、ケースごとに変更することが可能となります。
 
-**テストデータシートでのCookie設定**:
-リクエスト単体テスト用のテストデータシートに、Cookieに設定する値を準備することができる。この機能を使用して、Cookieに言語を設定してテストを実施すること。
+> Cookieに言語を設定する方法:
 
-Cookieに設定する際のCookie名称は、設定ファイルの`cookieName`プロパティのvalue値（下記設定例では `lang`）を使用すること。
+> ```
+> リクエスト単体テスト用のテストデータシートに、Cookieに設定する値を準備することができます。
+> この機能を使用して、Cookieに言語を設定してテストを実施してください。
+> 
+> Cookieに設定する際のCookie名称は、下記の設定ファイル例のCookie名称(プロパティ名がcookieNameのvalue値)を設定してください。
+> ```
 
-Excelへの準備データの設定方法等は **[プログラミング・単体テストガイド]** > **[単体テスト実施方法]** > **[リクエスト単体テストの実施方法]** を参照。
+> ※Cookieから言語を設定するためのハンドラーがリポジトリに設定されている必要があります。
+> 以下に設定例を示します。（本設定は、各プロジェクトのアーキテクトが実施するものなので、個々の開発者が実施する必要はありません。)
 
----
+> ```xml
+> <!-- 見やすさの問題で、ThreadContextHandlerへのその他の設定は省略しています。 -->
+> 
+> <component name="threadContextHandler"
+>     class="nablarch.common.handler.threadcontext.ThreadContextHandler">
+>   <property name="attributes">
+>     <list>
+>       <!-- 言語 -->
+>       <component name="languageAttribute"
+>           class="nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpCookie">
+>         <!-- 言語を保持しているCookie名称 -->
+>         <property name="cookieName" value="lang" />
+>         <property name="defaultLanguage" value="ja" />
+>         <property name="supportedLanguages" value="ja,en" />
+>         <property name="cookieMaxAge" value="7776000" />
+>       </component>
+>     </list>
+>   </property>
+> </component>
+> ```
 
-> **注意**: Cookieから言語を設定するためのハンドラー（`LanguageAttributeInHttpCookie`）がリポジトリのハンドラー構成に設定されている必要がある。この設定は各プロジェクトのアーキテクトが実施するものなので、個々の開発者が実施する必要はない。
+> Excelへの準備データの設定方法等は、以下のドキュメントを参照してください。
 
-**クラス**: `nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpCookie`
-
-```xml
-<!-- 見やすさの問題で、ThreadContextHandlerへのその他の設定は省略しています。 -->
-
-<component name="threadContextHandler"
-    class="nablarch.common.handler.threadcontext.ThreadContextHandler">
-  <property name="attributes">
-    <list>
-      <component name="languageAttribute"
-          class="nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpCookie">
-        <!-- 言語を保持しているCookie名称 -->
-        <property name="cookieName" value="lang" />
-        <property name="defaultLanguage" value="ja" />
-        <property name="supportedLanguages" value="ja,en" />
-        <property name="cookieMaxAge" value="7776000" />
-      </component>
-    </list>
-  </property>
-</component>
-```
-
-| プロパティ名 | 説明 |
-|---|---|
-| cookieName | 言語を保持しているCookie名称 |
-
-<details>
-<summary>keywords</summary>
-
-LanguageAttributeInHttpCookie, ThreadContextHandler, cookieName, テストデータシート, Cookie言語設定, リクエスト単体テスト言語変更, テストケース言語切替, 言語設定
-
-</details>
+> * >   **[プログラミング・単体テストガイド]** -> **[単体テスト実施方法]** -> **[リクエスト単体テストの実施方法]**

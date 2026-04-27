@@ -1,0 +1,134 @@
+{
+  "id": "web-application-feature-details",
+  "title": "機能詳細",
+  "content": "**目次**\n\n* Nablarchの初期化\n* 入力値のチェック\n* データベースアクセス\n* 排他制御\n* ファイルアップロード\n* ファイルダウンロード\n* URIとアクションクラスのマッピング\n* 2重サブミット防止\n* 入力データの保持\n* ページネーション\n* 画面の作成\n* 国際化対応\n* 認証\n* 認可チェック\n* ステータスコード\n* エラー時の画面遷移とステータスコード\n* MOMメッセージ送信\n* Webアプリケーションのスケールアウト設計\n* CSRF対策\n* ウェブアプリケーションとRESTfulウェブサービスの併用\n* Content Security Policy(CSP)対応",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "Nablarchの初期化",
+      "content": "feature_details/nablarch_servlet_context_listener\nfeature_details/web_front_controller\n\nNablarchの初期化を行うためには、 [システムリポジトリのロードの為の設定](../../processing-pattern/web-application/web-application-nablarch-servlet-context-listener.md#nablarch-servlet-context-listener)\n及び [ハンドラキューの設定(構築)](../../processing-pattern/web-application/web-application-web-front-controller.md#web-front-controller) が必要となる。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "入力値のチェック",
+      "content": "feature_details/error_message\n\n* [入力値のチェック](../../component/libraries/libraries-validation.md#validation)\n* [エラーメッセージの画面表示](../../processing-pattern/web-application/web-application-error-message.md)",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "データベースアクセス",
+      "content": "* [データベースアクセス](../../component/libraries/libraries-database-management.md#database-management)",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "排他制御",
+      "content": "排他制御は、以下の2種類の方法を提供しているが、\n[UniversalDaoを推奨する理由](../../component/libraries/libraries-exclusive-control.md#exclusive-control-deprecated) に記載がある通り、\n[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) の使用を推奨する。\n\n* [排他制御](../../component/libraries/libraries-exclusive-control.md#exclusive-control)\n* [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao)\n\n  * [楽観的ロックを行う](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-optimistic-lock)\n  * [悲観的ロックを行う](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-pessimistic-lock)",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "ファイルアップロード",
+      "content": "* [アップロードしたファイルを読み込む](../../component/handlers/handlers-multipart-handler.md#multipart-handler-read-upload-file)",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "ファイルダウンロード",
+      "content": "ファイルダウンロードは、以下の2種類の方法を提供しているが、\n[データバインドを推奨する理由](../../component/libraries/libraries-data-converter.md#data-converter-data-bind-recommend) に記載がある通り、\n[データバインド](../../component/libraries/libraries-data-bind.md#data-bind) の使用を推奨する。\n\n* [データバインド機能を使用したファイルダウンロード](../../component/libraries/libraries-data-bind.md#data-bind-file-download)\n* [汎用データフォーマット機能を使用したファイルダウンロード](../../component/libraries/libraries-data-format.md#data-format-file-download)\n\n大量データのダウンロード時には、 [検索結果を遅延ロードする](../../component/libraries/libraries-universal-dao.md#universal-dao-lazy-load) を参照し、\nデータベースの検索結果をヒープ上に展開しないように注意すること。",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "URIとアクションクラスのマッピング",
+      "content": "以下の2種類の方法を提供しているが、\n[ルーティングアダプタが推奨である理由](../../component/handlers/handlers-http-request-java-package-mapping.md#http-request-java-package-mapping-router-adaptor) に記載がある通り、 [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) の使用を推奨する。\n\n* [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor)\n* [HTTPリクエストディスパッチハンドラ](../../component/handlers/handlers-http-request-java-package-mapping.md#http-request-java-package-mapping)",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "2重サブミット防止",
+      "content": "* [2重サブミット防止](../../component/libraries/libraries-tag.md#tag-double-submission)\n\nまた、JSP以外のテンプレートエンジンを使用している場合は [UseTokenインターセプタ](../../component/handlers/handlers-use-token.md#use-token-interceptor) も参照すること。",
+      "level": 2
+    },
+    {
+      "id": "s9",
+      "title": "入力データの保持",
+      "content": "* [セッションストア](../../component/libraries/libraries-session-store.md#session-store)",
+      "level": 2
+    },
+    {
+      "id": "s10",
+      "title": "ページネーション",
+      "content": "データベースから範囲を指定して検索する方法は、 [データベースアクセス](../../component/libraries/libraries-database-management.md#database-management) を参照。\n\nクライアントサイドについては、プロジェクト要件により仕様が異なるため、フレークワークとしては提供していない。",
+      "level": 2
+    },
+    {
+      "id": "s11",
+      "title": "画面の作成",
+      "content": "feature_details/jsp_session\nfeature_details/view/freemarker\nfeature_details/view/other\n\n* JSPを使用する場合\n\n  * [JSPのtaglibを使用した画面開発](../../component/libraries/libraries-tag.md#tag)\n  * [JSPで自動的にHTTPセッションを作成しないようにする方法](../../processing-pattern/web-application/web-application-jsp-session.md#jsp-session)\n* JSP以外のテンプレートエンジンを使用する場合\n\n  * [Thymeleafを使用した画面開発](../../component/adapters/adapters-web-thymeleaf-adaptor.md#web-thymeleaf-adaptor)\n  * [FreeMarkerを使用した画面開発](../../processing-pattern/web-application/web-application-freemarker.md#view-freemarker)\n  * [その他のテンプレートエンジンを使用した画面開発](../../processing-pattern/web-application/web-application-other.md#view-other)",
+      "level": 2
+    },
+    {
+      "id": "s12",
+      "title": "国際化対応",
+      "content": "静的リソースの多言語化対応については以下を参照。\n\n* [メッセージの多言語化](../../component/libraries/libraries-message.md#message-multi-lang)\n* [コード名称の多言語化](../../component/libraries/libraries-code.md#code-use-multilingualization)\n\n画面表示する文言の言語を切り替えるには、以下の2通りの方法を提供しているが、\n[メッセージタグでの国際化対応](../../component/libraries/libraries-tag.md#tag-write-message) を使用した場合、\n画面レイアウトが崩れる可能性がある。\nそのため、レイアウト崩れを許容できる場合のみ、 [メッセージタグでの国際化対応](../../component/libraries/libraries-tag.md#tag-write-message) を使用すること。\n\n* [メッセージタグでの国際化対応](../../component/libraries/libraries-tag.md#tag-write-message)\n* [言語ごとにリソースのパスを切り替える](../../component/libraries/libraries-tag.md#tag-change-resource-path-of-lang)",
+      "level": 2
+    },
+    {
+      "id": "s13",
+      "title": "認証",
+      "content": "認証については、プロジェクト要件により仕様が異なるため、フレークワークとしては提供していない。\n[データベースを用いたパスワード認証機能サンプル](../../guide/biz-samples/biz-samples-01.md#authentication) を参考に、プロジェクト要件に合わせてPJで実装する。\n\n認証情報の保持については、以下を参照。\n\n* [認証情報を保持する](../../component/libraries/libraries-session-store.md#session-store-authentication-data)",
+      "level": 2
+    },
+    {
+      "id": "s14",
+      "title": "認可チェック",
+      "content": "* [ハンドラによる認可チェック](../../component/libraries/libraries-authorization-permission-check.md#permission-check)",
+      "level": 2
+    },
+    {
+      "id": "s15",
+      "title": "ステータスコード",
+      "content": "* [ステータスコードの使い分け(外部サイト)](https://qiita.com/kawasima/items/e48180041ace99842779)",
+      "level": 2
+    },
+    {
+      "id": "s16",
+      "title": "エラー時の画面遷移とステータスコード",
+      "content": "feature_details/forward_error_page\n\n* [ステータスコードに対応したデフォルトの遷移先ページを設定する](../../component/handlers/handlers-HttpErrorHandler.md#httperrorhandler-defaultpage)\n* [ハンドラで例外クラスに対応したエラーページに遷移させる](../../processing-pattern/web-application/web-application-forward-error-page.md#forward-error-page-handler)\n* アクションでエラー時の遷移先を指定する\n\n  * 例外クラスに対応した遷移先を定義する ([OnErrorインターセプタ](../../component/handlers/handlers-on-error.md#on-error-interceptor) 、 [OnErrorsインターセプタ](../../component/handlers/handlers-on-errors.md#on-errors-interceptor))\n  * [1つの例外に対して複数の遷移先を定義する](../../processing-pattern/web-application/web-application-forward-error-page.md#forward-error-page-try-catch)\n* [ステータスコードの使い分け(外部サイト)](https://qiita.com/kawasima/items/e48180041ace99842779)",
+      "level": 2
+    },
+    {
+      "id": "s17",
+      "title": "MOMメッセージ送信",
+      "content": "* [同期応答メッセージ送信](../../component/libraries/libraries-mom-system-messaging.md#mom-system-messaging-sync-message-send)",
+      "level": 2
+    },
+    {
+      "id": "s18",
+      "title": "Webアプリケーションのスケールアウト設計",
+      "content": "* [Webアプリケーションをステートレスにする](../../component/libraries/libraries-stateless-web-app.md#stateless-web-app)",
+      "level": 2
+    },
+    {
+      "id": "s19",
+      "title": "CSRF対策",
+      "content": "* [CSRF対策](../../component/handlers/handlers-csrf-token-verification-handler.md#csrf-token-verification-handler)",
+      "level": 2
+    },
+    {
+      "id": "s20",
+      "title": "ウェブアプリケーションとRESTfulウェブサービスの併用",
+      "content": "* [委譲するWebフロントコントローラの名前を変更する](../../processing-pattern/web-application/web-application-web-front-controller.md#change-web-front-controller-name)",
+      "level": 2
+    },
+    {
+      "id": "s21",
+      "title": "Content Security Policy(CSP)対応",
+      "content": "* [Content Security Policy(CSP)対応](../../component/handlers/handlers-secure-handler.md#content-security-policy)",
+      "level": 2
+    }
+  ]
+}

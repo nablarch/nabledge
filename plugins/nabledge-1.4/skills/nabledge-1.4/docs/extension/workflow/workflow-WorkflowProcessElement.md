@@ -1,244 +1,156 @@
 # ワークフロー定義
 
-**公式ドキュメント**: [ワークフロー定義]()
+[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) で使用するワークフロー定義について、定義に使用される要素の意味および定義内容について記載する。
 
-## 
+> **Note:**
+> [ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) では、基本的にはBPMNで定義されている用語を踏襲している。
 
-ワークフロー定義で使用可能なBPMN要素（これ以外の要素はサポートされない）:
+> ただし、一部についてはNablarchの他の機能での用語との重複や紛らわしさを排除するために、独自の用語に置き換えている。
+> そういった用語については、各要素の定義に対応するBPMNの用語を記載している。
 
-- [workflow_element_sequence_flows](#s2)（シーケンスフロー）
-- [workflow_element_task](#s4)（タスク）、[workflow_element_multi_instance_task](#s6)（マルチインスタンス・タスク）を含む
-- [workflow_element_gateway_xor](#s6)（XORゲートウェイ）
-- [workflow_element_event_start](#s8)（開始イベント）
-- [workflow_element_event_terminate](#s10)（停止イベント）
-- [workflow_element_boundary_event](#s12)（境界イベント）
-- [workflow_element_lane](#s14)（レーン）
+[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) でワークフロー定義に使用可能な要素は、BPMNの表記法で以下のように描かれる。
 
-> **注意**: 上記以外の要素がワークフロー定義で使用された場合、ワークフロー定義データ作成ツールの実行時にエラーとなる。
+![concept_sample.png](../../../knowledge/assets/workflow-WorkflowProcessElement/concept_sample.png)
 
-ワークフロー定義は [workflow_flow_node](#) を [workflow_element_sequence_flows](#s2) で繋ぎ合わせて作成する。
+BPMNでは、他にも多くの要素が用意されているが、 [ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) で利用することができるのは、
+以下に挙げる要素だけである。これら以外の要素は、サポートしていない。
 
-![ワークフロー定義のBPMN概念図](../../../knowledge/extension/workflow/assets/workflow-WorkflowProcessElement/concept_sample.png)
+* [シーケンスフロー](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-sequence-flows)
+* [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) （ [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task) を含む）
+* [XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor)
+* [開始イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-event-start)
+* [停止イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-event-terminate)
+* [境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-boundary-event)
+* [レーン](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-lane)
 
-<details>
-<summary>keywords</summary>
+> **Note:**
+> 上記以外の要素がワークフロー定義で使用されていた場合、ワークフロー定義データ作成ツールの実行時にエラーとなる。
 
-ワークフロー定義, BPMNサポート要素, ワークフロー定義データ作成ツール, フローノード, シーケンスフロー
-
-</details>
+ワークフロー定義は、上図のように、 [フローノード](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-flow-node) を [シーケンスフロー](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-sequence-flows) で
+繋ぎ合わせていくことで作成する。
 
 ## フローノード
 
-[workflow_element_task](#s4)、[workflow_element_gateway_xor](#s6)、[workflow_element_event_start](#s8)、[workflow_element_event_terminate](#s10)、[workflow_element_boundary_event](#s12) の総称。[workflow_element_sequence_flows](#s2) の接続元フローノード・接続先フローノードに設定できる要素を表す。
+[タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) 、 [XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) 、 [開始イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-event-start) 、
+[停止イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-event-terminate) 、 [境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-boundary-event) の総称。
 
-<details>
-<summary>keywords</summary>
-
-フローノード, workflow_flow_node, シーケンスフロー接続, タスク, XORゲートウェイ, 開始イベント, 停止イベント, 境界イベント
-
-</details>
-
-## 
-
-`workflow_element_sequence_flows` — シーケンスフローセクションへの参照ラベル（[workflow_element_sequence_flows](#s2) で参照）
-
-<details>
-<summary>keywords</summary>
-
-workflow_element_sequence_flows, シーケンスフロー, 参照ラベル
-
-</details>
+[シーケンスフロー](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-sequence-flows) の接続元フローノード、接続先フローノードに設定することができる要素をあらわす。
 
 ## シーケンスフロー
 
-フローノード間の進行方向と、フロー進行条件（フローに沿って進行するための条件）を定義する要素。
+**記法**
+![sequence-flow.png](../../../knowledge/assets/workflow-WorkflowProcessElement/sequence-flow.png)
 
-![シーケンスフロー記法](../../../knowledge/extension/workflow/assets/workflow-WorkflowProcessElement/sequence-flow.png)
+フローノード間の進行方向と、そのフローに沿ってワークフローが進行するための条件（フロー進行条件）を定義する要素。
 
-制約:
-- 並行処理の分岐・合流はサポートしない
-- [workflow_element_gateway_xor](#s6) からのみ複数のシーケンスフローが流出可能。それ以外の要素からは複数流出不可
-- [workflow_element_gateway_xor](#s6) 以外の要素から流出するシーケンスフローはフロー進行条件の定義不要（定義しても無視される）
+[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) では並行処理となるようなワークフローの分岐・合流をサポートしないため、 [XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) からは
+複数のシーケンスフローが流出することができるが、それ以外の要素からは、複数のシーケンスフローが流出することはできない。
 
-提供済みフロー進行条件: :ref:`flowProceedCondition` 参照
+[XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) 以外の要素からは複数のシーケンスフローが流出することはできないため、
+それらの要素から流出するシーケンスフローについては、フロー進行条件を定義する必要はなく、また、定義しても
+無視される。
 
-<details>
-<summary>keywords</summary>
-
-シーケンスフロー, フロー進行条件, 並行処理非サポート, XORゲートウェイ, flowProceedCondition
-
-</details>
-
-## 
-
-`workflow_element_task` — タスクセクションへの参照ラベル（[workflow_element_task](#s4) で参照）
-
-<details>
-<summary>keywords</summary>
-
-workflow_element_task, タスク, 参照ラベル
-
-</details>
+[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) であらかじめ提供しているフロー進行条件については、 [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) を参照。
 
 ## タスク
 
-**タスク**
+**記法**
+![task.png](../../../knowledge/assets/workflow-WorkflowProcessElement/task.png)
 
-ワークフロープロセスで、ユーザが画面などから実行する処理やバッチなどにより自動的に実行される処理などの存在を定義するフローノード。単一の [workflow_task_assignee](workflow-WorkflowInstanceElement.md) をアサイン可能。
+ワークフロープロセスで、ユーザが画面などから実行する処理や、バッチなどにより自動的に実行される処理などの
+存在を定義するフローノード。
 
-![タスク記法](../../../knowledge/extension/workflow/assets/workflow-WorkflowProcessElement/task.png)
+実際にタスクを行うユーザとして単一の [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-task-assignee) をアサインすることができる。
 
-**マルチインスタンス・タスク**
+> **Note:**
+> BPMNでは、「ユーザタスク」と呼ばれている要素であるが、ユーザだけでなくグループとしても担当の割り当てができること、
+> その他の種類のタスクをサポートしないことから、単に「タスク」としている。
 
-複数の [workflow_task_assignee](workflow-WorkflowInstanceElement.md) を設定できるタスク。順番処理か並行処理かを指定可能。タスクが処理されるまでに実行ユーザ数を動的決定できる。
+### マルチインスタンス・タスク
 
-![マルチインスタンス・タスク記法](../../../knowledge/extension/workflow/assets/workflow-WorkflowProcessElement/mi-task.png)
+**記法**
+![mi-task.png](../../../knowledge/assets/workflow-WorkflowProcessElement/mi-task.png)
 
-- 完了条件の定義が必須（次のフローノードへの進行条件）
-- 「合議」「AND承認」「OR承認」は完了条件を適切に設定することで実現可能
-- 提供済み完了条件: :ref:`completionCondition` 参照
+複数の [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-task-assignee) を設定することのできるタスク。それらの実行ユーザが順番に処理するか、
+並行して処理するかを指定することができる。
 
-<details>
-<summary>keywords</summary>
+マルチインスタンス・タスクでは、そのタスクが実際に処理されるまでに、実行ユーザの数を動的に決定することができる。
 
-タスク, マルチインスタンス・タスク, workflow_task_assignee, 完了条件, 合議, AND承認, OR承認, completionCondition
+マルチインスタンス・タスクには、タスクが完了して次のフローノードに進行する条件（完了条件）を定義する必要がある。
+これは自由に定義することができ、「合議」や「AND承認」「OR承認」は、完了条件を適切に設定することで実現できる。
 
-</details>
+[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) であらかじめ提供しているマルチインスタンス・タスクの完了条件については、 [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#completioncondition) を参照。
 
-## 
-
-`workflow_element_gateway_xor` — XORゲートウェイセクションへの参照ラベル（[workflow_element_gateway_xor](#s6) で参照）
-
-<details>
-<summary>keywords</summary>
-
-workflow_element_gateway_xor, XORゲートウェイ, 参照ラベル
-
-</details>
+> **Note:**
+> BPMNでは、「マルチインスタンスアクティビティ」と呼ばれている要素であるが、
+> タスク以外のアクティビティをサポートしないことから、「マルチインスタンス・タスク」としている。
 
 ## XORゲートウェイ
 
-条件分岐を表すフローノード。流出する各シーケンスフローのフロー進行条件を評価して、進行可能と判定されたフローに従ってワークフローを進行させる。
+**記法**
+![xor-gateway.png](../../../knowledge/assets/workflow-WorkflowProcessElement/xor-gateway.png)
 
-![XORゲートウェイ記法](../../../knowledge/extension/workflow/assets/workflow-WorkflowProcessElement/xor-gateway.png)
+ワークフローでの条件分岐をあらわすフローノード。
 
-> **重要**: 複数の条件に合致するシーケンスフローが存在した場合、どのフローに従うかは不定となる。XORゲートウェイから流出するシーケンスフローのフロー進行条件は必ず排他的になるよう設定すること。
+この要素からワークフローが進行する場合、流出する各シーケンスフローのフロー進行条件が評価されて、
+進行可能と判定されたシーケンスフローに従ってワークフローを進行させる。
 
-フロー進行条件詳細: :ref:`flowProceedCondition` 参照
+条件に合致するシーケンスフローが複数存在した場合、いずれかのシーケンスフローに従ってワークフローが進行するが、
+どのシーケンスフローに従うかは不定となる。XORゲートウェイから流出するシーケンスフローのフロー進行条件は、
+必ず排他的になるように設定すること。
 
-<details>
-<summary>keywords</summary>
-
-XORゲートウェイ, 条件分岐, フロー進行条件, 排他条件, flowProceedCondition
-
-</details>
-
-## 
-
-`workflow_element_event_start` — 開始イベントセクションへの参照ラベル（[workflow_element_event_start](#s8) で参照）
-
-<details>
-<summary>keywords</summary>
-
-workflow_element_event_start, 開始イベント, 参照ラベル
-
-</details>
+フロー進行条件についての詳細は、 [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) を参照。
 
 ## 開始イベント
 
+**記法**
+![start-event.png](../../../knowledge/assets/workflow-WorkflowProcessElement/start-event.png)
+
 ワークフローの開始を定義するフローノード。
 
-![開始イベント記法](../../../knowledge/extension/workflow/assets/workflow-WorkflowProcessElement/start-event.png)
-
-- ワークフロー定義には必ず1つの開始イベントが存在する必要がある
-- このフローノードにシーケンスフローが流入することはできない
-
-<details>
-<summary>keywords</summary>
-
-開始イベント, ワークフロー開始, シーケンスフロー流入禁止
-
-</details>
-
-## 
-
-`workflow_element_event_terminate` — 停止イベントセクションへの参照ラベル（[workflow_element_event_terminate](#s10) で参照）
-
-<details>
-<summary>keywords</summary>
-
-workflow_element_event_terminate, 停止イベント, 参照ラベル
-
-</details>
+ワークフロー定義には必ず一つの開始イベントが存在している必要がある。開始を定義するフローノードなので、
+このフローノードにシーケンスフローが流入することはできない。
 
 ## 停止イベント
 
+**記法**
+![terminate-event.png](../../../knowledge/assets/workflow-WorkflowProcessElement/terminate-event.png)
+
 ワークフローの完了を定義するフローノード。
 
-![停止イベント記法](../../../knowledge/extension/workflow/assets/workflow-WorkflowProcessElement/terminate-event.png)
-
-- ワークフローがこのフローノードに到達したとき、ワークフローは完了する
-- このフローノードからシーケンスフローが流出することはできない
-
-<details>
-<summary>keywords</summary>
-
-停止イベント, ワークフロー完了, シーケンスフロー流出禁止
-
-</details>
-
-## 
-
-`workflow_element_boundary_event` — 境界イベントセクションへの参照ラベル（[workflow_element_boundary_event](#s12) で参照）
-
-<details>
-<summary>keywords</summary>
-
-workflow_element_boundary_event, 境界イベント, 参照ラベル
-
-</details>
+ワークフローがこのフローノードに到達したとき、ワークフローは完了する。完了を定義するフローノードなので、
+このフローノードからシーケンスフローが流出することはできない。
 
 ## 境界イベント
 
-タスクと関連付けて定義され、タスクを中断して別のフローノードに強制移動させるためのフローノード。[workflow_pullback](workflow-WorkflowProcessSample.md)（申請者による引戻し）などの実現に利用。
+**記法**
+![boundary-event.png](../../../knowledge/assets/workflow-WorkflowProcessElement/boundary-event.png)
 
-![境界イベント記法](../../../knowledge/extension/workflow/assets/workflow-WorkflowProcessElement/boundary-event.png)
+タスクと関連付けて定義され、タスクを中断して別のフローノードに強制的に移動させるようなワークフローを定義するためのフローノード。
 
-動作:
-- 関連タスクが処理可能（[workflow_active_flow_node](workflow-WorkflowInstanceElement.md)）な状態で境界イベントが発生すると、タスクを中断し、境界イベントから流出するシーケンスフローに従ってワークフローが進行する
-- 各境界イベントには「境界イベントトリガー」を定義しておき、アプリケーションがそのトリガーを使用して境界イベントを発生させる
-- 異なるタスクに同じ境界イベントトリガーを持つ境界イベントを定義することも可能
+申請フローにおける、「 [申請者による引戻](../../extension/workflow/workflow-WorkflowProcessSample.md#workflow-pullback) 」などを実現するために利用することができる。
 
-<details>
-<summary>keywords</summary>
+関連付けられたタスクが処理可能（ [アクティブフローノード](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-active-flow-node) ）となっているときに境界イベントが発生すると、
+そのタスクを中断し、境界イベントから流出するシーケンスフローに従ってワークフローが進行する。
 
-境界イベント, 境界イベントトリガー, workflow_pullback, 引戻し, タスク中断, workflow_active_flow_node
+各境界イベントには、そのイベントを発生させる「境界イベントトリガー」を定義しておき、
+アプリケーションは境界イベントトリガーを使用して、各境界イベントを発生させる。
 
-</details>
+異なるタスクに対して、同じ境界イベントトリガーを持つ境界イベントを定義することもできる。
 
-## 
+> **Note:**
+> 「境界イベント」は、BPMNでは「中断メッセージ境界イベント」と呼ばれている要素であるが、
+> 「メッセージ」という単語を含むと紛らわしくなることと、 [ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) では他の境界イベントをサポートしないことから、
+> 単に「境界イベント」としている。
 
-`workflow_element_lane` — レーンセクションへの参照ラベル（[workflow_element_lane](#s14) で参照）
-
-<details>
-<summary>keywords</summary>
-
-workflow_element_lane, レーン, 参照ラベル
-
-</details>
+> また、上記で「境界イベントトリガー」と呼んでいるものは、BPMNでは「メッセージ」として定義されている。
+> しかし、Nablarchでは既に「メッセージ」が複数の異なる意味で使用されているため、本機能では、
+> 「メッセージ」という単語を使用せず、「境界イベントトリガー」としている。
 
 ## レーン
 
-ワークフロー上の担当ユーザの分類を表すために利用する要素。
+**記法**
+![lane.png](../../../knowledge/assets/workflow-WorkflowProcessElement/lane.png)
 
-![レーン記法](../../../knowledge/extension/workflow/assets/workflow-WorkflowProcessElement/lane.png)
-
-- ワークフローの進行には利用されない（担当グループの可視化のみ）
-- レーンに対して担当ユーザ/担当グループを割り当て可能
-
-<details>
-<summary>keywords</summary>
-
-レーン, 担当ユーザ, 担当グループ, ワークフロー進行
-
-</details>
+ワークフロー上に担当ユーザとして現れるユーザの分類を表すために利用する。ワークフローの進行に利用されることはないが、
+レーンに対して担当ユーザ/担当グループを割り当てることができる。

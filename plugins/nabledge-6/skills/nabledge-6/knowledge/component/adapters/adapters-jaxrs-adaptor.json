@@ -1,0 +1,32 @@
+{
+  "id": "adapters-jaxrs-adaptor",
+  "title": "Jakarta RESTful Web Servicesアダプタ",
+  "content": "**目次**\n\n* モジュール一覧\n* Jersey環境下でRESTfulウェブサービスを使用する\n* RESTEasy環境下でRESTfulウェブサービスを使用する\n* 各環境下で使用するボディコンバータを変更（追加）したい\n\n> **Tip:**\n> 本機能は、Nablarch5までは「JAX-RS アダプタ」という名称だった。\n> しかし、Java EEがEclipse Foundationに移管され仕様名が変わったことに伴い「Jakarta RESTful Web Servicesアダプタ」という名称に変更された。\n\n> 変更されたのは名称のみで、機能的な差は無い。\n\n> その他、Nablarch6で名称が変更された機能については [Nablarch5と6で名称が変更になった機能について](../../about/about-nablarch/about-nablarch-jakarta-ee.md#renamed-features-in-nablarch-6) を参照のこと。\n\n[RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restful-web-service) で使用するための以下のアダプタを提供する。\n\n* JSONを [Jackson(外部サイト、英語)](https://github.com/FasterXML/jackson) を使って変換するアダプタ\n* [Jersey(外部サイト、英語)](https://eclipse-ee4j.github.io/jersey/)  で [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restful-web-service) を使用するためのアダプタ\n* [RESTEasy(外部サイト、英語)](https://resteasy.dev/) で [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restful-web-service) を使用するためのアダプタ",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "content": "```xml\n<!-- jacksonアダプタを使う場合 -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-jackson-adaptor</artifactId>\n</dependency>\n\n<!-- Jersey用アダプタを使う場合 -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-jersey-adaptor</artifactId>\n</dependency>\n\n<!-- RESTEasy用アダプタを使う場合 -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-resteasy-adaptor</artifactId>\n</dependency>\n```\n\n> **Tip:**\n> Jacksonのバージョン2.17.1を使用してテストを行っている。\n> バージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。\n\n> **Tip:**\n> Jackson1系ライブラリの脆弱性対応が行われなくなったため、Nablarch5u16よりJackson1系のサポートを廃止した。\n> Jackson1系を使用していた場合はJackson2系へ移行すること。\n\n> 【参考情報】\n\n> * >   [https://jvndb.jvn.jp/ja/contents/2019/JVNDB-2019-012258.html](https://jvndb.jvn.jp/ja/contents/2019/JVNDB-2019-012258.html)\n> * >   [https://github.com/advisories/GHSA-r6j9-8759-g62w](https://github.com/advisories/GHSA-r6j9-8759-g62w)",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "Jersey環境下でRESTfulウェブサービスを使用する",
+      "content": "ウェブアプリケーションサーバにバンドルされている [Jakarta RESTful Web Services(外部サイト、英語)](https://jakarta.ee/specifications/restful-ws/) の実装が、\n[Jersey(外部サイト、英語)](https://eclipse-ee4j.github.io/jersey/) の場合には、Jersey用のアダプタを使用する。\n\n以下にJersey用アダプタの適用方法を示す。\n\nJaxRsMethodBinderFactory#handlerList\nに対して、Jersey用のハンドラを構築するファクトリクラス(JerseyJaxRsHandlerListFactory)\nをファクトリインジェクションする。これにより、Jersey用の以下のハンドラ構成が自動的に設定される。\n\n* [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) の設定(以下のコンバータが設定される)\n\n  * JSONのコンバータには Jackson2BodyConverter が設定される。\n  * XMLのコンバータには JaxbBodyConverter が設定される。\n  * application/x-www-form-urlencodedのコンバータには FormUrlEncodedConverter が設定される。\n  * multipart/form-dataのコンバータには MultipartFormDataBodyConverter が設定される。\n\n> **Tip:**\n> JSONのコンバータには、Date and Time APIを使用するために [jackson-modules-java8(外部サイト、英語)](https://github.com/FasterXML/jackson-modules-java8) に含まれるJava 8 Date/timeモジュールの追加および設定を行っている。\n\n* [Jakarta RESTful Web Servcies Bean Validationハンドラ](../../component/handlers/handlers-jaxrs-bean-validation-handler.md#jaxrs-bean-validation-handler)\n\n```xml\n<component name=\"packageMapping\" class=\"nablarch.integration.router.RoutesMapping\">\n  <property name=\"methodBinderFactory\">\n    <component class=\"nablarch.fw.jaxrs.JaxRsMethodBinderFactory\">\n      <property name=\"handlerList\">\n        <!-- handlerListプロパティにJerseyのハンドラキューをファクトリインジェクションする -->\n        <component class=\"nablarch.integration.jaxrs.jersey.JerseyJaxRsHandlerListFactory\"/>\n      </property>\n    </component>\n  </property>\n\n  <!-- 上記以外のプロパティは省略 -->\n</component>\n```\n\n> **Tip:**\n> 使用するウェブアプリケーションサーバに [Jackson(外部サイト、英語)](https://github.com/FasterXML/jackson) が\n> バンドルされていない場合は、Jacksonのモジュールをアプリケーションモジュールとセットでデプロイすること。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "RESTEasy環境下でRESTfulウェブサービスを使用する",
+      "content": "ウェブアプリケーションサーバにバンドルされている [Jakarta RESTful Web Services(外部サイト、英語)](https://jakarta.ee/specifications/restful-ws/) の実装が、\n[RESTEasy(外部サイト、英語)](https://resteasy.dev/) の場合には、RESTEasy用のアダプタを使用する。\n\n以下にRESTEasy用アダプタの適用方法を示す。\n\nJaxRsMethodBinderFactory#handlerList\nに対して、RESTEasy用のハンドラを構築するファクトリクラス(ResteasyJaxRsHandlerListFactory)\nをファクトリインジェクションする。これにより、RESTEasy用の以下のハンドラ構成が自動的に設定される。\n\n* [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) の設定(以下のコンバータが設定される)\n\n  * JSONのコンバータには Jackson2BodyConverter が設定される。\n  * XMLのコンバータには JaxbBodyConverter が設定される。\n  * application/x-www-form-urlencodedのコンバータには FormUrlEncodedConverter が設定される。\n  * multipart/form-dataのコンバータには MultipartFormDataBodyConverter が設定される。\n\n> **Tip:**\n> JSONのコンバータには、Date and Time APIを使用するために [jackson-modules-java8(外部サイト、英語)](https://github.com/FasterXML/jackson-modules-java8) に含まれるJava 8 Date/timeモジュールの追加および設定を行っている。\n\n* [Jakarta RESTful Web Servcies Bean Validationハンドラ](../../component/handlers/handlers-jaxrs-bean-validation-handler.md#jaxrs-bean-validation-handler)\n\n```xml\n<component name=\"packageMapping\" class=\"nablarch.integration.router.RoutesMapping\">\n  <property name=\"methodBinderFactory\">\n    <component class=\"nablarch.fw.jaxrs.JaxRsMethodBinderFactory\">\n      <property name=\"handlerList\">\n        <!-- handlerListプロパティにRESTEasyのハンドラキューをファクトリインジェクションする -->\n        <component class=\"nablarch.integration.jaxrs.resteasy.ResteasyJaxRsHandlerListFactory\"/>\n      </property>\n    </component>\n  </property>\n\n  <!-- 上記以外のプロパティは省略 -->\n</component>\n```\n\n> **Tip:**\n> 使用するウェブアプリケーションサーバに [Jackson(外部サイト、英語)](https://github.com/FasterXML/jackson) が\n> バンドルされていない場合は、Jacksonのモジュールをアプリケーションモジュールとセットでデプロイすること。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "各環境下で使用するボディコンバータを変更（追加）したい",
+      "content": "プロジェクトで対応すべきMIMEが増えた場合には、 JaxRsHandlerListFactory を実装し対応する。\n\n実装方法は、本アダプタ\n(JerseyJaxRsHandlerListFactory 、 ResteasyJaxRsHandlerListFactory)\nを参考にすると良い。",
+      "level": 2
+    }
+  ]
+}

@@ -97,13 +97,22 @@ Question: "want to implement paging"
 
 Empty pointer JSON: `{"results": []}`
 
-### Step 5: Section selection (route 2)
+### Step 5: Enumerate sections of candidate files (route 2)
 
-**Tool**: _knowledge-search/_section-search.md
+**Tool**: Bash (jq)
 
-**Action**: Execute `_knowledge-search/_section-search.md`. Input is the candidate file list from Step 4 and the keyword list from Step 1.
+**Action**: For each candidate file from Step 4, enumerate all sections to build the candidate section list. Section judgement (Step 6) reads each section content and decides relevance, so there is no pre-filter here.
 
-**Output**: List of candidate sections
+**Command**:
+```bash
+for file in component/libraries/libraries-universal-dao.json \
+            component/libraries/libraries-database.json; do
+  jq -r --arg f "$file" '.sections[] | "\($f)|\(.id)"' \
+    .claude/skills/nabledge-6/knowledge/"$file"
+done
+```
+
+**Output**: List of candidate sections in `file|section_id` format
 
 ### Step 6: Section judgement (common)
 

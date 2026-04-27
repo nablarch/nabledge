@@ -1,0 +1,104 @@
+{
+  "id": "testing-framework-initial-setup",
+  "title": "UI開発基盤の導入",
+  "content": "本節では、Nablarch UI開発基盤をプロジェクトの開発環境に導入する手順を述べる。\nUI開発基盤の導入時に以下の手順を実施すればよく、各担当者が個別に実施する必要はない。\n\n以下の手順で使用するインストール用コマンドの詳細仕様については、\n[プラグインビルドコマンド仕様](../../development-tools/testing-framework/testing-framework-plugin-build.md) を参照すること。\n\n> **Tip:**\n> 本節では、UI開発基盤用プロジェクトテンプレートを使用したUI開発基盤の導入手順を記載している。\n> UI開発基盤用プロジェクトテンプレートは [CSSフレームワーク](../../development-tools/testing-framework/testing-framework-css-framework.md) を使用しているため、\n> [マルチレイアウト用CSSフレームワーク](../../development-tools/testing-framework/testing-framework-multicol-css-framework.md) を使用する場合には、 [マルチレイアウトモードの適用方法](../../development-tools/testing-framework/testing-framework-multicol-css-framework.md#apply-multicol-layout)\n> を参考に設定すること。\n\n> **Tip:**\n> 開発作業手順はUI開発基盤を導入したプロジェクトが構成管理にSubversionを使用する想定で記載している。\n> Gitを使用する場合はプロジェクト構成やコマンド名などを読み替えること。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "0. 事前準備",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "1. Node.jsのインストール",
+      "content": "本節の作業をするには Node.js のインストールが必要である。\nインストールイメージを下記URL(2016/10時点)から取得し、インストールする。\n\n[http://nodejs.org/dist/v0.10.26/](http://nodejs.org/dist/v0.10.26/)\n\nバージョンによってはUI開発基盤が動作しないため、動作検証済みのバージョンである 0.10.26 の使用を推奨する。\n\n> **Tip:**\n> なお **Node.js** を必要とするのは初期環境構築をするアーキテクトのみである。\n> 通常の設計・開発担当者はインストール不要である。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "2. 環境変数 **JAVA_HOME** の設定",
+      "content": "本節で使用する [サーバ動作確認用サーバ起動コマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#ui-demo) は環境変数 **JAVA_HOME** の設定が前提となっているため、\n環境変数 **JAVA_HOME** にJDKのインストールディレクトリパスを設定する。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "1. プロジェクトの作成",
+      "content": "下記手順を実行することにより、UI開発基盤を使用するためのプロジェクトを作成する。\n作成したプロジェクトの構成は以下のようになる。\n\n> **Tip:**\n> ここでは、プロジェクト名は仮想のプロジェクト名(web_project)で示す。\n\n```bash\nプロジェクトルート/\n      │\n      ├── nablarch_plugins_bundle/\n      │     ├── bin/\n      │     │     ├── setup.bat\n      │     │     └── install.bat\n      │     ├── node_modules/\n      │     │     ├── nablarch-css-base\n      │     │     ├── nablarch-css-color-default\n      │     │     ├── nablarch-css-common\n      │     │     │\n      │     │ ## 後略 ##\n      │     │\n      │     └── package.json\n      │\n      └── web_project/\n            ├── web/\n            ├── ui_demo/\n            ├── ui_plugins/\n            │     └── package.json\n            └── ui_test/\n```\n\n> **Tip:**\n> ここで展開される各ディレクトリの内容については\n> [標準プロジェクト構成](../../development-tools/testing-framework/testing-framework-directory-layout.md) で解説する。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "1. プロジェクトルートの作成",
+      "content": "ローカルマシン上の任意の場所にプロジェクトルートとなるディレクトリを新規作成する。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "2. UI開発基盤の取得",
+      "content": "「git clone」コマンドでUI開発基盤を取得し、プロジェクトルート直下に配置する。\n以下にコマンド例を示す。\n\n```bash\ncd <<プロジェクトルート>>\ngit clone https://github.com/nablarch/nablarch-plugins-bundle.git\n```",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "3. UI開発基盤用プロジェクトテンプレートの取得",
+      "content": "「git clone」コマンドでUI開発基盤用プロジェクトテンプレートを取得し、プロジェクトルート直下に配置する。\n以下にコマンド例を示す。\n\n```bash\ncd <<プロジェクトルート>>\ngit clone https://github.com/nablarch/nablarch-ui-development-template.git web_project\n```",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "4. ブランクプロジェクトのセットアップ",
+      "content": "[3. UI開発基盤用プロジェクトテンプレートの取得](../../development-tools/testing-framework/testing-framework-initial-setup.md#clone-project-template) で取得したプロジェクトテンプレートにブランクプロジェクトをセットアップする。\nセットアップ方法は、 [ウェブプロジェクトの初期セットアップ](../../setup/blank-project/blank-project-setup-Web.md) を参照すること。\n\n> **Tip:**\n> ここでは、ブランクプロジェクトを生成する際、 `artifactId` に web と指定すること。\n\n> **Tip:**\n> mavenのインストールや設定をしていない場合には、以下を参考にそれぞれを実施してからセットアップを行うこと。\n\n> * >   [Apache Mavenについて](../../setup/blank-project/blank-project-maven.md)\n> * >   [初期セットアップの前に](../../setup/blank-project/blank-project-beforeFirstStep.md)",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "2. Nablarch UI開発基盤のインストール",
+      "content": "下記手順を実行することにより、Nablarch標準プラグインバンドルの内容と、\n各プラグインが依存するサードパーティ製ライブラリがプロジェクトルート配下に取り込まれる。",
+      "level": 2
+    },
+    {
+      "id": "s10",
+      "title": "1. プラグインのセットアップ",
+      "content": "nablarch_plugins_bundle/bin/setup.bat を実行する。\n\n> **Tip:**\n> プロキシ配下でインターネットに接続している場合には、\n> 以下の環境変数にプロキシのアドレスを設定すること。\n\n> * >   **http_proxy** ：例）http_proxy=http://proxy.example.com:8080\n> * >   **https_proxy** ：例）https_proxy=http://proxy.example.com:8080\n\nプラグインのセットアップが実行され、以下のようなログが表示される。\n\n```bash\n>setup.bat\n\n>cd <<プロジェクトルート>>/nablarch-plugins-bundle/bin/\n\n>call mvn clean compile dependency:copy-dependencies -f ../node_modules/nablarch-dev-tool-server/ui_test/pom.xml\n[INFO] Scanning for projects...\n[INFO]\n[INFO] ------------------------------------------------------------------------\n[INFO] Building nablarch-dev-tool-server 1.0.0\n[INFO] ------------------------------------------------------------------------\n\n### 中略 ###\n\n[INFO] ------------------------------------------------------------------------\n[INFO] BUILD SUCCESS\n[INFO] ------------------------------------------------------------------------\n[INFO] Total time: 1.949 s\n[INFO] Finished at: 2016-10-05T16:30:40+09:00\n[INFO] Final Memory: 21M/211M\n[INFO] ------------------------------------------------------------------------\nnpm WARN package.json nablarch-css-base@1.0.0 No repository field.\nnpm WARN package.json nablarch-css-base@1.0.0 No README data\n\n### 中略 ###\n\nnpm http 200 https://registry.npmjs.org/boom\nnpm http GET https://registry.npmjs.org/delayed-stream/0.0.5\nnpm http 304 https://registry.npmjs.org/delayed-stream/0.0.5\nshelljs@0.2.6 node_modules/shelljs\n\nrequirejs@2.1.11 node_modules/requirejs\n\nsugar@1.4.1 node_modules/sugar\n\njquery@1.11.0 node_modules/jquery\n\nless@1.4.2 node_modules/less\n├── mkdirp@0.3.5\n├── mime@1.2.11\n├── ycssmin@1.0.1\n└── request@2.34.0\n\nfont-awesome@4.0.3 node_modules/font-awesome\n>\n```\n\nnablarch_plugins_bundle/bin/setup.bat では以下の二つの処理を行っており、\nセットアップ後の状態はそれぞれ以下のようになる。\n\n* [6. UI開発基盤テスト用プロジェクトの動作確認](../../development-tools/testing-framework/testing-framework-initial-setup.md#ui-test-server) で使用するモジュールのビルド\n\n  nablarch-plugins-bundle/node_modules/nablarch-dev-tool-server/ui_test/tools 配下に\n  サーバ動作確認用のバイナリとライブラリが追加される。\n\n  ```bash\n  プロジェクトルート/\n        │\n        ├── nablarch_plugins_bundle/\n        │     ├── node_modules/\n        │     │     ├── nablarch-dev-tool-server\n        │     │     │     ├── ui_test\n        │     │     │     │     ├── tools\n        │     │     │     │     │     ├── bin # (追加)\n        │     │     │     │     │     ├── lib # (追加)\n        ## (後略) ##\n  ```\n* サードパーティライブラリの取得\n\n  nablarch_plugins_bundle/node_modules 配下に\n  サードパーティライブラリが追加される。\n\n  ```bash\n  プロジェクトルート/\n        │\n        ├── nablarch_plugins_bundle/\n        │     ├── bin/\n        │     │     ├── setup.bat\n        │     │     └── install.bat\n        │     ├── doc/\n        │     ├── guide/\n        │     ├── node_modules/\n        │     │     ├── es6-promise\n        │     │     ├── font-awesome  # (追加)\n        │     │     ├── jquery        # (追加)\n        │     │     ├── less          # (追加)\n        │     │     ├── nablarch-css-base\n        │     │     ├── nablarch-css-color-default\n        │     │     ├── nablarch-css-common\n        │     │     │\n      ## (後略) ##\n  ```",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "2. プロジェクトで使用するプラグインの選定",
+      "content": "web_project/ui_plugins/package.json を任意のテキストエディタで開く。\n\nこのファイルは以下のような構造を持ち、プロジェクトで使用する\n[UIプラグイン](../../development-tools/testing-framework/testing-framework-plugins.md) の名称とそのバージョンが列挙されている。\n\n```javascript\n//---- 前略 ----//\n\n\"dependencies\":\n{ \"requirejs\"    : \"2.1.11\"\n, \"sugar\"        : \"1.4.1\"\n, \"jquery\"       : \"1.11.0\"\n, \"requirejs-text\": \"2.0.10\"\n, \"font-awesome\": \"4.0.3\"\n, \"nablarch-css-color-default\": \"1.0.0\"\n, \"nablarch-css-core\": \"1.0.0\"\n, \"nablarch-css-conf-wide\": \"1.0.0\"\n, \"nablarch-css-conf-compact\": \"1.0.0\"\n, \"nablarch-css-conf-narrow\": \"1.0.0\"\n\n//---- 中略 ----//\n\n, \"nablarch-template-head\": \"1.0.0\"\n, \"nablarch-template-js_include\": \"1.0.0\"\n, \"nablarch-template-page\": \"1.0.0\"\n}\n\n//---- 後略 ----//\n```\n\nこのエントリを削除することによって、プロジェクト側で使用しないプラグインを\nインストールの対象から除去できる。\n各プラグインの内容については [UIプラグイン](../../development-tools/testing-framework/testing-framework-plugins.md) の項を参照すること。\n\n削除したプラグインがlessファイルを含んでいる場合、プロジェクトではそのlessファイルも\n使用できなくなるため、 [lessインポート定義ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#lessimport-less) から、当該プラグインのlessファイルの\nimport定義を削除する必要がある。\n\n[lessインポート定義ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#lessimport-less) には、以下のようにプロジェクトが各表示モードで使用するlessファイルの\nimport定義が列挙されている。\n\n```css\n@import \"../../node_modules/nablarch-css-core/ui_public/css/core/reset\";\n@import \"../../node_modules/nablarch-css-core/ui_public/css/core/css3\";\n@import \"../../node_modules/nablarch-css-core/ui_public/css/core/grid\";\n\n //---- 中略 ----//\n\n@import \"../../node_modules/web_project-template-app_nav/ui_public/css/template/topnav\";\n@import \"../../node_modules/web_project-template-app_nav/ui_public/css/template/topnav-wide\";\n@import \"../../node_modules/web_project-template-error/ui_public/css/template/errorpage\";\n```\n\n上記で削除したプラグインに対応するlessファイルは、それぞれの [lessインポート定義ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#lessimport-less) から削除する必要がある。\n本手順の場合は、以下の6ファイルから削除する。\n\n* web_project/ui_plugins/css/ui_local/compact.less\n* web_project/ui_plugins/css/ui_local/narrow.less\n* web_project/ui_plugins/css/ui_local/wide.less\n* web_project/ui_plugins/css/ui_public/compact.less\n* web_project/ui_plugins/css/ui_public/narrow.less\n* web_project/ui_plugins/css/ui_public/wide.less\n\n> **Tip:**\n> 使用するプラグインの選別は、開発中であっても随時実施可能である。\n> ただ、その場合でも、開発チーム側での誤用を避けるため、\n> 使用しないプラグインはなるべく早い段階で除いておくことが望ましい。",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "3. プロジェクトへのプラグインインストール",
+      "content": "インストールコマンドにプロジェクトルートを設定し実行する。\n(コマンドの詳細については [プラグインビルドコマンド仕様](../../development-tools/testing-framework/testing-framework-plugin-build.md) を参照)\n\n**1. PROJECT_ROOTの設定**\nnablarch_plugins_bundle/bin/install.bat を任意のテキストエディタで開き、\nコメントアウトされているプロジェクトルートを以下のように設定する。\n\n```bat\n@setlocal\n\ncd %~dp0\n@echo off\nset PROJECT_ROOT=../../web_project # (設定)\n###(後略)###\n```\n\n**2. インストールコマンドの実行**\nnablarch_plugins_bundle/bin/install.bat を実行する。\n\n> **Tip:**\n> なお、このスクリプトは完了までに通常5から10分程度の時間がかかる。\n\n以下のようなログが表示される。\n\n```bash\n> install.bat\nsetup plugin: ../node_modules/es6-promise\nsetup plugin: ../node_modules/font-awesome\nsetup plugin: ../node_modules/jquery\nsetup plugin: ../node_modules/less\n\n## (中略) ##\n\nnpm http 200 http://127.0.0.1:3000/nablarch-css-conf-compact/-/nablarch-css-conf-compact-1.0.0/package.tgz\nnpm http 200 http://127.0.0.1:3000/nablarch-css-conf-wide/-/nablarch-css-conf-wide-1.0.0/package.tgz\nnablarch-css-conf-compact@1.0.0 node_modules/nablarch-css-conf-compact\nnablarch-css-conf-narrow@1.0.0 node_modules/nablarch-css-conf-narrow\nnablarch-css-conf-wide@1.0.0 node_modules/nablarch-css-conf-wide\n\nhalting local repository ...\n\n... local repository shutdown.\n>\n```\n\nこの処理により、先の手順で **package.json** に指定されていたプラグインが\nweb_project/ui_plugins/node_modules 配下にインストールされる。\n\n```bash\nプロジェクトルート/\n      │\n      ├── nablarch_plugins_bundle/\n      │     │\n      │     │\n      │   ##(後略)##\n      │\n      └── web_project/\n            ├── web/\n            ├── ui_demo/\n            ├── ui_plugins/\n            │     ├── .npm/  # (追加)\n            │     ├── package.json\n            │     ├── bin/\n            │     │\n            │     └── node_modules/\n            │           ├── jquery/                       # (追加)\n            │           ├── less/                         # (追加)\n            │           ├── nablarch-css-base/            # (追加)\n            │           ├── nablarch-css-color-default/   # (追加)\n            │           ├── nablarch-css-common/          # (追加)\n            │           │\n            │       ##(後略)##\n            │\n            └── ui_test/\n```",
+      "level": 3
+    },
+    {
+      "id": "s13",
+      "title": "4. UI部品のビルドと配置",
+      "content": "ビルドコマンド用設定ファイルにデプロイ対象プロジェクトを設定しUIビルドコマンドを実行する。\n(設定ファイルとコマンドの詳細については [プラグインビルドコマンド仕様](../../development-tools/testing-framework/testing-framework-plugin-build.md) を参照)\n\n**1. デプロイ対象プロジェクトの設定**\nweb_project/ui_plugins/pjconf.json を任意のテキストエディタで開き、\nデプロイ対象プロジェクト(pathSettings/webProjectPath)を以下のように設定する。\n\n```javascript\n{\n  \"pathSettings\" :\n  { \"projectRootPath\"   : \"../..\"\n  , \"webProjectPath\"    : \"web/src/main/webapp\"  // (設定)\n  , \"demoProjectPath\"   : \"ui_demo\"\n  , \"testProjectPath\"   : \"ui_test\"\n  , \"pluginProjectPath\" : \"ui_plugins\"\n  }\n  // ###(後略)###\n```\n\n**2. UIビルドコマンドの実行**\nweb_project/ui_plugins/bin/ui_build.bat を実行する。\n\nこれにより web_project 配下の以下のディレクトリに各プラグインから抽出された\nUI資源が展開される。\n\n| パス | 名称 | 用途 |\n|---|---|---|\n| ui_demo/ | 業務画面モック開発用プロジェクト | 主に設計工程で作成する業務画面JSPを格納するプロジェクト。 サーバサイドの仕組みなしで、画面の表示や動作のデモを行うことができる。 使用方法については、 [JSP/HTML作成ガイド](../../development-tools/testing-framework/testing-framework-ui-dev-guide.md#ui-dev-howto-make-jsp) を参照すること。 |\n| ui_test/ | UI開発基盤テスト用プロジェクト | UI開発基盤自体の開発に用いるテストスイートを格納するプロジェクト。 プロジェクト側でUI基盤のカスタマイズを行う際に、既存機能への影響を確認する場合に 使用することができる。 また、UI基盤部品で問題が発生した場合に、Nablarchの標準プラグインの問題なのか、 PJ側でのカスタマイズの問題なのかを確認する際にも使用する。 |\n| web/ | デプロイ対象プロジェクト | 実際にサーバ環境にデプロイされる資源を格納するプロジェクト。 |",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "5. UIローカルデモ用プロジェクトの動作確認",
+      "content": "web_project/ui_demo/ローカル画面確認.bat\nを実行すると、ブラウザが起動し、以下の画面が表示される。\n\n![ui_demo_server_indexpage.png](assets/testing-framework-initial-setup/ui_demo_server_indexpage.png)\n\nこの画面には web_project/ui_demo 配下にある全てのJSPファイルへのリンクが\n表示される。\n各リンクを開くことで、当該画面のJSPがJavaScriptによって解釈され、\n下記のようなデモ画面を表示できる。\n\n![ui_demo_server_preview.png](assets/testing-framework-initial-setup/ui_demo_server_preview.png)",
+      "level": 3
+    },
+    {
+      "id": "s15",
+      "title": "6. UI開発基盤テスト用プロジェクトの動作確認",
+      "content": "web_project/ui_test/サーバ動作確認.bat\nを実行すると、ブラウザが起動し、以下の画面が表示される。\n\n![ui_test_server_top.png](assets/testing-framework-initial-setup/ui_test_server_top.png)\n\nコマンドを実行したコンソール内に以下のようなメッセージが表示されるのを確認できるまで待つ。\n\n```bash\n2014-05-05 16:28:24.022:INFO::Logging to STDERR via org.mortbay.log.StdErrLog\n2014-05-05 16:28:24.058:INFO::jetty-6.1.24\n2014-05-05 16:28:24.300 -INFO- ROO [null] load component config file. file = classpath:web-component-configuration.xml\n2014-05-05 16:28:24.331 -INFO- ROO [null] [nablarch.fw.web.servlet.NablarchServletContextListener#contextInitialized] initialization completed.\n2014-05-05 16:28:24.383:INFO::Started SocketConnector@0.0.0.0:7777\n```\n\nメッセージが確認できたら\nブラウザに表示されているリンクを押すと、以下のような画面に遷移する。\n\n![ui_test_server_indexpage.png](assets/testing-framework-initial-setup/ui_test_server_indexpage.png)\n\n左のメニューから、各UI部品の動作確認用ページに遷移できる。",
+      "level": 3
+    },
+    {
+      "id": "s16",
+      "title": "7. 開発リポジトリへの登録",
+      "content": "ここまでセットアップした開発基盤を、リポジトリに登録する。\n\n> **Important:**\n> ここでリポジトリへの登録を怠ると、以降のプロジェクト側で行うカスタマイズと、\n> Nablarch開発元で行う改修とを正しくマージすることが困難、もしくは不可能となるので、\n> 必ず実施すること。\n\n**1. UI開発基盤インストール作業ファイルの削除**\n下記のディレクトリおよびその配下のファイルについては、\nインストール作業完了後は不要となるので、コミット前に削除しておく。\n\n* **nablarch_plugins_bundle/**\n* **web_project/ui_plugins/.npm/**\n**2. コミット**\n上述の削除により、プロジェクトのファイル構成は以下の図のようになる。\nこれをプロジェクトのリポジトリにコミットする。\n\n```bash\nプロジェクトルート/\n      │\n      └── web_project/\n            ├── web/\n            │     │\n            │   ##(後略)##\n            │\n            ├── ui_demo/\n            │     ├── .project\n            │     │\n            │   ##(後略)##\n            │\n            ├── ui_plugins/\n            │     ├── package.json\n            │     ├── bin/\n            │     │     ├── ui_build.bat\n            │     │     ├── ui_build.sh\n            │     │     │\n            │     │\n            │     └── node_modules/\n            │           ├── jquery/\n            │           ├── less/\n            │           ├── nablarch-css-base/\n            │           ├── nablarch-css-color-default/\n            │           ├── nablarch-css-common/\n            │           │\n            │       ##(後略)##\n            │\n            └── ui_test/\n                  ├── .project\n                  ├── .classpath\n                  │\n                ##(後略)##\n```",
+      "level": 3
+    }
+  ]
+}

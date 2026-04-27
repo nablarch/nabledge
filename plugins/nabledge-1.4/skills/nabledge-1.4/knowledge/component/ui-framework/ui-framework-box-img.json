@@ -1,0 +1,26 @@
+{
+  "id": "ui-framework-box-img",
+  "title": "画像表示ウィジェット",
+  "content": "[画像表示ウィジェット](../../component/ui-framework/ui-framework-box-img.md) は、画像を表示するウィジェットである。\n表示デバイスのppiに応じて切り替えることができ、業務画面内画面内に画像を表示する場合に使用する。(共通ヘッダ内のロゴは対象外)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**実装成果物(サーバ動作)**\n\n```jsp\n<box:img id=\"imageSample\"\n         file=\"sample.png\">\n</box:img>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "id属性を設定した要素を出力し、CSSのbackground-imageプロパティを使用して画像を切替、出力する。\n\nローカル動作とサーバ動作の挙動は同じである。\n\n**高解像度・低解像度の位置づけ**\n\n* 低解像度画像 : 主に一般的なPCディスプレイ(デバイスピクセル比=1:1)で表示する画像。\n* 高解像度画像 : ratinaディスプレイ(デバイスピクセル比=2:1)などの高解像度ディスプレイをもつデバイスで表示する画像。\n\n本ウィジェットのデフォルトの設定では、デバイスピクセル比が1.25:1より大きいデバイスでは高解像度画像、それより小さい場合は低解像度画像を使用すること。\n\n**表示する画像ファイルパス**\n\n本ウィジェットでは **画面の表示モード(narrow or wide)** と **解像度への対応(high or low)** の組合せで画像を切り替えることが可能である。\n\nひとつの画像コンテンツを表示する場合、各表示モードと解像度向けに下記の4つのパスのファイルが対応するデバイスで参照される。\n\n* img/wide/high\n\n  wide,compactモードかつ高解像度で表示される画像を格納するフォルダ。\n* img/wide/low\n\n  wide,compactモードかつ低解像度で表示される画像を格納するフォルダ。\n* img/narrow/high\n\n  narrowモードかつ高解像度で表示される画像を格納するフォルダ。\n* img/narrow/low\n\n  narrowモードかつ低解像度で表示される画像を格納するフォルダ。\n\n**静的ファイルの用意**\n\n表示モードのディレクトリは **画面の表示モード(narrow or wide)** と **解像度への対応(high or low)** の組合せで用意する必要がある。\n\nリソースの切替が必要ない場合は、img/wide/high配下にファイルを配置し、img展開.batにて各ディレクトリに配置する。\n(※画像を切替えない場合は同一ファイルを表示モード領域に展開し、実質同一の画像を参照させる。)\n\n画像切替のリソースを高解像度向けの画像などに置き換える場合は、基点となるパス配下のファイルを上書きすればよい。\n\n**imgファイルの展開**\n\nimg展開.batで展開されるファイルは下記の優先順位によって展開される。\n※基本的にファイルはimg/wide/highに配置する。\n\n1. 対象のフォルダにすでにファイルが存在する場合、ファイルは展開されない。\n2. 対象のフォルダに存在しない場合、同一の表示モード(wide, narrow)の高解像度画像が展開される。\n3. 同一の表示モードに存在しない場合はデフォルトとして、img/wide/highの画像が展開される。\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| cssClass | 定義領域の class属性を指定する。 | 文字列 | ○ | ○ |  |\n| id | ウィジェットを定義する要素 のid属性 | 文字列 | ◎ | ◎ |  |\n| file | 表示する画像の相対パス。 | 文字列 | ◎ | ◎ | 画像の切替え用ディレクトリのimg/(wide\\|narrow)/(high\\|low)/ からの相対パスを指定する。 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "当ウィジェットでは静的ファイルへのリクエストを CSS Media Query を利用して切替える。\n\n**参照される画像のパス**\n\nfile属性に指定したパスは下記のようにパス解決され、タグに画像が出力される。\n画像を配置し、確認する場合は下記を参照。\n\n**{contextPath}/{表示モード対応ディレクトリ}/{指定したfile属性のパス}**\n\n**ブレークポイントや表示モードなどの拡張方法**\n\nブレークポイントや画像のURLはtemplateで指定されるstyleに依存している。\n改修する場合、基本的にtemplateを変更すればよい。\n画面のデバイスピクセル比の値(-webkit-min-device-pixel-ratioなど)を変更する場合、\nサポート対象のデバイスのピクセル比を確認すること。\ntemplateに渡すパラメータが増える場合、tagファイルの-{placeholder名}で指定する。\n\n**tagとテンプレートのコード例**\n\ntag\n\n```jsp\n<div id=\"<n:write name=\"id\" withHtmlFormat=\"false\"/>\"\n   class=\"nablarch_ResponsibleImage\n          -filepath    '<n:write name=\"file\" withHtmlFormat=\"false\" />'\n          -id          '<n:write name=\"id\" withHtmlFormat=\"false\"/>'\n          -contextPath '<n:write name=\"contextPath\" withHtmlFormat=\"false\"/>'\"></div>\n```\n\ntemplate\n\n```html\n@media screen and (min-width: 640px) and (-webkit-min-device-pixel-ratio:1.25)\n     , screen and (min-width: 640px) and (-moz-min-device-pixel-ratio:1.25)\n     , screen and (min-width: 640px) and (min-resolution:120dpi) {\n   #{id} > div {\n      background-image : url(\"{contextPath}/img/wide/high/{filepath}\");\n   }\n }\n@media screen and (max-width: 639px) and (-webkit-min-device-pixel-ratio:1.25)\n     , screen and (min-width: 639px) and (-moz-min-device-pixel-ratio:1.25)\n     , screen and (max-width: 639px) and (min-resolution:120dpi) {\n   #{id} > div {\n      background-image : url(\"{contextPath}/img/narrow/high/{filepath}\");\n   }\n}\n```\n\n> **Note:**\n> デフォルトの設定では、デバイスピクセル比が1:1のものを低解像度とし、それ以上のものを高解像度用の画像を表示する設定としている。\n\n> 実際の端末ではデバイスピクセル比が1.25以下のものは存在しないため、境界値を1.25としている。\n\n> ただし、IEではresolutionの単位としてデバイスピクセル比(dppx)を使用することが出来ないため、1dppx=96dpiで換算して指定している。\n\n**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/box/img.tag | [画像表示ウィジェット](../../component/ui-framework/ui-framework-box-img.md) の実体となるタグファイル。 |\n| /include/html_head.jsp | contextPathを解決する。 |\n| /js/ui/nablarch/ResponsibleImage.js | 画像のパスを解決するためのJS｡ |\n| /js/ui/nablarch/ResponsibleImage.template | 背景画像のスタイル定義を行うためのテンプレート｡ |\n| /js/ui/nablarch/ResponsibleImageUnsupportRatio.template | ピクセル比が判定できないブラウザ向けのテンプレート｡ |\n| /js/ui/nablarch/ResponsibleImageUnsupportMatchMedia.template | メディアクエリが効かない場合ブラウザ用テンプレート｡ |\n| /css/img/base.less | 画像表示のless。 |\n| /css/img/wide.less | ワイド画像指定less。 |\n| /css/img/narrow.les | ナロー画像指定less。 |\n| /js/jsp/taglib/box.js | [画像表示ウィジェット](../../component/ui-framework/ui-framework-box-img.md) をローカルレンダリングするスタブファイル｡ |\n| /tools/img展開.bat | /WEB-INF/img/配下のファイルを 表示モードディレクトリに配置するためのスクリプト｡ |\n| /img/resource | 配下の画像を各表示モード対応ディレクトリに配置する。 |\n| /img/wide/high /img/wide/low /img/narrow/high /img/narrow/low | 表示モード対応ディレクトリ。 wide=>compact or wide表示モード向け narrow=>narrow表示モード向け high=>高解像度向け low=>PCなどの低解像度向け |",
+      "level": 2
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "nablarch-batch-05-fileOutputBatch",
+  "title": "ファイルを出力するバッチ",
+  "content": "[ユーザ情報削除バッチ](../../guide/nablarch-batch/nablarch-batch-01-userDeleteBatchSpec.md)\nの「削除ユーザレポート出力バッチ」を例に、ファイルを出力するバッチ処理の実装方法を説明する。\n\n![userDeleteBatch.jpg](assets/nablarch-batch-05-fileOutputBatch/userDeleteBatch.jpg)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "初期化処理",
+      "content": "初期化処理では、 `FileRecordWriterHolder` の `open` メソッドを使用して、出力先のファイルをオープンする。\n第1引数にベースパス名称、第2引数に出力先ファイル名、第3引数には、フォーマット定義ファイルのベースパス、第4引数にデータフォーマット定義ファイル名を指定している。\nベースパス名称はリポジトリ設定ファイルに設定した、書き込むデータファイルのベースパス論理名を指定を指定している。\nフォーマット定義ファイルのベースパスはリポジトリ設定ファイルに設定した、フォーマット定義ファイルの格納ディレクトリの論理名を指定している。\n\nまた、 ヘッダーレコードの出力を行う。ヘッダレコードのように、ファイル１レコード目に必ず出力するようなレコードはinitializeメソッドでファイル出力を行う。\n\nファイル出力処理には `FileRecordWriterHolder` の `write` メソッドを使用している。\n`FileRecordWriterHolder` の `write` メソッドの第1引数にレコードタイプ、第2引数に出力する1レコード情報、第3引数に出力先ファイル名を指定している。\n\n```java\n/**\n * {@inheritDoc}\n * <p/>\n * ヘッダーレコードを出力する。\n */\n@Override\nprotected void initialize(CommandLine command, ExecutionContext context) {\n\n    // 【説明】 出力先のファイルをオープンする。\n    FileRecordWriterHolder.open(BASE_PATH_NAME, FILE_ID, \"format\", FILE_ID);\n\n    // 【説明】 ヘッダー行の出力を行う。\n    Map<String, Object> header = new HashMap<String, Object>();\n    header.put(\"sysDate\", SystemTimeUtil.getDateString());\n    writeRecord(\"header\", header);\n\n    dataRecordCount = 0;\n}\n\n/**\n * ファイル出力処理。\n * 指定されたMapを1レコードとしてファイル出力を行う。\n *\n * @param recordType レコードタイプを表す文字列\n * @param record 1レコードの情報を格納したMap\n */\nprivate static void writeRecord(String recordType, Map<String, ?> record) {\n\n    // 【説明】ファイル出力処理を行う。\n    FileRecordWriterHolder.write(recordType, record, BASE_PATH_NAME, FILE_ID);\n}\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "リーダ作成",
+      "content": "削除ユーザ一覧を読み込むリーダを生成する。\n\n```java\n/**\n * {@inheritDoc}\n * ファイル出力対象のデータを読み込む{@link DatabaseRecordReader}を生成する。\n */\n@Override\npublic DataReader<SqlRow> createReader(ExecutionContext ctx) {\n\n    int count = countByStatementSql(\"GET_OUTPUT_FILE_DATA\");\n    writeLog(\"M000000001\", count);\n\n    // 【説明】 データベースからファイル出力対象のデータを読み込むリーダを作成する。\n    DatabaseRecordReader reader = new DatabaseRecordReader();\n    SqlPStatement statement = getSqlPStatement(\"GET_OUTPUT_FILE_DATA\");\n    reader.setStatement(statement);\n    return reader;\n\n}\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "１件ごとの処理",
+      "content": "削除ユーザ1件ごとの処理を行う。\nこの処理は、削除ユーザの件数分だけ繰り返し起動される。\n\n引数で渡された、1件ごとのデータが格納されたSqlRowをそのままファイル出力している。\n`SqlRow` のカラム名と出力ファイルのフィールド名がマッピングされる為、\n単純に `FileRecordWriterHolder` の `write` メソッドを呼び出すだけで1行分のデータがファイル出力される。\nここでは、上記で定義したファイル出力処理を行う `writeRecord` に処理を委譲している。\n\n```java\n/**\n  * {@inheritDoc}\n  * <p/>\n  * 削除ユーザレポートテンポラリから取得したレコードをデータレコードに出力する。\n  */\n @Override\n public Result handle(SqlRow inputData, ExecutionContext context) {\n\n     // 【説明】 データレコードの出力を行う。\n     writeRecord(\"data\", inputData);\n\n     // 【説明】 総件数のインクリメントを行う。\n     dataRecordCount++;\n\n     return new Success();\n }\n```",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "エラー処理",
+      "content": "特別な処理は必要ないため、実装しない。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "終了処理",
+      "content": "トレーラレコードとエンドレコードをファイルに出力する。\n\n> **Note:**\n> `FileRecordWriterHolder` を使用して書き込みを行った出力ファイルはフレームワークによって自動的に開放（クローズ）されるため、アプリケーション側で開放処理を実装する必要はない。\n\n```java\n/**\n * {@inheritDoc}\n * <p/>\n * トレーラレコードと、エンドレコードを出力する。\n */\n@Override\nprotected void terminate(Result result, ExecutionContext context) {\n\n    if (result.isSuccess()) {\n        // 【説明】 トレーラレコードの出力を行う。\n        writeTrailerRecord();\n        // 【説明】 エンドレコードの出力を行う。\n        writeEndRecord();\n    }\n}\n\n/** トレーラレコードを出力する。 */\nprivate void writeTrailerRecord() {\n    Map<String, Object> trailer = new HashMap<String, Object>();\n    trailer.put(\"totalCount\", dataRecordCount);\n    writeRecord(\"trailer\", trailer);\n}\n\n/** エンドレコードを出力する。 */\nprivate void writeEndRecord() {\n    writeRecord(\"end\", new HashMap<String, Object>(0));\n}\n```",
+      "level": 2
+    }
+  ]
+}

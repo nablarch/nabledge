@@ -1,0 +1,56 @@
+{
+  "id": "handlers-thread-context-handler",
+  "title": "スレッドコンテキスト変数管理ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* リクエスト毎にスレッドコンテキストの初期化を行う\n\n  * ユーザIDを設定する\n* スレッドコンテキストの属性値を設定/取得する\n* ユーザが言語を選択する画面を作る\n* ユーザがタイムゾーンを選択する画面を作る\n\nスレッドコンテキストの各属性値について、リクエスト毎に初期化処理を行うハンドラ。\n\nスレッドコンテキストとは、リクエストIDやユーザIDなど、\n同一の処理スレッド内で共有する値をスレッドローカル領域上に保持するための仕組みである。\n\n> **Important:**\n> 本ハンドラで設定したスレッドローカル上の値は、 [スレッドコンテキスト変数削除ハンドラ](../../component/handlers/handlers-thread-context-clear-handler.md#thread-context-clear-handler) を使用して、復路処理で削除すること。\n> 往路処理にて本ハンドラより手前のハンドラでスレッドコンテキストにアクセスした場合、\n> 値を取得できないため本ハンドラより手前ではスレッドコンテキストにアクセスしないよう注意すること。\n\n> **Tip:**\n> スレッドコンテキストの属性値の多くは、本ハンドラによって設定されるが、\n> 本ハンドラ以外のハンドラや業務アクションから任意の変数を設定可能である。\n\n本ハンドラでは、以下の処理を行う。\n\n* [リクエスト毎にスレッドコンテキストの初期化を行う](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler-initialization)\n\n処理の流れは以下のとおり。\n\n![ThreadContextHandler_flow.png](assets/handlers-thread-context-handler/ThreadContextHandler_flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.common.handler.threadcontext.ThreadContextHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw</artifactId>\n</dependency>\n\n<!-- 国際化対応により、言語やタイムゾーンを選択できる画面を作る場合のみ  -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "なし。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "リクエスト毎にスレッドコンテキストの初期化を行う",
+      "content": "スレッドコンテキストの初期化は、\nThreadContextAttributeインタフェース\nを実装したクラスを使用して行う。\n\nデフォルトで以下のクラスを提供している。\n\nリクエストID、内部リクエストID\n* RequestIdAttribute\n* InternalRequestIdAttribute  [1]\n\n[認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#permission-check-handler) や [サービス提供可否チェックハンドラ](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md#serviceavailabilitycheckhandler) のような、内部リクエストIDに対する処理を実施するハンドラを使用する場合に設定する。\n\nユーザID\n* UserIdAttribute\n* UserIdAttributeInSessionStore\n言語\n* LanguageAttribute\n* HttpLanguageAttribute\n* LanguageAttributeInHttpCookie\n* LanguageAttributeInHttpSession\nタイムゾーン\n* TimeZoneAttribute\n* TimeZoneAttributeInHttpCookie\n* TimeZoneAttributeInHttpSession\n実行時ID\n* ExecutionIdAttribute\n\nこれらのクラスは、コンポーネント設定ファイルに定義を追加して使用する。\n\n```xml\n<component class=\"nablarch.common.handler.threadcontext.ThreadContextHandler\">\n  <property name=\"attributes\">\n    <list>\n\n      <!-- リクエストID -->\n      <component class=\"nablarch.common.handler.threadcontext.RequestIdAttribute\" />\n\n      <!-- 内部リクエストID -->\n      <component class=\"nablarch.common.handler.threadcontext.InternalRequestIdAttribute\" />\n\n      <!-- ユーザID -->\n      <component class=\"nablarch.common.handler.threadcontext.UserIdAttribute\">\n        <property name=\"sessionKey\"  value=\"user.id\" />\n        <property name=\"anonymousId\" value=\"guest\" />\n      </component>\n\n      <!-- 言語 -->\n      <component class=\"nablarch.common.handler.threadcontext.LanguageAttribute\">\n        <property name=\"defaultLanguage\" value=\"ja\" />\n      </component>\n\n      <!-- タイムゾーン -->\n      <component class=\"nablarch.common.handler.threadcontext.TimeZoneAttribute\">\n        <property name=\"defaultTimeZone\" value=\"Asia/Tokyo\" />\n      </component>\n\n      <!-- 実行時ID -->\n      <component class=\"nablarch.common.handler.threadcontext.ExecutionIdAttribute\" />\n    </list>\n  </property>\n</component>\n```",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "ユーザIDを設定する",
+      "content": "UserIdAttributeInSessionStore は、デフォルトではセッションストアからユーザIDを取得する。\nセッションストアへの設定はフレームワークでは実施しないため、ログイン時などにアプリケーションで設定する必要がある。\nセッションストアに設定する際のキーはデフォルトでは\"user.id\"が使用される。\n上書きする場合は、 UserIdAttribute#sessionKey に値を設定する。\n\"login_id\"に上書きする例を以下に示す。\n\n```xml\n<component name=\"threadContextHandler\" class=\"nablarch.common.handler.threadcontext.ThreadContextHandler\">\n  <property name=\"attributes\">\n    <list>\n      <!-- ユーザID -->\n      <component class=\"nablarch.common.web.handler.threadcontext.UserIdAttributeInSessionStore\">\n        <property name=\"sessionKey\" value=\"login_id\"/>\n        <property name=\"anonymousId\" value=\"${nablarch.userIdAttribute.anonymousId}\"/>\n      </component>\n      <!-- その他のコンポーネント定義は省略 -->\n    </list>\n  </property>\n</component>\n```\n\nデフォルトのキーでセッションストアにユーザIDを設定する実装例を以下に示す。\n\n```java\nSessionUtil.put(context, \"user.id\", userId);\n```\n\nまた、セッションストアに直接ユーザIDを格納するのではなく、ログイン情報をまとめて格納したいといった要件が考えられる。\nその場合は以下のように UserIdAttribute#getUserIdSession\nをオーバーライドすることで任意の取得元からユーザIDを取得することが可能となる。\n\"userContext\"というキーでセッションストアに設定したオブジェクトからユーザIDを取得する場合の実装例を以下に示す。\n下記の場合も、アプリケーションでセッションストアへオブジェクトを設定する必要がある。\n\n```java\npublic class SessionStoreUserIdAttribute extends UserIdAttribute {\n    @Override\n    protected Object getUserIdSession(ExecutionContext ctx, String skey) {\n        LoginUserPrincipal userContext = SessionUtil.orNull(ctx, \"userContext\");\n        if (userContext == null) {\n            return null;\n        }\n        return String.valueOf(userContext.getUserId());\n    }\n}\n```\n\n```xml\n<component class=\"nablarch.common.handler.threadcontext.ThreadContextHandler\">\n  <property name=\"attributes\">\n    <list>\n       <!-- ユーザID -->\n       <component class=\"com.nablarch.example.proman.web.common.handler.threadcontext.SessionStoreUserIdAttribute\">\n         <property name=\"anonymousId\" value=\"${nablarch.userIdAttribute.anonymousId}\"/>\n       </component>\n       <!-- その他のコンポーネント定義は省略 -->\n    </list>\n  </property>\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "スレッドコンテキストの属性値を設定/取得する",
+      "content": "スレッドコンテキストへのアクセスは、\nThreadContext を使用する。\n\n```java\n// リクエストIDの取得\nString requestId = ThreadContext.getRequestId();\n```",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "ユーザが言語を選択する画面を作る",
+      "content": "国際化対応などで、ユーザが言語を選択できることが求められることがある。\nこのような場合、以下のクラスのいずれかと\nLanguageAttributeInHttpUtil\nを使うことで、ユーザの言語選択を実現できる。\n\n* LanguageAttributeInHttpCookie\n* LanguageAttributeInHttpSession\n\nここでは、クッキーに言語を保持し、リンクにより言語を選択させる画面の実装例を示す。\n\n設定例\n```xml\n<!-- LanguageAttributeInHttpUtilを使用するため、\n     コンポーネント名を\"languageAttribute\"にする。-->\n<component name=\"languageAttribute\"\n           class=\"nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpCookie\">\n  <property name=\"defaultLanguage\" value=\"ja\" />\n  <property name=\"supportedLanguages\" value=\"ja,en\" />\n</component>\n```\nJSPの実装例\n```jsp\n<%-- n:submitLinkタグを使用しリンクを出力し\n  n:paramタグを使用しリンク毎に別々の言語を送信する --%>\n\n<n:submitLink uri=\"/action/menu/index\" name=\"switchToEnglish\">\n\n  英語\n\n  <n:param paramName=\"user.language\" value=\"en\" />\n</n:submitLink>\n<n:submitLink uri=\"/action/menu/index\" name=\"switchToJapanese\">\n\n  日本語\n\n  <n:param paramName=\"user.language\" value=\"ja\" />\n</n:submitLink>\n```\nハンドラの実装例\n```java\n// ユーザが選択した言語の保持を行うハンドラ。\n// 複数画面でユーザに言語を選択させる場合を想定しハンドラとして実装する。\npublic class I18nHandler implements HttpRequestHandler {\n\n    public HttpResponse handle(HttpRequest request, ExecutionContext context) {\n        String language = getLanguage(request, \"user.language\");\n        if (StringUtil.hasValue(language)) {\n\n            // LanguageAttributeInHttpUtilのkeepLanguageメソッドを呼び出し、\n            // クッキーに選択された言語を設定する。\n            // スレッドコンテキストにも言語が設定される。\n            // 指定された言語がサポート対象の言語でない場合は、\n            // クッキーとスレッドコンテキストへの設定を行わない。\n            LanguageAttributeInHttpUtil.keepLanguage(request, context, language);\n        }\n        return context.handleNext(request);\n    }\n\n    private String getLanguage(HttpRequest request, String paramName) {\n        if (!request.getParamMap().containsKey(paramName)) {\n            return null;\n        }\n        return request.getParam(paramName)[0];\n    }\n}\n```",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "ユーザがタイムゾーンを選択する画面を作る",
+      "content": "国際化対応などで、ユーザがタイムゾーンを選択できることが求められることがある。\nこのような場合、以下のクラスのいずれかと\nTimeZoneAttributeInHttpUtil\nを使うことで、ユーザのタイムゾーン選択を実現できる。\n\n* TimeZoneAttributeInHttpCookie\n* TimeZoneAttributeInHttpSession\n\nここでは、クッキーにタイムゾーンを保持し、リンクによりタイムゾーンを選択させる画面の実装例を示す。\n\n設定例\n```xml\n<!-- TimeZoneAttributeInHttpUtilを使用するため、\n     コンポーネント名を\"timeZoneAttribute\"にする。-->\n<component name=\"timeZoneAttribute\"\n           class=\"nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpCookie\">\n  <property name=\"defaultTimeZone\" value=\"Asia/Tokyo\" />\n  <property name=\"supportedTimeZones\" value=\"Asia/Tokyo,America/New_York\" />\n</component>\n```\nJSPの実装例\n```jsp\n<%-- n:submitLinkタグを使用しリンクを出力し\n  n:paramタグを使用しリンク毎に別々のタイムゾーンを送信する --%>\n\n<n:submitLink uri=\"/action/menu/index\" name=\"switchToNewYork\">\n\n  ニューヨーク\n\n  <n:param paramName=\"user.timeZone\" value=\"America/New_York\" />\n</n:submitLink>\n<n:submitLink uri=\"/action/menu/index\" name=\"switchToTokyo\">\n\n  東京\n\n  <n:param paramName=\"user.timeZone\" value=\"Asia/Tokyo\" />\n</n:submitLink>\n```\nハンドラの実装例\n```java\n// ユーザが選択したタイムゾーンの保持を行うハンドラ。\n// 複数画面でユーザにタイムゾーンを選択させる場合を想定しハンドラとして実装する。\npublic class I18nHandler implements HttpRequestHandler {\n\n    public HttpResponse handle(HttpRequest request, ExecutionContext context) {\n        String timeZone = getTimeZone(request, \"user.timeZone\");\n        if (StringUtil.hasValue(timeZone)) {\n\n            // TimeZoneAttributeInHttpUtilのkeepTimeZoneメソッドを呼び出し、\n            // クッキーに選択されたタイムゾーンを設定する。\n            // スレッドコンテキストにもタイムゾーンが設定される。\n            // 指定されたタイムゾーンがサポート対象のタイムゾーンでない場合は、\n            // クッキーとスレッドコンテキストへの設定を行わない。\n            TimeZoneAttributeInHttpUtil.keepTimeZone(request, context, timeZone);\n        }\n        return context.handleNext(request);\n    }\n\n    private String getTimeZone(HttpRequest request, String paramName) {\n        if (!request.getParamMap().containsKey(paramName)) {\n            return null;\n        }\n        return request.getParam(paramName)[0];\n    }\n}\n```",
+      "level": 2
+    }
+  ]
+}

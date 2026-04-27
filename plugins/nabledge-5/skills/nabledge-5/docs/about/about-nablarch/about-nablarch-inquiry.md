@@ -1,23 +1,13 @@
 # 機能追加要望・改善要望
 
-**公式ドキュメント**: [機能追加要望・改善要望](https://nablarch.github.io/docs/LATEST/doc/inquiry/index.html)
+Nablarchでは機能追加要望、改善要望、不具合報告を [JIRA](https://nablarch.atlassian.net) で受け付けています。
 
 ## JIRAへの課題起票方法
 
-機能追加要望・改善要望・不具合報告は[JIRA](https://nablarch.atlassian.net)で受け付けている。
+JIRAに課題を起票する際には [Atlassian](https://www.atlassian.com/ja) のアカウントとNablarch JIRAへの参加が必要です。
 
-課題起票には[Atlassian](https://www.atlassian.com/ja)アカウントとNablarch JIRAへの参加が必要。
-
-手順:
-1. [Nablarch JIRA](https://nablarch.atlassian.net)にアクセスし、画面右上のサインインリンクをクリック
-2. ログインまたはサインアップ
-3. "Welcome to nablarch"ページの"Join on nablarch"ボタンでNablarch JIRAに参加
-4. 課題一覧画面の青い作成ボタン（画面幅が狭い場合は"+"ボタン）で課題作成ウィンドウを開く
-5. 課題を作成
-
-<details>
-<summary>keywords</summary>
-
-JIRA課題起票, 機能追加要望, 改善要望, 不具合報告, Atlassianアカウント
-
-</details>
+1. [Nablarch JIRA](https://nablarch.atlassian.net) にアクセスし、画面上部右端に表示されたサインインリンクを押下してください。
+2. ログイン画面が表示されるのでログインまたはサインアップしてください。
+3. ログイン後に表示される"Welcome to nablarch"ページの"Join on nablarch"という青いボタンを押すことでNablarch JIRAに参加できます。
+4. Nablarch JIRAに参加すると課題の一覧画面が表示されます。画面上部の青い作成ボタン(画面幅が狭い場合は"+"ボタン)を押下することで課題作成ウィンドウが開きます。
+5. 課題を作成してください。

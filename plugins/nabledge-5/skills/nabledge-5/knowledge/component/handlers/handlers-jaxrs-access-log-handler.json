@@ -1,0 +1,32 @@
+{
+  "id": "handlers-jaxrs-access-log-handler",
+  "title": "HTTPアクセスログ（RESTfulウェブサービス用）ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* アクセスログ出力内容の切り替え\n\n[HTTPアクセスログ（RESTfulウェブサービス用）](../../component/libraries/libraries-jaxrs-access-log.md#jaxrs-access-log) を出力するハンドラ。\n\n本ハンドラでは、以下の処理を行う。\n\n* リクエスト処理開始時のアクセスログを出力する\n* リクエスト処理完了時のアクセスログを出力する\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-jaxrs-access-log-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.jaxrs.JaxRsAccessLogHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-jaxrs</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに配置すること\nこのハンドラから呼ばれるログ出力の処理内では、通常 ThreadContext に保持する内容が必要となる。\nこのため、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに配置する必要がある。\n[HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler) より前に配置すること\nまた、完了時のログ出力にはエラーコードが必要となるため、 [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler) より前に配置する必要がある。\nセッションストアIDを出力する場合は [セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler) より後ろに配置すること\n詳細は [セッションストアIDについて](../../component/libraries/libraries-jaxrs-access-log.md#jaxrs-access-log-session-store-id) を参照。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "アクセスログ出力内容の切り替え",
+      "content": "アクセスログの出力内容の切り替え方法は、 [ログ出力](../../component/libraries/libraries-log.md#log) および [HTTPアクセスログ（RESTfulウェブサービス用）の出力](../../component/libraries/libraries-jaxrs-access-log.md#jaxrs-access-log) を参照すること。",
+      "level": 2
+    }
+  ]
+}

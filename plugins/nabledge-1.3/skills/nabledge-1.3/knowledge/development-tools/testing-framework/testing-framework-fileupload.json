@@ -1,51 +1,26 @@
 {
   "id": "testing-framework-fileupload",
   "title": "リクエスト単体テストの実施方法(ファイルアップロード)",
+  "content": "ファイルアップロードのテストは、画面オンライン処理のテストの一種である。\nしたがって、ファイルアップロードのテストを実施するには、画面オンライン処理の [リクエスト単体テストの実施方法](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md) が前提となる。\n\nファイルアップロードのテストをする場合、HTTPリクエストパラメータにアップロードファイルを指定する必要がある。\n本項では、HTTPリクエストパラメータにアップロードファイルを指定する方法を解説する。\n\n-----",
   "no_knowledge_content": false,
-  "official_doc_urls": [],
-  "index": [
+  "sections": [
     {
       "id": "s1",
       "title": "アップロードファイルの記述方法",
-      "hints": [
-        "${attach:ファイルパス}",
-        "ファイルアップロード",
-        "HTTPリクエストパラメータ",
-        "アップロードファイル指定",
-        "テスト実行カレントディレクトリ",
-        "相対パス"
-      ]
+      "content": "HTTPリクエストパラメータの値に、以下の記述をすることで、\nHTTPリクエストパラメータにアップロードファイルを指定できる。\n\n```text\n${attach:ファイルパス}\n```\n\n> **Note:**\n> ファイルパスは、 **テスト実行時のカレントディレクトリからの相対パス** 、すなわち、\n> プロジェクトルートディレクトリからの相対パスで記述する。",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "バイナリファイルの場合",
-      "hints": [
-        "バイナリファイル",
-        "画像ファイル",
-        "ファイルアップロードテスト",
-        "LIST_MAP=requestParams",
-        "picture.png"
-      ]
+      "content": "画像ファイル等、バイナリファイルをアップロードする場合は、事前にファイルを配置しておき、\nそのファイルへのパスを指定する。\n\n以下の例では、uploadfileというキーで、プロジェクト配下のtest/resources/images\nディレクトリにあるpicture.pngをアップロードする。\n\n```text\n<project_root>\n     + test\n        + resources\n           + images\n              + picture.png\n```\n\n-----\n\n`LIST_MAP=requestParams`\n\n| uploadfile | comment | public |\n|---|---|---|\n| `${attach:test/resources/images/picture.png}` | アップロードします。 | `false` |",
+      "level": 2
     },
     {
       "id": "s3",
       "title": "固定長ファイル、CSVファイルの場合",
-      "hints": [
-        "SETUP_FIXED",
-        "CSVファイル",
-        "固定長ファイル",
-        "テストデータシート",
-        "how_to_setup_fixed_length_file",
-        "how_to_setup_csv_file",
-        "member_list.csv",
-        "text-encoding",
-        "record-separator"
-      ]
+      "content": "[固定長ファイル](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#how-to-setup-fixed-length-file)や\n[CSVファイル](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#how-to-setup-csv-file) をアップロードする場合、\nそのファイル内容をテストデータシートに記載する。\nテスト実行時に、自動テストフレームワークがこのデータを元にファイルを作成する。\n\n以下の例では、workディレクトリ配下にmember_list.csvファイルを作成し、\nそのファイルをアップロード対象として指定している。\n\n-----\n\n`LIST_MAP=requestParams`\n\n| uploadfile | comment |\n|---|---|\n| `${attach:work/member_list.csv}` | 10月度新規会員を登録 |\n\n`SETUP_FIXED=work/member_list.csv`\n\n// ディレクティブ\n\n| text-encoding | Windows-31J |  |\n|---|---|---|\n| record-separator | CRLF |  |\n\n// データ\n\n| name | age | address |\n|---|---|---|\n| 山田太郎 | 30 | 東京都港区芝浦1-1 |\n| 田中次郎 | 20 | 大阪府門真市東田町2-2 |\n\n-----\n\n> **Note:**\n> 固定長ファイルやCSVファイルをアップロードする場合でも、\n> バイナリファイルと同様に、事前にファイルを用意しておくことも可能であるが、\n> テストデータの保守容易性を考慮するとテストデータシートに記載しておくべきである。",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "ファイルアップロードのテストは、画面オンライン処理のテスト（[index](testing-framework-02_RequestUnitTest.json)）が前提となる。\n\nHTTPリクエストパラメータにアップロードファイルを指定するには以下の記述を使用する。\n\n```text\n${attach:ファイルパス}\n```\n\n> **注意**: ファイルパスはテスト実行時のカレントディレクトリ（プロジェクトルートディレクトリ）からの相対パスで記述する。",
-    "s2": "バイナリファイル（画像等）をアップロードする場合は、事前にファイルを配置しておき、そのパスを指定する。\n\nディレクトリ構成例:\n\n```\n<project_root>\n  + test\n     + resources\n        + images\n           + picture.png\n```\n\n`LIST_MAP=requestParams`\n\n| uploadfile | comment | public |\n|---|---|---|\n| `${attach:test/resources/images/picture.png}` | アップロードします。 | `false` |",
-    "s3": ":ref:`固定長ファイル<how_to_setup_fixed_length_file>` や :ref:`CSVファイル<how_to_setup_csv_file>` をアップロードする場合、ファイル内容をテストデータシートに記載する。テスト実行時に自動テストフレームワークがそのデータを元にファイルを作成する。\n\n例: `work/member_list.csv` を作成してアップロード対象として指定する\n\n`LIST_MAP=requestParams`\n\n| uploadfile | comment |\n|---|---|\n| `${attach:work/member_list.csv}` | 10月度新規会員を登録 |\n\n`SETUP_FIXED=work/member_list.csv`\n\nディレクティブ:\n\n```\ntext-encoding    Windows-31J\nrecord-separator CRLF\n```\n\nデータ:\n\n| name | age | address |\n|---|---|---|\n| 山田太郎 | 30 | 東京都港区芝浦1-1 |\n| 田中次郎 | 20 | 大阪府門真市東田町2-2 |\n\n> **注意**: 固定長ファイルやCSVファイルをアップロードする場合でも事前にファイルを用意することは可能だが、テストデータの保守容易性を考慮するとテストデータシートに記載すべきである。"
-  }
+  ]
 }

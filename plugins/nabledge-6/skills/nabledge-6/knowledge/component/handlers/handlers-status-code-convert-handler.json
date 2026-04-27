@@ -1,0 +1,32 @@
+{
+  "id": "handlers-status-code-convert-handler",
+  "title": "ステータスコード→プロセス終了コード変換ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* ステータスコード→プロセス終了コード変換\n\n後続ハンドラによる処理結果のステータスコードをプロセスの終了コードに変換するハンドラ。\n\n処理の流れは以下のとおり。\n\n![StatusCodeConvertHandler_flow.png](assets/handlers-status-code-convert-handler/StatusCodeConvertHandler_flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.handler.StatusCodeConvertHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-standalone</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "[共通起動ランチャ](../../component/handlers/handlers-main.md#main) の直後に設定すること\n本ハンドラが処理結果のステータスコードをプロセスの終了コードに変換するため。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "ステータスコード→プロセス終了コード変換",
+      "content": "ステータスコード→プロセス終了コード変換は、以下のルールで行う。\n\n> **Important:**\n> アプリケーションのエラー処理でステータスコードを指定する場合は、\n> 100～199を使用する。\n\n| ステータスコード | プロセス終了コード |\n|---|---|\n| -1以下 | 1 |\n| 0～199 | 0～199(変換は行わない) |\n| 200～399 | 0 |\n| 400 | 10 |\n| 401 | 11 |\n| 403 | 12 |\n| 404 | 13 |\n| 409 | 14 |\n| 上記以外の400～499 | 15 |\n| 500以上 | 20 |\n\n> **Tip:**\n> このハンドラは、設定などで変換ルールを切り替えることはできない。\n> このため、この変換ルールで要件を満たすことができない場合は、\n> プロジェクト固有の変換用ハンドラを作成し対応すること。",
+      "level": 2
+    }
+  ]
+}

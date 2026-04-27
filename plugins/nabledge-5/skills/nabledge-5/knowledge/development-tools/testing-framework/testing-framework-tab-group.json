@@ -1,0 +1,20 @@
+{
+  "id": "testing-framework-tab-group",
+  "title": "タブウィジェット",
+  "content": "[タブウィジェット](../../development-tools/testing-framework/testing-framework-tab-group.md) は **UI標準 UI部品 タブ** の内容に準拠したタブ表示用UI部品である。\n\n本部品には以下のバリエーションがあり、必要に応じて使い分けること。\n\n* クライアントサイドでのタブ切り替えタイプ <tab:content>\n* サーバにリクエストを送信するタイプ <tab:link>",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**設計成果物(ローカル動作)**\n\n```jsp\n<tab:group name=\"tab\">\n\n  <%-- クライアントサイドで切り替えを行うタブ --%>\n  <tab:content\n    title=\"ユーザ基本情報\"\n    selected=\"true\"\n    value=\"tab_baseinfo\">\n\n    <field:text title=\"ログインID\"\n                domain=\"ログインID\"\n                required=\"true\"\n                maxlength=\"20\"\n                hint=\"半角英数記号20文字以内\"\n                name=\"formdata.loginId\"\n                sample=\"test01\">\n    </field:text>\n\n  </tab:content>\n\n  <%-- サーバサイドにリクエストを送信するタブ --%>\n  <tab:link\n      title=\"パスワード変更\"\n      uri=\"\"\n      dummyUri=\"RW99ZZ6104.jsp\">\n  </tab:link>\n</tab:group>\n```\n\n**実装成果物(サーバ動作)**\n\n```jsp\n<tab:group name=\"tab\">\n\n  <%-- クライアントサイドで切り替えを行うタブ --%>\n  <tab:content\n    title=\"ユーザ基本情報\"\n    selected=\"true\"\n    value=\"tab_baseinfo\">\n\n    <field:text title=\"ログインID\"\n                domain=\"ログインID\"\n                required=\"true\"\n                maxlength=\"20\"\n                hint=\"半角英数記号20文字以内\"\n                name=\"formdata.loginId\"\n                sample=\"test01\">\n    </field:text>\n\n  </tab:content>\n\n  <%-- サーバサイドにリクエストを送信するタブ --%>\n  <tab:link\n      title=\"パスワード変更\"\n      uri=\"/action/ss99ZZ/W99ZZ61Action/RW99ZZ6104\">\n  </tab:link>\n</tab:group>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "**ローカル動作時の挙動**\n\nサーバサイドにリクエストを送信するタイプのタブの場合、タブクリック時にはdummyUrlで指定されたJSPファイルに遷移する。\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| **<tab:group>** |  |  |  |  |  |\n| name | タブグループ名を指定する | 文字列 | ◎ | × | ページ内で一意となる値を指定する |\n| **<tab:content>** |  |  |  |  |  |\n| title | タブに表示する見出し | 文字列 | ◎ | ◎ |  |\n| value | タブの識別名 | 文字列 | ◎ | × | tabグループ内で一意となる値を指定する |\n| selected | タブの初期選択状態 | 真偽値 | ○ | ○ | tabグループ内で初期選択状態とする contentに'true'を設定する |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ |  |\n| **<tab:link>** |  |  |  |  |  |\n| id | htmlのid属性 | 文字列 | ○ | ○ |  |\n| title | タブに表示する見出し | 文字列 | ◎ | ◎ |  |\n| uri | 遷移先のuri | 文字列 | ◎ | × |  |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ |  |\n| allowDoubleSubmission | 二重サブミットを許容するか否か | 真偽値 | ○ | × | デフォルトは 'true(許容する)' |\n| dummyUri | ローカル動作時の遷移先 | 文字列 | × | ○ |  |\n\n**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/tab/*.tag | [タブウィジェット](../../development-tools/testing-framework/testing-framework-tab-group.md) |\n| /js/jsp/taglib/nablarch.js | タブウィジェットが使用する以下タグの のエミュレーション機能を実装するタグライブラリスタブJS  * n:submitLink |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義。 タブに関する定義もここに含まれる。 |",
+      "level": 2
+    }
+  ]
+}

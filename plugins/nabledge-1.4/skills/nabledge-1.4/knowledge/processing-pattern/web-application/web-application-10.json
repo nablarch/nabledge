@@ -1,28 +1,7 @@
 {
   "id": "web-application-10",
   "title": "出力するHTMLの文字コードを変更したいのですが",
+  "content": "> **question:**\n> HTML出力時、デフォルトではUTF-8が使われるそうですが、\n> Windows-31J等に変更するにはどういう設定変更が必要でしょうか？\n\n> **answer:**\n> コンポーネント定義ファイルの以下の箇所を変更する必要があります。\n\n> **Nablarch Application Framework**\n\n> *HttpCharacterEncodingHandler*\n\n> HttpServletRequest、HttpServletResponseに対するエンコーディング設定を変更します。\n\n> ```xml\n> <component name=\"httpCharacterEncodingHandler\"\n>             class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\">\n>   <!-- ここを変更-->\n>   <property name=\"defaultEncoding\" value=\"Windows-31J\"/>\n>   <!-- 省略 -->\n> </component>\n> ```\n\n> *ファイルダウンロード*\n\n> ダウンロードファイル名のエンコーディングに使用する文字コード設定を変更します。\n\n> ```xml\n> <!-- MIME-Bエンコーダの設定 -->\n> <component name=\"mimeBEncoder\" class=\"nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoder\">\n>   <!-- ここを変更-->\n>   <property name=\"charset\" value=\"Windows-31J\" />\n> </component>\n> \n> <!-- URLエンコーダの設定 -->\n> <component name=\"urlEncoder\" class=\"nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoder\">\n>   <!-- ここを変更-->\n>   <property name=\"charset\" value=\"Windows-31J\" />\n> </component>\n> ```\n\n> **Nablarch Testing Framework**\n\n> *HttpTestConfiguration*\n\n> 静的リソースの文字コード設定を変更します。\n\n> ```xml\n> <component name=\"httpTestConfiguration\"\n>     class=\"nablarch.test.core.http.HttpTestConfiguration\">\n>   <property name=\"webBaseDir\" value=\"${webBaseDir}\" />\n> \n>   <!-- 中略 -->\n> \n>   <!-- ここを変更-->\n>   <property name=\"htmlResourcesCharset\" value=\"Windows-31J\" />\n> \n>   <!-- ダンプHTMLへの可変項目の出力可否 -->\n>   <property name=\"dumpVariableItem\" value=\"false\" />\n> </component>\n> ```\n\n> 詳細については以下のドキュメントを参照してください。\n\n> * >   **[Nablarch Application Framework解説書]** -> **[リファレンス]** -> **[ハンドラリファレインス]** -> **[HTTP文字エンコード制御ハンドラ]**\n> * >   **[Nablarch Application Framework解説書]** -> **[NAF実行制御基盤]** -> **[画面オンライン実行制御基盤]** -> **[ファイルダウンロード]**\n> * >   **[プログラミング・単体テストガイド]** -> **[自動テストフレームワークの使用方法]** -> **[リクエスト単体テスト（画面オンライン処理）]**",
   "no_knowledge_content": false,
-  "official_doc_urls": [],
-  "index": [
-    {
-      "id": "s1",
-      "title": "HTML文字コードの変更設定",
-      "hints": [
-        "HttpCharacterEncodingHandler",
-        "MimeBDownloadFileNameEncoder",
-        "UrlDownloadFileNameEncoder",
-        "HttpTestConfiguration",
-        "defaultEncoding",
-        "charset",
-        "htmlResourcesCharset",
-        "HTML文字コード変更",
-        "ファイルダウンロードエンコーディング",
-        "Windows-31J設定",
-        "テスト設定文字コード"
-      ]
-    }
-  ],
-  "sections": {
-    "s1": "HTML出力の文字コードをUTF-8から変更するには、コンポーネント定義ファイルの以下の箇所を変更する。\n\n**HttpCharacterEncodingHandler**（Nablarch Application Framework）\n\n**クラス**: `nablarch.fw.web.handler.HttpCharacterEncodingHandler`\n\n`HttpServletRequest`/`HttpServletResponse`のエンコーディング設定を変更する。`defaultEncoding`プロパティに使用する文字コードを指定する。\n\n```xml\n<component name=\"httpCharacterEncodingHandler\"\n            class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\">\n  <property name=\"defaultEncoding\" value=\"Windows-31J\"/>\n</component>\n```\n\n**ファイルダウンロード**（Nablarch Application Framework）\n\nダウンロードファイル名のエンコーディングに使用する文字コードを変更する。`charset`プロパティを変更する。\n\n**クラス**: `nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoder`, `nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoder`\n\n```xml\n<!-- MIME-Bエンコーダの設定 -->\n<component name=\"mimeBEncoder\" class=\"nablarch.fw.web.download.encorder.MimeBDownloadFileNameEncoder\">\n  <property name=\"charset\" value=\"Windows-31J\" />\n</component>\n\n<!-- URLエンコーダの設定 -->\n<component name=\"urlEncoder\" class=\"nablarch.fw.web.download.encorder.UrlDownloadFileNameEncoder\">\n  <property name=\"charset\" value=\"Windows-31J\" />\n</component>\n```\n\n**HttpTestConfiguration**（Nablarch Testing Framework）\n\n静的リソースの文字コード設定を変更する。`htmlResourcesCharset`プロパティを変更する。\n\n**クラス**: `nablarch.test.core.http.HttpTestConfiguration`\n\n```xml\n<component name=\"httpTestConfiguration\"\n    class=\"nablarch.test.core.http.HttpTestConfiguration\">\n  <property name=\"htmlResourcesCharset\" value=\"Windows-31J\" />\n</component>\n```"
-  }
+  "sections": []
 }

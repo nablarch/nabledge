@@ -1,16 +1,15 @@
 # configファイルの設定値の取得方法を教えてください
 
-## configファイルの設定値の取得方法
+> **question:**
+> configファイルに設定している値の取得方法を教えて下さい。
+> また、configファイルには非アスキー文字（マルチバイト文字など）は、そのまま設定することは可能でしょうか？
+> Javaのpropertyファイルのように、設定しなければいけないのかが知りたいです。
 
-**クラス**: `SystemRepository`
+> **answer:**
+> configファイルの値は、 *SystemRepository* クラスの *getString* メソッドを使用して取得してください。
+> 非アスキー文字ですが、propertyファイルのようにユニコードで設定する必要はありません。
 
-configファイルの値は`SystemRepository`クラスの`getString`メソッドで取得する。
+> 詳細は、以下の参照してください。
 
-非アスキー文字（マルチバイト文字など）はpropertyファイルのようにユニコードエスケープで設定する必要はなく、そのまま設定可能。
-
-<details>
-<summary>keywords</summary>
-
-SystemRepository, getString, configファイル設定値取得, 非アスキー文字, マルチバイト文字, プロパティファイル
-
-</details>
+> * >   SystemRepositoryのJavaDoc
+> * >   **[Nablarch Application Framework解説書]** -> **[NAF基盤ライブラリ]** -> **[リポジトリ]** -> **[環境設定ファイル記述ルール]**

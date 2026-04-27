@@ -1,61 +1,83 @@
 # 要求電文(FWヘッダ)リーダ
 
-## 要求電文(FWヘッダ)リーダ
+受信電文の [フレームワーク制御ヘッダ](../../component/libraries/libraries-enterprise-messaging.md#message-model) の解析を行い、後続のハンドラの動作に必要となる情報を取得するデータリーダ。
+具体的には、以下の処理を行なう。
 
-**クラス名**: `nablarch.fw.messaging.reader.FwHeaderReader`
+1. フレームワーク制御ヘッダの解析
 
-**読み込むデータの型**: `nablarch.fw.messaging.RequestMessage`
+  MessageReaderが読み込んだ受信電文のメッセージボディからフレームワーク制御ヘッダ部を読み込み、
+  `nablarch.fw.Request` インターフェースを実装した `nablarch.fw.messaging.RequestMessage` オブジェクトを生成して返す。
+2. スレッドコンテキスト変数の設定
 
-受信電文の [フレームワーク制御ヘッダ](../libraries/libraries-enterprise_messaging.md) を解析し、後続ハンドラ動作に必要な情報を取得するデータリーダ。以下の処理を行う:
+  フレームワークヘッダの値のうち以下のヘッダの値を、対応するスレッドコンテキスト属性の値として設定する。
 
-1. フレームワーク制御ヘッダの解析: MessageReaderが読み込んだ受信電文のメッセージボディからFW制御ヘッダ部を読み込み、`nablarch.fw.Request` インターフェースを実装した `nablarch.fw.messaging.RequestMessage` オブジェクトを生成して返す。
-2. スレッドコンテキスト変数の設定: `requestId` ヘッダと `userId` ヘッダの値を対応するスレッドコンテキスト属性に設定する。
-3. 業務データ部フォーマット定義の決定: リクエストIDをもとに決定。デフォルトは受信電文: `(requestId)_RECEIVE.fmt`、応答電文: `(requestId)_SEND.fmt`
+  * requestId ヘッダ
+  * userId ヘッダ
+3. 業務データ部のフォーマット定義を決定
 
-| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |
-|---|---|---|---|---|
-| messageReader | DataReader<ReceivedMessage> | ○ | | メッセージリーダ |
-| fwHeaderDefinition | FwHeaderDefinition | | StandardFwHeaderDefinition | フレームワーク制御ヘッダ定義 |
-| formatFileDir | String | | "format" | 電文フォーマットファイル配置先ディレクトリ論理名 |
-| messageFormatFileNamePattern | String | | "%s_RECEIVE" | 要求電文フォーマット定義ファイル名パターン |
-| replyMessageFormatFileNamePattern | String | | "%s_SEND" | 応答電文フォーマット定義ファイル名パターン |
+  リクエストIDをもとに、業務データ部のフォーマット定義を決定する。
+  デフォルトでは以下のフォーマット定義ファイルを使用する。
 
-Java設定例:
-```java
-long readTimeout = 15 * 1000; // 15sec
+  受信電文フォーマット:
 
-DataReader<RequestMessage> reader = new FwHeaderReader()
-                                   .setMessageReader(
-                                        new MessageReader()
-                                           .setReceiveQueueName("LOCAL.RECEIVE")
-                                           .setReadTimeout(readTimeout)
-                                    );
-```
+  ```
+  (requestIdヘッダ値) + "_RECEIVE.fmt"
+  ```
 
-XML設定例:
-```xml
-<component
-  name  = "dataReader"
-  class = "nablarch.fw.messaging.reader.FwHeaderReader">
-  <property name = "messageReader">
-    <component
-      class = "nablarch.fw.messaging.reader.MessageReader">
-      <property
-        name  = "receiveQueueName"
-        value = "LOCAL.RECEIVE"
-      />
-      <property
-        name  = "readTimeout"
-        value = "${readTimeout}"
-      />
-    </component>
-  </property>
-</component>
-```
+  応答電文フォーマット:
 
-<details>
-<summary>keywords</summary>
+  ```
+  (requestIdヘッダ値) + "_SEND.fmt"
+  ```
 
-FwHeaderReader, nablarch.fw.messaging.reader.FwHeaderReader, RequestMessage, nablarch.fw.messaging.RequestMessage, nablarch.fw.Request, MessageReader, messageReader, fwHeaderDefinition, formatFileDir, messageFormatFileNamePattern, replyMessageFormatFileNamePattern, フレームワーク制御ヘッダ解析, スレッドコンテキスト変数設定, 要求電文フォーマット, メッセージング, requestId, userId, ReceivedMessage, DataReader, FwHeaderDefinition, StandardFwHeaderDefinition
+**クラス名**
+nablarch.fw.messaging.reader.FwHeaderReader
+**読み込むデータの型**
+nablarch.fw.messaging.RequestMessage
 
-</details>
+**設定項目一覧**
+
+| 設定項目 | プロパティ名 | データ型 | 備考 |
+|---|---|---|---|
+| メッセージリーダ | messageReader | DataReader<ReceivedMessage> | 必須設定 |
+| フレームワーク制御ヘッダ定義 | fwHeaderDefinition | FwHeaderDefinition | 任意設定 (デフォルトは StandardFwHeaderDefinition) |
+| 電文フォーマットファイル配置先 ディレクトリ論理名 | formatFileDir | String | 任意設定 (デフォルトは "format") |
+| 要求電文フォーマット定義ファイル名 パターン | messageFormatFileNamePattern | String | 任意設定 (デフォルトは "%s_RECEIVE") |
+| 応答電文フォーマット定義ファイル名 パターン | replyMessageFormatFileNamePattern | String | 任意設定 (デフォルトは "%s_SEND") |
+
+**使用例**
+
+* データリーダファクトリ内でデータリーダを作成する例
+
+  ```java
+  long readTimeout = 15 * 1000; // 15sec
+  
+  DataReader<RequestMessage> reader = new FwHeaderReader()
+                                     .setMessageReader(
+                                          new MessageReader()
+                                             .setReceiveQueueName("LOCAL.RECEIVE")
+                                             .setReadTimeout(readTimeout)
+                                      );
+  ```
+* DIリポジトリに登録して使用する例
+
+  ```xml
+  <component
+    name  = "dataReader"
+    class = "nablarch.fw.messaging.reader.FwHeaderReader">
+    <!-- メッセージリーダ定義 -->
+    <property name = "messageReader">
+      <component
+        class = "nablarch.fw.messaging.reader.MessageReader">
+        <property
+          name  = "receiveQueueName"
+          value = "LOCAL.RECEIVE"
+        />
+        <property
+          name  = "readTimeout"
+          value = "${readTimeout}"
+        />
+      </component>
+    </property>
+  </component>
+  ```

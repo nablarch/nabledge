@@ -1,174 +1,219 @@
 # アーキテクチャ概要
 
-**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/architecture.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/cdi/StepScoped.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/listener/step/NablarchStepListenerExecutor.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/listener/chunk/NablarchItemWriteListenerExecutor.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/listener/job/JobProgressLogListener.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/listener/job/DuplicateJobRunningCheckListener.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/listener/step/StepProgressLogListener.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/listener/step/DbConnectionManagementListener.html) [9](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/listener/step/StepTransactionManagementListener.html) [10](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/listener/chunk/ChunkProgressLogListener.html) [11](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/batch/ee/listener/chunk/ItemWriteTransactionManagementListener.html)
+**目次**
+
+* バッチアプリケーションの構成
+* バッチの種類
+* バッチアプリケーションの処理の流れ
+
+  * Batchlet
+  * Chunk
+  * 例外(エラー含む)発生時の処理の流れ
+
+    * 例外発生時のバッチの状態
+    * ログ出力
+* バッチアプリケーションで使用するリスナー
+* 最小のリスナー構成
+* リスナーの指定方法
 
 ## バッチアプリケーションの構成
 
-Jakarta Batch(JSR352)準拠のバッチアプリケーション実装として、[jBeret](https://jberet.gitbooks.io/jberet-user-guide/content/)の使用を推奨する（ドキュメントが豊富、Maven Centralから取得可能）。[jBatch](https://github.com/WASdev/standards.jsr352.jbatch)も選択可能。
+<a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a> に準拠したバッチアプリケーションを実行するためには、 <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a> の実装が必要となる。
+実装は、主に以下の2つから選択することになるが、ドキュメントが豊富であること及びMaven Centralからライブラリを取得出来る手軽さから [jBeret(外部サイト、英語)](https://jberet.gitbooks.io/jberet-user-guide/content/) の使用を推奨する。
 
-> **重要**: JobContextおよびStepContextの一時領域（`TransientUserData`）はグローバル領域への値保持と同義であるため、アプリケーション側で使用してはならない。StepContextの一時領域は`StepScoped`がステップ内の値共有に使用しているため、アプリケーション側では使用不可。
+* [jBeret(外部サイト、英語)](https://jberet.gitbooks.io/jberet-user-guide/content/)
+* [互換実装のjBatch(外部サイト、英語)](https://github.com/WASdev/standards.jsr352.jbatch)
 
-> **補足**: [jsr352_batch](jakarta-batch-jsr352.md)のアーキテクチャは[nablarch_architecture](../../about/about-nablarch/about-nablarch-architecture.md)とは異なり、横断的処理（ログ出力・トランザクション制御等）はハンドラではなくJakarta Batchのリスナーで実現する。リスナーは既定のタイミングで起動されるため、ハンドラのような入力値フィルタ処理や変換処理は行えない。
+以下に構成を示す。
 
-<details>
-<summary>keywords</summary>
+![jsr352-configuration-diagram.png](../../../knowledge/assets/jakarta-batch-architecture/jsr352-configuration-diagram.png)
 
-jBeret, jBatch, Jakarta Batch, JSR352, TransientUserData, StepScoped, nablarch.fw.batch.ee.cdi.StepScoped, バッチ実装選択, リスナーアーキテクチャ, JobContext, StepContext
+> **Important:**
+> JobContext及びStepContextの一時領域( `TransientUserData` )を使用することは
+> グローバル領域に値を保持することと同義となるため、アプリケーション側で使用してはならない。
 
-</details>
+> なお、StepContextの一時領域については、 StepScoped でステップ内で値を共有をするために使用しているため、
+> アプリケーション側ではStepContextの一時領域は使用できない。
+
+> **Tip:**
+> [Jakarta Batchに準拠したバッチアプリケーション](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.md#jsr352-batch)のアーキテクチャは、 <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a> で定められた構成に準拠しているため、
+> Nablarchアプリケーションフレームワークの [アーキテクチャ](../../about/about-nablarch/about-nablarch-architecture.md#nablarch-architecture) に記載されているような、
+> ハンドラを用いたアーキテクチャとは異なっている。
+
+> [Jakarta Batchに準拠したバッチアプリケーション](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.md#jsr352-batch) では、ハンドラで行われるような横断的な処理（ログ出力やトランザクション制御等）は、
+> <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a> で規定されているリスナーを用いることで実現されている。
+
+> ただし、リスナーは既定のタイミングで起動されるものであり、入力、出力に対して直接処理を行うものではない点がハンドラとは異なっている。
+> このためリスナーでは、ハンドラで実現されているような入力値のフィルタ処理や変換処理などを行うことはできない。
 
 ## バッチの種類
 
-| バッチ種別 | 使用場面 | 例 |
-|---|---|---|
-| Batchlet | タスク指向の処理 | 外部システムからのファイル取得、SQL1つで処理が完結する処理 |
-| Chunk | 入力データソース（ファイル・DB等）からレコードを読み込み業務処理を実行する処理 | — |
+<a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a> では、バッチの実装方法として Batchlet と Chunk の2種類の方法がある。
+どちらのタイプを使用するのが適切かは、以下を参照しバッチごとに判断すること。
 
-<details>
-<summary>keywords</summary>
+Batchlet
+タスク指向の場合にBatchletタイプのバッチを実装する。
 
-Batchlet, Chunk, バッチ種別選択, タスク指向, ItemReader, ItemProcessor, ItemWriter, ファイル取得, レコード処理
+例えば、外部システムからのファイル取得や、SQL1つで処理が完結するような処理が該当する。
 
-</details>
+Chunk
+ファイルやデータベースなどの入力データソースからレコードを読み込み業務処理を実行する場合にChunkタイプのバッチを実装する。
 
-## Batchlet処理の流れ
+## バッチアプリケーションの処理の流れ
 
-Batchletタイプのバッチアプリケーションの処理の流れ：
+### Batchlet
 
-1. `NablarchStepListenerExecutor`がBatchletステップ実行前コールバックとして呼び出される
-2. Batchletステップ実行前のリスナーを順次実行
-3. Batchletが実行される
-4. Batchletで業務ロジックを実行（責務配置は[jsr352-batchlet_design](jakarta-batch-application_design.md)参照）
-5. `NablarchStepListenerExecutor`がBatchletステップ実行後コールバックとして呼び出される
-6. Batchletステップ実行後のリスナーをNo.2の逆順で実行
+Batchletタイプのバッチアプリケーションの処理の流れを以下に示す。
 
-<details>
-<summary>keywords</summary>
+![batchlet-flow.png](../../../knowledge/assets/jakarta-batch-architecture/batchlet-flow.png)
 
-NablarchStepListenerExecutor, nablarch.fw.batch.ee.listener.step.NablarchStepListenerExecutor, Batchlet処理フロー, Batchlet
+1. Jakarta BatchのBatch RuntimeからBatchletステップ実行前のコールバック処理として NablarchStepListenerExecutor が呼び出される。
+2. Batchletステップ実行前のリスナーを順次実行する。
+3. Jakarta BatchのBatch Runtimeから Batchlet が実行される。
+4. Batchlet では業務ロジックを実行する。(Batchletの責務配置は、 [Batchletの責務配置](../../processing-pattern/jakarta-batch/jakarta-batch-application-design.md#jsr352-batchlet-design) を参照)
+5. Jakarta BatchのBatch RuntimeからBatchletステップ実行後のコールバック処理として NablarchStepListenerExecutor が呼び出される。
+6. Batchletステップ実行後のリスナーを順次実行する。(No2とは逆順に実行する)
 
-</details>
+### Chunk
 
-## Chunk処理の流れ
+Chunkタイプのバッチアプリケーションの処理の流れを以下に示す。
 
-Chunkタイプのバッチアプリケーションの処理の流れ：
+![chunk-flow.png](../../../knowledge/assets/jakarta-batch-architecture/chunk-flow.png)
 
-1. `NablarchStepListenerExecutor`がChunkステップ実行前コールバックとして呼び出される
-2. Chunkステップ実行前のリスナーを順次実行
-3. `ItemReader`が実行され、入力データソースからデータを読み込む
-4. `ItemProcessor`が実行される
-5. `ItemProcessor`は`Form`や`Entity`を使って業務ロジックを実行する（DBへのデータ書き込み・更新はここでは実施しない）
-6. `NablarchItemWriteListenerExecutor`が`ItemWriter`実行前コールバックとして呼び出される
-7. `ItemWriter`実行前のリスナーを順次実行
-8. `ItemWriter`が実行され、テーブルへの登録（更新・削除）やファイル出力などの結果反映処理を行う
-9. `NablarchItemWriteListenerExecutor`が`ItemWriter`実行後コールバックとして呼び出される
-10. `ItemWriter`実行後のリスナーをNo.7の逆順で実行
-11. `NablarchStepListenerExecutor`がChunkステップ実行後コールバックとして呼び出される
-12. Chunkステップ実行後のリスナーをNo.2の逆順で実行
+1. Jakarta BatchのBatch RuntimeからChunkステップ実行前のコールバック処理として NablarchStepListenerExecutor が呼び出される。
+2. Chunkステップ実行前のリスナーを順次実行する。
+3. Jakarta BatchのBatch RuntimeからChunkステップの ItemReader が実行される。 
+  
+  ItemReader では、入力データソースからデータを読み込む。
+4. Jakarta BatchのBatch RuntimeからChunkステップの ItemProcessor が実行される。 
+5. ItemProcessor は、 Form や Entity を使って業務ロジックを実行する。 
+  
+  ※データーベースに対するデータの書き込みや更新はここでは実施しない。
+6. Jakarta BatchのBatch Runtimeから ItemWriter 実行前のコールバック処理として NablarchItemWriteListenerExecutor が呼び出される。
+7. ItemWriter 実行前のリスナーを順次実行する。
+8. Jakarta BatchのBatch RuntimeからChunkステップの ItemWriter が実行される。 
+  
+  ItemWriter では、テーブルへの登録(更新、削除)やファイル出力処理などの結果反映処理を行う。
+9. Jakarta BatchのBatch Runtimeから ItemWriter 実行後のコールバック処理として NablarchItemWriteListenerExecutor が呼び出される。
+10. ItemWriter 実行後のリスナーを順次実行する。(No7とは逆順で実行する)
+11. Jakarta BatchのBatch RuntimeからChunkステップ実行後のコールバック処理として NablarchStepListenerExecutor が呼び出される。
+12. Chunkステップ実行後のリスナーを順次実行する。(No2とは逆順に実行する)
 
-※No.3〜10は入力データソースのデータが終わるまで繰り返し実行される。Chunkの責務配置は[jsr352-chunk_design](jakarta-batch-application_design.md)参照。
+※No3からNo10は、入力データソースのデータが終わるまで繰り返し実行される。
 
-<details>
-<summary>keywords</summary>
+Chunkステップの責務配置については、 [Chunkの責務配置](../../processing-pattern/jakarta-batch/jakarta-batch-application-design.md#jsr352-chunk-design) を参照
 
-NablarchStepListenerExecutor, NablarchItemWriteListenerExecutor, nablarch.fw.batch.ee.listener.step.NablarchStepListenerExecutor, nablarch.fw.batch.ee.listener.chunk.NablarchItemWriteListenerExecutor, Chunk処理フロー, ItemReader, ItemProcessor, ItemWriter, Form, Entity
+### 例外(エラー含む)発生時の処理の流れ
 
-</details>
+バッチ実行中に例外が発生した場合、Nablarchでは例外の捕捉は行わずJakarta Batchの実装側で例外ハンドリングを行う方針としている。
+これは、Jakarta Batchに準拠したバッチアプリケーション特有の振る舞いであり、他の基盤( [Webアプリケーション](../../processing-pattern/web-application/web-application-web.md#web-application) や [Nablarchバッチアプリケーション](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch.md#nablarch-batch) など)とは異なる振る舞いである点に注意すること。
 
-## 例外発生時の処理の流れ
+> **Tip:**
+> Jakarta Batchに準拠したバッチアプリケーションがこのようなアーキテクチャを採用した理由は以下の通り。
 
-> **重要**: バッチ実行中の例外はNablarchでは捕捉せず、Jakarta Batchの実装側で例外ハンドリングを行う。[web_application](../web-application/web-application-web.md)や[nablarch_batch](../nablarch-batch/nablarch-batch-nablarch_batch.md)等の他基盤とは異なる振る舞い。Jakarta BatchはNablarchがコンポーネントを提供するのみで実行制御はJakarta Batch実装が担うため、例外制御をNablarchとJakarta Batchで分散させると設計が複雑化するためこの方針を採用。
+> Jakarta Batchに準拠したバッチアプリケーションは、Jakarta Batch上でNablarchを使用するためのコンポーネントのみの提供であり、実行制御自体はJakarta Batch実装によって行われる。
+> このため、Nablarchにより全ての例外を捕捉し処理を行うことは不可能であり、例外制御がNablarchとJakarta Batchで分散することで設計などが複雑化するのを防ぐためこのような方針としている。
 
-例外発生時のバッチステータス（batch status・exit status）やリトライ・継続有無の動作はJSR352仕様およびジョブ定義に従う。Javaプロセスからのリターンコードは[jsr352-failure_monitoring](jakarta-batch-operation_policy.md)参照。
+#### 例外発生時のバッチの状態
 
-Jakarta Batch実装で補足された例外のログはJakarta Batch実装により出力される。ログの設定（フォーマットや出力先などの設定）は、Jakarta Batch実装が使用しているロギングフレームワークのマニュアルなどを参照して行うこと。アプリケーションのエラーログをJakarta Batchと同一ログファイルに出力したい場合は[log_adaptor](../../component/adapters/adapters-log_adaptor.md)でロギングフレームワークを統一する。
+上述したように、例外発生時の制御は全てJakarta Batchの実装が行う。
+このため、例外発生時のバッチの状態(batch statusやexit status)については、 <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a> の仕様を参照すること。
+また、例外の種類に応じたリトライや継続有無などもジョブ定義に従った動作となる。ジョブ定義の詳細は、 <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a> の仕様を参照すること。
 
-<details>
-<summary>keywords</summary>
+例外発生後のJavaプロセスから戻されるリターンコードについては、 [障害監視](../../processing-pattern/jakarta-batch/jakarta-batch-operation-policy.md#jsr352-failure-monitoring) を参照。
 
-例外ハンドリング, batch status, exit status, Jakarta Batch例外処理, log_adaptor, jsr352-failure_monitoring, ログ設定, ロギングフレームワーク
+#### ログ出力
 
-</details>
+Jakarta Batchの実装で補足された例外の情報は、Jakarta Batchの実装によりログ出力される。
+ログの設定(フォーマットや出力先などの設定)は、Jakarta Batch実装が使用しているロギングフレームワークのマニュアルなどを参照して行うこと。
+
+なお、アプリケーションで明示的に出力するエラーログ等をJakarta Batchと同じログファイルに出力したい場合には、
+[logアダプタ](../../component/adapters/adapters-log-adaptor.md#log-adaptor) を使用してJakarta Batchの実装とロギングフレームワークを統一することで対応できる。
 
 ## バッチアプリケーションで使用するリスナー
 
-**ジョブレベルリスナー**（ジョブ起動・終了直前にコールバック）:
+<a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a> に準拠したバッチアプリケーションでは、 <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a> の仕様で定められているリスナーを使用してNablarchのハンドラ相当のことを実現する。
 
-- `JobProgressLogListener`: ジョブの起動・終了ログを出力
-- `DuplicateJobRunningCheckListener`: 同一ジョブの多重起動防止
+標準では、以下のリスナーを提供してる。
 
-**ステップレベルリスナー**（ステップ実行前後にコールバック）:
+ジョブレベルリスナー
+ジョブの起動及び終了直前にコールバックされるリスナー
 
-- `StepProgressLogListener`: ステップの開始・終了ログを出力
-- `DbConnectionManagementListener`: データベースへ接続
-- `StepTransactionManagementListener`: トランザクションを制御
+* ジョブの起動、終了ログを出力するリスナー
+* 同一ジョブの多重起動防止リスナー
+ステップレベルリスナー
+ステップの実行前及び実行後にコールバックされるリスナー
 
-**ItemWriterレベルリスナー**（`ItemWriter`実行前後にコールバック）:
+* ステップの開始、終了ログを出力するリスナー
+* データベースへ接続するリスナー
+* トランザクションを制御するリスナー
+ItemWriterレベルのリスナー
+ItemWriter の実行前及び実行後にコールバックされるリスナー
 
-- `ChunkProgressLogListener`: Chunkの進捗ログを出力（**非推奨**。代わりに[jsr352-progress_log](jakarta-batch-progress_log.md)を使用すること）
-- `ItemWriteTransactionManagementListener`: トランザクションを制御
+* Chunkの進捗ログを出力するリスナー(非推奨)
+  ([進捗ログで出力される内容](../../processing-pattern/jakarta-batch/jakarta-batch-progress-log.md#jsr352-progress-log) を使用して進捗ログを出力すること)
+* トランザクションを制御するリスナー
 
-> **補足**: JSR352では複数リスナーを設定した場合の実行順は保証されない。Nablarchでは各レベルに実行順を保証するexecutorリスナーのみを設定し、このexecutorが[repository](../../component/libraries/libraries-repository.md)からリスナーリストを取得して定義順に実行することで順序を保証する。定義方法は[jsr352-listener_definition](#s7)参照。
+> **Tip:**
+> <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a> で規定されているリスナーは、複数設定した場合の実行順を保証しないことが仕様上明記されている。
+> このため、Nablarchでは以下の点に対応することで、リスナーを指定した順で実行出来るよう対応している。
 
-<details>
-<summary>keywords</summary>
+> * >   各レベルのリスナーには、リスナーの実行順を保証するリスナーのみを設定する
+> * >   リスナーの実行順を保証するリスナーは、 [システムリポジトリ](../../component/libraries/libraries-repository.md#repository) からリスナーリストを取得し、定義順にリスナーを実行する。
 
-JobProgressLogListener, DuplicateJobRunningCheckListener, StepProgressLogListener, DbConnectionManagementListener, StepTransactionManagementListener, ChunkProgressLogListener, ItemWriteTransactionManagementListener, ジョブレベルリスナー, ステップレベルリスナー, ItemWriterレベルリスナー, リスナー実行順保証, 多重起動防止
-
-</details>
+> 実際のリスナーの定義方法は、 [リスナーの指定方法](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-listener-definition) を参照。
 
 ## 最小のリスナー構成
 
-プロジェクト要件を満たせない場合はリスナーを追加して対応すること。
+最小のリスナー構成を以下に示す。この構成でプロジェクト要件を満たすことができない場合は、リスナーの追加などにより対応すること。
 
-**ジョブレベルの最小リスナー構成**
+ジョブレベルの最小リスナー構成
 
 | No. | リスナー | ジョブ起動直前の処理 | ジョブ終了直前の処理 |
 |---|---|---|---|
-| 1 | `JobProgressLogListener` | 起動するジョブ名をログ出力 | ジョブ名称とバッチステータスをログ出力 |
+| 1 | ジョブの起動、終了ログを出力するリスナー | 起動するジョブ名をログに出力する。 | ジョブ名称とバッチステータスをログに出力する。 |
 
-**ステップレベルの最小リスナー構成**
+ステップレベルの最小リスナー構成
 
 | No. | リスナー | ステップ実行前の処理 | ステップ実行後の処理 |
 |---|---|---|---|
-| 1 | `StepProgressLogListener` | 実行するステップ名称をログ出力 | ステップ名称とステップステータスをログ出力 |
-| 2 | `DbConnectionManagementListener` | DB接続を取得 | DB接続を解放 |
-| 3 | `StepTransactionManagementListener` | トランザクションを開始 | トランザクションを終了（commit or rollback） |
+| 1 | ステップの開始、終了ログを出力するリスナー | 実行するステップ名称をログに出力する。 | ステップ名称とステップステータスをログに出力する。 |
+| 2 | データベースへ接続するリスナー | DB接続を取得する。 | DB接続を解放する。 |
+| 3 | トランザクションを制御するリスナー | トランザクションを開始する。 | トランザクションを終了(commit or rollback)する。 |
 
-**`ItemWriter`レベルの最小リスナー構成**
+ItemWriter レベルの最小リスナー構成
 
-| No. | リスナー | `ItemWriter`実行前の処理 | `ItemWriter`実行後の処理 |
+| No. | リスナー | ItemWriter 実行前の処理 | ItemWriter 実行後の処理 |
 |---|---|---|---|
-| 1 | `ItemWriteTransactionManagementListener` | — | トランザクションを終了（commit or rollback） |
+| 1 | トランザクションを制御するリスナー [1] |  | トランザクションを終了(commit or rollback)する。 |
 
-※`ItemWriter`レベルのリスナーで行うトランザクション制御は、ステップレベルで開始されたトランザクションに対して行う。
-
-<details>
-<summary>keywords</summary>
-
-最小リスナー構成, JobProgressLogListener, StepProgressLogListener, DbConnectionManagementListener, StepTransactionManagementListener, ItemWriteTransactionManagementListener, DB接続管理, トランザクション制御
-
-</details>
+ItemWriter レベルのリスナーで行うトランザクション制御は、ステップレベルで開始されたトランザクションに対して行う。
 
 ## リスナーの指定方法
 
-リスナーリスト定義の手順：
+各レベルに対してリスナーリストを定義する方法について説明する。
 
-1. ジョブ定義XMLにリスナーの実行順を保証するリスナーを設定する
-2. コンポーネント設定ファイルにリスナーリストを設定する
+リスナーリストを定義するには、以下の手順が必要になる。
 
-**ジョブ定義ファイルへの設定**
+1. <a href="https://jakarta.ee/specifications/batch/" target="_blank">Jakarta Batch(外部サイト、英語)</a> で規定されているジョブ定義を表すxmlファイルに、リスナーの実行順を保証するリスナーを設定する。
+2. コンポーネント設定ファイルにリスナーリストの設定をする。
 
+ジョブ定義ファイルへの設定
 ```xml
 <job id="chunk-integration-test" xmlns="https://jakarta.ee/xml/ns/jakartaee" version="2.0">
   <listeners>
+    <!-- ジョブレベルのリスナー -->
     <listener ref="nablarchJobListenerExecutor" />
   </listeners>
+
   <step id="myStep">
     <listeners>
+      <!-- ステップレベルのリスナー -->
       <listener ref="nablarchStepListenerExecutor" />
+      <!-- ItemWriterレベルのリスナー -->
       <listener ref="nablarchItemWriteListenerExecutor" />
     </listeners>
+
     <chunk item-count="10">
       <reader ref="stringReader">
         <properties>
@@ -181,11 +226,9 @@ JobProgressLogListener, DuplicateJobRunningCheckListener, StepProgressLogListene
   </step>
 </job>
 ```
-
-**コンポーネント設定ファイルへの設定**
-
+コンポーネント設定ファイルへの設定
 ```xml
-<!-- ジョブレベルのリスナーリスト（コンポーネント名: jobListeners） -->
+<!-- デフォルトのジョブレベルのリスナーリスト -->
 <list name="jobListeners">
   <component class="nablarch.fw.batch.ee.listener.job.JobProgressLogListener" />
   <component class="nablarch.fw.batch.ee.listener.job.DuplicateJobRunningCheckListener">
@@ -193,7 +236,7 @@ JobProgressLogListener, DuplicateJobRunningCheckListener, StepProgressLogListene
   </component>
 </list>
 
-<!-- ステップレベルのリスナーリスト（コンポーネント名: stepListeners） -->
+<!-- デフォルトのステップレベルのリスナーリスト -->
 <list name="stepListeners">
   <component class="nablarch.fw.batch.ee.listener.step.StepProgressLogListener" />
   <component class="nablarch.fw.batch.ee.listener.step.DbConnectionManagementListener">
@@ -204,35 +247,33 @@ JobProgressLogListener, DuplicateJobRunningCheckListener, StepProgressLogListene
   <component class="nablarch.fw.batch.ee.listener.step.StepTransactionManagementListener" />
 </list>
 
-<!-- ItemWriterレベルのリスナーリスト（コンポーネント名: itemWriteListeners） -->
+<!-- デフォルトのItemWriterレベルのリスナーリスト -->
 <list name="itemWriteListeners">
-  <component class="nablarch.fw.batch.ee.listener.chunk.ChunkProgressLogListener" />
-  <component class="nablarch.fw.batch.ee.listener.chunk.ItemWriteTransactionManagementListener" />
+  <component
+      class="nablarch.fw.batch.ee.listener.chunk.ChunkProgressLogListener" />
+  <component
+      class="nablarch.fw.batch.ee.listener.chunk.ItemWriteTransactionManagementListener" />
 </list>
 
-<!-- ジョブ固有のジョブレベルリスナーリスト上書き例 -->
+<!-- デフォルトのジョブレベルのリスナーリストの上書き -->
 <list name="sample-job.jobListeners">
   <component class="nablarch.fw.batch.ee.listener.job.JobProgressLogListener" />
 </list>
 
-<!-- ジョブ・ステップ固有のステップレベルリスナーリスト上書き例 -->
+<!-- デフォルトのステップレベルのリスナーリストの上書き -->
+<!-- 本設定は「sample-step」ステップの実行時に適用される -->
 <list name="sample-job.sample-step.stepListeners">
   <component class="nablarch.fw.batch.ee.listener.step.StepProgressLogListener" />
 </list>
 ```
-
-**ポイント**
-
-- デフォルトのジョブレベルリスナーリストのコンポーネント名: `jobListeners`
-- デフォルトのステップレベルリスナーリストのコンポーネント名: `stepListeners`
-- デフォルトのItemWriterレベルリスナーリストのコンポーネント名: `itemWriteListeners`
-- デフォルトリスナーリストを上書きする場合: コンポーネント名を「ジョブ名称 + "." + 上書き対象のコンポーネント名」とする（例: `sample-job.jobListeners`）
-- 特定のステップで上書きする場合: コンポーネント名を「ジョブ名称 + "." + ステップ名称 + "." + 上書き対象のコンポーネント名」とする（例: `sample-job.sample-step.stepListeners`）
-- 特定のステップで上書き可能なリスナーリストはステップレベルとItemWriterレベルのみ
-
-<details>
-<summary>keywords</summary>
-
-jobListeners, stepListeners, itemWriteListeners, リスナー定義, ジョブ定義XML, コンポーネント設定, リスナーリスト上書き, nablarchJobListenerExecutor, nablarchStepListenerExecutor, nablarchItemWriteListenerExecutor, DbConnectionManagementHandler, nablarch.common.handler.DbConnectionManagementHandler
-
-</details>
+ポイント
+* デフォルトのジョブレベルのリスナーリストのコンポーネント名は、 `jobListeners` とする。
+* デフォルトのステップレベルのリスナーリストのコンポーネント名は、 `stepListeners` とする。
+* デフォルトのItemWriterレベルのリスナーリストのコンポーネント名は、 `itemWriteListeners` とする。
+* デフォルトのリスナーリスト定義を上書きする場合は、コンポーネント名を「ジョブ名称 + "." + 上書き対象のコンポーネント名」とする。 
+  
+  例えば、「sample-job」でジョブレベルの定義を上書きする場合は、コンポーネント名を `sample-job.jobListeners` としてリスナーリストを定義する。
+* 特定のステップでデフォルトのリスナーリスト定義を上書きする場合は、コンポーネント名を「ジョブ名称 + "." + ステップ名称 + "." + 上書き対象のコンポーネント名」とする。 
+  
+  例えば、「sample-job」で定義されている「sample-step」で、デフォルトのステップレベルのリスナーリスト定義を上書きする場合は、コンポーネント名を `sample-job.sample-step.stepListeners` としてリスナーリストを定義する。
+* 特定のステップで上書き出来るリスナーリストは、ステップレベルとItemWriterレベルのリスナーリストのみである。

@@ -1,136 +1,68 @@
 {
   "id": "workflow-WorkflowProcessSample",
   "title": "ワークフロー定義例",
-  "official_doc_urls": [],
-  "index": [
+  "content": "一般的な「申請」「確認」「承認」のステップからなるワークフローを、 [ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) ではどのような\nワークフロー定義として実現するかの例を記載する。",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "通常経路（申請・確認・承認）",
-      "hints": [
-        "ワークフロー開始",
-        "ワークフロー進行",
-        "ワークフロー終了",
-        "申請・確認・承認フロー",
-        "タスク担当者指定",
-        "フローノード定義"
-      ]
+      "content": "**ワークフロー概要**\nワークフローインスタンスを生成し、ワークフローを開始・進行・終了させる。\n\n確認や承認の [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) の [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-task-assignee) を指定してワークフローを進行させる。\n**実現方法**\n各フローノードについて、それに続くフローノードを定義する。\n**ワークフロー定義の例**\n![normal_process.png](assets/workflow-WorkflowProcessSample/normal_process.png)",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "条件分岐",
-      "hints": [
-        "条件分岐",
-        "XORゲートウェイ",
-        "workflow_element_gateway_xor",
-        "進行先切り替え",
-        "3つ以上の分岐"
-      ]
+      "content": "**ワークフロー概要**\nある [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) での処理結果などに応じて進行先の [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) を変更する。\n**実現方法**\n[XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) を利用し、進行先となる可能性のあるフローノードとそれらに進行する条件を定義する。\n3つ以上に条件分岐することも可能。\n**ワークフロー定義の例**\n![conditional_branch.png](assets/workflow-WorkflowProcessSample/conditional_branch.png)",
+      "level": 2
     },
     {
       "id": "s3",
       "title": "差戻",
-      "hints": [
-        "差戻",
-        "XORゲートウェイ",
-        "workflow_element_gateway_xor",
-        "差戻し担当者",
-        "直前実行ユーザ",
-        "既存タスクへの進行"
-      ]
+      "content": "**ワークフロー概要**\n確認などを行う [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) で、確認結果がNGだった場合に申請者に差戻しを行う。\n\nこのとき、差戻し後の [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) の [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-task-assignee) は、\nその [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) を直前に実行したユーザとなる。\n**実現方法**\n確認結果がOKかどうかで進行先となるフローノードを切り替える [XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) を利用し、\nOKの場合には承認タスクへ、NGの場合は前の申請タスクにワークフローを進行させる。\n\n一般に、既に一度実行されている [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) へワークフローを進行させる必要がある場合には、\n[XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) を利用することで要件を実現できる。\nその場合の [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-task-assignee) には、その [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) に最後に割り当てられていたユーザが設定される。\n**ワークフロー定義の例**\n![remand.png](assets/workflow-WorkflowProcessSample/remand.png)",
+      "level": 2
     },
     {
       "id": "s4",
       "title": "再申請",
-      "hints": [
-        "再申請",
-        "差戻し後の再申請",
-        "シーケンスフロー",
-        "申請タスクと再申請タスクの区別",
-        "XORゲートウェイ"
-      ]
+      "content": "**ワークフロー概要**\n差し戻された申請を修正し、再申請を行う。\n\n上記の単純な差戻しフローとは異なり、初回の申請と再申請を明確に区別する。\n**実現方法**\n差戻しと同様に、確認結果がOKかどうかで進行先となるフローノードを切り替える [XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) を利用する。\nただし、NGの場合には、申請タスクではなく、再申請タスクにワークフローを進行させる。\n\nなお、申請者は申請タスクを実施後に必ずしも再申請を行うわけではないため、\n申請タスクと再申請タスクを結ぶシーケンスフローは作成しないこと。\n**ワークフロー定義の例**\n![reapply.png](assets/workflow-WorkflowProcessSample/reapply.png)",
+      "level": 2
     },
     {
       "id": "s5",
       "title": "取消",
-      "hints": [
-        "取消",
-        "境界イベント",
-        "workflow_element_boundary_event",
-        "終了イベント",
-        "workflow_element_event_terminate",
-        "申請取り消し"
-      ]
+      "content": "**ワークフロー概要**\n申請者が、申請の取り消しを行う。\n\n申請が取り消された場合には、ワークフローを完了させる。\n**実現方法**\n申請の取り消しを行うことができる作業種別に対応する [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) に、\n[境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-boundary-event) を関連付ける。\n\nそれらの [境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-boundary-event) からは、 [停止イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-event-terminate) に\nワークフローを進行させるようにしておく。\n\n申請の取り消しが行われた時には、上記の [境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-boundary-event) をトリガーし、ワークフローを完了する。\n**ワークフロー定義の例**\n![cancel.png](assets/workflow-WorkflowProcessSample/cancel.png)",
+      "level": 2
     },
     {
       "id": "s6",
       "title": "却下",
-      "hints": [
-        "却下",
-        "XORゲートウェイ",
-        "workflow_element_gateway_xor",
-        "終了イベント",
-        "workflow_element_event_terminate",
-        "申請却下"
-      ]
+      "content": "**ワークフロー概要**\n確認者や承認者が、申請を却下する。\n\n申請が却下された場合には、ワークフローを完了させる。\n**実現方法**\n[差戻](../../extension/workflow/workflow-WorkflowProcessSample.md#workflow-remand) と同様に、確認結果がOKかどうかで進行先となるフローノードを切り替える\n[XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) を利用し、却下の場合には、 [停止イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-event-terminate) にワークフローを進行させる。\n**ワークフロー定義の例**\n![reject.png](assets/workflow-WorkflowProcessSample/reject.png)",
+      "level": 2
     },
     {
       "id": "s7",
       "title": "引戻",
-      "hints": [
-        "引戻",
-        "境界イベント",
-        "workflow_element_boundary_event",
-        "ワークフロー巻き戻し",
-        "申請引き戻し"
-      ]
+      "content": "**ワークフロー概要**\n確認依頼などが行われ、既に別実行ユーザの担当する [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) にワークフローが進行している場合に、\n以前の実行ユーザが自分の担当する [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) までワークフローを巻き戻す。\n**実現方法**\n[取消](../../extension/workflow/workflow-WorkflowProcessSample.md#workflow-cancel) と同様に、申請の引戻しを行うことができる作業種別に対応する [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) に、\n[境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-boundary-event) を関連付ける。\n\nそれらの [境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-boundary-event) からは、引戻し後の [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) に\nワークフローを進行させるようにしておく。\n\n申請の引戻しが行われた時には、上記の [境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-boundary-event) を発生させし、\nワークフローを引戻し後の [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) に進行させる。\n**ワークフロー定義の例**\n![pullback.png](assets/workflow-WorkflowProcessSample/pullback.png)",
+      "level": 2
     },
     {
       "id": "s8",
       "title": "後閲",
-      "hints": [
-        "後閲",
-        "代理ユーザ",
-        "フロー進行条件",
-        "承認者選択タスク",
-        "代理元ユーザ確認",
-        "ゲートウェイ判定"
-      ]
+      "content": "**ワークフロー概要**\n[タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) が代理ユーザによって処理された場合には、代理元ユーザ本人が対象を確認して、ワークフローが完了する。\n**実現方法**\n後閲の可能性があるフローに入る際には、必ずユーザを選択してからワークフローを進行させるものとし、\n選択されたユーザが代理ユーザであるかどうかで、ワークフローを分岐する。\n\nなお、要件上、確認後にユーザ選択を強制することができない場合には、フロー進行条件をアプリケーションで実装し、\n直前の [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) の実行ユーザが代理ユーザであったかどうかをゲートウェイで判定することで、\n下記例の確認後の「承認者選択タスク」は不要となり、確認後にユーザ選択を強制する必要はなくなる。\n**ワークフロー定義の例**\n![confirm.png](assets/workflow-WorkflowProcessSample/confirm.png)",
+      "level": 2
     },
     {
       "id": "s9",
       "title": "合議（回覧）",
-      "hints": [
-        "合議",
-        "回覧",
-        "マルチインスタンスタスク",
-        "workflow_element_multi_instance_task",
-        "複数人承認",
-        "動的人数決定"
-      ]
+      "content": "**ワークフロー概要**\n複数人で承認を行い、全員の承認が完了した時点でワークフローを進行させる。\n\n一人でも差戻しなどを行った場合には、合議を中断して差戻し先にワークフローを進行させる。\n**実現方法**\n合議に対応する [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) には、担当ユーザを複数人割り当てることのできる\n[マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task) を利用する。\n\nなお、合議に参加する人数は動的に決定できる。\n**ワークフロー定義の例**\n![council.png](assets/workflow-WorkflowProcessSample/council.png)",
+      "level": 2
     },
     {
       "id": "s10",
       "title": "審議（エスカレーション）／スキップ",
-      "hints": [
-        "審議",
-        "エスカレーション",
-        "スキップ",
-        "条件分岐",
-        "workflow_conditional_branch",
-        "担当者審査"
-      ]
+      "content": "**ワークフロー概要**\n審議：確認や承認などを行った後、内容に応じて別の担当者による審査を実施する。\n\nスキップ：確認や承認などを行った後、内容に応じて別の担当者による審査はスキップする。\n**実現方法**\n審議とスキップは、同一のワークフロー定義であらわされる。\n[条件分岐](../../extension/workflow/workflow-WorkflowProcessSample.md#workflow-conditional-branch) を利用して、内容に応じた分岐を行えばよい。\n**ワークフロー定義の例**\n![escalation.png](assets/workflow-WorkflowProcessSample/escalation.png)",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "ワークフローインスタンスを生成し、ワークフローを開始・進行・終了させる。確認や承認の [workflow_element_task](workflow-WorkflowProcessElement.json#s4) の [workflow_task_assignee](workflow-WorkflowInstanceElement.json) を指定してワークフローを進行させる。\n\n**実現方法**: 各フローノードについて、それに続くフローノードを定義する。\n\n![通常経路（申請・確認・承認）のワークフロー定義例](assets/workflow-WorkflowProcessSample/normal_process.png)",
-    "s2": "ある [workflow_element_task](workflow-WorkflowProcessElement.json#s4) での処理結果などに応じて、進行先の [workflow_element_task](workflow-WorkflowProcessElement.json#s4) を変更する。\n\n**実現方法**: [workflow_element_gateway_xor](workflow-WorkflowProcessElement.json#s6) を利用し、進行先となる可能性のあるフローノードとそれらに進行する条件を定義する。3つ以上に条件分岐することも可能。\n\n![条件分岐のワークフロー定義例](assets/workflow-WorkflowProcessSample/conditional_branch.png)",
-    "s3": "確認などを行う [workflow_element_task](workflow-WorkflowProcessElement.json#s4) で確認結果がNGだった場合に、申請者に差戻しを行う。差戻し後の [workflow_element_task](workflow-WorkflowProcessElement.json#s4) の [workflow_task_assignee](workflow-WorkflowInstanceElement.json) は、そのタスクを直前に実行したユーザとなる。\n\n**実現方法**: [workflow_element_gateway_xor](workflow-WorkflowProcessElement.json#s6) を利用し、OKの場合は承認タスクへ、NGの場合は前の申請タスクにワークフローを進行させる。\n\n既に一度実行されている [workflow_element_task](workflow-WorkflowProcessElement.json#s4) へワークフローを進行させる場合は、[workflow_element_gateway_xor](workflow-WorkflowProcessElement.json#s6) を利用する。その場合の [workflow_task_assignee](workflow-WorkflowInstanceElement.json) には、そのタスクに最後に割り当てられていたユーザが設定される。\n\n![差戻のワークフロー定義例](assets/workflow-WorkflowProcessSample/remand.png)",
-    "s4": "差し戻された申請を修正し、再申請を行う。単純な差戻しフローとは異なり、初回の申請と再申請を明確に区別する。\n\n**実現方法**: [workflow_element_gateway_xor](workflow-WorkflowProcessElement.json#s6) を利用し、NGの場合には申請タスクではなく**再申請タスク**にワークフローを進行させる。\n\n> **注意**: 申請者は申請タスクを実施後に必ずしも再申請を行うわけではないため、申請タスクと再申請タスクを結ぶシーケンスフローは作成しないこと。\n\n![再申請のワークフロー定義例](assets/workflow-WorkflowProcessSample/reapply.png)",
-    "s5": "申請者が申請の取り消しを行う。申請が取り消された場合にはワークフローを完了させる。\n\n**実現方法**:\n1. 申請の取り消しを行うことができる作業種別に対応する [workflow_element_task](workflow-WorkflowProcessElement.json#s4) に [workflow_element_boundary_event](workflow-WorkflowProcessElement.json#s12) を関連付ける。\n2. それらの [workflow_element_boundary_event](workflow-WorkflowProcessElement.json#s12) からは [workflow_element_event_terminate](workflow-WorkflowProcessElement.json#s10) にワークフローを進行させる。\n3. 申請の取り消しが行われた時に、上記の [workflow_element_boundary_event](workflow-WorkflowProcessElement.json#s12) をトリガーしてワークフローを完了する。\n\n![取消のワークフロー定義例](assets/workflow-WorkflowProcessSample/cancel.png)",
-    "s6": "確認者や承認者が申請を却下する。申請が却下された場合にはワークフローを完了させる。\n\n**実現方法**: [workflow_remand](#s2) と同様に [workflow_element_gateway_xor](workflow-WorkflowProcessElement.json#s6) を利用し、却下の場合には [workflow_element_event_terminate](workflow-WorkflowProcessElement.json#s10) にワークフローを進行させる。\n\n![却下のワークフロー定義例](assets/workflow-WorkflowProcessSample/reject.png)",
-    "s7": "確認依頼などが行われ、既に別実行ユーザの担当する [workflow_element_task](workflow-WorkflowProcessElement.json#s4) にワークフローが進行している場合に、以前の実行ユーザが自分の担当する [workflow_element_task](workflow-WorkflowProcessElement.json#s4) までワークフローを巻き戻す。\n\n**実現方法**:\n1. [workflow_cancel](#s4) と同様に、引戻しを行うことができる作業種別に対応する [workflow_element_task](workflow-WorkflowProcessElement.json#s4) に [workflow_element_boundary_event](workflow-WorkflowProcessElement.json#s12) を関連付ける。\n2. それらの [workflow_element_boundary_event](workflow-WorkflowProcessElement.json#s12) からは、引戻し後の [workflow_element_task](workflow-WorkflowProcessElement.json#s4) にワークフローを進行させる。\n3. 申請の引戻しが行われた時に、上記の [workflow_element_boundary_event](workflow-WorkflowProcessElement.json#s12) を発生させ、ワークフローを引戻し後の [workflow_element_task](workflow-WorkflowProcessElement.json#s4) に進行させる。\n\n![引戻のワークフロー定義例](assets/workflow-WorkflowProcessSample/pullback.png)",
-    "s8": "[workflow_element_task](workflow-WorkflowProcessElement.json#s4) が代理ユーザによって処理された場合に、代理元ユーザ本人が対象を確認してワークフローが完了する。\n\n**実現方法**: 後閲の可能性があるフローに入る際には、必ずユーザを選択してからワークフローを進行させ、選択されたユーザが代理ユーザであるかどうかでワークフローを分岐する。\n\n> **補足**: 確認後にユーザ選択を強制できない場合は、フロー進行条件をアプリケーションで実装し、直前の [workflow_element_task](workflow-WorkflowProcessElement.json#s4) の実行ユーザが代理ユーザであったかどうかをゲートウェイで判定することで、確認後の「承認者選択タスク」が不要となり、確認後のユーザ選択を強制する必要はなくなる。\n\n![後閲のワークフロー定義例](assets/workflow-WorkflowProcessSample/confirm.png)",
-    "s9": "複数人で承認を行い、全員の承認が完了した時点でワークフローを進行させる。一人でも差戻しなどを行った場合には合議を中断して差戻し先にワークフローを進行させる。\n\n**実現方法**: 合議に対応する [workflow_element_task](workflow-WorkflowProcessElement.json#s4) には、担当ユーザを複数人割り当てることのできる [workflow_element_multi_instance_task](workflow-WorkflowProcessElement.json#s6) を利用する。なお、合議に参加する人数は動的に決定できる。\n\n![合議（回覧）のワークフロー定義例](assets/workflow-WorkflowProcessSample/council.png)",
-    "s10": "審議とスキップは同一のワークフロー定義で表される。\n\n- **審議**: 確認や承認などを行った後、内容に応じて別の担当者による審査を実施する。\n- **スキップ**: 確認や承認などを行った後、内容に応じて別の担当者による審査をスキップする。\n\n**実現方法**: [workflow_conditional_branch](#s1) を利用して、内容に応じた分岐を行う。\n\n![審議（エスカレーション）／スキップのワークフロー定義例](assets/workflow-WorkflowProcessSample/escalation.png)"
-  }
+  ]
 }

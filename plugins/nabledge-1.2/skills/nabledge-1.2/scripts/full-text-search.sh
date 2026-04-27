@@ -29,9 +29,9 @@ done
 find "$KNOWLEDGE_DIR" -name "*.json" | sort | while read -r filepath; do
   relpath="${filepath#$KNOWLEDGE_DIR/}"
   jq -r --arg file "$relpath" \
-    '.sections | to_entries[] |
-     (.value | '"$count_exprs"') as $score |
+    '.sections[] |
+     ((.title + " " + .content) | '"$count_exprs"') as $score |
      select($score > 0) |
-     "\($score)\t\($file)|\(.key)"' \
+     "\($score)\t\($file)|\(.id)"' \
     "$filepath" 2>/dev/null
 done | sort -t$'\t' -k1 -rn | head -n "$MAX_RESULTS" | cut -f2

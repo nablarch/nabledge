@@ -1,0 +1,20 @@
+{
+  "id": "jakarta-batch-operation-policy",
+  "title": "運用方針",
+  "content": "**目次**\n\n* 障害監視\n* ログの出力方針\n\nJSR352に準拠したバッチアプリケーションでは、以下の方針に従った障害監視、ログ出力方針を推奨している。\n\n* [障害監視](../../processing-pattern/jakarta-batch/jakarta-batch-operation-policy.md#jsr352-failure-monitoring) はバッチの終了ステータスで行う。\n* 取り込みファイルが存在しない等の予期できる障害発生時のリカバリ用に、運用担当者向けログを出力する。\n* アプリケーションの不具合等の予期できない障害発生時の調査用に、全てのログを出力する。\n  例外発生時のログ出力に関しては、 [例外(エラー含む)発生時の処理の流れ](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-batch-error-flow) を参照。\n* バッチ処理の遅延時に終了時刻を予測するため、進捗ログを出力する。\n\nこれらの方針に従うことで以下のメリットが得られる。つまり、障害発生時や顧客の問い合わせ対応に対して運用担当者のみで対応できることが増え、開発者の運用負荷の軽減が期待できる。\n\n* 障害発生時に運用担当者向けログにリカバリ手順を出力しておけば、運用担当者がリカバリを行うことができる。\n* 進捗ログを出力しておけば、開発者が別の手段で進捗状況を確認する必要がなくなり、\n  運用担当者は進捗ログを参照して終了予定時間を顧客に回答できる。\n\n> **Important:**\n> バッチの設計者は、予期できる障害とその対処方法を洗い出し、 [運用担当者向けログ](../../processing-pattern/jakarta-batch/jakarta-batch-operator-notice-log.md) に出力するようにバッチを設計すること。\n\n障害検知時のログ参照イメージ\n![operation-image.png](assets/jakarta-batch-operation-policy/operation-image.png)\nバッチ処理遅延時のログ参照イメージ\n![progress-image.png](assets/jakarta-batch-operation-policy/progress-image.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "障害監視",
+      "content": "バッチの終了ステータスをもとに障害監視する。\n詳細な情報が必要な場合はログを参照する。\n\n正常終了\nバッチ処理が正常に終了したことを意味する。\n異常終了\nバッチが何らかの理由で異常終了し、後続のジョブが実行できないことを意味する。\n運用担当者はログを参照し、障害対応する必要がある。\n警告終了\nバッチ実行中に何らかの問題が発生したが、後続のジョブは実行できることを意味する。\n運用担当者はログを参照し、発生した問題の内容を確認する必要がある。\n\nバッチアプリケーションの終了ステータス(Javaプロセスから戻されるリターンコード)の詳細は、\nJobExecutor 及び Main を参照。\n\n> **Tip:**\n> 終了コードを上記より細かく分類したい場合には、起動クラス(Main)を作成し対応すること。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "ログの出力方針",
+      "content": "運用担当者向けログ\n発生した障害とそれに対する対処方法を記載したメッセージを出力する。\n運用担当者は、このログに出力された情報を元に障害対応する。\n詳細な情報(スタックトレース)は運用担当者には不要なため、出力しない。\n詳細は、 [運用担当者向けのログ出力](../../processing-pattern/jakarta-batch/jakarta-batch-operator-notice-log.md) を参照。\n進捗ログ\nバッチ処理の進捗状況を出力する。\nバッチ処理が遅延している場合などは、このログを元に現在の処理の終了を予測し、続行や停止を判断する。\n詳細は、 [進捗状況のログ出力](../../processing-pattern/jakarta-batch/jakarta-batch-progress-log.md) を参照。\n全てのログ\n`進捗ログ` を除く全てのログを出力する。\n`運用担当者向けログ` に対応した詳細情報(スタックトレース)も、このログに出力する。",
+      "level": 2
+    }
+  ]
+}

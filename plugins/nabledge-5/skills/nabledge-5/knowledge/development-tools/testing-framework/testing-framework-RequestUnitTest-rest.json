@@ -1,0 +1,104 @@
+{
+  "id": "testing-framework-RequestUnitTest-rest",
+  "title": "リクエスト単体テスト（RESTfulウェブサービス）",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "リクエスト単体テスト(REST)では、 [リクエスト単体テスト(ウェブアプリケーション)](../../development-tools/testing-framework/testing-framework-02-RequestUnitTest.md#request-util-test-online) 同様、内蔵サーバを使用してテストを行う。\nRESTfulウェブサービス用実行基盤のみ、必要なモジュールが他の実行基盤より多くなるため、 [モジュール一覧](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-test-modules) に記載のモジュールを\n依存関係に追加する必要がある。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "全体像",
+      "content": "![rest_request_unit_test_structure.png](assets/testing-framework-RequestUnitTest-rest/rest_request_unit_test_structure.png)",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "主なクラス, リソース",
+      "content": "| 名称 | 役割 | 作成単位 |\n|---|---|---|\n| リクエスト単体テストクラス | テストロジックを実装する。 | テスト対象クラス(Action)につき１つ作成 |\n| テストデータ（Excelファイル） | テーブルに格納する準備データや期待する結果、 HTTPパラメータなど、テストデータを記載する。 | 必要に応じてテストクラスにつき１つ作成 |\n| テスト対象クラス(Action) | テスト対象のクラス (Action以降の業務ロジックを実装する各クラスを含む) | 取引につき1クラス作成 |\n| DbAccessTestSupport | 準備データ投入などデータベースを使用するテストに 必要な機能を提供する。 | － |\n| HttpServer | 内蔵サーバ。サーブレットコンテナとして動作する。 | － |\n| RestTestSupport | 内蔵サーバの起動やリクエスト単体テストで必要とな るステータスコードのアサートを提供する。 | － |",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "モジュール一覧",
+      "content": "```xml\n<!--  テスティングフレームワーク本体  -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-testing-rest</artifactId>\n  <scope>test</scope>\n</dependency>\n<!--  テスティングフレームワークで使用するデフォルト設定  -->\n<dependency>\n  <groupId>com.nablarch.configuration</groupId>\n  <artifactId>nablarch-testing-default-configuration</artifactId>\n  <scope>test</scope>\n</dependency>\n<!--  テスティングフレームワークで使用する内蔵サーバの実装  -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-testing-jetty6</artifactId>\n  <scope>test</scope>\n</dependency>\n```\n\n> **Important:**\n> `nablarch-testing-rest` は `nablarch-testing` ([テスティングフレームワーク](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide.md#unittestguide)) に依存している。\n> 上記のモジュールを依存に追加することで [テスティングフレームワーク](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide.md#unittestguide) のAPIも同時に使用できる。\n\n> **Tip:**\n> Java11を使用している場合は [自動テストで使用するJettyのモジュール変更](../../setup/blank-project/blank-project-setup-Java11.md#setup-java11-jetty9) の通り\n> 内蔵サーバを差し替えること。",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "設定",
+      "content": "アーキタイプからブランクプロジェクトを作成した場合、 `src/test/resources/unit-test.xml` に\nテスティングフレームワークの設定がされている。RESTfulウェブサービス向けテスティングフレームワークの\n設定を追加するためデフォルト設定で提供している以下の設定ファイルを読み込む。\n\n```xml\n<import file=\"nablarch/test/rest-request-test.xml\"/>\n```\n\nリクエスト単体テストの設定は [各種設定値](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-test-configuration) を参照。\n\n> **Tip:**\n> Nablarch5u18以降のアーキタイプから [RESTfulウェブサービス](../../setup/blank-project/blank-project-setup-WebService.md) の\n> ブランクプロジェクトを作成した場合上記が既に設定されている。\n> [ウェブプロジェクト](../../setup/blank-project/blank-project-setup-Web.md) や\n> [バッチプロジェクト](../../setup/blank-project/blank-project-setup-NablarchBatch.md) では追加が必要となる。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "構造",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "SimpleRestTestSupport",
+      "content": "リクエスト単体テスト用に用意されたスーパークラス。リクエスト単体テスト用のメソッドを用意している。\nデータベース関連機能が不要な場合は後述の `RestTestSupport` ではなくこちらのクラスを使用する。\n[事前準備補助機能](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-test-helper) 、 [実行](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-test-execute) 、 [結果確認](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-test-assert) については以下の `RestTestSupport` と同じ機能を持つ。\n\n> **Tip:**\n> RestTestSupportを使用する場合、`dbInfo` または `testDataParser` のコンポーネントを準備する必要がある。\n> データベースへの依存が不要な場合は、`SimpleRestTestSupport` を使用することでコンポーネント定義を簡略化できる。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "RestTestSupport",
+      "content": "リクエスト単体テスト用に用意されたスーパークラス。リクエスト単体テスト用のメソッドを用意している。\n`SimpleRestTestSupport` を継承し、データベース関連機能を持つ。",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "データベース関連機能",
+      "content": "データベースに関する機能は、 `RestTestSupport` クラスから `DbAccessTestSupport` クラスに処理を委譲することで実現している。\n`DbAccessTestSupport` クラスの詳細は、 [データベースを使用するクラスのテスト](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md) を参照。\n\nただし、 `DbAccessTestSupport` のうち以下のメソッドは、\nリクエスト単体テスト(REST)では不要であり、アプリケーションプログラマに誤解を与えないよう、\n意図的に委譲していない。\n\n* `public void beginTransactions()`\n* `public void commitTransactions()`\n* `public void endTransactions()`\n* `public void setThreadContextValues(String sheetName, String id)`\n* `public void assertSqlResultSetEquals(String message, String sheetName, String id, SqlResultSet actual)`\n* `public void assertSqlRowEquals(String message, String sheetName, String id, SqlRow actual)`\n\n> **Important:**\n> 利用者の利便性を考慮し、データベース関連機能を委譲している。\n> しかしRESTfulウェブサービスの単体テストにおいては、委譲された `assertTableEquals` などを使って\n> データベースのテーブル内容を確認するテストより、サービスとして公開されたAPIに問い合わせることで\n> データベースに依存することなくシステムが持つデータを確認するテストを推奨する。",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "事前準備補助機能",
+      "content": "内蔵サーバへのリクエスト送信には、 `HttpRequest` のインスタンスが必要となる。\n`RestTestSupport` クラスでは、 `HttpRequest` をリクエスト単体テスト用に拡張した\n`RestMockHttpRequest` のオブジェクトを簡単に作成できるよう\n5つのメソッドを用意している。\n\n```java\nRestMockHttpRequest get(String uri)\nRestMockHttpRequest post(String uri)\nRestMockHttpRequest put(String uri)\nRestMockHttpRequest patch(String uri)\nRestMockHttpRequest delete(String uri)\n```\n\n引数には、以下の値を引き渡す。\n\n* テスト対象となるリクエストURI\n\nこれらのメソッドでは、受け取ったリクエストURIを元に `RestMockHttpRequest` インスタンスを生成し、\nメソッド名に応じたHTTPメソッドを設定した上で返却する。\nリクエストパラメータなどURI以外のデータを設定したい場合は、\n本メソッド呼び出しにより取得したインスタンスに対してデータを設定するとよい。\n\nまた上記以外のHTTPメソッドで `RestMockHttpRequest` のオブジェクトを作成したい場合は以下のメソッドを使用する。\n\n```java\nRestMockHttpRequest newRequest(String httpMethod, String uri)\n```\n\n第1引数にはHTTPメソッドを、第2引数にはテスト対象となるリクエストURIを引き渡す。\n\n> **Tip:**\n> `RestMockHttpRequest` は流れるようなインターフェイスでパラメータなどを設定できるよう\n> メソッドをオーバーライドして自身のインスタンスを返すようにしてある。\n> 使用できるメソッドの詳細は Javadoc を参照\n\n> リクエストを構築する例\n\n> ```java\n> RestMockHttpRequest request = post(\"/projects\")\n>                                   .setHeader(\"Authorization\",\"Bearer token\")\n>                                   .setCookie(cookie);\n> ```",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "実行",
+      "content": "`RestTestSupport`  にある下記のメソッドを呼び出すことで、\n内蔵サーバが起動されリクエストが送信される。\n\n```java\nHttpResponse sendRequest(HttpRequest request)\n```",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "結果確認",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s13",
+      "title": "ステータスコード",
+      "content": "`RestTestSupport` にある下記のメソッドを呼び出すことで、\nレスポンスのHTTPステータスコードが想定通りであることを確認する。\n\n```java\nvoid assertStatusCode(String message, HttpResponse.Status expected, HttpResponse response);\n```\n\n引数には、以下の値を引き渡す。\n\n* アサート失敗時のメッセージ\n* 期待するステータス( `HttpResponse.Status` のEnum)\n* 内蔵サーバから返却された `HttpResponse` インスタンス\n\n期待するステータスコードとレスポンスのステータスコードが一致しなかった場合\nアサート失敗となる。",
+      "level": 4
+    },
+    {
+      "id": "s14",
+      "title": "レスポンスボディ",
+      "content": "レスポンスボディの検証についてはフレームワークでは仕組みを用意していない。\n各プロジェクトの要件に合わせて [JSONAssert(外部サイト、英語)](https://jsonassert.skyscreamer.org/) や\n[json-path-assert(外部サイト、英語)](https://github.com/json-path/JsonPath/tree/master/json-path-assert) 、\n[XMLUnit(外部サイト、英語)](https://github.com/xmlunit/user-guide/wiki) などのライブラリを使用すること。\n\n> **Tip:**\n>  [RESTfulウェブサービスのブランクプロジェクト](../../setup/blank-project/blank-project-setup-WebService.md) を作成した場合\n> 上記の [JSONAssert(外部サイト、英語)](https://jsonassert.skyscreamer.org/) 、\n> [json-path-assert(外部サイト、英語)](https://github.com/json-path/JsonPath/tree/master/json-path-assert) 、\n> [XMLUnit(外部サイト、英語)](https://github.com/xmlunit/user-guide/wiki) がpom.xmlに記載されている。\n> 必要に応じてライブラリの削除や差し替えを行うこと。\n\n**レスポンスボディ検証の補助機能**\n\nレスポンスボディの検証をする際に、期待されるボディをJSONファイルやXMLファイルとして用意したい場合がある。\nJSONAssertのように外部ライブラリが期待値として `String` しか引数に受け付けない場合に対応するため\n`RestTestSupport` にはファイルを読み込み `String` に変換するメソッドを用意している。\n\n```java\nString readTextResource(String fileName)\n```\n\nこのメソッドでは、以下のようにテストクラスと同じ名前のディレクトリにあるリソースから\n引数で指定したファイル名でファイルを読み込み `String` に変換する。\n\n| ファイルの種類 | 配置ディレクトリ | ファイル名 |\n|---|---|---|\n| テストクラスソースファイル | <PROJECT_ROOT>/test/java/com/example/ | SampleTest.java |\n| レスポンスボディの期待値ファイル | <PROJECT_ROOT>/test/resources/com/example/SampleTest | response.json(引数のfileNameに指定) |",
+      "level": 4
+    },
+    {
+      "id": "s15",
+      "title": "各種設定値",
+      "content": "環境設定に依存する設定値については、コンポーネント設定ファイルで変更できる。\n設定可能な項目を以下に示す。",
+      "level": 2
+    },
+    {
+      "id": "s16",
+      "title": "コンポーネント設定ファイル設定項目一覧",
+      "content": "| 設定項目名 | 説明 | デフォルト値 |\n|---|---|---|\n| webBaseDir | ウェブアプリケーションのルートディレクトリ [1] | src/main/webapp |\n| webFrontControllerKey | Webフロントコントローラーのリポジトリキー [2] | webFrontController |\n\nPJ共通のwebモジュールが存在する場合、このプロパティにカンマ区切りでディレクトリを設定する。\n複数指定された場合、先頭から順にリソースが読み込まれる。\n\n以下に例を示す。\n\n```xml\n<component name=\"restTestConfiguration\" class=\"nablarch.test.core.http.RestTestConfiguration\">\n  <property name=\"webBaseDir\" value=\"/path/to/web-a/,/path/to/web-common\"/>\n```\n\nこの場合、web-a、web-commonの順にリソースが探索される。\n\nウェブアプリケーション実行基盤とウェブサービス実行基盤をひとつのWarで実行する場合など\n[Webフロントコントローラー](../../processing-pattern/web-application/web-application-web-front-controller.md#web-front-controller) をデフォルトの\"webFrontController\"以外の名前で\nコンポーネント登録する場合がある。\nそのような場合は、このプロパティにウェブサービスで使用するWebフロントコントローラーのリポジトリキーを設定することで\n内蔵サーバで実行されるハンドラを制御できる。\n\n以下に例を示す。\n\nウェブアプリケーション実行基盤用のWebフロントコントローラー( `webFrontController` )と\nウェブサービス実行基盤用のWebフロントコントローラー( `jaxrsController` )が登録されているコンポーネント定義。\n\n```xml\n<!-- ハンドラキュー構成 -->\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\"/>\n      <component class=\"nablarch.fw.handler.GlobalErrorHandler\"/>\n      <component class=\"nablarch.common.handler.threadcontext.ThreadContextClearHandler\"/>\n      <component class=\"nablarch.fw.web.handler.HttpResponseHandler\"/>\n      ・\n      ・\n      ・\n      (略)\n    </list>\n  </property>\n</component>\n\n<component name=\"jaxrsController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\"/>\n      <component class=\"nablarch.fw.handler.GlobalErrorHandler\"/>\n      <component class=\"nablarch.fw.jaxrs.JaxRsResponseHandler\"/>\n      ・\n      ・\n      ・\n      (略)\n    </list>\n  </property>\n</component>\n```\n\nデフォルト設定でRESTfulウェブサービス実行基盤向けテスティングフレームワークを使用すると\n\"webFrontController\"が使用されるため、ウェブアプリケーション向けのWebフロントコントローラーが実行される。\n以下のように設定を上書きすることでウェブサービス向けのWebフロントコントローラーを使用できる。\n\n```xml\n<import file=\"nablarch/test/rest-request-test.xml\"/>\n<!--  デフォルトのコンポーネント定義をimport後に上書きする。-->\n<component name=\"restTestConfiguration\" class=\"nablarch.test.core.http.RestTestConfiguration\">\n  <property name=\"webFrontControllerKey\" value=\"jaxrsController\"/>\n```",
+      "level": 3
+    }
+  ]
+}

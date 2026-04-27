@@ -1,0 +1,38 @@
+{
+  "id": "handlers-http-messaging-response-building-handler",
+  "title": "HTTPメッセージングレスポンス変換ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* レスポンスヘッダに設定される値\n* フレームワーク制御ヘッダのレイアウトを変更する\n\n本ハンドラでは、後続のハンドラが作成した応答電文オブジェクトをHTTPレスポンスオブジェクトに変換する。\nまた、応答電文オブジェクト内のプロトコルヘッダの値を、対応するHTTPヘッダに設定及びXMLやJSONなどの形式への直列化を行う。\n\n本ハンドラでは、以下の処理を行う。\n\n* 応答電文オブジェクトの内容をHTTPレスポンスオブジェクトに変換する。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-http-messaging-response-building-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-messaging-http</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) よりも後ろに設定すること\nこのハンドラで生成した HTTPレスポンスオブジェクト を\n[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) がクライアントに返却するため。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "レスポンスヘッダに設定される値",
+      "content": "後続のハンドラで作成された応答電文オブジェクトを元に以下のレスポンスヘッダを設定する。\n\n応答電文オブジェクトのステータスコードを設定する。\n\n応答電文オブジェクトの持つフォーマッタ(InterSystemMessage.getFormatter())から以下の値を取得し設定する。\n\n* MIME(DataRecordFormatterSupport#getMimeType()\n* cherset(DataRecordFormatterSupport#getDefaultEncoding()\n\nMIMEが `application/json` でcharsetが `utf-8` の場合、Content-Typeは以下の値となる。\n\n**application/json;charset=utf-8**\n\nレスポンスヘッダの `X-Correlation-Id` に、応答電文オブジェクトのヘッダに設定された `CorrelationId` の値を設定する。\n\n> **Important:**\n> このハンドラでは、上記に記載のないレスポンスヘッダを設定できない。\n\n> 上記外のレスポンスヘッダを使用したい場合は、プロジェクトでハンドラを作成し対応すること。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "フレームワーク制御ヘッダのレイアウトを変更する",
+      "content": "応答電文内のフレームワーク制御ヘッダの定義を変更する場合には、プロジェクトで拡張したフレームワーク制御ヘッダの定義を設定する必要がある。\n設定しない場合は、デフォルトの StructuredFwHeaderDefinition が使用される。\n\nフレームワーク制御ヘッダの詳細は、 [フレームワーク制御ヘッダ](../../component/libraries/libraries-http-system-messaging.md#http-system-messaging-fw-header) を参照。\n\n以下に設定例を示す。\n\n```xml\n<component class=\"nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler\">\n  <!-- フレームワーク制御ヘッダの設定 -->\n  <property name=\"fwHeaderDefinition\">\n    <component class=\"sample.SampleFwHeaderDefinition\" />\n  </property>\n</component>\n```",
+      "level": 2
+    }
+  ]
+}

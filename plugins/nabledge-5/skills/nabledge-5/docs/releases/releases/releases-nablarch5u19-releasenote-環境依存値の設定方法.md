@@ -1,0 +1,9 @@
+# 環境依存値の設定方法
+
+環境依存値の動作後方互換性維持方法
+存在しない環境依存値をコンポーネント定義から参照した場合に
+5u18までのNablarch同様、WARNINGログを出力して環境依存値のキーを設定値に採用する方法を以下に示します。
+◆設定方法
+プロジェクトの環境設定ファイル（common.propertiesまたはcommon.config）に
+以下の値を追記する。
+nablarch.diContainer.allowEmptyValue=true

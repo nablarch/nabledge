@@ -1,199 +1,213 @@
 # 業務画面JSP検証ツール
 
-**公式ドキュメント**: [業務画面JSP検証ツール](https://nablarch.github.io/docs/LATEST/doc/development_tools/toolbox/JspVerifier/JspVerifier.html)
+* 概要
+* 初期環境構築
+
+  * Node.jsのインストール
+  * 環境変数の確認
+  * 依存パッケージのインストール
+  * 正常に使用できることの確認
+  * 環境依存設定値の修正
+* ツールの使用方法
+
+  * batファイルでの実行
+  * コマンドラインからの実行
+* 設定方法
+
+  * 既定の設定内容
 
 ## 概要
 
-JSPファイルに対して以下の検証を行うツール。検証内容は設定ファイルで変更・追加可能。
+本ツールは、JSPファイルに対して以下のような点を検証する。
 
-**実装済み**:
-- 使用許可タグのみが使用されていること
-- 必須構造が満たされていること
-- 禁止構造を使用していないこと
-- 各タグの属性がタグに定義済みの属性であること
+なお、検証の内容は設定ファイルで変更可能であり、また、検証内容自体も追加できる。
 
-**未実装**:
-- 各タグの属性値が、その属性のtypeにあった値であること
+**実装済**
 
-<details>
-<summary>keywords</summary>
+* 業務画面のJSPでは使用を許可されているタグのみが使用されていることを検証できる。
+* JSPで必須となる構造が満たされていることを検証できる。
+* JSPで禁止されている構造を使用していないことを検証できる。
+* 各タグに指定されている属性が、タグに定義されている属性であることを検証できる。
 
-JSP検証ツール, 使用可能タグ検証, 必須構造検証, 禁止構造検証, タグ属性検証, 業務画面JSP
+**未実装**
 
-</details>
+* 各タグの属性値が、その属性のtypeにあった値となっていることを検証できる。
 
 ## 初期環境構築
 
-## Node.jsのインストール
+### Node.jsのインストール
 
-[Node.js](https://nodejs.org/en) をインストールする。
+本ツールは、 [Node.js](https://nodejs.org/en) に依存しているため、下記サイトから使用する環境に合わせたインストーラをダウンロードし、インストールすること。
 
-## 環境変数（プロキシ環境）
+[https://nodejs.org/en](https://nodejs.org/en)
+
+### 環境変数の確認
+
+プロキシ環境下で下記の手順を実施する際には、以下の環境変数の値を確認すること。
 
 | 環境変数名 | 値 |
 |---|---|
 | HTTP_PROXY | HTTP用プロキシサーバのURL |
 | HTTPS_PROXY | HTTPS用プロキシサーバのURL |
 
-## 依存パッケージのインストール
+### 依存パッケージのインストール
 
-ルートディレクトリ（`package.json`のあるディレクトリ）で実行:
+本ツールは、いくつかのオープンソースライブラリに依存している。（依存しているライブラリについては、 package.json を参照のこと。）
 
-```
-npm install
-```
+それらのインストールを行うために、本ツールのルートディレクトリ（ package.json の配置されているディレクトリ）で、以下のコマンドを実行する。
 
-実行後、`node_modules`ディレクトリが作成されることを確認。
+| 実行ディレクトリ | コマンド | 確認内容 |
+|---|---|---|
+| 本ツールのルートディレクトリ（ package.json の配置されているディレクトリ） | npm install | * コマンドが正常に完了していること。 * ルートディレクトリに node_modules ディレクトリが作成されていること。 |
 
-> **重要**: インターネット接続が必要。プロキシ環境では以下の環境変数を設定すること:
-> - `http_proxy=http://proxy.example.com:8080`
-> - `https_proxy=http://proxy.example.com:8080`
->
-> オフライン環境へのインストール: インターネット接続環境で`npm install`を実行後、生成された`node_modules`ディレクトリを対象環境のルートディレクトリにコピーする。
+> **Important:**
+> 上記の手順で依存パッケージをインストールするためには、インターネットに接続している環境である必要がある。
 
-## 動作確認
+> また、プロキシ環境下である場合には、以下の環境変数にプロキシサーバのアドレスが設定されている必要がある。
 
-ルートディレクトリで`npm test`を実行し、すべてのテストが成功することを確認。
+> * >   http_proxy ：例）http_proxy=http://proxy.example.com:8080
+> * >   https_proxy ：例）https_proxy=http://proxy.example.com:8080
 
-## 環境依存設定値の修正
+> なお、インターネットに接続していない環境にインストールする場合には、
+> いったんインターネットに接続している環境で上記手順を実施し、ルートディレクトリに作成される
+> node_modules ディレクトリを、対象の環境に解凍した本ツールのルートディレクトリに
+> 配置することで使用できる。
 
-`verification_config.json`の`TagAttributeVerifier.directory`をタグファイルの実際のディレクトリに修正:
+### 正常に使用できることの確認
+
+本ツールのルートディレクトリで、以下のコマンドを実行し、すべてのテストが成功することを確認する。
+
+| 実行ディレクトリ | コマンド | 確認内容 |
+|---|---|---|
+| 本ツールのルートディレクトリ（ package.json の配置されているディレクトリ） | npm test | * テストがすべて成功していること。 |
+
+### 環境依存設定値の修正
+
+verification_config.json の下記の設定値を、実際にタグファイルが配置されているディレクトリに修正する。
 
 ```json
 {
-  "TagAttributeVerifier": {
-    "directory": "C:\\nablarch\\workspace\\tutorial\\main\\web\\WEB-INF\\tags\\widget",
-    "encoding": "utf-8"
+  "TagAttributeVerifier" : {
+    "directory" : "C:\\nablarch\\workspace\\tutorial\\main\\web\\WEB-INF\\tags\\widget",
+    "encoding" : "utf-8"
   }
 }
 ```
 
-<details>
-<summary>keywords</summary>
-
-Node.js, npm install, npm test, verification_config.json, HTTP_PROXY, HTTPS_PROXY, http_proxy, https_proxy, TagAttributeVerifier, 依存パッケージ, プロキシ環境
-
-</details>
-
 ## ツールの使用方法
 
-## batファイルでの実行
+### batファイルでの実行
 
-`jsp_verifier.bat`に検証対象のJSPファイルをDrag&Dropして実行。
+本ツールのルートディレクトリにある、 jsp_verifier.bat にファイルを Drag&Drop する。
 
-## コマンドラインからの実行
+コマンドラインウィンドウが表示され、検証エラーが0件だった場合には、
 
-ルートディレクトリで実行:
+Verification Succeeded.
+
+と表示され、検証エラーが1件以上あった場合には、
+
+Verification Failed!! 
+
+12 violations are found. 
+
+Detected violations are dumped to violations-1390366626297.log.
+
+のように、エラー内容が出力されたファイル名が表示される。
+
+### コマンドラインからの実行
+
+本ツールのルートディレクトリで、以下のコマンドを実行する。
 
 ```sh
 node bin/jsp_verifier <検証対象JSPファイルパス（複数可）>
 ```
 
-## 出力内容
-
-- エラー0件: `Verification Succeeded.`
-- エラーあり: `Verification Failed!!` + エラー件数 + ログファイル名（例: `violations-1390366626297.log`）
-
-<details>
-<summary>keywords</summary>
-
-jsp_verifier.bat, Drag&Drop, node bin/jsp_verifier, Verification Succeeded, Verification Failed, コマンドライン実行, violations.log
-
-</details>
+標準出力の出力内容は、上記のとおり。
 
 ## 設定方法
 
-設定ファイルは`verification_config.json`（ルートディレクトリ）。`verifiers`セクションに実施する検証を列挙する。定義されていない検証は実施されない。
+ルートディレクトリの、 verification_config.json が本ツールの設定ファイルとなっている。このファイルに実施する検証内容及び、
+各検証内容ごとの設定を記載することで、検証が行われる。
 
-```json
+> **Important:**
+> 下記の設定ファイル例では説明のために、JavaScript形式でコメントを記載しているが、実際のJSONファイルにはコメントを記載できない。
+
+```javascript
 {
+  // verifiers内に、実施する検証内容を記載していく。
   "verifiers": {
-    "TagUsageVerifier": {},
-    "RegexpBasedVerifier": {},
-    "SelectorBasedVerifier": {},
-    "WrappingTagVerifier": {},
-    "TagAttributeVerifier": {}
+    // 使用可能タグ検証
+    "TagUsageVerifier": {
+    }
+    // 正規表現検証
+    "RegexpBasedVerifier": {
+    }
+    // DOMツリー検証
+    "SelectorBasedVerifier": {
+    }
+    // 親タグ検証
+    "WrappingTagVerifier": {
+    }
+    // タグ属性検証
+    "TagAttributeVerifier": {
+    }
+    // ここに定義されていない検証は実施されない
   }
 }
 ```
 
-> **重要**: JSONファイルにはコメントを記載できない。
+### 既定の設定内容
 
-<details>
-<summary>keywords</summary>
+#### 使用可能タグ検証
 
-verification_config.json, verifiers, TagUsageVerifier, RegexpBasedVerifier, SelectorBasedVerifier, WrappingTagVerifier, TagAttributeVerifier, 設定ファイル
+以下の、使用が許可されているタグのみを使用していること。
 
-</details>
+* n:form
+* n:set
+* n:write
+* n:ConfirmationPage
+* n:forConfirmationPage
+* n:forInputPage
+* n:param
+* n:hidden
+* t:page_template
+* t:errorpage_template
+* box:.*
+* button:.*
+* field:.*
+* link:.*
+* tab:.*
+* table:.*
+* column:.*
+* spec:.*
+* c:if
+* jsp:attribute
+* %--
+* %@page
+* %@taglib
 
-## 使用可能タグ検証
+#### 正規表現検証
 
-`TagUsageVerifier`: 以下の許可タグのみ使用可能。
+以下の正規表現にマッチする文字列が存在しないこと（大文字・小文字は区別しない）。
 
-- `n:form`, `n:set`, `n:write`, `n:ConfirmationPage`, `n:forConfirmationPage`, `n:forInputPage`, `n:param`, `n:hidden`
-- `t:page_template`, `t:errorpage_template`
-- `box:.*`, `button:.*`, `field:.*`, `link:.*`, `tab:.*`, `table:.*`, `column:.*`, `spec:.*`
-- `c:if`, `jsp:attribute`
-- `%--`, `%@page`, `%@taglib`
+* /> （自己終了エレメント。自己終了エレメントを使用すると、その要素以降の記述内容が描画されなくなるため禁止。）
 
-<details>
-<summary>keywords</summary>
+#### DOMツリー検証
 
-TagUsageVerifier, 使用可能タグ, n:form, n:write, n:hidden, button, table, spec, 許可タグ一覧
+以下の、禁止されている構造を使用していないこと。
 
-</details>
+* table:not([id]) （テーブルを複数表示する場合にIDが必須となるため、テーブルにはIDを強制。）
+* table:not([listSearchInfoName]) （テーブルにはlistSearchInfoNameがないと結果件数が表示されないため、listSearchInfoNameを強制。）
 
-## 正規表現検証
+#### 親タグ検証
 
-`RegexpBasedVerifier`: 以下の正規表現にマッチする文字列が存在しないこと（大文字・小文字区別なし）。
+以下の、必須となる構造が満たされていること
 
-- `/>` — 自己終了エレメント。使用するとその要素以降の記述内容が描画されなくなるため禁止。
+* tableウィジェットは、n:formで囲む必要がある。
+* buttonウィジェットは、n:formで囲む必要がある。
+* 設計書ビューで画面項目定義に表示されるウィジェットは、spec:layoutで囲む必要がある。
 
-<details>
-<summary>keywords</summary>
+#### タグ属性検証
 
-RegexpBasedVerifier, 正規表現検証, 自己終了エレメント, />, 禁止パターン
-
-</details>
-
-## DOMツリー検証
-
-`SelectorBasedVerifier`: 以下の禁止構造を使用しないこと。
-
-- `table:not([id])` — テーブルを複数表示する場合にIDが必須となるため、すべてのテーブルにIDを付与すること。
-- `table:not([listSearchInfoName])` — `listSearchInfoName`がないと結果件数が表示されないため、すべてのテーブルに`listSearchInfoName`を付与すること。
-
-<details>
-<summary>keywords</summary>
-
-SelectorBasedVerifier, DOMツリー検証, table id, listSearchInfoName, 禁止構造
-
-</details>
-
-## 親タグ検証
-
-`WrappingTagVerifier`: 以下の必須構造が満たされていること。
-
-- `table`ウィジェットは`n:form`で囲む必要がある。
-- `button`ウィジェットは`n:form`で囲む必要がある。
-- 設計書ビューで画面項目定義に表示されるウィジェットは`spec:layout`で囲む必要がある。
-
-<details>
-<summary>keywords</summary>
-
-WrappingTagVerifier, 親タグ検証, n:form, spec:layout, 必須構造, 囲みタグ
-
-</details>
-
-## タグ属性検証
-
-`TagAttributeVerifier`: JSPで使用されているタグの属性が、タグファイルに実際に定義されている属性であること。
-
-対象タグファイルは`verification_config.json`の`TagAttributeVerifier.directory`で指定したディレクトリ配下に格納されているtagファイル。
-
-<details>
-<summary>keywords</summary>
-
-TagAttributeVerifier, タグ属性検証, tagファイル, 属性定義, directory, encoding
-
-</details>
+JSPで使用されているタグ（C:\nablarch\workspace\tutorial\main\web\WEB-INF\tags\widget\ 配下にtagファイルが格納されているもの）の属性が、
+実際にタグに定義されている属性であること。

@@ -1,0 +1,8 @@
+{
+  "id": "releases-nablarch5u13-releasenote-定型メール送信要求を5u12までと同じ動作にする方法",
+  "title": "■定型メール送信要求を5u12までと同じ動作にする方法",
+  "content": "5u13から定型メール送信要求にFreeMarkerなどのテンプレートエンジンを使用できるようになりました。\n5u12まではNablarchが提供する簡易的なテンプレート処理のみが使えていました。\n5u12までと同じ動作にしたい場合、次の手順を行ってください。\n1. MailRequesterのtemplateEngineMailProcessorプロパティにTinyTemplateEngineMailProcessorを設定する\n2. TinyTemplateEngineMailProcessorのmailTemplateTableプロパティを設定する\n※ 5u12まではMailRequester直下にmailTemplateTableプロパティがありましたが、5u13でTinyTemplateEngineMailProcessorに移動しました\n5u12までのコンポーネント定義の記述例:\n<component name=\"mailRequester\" class=\"nablarch.common.mail.MailRequester\">\n<property name=\"mailTemplateTable\" ref=\"mailTemplateTable\" />\n<!-- 他の設定は省略 -->\n</component>\n5u13からののコンポーネント定義の記述例（定型メール送信要求を5u12と同じ動作にする場合）:\n<component name=\"mailRequester\" class=\"nablarch.common.mail.MailRequester\">\n<property name=\"templateEngineMailProcessor\">\n<component class=\"nablarch.common.mail.TinyTemplateEngineMailProcessor\">\n<property name=\"mailTemplateTable\" ref=\"mailTemplateTable\" />\n</component>\n</property>\n<!-- 他の設定は省略 -->\n</component>",
+  "no_knowledge_content": false,
+  "sections": [],
+  "sheet_type": "P2"
+}

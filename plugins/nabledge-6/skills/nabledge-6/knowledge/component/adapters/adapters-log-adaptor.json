@@ -1,0 +1,44 @@
+{
+  "id": "adapters-log-adaptor",
+  "title": "logアダプタ",
+  "content": "Nablarchの提供する [ログ出力機能](../../component/libraries/libraries-log.md#log) のログ出力処理を以下のログフレームワークに委譲するアダプタ。\n\n* [slf4j(外部サイト、英語)](https://www.slf4j.org/)\n* [JBoss Logging(外部サイト、英語)](https://github.com/jboss-logging)\n\n顧客からの要求や使用する製品などにあわせてロガーを統一したい場合に、アダプタを使用する。\nアダプタを使用した場合、 Nablarchの [ログ出力機能](../../component/libraries/libraries-log.md#log) を使用したログ出力処理は全て選択したロギングフレームワークに委譲される。\n\n> **Important:**\n> Nablarch5u15まで提供されていたlog4jアダプタは、EOLを迎えた [log4j1.2(外部サイト、英語)](https://logging.apache.org/log4j/1.x/) を使用しており\n> [脆弱性](https://jvndb.jvn.jp/ja/contents/2019/JVNDB-2019-013606.html) への修正が公開されないため廃止します。\n> slf4jまたはJBoss Loggingを使用してください。\n\n> **Tip:**\n> ロギングフレームワークの設定方法などは、製品のマニュアルなどを参照すること。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "slf4j",
+      "content": "```xml\n<!-- slf4jアダプタ -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-slf4j-adaptor</artifactId>\n</dependency>\n```\n\n> **Important:**\n> slf4jにはFATALレベルが存在しないため、nablarch-slf4j-adaptorはFATALレベルでログ出力しようとした場合は全てERRORレベルで出力する仕様となっている。\n\n> **Tip:**\n> slf4jのバージョン2.0.11を使用してテストを行っている。\n> バージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "JBoss Logging",
+      "content": "```xml\n<!-- JBoss Loggingアダプタ -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-jboss-logging-adaptor</artifactId>\n</dependency>\n```\n\n> **Tip:**\n> JBoss Loggingのバージョン3.6.0.Finalを使用してテストを行っている。\n> バージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "ロギングフレームワークを使用するための設定を行う",
+      "content": "[ログ出力機能](../../component/libraries/libraries-log.md#log) の設定ファイル( **log.properties** )にファクトリを設定する。\nこの設定によりログ出力処理が、ロギングフレームワークに委譲される。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "slf4j",
+      "content": "```properties\n# slf4jを使用するためのファクトリの設定\nloggerFactory.className=nablarch.integration.log.slf4j.Slf4JLoggerFactory\n```",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "JBoss Logging",
+      "content": "```properties\n# JBoss Loggingを使用するためのファクトリの設定\nloggerFactory.className=nablarch.integration.log.jbosslogging.JbossLoggingLoggerFactory\n```",
+      "level": 3
+    }
+  ]
+}

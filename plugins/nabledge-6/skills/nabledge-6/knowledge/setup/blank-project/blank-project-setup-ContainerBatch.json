@@ -1,0 +1,74 @@
+{
+  "id": "blank-project-setup-ContainerBatch",
+  "title": "コンテナ用Nablarchバッチプロジェクトの初期セットアップ",
+  "content": "コンテナ用Nablarchバッチプロジェクトの初期セットアップでは以下を行う。\n\n* コンテナ用Nablarchバッチプロジェクトの生成\n* コンテナ用Nablarchバッチプロジェクトの動作確認\n* コンテナイメージの作成\n* コンテナイメージの実行",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "生成するプロジェクトの概要",
+      "content": "本手順で生成するプロジェクトの概要は以下の通りである。\n\n| 項目 | 説明 |\n|---|---|\n| プロジェクト種別 | Mavenプロジェクト |\n| プロジェクト構成 | 単一プロジェクト構成 |\n| 使用DB | H2 Databaes Engine(アプリケーションに組み込み) |\n| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * Nablarchバッチアプリケーション用の基本的な設定 * 疎通確認用の都度起動バッチアプリケーション * 疎通確認用のテーブルをキューとして使ったメッセージング * メール送信バッチの設定  [1] * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#about-maven-parent-module) を参照することによって取り込んでいる)。 |\n\nメール送信バッチは、[常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#nablarch-batch-resident-batch)  として動作し、SMTPサーバに対してメールを送信するものである。\nコンポーネント設定ファイルのサンプルは `src/main/resources/mail-sender-boot.xml` に存在する。\nメール送信バッチは初期環境構築時には必要ないが、必要になったタイミングで [メール送信](../../component/libraries/libraries-mail.md#mail) の解説を読んだ上で使用する。\n\n他のプロジェクトとの関係、及びディレクトリ構成は、 [Mavenアーキタイプの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md) を参照。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "ブランクプロジェクト作成",
+      "content": "Nablarchが提供するアーキタイプを使用してブランクプロジェクトを生成する。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "mvnコマンドの実行",
+      "content": "[Maven Archetype Plugin(外部サイト、英語)](https://maven.apache.org/archetype/maven-archetype-plugin/usage.html) を使用して、ブランクプロジェクトを生成する。\n\nカレントディレクトリを、ブランクプロジェクトを作成したいディレクトリ(任意のディレクトリで可)に変更する。\n\nその後、以下のコマンドを実行する。\n\n```bat\nmvn archetype:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArtifactId=nablarch-container-batch-archetype -DarchetypeVersion={nablarch_version}\n```\n\n上記コマンドで使用されているNablarchのバージョンは ​ となっている。バージョンを変更したい場合は、以下のパラメータを変更すること。\n\n| 設定値 | 説明 |\n|---|---|\n| archetypeVersion | 使用したいアーキタイプのバージョンを指定する。（Nablarch 6u2以降を指定すること） |",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "プロジェクト情報の入力",
+      "content": "上記コマンドを実行すると、以下の項目について入力を求められるので、 生成されるブランクプロジェクトに関する情報を入力する。\n\n| 入力項目 | 説明 | 設定例 |\n|---|---|---|\n| groupId | グループID（通常はパッケージ名を入力） | `com.example` |\n| artifactId | アーティファクトID | `myapp-container-batch` |\n| version | バージョン番号 | `0.1.0` |\n| package | パッケージ(通常はグループIDと同じ) | `com.example` |\n\n> **Important:**\n> 項目groupIdおよびpackageは、Javaのパッケージ名にマッピングされる。\n> よって、これらの入力値には、英小文字、数字、ドットを使用し、ハイフンは使用しないこと。\n\nコマンドが正常終了した場合、ブランクプロジェクトがカレントディレクトリ配下に作成される。\n\nプロジェクト情報の入力が終わると、Y: :と表示される。\n\n* 入力した内容をもとに、ひな形を生成する場合には「Y」を入力してください。\n* プロジェクト情報の入力をやり直したい場合には「N」を入力してください。",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "疎通確認",
+      "content": "疎通確認の仕組みや手順は通常のNablarchバッチプロジェクトと同じなので、 [Nablarchバッチプロジェクトの初期セットアップ手順](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepbatchstartuptest) を参照。\n\n> **Note:**\n> アーティファクトID が `myapp-container-batch` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "コンテナイメージを作成する",
+      "content": "ブランクプロジェクトには、Dockerコンテナのイメージを作成するために [Jib](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin) (外部サイト、英語)というプラグインがあらかじめ組み込まれている。\n\nこのプラグインの `jib:dockerBuild` ゴールを実行することで、コンテナイメージを作成できる。\n\n```text\ncd myapp-container-batch\nmvn compile jib:dockerBuild\n```\n\n実行に成功すると、以下のようなログがコンソールに出力される。\n\n```text\n(中略)\n[INFO] Built image to Docker daemon as myapp-container-batch, myapp-container-batch, myapp-container-batch:0.1.0\n[INFO] Executing tasks:\n[INFO] [==============================] 100.0% complete\n[INFO]\n[INFO] ------------------------------------------------------------------------\n[INFO] BUILD SUCCESS\n[INFO] ------------------------------------------------------------------------\n(以下略)\n```\n\nビルドされたDockerイメージは、ローカルリポジトリに保存される。\n以下のコマンドで、ローカルリポジトリに保存されたイメージを確認できる。\n\n```text\ndocker image ls\nREPOSITORY              TAG         IMAGE ID       CREATED        SIZE\nmyapp-container-batch   0.1.0       1cafd4108237   51 years ago   253MB\nmyapp-container-batch   latest      1cafd4108237   51 years ago   253MB\n```\n\n`myapp-container-batch:0.1.0` と `myapp-container-batch:latest` という２つのイメージが登録されていることが分かる。\n\nこのように、ブランクプロジェクトでは `jib:dockerBuild` を実行すると次の２つのイメージが作成されるように設定されている。\n\n* `${project.artifactId}:latest`\n* `${project.artifactId}:${project.version}`\n\nまた、初期設定ではベースイメージとして [OpenJDK のイメージ](https://hub.docker.com/_/eclipse-temurin) (外部サイト、英語)が使用される。\n\nベースイメージは `jib.from.image` プロパティで変更できる。\n例えば、ベースイメージに `eclipse-temurin:17.0.6_10-jre-jammy` を使用したい場合は、次のように `pom.xml` に記述する。\n\n```xml\n<project>\n  <!--省略...-->\n  <properties>\n    <!--省略...-->\n    <jib.from.image>eclipse-temurin:17.0.6_10-jre-jammy</jib.from.image>\n    <!--省略...-->\n  </properties>\n  <!--省略...-->\n</project>\n```\n\n> **Tip:**\n> ブランクプロジェクトではイメージをタグで指定しているが、この場合、指定したイメージの最新バージョンが選択される。\n> 検証時と異なるバージョンが選択された場合、アプリケーションの動作に影響が出る可能性があるので、\n> プロジェクトにおける検証が完了した段階で、バージョンを固定するために、イメージをダイジェストで指定することを推奨する。\n\n> ダイジェストによる設定例を以下に示す。\n\n> ```xml\n> <jib.from.image>eclipse-temurin@sha256:7dacdab7c335d90cf4e110f5744ca27d5a3ed87901a7c08022c8c12055438bd2</jib.from.image>\n> ```",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "コンテナイメージを実行する",
+      "content": "作成したコンテナイメージは、次のコマンドで実行できる。",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "都度起動バッチ",
+      "content": "```text\ncd myapp-container-batch\ndocker run --rm -v %CD%\\\\h2:/h2 -v %CD%\\\\src\\\\main\\\\format:/var/nablarch/format -v %CD%\\\\work\\\\output:/var/nablarch/output --name myapp-container-batch myapp-container-batch:latest -diConfig classpath:batch-boot.xml -requestPath SampleBatch -userId batch_user\n```\n\n動作は [疎通確認(都度起動バッチ)](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepbatchstartuptest) と同じである。\n起動に成功すると、[都度起動バッチアプリケーションの起動](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepbatchexecondemandbatch) と同様なログがコンソールに出力される。",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "テーブルをキューとして使ったメッセージング",
+      "content": "```text\ncd myapp-container-batch\ndocker run -it --rm -v %CD%\\\\h2:/h2 --name myapp-container-batch myapp-container-batch:latest -diConfig classpath:resident-batch-boot.xml -requestPath SampleResiBatch -userId batch_user\n```\n\n動作は [疎通確認(テーブルをキューとして使ったメッセージング)](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepbatchstartuptestdbmessagingbatch) と同じである。\n起動に成功すると、[アプリケーションの起動](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepbatchexecdbmessagingbatch) と同様なログがコンソールに出力される。\n待機状態となるので、確認後はctrl+c等で強制終了させる。",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "データベースに関する設定を行う",
+      "content": "ブランクプロジェクトは、初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は、[使用するRDBMSの変更手順](../../setup/blank-project/blank-project-CustomizeDB.md#customize-db) を参照して設定すること。\n\nまたER図からのDDL生成や実行、Entityクラスの自動生成を行うにはgsp-dba-maven-pluginの初期設定および実行を行う。詳細は [gsp-dba-maven-plugin(DBA作業支援ツール)の初期設定方法](../../setup/blank-project/blank-project-addin-gsp.md#gsp-maven-plugin) を参照。",
+      "level": 2
+    },
+    {
+      "id": "s11",
+      "title": "補足",
+      "content": "コンテナイメージの実行コマンドについて\n* 上記コマンドを実行すると、コンテナが起動し、バッチ処理実行後、コンテナは自動的に終了する。\n  また、 `-rmオプション` により、コンテナ終了時に、コンテナを自動削除するようにしている。\n* 上記コマンドは、データベースとしてブランクプロジェクトにあらかじめ組み込んでいるSAMPLE.h2.dbを使用する場合の例となっている。\n  SAMPLE.h2.dbを使用しない場合は、`%CD%\\\\h2:/h2` のボリュームの指定(`-v`)は不要になる。\n* [都度起動バッチ](../../setup/blank-project/blank-project-setup-ContainerBatch.md#firststepcontainerbatchstartupinnerbatchondemand) では上記に加えてブランクプロジェクトの `./work/format` , `./work/output` のディレクトリをコンテナにマウントしている。\n* [テーブルをキューとして使ったメッセージング](../../setup/blank-project/blank-project-setup-ContainerBatch.md#firststepcontainerbatchstartupinnerbatchdbmessaging) においてもdockerコマンドの `-itオプション` は省略できるが、ホスト側からのctrl+cでバッチを強制終了できなくなる。\n  その場合は、以下のコマンドにてコンテナを終了させればよい。\n\n  ```text\n  docker stop myapp-container-batch\n  ```\nDocker環境について\nDockerの実行は、Docker Desktopを使用していることを [前提](../../setup/blank-project/blank-project-beforeFirstStep.md#firststeppreamble) としている。\nDocker Toolboxを使用している場合は、上記例のボリューム指定ではエラーになる。\n\nDocker Toolboxを使用している場合、DockerはVirtualBox上のVMで動いている。\nこのため、ボリュームのホスト側に指定できるパスは、VM上のパスになる。\n\nWindowsの場合、デフォルトでは `C:\\Users` がVM上の `/c/users` にマウントされている。\nしたがって、Docker Toolboxを使用している場合は、ボリュームの指定を `-v /c/users/path/to/project/h2:/usr/local/tomcat/h2` のようにしなければならない。\nH2、ツールについて\nH2のデータの確認方法や、ブランクプロジェクトに組み込まれているツールに関しては、 [初期セットアップ手順　補足事項](../../setup/blank-project/blank-project-firststep-complement.md) を参照すること。",
+      "level": 2
+    }
+  ]
+}

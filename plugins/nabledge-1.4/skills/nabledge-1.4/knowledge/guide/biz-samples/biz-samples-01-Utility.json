@@ -1,0 +1,110 @@
+{
+  "id": "biz-samples-01-Utility",
+  "title": "ユーティリティ",
+  "content": "Nablarch Mobileが提供するユーティリティの仕様を解説する。\n以下に本章で解説するユーティリティクラスおよびその概要の一覧を記載する。\n\n| クラス名 | 概要 |\n|---|---|\n| [NMCommonUtil](../../guide/biz-samples/biz-samples-01-Utility.md#nmcommonutil) | 一般ユーティリティの集合クラス |\n| [NMConnectionUtil](../../guide/biz-samples/biz-samples-01-Utility.md#nmconnectionutil) | 通信ユーティリティの集合クラス |\n| [NMMockUtil](../../guide/biz-samples/biz-samples-01-Utility.md#nmmockutil) | 通信モックユーティリティの集合クラス |",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "NMCommonUtil",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "機能一覧",
+      "content": "| 機能名 | 概要 |\n|---|---|\n| クラス生成 | フォーマット通り作成されたディクショナリで指定されたクラスを生成する。 詳細は [newClassFromPropertyList詳解](../../guide/biz-samples/biz-samples-01-Utility.md#newclassfrompropertylist) を参照すること。  propertyList:フォーマット通り作成されたディクショナリ  propertyListで指定されたクラス  例  ```objective-c NSDictionary *propertyList = @{@\"class\" : @\"ClassName\",                                @\"initializeList\" : @{@\"proerty1\" : @\"value1\"}}; ClassName *clazz = ((ClassName *)[NMCommonUtil newClassFromPropertyList:propertyList]); ``` |\n| プロパティリストの取得 | 引数で指定されたファイル名のプロパティリストからNSDictionaryを生成する。 生成に使用するプロパティリストには NSBundle クラスの pathForResource:ofType: を使用してアクセスする。 このため、プロパティリストファイルは、 pathForResource:ofType: でアクセス可能な箇所に配置する 必要がある。  fileName:プロパティリストファイル名(拡張子を除く)  指定されたプロパティリストと同じ構造をもつNSDictionary  例  ```objective-c NSDictionary *propertyList = [NMCommonUtil getPropertyList:@\"fileName\"]; ``` |\n| プロトコル実装確認 | 指定したクラスが指定したプロトコルを実装しているか確認する。プロトコルを実装していない場合は 例外を発生する。例外を発生させずに、単純にプロトコルが実装されているか調べたい場合は iOS APIで提供されるNSObjectクラスのconformsToProtocolメソッドを使用すること。  prtcl:プロトコル clazz:クラス  例  ```objective-c [NMCommonUtil protocol:@protocol(NMMessageRequester) isImplementedIn:sender]; ``` |",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "newClassFromPropertyList詳解",
+      "content": "propertyList:フォーマット通り作成されたディクショナリ\n\npropertyListで指定されたクラス\n\n本メソッドではフォーマット通り作成されたディクショナリで指定されたクラスを生成する。\nディクショナリのフォーマットは以下の通り。\n\n| キー | 型 | 概要 |\n|---|---|---|\n| class | NSString | 生成したいクラス名 |\n| initializeList | NSDictionary | 生成したいクラスの初期化時に使用するパラメータ郡 |\n\ninitializeListに設定したディクショナリは生成するクラスのinitWithDictionaryメソッドの引数として渡される。 \n\n例\n\n```objective-c\n// メソッドの呼び出し側の実装\nNSDictionary *propertyList = @{@\"class\" : @\"NMAesEncryption\",\n                               @\"initializeList\" : @{@\"mode\" : @\"CBC\",\n                                                     @\"padding\" : @\"NOTHING\"}};\nNMAesEncryption *clazz = ((NMAesEncryption *)[NMCommonUtil newClassFromPropertyList:propertyList]);\n\n// 生成したいクラス側の実装\n@implementation NMAesEncryption\n\n@synthesize nmMode;\n@synthesize nmPaddingType;\n\n- (id)initWithDictionary:(NSDictionary *)dict {\n    self = [super init];\n    if (self != nil) {\n        self.nmMode = dict[@\"mode\"];\n        self.nmPaddingType = dict[@\"padding\"];\n    }\n    return self;\n}\n\n@end\n```",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "NMConnectionUtil",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "機能一覧",
+      "content": "| 機能名 | 概要 |\n|---|---|\n| JSONフォーマット | NMMessageオブジェクトをJSON形式の文字列にフォーマットする。  message:変換したいNMMessageオブジェクト error:エラー情報  フォーマットした文字列。エラーが発生した場合はnil。 |\n| JSONパース | JSON形式の文字列をNMMessageオブジェクトにパースする。  str:変換したいJSON形式文字列 error:エラー情報  パースしたNMMessageオブジェクト。エラーが発生した場合はnil。 |",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "NMMockUtil",
+      "content": "本クラスは通信モッククラスで使用されることを前提としており、本クラスを使用するためには通信モック設定ファイルが必要である。",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "機能一覧",
+      "content": "| 機能名 | 概要 |\n|---|---|\n| モック機能の実行 | 通信モックで使用する以下の機能を実行する。  * 入力値の検証(スキップ可能) * 通信フォーマット変換後の入力値のダンプ(スキップ可能) * 受信メッセージの作成 * 通信エラー情報の作成 * 通信待ち時間の発生  message:送信メッセージ error:エラー情報  プロパティconnectionDataIdに設定された値に対応する受信メッセージ。 エラーが発生した場合はnil。  利用例は <a href=\"../../../../../../app_dev_env/mobile/ios/sample/doc/01_iOS/01_ConnectionFramework/02_MockSample/03_howToImplementationOfMock.html\">モックサンプル</a> を参照。 |",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "通信モック設定ファイル",
+      "content": "通信モック設定ファイルは以下の設定を行うCSV形式(UTF-8)のファイルである。\n\n* 入力値の検証要否\n* 通信エラー発生要否\n* 入力値の期待値\n* 受信メッセージ\n* エラー情報\n* 通信待ち時間",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "ファイル内の構造",
+      "content": "csvファイルの記述に関する規約について説明を行う。 以下にファイルの記述例を記載する。\n※以下全ての例で、分かりやすいようにCSVデータではなくエクセルデータで記載する。\n\n![mockUtil_fileConstract.png](assets/biz-samples-01-Utility/mockUtil_fileConstract.png)\n\n通信モック設定ファイルは複数のデータで構成される。\nデータには以下の種類がある。\n\n* [通信の設定情報を表すデータ](../../guide/biz-samples/biz-samples-01-Utility.md#connectioninfo)\n* [受信メッセージを表すデータ](../../guide/biz-samples/biz-samples-01-Utility.md#responsemessage)\n* [入力値の期待値を表すデータ](../../guide/biz-samples/biz-samples-01-Utility.md#validationdata)\n* [通信エラー情報を表すデータ](../../guide/biz-samples/biz-samples-01-Utility.md#errordata)\n* [ディクショナリを表すデータ](../../guide/biz-samples/biz-samples-01-Utility.md#dictionarydata)\n* [配列を表すデータ](../../guide/biz-samples/biz-samples-01-Utility.md#arraydata)\n\nデータの種類に依らない共通の書式は以下の通り。\n\n* データ1行目は「listMap=<データ名>」の形式で、データ名を記載する\n* データ名を記載した次以降の行にデータ型を記載する\n* データ型を記載した次以降の行にKeyを記載する\n* Keyを記載した次以降の行に値を記載する\n* データ内に空行を含めない\n* データとデータの間には1行以上の空行を挿入する\n* データの値として「,（コンマ）」および「\\r（改行コード）」は使用できない\n\n**データ型**\nデータ型として指定できるのはNSString, int, float, BOOL, NSNull, NSArray, NSDictionaryのいずれか。\nNSArrayまたはNSDictionaryがある場合はそれに対応するデータが必ず存在すること。\n\n**Key**\n全てアルファベットで記入すること。空白を含まないこと。\n\n**値**\n空文字を指定したい場合は「be_empty」とすること。また、データ型がNSNullの場合も値は「be_empty」とすること。",
+      "level": 4
+    },
+    {
+      "id": "s10",
+      "title": "コメント",
+      "content": "セル内に”//”から開始する文字列を記載した場合、そのセルから右のセルは全て読み込み対象外となる。\nデータ自体には含めたくないが、可読性を向上させるために付加情報を記載したい場合には、コメント機能が使用できる。\n\n以下の例では、3行目で各項目の説明を、5行目末尾で各データ行の役割についてコメントしている。\n\nlistMap=PLAYER\n\n| NSString | NSString | NSString | NSString |  |\n|---|---|---|---|---|\n| //番号 | 名 | 姓 | 住所 |  |\n| 0001 | Andres | Segovia | Spain | // M01ABに紐づく |\n| 0002 | Julian | Bream | England | // M01AAに紐づく |",
+      "level": 5
+    },
+    {
+      "id": "s11",
+      "title": "通信の設定情報を表すデータ",
+      "content": "通信モック設定ファイルは必ず1つ以上の通信の設定情報を表すデータを持たなければならない。\n通信の設定情報を表すデータの書式は以下の通り。\n\n* データ名は「connectionInfo」固定\n* 以下の値を用意する\n\n  | key名 | データ型 | 概要 |\n  |---|---|---|\n  | connectionDataId | NSString | 通信データID |\n  | responseID | NSString | 受信メッセージを表すデータ名   受信メッセージを生成しない場合は「be_empty」を記入 |\n  | doValidate | BOOL | 入力値検証要否 |\n  | occurSendError | BOOL | 通信エラー発生要否 |\n  | responseTime | float | 通信待ち時間 |\n  | requestID | NSString | 入力値の期待値を表すデータ名   doValidateの値がFALSEの場合は「be_empty」を記入 |\n  | ignoreListID | NSString | 入力値検証無視項目を表すデータ名   occurSendErrorの値がFALSEの場合は「be_empty」を記入 |\n\n本データの通信設定はsendメソッドが呼ばれるごとに読み込まれる。1つのファイルに複数の通信設定を記述可能だが、\nsendメソッドで読み込まれる通信設定は1つである。sendメソッドが呼び出された時点で、connectonInfoIdというインスタンス変数\nに保存されている値と同名の通信データIDの設定が読み込まれる。\n\n記述例\n\n![mockUtil_connectionInfo.png](assets/biz-samples-01-Utility/mockUtil_connectionInfo.png)",
+      "level": 5
+    },
+    {
+      "id": "s12",
+      "title": "受信メッセージを表すデータ",
+      "content": "受信メッセージを表すデータはNMMessageオブジェクトとしてsendメソッドの戻り値となる。\n受信メッセージを表すデータの書式は以下の通り。\n\n* データの1番目のkeyはconnectionDataIdであること\n\n1つのファイルに複数の受信メッセージを記述可能だが、sendメソッドで戻り値となる受信メッセージは1つである。\n[通信の設定情報を表すデータ](../../guide/biz-samples/biz-samples-01-Utility.md#connectioninfo) の項目responseIDに対応するデータ名を持ち、connectionDataIdが一致するものが戻り値となる。\nただし、通信エラーが発生する等の理由で戻り値が必要ない場合は本データを作成する必要はない。\n\n記述例\n\n![mockUtil_responseMessage.png](assets/biz-samples-01-Utility/mockUtil_responseMessage.png)\n\nプログラム例\n\n```objective-c\nNMMockUtil *mockUtil = [[NMMockUtil alloc] initWithFileName:@\"fileName\" bodyConvertor:nil];\n\n// 000000002を通信データIDに設定した場合\n// @\"key01\" : @\"dummyString11\", @\"key02\" : @\"dummyString12\", @\"key03\" : @\"dummyString13\"\n// というデータを保持したメッセージが返される。\nmockUtil.connectionDataId = @\"000000002\"; // 通信データIDの設定\nNMMessage *responseMessage = [mockUtil send:message error:error];\n\n// 000000004を通信データIDに設定した場合\n// 通信エラーが発生するという設定になっているので、nilが戻り値となる。\nmockUtil.connectionDataId = @\"000000004\"; // 通信データIDの設定\nNMMessage *responseMessage = [mockUtil send:message error:error];\n```",
+      "level": 5
+    },
+    {
+      "id": "s13",
+      "title": "入力値の期待値を表すデータ",
+      "content": "入力値の期待値を表すデータはsendメソッドの引数として渡された送信メッセージの比較に使用される。\n入力値の期待値を表すデータの書式は以下の通り。\n\n* データの1番目のkeyはconnectionDataIdであること\n\n[受信メッセージを表すデータ](../../guide/biz-samples/biz-samples-01-Utility.md#responsemessage) と同様に1つのファイルに複数の受信メッセージを記述可能だが、 \nsendメソッドで期待値として扱われるデータは1つである。\n[通信の設定情報を表すデータ](../../guide/biz-samples/biz-samples-01-Utility.md#connectioninfo) の項目requestIDに対応するデータ名を持ち、connectionDataIdが一致するものが期待値となる。\nただし、[通信の設定情報を表すデータ](../../guide/biz-samples/biz-samples-01-Utility.md#connectioninfo) の項目doValidateがFalseである場合は本データを作成する必要はない。\n\n記述例\n\n![mockUtil_validationData.png](assets/biz-samples-01-Utility/mockUtil_validationData.png)\n\nプログラム例\n\n```objective-c\nNMMockUtil *mockUtil = [[NMMockUtil alloc] initWithFileName:@\"fileName\" bodyConvertor:nil];\n\n// 送信メッセージの作成\nNSDictionary *dict1 = @{@\"key01\" : @\"dummyStirng11\", @\"key02\" : @\"dummyString12\", @\"key03\" : @\"dummyString13\"};\nNMMessage *sendMessage = [[NMMessage alloc] initWithDictionary:dict];\n\n// 000000002を通信データIDに設定した場合\n// ファイルに記入した期待値とsendMessageが一致するので検証成功となる。\nmockUtil.connectionDataId = @\"000000002\"; // 通信データIDの設定\nNMMessage *responseMessage = [mockUtil send:sendMessage error:error];\n\n// 000000001を通信データIDに設定した場合\n// ファイルに記入した期待値とsendMessageが一致しないので、検証失敗となり例外が発生する。\nmockUtil.connectionDataId = @\"000000001\"; // 通信データIDの設定\nNMMessage *responseMessage = [mockUtil send:sendMessage error:error];\n```\n\n**検証無視項目の設定**\n\n日時や登録者IDなど、実行するたびに入力値が変わってしまうような項目に対して、検証を行わないように設定できる。\n入力検証無視リストの書式は以下の通り。\n\n* データの1番目のkeyはforeignKeyであり、値は\"const\"であること。\n\n入力検証無視リストは [通信の設定情報を表すデータ](../../guide/biz-samples/biz-samples-01-Utility.md#connectioninfo) の項目ignoreListIDに対応するデータ名を持つデータが読み込まれる。\n\n記述例\n\n![mockUtil_ignoreData.png](assets/biz-samples-01-Utility/mockUtil_ignoreData.png)\n\n上記の例の場合、送信メッセージのkey02およびkey03に期待値と異なる値が入っていたとしても、検証は失敗しない。",
+      "level": 5
+    },
+    {
+      "id": "s14",
+      "title": "通信エラー情報を表すデータ",
+      "content": "通信エラー情報を表すデータはエラー情報としてsendメソッドのerror引数に設定される。\n通信エラー情報を表すデータの書式は以下の通り。\n\n* データ名は「error」固定\n* 以下の値を用意する\n\n| key | データ型 | 概要 |\n|---|---|---|\n| connectionDataId | NSString | 通信データID |\n| code | int | エラーコード |\n| domain | NSString | エラードメイン |\n| NSLocalizedDescriptionKey | NSString | userInfoのキーNSLocalizedDescriptionKeyに設定する値 |\n| NSFilePathErrorKey | NSString | userInfoのキーNSFilePathErrorKeyに設定する値 |\n| NSStringEncodingErrorKey | NSString | userInfoのキーNSStringEncodingErrorKeyに設定する値 |\n| NSUnderlyingErrorKey | NSString | userInfoのキーNSUnderlyingErrorKeyに設定する値 |\n| NSURLErrorKey | NSString | userInfoのキーNSURLErrorKeyに設定する値 |\n| NSLocalizedFailureReasonErrorKey | NSString | userInfoのキーNSLocalizedFailureReasonErrorKeyに設定する値 |\n| NSLocalizedRecoverySuggestionErrorKey | NSString | userInfoのキーNSLocalizedRecoverySuggestionErrorKeyに設定する値 |\n| NSLocalizedRecoveryOptionsErrorKey | NSString | userInfoのキーNSLocalizedRecoveryOptionsErrorKeyに設定する値 |\n| NSRecoveryAttempterErrorKey | NSString | userInfoのキーNSRecoveryAttempterErrorKeyに設定する値 |\n| NSHelpAnchorErrorKey | NSString | userInfoのキーNSHelpAnchorErrorKeyに設定する値 |\n| NSURLErrorFailingURLErrorKey | NSString | userInfoのキーNSURLErrorFailingURLErrorKeyに設定する値 |\n| NSURLErrorFailingURLStringErrorKey | NSString | userInfoのキーNSURLErrorFailingURLStringErrorKeyに設定する値 |\n| NSURLErrorFailingURLPeerTrustErrorKey | NSString | userInfoのキーNSURLErrorFailingURLPeerTrustErrorKeyに設定する値 |\n\nNSLocalizedDescriptionKey～NSURLErrorFailingURLPeerTrustErrorKeyが必要ない場合はデータ内に記述しなくてもよい。\n\n1つのファイルに複数のエラー情報を記述可能だが、sendメソッドで使用されるエラー情報は1つである。\nsendメソッドが呼び出された時点で、connectonInfoIdというインスタンス変数に保存されている値と同名の通信データIDのエラー情報が読み込まれる。\nただし、[通信の設定情報を表すデータ](../../guide/biz-samples/biz-samples-01-Utility.md#connectioninfo) の項目occurSendErrorがFalseである場合は本データを作成する必要はない。",
+      "level": 5
+    },
+    {
+      "id": "s15",
+      "title": "ディクショナリを表すデータ",
+      "content": "ディクショナリを表すデータはデータの型がNSDictionaryであるものの内容を表すデータである。\nディクショナリを表すデータの書式は以下の通り。\n\n* データの1番目のkeyはforeignKeyであること\n\nデータ内にNSDictonary型の値がある場合、key名とデータ名が一致し、値とforeignKeyの値が一致する\nディクショナリを表すデータが読み込まれる。\n\n記述例\n\n![mockUtil_dictionaryData.png](assets/biz-samples-01-Utility/mockUtil_dictionaryData.png)",
+      "level": 5
+    },
+    {
+      "id": "s16",
+      "title": "配列を表すデータ",
+      "content": "配列を表すデータはデータの型がNSArrayであるものの内容を表すデータである。\n配列を表すデータの書式は以下の通り。\n\n* データの1番目のkeyはforeignKeyであること\n\nデータ内にNSArray型の値がある場合、key名とデータ名が一致し、値とforeignKeyの値が一致する\n配列を表すデータが読み込まれる。\n\n記述例\n\n![mockUtil_arrayData.png](assets/biz-samples-01-Utility/mockUtil_arrayData.png)",
+      "level": 5
+    },
+    {
+      "id": "s17",
+      "title": "通信モッククラスに要求される処理",
+      "content": "NMMockUtilを用いて通信モッククラスを作成する場合、通信モッククラスで行わなければならない処理は以下の通りである。\n\n1. 使用するモックファイルの指定\n2. 使用する通信データIDの指定\n3. モックユーティリティのsendメソッドの呼び出し",
+      "level": 3
+    }
+  ]
+}

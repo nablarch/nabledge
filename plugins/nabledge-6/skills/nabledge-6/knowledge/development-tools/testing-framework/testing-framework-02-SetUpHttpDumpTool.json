@@ -1,0 +1,50 @@
+{
+  "id": "testing-framework-02-SetUpHttpDumpTool",
+  "title": "リクエスト単体データ作成ツール インストールガイド",
+  "content": "[リクエスト単体データ作成ツール](../../development-tools/testing-framework/testing-framework-guide-development-guide-08-TestTools-01-HttpDumpTool.md) のインストール方法について説明する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "前提事項",
+      "content": "本ツールを使用する際、以下の前提事項を満たす必要がある。\n\n* 以下のツールがインストール済みであること\n\n  * Java\n  * Maven\n* プロジェクトがMavenで管理されていること\n* htmlファイルがブラウザに関連付けされていること\n* ブラウザのプロキシ設定で、localhostが除外されていること",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "提供方法",
+      "content": "本ツールは以下のjarにて提供する。\n\n* nablarch-testing-XXX.jar\n* nablarch-testing-jetty12-XXX.jar\n\nそのため、pom.xmlのdependencies要素以下の記述があることを確認する。\n\n```xml\n<dependencies>\n  <!-- 中略 -->\n  <dependency>\n    <groupId>com.nablarch.framework</groupId>\n    <artifactId>nablarch-testing</artifactId>\n    <scope>test</scope>\n  </dependency>\n  <dependency>\n    <groupId>com.nablarch.framework</groupId>\n    <artifactId>nablarch-testing-jetty12</artifactId>\n    <scope>test</scope>\n  </dependency>\n  <!-- 中略 -->\n</dependencies>\n```\n\nプロジェクトのディレクトリで以下のコマンドを実行し、jar ファイルをダウンロードする。\n\n```text\nmvn dependency:copy-dependencies -DoutputDirectory=lib\n```\n\n以下のファイルをプロジェクトのpom.xmlと同じディレクトリに配置する。\n\n* [httpDump.bat](assets/testing-framework-02-SetUpHttpDumpTool/httpDump.bat)",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "Eclipseとの連携",
+      "content": "以下の設定をすることでEclipseから本ツールを起動できる。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "設定画面起動",
+      "content": "ツールバーから、ウィンドウ(Window)→設定(Prefernce)を選択する。\n左側のペインから一般(General)→エディタ(Editors)→ファイルの関連付け(File Associations)\nを選択、右側のペインから*.htmlを選択し、追加(Add)ボタンを押下する。\n\n![01_Eclipse_Preference.png](assets/testing-framework-02-SetUpHttpDumpTool/01_Eclipse_Preference.png)",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "外部プログラム選択",
+      "content": "ラジオボタンから外部プログラム(External program)を選択し、参照(Browse)ボタンを押下する。\n\n![02_Eclipse_EditorSelection.png](assets/testing-framework-02-SetUpHttpDumpTool/02_Eclipse_EditorSelection.png)",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "起動用バッチファイル（シェルスクリプト）選択",
+      "content": "Windowsの場合はバッチファイル(httpDump.bat)を、\nLinuxの場合はシェルスクリプト(httpDump.sh)を選択する。\n\n![03_Eclipse_OpenFile.png](assets/testing-framework-02-SetUpHttpDumpTool/03_Eclipse_OpenFile.png)",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "HTMLファイルからの起動方法",
+      "content": "Eclipseのパッケージエクスプローラ等からHTMLファイルを右クリックし、\nhttpDumpで開くことでツールを起動できる。\n\n![04_Eclipse_OpenWith.png](assets/testing-framework-02-SetUpHttpDumpTool/04_Eclipse_OpenWith.png)",
+      "level": 3
+    }
+  ]
+}

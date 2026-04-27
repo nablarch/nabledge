@@ -1,32 +1,14 @@
 {
   "id": "web-application-getting-started-project-delete",
   "title": "削除機能の作成",
+  "content": "Exampleアプリケーションを元に削除機能を解説する。\n\n作成する機能の説明\n1. プロジェクト一覧のプロジェクトIDを押下する。\n\n![project_delete_list.png](assets/web-application-getting-started-project-delete/project_delete_list.png)\n\n1. 詳細画面の変更ボタンを押下する。\n\n![project_delete_detail.png](assets/web-application-getting-started-project-delete/project_delete_detail.png)\n\n1. 更新画面上の削除ボタンを押下する。\n\n![project_delete_update.png](assets/web-application-getting-started-project-delete/project_delete_update.png)\n\n1. 完了画面が表示される。\n\n![project_delete_complete.png](assets/web-application-getting-started-project-delete/project_delete_complete.png)",
   "no_knowledge_content": false,
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/project_delete/index.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html"
-  ],
-  "index": [
+  "sections": [
     {
       "id": "s1",
       "title": "削除を行う",
-      "hints": [
-        "UniversalDao",
-        "SessionUtil",
-        "HttpRequest",
-        "ExecutionContext",
-        "HttpResponse",
-        "Project",
-        "@OnDoubleSubmission",
-        "ProjectAction",
-        "プロジェクト削除",
-        "主キー削除",
-        "二重サブミット防止",
-        "UniversalDao#delete"
-      ]
+      "content": "削除機能の基本的な実装方法を、以下の順に説明する。\n\n1. [更新画面上に削除ボタンを作成](../../processing-pattern/web-application/web-application-getting-started-project-delete.md#project-delete-update)\n2. [削除を行う業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-delete.md#project-delete-delete-action)\n3. [削除完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-delete.md#project-delete-complete)\n\n更新画面上に削除ボタンを作成\n更新画面上に、削除ボタンを作成する。\n更新画面の作成に関する説明は、 [更新画面を表示する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-edit-action) 及び\n[更新画面のJSPの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-update-jsp) を参照。\n\n削除を行う業務アクションメソッドの作成\nデータベースから対象プロジェクトを削除する業務アクションメソッドを作成する。\n\nProjectAction.java\n```java\n@OnDoubleSubmission\npublic HttpResponse delete(HttpRequest request, ExecutionContext context) {\n\n    // 更新画面を表示する際にセッションにプロジェクト情報を格納している\n    Project project = SessionUtil.delete(context, \"project\");\n    UniversalDao.delete(project);\n\n    return new HttpResponse(303, \"redirect://completeOfDelete\");\n}\n```\nこの実装のポイント\n* 主キーを条件とした削除は、主キーが設定されたエンティティを引数に UniversalDao#delete\n  を実行することで、SQLを作成しなくとも実行できる。\n\n> **Tip:**\n> [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) は、主キーを条件とする削除機能のみを提供する。主キー以外を条件として削除する場合は、別途SQLを作成して実行する必要がある。\n> SQLの実行方法については、 [SQLIDを指定してSQLを実行する](../../component/libraries/libraries-database.md#database-execute-sqlid) を参照。\n\n削除完了画面の作成\n削除完了画面を表示する。\n完了画面の作成に関する説明は、 [完了画面を表示する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-complete-action) 及び\n[更新完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-success-jsp) を参照。\n\n削除機能の解説は以上。\n\n[Getting Started TOPページへ](../../processing-pattern/web-application/web-application-getting-started.md#getting-started)",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "**アノテーション**: `@OnDoubleSubmission`\n\n**業務アクションメソッド** (`ProjectAction.java`):\n\n```java\n@OnDoubleSubmission\npublic HttpResponse delete(HttpRequest request, ExecutionContext context) {\n    // 更新画面を表示する際にセッションにプロジェクト情報を格納している\n    Project project = SessionUtil.delete(context, \"project\");\n    UniversalDao.delete(project);\n    return new HttpResponse(303, \"redirect://completeOfDelete\");\n}\n```\n\n- 主キーを条件とした削除は、主キーが設定されたエンティティを引数に `UniversalDao#delete` を実行することで、SQLを作成せずに実行できる。\n- セッションからプロジェクト情報を取得して削除する際は `SessionUtil.delete(context, \"project\")` を使用する。更新画面を表示する際にセッションにプロジェクト情報を格納しているため、削除時にセッションから取得できる。\n\n> **補足**: [universal_dao](../../component/libraries/libraries-universal_dao.json#s1) は主キーを条件とする削除のみ提供。主キー以外を条件に削除する場合は別途SQLを作成して [SQLIDを指定してSQLを実行する](../../component/libraries/libraries-database.json#s5) で実行する。"
-  }
+  ]
 }

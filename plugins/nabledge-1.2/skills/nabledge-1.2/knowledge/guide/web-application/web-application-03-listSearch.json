@@ -1,0 +1,98 @@
+{
+  "id": "web-application-03-listSearch",
+  "title": "一覧検索",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "本項で説明する内容",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "説明内容",
+      "content": "本項では、以下の内容を説明する。\n\n* 条件を指定した一覧検索処理\n* 一覧検索結果を表示するJSPの作成方法",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "作成内容",
+      "content": "本項で作成するのは、下記画面遷移図の赤丸の部分である。\n\n![screenTransition.png](assets/web-application-03-listSearch/screenTransition.png)\n\n編集するソースコードは以下のとおり。\n\n| 名称(右クリック->保存でダウンロード) | ステレオタイプ | 処理内容 |\n|---|---|---|\n| [W11AC01Action.java](assets/web-application-03-listSearch/W11AC01Action.java) | Action | ユーザ一覧照会画面で指定された検索条件に一致する情報を、データベースから取得する。 結果をリクエストスコープに格納し、JSPに遷移させる。  本クラスから使用するSQLファイルは、下記リンク先のファイルを参照すること。 (右クリック->保存でダウンロード)  [W11AC01Action.sql](assets/web-application-03-listSearch/W11AC01Action.sql) |\n| [W11AC0101.jsp](assets/web-application-03-listSearch/W11AC0101.jsp) | View | ユーザ一覧照会画面に検索結果を表示する。 |\n\nステレオタイプについては [業務コンポーネントの責務配置](../../about/about-nablarch/about-nablarch-01-NablarchOutline.md#stereotype) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "作成手順",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "検索条件を保持するForm(SearchForm)の作成",
+      "content": "検索条件を保持するFormクラスを新規に作成する。\nFormクラスには、画面から入力する値や取引で必要となる精査処理(単項目精査や項目間精査)を実装する。\n\nこの時、 **ListSearchInfo** クラスを継承することで、ページングや検索結果の並び替えを容易に実現できる。\n\n> **Note:**\n> ListSearchInfoクラスの詳細は、 [検索結果の一覧表示の全体構造](../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07/07_FacilitateTag.html#webview-listsearchresultstructure) 、\n> 実装例は [検索結果の一覧表示](../../guide/web-application/web-application-function.md#custom-tag-paging) を参照。\n\n> **Note:**\n> 本項では、検索条件用のFormを作成する際に特に気をつける点について述べる。\n> Form作成時の詳細な手順は [入力内容の精査](../../guide/web-application/web-application-04-validation.md#how-to-validate) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "Formクラスの作成",
+      "content": "ListSearchInfo を継承した場合、使用する機能によって実装を追加する必要がある。\n\n> **Note:**\n> ListSearchInfoを継承した実装の詳細は [検索結果の一覧表示](../../guide/web-application/web-application-function.md#custom-tag-paging) を参照。\n\nW11AC01SearchFormクラスを作成し、プロパティの追加および精査処理の実装を行った例を示す。\n\n* W11AC01SearchForm.javaの内容\n\n```java\n/**\n * ユーザ検索の検索条件を表すクラス。\n */\npublic class W11AC01SearchForm extends ListSearchInfo {\n\n    // 【説明】検索条件をプロパティに追加\n    /** ログインID */\n    private String loginId;\n\n    /** 漢字氏名 */\n    private String kanjiName;\n\n    /** カナ氏名 */\n    private String kanaName;\n\n    /** グループID */\n    private String ugroupId;\n\n    /** ユーザIDロック */\n    private String userIdLocked;\n\n    /** システムアカウントテーブルの情報 */\n    private SystemAccountEntity systemAccount;\n\n    /**\n     * コンストラクタ\n     * @param params パラメータ\n     */\n    public W11AC01SearchForm(Map<String, Object> params) {\n        // 【説明】検索条件の設定\n        loginId = (String) params.get(\"loginId\");\n        kanjiName = (String) params.get(\"kanjiName\");\n        kanaName = (String) params.get(\"kanaName\");\n        ugroupId = (String) params.get(\"ugroupId\");\n        userIdLocked = (String) params.get(\"userIdLocked\");\n        systemAccount = (SystemAccountEntity) params.get(\"systemAccount\");\n\n        // 【説明】ListSearchInfoのプロパティへの設定\n        setPageNumber((Integer) params.get(\"pageNumber\"));\n        setSortId((String) params.get(\"sortId\"));\n    }\n\n    /**\n     * デフォルトコンストラクタ\n     */\n    public W11AC01SearchForm() {\n\n    }\n\n    // 【説明】検索条件のセッター/ゲッターは省略\n\n    /* 【説明】\n        ListSearchInfoのpageNumberのセッターを追加。\n        想定するページの範囲を@NumberRangeで設定。 */\n    /**\n     * ページ番号を設定する。\n     * @param pageNumber ページ番号\n     */\n    @PropertyName(\"開始ページ\")\n    @Required\n    @NumberRange(max = 10, min = 1)\n    @Digits(integer = 2)\n    public void setPageNumber(Integer pageNumber) {\n        super.setPageNumber(pageNumber);\n    }\n\n    /* 【説明】\n        ListSearchInfoのsortIdのセッターを追加。\n        検索結果の並び替えで使用する。 */\n    /**\n     * ソートIDを設定する。\n     * @param sortId ソートID\n     */\n    @PropertyName(\"ソートID\")\n    @Required\n    public void setSortId(String sortId) {\n        super.setSortId(sortId);\n    }\n\n    // 【説明】精査対象のプロパティに、ListSearchInfoのプロパティを設定\n    /** 精査対象プロパティ */\n    private static final String[] SEARCH_COND_PROPS =\n        new String[] {\"loginId\", \"kanjiName\", \"kanaName\", \"ugroupId\", \"userIdLocked\", \"pageNumber\", \"sortId\"};\n\n    // 【説明】精査対象プロパティのゲッターを追加\n    /**\n     * 検索条件の精査対象プロパティを返す。\n     * @return 検索条件の精査対象プロパティ\n     */\n    public String[] getSearchConditionProps() {\n        return SEARCH_COND_PROPS;\n    }\n\n    /**\n     * 検索条件を精査する。\n     * @param context ValidationContext\n     */\n    @ValidateFor(\"search\")\n    public static void validateForSearch(ValidationContext<W11AC01SearchForm> context) {\n\n        // 【説明】検索条件の精査処理はListSearchInfoによって変わらない\n\n        // 単項目精査\n        ValidationUtil.validate(context, SEARCH_COND_PROPS);\n        if (!context.isValid()) {\n            return;\n        }\n\n        // 項目間精査\n        String loginId = (String) context.getConvertedValue(\"loginId\");        // ログインID\n        String kanjiName = (String) context.getConvertedValue(\"kanjiName\");    // 漢字氏名\n        String kanaName = (String) context.getConvertedValue(\"kanaName\");      // カナ氏名\n        String ugroupId = (String) context.getConvertedValue(\"ugroupId\");      // グループID\n        String userIdLocked = (String) context.getConvertedValue(\"userIdLocked\");   // ユーザIDロック\n        if (!isValidSearchCondition(loginId, kanjiName, kanaName, ugroupId, userIdLocked)) {\n            context.addMessage(\"MSG00006\");\n        }\n    }\n\n    // ～中略～\n\n}\n```",
+      "level": 4
+    },
+    {
+      "id": "s7",
+      "title": "ビジネスロジック(Action)の作成",
+      "content": "本処理では、アプリケーションフレームワークが持つデータベースアクセス機能の中から、以下のものを使用している。\n\n* [Javaオブジェクトのフィールドの値をバインド変数に設定する機能](../../guide/web-application/web-application-03-listSearch.md#03-field)\n* [条件が可変のSQL文を組み立てる機能](../../guide/web-application/web-application-03-listSearch.md#03-sql)\n* [LIKE検索を簡易的に実装できる機能](../../guide/web-application/web-application-03-listSearch.md#03-like)\n* [ORDER BY句を動的に変更する機能](../../guide/web-application/web-application-03-listSearch.md#03-orderby)\n\n> **Note:**\n> 本処理で使用するビジネスロジックは他の処理では使用しない。\n> そのため、ComponentクラスではなくActionクラスに作成する。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "Javaオブジェクトのフィールドの値をバインド変数に設定する機能",
+      "content": "Javaオブジェクトのフィールドの値をバインド変数に設定する機能とは、SQL文のバインド変数ごとに一つ一つ値を設定するのではなく、オブジェクトを指定して、\nそのフィールドの値をバインド変数に設定できる機能である。本機能は以下のように使用する。\n\nプリペアドステートメントを作成する際に、SqlPStatementクラスではなく、ParameterizedSqlPStatementクラスを使用する(DbAccessSupport#getParameterizedSqlStatementを使用する)。\n\nバインド変数は\"?\"ではなく、\":フィールド名\"とする。\n\nParameterizedSqlPStatement#retrieveの引数に、バインド変数に指定したフィールドを持つJavaオブジェクトのインスタンスを渡す。バインド変数には、対応するフィールドの値が設定される。\n\n> **Note:**\n> サンプルでは、本機能を含んだ [一覧検索用の検索処理](../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07/07_FacilitateTag.html#webview-listsearchresultdbaccesssupport) を用いて検索を行っている。\n> 実例は [メソッドの実装](../../guide/web-application/web-application-03-listSearch.md#03-methodcreate) を参照。",
+      "level": 4
+    },
+    {
+      "id": "s9",
+      "title": "条件が可変のSQL文を組み立てる機能",
+      "content": "条件が可変のSQL文を組み立てる機能とは、Webアプリケーションで多く見られる可変条件(画面で入力された場合のみ、検索条件に含める)のSQL文を、自動で生成できる機能である。\n指定したフィールドの値がnullか空文字(\"\")でない場合、検索条件に組み込み、nullか空文字の場合、検索条件から除外する。例えば、下記のソースコードは *\"loginId\"が\nnullもしくは空文字でない* 場合に *LOGIN_ID = (入力された値)* という検索条件が組み込まれる。\n\nloginIdがnullもしくは空文字かどうかの判断は、SQL文を組み立てる際(DbAccessSupport#getParameterizedSqlStatement実行時)の引数のオブジェクトに設定されているloginId\nフィールドの値による。\n\n```sql\n-- 【説明】\n--  SQL文を組み立てる際に渡されるオブジェクトのloginIdフィールドの値から\n--  検索条件に組み込まれるかどうか判断される\n--  (nullもしくは空文字でない場合に、{}内が検索条件に組み込まれる)\nWHERE $if (loginId)   {LOGIN_ID = :loginId}\n```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)\n\n実際に検索条件として:loginIdに設定される値は、検索実行(ParameterizedSqlPStatement#retrieve実行)時に引き渡すオブジェクトの、フィールドの値である(この例では、loginIdフィールドの値)。\n実例は [メソッドの実装](../../guide/web-application/web-application-03-listSearch.md#03-methodcreate) を参照。",
+      "level": 4
+    },
+    {
+      "id": "s10",
+      "title": "LIKE検索を簡易的に実装できる機能",
+      "content": "LIKE検索を簡易的に実装できる機能とは、LIKE検索を実装する際に、下記のメリットを提供する機能である。\n* アプリケーションプログラマは、LIKE条件に設定する文字列のエスケープ処理を実装する必要がない。\n* Javaコードで条件に\"%\"を付加する必要がない(\"%\"はSQL文に記述する)。\n\n下記のソースコードは、検索実行(ParameterizedSqlPStatement#retrieve実行)時に引き渡すオブジェクトの、kanjiNameフィールドの値で中間一致検索を行っている。\nエスケープ処理や、入力された検索条件に対する\"%\"を付加するJavaの処理は不要である。実例は [メソッドの実装](../../guide/web-application/web-application-03-listSearch.md#03-methodcreate) を参照。\n\n```sql\n-- 【説明】SQL文を実行する際に渡されるオブジェクトの\"kanjiName\"フィールドの値で中間一致検索\nWHERE USR.KANJI_NAME LIKE :%kanjiName%\n```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 4
+    },
+    {
+      "id": "s11",
+      "title": "ORDER BY句を動的に変更する機能",
+      "content": "ORDER BY句を動的に変更する機能とは、検索結果リストの列見出しによる並び替えを行う場合などに、SQL文を自動で生成できる機能である。\nORDER BY句の条件を指定するフィールドを *$sort (フィールド名)* で指定し、組み込みたい条件を *(値 条件)* の組み合わせで定義する。\n\n本機能を使用したSQL文の実行時に、フィールド名に設定した値に対応する条件が自動的に組み込まれる。\n\n```sql\n-- 【説明】\n--  SQL文を実行する際に渡されるオブジェクトの\"sortId\"フィールドの値で、実行するORDER BY句を切り替える。\n--  例えば、sortId = 2 の場合、ORDER BY 句に SA.LOGIN_ID DESC が指定される。\n$sort (sortId) {\n    (1 SA.LOGIN_ID)\n    (2 SA.LOGIN_ID DESC)\n    (3 USR.KANJI_NAME, SA.LOGIN_ID)\n    (4 USR.KANJI_NAME DESC, SA.LOGIN_ID)\n    (5 USR.KANA_NAME, SA.LOGIN_ID)\n    (6 USR.KANA_NAME DESC, SA.LOGIN_ID)\n}\n```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)\n\n実例は [メソッドの実装](../../guide/web-application/web-application-03-listSearch.md#03-methodcreate) を参照。",
+      "level": 4
+    },
+    {
+      "id": "s12",
+      "title": "メソッドの実装",
+      "content": "[Javaオブジェクトのフィールドの値をバインド変数に設定する機能](../../guide/web-application/web-application-03-listSearch.md#03-field) 、 [条件が可変のSQL文を組み立てる機能](../../guide/web-application/web-application-03-listSearch.md#03-sql) 、 [LIKE検索を簡易的に実装できる機能](../../guide/web-application/web-application-03-listSearch.md#03-like) 、 [ORDER BY句を動的に変更する機能](../../guide/web-application/web-application-03-listSearch.md#03-orderby) を参考に、 *W11AC01Actionクラス* を作成し以下のメソッドを追加する。このメソッドの目的は、指定された検索条件に一致する情報を\nデータベースから取得することである。\n\nこのメソッドでは、条件が可変のSQL文を組み立てる機能、LIKE検索を簡易的に実装できる機能、ORDER BY句を動的に変更する機能を組み合わせて使っている。\n\n* W11AC01Action.sqlの内容\n\n```sql\n--\n-- 条件指定によるユーザ情報照会\n--\nSELECT_USER_BY_CONDITION =\nSELECT\n  SA.LOGIN_ID,\n  SA.USER_ID,\n  SA.USER_ID_LOCKED,\n  USR.KANJI_NAME,\n  USR.KANA_NAME,\n  USR.MAIL_ADDRESS,\n  USR.EXTENSION_NUMBER_BUILDING,\n  USR.EXTENSION_NUMBER_PERSONAL,\n  UGRP.UGROUP_ID,\n  UGRP.UGROUP_NAME\nFROM\n    USERS USR\nINNER JOIN\n    UGROUP_SYSTEM_ACCOUNT USA\nON\n    USR.USER_ID = USA.USER_ID\nINNER JOIN\n    SYSTEM_ACCOUNT SA\nON\n    USR.USER_ID = SA.USER_ID\nINNER JOIN\n    UGROUP UGRP\nON\n    UGRP.UGROUP_ID = USA.UGROUP_ID\nWHERE\n    -- 【説明】\n    --  条件が可変のSQL文を組み立てる機能を利用。search実行時に引き渡されるオブジェクトに\n    --  該当フィールドがあり、その値がnullでも空文字でなければ、({}内が)検索条件に組み込まれる。\n    --  また、LIKE検索を簡易的に実装出来る機能も使用。LIKE検索時のエスケープ処理は不要\n    $if (loginId) {SA.LOGIN_ID = :loginId}\n    AND $if (kanjiName) {USR.KANJI_NAME LIKE :%kanjiName%}\n    AND $if (kanaName) {USR.KANA_NAME  LIKE :%kanaName%}\n    AND $if (ugroupId) {UGRP.UGROUP_ID = :ugroupId}\n    AND $if (userIdLocked) {SA.USER_ID_LOCKED = :userIdLocked}\n-- 【説明】\n--  ORDER BY句を動的に変更する機能を利用。prepareParameterizedSqlStatement実行時に引き渡され\n--  るオブジェクトに該当フィールドがあり、その値に応じた条件がORDER BY句に組み込まれる。\n$sort (sortId) {\n    (1 SA.LOGIN_ID)\n    (2 SA.LOGIN_ID DESC)\n    (3 USR.KANJI_NAME, SA.LOGIN_ID)\n    (4 USR.KANJI_NAME DESC, SA.LOGIN_ID)\n    (5 USR.KANA_NAME, SA.LOGIN_ID)\n    (6 USR.KANA_NAME DESC, SA.LOGIN_ID)\n}\n```\n\n* W11AC01Action.javaの内容\n\n```java\n// 【説明】\n// DbAccessSupportクラスを継承する。\npublic class W11AC01Action extends DbAccessSupport {\n\n    /**\n     * 条件検索を行う。<br/>\n     * 引数で検索条件を指定することにより条件検索ができる。<br/>\n     * 検索条件を指定しない場合は、引数にnullまたは空文字を渡すようにする。<br/>\n     * これにより、その引数に関する検索条件を外すことができる。<br/>\n     *\n     * @param condition 検索条件\n     * @return 検索結果\n     */\n    private SqlResultSet selectByCondition(W11AC01SearchForm condition) {\n\n        // 【説明】\n        //  一覧検索の検索処理を行う。\n        //  引数のconditionに設定されているフィールドの値に従って組み立てたSQL文を用いて検索を行う。\n        //  SQL_IDには、上記のW11AC01Action.sqlで定義している「SELECT_USER_BY_CONDITION」を指定する。\n        //  LIKE検索に対するエスケープや%を付加するJavaコードは不要\n        return search(\"SELECT_USER_BY_CONDITION\", condition);\n    }\n}\n\n// ～後略～\n```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)\n\n> **Note:**\n> [Javaオブジェクトのフィールドの値をバインド変数に設定する機能](../../guide/web-application/web-application-03-listSearch.md#03-field) を明示的に使用する場合、getParameterizedSqlStatementの第2引数(上記のサンプルではcondition)とretrieveの引数(同じくcondition)は、両方に同じインスタンスを渡すこと。\n> そうしないと意図した条件で検索が行われない。その場合の実装例は、以下を参照。\n\n> ```java\n> public SqlResultSet selectWithCondition(SearchCondition condition) {\n> \n>     // 【説明】引数のcondに設定されているフィールドの値に従ってSQL文を組み立て\n>     // SQL_IDには、上記のW11AC01Action.sqlで定義している「SELECT_USER_BY_CONDITION」を指定する。\n>     ParameterizedSqlPStatement statement = getParameterizedSqlStatement(\n>             \"SELECT_USER_BY_CONDITION\", condition);\n> \n>     // 【説明】\n>     //  引数のcondのフィールドの値をSQLの条件の対応する場所(:フィールド名)に\n>     //  設定して検索実行。LIKE検索に対するエスケープや%を付加するJavaコードは不要\n>     return statement.retrieve(condition);\n> }\n> ```",
+      "level": 4
+    },
+    {
+      "id": "s13",
+      "title": "リクエストに対応するメソッドの作成",
+      "content": "*W11AC01Actionクラス* に以下のメソッドを追加する。検索条件入力チェックは [入力内容の精査](../../guide/web-application/web-application-04-validation.md#how-to-validate) を参照。\n\n```java\n/**\n * ユーザ一覧照会結果を表示する。<br/>\n *\n * @param req リクエストコンテキスト\n * @param ctx HTTPリクエストの処理に関連するサーバ側の情報\n * @return HTTPレスポンス\n */\n@OnError(type = ApplicationException.class,\n         path = \"/ss11AC/W11AC0101.jsp\")\npublic HttpResponse doRW11AC0102(HttpRequest req, ExecutionContext ctx) {\n\n    // ～中略～\n\n    // 検索条件入力チェック                                           // 【説明】検索条件入力チェックは後述\n    ValidationContext<W11AC01SearchForm> searchConditionCtx =\n        ValidationUtil.validateAndConvertRequest(\"11AC_W11AC01\", W11AC01SearchForm.class, req, \"search\");\n    if (!searchConditionCtx.isValid()) {\n        throw new ApplicationException(searchConditionCtx.getMessages());\n    }\n\n    // ～中略～\n\n    W11AC01SearchForm condition = searchConditionCtx.createObject();\n    ctx.setRequestScopedVar(\"11AC_W11AC01\", condition);\n\n    // 検索実行\n    SqlResultSet searchResult;\n    try {\n        searchResult = selectByCondition(condition);\n    } catch (TooManyResultException e) {\n        throw new ApplicationException(MessageUtil.createMessage(MessageLevel.ERROR, \"MSG00035\", e.getMaxResultCount()));\n    }\n\n    // 検索結果をリクエストスコープに設定\n    ctx.setRequestScopedVar(\"searchResult\", searchResult);\n    ctx.setRequestScopedVar(\"resultCount\", condition.getResultCount());\n\n    // ～中略～\n\n    return new HttpResponse(\"/ss11AC/W11AC0101.jsp\");\n}\n```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "View(JSP)の作成",
+      "content": "以下の内容で *W11AC0101.jsp* を作成する。\n\n検索結果はリスト-マップ(検索結果の1レコードを表すMapを要素とするList)で取得できるが、検索結果一覧表示用のカスタムタグを使用しているためJSP内でループ処理を行わない。\n\n```./_source/03/W11AC0101.jsp\n\n```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)\n\n> **Note:**\n> 本画面で使用している一覧表示用のカスタムタグも含め、検索結果の一覧表示を行う方法は、 [使用例集](../../guide/web-application/web-application-function.md#custom-tag-paging) を参照。\n\n> **Warning:**\n> n:writeタグは、出力時にサニタイジング処理を行うため、値を出力する際はn:writeタグを使用する。\n> EL式は、サニタイジング処理を行わないため、EL式を使用して直接出力を行わないこと。",
+      "level": 3
+    },
+    {
+      "id": "s15",
+      "title": "次に読むもの",
+      "content": "* [データベースアクセス処理を詳しく知りたい時](../../../fw/reference/02_FunctionDemandSpecifications/01_Core/04_DbAccessSpec.html)\n* [データベースアクセス処理の実例を知りたい時](./DB/01_DbAccessSpec_Example.html)\n* [カスタムタグの使用方法を詳しく知りたい時](../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07_WebView.html)",
+      "level": 2
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "libraries-static-data-cache",
+  "title": "静的データのキャッシュ",
+  "content": "**目次**\n\n* 機能概要\n\n  * 任意のデータをキャッシュできる\n* モジュール一覧\n* 使用方法\n\n  * 任意のデータをキャッシュする\n  * データのキャッシュタイミングを制御する\n\nデータベースやファイルなどに格納した静的データへのアクセスを高速化するためのキャッシュ機能を提供する。\n\nこの機能は単体では動作しない。\n静的データをキャッシュしたい場合には、 [任意のデータをキャッシュする](../../component/libraries/libraries-static-data-cache.md#static-data-cache-load-data) を参照し、データのロード処理を実装すること。\n\n> **Important:**\n> この機能では、キャシュしたデータをヒープ上に保持する。\n> 大量のデータをキャッシュした場合、Full GCが頻発しパフォーマンスに悪影響を与える可能性があるので、注意すること。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "機能概要",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "任意のデータをキャッシュできる",
+      "content": "この機能が提供するインタフェースを実装することで、容易に任意のデータをキャッシュできる。\n\nなお、データのキャッシュの制御はこの機能が提供するクラスで行っている。\nこのため、新たなデータをキャッシュしたい場合には、データをロードする処理のみを実装すればよい。\n特に、マルチスレッド環境下での同期処理などを行う必要がないのは大きなメリットである。\n\n詳細は、 [任意のデータをキャッシュする](../../component/libraries/libraries-static-data-cache.md#static-data-cache-load-data) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "使用方法",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "任意のデータをキャッシュする",
+      "content": "任意の静的データをキャッシュする場合、以下の作業が必要となる。\n\n1. StaticDataLoader インタフェースを実装し、データをロードする処理を実装する。\n2. BasicStaticDataCache クラスに、 StaticDataLoader の実装クラスを設定する。\n3. キャッシュを使用するクラスに BasicStaticDataCache を設定する。\n\n以下に詳細な手順を示す。\n\nStaticDataLoaderインタフェースを実装しローダーを作成する\nStaticDataLoader を実装し、任意のストアから静的データをロードする処理を実装する。\n\n幾つか実装すべきメソッドがあるが、以下のルールにもとづいて実装すると良い。\n\nシステム起動時に一括ロードを行う場合に実装する。それ以外の場合は、 return null で良い。\n\n静的データを一意に識別するidに対応するデータをロードする。\nこのメソッドは、キャッシュにデータが存在しなかった場合に呼び出される。\n\nインデックス毎に静的データを管理したい場合に使用する。\nこの機能は実装方法が複雑になるだけでなく、使用するメリットもないため原則使用しない。\n\n実装としては、 return null で良い。\nBasicStaticDataCacheクラスにローダーを設定する\nStaticDataLoader を実装したローダーを、 BasicStaticDataCache.loader に設定する。\n\n設定例は、 [静的データキャッシュの設定ファイル例](../../component/libraries/libraries-static-data-cache.md#static-data-cache-config-sample) を参照。\n\n> **Important:**\n> 設定例でも行っているように、 BasicStaticDataCache は必ず初期化対象に設定すること。\n> 初期化の詳細は、 [オブジェクトの初期化処理を行う](../../component/libraries/libraries-repository.md#repository-initialize-object) を参照。\nキャッシュを使用するクラスにBasicStaticDataCacheを設定する\nキャッシュを使用するクラスに、ローダーを持つ BasicStaticDataCache を設定することで、キャッシュされたデータにアクセスできる。\n\n以下にキャッシュを使用するクラスの例を示す。\n\nこの例では、設定された StaticDataCache を使用して、キャッシュしたデータを取得している。\n\n設定例は、 [静的データキャッシュの設定ファイル例](../../component/libraries/libraries-static-data-cache.md#static-data-cache-config-sample) を参照。\n\n```java\npublic class SampleService {\n\n  private StaticDataCache<Integer> sampleCache;\n\n  public int calc(int n) {\n      return sampleCache.getValue(n);\n  }\n\n  public void setSampleCache(StaticDataCache<Integer> sampleCache) {\n      this.sampleCache = sampleCache;\n  }\n}\n```\n\n設定ファイル例\n```xml\n<!-- ローダー -->\n<component name=\"sampleLoader\" class=\"sample.SampleLoader\" />\n\n<!-- ローダーでロードしたデータをキャシュするBasicStaticDataCache -->\n<component name=\"sampleDataCache\" class=\"nablarch.core.cache.BasicStaticDataCache\">\n  <property name=\"loader\" ref=\"sampleLoader\" />\n</component>\n\n<!--\nローダーでロードしたキャッシュを使用するクラス。\nこのクラスに設定した、BasicStaticDataCacheを使ってキャッシュにアクセスする。\n-->\n<component class=\"sample.SampleService\">\n  <property name=\"sampleCache\" ref=\"sampleDataCache\" />\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n\n  <property name=\"initializeList\">\n    <list>\n      <!-- BasicStaticDataCacheを初期化する -->\n      <component-ref name=\"sampleDataCache\" />\n    </list>\n  </property>\n\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "データのキャッシュタイミングを制御する",
+      "content": "データのキャッシュタイミングは、以下の2パターンから選択できる。\n\n* 一括ロード(起動時全てのデータがキャッシュされる)\n* オンデマンドロード(初めて取得要求があった時にキャッシュされる)\n\n> **Tip:**\n> 原則起動時に一括ロードで問題ないが、静的データが大量で一部しか使用しない場合には、オンデマンドロードを選択すると良い。\n> 例えば、バッチアプリケーションのように一部のデータにしかアクセスしない場合には、オンデマンドロードを選択すると良い。\n\nロードタイミングの変更は、ローダを設定した BasicStaticDataCache.loadOnStartup で行う。\nこのプロパティに true が設定されていると、起動時に一括でロードされる。\n\n以下の例では、 true を設定しているため起動時に一括でデータがキャッシュされる。\n\n```xml\n<component name=\"sampleLoader\" class=\"sample.SampleLoader\" />\n\n<component name=\"sampleDataCache\" class=\"nablarch.core.cache.BasicStaticDataCache\">\n  <property name=\"loader\" ref=\"sampleLoader\" />\n  <property name=\"loadOnStartup\" value=\"true\" />\n</component>\n```",
+      "level": 3
+    }
+  ]
+}

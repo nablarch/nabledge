@@ -1,0 +1,152 @@
+{
+  "id": "libraries-02-SqlLog",
+  "title": "SQLログの出力",
+  "content": "SQLログは、パフォーマンスチューニングに使用するために、SQL文の実行時間やSQL文を出力する。\nアプリケーションでは、ログ出力の設定を行うことにより出力する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "SQLログの出力方針",
+      "content": "SQLログで想定している出力方針を下記に示す。\nSQLログは、開発時の使用を想定しているためDEBUGレベル以下で出力する。\n\n| ログレベル | ロガー名 |\n|---|---|\n| DEBUG、TRACE | SQL |\n\nログレベルと出力内容を下記に示す。\n\n| ログレベル | 出力内容 |\n|---|---|\n| DEBUG | SQL文、実行時間、 件数(検索件数や更新件数など)、 トランザクションの処理結果(コミット又はロールバック) |\n| TRACE | SQLパラメータ(バインド変数の値) |\n\n上記出力方針に対するログ出力の設定例を下記に示す。\n\nlog.propertiesの設定例\n\n```bash\n# SQL\nloggers.SQL.nameRegex=SQL\nloggers.SQL.level=TRACE\nloggers.SQL.writerNames=<出力先のログライタ>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "SQLログの出力項目",
+      "content": "SQLログの個別項目を下記に示す。\nSQLログは、SQL文を発行する方法に応じて出力項目が異なる。\n\nここでは、 [BasicLogFormatter](../../component/libraries/libraries-01-Log.md#log-basiclogformatter) の設定で指定できる共通項目については省略する。\n共通項目と個別項目を組み合わせたフォーマットについては、 [各種ログの共通項目のフォーマット](../../component/libraries/libraries-01-Log.md#applog-format) を参照。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "SqlPStatement#retrieveメソッドの検索開始時",
+      "content": "出力項目\n\n| 項目名 | 説明 |\n|---|---|\n| メソッド名 | クラス名#メソッド名形式。 |\n| SQL文 | SQL文。 |\n| 取得開始位置 | 検索結果のデータ取得を開始する行数。 |\n| 取得最大件数 | 検索結果に含める最大行数。 |\n| タイムアウト時間 | 検索のタイムアウト時間。 |\n| フェッチする行数 | データ取得時のフェッチ件数。 |\n| 付加情報 | BasicSqlPStatementの設定で指定された付加情報。 |",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "SqlPStatement#retrieveメソッドの検索終了時",
+      "content": "出力項目\n\n| 項目名 | 説明 |\n|---|---|\n| メソッド名 | クラス名#メソッド名形式。 |\n| 実行時間 | 実行時間。 |\n| データ取得時間 | 検索後のデータ取得に要した時間。 |\n| 検索件数 | 検索結果の件数。 |",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "SqlPStatement#executeメソッドの実行開始時",
+      "content": "出力項目\n\n| 項目名 | 説明 |\n|---|---|\n| メソッド名 | クラス名#メソッド名形式。 |\n| SQL文 | SQL文。 |\n| 付加情報 | BasicSqlPStatementの設定で指定された付加情報。 |",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "SqlPStatement#executeメソッドの実行終了時",
+      "content": "出力項目\n\n| 項目名 | 説明 |\n|---|---|\n| メソッド名 | クラス名#メソッド名形式。 |\n| 実行時間 | 実行時間。 |",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "SqlPStatement#executeQueryメソッドの検索開始時",
+      "content": "出力項目\n\n| 項目名 | 説明 |\n|---|---|\n| メソッド名 | クラス名#メソッド名形式。 |\n| SQL文 | SQL文。 |\n| 付加情報 | BasicSqlPStatementの設定で指定された付加情報。 |",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "SqlPStatement#executeQueryメソッドの検索終了時",
+      "content": "出力項目\n\n| 項目名 | 説明 |\n|---|---|\n| メソッド名 | クラス名#メソッド名形式。 |\n| 実行時間 | 検索の実行時間。 |",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "SqlPStatement#executeUpdateメソッドの更新開始時",
+      "content": "出力項目\n\n| 項目名 | 説明 |\n|---|---|\n| メソッド名 | クラス名#メソッド名形式。 |\n| SQL文 | SQL文。 |\n| 付加情報 | BasicSqlPStatementの設定で指定された付加情報。 |",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "SqlPStatement#executeUpdateメソッドの更新終了時",
+      "content": "出力項目\n\n| 項目名 | 説明 |\n|---|---|\n| メソッド名 | クラス名#メソッド名形式。 |\n| 実行時間 | 実行時間。 |\n| 更新件数 | 更新件数。 |",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "SqlPStatement#executeBatchメソッドの更新開始時",
+      "content": "出力項目\n\n| 項目名 | 説明 |\n|---|---|\n| メソッド名 | クラス名#メソッド名形式。 |\n| SQL文 | SQL文。 |\n| 付加情報 | BasicSqlPStatementの設定で指定された付加情報。 |",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "SqlPStatement#executeBatchメソッドの更新終了時",
+      "content": "出力項目\n\n| 項目名 | 説明 |\n|---|---|\n| メソッド名 | クラス名#メソッド名形式。 |\n| 実行時間 | 実行時間。 |\n| バッチ件数 | バッチ件数。 |",
+      "level": 3
+    },
+    {
+      "id": "s13",
+      "title": "SQLログの出力方法",
+      "content": "SQLログの出力に使用するクラスを下記に示す。\n\n![Log_SqlLog_ClassDiagram.jpg](assets/libraries-02-SqlLog/Log_SqlLog_ClassDiagram.jpg)\n\n| クラス名 | 概要 |\n|---|---|\n| nablarch.core.db.statement.SqlLogUtil | SQLログのフォーマットを助けるクラス。 |\n| nablarch.core.db.statement.SqlLogFormatter | SQLログの個別項目をフォーマットするクラス。 |\n\nBasicSqlPStatementは、SQL文、実行時間、件数のフォーマットにSqlLogUtilを使用する。\nトランザクションの処理結果とSQLパラメータの出力では、SqlLogUtilを使用せずに直接Loggerを使用して出力する。\n\nSQLログは、ログ出力の設定でロガー名にSQLを指定することで出力される。\nログ出力の設定を下記に示す。\n\nlog.propertiesの設定例\n\n```bash\n# SQL\nloggers.SQL.nameRegex=SQL\nloggers.SQL.level=TRACE\nloggers.SQL.writerNames=<出力先のログライタ>\n```\n\nSQLログの出力例を下記に示す。SQLログの個別項目は、デフォルトのフォーマットを使用した場合の出力例である。\n\nlog.propertiesの設定例\n\n```bash\nwriterNames=appFile\n\n# appFile\nwriter.appFile.className=nablarch.core.log.basic.FileLogWriter\nwriter.appFile.filePath=./app.log\nwriter.appFile.encoding=UTF-8\nwriter.appFile.maxFileSize=10000\nwriter.appFile.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.appFile.formatter.format=$date$ -$logLevel$- R[$requestId$] U[$userId$] E[$executionId$] $message$\n\navailableLoggersNamesOrder=SQL\n\n# SQL\nloggers.SQL.nameRegex=SQL\nloggers.SQL.level=TRACE\nloggers.SQL.writerNames=appFile\n```\n\nログの出力例\n\n```bash\n2011-02-08 23:07:25.182 -DEBUG- R[LOGIN00102] U[9999999999] E[AP01201102082307249470003] nablarch.core.db.statement.BasicSqlPStatement#retrieve\n    SQL = [SELECT BIZ_DATE FROM BUSINESS_DATE WHERE SEGMENT = ?]\n    start_position = [1] size = [0]\n    query_timeout = [0] fetch_size = [500]\n    additional_info:\n2011-02-08 23:07:25.182 -TRACE- R[LOGIN00102] U[9999999999] E[AP01201102082307249470003] nablarch.core.db.statement.BasicSqlPStatement#Parameters\n    01 = [00]\n2011-02-08 23:07:25.182 -DEBUG- R[LOGIN00102] U[9999999999] E[AP01201102082307249470003] nablarch.core.db.statement.BasicSqlPStatement#retrieve\n    execute_time(ms) = [0] retrieve_time(ms) = [0] count = [1]\n```\n\nSqlLogUtilは、プロパティファイル(app-log.properties)を読み込み、\nSqlLogFormatterオブジェクトを生成して、個別項目のフォーマット処理を委譲する。\nプロパティファイルのパス指定や実行時の変更方法は、 [各種ログの設定](../../component/libraries/libraries-01-Log.md#applog-config) を参照。\n\nSQLログの設定例を下記に示す。\n\napp-log.propertiesの設定例\n\n```bash\n# SqlLogFormatter\nsqlLogFormatter.className=nablarch.core.db.statement.SqlLogFormatter\nsqlLogFormatter.startRetrieveFormat=$methodName$\\n\\tSQL:$sql$\\n\\tstart:$startPosition$ size:$size$\\n\\tadditional_info:\\n\\t$additionalInfo$\nsqlLogFormatter.endRetrieveFormat=$methodName$\\n\\texe:$executeTime$ms ret:$retrieveTime$ms count:$count$\nsqlLogFormatter.startExecuteFormat=$methodName$\\n\\tSQL:$sql$\\n\\tadditional_info:\\n\\t$additionalInfo$\nsqlLogFormatter.endExecuteFormat=$methodName$\\n\\texe:$executeTime$ms\nsqlLogFormatter.startExecuteQueryFormat=$methodName$\\n\\tSQL:$sql$\\n\\tadditional_info:\\n\\t$additionalInfo$\nsqlLogFormatter.endExecuteQueryFormat=$methodName$\\n\\texe:$executeTime$ms\nsqlLogFormatter.startExecuteUpdateFormat=$methodName$\\n\\tSQL:$sql$\\n\\tadditional_info:\\n\\t$additionalInfo$\nsqlLogFormatter.endExecuteUpdateFormat=$methodName$\\n\\texe:$executeTime$ms count:$updateCount$\nsqlLogFormatter.startExecuteBatchFormat=$methodName$\\n\\tSQL:$sql$\\n\\tadditional_info:\\n\\t$additionalInfo$\nsqlLogFormatter.endExecuteBatchFormat=$methodName$\\n\\texe:$executeTime$ms count:$updateCount$\n```\n\nプロパティの説明を下記に示す。\n\n| プロパティ名 | 設定値 |\n|---|---|\n| sqlLogFormatter.className | SqlLogFormatterのクラス名。  SqlLogFormatterクラスを差し替える場合に指定する。 |\n| sqlLogFormatter.startRetrieveFormat | SqlPStatement#retrieveメソッドの検索開始時に使用するフォーマット。 |\n| sqlLogFormatter.endRetrieveFormat | SqlPStatement#retrieveメソッドの検索終了時に使用するフォーマット。 |\n| sqlLogFormatter.startExecuteFormat | SqlPStatement#executeメソッドの実行開始時に使用するフォーマット。 |\n| sqlLogFormatter.endExecuteFormat | SqlPStatement#executeメソッドの実行終了時に使用するフォーマット。 |\n| sqlLogFormatter.startExecuteQueryFormat | SqlPStatement#executeQueryメソッドの検索開始時に使用するフォーマット。 |\n| sqlLogFormatter.endExecuteQueryFormat | SqlPStatement#executeQueryメソッドの検索終了時に使用するフォーマット。 |\n| sqlLogFormatter.startExecuteUpdateFormat | SqlPStatement#executeUpdateメソッドの更新開始時に使用するフォーマット。 |\n| sqlLogFormatter.endExecuteUpdateFormat | SqlPStatement#executeUpdateメソッドの更新終了時に使用するフォーマット。 |\n| sqlLogFormatter.startExecuteBatchFormat | SqlPStatement#executeBatchメソッドの更新開始時に使用するフォーマット。 |\n| sqlLogFormatter.endExecuteBatchFormat | SqlPStatement#executeBatchメソッドの更新終了時に使用するフォーマット。 |\n\nフォーマットに指定可能なプレースホルダの一覧とデフォルトのフォーマットを下記に示す。\nデフォルトのフォーマットは、フォーマット内の改行位置で改行して表示する。",
+      "level": 2
+    },
+    {
+      "id": "s14",
+      "title": "SqlPStatement#retrieveメソッドの検索開始時",
+      "content": "プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| メソッド名 | $methodName$ |\n| SQL文 | $sql$ |\n| 取得開始位置 | $startPosition$ |\n| 取得最大件数 | $size$ |\n| タイムアウト時間 | $queryTimeout$ |\n| フェッチする行数 | $fetchSize$ |\n| 付加情報 | $additionalInfo$ |\n\nデフォルトのフォーマット\n\n```bash\n$methodName$\n    \\n\\tSQL = [$sql$]\n    \\n\\tstart_position = [$startPosition$] size = [$size$]\n    \\n\\tquery_timeout = [$queryTimeout$] fetch_size = [$fetchSize$]\n    \\n\\tadditional_info:\n    \\n\\t$additionalInfo$\n```",
+      "level": 3
+    },
+    {
+      "id": "s15",
+      "title": "SqlPStatement#retrieveメソッドの検索終了時",
+      "content": "プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| メソッド名 | $methodName$ |\n| 実行時間 | $executeTime$ |\n| データ取得時間 | $retrieveTime$ |\n| 検索件数 | $count$ |\n\nデフォルトのフォーマット\n\n```bash\n$methodName$\n    \\n\\texecute_time(ms) = [$executeTime$] retrieve_time(ms) = [$retrieveTime$] count = [$count$]\n```",
+      "level": 3
+    },
+    {
+      "id": "s16",
+      "title": "SqlPStatement#executeメソッドの実行開始時",
+      "content": "プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| メソッド名 | $methodName$ |\n| SQL文 | $sql$ |\n| 付加情報 | $additionalInfo$ |\n\nデフォルトのフォーマット\n\n```bash\n$methodName$\n    \\n\\tSQL = [$sql$]\n    \\n\\tadditional_info:\n    \\n\\t$additionalInfo$\n```",
+      "level": 3
+    },
+    {
+      "id": "s17",
+      "title": "SqlPStatement#executeメソッドの実行終了時",
+      "content": "プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| メソッド名 | $methodName$ |\n| 実行時間 | $executeTime$ |\n\nデフォルトのフォーマット\n\n```bash\n$methodName$\n    \\n\\texecute_time(ms) = [$executeTime$]\n```",
+      "level": 3
+    },
+    {
+      "id": "s18",
+      "title": "SqlPStatement#executeQueryメソッドの検索開始時",
+      "content": "プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| メソッド名 | $methodName$ |\n| SQL文 | $sql$ |\n| 付加情報 | $additionalInfo$ |\n\nデフォルトのフォーマット\n\n```bash\n$methodName$\n    \\n\\tSQL = [$sql$]\n    \\n\\tadditional_info:\n    \\n\\t$additionalInfo$\n```",
+      "level": 3
+    },
+    {
+      "id": "s19",
+      "title": "SqlPStatement#executeQueryメソッドの検索終了時",
+      "content": "プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| メソッド名 | $methodName$ |\n| 実行時間 | $executeTime$ |\n\nデフォルトのフォーマット\n\n```bash\n$methodName$\n    \\n\\texecute_time(ms) = [$executeTime$]\n```",
+      "level": 3
+    },
+    {
+      "id": "s20",
+      "title": "SqlPStatement#executeUpdateメソッドの更新開始時",
+      "content": "プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| メソッド名 | $methodName$ |\n| SQL文 | $sql$ |\n| 付加情報 | $additionalInfo$ |\n\nデフォルトのフォーマット\n\n```bash\n$methodName$\n    \\n\\tSQL = [$sql$]\n    \\n\\tadditional_info:\n    \\n\\t$additionalInfo$\n```",
+      "level": 3
+    },
+    {
+      "id": "s21",
+      "title": "SqlPStatement#executeUpdateメソッドの更新終了時",
+      "content": "プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| メソッド名 | $methodName$ |\n| 実行時間 | $executeTime$ |\n| 更新件数 | $updateCount$ |\n\nデフォルトのフォーマット\n\n```bash\n$methodName$\n    \\n\\texecute_time(ms) = [$executeTime$] update_count = [$updateCount$]\n```",
+      "level": 3
+    },
+    {
+      "id": "s22",
+      "title": "SqlPStatement#executeBatchメソッドの更新開始時",
+      "content": "プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| メソッド名 | $methodName$ |\n| SQL文 | $sql$ |\n| 付加情報 | $additionalInfo$ |\n\nデフォルトのフォーマット\n\n```bash\n$methodName$\n    \\n\\tSQL = [$sql$]\n    \\n\\tadditional_info:\n    \\n\\t$additionalInfo$\n```",
+      "level": 3
+    },
+    {
+      "id": "s23",
+      "title": "SqlPStatement#executeBatchメソッドの更新終了時",
+      "content": "プレースホルダ一覧\n\n| 項目名 | プレースホルダ |\n|---|---|\n| メソッド名 | $methodName$ |\n| 実行時間 | $executeTime$ |\n| バッチ件数 | $batchCount$ |\n\nデフォルトのフォーマット\n\n```bash\n$methodName$\n    $\\n\\texecute_time(ms) = [$executeTime$] batch_count = [$updateCount$]\n```",
+      "level": 3
+    },
+    {
+      "id": "s24",
+      "title": "SQLログの出力例",
+      "content": "SQLログの出力例を下記に示す。\n\nlog.propertiesの設定例\n\n```bash\nwriterNames=appFile\n\n# ログの出力先\nwriter.appFile.className=nablarch.core.log.basic.FileLogWriter\nwriter.appFile.filePath=./app.log\nwriter.appFile.encoding=UTF-8\nwriter.appFile.maxFileSize=10000\nwriter.appFile.formatter.className=nablarch.core.log.basic.BasicLogFormatter\nwriter.appFile.formatter.format=$date$ -$logLevel$- R[$requestId$] U[$userId$] E[$executionId$] $message$\n\navailableLoggersNamesOrder=SQL\n\n# SQL\nloggers.SQL.nameRegex=SQL\nloggers.SQL.level=TRACE\nloggers.SQL.writerNames=appFile\n```\n\napp-log.propertiesの設定例\n\n```bash\n# SqlLogFormatterの設定(個別項目のフォーマット)\nsqlLogFormatter.startRetrieveFormat=$methodName$\\n\\tSQL:$sql$\\n\\tstart:$startPosition$ size:$size$\\n\\tadditional_info:\\n\\t$additionalInfo$\nsqlLogFormatter.endRetrieveFormat=$methodName$\\n\\texe:$executeTime$ms ret:$retrieveTime$ms count:$count$\n```\n\n上記設定から出力した結果を下記に示す。\n\n```bash\n2011-02-15 18:06:05.952 -DEBUG- R[LOGIN00102] U[9999999999] E[APUSRMGR0001201102151806058420002] nablarch.core.db.statement.BasicSqlPStatement#retrieve\n    SQL:SELECT BIZ_DATE FROM BUSINESS_DATE WHERE SEGMENT = ?\n    start:1 size:0\n    additional_info:\n2011-02-15 18:06:05.952 -TRACE- R[LOGIN00102] U[9999999999] E[APUSRMGR0001201102151806058420002] nablarch.core.db.statement.BasicSqlPStatement#Parameters\n    01 = [00]\n2011-02-15 18:06:05.952 -DEBUG- R[LOGIN00102] U[9999999999] E[APUSRMGR0001201102151806058420002] nablarch.core.db.statement.BasicSqlPStatement#retrieve\n    exe:0ms ret:0ms count:1\n2011-02-15 18:06:05.952 -DEBUG- R[LOGIN00102] U[9999999999] E[APUSRMGR0001201102151806058420002] nablarch.core.db.transaction.JdbcTransaction#commit()\n```",
+      "level": 2
+    }
+  ]
+}

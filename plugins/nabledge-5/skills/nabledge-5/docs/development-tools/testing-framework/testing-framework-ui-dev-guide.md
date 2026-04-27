@@ -1,61 +1,44 @@
 # JSP/HTML作成ガイド
 
-**公式ドキュメント**: [JSP/HTML作成ガイド](https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/guide/index.html)
+この文書では、業務画面JSPの作成方法について記載する。
 
 ## 業務画面JSP作成フロー
 
-## 業務画面JSP作成フロー
+UI開発基盤を使用し、業務画面JSPを作成する際の開発概要を以下に示す。
 
-![業務画面JSP作成フロー](../../../knowledge/development-tools/testing-framework/assets/testing-framework-ui-dev-guide/create_jsp.png)
+![create_jsp.png](../../../knowledge/assets/testing-framework-ui-dev-guide/create_jsp.png)
 
-- 業務画面JSPはブラウザで開くことで、画面遷移を含めた動作確認ができる。
-- 画面に表示されている項目から、システム機能設計書に記載する画面項目定義を生成できる。
-- PG/UT工程でサーバサイド処理に必要な情報が追加され、本番環境で動作する業務画面JSPとなる。
+作成する業務画面JSPは、ブラウザで開くことで画面遷移も含めた動作確認を行うことができる。
+また、画面に表示されている項目からシステム機能設計書に記載する項目定義を生成できる。
 
-<details>
-<summary>keywords</summary>
-
-業務画面JSP作成フロー, ブラウザ動作確認, 画面項目定義生成, PG/UT工程, JSP作成概要
-
-</details>
+なお、ここで作成された業務画面JSPにPG/UT工程でサーバサイドでの処理に必要な情報が追加され、本番環境で動作する業務画面JSPとなる。
 
 ## 業務画面JSP作成に使用する開発環境
 
-## 業務画面JSP作成に使用する開発環境
+業務画面JSPを作成する際に、ブラウザで動作確認を行うためには指定されたディレクトリ構造でファイルを配置する必要がある。
 
-- ブラウザで動作確認を行うには、指定されたディレクトリ構造でファイルを配置する必要がある。
-- 業務画面JSPはIDE（統合開発環境）の使用を推奨。
-- Eclipseのテンプレートを導入すると、より効率的に開発できる。
+ディレクトリ構造の詳細については、以下を参照。
 
-<details>
-<summary>keywords</summary>
+widget_usage/project_structure
 
-ディレクトリ構造, 開発環境構築, IDE, Eclipseテンプレート, project_structure, develop_environment, template_list
+業務画面JSPは、統合開発環境(IDE)を使用して作成することを推奨している。
 
-</details>
+統合開発環境での開発方法は以下を参照。
+
+widget_usage/develop_environment
+
+また、下記ドキュメントを参考にEclipseのテンプレートを導入すると、より効率的に開発できる。
+
+widget_usage/template_list.rst
 
 ## 業務画面JSPの作成方法
 
-## 業務画面JSPの作成方法
+開発環境を構築した後は、業務画面テンプレートと、UI部品（JavaScript、ウィジェット）を使用して業務画面JSPを作成していく。
 
-業務画面テンプレートとUI部品（JavaScript、ウィジェット）を使用して業務画面JSPを作成する。
-
-<details>
-<summary>keywords</summary>
-
-業務画面テンプレート, UI部品, ウィジェット, JavaScript, create_with_widget
-
-</details>
-
-## 画面項目定義一覧の作成方法
+widget_usage/create_with_widget
 
 ## 画面項目定義一覧の作成方法
 
 作成した業務画面JSPから、システム機能設計書に張り付ける画面項目定義を作成する。
 
-<details>
-<summary>keywords</summary>
-
-画面項目定義, システム機能設計書, 画面項目定義一覧, create_screen_item_list
-
-</details>
+widget_usage/create_screen_item_list

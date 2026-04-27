@@ -1,54 +1,56 @@
 {
   "id": "nablarch-patterns-Nablarchバッチ処理パターン",
   "title": "Nablarchバッチ処理パターン",
+  "content": "",
   "no_knowledge_content": false,
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/index.html",
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/architecture.html#nablarch-batch-each-time-batch",
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/index.html"
-  ],
-  "index": [
+  "sections": [
     {
       "id": "s1",
       "title": "起動方法による分類",
-      "hints": [
-        "都度起動バッチ",
-        "テーブルをキューとして使ったメッセージング",
-        "バッチ起動方法",
-        "非同期バッチ",
-        "定期バッチ",
-        "常駐バッチ"
-      ]
+      "content": "[Nablarchバッチ](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/index.html)では、主に以下の2つの起動方法を使用します。\n* [都度起動バッチ](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/architecture.html#nablarch-batch-each-time-batch)\n  * プロセスを都度起動して、バッチ処理を実行します\n  * 日次や月次など、定期的にバッチ処理を実行するような場合に使用します\n* [テーブルをキューとして使ったメッセージング](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/index.html)\n  * プロセスを起動しておき、定期的にデータベース上のテーブルを監視し未処理のレコードを順次処理します\n  * オンライン処理で処理要求を受け付け、非同期でバッチ処理を実行したいような場合に使用します",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "入出力による分類",
-      "hints": [
-        "FILE to DB",
-        "DB to DB",
-        "DB to FILE",
-        "テンポラリテーブル",
-        "バッチ入出力パターン",
-        "マッチング処理",
-        "コントロールブレイク",
-        "FILE to FILE"
-      ]
+      "content": "この切り口とは別に、主となる入力、出力の組み合わせにより、 以下の3パターンに分けることができます。\n* FILE to DB\n* DB to DB\n* DB to FILE\n組み合わせは以下の通りとなります。\n|  | FILE to DB | DB to DB | DB to FILE |\n| --- | --- | --- | --- |\n| 都度起動 | ○ | ○ | ○ |\n| 常駐 | ✕ | ○ | △ |\n* ○：使用する\n* △：仕組み上は可能だが普通は使わない\n* ✕：使わない\n（常駐バッチは、通常データベースを監視するため、FILE to DBとの組み合わせはありません）",
+      "level": 2
     },
     {
       "id": "s3",
+      "title": "FILE to DB",
+      "content": "* 外部から受け取ったファイルをシステムに取り込む際に使用します。\n* ファイル取り込み用のバッチプログラムを作成します。\n* 取り込み先は、業務用のテーブルではなく、一時保存用のテーブル（テンポラリテーブル）になります\n* テンポラリテーブルはファイルのレイアウトと１対１のカラムを持ちます\nFILE to DBバッチでは、できるだけ業務処理を加えず、ファイルをテンポラリテーブルにINSERTしていくようにします。 これにより、以下のようなメリットが得られます。\n* 一度DBに取り込むことによって、RDBの強力な機能が使用できる。\n  * トランザクション\n  * SQL\n    * 従来のマッチング処理は、SQLのJOINで代替できます\n    * 従来のコントロールブレイク処理は、GROUP BYで代替できるケースがあります\n* Nablarchのファイル取り込み機能が使用できる（任意）\n  * ファイル取り込み時に障害が発生した場合、途中から取り込みを再開できる",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "DB to DB",
+      "content": "* 入力はSELECT文の結果セットの各レコードになります。\n* 1レコード分のデータを受け取って、DBを更新します。\n* 1レコードの処理中に行われる更新は全て同一トランザクション下で実行されるため、障害発生時でも不整合が発生しません",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "DB to FILE",
+      "content": "* 入力はSELECT文の結果セットの各レコードになります。\n* 1レコード分のデータを受け取って、ファイルを書き出します(普通は1行分)\nDBはトランザクション管理されますが、ファイル書き出しは管理外なので、 障害発生時に、不整合がありえます。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "上記以外の組み合わせ(FILE to FILE)",
+      "content": "例えば、よくあるバッチ処理として「2つのファイルをマッチングしながら、1つのファイルを出力する」というものがあります。 この場合は、FILE to FILEということになりますが、Nablarchバッチではこの形態は使用しません。 それぞれのファイルをDBに取り込んだ後、SQLでJOINすることで同等の処理ができます。\nマッチングやコントロールブレイクといったメインフレームのバッチでよくあるようなファイル処理をNablarchバッチで実現することは可能ですが、バッチプログラムが複雑になる、どこまでをファイルでどこまでをDBで扱うかという切り分けが難しい、というような問題があります。 それよりも、前述のパターンの組み合わせで実現したほうが、各バッチがシンプルになり設計もしやすく、バグも埋め込みにくくなります。",
+      "level": 3
+    },
+    {
+      "id": "s7",
       "title": "注意点",
-      "hints": [
-        "ファイル移動",
-        "ファイルコピー",
-        "バッチ再実行",
-        "単体テスト",
-        "ファイル取り込み"
-      ]
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "ファイルの移動、コピー",
+      "content": "FILE to DBないしDB to FILEを行う場合、そのバッチ処理にはファイルの移動やコピーは含めないようにします。\n仮に以下のようなバッチ処理を実装したとします。\n1. ファイルを所定のディレクトリに移動（初期化処理）\n2. 1で移動したファイルを読み込んでDBに登録（本処理）\n2で処理が失敗した場合、再実行する前に入力ファイルを元のディレクトリに戻すというオペレーションが必要となってしまいます。\nファイルの移動、コピーを別出ししておくことで、以下のようなメリットがあります。\n* 再実行がやりやすくなる\n* ファイル取り込みバッチの単体テストがやりやすくなる\n* ファイルの移動、コピーを自分で実装しないので、移動、コピーに対する単体テストが不要になる",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s1": "Nablarchバッチの主な2つの起動方法:\n\n- **[都度起動バッチ](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/architecture.html#nablarch-batch-each-time-batch)**: プロセスを都度起動してバッチ処理を実行。日次・月次など定期的バッチに使用\n- **[テーブルをキューとして使ったメッセージング](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/index.html)**: プロセスを起動しておき、定期的にDBテーブルを監視して未処理レコードを順次処理。オンライン処理の非同期バッチに使用",
-    "s2": "入出力パターンの組み合わせ:\n\n|          | FILE to DB | DB to DB | DB to FILE |\n|----------|------------|----------|------------|\n| 都度起動 | ○         | ○       | ○         |\n| 常駐     | ✕          | ○       | △         |\n\n- ○：使用する\n- △：仕組み上は可能だが普通は使わない\n- ✕：使わない\n\n（常駐バッチは通常DBを監視するため、FILE to DBとの組み合わせはない）\n\n### FILE to DB\n\n外部ファイルをシステムに取り込む際に使用。ファイルをテンポラリテーブル（ファイルレイアウトと1対1のカラム）にINSERTする。**業務処理はできるだけ加えない**こと。\n\nテンポラリテーブルに取り込むメリット:\n- RDBの強力な機能（トランザクション、SQL）が使用できる\n  - 従来のマッチング処理はSQLのJOINで代替可能\n  - 従来のコントロールブレイク処理はGROUP BYで代替できるケースがある\n- Nablarchのファイル取り込み機能（任意）: 障害発生時に途中から再開可能\n\n### DB to DB\n\n入力はSELECT文の結果セットの各レコード。1レコード受け取りDBを更新。1レコードの処理中の更新は全て同一トランザクション下で実行されるため、障害発生時でも不整合が発生しない。\n\n### DB to FILE\n\n入力はSELECT文の結果セットの各レコード。1レコード受け取りファイルを書き出す（通常1行）。DBはトランザクション管理されるが、ファイル書き出しは管理外のため、障害発生時に不整合が起きえる。\n\n### FILE to FILE（技術的には可能だが非推奨）\n\nNablarchバッチではこの形態は**使用しない**ことを推奨する。マッチングやコントロールブレイクといったメインフレームのバッチでよくあるようなファイル処理をNablarchバッチで実現することは技術的には可能だが、以下の問題があるため推奨しない:\n- バッチプログラムが複雑になる\n- どこまでをファイルでどこまでをDBで扱うかという切り分けが難しい\n\n代わりに各ファイルをDBに取り込んだ後、SQLでJOINすることで同等の処理ができる。各バッチがシンプルになり設計がしやすく、バグが埋め込みにくい。",
-    "s3": "### ファイルの移動、コピー\n\nFILE to DBまたはDB to FILEを行う場合、そのバッチ処理にはファイルの移動やコピーは含めないようにします。含めると処理失敗時の再実行前に入力ファイルを元のディレクトリに戻すオペレーションが必要になる。\n\nファイルの移動・コピーを別出しにするメリット:\n- 再実行がやりやすくなる\n- ファイル取り込みバッチの単体テストがやりやすくなる\n- ファイルの移動・コピーに対する単体テストが不要になる"
-  }
+  ]
 }

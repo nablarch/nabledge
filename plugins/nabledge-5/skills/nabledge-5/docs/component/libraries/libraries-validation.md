@@ -1,35 +1,25 @@
 # 入力値のチェック
 
-**公式ドキュメント**: [入力値のチェック](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/validation.html)
+クライアントから送信されるユーザ入力値や、システム間連携により外部システムから送信される値が妥当かを検証するための機能を提供する。
 
-## 入力値チェックの概要
+入力値のチェックでは以下のことを行う。
 
-入力値のチェックでは以下のことを行う:
-- 入力値が妥当な形式かどうか（例えば、桁数や文字種などのチェック）
-- システムの状態に適合しているかどうか（例えば、アカウントの重複登録チェック）
+* 入力値が妥当な形式かどうか(例えば、桁数や文字種などのチェック)
+* システムの状態に適合しているかどうか(例えば、アカウントの重複登録チェック)
 
-<details>
-<summary>keywords</summary>
+※入力値のチェックでエラーとなった場合に表示するメッセージの定義方法は、 [メッセージ管理](../../component/libraries/libraries-message.md) を参照。
 
-入力値チェック, バリデーション, 形式チェック, 桁数, 文字種, 業務チェック, 重複登録チェック, システム状態
+Nablarchでは、以下の2種類のバリデーション機能を提供している。
 
-</details>
+Java EE7のBean Validation(JSR349)に準拠したバリデーション機能 (Bean Validation) <validation/bean_validation>
+Nablarch独自のバリデーション機能 (Nablarch Validation) <validation/nablarch_validation>
 
-## バリデーション機能の選択
+どちらの機能を使用しても入力値のチェックは行えるが、以下の理由によりJava EE7に準拠した機能を使用することを推奨する。
 
-Nablarchでは以下の2種類のバリデーション機能を提供している:
-- Java EE7のBean Validation（JSR349）準拠: [validation/bean_validation](libraries-bean_validation.md)
-- Nablarch独自のバリデーション機能: [validation/nablarch_validation](libraries-nablarch_validation.md)
+* Bean ValidationはJava EEで仕様が定められており情報が豊富である。
+* 開発者がNablarch独自のバリデーションの使い方などを覚える必要がない。
 
-**推奨**: Java EE7に準拠したBean Validationを使用すること。理由:
-1. Bean ValidationはJava EEで仕様が定められており情報が豊富
-2. 開発者がNablarch独自バリデーションの使い方を覚える必要がない
+> **Tip:**
+> [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) と [Nablarch Validation](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation) で提供している機能の違いは、 [Bean ValidationとNablarch Validationの機能比較](../../component/libraries/libraries-validation-functional-comparison.md#validation-functional-comparison) を参照。
 
-> **補足**: [bean_validation](libraries-bean_validation.md) と [nablarch_validation](libraries-nablarch_validation.md) の機能比較は :ref:`validation-functional_comparison` を参照。
-
-<details>
-<summary>keywords</summary>
-
-Bean Validation, Nablarch Validation, バリデーション, 入力値チェック, JSR349, bean_validation, nablarch_validation, validation-functional_comparison
-
-</details>
+validation/functional_comparison

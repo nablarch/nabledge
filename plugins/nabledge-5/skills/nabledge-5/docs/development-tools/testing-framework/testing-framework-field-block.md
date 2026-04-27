@@ -1,0 +1,61 @@
+# 入力フォームブロック
+
+[入力フォームブロック](../../development-tools/testing-framework/testing-framework-field-block.md) は、入力フォームの論理的なまとまりを定義し、見出しを表示するウィジェットである。
+(HTMLにおける<filedset>タグに相当する。)
+
+## コードサンプル
+
+**実装成果物(サーバ動作)**
+
+```jsp
+ <field:block
+   title="ユーザ基本情報"
+   id="user">
+
+   <field:text title="ログインID"
+               domain="ログインID"
+               required="true"
+               maxlength="20"
+               hint="半角英数記号20文字以内"
+               name="W11AC02.systemAccount.loginId"
+               sample="test01">
+   </field:text>
+   <field:password title="パスワード"
+                   domain="パスワード"
+                   required="true"
+                   maxlength="20"
+                   name="W11AC02.newPassword"
+                   sample="password">
+   </field:password>
+</field:block>
+```
+
+## 仕様
+
+このウィジェットは **title** 属性に設定されたタイトルの見出しを表示し、
+その後にボディ部に記述されたフォームの内容をそのまま出力する。
+
+見出しを表示したくない場合は、 **showTitle** をfalseに指定する。
+
+また **collapsible** 属性を指定することで、フォームの内容を開閉可能にできる。
+なお、このウィジェットは、サーバ動作でもローカル動作でも挙動は同一である。
+
+**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]
+
+| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |
+|---|---|---|---|---|---|
+| title | ブロックの見出し文字列 | 文字列 | ○ | ○ |  |
+| id | htmlのid属性 | 文字列 | ○ | ○ |  |
+| showTitle | ブロックの見出し文字列を表示 するかどうか | 真偽値 | ○ | ○ | デフォルトはtrue |
+| collapsible | ブロックを開閉可能とするか | 真偽値 | ○ | ○ | デフォルトはfalse. showTitle="true" でなければ無効 |
+| name | ブロックの開閉状態を保持す るフォームの入力要素名 | 文字列 | ○ | ○ | collapsible="true"の場合は必須 (falseの場合は無効)  name属性に設定した値を本ウィジェットと 同一form内にn:plainHiddenで 書きだすことで状態が保持される。  以下に例を示す。  ```jsp <n:form>     <%--       field:blockと同一form内にfield:blockの       name属性と同一のname属性を指定した       n:plainHidden出力する    --%>     <n:plainHidden name="block_status" />    <field:block       title="ユーザ基本情報"       collapsible="true"       name="block_status"       value="basic_info"       collapsed="true">    </field:block>  </n:form> ``` |
+| value | ブロックが開かれていた場合に サーバ側に送信する値 | 文字列 | ○ | ○ | collapsible="true"の場合は必須 (falseの場合は無効) |
+| collapsed | 初期表示時にブロックを 閉じるかどうか。 | 真偽値 | ○ | ○ | デフォルトはfalse. collapsible="true"でなければ無効 |
+
+## 内部構造・改修時の留意点
+
+**部品一覧**
+
+| パス | 内容 |
+|---|---|
+| /WEB-INF/tags/widget/field/block.tag | [入力フォームブロック](../../development-tools/testing-framework/testing-framework-field-block.md) の実体となるタグファイル |

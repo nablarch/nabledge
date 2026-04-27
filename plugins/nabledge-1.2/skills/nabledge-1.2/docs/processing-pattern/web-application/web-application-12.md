@@ -1,45 +1,53 @@
 # JavaScriptコードを記述すると静的解析ツールでエラーが発生します。対処方法を教えてください。
 
-## JSPでのJavaScript記述方法
+> **question:**
+> JavaScriptコードをHTMLコメントタグでくくって記述したところ、JSP静的解析ツールで「<!-- (at line=XX column=XX) is forbidden.」というエラーが発生しました。
 
-JSPにJavaScriptコードを記述する場合は、HTMLコメントタグ（`<!-- -->`）を使用せず、`<n:script>`タグを使用すること。
+> HTMLコメントタグでくくらずに記述したところ、HTMLチェックツールで下記のようなエラーが発生しました。
 
-- HTMLコメントタグでJavaScriptを囲むと、JSP静的解析ツールで `<!-- (at line=XX column=XX) is forbidden.` エラーが発生する
-- HTMLコメントタグなしで記述すると、HTMLチェックツールで `InvalidHtmlException: Lexical error` が発生する（`HtmlChecker`、`HtmlSyntaxChecker`、`TokenMgrError`、`ParserTokenManager` などのクラスがスタックトレースに現れる）
+> ```java
+> nablarch.test.tool.htmlcheck.InvalidHtmlException: syntax check failed. file = []
+>     at nablarch.test.tool.htmlcheck.HtmlChecker.doCheckSyntax(HtmlChecker.java:123)
+>     ～ 省略 ～
+> Caused by: nablarch.test.tool.htmlcheck.InvalidHtmlException: nablarch.test.tool.htmlcheck.parser.TokenMgrError: Lexical error at line 31, column 28.  Encountered: " " (32), after : "<"
+>     at nablarch.test.tool.htmlcheck.HtmlSyntaxChecker.check(HtmlSyntaxChecker.java:44)
+>     ～ 省略 ～
+> Caused by: nablarch.test.tool.htmlcheck.parser.TokenMgrError: Lexical error at line 31, column 28.  Encountered: " " (32), after : "<"
+>     at nablarch.test.tool.htmlcheck.parser.ParserTokenManager.getNextToken(ParserTokenManager.java:5019)
+>     ～ 省略 ～
+> ```
 
-`<n:script>`タグを使用すると、HTMLには自動的にHTMLコメント（`<!-- -->`）でくくられた`<script>`タグとして出力される。
+> JavaScriptコードはどのように記述すればいいのでしょうか。
 
-JSP記述例:
-```jsp
-<n:script type="text/javascript">
-    function clearChnKbn() {
-        var element = document.getElementsByTagName("select")
-        for (var i = 0; i < element.length; i++) {
-          var shnKbn = element[i];
-            shnKbn.selectedIndex = 0;
-        }
-    }
-</n:script>
-```
+> **answer:**
+> JavaScriptコードを記述したい場合は、<n:script>タグを使用してください。
 
-HTML出力例:
-```html
-<script type="text/javascript">
-<!--
-    function clearChnKbn() {
-        var element = document.getElementsByTagName("select")
-        for (var i = 0; i < element.length; i++) {
-          var shnKbn = element[i];
-            shnKbn.selectedIndex = 0;
-        }
-    }
--->
-</script>
-```
+> JSPの記述例を下記に示します。
 
-<details>
-<summary>keywords</summary>
+> ```java
+> <n:script type="text/javascript">
+>     function clearChnKbn() {
+>         var element = document.getElementsByTagName("select")
+>         for (var i = 0; i < element.length; i++) {
+>           var shnKbn = element[i];
+>             shnKbn.selectedIndex = 0;
+>         }
+>     }
+> </n:script>
+> ```
 
-n:script, JavaScript, JSP静的解析, HTMLチェック, InvalidHtmlException, HTMLコメントタグ, 静的解析エラー対処, HtmlChecker, HtmlSyntaxChecker, TokenMgrError, ParserTokenManager
+> HTMLには下記のように出力されます。
 
-</details>
+> ```java
+> <script type="text/javascript">
+> <!--
+>     function clearChnKbn() {
+>         var element = document.getElementsByTagName("select")
+>         for (var i = 0; i < element.length; i++) {
+>           var shnKbn = element[i];
+>             shnKbn.selectedIndex = 0;
+>         }
+>     }
+> -->
+> </script>
+> ```

@@ -1,232 +1,68 @@
 {
   "id": "testing-framework-ui-dev-doc-reference-ui-plugin",
   "title": "UIプラグイン一覧",
+  "content": "",
   "no_knowledge_content": false,
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/development_tools/ui_dev/doc/reference_ui_plugin/index.html"
-  ],
-  "index": [
+  "sections": [
     {
       "id": "s1",
       "title": "サードパーティ製ライブラリ",
-      "hints": [
-        "es6-promise",
-        "font-awesome",
-        "jquery",
-        "less",
-        "rquirejs",
-        "requiejs-text",
-        "shelljs",
-        "sugar",
-        "サードパーティライブラリ",
-        "外部ライブラリ",
-        "AMDモジュールローダ",
-        "LESSコンパイラ",
-        "jQueryライブラリ"
-      ]
+      "content": "これらのプラグインは Nablarch UI開発基盤が依存している外部ライブラリを含むものであり、\nその性質上、プロジェクト側でのカスタマイズは想定していない。\n\nなお、これらはUI開発基盤のリリース配布物に同梱していない。\n[UI開発基盤の導入](../../development-tools/testing-framework/testing-framework-initial-setup.md) の手順に従って作業することで\n別途ダウンロードするようになっている。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| es6-promise | ES6 Promise API ポリフィル | 不可 | ES6標準の非同期処理APIであるPromiseライブラリの ポリフィル 一部の開発用コマンドの中で使用している。 |\n| font-awesome | WebFontアイコン | 不可 | WebFontによるアイコン画像とそれを表示するための スタイル定義。 |\n| jquery | jQueryライブラリ | 不可 | W3C DOM APIの互換レイヤを提供するライブラリ。 |\n| less | LESSコンパイラ | 不可 | LESS記法で記述されたスタイル定義を 通常のCSSに展開するツール |\n| rquirejs | AMDモジュールローダ /コンパイラ | 不可 | AMD(Asynchronous Module Definition) 形式で記述されたJavaScriptライブラリを管理する ライブラリおよびminifyツール |\n| requiejs-text | テキストファイルAMD拡張 | 不可 | 通常のテキストファイルをAMDモジュールとして 管理するためのrequirejs 拡張 |\n| shelljs | プラットフォーム互換コマンド | 不可 | cd/grep/ln などの主要基本コマンドのnode.jsによる実装。 一部の開発用コマンドの中で使用している。 |\n| sugar | JavaScriptコアAPI拡張 | 不可 | String/Array/Number などのコアクラスを拡張する。 また、Array.forEach など一部のES5標準APIの ポリフィルを提供する。 |",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "CSS共通スタイルプラグイン",
-      "hints": [
-        "nablarch-css-core",
-        "nablarch-css-base",
-        "nablarch-css-common",
-        "nablarch-css-color-default",
-        "nablarch-css-conf-wide",
-        "nablarch-css-conf-compact",
-        "nablarch-css-conf-narrow",
-        "nablarch-css-conf-multicol",
-        "CSSスタイル",
-        "LESS",
-        "レスポンシブ",
-        "表示モード",
-        "グリッドフレームワーク",
-        "カラースキーム",
-        "マルチレイアウト"
-      ]
+      "content": "画面の表示制御を行うスタイル定義を含むプラグイン。\nNablarch UI開発基盤のスタイルは全て LESS記法を用いて記述している。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-css-core | コアスタイル定義 | 不可 | Nablarchのスタイル定義における共通基盤となる以下のファイルを含む。  **reset.less** 各ブラウザのHTML要素に対するデフォルトスタイルを一律除去する ことでブラウザ間の表示互換性を向上させる。 **grid.less** グリッドフレームワークを定義する。 **css3.less** CSS3プロパティに相当するブラウザ互換なクラス定義 |\n| nablarch-css-base | HTML基本要素スタイル | 非推奨 | **reset.less** で除去されたHTMLの基本要素のスタイルを再定義する。 修正時の影響が大きいので、カスタマイズは推奨しない。 |\n| nablarch-css-common | NAF既定CSSスタイル定義 | 可 | 精査エラーメッセージの表示色などNAF側で指定されている CSSクラスの内容を定義する。 |\n| nablarch-css-color-default | カラースキーム定義 | 必須 | 画面全体の基本配色を定義する。 |\n| nablarch-css-conf-wide | ワイド表示モード定義 | 可 | レスポンシブ対応画面におけるワイド表示モード (デバイス/ウィンドウの横論理ピクセル数が1024超) での画面レイアウトを定義する。 |\n| nablarch-css-conf-compact | コンパクト表示モード定義 | 可 | レスポンシブ対応画面におけるコンパクト表示モード (デバイス/ウィンドウの横論理ピクセル数が640超 1024未満) における画面レイアウトを定義する。 |\n| nablarch-css-conf-narrow | ナロー表示モード定義 | 可 | レスポンシブ対応画面におけるナロー表示モード (デバイス/ウィンドウの横論理ピクセル数が640未満) における画面レイアウトを定義する。 |\n| nablarch-css-conf-multicol | マルチレイアウト表示モード定義 | 可 | マルチレイアウト表示モード(本表示モードはワイドモードを ベースとしている)における画面レイアウトを定義する。 本モード使用時は、画面サイズに応じた表示モードの切替 (レスポンシブ対応)は使用できない。 |",
+      "level": 2
     },
     {
       "id": "s3",
       "title": "表示モード切替用プラグイン",
-      "hints": [
-        "nablarch-device-media_query",
-        "MediaQuery",
-        "表示モード切替",
-        "レスポンシブ対応"
-      ]
+      "content": "[CSSフレームワーク](../../development-tools/testing-framework/testing-framework-css-framework.md) の機能である表示モードを切り替えを実現するためのプラグイン。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-device-media_query | 表示モード切替用プラグイン | 可 | MediaQueryによって、 表示モードを切り替える機能を実装する。  表示モード切替えの条件を変更する場合は、 本プラグインをカスタマイズする。  プラグインは、/WEB-INF/tags/device/media.tag として実装されている。 |",
+      "level": 2
     },
     {
       "id": "s4",
       "title": "特定端末向けパッチプラグイン",
-      "hints": [
-        "nablarch-device-fix-base",
-        "nablarch-device-fix-ios",
-        "nablarch-device-fix-android_browser",
-        "UserAgent",
-        "iOS",
-        "Android",
-        "端末判定",
-        "デバイスパッチ"
-      ]
+      "content": "UserAgent判定により、特定の端末のみで有効となるスクリプトやスタイル定義からなるプラグイン。\nただし、いわゆる feature-detection により判定するものについてはここには含まない。\n\n> **Important:**\n> システムサポート外の端末を対象としたプラグインは、あらかじめ除去しておくこと。\n> ( [UI開発基盤の導入](../../development-tools/testing-framework/testing-framework-initial-setup.md) の「プロジェクトで使用するプラグインの選定」の項を参照。)\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-device-fix-base | UserAgentによるデバイス判定 | 可 | リクエストごとにサーバサイド処理でUserAgentを判定して   その結果をJavaScriptのグローバル変数および、<body>要素のクラス属性 に設定する。  なお、ローカル表示ではJavaScriptによりUserAgentを判定する。 |\n| nablarch-device-fix-ios | ios向けパッチ | 可 | iOSの標準ブラウザにおける表示不具合を回避するためのスクリプト およびスタイル定義。 |\n| nablarch-device-fix-android_browser | android向けパッチ | 可 | androidの標準ブラウザにおける表示不具合を回避するためのスクリプト およびスタイル定義。 |",
+      "level": 2
     },
     {
       "id": "s5",
       "title": "開発用ツールプラグイン",
-      "hints": [
-        "nablarch-dev-tool-installer",
-        "nablarch-dev-tool-server",
-        "nablarch-dev-ui_test-support",
-        "nablarch-dev-tool-uibuild",
-        "nablarch-dev-tool-update_support",
-        "ビルドスクリプト",
-        "LESSコンパイル",
-        "ミニファイ",
-        "開発ツール"
-      ]
+      "content": "開発作業において使用する各種ツールからなるプラグイン。\n\nこれらのツールの使用方法については [UI開発基盤の導入](../../development-tools/testing-framework/testing-framework-initial-setup.md) を参照すること。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-dev-tool-installer | Nablarch UI開発基盤 標準プラグインインストーラ | 不可 | Nablarch UI基盤標準プラグインをプロジェクト側にインストール するスクリプト。 |\n| nablarch-dev-tool-server | Nablarch UI開発基盤 テスト用簡易サーバ | 不可 | Nablarch UI開発基盤自体の各種テストに用いる 簡易アプリケーションサーバ |\n| nablarch-dev-ui_test-support | Nablarch UI開発基盤 テストケース用資源 | 不可 | Nablarch UI開発基盤自体のテストケースで使用している テストツール類 (qunit.js など) |\n| nablarch-dev-tool-uibuild | ウェブアプリケーション資源 ビルドスクリプト | 可 | ウェブアプリケーション上で公開される資源を各プラグインから収集し、 サーブレットコンテキスト配下に配置するスクリプト。  スクリプトのミニファイおよびスタイル定義の LESSコンパイルとミニファイも合わせて行う。 |\n| nablarch-dev-tool-update_support | Nablarch 標準プラグイン 更新補助スクリプト | 不可 | 使用しているプラグインとリリース資材のプラグイン間で バージョンが異なるプラグイン名を出力するスクリプト。 |",
+      "level": 2
     },
     {
       "id": "s6",
       "title": "業務画面JSPローカル表示機能プラグイン",
-      "hints": [
-        "nablarch-dev-ui_demo-core",
-        "nablarch-dev-ui_demo-config",
-        "nablarch-dev-ui_demo-core-lib",
-        "nablarch-dev-ui_tool-base-core",
-        "nablarch-dev-ui_tool-base-config",
-        "nablarch-dev-ui_tool-jsp_verify",
-        "nablarch-dev-ui_tool-spec_view-core",
-        "nablarch-dev-ui_tool-spec_view",
-        "nablarch-dev-ui_tool-spec_view-resource",
-        "JSPローカル表示",
-        "設計書ビュー",
-        "JSP検証",
-        "SpecSheetTemplate"
-      ]
+      "content": "以下のプラグインには [業務画面JSPローカル表示機能](../../development-tools/testing-framework/testing-framework-inbrowser-jsp-rendering.md) およびその拡張機能を実現するための各種スクリプトなどが含まれる。\n\n使用方法については **HTML/JSP作成ガイド** を参照すること。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-dev-ui_demo-core | ローカル表示用JSPレンダラー | 不可 | 業務画面JSPをDOMに直接変換してプレビューを表示するJavaScript |\n| nablarch-dev-ui_demo-config | ローカル表示時変数定義 | 必要 | JSPのレンダリング時に参照する各種スコープ変数の値を設定する。 (ログインユーザ名など) |\n| nablarch-dev-ui_demo-core-lib | ローカル表示用タグライブラリ スタブ | 可 | 下記のタグのレンダリングを行うスクリプト群  * JSP標準タグライブラリ( **<jsp:include>** など) * JSTLタグライブラリ( **<c:if>** など) * EL埋め込み関数( **${fn:replace}** など) * Nablarch標準タグライブラリ( **<n:form>** など) * その他特殊な対応が必要となるHTMLタグ( **<style>** など) |\n| nablarch-dev-ui_tool-base-core | 業務画面JSPローカル表示機能のベースコアプラグイン | 不要 | 業務画面JSPローカル表示機能のベースとなる機能を実装する。 |\n| nablarch-dev-ui_tool-base-config | 業務画面JSPローカル表示機能の ベースコンフィギュレーションプラグイン | 必須 | 業務画面JSPローカル表示機能のリソースを管理する。 |\n| nablarch-dev-ui_tool-jsp_verify | JSP検証ツールプラグイン | 可 | 業務画面JSPローカル表示機能で使用される JSPファイルの検証の実装。  ローカル表示や設計書表示用の 属性のチェックを行う。  IE8の場合は、検証処理は実行しない (IE8には未対応)。 |\n| nablarch-dev-ui_tool-spec_view-core | 設計書ビューコアプラグイン | 不要 | [設計書ビュー表示機能](../../development-tools/testing-framework/testing-framework-showing-specsheet-view.md) の実装。 |\n| nablarch-dev-ui_tool-spec_view | 設計書ビュープラグイン | 不要 | 設計情報をJSPから取得する拡張機能。 (jQueryの拡張プラグインとして提供する。)   画面設計書ViewなどJSPの値を取得、変換 する際に本拡張機能が使用できる。 |\n| nablarch-dev-ui_tool-spec_view-resource | 設計書ビュー用のリソース管理プラグイン | 可 | 表示される設計書のテンプレート。 フォーマットを変更する場合は、 本プラグインに含まれるSpecSheetTmeplate.xlsx を修正し、htm形式で保存する。 |",
+      "level": 2
     },
     {
       "id": "s7",
       "title": "JavaScriptユーティリティプラグイン",
-      "hints": [
-        "nablarch-js-util-bigdecimal",
-        "nablarch-js-util-date",
-        "nablarch-js-util-consumer",
-        "BigDecimal",
-        "日付フォーマット",
-        "SimpleDateFormat",
-        "JavaScriptユーティリティ",
-        "浮動小数誤差"
-      ]
+      "content": "JavaScriptのコアライブラリをサポートするユーティリティスクリプト。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-js-util-bigdecimal | 簡易BigDecimalライブラリ | 不可 | JavaScriptのNumber型(32bit浮動少数)を使用した場合に発生する誤差を 回避するために使用する簡易BigDecimal型実装クラス。  ただし、内部的には32bit浮動少数を使用するため、 有効桁が15桁を超える場合は使用できない。 |\n| nablarch-js-util-date | 日付フォーマット変換ライブラリ | 可 | Javaのjava.util.SimpleDateFormatのサブセットとなる 日付フォーマット変換を実装するユーティリティクラス。 |\n| nablarch-js-util-consumer | 簡易Tokenizer/Parser | 不可 | ミニ言語のパーサの実装に使用する簡易パーサ |",
+      "level": 2
     },
     {
       "id": "s8",
       "title": "UI部品ウィジェットプラグイン",
-      "hints": [
-        "nablarch-widget-core",
-        "nablarch-widget-box-base",
-        "nablarch-widget-box-content",
-        "nablarch-widget-box-img",
-        "nablarch-widget-box-title",
-        "nablarch-widget-button",
-        "nablarch-widget-collapsible",
-        "nablarch-widget-column-base",
-        "nablarch-widget-column-checkbox",
-        "nablarch-widget-column-code",
-        "nablarch-widget-column-label",
-        "nablarch-widget-column-link",
-        "nablarch-widget-column-radio",
-        "nablarch-widget-field-base",
-        "nablarch-widget-field-block",
-        "nablarch-widget-field-calendar",
-        "nablarch-widget-field-checkbox",
-        "nablarch-widget-field-file",
-        "nablarch-widget-field-hint",
-        "nablarch-widget-field-label",
-        "nablarch-widget-field-label_block",
-        "nablarch-widget-field-label_id_value",
-        "nablarch-widget-field-listbuilder",
-        "nablarch-widget-field-password",
-        "nablarch-widget-field-pulldown",
-        "nablarch-widget-field-radio",
-        "nablarch-widget-field-text",
-        "nablarch-widget-field-textarea",
-        "nablarch-widget-link",
-        "nablarch-widget-multicol-cell",
-        "nablarch-widget-multicol-row",
-        "nablarch-widget-placeholder",
-        "nablarch-widget-readonly",
-        "nablarch-widget-slide-menu",
-        "nablarch-widget-spec",
-        "nablarch-widget-spec-meta_info",
-        "nablarch-widget-tab",
-        "nablarch-widget-table-base",
-        "nablarch-widget-table-plain",
-        "nablarch-widget-table-row",
-        "nablarch-widget-table-search_result",
-        "nablarch-widget-table-tree",
-        "nablarch-widget-toggle-checkbox",
-        "nablarch-widget-tooltip",
-        "ウィジェット",
-        "JSPウィジェット",
-        "フィールドウィジェット",
-        "テーブルウィジェット",
-        "カラムウィジェット"
-      ]
+      "content": "[UI部品ウィジェット](../../development-tools/testing-framework/testing-framework-jsp-widgets.md) を実装するタグファイル・スクリプト・スタイル定義などを格納するプラグイン。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-widget-core | JSウィジェット基盤クラス | 不可 | [UI部品ウィジェット一覧](../../development-tools/testing-framework/testing-framework-ui-dev-doc-reference-jsp-widgets.md) の中で共通的に使用されるJavaScript部品を 格納するプラグイン。 jQueryのカスタムセレクタもここに含まれる。 |\n| nablarch-widget-box-base | 表示領域ウィジェット共通テンプレート | 可 | 表示領域ウィジェットで共通的に使用されるCSS 定義を実装する。 |\n| nablarch-widget-box-content | [コンテンツ用表示領域ウィジェット](../../development-tools/testing-framework/testing-framework-box-content.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-box-img | [画像表示ウィジェット](../../development-tools/testing-framework/testing-framework-box-img.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-box-title | [タイトル用表示領域ウィジェット](../../development-tools/testing-framework/testing-framework-box-title.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-button | [ボタンウィジェット](../../development-tools/testing-framework/testing-framework-button-submit.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-collapsible | 開閉機能スクリプト | 非推奨 | 画面内の領域を開閉する機能を実装するスクリプト [階層(ツリー)表示テーブルウィジェット](../../development-tools/testing-framework/testing-framework-table-treelist.md) などから使用される。 |\n| nablarch-widget-column-base | カラムウィジェット共通プラグイン | 可 | カラムウィジェットで使用される以下の共通的な 機能を実装する。  * 共通的に使用されるCSS定義 * カラムウェジェットで使用するJSPローカル表示機能用ライブラリ |\n| nablarch-widget-column-checkbox | [テーブル複数行選択用チェックボックスカラムウィジェット](../../development-tools/testing-framework/testing-framework-column-checkbox.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-column-code | [コード値ラベル表示用カラムウィジェット](../../development-tools/testing-framework/testing-framework-column-code.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-column-label | [ラベル表示用カラムウィジェット](../../development-tools/testing-framework/testing-framework-column-label.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-column-link | [リンク表示用カラムウィジェット](../../development-tools/testing-framework/testing-framework-column-link.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-column-radio | [テーブル行選択用ラジオボタンカラムウィジェット](../../development-tools/testing-framework/testing-framework-column-radio.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-base | [入力項目ウィジェット共通テンプレート](../../development-tools/testing-framework/testing-framework-field-base.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-block | [入力フォームブロック](../../development-tools/testing-framework/testing-framework-field-block.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-calendar | [カレンダー日付入力ウィジェット](../../development-tools/testing-framework/testing-framework-field-calendar.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-checkbox | [チェックボックス入力項目ウィジェット](../../development-tools/testing-framework/testing-framework-field-checkbox.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-file | [ファイル選択ウィジェット](../../development-tools/testing-framework/testing-framework-field-file.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-hint | [入力内容注記表示ウィジェット](../../development-tools/testing-framework/testing-framework-field-hint.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-label | [表示項目ウィジェット](../../development-tools/testing-framework/testing-framework-field-label.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-label_block | [表示ブロックウィジェット](../../development-tools/testing-framework/testing-framework-field-label-block.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-label_id_value | [ID:値セット項目表示ウィジェット](../../development-tools/testing-framework/testing-framework-field-label-id-value.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-listbuilder | [リストビルダー入力項目ウィジェット](../../development-tools/testing-framework/testing-framework-field-listbuilder.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-password | [パスワード入力ウィジェット](../../development-tools/testing-framework/testing-framework-field-password.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-pulldown | [プルダウン入力項目ウィジェット](../../development-tools/testing-framework/testing-framework-field-pulldown.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-radio | [ラジオボタン入力項目ウィジェット](../../development-tools/testing-framework/testing-framework-field-radio.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-text | [単行テキスト入力項目ウィジェット](../../development-tools/testing-framework/testing-framework-field-text.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-field-textarea | [複数行テキスト入力項目ウィジェット](../../development-tools/testing-framework/testing-framework-field-textarea.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-link | [リンクウィジェット](../../development-tools/testing-framework/testing-framework-link-submit.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-multicol-cell | マルチレイアウト用列定義ウィジェット | 可 | マルチレイアウトで使用する列を表すタグ(layout:cell) を実装する。  詳細は [使用例](../../development-tools/testing-framework/testing-framework-multicol-css-framework.md#multicol-css-framework-example) を参照。 |\n| nablarch-widget-multicol-row | マルチレイアウト用行定義ウィジェット | 可 | マルチレイアウトで使用する行を表すタグ(layout:row) を実装する。  詳細は [使用例](../../development-tools/testing-framework/testing-framework-multicol-css-framework.md#multicol-css-framework-example) を参照。 |\n| nablarch-widget-placeholder | placeholder属性ポリフィル | 非推奨 | IEなどのplaceholder属性を実装していない ブラウザ向けのポリフィル実装 |\n| nablarch-widget-readonly | 変更不可項目制御 | 非推奨 | readonly属性の拡張。 通常のreadonly属性とは異なり、プルダウンや チェックボックスの選択状態の変更も抑止できる。 |\n| nablarch-widget-slide-menu | スライドメニューウィジェット | 必須 | narrow,compact表示でメニューを省スペース化する サンプル機能。 JavaScript,LESSの定義はそのまま使用できるが、 JSPはPJ側で修正する必要がある。 |\n| nablarch-widget-spec | [画面仕様記述用ウィジェット](../../development-tools/testing-framework/testing-framework-ui-dev-doc-reference-jsp-widgets.md#reference-jsp-widgets-index-spec) | 可 | 画面仕様の情報を記述するタグの実装。  設計書ビュー表示プラグインはこのタグから 情報を取得した情報を使用する。  このタグはサーバ表示には影響を与えない。 |\n| nablarch-widget-spec-meta_info | [メタ情報記述用ウィジェット](../../development-tools/testing-framework/testing-framework-ui-dev-doc-reference-jsp-widgets.md#reference-jsp-widgets-index-spec) | 可 | 設計書作成者等の情報を記述するためのタグの 実装。  設計書ビュー表示プラグインは、このタグから 取得した情報を使用する。  このタグはサーバ表示には影響を与えない。 |\n| nablarch-widget-tab | [タブウィジェット](../../development-tools/testing-framework/testing-framework-tab-group.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-table-base | テーブルウィジェットの共通プラグイン | 可 | テーブルウィジェットで使用される以下の共通的な 機能が実装されている。  * 共通的に使用されるCSS定義 * 表示モードに応じたウィジェット表示内容の   切り替え用CSS定義 * テーブルウェジェットで使用するJSPローカル表示機能用   ライブラリ |\n| nablarch-widget-table-plain | [一覧テーブルウィジェット](../../development-tools/testing-framework/testing-framework-table-plain.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-table-row | [マルチレイアウトテーブル](../../development-tools/testing-framework/testing-framework-table-row.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-table-search_result | [検索結果テーブルウィジェット](../../development-tools/testing-framework/testing-framework-table-search-result.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-table-tree | [階層(ツリー)表示テーブルウィジェット](../../development-tools/testing-framework/testing-framework-table-treelist.md) | 可 | 左記ウィジェットの実装 |\n| nablarch-widget-toggle-checkbox | チェックボックスの全選択/全解除プラグイン | 可 | リンクやボタンにチェックボックス全選択/全解除 の機能を持たせるためのプラグイン。 |\n| nablarch-widget-tooltip | ツールチップ表示プラグイン | 可 | マウスオーバーにより、補足情報をポップアップで 表示する機能をもつプラグイン。 |",
+      "level": 2
     },
     {
       "id": "s9",
       "title": "UIイベント制御部品プラグイン",
-      "hints": [
-        "nablarch-js-submit",
-        "nablarch-widget-event-base",
-        "nablarch-widget-event-listen",
-        "nablarch-widget-event-autosum",
-        "nablarch-widget-event-dialog",
-        "nablarch-widget-event-send_request",
-        "nablarch-widget-event-toggle",
-        "nablarch-widget-event-window_close",
-        "nablarch-widget-event-write_to",
-        "イベント制御",
-        "カスタムサブミット",
-        "ダイアログ",
-        "自動集計",
-        "nablarch_submit"
-      ]
+      "content": "画面上のイベント制御を宣言的に定義する各種ウィジェットを実装するプラグイン。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-js-submit | Nablarchカスタムサブミットイベント | 不可 | Nablarchフレームワークのサブミット時処理 (nablarch_submit)の実行前後に発火する jQueryグローバルカスタムイベントを定義する。 |\n| nablarch-widget-event-base | イベントウィジェットベースプラグイン | 不可 | イベントウィジェットのベースプラグイン。  JSPローカル表示時に、イベントの エミュレーションを行うために必要な機能を 実装する。 |\n| nablarch-widget-event-listen | [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.md) | 不可 | 画面内で発生する指定されたイベントを監視し、 各種イベントアクションを実行するウィジェット の実装 |\n| nablarch-widget-event-autosum | [自動集計イベント](../../../../_static/ui_dev/yuidoc/classes/nablarch.ui.AutoSum.html) | 不可 | 左記イベントアクションの実装 |\n| nablarch-widget-event-dialog | ダイアログ表示イベントアクション [アラートダイアログ表示イベントアクション](../../development-tools/testing-framework/testing-framework-event-alert.md) [確認ダイアログ表示イベントアクション](../../development-tools/testing-framework/testing-framework-event-confirm.md) | 不可 | 左記イベントアクションの実装   ダイアログ表示は、アラート、確認ダイアログから使用される。 |\n| nablarch-widget-event-send_request | [XHRリクエスト送信イベントアクション](../../development-tools/testing-framework/testing-framework-event-send-request.md) | 不可 | 左記イベントアクションの実装 |\n| nablarch-widget-event-toggle | [disabled 項目切替えイベントアクション](../../development-tools/testing-framework/testing-framework-event-toggle-disabled.md) [属性値の動的切替](../../development-tools/testing-framework/testing-framework-event-toggle-property.md) [readonly 項目切替えイベントアクション](../../development-tools/testing-framework/testing-framework-event-toggle-readonly.md) | 不可 | 左記イベントアクションの実装 |\n| nablarch-widget-event-window_close | [ウィンドウクローズイベントアクション](../../development-tools/testing-framework/testing-framework-event-window-close.md) | 不可 | 左記イベントアクションの実装 |\n| nablarch-widget-event-write_to | [項目内容変更イベントアクション](../../development-tools/testing-framework/testing-framework-event-write-to.md) | 不可 | 左記イベントアクションの実装 |",
+      "level": 2
     },
     {
       "id": "s10",
       "title": "業務画面テンプレートプラグイン",
-      "hints": [
-        "nablarch-template-base",
-        "nablarch-template-page",
-        "nablarch-template-error",
-        "nablarch-template-head",
-        "nablarch-template-multicol-head",
-        "nablarch-template-js_include",
-        "nablarch-template-app_nav",
-        "nablarch-template-app_header",
-        "nablarch-template-app_footer",
-        "nablarch-template-app_aside",
-        "base_layout_tag",
-        "page_template_tag",
-        "errorpage_template_tag",
-        "JSPテンプレート",
-        "ナビゲーション",
-        "ヘッダ",
-        "フッタ"
-      ]
+      "content": "[業務画面テンプレート](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md) の実体となるタグファイルと、それに付随するスクリプトやスタイル定義から構成されるプラグイン。\nまた、各テンプレートからインクルードされる共通領域を描画するJSPのサンプルもここに含まれる。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-template-base | [業務画面ベースレイアウト](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md#base-layout-tag) | 可 | 左記テンプレートの実装。 |\n| nablarch-template-page | [業務画面標準テンプレート](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md#page-template-tag) | 可 | 左記テンプレートの実装。 |\n| nablarch-template-error | [エラー画面テンプレート](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md#errorpage-template-tag) | 可 | 左記テンプレートの実装。 |\n| nablarch-template-head | HTML head要素定義インクルード | 可 | head要素の内容を出力するJSP。 [業務画面ベースレイアウト](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md#base-layout-tag) からインクルードされ、 以下の内容を定義している。  * <title>タグの内容 * MediaQueryによる表示モード切替え * 外部CSSファイルのインクルード * <meta>タグの内容   (IEの互換モード設定など) |\n| nablarch-template-multicol-head | マルチレイアウト用HTML head要素定義インクルード | 可 | マルチレイアウト用のhead要素の内容を出力する JSP。 [業務画面ベースレイアウト](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md#base-layout-tag) からインクルードされ、 以下の内容を定義している。  * <title>タグの内容 * 外部CSSファイルのインクルード * <meta>タグの内容   (IEの互換モード設定など)  使用方法は、 [レイアウトの調整方法](../../development-tools/testing-framework/testing-framework-multicol-css-framework.md#multicol-css-framework-setting-layout) を参照。 |\n| nablarch-template-js_include | HTML script要素定義インクルード | 可 | scriptタグの内容を出力するJSP。 [業務画面ベースレイアウト](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md#base-layout-tag) からインクルードされる。  > **Tip:** > [業務画面ベースレイアウト](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md#base-layout-tag) ではこのインクルードを > HTMLの最後(bodyタグの末端)に出力している。 >  > これは、画面の描画とスクリプトのロードを > 並行に実行し、ユーザの体感速度を > 向上させるためである。 |\n| nablarch-template-app_nav | アプリケーション共通ナビゲーションメニュー サンプル | 必須 | 業務画面の共通ナビゲーション領域を描画する JSPおよびスタイル定義などのリソース。 JSPは [業務画面標準テンプレート](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md#page-template-tag) から インクルードされる。  内容はUI開発基盤用プロジェクトテンプレート と同じものなので、PJ側で修正する必要がある。 |\n| nablarch-template-app_header | アプリケーション共通ヘッダサンプル | 必須 | 業務画面の共通ヘッダ領域を描画するJSPおよび スタイル定義などのリソース。 JSPは [業務画面標準テンプレート](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md#page-template-tag) から インクルードされる。  内容はUI開発基盤用プロジェクトテンプレート と同じものなので、PJ側で修正する必要がある。 |\n| nablarch-template-app_footer | アプリケーション共通フッターサンプル | 必須 | 業務画面の共通フッター領域を描画するJSPおよび スタイル定義などのリソース。 JSPは [業務画面標準テンプレート](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md#page-template-tag) から インクルードされる。  内容はUI開発基盤用プロジェクトテンプレート と同じものなので、PJ側で修正する必要がある。 |\n| nablarch-template-app_aside | アプリケーション共通サイドメニューサンプル | 必須 | 業務画面の共通サイドメニューを描画するJSPおよび スタイル定義などのリソース。 JSPは [業務画面標準テンプレート](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md#page-template-tag) から インクルードされる。  内容はUI開発基盤用プロジェクトテンプレート と同じものなので、PJ側で修正する必要がある。 |",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "サードパーティ製ライブラリはNablarch UI開発基盤が依存している外部ライブラリを含むものであり、プロジェクト側でのカスタマイズは不可。リリース配布物には同梱されていないため、[../development_environment/initial_setup](testing-framework-initial_setup.json) の手順に従って別途ダウンロードする。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| es6-promise | ES6 Promise API ポリフィル | 不可 | ES6標準の非同期処理APIであるPromiseライブラリのポリフィル。一部の開発用コマンドで使用。 |\n| font-awesome | WebFontアイコン | 不可 | WebFontによるアイコン画像とそれを表示するためのスタイル定義。 |\n| jquery | jQueryライブラリ | 不可 | W3C DOM APIの互換レイヤを提供するライブラリ。 |\n| less | LESSコンパイラ | 不可 | LESS記法で記述されたスタイル定義を通常のCSSに展開するツール。 |\n| rquirejs | AMDモジュールローダ/コンパイラ | 不可 | AMD形式で記述されたJavaScriptライブラリを管理するライブラリおよびminifyツール。 |\n| requiejs-text | テキストファイルAMD拡張 | 不可 | 通常のテキストファイルをAMDモジュールとして管理するためのrequirejs拡張。 |\n| shelljs | プラットフォーム互換コマンド | 不可 | cd/grep/lnなどの主要基本コマンドのnode.jsによる実装。一部の開発用コマンドで使用。 |\n| sugar | JavaScriptコアAPI拡張 | 不可 | String/Array/Numberなどのコアクラスを拡張。Array.forEachなど一部のES5標準APIのポリフィルを提供。 |",
-    "s2": "Nablarch UI開発基盤のスタイルは全てLESS記法を用いて記述している。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-css-core | コアスタイル定義 | 不可 | 共通基盤ファイルを含む: **reset.less**（各ブラウザのHTML要素に対するデフォルトスタイルを一律除去してブラウザ間の表示互換性を向上）、**grid.less**（グリッドフレームワーク定義）、**css3.less**（CSS3プロパティに相当するブラウザ互換なクラス定義） |\n| nablarch-css-base | HTML基本要素スタイル | 非推奨 | reset.lessで除去されたHTMLの基本要素のスタイルを再定義する。修正時の影響が大きいのでカスタマイズは推奨しない。 |\n| nablarch-css-common | NAF既定CSSスタイル定義 | 可 | 精査エラーメッセージの表示色などNAF側で指定されているCSSクラスの内容を定義する。 |\n| nablarch-css-color-default | カラースキーム定義 | 必須 | 画面全体の基本配色を定義する。 |\n| nablarch-css-conf-wide | ワイド表示モード定義 | 可 | レスポンシブ対応画面におけるワイド表示モード（デバイス/ウィンドウの横論理ピクセル数が1024超）での画面レイアウトを定義する。 |\n| nablarch-css-conf-compact | コンパクト表示モード定義 | 可 | レスポンシブ対応画面におけるコンパクト表示モード（横論理ピクセル数が640超1024未満）における画面レイアウトを定義する。 |\n| nablarch-css-conf-narrow | ナロー表示モード定義 | 可 | レスポンシブ対応画面におけるナロー表示モード（横論理ピクセル数が640未満）における画面レイアウトを定義する。 |\n| nablarch-css-conf-multicol | マルチレイアウト表示モード定義 | 可 | マルチレイアウト表示モード（ワイドモードをベースとしている）における画面レイアウトを定義する。本モード使用時は画面サイズに応じた表示モードの切替（レスポンシブ対応）は使用できない。 |",
-    "s3": "[../internals/css_framework](testing-framework-css_framework.json) の表示モード切り替えを実現するプラグイン。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-device-media_query | 表示モード切替用プラグイン | 可 | MediaQueryによって表示モードを切り替える機能を実装する。表示モード切替えの条件を変更する場合は本プラグインをカスタマイズする。プラグインは `/WEB-INF/tags/device/media.tag` として実装されている。 |",
-    "s4": "> **重要**: システムサポート外の端末を対象としたプラグインは、あらかじめ除去しておくこと。（[../development_environment/initial_setup](testing-framework-initial_setup.json) の「プロジェクトで使用するプラグインの選定」を参照。）\n\nUserAgent判定により特定の端末のみで有効となるスクリプトやスタイル定義からなるプラグイン群。ただし、いわゆる feature-detection により判定するものについてはここには含まない。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-device-fix-base | UserAgentによるデバイス判定 | 可 | リクエストごとにサーバサイド処理でUserAgentを判定し、その結果をJavaScriptのグローバル変数および`<body>`要素のクラス属性に設定する。ローカル表示ではJavaScriptによりUserAgentを判定。 |\n| nablarch-device-fix-ios | iOS向けパッチ | 可 | iOSの標準ブラウザにおける表示不具合を回避するためのスクリプトおよびスタイル定義。 |\n| nablarch-device-fix-android_browser | Android向けパッチ | 可 | Androidの標準ブラウザにおける表示不具合を回避するためのスクリプトおよびスタイル定義。 |",
-    "s5": "| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-dev-tool-installer | Nablarch UI開発基盤 標準プラグインインストーラ | 不可 | Nablarch UI基盤標準プラグインをプロジェクト側にインストールするスクリプト。 |\n| nablarch-dev-tool-server | Nablarch UI開発基盤 テスト用簡易サーバ | 不可 | Nablarch UI開発基盤自体の各種テストに用いる簡易アプリケーションサーバ。 |\n| nablarch-dev-ui_test-support | Nablarch UI開発基盤 テストケース用資源 | 不可 | テストケースで使用しているテストツール類（qunit.jsなど）。 |\n| nablarch-dev-tool-uibuild | ウェブアプリケーション資源 ビルドスクリプト | 可 | ウェブアプリケーション上で公開される資源を各プラグインから収集しサーブレットコンテキスト配下に配置するスクリプト。スクリプトのミニファイおよびスタイル定義のLESSコンパイルとミニファイも行う。 |\n| nablarch-dev-tool-update_support | Nablarch 標準プラグイン 更新補助スクリプト | 不可 | 使用しているプラグインとリリース資材のプラグイン間でバージョンが異なるプラグイン名を出力するスクリプト。 |",
-    "s6": "[../internals/inbrowser_jsp_rendering](testing-framework-inbrowser_jsp_rendering.json) およびその拡張機能を実現するための各種スクリプトなどを含むプラグイン群。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-dev-ui_demo-core | ローカル表示用JSPレンダラー | 不可 | 業務画面JSPをDOMに直接変換してプレビューを表示するJavaScript。 |\n| nablarch-dev-ui_demo-config | ローカル表示時変数定義 | 必要 | JSPのレンダリング時に参照する各種スコープ変数の値を設定する（ログインユーザ名など）。 |\n| nablarch-dev-ui_demo-core-lib | ローカル表示用タグライブラリ スタブ | 可 | 下記タグのレンダリングを行うスクリプト群: JSP標準タグライブラリ（`<jsp:include>`など）、JSTLタグライブラリ（`<c:if>`など）、EL埋め込み関数（`${fn:replace}`など）、Nablarch標準タグライブラリ（`<n:form>`など）、その他特殊な対応が必要となるHTMLタグ（`<style>`など） |\n| nablarch-dev-ui_tool-base-core | 業務画面JSPローカル表示機能のベースコアプラグイン | 不要 | 業務画面JSPローカル表示機能のベースとなる機能を実装する。 |\n| nablarch-dev-ui_tool-base-config | 業務画面JSPローカル表示機能の ベースコンフィギュレーションプラグイン | 必須 | 業務画面JSPローカル表示機能のリソースを管理する。 |\n| nablarch-dev-ui_tool-jsp_verify | JSP検証ツールプラグイン | 可 | 業務画面JSPローカル表示機能で使用されるJSPファイルの検証。ローカル表示や設計書表示用の属性のチェックを行う。IE8の場合は検証処理は実行しない（IE8には未対応）。 |\n| nablarch-dev-ui_tool-spec_view-core | 設計書ビューコアプラグイン | 不要 | [../internals/showing_specsheet_view](testing-framework-showing_specsheet_view.json) の実装。 |\n| nablarch-dev-ui_tool-spec_view | 設計書ビュープラグイン | 不要 | 設計情報をJSPから取得する拡張機能（jQueryの拡張プラグインとして提供）。画面設計書ViewなどJSPの値を取得、変換する際に本拡張機能が使用できる。 |\n| nablarch-dev-ui_tool-spec_view-resource | 設計書ビュー用のリソース管理プラグイン | 可 | 表示される設計書のテンプレート。フォーマットを変更する場合は、本プラグインに含まれるSpecSheetTmeplate.xlsxを修正し、htm形式で保存する。 |",
-    "s7": "| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-js-util-bigdecimal | 簡易BigDecimalライブラリ | 不可 | JavaScriptのNumber型（32bit浮動小数）使用時の誤差を回避するための簡易BigDecimal型実装クラス。内部的には32bit浮動小数を使用するため、有効桁が15桁を超える場合は使用できない。 |\n| nablarch-js-util-date | 日付フォーマット変換ライブラリ | 可 | Javaのjava.util.SimpleDateFormatのサブセットとなる日付フォーマット変換を実装するユーティリティクラス。 |\n| nablarch-js-util-consumer | 簡易Tokenizer/Parser | 不可 | ミニ言語のパーサの実装に使用する簡易パーサ。 |",
-    "s8": "[../internals/jsp_widgets](testing-framework-jsp_widgets.json) を実装するタグファイル・スクリプト・スタイル定義などを格納するプラグイン群。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-widget-core | JSウィジェット基盤クラス | 不可 | [../reference_jsp_widgets/index](testing-framework-ui-dev-doc-reference-jsp-widgets.json) で共通的に使用されるJavaScript部品を格納するプラグイン。jQueryのカスタムセレクタも含む。 |\n| nablarch-widget-box-base | 表示領域ウィジェット共通テンプレート | 可 | 表示領域ウィジェットで共通的に使用されるCSS定義を実装する。 |\n| nablarch-widget-box-content | box_contentウィジェット | 可 | [../reference_jsp_widgets/box_content](testing-framework-box_content.json) の実装。 |\n| nablarch-widget-box-img | box_imgウィジェット | 可 | [../reference_jsp_widgets/box_img](testing-framework-box_img.json) の実装。 |\n| nablarch-widget-box-title | box_titleウィジェット | 可 | [../reference_jsp_widgets/box_title](testing-framework-box_title.json) の実装。 |\n| nablarch-widget-button | buttonウィジェット | 可 | [../reference_jsp_widgets/button_submit](testing-framework-button_submit.json) の実装。 |\n| nablarch-widget-collapsible | 開閉機能スクリプト | 非推奨 | 画面内の領域を開閉する機能を実装するスクリプト。[../reference_jsp_widgets/table_treelist](testing-framework-table_treelist.json) などから使用される。 |\n| nablarch-widget-column-base | カラムウィジェット共通プラグイン | 可 | カラムウィジェットで使用される共通機能（共通CSS定義、JSPローカル表示機能用ライブラリ）を実装する。 |\n| nablarch-widget-column-checkbox | column_checkboxウィジェット | 可 | [../reference_jsp_widgets/column_checkbox](testing-framework-column_checkbox.json) の実装。 |\n| nablarch-widget-column-code | column_codeウィジェット | 可 | [../reference_jsp_widgets/column_code](testing-framework-column_code.json) の実装。 |\n| nablarch-widget-column-label | column_labelウィジェット | 可 | [../reference_jsp_widgets/column_label](testing-framework-column_label.json) の実装。 |\n| nablarch-widget-column-link | column_linkウィジェット | 可 | [../reference_jsp_widgets/column_link](testing-framework-column_link.json) の実装。 |\n| nablarch-widget-column-radio | column_radioウィジェット | 可 | [../reference_jsp_widgets/column_radio](testing-framework-column_radio.json) の実装。 |\n| nablarch-widget-field-base | field_baseウィジェット | 可 | [../reference_jsp_widgets/field_base](testing-framework-field_base.json) の実装。 |\n| nablarch-widget-field-block | field_blockウィジェット | 可 | [../reference_jsp_widgets/field_block](testing-framework-field_block.json) の実装。 |\n| nablarch-widget-field-calendar | field_calendarウィジェット | 可 | [../reference_jsp_widgets/field_calendar](testing-framework-field_calendar.json) の実装。 |\n| nablarch-widget-field-checkbox | field_checkboxウィジェット | 可 | [../reference_jsp_widgets/field_checkbox](testing-framework-field_checkbox.json) の実装。 |\n| nablarch-widget-field-file | field_fileウィジェット | 可 | [../reference_jsp_widgets/field_file](testing-framework-field_file.json) の実装。 |\n| nablarch-widget-field-hint | field_hintウィジェット | 可 | [../reference_jsp_widgets/field_hint](testing-framework-field_hint.json) の実装。 |\n| nablarch-widget-field-label | field_labelウィジェット | 可 | [../reference_jsp_widgets/field_label](testing-framework-field_label.json) の実装。 |\n| nablarch-widget-field-label_block | field_label_blockウィジェット | 可 | [../reference_jsp_widgets/field_label_block](testing-framework-field_label_block.json) の実装。 |\n| nablarch-widget-field-label_id_value | field_label_id_valueウィジェット | 可 | [../reference_jsp_widgets/field_label_id_value](testing-framework-field_label_id_value.json) の実装。 |\n| nablarch-widget-field-listbuilder | field_listbuilderウィジェット | 可 | [../reference_jsp_widgets/field_listbuilder](testing-framework-field_listbuilder.json) の実装。 |\n| nablarch-widget-field-password | field_passwordウィジェット | 可 | [../reference_jsp_widgets/field_password](testing-framework-field_password.json) の実装。 |\n| nablarch-widget-field-pulldown | field_pulldownウィジェット | 可 | [../reference_jsp_widgets/field_pulldown](testing-framework-field_pulldown.json) の実装。 |\n| nablarch-widget-field-radio | field_radioウィジェット | 可 | [../reference_jsp_widgets/field_radio](testing-framework-field_radio.json) の実装。 |\n| nablarch-widget-field-text | field_textウィジェット | 可 | [../reference_jsp_widgets/field_text](testing-framework-field_text.json) の実装。 |\n| nablarch-widget-field-textarea | field_textareaウィジェット | 可 | [../reference_jsp_widgets/field_textarea](testing-framework-field_textarea.json) の実装。 |\n| nablarch-widget-link | linkウィジェット | 可 | [../reference_jsp_widgets/link_submit](testing-framework-link_submit.json) の実装。 |\n| nablarch-widget-multicol-cell | マルチレイアウト用列定義ウィジェット | 可 | マルチレイアウトで使用する列を表すタグ（layout:cell）を実装する。詳細は [multicol_css_framework_example](testing-framework-multicol_css_framework.json#s4) を参照。 |\n| nablarch-widget-multicol-row | マルチレイアウト用行定義ウィジェット | 可 | マルチレイアウトで使用する行を表すタグ（layout:row）を実装する。詳細は [multicol_css_framework_example](testing-framework-multicol_css_framework.json#s4) を参照。 |\n| nablarch-widget-placeholder | placeholder属性ポリフィル | 非推奨 | IEなどのplaceholder属性を実装していないブラウザ向けのポリフィル実装。 |\n| nablarch-widget-readonly | 変更不可項目制御 | 非推奨 | readonly属性の拡張。通常のreadonly属性とは異なり、プルダウンやチェックボックスの選択状態の変更も抑止できる。 |\n| nablarch-widget-slide-menu | スライドメニューウィジェット | 必須 | narrow/compact表示でメニューを省スペース化するサンプル機能。JavaScript/LESSの定義はそのまま使用できるが、JSPはPJ側で修正する必要がある。 |\n| nablarch-widget-spec | 画面仕様記述用ウィジェット | 可 | 画面仕様の情報を記述するタグの実装。設計書ビュー表示プラグインはこのタグから情報を取得する。このタグはサーバ表示には影響を与えない。 |\n| nablarch-widget-spec-meta_info | メタ情報記述用ウィジェット | 可 | 設計書作成者等の情報を記述するためのタグの実装。設計書ビュー表示プラグインはこのタグから取得した情報を使用する。このタグはサーバ表示には影響を与えない。 |\n| nablarch-widget-tab | tabウィジェット | 可 | [../reference_jsp_widgets/tab_group](testing-framework-tab_group.json) の実装。 |\n| nablarch-widget-table-base | テーブルウィジェットの共通プラグイン | 可 | テーブルウィジェットで共通的に使用されるCSS定義、表示モードに応じたウィジェット表示内容の切り替え用CSS定義、JSPローカル表示機能用ライブラリが実装されている。 |\n| nablarch-widget-table-plain | table_plainウィジェット | 可 | [../reference_jsp_widgets/table_plain](testing-framework-table_plain.json) の実装。 |\n| nablarch-widget-table-row | table_rowウィジェット | 可 | [../reference_jsp_widgets/table_row](testing-framework-table_row.json) の実装。 |\n| nablarch-widget-table-search_result | table_search_resultウィジェット | 可 | [../reference_jsp_widgets/table_search_result](testing-framework-table_search_result.json) の実装。 |\n| nablarch-widget-table-tree | table_treelistウィジェット | 可 | [../reference_jsp_widgets/table_treelist](testing-framework-table_treelist.json) の実装。 |\n| nablarch-widget-toggle-checkbox | チェックボックスの全選択/全解除プラグイン | 可 | リンクやボタンにチェックボックス全選択/全解除の機能を持たせるためのプラグイン。 |\n| nablarch-widget-tooltip | ツールチップ表示プラグイン | 可 | マウスオーバーにより補足情報をポップアップで表示する機能をもつプラグイン。 |",
-    "s9": "画面上のイベント制御を宣言的に定義するウィジェットを実装するプラグイン群。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-js-submit | Nablarchカスタムサブミットイベント | 不可 | Nablarchフレームワークのサブミット時処理（nablarch_submit）の実行前後に発火するjQueryグローバルカスタムイベントを定義する。 |\n| nablarch-widget-event-base | イベントウィジェットベースプラグイン | 不可 | イベントウィジェットのベースプラグイン。JSPローカル表示時にイベントのエミュレーションを行うために必要な機能を実装する。 |\n| nablarch-widget-event-listen | event_listenウィジェット | 不可 | 画面内で発生する指定されたイベントを監視し、各種イベントアクションを実行するウィジェットの実装。[../reference_jsp_widgets/event_listen](testing-framework-event_listen.json) |\n| nablarch-widget-event-autosum | 自動集計イベント | 不可 | 自動集計イベントアクションの実装。 |\n| nablarch-widget-event-dialog | ダイアログ表示イベントアクション | 不可 | ダイアログ表示イベントアクションの実装。アラート、確認ダイアログから使用される。[../reference_jsp_widgets/event_alert](testing-framework-event_alert.json) / [../reference_jsp_widgets/event_confirm](testing-framework-event_confirm.json) |\n| nablarch-widget-event-send_request | event_send_requestウィジェット | 不可 | [../reference_jsp_widgets/event_send_request](testing-framework-event_send_request.json) の実装。 |\n| nablarch-widget-event-toggle | event_toggle系ウィジェット | 不可 | [../reference_jsp_widgets/event_toggle_disabled](testing-framework-event_toggle_disabled.json) / [../reference_jsp_widgets/event_toggle_property](testing-framework-event_toggle_property.json) / [../reference_jsp_widgets/event_toggle_readonly](testing-framework-event_toggle_readonly.json) の実装。 |\n| nablarch-widget-event-window_close | event_window_closeウィジェット | 不可 | [../reference_jsp_widgets/event_window_close](testing-framework-event_window_close.json) の実装。 |\n| nablarch-widget-event-write_to | event_write_toウィジェット | 不可 | [../reference_jsp_widgets/event_write_to](testing-framework-event_write_to.json) の実装。 |",
-    "s10": "[../internals/jsp_page_templates](testing-framework-jsp_page_templates.json) の実体となるタグファイルと、それに付随するスクリプトやスタイル定義から構成されるプラグイン群。各テンプレートからインクルードされる共通領域を描画するJSPのサンプルも含む。\n\n| プラグインID | 名称 | カスタマイズ | 概要 |\n|---|---|---|---|\n| nablarch-template-base | baseレイアウトテンプレート | 可 | [base_layout_tag](testing-framework-jsp_page_templates.json) の実装。 |\n| nablarch-template-page | pageテンプレート | 可 | [page_template_tag](testing-framework-jsp_page_templates.json) の実装。 |\n| nablarch-template-error | errorページテンプレート | 可 | [errorpage_template_tag](testing-framework-jsp_page_templates.json) の実装。 |\n| nablarch-template-head | HTML head要素定義インクルード | 可 | [base_layout_tag](testing-framework-jsp_page_templates.json) からインクルードされる。`<title>`タグの内容、MediaQueryによる表示モード切替え、外部CSSファイルのインクルード、`<meta>`タグの内容（IEの互換モード設定など）を定義する。 |\n| nablarch-template-multicol-head | マルチレイアウト用HTML head要素定義インクルード | 可 | [base_layout_tag](testing-framework-jsp_page_templates.json) からインクルードされる。`<title>`タグの内容、外部CSSファイルのインクルード、`<meta>`タグの内容（IEの互換モード設定など）を定義する。使用方法は [multicol_css_framework_setting_layout](testing-framework-multicol_css_framework.json#s3) を参照。 |\n| nablarch-template-js_include | HTML script要素定義インクルード | 可 | [base_layout_tag](testing-framework-jsp_page_templates.json) からインクルードされる。HTMLの最後（bodyタグの末端）に出力している（画面の描画とスクリプトのロードを並行に実行しユーザの体感速度を向上させるため）。 |\n| nablarch-template-app_nav | アプリケーション共通ナビゲーションメニューサンプル | 必須 | 業務画面の共通ナビゲーション領域を描画するJSPおよびスタイル定義などのリソース。JSPは [page_template_tag](testing-framework-jsp_page_templates.json) からインクルードされる。内容はUI開発基盤用プロジェクトテンプレートと同じものなので、PJ側で修正する必要がある。 |\n| nablarch-template-app_header | アプリケーション共通ヘッダサンプル | 必須 | 業務画面の共通ヘッダ領域を描画するJSPおよびスタイル定義などのリソース。JSPは [page_template_tag](testing-framework-jsp_page_templates.json) からインクルードされる。内容はUI開発基盤用プロジェクトテンプレートと同じものなので、PJ側で修正する必要がある。 |\n| nablarch-template-app_footer | アプリケーション共通フッターサンプル | 必須 | 業務画面の共通フッター領域を描画するJSPおよびスタイル定義などのリソース。JSPは [page_template_tag](testing-framework-jsp_page_templates.json) からインクルードされる。内容はUI開発基盤用プロジェクトテンプレートと同じものなので、PJ側で修正する必要がある。 |\n| nablarch-template-app_aside | アプリケーション共通サイドメニューサンプル | 必須 | 業務画面の共通サイドメニューを描画するJSPおよびスタイル定義などのリソース。JSPは [page_template_tag](testing-framework-jsp_page_templates.json) からインクルードされる。内容はUI開発基盤用プロジェクトテンプレートと同じものなので、PJ側で修正する必要がある。 |"
-  }
+  ]
 }

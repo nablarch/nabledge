@@ -1,60 +1,32 @@
 {
   "id": "web-application-freemarker",
   "title": "FreeMarkerを使用した画面開発",
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/feature_details/view/freemarker.html"
-  ],
-  "index": [
+  "content": "[FreeMarker(外部サイト、英語)](https://freemarker.apache.org/) を使用した画面開発について解説する。\n\nFreeMarkerの導入手順は以下の通り。なお、詳細な手順については、 [FreeMarkerのドキュメント](https://freemarker.apache.org/docs/pgui_misc_servlet.html) を参照。\n\n1. [FreeMarkerを依存ライブラリに追加する](../../processing-pattern/web-application/web-application-freemarker.md#freemarker-pom)\n2. [FreeMarkerServletの設定を行う](../../processing-pattern/web-application/web-application-freemarker.md#freemarker-servlet)\n3. [テンプレートファイル(ftlファイル)を作成しActionを実装する](../../processing-pattern/web-application/web-application-freemarker.md#freemarker-create-ftl)\n4. [2重サブミットを防止する(必要な場合のみ)](../../processing-pattern/web-application/web-application-freemarker.md#freemarker-use-token)",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "FreeMarkerを依存ライブラリに追加する",
-      "hints": [
-        "freemarker-gae",
-        "org.freemarker",
-        "FreeMarker導入",
-        "Maven依存関係追加",
-        "freemarker-gae 2.3.27-incubating"
-      ]
+      "content": "FreeMarkerをプロジェクトで使用可能にするために依存ライブラリに追加する。\nMavenを使用している場合は、POMに以下を追加する。\nなお、本解説書は下のdependencyに記載のバージョンにて動作確認している。\n\n```xml\n<dependency>\n  <groupId>org.freemarker</groupId>\n  <artifactId>freemarker-gae</artifactId>\n  <version>2.3.27-incubating</version>\n</dependency>\n```",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "FreeMarkerServletの設定を行う",
-      "hints": [
-        "FreemarkerServlet",
-        "freemarker.ext.servlet.FreemarkerServlet",
-        "TemplatePath",
-        "FreeMarkerServlet設定",
-        "web.xml設定",
-        "*.ftlマッピング"
-      ]
+      "content": "`web.xml` に `FreeMarkerServlet` を登録し、 `*.ftl` に反応するようにする。\n\nweb.xmlの例\n```xml\n<servlet>\n  <servlet-name>freemarker</servlet-name>\n  <servlet-class>freemarker.ext.servlet.FreemarkerServlet</servlet-class>\n</servlet>\n\n<servlet-mapping>\n  <servlet-name>freemarker</servlet-name>\n  <url-pattern>*.ftl</url-pattern>\n\n  <init-param>\n    <!--\n    テンプレートファイル(ftl)の配置ディレクトリを指定する。\n    「/」を指定した場合は、warのルートディレクトリが配置ディレクトリとなる。\n    -->\n    <param-name>TemplatePath</param-name>\n    <param-value>/</param-value>\n\n    <!-- 上記以外については、ドキュメントを参照し必要なパラメータを設定すること -->\n  </init-param>\n</servlet-mapping>\n```",
+      "level": 2
     },
     {
       "id": "s3",
       "title": "テンプレートファイル(ftlファイル)を作成しActionを実装する",
-      "hints": [
-        "HttpResponse",
-        "ftlテンプレート作成",
-        "Action実装",
-        "FreeMarkerレンダリング",
-        "Servlet forward",
-        "http_response_handler"
-      ]
+      "content": "テンプレートファイル(ftlファイル)を作成し配置する。(テンプレートの作成方法は、FreeMarkerのドキュメントを参照)\nActionクラスでは、レスポンスとしてテンプレートファイルへのパスを返却する。\n\n例えば、 `webapp/WEB-INF/template/index.ftl` を使用してhtmlをクライアントに返したい場合は、Actionクラスは以下のようにレスポンスを返却する。\n(webappはWARのルートとなるディレクトリ)\n\n```java\nreturn new HttpResponse(\"/WEB-INF/template/index.ftl\");\n```\n\n> **Tip:**\n> FreeMarkerによって生成されたhtmlがクライアントに返却される仕組みは以下の通り。\n\n> 1. >   [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) が `/WEB-INF/template/index.ftl` に対してServlet forwardを行う。\n> 2. >   拡張子の `ftl` に反応し `FreeMarkerServlet` が実行され、テンプレートとリクエストスコープ等のデータを元にhtmlを生成する。\n> 3. >   生成したhtmlをクライアントに返す。",
+      "level": 2
     },
     {
       "id": "s4",
       "title": "2重サブミットを防止する",
-      "hints": [
-        "2重サブミット防止",
-        "use_token_interceptor",
-        "トークン",
-        "ftlファイル"
-      ]
+      "content": "2重サブミットを防止したい場合は、 [UseTokenインターセプタ](../../component/handlers/handlers-use-token.md#use-token-interceptor) を参照しAction及びテンプレートファイル(ftlファイル)を作成すること。",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "**モジュール** (動作確認済みバージョン):\n```xml\n<dependency>\n  <groupId>org.freemarker</groupId>\n  <artifactId>freemarker-gae</artifactId>\n  <version>2.3.27-incubating</version>\n</dependency>\n```\n\n> **注**: 上記のバージョンにて動作確認している。",
-    "s2": "`web.xml` に `freemarker.ext.servlet.FreemarkerServlet` を登録し、`*.ftl` にマッピングする。\n\n```xml\n<servlet>\n  <servlet-name>freemarker</servlet-name>\n  <servlet-class>freemarker.ext.servlet.FreemarkerServlet</servlet-class>\n</servlet>\n\n<servlet-mapping>\n  <servlet-name>freemarker</servlet-name>\n  <url-pattern>*.ftl</url-pattern>\n  <init-param>\n    <param-name>TemplatePath</param-name>\n    <param-value>/</param-value>\n    <!-- 上記以外については、ドキュメントを参照し必要なパラメータを設定すること -->\n  </init-param>\n</servlet-mapping>\n```\n\n`TemplatePath`: テンプレートファイル(ftl)の配置ディレクトリ。`/` を指定するとWARのルートディレクトリになる。`TemplatePath` 以外のパラメータが必要な場合は、FreeMarkerのドキュメントを参照して設定する。",
-    "s3": "ActionクラスでHTTPResponseとしてftlファイルへのパスを返す。\n\n```java\nreturn new HttpResponse(\"/WEB-INF/template/index.ftl\");\n```\n\n> **補足**: FreeMarkerによるHTML生成の流れ:\n> 1. [http_response_handler](../../component/handlers/handlers-http_response_handler.json#s1) が `/WEB-INF/template/index.ftl` に対してServlet forwardを行う。\n> 2. 拡張子 `ftl` に反応し `FreeMarkerServlet` が実行され、テンプレートとリクエストスコープ等のデータを元にhtmlを生成する。\n> 3. 生成したhtmlをクライアントに返す。",
-    "s4": "2重サブミットを防止する場合は、[use_token_interceptor](../../component/handlers/handlers-use_token.json#s1) を参照してAction及びテンプレートファイル(ftlファイル)を作成する。"
-  }
+  ]
 }

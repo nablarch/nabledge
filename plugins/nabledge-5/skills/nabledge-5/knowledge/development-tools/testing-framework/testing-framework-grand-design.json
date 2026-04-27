@@ -1,0 +1,20 @@
+{
+  "id": "testing-framework-grand-design",
+  "title": "設計指針",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "業務画面JSPの記述",
+      "content": "Nablarchでの画面開発のワークフローでは、設計段階から各業務画面のJSPを作成する。\nこれらのJSPでは画面項目定義書の記述レベルと同じ抽象度をもったカスタムタグを記述する。\n以下は業務画面JSPの記述例である。\n\n```jsp\n<t:page_template\n    title=\"ユーザ情報登録\"\n    confirmationPageTitle=\"ユーザ情報登録確認\">\n  <jsp:attribute name=\"contentHtml\">\n  <n:form>\n    <field:block title=\"ユーザ基本情報\">\n      <field:text title=\"ログインID\"\n                  required=\"true\"\n                  maxlength=\"20\"\n                  hint=\"半角英数記号20文字以内\"\n                  sample=\"test01\">\n      </field:text>\n      <field:password title=\"パスワード\"\n                      required=\"true\"\n                      maxlength=\"20\"\n                      sample=\"password\">\n      </field:password>\n      <field:password title=\"パスワード（確認用）\"\n                      required=\"true\"\n                      maxlength=\"20\"\n                      sample=\"password\">\n      </field:password>\n      <field:hint>半角英数記号20文字以内</field:hint>\n    </field:block>\n    <button:block>\n      <button:back\n            label=\"一覧照会画面へ\"\n            size=\"4\">\n        </button:back>\n        <button:check\n            uri=\"/action/ss11AC/W11AC02Action/RW11AC0202\">\n        </button:check>\n    </button:block>\n  </n:form>\n  </jsp:attribute>\n</t:page_template>\n```\n\nこのソースコードを見ると、各業務画面のJSPソースコードから画面の見た目に関する情報が全て排除されていることがわかる。\nこのソース中の各カスタムタグがどのように画面上に表示されるのかを規定するのが **UI標準**\nであり、その標準に沿った画面表示を実現する共通部品群が [業務画面テンプレート](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md) と\n[UI部品ウィジェット](../../development-tools/testing-framework/testing-framework-jsp-widgets.md) である。\n\n[業務画面テンプレート](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md) は画面の全体構成および、画面間で共通のヘッダ・サイドメニューなどの\n領域を描画するUI部品である。\n[UI部品ウィジェット](../../development-tools/testing-framework/testing-framework-jsp-widgets.md) は各業務画面中で使用する\nボタン、検索結果テーブル、テキスト入力などを描画するUI部品である。\n\n業務画面JSPでは、画面表示に関する実装は全て [業務画面テンプレート](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md) と\n[UI部品ウィジェット](../../development-tools/testing-framework/testing-framework-jsp-widgets.md) を通じて行う。 [1]\nこれにより、各画面の開発者が全く意識しなくとも、UI標準に準拠した画面表示となることが保証される。\n\n業務画面JSPに直接記述したHTMLは、そのまま画面上に描画される。\nこのため [UI部品ウィジェット](../../development-tools/testing-framework/testing-framework-jsp-widgets.md) として提供されていない画面要素がある場合は、\n一旦HTMLとして記述し、仕様が固まった後で共通化するといったことが可能である。\n\n以下はこの構造をあらわした概念図である。\n\n![app_jsp.png](assets/testing-framework-grand-design/app_jsp.png)\n\nここで作成した業務画面JSPは、以下の特性をもつ。\n\n**ブラウザで直接開くことが可能**\n各設計担当者に業務画面JSPを確認するためのサーバ環境を用意させるのはかなり難しいので、\n本機能で作成したJSPファイルはHTMLと同様に直接ブラウザで確認することが可能となっている。\n\n詳細は [業務画面JSPローカル表示機能](../../development-tools/testing-framework/testing-framework-inbrowser-jsp-rendering.md) を参照すること。\n**画面項目一覧を表示しその内容をExcelの設計書に貼りこむことが可能**\n業務画面JSPのローカル表示時に、画面内の入出力項目を **システム機能設計書/画面項目一覧**\nの書式で画面上に表示でき、その内容をコピー&ペーストで設計書に貼りこむことが可能である。\n**マルチブラウザ・マルチデバイスでの表示が可能**\n**UI標準** では、マルチブラウザ・マルチデバイスをサポートしており、\n各デバイスでどのような表示になるかについて、詳細に定義している。\nそこで記述している仕様は全て [業務画面テンプレート](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md) と\n[UI部品ウィジェット](../../development-tools/testing-framework/testing-framework-jsp-widgets.md) 側の実装により吸収されるため、\n各業務画面ではその実装について気にする必要はない。\n**開発工程以降もそのまま流用できる**\n設計工程で作成したJSPファイルは、必要最小限の修正(入力項目の **name** 属性追加など)により\n開発工程以降もそのまま流用することが可能である。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "UI標準と共通部品",
+      "content": "上述したように、本機能では各画面のJSPを最小の工数で作成できるだけでなく、\nインターフェース標準への準拠、デモ用の表示、画面項目定義の出力、\nマルチデバイスへの対応などを単一のソースコードで実現できる。\n\nしかし、これらの機能を実現している [業務画面テンプレート](../../development-tools/testing-framework/testing-framework-jsp-page-templates.md) および\n[UI部品ウィジェット](../../development-tools/testing-framework/testing-framework-jsp-widgets.md) の修正には、高い技術と知識が必要となる。\n特に、PJごとの要求に沿ってUI標準のカスタマイズを行った際、\nその内容に沿って共通部品を修正する担当者の存在はPJを進める上で必須である。",
+      "level": 2
+    }
+  ]
+}

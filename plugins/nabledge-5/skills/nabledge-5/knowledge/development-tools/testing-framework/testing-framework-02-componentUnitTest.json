@@ -1,0 +1,74 @@
+{
+  "id": "testing-framework-02-componentUnitTest",
+  "title": "Action/Componentのクラス単体テスト",
+  "content": "本項では、Action/Componentのクラス単体テストのうちComponentのクラス単体テスト(以下Component単体テスト)にて説明する。\nなお、Actionのクラス単体テスト(以下Action単体テスト)の場合の違いとしてはテストクラス名の部分である。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "Action/Component単体テストの書き方",
+      "content": "本項で例として使用したテストクラスとテストデータは以下のとおり(右クリック->保存でダウンロード)。\n\n* [テストケース一覧(ユーザ登録_ UserComponent_クラス単体テストケース.xlsx)](assets/testing-framework-02-componentUnitTest/ユーザ登録_UserComponent_クラス単体テストケース.xlsx)\n* [テストクラス(UserComponentTest.java)](assets/testing-framework-02-componentUnitTest/UserComponentTest.java)\n* [テストデータ(UserComponentTest.xlsx)](assets/testing-framework-02-componentUnitTest/UserComponentTest.xlsx)\n* [テスト対象クラス(UserComponent.java)](assets/testing-framework-02-componentUnitTest/UserComponent.java)\n\n本項では、ユーザ登録用メソッド(UserComponent#registerUser)を例に説明する。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "テストケース実行のパターン分け",
+      "content": "テストケース一覧とテスト対象メソッドから、テストケースは以下の4つに分類される。これは、どのパターンに属するかによって、テストクラスやデータの作成方法に\n違いがあるためである。\n\n| パターン | 当てはまる処理の例 |\n|---|---|\n| 戻り値(データベースの検索結果)を確認しなければならないもの | 検索処理 |\n| 戻り値(データベースの検索結果以外)を確認しなければならないもの | 計算、判定処理 |\n| 処理終了後のデータベースの状況を確認しなければならないもの | 更新(挿入、削除含む)処理 |\n| メッセージIDを確認しなければならないもの | エラー処理 |\n\n今回の例は、DB挿入処理、2重登録時のエラー処理ありなので、テストケースは\"処理終了後のデータベースの状況を確認しなければならないもの\"と\n\"メッセージIDを確認しなければならないもの\"に分類される。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "テストデータとテストクラスの作成",
+      "content": "[事前準備データの作成処理](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-setup) 、 [処理終了後のデータベースの状況を確認しなければならないもの](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-db) 、 [メッセージIDを確認しなければならないもの](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-messageid) のそれぞれについて、テストデータとテストクラスの作成方法を説明する。\nまず最初に、テストデータ(Excelファイル)そのもののと、テストクラスの作成方法(継承すべきクラスなど)を説明する。次に、各パターンごとのデータとテストメソッド作成方法を説明する。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "テストデータの作成",
+      "content": "テストデータを記載したExcelファイルは、 [Nablarch Validationに対応したForm/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest) と同様にテストソースコードと同じディレクトリに同じ名前で格納する(拡張子のみ異なる)。\nなお、全てのテストデータは同じExcelのシートに記載する前提である。\n\nテストデータの記述方法詳細については、 [自動テストフレームワーク](../../development-tools/testing-framework/testing-framework-01-Abstract.md) 、 [データベースを使用するクラスのテスト](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md) を参照。\n\nなお、メッセージデータやコードマスタなどの、データベースに格納する静的マスタデータは、プロジェクトで管理されたデータがあらかじめ投入されている\n(これらのデータを個別のテストデータとして作成しない)前提である。",
+      "level": 4
+    },
+    {
+      "id": "s5",
+      "title": "テストクラスの作成",
+      "content": "Component単体テストのテストクラスは以下の条件を満たすように作成する。詳細は、 [データベースを使用するクラスのテスト](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md) を参照。\n\n* テストクラスのパッケージは、テスト対象のAction/Componentと同じとする。\n* <Action/Componentクラス名>Testというクラス名でテストクラスを作成する。\n* nablarch.test.core.db.DbAccessTestSupportを継承する。\n\n```java\npackage nablarch.sample.management.user; // 【説明】パッケージはUserComponentと同じ\n\nimport static org.junit.Assert.assertEquals;\nimport static org.junit.Assert.assertTrue;\nimport static org.junit.Assert.fail;\n\nimport java.util.HashMap;\nimport java.util.List;\nimport java.util.Map;\nimport java.util.Map.Entry;\n\nimport nablarch.core.db.statement.SqlResultSet;\nimport nablarch.core.message.ApplicationException;\nimport nablarch.test.core.db.DbAccessTestSupport;\n\nimport org.junit.Test;\n\n/**\n * {@link UserComponentTest}のテストクラス。\n *\n * @author Tsuyoshi Kawasaki\n * @since 1.0\n */\npublic class UserComponentTest extends DbAccessTestSupport {\n// 【説明】クラス名はUserComponentTestで、DbAccessTestSupportを継承する\n\n// ～後略～\n```",
+      "level": 4
+    },
+    {
+      "id": "s6",
+      "title": "事前準備データの作成処理",
+      "content": "事前データと事前データ投入処理を作成する。今回の例では、次のようなデータを作成している。\n\n* スレッドコンテキスト [1] の設定\n\n  * USER_ID:ユーザID。USERID0001。\n  * REQUEST_ID:リクエストID。USERS00301。\n* 挿入対象テーブルの初期化\n\n  * SYSTEM_ACCOUNT:システムアカウントテーブル。初期データ3件。\n  * USERS:ユーザテーブル。初期データ0件。\n  * UGROUP_SYSTEM_ACCOUNT:グループシステムアカウントテーブル。初期データ0件。\n  * SYSTEM_ACCOUNT_AUTHORITY:システムアカウント権限テーブル。初期データ0件。\n* マスタ系データの投入\n\n  * ID_GENERATE:採番テーブル。登録時に採番処理を行うため。採番テーブルを初期化しておかないと、テスト実行時の採番結果がわからなくなり、挿入結果の検証ができなくなる。\n\n![componentUnitTest_Setup.png](assets/testing-framework-02-componentUnitTest/componentUnitTest_Setup.png)\n\nスレッドコンテキストとは、ユーザID、リクエストID、使用言語のような、一連の処理を実行するときに、コールスタックの複数のメソッドにおいて共通的に必要なデータを格納するオブジェクト。\n\nこれらのデータを読み込む処理を以下に示す。\n\n```java\n// ～前略～\n\n/**\n * {@link UserComponent#registerUser()}のテスト1。<br>\n * 正常系。\n */\n@Test\npublic void testRegisterUser1() {\n    String sheetName = \"registerUser\";\n\n    setThreadContextValues(sheetName, \"threadContext\"); // 【説明】スレッドコンテキストの設定\n\n// ～中略～\n\n     for (int i = 0; i < sysAcctDatas.size(); i++) {\n\n// ～中略～\n\n        // データベース準備\n        setUpDb(sheetName); // 【説明】事前データの投入。\n                            // 【説明】各ケースごとに初期化するためループ中で実行する。\n\n// ～後略～\n```",
+      "level": 4
+    },
+    {
+      "id": "s7",
+      "title": "処理終了後のデータベースの状況を確認しなければならないもの",
+      "content": "",
+      "level": 4
+    },
+    {
+      "id": "s8",
+      "title": "テストデータ(入力値)の作成",
+      "content": "テスト対象メソッドの引数を用意する。今回の例では、以下の3つが必要となる。なお、各データの同じ行で1組のテストデータとなる(例えば、sysAcctEntityの1行目と、\nusersEntityの1行目と、grpSysAcctEntityの1行目で1ケース分のテストデータとなる)。\n\n* sysAcctEntity:システムアカウントエンティティのデータ\n* usersEntity:ユーザエンティティのデータ\n* grpSysAcctEntity:グループシステムアカウントエンティティのデータ\n\nsysAcctEntityのuseCaseIdはuseCaseIdプロパティに設定される値そのものではなく(SystemAccountEntityのuseCaseIdプロパティは配列)、図中矢印で示している別の\n表のデータを指している。テストコードでは、取得した値をキーとして更にデータを取得、配列を作成し、useCaseIdプロパティに設定している。\n\n![componentUnitTest_inputData.png](assets/testing-framework-02-componentUnitTest/componentUnitTest_inputData.png)\n\n```java\n// ～前略～\n\npublic void testRegisterUser1() {\n    String sheetName = \"registerUser\";\n\n    setThreadContextValues(sheetName, \"threadContext\");\n\n    List<Map<String, String>> sysAcctDatas = getListMap(sheetName, \"sysAcctEntity\");\n    List<Map<String, String>> usersDatas = getListMap(sheetName, \"usersEntity\");\n    List<Map<String, String>> grpSysAcctDatas = getListMap(sheetName, \"grpSysAcctEntity\");\n    // エクセルのデータを一時的に受けるMap、List\n    Map<String, Object> work = new HashMap<String, Object>();\n    List<Map<String, String>> useCaseData = null;\n\n    SystemAccountEntity sysAcct = null;\n    UsersEntity users = null;\n    UgroupSystemAccountEntity grpSysAcct = null;\n    for (int i = 0; i < sysAcctDatas.size(); i++) {\n\n// ～中略～\n\n        // システムアカウント  // 【説明】SystemAccountEntityの準備\n        work.clear();\n        for (Entry<String, String> e : sysAcctDatas.get(i).entrySet()) {\n            work.put(e.getKey(), e.getValue());\n        }\n        // ユースケースIDの引数作成\n        String id = sysAcctDatas.get(i).get(\"useCaseId\"); // 【説明】図中矢印の根元にある表のIDを取得\n        useCaseData = getListMap(sheetName, id); // 【説明】取得したIDを使用して図中矢印の先にある配列のデータを取得\n        String[] useCaseId = new String[useCaseData.size()]; // 【説明】配列の作成\n        for (int j = 0; j < useCaseData.size(); j++) {\n            useCaseId[j] = useCaseData.get(j).get(\"useCaseId\");\n        }\n        work.put(\"useCase\", useCaseId); // 【説明】作成した配列をSystemAccountEntityのコンストラクタに渡すMapに設定\n        sysAcct = new SystemAccountEntity(work);\n\n        // ユーザ  // 【説明】UsersEntityの準備\n        work.clear();\n        for (Entry<String, String> e : usersDatas.get(i).entrySet()) {\n            work.put(e.getKey(), e.getValue());\n        }\n        users = new UsersEntity(work);\n\n        // グループシステムアカウント  // 【説明】UgroupSystemAccountEntityの準備\n        work.clear();\n        for (Entry<String, String> e : grpSysAcctDatas.get(i).entrySet()) {\n            work.put(e.getKey(), e.getValue());\n        }\n        grpSysAcct = new UgroupSystemAccountEntity(work);\n\n        // 実行\n        target.registerUser(sysAcct, users, grpSysAcct);\n        commitTransactions();   // 【説明】全てのトランザクションをコミット\n\n        // 検証\n        String expectedGroupId = getListMap(sheetName, \"expected\").get(i).get(\"caseNo\");\n        assertTableEquals(expectedGroupId, sheetName, expectedGroupId);\n\n// ～後略～\n```\n\n> **Tip:**\n> 上記のソースコードでは、getListMapメソッドを用いてExcelシートからデータを読み込んでいる。\n> getListMapメソッドの詳細については、 [目的別API使用方法](../../development-tools/testing-framework/testing-framework-03-Tips.md) の\n> 『 [Excelファイルから、入力パラメータや戻り値に対する期待値などを取得したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#how-to-get-data-from-excel) 』 を参照。\n\nクラス単体テストでは、テストクラスからデータベースアクセスを行うクラスを直接起動する為、\nフレームワークによるトランザクション制御は行われない。\n処理終了後のデータベースの状況を確認しなければならない場合は、テストクラスにてトランザクションをコミットする必要がある。\n\nスーパクラスの `commitTransactions()` メソッドを起動しコミットする。\nトランザクションをコミットしない場合、テスト結果の確認が正常に行われない。\n(参照系のテストの場合はコミットを行う必要はない)",
+      "level": 5
+    },
+    {
+      "id": "s9",
+      "title": "テストデータ(想定結果)の作成",
+      "content": "想定結果をテストケースごとに用意する。アプリケーションで設定する項目だけでなく、自動設定項目( [SQL実行時に共通的な値を自動的に設定したい](../../component/libraries/libraries-database.md#database-common-bean) 参照)も想定結果を用意する。検証には\"assertTableEquals\"メソッドを用いる。\n\nサンプルアプリケーションでは、グループID( [一つのシートに複数テストケースのデータを記載したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) 参照)を定義したデータ(expected)を用意し、これをassertTableEqualsの\n引数に渡すことで、複数の想定結果に対応している。\n\n![componentUnitTest_expectedDataNormal.png](assets/testing-framework-02-componentUnitTest/componentUnitTest_expectedDataNormal.png)\n\n```java\n// ～前略～\n\n/**\n * {@link UserComponent#registerUser()}のテスト1。<br>\n * 正常系。\n */\n@Test\npublic void testRegisterUser1() {\n    String sheetName = \"registerUser\";\n\n// ～中略～\n\n     for (int i = 0; i < sysAcctDatas.size(); i++) {\n\n// ～中略～\n\n         // 検証\n         // 【説明】グループIDの取得\n         String expectedGroupId = getListMap(sheetName, \"expected\").get(i).get(\"caseNo\");\n         // 【説明】取得したグループIDを引数にassertTableEqualsの実行\n         assertTableEquals(expectedGroupId, sheetName, expectedGroupId);\n\n// ～後略～\n```\n\ncase1を例にとると、想定結果は次のようになる。\n\n| テーブル名 | 想定 |\n|---|---|\n| SYSTEM_ACCOUNT | [事前準備データの作成処理](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-setup) で示したレコード+1レコード追加。計4レコード。 |\n| USERS | 1レコード追加。( [事前準備データの作成処理](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-setup) で0件に初期化し、テスト対象処理で1レコード追加) |\n| UGROUP_SYSTEM_ACCOUNT | 1レコード追加。( [事前準備データの作成処理](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-setup) で0件に初期化し、テスト対象処理で1レコード追加) |\n| SYSTEM_ACCOUNT_AUTHORITY | 変化なし(新規追加なし)。 |",
+      "level": 5
+    },
+    {
+      "id": "s10",
+      "title": "メッセージIDを確認しなければならないもの",
+      "content": "",
+      "level": 4
+    },
+    {
+      "id": "s11",
+      "title": "テストデータ(入力値と想定値)の作成",
+      "content": "[前項のテストデータ(入力値)の作成](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-inputdata-normal) と同様にテストデータ(入力値)を作成する。こちらでは、\n [前項](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-inputdata-normal) で指定したIDの末尾に\"Err\"を付加することで、同じExcelシート内に正常系と異常系のデータを混載している。また、\n想定値はメッセージIDである。\n\nここで確認すべき内容は、ユニークキー制約違反による例外の発生である。テストコードでは、目的の例外をキャッチし、メッセージIDを比較することで検証する。\n\n> **Important:**\n> キャッチする例外は発生を想定する例外とし、RuntimeExceptionなどの上位例外クラスは用いないこと。メッセージIDはあっているが、例外そのものを間違えているバグを\n> 検出できなくなってしまう。\n\n![componentUnitTest_expectedDataAbnormal.png](assets/testing-framework-02-componentUnitTest/componentUnitTest_expectedDataAbnormal.png)\n\n```java\n// ～前略～\n\n/**\n * {@link UserComponent#registerUser()}のテスト2。<br>\n * 異常系。\n */\n@Test\npublic void testRegisterUser2() {\n    String sheetName = \"registerUser\";\n\n// ～中略～\n\n        // 実行\n        try {\n            target.registerUser(sysAcct, users, grpSysAcct); // 【説明】テスト対象メソッド実行\n            fail(); // 【説明】例外が発生しなかったらテスト失敗\n        } catch (ApplicationException ae) { // 【説明】発生するはずの例外をキャッチ\n            // 【説明】メッセージIDを検証\n            assertEquals(expected.get(i).get(\"messageId\"), ae.getMessages().get(0).getMessageId());\n        }\n    }\n}\n\n// ～後略～\n```",
+      "level": 5
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "id": "blank-project-addin-gsp",
+  "title": "gsp-dba-maven-plugin(DBA作業支援ツール)の初期設定方法",
+  "content": "**目次**\n\n* 概要\n* generate-entityゴールがJava17以降で動くように設定する\n* ファイル修正\n\n  * pom.xmlファイルの修正\n  * data-model.edm  (src/main/resources/entity)の準備\n* 動作確認\n* データモデリングツールについての補足",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "[gsp-dba-maven-plugin(外部サイト)](https://github.com/coastland/gsp-dba-maven-plugin) は、Apache License Version 2.0 ライセンスで提供されるオープンソースのツールである。\n\ngsp-dba-maven-pluginは、使用開始前にRDBMSにあわせて設定する必要がある。\n\n本手順では、アーキタイプから生成したプロジェクトで、gsp-dba-maven-pluginを使用するための設定方法を示す。\n\n> **Important:**\n> [ツールのREADME(外部サイト)](https://github.com/coastland/gsp-dba-maven-plugin) にもある通り、gsp-dba-maven-pluginは開発フェーズで用いることを想定している。\n> 開発者のローカルDBを主ターゲットとしたツールであり、本番環境での使用は推奨しない。\n\n> ER図からツールによって生成されたDDLをそのまま本番環境に配置して実行するというような使い方も想定していない。\n> ツールによって生成されたDDLを流用して本番環境向けのDDLを作成する場合はDBAの責任でDDLに問題ないかを確認すること。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "generate-entityゴールがJava17以降で動くように設定する",
+      "content": "generate-entityゴールを実行することによりEntityクラスを自動生成できるが、Java 17以降で利用するにはJVMオプションを設定する必要がある。\n\n以下を参照して設定する。\n\n[generate-entity(外部サイト)](https://github.com/coastland/gsp-dba-maven-plugin/blob/main/README.md#generate-entity)",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "ファイル修正",
+      "content": "この手順は、以下のプロジェクトを対象とする。\n\n* アーキタイプから生成後、[使用するRDBMSの変更手順](../../setup/blank-project/blank-project-CustomizeDB.md) の手順を実施した各種プロジェクト。\n\n> **Tip:**\n> gsp-dba-maven-pluginはデフォルトでH2 Database Engine(以下H2)を使うように設定されている。\n\n> H2を使用する場合は、ここで記載しているファイル修正の手順は不要である。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "pom.xmlファイルの修正",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "properties要素内",
+      "content": "pom.xmlのpropertiesタグ内の以下の箇所を修正する。\n\n| プロパティ名 | 説明 |\n|---|---|\n| nablarch.db.jdbcDriver | JDBCドライバのクラス名 |\n| nablarch.db.url | データベースの接続URL |\n| nablarch.db.adminUser | 管理者ユーザ名 |\n| nablarch.db.adminPassword | 管理者ユーザのパスワード |\n| nablarch.db.user | データベースアクセスユーザ名 |\n| nablarch.db.password | データベースアクセスユーザのパスワード |\n| nablarch.db.schema | 接続するスキーマ名 |\n\n以下に記述例を示す。\n\n**Oracleの設定例**\n\n```xml\n<nablarch.db.jdbcDriver>oracle.jdbc.driver.OracleDriver</nablarch.db.jdbcDriver>\n<!-- jdbc:oracle:thin:@ホスト名:ポート番号:データベースのSID -->\n<nablarch.db.url>jdbc:oracle:thin:@localhost:1521/xe</nablarch.db.url>\n<nablarch.db.adminUser>SAMPLE</nablarch.db.adminUser>\n<nablarch.db.adminPassword>SAMPLE</nablarch.db.adminPassword>\n<nablarch.db.user>sample</nablarch.db.user>\n<nablarch.db.password>sample</nablarch.db.password>\n<nablarch.db.schema>sample</nablarch.db.schema>\n```\n\n**PostgreSQLの設定例**\n\n```xml\n<nablarch.db.jdbcDriver>org.postgresql.Driver</nablarch.db.jdbcDriver>\n<!-- jdbc:postgresql://ホスト名:ポート番号/データベース名 -->\n<nablarch.db.url>jdbc:postgresql://localhost:5432/postgres</nablarch.db.url>\n<nablarch.db.adminUser>SAMPLE</nablarch.db.adminUser>\n<nablarch.db.adminPassword>SAMPLE</nablarch.db.adminPassword>\n<nablarch.db.user>sample</nablarch.db.user>\n<nablarch.db.password>sample</nablarch.db.password>\n<nablarch.db.schema>sample</nablarch.db.schema>\n```\n\n**DB2の設定例**\n\n```xml\n<nablarch.db.jdbcDriver>com.ibm.db2.jcc.DB2Driver</nablarch.db.jdbcDriver>\n<!-- jdbc:db2://ホスト名:ポート番号/データベース名 -->\n<nablarch.db.url>jdbc:db2://localhost:50000/SAMPLE</nablarch.db.url>\n<nablarch.db.adminUser>SAMPLE</nablarch.db.adminUser>\n<nablarch.db.adminPassword>SAMPLE</nablarch.db.adminPassword>\n<nablarch.db.user>sample</nablarch.db.user>\n<nablarch.db.password>sample</nablarch.db.password>\n<nablarch.db.schema>sample</nablarch.db.schema>\n```\n\n**SQLServerの設定例**\n\n```xml\n<nablarch.db.jdbcDriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</nablarch.db.jdbcDriver>\n<!-- jdbc:sqlserver://ホスト名:ポート番号;instanceName=インスタンス名 -->\n<nablarch.db.url>jdbc:sqlserver://localhost:1433;instanceName=SQLEXPRESS</nablarch.db.url>\n<nablarch.db.adminUser>SAMPLE</nablarch.db.adminUser>\n<nablarch.db.adminPassword>SAMPLE</nablarch.db.adminPassword>\n<nablarch.db.user>sample</nablarch.db.user>\n<nablarch.db.password>sample</nablarch.db.password>\n<nablarch.db.schema>sample</nablarch.db.schema>\n```",
+      "level": 4
+    },
+    {
+      "id": "s6",
+      "title": "build要素内",
+      "content": "gsp-dba-maven-pluginに対する依存関係を、H2のJDBCドライバから使用するRDBMSにあわせたものに修正する。\n\nPOMの設定例は、 [pom.xmlファイルの修正](../../setup/blank-project/blank-project-CustomizeDB.md#customizedb-pom-dependencies) を参照。\n例えば、PostgreSQLを使用する場合は以下のように設定する。\n\n```xml\n<build>\n  <plugins>\n    <plugin>\n      <groupId>jp.co.tis.gsp</groupId>\n      <artifactId>gsp-dba-maven-plugin</artifactId>\n      <dependencies>\n        <dependency>\n          <groupId>org.postgresql</groupId>\n          <artifactId>postgresql</artifactId>\n          <!-- バージョンは適切な値に書き換えてください。 -->\n          <version>42.1.4</version>\n        </dependency>\n      </dependencies>\n    </plugin>\n  </plugins>\n</build>\n```",
+      "level": 4
+    },
+    {
+      "id": "s7",
+      "title": "data-model.edm  (src/main/resources/entity)の準備",
+      "content": "src/main/resources/entity以下にRDBMS毎にedmファイルが存在するので、使用するRDBMSに対応するファイルを「data-model.edm」にリネームする。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "動作確認",
+      "content": "> **Important:**\n> DBのデータが削除されるため、必要であれば現在DBに格納されているデータを退避しておくこと。\n\n**1.以下のコマンドを実行して、DDLの生成からダンプファイル作成までを行う。**\n\n```bash\nmvn -P gsp clean generate-resources\n```\n\n> **Tip:**\n> 以下のゴールが実行されるように、各アーキタイプから生成したプロジェクトのpom.xmlに記述されている。\n\n> * >   generate-ddl\n> * >   execute-ddl\n> * >   generate-entity\n> * >   load-data\n> * >   export-schema\n\n成功すると以下のようなログがコンソールに出力される。\n\n```text\n(中略)\n[INFO] --- gsp-dba-maven-plugin:3.2.0:export-schema (default-cli) @ myapp-web ---\n[INFO] PUBLICスキーマのExportを開始します。:C:\\develop\\myapp\\myapp-web\\gsp-target\\output\\PUBLIC.dmp\n[INFO] Building jar: C:\\develop\\myapp-web\\gsp-target\\output\\myapp-web-testdata-0.1.0.jar\n[INFO] PUBLICスキーマのExport完了\n[INFO] ------------------------------------------------------------------------\n[INFO] BUILD SUCCESS\n[INFO] ------------------------------------------------------------------------\n[INFO] Total time: 5.415 s\n[INFO] Finished at: 2016-05-11T21:17:03+09:00\n[INFO] Final Memory: 13M/31M\n[INFO] ------------------------------------------------------------------------\n```\n\nまた、 `gsp-target/output/` ディレクトリにダンプファイルが格納されたjarファイルが生成される。\n\n> **Tip:**\n> 実行に失敗する場合は、RDBMS固有の制限事項に抵触していないか確認する。\n\n> RDBMS固有の制限事項については、[https://github.com/coastland/gsp-dba-maven-plugin](https://github.com/coastland/gsp-dba-maven-plugin) (外部サイト)の「ゴール共通のパラメータ」を参照。\n\n**2.以下のコマンドを実行して、ダンプファイルをローカルリポジトリへインストールする。**\n\n```bash\nmvn -P gsp install:install-file\n```\n\n成功すると以下のようなログがコンソールに出力される。\n\n```text\n(中略)\n[INFO] --- maven-install-plugin:2.5.2:install-file (default-cli) @ myapp-web ---\n[INFO] pom.xml not found in myapp-web-testdata-0.1.0.jar\n[INFO] Installing C:\\develop\\myapp-web\\gsp-target\\output\\myapp-web-testdata-0.1.0.jar to C:\\Users\\TISxxxxxx\\.m2\\repository\\com\\example\\myapp-web-testdata\\0.1.0\\myapp-web-testdata-0.1.0.jar\n[INFO] Installing C:\\Users\\TISxxx~1\\AppData\\Local\\Temp\\mvninstall7441010390688212345.pom to C:\\Users\\TISxxxxxx\\.m2\\repository\\com\\example\\myapp-web-testdata\\0.1.0\\myapp-web-testdata-0.1.0.pom\n[INFO] ------------------------------------------------------------------------\n[INFO] BUILD SUCCESS\n[INFO] ------------------------------------------------------------------------\n[INFO] Total time: 1.077 s\n[INFO] Finished at: 2016-05-12T14:37:39+09:00\n[INFO] Final Memory: 8M/20M\n[INFO] ------------------------------------------------------------------------\n```\n\n**3.以下のコマンドを実行して、ダンプファイルをインポートする。**\n\n```bash\nmvn -P gsp gsp-dba:import-schema\n```\n\n成功すると以下のようなログがコンソールに出力される。\n\n```text\n(中略)\n[INFO] スキーマのインポートを開始します。:C:\\develop\\myapp-web\\gsp-target\\output\\PUBLIC.dmp\n[INFO] スキーマのインポートを終了しました\n[INFO] ------------------------------------------------------------------------\n[INFO] BUILD SUCCESS\n[INFO] ------------------------------------------------------------------------\n[INFO] Total time: 2.584 s\n[INFO] Finished at: 2016-05-12T14:49:58+09:00\n[INFO] Final Memory: 9M/23M\n[INFO] ------------------------------------------------------------------------\n```",
+      "level": 2
+    },
+    {
+      "id": "s9",
+      "title": "データモデリングツールについての補足",
+      "content": "ブランクプロジェクトは [SI Object Browser ER(外部サイト)](https://products.sint.co.jp/ober) というモデリングツールを使用してデータモデル(data-model.edm)を作成することを前提としている。\nしかし、data-model.edm が使われるのはDDLの生成時だけである。\nそのため、任意の方法でDDLを生成・実行しデータベースを構築すれば、\nDDL の生成/実行以外の機能は SI Object Browser ER 以外のモデリングツールを使用した場合でも実行可能である。\n\nSI Object Browser ER 以外のモデリングツールを使用する場合は、以下のように generate-ddl 、execute-ddl のゴールが実行されないようpom.xmlを修正する。\n\n```xml\n<build>\n  <plugins>\n    <plugin>\n      <groupId>jp.co.tis.gsp</groupId>\n      <artifactId>gsp-dba-maven-plugin</artifactId>\n        <executions>\n          <execution>\n            <id>default-cli</id>\n            <phase>generate-resources</phase>\n            <goals>\n              <!-- <goal>generate-ddl</goal> この行を削除する -->\n              <!-- <goal>execute-ddl</goal> この行を削除する -->\n              <goal>generate-entity</goal>\n              <goal>load-data</goal>\n              <goal>export-schema</goal>\n            </goals>\n          </execution>\n        </executions>\n    </plugin>\n  </plugins>\n</build>\n```\n\n修正後に以下のコマンドを実行することでEntityクラスの生成、テストデータの登録、ダンプファイルの作成が行われる。\nなお、コマンド実行前に任意の方法でデータベースを構築する必要がある。\n\n```bash\nmvn -P gsp clean generate-resources\n```\n\n> **Tip:**\n> gsp-dba-maven-pluginはDDL生成機能を使用しない場合は、DDL実行機能の使用も推奨しない。",
+      "level": 2
+    }
+  ]
+}

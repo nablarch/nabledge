@@ -1,271 +1,206 @@
 {
   "id": "migration-migration",
   "title": "Nablarch 5から6への移行ガイド",
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/migration/index.html",
-    "https://nablarch.github.io/docs/5-LATEST/doc/releases/index.html",
-    "https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/blank_project/FirstStep.html",
-    "https://jakarta.ee/specifications/servlet/6.0/#details",
-    "https://jakarta.ee/specifications/tags/3.0/"
-  ],
-  "index": [
+  "content": "**目次**\n\n* Nablarch 5と6で大きく異なる点\n\n  * Jakarta EE 10に対応\n  * 動作に必要なJavaの最低バージョンを17に変更\n* 前提条件\n* 移行手順の概要\n* 移行手順の詳細\n\n  * Nablarchのバージョンアップ\n  * Jakarta EE対応\n\n    * Java EEの依存関係をJakarta EEに変更する\n\n      * Java Servlet → Jakarta Servlet\n      * JSP → Jakarta Server Pages\n      * JSTL → Jakarta Standard Tag Library\n      * JPA → Jakarta Persistence\n      * JAX-RS → Jakarta RESTful Web Services\n      * Common Annotations for the Java Platform → Jakarta Annotations\n    * Java EE仕様の実装ライブラリを更新する\n\n      * Bean Validation → Jakarta Bean Validation\n      * JSTL → Jakarta Standard Tag Library\n      * JAX-RS → Jakarta RESTful Web Services\n      * JMS → Jakarta Messaging\n    * Domaアダプタを更新する\n    * Micrometerアダプタを更新する\n    * gsp-dba-maven-pluginを更新する\n    * waitt-maven-pluginをjetty-ee10-maven-pluginに変更する\n    * nablarch-testing-jetty6をnablarch-testing-jetty12に変更する\n    * javax名前空間をjakarta名前空間に変更する\n    * XMLスキーマ指定をJakarta EE 10のスキーマに変更する\n    * タグライブラリのネームスペースをJakarta EE 10のネームスペースに変更する\n* JSR352に準拠したバッチアプリケーションの移行手順\n\n  * 実行時にエラーになる場合の対処方法\n\n    * NoClassDefFoundErrorになる場合\n* 付録\n\n  * Java EEとJakarta EEの仕様の対応表\n\nここでは、Nablarch 5で作られたプロジェクトをNablarch 6へ移行するための方法について説明する。\n\n> **Important:**\n> Nablarch 6のバージョン 6/6u1 は先行リリースバージョンであり、6u2が正式リリース後の最初のバージョンとなる。\n> そのため、ここで説明する手順は、Nablarch 5の最新バージョンからNablarch 6u2へのバージョンアップを前提としている。\n> またアーキタイプから作ったプロジェクトなどに組み込まれているgsp-dba-maven-pluginは、6u2と合わせてリリースされた5.1.0の使用を前提としている。\n> 6u3以降へバージョンアップする場合は、ここで説明する手順以外にも追加の手順が必要となる場合があるため、6u3以降のリリースノートを順に参照してバージョンアップ手順を必ず確認すること。",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "Nablarch 5と6で大きく異なる点",
-      "hints": [
-        "Nablarch 5から6への移行",
-        "移行ガイド概要",
-        "6u2",
-        "先行リリース",
-        "gsp-dba-maven-plugin",
-        "Bean Validation",
-        "JSTL",
-        "JAX-RS",
-        "JMS",
-        "Jakarta EE移行",
-        "依存関係更新",
-        "hibernate-validator",
-        "jakarta.servlet.jsp.jstl",
-        "jersey-bom",
-        "artemis",
-        "taglib",
-        "ネームスペース変更",
-        "Jakarta EE 10",
-        "JSP",
-        "jakarta.tags.core",
-        "javax.servlet.jsp.jstl",
-        "taglib ディレクティブ"
-      ]
+      "content": "",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "Jakarta EE 10に対応",
-      "hints": [
-        "Jakarta EE 10",
-        "javax から jakarta 名前空間変更",
-        "Java EE後継",
-        "アプリケーションサーバ要件",
-        "後方互換性なし",
-        "Domaアダプタ",
-        "依存関係設定",
-        "Jakarta EE移行",
-        "doma_dependency",
-        "migration_doma2.44.0",
-        "JSR352",
-        "JBeret",
-        "jberet-core",
-        "jberet-se",
-        "weld-core-impl",
-        "weld-se-core",
-        "wildfly-elytron-security-manager",
-        "jakarta.batch-api",
-        "jakarta.inject-api",
-        "jakarta.enterprise.cdi-api",
-        "jakarta.transaction-api",
-        "expressly",
-        "pom.xml",
-        "依存関係",
-        "groupId変更",
-        "artifactId変更",
-        "javax.inject",
-        "javax.enterprise",
-        "jboss-batch-api_1.0_spec",
-        "weld-core",
-        "wildfly-security-manager",
-        "javax.el",
-        "org.glassfish.expressly",
-        "jboss-marshalling",
-        "jboss-logging",
-        "guava",
-        "slf4j-api",
-        "logback-classic",
-        "バッチアプリケーション移行"
-      ]
+      "content": "Nablarch 6ではJakarta EE 10に対応している。\n\nJakarta EEとは、Java EEがEclipse Foundationに移管された後の名前で、Java EEの後継となる。\n基本的にはJava EEの仕様がそのまま移管されているが、Jakarta EE 9で名前空間が `javax.*` から `jakarta.*` になるという大きな変更が入っている。\n\nしたがって、Nablarch 5で作られたプロジェクトでNablarch 6へ移行するためには、NablarchのバージョンアップだけでなくプロジェクトもJakarta EE 10に対応する必要がある。\n\nまた、名前空間の変更などにより後方互換性が維持されないため、アプリケーションサーバ上で動作させるにはJakarta EE 10に対応しているアプリケーションサーバが必要となる。",
+      "level": 3
     },
     {
       "id": "s3",
       "title": "動作に必要なJavaの最低バージョンを17に変更",
-      "hints": [
-        "Java 17",
-        "最低Javaバージョン要件",
-        "Java 17以上",
-        "コンパイル要件",
-        "Micrometerアダプタ",
-        "監視サービス連携",
-        "バージョン更新",
-        "micrometer_collaboration",
-        "Jakarta EE移行",
-        "実行時エラー",
-        "JSR352バッチ",
-        "NoClassDefFoundError",
-        "WeldException",
-        "エラー対処"
-      ]
+      "content": "Nablarch 6のモジュールはJava 17でコンパイルされているため、動作させるにはJava 17以上が必要となる。",
+      "level": 3
     },
     {
       "id": "s4",
       "title": "前提条件",
-      "hints": [
-        "前提条件",
-        "Nablarch 5最新版へのバージョンアップ",
-        "Java 17以上",
-        "Jakarta EE 10対応アプリケーションサーバ",
-        "gsp-dba-maven-plugin",
-        "generate-entity",
-        "Jakarta EE対応",
-        "エンティティ生成",
-        "JPA",
-        "5.1.0",
-        "Nablarch 6u2",
-        "NoClassDefFoundError",
-        "WeldException",
-        "slf4j-nablarch-adaptor",
-        "クラスパス順序",
-        "Logback",
-        "BeanLogger",
-        "jboss-logging",
-        "AbstractExecutorServices"
-      ]
+      "content": "ここで説明する手順は、Nablarch 5の最新版へのバージョンアップが済んでいることを前提としている。\n\n古いバージョンで作られたプロジェクトは、まずはNablarch 5の最新版へのバージョンアップを済ませてからNablarch 6への移行を行うこと。\nNablarch 5の最新版へのバージョンアップに必要となる修正内容については、 [Nablarch 5のリリースノート](https://nablarch.github.io/docs/5-LATEST/doc/releases/index.html) を参照のこと。\n\nまた、前述のとおり動作させるにはJava 17以上およびJakarta EE 10に対応しているアプリケーションサーバが必要であるため、これらに対応した環境にて動作させるものとする。\n\n> **Tip:**\n> Nablarch 5の最新版へのバージョンアップの他に、Java 17以上で使用するための対応も必要となる。\n> 対応に必要となる修正内容については、 [Nablarch 5のセットアップ手順](https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/blank_project/FirstStep.html) を参照のこと。",
+      "level": 2
     },
     {
       "id": "s5",
       "title": "移行手順の概要",
-      "hints": [
-        "移行手順概要",
-        "Nablarchバージョンアップ",
-        "Jakarta EE対応",
-        "移行に必要な2つの修正",
-        "waitt-maven-plugin",
-        "jetty-ee10-maven-plugin",
-        "組み込みサーバ",
-        "Jakarta EE非対応",
-        "mvn jetty:run",
-        "Jetty 12",
-        "Java EE",
-        "Jakarta EE",
-        "仕様対応表",
-        "javax",
-        "jakarta",
-        "名前空間プレフィックス変更",
-        "JSF",
-        "JPA",
-        "JTA",
-        "CDI",
-        "JAX-RS",
-        "JAXB",
-        "JMS",
-        "JSTL",
-        "EJB",
-        "JASPIC",
-        "JACC",
-        "JAF",
-        "JSON-B",
-        "JSON-P",
-        "JCA",
-        "jBatch",
-        "EL",
-        "JAX-WS"
-      ]
+      "content": "Nablarch 5のプロジェクトをNablarch 6へ移行するためには、大まかに次の2つの修正が必要となる。\n\n* Nablarchのバージョンアップ\n* Jakarta EE対応\n\n1つ目の「Nablarchのバージョンアップ」は、プロジェクトで使用しているNablarchのバージョンを5から6に変更することを指す。\n\n2つ目の「Jakarta EE対応」は、プロジェクトをJakarta EE 10に対応させることを指す。\nこれには、Jakarta EE 9で入った名前空間の変更対応や、Java EEに依存しているライブラリをJakarta EE対応版に変更する対応が含まれる。\n\n以下で、それぞれの具体的な手順について説明する。",
+      "level": 2
     },
     {
       "id": "s6",
       "title": "移行手順の詳細",
-      "hints": [
-        "移行手順詳細",
-        "ウェブプロジェクト固有手順",
-        "バッチプロジェクト",
-        "waitt-to-jetty",
-        "update-ntf-jetty",
-        "nablarch-testing-jetty6",
-        "nablarch-testing-jetty12",
-        "nablarch-testing-jetty9",
-        "NTF",
-        "Nablarch Testing Framework",
-        "HttpServerFactoryJetty12",
-        "HttpServerFactoryJetty6",
-        "unit-test.xml"
-      ]
+      "content": "ここでは、Nablarch 5のプロジェクトをNablarch 6へ移行する際に必要となる手順について、それぞれ詳細な内容を説明する。\n\nプロジェクトによっては不要な手順が含まれる可能性があるが、その場合は適宜取捨選択して読み進めること（例えば、 [waitt-maven-pluginをjetty-ee10-maven-pluginに変更する](../../about/migration/migration-migration.md#waitt-to-jetty) や [nablarch-testing-jetty6をnablarch-testing-jetty12に変更する](../../about/migration/migration-migration.md#update-ntf-jetty) はウェブプロジェクト固有の手順なので、バッチプロジェクトでは読み飛ばして問題ない）。",
+      "level": 2
     },
     {
       "id": "s7",
       "title": "Nablarchのバージョンアップ",
-      "hints": [
-        "nablarch-bom",
-        "pom.xml BOM",
-        "6u2",
-        "Nablarchバージョンアップ手順",
-        "com.nablarch.profile",
-        "javax",
-        "jakarta",
-        "名前空間変更",
-        "import文",
-        "Grep検索",
-        "Jakarta EE 9",
-        "javax.servlet.forward.request_uri",
-        "jakarta.servlet.forward.request_uri",
-        "ConstraintValidator"
-      ]
+      "content": "Nablarchを構成する各モジュールのバージョンはBOMで管理しているので、BOMのバージョンを変えることでNablarchのバージョンアップができる。\n以下のように、 `pom.xml` でNablarchのBOMを読み込んでいる部分の `<version>` を変更する。\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    <dependency>\n      <groupId>com.nablarch.profile</groupId>\n      <artifactId>nablarch-bom</artifactId>\n      <version>6u2</version>\n      <type>pom</type>\n      <scope>import</scope>\n    </dependency>\n    ...\n  </dependencies>\n</dependencyManagement>\n```",
+      "level": 3
     },
     {
       "id": "s8",
       "title": "Jakarta EE対応",
-      "hints": [
-        "Jakarta EE BOM",
-        "jakarta.jakartaee-bom",
-        "jakarta.platform",
-        "Java EE依存関係変更方針",
-        "BOM推奨",
-        "web.xml",
-        "XMLスキーマ",
-        "Jakarta EE 10",
-        "jakartaee",
-        "web-app_6_0.xsd",
-        "xmlns",
-        "xsi:schemaLocation"
-      ]
+      "content": "",
+      "level": 3
     },
     {
       "id": "s9",
       "title": "Java EEの依存関係をJakarta EEに変更する",
-      "hints": [
-        "javax.servlet",
-        "jakarta.servlet",
-        "javax.servlet.jsp",
-        "jakarta.persistence",
-        "javax.ws.rs",
-        "jakarta.ws.rs",
-        "javax.annotation",
-        "jakarta.annotation",
-        "Jakarta Servlet",
-        "Jakarta Server Pages",
-        "JSTL",
-        "JPA",
-        "JAX-RS",
-        "Jakarta Annotations"
-      ]
+      "content": "Java EEのAPIの依存関係(`dependency`)を、Jakarta EEのものに変更する必要がある。\n例えば代表的なものとしては、Java Servletなどが挙げられる。\n\nただ、Java EEのAPIの `dependency` は、jarの提供元やバージョンによってバラバラになっており統一されていない。\nこのため、 `groupId` などから機械的に判断はできない。\nどの `dependency` がJava EEのAPIなのかは、 `groupId` や `artifactId` 、jarの中に含まれるクラスなどから判断しなければならない。\n\n参考までに、Nablarchが提供しているアーキタイプやExampleでの変更内容を以下に記載する。\nなお、ExampleではJakarta EEが提供しているBOMを読み込むことで、個別にバージョンを指定しないようにしている。\nバージョンを調べる手間や指定のミスが減り管理も楽になるため、BOMを読み込むことを推奨する。\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    ...\n    <dependency>\n      <groupId>jakarta.platform</groupId>\n      <artifactId>jakarta.jakartaee-bom</artifactId>\n      <version>10.0.0</version>\n      <type>pom</type>\n      <scope>import</scope>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n```\n\nまた、ここで記載されていない依存関係を変更するための参考として、本ページ末尾の付録に [Java EEとJakarta EEの仕様の対応表](../../about/migration/migration-migration.md#java-ee-jakarta-ee-comparation) を記載する。\nJakarta EEでの `dependency` が何になるかは各仕様のページに記載されているので、そちらも参考にすること。\n（例えば [Jakarta Servlet 6.0 の仕様のページ (外部サイト、英語)](https://jakarta.ee/specifications/servlet/6.0/#details) には、「Maven coordinates」のところに `jakarta.servlet:jakarta.servlet-api:jar:6.0.0` と記載されている）",
+      "level": 4
     },
     {
       "id": "s10",
+      "title": "Java Servlet → Jakarta Servlet",
+      "content": "**修正前**\n\n```xml\n<dependency>\n  <groupId>javax.servlet</groupId>\n  <artifactId>javax.servlet-api</artifactId>\n  <version>...</version>\n  <scope>provided</scope>\n</dependency>\n```\n\n**修正後**\n\n```xml\n<dependency>\n  <groupId>jakarta.servlet</groupId>\n  <artifactId>jakarta.servlet-api</artifactId>\n  <scope>provided</scope>\n</dependency>\n```",
+      "level": 5
+    },
+    {
+      "id": "s11",
+      "title": "JSP → Jakarta Server Pages",
+      "content": "**修正前**\n\n```xml\n<dependency>\n  <groupId>javax.servlet.jsp</groupId>\n  <artifactId>javax.servlet.jsp-api</artifactId>\n  <version>...</version>\n  <scope>provided</scope>\n</dependency>\n```\n\n**修正後**\n\n```xml\n<dependency>\n  <groupId>jakarta.servlet.jsp</groupId>\n  <artifactId>jakarta.servlet.jsp-api</artifactId>\n  <scope>provided</scope>\n</dependency>\n```",
+      "level": 5
+    },
+    {
+      "id": "s12",
+      "title": "JSTL → Jakarta Standard Tag Library",
+      "content": "**修正前**\n\n```xml\n<dependency>\n  <groupId>javax.servlet.jsp.jstl</groupId>\n  <artifactId>javax.servlet.jsp.jstl-api</artifactId>\n  <version>...</version>\n</dependency>\n```\n\n**修正後**\n\n```xml\n<dependency>\n  <groupId>jakarta.servlet.jsp.jstl</groupId>\n  <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>\n</dependency>\n```",
+      "level": 5
+    },
+    {
+      "id": "s13",
+      "title": "JPA → Jakarta Persistence",
+      "content": "**修正前**\n\n```xml\n<dependency>\n  <groupId>org.apache.geronimo.specs</groupId>\n  <artifactId>geronimo-jpa_2.0_spec</artifactId>\n  <version>...</version>\n</dependency>\n```\n\n**修正後**\n\n```xml\n<dependency>\n  <groupId>jakarta.persistence</groupId>\n  <artifactId>jakarta.persistence-api</artifactId>\n</dependency>\n```",
+      "level": 5
+    },
+    {
+      "id": "s14",
+      "title": "JAX-RS → Jakarta RESTful Web Services",
+      "content": "**修正前**\n\n```xml\n<dependency>\n  <groupId>javax.ws.rs</groupId>\n  <artifactId>javax.ws.rs-api</artifactId>\n  <version>...</version>\n</dependency>\n```\n\n**修正後**\n\n```xml\n<dependency>\n  <groupId>jakarta.ws.rs</groupId>\n  <artifactId>jakarta.ws.rs-api</artifactId>\n</dependency>\n```",
+      "level": 5
+    },
+    {
+      "id": "s15",
+      "title": "Common Annotations for the Java Platform → Jakarta Annotations",
+      "content": "**修正前**\n\n```xml\n<dependency>\n  <groupId>javax.annotation</groupId>\n  <artifactId>javax.annotation-api</artifactId>\n  <version>...</version>\n</dependency>\n```\n\n**修正後**\n\n```xml\n<dependency>\n  <groupId>jakarta.annotation</groupId>\n  <artifactId>jakarta.annotation-api</artifactId>\n</dependency>\n```",
+      "level": 5
+    },
+    {
+      "id": "s16",
+      "title": "Java EE仕様の実装ライブラリを更新する",
+      "content": "Java EE仕様の実装ライブラリをアプリケーションに組み込んでいる場合は、これらをJakarta EEのものに置き換える。\n\nどの `dependency` がJava EE仕様の実装ライブラリであるのかは、それぞれの `dependency` ごとに個別に調査する必要がある。\nまた、Java EE仕様の実装ライブラリであることが分かった場合、Jakarta EE対応版の `dependency` が何になるかは実装ライブラリごとに異なる。\nしたがって、プロジェクトで使用している実装ライブラリごとに公式サイトなどを確認する必要がある。\n\n参考までに、Nablarchが提供しているアーキタイプやExampleでの変更内容を以下に記載する。\n\nまた、Jakarta EEの各仕様のページでも互換実装が紹介されているので、そちらも参考にすること。\n(例えば、 [Jakarta RESTful Web Services 3.1 の仕様のページ (外部サイト、英語)](https://jakarta.ee/specifications/restful-ws/3.1/#compatible-implementations) では、互換実装として Eclipse Jersey 3.1.0 が紹介されている)\n\n> **Tip:**\n> Nablarch 6はJava 17以上を前提としているため、Java 17以上で必要となるモジュールを新たに組み込んでいる。\n> そのため [Nablarch 5のセットアップ手順](https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/blank_project/FirstStep.html) にてJava 17以上で動作させるため依存関係に追加したモジュールは、アプリケーションによって追加不要になっている場合がある。\n> [dependency:tree](https://maven.apache.org/plugins/maven-dependency-plugin/tree-mojo.html) 等により依存関係を確認し、更新もしくは削除を判断すること。",
+      "level": 4
+    },
+    {
+      "id": "s17",
+      "title": "Bean Validation → Jakarta Bean Validation",
+      "content": "**修正前**\n\n```xml\n<dependency>\n  <groupId>org.hibernate</groupId>\n  <artifactId>hibernate-validator</artifactId>\n  <version>5.3.6.Final</version>\n</dependency>\n```\n\n**修正後**\n\n```xml\n<dependency>\n  <groupId>org.hibernate.validator</groupId>\n  <artifactId>hibernate-validator</artifactId>\n  <version>8.0.0.Final</version>\n</dependency>\n```",
+      "level": 5
+    },
+    {
+      "id": "s18",
+      "title": "JSTL → Jakarta Standard Tag Library",
+      "content": "**修正前**\n\n```xml\n<dependency>\n  <groupId>taglibs</groupId>\n  <artifactId>standard</artifactId>\n  <version>...</version>\n</dependency>\n```\n\n**修正後**\n\n```xml\n<dependency>\n  <groupId>org.glassfish.web</groupId>\n  <artifactId>jakarta.servlet.jsp.jstl</artifactId>\n  <version>3.0.0</version>\n</dependency>\n```",
+      "level": 5
+    },
+    {
+      "id": "s19",
+      "title": "JAX-RS → Jakarta RESTful Web Services",
+      "content": "**修正前**\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    ...\n    <dependency>\n      <groupId>org.glassfish.jersey</groupId>\n      <artifactId>jersey-bom</artifactId>\n      <version>...</version>\n      <type>pom</type>\n      <scope>import</scope>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n\n<dependency>\n  <groupId>org.glassfish.jersey.media</groupId>\n  <artifactId>jersey-media-json-jackson</artifactId>\n</dependency>\n\n<dependency>\n  <groupId>org.glassfish.jersey.core</groupId>\n  <artifactId>jersey-client</artifactId>\n</dependency>\n\n<dependency>\n  <groupId>org.glassfish.jersey.inject</groupId>\n  <artifactId>jersey-hk2</artifactId>\n</dependency>\n```\n\n**修正後**\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    ...\n    <dependency>\n      <groupId>org.glassfish.jersey</groupId>\n      <artifactId>jersey-bom</artifactId>\n      <version>3.1.8</version>\n      <type>pom</type>\n      <scope>import</scope>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n\n<dependency>\n  <groupId>org.glassfish.jersey.media</groupId>\n  <artifactId>jersey-media-json-jackson</artifactId>\n</dependency>\n\n<dependency>\n  <groupId>org.glassfish.jersey.core</groupId>\n  <artifactId>jersey-client</artifactId>\n</dependency>\n\n<dependency>\n  <groupId>org.glassfish.jersey.inject</groupId>\n  <artifactId>jersey-hk2</artifactId>\n</dependency>\n```",
+      "level": 5
+    },
+    {
+      "id": "s20",
+      "title": "JMS → Jakarta Messaging",
+      "content": "**修正前**\n\n```xml\n<dependency>\n  <groupId>org.apache.activemq</groupId>\n  <artifactId>activemq-all</artifactId>\n  <version>...</version>\n</dependency>\n```\n\n**修正後**\n\n```xml\n<dependency>\n  <groupId>org.apache.activemq</groupId>\n  <artifactId>artemis-server</artifactId>\n  <version>2.37.0</version>\n</dependency>\n<dependency>\n  <groupId>org.apache.activemq</groupId>\n  <artifactId>artemis-jakarta-server</artifactId>\n  <version>2.37.0</version>\n</dependency>\n<dependency>\n  <groupId>org.apache.activemq</groupId>\n  <artifactId>artemis-jakarta-client</artifactId>\n  <version>2.37.0</version>\n</dependency>\n```",
+      "level": 5
+    },
+    {
+      "id": "s21",
+      "title": "Domaアダプタを更新する",
+      "content": "Domaアダプタをアプリケーションに組み込んでいる場合は、依存関係の設定が必要となる。\n詳細については [依存関係の設定](../../component/adapters/adapters-doma-adaptor.md#doma-dependency) を参照のこと。\n\nまた、新しいバージョンで推奨する実装方法についても案内しているため、必要に応じて対応する。\n詳細については [Doma 2.44.0までの実装方法から移行する](../../component/adapters/adapters-doma-adaptor.md#migration-doma2440) を参照のこと。",
+      "level": 4
+    },
+    {
+      "id": "s22",
+      "title": "Micrometerアダプタを更新する",
+      "content": "Micrometerアダプタをアプリケーションに組み込んで監視サービスと連携している場合は、依存関係に追加しているMicrometerモジュールのバージョン更新が必要となる。\n詳細については [監視サービスと連携する](../../component/adapters/adapters-micrometer-adaptor.md#micrometer-collaboration) を参照のこと。",
+      "level": 4
+    },
+    {
+      "id": "s23",
+      "title": "gsp-dba-maven-pluginを更新する",
+      "content": "nablarch-example-webをはじめ、アーキタイプから作ったプロジェクトには [gsp-dba-maven-plugin (外部サイト)](https://github.com/coastland/gsp-dba-maven-plugin) があらかじめ組み込まれている。\nこのプラグインは、データベーステーブルのメタデータからJavaのエンティティクラスを生成する機能(`generate-entity`)を提供している。\nこのエンティティクラスにはJPAなどのJava EEのアノテーションが設定されるため、そのままではJakarta EE環境で使用できない。\n\ngsp-dba-maven-pluginは5.1.0でJakarta EEおよびNablarch 6u2へ対応したので、 `pom.xml` でgsp-dba-maven-pluginの `<version>` を変更する。\n\n```xml\n<plugin>\n  <groupId>jp.co.tis.gsp</groupId>\n  <artifactId>gsp-dba-maven-plugin</artifactId>\n  <version>5.1.0</version>\n  <configuration>\n  ...\n```\n\nまた、 変更前バージョンではJava 17で使用するために [Java 17での設定ガイド (外部サイト)](https://github.com/coastland/gsp-dba-maven-plugin/tree/4.x.x-main?tab=readme-ov-file#java17%E3%81%A7%E3%81%AE%E8%A8%AD%E5%AE%9A) に沿って依存関係を追加しているが、バージョンアップ後にはこの設定が組み込まれており不要となるため、追加した依存関係を削除する。\n\nさらに、Jakarta EE対応されたgsp-dba-maven-pluginの `generate-entity` を使うためには、 `dependency` やJVM引数の追加が必要となる。\n詳細については [gsp-dba-maven-pluginのガイド (外部サイト)](https://github.com/coastland/gsp-dba-maven-plugin?tab=readme-ov-file#generate-entity) を参照のこと。\n\n以上で、Jakarta EEのアノテーションが設定されたエンティティが生成されるようになる。",
+      "level": 4
+    },
+    {
+      "id": "s24",
+      "title": "waitt-maven-pluginをjetty-ee10-maven-pluginに変更する",
+      "content": "nablarch-example-webをはじめ、アーキタイプから作ったウェブアプリケーションのプロジェクトには [waitt-maven-plugin (外部サイト、英語)](https://github.com/kawasima/waitt) があらかじめ組み込まれている。\nこのプラグインは、プロジェクトのコードを組み込みサーバ(Tomcatなど)にデプロイして簡単に実行できる機能を提供している。\nしかし、このプラグインはJakarta EE対応がされていないので、同様の機能を提供していてJakarta EEにも対応しているjetty-ee10-maven-pluginに変更する。\n\n修正前、nablarch-example-webでは以下のようにwaitt-maven-pluginが `pom.xml` に設定されている。\n\n**修正前**\n\n```xml\n<plugin>\n  <groupId>net.unit8.waitt</groupId>\n  <artifactId>waitt-maven-plugin</artifactId>\n  <version>1.2.3</version>\n  <configuration>\n    <servers>\n      <server>\n        <groupId>net.unit8.waitt.server</groupId>\n        <artifactId>waitt-tomcat8</artifactId>\n        <version>1.2.3</version>\n      </server>\n    </servers>\n  </configuration>\n</plugin>\n```\n\nこれを、以下のようにしてjetty-ee10-maven-pluginに変更する。\n\n**修正後**\n\n```xml\n<plugin>\n  <groupId>org.eclipse.jetty.ee10</groupId>\n  <artifactId>jetty-ee10-maven-plugin</artifactId>\n  <version>12.0.12</version>\n</plugin>\n```\n\nこれで、アプリケーションのコードをJettyにデプロイして実行できるようになる。\n\n実際に動かしたい場合は、以下のコマンドでJettyを起動できる。\n\n```batch\nmvn jetty:run\n```",
+      "level": 4
+    },
+    {
+      "id": "s25",
+      "title": "nablarch-testing-jetty6をnablarch-testing-jetty12に変更する",
+      "content": "ウェブアプリケーションのプロジェクトでNTF (Nablarch Testing Framework)を使用している場合、JUnitのテストで組み込みサーバを実行するために `nablarch-testing-jetty6` というモジュールを使用する。\nこのモジュールで起動するJetty 6はJakarta EEに対応していない。\nJettyがJakarta EE 10に対応したのはJetty 12なので、Jetty 12を起動できる `nablarch-testing-jetty12` を使うように変更する必要がある。\n\n> **Tip:**\n> Java 11以上のプロジェクトではJetty 9を起動する `nablarch-testing-jetty9` を使用するが、これもJakarta EEには対応していないため `nablarch-testing-jetty12` に変更する必要がある。\n\nまずは、 `pom.xml` を以下のように修正する。\n\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-testing-jetty12</artifactId> <!-- artifactId を nablarch-testing-jetty12 に変更する -->\n  <scope>test</scope>\n</dependency>\n```\n\n次に、 `HttpServerFactory` のコンポーネントを定義している部分を以下のように修正する。\n\n**修正前**\n\n```xml\n<component name=\"httpServerFactory\" class=\"nablarch.fw.web.httpserver.HttpServerFactoryJetty6\"/>\n```\n\n**修正後**\n\n```xml\n<component name=\"httpServerFactory\" class=\"nablarch.fw.web.httpserver.HttpServerFactoryJetty12\"/>\n```\n\nnablarch-example-webの場合は、 `src/test/resources/unit-test.xml` に上記設定が存在する。\n\n以上で、NTF実行時に起動される組み込みサーバがJakarta EE対応版に切り替わる。",
+      "level": 4
+    },
+    {
+      "id": "s26",
+      "title": "javax名前空間をjakarta名前空間に変更する",
+      "content": "Jakarta EE 9で入った名前空間の変更の対応を、アプリケーションのコードにも実施する。\n名前空間の変更対応の大まかな流れを以下に記載する。\n\n1. `javax` 名前空間で `import` している部分等がコンパイルエラーになるため、 `jakarta` 名前空間に変更する\n2. コンパイルエラーにならない場所を対応するため、プロジェクト全体を `javax` でGrep検索する\n3. 検索で見つかった箇所に関して、Java EEの名前空間かどうか判定する\n4. Java EEの名前空間である場合は、 `javax` を `jakarta` に置換する\n\n以下で、詳細について説明する。\n\n`javax` の記述は、多くの場合はJavaソースコード上の `import` 文に現れる。\nここまでの修正でJava EEの依存関係がなくなりJakarta EEの依存関係に置き換わっているため、 `javax` 名前空間で `import` している部分はコンパイルエラーが発生するようになっている。\nそのため、まずはコンパイルエラーが発生している箇所を確認し、 `jakarta` 名前空間に変更する。\n\nしかし、 `javax` が現れるのは `import` 文だけとは限らず、コンパイルエラーにならない場所にも存在する可能性がある。\nたとえば、Java Servletでフォワード元のリクエストURIを取得するためのキー `javax.servlet.forward.request_uri` は文字列で指定するため、コンパイルエラーにはならない（このキーは、Jakarta Servletでは `jakarta.servlet.forward.request_uri` に変える必要がある）。\n他にも、JSPや設定ファイルの中に記述されている場合も、コンパイルエラーにはならないが修正対象となる。\n\nしたがって `javax` 名前空間の有無を調査するには、プロジェクト全体に対してGrep検索を行わなければならない。\n\n次に、 `javax` で検索にヒットした箇所について、それが本当にJava EEの名前空間であるかどうかを判定する。\n例えば、nablarch-example-webを `javax` で検索すると、以下のような記述がヒットする。\n\n```java\nimport javax.validation.ConstraintValidator;\n```\n\nこれは、Bean Validationのクラスを `import` している箇所なので、Java EEの名前空間と判断できる。\n\n一方で、以下のような記述もヒットする。\n\n```java\nimport javax.crypto.SecretKeyFactory;\n```\n\nこれは標準ライブラリに含まれる暗号処理に関するクラスを `import` している箇所になるので、Java EEの名前空間ではない。\n\nこのように、 `javax` でヒットしたからといって、それらが全てJava EEの名前空間とは一概には判断できない。\n本ページ付録の [Java EEとJakarta EEの仕様の対応表](../../about/migration/migration-migration.md#java-ee-jakarta-ee-comparation) に各仕様の名前空間を記載しているので、これを参考にヒットした `javax` がJava EEのものか判断すること。\n\nJava EEの名前空間であると判断できた場合は、 `javax` の部分を `jakarta` に置換する。\n以下は、前述の `import` を `jakarta` に置換した場合の例になる。\n\n```java\nimport jakarta.validation.ConstraintValidator;\n```",
+      "level": 4
+    },
+    {
+      "id": "s27",
+      "title": "XMLスキーマ指定をJakarta EE 10のスキーマに変更する",
+      "content": "`web.xml` 等のXMLファイルではXMLスキーマを指定しているが、これをJakarta EE 10に対応したスキーマに変更する。\nJakarta EE 10で提供されているスキーマは、 [Jakarta EE XML Schemas (外部サイト、英語)](https://jakarta.ee/xml/ns/jakartaee/#10) で確認できる。\n\n**修正前**\n\n```xml\n<web-app xmlns=\"http://xmlns.jcp.org/xml/ns/javaee\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://xmlns.jcp.org/xml/ns/javaee\n         http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd\"\n         version=\"3.1\">\n```\n\n**修正後**\n\n```xml\n<web-app xmlns=\"https://jakarta.ee/xml/ns/jakartaee\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"https://jakarta.ee/xml/ns/jakartaee\n                             web-app_6_0.xsd\"\n         version=\"6.0\">\n```",
+      "level": 4
+    },
+    {
+      "id": "s28",
+      "title": "タグライブラリのネームスペースをJakarta EE 10のネームスペースに変更する",
+      "content": "JSPファイルでは taglib ディレクティブでタグライブラリのネームスペースを指定しているが、これをJakarta EE 10に対応したネームスペースに変更する。\nJakarta EE 10で提供されているネームスペースは、 [Jakarta Standard Tag Library 3.0 (外部サイト、英語)](https://jakarta.ee/specifications/tags/3.0/) で確認できる。\n\n**修正前**\n\n```jsp\n<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\" %>\n```\n\n**修正後**\n\n```jsp\n<%@ taglib prefix=\"c\" uri=\"jakarta.tags.core\" %>\n```",
+      "level": 4
+    },
+    {
+      "id": "s29",
+      "title": "JSR352に準拠したバッチアプリケーションの移行手順",
+      "content": "Nablarchが提供する実行制御基盤は、いずれも前節で説明した手順で移行できる。\n\nただし [Jakarta Batchに準拠したバッチアプリケーション](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.md) のみ、JSR352に準拠した実装として使用しているJBeretと関連するライブラリの更新が複雑であるため、ここで追加で説明する。\n\nJSR352に準拠したバッチアプリケーションをアーキタイプから生成した場合、Nablarch 5までは以下のように `dependency` が `pom.xml` に設定されている。\n\n**修正前**\n\n```xml\n<dependency>\n  <groupId>org.glassfish</groupId>\n  <artifactId>javax.el</artifactId>\n  <version>...</version>\n</dependency>\n\n...\n\n<!-- JBeretに最低限必要な依存関係 -->\n<dependency>\n  <groupId>org.jboss.spec.javax.batch</groupId>\n  <artifactId>jboss-batch-api_1.0_spec</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>javax.inject</groupId>\n  <artifactId>javax.inject</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>javax.enterprise</groupId>\n  <artifactId>cdi-api</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.spec.javax.transaction</groupId>\n  <artifactId>jboss-transaction-api_1.2_spec</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.jberet</groupId>\n  <artifactId>jberet-core</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.marshalling</groupId>\n  <artifactId>jboss-marshalling</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.logging</groupId>\n  <artifactId>jboss-logging</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.weld</groupId>\n  <artifactId>weld-core</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.wildfly.security</groupId>\n  <artifactId>wildfly-security-manager</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>com.google.guava</groupId>\n  <artifactId>guava</artifactId>\n  <version>...</version>\n</dependency>\n\n<!-- JBeretをJavaSEで動作させるための依存関係 -->\n<dependency>\n  <groupId>org.jberet</groupId>\n  <artifactId>jberet-se</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.weld.se</groupId>\n  <artifactId>weld-se</artifactId>\n  <version>...</version>\n</dependency>\n\n<!-- Logbackでログを出力している場合の依存関係 -->\n<dependency>\n  <groupId>org.slf4j</groupId>\n  <artifactId>slf4j-api</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>ch.qos.logback</groupId>\n  <artifactId>logback-classic</artifactId>\n  <version>...</version>\n</dependency>\n```\n\nNablarch 6へ移行するためには、これらを以下のように修正する。\n\n**修正後**\n\n```xml\n<dependency>\n  <groupId>org.glassfish.expressly</groupId>\n  <artifactId>expressly</artifactId>\n  <version>5.0.0</version>\n</dependency>\n\n...\n\n<!-- JBeretに最低限必要な依存関係 -->\n<dependency>\n  <groupId>jakarta.batch</groupId>\n  <artifactId>jakarta.batch-api</artifactId>\n</dependency>\n<dependency>\n  <groupId>jakarta.inject</groupId>\n  <artifactId>jakarta.inject-api</artifactId>\n</dependency>\n<dependency>\n  <groupId>jakarta.enterprise</groupId>\n  <artifactId>jakarta.enterprise.cdi-api</artifactId>\n</dependency>\n<dependency>\n  <groupId>jakarta.transaction</groupId>\n  <artifactId>jakarta.transaction-api</artifactId>\n</dependency>\n<dependency>\n  <groupId>org.jberet</groupId>\n  <artifactId>jberet-core</artifactId>\n  <version>2.1.4.Final</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.marshalling</groupId>\n  <artifactId>jboss-marshalling</artifactId>\n  <version>2.1.3.Final</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.logging</groupId>\n  <artifactId>jboss-logging</artifactId>\n  <version>3.5.3.Final</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.weld</groupId>\n  <artifactId>weld-core-impl</artifactId>\n  <version>5.0.1.Final</version>\n</dependency>\n<dependency>\n  <groupId>org.wildfly.security</groupId>\n  <artifactId>wildfly-elytron-security-manager</artifactId>\n  <version>2.2.2.Final</version>\n</dependency>\n<dependency>\n  <groupId>com.google.guava</groupId>\n  <artifactId>guava</artifactId>\n  <version>32.1.1-jre</version>\n</dependency>\n\n<!-- JBeretをJavaSEで動作させるための依存関係 -->\n<dependency>\n  <groupId>org.jberet</groupId>\n  <artifactId>jberet-se</artifactId>\n  <version>2.1.4.Final</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.weld.se</groupId>\n  <artifactId>weld-se-core</artifactId>\n  <version>5.0.1.Final</version>\n</dependency>\n\n<!-- Logbackでログを出力している場合の依存関係 -->\n<dependency>\n  <groupId>org.slf4j</groupId>\n  <artifactId>slf4j-api</artifactId>\n  <version>2.0.11</version>\n</dependency>\n<dependency>\n  <groupId>ch.qos.logback</groupId>\n  <artifactId>logback-classic</artifactId>\n  <version>1.5.6</version>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s30",
+      "title": "実行時にエラーになる場合の対処方法",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s31",
+      "title": "NoClassDefFoundErrorになる場合",
+      "content": "```text\norg.jboss.weld.exceptions.WeldException\n    at org.jboss.weld.executor.AbstractExecutorServices.checkForExceptions (AbstractExecutorServices.java:82)\n    ...\nCaused by: java.lang.NoClassDefFoundError\n    at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0 (Native Method)\n    ...\nCaused by: java.lang.NoClassDefFoundError:Could not initialize class org.jboss.weld.logging.BeanLogger\n    at org.jboss.weld.util.Beans.getBeanConstructor (Beans.java:279)\n```\n\n実行時に上記のようなスタックトレースが出力されてエラーになる場合、クラスパスの順序において `slf4j-nablarch-adaptor` をLogbackより後にすることでエラーを解消できる。\nMavenで実行する場合は、 `pom.xml` 上の `slf4j-nablarch-adaptor` の位置をLogbackより下に配置することで順序を変更できる。\n\n```xml\n<dependency>\n  <groupId>ch.qos.logback</groupId>\n  <artifactId>logback-classic</artifactId>\n  <version>...</version>\n</dependency>\n\n<!-- Logbackより下にslf4j-nablarch-adaptorを配置する -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>slf4j-nablarch-adaptor</artifactId>\n  <scope>runtime</scope>\n</dependency>\n```",
+      "level": 4
+    },
+    {
+      "id": "s32",
       "title": "付録",
-      "hints": [
-        "付録",
-        "Java EE",
-        "Jakarta EE",
-        "java_ee_jakarta_ee_comparation",
-        "仕様対応表参照"
-      ]
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s33",
+      "title": "Java EEとJakarta EEの仕様の対応表",
+      "content": "Java EEとJakarta EEの仕様の対応表\n\n| Java EE | 省略名 | 名前空間プレフィックス | Jakarta EE |\n|---|---|---|---|\n| Java Servlet |  | `javax.servlet` | [Jakarta Servlet (外部サイト、英語)](https://jakarta.ee/specifications/servlet/) |\n| JavaServer Faces | JSF | `javax.faces` | [Jakarta Faces (外部サイト、英語)](https://jakarta.ee/specifications/faces/) |\n| Java API for WebSocket |  | `javax.websocket` | [Jakarta WebSocket (外部サイト、英語)](https://jakarta.ee/specifications/websocket/) |\n| Concurrency Utilities for Java EE |  | `javax.enterprise.concurrent` | [Jakarta Concurrency (外部サイト、英語)](https://jakarta.ee/specifications/concurrency/) |\n| Interceptors |  | `javax.interceptor` | [Jakarta Interceptors (外部サイト、英語)](https://jakarta.ee/specifications/interceptors/) |\n| Java Authentication SPI for Containers | JASPIC | `javax.security.auth.message` | [Jakarta Authentication (外部サイト、英語)](https://jakarta.ee/specifications/authentication/) |\n| Java Authorization Contract for Containers | JACC | `javax.security.jacc` | [Jakarta Authorization (外部サイト、英語)](https://jakarta.ee/specifications/authorization/) |\n| Java EE Security API |  | `javax.security.enterprise` | [Jakarta Security (外部サイト、英語)](https://jakarta.ee/specifications/security/) |\n| Java Message Service | JMS | `javax.jms` | [Jakarta Messaging (外部サイト、英語)](https://jakarta.ee/specifications/messaging/) |\n| Java Persistence API | JPA | `javax.persistence` | [Jakarta Persistence (外部サイト、英語)](https://jakarta.ee/specifications/persistence/) |\n| Java Transaction API | JTA | `javax.transaction` | [Jakarta Transactions (外部サイト、英語)](https://jakarta.ee/specifications/transactions/) |\n| Batch Application for the Java Platform | jBatch | `javax.batch` | [Jakarta Batch (外部サイト、英語)](https://jakarta.ee/specifications/batch/) |\n| JavaMail |  | `javax.mail` | [Jakarta Mail (外部サイト、英語)](https://jakarta.ee/specifications/mail/) |\n| Java EE Connector Architecture | JCA | `javax.resource` | [Jakarta Connectors (外部サイト、英語)](https://jakarta.ee/specifications/connectors/) |\n| Common Annotations for the Java Platform |  | `javax.annotation` | [Jakarta Annotations (外部サイト、英語)](https://jakarta.ee/specifications/annotations/) |\n| JavaBeans Activation Framework | JAF | `javax.activation` | [Jakarta Activation (外部サイト、英語)](https://jakarta.ee/specifications/activation/) |\n| Bean Validation |  | `javax.validation` | [Jakarta Bean Validation (外部サイト、英語)](https://jakarta.ee/specifications/bean-validation/) |\n| Expression Language | EL | `javax.el` | [Jakarta Expression Language (外部サイト、英語)](https://jakarta.ee/specifications/expression-language/) |\n| Enterprise JavaBeans | EJB | `javax.ejb` | [Jakarta Enterprise Beans (外部サイト、英語)](https://jakarta.ee/specifications/enterprise-beans/) |\n| Java Architecture for XML Binding | JAXB | `javax.xml.bind` | [Jakarta XML Binding (外部サイト、英語)](https://jakarta.ee/specifications/xml-binding/) |\n| Java API for JSON Binding | JSON-B | `javax.json.bind` | [Jakarta JSON Binding (外部サイト、英語)](https://jakarta.ee/specifications/jsonb/) |\n| Java API for JSON Processing | JSON-P | * `javax.json` * `javax.json.spi` * `javax.json.stream` | [Jakarta JSON Processing (外部サイト、英語)](https://jakarta.ee/specifications/jsonp/) |\n| JavaServer Pages | JSP | `javax.servlet.jsp` | [Jakarta Server Pages (外部サイト、英語)](https://jakarta.ee/specifications/pages/) |\n| Java API for XML-Based Web Services | JAX-WS | `javax.xml.ws` | [Jakarta XML Web Services (外部サイト、英語)](https://jakarta.ee/specifications/xml-web-services/) |\n| Java API for RESTful Web Services | JAX-RS | `javax.ws.rs` | [Jakarta RESTful Web Services (外部サイト、英語)](https://jakarta.ee/specifications/restful-ws/) |\n| JavaServer Pages Standard Tag Library | JSTL | `javax.servlet.jsp.jstl` | [Jakarta Standard Tag Library (外部サイト、英語)](https://jakarta.ee/specifications/tags/) |\n| Contexts and Dependency Injection for Java | CDI | * `javax.decorator` * `javax.enterprise.context` * `javax.enterprise.event` * `javax.enterprise.inject` * `javax.enterprise.util` | [Jakarta Contexts and Dependency Injection (外部サイト、英語)](https://jakarta.ee/specifications/cdi/) |\n| Dependency Injection for Java |  | `javax.inject` | [Jakarta Dependency Injection (外部サイト、英語)](https://jakarta.ee/specifications/dependency-injection/) |",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s2": "Nablarch 6はJakarta EE 10に対応している。Jakarta EEはJava EEがEclipse Foundationに移管された後の名前。Jakarta EE 9で名前空間が`javax.*`から`jakarta.*`に変更された。\n\nNablarch 5からNablarch 6へ移行するためには、NablarchのバージョンアップだけでなくプロジェクトのJakarta EE 10対応が必要。名前空間変更により後方互換性が維持されないため、動作にはJakarta EE 10対応のアプリケーションサーバが必要。\n\nDomaアダプタが組み込まれている場合、依存関係の設定が必要。詳細は :ref:`doma_dependency` を参照。\n\n新バージョンで推奨する実装方法への対応については :ref:`migration_doma2.44.0` を参照し、必要に応じて対応する。\n\nJSR352に準拠したバッチアプリケーションは、JBeretと関連するライブラリの更新が複雑であるため、pom.xmlの依存関係を以下のように修正する必要がある。\n\n**修正前**\n```xml\n<dependency>\n  <groupId>org.glassfish</groupId>\n  <artifactId>javax.el</artifactId>\n  <version>...</version>\n</dependency>\n\n...\n\n<!-- JBeretに最低限必要な依存関係 -->\n<dependency>\n  <groupId>org.jboss.spec.javax.batch</groupId>\n  <artifactId>jboss-batch-api_1.0_spec</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>javax.inject</groupId>\n  <artifactId>javax.inject</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>javax.enterprise</groupId>\n  <artifactId>cdi-api</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.spec.javax.transaction</groupId>\n  <artifactId>jboss-transaction-api_1.2_spec</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.jberet</groupId>\n  <artifactId>jberet-core</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.marshalling</groupId>\n  <artifactId>jboss-marshalling</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.logging</groupId>\n  <artifactId>jboss-logging</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.weld</groupId>\n  <artifactId>weld-core</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.wildfly.security</groupId>\n  <artifactId>wildfly-security-manager</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>com.google.guava</groupId>\n  <artifactId>guava</artifactId>\n  <version>...</version>\n</dependency>\n\n<!-- JBeretをJavaSEで動作させるための依存関係 -->\n<dependency>\n  <groupId>org.jberet</groupId>\n  <artifactId>jberet-se</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.weld.se</groupId>\n  <artifactId>weld-se</artifactId>\n  <version>...</version>\n</dependency>\n\n<!-- Logbackでログを出力している場合の依存関係 -->\n<dependency>\n  <groupId>org.slf4j</groupId>\n  <artifactId>slf4j-api</artifactId>\n  <version>...</version>\n</dependency>\n<dependency>\n  <groupId>ch.qos.logback</groupId>\n  <artifactId>logback-classic</artifactId>\n  <version>...</version>\n</dependency>\n```\n\n**修正後**\n```xml\n<dependency>\n  <groupId>org.glassfish.expressly</groupId>\n  <artifactId>expressly</artifactId>\n  <version>5.0.0</version>\n</dependency>\n\n...\n\n<!-- JBeretに最低限必要な依存関係 -->\n<dependency>\n  <groupId>jakarta.batch</groupId>\n  <artifactId>jakarta.batch-api</artifactId>\n</dependency>\n<dependency>\n  <groupId>jakarta.inject</groupId>\n  <artifactId>jakarta.inject-api</artifactId>\n</dependency>\n<dependency>\n  <groupId>jakarta.enterprise</groupId>\n  <artifactId>jakarta.enterprise.cdi-api</artifactId>\n</dependency>\n<dependency>\n  <groupId>jakarta.transaction</groupId>\n  <artifactId>jakarta.transaction-api</artifactId>\n</dependency>\n<dependency>\n  <groupId>org.jberet</groupId>\n  <artifactId>jberet-core</artifactId>\n  <version>2.1.4.Final</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.marshalling</groupId>\n  <artifactId>jboss-marshalling</artifactId>\n  <version>2.1.3.Final</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.logging</groupId>\n  <artifactId>jboss-logging</artifactId>\n  <version>3.5.3.Final</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.weld</groupId>\n  <artifactId>weld-core-impl</artifactId>\n  <version>5.0.1.Final</version>\n</dependency>\n<dependency>\n  <groupId>org.wildfly.security</groupId>\n  <artifactId>wildfly-elytron-security-manager</artifactId>\n  <version>2.2.2.Final</version>\n</dependency>\n<dependency>\n  <groupId>com.google.guava</groupId>\n  <artifactId>guava</artifactId>\n  <version>32.1.1-jre</version>\n</dependency>\n\n<!-- JBeretをJavaSEで動作させるための依存関係 -->\n<dependency>\n  <groupId>org.jberet</groupId>\n  <artifactId>jberet-se</artifactId>\n  <version>2.1.4.Final</version>\n</dependency>\n<dependency>\n  <groupId>org.jboss.weld.se</groupId>\n  <artifactId>weld-se-core</artifactId>\n  <version>5.0.1.Final</version>\n</dependency>\n\n<!-- Logbackでログを出力している場合の依存関係 -->\n<dependency>\n  <groupId>org.slf4j</groupId>\n  <artifactId>slf4j-api</artifactId>\n  <version>2.0.11</version>\n</dependency>\n<dependency>\n  <groupId>ch.qos.logback</groupId>\n  <artifactId>logback-classic</artifactId>\n  <version>1.5.6</version>\n</dependency>\n```",
-    "s3": "Nablarch 6のモジュールはJava 17でコンパイルされているため、動作させるにはJava 17以上が必要となる。\n\nMicrometerアダプタが組み込まれ監視サービスと連携している場合、依存関係に追加しているMicrometerモジュールのバージョン更新が必要。詳細は [micrometer_collaboration](../../component/adapters/adapters-micrometer_adaptor.json) を参照。\n\nJSR352バッチアプリケーションの実行時エラーへの対処方法。Nablarch 6移行後に発生する可能性があるエラーのうち、`NoClassDefFoundError` については次のセクションで説明する。",
-    "s7": "`pom.xml`のNablarch BOMの`<version>`を`6u2`に変更する：\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    <dependency>\n      <groupId>com.nablarch.profile</groupId>\n      <artifactId>nablarch-bom</artifactId>\n      <version>6u2</version>\n      <type>pom</type>\n      <scope>import</scope>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n```\n\njavax名前空間からjakarta名前空間への変更手順:\n\n1. `javax`名前空間でimportしている部分がコンパイルエラーになるため、`jakarta`名前空間に変更する\n2. コンパイルエラーにならない場所（文字列キー、JSP、設定ファイル内）も対象となるため、プロジェクト全体を`javax`でGrep検索する\n3. 検索にヒットした箇所がJava EEの名前空間かどうか判定する\n4. Java EEの名前空間であれば`javax`を`jakarta`に置換する\n\n`javax`でヒットしてもJava EEの名前空間でない場合がある。例：`javax.crypto.SecretKeyFactory`は標準ライブラリの暗号処理クラスであり置換対象外。各仕様の名前空間は [java_ee_jakarta_ee_comparation](#) を参照すること。\n\nコンパイルエラーにならない置換対象の例:\n- 文字列キー: `javax.servlet.forward.request_uri` → `jakarta.servlet.forward.request_uri`\n- import文: `import javax.validation.ConstraintValidator;` → `import jakarta.validation.ConstraintValidator;`",
-    "s8": "Java EEのAPI依存関係（`dependency`）をJakarta EEのものに変更する必要がある。Java EEのAPIの`dependency`は提供元やバージョンによって統一されていないため、`groupId`などから機械的に判断できない。どの`dependency`がJava EEのAPIなのかは`groupId`や`artifactId`、jarに含まれるクラスから判断する必要がある。\n\nバージョン管理簡素化のためJakarta EE BOMの使用を推奨する（個別バージョン指定が不要になる）：\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    <dependency>\n      <groupId>jakarta.platform</groupId>\n      <artifactId>jakarta.jakartaee-bom</artifactId>\n      <version>10.0.0</version>\n      <type>pom</type>\n      <scope>import</scope>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n```\n\nここに記載されていない依存関係については、付録のJava EE/Jakarta EE対応表を参照。各仕様のページにMaven coordinatesが記載されている（例: [Jakarta Servlet 6.0仕様ページ](https://jakarta.ee/specifications/servlet/6.0/#details)）。\n\n`web.xml`等のXMLファイルのスキーマをJakarta EE 10対応のものに変更する。提供されているスキーマは[Jakarta EE XML Schemas](https://jakarta.ee/xml/ns/jakartaee/#10)で確認できる。\n\n**修正前:**\n```xml\n<web-app xmlns=\"http://xmlns.jcp.org/xml/ns/javaee\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://xmlns.jcp.org/xml/ns/javaee\n         http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd\"\n         version=\"3.1\">\n```\n\n**修正後:**\n```xml\n<web-app xmlns=\"https://jakarta.ee/xml/ns/jakartaee\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"https://jakarta.ee/xml/ns/jakartaee\n                             web-app_6_0.xsd\"\n         version=\"6.0\">\n```",
-    "s9": "Java EEのAPIをJakarta EEに変更する際の`groupId`/`artifactId`の対応（Jakarta EE BOMを使用する場合はバージョン指定不要）：\n\n| API | 修正前 (groupId:artifactId) | 修正後 (groupId:artifactId) | scope |\n|---|---|---|---|\n| Java Servlet → Jakarta Servlet | `javax.servlet:javax.servlet-api` | `jakarta.servlet:jakarta.servlet-api` | provided |\n| JSP → Jakarta Server Pages | `javax.servlet.jsp:javax.servlet.jsp-api` | `jakarta.servlet.jsp:jakarta.servlet.jsp-api` | provided |\n| JSTL → Jakarta Standard Tag Library | `javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api` | `jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api` | |\n| JPA → Jakarta Persistence | `org.apache.geronimo.specs:geronimo-jpa_2.0_spec` | `jakarta.persistence:jakarta.persistence-api` | |\n| JAX-RS → Jakarta RESTful Web Services | `javax.ws.rs:javax.ws.rs-api` | `jakarta.ws.rs:jakarta.ws.rs-api` | |\n| Common Annotations → Jakarta Annotations | `javax.annotation:javax.annotation-api` | `jakarta.annotation:jakarta.annotation-api` | |",
-    "s6": "プロジェクトによっては不要な手順が含まれる場合がある。例えば、waitt-to-jettyセクションやupdate-ntf-jettyセクションはウェブプロジェクト固有の手順なので、バッチプロジェクトでは読み飛ばして問題ない。\n\nNTFを使用するウェブアプリケーションで`nablarch-testing-jetty6`が使用されている場合、Jetty 6はJakarta EE非対応のため`nablarch-testing-jetty12`に変更する。\n\n> **補足**: Java 11以上のプロジェクトで`nablarch-testing-jetty9`を使用している場合も、Jakarta EE非対応のため`nablarch-testing-jetty12`に変更が必要。\n\n**1. `pom.xml`のartifactIdを変更する:**\n\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-testing-jetty12</artifactId>\n  <scope>test</scope>\n</dependency>\n```\n\n**2. `HttpServerFactory`のコンポーネント定義を変更する:**\n\n修正前:\n```xml\n<component name=\"httpServerFactory\" class=\"nablarch.fw.web.httpserver.HttpServerFactoryJetty6\"/>\n```\n\n修正後:\n```xml\n<component name=\"httpServerFactory\" class=\"nablarch.fw.web.httpserver.HttpServerFactoryJetty12\"/>\n```\n\nnablarch-example-webの場合、上記設定は`src/test/resources/unit-test.xml`に存在する。",
-    "s4": "手順はNablarch 5の最新版へのバージョンアップ済みであることを前提としている。古いバージョンのプロジェクトは先にNablarch 5の最新版へバージョンアップすること。Nablarch 5の最新版へのバージョンアップに必要な修正内容は[Nablarch 5のリリースノート](https://nablarch.github.io/docs/5-LATEST/doc/releases/index.html)を参照。\n\n動作にはJava 17以上およびJakarta EE 10対応のアプリケーションサーバが必要。\n\n> **補足**: Nablarch 5の最新版バージョンアップの他に、Java 17以上で使用するための対応も必要。対応内容は[Nablarch 5のセットアップ手順](https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/blank_project/FirstStep.html)を参照。\n\nアーキタイプから作ったプロジェクトには[gsp-dba-maven-plugin](https://github.com/coastland/gsp-dba-maven-plugin)があらかじめ組み込まれている。`generate-entity`が生成するエンティティクラスにはJPAなどJava EEのアノテーションが設定されるため、そのままではJakarta EE環境で使用不可。\n\ngsp-dba-maven-plugin 5.1.0でJakarta EEおよびNablarch 6u2に対応したため、`pom.xml`の`<version>`を`5.1.0`に変更する。\n\n```xml\n<plugin>\n  <groupId>jp.co.tis.gsp</groupId>\n  <artifactId>gsp-dba-maven-plugin</artifactId>\n  <version>5.1.0</version>\n  <configuration>\n  ...\n</plugin>\n```\n\nバージョンアップ後はJava 17設定が組み込まれるため、[Java 17での設定ガイド](https://github.com/coastland/gsp-dba-maven-plugin/tree/4.x.x-main?tab=readme-ov-file#java17%E3%81%A7%E3%81%AE%E8%A8%AD%E5%AE%9A)に沿って追加した依存関係は削除する。\n\nJakarta EE対応の`generate-entity`を使用するには`dependency`とJVM引数の追加が必要。詳細は[gsp-dba-maven-pluginのガイド](https://github.com/coastland/gsp-dba-maven-plugin?tab=readme-ov-file#generate-entity)を参照。\n\n以下のスタックトレースが出力されてエラーになる場合、クラスパスの順序で`slf4j-nablarch-adaptor`をLogbackより後にすることで解消できる。\n\n```text\norg.jboss.weld.exceptions.WeldException\n    at org.jboss.weld.executor.AbstractExecutorServices.checkForExceptions (AbstractExecutorServices.java:82)\n    ...\nCaused by: java.lang.NoClassDefFoundError\n    at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0 (Native Method)\n    ...\nCaused by: java.lang.NoClassDefFoundError: Could not initialize class org.jboss.weld.logging.BeanLogger\n    at org.jboss.weld.util.Beans.getBeanConstructor (Beans.java:279)\n```\n\nMavenで実行する場合、`pom.xml`上の`slf4j-nablarch-adaptor`の位置をLogbackより下に配置することで順序を変更できる。\n\n```xml\n<dependency>\n  <groupId>ch.qos.logback</groupId>\n  <artifactId>logback-classic</artifactId>\n  <version>...</version>\n</dependency>\n\n<!-- Logbackより下にslf4j-nablarch-adaptorを配置する -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>slf4j-nablarch-adaptor</artifactId>\n  <scope>runtime</scope>\n</dependency>\n```",
-    "s10": "Java EEとJakarta EEの仕様の対応表（`java_ee_jakarta_ee_comparation`）を含む付録セクション。ここに記載されていない依存関係の変更を調べる際の参考として記載されている。",
-    "s5": "Nablarch 5のプロジェクトをNablarch 6へ移行するために必要な修正：\n\n1. **Nablarchのバージョンアップ**: NablarchのバージョンをBOMで5から6に変更\n2. **Jakarta EE対応**: Jakarta EE 10対応。Jakarta EE 9の名前空間変更（`javax.*`→`jakarta.*`）対応と、Java EE依存ライブラリのJakarta EE対応版への変更を含む\n\nwaitt-maven-pluginはJakarta EE非対応のため、Jakarta EEに対応したjetty-ee10-maven-pluginに変更する。\n\n**修正前:**\n```xml\n<plugin>\n  <groupId>net.unit8.waitt</groupId>\n  <artifactId>waitt-maven-plugin</artifactId>\n  <version>1.2.3</version>\n  <configuration>\n    <servers>\n      <server>\n        <groupId>net.unit8.waitt.server</groupId>\n        <artifactId>waitt-tomcat8</artifactId>\n        <version>1.2.3</version>\n      </server>\n    </servers>\n  </configuration>\n</plugin>\n```\n\n**修正後:**\n```xml\n<plugin>\n  <groupId>org.eclipse.jetty.ee10</groupId>\n  <artifactId>jetty-ee10-maven-plugin</artifactId>\n  <version>12.0.12</version>\n</plugin>\n```\n\n起動コマンド:\n```batch\nmvn jetty:run\n```\n\n| Java EE | 省略名 | 名前空間プレフィックス | Jakarta EE |\n|---|---|---|---|\n| Java Servlet | | `javax.servlet` | [Jakarta Servlet](https://jakarta.ee/specifications/servlet/) |\n| JavaServer Faces | JSF | `javax.faces` | [Jakarta Faces](https://jakarta.ee/specifications/faces/) |\n| Java API for WebSocket | | `javax.websocket` | [Jakarta WebSocket](https://jakarta.ee/specifications/websocket/) |\n| Concurrency Utilities for Java EE | | `javax.enterprise.concurrent` | [Jakarta Concurrency](https://jakarta.ee/specifications/concurrency/) |\n| Interceptors | | `javax.interceptor` | [Jakarta Interceptors](https://jakarta.ee/specifications/interceptors/) |\n| Java Authentication SPI for Containers | JASPIC | `javax.security.auth.message` | [Jakarta Authentication](https://jakarta.ee/specifications/authentication/) |\n| Java Authorization Contract for Containers | JACC | `javax.security.jacc` | [Jakarta Authorization](https://jakarta.ee/specifications/authorization/) |\n| Java EE Security API | | `javax.security.enterprise` | [Jakarta Security](https://jakarta.ee/specifications/security/) |\n| Java Message Service | JMS | `javax.jms` | [Jakarta Messaging](https://jakarta.ee/specifications/messaging/) |\n| Java Persistence API | JPA | `javax.persistence` | [Jakarta Persistence](https://jakarta.ee/specifications/persistence/) |\n| Java Transaction API | JTA | `javax.transaction` | [Jakarta Transactions](https://jakarta.ee/specifications/transactions/) |\n| Batch Application for the Java Platform | jBatch | `javax.batch` | [Jakarta Batch](https://jakarta.ee/specifications/batch/) |\n| JavaMail | | `javax.mail` | [Jakarta Mail](https://jakarta.ee/specifications/mail/) |\n| Java EE Connector Architecture | JCA | `javax.resource` | [Jakarta Connectors](https://jakarta.ee/specifications/connectors/) |\n| Common Annotations for the Java Platform | | `javax.annotation` | [Jakarta Annotations](https://jakarta.ee/specifications/annotations/) |\n| JavaBeans Activation Framework | JAF | `javax.activation` | [Jakarta Activation](https://jakarta.ee/specifications/activation/) |\n| Bean Validation | | `javax.validation` | [Jakarta Bean Validation](https://jakarta.ee/specifications/bean-validation/) |\n| Expression Language | EL | `javax.el` | [Jakarta Expression Language](https://jakarta.ee/specifications/expression-language/) |\n| Enterprise JavaBeans | EJB | `javax.ejb` | [Jakarta Enterprise Beans](https://jakarta.ee/specifications/enterprise-beans/) |\n| Java Architecture for XML Binding | JAXB | `javax.xml.bind` | [Jakarta XML Binding](https://jakarta.ee/specifications/xml-binding/) |\n| Java API for JSON Binding | JSON-B | `javax.json.bind` | [Jakarta JSON Binding](https://jakarta.ee/specifications/jsonb/) |\n| Java API for JSON Processing | JSON-P | `javax.json`, `javax.json.spi`, `javax.json.stream` | [Jakarta JSON Processing](https://jakarta.ee/specifications/jsonp/) |\n| JavaServer Pages | JSP | `javax.servlet.jsp` | [Jakarta Server Pages](https://jakarta.ee/specifications/pages/) |\n| Java API for XML-Based Web Services | JAX-WS | `javax.xml.ws` | [Jakarta XML Web Services](https://jakarta.ee/specifications/xml-web-services/) |\n| Java API for RESTful Web Services | JAX-RS | `javax.ws.rs` | [Jakarta RESTful Web Services](https://jakarta.ee/specifications/restful-ws/) |\n| JavaServer Pages Standard Tag Library | JSTL | `javax.servlet.jsp.jstl` | [Jakarta Standard Tag Library](https://jakarta.ee/specifications/tags/) |\n| Contexts and Dependency Injection for Java | CDI | `javax.decorator`, `javax.enterprise.context`, `javax.enterprise.event`, `javax.enterprise.inject`, `javax.enterprise.util` | [Jakarta Contexts and Dependency Injection](https://jakarta.ee/specifications/cdi/) |\n| Dependency Injection for Java | | `javax.inject` | [Jakarta Dependency Injection](https://jakarta.ee/specifications/dependency-injection/) |",
-    "s1": "Nablarch 5プロジェクトのNablarch 6への移行方法について説明する。\n\n> **重要**: Nablarch 6のバージョン6/6u1は先行リリースバージョンであり、6u2が正式リリース後の最初のバージョンとなる。ここで説明する手順はNablarch 5の最新バージョンからNablarch **6u2**へのバージョンアップを前提としている。アーキタイプから作ったプロジェクトに組み込まれているgsp-dba-maven-pluginは6u2と合わせてリリースされた**5.1.0**の使用を前提としている。6u3以降へバージョンアップする場合は、6u3以降のリリースノートを順に参照してバージョンアップ手順を確認すること。\n\nJava EE仕様の実装ライブラリが組み込まれている場合、Jakarta EEのものに置き換える。各`dependency`がJava EE仕様かどうかは個別に調査し、Jakarta EE対応版の`dependency`は実装ライブラリごとに異なるため公式サイトで確認する。\n\n> **補足**: Nablarch 6はJava 17以上前提のため、[Nablarch 5のセットアップ手順](https://nablarch.github.io/docs/5-LATEST/doc/application_framework/application_framework/blank_project/FirstStep.html)でJava 17動作のために追加したモジュールが不要になる場合がある。[dependency:tree](https://maven.apache.org/plugins/maven-dependency-plugin/tree-mojo.html)等で依存関係を確認し、更新または削除を判断する。\n\n### Bean Validation → Jakarta Bean Validation\n\n```xml\n<!-- 修正前 -->\n<dependency>\n  <groupId>org.hibernate</groupId>\n  <artifactId>hibernate-validator</artifactId>\n  <version>5.3.6.Final</version>\n</dependency>\n```\n\n```xml\n<!-- 修正後 -->\n<dependency>\n  <groupId>org.hibernate.validator</groupId>\n  <artifactId>hibernate-validator</artifactId>\n  <version>8.0.0.Final</version>\n</dependency>\n```\n\n### JSTL → Jakarta Standard Tag Library\n\n```xml\n<!-- 修正前 -->\n<dependency>\n  <groupId>taglibs</groupId>\n  <artifactId>standard</artifactId>\n  <version>...</version>\n</dependency>\n```\n\n```xml\n<!-- 修正後 -->\n<dependency>\n  <groupId>org.glassfish.web</groupId>\n  <artifactId>jakarta.servlet.jsp.jstl</artifactId>\n  <version>3.0.0</version>\n</dependency>\n```\n\n### JAX-RS → Jakarta RESTful Web Services\n\njersey-bomのバージョンを`3.1.8`に更新する（他のdependencyは変更なし）。\n\n```xml\n<!-- 修正後: jersey-bom バージョン変更 -->\n<dependencyManagement>\n  <dependencies>\n    <dependency>\n      <groupId>org.glassfish.jersey</groupId>\n      <artifactId>jersey-bom</artifactId>\n      <version>3.1.8</version>\n      <type>pom</type>\n      <scope>import</scope>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n```\n\n### JMS → Jakarta Messaging\n\n`activemq-all`を以下3モジュール（バージョン`2.37.0`）に置き換える。\n\n```xml\n<dependency>\n  <groupId>org.apache.activemq</groupId>\n  <artifactId>artemis-server</artifactId>\n  <version>2.37.0</version>\n</dependency>\n<dependency>\n  <groupId>org.apache.activemq</groupId>\n  <artifactId>artemis-jakarta-server</artifactId>\n  <version>2.37.0</version>\n</dependency>\n<dependency>\n  <groupId>org.apache.activemq</groupId>\n  <artifactId>artemis-jakarta-client</artifactId>\n  <version>2.37.0</version>\n</dependency>\n```\n\nJSPのtaglibディレクティブのネームスペースをJakarta EE 10対応のネームスペースに変更する。\n\n**修正前**\n```jsp\n<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\" %>\n```\n\n**修正後**\n```jsp\n<%@ taglib prefix=\"c\" uri=\"jakarta.tags.core\" %>\n```\n\nJakarta EE 10で提供されているネームスペースは[Jakarta Standard Tag Library 3.0](https://jakarta.ee/specifications/tags/3.0/)で確認できる。"
-  }
+  ]
 }

@@ -1,122 +1,44 @@
 {
   "id": "workflow-SampleApplicationDesign",
   "title": "サンプルアプリケーション概要",
-  "official_doc_urls": [],
-  "index": [
+  "content": "サンプルアプリケーションでは、\n申請情報を登録し、登録された申請情報をもとにワークフローを進行する機能を実装している。\n\n申請の種類は、以下の二種類である。\n\n* 交通費申請\n* ローン申請",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
-      "title": "",
-      "hints": [
-        "サンプルアプリケーション",
-        "交通費申請",
-        "ローン申請",
-        "申請情報登録",
-        "ワークフロー進行"
-      ]
+      "title": "ワークフロー定義",
+      "content": "サンプルアプリケーションで実装しているワークフロー定義をそれぞれ以下に示す。\n\n* 交通費申請\n\n![WF1101.png](assets/workflow-SampleApplicationDesign/WF1101.png)\n\n* ローン申請\n\n![WF1102.png](assets/workflow-SampleApplicationDesign/WF1102.png)\n\n上記の①～④の説明箇所は以下のとおり\n\n| 番号 | 処理内容 | 実装方法 |\n|---|---|---|\n| ① | ワークフローを開始する。 | [ワークフローの開始](../../extension/workflow/workflow-SampleApplicationImplementation.md#start-workflow) |\n| ② | 確認タスクを承認タスクへ進行させる。 | [ワークフローの進行](../../extension/workflow/workflow-SampleApplicationImplementation.md#complete-task) |\n| ③ | 確認タスクを再申請タスクへ進行させる。 | [境界イベントの実行](../../extension/workflow/workflow-SampleApplicationImplementation.md#trigger-event) |\n| ④ | 内部自動審査タスクの進行先ノードを判定する。 | [進行先ノードの判定制御ロジックの実装](../../extension/workflow/workflow-SampleApplicationExtension.md#customize-flow-proceed-condition) |",
+      "level": 2
     },
     {
       "id": "s2",
-      "title": "ワークフロー定義",
-      "hints": [
-        "ワークフロー定義",
-        "交通費申請",
-        "ローン申請",
-        "ワークフロー図",
-        "WF1101",
-        "WF1102"
-      ]
+      "title": "画面遷移",
+      "content": "サンプルとして提供する画面遷移は下記のとおり。\nこれらの画面のいくつかの機能でワークフローAPIを呼び出すことで、前述のワークフローを実現している。\nまた、ローン申請承認機能のうち内部自動審査はバッチ処理で実現しているため、本遷移には含まれていない。\n\n![screenTransition.png](assets/workflow-SampleApplicationDesign/screenTransition.png)",
+      "level": 2
     },
     {
       "id": "s3",
-      "title": "",
-      "hints": [
-        "ワークフロー開始",
-        "start_workflow",
-        "complete_task",
-        "trigger_event",
-        "customize_flow_proceed_condition",
-        "タスク進行",
-        "実装方法"
-      ]
+      "title": "ワークフローライブラリに関連する機能",
+      "content": "ワークフローライブラリに関連する以下の機能は、アプリケーション側で実装する必要がある。\n\n* ワークフローに付随する情報の保持\n* ワークフローにおける処理履歴の保持\n* タスクにアサインするユーザ/グループや権限の管理\n\nサンプルアプリケーションでどのように実現しているかについて、以下のテーブル定義を元に説明する。\n\n* 申請情報および履歴テーブルの定義\n\n![workItemsAndHistories.png](assets/workflow-SampleApplicationDesign/workItemsAndHistories.png)\n\n* ワークフローにおけるタスクの担当ユーザに関連するテーブルの定義\n\n![assigned.png](assets/workflow-SampleApplicationDesign/assigned.png)",
+      "level": 2
     },
     {
       "id": "s4",
-      "title": "画面遷移",
-      "hints": [
-        "画面遷移",
-        "ワークフローAPI",
-        "内部自動審査",
-        "バッチ処理",
-        "screenTransition"
-      ]
+      "title": "ワークフローに付随する情報の保持",
+      "content": "ワークフローに付随する情報として、申請状況のステータスを申請情報のテーブルで保持している。\n\nワークフロー進行中の申請状況のステータス名は案件ごとに異なる。\nそのため、申請状況のステータスは業務データとして管理する必要がある。\n\n例えば、交通費申請の「再申請」タスクが処理可能となっている場合のステータス名は、\n確認タスクから差戻された場合には「確認差戻」となり、申請者が自ら引戻した場合は「確認引戻」となる。",
+      "level": 3
     },
     {
       "id": "s5",
-      "title": "",
-      "hints": [
-        "アプリケーション実装必須機能",
-        "ワークフロー付随情報",
-        "処理履歴保持",
-        "タスクアサイン",
-        "ユーザー権限管理"
-      ]
+      "title": "ワークフローにおける処理履歴の保持",
+      "content": "申請に対する処理の内容および処理の結果を\n対応する履歴テーブルに登録することで、処理履歴を保持している。\n処理内容および処理結果は申請情報の種類によって異なるため、\n申請情報の種類ごとに履歴テーブルを定義している。",
+      "level": 3
     },
     {
       "id": "s6",
-      "title": "ワークフローライブラリに関連する機能",
-      "hints": [
-        "テーブル定義",
-        "申請情報テーブル",
-        "履歴テーブル",
-        "担当ユーザテーブル",
-        "workItemsAndHistories",
-        "assigned"
-      ]
-    },
-    {
-      "id": "s7",
-      "title": "ワークフローに付随する情報の保持",
-      "hints": [
-        "ステータス管理",
-        "申請状況",
-        "確認差戻",
-        "確認引戻",
-        "業務データ",
-        "ワークフロー付随情報"
-      ]
-    },
-    {
-      "id": "s8",
-      "title": "ワークフローにおける処理履歴の保持",
-      "hints": [
-        "処理履歴",
-        "履歴テーブル",
-        "処理内容記録",
-        "処理結果記録"
-      ]
-    },
-    {
-      "id": "s9",
       "title": "タスクにアサインするユーザ/グループや権限の管理",
-      "hints": [
-        "認可モデル",
-        "担当ユーザ",
-        "担当グループ",
-        "タスク権限",
-        "判定者グループ",
-        "ローン申請判定"
-      ]
+      "content": "Nablarchの認可モデルを利用して、タスクの担当ユーザおよび担当グループを管理している。\nまた、ワークフローの各フローに対応するリクエストに認可を設定することで、タスクの権限設定を行っている。\n\nたとえば、ローン申請判定処理を行うリクエストは判定者グループのみに認可されており、\nそれ以外のグループに属するユーザでは判定処理が実行できない。",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s1": "サンプルアプリケーションは申請情報の登録とワークフロー進行機能を実装している。\n\n申請の種類:\n- 交通費申請\n- ローン申請",
-    "s2": "交通費申請のワークフロー定義:\n![交通費申請ワークフロー定義](assets/workflow-SampleApplicationDesign/WF1101.png)\n\nローン申請のワークフロー定義:\n![ローン申請ワークフロー定義](assets/workflow-SampleApplicationDesign/WF1102.png)",
-    "s3": "| 番号 | 処理内容 | 実装方法 |\n|---|---|---|\n| ① | ワークフローを開始する | [start_workflow](workflow-SampleApplicationImplementation.json) |\n| ② | 確認タスクを承認タスクへ進行させる | [complete_task](workflow-SampleApplicationImplementation.json#s1) |\n| ③ | 確認タスクを再申請タスクへ進行させる | [trigger_event](workflow-SampleApplicationImplementation.json#s2) |\n| ④ | 内部自動審査タスクの進行先ノードを判定する | [customize_flow_proceed_condition](workflow-SampleApplicationExtension.json) |",
-    "s4": "これらの画面のいくつかの機能でワークフローAPIを呼び出すことで、前述のワークフローを実現している。\n\n![画面遷移](assets/workflow-SampleApplicationDesign/screenTransition.png)\n\nローン申請承認機能のうち内部自動審査はバッチ処理で実現しているため、本画面遷移には含まれていない。",
-    "s5": "ワークフローライブラリに関連する以下の機能はアプリケーション側で実装する必要がある:\n\n- ワークフローに付随する情報の保持\n- ワークフローにおける処理履歴の保持\n- タスクにアサインするユーザ/グループや権限の管理",
-    "s6": "申請情報および履歴テーブルの定義:\n![申請情報および履歴テーブル](assets/workflow-SampleApplicationDesign/workItemsAndHistories.png)\n\nタスクの担当ユーザに関連するテーブルの定義:\n![担当ユーザ関連テーブル](assets/workflow-SampleApplicationDesign/assigned.png)",
-    "s7": "申請状況のステータスを申請情報テーブルで保持する。ステータス名は案件ごとに異なるため業務データとして管理する必要がある。\n\n例: 交通費申請の「再申請」タスクが処理可能な場合のステータス名:\n- 確認タスクから差戻された場合: 「確認差戻」\n- 申請者が自ら引戻した場合: 「確認引戻」",
-    "s8": "申請に対する処理内容および結果を対応する履歴テーブルに登録して処理履歴を保持する。申請情報の種類ごとに履歴テーブルを定義している。",
-    "s9": "Nablarchの認可モデルを利用してタスクの担当ユーザおよび担当グループを管理する。ワークフローの各フローに対応するリクエストに認可を設定することでタスクの権限設定を行う。\n\n例: ローン申請判定処理リクエストは判定者グループのみに認可されており、それ以外のグループのユーザは判定処理を実行できない。"
-  }
+  ]
 }

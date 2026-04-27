@@ -1,0 +1,26 @@
+{
+  "id": "ui-framework-column-checkbox",
+  "title": "テーブル複数行選択用チェックボックスカラムウィジェット",
+  "content": "[テーブル複数行選択用チェックボックスカラムウィジェット](../../component/ui-framework/ui-framework-column-checkbox.md) は、 **UI標準 UI部品 テーブル** において、\n「処理対象レコード選択用ボタン」 として定義されているチェックボックスを出力するウィジェットである。\n[検索結果テーブルウィジェット](../../component/ui-framework/ui-framework-table-search-result.md) や、 [一覧テーブルウィジェット](../../component/ui-framework/ui-framework-table-plain.md) 、 [階層(ツリー)表示テーブルウィジェット](../../component/ui-framework/ui-framework-table-treelist.md)\nと組み合わせて使用し、これらのウィジェットが表示する一覧テーブルから後続処理の対象行を複数行選択する\nためのチェックボックスから成るカラムを出力する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**設計成果物(ローカル動作)**\n\n```jsp\n<table:search_result\n  title         = \"検索結果\"\n  sampleResults = \"15\">\n\n  <column:checkbox\n    title = \"選択\">\n  </column:checkbox>\n\n  <column:link\n    title  = \"ログインID\"\n    sample = \"user001|user002|user003\">\n  </column:link>\n\n</table:search_result>\n```\n\n**実装成果物(サーバ動作)**\n\n```jsp\n<table:search_result\n  title               = \"検索結果\"\n  searchUri           = \"/action/ss11AC/W11AC01Action/RW11AC0102\"\n  listSearchInfoName  = \"11AC_W11AC01\"\n  resultSetName       = \"searchResult\"\n  sampleResults       = \"15\">\n\n  <column:checkbox\n    title    = \"選択\"\n    key      = \"userId\"\n    name     = \"W11AC05.systemAccountEntityArray[${count-1}].userId\"\n    offValue = \"0000000000\">\n  </column:checkbox>\n\n  <column:link\n    title  = \"ログインID\"\n    key    = \"loginId\"\n    uri    = \"/action/ss11AC/W11AC01Action/RW11AC0103\"\n    sample = \"user001|user002|user003\">\n    <n:param paramName=\"11AC_W11AC01.systemAccount.userId\" name=\"row.userId\"></n:param>\n  </column:link>\n\n</table:search_result>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "入力画面ではテーブル行を選択するためのチェックボックスが出力され、確認画面ではチェックされた行には「●」マークが表示される。\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| key | チェックオンの場合に、 サーバに送信する値を 行データから取得するキー | 文字列 | ◎ | × |  |\n| title | カラムヘッダーに表示する 文字列 | 文字列 | ◎ | ◎ |  |\n| cssClass | 各カラムに指定するCSSクラス | 文字列 | ○ | ○ |  |\n| checkboxCssClass | チェックボックスに指定する CSSクラス | 文字列 | ○ | ○ |  |\n| name | チェックボックスのname属性 | 文字列 | ◎ | ○ |  |\n| value | チェックボックス選択時に 送信する値 | 文字列 | ○ | × | 指定されない場合、行データ から、key属性に指定した名前で 取得した値を利用する。 |\n| offValue | チェックボックス非選択時に 送信する値 | 文字列 | ○ | × |  |\n| disabled | サーバに対する入力値の送信 を抑制するかどうか | 真偽値 | ○ | ○ | デフォルト値は'false' |\n| readonly | 編集可能かどうか | 真偽値 | ○ | ○ | デフォルト値は'false' |\n| width | カラムの横幅の指定 | 文字列 | ○ | ○ |  |\n| toggle | 全選択/解除操作を可能 とするかどうか | 真偽値 | ○ | ○ | デフォルト値は'false' (一括選択/解除は不可)  > **Note:** > trueを設定した場合、 > タイトル部には「全選択」、 > 「全解除」のリンクが出力され、 > 全選択/解除操作が可能となる。 |\n| colspan | 横方向に結合するカラム数 | 数値 | ○ | ○ | 使用方法は、 [マルチレイアウトテーブル](../../component/ui-framework/ui-framework-table-row.md) を参照 |\n| rowspan | 縦方向に結合するカラム数 | 数値 | ○ | ○ | 使用方法は、 [マルチレイアウトテーブル](../../component/ui-framework/ui-framework-table-row.md) を参照 |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 画面項目定義に記載する、 「表示情報取得元」.「表示項目名」 の形式で設定する。 |\n| comment | チェックボックスについての備考 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/column/checkbox.tag | [テーブル複数行選択用チェックボックスカラムウィジェット](../../component/ui-framework/ui-framework-column-checkbox.md) |\n| /WEB-INF/tags/listSearchResult/*.tag | Nablarch検索結果テーブルタグファイル |\n| /js/jsp/taglib/nablarch.js | <n:checkbox> のエミュレーション機能を実装する タグライブラリスタブJS |\n| /css/style/nablarch.less | Nablarch関連スタイル定義 テーブルの配色などを定義している。 |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義。 チェックボックスに関する定義もここに含まれる。 |",
+      "level": 2
+    }
+  ]
+}

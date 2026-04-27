@@ -1,0 +1,158 @@
+{
+  "id": "libraries-02-04-Repository-override",
+  "title": "",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "設定値の上書きの対象",
+      "content": "設定の上書きは、下記対象に対して実施できる。\n\n1. 環境設定ファイルに記述した文字列の設定値\n2. コンポーネントのプロパティ\n3. コンポーネントのクラス\n\nそれぞれの設定値は、 XmlComponentDefinitionLoader クラスのコンストラクタに渡すコンポーネント設定ファイルを起点として、より後に記述した設定が優先される。\n\n以下にそれぞれの対象ごとの設定方法と例を示す。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "環境設定ファイルに記述した文字列の設定値の上書き",
+      "content": "環境設定ファイルに記述した設定値は、同じ設定名を2回以上設定ファイルに記述した場合に後に記述した設定で上書きされる。\nこれは、単に同一設定ファイル内に記述した場合だけでなく、コンポーネント設定ファイルの config-file 要素で環境設定ファイルを読み込んだ場合でも同様の動作となる。\n\n下記の test1.conf と test2.conf の2種類の環境設定ファイルをコンポーネント設定ファイルで読み込む場合を考える。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "環境設定ファイル(test1.conf)",
+      "content": "```bash\ntest.message=test1\n```",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "環境設定ファイル(test2.conf)",
+      "content": "```bash\ntest.message=test2\n```\n\nこれら2つのファイルを下記のコンポーネント設定ファイルで読み込んだ場合、リポジトリから \"test.message\" をキーにして取得した設定値は test2.conf に記述した \"test2\" となる。",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "コンポーネント設定ファイルを読み込む",
+      "content": "```xml\n<component-configuration\n    xmlns=\"http://tis.co.jp/nablarch/component-configuration\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <config-file file=\"test1.conv\"/>\n    <config-file file=\"test2.conv\"/>\n</conponent-configuration>\n```",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "設定値の取得例",
+      "content": "```java\n// より後に設定が記述された test2.conf ファイルの設定値 \"test2\" が取得できる。\nString testMessage = SystemRepository.getString(\"test.message\");\n```",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "コンポーネントのプロパティの上書き",
+      "content": "同じコンポーネント名で別々にコンポーネントの定義を記述した場合、コンポーネント設定ファイルでより後に記述した設定が有効になる。\nこれはベースとなる設定値を別のファイルで記述した設定で上書きするという用途を意図している。\nただし、この動作が意図しないものであった場合を考慮し、上書きが発生した際はワーニングレベルのログ出力を行う。\n\n上書き設定を行った場合のコンポーネント設定ファイルと実装例を下記に示す。\n\n> **Note:**\n> この例では説明のために上書きされる設定と上書きする設定を続けて記述しているが、\n> 本来設定上書きの機能は別のファイルに設定を記述して状況に応じてコンポーネント設定ファイルを\n> 切り替えて使用する用途を想定している。",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "使用するクラス",
+      "content": "```java\npublic class OverrideExample {\n\n    private String str1;\n    private String str2;\n    private String str3;\n\n    // setter,getter は省略\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "コンポーネント設定ファイルの例",
+      "content": "```xml\n<component-configuration xmlns=\"http://tis.co.jp/nablarch/component-configuration\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n        xsi:schemaLocation=\"http://tis.co.jp/nablarch/component-configuration ./component-configuration.xsd\">\n\n        <!-- 元の設定 -->\n    <component name=\"overrideExample\" class=\"nablarch.core.repository.di.example.override.OverrideExample\">\n        <property name=\"str1\" value=\"base value1\" />\n        <property name=\"str2\" value=\"base value2\" />\n    </component>\n\n        <!-- 上書き設定 -->\n    <component name=\"overrideExample\" class=\"nablarch.core.repository.di.example.override.OverrideExample\">\n        <property name=\"str2\" value=\"override value2\" />\n        <property name=\"str3\" value=\"override value3\" />\n    </component>\n</component-configuration>\n```",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "設定したコンポーネントの取得例",
+      "content": "```java\n// コンポーネントを取得\nOverrideExample overrideExample = (OverrideExample) SystemRepository.getObject(\"overrideExample\");\n\n// 上書きする前の \"base value1\" が出力される\nSystem.out.println(overrideExample.getStr1());\n// 上書きされた \"override value2\" が出力される\nSystem.out.println(overrideExample.getStr2());\n// 上書き設定で設定された \"override value3\" が出力される\nSystem.out.println(overrideExample.getStr3());\n```",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "コンポーネントのクラスの上書き",
+      "content": "コンポーネント設定ファイルに、同一のコンポーネント名で異なるクラスを登録した場合、より後に設定したクラスの設定が優先される。\nこの上書きは、フレームワークがテスト時に使用するクラスを、実際のアプリケーションで使用するものからスタブに変更したい場合などに使用する。\n\nスタブを用いたテストは、外部システム連携を行うクラスでしばしば必要になる。\n外部連携を行う RealConnectionService クラスをスタブによるテスト時のみ MockConnectionService クラスに置き換えるような用途であれば、\n下記のように読み込み元の設定ファイルとテスト用の設定ファイルを用意し、テスト時のみテスト用の設定ファイルが読み込まれるように配置すればよい。",
+      "level": 2
+    },
+    {
+      "id": "s12",
+      "title": "読み込み元の設定ファイル",
+      "content": "```xml\n<component-configuration xmlns=\"http://tis.co.jp/nablarch/component-configuration\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n\n    <!--\n        元の設定\n        実アプリケーションで使用する外部接続クラス\n     -->\n    <component name=\"stringResource\" class=\"example.external.RealConnectionService\">\n        <!-- プロパティの設定は省略 -->\n    </component>\n    <import dir=\"/opt/testconfig\" file=\"*.xml\"/>\n</component-configuration>\n```",
+      "level": 3
+    },
+    {
+      "id": "s13",
+      "title": "テスト用の設定ファイル(/opt/testconfig/testconfig.xml)",
+      "content": "```xml\n<component-configuration xmlns=\"http://tis.co.jp/nablarch/component-configuration\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n\n    <!--\n        上書きする設定\n        テストで使用する外部接続クラスのスタブ\n        テスト時は、この設定ファイルをサーバの /opt/testconfig に配置する\n     -->\n    <component name=\"stringResource\" class=\"example.external.MockConnectionService\">\n        <!-- プロパティの設定は省略 -->\n    </component>\n</component-configuration>\n```\n\n> **Note:**\n> コンポーネントのクラスの上書きを行った場合、先に設定されたコンポーネントに設定したプロパティは上書きしたクラスのプロパティに反映されないため、注意すること。\n> これは、先に設定されたコンポーネントが持つプロパティを上書きしたクラスが持っていない可能性があるために発生した制約である。",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "import 要素および config-file 要素による外部ファイル読み込み時の優先順位",
+      "content": "import 要素や config-file 要素を使用して他のファイルの読み込みを行った場合、その属性の箇所にインポートしたファイルに記述した設定をそのまま展開した場合と同じ順序で設定の優先順位が決定する。\n\n例えば下記の import-example1.xml と import-example2.xml は、onefile-example.xml と同様の順序で評価され、コンポーネント  helloImport1 の value プロパティには\nimport-example2.xml に設定した \"imported2\" が設定される。",
+      "level": 2
+    },
+    {
+      "id": "s15",
+      "title": "import-example1.xml",
+      "content": "```xml\n<component-configuration xmlns=\"http://tis.co.jp/nablarch/component-configuration\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n\n    <!-- 元の設定 -->\n    <component name=\"helloImport1\" class=\"nablarch.core.repository.di.example.imp.HelloImport\">\n        <property name=\"value\" value=\"imported1\"/>\n    </component>\n    <import file=\"import-example2.xml\"/>\n</component-configuration>\n```",
+      "level": 3
+    },
+    {
+      "id": "s16",
+      "title": "import-example2.xml",
+      "content": "```xml\n<component-configuration xmlns=\"http://tis.co.jp/nablarch/component-configuration\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n\n    <!-- 上書きする設定 -->\n    <component name=\"helloImport1\" class=\"nablarch.core.repository.di.example.imp.HelloImport\">\n        <property name=\"value\" value=\"imported2\"/>\n    </component>\n</component-configuration>\n```",
+      "level": 3
+    },
+    {
+      "id": "s17",
+      "title": "onefile-example.xml(import-example1.xml、import-example2.xmlと等価)",
+      "content": "```xml\n<component-configuration xmlns=\"http://tis.co.jp/nablarch/component-configuration\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n\n    <!-- 元の設定 -->\n    <component name=\"helloImport1\" class=\"nablarch.core.repository.di.example.imp.HelloImport\">\n        <property name=\"value\" value=\"imported1\"/>\n    </component>\n\n    <!-- 上書きする設定 -->\n    <component name=\"helloImport1\" class=\"nablarch.core.repository.di.example.imp.HelloImport\">\n        <property name=\"value\" value=\"imported2\"/>\n    </component>\n</component-configuration>\n```",
+      "level": 3
+    },
+    {
+      "id": "s18",
+      "title": "dir 属性を使用した読み込み時の優先順位",
+      "content": "import 要素、config-file 要素の dir 属性を使用した読み込み [1] を使用した場合は、インポートするファイル名を java の文字列としてソートした順序で読み込まれる。\n\n[ディレクトリに配置された設定ファイルの読み込み](../../component/libraries/libraries-02-01-Repository-config.md#directory-config) を参照\n\n例えば、 /opt/config/ ディレクトリ以下に下記のファイルが存在していた場合を考える。\n\n/opt/config/ ディレクトリに存在するファイル\n\n* test1.xml\n* test2.xml\n* test3.xml\n* environment.config\n\nこの場合、下記2つの設定は等価となる。\n\n```xml\n<!--\n    dir属性を使用した設定\n    ファイルは /opt/config/test1.xml 、 /opt/config/test2.xml 、 /opt/config/test3.xml の順に読み込まれる。\n-->\n<component-configuration xmlns=\"http://tis.co.jp/nablarch/component-configuration\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <import dir=\"/opt/config/\" file=\"*.xml\"/>\n</component-configuration>\n```\n\n```xml\n<component-configuration xmlns=\"http://tis.co.jp/nablarch/component-configuration\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n    <!--\n        dir属性を使用しない設定\n        上記設定と同じ動作となる\n    -->\n    <import file=\"/opt/config/test1.xml\"/>\n    <import file=\"/opt/config/test2.xml\"/>\n    <import file=\"/opt/config/test3.xml\"/>\n</component-configuration>\n```",
+      "level": 2
+    },
+    {
+      "id": "s19",
+      "title": "設定値の上書き時の動作設定",
+      "content": "設定値の上書きは、テストに便利であるなど利点がある反面、使用者が誤って行った設定値の上書きの検出が煩雑となる問題がある。\nこのような場合を考慮し、DIコンテナは設定値の上書きが発生した際の動作を変更できる機能を持つ。\n\n設定値の上書きを行った際の動作は、下記2通りを指定できる。\n\n| 名称 | 説明 |\n|---|---|\n| OVERRIDE | 設定値を後に記述したもので上書きする。指定がない場合のデフォルト動作。 |\n| DENY | 重複した設定を検出した際に例外を発生させる。 |\n\n通常この動作の変更は、 Web フレームワークやバッチフレームワークの起動時に行われるブートストラップ処理の設定で行う。\n\nもしこれらブートストラップの処理以外で動作を変更したい場合、 XmlComponentDefinitionLoader のコンストラクタ2番目の引数を指定する。\n\n例えば設定値の重複があった際に例外を発生には下記のように実装する。",
+      "level": 2
+    },
+    {
+      "id": "s20",
+      "title": "設定をロードする際の実装例(通常フレームワークのブートストラップ処理で行う)",
+      "content": "```java\n// ******** 注意 ********\n// 直下のコードはブートストラップ処理で行うべき処理であり、通常のアプリケーションでは実装する必要がない。\n// 従って、本フレームワークを使用する場合、アプリケーション・プログラマはこのような実装を行わない。\n\n// XmlComponentDefinitionLoader のコンストラクタ第2引数に DuplicateDefinitionPolicy.DENY を指定\nXmlComponentDefinitionLoader loader = new XmlComponentDefinitionLoader(\n        \"nablarch/core/repository/di/example/override/hello-override.xml\",\n        DuplicateDefinitionPolicy.DENY);\ntry {\n    DiContainer container = new DiContainer(loader);\n\n} catch (ConfigurationLoadException e) {\n    // 重複した設定を行なった場合、例外が発生する。\n    throw new RuntimeException(\"コンポーネント設定ファイルの読み込みに失敗しました。\", e);\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s21",
+      "title": "システムプロパティによる設定値の上書き",
+      "content": "環境設定ファイルに記述する設定値は、前述の環境設定ファイルによる上書きの他に、\njava.lang.System.getProperties() メソッドで取得できるシステムプロパティによって上書きできる。\nシステムプロパティによる上書きは、環境設定ファイルよりも優先されるため、実行時に環境設定ファイルを変更することなく動作を変更する際に使用できる。\n\n以下に使用例を示す。",
+      "level": 2
+    },
+    {
+      "id": "s22",
+      "title": "環境設定ファイル(hello-system-property.config)",
+      "content": "```bash\n# この設定はシステムプロパティより優先されない\nhello.message = This is property file hello message!!\n```",
+      "level": 3
+    },
+    {
+      "id": "s23",
+      "title": "コンポーネント設定ファイル(hello-system-property.xml)",
+      "content": "```xml\n<component-configuration xmlns=\"http://tis.co.jp/nablarch/component-configuration\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n        xsi:schemaLocation=\"http://tis.co.jp/nablarch/component-configuration ./component-configuration.xsd\">\n    <config-file file=\"nablarch/core/repository/di/example/override/hello-system-property.config\"/>\n\n    <component name=\"helloComponent\" class=\"nablarch.core.repository.di.example.hello.HelloComponent\">\n        <property name=\"helloMessageProvider\" ref=\"helloMessageProvider\"/>\n    </component>\n\n    <component name=\"helloMessageProvider\" class=\"nablarch.core.repository.di.example.hello.HelloMessageProvider\">\n        <property name=\"helloMessage\" value=\"${hello.message}\" />\n    </component>\n\n</component-configuration>\n```",
+      "level": 3
+    },
+    {
+      "id": "s24",
+      "title": "設定値のロードの実装例",
+      "content": "```java\n// ******** 注意 ********\n// 直下のコードはブートストラップ処理で行うべき処理であり、通常のアプリケーションでは実装する必要がない。\n// 従って、本フレームワークを使用する場合、アプリケーション・プログラマはこのような実装を行わない。\n\n// システムプロパティにキー\"hello.message\"でメッセージを設定\nSystem.setProperty(\"hello.message\", \"This is system property hello message!!\");\n\nXmlComponentDefinitionLoader loader = new XmlComponentDefinitionLoader(\n        \"nablarch/core/repository/di/example/override/hello-system-property.xml\");\nDiContainer container = new DiContainer(loader);\nSystemRepository.load(container);\n```\n\n> **Note:**\n> 例では説明のために java.lang.System.setProperty() を使用した方法を示しているが、実際に使用する際はjavaコマンドのオプション-Dによる\n> 指定を用いて下記のように実行時のオプションとしてシステムプロパティを設定できる。\n> 環境設定ファイルを変更せずに動作確認を行う際は、通常この方法を使用する。\n\n> ```bash\n> > java -Dhello.message=\"value in system property\" ...\n> ```",
+      "level": 3
+    },
+    {
+      "id": "s25",
+      "title": "設定したコンポーネントを取得する実装例",
+      "content": "```java\n// DIコンテナで \"helloComponent\" と名付けたコンポーネントを取得\nHelloComponent helloComponent = (HelloComponent) SystemRepository.getObject(\"helloComponent\");\n// 環境設定ファイルに設定した \"This is property file hello message!!\" ではなく、\n// システムプロパティに設定を記述した \"This is system property hello message!!\" がコンソールに表示される\nhelloComponent.printHello();\n```",
+      "level": 3
+    }
+  ]
+}

@@ -1,14 +1,20 @@
 # bouncycastleを使用した電子署名つきメールの送信サンプルの使用方法
 
-**公式ドキュメント**: [bouncycastleを使用した電子署名つきメールの送信サンプルの使用方法](https://nablarch.github.io/docs/LATEST/doc/biz_samples/09/index.html)
-
-## 環境準備
-
-本機能はサンプル実装のため、使用する際はソースコード（プロダクション・テストコード共に）をプロジェクトに取り込むこと。
+本章では、bouncycastle  [1] を使用した電子署名付きメール送信機能の使用方法を解説する。
+なお、本機能はサンプル実装のため、導入プロジェクトで使用する際には、ソースコード(プロダクション、テストコード共に）をプロジェクトに取込使用すること。
 
 [ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-smime-integration)
 
-**モジュール**:
+bouncycastleとは、暗号化等のセキュリティ関連の機能を提供するオープンソースライブラリである。
+
+詳細は、bouncycastleのサイト( [https://www.bouncycastle.org/](https://www.bouncycastle.org/) )を参照
+
+## 環境準備
+
+**ライブラリの準備**
+
+以下をpom.xmlに追加する。
+
 ```xml
 <dependency>
   <groupId>org.bouncycastle</groupId>
@@ -17,43 +23,51 @@
 </dependency>
 ```
 
-> **補足**: テストはRelease1.78.1で実施。[bouncycastleのサイト](https://www.bouncycastle.org/)で最新リリースを必ず確認し、1.78.1より新しいバージョンがあればプロジェクトに適用すること。
+> **Tip:**
+> 本機能のテストでは、 **Release1.78.1** のライブラリを使用してテストを行なっている。
 
-証明書は認証局から発行してもらい、メール送信機能（バッチ）からアクセス可能なディレクトリに配置すること。ディレクトリへのアクセス権限は必要最小限にし、不要なユーザが証明書にアクセスできないようにすること。
+> バグフィックスや脆弱性対応などが行われる可能性があるため、bouncycastleのサイトで最新リリースの有無を必ず確認すること。
+> もし、1.78.1以降のバージョンがリリースされている場合には、最新バージョンのライブラリをプロジェクトに適用すること。
 
-<details>
-<summary>keywords</summary>
+**電子署名用の証明書の準備**
 
-bcjmail-jdk18on, org.bouncycastle, bouncycastle, 電子署名, 証明書準備, Maven依存設定
-
-</details>
+証明書は、認証局から発行してもらい任意のディレクトリ（メール送信機能（バッチ）からアクセス可能なディレクトリ）に配置すること。
+このディレクトリへのアクセス権限は必要最小限にし、必要のないユーザが証明書にアクセスできないようにすることを推奨する。
 
 ## 電子署名付きメール送信機能の構造
 
-**クラス**: `nablarch.common.mail.MailSender` の拡張機能。
+本機能は、Nablarchアプリケーションフレームワークで提供されるメール送信機能( *nablarch.common.mail.MailSender* )の拡張機能である。
 
-メール送信パターンIDを元に証明書を特定し、電子署名を付加する。本機能を使用する場合、必ずメール送信パターンIDを使用できるテーブル設計とすること。
+送信対象のメール送信パターンIDを元に証明書を特定し、電子署名を付加する仕様としている。
+このため、本機能を使用する場合には、必ずメール送信パターンIDを使用できるテーブル設計とすること。
 
-詳細は [メール送信機能](../../component/libraries/libraries-mail.md) を参照。
-
-<details>
-<summary>keywords</summary>
-
-nablarch.common.mail.MailSender, 電子署名付きメール, メール送信パターンID, テーブル設計
-
-</details>
+詳細は、[メール送信機能](../../component/libraries/libraries-mail.md#mail) を参照すること。
 
 ## 設定ファイルの準備
 
-証明書に関する設定以外はNablarchのメール送信機能の設定と同じ。
+本機能を使用する際に必要となる設定は、証明書に関する設定を除き全てNablarchアプリケーションフレームワークのメール送信機能と同じである。
+このため、Nablarchアプリケーションフレームワークのメール送信機能のガイドを参照し、設定ファイルの準備をすること。
 
-**クラス**: `please.change.me.common.mail.smime.CertificateWrapper`（証明書ファイル単位でコンポーネントを設定する）
+### 証明書に関する設定方法
+
+本機能を使用する際に必要となる証明書に関する設定方法を、設定例を元に解説する。
 
 ```xml
+<!-- 証明書へアクセスするための設定 -->
+<!--
+証明書へのアクセス設定は証明書のファイル単位で設定を行う。
+この例では、証明書ファイルが２ファイルある場合を例にした設定としている。
+name属性：任意の名前（証明書ファイルを識別出来る名前）を設定する。
+class属性：please.change.me.common.mail.smime.CertificateWrapperを固定で設定する。
+-->
 <component name="certificate_1" class="please.change.me.common.mail.smime.CertificateWrapper">
+  <!-- 証明書ファイルへアクセスするためのパスワードを設定する。 -->
   <property name="password" value="password" />
+  <!-- 証明書に格納された秘密鍵にアクセスするためのパスワードを設定する。 -->
   <property name="keyPassword" value="password" />
+  <!-- 証明書ファイルのパスを設定する。 -->
   <property name="certificateFileName" value="classpath:please/change/me/common/mail/smime/data/certificate_1.p12" />
+  <!-- 証明書のキーストアタイプを設定する。 -->
   <property name="keyStoreType" value="PKCS12" />
 </component>
 <component name="certificate_2" class="please.change.me.common.mail.smime.CertificateWrapper">
@@ -63,33 +77,18 @@ nablarch.common.mail.MailSender, 電子署名付きメール, メール送信パ
   <property name="keyStoreType" value="JKS" />
 </component>
 
+<!-- 電子署名付きメール送信機能用に証明書リストを設定 -->
 <map name="certificateList">
+  <!-- メール送信パターンID:01は、certificate_1で設定された証明書を使用して電子署名を付加する。 -->
   <entry key="01" value-name="certificate_1" />
+  <!-- メール送信パターンID:02は、certificate_2で設定された証明書を使用して電子署名を付加する。 -->
   <entry key="02" value-name="certificate_2" />
 </map>
 ```
 
-| プロパティ名 | 説明 |
-|---|---|
-| password | 証明書ファイルへアクセスするためのパスワード |
-| keyPassword | 証明書に格納された秘密鍵にアクセスするためのパスワード |
-| certificateFileName | 証明書ファイルのパス |
-| keyStoreType | キーストアタイプ（PKCS12またはJKS） |
-
-<details>
-<summary>keywords</summary>
-
-please.change.me.common.mail.smime.CertificateWrapper, certificateList, 証明書設定, PKCS12, JKS, keyStoreType, certificateFileName, password, keyPassword
-
-</details>
-
 ## 実行方法
 
-アクションクラスに `please.change.me.common.mail.smime.SMIMESignedMailSender` を指定してバッチプロセスを起動する。プロセス起動時に処理すべきメールを特定できるメール送信パターンIDを引数として指定する。
+実行対象のアクションクラスを、 **please.change.me.common.mail.smime.SMIMESignedMailSender** としてメール送信のバッチプロセスを起動する。
+プロセス起動時には、このプロセスが処理すべきメールが特定できるメール送信パターンIDを引数として指定する。
 
-<details>
-<summary>keywords</summary>
-
-please.change.me.common.mail.smime.SMIMESignedMailSender, メール送信バッチ, メール送信パターンID, バッチ起動
-
-</details>
+詳細は、Nablarchアプリケーションフレームワークのメール送信機能のガイドを参照すること。

@@ -1,0 +1,44 @@
+{
+  "id": "libraries-file-access",
+  "title": "",
+  "content": "![handler_structure_bg.png](assets/libraries-file-access/handler_structure_bg.png)\n\n![handler_bg.png](assets/libraries-file-access/handler_bg.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ファイルアクセス機能",
+      "content": "本稿では、業務アプリケーションからシステム内のファイルシステムにアクセスする際に使用する\n以下の機能について解説する。\n\n* 論理パス\n\n  本フレームワークでは、業務アプリケーションから処理対象のファイルを指定する際、\n  アプリケーションが動作環境に依存することを回避するために、 **論理パス** と呼ばれる文字列を使用する。\n* ファイルアクセスAPI\n\n  業務アプリケーションからデータファイルの読み書きを行う際に使用するAPIである。\n  この機能では、データファイルの内容を [汎用データフォーマット機能](../../component/libraries/libraries-record-format.md) を用いて解析する。\n  これによって、ファイル内の各レコードを単なるMapとしてアクセスできるようになっている。\n\n-----\n\n-----",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "論理パス",
+      "content": "**論理パス** は、ファイルの格納先ディレクトリを表す文字列で、バッチの結果として出力されるファイル、フォーマット定義ファイル、アプリケーション固有の設定ファイルの格納先、といった用途ごとに定義する。\n各論理パスに対する物理パスの定義は、 [FilePathSetting](../../javadoc/nablarch/core/util/FilePathSetting.html) クラスに設定し、それを キー名 **filePathSetting** で、 [リポジトリ](../02_FunctionDemandSpecifications/01_Core/02_Repository.html) に登録しておく必要がある。\n\n**既定論理パス名**\n以下に、本フレームワーク内の各機能において、デフォルトの参照先として設定されている論理パス名を示す。\n\n| 論理パス名 | 内容 |\n|---|---|\n| **output** | 業務処理の結果として生成されるファイルを出力するディレクトリ。 |\n| **input** | 業務処理の入力となるファイルを格納したディレクトリ。 |\n| **format** | ファイル、電文等の [フォーマット定義ファイル](../../component/libraries/libraries-record-format.md) を格納したディレクトリ。 |\n**拡張子の設定**\n各論理パスには、そこに格納されるファイルの拡張子を定義することができる。\nこの場合、ファイル名には拡張子を除いた文字列を指定する。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "設定方法",
+      "content": "[FilePathSetting](../../javadoc/nablarch/core/util/FilePathSetting.html) クラスの設定項目の一覧と、設定例を以下に示す。\n\n**設定項目一覧**\n\n| 設定項目 | プロパティ名 | データ型 | 備考 |\n|---|---|---|---|\n| basePathSettings（必須） | 論理パス名と対応する物理パスの組み合わせ。 | Map<String, String> | **キー:** 論理パス名、 **値:** 物理パス 物理パスはURLの形式で指定し、ファイルシステムもしくはクラスパス上のリソースを指定する。 **ただし、パスにはスペースを含めないこと。（スペースが含まれているパスは指定できない）**  **記述書式**  ```bash (\"file\"\\|\"classpath\"):(リソースのパス) ```  **使用例**  ```bash file:./main/format   # ファイルパスの場合 classpath:web/format # クラスパスの場合 ```  クラスパスを指定する場合、そのパスにはディレクトリが存在している 必要がある。 ディレクトリが存在しない場合は、例外をスローする。  ファイルパスを指定する場合、そのパスにディレクトリが存在して いなければ、本メソッド内でディレクトリを作成する。 |\n| fileExtensions | 論理パス名とその配下に格納されるファイルの拡張子の組み合わせ。 | Map<String, String> | (任意指定: デフォルトは空のMap) |\n\n**設定ファイルの記述例**\n\n```xml\n<component name=\"filePathSetting\" class=\"nablarch.core.util.FilePathSetting\">\n  <property name=\"fileExtensions\">\n    <map>\n      <entry key=\"format\" value=\"fmt\" />\n      <entry key=\"csv-output\" value=\"csv\" />\n      <entry key=\"tsv-input\" value=\"tsv\" />\n    </map>\n  </property>\n  <property name=\"basePathSettings\">\n    <map>\n      <!--フォーマット定義ファイルの格納ディレクトリ-->\n      <entry key=\"format\" value=\"file:./main/format\" />\n      <!--入力ファイルの格納ディレクトリ-->\n      <entry key=\"input\" value=\"file:./work/input\" />\n      <!--出力ファイルの格納ディレクトリ-->\n      <entry key=\"output\" value=\"file:./work/output\" />\n    </map>\n  </property>\n</component>\n```",
+      "level": 4
+    },
+    {
+      "id": "s4",
+      "title": "ファイルアクセスAPI",
+      "content": "-----",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "ファイルレコードライタ",
+      "content": "アプリケーションでファイルを出力する場合は、 [FileRecordWriterHolder](../../javadoc/nablarch/common/io/FileRecordWriterHolder.html) クラスを使用する。\nこのクラスでは、プロセスレベルで入出力対象ファイルの管理を行っており、並行スレッドからの同一ファイルに対する出力の同期制御が自動的に行われる。\n\nまた、 [出力ファイル開放ハンドラ](../../component/handlers/handlers-FileRecordWriterDisposeHandler.md) と組み合わせて使用することで、ファイルクローズ等の終端処理をハンドラに委譲することが可能となる。\n\n[FileRecordWriterHolder](../../javadoc/nablarch/common/io/FileRecordWriterHolder.html) クラスを使用する場合、出力するファイルとフォーマット定義ファイルが格納されるディレクトリの 論理パス名 および出力ファイル名を指定する。\n論理パス名を指定しなかった場合、出力するファイルの論理パス名として **\"output\"** 、フォーマット定義ファイルの論理パス名として **\"format\"** が使用される。\n\n```java\nString outputFileBasePathName = \"output\";     // 出力ファイル格納ディレクトリの論理パス名\nString outputFileName         = \"results.dat\" // 出力ファイル名\nString formatFileName         = \"results.fmt\" // フォーマット定義ファイル格納ディレクトリの論理パス名\n\n// 対象のファイルを開く。\nFileRecordWriterHolder.open(outputFileBasePathName,\n                            outputFileName,\n                            formatFileName);\n\nMap<String, Object> results = new DataRecord();\nresults.put(\"status\", status);\nresults.put(\"processedData\", processedData);\n//\n// 後略\n//\n\n// レコードを対象のファイルに出力する。\nFileRecordWriterHolder.write(results, outputFileBasePathName, outputFileName);\n```",
+      "level": 4
+    },
+    {
+      "id": "s6",
+      "title": "ファイルデータリーダ",
+      "content": "本フレームワークでは、アプリケーションに対するデータ入力は全て [データリーダ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#data-reader)\nインターフェースによって抽象化されている。\nファイルの読込みについても、専用のデータリーダ [ファイルデータリーダ](../../component/readers/readers-FileDataReader.md) が用意されているので\nそれを使用すること。",
+      "level": 4
+    }
+  ]
+}

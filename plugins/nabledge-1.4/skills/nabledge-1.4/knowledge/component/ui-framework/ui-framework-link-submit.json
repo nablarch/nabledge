@@ -1,0 +1,20 @@
+{
+  "id": "ui-framework-link-submit",
+  "title": "リンクウィジェット",
+  "content": "[リンクウィジェット](../../component/ui-framework/ui-framework-link-submit.md) は **UI標準 UI部品 リンク** の内容に準拠したリンクを出力する。\n\n本部品には以下のバリエーションがあり、必要に応じて使い分けること。\n\n* 汎用リンク <link:submit>\n* ポップアップリンク <link:popup>",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**設計成果物(ローカル動作)**\n\n```jsp\n<%-- 汎用リンクの場合 --%>\n<link:submit\n    uri=\"\"\n    label=\"ユーザ情報一覧照会\"\n    dummyUri=\"./W11AC0101.jsp\">\n</link:submit>\n\n<%-- ポップアップリンクの場合 --%>\n<link:popup\n    uri=\"\"\n    label=\"ポップアップリンク\"\n    dummyUri=\"./index.jsp\">\n</link:popup>\n```\n\n**実装成果物(サーバ動作)**\n\n```jsp\n<%-- 汎用リンクの場合 --%>\n<link:submit\n    uri=\"/action/ss11AC/W11AC01Action/RW11AC0101\"\n    label=\"ユーザ情報一覧照会\">\n</link:submit>\n\n<%-- ポップアップリンクの場合 --%>\n<link:popup\n    uri=\"/action/ss99ZZ/W99ZZ61Action/RW99ZZ6102\"\n    popupWindowName=\"W99ZZ6101\"\n    label=\"ポップアップリンク\">\n</link:popup>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "**ローカル動作時の挙動**\n\nリンクをクリック時、dummyUriで指定されたJSPファイルに遷移する。\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| 共通属性 |  |  |  |  |  |\n| id | htmlのid属性 | 文字列 | ○ | ○ |  |\n| label | リンクの文言 | 文字列 | ◎ | ◎ |  |\n| uri | リンク先のuri | 文字列 | ◎ | × |  |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ |  |\n| dummyUri | ローカル動作時の遷移先 | 文字列 | × | ○ |  |\n| comment | リンククリック時のイベント概要 | 文字列 | × | × | 設計書の表示時に、 画面イベント一覧の「画面 イベント概要」に表示される。 |\n| 汎用リンクのみの属性 |  |  |  |  |  |\n| allowDoubleSubmission | 二重サブミットを許容するか否か | 真偽値 | ○ | × | デフォルトは 'true(許容する)' |\n| ポップアップリンクのみの属性 |  |  |  |  |  |\n| popupWindowName | ウィンドウ名 | 文字列 | ○ | ○ | デフォルトは 'subwindow' [1] |\n| popupOption | ウィンドウを開く際のオプション | 文字列 | ○ | ○ |  |\n\n明示的にウィンドウ名を指定しない場合、1つの画面から開かれるポップアップウィンドウは1つに固定される。\nすなわち、複数回ポップアップウィンドウを開いた場合、以前に開いたウィンドウが開かれたままであれば\n新たなウィンドウは開かずに既存のウィンドウの内容のみを更新する。\n複数のサブウィンドウを開きたい場合は、それぞれ個別のウィンドウ名を設定すること。",
+      "level": 2
+    }
+  ]
+}

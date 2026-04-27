@@ -1,55 +1,32 @@
 {
   "id": "toolbox-PublishedApiConfigGenerator",
   "title": "使用許可API一覧作成ツール",
-  "official_doc_urls": [],
-  "index": [
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
-      "title": "使用許可API一覧作成ツールの概要と使用方法",
-      "hints": [
-        "PublishedDoclet",
-        "nablarch.tool.published.doclet.PublishedDoclet",
-        "@Published",
-        "nablarch.core.util.annotation.Published",
-        "使用許可API一覧作成ツール",
-        "使用不許可APIチェックツール設定ファイル生成",
-        "Javadoc生成",
-        "公開API一覧"
-      ]
+      "title": "概要",
+      "content": "本ツールは、使用不許可APIチェックツールの設定ファイルとなる公開APIの一覧と、公開APIのJavadocを生成する。\n\n生成される使用許可API一覧をそのまま「使用不許可APIチェックツール」の設定ファイルとして利用することで、\nプロジェクトで実装した基盤部品などについて、業務アプリからの利用を想定していない非公開APIが利用されていないかどうかを使用不許可APIチェックツールを利用してチェックすることができる。",
+      "level": 2
     },
     {
       "id": "s2",
-      "title": "docletタグ",
-      "hints": [
-        "Ant Javadocタスク docletタグ設定",
-        "nablarch.tool.published.doclet.PublishedDoclet",
-        "docletpath設定",
-        "nablarch-toolbox.jar"
-      ]
+      "title": "ツール配置場所",
+      "content": "本ツールはチュートリアルプロジェクトの `tool_lib/nablarch-toolbox.jar` に配置されている（nablarch-toolbox.jarの一部である）。\n詳細は、 使用方法 の項を参照。",
+      "level": 2
     },
     {
       "id": "s3",
-      "title": "docletタグ内のparamタグ（出力先ファイルを指定）",
-      "hints": [
-        "-output",
-        "使用許可API一覧出力先ファイル指定",
-        "configファイル出力"
-      ]
+      "title": "使用方法",
+      "content": "本ツールは、Javadocを生成する際に利用するDocletとして提供される。\n\nJavadoc生成時に以下のDocletを利用し、必要なオプションを渡すことで使用許可API一覧および使用許可APIのみが出力されているJavadocが生成される。\n\nなお、実行時にはNablarch Application Framework, Nablarch ToolboxおよびJDKに付属のtools.jarをdocletpathに指定する必要がある。\n\n**本ツールが提供するDoclet**\nnablarch.tool.published.doclet.PublishedDoclet\n**必要な引数**\n| 引数 | 説明 | 必須 |\n|---|---|---|\n| output | 使用許可API一覧の出力先ファイルを指定する。 使用不許可APIチェックツールの設定ファイルとして利用する場合には、拡張子を **config** とすること。 | ○ |\n| tag | 出力対象とするタグを指定する。カンマ区切りで複数指定することができる。 | × |\n**出力対象**\nnablarch.core.util.annotation.Publishedアノテーションの付与された、\n\n* クラス\n* コンストラクタ\n* メソッド\n* フィールド\n* アノテーション\n\nが出力対象となる。\n\n引数tagに出力対象タグが指定されている場合、該当するtag属性が指定されているPublishedアノテーションが付与されたものと、\ntag属性が指定されていないPublishedアノテーションが付与されたものが出力対象となる。\n\n引数tagが指定されない場合には、tag属性が指定されていないPublishedアノテーションが付与されたものが出力対象となる。",
+      "level": 2
     },
     {
       "id": "s4",
-      "title": "docletタグ内のparamタグ（出力対象タグを指定）",
-      "hints": [
-        "-tag",
-        "出力対象タグ指定",
-        "Publishedアノテーション タグフィルタ"
-      ]
+      "title": "Ant Javadocタスクの設定方法",
+      "content": "本ツールを利用してAntのJavadocタスクを実行する場合は、javadocタグ内で以下のように設定すればよい。\n\n| 設定項目 | 設定値 | 備考 |\n|---|---|---|\n| **docletタグ** |  |  |\n| docletタグのname属性 | nablarch.tool.published.doclet.PublishedDoclet |  |\n| docletタグのpath属性 | nablarch.jar, nablarch-toolbox.jar, tools.jar のパス（;区切り） | pathref属性で、pathタグのidを指定しても可 |\n| **docletタグ内のparamタグ（出力先ファイルを指定）** |  |  |\n| paramタグのname属性 | -output | 必ず設定する必要がある |\n| paramタグのvalue属性 | 出力先ファイル |  |\n| **docletタグ内のparamタグ（出力対象タグを指定）** |  |  |\n| paramタグのname属性 | -tag | 引数tagを指定しない場合は、このparamタグは不要 |\n| paramタグのvalue属性 | 出力対象とするタグ |  |\n\n実際のAntファイルの例を以下に記載する。\n\nただし、以下の例では、本ツールの設定に必要な項目のみ設定している。Javadocタスクに必要なその他の設定については、\n[Ant Javadoc Task](http://ant.apache.org/manual/Tasks/javadoc.html) を参照すること。\n\n```xml\n<!-- 本ツールの実行時にクラスパスに含める必要があるパスを定義する。-->\n<!-- 以下は、Nablarch_totorialワークスペースの場合の値。実際に利用する際には適切な値に修正すること。 -->\n<path id=\"lib.path\">\n  <!-- nablarch.jarをクラスパスに含める。-->\n  <pathelement location=\"main/web/WEB-INF/lib/nablarch.jar\" />\n  <!-- Nablarch Toolboxをクラスパスに含める。 -->\n  <pathelement location=\"tool_lib/nablarch-toolbox.jar\" />\n  <!-- Oracle JDK付属の tools.jar をクラスパスに含める。 -->\n  <pathelement location=\"tool_lib/tools.jar\" />\n</path>\n\n<javadoc>\n  <!-- docletタグで、使用許可API一覧作成ツールのDocletクラスと、必要なクラスパスを設定する。 -->\n  <doclet name=\"nablarch.tool.published.doclet.PublishedDoclet\" pathref=\"lib.path\">\n    <!-- 出力対象とするタグを指定する。指定しない場合には不要。 -->\n    <param name=\"-tag\" value=\"architect\"/>\n    <!-- 使用許可API一覧の出力先ファイルを指定する。 -->\n    <param name=\"-output\" value=\"ProjectOpenApiForArchitect.config\"/>\n  </doclet>\n</javadoc>\n```",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s1": "使用不許可APIチェックツールの設定ファイルとなる公開APIの一覧と公開APIのJavadocを生成するツール。生成した使用許可API一覧を「使用不許可APIチェックツール」の設定ファイルとして利用できる。\n\n**配置場所**: `tool_lib/nablarch-toolbox.jar`（nablarch-toolbox.jarの一部）\n\n**Docletクラス**: `nablarch.tool.published.doclet.PublishedDoclet`\n\n実行時にNablarch Application Framework、Nablarch Toolbox、tools.jarをdocletpathに指定する必要がある。\n\n**引数**:\n\n| 引数 | 説明 | 必須 |\n|---|---|---|\n| output | 使用許可API一覧の出力先ファイル。使用不許可APIチェックツールの設定ファイルとして利用する場合は拡張子を **config** とすること | ○ |\n| tag | 出力対象タグ（カンマ区切りで複数指定可） | × |\n\n**出力対象**: `nablarch.core.util.annotation.Published`アノテーション付与のクラス、コンストラクタ、メソッド、フィールド、アノテーション\n\n- tag引数指定時: 該当tag属性のPublishedアノテーション付与のもの + tag属性なしのPublishedアノテーション付与のもの\n- tag引数未指定時: tag属性なしのPublishedアノテーション付与のもののみ\n\n**Ant Javadocタスク設定例**:\n\nただし、以下の例では、本ツールの設定に必要な項目のみ設定している。Javadocタスクに必要なその他の設定については、[Ant Javadoc Task](http://ant.apache.org/manual/Tasks/javadoc.html) を参照すること。\n\n```xml\n<path id=\"lib.path\">\n  <pathelement location=\"main/web/WEB-INF/lib/nablarch.jar\" />\n  <pathelement location=\"tool_lib/nablarch-toolbox.jar\" />\n  <pathelement location=\"tool_lib/tools.jar\" />\n</path>\n\n<javadoc>\n  <doclet name=\"nablarch.tool.published.doclet.PublishedDoclet\" pathref=\"lib.path\">\n    <param name=\"-tag\" value=\"architect\"/>\n    <param name=\"-output\" value=\"ProjectOpenApiForArchitect.config\"/>\n  </doclet>\n</javadoc>\n```",
-    "s2": "Ant JavadocタスクにおけるdocletタグのAnt設定:\n\n| 設定項目 | 設定値 | 備考 |\n|---|---|---|\n| name属性 | `nablarch.tool.published.doclet.PublishedDoclet` | |\n| path属性 | nablarch.jar、nablarch-toolbox.jar、tools.jarのパス（;区切り） | pathref属性でpathタグのidを指定しても可 |",
-    "s3": "Ant Javadocタスクのdocletタグ内paramタグ（出力先ファイル指定）の設定:\n\n| 設定項目 | 設定値 | 備考 |\n|---|---|---|\n| name属性 | `-output` | 必ず設定する必要がある |\n| value属性 | 出力先ファイルパス | |",
-    "s4": "Ant Javadocタスクのdocletタグ内paramタグ（出力対象タグ指定）の設定:\n\n| 設定項目 | 設定値 | 備考 |\n|---|---|---|\n| name属性 | `-tag` | tag引数を指定しない場合、このparamタグは不要 |\n| value属性 | 出力対象とするタグ | |"
-  }
+  ]
 }

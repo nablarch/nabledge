@@ -1,19 +1,107 @@
 # OIDCのIDトークンを用いた認証サンプル
 
-**公式ドキュメント**: [OIDCのIDトークンを用いた認証サンプル](https://nablarch.github.io/docs/LATEST/doc/biz_samples/12/index.html)
-
 ## 提供パッケージ
 
 [ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/v5-main)
 
-**パッケージ**: `please.change.me.common.oidc.verification`
+本サンプルは、以下のパッケージで提供される。
 
-## 依存ライブラリの追加
+*please.change.me.* **common.oidc.verification**
 
-IDトークンはJWT形式で作成される。JWTを扱うためのライブラリとしてAuth0が公開している`java-jwt`と`jwks-rsa-java`を使用する。
+## 概要
+
+本サンプルは、OpenID Connect（以下OIDC）で発行されるIDトークンを用いて認証を行うサンプルである。
+
+IDトークンの取得方法や実装場所などはアプリケーション構成によって様々あるが、本サンプルでは以下の構成を想定している。
+
+* Nablarchを使用したRESTfulウェブサービスのアプリケーションを、バックエンドとして稼働させる
+* IDトークンはフロントエンド（SPA、モバイルアプリ等）で取得し、バックエンドに送信する
+* 認証成功時にログインセッションを確立し、認証後はステートフルなセッション管理を行う
+* 認証処理は業務アクションで実装する
+
+OIDCは様々なサービスで対応しているが、本サンプルでは以下のユーザー管理サービスで発行されるIDトークンを取り扱う。
+
+* Amazon Web Services（以下AWS）
+
+  * [Amazon Cognito ユーザープール](https://aws.amazon.com/jp/cognito/) （以下ユーザープール）
+* Microsoft Azure（以下Azure）
+
+  * [Azure Active Directory B2C](https://learn.microsoft.com/ja-jp/azure/active-directory-b2c/) （以下ADB2C）
+
+提供パッケージ内では、対象のサービス別にさらにパッケージを分けている。
+
+ユーザープールが発行するIDトークンを取り扱うサンプル
+
+*please.change.me.common.oidc.verification.* **cognito**
+
+ADB2Cが発行するIDトークンを取り扱うサンプル
+
+*please.change.me.common.oidc.verification.* **adb2c**
+
+考え方はどちらのパッケージでも同じであるため、本ページでは、cognito パッケージのサンプルをベースとして説明する。
+adb2c パッケージを使用する場合は、適宜対応するコンポーネントに読み替えること。
+
+> **Tip:**
+> 本サンプルは、2023年3月時点のユーザープール、ADB2Cの仕様に合わせて実装している。
+> 必ず利用するサービスの最新の仕様を確認し、適宜カスタマイズすること。
+
+### 本サンプルで取り扱う範囲
+
+全体の処理の流れ、および本サンプルで取り扱う範囲について、以下に示す。
+
+![nablarch-example-oidc-scope.drawio.png](../../../knowledge/assets/biz-samples-12/nablarch-example-oidc-scope.drawio.png)
+
+本サンプルで取り扱うのはNablarchを使用するバックエンドアプリケーションのみとし、フロントエンドアプリケーション（Web、モバイルアプリ等）で行うIDトークンの取得方法については本サンプルの対象外とする。
+
+## 構成
+
+### クラス図
+
+本サンプルで提供するクラスについて、クラス図を以下に示す。
+
+![nablarch-example-oidc-class.drawio.png](../../../knowledge/assets/biz-samples-12/nablarch-example-oidc-class.drawio.png)
+
+### 各クラスの責務
+
+各クラスの責務については、以下のとおりである。
+
+#### インタフェース
+
+| インタフェース名 | 概要 |
+|---|---|
+| IdTokenVerifier | IDトークンが有効であるか検証するための機能を提供する |
+| SignatureAlgorithmProvider | トークンの署名検証に使用するアルゴリズムを提供する |
+
+#### クラス（コンポーネント）
+
+| クラス名 | 概要 |
+|---|---|
+| CognitoIdTokenVerifier | Cognitoが提供するIDトークンが有効であるか検証するための機能を提供する |
+| CognitoSignatureAlgorithmProvider | Cognitoが提供するトークンの署名検証に使用するアルゴリズムを提供する |
+| CognitoRSAKeyProvider | Cognitoが発行するトークンの検証に使用するRSA公開鍵を提供する |
+
+#### クラス（業務アクション）
+
+| クラス名 | 概要 |
+|---|---|
+| LoginAction | 認証処理の業務アクション |
+| LoginRequestForm | 認証のリクエスト情報を格納するフォーム |
+
+## 使用方法
+
+### 依存ライブラリの追加
+
+IDトークンはJSON Web Tokens（以下JWT）の形式で作成される。
+JWTを扱うためのライブラリはOSSでも多く公開されているが、サンプルではAuth0が公開している java-jwt と jwks-rsa-java を使用する。
+
+> **Tip:**
+> JWTを扱うライブラリは、 [OpenID Foundation](https://openid.net/developers/jwt-jws-jwe-jwk-and-jwa-implementations/) や [jwt.io](https://jwt.io/libraries) でも紹介されている。
+
+ライブラリを使用可能にするため、プロジェクトの依存関係設定に以下の依存関係を追加する。
 
 ```xml
 <dependencies>
+  ...
   <!-- JWTライブラリ -->
   <dependency>
     <groupId>com.auth0</groupId>
@@ -25,56 +113,29 @@ IDトークンはJWT形式で作成される。JWTを扱うためのライブラ
     <artifactId>jwks-rsa</artifactId>
     <version>0.21.3</version>
   </dependency>
+  ...
 </dependencies>
 ```
 
-ADB2CパッケージではHTTPクライアントも必要:
+また、ADB2Cのパッケージでは、HTTPクライアントを使用するため、以下の依存関係も追加する。
 
 ```xml
 <dependencies>
+  ...
   <!-- HTTPクライアント -->
   <dependency>
     <groupId>org.apache.httpcomponents.client5</groupId>
     <artifactId>httpclient5</artifactId>
     <version>5.2.1</version>
   </dependency>
+  ...
 </dependencies>
 ```
 
-<details>
-<summary>keywords</summary>
+### 環境依存値の設定
 
-please.change.me.common.oidc.verification, OIDCサンプル, IDトークン認証, パッケージ構成, ソースコード, java-jwt, jwks-rsa, httpclient5, com.auth0, JWTライブラリ
-
-</details>
-
-## 概要
-
-OpenID Connect（OIDC）で発行されるIDトークンを用いて認証を行うサンプル。
-
-**想定構成**:
-- NablarchのRESTfulウェブサービスをバックエンドとして稼働
-- IDトークンはフロントエンド（SPA、モバイルアプリ等）で取得し、バックエンドに送信
-- 認証成功時にログインセッションを確立し、認証後はステートフルなセッション管理
-- 認証処理は業務アクションで実装
-
-**対応サービス**:
-- [Amazon Cognito ユーザープール](https://aws.amazon.com/jp/cognito/)
-- [Azure Active Directory B2C](https://learn.microsoft.com/ja-jp/azure/active-directory-b2c/)
-
-**パッケージ構成**:
-- Cognito用: `please.change.me.common.oidc.verification.cognito`
-- ADB2C用: `please.change.me.common.oidc.verification.adb2c`
-
-**取り扱い範囲**: 本サンプルで取り扱うのはNablarchを使用するバックエンドアプリケーションのみ。フロントエンドアプリケーション（Web、モバイルアプリ等）で行うIDトークンの取得方法は本サンプルの対象外。
-
-**説明の方針**: 考え方はどちらのパッケージでも同じであるため、本ページではcognitoパッケージのサンプルをベースとして説明する。adb2cパッケージを使用する場合は、適宜対応するコンポーネントに読み替えること。
-
-> **補足**: 本サンプルは2023年3月時点のユーザープール・ADB2Cの仕様に合わせて実装している。必ず利用するサービスの最新の仕様を確認し、適宜カスタマイズすること。
-
-## 環境依存値の設定
-
-IDトークンを検証するためのコンポーネントは、サービスへアクセスするための情報を環境依存値としてプロパティから参照する。以下の環境依存値を実行環境に設定する。
+IDトークンを検証するための処理はコンポーネントとして作成しており、サービスへアクセスするための情報を設定するために、環境依存値をプロパティとして参照している。
+そのため、以下の環境依存値を実行環境に設定する。
 
 | 名前 | 説明 |
 |---|---|
@@ -82,44 +143,17 @@ IDトークンを検証するためのコンポーネントは、サービスへ
 | aws.cognito.userPool.id | ユーザープールID |
 | aws.cognito.userPool.clientId | ユーザープールに登録したアプリケーションのクライアントID |
 
-環境依存値の設定方法については [repository-overwrite_environment_configuration](../../component/libraries/libraries-repository.md) や [repository-overwrite_environment_configuration_by_os_env_var](../../component/libraries/libraries-repository.md) を参照。
+環境依存値の設定方法については [システムプロパティを使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#repository-overwrite-environment-configuration) や [OS環境変数を使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#repository-overwrite-environment-configuration-by-os-env-var) を参照。
 
-> **補足**: サービスへのアクセスに必要な情報に秘匿すべき情報が含まれる場合は、バージョン管理システムで管理対象となるファイルへの記述を避け、システムプロパティやOS環境変数として設定すること。
+> **Tip:**
+> サービスへのアクセスに必要な情報には、秘匿すべき情報が含まれている場合がある。
+> そのような情報がある場合、外部への漏洩を防ぐため、バージョン管理システムで管理対象となるファイルへの記述は避けるのが望ましい。
+> そのような情報を扱う場合には、システムプロパティやOS環境変数として設定することで、安全に使用できる。
 
-<details>
-<summary>keywords</summary>
+### コンポーネント定義の設定
 
-please.change.me.common.oidc.verification.cognito, please.change.me.common.oidc.verification.adb2c, OIDC認証, IDトークン, Amazon Cognito, Azure Active Directory B2C, RESTfulウェブサービス, 認証処理, 業務アクション, aws.cognito.region, aws.cognito.userPool.id, aws.cognito.userPool.clientId, Cognito認証
-
-</details>
-
-## 構成
-
-**インタフェース**:
-
-| インタフェース名 | 概要 |
-|---|---|
-| `IdTokenVerifier` | IDトークンが有効であるか検証する機能を提供 |
-| `SignatureAlgorithmProvider` | トークンの署名検証に使用するアルゴリズムを提供 |
-
-**クラス（コンポーネント）**:
-
-| クラス名 | 概要 |
-|---|---|
-| `CognitoIdTokenVerifier` | CognitoのIDトークンが有効であるか検証する機能を提供 |
-| `CognitoSignatureAlgorithmProvider` | Cognitoのトークン署名検証に使用するアルゴリズムを提供 |
-| `CognitoRSAKeyProvider` | Cognitoが発行するトークンの検証に使用するRSA公開鍵を提供 |
-
-**クラス（業務アクション）**:
-
-| クラス名 | 概要 |
-|---|---|
-| `LoginAction` | 認証処理の業務アクション |
-| `LoginRequestForm` | 認証のリクエスト情報を格納するフォーム |
-
-## コンポーネント定義の設定
-
-IDトークンを検証するための処理は、プロパティの使用や起動時の初期化を考慮してコンポーネントとして作成している。それらのコンポーネントをコンポーネント設定ファイルに定義する。
+IDトークンを検証するための処理は、プロパティの使用や起動時の初期化を考慮して、コンポーネントとして作成している。
+そのため、それらのコンポーネントをコンポーネント設定ファイルに定義する。
 
 ```xml
 <!-- IDトークン検証コンポーネント -->
@@ -140,42 +174,101 @@ IDトークンを検証するための処理は、プロパティの使用や起
 </component>
 ```
 
-<details>
-<summary>keywords</summary>
+### IDトークンの検証
 
-IdTokenVerifier, SignatureAlgorithmProvider, CognitoIdTokenVerifier, CognitoSignatureAlgorithmProvider, CognitoRSAKeyProvider, LoginAction, LoginRequestForm, クラス図, インタフェース, 業務アクション, 署名検証
+IDトークンの検証を行うコンポーネントでは、IDトークンを発行するサービスが案内している検証方法に従って検証する。
 
-</details>
-
-## IDトークンの検証
-
-## IDトークンの検証
-
-`CognitoIdTokenVerifier`はCognitoのガイドに従ってIDトークンを検証する。クライアント側でIDトークン取得後に即時送信されることを想定し、有効期限の許容範囲は60秒。
+なお、検証方法に含まれる署名の検証では、サービスが提供しているJWKSエンドポイントにアクセスし、公開鍵情報を取得する必要がある。
+サンプルでは、署名検証以外の処理についてローカル開発環境でテストが実装しやすくするため、署名検証に必要な情報を差し替えやすいように別のコンポーネントから提供するものとしている。
 
 ```java
-JWTVerifier verifier = JWT.require(signatureAlgorithmProvider.get())
-        .acceptExpiresAt(60)
-        .withAudience(clientId)
-        .withIssuer(createUserPoolUrl(region, userPoolId))
-        .withClaim("token_use", "id")
-        .build();
-return verifier.verify(idToken);
-```
+/**
+ * Cognitoが発行するIDトークンが有効であるか検証するための機能を提供する。
+ */
+public class CognitoIdTokenVerifier implements IdTokenVerifier {
 
-`CognitoSignatureAlgorithmProvider`はRSA256アルゴリズムを返却:
+    /** リージョン */
+    private String region;
 
-```java
-public Algorithm get() {
-    return Algorithm.RSA256(rsaKeyProvider);
+    /** ユーザープール ID */
+    private String userPoolId;
+
+    /** クライアントID */
+    private String clientId;
+
+    /** 署名アルゴリズムプロバイダ */
+    private SignatureAlgorithmProvider signatureAlgorithmProvider;
+
+    @Override
+    public DecodedJWT verify(String idToken) throws JWTVerificationException {
+        // トークンが有効であるか検証する検証方法はCognitoのガイドに従う
+        //   https://docs.aws.amazon.com/ja_jp/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html
+        // クライアント側でIDトークン取得後に即時送信されることを想定し、有効期限の許容範囲は60秒とする。
+        JWTVerifier verifier = JWT.require(signatureAlgorithmProvider.get())
+                .acceptExpiresAt(60)
+                .withAudience(clientId)
+                .withIssuer(createUserPoolUrl(region, userPoolId))
+                .withClaim("token_use", "id")
+                .build();
+        return verifier.verify(idToken);
+    }
+
+    /**
+     * ユーザープールのURLを作成する。
+     *
+     * @param region リージョン
+     * @param userPoolId ユーザープールID
+     * @return ユーザープールのURL
+     */
+    private String createUserPoolUrl(String region, String userPoolId) {
+        return "https://cognito-idp." + region + ".amazonaws.com/" + userPoolId;
+    }
+    ...
 }
 ```
 
-`CognitoRSAKeyProvider`は`RSAKeyProvider`インタフェースと`Initializable`インタフェースの両方を実装する。`initialize()`ではCognitoが公開するJWKSエンドポイントから公開鍵を取得するための`JwkProvider`を`JwkProviderBuilder`で構築する。
+署名検証に必要な情報を提供するコンポーネントでは、サービスがトークンの署名に使用するアルゴリズムに合わせて、アルゴリズム情報を返却する。
+サンプルではRSA署名を用いるため公開鍵が必要であるが、サービスが提供している公開鍵情報を取得する処理については、別のコンポーネントから提供するものとしている。
 
 ```java
-public class CognitoRSAKeyProvider implements RSAKeyProvider, Initializable {
+/**
+ * Cognitoが発行するトークンの署名検証に使用するアルゴリズムを提供する。
+ */
+public class CognitoSignatureAlgorithmProvider implements SignatureAlgorithmProvider {
+
+    /** RSA公開鍵プロバイダ */
+    private RSAKeyProvider rsaKeyProvider;
+
+    @Override
+    public Algorithm get() {
+        return Algorithm.RSA256(rsaKeyProvider);
+    }
     ...
+}
+```
+
+RSA署名の公開鍵情報を提供するコンポーネントでは、ライブラリが提供している公開鍵情報を外部から取得するための RSAKeyProvider インタフェースを実装し、サービスが公開しているJson Web Key Set（以下JWKS）のエンドポイントからJson Web Key（以下JWK）および公開鍵情報を取得する。
+
+> **Tip:**
+> サービスによっては、安全性を向上させるために、署名に使用する情報を一定の周期でローテーションしている場合がある。
+> またローテーション以外でも、情報漏洩等の緊急事態では情報が変更されるといったことも考えられる。
+> 署名検証を確実に行うため、事前に鍵情報が判明していた場合であっても固定値を使用せず、公開しているエンドポイントで最新情報を取得するのが望ましい。
+
+```java
+/**
+ * Cognitoが発行するトークンの検証に使用するRSA公開鍵を提供する。
+ */
+public class CognitoRSAKeyProvider implements RSAKeyProvider, Initializable {
+
+    /** リージョン */
+    private String region;
+
+    /** ユーザープール ID */
+    private String userPoolId;
+
+    /** JWKプロバイダ */
+    private JwkProvider provider;
+
     @Override
     public RSAPublicKey getPublicKeyById(String keyId) {
         try {
@@ -187,7 +280,28 @@ public class CognitoRSAKeyProvider implements RSAKeyProvider, Initializable {
     }
 
     @Override
+    public RSAPrivateKey getPrivateKey() {
+        // 公開鍵のみ取得可能であるため、秘密鍵の取得はサポートしない
+        throw new UnsupportedOperationException("Get private key is not supported");
+    }
+
+    @Override
+    public String getPrivateKeyId() {
+        // 未定義であるためインタフェースの仕様に則り null を返却する
+        return null;
+    }
+
+    @Override
     public void initialize() {
+        // Cognitoが公開しているJWKSエンドポイントから公開鍵を取得するためのプロバイダを作成する。
+        // プロバイダでは以下の設定をすることができる。
+        // ・キーID（kidクレームの値）ごとの結果をどれだけの期間いくつまでキャッシュするか
+        // ・JWKSエンドポイントへのアクセスをどれだけの期間で何回まで許容するか
+        // ・JWKSエンドポイントへのアクセス時にプロキシを使用するか
+        // ここでは以下のとおり設定している。
+        // ・キーIDは1時間に4つまでキャッシュする（キーのローテーションを跨いだ場合でも通常使用ではキャッシュされる範囲）
+        // ・JWKSエンドポイントへのアクセスは1分で10回まで許容する（キャッシュを考慮すると通常使用では到達しない範囲）
+        // ・プロキシは使用しない
         this.provider = new JwkProviderBuilder(createUserPoolUrl(region, userPoolId))
                 .cached(true)
                 .cached(4, 1, TimeUnit.HOURS)
@@ -196,82 +310,70 @@ public class CognitoRSAKeyProvider implements RSAKeyProvider, Initializable {
                 .proxied(Proxy.NO_PROXY)
                 .build();
     }
-}
 ```
 
-プロバイダの設定内容:
-- キーIDは1時間に4つまでキャッシュ（キーのローテーションを跨いだ場合でも通常使用ではキャッシュされる範囲）
-- JWKSエンドポイントへのアクセスは1分で10回まで許容（キャッシュを考慮すると通常使用では到達しない範囲）
-- プロキシは使用しない
+### 認証用業務アクションのパス設定
 
-> **補足**: 署名に使用する鍵情報はローテーションされる場合があるため、事前に鍵情報が判明していた場合でも固定値を使用せず、JWKSエンドポイントから最新情報を取得すること。
-
-<details>
-<summary>keywords</summary>
-
-CognitoIdTokenVerifier, CognitoSignatureAlgorithmProvider, CognitoRSAKeyProvider, RSAKeyProvider, Initializable, JWTVerifier, JwkProvider, JwkProviderBuilder, Jwk, JwkException, JWKS公開鍵取得, JWT署名検証
-
-</details>
-
-## 認証用業務アクションのパス設定
-
-## 認証用業務アクションのパス設定
-
-JAX-RSの`@Path`アノテーションで認証用業務アクションのパスを設定する:
+サンプルでは、認証用業務アクションのパスをJAX-RSのPathアノテーションで設定している。
 
 ```java
 @Path("/cognito/login")
 public class LoginAction {
 ```
 
-JAX-RSの`@Path`アノテーションによるマッピングについては [router_adaptor_path_annotation](../../component/adapters/adapters-router_adaptor.md) を参照。
+JAX-RSのPathアノテーションによるマッピングについては  [JAX-RSのPathアノテーションでマッピングする](../../component/adapters/adapters-router-adaptor.md#router-adaptor-path-annotation) を参照。
 
-<details>
-<summary>keywords</summary>
-
-LoginAction, @Path, JAX-RS
-
-</details>
-
-## 認証および成功時のログイン状態設定
-
-## 認証および成功時のログイン状態設定
+### 認証および成功時のログイン状態設定
 
 認証処理を実装する業務アクションでは、IDトークンの検証を呼び出し、異常が検知されなければログインセッションを確立する。
+異常を検知した場合は、エラー情報としてHTTPステータスが401（Unauthorized）のレスポンスを返却する。
+
+> **Tip:**
+> 本サンプルでは、CSRF(クロスサイトリクエストフォージェリ)への対策のため、CSRFトークン検証ハンドラの使用を想定している。
+> CSRF対策の詳細については [CSRFトークン検証ハンドラ](../../component/handlers/handlers-csrf-token-verification-handler.md#csrf-token-verification-handler) を参照。
 
 ```java
+/**
+ * IDトークンで認証を行い、成功すればログインセッションを確立する。
+ *
+ * @param context 実行コンテキスト
+ * @param form リクエストボディ
+ */
 @POST
 @Consumes(MediaType.APPLICATION_JSON)
 @Valid
 public void login(ExecutionContext context, LoginRequestForm form) {
+    // IDトークンが有効であるか検証する
     DecodedJWT decodedJWT = verifyIdToken(form.getIdToken());
-    // 認証成功後にセッションIDおよびCSRFトークンを変更する
+
+    // 安全性向上のため、認証成功後にセッションIDおよびCSRFトークンを変更する
     SessionUtil.changeId(context);
     CsrfTokenUtil.regenerateCsrfToken(context);
-    // IDトークンのsubjectからユーザーIDを取得してセッションに保持する
+
+    // IDトークンで連携された情報からユーザー情報を特定して、認証状態をセッションに保持する
     String userId = decodedJWT.getSubject();
     SessionUtil.put(context, "user.id", userId);
 }
-```
 
-`verifyIdToken`ではシステムリポジトリから`IdTokenVerifier`を取得してIDトークンを検証する。`JWTVerificationException`がスローされた場合は、HTTPステータス401（Unauthorized）のエラーレスポンスを返却する:
-
-```java
+/**
+ * IDトークンが有効であるか検証する。
+ *
+ * @param idToken IDトークン
+ * @return デコード済みのIDトークン
+ * @throws HttpErrorResponse 無効なIDトークンである場合（HTTPステータスコードは401）
+ */
 private DecodedJWT verifyIdToken(String idToken) {
+    // プロパティを使用した検証用コンポーネントを定義しているため、システムリポジトリから取得する
     IdTokenVerifier idTokenVerifier = SystemRepository.get("idTokenVerifier");
     try {
+        // IDトークンを検証する
         return idTokenVerifier.verify(idToken);
     } catch (JWTVerificationException e) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.logDebug("ID token verification failed...", e);
+        }
+        // 検証で異常を検知した場合は、ステータスコードが401(Unauthorized)のエラーレスポンスを返却する
         throw new HttpErrorResponse(HttpResponse.Status.UNAUTHORIZED.getStatusCode());
     }
 }
 ```
-
-> **補足**: CSRF対策のため、CSRFトークン検証ハンドラの使用を想定している。詳細は [csrf_token_verification_handler](../../component/handlers/handlers-csrf_token_verification_handler.md) を参照。
-
-<details>
-<summary>keywords</summary>
-
-JWTVerificationException, IDトークン検証, セッション管理, DecodedJWT, SessionUtil, CsrfTokenUtil, HttpErrorResponse, SystemRepository
-
-</details>

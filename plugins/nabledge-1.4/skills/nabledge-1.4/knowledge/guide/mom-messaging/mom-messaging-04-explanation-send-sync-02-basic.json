@@ -1,0 +1,26 @@
+{
+  "id": "mom-messaging-04-explanation-send-sync-02-basic",
+  "title": "同期応答メッセージ送信処理のアプリケーション構造",
+  "content": "本項では、同期応答メッセージ送信処理で共通の基本的なクラス構造について説明する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "Nablarch Application Frameworkでは、複雑になりがちなメッセージの送信処理を簡潔かつ堅牢に作成できるように以下のような機能を備えている。\n\n* 同期応答メッセージ送信を行うユーティリティクラスを提供する。\n\n  アプリケーションプログラマは、ユーティリティクラスを使用して同期応答メッセージの送信を行う。\n  ユーティリティクラスを使用する場合、アプリケーションプログラマはフォーマット定義ファイルを作成し、フィールド名をキーに持つMap型データを使用して、\n  送信時と受信時のデータの受け渡しを行う実装のみ行えばよく、簡便に同期応答メッセージの送信処理を作成できるようになっている。\n\nアプリケーションプログラマが作成するフォーマット定義ファイルおよび、ユーティリティを実行するための実装方法及び実装例は、\n [同期応答メッセージ送信処理の実装方法](../../guide/http-messaging/http-messaging-03-userSendSyncMessageAction.md#usersendsyncmessagetitle)にて解説を行なっているため、参照すること。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "クラス構造",
+      "content": "![class_diagram.png](assets/mom-messaging-04-explanation-send-sync-02-basic/class_diagram.png)\n\n同期応答メッセージの送信を行う場合、MessageSenderの以下のメソッドを実行する。\n\n| メソッド | 概要 |\n|---|---|\n| `SyncMessage sendSync(SyncMessage requestMessage) throws MessageSendSyncTimeoutException` | 同期応答メッセージの送信を行う。 タイムアウトが発生し、同期送信が正常終了しなかった場合は、MessageSendSyncTimeoutExceptionがスローされる。 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "処理の流れ",
+      "content": "業務ActionはMessageSenderを実行し、同期応答メッセージの送信を行う。\n具体的には以下の流れで処理が行われる。\n\n1. 業務Actionは、SyncMessageクラスにリクエストID [1] と要求電文に格納するパラメータを設定し、それを引数にMessageSenderのsendSyncメソッドを実行する。\n2. MessageSenderは、引数のSyncMessageから要求電文を生成し、送信キューに格納（PUT）する。\n3. 後続の処理は、送信キューから電文を取得（GET）し、業務処理を行った後、受信キューに応答電文を（PUT）する。\n4. MessageSenderは、キューから応答電文を取得（GET）する。\n5. MessageSenderは、応答電文の解析結果をSyncMessageに格納し、呼び出し元（業務Action）に返却する。\n\n![sequence.png](assets/mom-messaging-04-explanation-send-sync-02-basic/sequence.png)\n\nここで扱うリクエストIDとは、メッセージを送信する相手先システムの機能を一意に識別するために定義するIDのことを指すものであり、画面オンライン処理やバッチ処理で使用するリクエストIDとは意味が異なる点に注意すること。\nこのリクエストIDにもとづき、要求電文および応答電文のフォーマット、送信キュー名、受信キュー名が決定する。",
+      "level": 2
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "ui-framework-update-bundle-plugin",
+  "title": "Nablarch 標準プラグインの更新",
+  "content": "本節では、UI開発基盤を構築後にNablarch 標準プラグイン(以下標準プラグイン)をバージョンアップする手順を示す。\nなお、この作業は、UI開発基盤の担当者が実施すればよく、各担当者が個別に実施する必要はない。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1. UI開発基盤の更新方針",
+      "content": "UI開発基盤をPJで取り込んだ後も、Nablarchでは標準プラグインの不具合修正や機能追加を継続的に行う。\nNablarch側で行った標準プラグインの不具合修正や機能追加がPJ側でも必要と判断した場合は、\nその変更内容をここで述べる手順に沿って取り込むことができる。\n\n機能の修正や追加はプラグイン単位で行うことができるので、取り込みに要する作業工数や、\nPJの既存機能に対する影響を極小化することができる。\n\n> **Note:**\n> ただし、PJ側の拡張や既存機能への影響に関して、Nablarch側では把握することができないので、\n> 取り込み後の動作確認等はPJ側で担保する必要がある。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "2. 作業時のディレクトリ構成",
+      "content": "最新バージョンのNablarch標準プラグインのバンドルを取得し、\n[UI開発基盤の導入](../../component/ui-framework/ui-framework-initial-setup.md) の **UI開発基盤の取得と展開** で述べたディレクトリ構造と同じ構造になるように配置する。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "3. 標準プラグインの更新",
+      "content": "標準プラグインの変更内容を取り込む手順を以下に示す。\n\n更新前のPJのUI開発基盤が依存している標準プラグインのうち、\n更新されたプラグインを確認し、マージ作業をおこなう。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "1. 現在のプラグインのバージョンの確認",
+      "content": "標準プラグインバンドル配下にある bin/update.bat をPJのディレクトリ構造にあわせ修正し、\n実行することで、現在のPJのプラグインとリリースされた標準プラグインのバージョン差異を確認することができる。\n\n下記の構造の場合、 PROJECT は\"../../xxx_project\"、 UI_PLUGIN は\"ui_plugins\"となる。\n\n```bash\nプロジェクトルート/\n     │\n     ├── nablarch_plugins_bundle/\n     │       ├── bin/\n     │       │     └── update.bat\n     │       ├── node_modules/\n     │       │     ├── nablarch-css-base/\n     │       │     ├── nablarch-css-color-default/\n     │       │     ├── nablarch-css-common/\n     │       │     │\n     │       │ ## 後略 ##\n     │       │\n     │       └── package.json\n     │\n     └── xxx_project/           # PROJECT\n              ├── web_project/\n              ├── ui_demo/\n              ├── ui_test/\n              └── ui_plugins/   # UI_PLUGIN\n                     ├── node_modules/\n                     ├── pjconf.json\n                     └── package.json\n```\n\nupdate.batを実行すると、ui_plugins/ で管理されている標準プラグインの内、\n更新されているプラグインを ui_plugins/updated_plugin.json に出力する。\n\n> **Note:**\n> 標準プラグインの新規取込の場合、 updated_plugin.json には出力されないため、\n> 対象の標準プラグインをPJのUI開発基盤にコピーすること。\n\nupdated_plugin.jsonの出力例\n\n```javascript\n{\n   \"nablarch-css-core\" : \"1.0.0\"            // nablarch-css-coreが更新されていた場合\n , \"tutorial-dev-ui_test-support\" : \"1.0.1\" // 後述する_fromで指定したプラグインが更新されていた場合\n , \"tutorial-dev-ui_test-support\" : \"1.0.0\"\n}\n```\n\nPJでコピー(もしくは参照)して作成した場合、\nコピーしたプラグインのpackage.jsonに _from を設定することでupdate.bat実行時に一覧に出力することができる。\n\n> **Note:**\n> 標準プラグインには _from が設定済みのため、コピーした時に削除しなければよい。\n\n_from の指定例\n\n```javascript\n{ \"name\" : \"tutorial-dev-ui_test-support\"\n, \"description\" : \"Nablarch tutorial applicationのUI部品単体テストサポートプラグイン\"\n, \"version\" : \"1.0.0\"\n, \"_from\" : \"nablarch-dev-ui_test-support@1.0.0\"\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "2. プラグインのマージ",
+      "content": "取り込むと判断したプラグインについて修正内容を取り込む。\n下記に取込作業の手順を示す。\n\n1. 作業ディレクトリにUI開発基盤導入時のリビジョンをチェックアウトする\n\n  ```bash\n  作業ディレクトリ/\n        ├── nablarch_plugins_bundle/\n        │        ├── node_modules/\n        │        │      ├── nablarch-css-base/\n        │        │      ├── nablarch-css-color-default/\n        │        │      ├── nablarch-css-common/\n        │        │      │\n        │        │   ## 後略 ##\n        │        │\n        │        └── package.json\n        │\n        └── xxx_project/\n                  ├── web_project/\n                  ├── ui_plugins/\n                  │        ├── node_modules/\n                  │        │       ├── nablarch-css-base/\n                  │        │       ├── nablarch-css-color-default/\n                  │        │       ├── nablarch-css-common/\n                  │        │       │\n                  │        │   ## 後略 ##\n                  │        │\n                  │        └── package.json\n                  ├── ui_demo/\n                  └── ui_test/\n  ```\n2. 標準プラグインとカスタマイズしたプラグイン(初期状態)を上書きする。\n\n  カスタマイズしたプラグインについては競合する可能性があるため、競合を解消する。\n\n  1. 新規(標準モジュールをコピーし、リネームした状態で)追加したリビジョンにアップデートする。\n  2. _from 属性に設定されている標準モジュールの内容で上書きする。\n  3. PJ側が修正したリビジョンにアップデートする。\n\n  * 競合しない場合は、Nablarch側の修正を確認する。\n  * 競合した場合は、競合を解決する。\n\n下記の場合、rev:10, rev:15で2回の競合の解消を行う。\n\n1. nablarch-css-color-defaultを上書きする。\n2. リビジョン10にアップデートする。\n3. xxx_project-css-color-defaultに _from に設定されているnablarch-css-color-defaultの修正内容を上書きする。\n4. リビジョン15にアップデートする。\n5. xxx_project-css-commonに _from に設定されているnablarch-css-commonの修正内容を上書きする。\n6. PJ側の修正したリビジョンまでアップデートする。\n\n```bash\n作業ディレクトリ/\n      ├── nablarch_plugins_bundle/\n      │        └── node_modules/\n      │                 ├── nablarch-css-base/\n      │                 ├── nablarch-css-color-default/\n      │                 ├── nablarch-css-color-common/\n      │                 │\n      │              ## 後略 ##\n      │\n      └── xxx_project/\n                ├── web_project/\n                ├── ui_demo/\n                ├── ui_test/\n                └── ui_plugins/\n                         └── node_modules/\n                                   ├── nablarch-css-base/\n                                   ├── nablarch-css-color-default/    # diff確認\n                                   ├── nablarch-css-common/\n                                   ├── xxx_project-css-color-default/ # rev:10 で追加(マージ対象)\n                                   ├── xxx_project-css-common/        # rev:15 で追加(マージ対象)\n                                   │\n                               ## 後略 ##\n```\n\n1. trunkのリビジョンまでアップデートしたら、UI部品のビルドを行い、各部品のテストをする。\n\n> **Note:**\n> 標準プラグインを新規に取り込んだ際、カスタマイズが必要になった場合は、一旦 ui_plugins/pjconf.json から対象プラグインを外し、\n> カスタマイズは行わないこと。\n\n> 標準プラグインの取り込みが完了してから [UI標準のカスタマイズとUI開発基盤への反映](../../component/ui-framework/ui-framework-modifying-code-and-testing.md) を参照し、カスタマイズすること。\n\n1. リポジトリにコミットする。",
+      "level": 3
+    }
+  ]
+}

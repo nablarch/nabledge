@@ -1,0 +1,44 @@
+{
+  "id": "handlers-body-convert-handler",
+  "title": "リクエストボディ変換ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* 変換処理を行うコンバータを設定する\n* リクエストボディをFormに変換する\n* リソース(アクション)の処理結果をレスポンスボディに変換する\n\n本ハンドラでは、リクエストボディとレスポンスボディの変換処理を行う。\n\n変換時に使用するフォーマットは、リクエストを処理するリソース(アクション)クラスのメソッドに設定された\nConsumes 及び Produces アノテーションで指定する。\n\n本ハンドラでは、以下の処理を行う。\n\n* リクエストボディをリソース(アクション)クラスで受け付けるFormに変換する。\n  詳細は、[リクエストボディをFormに変換する](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler-convert-request) を参照。\n* リソース(アクション)クラスの処理結果をレスポンスボディに変換する。\n  詳細は、[リソース(アクション)の処理結果をレスポンスボディに変換する](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler-convert-response) を参照。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-body-convert-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.jaxrs.BodyConvertHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-jaxrs</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "本ハンドラは [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) よりも後ろに設定すること\nこのハンドラは、リソース(アクション)クラスのメソッドに設定された、アノテーションの情報を元に\nリクエスト及びレスポンスの変換処理を行う。\nこのため、ディスパッチ先を特定する [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) よりも後ろに設定する必要がある。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "変換処理を行うコンバータを設定する",
+      "content": "このハンドラでは、 bodyConverters プロパティに設定された、\nBodyConverter の実装クラスを使用してリクエスト及びレスポンスの変換処理を行う。\nbodyConverters プロパティには、\nプロジェクトで使用するMIMEに対応した、 BodyConverter を設定すること。\n\n以下に例を示す。\n\n```xml\n<component class=\"nablarch.fw.jaxrs.BodyConvertHandler\">\n  <property name=\"bodyConverters\">\n    <list>\n      <!-- application/xmlに対応したリクエスト・レスポンスのコンバータ -->\n      <component class=\"nablarch.fw.jaxrs.JaxbBodyConverter\" />\n      <!-- application/x-www-form-urlencodedに対応したリクエスト・レスポンスのコンバータ -->\n      <component class=\"nablarch.fw.jaxrs.FormUrlEncodedConverter\" />\n    </list>\n  </property>\n</component>\n```\n\n> **Tip:**\n> bodyConverters プロパティに設定されたコンバータで、\n> 変換出来ないMIMEが使用された場合、サポートしていないメディアタイプであることを示すステータスコード(`415`)を返却する。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "リクエストボディをFormに変換する",
+      "content": "リクエストボディの変換処理で使用するフォーマットは、リクエストを処理するメソッドに設定された Consumes により決まる。\nもし、 Consumes に設定されたMIMEと異なるMIMEがリクエストヘッダのContent-Typeに設定されていた場合は、\nサポートしていないメディアタイプであることを示すステータスコード(`415`)を返却する。\n\nリソース(アクション)のメソッドの実装例を以下に示す。\n\nこの例では、 `MediaType.APPLICATION_JSON` が示す `application/json` に対応した\nBodyConverter でリクエストボディが `Person` に変換される。\n\n```java\n@Consumes(MediaType.APPLICATION_JSON)\n@Valid\npublic HttpResponse saveJson(Person person) {\n    UniversalDao.insert(person);\n    return new HttpResponse();\n}\n```",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "リソース(アクション)の処理結果をレスポンスボディに変換する",
+      "content": "レスポンスボディへの変換処理で使用するフォーマットは、リクエストを処理したメソッドに設定された Produces により決まる。\n\nリソース(アクション)のメソッドの実装例を以下に示す。\n\nこの例では、 `MediaType.APPLICATION_JSON` が示す `application/json` に対応した\nBodyConverter でリクエストボディが `Person` に変換される。\n\n```java\nGET\n@Produces(MediaType.APPLICATION_JSON)\npublic List<Person> findJson() {\n    return UniversalDao.findAll(Person.class);\n}\n```",
+      "level": 2
+    }
+  ]
+}

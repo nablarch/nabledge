@@ -1,37 +1,14 @@
 {
   "id": "nablarch-patterns-Nablarchでの非同期処理",
   "title": "Nablarchでの非同期処理",
+  "content": "NablarchのWebアプリケーションでは、非同期処理は「[テーブルをキューとして使ったメッセージング](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/index.html)」を組み合わることで実現可能です。\n例えば、Webアプリケーションで1つのリクエストで処理するには時間がかかり過ぎるものがあるとします。 この場合、以下のようにテーブルをキューとして使ったメッセージングを使用することで非同期処理を実現できます。\n* Webアプリはリクエストを受け付けて後続処理に必要なデータをDBに登録し、レスポンスを返却する\n* テーブルをキューとして使ったメッセージングがDBへのデータ登録を検知し、当該データの処理を行う\n![sequence](./nablarch-async-pattern.png)",
   "no_knowledge_content": false,
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/index.html",
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/mail.html",
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/architecture.html#nablarch-batch-resident-batch"
-  ],
-  "index": [
+  "sections": [
     {
       "id": "s1",
-      "title": "Nablarchでの非同期処理",
-      "hints": [
-        "非同期処理",
-        "テーブルをキューとして使ったメッセージング",
-        "Webアプリケーション",
-        "DB登録検知"
-      ]
-    },
-    {
-      "id": "s2",
       "title": "メール送信を行う場合",
-      "hints": [
-        "メール送信",
-        "常駐バッチ",
-        "テーブルをキューとして使ったメッセージング",
-        "マルチスレッド",
-        "非同期処理"
-      ]
+      "content": "Nablarchが提供する[メール送信](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/mail.html)機能は、「[常駐バッチ](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/architecture.html#nablarch-batch-resident-batch)」を前提としています。\n「常駐バッチ」と「テーブルをキューとして使ったメッセージング」は、どちらもDBにデータが登録されるのを監視してバッチ処理を実行できます。 しかし、「常駐バッチ」はマルチスレッドで動かしたときに、並列実行されたスレッドが全て終了するまで次のデータ登録の監視が始まらないという問題があります。 このため、新規プロジェクトでは「常駐バッチ」よりも「テーブルをキューとして使ったメッセージング」を使用することが推奨されています。\nしかし、メール送信に関しては、そもそもマルチスレッドを必要とするような大量送信に使用することは想定されていません。 したがって、メール送信を利用する場合は、「テーブルをキューとして使ったメッセージング」ではなく「常駐バッチ」を使って問題ありません。",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "Nablarch Webアプリで1リクエストの処理時間が長い場合、[テーブルをキューとして使ったメッセージング](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/index.html)と組み合わせることで非同期処理を実現できる。\n\n処理フロー:\n1. WebアプリがリクエストをDBに登録し、レスポンスを返却する\n2. テーブルをキューとして使ったメッセージングがDB登録を検知し、当該データを処理する",
-    "s2": "Nablarchの[メール送信](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/mail.html)機能は[常駐バッチ](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/nablarch_batch/architecture.html#nablarch-batch-resident-batch)を前提としている。\n\n常駐バッチの問題: マルチスレッドで動かした場合、並列実行された全スレッドが終了するまで次のデータ登録の監視が始まらない。このため、新規プロジェクトでは常駐バッチよりテーブルをキューとして使ったメッセージングの使用が推奨されている。\n\nただし、メール送信はマルチスレッドを必要とする大量送信を想定していないため、メール送信には常駐バッチを使用して問題ない。"
-  }
+  ]
 }

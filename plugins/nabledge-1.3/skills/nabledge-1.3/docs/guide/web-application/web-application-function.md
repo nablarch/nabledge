@@ -1,471 +1,1233 @@
-# ファイルダウンロードの実現方法
 
-## ファイルのダウンロード方法
 
-ファイルダウンロードに使用するタグとユーティリティクラス:
+## ファイルダウンロードの実現方法
 
-**タグ**: `downloadSubmit`, `downloadButton`, `downloadLink`
+ファイルダウンロードは、下記のタグとHttpResponseを継承したユーティリティクラスを使用する。
 
-**クラス**: `StreamResponse`, `DataRecordResponse`
+**タグ**
 
-## ファイルのダウンロード方法
+* downloadSubmit
+* downloadButton
+* downloadLink
 
-- JSP: `downloadButton`タグを使用
-- Action: `StreamResponse`クラスを使用
+**ユーティリティクラス**
 
-```jsp
-<n:downloadButton uri="/action/ss11AC/W11AC02Action/TempFile" name="tempFile">ダウンロード</n:downloadButton>
-```
+* StreamResponse
+* DataRecordResponse
 
-```java
-StreamResponse response = new StreamResponse(file, true);
-response.setContentType("text/plain; charset=UTF-8");
-response.setContentDisposition(file.getName());
-return response;
-```
+### ファイルのダウンロード方法
 
-`StreamResponse(File file, boolean deleteOnClose)`: 第2引数`true`=ダウンロード後にファイルを削除（フレームワークが削除）、`false`=削除しない。
+ボタンが押されたらサーバ上のファイルをダウンロードする場合の実装例を示す。
 
-ファイルアップロードを行うには `file` タグと `PartInfo`, `UploadHelper` クラスを使用する。
+* JSPの実装例
 
-> **警告**: ファイルアップロードを行う場合、`<n:form>` タグの `enctype` 属性に `"multipart/form-data"` を必ず指定すること。
+  ```jsp
+  <%-- 【説明】
+        downloadButtonタグを使用してダウンロードボタンを実装する。 --%>
+  <n:downloadButton uri="/action/ss11AC/W11AC02Action/TempFile" name="tempFile">ダウンロード</n:downloadButton>
+  ```
+* アクションの実装例
+
+  ```java
+  /* 【説明】JavaDocは省略。 */
+  public HttpResponse doTempFile(HttpRequest request, ExecutionContext context) {
+  
+      /* 【説明】
+          ファイルを取得する処理はプロジェクトの実装方式に従う。*/
+      File file = getTempFile();
+  
+      /* 【説明】
+          FileのダウンロードにはStreamResponseクラスを使用する。
+          コンストラクタ引数にダウンロード対象のファイルと
+          リクエスト処理の終了時にファイルを削除する場合はtrue、削除しない場合はfalseを指定する。
+          ファイルの削除はフレームワークが行う。
+          通常ダウンロード用のファイルはダウンロード後に不要となるためtrueを指定する。*/
+      StreamResponse response = new StreamResponse(file, true);
+  
+      /* 【説明】
+          Content-Typeヘッダ、Content-Dispositionヘッダを設定する。*/
+      response.setContentType("text/plain; charset=UTF-8");
+      response.setContentDisposition(file.getName());
+  
+      return response;
+  }
+  ```
+
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+
+### BLOB型カラムのダウンロード方法
+
+下記テーブル定義に対して、行データ毎にリンクを表示し、
+選択されたリンクに対応するデータをダウンロードする場合の実装例を示す。
+
+| カラム(論理名) | カラム(物理名) | データ型 | 補足 |
+|---|---|---|---|
+| ファイルID | FILE_ID | CHAR(3) | PK |
+| ファイル名 | FILE_NAME | NVARCHAR2(100) |  |
+| ファイルデータ | FILE_DATA | BLOB |  |
+
+* JSPの実装例
+
+  ```jsp
+  <%-- 【説明】
+        recordsという名前で行データのリストが
+        リクエストスコープに設定されているものとする。 --%>
+  <c:forEach var="record" items="${records}" varStatus="status">
+      <n:set var="fileId" name="record.fileId" />
+      <div>
+          <%-- downloadLinkタグを使用してリンクを実装する。 --%>
+          <n:downloadLink uri="/action/ss11AC/W11AC02Action/BlobColumn" name="blobColumn_${status.index}">
+              <n:write name="record.fileName" />(<n:write name="fileId" />)
+              <%-- 選択されたリンクを判別するためにfileIdパラメータをparamタグで設定する。 --%>
+              <n:param paramName="fileId" name="fileId" />
+          </n:downloadLink>
+      </div>
+  </c:forEach>
+  ```
+* アクションの実装例
+
+  ```java
+  /* 【説明】JavaDocは省略。 */
+  public HttpResponse doBlobColumn(HttpRequest request, ExecutionContext context) {
+  
+      /* 【説明】
+          fileIdパラメータを使用して選択されたリンクに対応する行データを取得する。 */
+      SqlRow record = getRecord(request);
+  
+      /* 【説明】
+          BlobのダウンロードにはStreamResponseクラスを使用する。*/
+      StreamResponse response = new StreamResponse((Blob) record.get("FILE_DATA"));
+  
+      /* 【説明】
+          Content-Typeヘッダ、Content-Dispositionヘッダを設定する。*/
+      response.setContentType("image/jpeg");
+      response.setContentDisposition(record.getString("FILE_NAME"));
+  
+      return response;
+  }
+  ```
+
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+
+### データレコードのダウンロード方法
+
+下記テーブル定義に対して、全データをCSV形式でダウンロードする場合の使用例を示す。
+
+| カラム(論理名) | カラム(物理名) | データ型 | 補足 |
+|---|---|---|---|
+| メッセージID | MESSAGE_ID | CHAR(8) | PK |
+| 言語 | LANG | CHAR(2) | PK |
+| メッセージ | MESSAGE | NVARCHAR2(200) |  |
+
+データレコードのダウンロードでは、データレコードをフォーマットした上でダウンロードを行うため、
+フォーマットに使用するフォーマット定義ファイルを作成する必要がある。
+フォーマット定義ファイルの配置場所はプロジェクトの実装方針に従う。
+
+* フォーマット定義の実装例
+
+  ```bash
+  # 【説明】
+  #  N11AA001.fmtというファイル名でプロジェクトで規定された場所に配置する。
+  
+  #-------------------------------------------------------------------------------
+  # メッセージ一覧のCSVファイルフォーマット
+  #-------------------------------------------------------------------------------
+  file-type:        "Variable"
+  text-encoding:    "Shift_JIS" # 文字列型フィールドの文字エンコーディング
+  record-separator: "\n"        # レコード区切り文字
+  field-separator:  ","         # フィールド区切り文字
+  
+  [header]
+  1   messageId    N "メッセージID"
+  2   lang         N "言語"
+  3   message      N "メッセージ"
+  
+  [data]
+  1   messageId    X # メッセージID
+  2   lang         X # 言語
+  3   message      N # メッセージ
+  ```
+* JSPの実装例
+
+  ```jsp
+  <%-- 【説明】
+        downloadSubmitタグを使用してダウンロードボタンを実装する。 --%>
+  <n:downloadSubmit type="button" uri="/action/ss11AC/W11AC02Action/CsvDataRecord"
+                    name="csvDataRecord" value="ダウンロード" />
+  ```
+* アクションの実装例
+
+  ```java
+  /* 【説明】JavaDocは省略。 */
+  public HttpResponse doCsvDataRecord(HttpRequest request, ExecutionContext context) {
+  
+      /* 【説明】
+          レコードを取得する。*/
+      SqlResultSet records = getRecords(request);
+  
+      /* 【説明】
+          データレコードのダウンロードにはDataRecordResponseクラスを使用する。
+          コンストラクタ引数にフォーマット定義のベースパス論理名と
+          フォーマット定義のファイル名を指定する。*/
+      DataRecordResponse response = new DataRecordResponse("format", "N11AA001");
+  
+      /* 【説明】
+          DataRecordResponseのwrite(String recordType, Map<String, ?> record)メソッド
+          を使用してヘッダーを書き込む。
+          フォーマット定義に指定したデフォルトのヘッダー情報を使用するため、
+          空のマップを指定する。*/
+      response.write("header", Collections.<String, Object>emptyMap());
+  
+      /* 【説明】
+          DataRecordResponseのwrite(String recordType, Map<String, ?> record)メソッド
+          を使用してレコードを書き込む。*/
+      for (SqlRow record : records) {
+          /* 【説明】レコードを編集する場合はここで行う。 */
+          response.write("data", record);
+      }
+  
+      /* 【説明】
+          Content-Typeヘッダ、Content-Dispositionヘッダを設定する。*/
+      response.setContentType("text/csv; charset=Shift_JIS");
+      response.setContentDisposition("メッセージ一覧.csv");
+  
+      return response;
+  }
+  ```
+
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+
+### 別ウィンドウを開きダウンロードを開始したい場合
+
+リクエストを受け付けてからダウンロードが開始するまでに処理時間がかかってしまう場合など、
+ユーザにダウンロードのサブミットを送信したことを視覚的に伝達するために、
+ダウンロードボタンを押すと別ウィンドウが開きダウンロードを開始したい場合がある。
+
+ここでは、別ウィンドウを開きダウンロードを開始したい場合の実装例を示す。
+
+* 別ウィンドウを開くためのJSPの実装例
+
+  別ウィンドウを開くための実装は、 [複数ウィンドウを立ち上げたい場合](../../guide/web-application/web-application-screenTransition.md#howto-open-multi-window) で説明した実装方法で行う。
+
+  ```jsp
+  <%-- 【説明】
+        ポップアップタグを使用して別ウィンドウを開く。--%>
+  <n:popupButton uri="/action/ss11AC/W11AC02Action/ShowSub" name="showSub">
+      ダウンロード
+  </n:popupButton>
+  ```
+* ダウンロードを開始する別ウィンドウのJSPの実装例
+
+  画面表示後にすぐにダウンロードを開始するため、
+  ダウンロード用のフォームを実装し、onloadイベントでサブミットを行う。
+
+  ```jsp
+  <%-- 【説明】
+        指定されたname属性を持つ要素のonclickイベントを発生させる
+        doOnclick関数を指定する。--%>
+  <body onload="doOnclick('submit');">
+      <h1><n:write name="title" /></h1>
+      <p>ダウンロードを開始します。</p>
+      <n:errors filter="global" />
+      <n:form name="downloadForm">
+          <%-- 【説明】
+                ダウンロードボタンを表示したくない場合は、
+                「style="display: none;"」などCSSを使用する。 --%>
+          <n:downloadSubmit type="button" uri="/action/ss11AC/W11AC02Action/TempFile"
+                            name="submit" value="ダウンロード"
+                            allowDoubleSubmission="false" />
+          <n:button uri="#" name="close" onclick="window.close();"
+                    displayMethod="NORMAL">閉じる</n:button>
+      </n:form>
+  </body>
+  ```
+* JavaScriptの実装例
+
+  ```javascript
+  /**
+   * 指定されたname属性を持つ要素のonclickイベントを発生させる。
+   * @param name onclickイベントを発生させる要素のname属性
+   */
+  function doOnclick(name) {
+      var element = document.getElementsByName(name)[0];
+      if (element.fireEvent) { // for IE
+          element.fireEvent("onclick");
+      } else if (document.createEvent) { // for not IE
+          var evt = document.createEvent("MouseEvents");
+          var bubbles = false;
+          var cancelable = true;
+          evt.initEvent("click", bubbles, cancelable);
+          element.dispatchEvent(evt);
+      } else { // just in case
+          element.onclick();
+      }
+  }
+  ```
+
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+
+## ファイルアップロードの実現方法
+
+ファイルアップロードを行うには下記のタグとクラスを使用する。
+
+**タグ**
+
+* file
+
+**クラス**
+
+* PartInfo
+* UploadHelper
+
+### ファイルアップロード画面の作成方法（JSP）
+
+ユーザが指定したファイルをアップロードする画面の実装例を示す。
+
+* JSPの実装例
 
 ```jsp
 <n:form enctype="multipart/form-data">
+
+  登録対象ユーザ情報ファイル
   <n:file name="userList" cssClass="input" size="50"/>
   <n:submit name="submit" type="submit" value="アップロード" uri="RW11AC0602"/>
 </n:form>
 ```
 
-ページングを実現するための実装:
-1. `ListSearchInfo`を継承した検索条件クラスの実装
-2. `nbs:listSearchResult`タグを使用したJSPの実装
-3. 検索処理アクションの実装
+> **Warning:**
+> ファイルアップロードを行う場合、<n:form>タグに `enctype` 属性に `"multipart/form-data"` を必ず指定すること。
+> （通常のHTMLでのformタグと同様）
 
-**検索条件クラス** (`ListSearchInfo`継承):
-- `setPageNumber()`をオーバーライドして`pageNumber`プロパティにバリデーションアノテーションを付加する（例: 最大件数200件・1ページ20件の場合は`@NumberRange(max = 10, min = 1)`, `@Digits(integer = 2)`）
-- `getSearchConditionProps()`をオーバーライドして`"pageNumber"`を含む検索条件プロパティ配列を返す
+### アップロードファイルの取得方法（サーバサイド）
+
+サーバ側では、HttpRequestオブジェクトからアップロードファイルを取得することができる。
+
+* アクションの実装例
 
 ```java
-public class W11AC01SearchForm extends ListSearchInfo {
-    public W11AC01SearchForm(Map<String, Object> params) {
-        setPageNumber((Integer) params.get("pageNumber"));
-    }
+public HttpResponse doMoveFile(HttpRequest req, ExecutionContext ctx) {
 
-    @PropertyName("開始ページ")
-    @Required
-    @NumberRange(max = 10, min = 1)
-    @Digits(integer = 2)
-    public void setPageNumber(Integer pageNumber) {
-        super.setPageNumber(pageNumber);
-    }
+    // n:fileタグで指定したname属性を指定して、アップロードファイルを取得
+    List<PartInfo> partInfoList = req.getPart("userList");
 
-    private static final String[] SEARCH_COND_PROPS = new String[] { ..., "pageNumber"};
-
-    public String[] getSearchConditionProps() {
-        return SEARCH_COND_PROPS;
+    // ファイルがアップロードされていることを確認
+    if (partInfoList.isEmpty()) {
+        // ファイルがアップロードされていない
+        throw new ApplicationException(
+                MessageUtil.createMessage(MessageLevel.ERROR, "MSG00039"));
     }
+    // アップロードファイル１つ分の情報を取得
+    PartInfo partInfo = partInfoList.get(0);
+```
+
+> **Note:**
+> 同一のn:formタグ内に、同一name属性のn:fileタグが複数ある場合
+> 上記ソースコードのpartInfoListには複数のPartInfoが含まれる。
+
+取得したPartInfoオブジェクトをどのように使用するかは、
+以下の項を参照。
+
+### アップロードファイルの保存方法
+
+アップロードされたファイルを、所定のディレクトリに移動する実装例を以下に示す。
+
+* アクションの実装例
+
+```java
+UploadHelper helper = new UploadHelper(partInfo);
+
+// 【説明】ユニークなファイル名を生成
+String fileName = generateUniqueFileName();
+
+// 【説明】ユーティリティクラスを使用しファイルを移動する。
+helper.moveFileTo("uploadFileSaveDir",      // 【説明】移動先ディレクトリを論理パス名で指定
+                  fileName);                // 【説明】移動後のファイル名を指定
+```
+
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+
+### アップロードファイルを読み込む方法
+
+画像ファイルなどのバイナリファイルをアップロードする場合、
+アップロードファイルを入力ストリームとして扱う必要がある。
+その場合の実装例を以下に示す。
+
+```java
+public HttpResponse doHandleImageFile(HttpRequest req, ExecutionContext ctx) {
+
+    PartInfo partInfo = req.getPart("imageFile").get(0);
+
+    // 【説明】アップロードファイルの入力ストリームを取得
+    InputStream in = partInfo.getInputStream();
+
+    // 【説明】以下、入力ストリームを使用した処理
+    //                  :
+```
+
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+
+### アップロードファイルをDBに登録する方法
+
+データを一括登録する用途でファイルアップロードを行う場合、
+アップロードファイルを一時テーブルに登録することが多い。
+
+このような処理を行う場合、UploadHelperクラスを使用してファイル精査および登録を簡易的に行うことができる。
+
+> **Note:**
+> 本機能を使用する際、以下の前提事項がある。
+
+> * >   単一レイアウトであること（全レコードが同じレイアウトである）
+> * >   登録先テーブルがひとつであること（１レコードから複数テーブルへの登録は不可）
+
+> **Note:**
+> UploadHelperクラスの詳細使用については、 [ファイルアップロード業務処理用ユーティリティ](../../../../fw/reference/common_library/file_upload_utility.html) を参照。
+
+本処理の概要は以下のようになる。
+
+| 処理 | 説明 | 業務処理側で必要な実装内容 |
+|---|---|---|
+| フォーマット定義のロード | アップロードされるファイルのデータフォーマットを定義した ファイルを決定し読み込む。 | フォーマット定義ファイルパスの指定 |
+| レコード内容チェック | アップロードされたファイル中の各レコードに対して以下の検査を 行う。  **形式チェック** アップロードされたファイル中の各レコードを フレームワークが読み込む際に、自動的に行う検証。 ファイル内のデータが、 フォーマット定義ファイルに記述されている 1レコードあたりの項目数、各項目のデータ形式などの定義に合致 していることを検証する。 形式チェックを通過したレコードはMap型のオブジェクトに 変換される。 **精査処理** 形式チェックを通過した各レコードに対して行われる検証。 通常の業務Actionと同様の実装を行うことができるので、 ドメインベースの単項目精査やDB精査、ビジネスロジックを伴う 複雑な精査処理を実装することができる。 **空ファイルチェック** アップロードされたファイルが空でないこと （ レコードが１件以上存在すること）をチェックする。 | エラー発生時のメッセージID指定 精査処理を実装したクラス、メソッドの指定 |
+| レコードの登録 | アップロードされたファイル中の全てのレコードが上記の検査を 通過したした場合は、それらをDBに登録する。 | データベース一括登録 |
+
+実装例を以下に示す。
+
+```java
+// 【説明】ファイルをDBに投入する
+@OnError(type = ApplicationException.class, path = "forward://RW11AC0601")
+public HttpResponse doRW11AC0602(HttpRequest req, ExecutionContext ctx) {
+
+    PartInfo partInfo = req.getPart("fileToSave").get(0);
+
+   // 全件一括登録
+    UploadHelper helper = new UploadHelper(partInfo);
+    int cnt = helper.applyFormat("N11AC002")                     // 【説明】フォーマットを適用する
+                    .setUpMessageIdOnError("MSG00037",           // 【説明】形式エラー時のメッセージIDを指定する
+                                           "MSG00038",           // 【説明】精査エラー時のメッセージIDを指定する
+                                           "MSG00040")           // 【説明】ファイルが空の場合のメッセージIDを指定する
+                    .validateWith(UserInfoTempEntity.class,      // 【説明】精査メソッドを指定する
+                                  "validateRegister")
+                    .importWith(this, "INSERT_SQL");             // 【説明】INSERT文のSQLIDを指定する
+
 }
 ```
 
-**JSP実装**: 検索条件フォームと検索結果フォームを分け、`windowScopePrefixes`でウィンドウスコープを使用して前回検索条件を維持する。検索ボタンには`<n:param>`で`pageNumber=1`（1ページ目）を変更パラメータとして指定する。
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
 
-`nbs:listSearchResult`タグの属性:
+#### フォーマット定義ファイルパスの指定
 
-| 属性名 | 説明 |
+以下のメソッドを使用し、アップロードファイルに適用するフォーマットを指定する。
+
+* applyFormat(String layoutFileName)
+
+フォーマット定義ファイルの読み込み先をデフォルト値から変更したい場合、
+論理パス名を指定することもできる。この場合は、以下のメソッドを使用する。
+
+* applyFormat(String basePathName, String layoutFileName)
+
+#### エラー発生時のメッセージID指定
+
+以下のメソッドを使用し、エラー発生時のメッセージIDを指定する。
+
+* setUpMessageIdOnError(String messageIdOnFormatError, String messageIdOnValidationError, String messageIdOnEmptyFile)
+
+引数には以下の値を設定する。
+
+| 引数 | 設定内容 |
 |---|---|
-| `listSearchInfoName` | リクエストスコープに設定した`ListSearchInfo`継承クラスの変数名 |
-| `searchUri` | 検索を行うパス（通常は検索ボタンと同じパス） |
-| `resultSetName` | リクエストスコープに設定した検索結果の変数名 |
+| 第１引数 | 形式エラー時のメッセージID |
+| 第２引数 | 精査エラー時のメッセージID |
+| 第３引数 | ファイルが空の場合のメッセージID |
 
-`bodyRowFragment`内で使用可能な変数:
+形式エラーが発生した場合、第１引数で指定したメッセージが生成され蓄積される。
+その際、メッセージには以下の値が渡される。
 
-| 変数名 | 説明 |
-|---|---|
-| `row` | 行データ |
-| `oddEvenCss` | 奇数行・偶数行ごとのCSSクラス名（奇数行: `"odd"`、偶数行: `"even"`） |
-| `count` | ループ内カウント（1始まり） |
-| `rowCount` | 全検索結果件数内カウント（取得開始位置＋ループインデックス(0始まり)） |
+1. 形式エラーが発生したレコード行数
 
-**アクション実装**:
-- `DbAccessSupport`の`search(SQL_ID, condition)`メソッドで検索実行
-- 検索実行前に`ListSearchInfo`継承クラスをリクエストスコープに設定: `ctx.setRequestScopedVar("変数名", condition)`
-- 検索結果件数が上限超過時は`TooManyResultException`がスローされる。`e.getMaxResultCount()`で上限件数を取得可能
-- アクションメソッドに`@OnError(type = ApplicationException.class, path = "...")`を付加することで、`ApplicationException`発生時のフォワード先JSPを指定できる
+例えば、以下のメッセージを指定した場合、
+
+```text
+{0}行目に形式エラーがあります。
+```
+
+実際には、以下のようなメッセージ文言となる。(12行目がエラーの場合)
+
+```text
+12行目に形式エラーがあります。
+```
+
+精査エラーが発生した場合、第２引数で指定したメッセージが生成され蓄積される。
+その際、メッセージには以下の値が渡される。
+
+1. 精査エラーが発生したレコード行数
+2. 精査エラーメッセージ文言
+
+例えば、以下のメッセージを指定した場合、
+
+```text
+{0}行目に精査エラーがあります。 [1]
+```
+
+実際には、以下のようなメッセージ文言となる。(8行目で精査エラーが発生した場合)
+
+```text
+8行目に精査エラーがあります。 [カナ氏名は全角カナで入力してください。]
+```
+
+#### 精査処理を実装したクラス、メソッドの指定
+
+以下のメソッドを起動し、精査に使用するフォームクラスと精査メソッド名を指定する。
+
+* validateWith(Class<F> formClass, String validateFor)
+
+指定された精査メソッドで精査が実行される。
+そのエラーメッセージは蓄積され、 データベース一括登録 まで例外は送出されない。
+
+#### データベース一括登録
+
+以下のメソッドを起動し、精査済みのフォームを一括登録する。
+
+* importWith(DbAccessSupport dbAccessSupport, String insertSqlId)
+
+第１引数にはDbAccessSupportクラスのインスタンスを指定する。
+通常ActionクラスはDbAccessSupportクラスを継承しているので、自分自身の参照(this参照)を使用すれば良い。
+第２引数には、レコード１件を登録するINSERT文のSQLIDを指定する。
+
+形式エラー、精査エラーが１件でも存在する場合には、ApplicationExceptionが送出される。
+エラーが発生した場合、 エラー発生時のメッセージID指定 で指定した精査エラー時のメッセージが生成される。
+この例外には、これまでに蓄積されたメッセージ（形式エラー、精査エラー）が全て設定される。
+
+## 検索結果の一覧表示
+
+本フレームワークの検索結果の一覧表示機能を使用した下記の実装例を解説する。
+
+* [ページングを使用した一覧表示](../../guide/web-application/web-application-function.md#custom-tag-paging-paging)
+* [特定の一覧表示で表示件数と検索結果件数(上限)を個別に設定する方法](../../guide/web-application/web-application-function.md#custom-tag-paging-specified-page-settings)
+* [検索結果の並び替え](../../guide/web-application/web-application-function.md#custom-tag-paging-sort)
+* [ページングを使用しない一覧表示](../../guide/web-application/web-application-function.md#custom-tag-paging-nopaging)
+
+ページングの基本的な実装は、 [ページングを使用した一覧表示](../../guide/web-application/web-application-function.md#custom-tag-paging-paging) において解説する。
+[特定の一覧表示で表示件数と検索結果件数(上限)を個別に設定する方法](../../guide/web-application/web-application-function.md#custom-tag-paging-specified-page-settings) では、ページングが実現されていることを前提に、特定の一覧表示にて表示件数と検索結果件数(上限)を個別に設定する方法を解説する。
+[検索結果の並び替え](../../guide/web-application/web-application-function.md#custom-tag-paging-sort) では、ページングが実現されていることを前提に、検索結果の並び替えを行う方法を解説する。
+
+### ページングを使用した一覧表示
+
+ここでは、基本的なページング機能の実装方法を述べる。
+
+ページングを実現するには下記の実装を行う。
+
+* ListSearchInfoクラスを使用して検索条件を保持するクラスを実装する。
+* listSearchResultタグを使用して検索結果を表示するJSPを実装する。
+* 検索処理のアクションを実装する。
+
+ユーザ検索処理の実装例を以下に示す。
+
+* 検索条件を保持するクラスの実装例
+
+  ```java
+  /* 【説明】
+      ユーザ検索の検索条件を保持するクラス。
+      ListSearchInfoクラスを継承し、
+      ListSearchInfoクラスのpageNumberプロパティ(取得対象のページ番号)を入力精査に含める。 */
+  public class W11AC01SearchForm extends ListSearchInfo {
+  
+      //  検索条件のプロパティ定義は省略。
+  
+      /*  【説明】
+           バリデーション機能に対応したコンストラクタ。 */
+      public W11AC01SearchForm(Map<String, Object> params) {
+  
+          //  検索条件のプロパティ設定は省略。
+  
+          /* 【説明】
+              ListSearchInfoのプロパティを設定する。 */
+          setPageNumber((Integer) params.get("pageNumber"));
+      }
+  
+  
+      /* 【説明】
+          オーバーライドして入力精査用のアノテーションを付加する。
+          検索結果の最大件数(上限):200件、1ページの表示件数:20件の場合。 */
+      @PropertyName("開始ページ")
+      @Required
+      @NumberRange(max = 10, min = 1)
+      @Digits(integer = 2)
+      public void setPageNumber(Integer pageNumber) {
+          super.setPageNumber(pageNumber);
+      }
+  
+      /* 【説明】
+          精査対象プロパティにListSearchInfoのプロパティを指定する。
+          検索条件のプロパティは省略。 */
+      private static final String[] SEARCH_COND_PROPS = new String[] { ..., "pageNumber"};
+  
+      /* 【説明】
+          オーバーライドして検索条件のプロパティ名を返す。
+          通常は精査対象プロパティと同じとなる。 */
+      public String[] getSearchConditionProps() {
+          return SEARCH_COND_PROPS;
+      }
+  }
+  ```
+* JSPの実装例
+
+  ```jsp
+  <%-- 【説明】
+        ユーザ検索画面。
+  
+        ページング時の検索条件は、前回検索時の条件を使用する。
+        ウィンドウスコープを使用して前回検索時の条件を維持するため、
+        検索条件と検索結果一覧のフォームを分ける。 --%>
+  <n:form windowScopePrefixes="11AC_W11AC01">
+  
+      <%-- 【説明】
+            検索条件。
+            検索ボタンに変更パラメータを指定する。 --%>
+      <div class="search">
+          <table class="data conditionArea" width="100%">
+  
+              <%-- 検索条件の入力項目は省略。 --%>
+  
+          </table>
+          <div id="buttons" class="placeButton">
+  
+              <input class="cbuttons" type="reset" value="リセット" />
+  
+              <%-- 【説明】
+                    検索ボタン。
+                    検索ボタンが押された場合の検索結果の取得開始ページを変更パラメータで指定する。
+                    検索ボタンが押された場合は1ページ目から表示するので、通常は1を指定する。 --%>
+              <n:submit cssClass="cbuttons" type="button" name="search"
+                        uri="/action/ss11AC/W11AC01Action/RW11AC0102" value="検索">
+                  <n:param paramName="11AC_W11AC01.pageNumber" value="1" />
+              </n:submit>
+  
+          </div>
+      </div>
+  </n:form>
+  
+  <n:form windowScopePrefixes="11AC_W11AC01">
+      <%-- 【説明】
+            ページング付きの検索結果。
+            listSearchInfoName属性:
+                アクションでListSearchInfoを継承したクラス(W11AC01SearchForm)を
+                リクエストスコープに設定する際に使用した変数名を指定する。
+            searchUri属性:
+                検索を行うパスを指定する。
+                通常は検索ボタンと同じパスを指定する。
+            resultSetName属性:
+                アクションで検索結果を
+                リクエストスコープに設定する際に使用した変数名を指定する。 --%>
+      <nbs:listSearchResult listSearchInfoName="11AC_W11AC01"
+                          searchUri="/action/ss11AC/W11AC01Action/RW11AC0102"
+                          resultSetName="searchResult">
+  
+          <%-- 【説明】
+                headerRowFragment属性には、ヘッダ行のJSPフラグメントを指定する。 --%>
+          <jsp:attribute name="headerRowFragment">
+              <tr>
+                  <th>ログインID</th>
+                  <th>漢字氏名</th>
+                  <th>カナ氏名</th>
+                  <th>グループ</th>
+                  <th>内線番号</th>
+                  <th>メールアドレス</th>
+              </tr>
+          </jsp:attribute>
+  
+          <%-- 【説明】
+                bodyRowFragment属性には、ボディ行のJSPフラグメントを指定する。
+                ここで指定したJSPフラグメントは、
+                下記の「ボディ行のJSPフラグメントが評価されるタイミング」
+                に示したタイミングで評価される。 --%>
+          <jsp:attribute name="bodyRowFragment">
+  
+              <%-- 【説明】
+                    ボディ行で使用可能な変数は、下記の通り。
+                    row:        行データ
+                    oddEvenCss: 奇数行と偶数行ごとのクラス名
+                    count:      ループ内のカウント(1はじまり)
+                    rowCount:   全ての検索結果件数内のカウント
+                                (取得開始位置＋ループ内のインデックス(0はじまり)) --%>
+              <tr class="<n:write name="oddEvenCss" />">
+                  <td><n:write name="row.loginId" /></td>
+                  <td><n:write name="row.kanjiName" /></td>
+                  <td><n:write name="row.kanaName" /></td>
+                  <td><n:write name="row.ugroupId" />:<n:write name="row.ugroupName" /></td>
+                  <td><n:write name="row.extensionNumberBuilding" />-<n:write name="row.extensionNumberPersonal" /></td>
+                  <td><n:write name="row.mailAddress" /></td>
+              </tr>
+  
+          </jsp:attribute>
+  
+      </nbs:listSearchResult>
+  
+  </n:form>
+  ```
+
+  **ボディ行のJSPフラグメントが評価されるタイミング**
+
+  ```jsp
+  <c:forEach var="row" items="${searchResult}" varStatus="status">
+  
+      <c:if test="${status.count % 2 != 0}">
+          <n:set var="oddEvenCss" value="odd" />
+      </c:if>
+      <c:if test="${status.count % 2 == 0}">
+          <n:set var="oddEvenCss" value="even" />
+      </c:if>
+  
+      <n:set var="count" value="${status.count}" />
+      <n:set var="rowCount" value="${startPosition + status.index}" />
+  
+      (bodyRowFragment属性で指定した内容がここにくる)
+  
+  </c:forEach>
+  ```
+* アクションの実装例
+
+  ```java
+  /* 【説明】
+      ユーザ検索処理のアクション。
+      実装例ではDbAccessSupportクラスを継承して使用するが、
+      プロジェクトの方針に合わせて実装する。 */
+  public class W11AC01Action extends DbAccessSupport {
+  
+      /* 【説明】
+          ユーザ検索画面の初期表示で呼ばれるメソッド。 */
+      public HttpResponse doRW11AC0101(HttpRequest req, ExecutionContext ctx) {
+          // 初期表示は、業務処理のみのため省略。
+      }
+  
+      /* 【説明】
+          ユーザ検索画面の検索で呼ばれるメソッド。 */
+      @OnError(type = ApplicationException.class, path = "/ss11AC/W11AC0101.jsp")
+      public HttpResponse doRW11AC0102(HttpRequest req, ExecutionContext ctx) {
+  
+          // 業務処理は省略。
+  
+          // 入力精査
+          ValidationContext<W11AC01SearchForm> searchConditionCtx = ...;
+          searchConditionCtx.abortIfInvalid();
+  
+          W11AC01SearchForm condition = searchConditionCtx.createObject();
+  
+          /* 【説明】
+              検索結果表示(listSearchResultタグ)で使用するため、
+              ListSearchInfoを継承したクラス(W11AC01SearchForm)をリクエストスコープに設定する。 */
+          ctx.setRequestScopedVar("searchCondition", condition);
+  
+          // 検索実行
+          SqlResultSet searchResult;
+          try {
+              /* 【説明】
+                  ユーザ検索処理。
+                  DbAccessSupportクラスのsearchメソッドを使用する。
+                  "SELECT_USER_BY_CONDITION"は、ユーザ検索を行うSELECT文に対するSQL_ID。 */
+              searchResult = search("SELECT_USER_BY_CONDITION", condition);
+          } catch (TooManyResultException e) {
+              /* 【説明】
+                  検索結果件数が上限を超えた場合のエラー処理。
+                  TooManyResultExceptionは、検索結果の最大件数(上限)、実際の検索結果件数を提供する。
+                  "MSG00024"は「検索結果が上限件数({0}件)を超えました。」というメッセージに対するメッセージID。 */
+              throw new ApplicationException(
+                  MessageUtil.createMessage(MessageLevel.ERROR, "MSG00024", e.getMaxResultCount()));
+          }
+  
+          // 検索結果をリクエストスコープに設定
+          ctx.setRequestScopedVar("11AC_W11AC01", searchResult);
+  
+          return new HttpResponse("/ss11AC/W11AC0101.jsp");
+      }
+  }
+  ```
+
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+
+### 特定の一覧表示で表示件数と検索結果件数(上限)を個別に設定する方法
+
+ここでは特定の一覧表示にて、システムのデフォルト値とは異なる表示件数と検索結果件数（上限）を設定する実装例を示す。
+
+尚、ここでは、 [ページングを使用した一覧表示](../../guide/web-application/web-application-function.md#custom-tag-paging-paging) が実現されているものとして、
+[ページングを使用した一覧表示](../../guide/web-application/web-application-function.md#custom-tag-paging-paging) との差分についてのみ実装例を示す。
+
+特定の一覧表示にて個別の表示件数と検索結果件数（上限）を設定するには、下記の実装を行う。
+
+* 一覧表示画面を表示するアクションのメソッドにて、ListSearchInfoを継承したクラスに表示件数と検索結果件数(上限)を設定する。
+
+ユーザ検索画面にてデフォルト値とは異なる表示件数と検索結果件数（上限）を設定する実装例を以下に示す。
+
+* アクションの実装例
+
+  ```java
+  // 一覧表示の最大表示件数
+  private static final int MAX_ROWS = 10;
+  
+  // 一覧表示の検索結果件数（上限）
+  private static final int MAX_RESULT_COUNT = 100;
+  
+  /* 【説明】
+      ユーザ検索画面の検索で呼ばれるメソッド。 */
+  @OnError(type = ApplicationException.class, path = "/ss11AC/W11AC0101.jsp")
+  public HttpResponse doRW11AC0102(HttpRequest req, ExecutionContext ctx) {
+  
+      // 業務処理は省略。
+  
+      // 入力精査は省略。
+      W11AC01SearchForm condition = .....;
+  
+      /* 【説明】
+          一覧表示の表示件数がデフォルト値と異なる場合は、
+          ListSearchInfoを継承したクラス(W11AC01SearchForm)のmaxプロパティに設定する。 */
+      condition.setMax(MAX_ROWS);
+  
+      /* 【説明】
+          検索結果件数（上限）がデフォルト値と異なる場合は、
+          ListSearchInfoを継承したクラス(W11AC01SearchForm)のmaxResultCountプロパティに設定する。 */
+      condition.setMaxResultCount(MAX_RESULT_COUNT);
+  
+      /* 【説明】
+          検索結果表示(listSearchResultタグ)で使用するため、
+          ListSearchInfoを継承したクラス(W11AC01SearchForm)をリクエストスコープに設定する。 */
+      ctx.setRequestScopedVar("searchCondition", condition);
+  
+      // 検索処理は省略
+  
+      // 以降の処理は省略。
+  }
+  ```
+
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+
+### 検索結果の並び替え
+
+ここでは検索結果の一覧画面の並べ替えの実装例を示す。
+
+尚、ここでは、 [ページングを使用した一覧表示](../../guide/web-application/web-application-function.md#custom-tag-paging-paging) が実現されているものとして、
+[ページングを使用した一覧表示](../../guide/web-application/web-application-function.md#custom-tag-paging-paging) との差分についてのみ実装例を示す。
+
+検索結果の並び替えを実現するには下記の実装を行う。
+
+* 可変ORDER BY構文を使用したSQL文を実装する。
+* 検索条件を保持するクラスにListSearchInfoクラスのsortIdプロパティの入力精査を含める。
+* listSearchSortSubmitタグを使用して並べ替え用のリンクを表示するJSPを実装する。
+
+ユーザ検索画面の実装例を以下に示す。
+
+* SQL文の実装例
+
+  ```sql
+  -- 【説明】
+  -- 可変ORDER BY構文を使用したSQL文。
+  -- ログインIDとメールアドレスを並び替える場合の実装例。
+  -- どのORDER BYを使用するかは、$sort (sortId)の記述により、
+  -- 検索条件オブジェクトのsortIdフィールドから取得した値が使用される。
+  -- 例えば、検索条件オブジェクトのsortIdフィールドが3の場合、
+  -- ORDER BY句は"ORDER BY USR.MAIL_ADDRESS"に変換される。
+  
+  SELECT_USER_BY_CONDITION =
+  SELECT
+    -- 省略
+  FROM
+      -- 省略
+  WHERE
+      -- 省略
+  $sort (sortId) {
+     (1 SA.LOGIN_ID)
+     (2 SA.LOGIN_ID DESC)
+     (3 USR.MAIL_ADDRESS)
+     (4 USR.MAIL_ADDRESS DESC) }
+  ```
+* 検索条件を保持するクラスの実装例
+
+  ```java
+  /* 【説明】
+      ユーザ検索の検索条件を保持するクラス。 */
+  public class W11AC01SearchForm extends ListSearchInfo {
+  
+      //  検索条件のプロパティ定義は省略。
+  
+      /*  バリデーション機能に対応したコンストラクタ。 */
+      public W11AC01SearchForm(Map<String, Object> params) {
+  
+          //  検索条件のプロパティ設定は省略。
+  
+          /* 【説明】
+              ListSearchInfoのsortIdプロパティを設定する。 */
+          setSortId((String) params.get("sortId"));
+      }
+  
+  
+      /* 【説明】
+          オーバーライドして入力精査用のアノテーションを付加する。 */
+      @PropertyName("ソートID")
+      @Required
+      public void setSortId(String sortId) {
+          super.setSortId(sortId);
+      }
+  
+      /* 【説明】
+          精査対象プロパティにListSearchInfoのsortIdプロパティを指定する。
+          検索条件のプロパティは省略。 */
+      private static final String[] SEARCH_COND_PROPS = new String[] { ..., "sortId"};
+  
+      /* 【説明】
+          オーバーライドして検索条件のプロパティ名を返す。
+          通常は精査対象プロパティと同じとなる。 */
+      public String[] getSearchConditionProps() {
+          return SEARCH_COND_PROPS;
+      }
+  }
+  ```
+* JSPの実装例
+
+  ```jsp
+  <nbs:listSearchResult listSearchInfoName="11AC_W11AC01"
+                      searchUri="/action/ss11AC/W11AC01Action/RW11AC0102"
+                      resultSetName="searchResult"
+                      usePageNumberSubmit="true"
+                      useLastSubmit="true">
+      <%-- 【説明】
+            ヘッダ行にlistSearchSortSubmitタグを使用して並び替え用のリンクを追加する。--%>
+      <jsp:attribute name="headerRowFragment">
+          <tr>
+              <th>
+                  <%-- 【説明】
+                        ログインIDを並び替え用のリンクにする。
+                        SQL文に合わせて昇順(1)と降順(2)のソートIDを指定する。
+                        name属性は画面で一意になるように指定する。 --%>
+                  <nbs:listSearchSortSubmit ascSortId="1" descSortId="2"
+                                          label="ログインID" uri="/action/ss11AC/W11AC01Action/RW11AC0102"
+                                          name="loginIdSort" listSearchInfoName="11AC_W11AC01" />
+              </th>
+              <th>漢字氏名</th>
+              <th>カナ氏名</th>
+              <th>グループ</th>
+              <th>内線番号</th>
+              <th>
+                  <%-- 【説明】
+                        メールアドレスを並び替え用のリンクにする。
+                        SQL文に合わせて昇順(3)と降順(4)のソートIDを指定する。
+                        name属性は画面で一意になるように指定する。 --%>
+                  <nbs:listSearchSortSubmit ascSortId="3" descSortId="4"
+                                      label="メールアドレス" uri="/action/ss11AC/W11AC01Action/RW11AC0102"
+                                      name="kanaNameSort" listSearchInfoName="11AC_W11AC01" />
+              </th>
+          </tr>
+      </jsp:attribute>
+      <jsp:attribute name="bodyRowFragment">
+          <%-- 省略 --%>
+      </jsp:attribute>
+  </nbs:listSearchResult>
+  ```
+
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+
+### ページングを使用しない一覧表示
+
+ここでは検索結果の一覧画面においてページングを使用せずに1画面にすべての検索結果を表示する場合の実装例を示す。
+
+1画面にすべての検索結果を一覧表示する場合、基本的な実装方法はページングを使用する場合と変わらない。
+検索処理や並び替えの処理もページングを使用する場合と同じ実装方法となる。
+
+ユーザ検索処理の実装例を以下に示す。
+
+* ListSearchInfoを継承するクラスの実装例
+
+  ```java
+  /* 【説明】
+      ユーザ検索の検索条件を保持するクラス。
+      ListSearchInfoを継承する。 */
+  public class W11AC01SearchForm extends ListSearchInfo {
+  
+      // 検索条件のプロパティ定義は省略。
+  
+      /* 【説明】
+          バリデーション機能に対応したコンストラクタ。 */
+      public W11AC01SearchForm(Map<String, Object> params) {
+  
+          // 検索条件のプロパティ設定は省略。
+  
+          /* 【説明】
+              ページングを使用する場合と異なり、ListSearchInfoのpageNumberプロパティの設定は不要。
+              pageNumberプロパティの初期値は1のため常に1ページ目となる。 */
+      }
+  
+      /* 【説明】
+          精査対象プロパティ。
+          検索条件のプロパティのみとなる。 */
+      private static final String[] SEARCH_COND_PROPS = new String[] { ... };
+  
+      /* 【説明】
+          オーバーライドして検索条件のプロパティ名を返す。
+          通常は精査対象プロパティと同じとなる。 */
+      public String[] getSearchConditionProps() {
+          return SEARCH_COND_PROPS;
+      }
+  }
+  ```
+* アクションの実装例
+
+  ```java
+  /* 【説明】
+      ユーザ検索処理のアクション。
+      実装例ではDbAccessSupportクラスを継承して使用するが、
+      プロジェクトの方針に合わせて実装する。 */
+  public class W11AC01Action extends DbAccessSupport {
+  
+      /* 【説明】
+          ユーザ検索画面の検索で呼ばれるメソッド。 */
+      @OnError(type = ApplicationException.class, path = "/ss11AC/W11AC0101.jsp")
+      public HttpResponse doRW11AC0102(HttpRequest req, ExecutionContext ctx) {
+  
+          // 業務処理は省略。
+  
+          // 入力精査
+          ValidationContext<W11AC01SearchForm> searchConditionCtx = ...;
+          searchConditionCtx.abortIfInvalid();
+          W11AC01SearchForm condition = searchConditionCtx.createObject();
+  
+          /* 【説明】
+              検索結果の取得件数(1ページの表示件数)に検索結果の最大件数(上限)を設定する。
+              ページングを使用しないため下記の設定が必須となる。 */
+          condition.setMax(condition.getMaxResultCount());
+  
+          ctx.setRequestScopedVar("searchCondition", condition);
+  
+          // 検索実行
+          SqlResultSet searchResult;
+          try {
+              // 検索処理は省略。
+          } catch (TooManyResultException e) {
+              // 例外処理は省略。
+          }
+  
+          // 検索結果をリクエストスコープに設定
+          ctx.setRequestScopedVar("11AC_W11AC01", searchResult);
+  
+          return new HttpResponse("/ss11AC/W11AC0101.jsp");
+      }
+  }
+  ```
+* JSPの実装例
+
+  ```jsp
+  <%-- 【説明】
+        ページングを使用しないのでusePaging属性にfalseを指定する。
+        ページングを使用しないのでsearchUri属性の指定は不要。 --%>
+  <nbs:listSearchResult listSearchInfoName="11AC_W11AC01"
+                      usePaging="false"
+                      resultSetName="searchResult">
+  
+      <%-- その他の属性は省略。 --%>
+  
+  </nbs:listSearchResult>
+  ```
+
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+
+## 複合キーを使用したデータの一覧画面から、ラジオボタン・チェックボックスでデータを選択する
+
+[検索結果の一覧表示](../../guide/web-application/web-application-function.md#custom-tag-paging) で作成する一覧画面では、一括削除処理などのように一覧の中から一部の
+データをチェックボックスあるいはラジオボタンで選択させて処理を行うUIがしばしば作られる。
+このようなUIを複合キーで実現する際の実装方法を以下に示す。
+
+### 複合キーを用いたUIの実装
+
+複合キーを用いた場合、単純なキーを使用する場合と比較して下記の考慮が必要となる。
+
+* 画面入力用 Form では、キー項目用に CompositeKeyクラスのプロパティを一つ用意する。
+* JSP で複合キー項目の入力に n:checkbox、n:radioButton の代わりに n:compositeKeyCheckbox または n:compositeKeyRadioButton を使用する。
+
+以下に実装例を示す。
+
+* Form の実装例
 
 ```java
-public class W11AC01Action extends DbAccessSupport {
-    @OnError(type = ApplicationException.class, path = "/ss11AC/W11AC0101.jsp")
-    public HttpResponse doRW11AC0102(HttpRequest req, ExecutionContext ctx) {
-        W11AC01SearchForm condition = ...;
-        ctx.setRequestScopedVar("searchCondition", condition);
+/* 【説明】JavaDocは省略。 */
+    public class UsersBulkDeleteForm {
 
-        SqlResultSet searchResult;
-        try {
-            searchResult = search("SELECT_USER_BY_CONDITION", condition);
-        } catch (TooManyResultException e) {
-            throw new ApplicationException(
-                MessageUtil.createMessage(MessageLevel.ERROR, "MSG00024", e.getMaxResultCount()));
-        }
+        /*
+          【説明】
+          複合キーはCompositeKeyの配列(checkboxで複数選択の場合)、
+          またはCompositeKey (radioで単一選択の場合)で保持する。
+          */
+        private CompositeKey[] userCompositeKeys;
 
-        ctx.setRequestScopedVar("11AC_W11AC01", searchResult);
-        return new HttpResponse("/ss11AC/W11AC0101.jsp");
+        /* 【説明】setter,getter, コンストラクタは省略。 */
     }
-}
 ```
 
-検索結果の並び替えを実現するには以下の3つの実装が必要。
+* JSPの実装例
 
-1. 可変ORDER BY構文を使用したSQL文
-2. 検索条件クラスに`ListSearchInfo`の`sortId`プロパティの入力精査を含める
-3. `listSearchSortSubmit`タグを使用して並び替え用のリンクを表示するJSP
+  ```jsp
+  <nbs:listSearchResult listSearchInfoName="condition"
+                 searchUri="./EXCLUS30102"
+                 resultSetName="form.users"
+                 usePageNumberSubmit="true">
+      <jsp:attribute name="headerRowFragment">
+  
+        <%-- 【説明】ヘッダ部分は省略 --%>
+  
+      </jsp:attribute>
+      <jsp:attribute name="bodyRowFragment">
+      <tr class="<n:write name="oddEvenCss" />">
+          <td>
+              <%--
+                【説明】
+                 keyNames 属性には、 nbs:listSearchResult の各行 (row) のプロパティにある
+                 キー属性をカンマ区切りで指定する。
+              --%>
+              <n:compositeKeyCheckbox namePrefix="form"
+                 valueObject="${row}"
+                 keyNames="userId,pk2,pk3"
+                 name="form.userCompositeKeys"
+                 />
+              <n:hidden name  = "form.users[${count -1}].userId"  />
+              <n:hidden name  = "form.users[${count -1}].pk2"  />
+              <n:hidden name  = "form.users[${count -1}].pk3"  />
+              <n:hidden name  = "form.users[${count -1}].name"  />
+              <n:hidden name  = "form.users[${count -1}].profile"  />
+              <n:hidden name  = "form.users[${count -1}].version"  />
+          </td>
+          <td>
+              <n:write name="row.userId" />
+              (所持カード一覧)
+          </td>
+          <td><n:write name="row.name" /></td>
+          <td><n:write name="row.profile" /></td>
+          <td><n:write name="row.version" /></td>
+      </tr>
+      </jsp:attribute>
+  </nbs:listSearchResult>
+  ```
 
-**SQL文（可変ORDER BY構文）**:
+### 複合キーを用いた排他制御の実装
 
-`$sort (sortId)` 構文で、検索条件オブジェクトの`sortId`フィールドの値に対応するORDER BY句が使用される。例: `sortId=3` の場合は `ORDER BY USR.MAIL_ADDRESS` に変換される。
+複合キーを用いた排他制御では、主キークラスを引数に取る HttpExclusiveControlUtil の
+メソッドを、排他制御ロックを画面で選択された行毎に呼び出すよう実装する。
 
-```sql
-SELECT_USER_BY_CONDITION =
-SELECT ...
-FROM ...
-WHERE ...
-$sort (sortId) {
-   (1 SA.LOGIN_ID)
-   (2 SA.LOGIN_ID DESC)
-   (3 USR.MAIL_ADDRESS)
-   (4 USR.MAIL_ADDRESS DESC) }
-```
+複合キーを用いた排他制御の実装例を以下に示す。
 
-**検索条件クラスの実装**:
+* Action で使用する Form の実装例
 
-`ListSearchInfo`を継承し、`setSortId()`をオーバーライドして`@Required`等のバリデーションアノテーションを付加する。`SEARCH_COND_PROPS`に`"sortId"`を含める。
-
-```java
-public class W11AC01SearchForm extends ListSearchInfo {
-    public W11AC01SearchForm(Map<String, Object> params) {
-        setSortId((String) params.get("sortId"));
-    }
-
-    @PropertyName("ソートID")
-    @Required
-    public void setSortId(String sortId) {
-        super.setSortId(sortId);
-    }
-
-    private static final String[] SEARCH_COND_PROPS = new String[] { ..., "sortId"};
-
-    public String[] getSearchConditionProps() {
-        return SEARCH_COND_PROPS;
-    }
-}
-```
-
-**JSPの実装（`listSearchSortSubmit`タグ）**:
-
-`ascSortId`・`descSortId`にはSQL文の`$sort`定義に対応するsortId値を指定する。`name`属性は画面で一意になるように指定する。
-
-```jsp
-<nbs:listSearchResult listSearchInfoName="11AC_W11AC01"
-                    searchUri="/action/ss11AC/W11AC01Action/RW11AC0102"
-                    resultSetName="searchResult"
-                    usePageNumberSubmit="true"
-                    useLastSubmit="true">
-    <jsp:attribute name="headerRowFragment">
-        <tr>
-            <th>
-                <nbs:listSearchSortSubmit ascSortId="1" descSortId="2"
-                    label="ログインID" uri="/action/ss11AC/W11AC01Action/RW11AC0102"
-                    name="loginIdSort" listSearchInfoName="11AC_W11AC01" />
-            </th>
-            <th>
-                <nbs:listSearchSortSubmit ascSortId="3" descSortId="4"
-                    label="メールアドレス" uri="/action/ss11AC/W11AC01Action/RW11AC0102"
-                    name="kanaNameSort" listSearchInfoName="11AC_W11AC01" />
-            </th>
-        </tr>
-    </jsp:attribute>
-</nbs:listSearchResult>
-```
-
-複合キーを用いたUIを実装する際は、以下の考慮が必要:
-
-- 画面入力用FormのキーはCompositeKeyクラスのプロパティで保持する（チェックボックスで複数選択の場合は`CompositeKey[]`配列、ラジオボタンで単一選択の場合は`CompositeKey`単体）
-- JSPでの複合キー入力には`n:checkbox`/`n:radioButton`の代わりに`n:compositeKeyCheckbox`または`n:compositeKeyRadioButton`を使用する
-
-**Form実装例**:
 ```java
 public class UsersBulkDeleteForm {
-    // checkbox複数選択: CompositeKey[]
-    // radio単一選択: CompositeKey
+
+    /** 複合主キー */
     private CompositeKey[] userCompositeKeys;
-}
-```
 
-**JSP実装例** (`nbs:listSearchResult`で一覧を囲み、`n:compositeKeyCheckbox`と`n:hidden`を使用):
-```jsp
-<nbs:listSearchResult listSearchInfoName="condition"
-               searchUri="./EXCLUS30102"
-               resultSetName="form.users"
-               usePageNumberSubmit="true">
-    <jsp:attribute name="bodyRowFragment">
-    <tr class="<n:write name="oddEvenCss" />">
-        <td>
-            <%-- keyNames属性には各行のプロパティにあるキー属性をカンマ区切りで指定 --%>
-            <n:compositeKeyCheckbox namePrefix="form"
-               valueObject="${row}"
-               keyNames="userId,pk2,pk3"
-               name="form.userCompositeKeys"
-               />
-            <%-- n:hiddenでフォームデータを維持 --%>
-            <n:hidden name="form.users[${count -1}].userId" />
-            <n:hidden name="form.users[${count -1}].pk2" />
-            <n:hidden name="form.users[${count -1}].pk3" />
-            <n:hidden name="form.users[${count -1}].name" />
-            <n:hidden name="form.users[${count -1}].profile" />
-            <n:hidden name="form.users[${count -1}].version" />
-        </td>
-        <td><n:write name="row.userId" /></td>
-        <td><n:write name="row.name" /></td>
-        <td><n:write name="row.profile" /></td>
-        <td><n:write name="row.version" /></td>
-    </tr>
-    </jsp:attribute>
-</nbs:listSearchResult>
-```
-`nbs:listSearchResult`の`resultSetName`に一覧データのプロパティ名を、`searchUri`に検索URIを指定する。各行のユーザーデータは`n:hidden`フィールドで保持し、次画面へのフォームデータ送信を確保する。
+    /* 【説明】setter, getter, コンストラクタ、バリデートメソッドは省略 */
 
-<details>
-<summary>keywords</summary>
+    /**
+     * 一括削除対象を取得する。
+     * @return 一括削除対象
+     */
+    public User[] getDeletedUsers() {
+        /* 【説明】チェックされたオブジェクトのみを取得する処理 */
+        List<User> deletedUsers = new ArrayList<User>();
+        List<CompositeKey> deletedCompositeKeys = Arrays.asList(userCompositeKeys);
+        int numOfDeletedUsers = users.length;
+        StringBuilder sb = new StringBuilder();
+        CompositeKey compositeKey;
 
-StreamResponse, downloadButton, ファイルダウンロード, setContentDisposition, setContentType, downloadSubmit, downloadLink, DataRecordResponse, file, ファイルアップロード, enctype, multipart/form-data, n:form, n:file, PartInfo, UploadHelper, ListSearchInfo, W11AC01SearchForm, DbAccessSupport, SqlResultSet, TooManyResultException, ApplicationException, MessageUtil, MessageLevel, @OnError, @PropertyName, @Required, @NumberRange, @Digits, pageNumber, getSearchConditionProps, nbs:listSearchResult, listSearchInfoName, searchUri, resultSetName, windowScopePrefixes, bodyRowFragment, headerRowFragment, ページング, 検索結果一覧表示, listSearchResultタグ, 検索条件保持, listSearchSortSubmit, sortId, 検索結果の並び替え, 可変ORDER BY, $sort構文, ソートID, CompositeKey, n:compositeKeyCheckbox, n:compositeKeyRadioButton, 複合キー選択, チェックボックス, ラジオボタン, 一覧画面, keyNames, UsersBulkDeleteForm, n:hidden, usePageNumberSubmit
-
-</details>
-
-## BLOB型カラムのダウンロード方法
-
-BLOB型カラムのダウンロード方法:
-
-- JSP: `downloadLink`タグを使用、`n:param`タグで行IDパラメータを渡す
-- Action: `StreamResponse(Blob)`を使用
-
-```jsp
-<n:downloadLink uri="/action/ss11AC/W11AC02Action/BlobColumn" name="blobColumn_${status.index}">
-    <n:write name="record.fileName" />(<n:write name="fileId" />)
-    <n:param paramName="fileId" name="fileId" />
-</n:downloadLink>
-```
-
-```java
-SqlRow record = getRecord(request);
-StreamResponse response = new StreamResponse((Blob) record.get("FILE_DATA"));
-response.setContentType("image/jpeg");
-response.setContentDisposition(record.getString("FILE_NAME"));
-return response;
-```
-
-`HttpRequest.getPart(name)` でアップロードファイルを `List<PartInfo>` として取得する。
-
-```java
-List<PartInfo> partInfoList = req.getPart("userList");
-if (partInfoList.isEmpty()) {
-    throw new ApplicationException(
-            MessageUtil.createMessage(MessageLevel.ERROR, "MSG00039"));
-}
-PartInfo partInfo = partInfoList.get(0);
-```
-
-> **注意**: 同一フォーム内に同一name属性の `n:file` タグが複数ある場合、`partInfoList` には複数の `PartInfo` が含まれる。
-
-:ref:`custom_tag_paging_paging` が実現されている前提で、特定の一覧表示にてシステムデフォルト値とは異なる表示件数・検索結果件数（上限）を設定する方法。
-
-アクションメソッド内で`ListSearchInfo`継承クラスに設定する:
-- 表示件数のオーバーライド: `condition.setMax(件数)` （`max`プロパティ）
-- 検索結果件数上限のオーバーライド: `condition.setMaxResultCount(件数)` （`maxResultCount`プロパティ）
-
-```java
-private static final int MAX_ROWS = 10;
-private static final int MAX_RESULT_COUNT = 100;
-
-public HttpResponse doRW11AC0102(HttpRequest req, ExecutionContext ctx) {
-    W11AC01SearchForm condition = .....;
-    condition.setMax(MAX_ROWS);
-    condition.setMaxResultCount(MAX_RESULT_COUNT);
-    ctx.setRequestScopedVar("searchCondition", condition);
-    // 以降の処理は省略
-}
-```
-
-ページングを使用せずに1画面にすべての検索結果を表示する場合、基本的な実装方法はページングを使用する場合と変わらない。検索処理や並び替えの処理もページングを使用する場合と同じ実装方法となる。
-
-**ListSearchInfoを継承するクラス**:
-
-- `pageNumber`プロパティの設定は不要。初期値が1のため常に1ページ目となる。
-- `SEARCH_COND_PROPS`には検索条件プロパティのみ含める。
-
-```java
-public class W11AC01SearchForm extends ListSearchInfo {
-    public W11AC01SearchForm(Map<String, Object> params) {
-        // pageNumberプロパティの設定は不要
-    }
-
-    private static final String[] SEARCH_COND_PROPS = new String[] { ... };
-
-    public String[] getSearchConditionProps() {
-        return SEARCH_COND_PROPS;
-    }
-}
-```
-
-**アクションの実装**:
-
-実装例では`DbAccessSupport`クラスを継承して使用するが、プロジェクトの方針に合わせて実装する。`@OnError`アノテーションでエラー時のパスを指定する。入力精査には`ValidationContext`を使用する。ページングを使用しない場合、以下の設定が必須。検索結果の取得件数（1ページの表示件数）に検索結果の最大件数（上限）を設定する。検索実行時に`TooManyResultException`が発生する場合は適切に処理する。
-
-```java
-public class W11AC01Action extends DbAccessSupport {
-    @OnError(type = ApplicationException.class, path = "/ss11AC/W11AC0101.jsp")
-    public HttpResponse doRW11AC0102(HttpRequest req, ExecutionContext ctx) {
-        ValidationContext<W11AC01SearchForm> searchConditionCtx = ...;
-        searchConditionCtx.abortIfInvalid();
-        W11AC01SearchForm condition = searchConditionCtx.createObject();
-
-        condition.setMax(condition.getMaxResultCount());
-
-        try {
-            // 検索処理
-        } catch (TooManyResultException e) {
-            // 例外処理
+        for (int i = 0; i < numOfDeletedUsers; i++) {
+            User user = users[i];
+            sb.delete(0, sb.length());
+            compositeKey = new CompositeKey(user.getUserId(), user.getPk2(), user.getPk3());
+            if (deletedCompositeKeys.contains(compositeKey)) {
+                deletedUsers.add(user);
+            }
         }
+        return deletedUsers.toArray(new User[deletedUsers.size()]);
     }
 }
 ```
 
-**JSPの実装**:
+* 検索結果表示を行う Action の実装例
 
-`usePaging="false"` を指定する。`searchUri`属性の指定は不要。
-
-```jsp
-<nbs:listSearchResult listSearchInfoName="11AC_W11AC01"
-                    usePaging="false"
-                    resultSetName="searchResult">
-</nbs:listSearchResult>
-```
-
-## 複合キーを用いた排他制御の実装
-
-複合キーを用いた排他制御では、主キークラスを引数に取る`HttpExclusiveControlUtil`のメソッドを、画面で選択された行ごとに呼び出す。
-
-**Form** (`getDeletedUsers`でチェック済みオブジェクトを取得):
 ```java
-public User[] getDeletedUsers() {
-    List<User> deletedUsers = new ArrayList<User>();
-    List<CompositeKey> deletedCompositeKeys = Arrays.asList(userCompositeKeys);
-    for (int i = 0; i < users.length; i++) {
-        User user = users[i];
-        CompositeKey compositeKey = new CompositeKey(user.getUserId(), user.getPk2(), user.getPk3());
-        if (deletedCompositeKeys.contains(compositeKey)) {
-            deletedUsers.add(user);
-        }
-    }
-    return deletedUsers.toArray(new User[deletedUsers.size()]);
-}
-```
+/*
+  【説明】
+  検索処理は一覧表示と同様に行う。
+  */
 
-**検索結果表示Action** (`HttpExclusiveControlUtil.prepareVersions`でバージョン取得):
-```java
+SqlResultSet result = searchUser(request, context);
+
+/*
+  【説明】
+  ExclusiveControlContext のリストを生成し、HttpExclusiveControlUtil.prepareVersions の
+  第3引数に指定する。
+  */
 List<ExclusiveControlContext> exclusiveControlContexts = new ArrayList<ExclusiveControlContext>();
+User[] users = new User[result.size()];
 for (int i = 0; i < result.size(); i++) {
     SqlRow row = result.get(i);
-    exclusiveControlContexts.add(new ExclusiveUserCondition(
-        row.getString("USER_ID"), row.getString("PK2"), row.getString("PK3")));
+    exclusiveControlContexts.add(new ExclusiveUserCondition(row.getString("USER_ID"), row.getString("PK2"), row.getString("PK3")));
+    users[i] = new User(row);
 }
 HttpExclusiveControlUtil.prepareVersions(context, exclusiveControlContexts);
 ```
 
-**確認画面表示Action** (`HttpExclusiveControlUtil.checkVersion`で排他チェック):
+* 確認画面表示処理での排他制御チェックを行う Action の実装例
+
 ```java
+/*
+  【説明】
+  精査処理は一覧表示と同様に行う。
+  */
+UsersBulkDeleteForm form = validate("form", UsersBulkDeleteForm.class, request, "usersBulkDelete");
+/*
+  【説明】
+  チェックされた複合キーのオブジェクトを取得する。
+  ※form.getDeletedUsers メソッドの中では、チェックされた User エンティティのみを取り出す処理を行っている。
+  */
 User[] deletedUsers = form.getDeletedUsers();
-for (int i = 0; i < deletedUsers.length; i++) {
+
+/*
+  【説明】
+  チェックされたオブジェクトのキーを使用して排他制御キークラスのオブジェクトを生成し、
+  HttpExclusiveControlUtil.checkVersion メソッドを呼び出す。
+  */
+for( int i=0; i < deletedUsers.length; i++) {
     User deletedUser = deletedUsers[i];
-    HttpExclusiveControlUtil.checkVersion(request, context,
-        new ExclusiveUserCondition(deletedUser.getUserId(), deletedUser.getPk2(), deletedUser.getPk3()));
+    HttpExclusiveControlUtil.checkVersion(request, context, new ExclusiveUserCondition(deletedUser.getUserId(), deletedUser.getPk2(), deletedUser.getPk3()));
 }
+
+/* 【説明】以降の処理は省略*/
 ```
 
-**完了画面表示Action** (`HttpExclusiveControlUtil.updateVersionWithCheck`で排他更新):
+* 完了画面表示処理での排他制御チェックを行う Action の実装例
+
 ```java
+/*
+  【説明】
+  精査処理は一覧表示と同様に行う。
+  */
+UsersBulkDeleteForm form = validate("form", UsersBulkDeleteForm.class, request, "usersBulkDelete");
 User[] deletedUsers = form.getDeletedUsers();
-for (int i = 0; i < deletedUsers.length; i++) {
+
+/*
+  【説明】
+  チェックされたオブジェクトのキーを使用して排他制御キークラスのオブジェクトを生成し、
+  HttpExclusiveControlUtil.updateVersionWithCheck メソッドを呼び出す。
+  */
+for( int i=0; i < deletedUsers.length; i++) {
     User deletedUser = deletedUsers[i];
-    HttpExclusiveControlUtil.updateVersionWithCheck(request,
-        new ExclusiveUserCondition(deletedUser.getUserId(), deletedUser.getPk2(), deletedUser.getPk3()));
+    HttpExclusiveControlUtil.updateVersionWithCheck(request, new ExclusiveUserCondition(deletedUser.getUserId(), deletedUser.getPk2(), deletedUser.getPk3()));
 }
+
+/* 【説明】以降の処理(DBの更新処理)は省略*/
 ```
 
-<details>
-<summary>keywords</summary>
+## Javascriptの使用
 
-StreamResponse, downloadLink, BLOBダウンロード, BLOB, setContentDisposition, n:param, SqlRow, Blob, PartInfo, getPart, HttpRequest, ApplicationException, MessageUtil, MessageLevel, ファイルアップロード, ListSearchInfo, setMax, setMaxResultCount, max, maxResultCount, 表示件数設定, 検索結果件数上限設定, ページング個別設定, getMaxResultCount, usePaging, listSearchResult, ページングなし一覧表示, 全件表示, pageNumber, DbAccessSupport, TooManyResultException, ValidationContext, @OnError, CompositeKey, HttpExclusiveControlUtil, ExclusiveControlContext, ExclusiveUserCondition, prepareVersions, checkVersion, updateVersionWithCheck, UsersBulkDeleteForm, getDeletedUsers, 複合キー排他制御, 排他制御
+Javascriptを使用する場合は、下記の記述例の様に必ず専用の
+[スクリプトタグ](../../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07/07_TagReference.html#webview-scripttag)
+を使用すること。
 
-</details>
+**JSPの記述例**
 
-## データレコードのダウンロード方法
-
-データレコードをフォーマットしてダウンロードするには、フォーマット定義ファイルが必要（配置場所はプロジェクトの実装方針に従う）。
-
-### フォーマット定義ファイルの例 (N11AA001.fmt)
-
-```
-file-type:        "Variable"
-text-encoding:    "Shift_JIS"
-record-separator: "\n"
-field-separator:  ","
-
-[header]
-1   messageId    N "メッセージID"
-2   lang         N "言語"
-3   message      N "メッセージ"
-
-[data]
-1   messageId    X
-2   lang         X
-3   message      N
-```
-
-- JSP: `downloadSubmit`タグを使用
-- Action: `DataRecordResponse("format", "N11AA001")`を使用
-
-```jsp
-<n:downloadSubmit type="button" uri="/action/ss11AC/W11AC02Action/CsvDataRecord"
-                  name="csvDataRecord" value="ダウンロード" />
-```
-
-```java
-SqlResultSet records = getRecords(request);
-DataRecordResponse response = new DataRecordResponse("format", "N11AA001");
-response.write("header", Collections.<String, Object>emptyMap());
-for (SqlRow record : records) {
-    response.write("data", record);
-}
-response.setContentType("text/csv; charset=Shift_JIS");
-response.setContentDisposition("メッセージ一覧.csv");
-return response;
-```
-
-`DataRecordResponse.write(String recordType, Map<String, ?> record)`: ヘッダーのデフォルト値を使用する場合は空マップ`Collections.emptyMap()`を指定。
-
-`UploadHelper.moveFileTo(論理パス名, ファイル名)` でファイルを指定ディレクトリへ移動する。
-
-```java
-UploadHelper helper = new UploadHelper(partInfo);
-String fileName = generateUniqueFileName();
-helper.moveFileTo("uploadFileSaveDir", fileName);
-```
-
-Javascriptを使用する場合は、専用の`n:script`タグを使用すること。
-
-> **注意**: タグ内に直接スクリプトを記述した場合、スクリプトの内容が自動的にHTMLコメントで囲われて出力される。そのため、タグ内にスクリプトを直接記述すること。
-
-**JSP記述例**:
 ```jsp
 <%-- 外部スクリプトファイルを読み込む場合 --%>
 <n:script type="text/javascript" src="/js/common.js" />
@@ -478,169 +1240,5 @@ function common_validate() {
 </n:script>
 ```
 
-<details>
-<summary>keywords</summary>
-
-DataRecordResponse, downloadSubmit, CSVダウンロード, データレコードダウンロード, フォーマット定義ファイル, Variable, Shift_JIS, N11AA001, field-separator, record-separator, SqlResultSet, UploadHelper, moveFileTo, ファイル保存, PartInfo, n:script, JavaScript, スクリプトタグ, JSP, HTMLコメント
-
-</details>
-
-## 別ウィンドウを開きダウンロードを開始したい場合
-
-リクエストからダウンロード開始まで時間がかかる場合など、ユーザに視覚的に伝達するために別ウィンドウを開いてダウンロードを開始する。
-
-1. 親画面: `n:popupButton`タグで別ウィンドウを開く
-2. 別ウィンドウ: `onload`イベントでダウンロードフォームを自動サブミット
-3. `downloadSubmit`の`allowDoubleSubmission="false"`を指定
-4. `doOnclick(name)`: 指定された`name`属性の要素のonclickイベントを発生させるJavaScript関数（IE対応含むクロスブラウザ実装）
-
-```jsp
-<%-- 親画面 --%>
-<n:popupButton uri="/action/ss11AC/W11AC02Action/ShowSub" name="showSub">ダウンロード</n:popupButton>
-```
-
-```jsp
-<%-- 別ウィンドウ --%>
-<body onload="doOnclick('submit');">
-    <n:downloadSubmit type="button" uri="/action/ss11AC/W11AC02Action/TempFile"
-                      name="submit" value="ダウンロード" allowDoubleSubmission="false" />
-    <n:button uri="#" name="close" onclick="window.close();" displayMethod="NORMAL">閉じる</n:button>
-</body>
-```
-
-```javascript
-function doOnclick(name) {
-    var element = document.getElementsByName(name)[0];
-    if (element.fireEvent) { // for IE
-        element.fireEvent("onclick");
-    } else if (document.createEvent) { // for not IE
-        var evt = document.createEvent("MouseEvents");
-        var bubbles = false;
-        var cancelable = true;
-        evt.initEvent("click", bubbles, cancelable);
-        element.dispatchEvent(evt);
-    } else { // just in case
-        element.onclick();
-    }
-}
-```
-
-画像などのバイナリファイルは `PartInfo.getInputStream()` で入力ストリームとして取得する。
-
-```java
-PartInfo partInfo = req.getPart("imageFile").get(0);
-InputStream in = partInfo.getInputStream();
-```
-
-<details>
-<summary>keywords</summary>
-
-別ウィンドウダウンロード, popupButton, doOnclick, allowDoubleSubmission, onload, downloadSubmit, fireEvent, dispatchEvent, PartInfo, getInputStream, InputStream, バイナリファイル, UploadHelper
-
-</details>
-
-## アップロードファイルをDBに登録する方法
-
-`UploadHelper` クラスを使用してファイル精査およびDB登録を簡易的に行うことができる。
-
-> **注意**: 前提事項: (1) 単一レイアウト（全レコードが同一レイアウト）、(2) 登録先テーブルが1つ（1レコードから複数テーブルへの登録不可）
-
-処理フロー:
-1. フォーマット定義のロード — アップロードファイルのデータフォーマット定義ファイルを読み込む
-2. 形式チェック — フォーマット定義に基づき各レコードを自動検証。通過したレコードはMap型に変換
-3. 精査処理 — 通常の業務Actionと同様にドメイン精査・DB精査・複雑なビジネスロジック精査が実装可能
-4. 空ファイルチェック — レコードが1件以上存在することを確認
-5. DB登録 — 全レコードが検査を通過した場合に一括登録
-
-実装例:
-
-```java
-@OnError(type = ApplicationException.class, path = "forward://RW11AC0601")
-public HttpResponse doRW11AC0602(HttpRequest req, ExecutionContext ctx) {
-    PartInfo partInfo = req.getPart("fileToSave").get(0);
-    UploadHelper helper = new UploadHelper(partInfo);
-    int cnt = helper.applyFormat("N11AC002")
-                    .setUpMessageIdOnError("MSG00037", "MSG00038", "MSG00040")
-                    .validateWith(UserInfoTempEntity.class, "validateRegister")
-                    .importWith(this, "INSERT_SQL");
-}
-```
-
-<details>
-<summary>keywords</summary>
-
-UploadHelper, DB一括登録, applyFormat, validateWith, importWith, UserInfoTempEntity, @OnError, ApplicationException, 形式チェック, 精査処理, 空ファイルチェック
-
-</details>
-
-## フォーマット定義ファイルパスの指定
-
-`applyFormat(String layoutFileName)` でアップロードファイルに適用するフォーマットを指定する。
-
-フォーマット定義ファイルの読み込み先をデフォルト値から変更する場合は論理パス名を指定する:
-
-`applyFormat(String basePathName, String layoutFileName)`
-
-<details>
-<summary>keywords</summary>
-
-applyFormat, フォーマット定義, UploadHelper, basePathName, layoutFileName
-
-</details>
-
-## エラー発生時のメッセージID指定
-
-`setUpMessageIdOnError(String messageIdOnFormatError, String messageIdOnValidationError, String messageIdOnEmptyFile)` でエラー発生時のメッセージIDを指定する。
-
-| 引数 | 設定内容 |
-|---|---|
-| 第1引数 | 形式エラー時のメッセージID |
-| 第2引数 | 精査エラー時のメッセージID |
-| 第3引数 | ファイルが空の場合のメッセージID |
-
-形式エラー時のメッセージプレースホルダー:
-- `{0}`: 形式エラーが発生したレコード行数
-
-例: `{0}行目に形式エラーがあります。` → `12行目に形式エラーがあります。`
-
-精査エラー時のメッセージプレースホルダー:
-- `{0}`: 精査エラーが発生したレコード行数
-- `{1}`: 精査エラーメッセージ文言
-
-例: `{0}行目に精査エラーがあります。 [{1}]` → `8行目に精査エラーがあります。 [カナ氏名は全角カナで入力してください。]`
-
-<details>
-<summary>keywords</summary>
-
-setUpMessageIdOnError, エラーメッセージ, 形式エラー, 精査エラー, 空ファイルチェック, メッセージID, UploadHelper
-
-</details>
-
-## 精査処理を実装したクラス、メソッドの指定
-
-`validateWith(Class<F> formClass, String validateFor)` で精査に使用するフォームクラスと精査メソッド名を指定する。
-
-精査エラーのメッセージは蓄積され、`importWith` が実行されるまで例外は送出されない。
-
-<details>
-<summary>keywords</summary>
-
-validateWith, 精査処理, UploadHelper, フォームクラス, バリデーション, validateFor
-
-</details>
-
-## データベース一括登録
-
-`importWith(DbAccessSupport dbAccessSupport, String insertSqlId)` で精査済みのフォームを一括登録する。
-
-- 第1引数: `DbAccessSupport` のインスタンス（ActionクラスはDbAccessSupportを継承しているため通常は `this`）
-- 第2引数: レコード1件を登録するINSERT文のSQLID
-
-形式エラー・精査エラーが1件でも存在する場合は `ApplicationException` が送出される。この例外には蓄積された全エラーメッセージ（形式エラー・精査エラー）が含まれる。
-
-<details>
-<summary>keywords</summary>
-
-importWith, データベース一括登録, DbAccessSupport, ApplicationException, SQLID, UploadHelper
-
-</details>
+なお、scriptタグ内にスクリプトを記述した場合は、スクリプトの内容が自動的にHTMLコメントで囲われて出力される。
+そのため、上記例のようにタグ内にスクリプトを直接記述すること。

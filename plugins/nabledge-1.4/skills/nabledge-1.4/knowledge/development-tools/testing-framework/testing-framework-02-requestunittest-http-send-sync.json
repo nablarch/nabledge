@@ -1,0 +1,26 @@
+{
+  "id": "testing-framework-02-requestunittest-http-send-sync",
+  "title": "リクエスト単体テストの実施方法(HTTP同期応答メッセージ送信処理)",
+  "content": "リクエスト単体テスト実施方法は、 [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#message-sendsyncmessage-test) を参照すること。\n\nただし、「送信キュー」「受信キュー」を「通信先」と読み替えること。\n\n本項では、 [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#message-sendsyncmessage-test) と異なる箇所の解説を行う。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "テストデータの書き方",
+      "content": "以下に、実際にExcelで書かれたテストデータを示す。\n\n![http_send_sync.png](assets/testing-framework-02-requestunittest-http-send-sync/http_send_sync.png)\n\n-----\n\nモックアップを使用する場合、testShotsに\"expectedMessageByClient\"および\"responseMessageByClient\"にグループIDを設定する。\nグループIDの関連については [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#message-sendsyncmessage-test) における\"expectedMessage\"および\"responseMessage\"の場合と同様であるため割愛する。\n\n![http_send_sync_shot.png](assets/testing-framework-02-requestunittest-http-send-sync/http_send_sync_shot.png)\n\n-----\n\n同一アクション内でMOMによる同期応答メッセージ送信処理とHTTP同期応答メッセージ送信処理が同時に行われる場合、\n\"expectedMessage\"、\"responseMessage\"にMOMによる同期応答メッセージ送信処理で使用するグループIDを、\n\"expectedMessageByClient\"、\"responseMessageByClient\"にHTTP同期応答メッセージ送信処理で使用するグループIDを\nそれぞれ個別に指定する。\n\n![http_mom_send_sync_shot.png](assets/testing-framework-02-requestunittest-http-send-sync/http_mom_send_sync_shot.png)\n\n> **Note:**\n> グループIDはMOMによる同期応答メッセージ送信処理とHTTP同期応答メッセージ送信処理でそれぞれ別の値を設定する必要がある。\n> 同一のグループIDを指定した場合、正しく結果検証が行われないため、注意すること。\n\n-----\n\nテストデータのディレクティブ行に設定されたfile-typeの値により、要求電文のアサート方法が変化する。\n\n設定方法やアサート内容についての詳細は [リクエスト単体テストの実施方法(同期応答メッセージ受信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-real.md#real-request-test) のレスポンスメッセージの項を参照すること。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "フレームワークで使用するクラスの設定",
+      "content": "通常、これらの設定はアーキテクトが行うものでありアプリケーションプログラマが設定する必要はない。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "モックアップクラスの設定",
+      "content": "コンポーネント設定ファイルに、リクエスト単体テストで使用するモックアップクラスを設定する。\n\n```xml\n<!-- HTTP通信用クライアント -->\n<component name=\"defaultMessageSenderClient\"\n           class=\"nablarch.test.core.messaging.RequestTestingMessagingClient\">\n</component>\n```",
+      "level": 3
+    }
+  ]
+}

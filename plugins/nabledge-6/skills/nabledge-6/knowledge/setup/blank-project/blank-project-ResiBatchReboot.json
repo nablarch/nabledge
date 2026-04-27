@@ -1,37 +1,20 @@
 {
   "id": "blank-project-ResiBatchReboot",
   "title": "テーブルをキューとして使ったメッセージングを再び起動したい場合にすること",
+  "content": "",
   "no_knowledge_content": false,
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/blank_project/firstStep_appendix/ResiBatchReboot.html"
-  ],
-  "index": [
+  "sections": [
     {
       "id": "s1",
       "title": "概要",
-      "hints": [
-        "テーブルをキューとして使ったメッセージング",
-        "処理済みフラグ",
-        "再起動",
-        "再設定"
-      ]
+      "content": "テーブルをキューとして使ったメッセージングを一端終了した後に再び起動させたい場合、処理対象データの処理済みフラグを再設定する必要がある。",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "手順",
-      "hints": [
-        "H2データベース",
-        "SAMPLE_USER",
-        "h2.bat",
-        "組み込みモード",
-        "未処理状態リセット",
-        "JDBC URL",
-        "Test Connection"
-      ]
+      "content": "以下の方法でデータを再設定できる。\n\n1.h2/bin/h2.batを実行する。\n\n> **Tip:**\n> 必ず生成したバッチプロジェクトに含まれるh2.batを起動すること。\n\n2.しばらく待つとブラウザが起動するので、各項目に以下の通りに入力し、[Test Connection]ボタンをクリックする。\n\n| 項目 | 値 | 補足 |\n|---|---|---|\n| JDBC URL | `jdbc:h2:../db/SAMPLE` | 左記の通り、h2.batからの相対パスでデータファイルの位置を   指定する必要がある。 |\n| User Name | `SAMPLE` |  |\n| Password | `SAMPLE` |  |\n\n3.画面下部に「Test successful」と表示されていることを確認する。\n\n4.Password欄を再び入力し、[Connect]ボタンをクリックする。\n\n> **Important:**\n> [Connect]ボタンクリック時に、指定したURLにH2のデータファイルが存在しない場合、H2のデータファイルが新規生成される。\n\n> トラブルを避けるために、手順2にあるように必ず[Test Connection]をクリックして、データファイルの存在を確認すること。\n\n5.右側のペインの上部がSQLを入力するスペースになっているので、そこに以下のSQLを入力する。\n\n```sql\nDELETE FROM SAMPLE_USER WHERE USER_INFO_ID = '00000000000000000001';\n\nINSERT INTO SAMPLE_USER(\n  USER_INFO_ID\n  , LOGIN_ID\n  , KANA_NAME\n  , KANJI_NAME\n  , STATUS\n) VALUES (\n  '00000000000000000001'\n  , 'tarou'\n  , 'たろう'\n  , '太郎'\n  , '0' -- 0: 未処理\n);\n\nCOMMIT;\n```\n\n> **Tip:**\n> 上記SQLは、テーブルをキューとして使ったメッセージングの処理対象レコードの状態を「未処理」に設定している。\n\n6.画面上部に存在する[Run]ボタン(緑色のボタン)をクリックする。\n\n7.左上のdisconnectボタン(赤色で書かれたアイコンのボタン)をクリックして切断する。\n\n> **Important:**\n> アーキタイプから生成したプロジェクトはH2の組み込みモードを使用している。\n\n> 組み込みモード使用時は、1プロセスからのみ接続を受け付ける。\n\n> そのため、 **切断を忘れると、アプリケーションからH2に接続できなくなる。**",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "テーブルをキューとして使ったメッセージングを一端終了した後に再び起動させたい場合、処理対象データの処理済みフラグを再設定する必要がある。",
-    "s2": "1. `h2/bin/h2.bat`を実行する。\n\n> **補足**: 必ず生成したバッチプロジェクトに含まれるh2.batを起動すること。\n\n2. ブラウザが起動したら、以下の通りに入力し、[Test Connection]ボタンをクリックする。\n\n| 項目 | 値 | 補足 |\n|---|---|---|\n| JDBC URL | `jdbc:h2:../db/SAMPLE` | h2.batからの相対パスでデータファイルの位置を指定する必要がある |\n| User Name | `SAMPLE` | |\n| Password | `SAMPLE` | |\n\n3. 画面下部に「Test successful」と表示されていることを確認する。\n\n4. Password欄を再び入力し、[Connect]ボタンをクリックする。\n\n> **重要**: [Connect]ボタンクリック時に、指定したURLにH2のデータファイルが存在しない場合、H2のデータファイルが新規生成される。トラブルを避けるために、必ず[Test Connection]をクリックして、データファイルの存在を確認すること。\n\n5. 右側のペインの上部のSQL入力スペースに以下のSQLを入力する。\n\n```sql\nDELETE FROM SAMPLE_USER WHERE USER_INFO_ID = '00000000000000000001';\n\nINSERT INTO SAMPLE_USER(\n  USER_INFO_ID\n  , LOGIN_ID\n  , KANA_NAME\n  , KANJI_NAME\n  , STATUS\n) VALUES (\n  '00000000000000000001'\n  , 'tarou'\n  , 'たろう'\n  , '太郎'\n  , '0' -- 0: 未処理\n);\n\nCOMMIT;\n```\n\n> **補足**: 上記SQLは、テーブルをキューとして使ったメッセージングの処理対象レコードの状態を「未処理」に設定している。\n\n6. 画面上部の[Run]ボタン（緑色のボタン）をクリックする。\n\n7. 左上のdisconnectボタン（赤色のアイコン）をクリックして切断する。\n\n> **重要**: アーキタイプから生成したプロジェクトはH2の組み込みモードを使用している。組み込みモード使用時は、1プロセスからのみ接続を受け付ける。そのため、**切断を忘れると、アプリケーションからH2に接続できなくなる。**"
-  }
+  ]
 }

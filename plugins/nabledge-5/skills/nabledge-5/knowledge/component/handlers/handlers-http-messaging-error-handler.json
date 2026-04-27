@@ -1,0 +1,44 @@
+{
+  "id": "handlers-http-messaging-error-handler",
+  "title": "HTTPメッセージングエラー制御ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* 例外の種類に応じたログ出力とレスポンス生成\n\n  * nablarch.fw.Result.Errorのログ出力について\n* レスポンスボディが空の場合のデフォルトレスポンスの設定\n\n本ハンドラでは後続のハンドラで発生した例外及びエラーを補足し、例外(エラー)に応じたログ出力とレスポンスの生成を行う。\nまた、後続のハンドラでレスポンスボディが設定されていない場合には、HTTPステータスコードに対応したデフォルトのボディをレスポンスに設定する。\n\n本ハンドラでは、以下の処理を行う。\n\n* 例外(エラー)に応じたログ出力とレスポンスの生成を行う。\n  詳細は、 [例外の種類に応じたログ出力とレスポンス生成](../../component/handlers/handlers-http-messaging-error-handler.md#http-messaging-error-handler-error-response-and-log) を参照。\n* デフォルトのレスポンスボディを設定する。\n  詳細は、 [レスポンスボディが空の場合のデフォルトレスポンスの設定](../../component/handlers/handlers-http-messaging-error-handler.md#http-messaging-error-handler-default-page) を参照。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-http-messaging-error-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.messaging.handler.HttpMessagingErrorHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-messaging-http</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置すること\n本ハンドラで生成した HttpResponse を [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) が処理する。\nこのため、本ハンドラを [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに設定する必要がある。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "例外の種類に応じたログ出力とレスポンス生成",
+      "content": "nablarch.fw.NoMoreHandlerException\nINFO\n\n404\n\nリクエストを処理すべきハンドラが存在しなかったことを意味するため、証跡ログとして記録する。\nまた、処理すべき *action class* が存在しなかったことを意味するため、HTTPステータスコードが *404*  のレスポンスを生成する。\nnablarch.fw.web.HttpErrorResponse\nログ出力なし\n\nHttpErrorResponse#getResponse()\n\n後続のハンドラで業務例外(バリデーションなどを行った結果の例外)が発生したことを意味するので、ログ出力は行わない。\nnablarch.fw.Result.Error\n設定による\n\nError#getStatusCode()\n\n[nablarch.fw.Result.Errorのログ出力について](../../component/handlers/handlers-http-messaging-error-handler.md#http-messaging-error-handler-write-failure-log-pattern) を参照\nnablarch.core.message.ApplicationException と nablarch.fw.messaging.MessagingException\n-\n\n400\n\nクライアントからのリクエストが不正であることを示す例外のため、HTTPステータスコードが *400* のレスポンスを生成する。\n上記以外の例外及びエラー\nFATAL\n\n500\n\n上記に該当しない例外及びエラーの場合には、障害扱いとしてログ出力を行う。\nまた、予期しない例外やエラーであるため、レスポンスは **500** としている。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "nablarch.fw.Result.Errorのログ出力について",
+      "content": "後続のハンドラで発生した例外が、 Error の場合はログ出力を行うかどうかは、\nwriteFailureLogPattern に設定した値によって変わる。\nこのプロパティには正規表現が設定でき、その正規表現が Error#getStatusCode() とマッチした場合に FATAL レベルのログを出力する。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "レスポンスボディが空の場合のデフォルトレスポンスの設定",
+      "content": "詳細は、 [HTTPエラー制御ハンドラのデフォルトページの設定](../../component/handlers/handlers-HttpErrorHandler.md#httperrorhandler-defaultpage) を参照。",
+      "level": 2
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "id": "handlers-jaxrs-response-handler",
+  "title": "JAX-RSレスポンスハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* 例外及びエラーに応じたレスポンスの生成\n* 例外及びエラーに応じたログ出力\n* 拡張例\n\n  * エラー時のレスポンスにメッセージを設定する\n  * 特定のエラーの場合に個別に定義したエラーレスポンスを返却する\n  * クライアントに返すレスポンスに共通処理を追加する\n\n本ハンドラでは、後続のハンドラ(リソース(アクション)クラスや [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler))\nから戻されたレスポンス情報を、クライアントに返却する。\n後続のハンドラで例外及びエラーが送出された場合には、エラー及び例外に対応したレスポンス情報を構築しクライアントに返却する。\n\n本ハンドラでは、以下の処理を行う。\n\n* 例外及びエラー発生時のレスポンス情報を生成する。\n  詳細は、 [例外及びエラーに応じたレスポンスの生成](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler-error-response) を参照。\n* 例外及びエラー発生時のログを出力する。\n  詳細は、 [例外及びエラーに応じたログ出力](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler-error-log) を参照\n* クライアントへのレスポンスを返却する。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-jaxrs-response-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.jaxrs.JaxRsResponseHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-jaxrs</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "なし。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "例外及びエラーに応じたレスポンスの生成",
+      "content": "例外及びエラーに応じたレスポンス情報の生成は、 errorResponseBuilder プロパティに設定された\nErrorResponseBuilder により行われる。\nただし、発生した例外クラスが HttpErrorResponse の場合は、\nHttpErrorResponse#getResponse() から戻される\nHttpResponse がクライアントに戻される。\n\n設定を省略した場合は、デフォルト実装の ErrorResponseBuilder が使用される。\nデフォルト実装では、プロジェクト要件を満たせない場合は、デフォルト実装クラスを継承して対応すること。\n\n以下に設定例を示す。\n\n```xml\n<component class=\"nablarch.fw.jaxrs.JaxRsResponseHandler\">\n  <property name=\"errorResponseBuilder\">\n    <component class=\"sample.SampleErrorResponseBuilder\" />\n  </property>\n</component>\n```\n\n> **Important:**\n> ErrorResponseBuilderは例外及びエラーに応じたレスポンスを生成する役割のため、ErrorResponseBuilderの処理中に例外が発生するとレスポンスが生成されず、クライアントにレスポンスを返せない状態となる。\n> そのため、プロジェクトでErrorResponseBuilderをカスタマイズする場合は、ErrorResponseBuilderの処理中に例外が発生しないように実装すること。\n> ErrorResponseBuilderの処理中に例外が発生した場合、フレームワークはErrorResponseBuilderの処理中に発生した例外をWARNレベルで\n> ログ出力を行い、ステータスコード500のレスポンスを生成し、後続処理を継続する。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "例外及びエラーに応じたログ出力",
+      "content": "例外及びエラーに応じたログ出力は errorLogWriter プロパティに設定された\nJaxRsErrorLogWriter により行われる。\n\n設定を省略した場合は、デフォルト実装の JaxRsErrorLogWriter が使用される。\nデフォルト実装では、プロジェクト要件を満たせない場合は、デフォルト実装クラスを継承して対応すること。\n\n以下に設定例を示す。\n\n```xml\n<component class=\"nablarch.fw.jaxrs.JaxRsResponseHandler\">\n  <property name=\"errorLogWriter\">\n    <component class=\"sample.SampleJaxRsErrorLogWriter\" />\n  </property>\n</component>\n```",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "拡張例",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "エラー時のレスポンスにメッセージを設定する",
+      "content": "バリデーションエラー発生時など、エラーレスポンスのボディにエラーメッセージを設定して返却したい場合がある。\nこのような場合は、 ErrorResponseBuilder の継承クラスを作成して対応する。\n\n以下に、JSON形式のエラーメッセージをレスポンスに設定する場合の実装例を示す。\n\n```java\npublic class SampleErrorResponseBuilder extends ErrorResponseBuilder {\n\n    private final ObjectMapper objectMapper = new ObjectMapper();\n\n    @Override\n    public HttpResponse build(final HttpRequest request,\n            final ExecutionContext context, final Throwable throwable) {\n        if (throwable instanceof ApplicationException) {\n            return createResponseBody((ApplicationException) throwable);\n        } else {\n            return super.build(request, context, throwable);\n        }\n    }\n\n    private HttpResponse createResponseBody(final ApplicationException ae) {\n        final HttpResponse response = new HttpResponse(400);\n        response.setContentType(MediaType.APPLICATION_JSON);\n\n        // エラーメッセージの生成処理は省略\n\n        try {\n            response.write(objectMapper.writeValueAsString(errorMessages));\n        } catch (JsonProcessingException ignored) {\n            return new HttpResponse(500);\n        }\n        return response;\n    }\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "特定のエラーの場合に個別に定義したエラーレスポンスを返却する",
+      "content": "本ハンドラの後続の処理で発生したエラーに対し、\n個別にステータスコードやボディを定義したエラーレスポンスを返却したい場合がある。\n\nその場合は ErrorResponseBuilder の継承クラスを作成し、\n送出された例外に応じたレスポンスの生成処理を個別に実装する。\n\n実装例を以下に示す。\n\n```java\npublic class SampleErrorResponseBuilder extends ErrorResponseBuilder {\n\n    @Override\n    public HttpResponse build(final HttpRequest request,\n            final ExecutionContext context, final Throwable throwable) {\n        if (throwable instanceof NoDataException) {\n            return new HttpResponse(404);\n        } else {\n            return super.build(request, context, throwable);\n        }\n    }\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "クライアントに返すレスポンスに共通処理を追加する",
+      "content": "正常時やエラー発生時を問わず、クライアントに返すレスポンスに対してCORS対応やセキュリティ対応で共通的にレスポンスヘッダを指定したい場合がある。\n\nそのような場合に対応するため、フレームワークはレスポンスを仕上げる ResponseFinisher インタフェースを提供している。\nレスポンスに共通処理を追加したい場合は、ResponseFinisherインタフェースを実装したクラスを作成し、\n本ハンドラのresponseFinishersプロパティに指定すればよい。\n\n実装例と設定例を以下に示す。\n\n```java\npublic class CustomResponseFinisher implements ResponseFinisher {\n    @Override\n    public void finish(HttpRequest request, HttpResponse response, ExecutionContext context) {\n        // レスポンスヘッダを設定するなど、共通処理を行う。\n    }\n}\n```\n\n```xml\n<component class=\"nablarch.fw.jaxrs.JaxRsResponseHandler\">\n  <property name=\"responseFinishers\">\n    <list>\n      <!-- ResponseFinisherを実装したクラスを指定 -->\n      <component class=\"sample.CustomResponseFinisher\" />\n    </list>\n  </property>\n</component>\n```\n\nセキュリティ関連のレスポンスヘッダを設定する [セキュアハンドラ](../../component/handlers/handlers-secure-handler.md#secure-handler) のような既存のハンドラをResponseFinisherとして使用したい場合がある。\nこのような場合に対応するため、ハンドラをResponseFinisherに適用する\nAdoptHandlerResponseFinisher クラスを提供している。\n\nAdoptHandlerResponseFinisherで使用できるハンドラは、自らレスポンスを作成せず、後続ハンドラが返すレスポンスに変更を加えるハンドラに限定される。\n\nAdoptHandlerResponseFinisherの使用例を下記に示す。\n\n```xml\n<component class=\"nablarch.fw.jaxrs.JaxRsResponseHandler\">\n  <property name=\"responseFinishers\">\n    <list>\n      <!-- AdoptHandlerResponseFinisher -->\n      <component class=\"nablarch.fw.jaxrs.AdoptHandlerResponseFinisher\">\n        <!-- handlerプロパティにハンドラを指定 -->\n        <property name=\"handler\" ref=\"secureHandler\" />\n      </component>\n    </list>\n  </property>\n</component>\n```",
+      "level": 3
+    }
+  ]
+}

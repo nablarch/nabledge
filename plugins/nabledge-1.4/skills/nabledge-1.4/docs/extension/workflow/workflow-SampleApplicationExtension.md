@@ -1,15 +1,27 @@
-# ゲートウェイの進行先ノード判定ロジックを変更する方法
+# ゲートウェイの進行先ノード判定ロジックを変更する方法 — 進行先ノードの判定制御ロジックの実装
 
-## 進行先ノードの判定制御ロジックの実装
+`FlowProceedCondition` インタフェースを実装することで、進行先ノードの判定制御としてPJ固有のロジックを用いることが出来る。
 
-`FlowProceedCondition` インタフェースを実装することで、進行先ノードの判定制御にPJ固有ロジックを組み込める。
+**実装例(CM111004Component.java)**
 
-**仕様（ローン申請サンプル）**:
-- パラメータから `LoanApplicationEntity` を取得（キー: `loanApplication`）し、年収・ローン申請額を元に進行先を決定する
-- ローン申請額 ≤ 年収の半分 → 「調査」タスクへ進行
-- ローン申請額 > 年収の半分 → 「却下」タスクへ進行
+以下は、`FlowProceedCondition` を実装したコンポーネントの一部であり、ローン申請の内部自動審査後の条件分岐
+（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#loan-appliance-definition) の④に対応）のための
+業務ロジックを実装している。
 
-**実装方法**: `isMatch` メソッドで、評価対象の `SequenceFlow`（引数 `sequenceFlow`）の進行先が「調査」タスクの場合に `true` を返却。それ以外は `false`。同一XORゲートウェイから流出するすべてのシーケンスフローに同一コンポーネントが設定されるため、進行先タスクIDによって返却値を切り替える必要がある。
+このコンポーネントは、内部自動審査後のXORゲートウェイから流出するすべてのシーケンスフローのフロー進行条件として
+設定されているため、評価対象のシーケンスフローがどのタスクに進行するシーケンスフローかに応じて返却する値を変える必要がある。
+
+> **仕様:**
+> パラメータから `LoanApplicationEntity` を取得(キー:`loanApplication`)し、
+> 年収及びローン申請額を元に進行先を決定する。
+
+> ローン申請額が年収の半分以下の場合は「調査」タスクに進行し、半分より大きい場合は「却下」タスクに進行する。
+
+> **実装方法:**
+> ローン申請額が年収の半分以下で、評価対象の `SequenceFlow` （引数として渡されている `sequenceFlow` ）の
+> 進行先が「調査」タスクの場合に `true` を返却する。
+
+> それ以外の場合には `false` を返却する。
 
 ```java
 @Override
@@ -28,10 +40,3 @@ public boolean isMatch(String instanceId, Map<String, ?> param, SequenceFlow seq
     }
 }
 ```
-
-<details>
-<summary>keywords</summary>
-
-FlowProceedCondition, SequenceFlow, LoanApplicationEntity, isMatch, CM111004Component, ゲートウェイ進行先判定, XORゲートウェイ条件分岐, フロー進行条件カスタマイズ
-
-</details>

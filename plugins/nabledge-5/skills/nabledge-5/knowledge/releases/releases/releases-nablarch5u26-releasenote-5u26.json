@@ -1,0 +1,216 @@
+{
+  "id": "releases-nablarch5u26-releasenote-5u26",
+  "title": "■Nablarch 5u26 リリースノート",
+  "content": "5u25からの変更点を記載しています。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "アプリケーションフレームワーク",
+      "content": "コンテンツ: アプリケーションフレームワーク"
+    },
+    {
+      "id": "s2",
+      "title": "JSONの読み取りに失敗する問題を修正",
+      "content": "No.: 1\n分類: 汎用データフォーマット\nリリース 区分: 不具合\nタイトル: JSONの読み取りに失敗する問題を修正\n概要: JSON内に含まれる値（\"\"で囲われた項目）がJSON構文で意味を持つ区切り文字（:、[、{、, の4つ）のみで、かつその後にデータが続く場合、値とJSON構文の区切り文字の区別ができずに失敗していました。 ①NGになる例（\":\"の後にデータが続く）： {\"key1\": \":\", \"key2\": \"value2\"} ②OKになる例（\":\"の後にデータが続かない）： {\"key1\": \":\"} NGになっていた例も、正常に値として解析できるように修正しました。\n修正後のバージョン （※1）: nablarch-core-dataformat 1.3.5\n不具合の起因バージョン （※2） / モジュール: 1.3.1\n不具合の起因バージョン （※2） / Nablarch: 5u19\nシステムへの 影響の可能性 （※3）: あり(本番)\nシステムへの影響の可能性の内容と対処: 概要の①のようにJSONの区切り文字のみが値になるデータを解析できるようになります。 本来は値として解析できることが正しい挙動であるため影響が無い想定ですが、もしこのようなJSONを読み込めるようになることでシステム影響がある場合、値の確認をして受け入れないようにするなどの修正を行ってください。\n参照先: https://nablarch.github.io/docs/5u26/doc/application_framework/application_framework/libraries/data_io/data_format.html\nJIRA issue (※4): NAB-649"
+    },
+    {
+      "id": "s3",
+      "title": "ルート定義ファイル再読込に関するデフォルト値、コメント変更",
+      "content": "No.: 2\n分類: ウェブアプリケーション\nリリース 区分: 変更\nタイトル: ルート定義ファイル再読込に関するデフォルト値、コメント変更\n概要: ウェブアプリケーションおよびコンテナ用ウェブアプリケーションのブランクプロジェクトに含まれる、ルートマッピング定義ファイル再読込設定の値とコメントが、ルーティングアダプタの実装と合っていませんでした。 具体的なファイルは以下となります。 ・ウェブアプリケーションプロジェクト src/env/prod/resources/env.properties ・コンテナ用ウェブアプリケーションプロジェクト src/main/resources/env.properties これらのファイルに含まれるnablarch.routesMapping.checkIntervalプロパティは負の値を設定するとルート定義ファイルの変更チェックと再読込を無効にしますが、これまでは0以上の値が設定されていました。またプロパティの説明をしているコメントも誤っていました。 今回の修正で、設定値は-1となりコメントも修正しています。\n修正後のバージョン （※1）: nablarch-single-module-archetype 5u26\n不具合の起因バージョン （※2） / モジュール: nablarch-single-module-archetype\n不具合の起因バージョン （※2） / Nablarch: 5u6\nシステムへの 影響の可能性 （※3）: あり(本番)\nシステムへの影響の可能性の内容と対処: プロジェクトが依存するNablarchのバージョンアップを行っても、動作に変更はありません。 一方でenv.propertiesのデフォルト設定と説明を行っているコメントに誤りがあったため、これにしたがって変更チェックと再読込が無効になっていることを期待していた場合は実際の挙動と乖離があることになります。 明示的にこれらを無効化したい場合はenv.propertiesに定義されているnablarch.routesMapping.checkIntervalを以下のように負の値に設定してください。 nablarch.routesMapping.checkInterval=-1\n参照先: https://nablarch.github.io/docs/5u26/doc/application_framework/adaptors/router_adaptor.html\nJIRA issue (※4): NAB-654"
+    },
+    {
+      "id": "s4",
+      "title": "使用不許可APIツールのバージョン更新",
+      "content": "No.: 3\n分類: 全般\nリリース 区分: 変更\nタイトル: 使用不許可APIツールのバージョン更新\n概要: No.6の対応に伴い、使用不許可APIツールのバージョンを以下に更新しました。 ・nablarch-unpublished-api-checker 1.0.1\n修正後のバージョン （※1）: nablarch-single-module-archetype 5u26\nシステムへの 影響の可能性 （※3）: なし\nJIRA issue (※4): NAB-655"
+    },
+    {
+      "id": "s5",
+      "title": "gsp-dba-maven-pluginをJava 11以降で実行するための依存ライブラリ追加",
+      "content": "No.: 4\n分類: コンテナ用ウェブアプリケーション コンテナ用RESTfulウェブサービス\nリリース 区分: 変更\nタイトル: gsp-dba-maven-pluginをJava 11以降で実行するための依存ライブラリ追加\n概要: 以下のコンテナ用ブランクプロジェクトのMavenプロファイルに、gsp-dba-maven-pluginの依存関係が不足していたので追加しました。 ・コンテナ用ウェブアプリケーション ・BACKUPプロファイル ・コンテナ用RESTfulウェブサービス ・gspプロファイル\n修正後のバージョン （※1）: nablarch-single-module-archetype 5u26\n不具合の起因バージョン （※2） / モジュール: nablarch-single-module-archetype\n不具合の起因バージョン （※2） / Nablarch: 5u18\nシステムへの 影響の可能性 （※3）: なし\n参照先: https://nablarch.github.io/docs/5u26/doc/application_framework/application_framework/blank_project/addin_gsp.html\nJIRA issue (※4): NAB-657"
+    },
+    {
+      "id": "s6",
+      "title": "UI開発基盤 ※既にUI開発基盤を導入済みのPJにおいては、左記の変更内容の取込をプラグイン単位で実施します。変更内容とプラグインの対応については、 「標準プラグインの変更点」シートを参照ください。",
+      "content": "コンテンツ: UI開発基盤 ※既にUI開発基盤を導入済みのPJにおいては、左記の変更内容の取込をプラグイン単位で実施します。変更内容とプラグインの対応については、 「標準プラグインの変更点」シートを参照ください。"
+    },
+    {
+      "id": "s7",
+      "title": "RequireJSのバージョンアップ",
+      "content": "No.: 5\n分類: Nablarch 標準プラグインの更新\nリリース 区分: 変更\nタイトル: RequireJSのバージョンアップ\n概要: RequireJSの脆弱性を検知したため2.1.11から2.3.7へバージョンアップしました。RequireJSのバージョンアップによりモジュールr.jsの仕様が変更になっており、既存の動作にあわせるためビルドスクリプトを修正しました。 UI開発基盤は本脆弱性の対象となる機能を使用してはいないため脆弱性はありません。 しかし、UI開発基盤を使用する場合、RequireJSのバージョンはUI開発基盤自体で使用しているバージョンに強制されます。 そのため、プロジェクト側で独自に作成した機能がRequireJSを利用する場合に脆弱性のある機能を使用する危険性があるため本対応を行いました。\n修正後のバージョン （※1）: nablarch-plugin-bundle 1.0.7 nablarch-ui-development-template 1.1.4\n不具合の起因バージョン （※2） / モジュール: -\n不具合の起因バージョン （※2） / Nablarch: -\nシステムへの 影響の可能性 （※3）: なし\nシステムへの影響の可能性の内容と対処: -\n参照先: https://nablarch.github.io/docs/5u26/doc/development_tools/ui_dev/index.html\nJIRA issue (※4): NAB-644"
+    },
+    {
+      "id": "s8",
+      "title": "Nablarch開発標準",
+      "content": "コンテンツ: Nablarch開発標準"
+    },
+    {
+      "id": "s9",
+      "title": "Java 21でjava.lang.Objectのメソッドが許可できない場合がある問題に対応",
+      "content": "No.: 6\n分類: 使用不許可APIチェックツール\nリリース 区分: 不具合\nタイトル: Java 21でjava.lang.Objectのメソッドが許可できない場合がある問題に対応\n概要: Java 21でバイトコードが変わったことにより、インタフェースからjava.lang.Objectのメソッドを呼んでいる場合、設定ファイルで指定しても許可されないという不具合があったため対応しました。 例) ■使用不許可APIツールの設定ファイル java.lang.Object ■解析対象のjavaファイル // toStringメソッドは本来許可されるはずだが不許可になる Map<String, String> headers = request.headers(); headers.toString();\n修正後のバージョン （※1）: nablarch-unpublished-api-checker 1.0.1\n不具合の起因バージョン （※2） / モジュール: 1.0.0\n不具合の起因バージョン （※2） / Nablarch: -\nシステムへの 影響の可能性 （※3）: なし\nシステムへの影響の可能性の内容と対処: -\n参照先: https://nablarch.github.io/docs/5u26/doc/development_tools/java_static_analysis/index.html#id6\nJIRA issue (※4): NAB-655"
+    }
+  ],
+  "sheet_type": "P1",
+  "columns": [
+    "コンテンツ",
+    "",
+    "No.",
+    "分類",
+    "リリース 区分",
+    "タイトル",
+    "概要",
+    "修正後のバージョン （※1）",
+    "不具合の起因バージョン （※2） / モジュール",
+    "不具合の起因バージョン （※2） / Nablarch",
+    "システムへの 影響の可能性 （※3）",
+    "システムへの影響の可能性の内容と対処",
+    "参照先",
+    "JIRA issue (※4)"
+  ],
+  "data_rows": [
+    [
+      "アプリケーションフレームワーク",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "オブジェクトコード、ソースコード",
+      "1",
+      "汎用データフォーマット",
+      "不具合",
+      "JSONの読み取りに失敗する問題を修正",
+      "JSON内に含まれる値（\"\"で囲われた項目）がJSON構文で意味を持つ区切り文字（:、[、{、, の4つ）のみで、かつその後にデータが続く場合、値とJSON構文の区切り文字の区別ができずに失敗していました。\n\n①NGになる例（\":\"の後にデータが続く）：\n  {\"key1\": \":\", \"key2\": \"value2\"}\n\n②OKになる例（\":\"の後にデータが続かない）：\n  {\"key1\": \":\"}\n\nNGになっていた例も、正常に値として解析できるように修正しました。",
+      "nablarch-core-dataformat 1.3.5",
+      "1.3.1",
+      "5u19",
+      "あり(本番)",
+      "概要の①のようにJSONの区切り文字のみが値になるデータを解析できるようになります。\n本来は値として解析できることが正しい挙動であるため影響が無い想定ですが、もしこのようなJSONを読み込めるようになることでシステム影響がある場合、値の確認をして受け入れないようにするなどの修正を行ってください。",
+      "https://nablarch.github.io/docs/5u26/doc/application_framework/application_framework/libraries/data_io/data_format.html",
+      "NAB-649"
+    ],
+    [
+      "",
+      "ブランクプロジェクト",
+      "2",
+      "ウェブアプリケーション",
+      "変更",
+      "ルート定義ファイル再読込に関するデフォルト値、コメント変更",
+      "ウェブアプリケーションおよびコンテナ用ウェブアプリケーションのブランクプロジェクトに含まれる、ルートマッピング定義ファイル再読込設定の値とコメントが、ルーティングアダプタの実装と合っていませんでした。\n\n具体的なファイルは以下となります。\n・ウェブアプリケーションプロジェクト\n　src/env/prod/resources/env.properties\n・コンテナ用ウェブアプリケーションプロジェクト\n　src/main/resources/env.properties\n\nこれらのファイルに含まれるnablarch.routesMapping.checkIntervalプロパティは負の値を設定するとルート定義ファイルの変更チェックと再読込を無効にしますが、これまでは0以上の値が設定されていました。またプロパティの説明をしているコメントも誤っていました。\n今回の修正で、設定値は-1となりコメントも修正しています。",
+      "nablarch-single-module-archetype 5u26",
+      "nablarch-single-module-archetype",
+      "5u6",
+      "あり(本番)",
+      "プロジェクトが依存するNablarchのバージョンアップを行っても、動作に変更はありません。\n\n一方でenv.propertiesのデフォルト設定と説明を行っているコメントに誤りがあったため、これにしたがって変更チェックと再読込が無効になっていることを期待していた場合は実際の挙動と乖離があることになります。\n\n明示的にこれらを無効化したい場合はenv.propertiesに定義されているnablarch.routesMapping.checkIntervalを以下のように負の値に設定してください。\n\nnablarch.routesMapping.checkInterval=-1",
+      "https://nablarch.github.io/docs/5u26/doc/application_framework/adaptors/router_adaptor.html",
+      "NAB-654"
+    ],
+    [
+      "",
+      "",
+      "3",
+      "全般",
+      "変更",
+      "使用不許可APIツールのバージョン更新",
+      "No.6の対応に伴い、使用不許可APIツールのバージョンを以下に更新しました。\n・nablarch-unpublished-api-checker 1.0.1",
+      "nablarch-single-module-archetype 5u26",
+      "",
+      "",
+      "なし",
+      "",
+      "",
+      "NAB-655"
+    ],
+    [
+      "",
+      "",
+      "4",
+      "コンテナ用ウェブアプリケーション\nコンテナ用RESTfulウェブサービス",
+      "変更",
+      "gsp-dba-maven-pluginをJava 11以降で実行するための依存ライブラリ追加",
+      "以下のコンテナ用ブランクプロジェクトのMavenプロファイルに、gsp-dba-maven-pluginの依存関係が不足していたので追加しました。\n\n・コンテナ用ウェブアプリケーション\n　・BACKUPプロファイル\n・コンテナ用RESTfulウェブサービス\n　・gspプロファイル",
+      "nablarch-single-module-archetype 5u26",
+      "nablarch-single-module-archetype",
+      "5u18",
+      "なし",
+      "",
+      "https://nablarch.github.io/docs/5u26/doc/application_framework/application_framework/blank_project/addin_gsp.html",
+      "NAB-657"
+    ],
+    [
+      "UI開発基盤 ※既にUI開発基盤を導入済みのPJにおいては、左記の変更内容の取込をプラグイン単位で実施します。変更内容とプラグインの対応については、 「標準プラグインの変更点」シートを参照ください。",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "ソースコード",
+      "5",
+      "Nablarch 標準プラグインの更新",
+      "変更",
+      "RequireJSのバージョンアップ",
+      "RequireJSの脆弱性を検知したため2.1.11から2.3.7へバージョンアップしました。RequireJSのバージョンアップによりモジュールr.jsの仕様が変更になっており、既存の動作にあわせるためビルドスクリプトを修正しました。\n\nUI開発基盤は本脆弱性の対象となる機能を使用してはいないため脆弱性はありません。\nしかし、UI開発基盤を使用する場合、RequireJSのバージョンはUI開発基盤自体で使用しているバージョンに強制されます。\nそのため、プロジェクト側で独自に作成した機能がRequireJSを利用する場合に脆弱性のある機能を使用する危険性があるため本対応を行いました。",
+      "nablarch-plugin-bundle 1.0.7\nnablarch-ui-development-template 1.1.4",
+      "-",
+      "-",
+      "なし",
+      "-",
+      "https://nablarch.github.io/docs/5u26/doc/development_tools/ui_dev/index.html",
+      "NAB-644"
+    ],
+    [
+      "Nablarch開発標準",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "開発プロセス支援ツール",
+      "6",
+      "使用不許可APIチェックツール",
+      "不具合",
+      "Java 21でjava.lang.Objectのメソッドが許可できない場合がある問題に対応",
+      "Java 21でバイトコードが変わったことにより、インタフェースからjava.lang.Objectのメソッドを呼んでいる場合、設定ファイルで指定しても許可されないという不具合があったため対応しました。\n\n例) \n■使用不許可APIツールの設定ファイル\njava.lang.Object\n\n■解析対象のjavaファイル\n// toStringメソッドは本来許可されるはずだが不許可になる\nMap<String, String> headers = request.headers();\nheaders.toString();",
+      "nablarch-unpublished-api-checker 1.0.1",
+      "1.0.0",
+      "-",
+      "なし",
+      "-",
+      "https://nablarch.github.io/docs/5u26/doc/development_tools/java_static_analysis/index.html#id6",
+      "NAB-655"
+    ]
+  ]
+}

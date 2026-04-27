@@ -1,0 +1,62 @@
+{
+  "id": "toolbox-01-httpdumptool-01-HttpDumpTool",
+  "title": "リクエスト単体データ作成ツール",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "リクエスト単体テスト(画面オンライン処理)では、HTMLからのリクエストパラメータにあるキーと値をテストデータとして作成する必要がある [*] 。\nこのリクエストパラメータ作成を人手で実施すると、リクエストパラメータ名（form内のname属性）を\n写し間違える恐れがある。特に、登録画面などパラメータ数が多い画面ではその可能性が高くなる。\n\nこのような人手によるミスを解消するため、リクエスト単体テストで生成されたHTMLを使用して、\n次画面へのリクエストパラメータを作成できるツールを提供する。\n\nリクエストパラメータのテストデータ記述方法については、 [リクエスト単体テストの実施方法](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md) （特に「  [リクエストパラメータ](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-req-params) 」の項 ）を参照",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "content": "本ツールでは、リクエスト単体テストで生成されたHTMLをブラウザで操作することで、\n次画面へのリクエストパラメータをExcel形式で取得できるようになっている。\nWebアプリケーションを操作するような感覚で直感的にテストデータが作成できる。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "使用方法",
+      "content": "下記の図に沿って、本ツールの使用方法を説明する。\n\n![requestDumpToolAbstract.png](assets/toolbox-01-httpdumptool-01-HttpDumpTool/requestDumpToolAbstract.png)",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "前提条件",
+      "content": "* 開発環境構築ガイドに従って開発環境を構築済みであること。\n* [リクエスト単体データ作成ツール インストールガイド](../../development-tools/toolbox/toolbox-02-SetUpHttpDumpTool.md) の [前提事項](../../development-tools/toolbox/toolbox-02-SetUpHttpDumpTool.md#http-dump-tool-prerequisite) 参照",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "入力となるHTML生成",
+      "content": "リクエスト単体テストを実行し、HTMLファイルを生成する。\n\n初期画面表示のリクエスト単体テスト用データだけは、手動で用意する必要がある。\n初期画面表示リクエスト（例えば、メニューからの単純な画面遷移）には\nリクエストパラメータが含まれていないことがほとんどであるので、\n通常は空のリクエストパラメータを作成すればよい。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "ツール起動",
+      "content": "Eclipse上からHTMLファイルを右クリックし、ツールを起動する。\n（ [HTMLファイルからの起動方法](../../development-tools/toolbox/toolbox-02-SetUpHttpDumpTool.md#howtoexecutefromeclipse) を参照）\n\n> **Note:**\n> Windows上で本ツールを起動するとコマンドプロンプトが現れるが、これはツール内部で使用される内蔵サーバのプロセスである。本ツールを使用する間はこのコマンドプロンプトは実行したままにしておくとよい。ツール起動時に、既にサーバが起動されている場合はサーバ起動がスキップされるので、２回目以降のツール起動が速くなる。誤ってこのコマンドプロンプトを落としてしまっても、次回のツール起動時に自動的に起動されるので問題はない。",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "データ入力",
+      "content": "HTMLファイルがブラウザで起動されるので、ブラウザ上で画面入力を行いサブミットを実行する。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "Excelダウンロード",
+      "content": "サブミットで発生したHTTPリクエストがExcelファイルに記載された状態で\nダウンロードできる。Excelファイルをローカル上に保存する必要はないので、\nブラウザから直接ExcelやOpenOfficeで起動すればよい。",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "データ編集",
+      "content": "ダウンロードしたExcelファイルに、HTTPリクエストパラメータのデータが記載されている。\nそのデータをリクエスト単体テストのテストデータにコピーする。",
+      "level": 3
+    }
+  ]
+}

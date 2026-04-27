@@ -1,0 +1,68 @@
+{
+  "id": "libraries-stateless-web-app",
+  "title": "Webアプリケーションをステートレスにする",
+  "content": "**目次**\n\n* 基本的な考え方\n* HTTPセッションに依存している機能\n* HTTPセッション非依存機能の導入方法\n\n  * セッションストア\n  * 2重サブミット防止\n  * スレッドコンテキスト変数管理ハンドラ\n  * HTTPリライトハンドラ\n  * hidden暗号化\n* ローカルファイルシステムの使用\n* HTTPセッションの誤生成を検知する",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "基本的な考え方",
+      "content": "サーブレットAPIが提供するHTTPセッションはAPサーバで状態を持ってしまうため、そのままではスケールアウトができない。\n通常、APサーバのスケールアウトを行うには以下のような対処が必要となる。\n\n1. ロードバランサーでスティッキーセッションを有効にする\n2. APサーバのセッションレプリケーション機能を使用する\n3. APサーバのHTTPセッション保存先をNoSQLにする\n\n1, 2は [Twelve-Factor App](https://12factor.net/ja/) で言うところの廃棄容易性の点で劣り、2, 3はAPサーバ依存となる。\n\nNablarchが使用する機能では、HTTPセッションに依存しているものがあるが、\nこれらの機能をHTTPセッション非依存のものに切り替えることで、\nAPサーバをステートレスにできる。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "HTTPセッションに依存している機能",
+      "content": "以下の機能は、デフォルトではHTTPセッションに依存している。\n\n* [セッションストア](../../component/libraries/libraries-session-store.md#session-store)\n* [2重サブミット防止](../../component/libraries/libraries-tag.md#tag-double-submission)\n* [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler)\n* [HTTPリライトハンドラ](../../component/handlers/handlers-http-rewrite-handler.md#http-rewrite-handler)\n* [hidden暗号化](../../component/libraries/libraries-tag.md#tag-hidden-encryption)",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "HTTPセッション非依存機能の導入方法",
+      "content": "[HTTPセッションに依存している機能](../../component/libraries/libraries-stateless-web-app.md#http-session-dependence) の各機能について以下の通り設定することでHTTPセッションへの依存をなくすことができる。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "セッションストア",
+      "content": "* [有効期間をデータベースに保存する](../../component/handlers/handlers-SessionStoreHandler.md#db-managed-expiration)",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "2重サブミット防止",
+      "content": "* [データベースを使用した二重サブミット防止](../../component/libraries/libraries-db-double-submit.md#db-double-submit)",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "スレッドコンテキスト変数管理ハンドラ",
+      "content": "[スレッドコンテキストの初期化](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler-initialization) に以下の部品を使用しない。\n\n* LanguageAttributeInHttpSession\n* TimeZoneAttributeInHttpSession\n* UserIdAttribute\n\nそれぞれ、HTTPセッションを使用しない実装として以下の部品で代替できる。\n\n* LanguageAttributeInHttpCookie\n* TimeZoneAttributeInHttpCookie\n* UserIdAttributeInSessionStore",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "HTTPリライトハンドラ",
+      "content": "[HTTPリライトハンドラ](../../component/handlers/handlers-http-rewrite-handler.md#http-rewrite-handler) を使用しない。\n使用する場合にはセッションスコープにアクセスしないよう設定する。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "hidden暗号化",
+      "content": "Nablarchでは [hidden暗号化](../../component/libraries/libraries-tag.md#tag-hidden-encryption) の機能を提供している。\nこの機能はHTTPセッションに依存しているため、使用しないよう [useHiddenEncryption](../../component/libraries/libraries-tag.md#tag-use-hidden-encryption) に `false` を設定する。",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "ローカルファイルシステムの使用",
+      "content": "アップロードしたファイルなどをAPサーバのローカルに保存してしまうと、ステートを持つことになってしまう。\nこのような場合は、共有のストレージを用意するなどして、APサーバがローカルにファイルを持たないようにする必要がある。",
+      "level": 2
+    },
+    {
+      "id": "s10",
+      "title": "HTTPセッションの誤生成を検知する",
+      "content": "設定漏れや実装ミスによって誤ってHTTPセッションを生成してしまうことを防ぐために、HTTPセッションの生成を検知する機能を提供している。\nこの機能を有効にすると、HTTPセッションを生成しようとしたときに例外が送出されるようになる。\n\nこの機能は、 WebFrontController の `preventSessionCreation` プロパティに `true` を設定することで有効にできる（デフォルトは `false` で無効になっている）。\n\n具体的には、 WebFrontController のコンポーネントを定義した設定ファイルで、次のように記述することで検知機能を有効にできる。\n\n```xml\n<!-- ハンドラキュー構成 -->\n<component name=\"webFrontController\"\n           class=\"nablarch.fw.web.servlet.WebFrontController\">\n\n  <!-- HTTPセッションの誤生成を検知する -->\n  <property name=\"preventSessionCreation\" value=\"true\" />\n```",
+      "level": 2
+    }
+  ]
+}

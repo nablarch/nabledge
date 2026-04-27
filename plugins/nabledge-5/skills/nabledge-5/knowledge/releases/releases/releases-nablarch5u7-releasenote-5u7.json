@@ -1,0 +1,342 @@
+{
+  "id": "releases-nablarch5u7-releasenote-5u7",
+  "title": "■Nablarch 5u7 リリースノート",
+  "content": "5u6からの変更点を記載しています。\n※1 バージョンアップする手順は、本書「バージョンアップ手順」シートを参照ください。\n※2 変更点により、Nablarchの動作に変更がある場合に「あり」とします。 Nablarchバージョンアップ時の影響確認は、「あり」の変更点のみ確認してください。\n※3 チケット番号がないものはNablarch開発チーム内部検知したものです。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "アプリケーションフレームワーク",
+      "content": "コンテンツ: アプリケーションフレームワーク"
+    },
+    {
+      "id": "s2",
+      "title": "ResourceLocatorで発生する可能性のあるStackOverflowErrorへの対応",
+      "content": "No.: 1\n分類: ウェブアプリケーション\nリリース 区分: 不具合\nタイトル: ResourceLocatorで発生する可能性のあるStackOverflowErrorへの対応\n概要: ResourceLocatorに対して長いパスを設定した場合、StackOverflowErrorが発生する可能性がありました。このため、複雑な正規表現を使用するのをやめ、長いパス指定時でもStackOverflowErrorが発生しないように対応しました。\n修正後のバージョン（※1）: nablarch-fw-web 1.2.3\n不具合の起因バージョン: 1.0.0\nアプリケーション への影響（※2）: あり\nアプリケーションへの影響内容と対処: 複雑な正規表現を削除したため、幾つかの機能を削除(仕様変更)しています。尚、これらの機能はNablarch内では使用していない機能となります。 不具合原因となった複雑な正規表現を持つ、以下のpublicフィールドを削除しました。 * SYNTAX また、上記正規表現を使用していた以下のメソッドを削除しました。 * isValidPath 削除されたSYNTAX及びisValidを使用している場合には、旧バージョンのソースコードから実装をプロジェクト側に移植するなどして対応してください。\n参照先: -\nFBシステム チケット番号（※3）: 14604\nGitHub issue: nablarch-fw-web/issues/2 nablarch-fw-web/issues/13"
+    },
+    {
+      "id": "s3",
+      "title": "プリミティブ配列を値に持つMapをログにダンプできるように変更",
+      "content": "No.: 2\n分類: ログ出力\nリリース 区分: 不具合\nタイトル: プリミティブ配列を値に持つMapをログにダンプできるように変更\n概要: プリミティブ配列を値に持つMapをLogUtilを使ってダンプ(ログ出力)すると、ClassCastExceptionが発生する問題がありました。 このため、プリミティブ配列を持つMapの場合でも、ログに出力できるように修正しました。\n修正後のバージョン（※1）: nabalrch-core 1.2.3\n不具合の起因バージョン: 1.0.0\nアプリケーション への影響（※2）: なし\nアプリケーションへの影響内容と対処: -\n参照先: -\nFBシステム チケット番号（※3）: 14625\nGitHub issue: nablarch-core/issues/3"
+    },
+    {
+      "id": "s4",
+      "title": "複数の値を出力するタグでプリミティブ配列を扱えるように修正",
+      "content": "No.: 3\n分類: JSPカスタムタグ\nリリース 区分: 不具合\nタイトル: 複数の値を出力するタグでプリミティブ配列を扱えるように修正\n概要: 複数の値を出力するタグで、対象の値がプリミティブ配列として保持されている場合に、ClassCastExceptionが発生する問題がありました。 このため、プリミティブ配列の場合でも、値が出力されるよう修正しました。\n修正後のバージョン（※1）: nablarch-fw-web-tag 1.0.4\n不具合の起因バージョン: 1.0.0\nアプリケーション への影響（※2）: なし\nアプリケーションへの影響内容と対処: -\n参照先: -\nFBシステム チケット番号（※3）: -\nGitHub issue: nablarch-fw-web-tag/issues/5"
+    },
+    {
+      "id": "s5",
+      "title": "n:textareaで表示するデータの先頭改行が削除されないように修正",
+      "content": "No.: 4\n分類: JSPカスタムタグ\nリリース 区分: 不具合\nタイトル: n:textareaで表示するデータの先頭改行が削除されないように修正\n概要: 先頭が改行文字のデータをn:textareaタグで表示すると、先頭の改行文字が削除されてブラウザで表示される問題がありました。 このため、ブラウザで表示した際に先頭の改行が削除されずにそのまま表示されるよう修正しました。\n修正後のバージョン（※1）: nablarch-fw-web-tag 1.0.4\n不具合の起因バージョン: 1.0.0\nアプリケーション への影響（※2）: あり\nアプリケーションへの影響内容と対処: 「概要」を参照。 n:textareaタグで先頭の改行が削除されることを前提に、アプリケーションで何らかの処理を入れている場合は、その処理を削除する必要があります。\n参照先: -\nFBシステム チケット番号（※3）: 14618\nGitHub issue: nablarch-fw-web-tag/issues/1"
+    },
+    {
+      "id": "s6",
+      "title": "配列要素の孫要素を出力できない問題に対応",
+      "content": "No.: 5\n分類: 汎用データフォーマット\nリリース 区分: 不具合\nタイトル: 配列要素の孫要素を出力できない問題に対応\n概要: 「element(配列)->child->grandchild」のように、配列要素からみて孫要素があるXMLを出力すると、子要素(child)が見つからないエラーが発生していました。このため、修正を行いこのような構造のXMLでも出力出来るようにしました。 ★出力時に問題が発生するXMLの例 <root> <element> <child><grandchild /></child> <element> <element> <child><grandchild /></child> <element> </root>\n修正後のバージョン（※1）: nablarch-core-dataformat 1.0.2\n不具合の起因バージョン: 1.0.0\nアプリケーション への影響（※2）: なし\nアプリケーションへの影響内容と対処: -\n参照先: -\nFBシステム チケット番号（※3）: 14638\nGitHub issue: nablarch-core-dataformat/issues/11"
+    },
+    {
+      "id": "s7",
+      "title": "属性を持つ要素にコンテンツを定義できない問題に対応",
+      "content": "No.: 6\n分類: 汎用データフォーマット\nリリース 区分: 不具合\nタイトル: 属性を持つ要素にコンテンツを定義できない問題に対応\n概要: XMLの入出力時、属性を持つ要素に対しコンテンツを定義できない問題に対応しました。 フォーマット定義ファイルにて、コンテンツを表すフィールドのフィールド名を\"body\"とすることで属性を持つ要素にコンテンツを定義することができます。 ★フォーマット定義ファイルの例 [root] 1 child OB [child] 1 @attr X 2 body X ★上記フォーマット定義に対応するXMLの例 <root> <child attr=\"value1\">value2</child> </root>\n修正後のバージョン（※1）: nablarch-core-dataformat 1.0.2\n不具合の起因バージョン: 1.0.0\nアプリケーション への影響（※2）: あり\nアプリケーションへの影響内容と対処: 「概要」を参照。 以下の様な、要素名が\"body\"となる要素を持つXMLの入出力を想定している場合に対処が必要になります。 ★対処が必要となるXMLの例 <root> <child> <body>value</body> </child> </root> 変更方法は「参照先」を参照。\n参照先: Nablarchアプリケーションフレームワーク:Nablarchが提供するライブラリ:様々なフォーマットのデータへのアクセス:汎用データフォーマット:XMLで属性を持つ要素にコンテンツを定義する\nFBシステム チケット番号（※3）: 14601\nGitHub issue: nablarch-core-dataformat/issues/6 nablarch-core-dataformat/issues/8"
+    },
+    {
+      "id": "s8",
+      "title": "BeanUtilでnullの要素を１つだけ持つプロパティの値をコピーできない不具合に対応",
+      "content": "No.: 7\n分類: 汎用ユーティリティ\nリリース 区分: 不具合\nタイトル: BeanUtilでnullの要素を１つだけ持つプロパティの値をコピーできない不具合に対応\n概要: BeanUtilを使用してJava Beanにプロパティの値をコピーした際に、下記の条件に該当する値がコピーできない問題がありました。 このため、下記の条件に該当する場合には、コピー先にはnullをコピーするよう対応を行いました。 【コピーできない条件】 ・コピー元の型が配列型 ・コピー先が非配列型 ・コピー元の配列の値が、サイズ1でnull\n修正後のバージョン（※1）: nablarch-core-beans 1.1.3\n不具合の起因バージョン: 1.0.0\nアプリケーション への影響（※2）: なし\nアプリケーションへの影響内容と対処: 「概要」に記載した条件に合致する使い方をしている場合は、影響を受けます。 また、今回の不具合は、リクエストパラメータ（String型配列）からFormへのコピーを想定した実装が起因となっています。 そのため、BeanUtilを使用しており、アプリケーションでリクエストパラメータの値をnullに変更している処理がある場合は影響を受けます。影響を受ける処理がある場合は処理を見直してください。\n参照先: -\nFBシステム チケット番号（※3）: -\nGitHub issue: nablarch-core-beans/issues/13"
+    },
+    {
+      "id": "s9",
+      "title": "Interceptor.Implを公開APIに変更",
+      "content": "No.: 8\n分類: インターセプタ\nリリース 区分: 変更\nタイトル: Interceptor.Implを公開APIに変更\n概要: Inteceptor.Implは非公開APIとなっていましたが、アプリケーションでInterceptorを作成する際に継承する必要があるため、公開APIに変更しました。\n修正後のバージョン（※1）: nabalrch-core 1.2.3\n不具合の起因バージョン: -\nアプリケーション への影響（※2）: なし\nアプリケーションへの影響内容と対処: -\n参照先: -\nFBシステム チケット番号（※3）: 14610\nGitHub issue: nablarch-core/issues/5"
+    },
+    {
+      "id": "s10",
+      "title": "nablarch-bomに定義されているnablarch-wmq-adaptorのバージョンが誤っていたので修正",
+      "content": "No.: 9\n分類: Mavenプロファイル\nリリース 区分: 不具合\nタイトル: nablarch-bomに定義されているnablarch-wmq-adaptorのバージョンが誤っていたので修正\n概要: nablarch-bomに定義されているnablarch-wmq-adaptorのバージョンが誤っていたので修正しました。 修正前：1.0.0 修正後：1.0.1\n修正後のバージョン（※1）: nablarch-profiles 5u7\n不具合の起因バージョン: 5u6\nアプリケーション への影響（※2）: なし\nアプリケーションへの影響内容と対処: -\n参照先: -\nFBシステム チケット番号（※3）: 14627\nGitHub issue: nablarch-profiles/issues/1"
+    },
+    {
+      "id": "s11",
+      "title": "モジュールのバイトコードをJava6に準拠するように修正",
+      "content": "No.: 10\n分類: フレームワーク\nリリース 区分: 不具合\nタイトル: モジュールのバイトコードをJava6に準拠するように修正\n概要: 以下のモジュールのJavaのバイトコードがJava7に準拠していたので、Java6に準拠するように修正しました。 nablarch-core-validation-ee nablarch-etl nablarch-fw-batch-ee nablarch-fw-jaxrs nablarch-jackson-adaptor nablarch-jersey-adaptor nablarch-resteasy-adaptor\n修正後のバージョン（※1）: nablarch-core-validation-ee 1.0.4 nablarch-etl 1.0.2 nablarch-fw-batch-ee 1.0.2 nablarch-fw-jaxrs 1.0.2 nablarch-jackson-adaptor 1.0.2 nablarch-jersey-adaptor 1.0.2 nablarch-resteasy-adaptor 1.0.2\n不具合の起因バージョン: 1.0.3 1.0.1 1.0.1 1.0.1 1.0.1 1.0.1 1.0.1\nアプリケーション への影響（※2）: あり\nアプリケーションへの影響内容と対処: 「概要」を参照。 アプリケーションへの対処は必要ありません。\n参照先: -\nFBシステム チケット番号（※3）: -\nGitHub issue: nablarch-core-validation-ee/issues/1 nablarch-etl/issues/3 nablarch-fw-batch-ee/issues/2 nablarch-fw-jaxrs/issues/4 nablarch-jaxrs-adaptor/issues/1"
+    },
+    {
+      "id": "s12",
+      "title": "XML、JSONで使用可能なデータタイプ名が誤っていたので修正",
+      "content": "No.: 11\n分類: 汎用データフォーマット\nリリース 区分: 不具合\nタイトル: XML、JSONで使用可能なデータタイプ名が誤っていたので修正\n概要: 以下の通りXML及びJSONで使用可能なデータタイプの記載を修正しています。 誤: タイプ名 -> XS9 正: タイプ名 -> SX9\n修正後のバージョン（※1）: -\n不具合の起因バージョン: 5u6\nアプリケーション への影響（※2）: なし\nアプリケーションへの影響内容と対処: -\n参照先: -\nFBシステム チケット番号（※3）: 14624\nGitHub issue: nablarch-document/issues/7"
+    },
+    {
+      "id": "s13",
+      "title": "空白を含むパスを使用できない仕様を追記",
+      "content": "No.: 12\n分類: ファイルパス管理\nリリース 区分: 不具合\nタイトル: 空白を含むパスを使用できない仕様を追記\n概要: 空白を含むパスを使用できない仕様を追記しました。\n修正後のバージョン（※1）: -\n不具合の起因バージョン: 5u6\nアプリケーション への影響（※2）: なし\nアプリケーションへの影響内容と対処: -\n参照先: Nablarchアプリケーションフレームワーク:Nablarchが提供するライブラリ:ファイルパス管理:ディレクトリと拡張子を設定する →ポイントに追記しました。\nFBシステム チケット番号（※3）: 13591\nGitHub issue: nablarch-document/issues/5"
+    },
+    {
+      "id": "s14",
+      "title": "テスティングフレームワーク",
+      "content": "コンテンツ: テスティングフレームワーク"
+    },
+    {
+      "id": "s15",
+      "title": "アクションの返すパスのアサート方法を変更",
+      "content": "No.: 13\n分類: テスティングフレームワーク\nリリース 区分: 不具合\nタイトル: アクションの返すパスのアサート方法を変更\n概要: Webアプリケーションのアクションが返すHttpResponseのパスのアサート方法を変更しました。 変更前:http(https)を示すパスの場合、ホスト名を除いた部分をアサートしていました。 変更後:ホスト名を含む全体をアサートするように変更しました。\n修正後のバージョン（※1）: nablarch-testing 1.0.7\n不具合の起因バージョン: 1.0.0\nアプリケーション への影響（※2）: あり\nアプリケーションへの影響内容と対処: 期待値のパスだけではなくホストを含む完全なパスに変更してください。 例： ★アクション return new HttpResponse(\"https://calendar.google.com/calendar\"); ★期待値 上記アクションの実装の場合、以下のように完全なパスを期待値に設定します。 https://calendar.google.com/calendar\n参照先: -\nFBシステム チケット番号（※3）: -\nGitHub issue: nablarch-testing/issues/4"
+    }
+  ],
+  "sheet_type": "P1",
+  "columns": [
+    "コンテンツ",
+    "",
+    "No.",
+    "分類",
+    "リリース 区分",
+    "タイトル",
+    "概要",
+    "修正後のバージョン（※1）",
+    "不具合の起因バージョン",
+    "アプリケーション への影響（※2）",
+    "アプリケーションへの影響内容と対処",
+    "参照先",
+    "FBシステム チケット番号（※3）",
+    "GitHub issue"
+  ],
+  "data_rows": [
+    [
+      "アプリケーションフレームワーク",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "オブジェクトコード、ソースコード",
+      "1",
+      "ウェブアプリケーション",
+      "不具合",
+      "ResourceLocatorで発生する可能性のあるStackOverflowErrorへの対応",
+      "ResourceLocatorに対して長いパスを設定した場合、StackOverflowErrorが発生する可能性がありました。このため、複雑な正規表現を使用するのをやめ、長いパス指定時でもStackOverflowErrorが発生しないように対応しました。",
+      "nablarch-fw-web 1.2.3",
+      "1.0.0",
+      "あり",
+      "複雑な正規表現を削除したため、幾つかの機能を削除(仕様変更)しています。尚、これらの機能はNablarch内では使用していない機能となります。\n\n不具合原因となった複雑な正規表現を持つ、以下のpublicフィールドを削除しました。\n* SYNTAX\n\nまた、上記正規表現を使用していた以下のメソッドを削除しました。\n* isValidPath\n\n削除されたSYNTAX及びisValidを使用している場合には、旧バージョンのソースコードから実装をプロジェクト側に移植するなどして対応してください。",
+      "-",
+      "14604",
+      "nablarch-fw-web/issues/2\nnablarch-fw-web/issues/13"
+    ],
+    [
+      "",
+      "",
+      "2",
+      "ログ出力",
+      "不具合",
+      "プリミティブ配列を値に持つMapをログにダンプできるように変更",
+      "プリミティブ配列を値に持つMapをLogUtilを使ってダンプ(ログ出力)すると、ClassCastExceptionが発生する問題がありました。\nこのため、プリミティブ配列を持つMapの場合でも、ログに出力できるように修正しました。",
+      "nabalrch-core 1.2.3",
+      "1.0.0",
+      "なし",
+      "-",
+      "-",
+      "14625",
+      "nablarch-core/issues/3"
+    ],
+    [
+      "",
+      "",
+      "3",
+      "JSPカスタムタグ",
+      "不具合",
+      "複数の値を出力するタグでプリミティブ配列を扱えるように修正",
+      "複数の値を出力するタグで、対象の値がプリミティブ配列として保持されている場合に、ClassCastExceptionが発生する問題がありました。\nこのため、プリミティブ配列の場合でも、値が出力されるよう修正しました。",
+      "nablarch-fw-web-tag 1.0.4",
+      "1.0.0",
+      "なし",
+      "-",
+      "-",
+      "-",
+      "nablarch-fw-web-tag/issues/5"
+    ],
+    [
+      "",
+      "",
+      "4",
+      "JSPカスタムタグ",
+      "不具合",
+      "n:textareaで表示するデータの先頭改行が削除されないように修正",
+      "先頭が改行文字のデータをn:textareaタグで表示すると、先頭の改行文字が削除されてブラウザで表示される問題がありました。\nこのため、ブラウザで表示した際に先頭の改行が削除されずにそのまま表示されるよう修正しました。",
+      "nablarch-fw-web-tag 1.0.4",
+      "1.0.0",
+      "あり",
+      "「概要」を参照。\n\nn:textareaタグで先頭の改行が削除されることを前提に、アプリケーションで何らかの処理を入れている場合は、その処理を削除する必要があります。",
+      "-",
+      "14618",
+      "nablarch-fw-web-tag/issues/1"
+    ],
+    [
+      "",
+      "",
+      "5",
+      "汎用データフォーマット",
+      "不具合",
+      "配列要素の孫要素を出力できない問題に対応",
+      "「element(配列)->child->grandchild」のように、配列要素からみて孫要素があるXMLを出力すると、子要素(child)が見つからないエラーが発生していました。このため、修正を行いこのような構造のXMLでも出力出来るようにしました。\n\n★出力時に問題が発生するXMLの例\n<root>\n  <element>\n     <child><grandchild /></child>\n  <element>\n  <element>\n     <child><grandchild /></child>\n  <element>\n</root>",
+      "nablarch-core-dataformat 1.0.2",
+      "1.0.0",
+      "なし",
+      "-",
+      "-",
+      "14638",
+      "nablarch-core-dataformat/issues/11"
+    ],
+    [
+      "",
+      "",
+      "6",
+      "汎用データフォーマット",
+      "不具合",
+      "属性を持つ要素にコンテンツを定義できない問題に対応",
+      "XMLの入出力時、属性を持つ要素に対しコンテンツを定義できない問題に対応しました。\n\nフォーマット定義ファイルにて、コンテンツを表すフィールドのフィールド名を\"body\"とすることで属性を持つ要素にコンテンツを定義することができます。\n\n★フォーマット定義ファイルの例\n[root]\n1 child OB\n[child]\n1 @attr X\n2 body X\n\n★上記フォーマット定義に対応するXMLの例\n<root>\n  <child attr=\"value1\">value2</child>\n</root>",
+      "nablarch-core-dataformat 1.0.2",
+      "1.0.0",
+      "あり",
+      "「概要」を参照。\n\n以下の様な、要素名が\"body\"となる要素を持つXMLの入出力を想定している場合に対処が必要になります。\n\n★対処が必要となるXMLの例\n<root>\n  <child>\n    <body>value</body>\n  </child>\n</root>\n\n変更方法は「参照先」を参照。",
+      "Nablarchアプリケーションフレームワーク:Nablarchが提供するライブラリ:様々なフォーマットのデータへのアクセス:汎用データフォーマット:XMLで属性を持つ要素にコンテンツを定義する",
+      "14601",
+      "nablarch-core-dataformat/issues/6\nnablarch-core-dataformat/issues/8"
+    ],
+    [
+      "",
+      "",
+      "7",
+      "汎用ユーティリティ",
+      "不具合",
+      "BeanUtilでnullの要素を１つだけ持つプロパティの値をコピーできない不具合に対応",
+      "BeanUtilを使用してJava Beanにプロパティの値をコピーした際に、下記の条件に該当する値がコピーできない問題がありました。\nこのため、下記の条件に該当する場合には、コピー先にはnullをコピーするよう対応を行いました。\n\n【コピーできない条件】\n・コピー元の型が配列型\n・コピー先が非配列型\n・コピー元の配列の値が、サイズ1でnull",
+      "nablarch-core-beans 1.1.3",
+      "1.0.0",
+      "なし",
+      "「概要」に記載した条件に合致する使い方をしている場合は、影響を受けます。\n\nまた、今回の不具合は、リクエストパラメータ（String型配列）からFormへのコピーを想定した実装が起因となっています。\n\nそのため、BeanUtilを使用しており、アプリケーションでリクエストパラメータの値をnullに変更している処理がある場合は影響を受けます。影響を受ける処理がある場合は処理を見直してください。",
+      "-",
+      "-",
+      "nablarch-core-beans/issues/13"
+    ],
+    [
+      "",
+      "",
+      "8",
+      "インターセプタ",
+      "変更",
+      "Interceptor.Implを公開APIに変更",
+      "Inteceptor.Implは非公開APIとなっていましたが、アプリケーションでInterceptorを作成する際に継承する必要があるため、公開APIに変更しました。",
+      "nabalrch-core 1.2.3",
+      "-",
+      "なし",
+      "-",
+      "-",
+      "14610",
+      "nablarch-core/issues/5"
+    ],
+    [
+      "",
+      "",
+      "9",
+      "Mavenプロファイル",
+      "不具合",
+      "nablarch-bomに定義されているnablarch-wmq-adaptorのバージョンが誤っていたので修正",
+      "nablarch-bomに定義されているnablarch-wmq-adaptorのバージョンが誤っていたので修正しました。\n\n修正前：1.0.0\n修正後：1.0.1",
+      "nablarch-profiles 5u7",
+      "5u6",
+      "なし",
+      "-",
+      "-",
+      "14627",
+      "nablarch-profiles/issues/1"
+    ],
+    [
+      "",
+      "",
+      "10",
+      "フレームワーク",
+      "不具合",
+      "モジュールのバイトコードをJava6に準拠するように修正",
+      "以下のモジュールのJavaのバイトコードがJava7に準拠していたので、Java6に準拠するように修正しました。\n\nnablarch-core-validation-ee\nnablarch-etl\nnablarch-fw-batch-ee\nnablarch-fw-jaxrs\nnablarch-jackson-adaptor\nnablarch-jersey-adaptor\nnablarch-resteasy-adaptor",
+      "nablarch-core-validation-ee 1.0.4\nnablarch-etl 1.0.2\nnablarch-fw-batch-ee 1.0.2\nnablarch-fw-jaxrs 1.0.2\nnablarch-jackson-adaptor 1.0.2\nnablarch-jersey-adaptor 1.0.2\nnablarch-resteasy-adaptor 1.0.2",
+      "1.0.3\n1.0.1\n1.0.1\n1.0.1\n1.0.1\n1.0.1\n1.0.1",
+      "あり",
+      "「概要」を参照。\n\nアプリケーションへの対処は必要ありません。",
+      "-",
+      "-",
+      "nablarch-core-validation-ee/issues/1\nnablarch-etl/issues/3\nnablarch-fw-batch-ee/issues/2\nnablarch-fw-jaxrs/issues/4\nnablarch-jaxrs-adaptor/issues/1"
+    ],
+    [
+      "",
+      "解説書",
+      "11",
+      "汎用データフォーマット",
+      "不具合",
+      "XML、JSONで使用可能なデータタイプ名が誤っていたので修正",
+      "以下の通りXML及びJSONで使用可能なデータタイプの記載を修正しています。\n\n誤: タイプ名 -> XS9 \n正: タイプ名 -> SX9",
+      "-",
+      "5u6",
+      "なし",
+      "-",
+      "-",
+      "14624",
+      "nablarch-document/issues/7"
+    ],
+    [
+      "",
+      "",
+      "12",
+      "ファイルパス管理",
+      "不具合",
+      "空白を含むパスを使用できない仕様を追記",
+      "空白を含むパスを使用できない仕様を追記しました。",
+      "-",
+      "5u6",
+      "なし",
+      "-",
+      "Nablarchアプリケーションフレームワーク:Nablarchが提供するライブラリ:ファイルパス管理:ディレクトリと拡張子を設定する\n→ポイントに追記しました。",
+      "13591",
+      "nablarch-document/issues/5"
+    ],
+    [
+      "テスティングフレームワーク",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "オブジェクトコード、ソースコード",
+      "13",
+      "テスティングフレームワーク",
+      "不具合",
+      "アクションの返すパスのアサート方法を変更",
+      "Webアプリケーションのアクションが返すHttpResponseのパスのアサート方法を変更しました。\n\n変更前:http(https)を示すパスの場合、ホスト名を除いた部分をアサートしていました。\n変更後:ホスト名を含む全体をアサートするように変更しました。",
+      "nablarch-testing 1.0.7",
+      "1.0.0",
+      "あり",
+      "期待値のパスだけではなくホストを含む完全なパスに変更してください。\n\n例：\n★アクション\nreturn new HttpResponse(\"https://calendar.google.com/calendar\");\n\n★期待値\n上記アクションの実装の場合、以下のように完全なパスを期待値に設定します。\nhttps://calendar.google.com/calendar",
+      "-",
+      "-",
+      "nablarch-testing/issues/4"
+    ]
+  ]
+}

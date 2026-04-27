@@ -1,0 +1,32 @@
+{
+  "id": "adapters-web-thymeleaf-adaptor",
+  "title": "ウェブアプリケーション Thymeleafアダプタ",
+  "content": "**目次**\n\n* モジュール一覧\n* ウェブアプリケーション Thymeleafアダプタを使用するための設定を行う\n\n  * 処理対象判定について\n* テンプレートエンジンを使用する\n\nウェブアプリケーションで、テンプレートエンジンに [Thymeleaf(外部サイト)](https://www.thymeleaf.org)\nを使用するためのアダプタを提供する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "content": "```xml\n<!-- ウェブアプリケーション Thymeleafアダプタ -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-web-thymeleaf-adaptor</artifactId>\n</dependency>\n```\n\n> **Tip:**\n> Thymeleafのバージョン3.0.9.RELEASEを使用してテストを行っている。\n> バージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "ウェブアプリケーション Thymeleafアダプタを使用するための設定を行う",
+      "content": "本アダプタを使用するためには、コンポーネント設定ファイルで\nThymeleafResponseWriter を\nHttpResponseHandler へ設定する。\n\n`ThymeleafResponseWriter` にはThymeleafが提供する `TemplateEngine` を設定する必要がある。\n\nコンポーネント設定ファイルの設定例を以下に示す。\n\n```xml\n<component name=\"templateEngine\" class=\"org.thymeleaf.TemplateEngine\" autowireType=\"None\">\n  <property name=\"templateResolver\">\n    <component class=\"org.thymeleaf.templateresolver.ClassLoaderTemplateResolver\">\n      <property name=\"prefix\" value=\"template/\"/>\n    </component>\n  </property>\n</component>\n\n<component name=\"thymeleafResponseWriter\"\n           class=\"nablarch.fw.web.handler.responsewriter.thymeleaf.ThymeleafResponseWriter\"\n           autowireType=\"None\">\n  <property name=\"templateEngine\" ref=\"templateEngine\" />\n</component>\n\n<component name=\"httpResponseHandler\"\n           class=\"nablarch.fw.web.handler.HttpResponseHandler\">\n  <property name=\"customResponseWriter\" ref=\"thymeleafResponseWriter\"/>\n  <!-- その他の設定は省略 -->\n</component>\n```\n\n> **Tip:**\n> `ITemplateResolver` インタフェースの実装クラスに、\n> `org.thymeleaf.templateresolver.ServletContextTemplateResolver` が存在するが、\n> 以下の理由により、[システムリポジトリ](../../component/libraries/libraries-repository.md#repository) にコンポーネントとして登録できない。\n\n> * >   コンストラクタ引数に `javax.servlet.ServletContext` が必須である(デフォルトコンストラクタを持たない)。\n> * >   システムリポジトリ構築時には `javax.servlet.ServletContext` にアクセスできず、[ファクトリ](../../component/libraries/libraries-repository.md#repository-factory-injection) によるオブジェクト生成もできない。\n\n> このため、 `ServletContextTemplateResolver` ではなく、 `ClassLoaderTemplateResolver` 等の別の実装クラスを使用すること。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "処理対象判定について",
+      "content": "ThymeleafResponseWriter は\nHttpResponse のコンテンツパスの内容によって、\nテンプレートエンジンを使用してレスポンスを出力するか否かを判断する。\nデフォルトではコンテンツパスが `.html` で終了している場合、処理対象と判定しテンプレートエンジンにより出力する。\n\n例えば、アクションクラスで以下のように `HttpResponse` を返却したとする。\n\n```java\nreturn new HttpResponse(\"template/index.html\");\n```\n\nこの場合、コンテンツパス( `template/index.html` )は `.html` で終了しているため、\nテンプレートエンジンの出力対象と判定される。\n\n処理対象と判定されなかった場合は、テンプレートエンジンによる出力は行われず、\nサーブレットフォワードが実行される。\n例えば、以下の例では、コンテンツパスが `.html` で終了していないため、サーブレットフォワードが実行される。\n\n```java\nreturn new HttpResponse(\"/path/to/anotherServlet\");\n```\n\nこの処理対象判定条件は設定変更が可能である。プロパティ `pathPattern` に、\n判定に使用する正規表現が設定できる(デフォルト値は `.*\\.html` )。\nこの正規表現にコンテンツパスがマッチした場合、テンプレートエンジンの処理対象と判定される。\n\n> **Important:**\n> Thymeleafでは、テンプレートのパスを解決する際、サフィックスを省略する設定ができるが、\n> 本アダプタを使用する場合はサフィックスの省略は行わないこと。\n\n> * >   OK: `return new HttpResponse(\"index.html\");`\n> * >   NG: `return new HttpResponse(\"index\");`\n\n> サフィックスを省略した場合、セッションストアからリクエストスコープへの移送が行われず、\n> テンプレートからセッションストアの値を参照できなくなる。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "テンプレートエンジンを使用する",
+      "content": "テンプレートエンジンを使用するには、テンプレートファイルを作成、配置する必要がある。\n\nテンプレートファイルを配置する場所は `TemplateEngine` の設定によって異なる。\n前節で示した設定例の場合、テンプレートファイルはクラスパスからロードされる。\nまた、 `ClassLoaderTemplateResolver` のプロパティ `prefix` に `template/` \nというようにプレフィックスが設定されているので、\nクラスパス上の `template` ディレクトリ配下にテンプレートファイルを配置することになる。\n\n配置したテンプレートを使ってレスポンスを出力するには、テンプレートファイルへのパスを指定した `HttpResponse` を\nアクションクラスの戻り値として返却する。\n\n例えば、 `src/main/resources/template` 配下に、`index.html` というテンプレートファイルを配置したとする。\nこの場合、このテンプレートファイルはクラスパス上では `template/index.html` に位置するので、\nアクションクラスで、このパスを指定した `HttpResponse` を返却する。\n\n先の設定例のように、プレフィックスの指定をしている場合は、プレフィックスを省略したパスを指定する。\n\n```java\nreturn new HttpResponse(\"index.html\");\n```\n\nプレフィックスを指定しない場合は、パスを省略せずそのまま指定する。\n\n```java\nreturn new HttpResponse(\"template/index.html\");\n```\n\nこれにより、配置したテンプレートファイルを用いてレスポンスが出力される。",
+      "level": 2
+    }
+  ]
+}

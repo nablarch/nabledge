@@ -1,49 +1,39 @@
-# Nablarch 1.2.8版
 
-## Nablarchについて
 
-Nablarch(ナブラーク)はTISの豊富な基幹システム構築経験から得られたナレッジを集約したJavaアプリケーション開発/実行基盤。
+![Nablarch.jpg](../../../knowledge/assets/about-nablarch-top/Nablarch.jpg)
 
-関連ドキュメント（toctree）:
-- about_nablarch/concept
-- about_nablarch/development_policy
-- about_nablarch/contents
-- about_nablarch/support_service
-- about_nablarch/versionup_policy
+## Nablarch 1.2.8版
 
-<details>
-<summary>keywords</summary>
+### Nablarchについて
 
-Nablarch, Java開発基盤, TIS, アプリケーション開発実行基盤, about_nablarch/concept, about_nablarch/development_policy, about_nablarch/contents, about_nablarch/support_service, about_nablarch/versionup_policy
+Nablarch(ナブラーク)は、TISの豊富な基幹システム構築経験から得られたナレッジを集約したJavaアプリケーション開発/実行基盤です。
 
-</details>
+about_nablarch/concept
+about_nablarch/development_policy
+about_nablarch/contents
+about_nablarch/support_service
+about_nablarch/versionup_policy
 
-## Nablarchのコンテンツ
+### Nablarchのコンテンツ
 
-- [Nablarchのコンテンツ](./nablarch/index.html)
-- [FAQ](./FAQ/index.html)
+Nablarchのコンテンツは nablarchフォルダに格納されています。下記リンクから参照してください。
 
-<details>
-<summary>keywords</summary>
+* [Nablarchのコンテンツ](./nablarch/index.html)
 
-Nablarchコンテンツ, FAQ, nablarch/index, コンテンツ一覧
+nablarch/index
 
-</details>
+また、Nablarchを使用したアプリケーション開発に関する質問については、FAQを参照してください。
 
-## リリース情報
+* [FAQ](./FAQ/index.html)
 
-| 項目 | 内容 |
-|---|---|
+### リリース情報
+
+本リリースのリリース情報は下記のとおりです。
+
 | 配布元 | TIS株式会社 テクノロジー開発部 |
+|---|---|
 | バージョン番号 | 1.2.8 |
 | リリース日 | 2024年05月30日 |
 | リリース内容 | [リリースノート](./nablarch/release_note/nablarch-releasenote.xlsx) |
 | 既知不具合 | [既知不具合](./nablarch/release_note/既知不具合.xls) |
-| リリース履歴 | 2013年05月13日 1.1.9リリース、2021年06月30日 1.2.7リリース |
-
-<details>
-<summary>keywords</summary>
-
-リリース情報, 配布元, バージョン番号, 1.2.8, リリース日, リリース内容, リリースノート, 既知不具合, リリース履歴
-
-</details>
+| リリース履歴 | 2013年05月13日 1.1.9 リリース 2021年06月30日 1.2.7 リリース |

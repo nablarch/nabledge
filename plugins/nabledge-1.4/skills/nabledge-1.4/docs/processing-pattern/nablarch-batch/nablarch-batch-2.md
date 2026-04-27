@@ -1,40 +1,51 @@
 # データベースをインプットとするバッチ処理の場合で、精査が不要な場合でもEntityは作成する必要はありますか？
 
-## 精査不要なバッチ処理でのEntity使用方針
+> **question:**
+> データベースをインプットとして処理を行う場合で、インプットデータが処理済みの場合の処理の流れは以下のようになると思います。
 
-精査が不要な場合でも、基本的にはEntityを生成してデータベースへのINSERTやUPDATE処理を行うこと。1項目ずつ値を設定する実装よりもEntityを使用したDB更新のほうが保守性・生産性の面でメリットが大きい。
+> 1. >   入力データを受け取る。
+> 2. >   データを出力する。(テーブルへのINSERTやUPDATE)
 
-> **重要**: 1項目ずつ値を設定した場合、Nablarchのデータベースアクセス機能が提供する共通項目の設定機能が使用不可になる。
+> このようなケースの場合、INSERTやUPDATE時にEntityは使用せずに1項目ずつsetStringやsetObjectを呼び出す想定でいます。
+> イメージ的には、以下のような実装を想定しています。
 
-**非推奨の実装例（Entityを使わない場合）**:
-```java
-@Override
-public Result handle(SqlRow inputData, ExecutionContext ctx) {
-    SqlPStatement statement = getSqlPStatement("INSERT_SQL");
-    statement.setString(1, inputData.getString("id"));
-    statement.setString(2, inputData.getString("name"));
-    statement.setString(3, inputData.getString("kana_name"));
-    statement.setString(4, inputData.getString("tel"));
-    statement.executeUpdate();
-    return new Success();
-}
-```
+> これは、実装方法として正しいのでしょうか？
 
-**推奨の実装例（Entityを使う場合）**:
-```java
-@Override
-public Result handle(SqlRow inputData, ExecutionContext ctx) {
-    ParameterizedSqlPStatement statement = getParameterizedSqlStatement("INSERT_SQL");
-    statement.executeUpdateByObject(new SampleEntity(inputData));
-    return new Success();
-}
-```
+> ```java
+> @Override
+> public Result handle(SqlRow inputData, ExecutionContext ctx) {
+> 
+>     // Entityは使用せずに1項目ずつ値をバインドする。
+>     SqlPStatement statement = getSqlPStatement("INSERT_SQL");
+>     statement.setString(1, inputData.getString("id"));
+>     statement.setString(2, inputData.getString("name"));
+>     statement.setString(3, inputData.getString("kana_name"));
+>     statement.setString(4, inputData.getString("tel"));
+>     statement.executeUpdate();
+> 
+>     return new Success();
+> }
+> ```
 
-関連情報: [6](nablarch-batch-6.md)
+> **answer:**
+> 精査が不要な場合でも、基本的にはEntityを生成してデータベースへのINSERTやUPDATE処理を行うようにしてください。
 
-<details>
-<summary>keywords</summary>
+> なぜなら、保守性や生産性の面で1項目ずつ値を設定するよりもEntityを使用したデータベース更新(INSERTやUPDATE)のほうがメリットが大きいからです。
+> また、1項目ずつ値を設定した場合、Nablarchのデータベースアクセス機能が提供する共通項目の設定機能も使用することができなくなってしまいます。
 
-SqlPStatement, ParameterizedSqlPStatement, SqlRow, ExecutionContext, executeUpdateByObject, Entity使用, データベース更新, INSERT, UPDATE, 共通項目設定, バッチ処理, Result, Success, SampleEntity
+> 上記の **question** にある実装を、Entityを使用した実装に置き換えると以下のようになります。
 
-</details>
+> ```java
+> @Override
+> public Result handle(SqlRow inputData, ExecutionContext ctx) {
+> 
+>     // Entityを生成して、データベースの更新を行う。
+>     ParameterizedSqlPStatement statement = getParameterizedSqlStatement("INSERT_SQL");
+>     statement.executeUpdateByObject(new SampleEntity(inputData));
+> 
+>     return new Success();
+> }
+> ```
+
+> **related information:**
+> * >   [データベースをインプットとするバッチ処理でも、画面処理と同じようにFormは必要ですか？](../../processing-pattern/nablarch-batch/nablarch-batch-6.md)

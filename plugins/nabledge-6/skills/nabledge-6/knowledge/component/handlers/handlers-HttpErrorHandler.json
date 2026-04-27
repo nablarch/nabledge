@@ -1,91 +1,44 @@
 {
   "id": "handlers-HttpErrorHandler",
   "title": "HTTPエラー制御ハンドラ",
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web/HttpErrorHandler.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/HttpErrorHandler.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/NoMoreHandlerException.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpErrorResponse.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.Error.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/message/ApplicationException.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/message/ErrorMessages.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/WebConfig.html"
-  ],
-  "index": [
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* 例外の種類に応じた処理とレスポンスの生成\n\n  * nablarch.fw.Result.Errorのログ出力について\n* デフォルトページの設定\n\n後続のハンドラで発生した例外に対するログ出力やレスポンスへの変換を行うハンドラ。\n\n本ハンドラでは、以下の処理を行う。\n\n* [例外の種類に応じたログ出力](../../component/handlers/handlers-HttpErrorHandler.md#httperrorhandler-errorhandling)\n* [例外の種類に応じたエラー用HttpResponseの生成と返却](../../component/handlers/handlers-HttpErrorHandler.md#httperrorhandler-errorhandling)\n* [デフォルトページの設定](../../component/handlers/handlers-HttpErrorHandler.md#httperrorhandler-defaultpage)\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-HttpErrorHandler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "ハンドラクラス名",
-      "hints": [
-        "HttpErrorHandler",
-        "nablarch.fw.web.handler.HttpErrorHandler",
-        "HTTPエラー制御ハンドラ",
-        "例外ハンドラ",
-        "エラーレスポンス変換"
-      ]
+      "content": "* nablarch.fw.web.handler.HttpErrorHandler",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "モジュール一覧",
-      "hints": [
-        "nablarch-fw-web",
-        "モジュール依存関係",
-        "com.nablarch.framework"
-      ]
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+      "level": 2
     },
     {
       "id": "s3",
       "title": "制約",
-      "hints": [
-        "http_response_handler",
-        "http_access_log_handler",
-        "ハンドラ配置順序",
-        "配置制約",
-        "HTTPレスポンスハンドラ",
-        "HTTPアクセスログハンドラ",
-        "HttpResponse"
-      ]
+      "content": "[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置すること\n本ハンドラで生成した HttpResponse をHTTPレスポンスハンドラが処理するため、\n本ハンドラは [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置する必要がある。\n[HTTPアクセスログハンドラ](../../component/handlers/handlers-http-access-log-handler.md#http-access-log-handler) より後ろに配置すること\n本ハンドラで生成したエラー用 HttpResponse を元にログ出力を行うため、\n[HTTPアクセスログハンドラ](../../component/handlers/handlers-http-access-log-handler.md#http-access-log-handler) より後ろに配置する必要がある。",
+      "level": 2
     },
     {
       "id": "s4",
       "title": "例外の種類に応じた処理とレスポンスの生成",
-      "hints": [
-        "NoMoreHandlerException",
-        "HttpErrorResponse",
-        "ApplicationException",
-        "ErrorMessages",
-        "nablarch.fw.Result.Error",
-        "writeFailureLogPattern",
-        "errorMessageRequestAttributeName",
-        "例外処理",
-        "ログ出力レベル",
-        "エラーレスポンス生成",
-        "StackOverflowError",
-        "ThreadDeath",
-        "VirtualMachineError",
-        "errors"
-      ]
+      "content": "nablarch.fw.NoMoreHandlerException\nINFO\n\n404\n\nリクエストを処理すべきハンドラが存在しなかったことを意味するため、証跡ログとして記録する。\nまた、処理すべき *action class* が存在しなかったことを意味するため、レスポンスは *404*  としている。\nnablarch.fw.web.HttpErrorResponse\nログ出力なし\n\nHttpErrorResponse#getResponse()\n\n後続のハンドラで業務例外(バリデーションなどを行った結果のエラーレスポンス送出)を送出したことを意味するのでログ出力は行わない。\n\n`HttpErrorResponse` の原因例外が ApplicationException の場合は、\nViewでエラーメッセージを扱えるよう以下の処理を行う。\n\n1. `ApplicationException` が保持するメッセージ情報を ErrorMessages に変換する。\n2. `ErrorMessages` をリクエストスコープに設定する。\n  リクエストスコープに設定する際のキー名は、デフォルトでは `errors` となる。キー名は、コンポーネント設定ファイルで変更できる。\n\n  設定例\n  ```xml\n  <component name=\"webConfig\" class=\"nablarch.common.web.WebConfig\">\n    <!-- キーをmessagesに変更 -->\n    <property name=\"errorMessageRequestAttributeName\" value=\"messages\" />\n  </component>\n  ```\nnablarch.fw.Result.Error\n設定による\n\nError#getStatusCode()\n\nnablarch.fw.Result.Errorのログ出力について を参照\njava.lang.StackOverflowError\nFATAL\n\n500\n\nデータや実装バグに起因する可能性があるため、障害として通知する。\nまた予期しないエラーであるため、レスポンスは **500** としている。\njava.lang.ThreadDeath と java.lang.VirtualMachineError ( java.lang.StackOverflowError 以外)\n-\n\n-\n\n本ハンドラでは何もせず上位のハンドラに処理を任せる。(エラーを再送出する)\n上記以外の例外及びエラー\nFATAL\n\n500\n\n上記に該当しない例外及びエラーの場合には、障害扱いとしてログ出力を行う。\nまた、予期しない例外やエラーであるため、レスポンスは **500** としている。",
+      "level": 2
     },
     {
       "id": "s5",
+      "title": "nablarch.fw.Result.Errorのログ出力について",
+      "content": "後続のハンドラで発生した例外が、 Error の場合はログ出力を行うかどうかは、\nwriteFailureLogPattern に設定した値によって変わる。\nこのプロパティには正規表現が設定でき、その正規表現が Error#getStatusCode() とマッチした場合に FATAL レベルのログを出力する。",
+      "level": 3
+    },
+    {
+      "id": "s6",
       "title": "デフォルトページの設定",
-      "hints": [
-        "defaultPage",
-        "defaultPages",
-        "デフォルトページ設定",
-        "エラーページ",
-        "web.xml",
-        "HttpErrorHandler",
-        "error-page",
-        "HttpResponse"
-      ]
+      "content": "後続のハンドラや本ハンドラのエラー処理で作成した HttpResponse に対して、デフォルトページを適用する。\nこの機能では、 HttpResponse が設定されていなかった場合、\ndefaultPage や\ndefaultPages で設定されたデフォルトのページを適用する。\n\n以下に設定例を示す。\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpErrorHandler\">\n  <property name=\"defaultPages\">\n    <map>\n      <entry key=\"4..\" value=\"/USER_ERROR.jsp\" />\n      <entry key=\"404\" value=\"/NOT_FOUND.jsp\" />\n      <entry key=\"5..\" value=\"/ERROR.jsp\" />\n      <entry key=\"503\" value=\"/NOT_IN_SERVICE.jsp\" />\n    </map>\n  </property>\n</component>\n```\n\n> **Important:**\n> この機能を使用した場合、Servlet APIで規定されている web.xml へのエラーページ設定( error-page 要素)と重複してJSPの設定が必要となる。\n> web.xml へ設定しなかった場合、エラーの発生場所によっては、ウェブサーバのデフォルトのエラーページが表示される。\n\n> このため、本機能を使用するのではなく、デフォルトのエラーページの設定は、 web.xml へ行うことを推奨する。",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "後続のハンドラで発生した例外に対するログ出力やレスポンスへの変換を行うハンドラ。以下の処理を行う：\n\n1. 例外の種類に応じたログ出力\n2. 例外の種類に応じたエラー用HttpResponseの生成と返却\n3. デフォルトページの設定\n\n**クラス名**: `nablarch.fw.web.handler.HttpErrorHandler`",
-    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
-    "s3": "- [http_response_handler](handlers-http_response_handler.json#s1) より後ろに配置すること: 本ハンドラで生成した `HttpResponse` をHTTPレスポンスハンドラが処理するため。\n- [http_access_log_handler](handlers-http_access_log_handler.json#s1) より後ろに配置すること: 本ハンドラで生成したエラー用 `HttpResponse` を元にログ出力を行うため。",
-    "s4": "| 例外/エラー | ログレベル | レスポンス |\n|---|---|---|\n| `NoMoreHandlerException` | INFO | 404 |\n| `HttpErrorResponse` | なし | `HttpErrorResponse#getResponse()` |\n| `Error` | 設定による | `Error#getStatusCode()` |\n| `StackOverflowError` | FATAL | 500 |\n| `ThreadDeath` と `VirtualMachineError`（StackOverflowError以外） | — | — |\n| 上記以外の例外・エラー | FATAL | 500 |\n\n- `NoMoreHandlerException`: 処理すべきaction classが存在しなかった証跡として記録。レスポンス404。\n- `HttpErrorResponse`: 業務例外（バリデーション等）のためログ出力なし。\n- `StackOverflowError`: データや実装バグに起因する可能性があるため障害扱い。レスポンス500。\n- `ThreadDeath`・`VirtualMachineError`（StackOverflowError以外）: 本ハンドラでは何もせず上位ハンドラに処理を任せる（エラーを再送出）。\n- 上記以外: 予期しない例外・エラーのため障害扱い。レスポンス500。\n\n**HttpErrorResponseの原因例外が `ApplicationException` の場合の追加処理:**\n1. `ApplicationException` のメッセージ情報を `ErrorMessages` に変換する。\n2. `ErrorMessages` をリクエストスコープに設定する（デフォルトキー名: `errors`）。キー名はコンポーネント設定ファイルで変更可能。\n\n```xml\n<component name=\"webConfig\" class=\"nablarch.common.web.WebConfig\">\n  <!-- キーをmessagesに変更 -->\n  <property name=\"errorMessageRequestAttributeName\" value=\"messages\" />\n</component>\n```\n\n**Result.Errorのログ出力設定:**\n`writeFailureLogPattern` プロパティに正規表現を設定し、`Error#getStatusCode()` とマッチした場合に `FATAL` レベルのログを出力する。",
-    "s5": "後続ハンドラや本ハンドラのエラー処理で生成した `HttpResponse` にデフォルトページを適用する機能。`HttpResponse` が設定されていなかった場合、`defaultPage` / `defaultPages` で設定されたデフォルトページを適用する。\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpErrorHandler\">\n  <property name=\"defaultPages\">\n    <map>\n      <entry key=\"4..\" value=\"/USER_ERROR.jsp\" />\n      <entry key=\"404\" value=\"/NOT_FOUND.jsp\" />\n      <entry key=\"5..\" value=\"/ERROR.jsp\" />\n      <entry key=\"503\" value=\"/NOT_IN_SERVICE.jsp\" />\n    </map>\n  </property>\n</component>\n```\n\n> **重要**: この機能を使用した場合、`web.xml` へのエラーページ設定（`error-page` 要素）と重複してJSPの設定が必要となる。`web.xml` へ設定しなかった場合、エラーの発生場所によってはウェブサーバのデフォルトのエラーページが表示される。デフォルトエラーページの設定は本機能ではなく `web.xml` へ行うことを推奨する。"
-  }
+  ]
 }

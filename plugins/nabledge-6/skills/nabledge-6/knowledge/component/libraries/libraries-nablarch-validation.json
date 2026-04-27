@@ -1,0 +1,158 @@
+{
+  "id": "libraries-nablarch-validation",
+  "title": "Nablarch Validation",
+  "content": "**目次**\n\n* 機能概要\n\n  * バリデーションと型変換及び値の正規化ができる\n  * ドメインバリデーションができる\n  * よく使われるバリデータ及びコンバータが提供されている\n* モジュール一覧\n* 使用方法\n\n  * 使用するバリデータとコンバータを設定する\n  * バリデーションルールを設定する\n  * ドメインバリデーションを使う\n  * バリデーション対象のBeanを継承する\n  * バリデーションを実行する\n  * バリデーションの明示的な実行\n  * 文字種バリデーションを行う\n  * 相関バリデーションを行う\n  * 一括登録のようなBeanの配列を入力とする機能でバリデーションを行う\n  * ラジオボタンやリストボックスの選択値に応じてバリデーション項目を変更する\n  * 特定の項目に紐づくバリデーションエラーのメッセージを作りたい\n  * バリデーションエラー時のメッセージに項目名を埋め込みたい\n  * 数値型への型変換\n  * データベースとの相関バリデーションを行う\n  * ウェブアプリケーションのユーザ入力値のチェックを行う\n* 拡張例\n\n  * プロジェクト固有のバリデータを追加したい\n  * プロジェクト固有のコンバータを追加したい\n  * バリデーション対象のBeanオブジェクトの生成方法を変更したい\n\nこの章では、Nablarchで独自に実装したバリデーション機能を解説する。\n\n> **Tip:**\n> [入力値のチェック](../../component/libraries/libraries-validation.md#validation) で説明したように、 [Bean Validation](../../component/libraries/libraries-bean-validation.md) を使用することを推奨する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "機能概要",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "バリデーションと型変換及び値の正規化ができる",
+      "content": "Nablarchのバリデーションでは、バリデーションと入力値の型変換、正規化を行うことが出来る。\n\n型変換が行えるため、入力値をBeanクラスの数値型(IntegerやLong)などに直接マッピングすることが出来る。\nまた、編集された値の編集解除(正規化)なども型変換時に行うことが出来る。\n\n詳細は、 [使用するバリデータとコンバータを設定する](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-definition-validator-convertor) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "ドメインバリデーションができる",
+      "content": "ドメインごとにバリデーションルールを定義できる。\n\nドメインバリデーションを使うと、Beanクラスのsetterにはドメイン名の指定だけを行えばよく、バリデーションルールの変更が容易になる。\n\n詳細は、 ドメインバリデーションを使う を参照。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "よく使われるバリデータ及びコンバータが提供されている",
+      "content": "Nablarchでは、よく使われるバリデータやコンバータを標準で提供している。\nこのため、プロジェクト側では [使用するバリデータとコンバータを設定する](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-definition-validator-convertor) だけで、バリデーションが実行できる。\n\nNablarchで提供しているバリデータ及びコンバータについては以下のリンク先を参照。\n\n* nablarch.core.validation.validator\n* nablarch.core.validation.convertor\n* nablarch.common.date\n* nablarch.common.code.validator",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-validation</artifactId>\n</dependency>\n\n<!-- 日付のバリデータ、コンバータを使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-date</artifactId>\n</dependency>\n\n<!-- コード値のバリデータ、コンバータを使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-code</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "使用方法",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "使用するバリデータとコンバータを設定する",
+      "content": "バリデーションを有効にするには、コンポーネント設定ファイルに使用するバリデータとコンバータの登録が必要となる。\n\nNablarchが提供しているバリデータ及びコンバータについては、 [よく使われるバリデータ及びコンバータが提供されている](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-validator-convertor) を参照。\n\n> **Important:**\n> バリデータやコンバータの設定がない場合、バリデーション機能は使用できないので必ず設定すること。\n\n設定例\n* ValidationManager を **validationManager** という名前でコンポーネント定義する。\n* ValidationManager#convertors に使用するコンバータを列挙する。\n* ValidationManager#validators に使用するバリデータを列挙する。\n\n```xml\n<component name=\"validationManager\" class=\"nablarch.core.validation.ValidationManager\">\n  <property name=\"convertors\">\n    <list>\n      <!-- ここに使用するコンバータを列挙する -->\n    </list>\n  </property>\n  <property name=\"validators\">\n    <list>\n      <!-- ここに使用するバリデータを列挙する -->\n    </list>\n  </property>\n\n  <!--\n  他の属性は省略\n  詳細は、ValidationManagerのJavadocを参照\n   -->\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "バリデーションルールを設定する",
+      "content": "バリデーションルールのアノテーションは、バリデーション対象のBeanクラスのプロパティ(setter)に設定する。\nなお、getterにはアノテーションを指定できないので注意すること。(指定しても意味が無い)\n\n> **Tip:**\n> 個別にアノテーションを設定した場合、実装時のミスが増えたりメンテナンスコストが大きくなるため、\n> 後述する [ドメインバリデーション](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-domain-validation) を使うことを推奨する。\n\n実装例\n[Nablarchで提供しているバリデータとコンバータ](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-validator-convertor) を参照しアノテーションを設定する。\n\nこの例では、 userName は入力が必須で、全角文字の最大10文字が許容される。\nbirthday は、半角数字の8桁が許容される。\nage は、整数で3桁まで許容される。\n\n```java\npublic class SampleForm {\n\n  @Length(max = 10)\n  @SystemChar(charsetDef = \"全角文字\")\n  @Required\n  public void setUserName(String userName) {\n      this.userName = userName;\n  }\n\n  @Length(min = 8, max = 8)\n  @SystemChar(charsetDef = \"半角数字\")\n  public void setBirthday(String birthday) {\n      this.birthday = birthday;\n  }\n\n  @Digits(integer = 3)\n  public void setAge(Integer age) {\n      this.age = age;\n  }\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "ドメインバリデーションを使う",
+      "content": "ドメインバリデーションを使うための設定や実装例を示す。\n\nドメインごとのバリデーションルールを定義したEnumの作成\nドメインバリデーションを使用するには、まずドメインごとのバリデーションルールを持つEnum(ドメインEnum)を作成する。\nこのEnumは、必ず DomainDefinition インタフェースを実装すること。\n\nEnumの各列挙子がドメイン名となる。以下の例では `NAME` と `DATE` の２つのドメインが定義されている。\n\n```java\npublic enum SampleDomain implements DomainDefinition {\n\n    @Length(max = 10)\n    @SystemChar(charsetDef = \"全角文字\")\n    NAME,\n\n    @Length(min = 8, max = 8)\n    @SystemChar(charsetDef = \"半角数字\")\n    DATE;\n\n    // インタフェースで定義されているメソッドの実装\n    // 実装する内容は、この例と全く同じとすること\n    @Override\n    public Annotation getConvertorAnnotation() {\n        return DomainValidationHelper.getConvertorAnnotation(this);\n    }\n\n    @Override\n    public List<Annotation> getValidatorAnnotations() {\n        return DomainValidationHelper.getValidatorAnnotations(this);\n    }\n}\n```\nドメインを表すアノテーションの作成\nドメインを表すアノテーションを作成する。\nvalue 属性には、上記で作成したドメインEnumを指定できるようにする。\n\n```java\n@ConversionFormat\n@Validation\n@Target(ElementType.METHOD)\n@Retention(RetentionPolicy.RUNTIME)\npublic @interface Domain {\n    SampleDomain value();\n}\n```\nバリデーション対象のBeanにドメインを設定\n上記で作成したドメインを表すアノテーションを設定することで、ドメインバリデーションが行われる。\n\nこの例では、 userName に対して SampleDomain.NAME に設定したバリデーションが実行される。\n※コンバータが設定されている場合は、コンバータによる値の変換も行われる。\n\n```java\n@Domain(SampleDomain.NAME)\npublic void setUserName(String userName) {\n    this.userName = userName;\n}\n```\nドメインバリデーションを有効にするための設定\nドメインバリデーションを有効にするためには、以下の設定が必要となる。\n\n* DomainValidationHelper の設定\n* DomainValidator の設定\n* ValidationManager の設定\n* 初期化コンポーネントの設定\n\n以下に例を示す。\n\nDomainValidationHelper の設定\n* domainAnnotationプロパティ\n  にドメインを表すアノテーションの完全修飾名(FQCN)を設定する。\n\n```xml\n<component name=\"domainValidationHelper\"\n    class=\"nablarch.core.validation.domain.DomainValidationHelper\">\n\n  <property name=\"domainAnnotation\" value=\"sample.Domain\" />\n\n</component>\n```\nDomainValidator の設定\n* domainValidationHelperプロパティ\n  に、上記で設定した DomainValidationHelper を設定する。\n* validatorsプロパティ\n  にバリデータのリストを設定する。\n\n```xml\n<component name=\"domainValidator\"\n    class=\"nablarch.core.validation.domain.DomainValidator\">\n\n  <!--\n    DomainValidatorはここには設定しないこと。設定すると循環参照となり、\n    システムリポジトリ初期化時にエラーとなる。\n  -->\n  <property name=\"validators\">\n    <list>\n      <component-ref name=\"requiredValidator\" />\n    </list>\n  </property>\n  <property name=\"domainValidationHelper\" ref=\"domainValidationHelper\" />\n</component>\n```\nValidationManager の設定\n* domainValidationHelperプロパティ\n  に、上記で設定した DomainValidationHelper を設定する。\n* validatorsプロパティ\n  にバリデータのリスト(上記で設定した DomainValidator を忘れずに) を設定する。\n\n```xml\n<component name=\"validationManager\" class=\"nablarch.core.validation.ValidationManager\">\n  <property name=\"validators\">\n    <list>\n      <component-ref name=\"domainValidator\" />\n      <!-- 他のバリデータの記述は省略 -->\n    </list>\n  </property>\n  <property name=\"domainValidationHelper\" ref=\"domainValidationHelper\" />\n</component>\n```\n初期化コンポーネントの設定\n上記で設定した、 DomainValidator と\nValidationManager を初期化対象のリストに設定する。\n\n```xml\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"validationManager\" />\n      <component-ref name=\"domainValidator\" />\n    </list>\n  </property>\n</component>\n```\nドメインバリデーションに複数のバリデーションルールを設定した場合の挙動\nドメインバリデーションにて１つの入力項目に複数のエラーが存在する場合、精査を１つ目のエラーで打ち切る。\n\n```java\n public enum SampleDomain implements DomainDefinition {\n   @Length(max = 10)\n   @SystemChar(charsetDef = \"全角文字\")\n   NAME;\n}\n```\n\n上記 NAME は Length バリデーションエラーになった場合、 SystemChar バリデーションは行わない。",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "バリデーション対象のBeanを継承する",
+      "content": "バリデーション対象のBeanは継承できるが、以下の理由により継承は推奨しない。\n\n安易に継承した場合、親クラスの変更により予期せぬバリデーションが実行されたり、\n複雑なバリデーションの上書きルールを意識したアノテーションを設定しなければならず、間違い(バグ)の原因となる。\n\nなお、Beanを継承した場合は以下の動作となる。\n\n* サブクラス側に @PropertyName のみをつけた場合、親クラス側のバリデータとコンバータが使用される。\n* サブクラス側にバリデータ用のアノテーションを1つでもつけた場合、親クラス側のバリデータアノテーションは無視され\n  サブクラス側のバリデータが使用される。コンバータは親クラスのものが使用される。\n* サブクラス側にコンバータ用のアノテーションを1つでもつけた場合は、親クラスのコンバータのアノテーションは無視され\n  サブクラス側のコンバータが使用される。バリデータは親クラスのものが使用される。\n* サブクラス側にバリデータもコンバータも設定されている場合は、全てサブクラス側の設定が使われる。\n* 親クラス側のコンバータの設定をサブクラス側で削除できない。\n\n以下の親子関係のBeanの場合、 ChildForm の value プロパティに対しては、\n@Digits と @NumberRange のバリデーションが実行される。\n\n```java\n// 親Form\npublic class ParentForm {\n  @Digits(integer=5, fraction=3)\n  public void setValue(BigDecimal value) {\n      this.value = value;\n  }\n}\n\n// 子Form\npublic class ChildForm extends ParentForm {\n  @Override\n  @NumberRange(min=100.0, max=20000.0)\n  public void setValue(BigDecimal value) {\n      super.setBdValue(value);\n  }\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "バリデーションを実行する",
+      "content": "バリデーションは、 ValidationUtil で提供されるメソッドを呼び出すことで実行できる。\n\n実装例\nまず、入力値からBeanオブジェクトを生成するため、バリデーション対象のBeanにMapを引数に取るコンストラクタを実装する。\n\n次にバリデーション対象のBeanにバリデーションを行うためのstaticメソッドを実装する。\nこのメソッドには、 @ValidateFor アノテーションを設定し、バリデーションを識別するための任意の値を引数で指定する。\n\nこのメソッドに必要となる処理は、  ValidationUtil を使用してバリデーションを実行すること。\n\n```java\npublic class SampleForm {\n\n  public SampleForm(Map<String, Object> params) {\n      userName = (String) params.get(\"userName\");\n      birthDay = (String) params.get(\"birthDay\");\n      age = (Integer) params.get(\"age\");\n  }\n\n  @Domain(SampleDomain.NAME)\n  @Required\n  public void setUserName(String userName) {\n      this.userName = userName;\n  }\n\n  @Domain(SampleDomain.DATE)\n  public void setBirthday(String birthday) {\n      this.birthday = birthday;\n  }\n\n  @Domain(SampleDomain.AGE)\n  public void setAge(Integer age) {\n      this.age = age;\n  }\n\n  @ValidateFor(\"validate\")\n  public static void validate(ValidationContext<SampleForm> context) {\n    // userNameとbirthdayとageに対してバリデーションを実行\n    ValidationUtil.validate(context, new String[] {\"userName\", \"birthday\", \"age\"});\n  }\n}\n```\n\n上記のBeanを使って入力値の request をバリデーションするには、以下のように  ValidationUtil を使用する。\nなお、ウェブアプリケーションの場合には ウェブアプリケーションのユーザ入力値のチェックを行う でより簡易的にバリデーションが行える。\n\n```java\n// バリデーションの実行\n// SampleFormを使って入力パラメータのrequestをチェックする。\n//\n// 最後の引数にはSampleFormのどのバリデーションメソッドを使用してバリデーションを行うのかを指定する。\n// この例では、validateを指しているので、SampleFormの@ValidateForアノテーションに\n// validateと指定されているメソッドを使ってバリデーションが実行される。\nValidationContext<SampleForm> validationContext =\n        ValidationUtil.validateAndConvertRequest(SampleForm.class, request, \"validate\");\n\n// バリデーションエラーが発生している場合、abortIfInvalidで例外が送出される\nvalidationContext.abortIfInvalid();\n\n// Mapを引数に取るコンストラクタを使用してFormを生成する。\n// (入力値のrequestが変換されたFormが取得できる)\nSampleForm form = validationContext.createObject();\n```",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "バリデーションの明示的な実行",
+      "content": "バリデーションを実行する では、Beanのプロパティ(setter)に設定したアノテーションベースでバリデーションが実行されたが、\nここではアノテーションを設定するのではなく直接バリデーションを実行する方法を説明する。\n\n原則、 バリデーションを実行する の方法でバリデーションを行うが、個別にバリデーションを実行する必要がある場合には、\nこの方法でバリデーションを行うこと。\n例えば、 [コード管理のパターン](../../component/libraries/libraries-code.md#code-use-pattern) を使っていて、\n特定の画面だけパターンを変えてバリデーションしたい場合に、個別にバリデーションを実行する。\n\n実装例\n明示的なバリデーションの実行は、Beanクラスの  @ValidateFor アノテーションが設定されたメソッドから行う。\nなお、明示的バリデーションの実行時に指定できるアノテーションは、 DirectCallableValidator を実装しているものに限定される。\n(コンバータは指定できない。)\n\n```java\npublic class SampleForm {\n  // 属性は省略\n\n  @ValidateFor(\"validate\")\n  public static void validate(ValidationContext<SampleForm> context) {\n\n      ValidationUtil.validate(context, new String[]{\"userName\", \"prefectureCode\"});\n\n      // userNameに対して必須チェックを実施\n      ValidationUtil.validate(context, \"userName\", Required.class);\n\n      // アノテーションのパラメータはMapで指定する\n      Map<String, Object> params = new HashMap<String, Object>();\n      params.put(\"codeId\", \"1052\");     // コードID\n      params.put(\"pattern\", \"A\");       // 使用するコードパターン名\n      params.put(\"messageId\", \"M4865\"); // エラーメッセージのID\n      ValidationUtil.validate(context, \"prefectureCode\", CodeValue.class, params);\n  }\n}\n```\n\n> **Important:**\n> 明示的なバリデーションを行うには、対象の項目に対し予めバリデーションを実施しておく必要がある。\n> 詳細は [バリデーションを実行する](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-execute) を参照",
+      "level": 3
+    },
+    {
+      "id": "s13",
+      "title": "文字種バリデーションを行う",
+      "content": "文字種バリデーションの定義方法は、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) と同じである。\n詳細な設定方法は、 [Bean Validationの文字種バリデーションを行う](../../component/libraries/libraries-bean-validation.md#bean-validation-system-char-validator) を参照。\nただし、サロゲートペアを許容する設定は [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) と異なるので下記を参照すること。\n\nなお、使用するアノテーションは、 @SystemChar で、\n[Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) とは完全修飾名が異なる(アノテーション名は同一)ので注意すること。\n\nサロゲートペアを許容する\nこのバリデーションでは、デフォルトではサロゲートペアを許容しない。\n（例え LiteralCharsetDef で明示的にサロゲートペアの文字を定義していても許容しない）\n\nサロゲートペアを許容する場合は次のようにコンポーネント設定ファイルに SystemCharValidator#allowSurrogatePair を設定する必要がある。\n\n```xml\n<component name=\"systemCharValidator\" class=\"nablarch.core.validation.validator.unicode.SystemCharValidator\">\n  <!-- サロゲートペアを許容する -->\n  <property name=\"allowSurrogatePair\" value=\"true\"/>\n\n  <!-- その他のプロパティは省略 -->\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "相関バリデーションを行う",
+      "content": "複数の項目を使用した相関バリデーションは、Beanクラスの @ValidateFor アノテーションを設定したメソッドで実装する。\nこのメソッドでまずは項目ごとのバリデーションを実施し、エラーが発生しなかった場合に複数項目を使用したバリデーションを実行する。\n\n実装例\nこの例では、mailAddressとconfirmMailAddressを使用した相関バリデーションを行っている。\n\n相関バリデーションでエラーとなった場合は、ユーザに通知すべきメッセージを示すメッセージIDを明示的に ValidationContext に追加する。\n\n```java\npublic class SampleForm {\n\n  @Domain(SampleDomain.MAIL)\n  @Required\n  public void setMailAddress(String mailAddress) {\n      this.mailAddress = mailAddress;\n  }\n\n  @Domain(SampleDomain.MAIL)\n  @Required\n  public void setConfirmMailAddress(String confirmMailAddress) {\n      this.confirmMailAddress = confirmMailAddress;\n  }\n\n  @ValidateFor(\"validate\")\n  public static void validate(ValidationContext<SampleForm> context) {\n      // mailAddressとconfirmMailAddressのバリデーションを実施\n      ValidationUtil.validate(context, new String[] {\"mailAddress\", \"confirmMailAddress\"});\n\n      // エラーが発生した場合は、相関バリデーションを実施しない\n      if (!context.isValid()) {\n          return;\n      }\n\n      // formオブジェクトを生成し、相関バリデーションを実施\n      SampleForm form = context.createObject();\n      if (!Objects.equals(form.mailAddress, form.confirmMailAddress)) {\n          // mailAddressとconfirmMailAddressが一致していない場合エラー\n          context.addMessage(\"compareMailAddress\");\n      }\n  }\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s15",
+      "title": "一括登録のようなBeanの配列を入力とする機能でバリデーションを行う",
+      "content": "一括登録のように同一の情報を複数入力するケースがある。\nこのような場合には、バリデーション対象のBeanに対してネストしたBeanを定義することで対応する。\n\nネストしたBeanのsetterには  @ValidationTarget アノテーションを設定し、ネストしたBeanのサイズを指定する。\n要素数が固定(コンパイル時に決まっている)の場合には size 属性に指定する。可変の場合には、\nsizeKey 属性にサイズを持つプロパティの名前を設定する。\n\nこの例では AddressForm の情報を一括で入力できるため、 SampleForm は AddressForm を配列として保持している。\nまた、サイズはコンパイル時には決まっていないため、 sizeKey を使用している。\n\n```java\npublic class SampleForm {\n    private AddressForm[] addressForms;\n    // addressFormsのサイズ\n    // 画面のhiddenなどから送信すること\n    private Integer addressSize;\n\n    @ValidationTarget(sizeKey = \"addressSize\")\n    public void setAddressForms(AddressForm[] addressForms) {\n        this.addressForms = addressForms;\n    }\n\n    @Domain(SampleDomain.SIZE)\n    @Required\n    public void setAddressSize(Integer addressSize) {\n        this.addressSize = addressSize;\n    }\n\n    @ValidateFor(\"validate\")\n    public static void validate(ValidationContext<SampleForm> context) {\n        ValidationUtil.validate(context, new String[] {\"addressSize\", \"addressForms\"});\n    }\n}\n\npublic class AddressForm {\n    // 省略\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s16",
+      "title": "ラジオボタンやリストボックスの選択値に応じてバリデーション項目を変更する",
+      "content": "WebUtil クラスを使うことで、ラジオボタンやリストボックスなどの選択値に応じてバリデーション項目を切り替えることが出来る。\n\nこの例では、画面から送信された **form.radio** の値が **ptn1** の場合に、 item1 のみバリデーションを行う。\n**ptn1** 以外の場合には、 item1 と item2 のバリデーションを行う。\n\n```java\npublic class SampleForm {\n\n    // プロパティは省略\n\n    @ValidateFor(\"validate\")\n    public static void validate(ValidationContext<SampleForm> context) {\n        if (WebUtil.containsPropertyKeyValue(context, \"form.radio\", \"ptn1\")) {\n            ValidationUtil.validate(context, new String[] {\"item1\"});\n        } else {\n            ValidationUtil.validate(context, new String[] {\"item1\", \"item2\"});\n        }\n    }\n}\n```\n\n> **Tip:**\n> この例では、 WebUtil.containsPropertyKeyValue を使って、送信された値までチェックを行っているが、\n> 単純にラジオボタンのチェック有無だけを調べたいのであれば WebUtil.containsPropertyKey を使う。",
+      "level": 3
+    },
+    {
+      "id": "s17",
+      "title": "特定の項目に紐づくバリデーションエラーのメッセージを作りたい",
+      "content": "[Bean Validationの特定の項目に紐づくバリデーションエラーのメッセージを作りたい](../../component/libraries/libraries-bean-validation.md#bean-validation-create-message-for-property) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s18",
+      "title": "バリデーションエラー時のメッセージに項目名を埋め込みたい",
+      "content": "メッセージに項目名を埋め込むには、 @PropertyName アノテーションを使用して、バリデーション対象の項目の項目名を指定する。\n\n実装例\nメッセージには、項目名を埋め込むためのパターン文字を使用する。\n項目名は、必ず先頭に指定されるので項目名を埋め込む箇所には、 **{0}** と指定する。\n\n```properties\nrequired.message = {0}を入力してください。\n```\n\nバリデーション対象の項目に、バリデーション用のアノテーションとともに項目名を設定する @PropertyName アノテーションを設定する。\n\n```java\npublic class SampleForm {\n\n    @Domain(SampleDomain.NAME)\n    @Required\n    @PropertyName(\"名前\")\n    public void setUserName(String userName) {\n        this.userName = userName;\n    }\n\n    @Domain(SampleDomain.DATE)\n    @PropertyName(\"誕生日\")\n    public void setBirthday(String birthday) {\n        this.birthday = birthday;\n    }\n}\n```\n生成されるメッセージ\n上記実装で、 username プロパティで必須エラーが発生すると、生成されるメッセージは **「名前を入力してください。」** となる。",
+      "level": 3
+    },
+    {
+      "id": "s19",
+      "title": "数値型への型変換",
+      "content": "バリデーション後にBeanクラスの数値型に入力値を変換したい場合、その項目には必ず @Digits アノテーションが必要となる。\n※ドメインバリデーションの場合、ドメインEnumに対して設定が必要となる。\n\nなお、数値型へ変換するためのコンバータが [使用するバリデータとコンバータを設定する](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-definition-validator-convertor) の手順に従い設定されていることが前提となる。\n\n実装例\nこの例では、setterに指定しているが、ドメインバリデーションを使用したドメインEnumへの指定を推奨する。\n\n```java\npublic class SampleForm {\n\n    @PropertyName(\"年齢\")\n    @Digits(integer = 3)\n    public void setAge(Integer age) {\n        this.age = age;\n    }\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s20",
+      "title": "データベースとの相関バリデーションを行う",
+      "content": "データベースとの相関バリデーションは、業務アクションで行う。\n\n業務アクションで行う理由は、[Bean Validationのデータベースとの相関バリデーション](../../component/libraries/libraries-bean-validation.md#bean-validation-database-validation) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s21",
+      "title": "ウェブアプリケーションのユーザ入力値のチェックを行う",
+      "content": "ウェブアプリケーションのユーザ入力値のチェックは [InjectForm インターセプタ](../../component/handlers/handlers-InjectForm.md#inject-form-interceptor) を使用して行う。\n詳細は、 [InjectForm インターセプタ](../../component/handlers/handlers-InjectForm.md#inject-form-interceptor) を参照",
+      "level": 3
+    },
+    {
+      "id": "s22",
+      "title": "拡張例",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s23",
+      "title": "プロジェクト固有のバリデータを追加したい",
+      "content": "バリデータを追加するには、以下の手順が必要となる。\n\n1. アノテーションの作成\n2. バリデータの作成\n3. 設定ファイルにバリデータの登録\n\n以下に手順を示す。\n\nアノテーションの作成\nアノテーションは以下の条件を満たすこと。\n\n* @Validation アノテーションを設定すること。\n* @Target アノテーションで ElementType.METHOD を設定すること。\n* @Retention アノテーションで RetentionPolicy.RUNTIME を設定すること。\n\n```java\n@Validation\n@Target(ElementType.METHOD)\n@Retention(RetentionPolicy.RUNTIME)\npublic @interface Sample {\n}\n```\nバリデータの作成\nバリデータは、 Validator インタフェースを実装し、バリデーションロジックを実装する。\n\n```java\npublic class SampleValidator implements Validator {\n\n  public Class<? extends Annotation> getAnnotationClass() {\n      return Sample.class;\n  }\n\n  public <T> boolean validate(ValidationContext<T> context,\n      // 省略\n  }\n}\n```\n設定ファイルにバリデータの登録\n[使用するバリデータとコンバータを設定する](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-definition-validator-convertor) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s24",
+      "title": "プロジェクト固有のコンバータを追加したい",
+      "content": "コンバータを追加するには、以下の手順が必要となる。\n\n1. コンバータの作成\n2. 設定ファイルにコンバータの登録\n\n以下に手順を示す。\n\nコンバータの作成\nコンバータは、 Convertor インタフェースを実装し、型変換ロジックなどを実装する。\n\n```java\npublic class SampleConvertor implements Convertor {\n\n    @Override\n    public Class<?> getTargetClass() {\n        return Short.class;\n    }\n\n    @Override\n    public <T> boolean isConvertible(ValidationContext<T> context, String propertyName, Object propertyDisplayName,\n            Object value, Annotation format) {\n\n        boolean convertible = true;\n\n        if (value instanceof String) {\n            try {\n                Short.valueOf((String) value);\n            } catch (NumberFormatException e) {\n                convertible = false;\n            }\n        } else {\n            convertible = false;\n        }\n\n        if (!convertible) {\n            context.addResultMessage(propertyName, \"sampleconvertor.message\", propertyDisplayName);\n        }\n        return convertible;\n    }\n\n    @Override\n    public <T> Object convert(ValidationContext<T> context, String propertyName, Object value, Annotation format) {\n        return Short.valueOf((String) value);\n    }\n}\n```\n設定ファイルにコンバータの登録\n[使用するバリデータとコンバータを設定する](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-definition-validator-convertor) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s25",
+      "title": "バリデーション対象のBeanオブジェクトの生成方法を変更したい",
+      "content": "バリデーション対象のBeanオブジェクトの生成方法を変更するには、以下の手順が必要となる。\n\n1. FormCreator の実装クラスの作成\n2. ValidationManager.formCreator に、作成したクラスのコンポーネント定義を追加",
+      "level": 3
+    }
+  ]
+}

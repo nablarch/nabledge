@@ -1,0 +1,104 @@
+{
+  "id": "libraries-02-Repository",
+  "title": "リポジトリ",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "本フレームワークでは、設定値や、フレームワークで提供しているクラスのインスタンスなど、\nアプリケーションを実装する際に様々な箇所で使用されるオブジェクトを保持する入れ物をリポジトリと呼ぶ。\n\n本フレームワークでは、適用されるプロジェクトや環境毎に異なる可能性のあるロジック（生成されるクラス、フィールドの値）を、\n本機能を使用して外部ファイルに記述した設定通りにセットアップする。\n\nリポジトリを使用すれば、リポジトリに保持した設定値やコンポーネントが提供する機能を、アプリケーションのあらゆる箇所で使用できる。\n\nコンポーネントは通常、単独のオブジェクトとしてリポジトリに登録されるのではなく、特定の目的を果すために複数の\nコンポーネント間で関連を持つ必要がある。\nこのコンポーネント間の関連を構築するため、リポジトリはDIコンテナの機能を持つ。\n\n本機能を使用する際は初期化処理の呼び出しが必要となる。\nこの初期化処理は、フレームワークの他の機能が行う。\nWeb アプリケーションでは、 [Nablarchサーブレットコンテキスト初期化リスナ](../../component/handlers/handlers-NablarchServletContextListener.md#nablarchservletcontextlistener) により初期化が行われる。\n\nアプリケーションプログラマは、本機能を環境設定の取得に使用する。\n環境設定の取得方法は、 [環境設定の取得](../../component/libraries/libraries-02-01-Repository-config.md#repository-get-config) に記述する。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "DIコンテナによるコンポーネントの構築",
+      "content": "本機能では、コンポーネント間の関連を構築するために、下記DIコンテナの機能を使用できる。\n\n* セッタインジェクションおよびフィールドインジェクション\n* 環境依存する設定項目の集約\n* 下記プロパティの簡易設定\n\n  * 文字列\n  * boolean型\n  * int型、long型の数値\n  * 文字列配列\n* インタフェースによる自動インジェクション\n* プロパティ名による自動インジェクション",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "リポジトリとDIコンテナの分離",
+      "content": "SpringFrameworkのような他のDIコンテナの実装を使用した場合にも、本フレームワークおよびリポジトリの機能を使用できるよう、DIコンテナの機能とリポジトリの機能を分離して実装している。",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "DIコンテナに登録したコンポーネントの初期化機能",
+      "content": "DIコンテナは、コンポーネントに必要なプロパティを設定する機能を提供している。\nしかし、コンポーネントによってはプロパティ設定後に独自の初期化処理が必要となる。\n本機能では、これらのコンポーネントの初期化処理を行う機能を提供する。\n\nまた、コンポーネントの依存関係によって、初期化処理に順序の制約が発生することを考慮し、\n初期化機能はコンポーネントの初期化順序を指定できるよう考慮している。\n\n初期化機能の詳細は、 [初期化処理の使用手順](../../component/libraries/libraries-02-02-Repository-initialize.md#repository-initialize) に記述する。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "要求",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "実装済み",
+      "content": "* ビジネスロジックのあらゆる箇所で設定値およびコンポーネントを取得できる。\n* ファイルから設定値を読み込める。\n* ディレクトリを指定して、そのディレクトリ以下にあるファイルをまとめて読み込める。\n* 設定値を機能あるいは方式ごとに複数ファイルに分割して定義できる。\n* 環境依存項目を設定ファイル(環境設定ファイル)に記述できる。\n* 設定値をJava起動オプション(-Dオプション）の値で上書きできる。\n* コンポーネント設定ファイルに記述した定義を元に、インスタンス間の関連を生成するDIが使用できる。\n* DIの実行時、プロパティに一致する型のインスタンスを自動的に設定できる。\n* OSSやサードパーティ製品のクラスをDIコンテナ上に作成するため、ファクトリインジェクションの機能を提供する。\n* 複数のコンポーネント設定ファイルに設定を記述する際、同じ設定名を使用することで設定値を上書きできる。\n* 設定名が重複した際、例外を送出するかワーニングログを出力するかの振る舞いを選択できる。\n* DIコンテナに登録したクラスの初期化処理が実行できる。\n* DIコンテナを変更できる。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "未検討",
+      "content": "* アプリケーションを停止することなく、設定の変更を反映できる。\n* バイナリデータを設定できる。\n\n  暗号化鍵のようなバイナリデータを設定できる。",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "構成",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s10",
+      "title": "クラス図",
+      "content": "![02_Repository_ClassDiagram.jpg](assets/libraries-02-Repository/02_Repository_ClassDiagram.jpg)",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "インタフェース定義",
+      "content": "| インタフェース名 | 概要 |\n|---|---|\n| nablarch.core.repository.ObjectLoader | SystemRepositoryに保持するオブジェクトを読み込むインタフェース。 |\n| nablarch.core.repository.di.ComponentDefinitionLoader | コンポーネントの定義を読み込むインタフェース。 |\n| nablarch.core.repository.initialization.ApplicationInitializer | コンポーネントの初期化を行うインタフェース。 |\n| nablarch.core.repository.initialization.Initializable | 初期化処理を行うインタフェース。 |\n| nablarch.core.repository.initialization.ComponentFactory | コンポーネントの作成を行うインタフェース。 FactoryInjectionの機能で使用する。 |",
+      "level": 4
+    },
+    {
+      "id": "s12",
+      "title": "クラス定義",
+      "content": "| クラス名 | 概要 |\n|---|---|\n| nablarch.core.repository.SystemRepository | 設定値およびコンポーネントを保持するクラス。 |\n| nablarch.core.repository.ConfigFileLoader | 環境設定ファイルから文字列の設定値を読み込むクラス。 |\n| nablarch.core.repository.di.DiContainer | DIコンテナの機能を実現するクラス。 コンポーネントを生成する責務を持つ。 また、他のObjectLoaderが読み出した設定値を読み込む機能も持つ。 |\n| nablarch.core.repository.di.ComponentDefinition | DiContainerがコンポーネントの生成に使用する定義を保持するクラス。 |\n| nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader | XMLファイルからコンポーネントの定義を読み込むクラス。 |\n| nablarch.core.repository.initialization.BasicApplicationInitializer | Initializableを実装したコンポーネントを指定した順序で初期化するクラス。 |",
+      "level": 4
+    },
+    {
+      "id": "s13",
+      "title": "リポジトリの設定方法と使用方法",
+      "content": "基本的にリポジトリは、設定ファイルに記載した内容を元にフレームワークが初期化を行うことで使用できるようになる。\nこれら設定ファイルの記述方法と、リポジトリから設定値またはコンポーネントを取得する方法について下記に記述する。\n\n02/02_01_Repository_config",
+      "level": 2
+    },
+    {
+      "id": "s14",
+      "title": "コンポーネント初期化機能",
+      "content": "[DIコンテナに登録したコンポーネントの初期化機能](../../component/libraries/libraries-02-Repository.md#initialize-label) で述べた通り、DIコンテナは、コンポーネントに必要な初期化処理を行うコンポーネント初期化機能を提供する。\n\nコンポーネント初期化機能の詳細について下記に記述する。\n\n02/02_02_Repository_initialize",
+      "level": 2
+    },
+    {
+      "id": "s15",
+      "title": "ファクトリインジェクション",
+      "content": "フレームワーク外のソフトウェアに含まれるクラスを、コンポーネントとして使用したいことがある。\nこれらのクラスが Java Beans として実装されていない場合、通常のリポジトリの設定では使用できない。\n\nこのような場合でも、ファクトリインジェクションを使用することで、これらのクラスをコンポーネントとして取り扱うことができる。\n\nファクトリインジェクションの詳細について、下記に記述する。\n\n02/02_03_Repository_factory",
+      "level": 2
+    },
+    {
+      "id": "s16",
+      "title": "設定の上書き",
+      "content": "作成したアプリケーションをテストする際には、一部機能をスタブにして実行するなど、\n本番環境向けの設定の一部を変更してテストを実施したいことがある。\nこのような場合を考慮し、本機能では一部設定のみを上書きしてテストを実行する機能を提供している。\n\n設定の上書き方法について、下記に記述する。\n\n02/02_04_Repository_override",
+      "level": 2
+    }
+  ]
+}

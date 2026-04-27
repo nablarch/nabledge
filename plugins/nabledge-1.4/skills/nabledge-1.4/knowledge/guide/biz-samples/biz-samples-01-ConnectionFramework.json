@@ -1,0 +1,158 @@
+{
+  "id": "biz-samples-01-ConnectionFramework",
+  "title": "モバイルアプリとNablarchサーバ間の通信",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "モバイルアプリとサーバ間での通信機能を提供する。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "content": "* **通信機能の隠蔽**\n  本機能を使用することで、利用者は通信方式を意識することなくサーバとの通信を行える。\n* **基本的な通信機能の提供**\n  [HTTP/HTTPS通信](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#abouthttpconn) に記述されている通りの通信機能であれば、カスタマイズすることなく利用できる。\n* **汎用的な電文の利用**\n  送受信する電文形式を自由に変更できる。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "要求",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "実装済み",
+      "content": "* REST APIを提供するサーバと通信\n* HTTP/HTTPS方式の通信\n* JSON形式の電文の送受信",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "未実装",
+      "content": "* XML形式の電文の送受信",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "未検討",
+      "content": "* ベーシック認証\n* ダイジェスト認証\n* 証明書を用いた認証",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "構造",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "クラス図",
+      "content": "![connectionFramework_classDiagram.jpg](assets/biz-samples-01-ConnectionFramework/connectionFramework_classDiagram.jpg)",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "各クラスの責務",
+      "content": "",
+      "level": 4
+    },
+    {
+      "id": "s10",
+      "title": "インタフェース定義",
+      "content": "| インタフェース名 | 概要 |\n|---|---|\n| NMMessageRequester | 通信を行うためのインタフェース。 通信方式ごとに本インタフェースの実装クラスを作成する。NMMessageRequesterを実装したクラス 及びインスタンスをセンダと呼ぶ。 |\n| NMSenderHook | 通信前後の処理を行うインタフェース。 本インタフェースを実装することで、通信前後に処理を加えられる。 NMSenderHookを実装したクラスおよびインスタンスをフックと呼ぶ。 |\n| NMBodyConvertor | NMMessageインスタンスをバイナリデータに変換するインタフェース。 変換形式ごとに本インタフェースの実装クラスを作成する。NMBodyConvertorを実装したクラス及び インスタンスをコンバータと呼ぶ。 |",
+      "level": 5
+    },
+    {
+      "id": "s11",
+      "title": "クラス定義",
+      "content": "a) 通信処理\n\n| クラス名 | 概要 |\n|---|---|\n| NMMessageSender | 通信機能を提供するクラス。使用方法につていは [通信処理APIの呼び出し](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#houtouse) に記載する。 |\n| NMHttpRequester | HTTP/HTTPS通信機能を実装したクラス。実装機能の詳細については [HTTP/HTTPS通信](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#abouthttpconn) に、 本実装クラスの設定方法については [センダ](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#propertyaboutsender) に記載する。 |\n\nb) 通信データ\n\n| クラス名 | 概要 |\n|---|---|\n| NMMessage | 通信のペイロード。本機能が想定するデータ形式のモデルは [データモデル](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#aboutmessage) に記載する。 |\n\nc) データ変換\n\n| クラス名 | 概要 |\n|---|---|\n| NMJsonBodyConvertor | JSON形式でNMMessageおよびNSData間の変換機能を提供するクラス。 実装機能の詳細については [JSONコンバータ](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#aboutjsoncon) に記載する。 |\n\nd) その他\n\n| クラス名 | 概要 |\n|---|---|\n| NMConnectionUtil | 通信機能に関するユーティリティをまとめたクラス。各ユーティリティの詳細については [NMConnectionUtil](../../guide/biz-samples/biz-samples-01-Utility.md#nmconnectionutil) に記載する。 |\n| NMMockUtil | 通信モックに関するユーティリティをまとめたクラス。各ユーティリティの詳細については [NMMockUtil](../../guide/biz-samples/biz-samples-01-Utility.md#nmmockutil) に記載する。 |",
+      "level": 5
+    },
+    {
+      "id": "s12",
+      "title": "シーケンス図",
+      "content": "通信時のシーケンスを以下に示す。\n\n![connection_sequence.jpg](assets/biz-samples-01-ConnectionFramework/connection_sequence.jpg)\n\nフックを複数使用する場合、送信前処理は設定した順番に、送信後処理は設定した順番とは逆に呼び出される\n(フックの設定方法については [プロパティリストの作成](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#connectionfwpropertylist) のb) SenderHookを参照)。\n例えば、以下の処理を行うフックを順に設定した場合\n\n1. 通信ヘッダの設定/取得\n  (この通信ヘッダとは通信プロトコルヘッダとは別に、システムの通信インタフェースごとに決められたものを指す。)\n2. 暗号化対象データ/復号データのフォーマット/パース\n3. 通信データの一部暗号化/復号\n\nこの場合、送信前には1、2、3の順にフックの前処理が呼び出される。つまり、\nヘッダの設定、暗号化対象データのフォーマット、データの暗号化の順に処理が行われる。\n一方、送信後には3、2、1の順にフックの後処理が呼び出される。つまり\nデータの復号、復号データのパース、ヘッダの取得の順に処理が行われる。\nまた、フックを複数使用できることにより、処理の追加および削除が容易である。\n例えば、テスト実行時にはデータの暗号化は行いたくない、といった場合には3のフックだけを\n取り外せばよい。",
+      "level": 3
+    },
+    {
+      "id": "s13",
+      "title": "データモデル",
+      "content": "本機能では、送受信電文を以下のようなデータモデルで表現している。\n\n![dataModel.jpg](assets/biz-samples-01-ConnectionFramework/dataModel.jpg)\n\n* **プロトコルヘッダ**\n  各通信プロトコル(HTTPなど)のヘッダ情報を格納する領域。本領域へのアクセスはセンダで行うことを推奨する。\n* **メッセージボディ**\n  プロトコルヘッダを除いた電文のデータ領域をメッセージボディと呼ぶ。メッセージボディの解析はコンバータによって行う。\n  これによりメッセージボディをNMMessageオブジェクトとして扱える。NMMessageオブジェクトはNSDictionaryと同様にキーと値を格納するコレクションクラスである。",
+      "level": 2
+    },
+    {
+      "id": "s14",
+      "title": "使用方法",
+      "content": "本機能の使用方法について記載する。\nユーザはメッセージを送信するために、以下の3つのステップを実施する必要がある。\n\n1. プロパティリストの作成\n2. メッセージの作成\n3. 通信処理APIの呼び出し\n\n以下に各ステップの詳細を記載する。",
+      "level": 2
+    },
+    {
+      "id": "s15",
+      "title": "プロパティリストの作成",
+      "content": "本機能を利用する際、通信機能に関する設定を記述したプロパティリストファイル(通信設定ファイル)を作成する必要がある。\n通信設定ファイルでは以下の事柄について設定を行う。\n\n* センダの指定(Sender.class)\n* センダの初期値パラメータの指定(Sener.initializeLIst)\n* 複数のフックの指定(SenderHook[].class)\n* 各フックの初期値パラメータの指定(SenderHook[].initializeLIst)\n* フックの呼び出し順の指定\n\n設定例を以下に示す。\n\n![propertyList.png](assets/biz-samples-01-ConnectionFramework/propertyList.png)\n\nプロパティの説明を下記に示す。\n\n| 項目名 | データ型 | 概要 |\n|---|---|---|\n| Sender | Dictionary | センダの設定。 |\n| SenderHook | Array | 通信前後の処理を行う複数のフックの設定。 |\n\na) Sender\n\n| 項目名 | データ型 | 概要 |\n|---|---|---|\n| class | String | 使用するセンダ名。 |\n| initializeList | Dictionary | 使用するセンダの初期化時に使用するパラメータ。 詳細は使用するクラスの初期化パラメータを参照すること。 |\n\nb) SenderHook\n\n| 項目名 | データ型 | 概要 |\n|---|---|---|\n| SenderHook[] | Dictionary | 各フックの設定。 |\n| SenderHook[].class | String | 使用するフック名。 |\n| SenderHook[].initializeList | Dictionary | 使用するフックの初期化時に使用するパラメータ。 詳細は使用するクラスの初期化パラメータを参照すること。 |\n\nフック処理は送信前処理であれば通信設定ファイルの配列順に、受信後処理であれば通信設定ファイルの配列逆順に実行される。\n従って、上記の設定例では以下の順番で通信前処理が実行される。\n\n1. HookAboutKeyManagerクラスで実装された送信前処理\n2. SenderHookクラスで実装された送信前処理\n3. HookAboutEncryptionクラスで実装された送信前処理\n\nまた、受信後処理は以下の順番で実行される。\n\n1. HookAboutEncryptionクラスで実装された受信後処理\n2. SenderHookクラスで実装された受信後処理\n3. HookAboutKeyManagerクラスで実装された受信後処理",
+      "level": 3
+    },
+    {
+      "id": "s16",
+      "title": "初期値パラメータ",
+      "content": "初期値パラメータはクラスによって異なる。それぞれのクラスの初期値パラメータについて記載する。",
+      "level": 4
+    },
+    {
+      "id": "s17",
+      "title": "センダ",
+      "content": "a) NMHttpRequester\n\n初期値パラメータ一覧\n\n| 項目名 | データ型 | 概要 |\n|---|---|---|\n| URL | String | 宛先URL |\n| timeInterval | Number | 待機タイムアウト時間 |\n| dumpMessageEnabled | Boolean | JSON形式でのメッセージダンプ要否 |\n| bodyConvertor | Dictionary | コンバータの設定 |\n| bodyConvertor.class | String | 使用するコンバータ名 |\n| bodyConvertor.initializeList | Dictionary | 使用するコンバータの初期化パラメータ。 詳細は使用するクラスの初期化パラメータを参照すること。 |\n\n設定例\n\n![propertyList_httpRequester.png](assets/biz-samples-01-ConnectionFramework/propertyList_httpRequester.png)",
+      "level": 5
+    },
+    {
+      "id": "s18",
+      "title": "フック",
+      "content": "フレームワークで提供する実装クラスなし",
+      "level": 5
+    },
+    {
+      "id": "s19",
+      "title": "コンバータ",
+      "content": "a) NMJsonBodyConvertor\n\n特に無し",
+      "level": 5
+    },
+    {
+      "id": "s20",
+      "title": "メッセージの作成",
+      "content": "以下にメッセージを作成する実装例を示す。\n\n```objective-c\nNSDictionary *dict = @{\n                       @\"string\" : @\"dummyString\",\n                       @\"number_integer\" : @10,\n                       @\"number_double\" : @1.0,\n                       @\"number_bool\" : @YES,\n                       @\"array\" : @[],\n                       @\"object\" : @{},\n                       @\"null\" : [NSNull null] };\nNMMessage *sendMessage = [[NMMessage alloc] initWithDictionary:dict];\n\n// NSDataは文字列にエンコードしてから格納する\nNSString *str= [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];\n[sendMessage setValue:str forKey:@\"data\"];\n```",
+      "level": 3
+    },
+    {
+      "id": "s21",
+      "title": "通信処理APIの呼び出し",
+      "content": "以下に通信処理APIを呼び出す実装例を示す。\n\n```objective-c\n/**\n * 通信機能使用サンプル\n */\n- (NMMessage *)sample {\n    NMMessage *sendMessage = [self createSendMessage];\n    NMMessageSender *sender = [[NMMessageSender alloc] init];\n\n    NSError *error = nil;\n    // 第一引数に設定された物と同名の通信設定ファイルが読み込まれる\n    // この例だとdestination.plistというプロパティリストが読み込まれる\n    NMMessage *response = [sender send:@\"destination\" sendMessage:sendMessage error:&error];\n\n    return response;\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s22",
+      "title": "実装クラス",
+      "content": "Nablarch Mobileで提供する、各インタフェースの実装クラスについて解説する。",
+      "level": 2
+    },
+    {
+      "id": "s23",
+      "title": "HTTP/HTTPS通信",
+      "content": "NMHttpRequesterはHTTP/HTTPS通信を実装したセンダである。\n実装したHTTP/HTTPS通信の仕様を以下に示す。\n\n* **リクエストパス**\n  URL：通信設定ファイルに設定された値に従う\n  　　　　設定されたURLのプロトコルがhttpの場合はHTTP通信を、httpsの場合はHTTPS通信を行う\n  メソッド：POST\n* **ヘッダ**\n  特に設定なし\n* **ボディ**\n  送信時：コンバータによりバイナリデータに変換したメッセージオブジェクト\n  受信時：ダウンロードデータおよびHTTPステータス(ダウンロードデータがない場合はHTTPステータスだけを返す)\n* **その他**\n  キャッシュ：使用しない\n  メッセージのダンプ：通信設定ファイルに設定された値によってはJSON形式のダンプを行う\n  タイムアウト時間：通信設定ファイルに設定された値に従う",
+      "level": 3
+    },
+    {
+      "id": "s24",
+      "title": "JSONコンバータ",
+      "content": "NMJsonConvertorはJSONによるNMMessageオブジェクトからのエンコードおよびNMMessageオブジェクトへのデコードを実装したコンバータである。\n\n以下にJSONとObjective-Cのデータ型の変換仕様を示す。\n\n| JSON | Objective-C |\n|---|---|\n| 数値 | NSNumber(数値、浮動小数点) |\n| 文字列 | NSString |\n| 真偽値 | NSNumber(真偽値) |\n| 配列 | NSArray |\n| オブジェクト | NSDictionary |\n| null | NSNull |\n\nNMMessageからバイナリデータに変換する際、上記以外のデータ型オブジェクトが格納されていると\n変換できない。\n例えばバイト配列をNMMessageに格納したい場合は、Base64でフォーマットして文字列へ変換してから\n格納するなどして対応すること。\nまたNMMessageに使用できるキーの型もNSStringに限られる。",
+      "level": 3
+    },
+    {
+      "id": "s25",
+      "title": "ユーティリティ",
+      "content": "[ユーティリティ](../../guide/biz-samples/biz-samples-01-Utility.md) 参照。",
+      "level": 2
+    }
+  ]
+}

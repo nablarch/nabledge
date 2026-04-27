@@ -1,0 +1,44 @@
+{
+  "id": "handlers-process-resident-handler",
+  "title": "プロセス常駐化ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* データの監視間隔を設定する\n* プロセス常駐化ハンドラの終了方法\n* 後続ハンドラで発生した例外の扱い\n\n後続のハンドラキューの内容を一定間隔毎に繰り返し実行するハンドラ。\n本ハンドラは、特定のデータソース上の入力データを定期的に監視してバッチ処理を行う、いわゆる常駐起動型のバッチ処理で用いられる。\n\n本ハンドラでは、以下の処理を行う。\n\n* 一定間隔(データの監視間隔)毎に後続ハンドラの呼び出し。\n* 後続ハンドラで例外発生時に、このハンドラの継続有無などを判断する。\n  詳細は、 [後続ハンドラで発生した例外の扱い](../../component/handlers/handlers-process-resident-handler.md#process-resident-handler-exception) を参照。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-process-resident-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.handler.ProcessResidentHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-standalone</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "本ハンドラは、リトライハンドラよりも後ろに設定すること\n本ハンドラで実行時例外を捕捉した場合、リトライ可能例外( RetryableException )でラップしてから再送出し、\nプロセスの継続制御を [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) に委譲する。\nこのため、このハンドラはリトライハンドラより後に設定する必要がある。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "データの監視間隔を設定する",
+      "content": "データの監視間隔は、 dataWatchInterval プロパティにミリ秒で設定する。\n設定を省略した場合のデフォルト値は、1000ミリ秒(1秒)となっている。\n\n以下に例を示す。\n\n```xml\n<component name=\"settingsProcessResidentHandler\"\n    class=\"nablarch.fw.handler.ProcessResidentHandler\">\n\n  <!-- データの監視間隔に5秒(5000)を設定 -->\n  <property name=\"dataWatchInterval\" value=\"5000\" />\n  <!-- その他のプロパティは省略 -->\n</component>\n```",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "プロセス常駐化ハンドラの終了方法",
+      "content": "このハンドラはプロセスの正常終了を示す例外が送出された場合に、後続のハンドラの呼び出しを止め処理を終了する。\nデフォルトでは、 [プロセス停止制御ハンドラ](../../component/handlers/handlers-process-stop-handler.md#process-stop-handler) が送出する処理停止を示す例外( ProcessStop (サブクラス含む))が送出された場合に、このハンドラは処理を終了する。\n\nプロセスの正常終了を示す例外を変更したい場合には、 normalEndExceptions プロパティに例外クラスのリストを設定する。\nなお、例外リストを設定する場合にはデフォルトの設定が上書きされるため、 ProcessStop の設定を忘れずに行う必要がある。\n\n以下に例を示す。\n\n```xml\n<component name=\"settingsProcessResidentHandler\"\n    class=\"nablarch.fw.handler.ProcessResidentHandler\">\n\n  <!-- プロセスの正常終了を示す例外リスト -->\n  <property name=\"normalEndExceptions\">\n    <list>\n      <!-- Nablarchデフォルトのプロセス停止を示す例外クラス -->\n      <value>nablarch.fw.handler.ProcessStopHandler$ProcessStop</value>\n      <!-- プロジェクトカスタムなプロセス停止を示す例外クラス(サブクラスも対象となる) -->\n      <value>sample.CustomProcessStop</value>\n    </list>\n  </property>\n\n  <!-- その他のプロパティは省略 -->\n</component>\n```",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "後続ハンドラで発生した例外の扱い",
+      "content": "このハンドラでは、後続のハンドラで発生した例外の種類に応じて、処理を継続するか、終了するかが切り替わる。\n\n以下に例外毎の処理内容を示す。\n\nサービス閉塞中例外( ServiceUnavailable )\nサービス閉塞中例外の場合には、データ監視間隔に設定された時間分待機後に、再度後続ハンドラを実行する。\nリトライ可能例外\nリトライ可能例外( RetryUtil#isRetryable() が真を返す場合)の場合は、\n何もせずに捕捉した例外を再送出する。\nプロセスを異常終了する例外\nプロセスを異常終了させることを示す例外の場合は、なにもせずに捕捉した例外を再送出する。\n\nプロセスを異常終了させる例外は、 abnormalEndExceptions\nプロパティに設定する。\nデフォルトでは、 ProcessAbnormalEnd (サブクラス含む)が、異常終了対象クラスとなる。\nプロセスを正常終了させる例外\n後続のハンドラから戻された結果オブジェクトを、本ハンドラの戻り値として処理を終了する。\n\nプロセスを正常終了させる例外については、 [プロセス常駐化ハンドラの終了方法](../../component/handlers/handlers-process-resident-handler.md#process-resident-handler-normal-end) を参照。\n上記以外の例外\n例外情報をログに記録し、リトライ可能例外 ( RetryableException )でラップし再送出する。",
+      "level": 2
+    }
+  ]
+}

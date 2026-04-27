@@ -1,0 +1,38 @@
+{
+  "id": "handlers-global-error-handler",
+  "title": "グローバルエラーハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* 例外及びエラーに応じた処理内容\n* グローバルエラーハンドラでは要件を満たせない場合\n\n後続ハンドラで発生した未捕捉の例外及びエラーを捕捉し、ログ出力及び結果を返すハンドラ。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-global-error-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.handler.GlobalErrorHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "できるだけハンドラキューの先頭に配置すること\nこのハンドラは未捕捉例外を処理するため、特に理由がない限り、できるだけハンドラキューの先頭に配置すること。\n\nもし、このハンドラより手前のハンドラで例外が発生した場合は、ウェブアプリケーションサーバやJVMにより例外処理が行われる。\n\n例外を捕捉した際にスレッドコンテキストの情報をログに出力したい場合は、 [スレッドコンテキスト変数削除ハンドラ](../../component/handlers/handlers-thread-context-clear-handler.md#thread-context-clear-handler) より後に配置すること。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "例外及びエラーに応じた処理内容",
+      "content": "このハンドラでは捕捉した例外及びエラーの内容に応じて、以下の処理を行い結果を生成する。\n\n例外に応じた処理内容\n| 例外クラス | 処理内容 |\n|---|---|\n| ServiceError  (サブクラス含む) | ServiceError#writeLog を呼び出し、ログを出力する。  ログレベルは、 ServiceError の実装クラスにより異なる。  ログ出力後、ハンドラの処理結果として、 ServiceError を返却する。 |\n| Result.Error  (サブクラス含む) | FATALレベルのログを出力する。  ログ出力後、ハンドラの処理結果として、 Result.Error を返却する。 |\n| 上記以外の例外クラス | FATALレベルのログを出力する。  ログ出力後、捕捉した例外を原因に持つ InternalError を生成し、ハンドラの処理結果として返却する。 |\nエラーに応じた処理内容\n| エラークラス | 処理内容 |\n|---|---|\n| ThreadDeath  (サブクラス含む) | INFOレベルのログ出力を行う。  ログ出力後、捕捉したエラーをリスローする。 |\n| StackOverflowError  (サブクラス含む) | FATALレベルのログ出力を行う。  ログ出力後、捕捉したエラーを原因に持つ InternalError を生成し、ハンドラの処理結果として返却する。 |\n| OutOfMemoryError  (サブクラス含む) | FATALレベルのログ出力を行う。  なお、FATALレベルのログ出力に失敗する可能性(再度 OutOfMemoryError が発生する可能性)があるため、 ログ出力前に標準エラー出力に OutOfMemoryError が発生したことを出力する。  ログ出力後、捕捉したエラーを原因に持つ InternalError を生成し、ハンドラの処理結果として返却する。 |\n| VirtualMachineError  (サブクラス含む) | FATALレベルのログ出力を行う。  ログ出力後、捕捉したエラーをリスローする。  > **Tip:** > StackOverflowError 及び OutOfMemoryError 以外が対象となる。 |\n| 上記以外のエラークラス | FATALレベルのログ出力を行う。  ログ出力後、捕捉したエラーを原因に持つ InternalError を生成し、ハンドラの処理結果として返却する。 |",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "グローバルエラーハンドラでは要件を満たせない場合",
+      "content": "このハンドラは、設定などで実装を切り替えることはできない。\nこのため、この実装で要件を満たすことができない場合は、\nプロジェクト固有のエラー処理用ハンドラを作成し対応すること。\n\n例えば、ログレベルを細かく切り替えたい場合などは、このハンドラを使用するのではなく、ハンドラを新たに作成すると良い。",
+      "level": 2
+    }
+  ]
+}

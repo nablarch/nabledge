@@ -1,58 +1,26 @@
 {
   "id": "workflow-WorkflowInstanceElement",
   "title": "ワークフローインスタンス",
-  "official_doc_urls": [],
-  "index": [
+  "content": "[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) がワークフローインスタンス情報として管理する情報について記載する。\n\n[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) は、ワークフローインスタンスの情報として、大きく分けて\n「ワークフローに含まれているタスクに割り当てられている担当ユーザ/担当グループ」と\n「現在処理可能なタスク」の2つを管理する。",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
-      "title": "ワークフローインスタンス概要",
-      "hints": [
-        "ワークフローインスタンス管理",
-        "担当ユーザ管理",
-        "担当グループ管理",
-        "タスク割り当て",
-        "アクティブフローノード"
-      ]
+      "title": "タスク担当ユーザ/タスク担当グループ",
+      "content": "ワークフローに含まれる各タスクに割り当てられているユーザ/グループをあらわす。\n\n[タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) の場合には、単一の担当ユーザ/グループのみ割り当てることができ、\n[マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task) の場合には、複数の担当ユーザ/グループを\n割り当てることができる。\n\nただし、一つのタスクには、ユーザもしくはグループのどちらか片方しか割り当てることはできない。\nたとえば、 [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task) で複数の担当を割り当て、その一部を\n担当ユーザとし、残りを担当グループに割り当てる、といったことはできない。\n\nタスクが [ワークフローの進行](../../extension/workflow/workflow-WorkflowApplicationApi.md#workflow-complete-task) によって終了したとしても削除されることはなく、\n再度そのタスクが [アクティブフローノード](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-active-flow-node) となった際には、以前から割り当てられているユーザ/グループの\n[アクティブユーザタスク/アクティブグループタスク](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-active-task) が作成される。",
+      "level": 2
     },
     {
       "id": "s2",
-      "title": "タスク担当ユーザ/タスク担当グループ",
-      "hints": [
-        "タスク担当ユーザ",
-        "タスク担当グループ",
-        "マルチインスタンスタスク",
-        "タスク割り当て制約",
-        "ユーザグループ排他割り当て不可",
-        "workflow_task_assignee",
-        "workflow_complete_task"
-      ]
+      "title": "アクティブフローノード",
+      "content": "ワークフローインスタンスで、現在処理可能となっているフローノード。\n\n基本的には、 [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) 、 [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task) が\nアクティブフローノードとなるが、ワークフローが完了した場合には [停止イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-event-terminate) が\nアクティブフローノードとなる。\n\nワークフローの進行状況は、このアクティブフローノードが変化していくことで管理される。",
+      "level": 2
     },
     {
       "id": "s3",
-      "title": "アクティブフローノード",
-      "hints": [
-        "アクティブフローノード",
-        "ワークフロー進行状況",
-        "終了イベント",
-        "workflow_active_flow_node",
-        "処理可能フローノード"
-      ]
-    },
-    {
-      "id": "s4",
       "title": "アクティブユーザタスク/アクティブグループタスク",
-      "hints": [
-        "アクティブユーザタスク",
-        "アクティブグループタスク",
-        "処理可能タスク",
-        "workflow_active_task"
-      ]
+      "content": "ワークフローインスタンスで、現在ユーザ/グループが処理可能であるタスク。\n\n現在のアクティブフローノードに割り当てられている担当ユーザ/グループのタスクが登録されている。",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "ワークフローインスタンスの情報として、「ワークフローに含まれているタスクに割り当てられている担当ユーザ/担当グループ」と「現在処理可能なタスク」の2つを管理する。",
-    "s2": "ワークフローに含まれる各タスクに割り当てられているユーザ/グループ。\n\n- [workflow_element_task](workflow-WorkflowProcessElement.json#s4) には単一の担当ユーザ/グループのみ割り当て可能\n- [workflow_element_multi_instance_task](workflow-WorkflowProcessElement.json#s6) には複数の担当ユーザ/グループを割り当て可能\n\n> **重要**: 一つのタスクには、ユーザもしくはグループのどちらか片方しか割り当てることはできない。[workflow_element_multi_instance_task](workflow-WorkflowProcessElement.json#s6) であっても、一部を担当ユーザ・残りを担当グループに割り当てることは不可。\n\nタスクが [workflow_complete_task](workflow-WorkflowApplicationApi.json#s3) によって終了しても担当情報は削除されない。再度そのタスクが [workflow_active_flow_node](#s2) となった際には、以前の担当ユーザ/グループの [workflow_active_task](#s3) が作成される。",
-    "s3": "ワークフローインスタンスで現在処理可能となっているフローノード。\n\n- 通常は [workflow_element_task](workflow-WorkflowProcessElement.json#s4) または [workflow_element_multi_instance_task](workflow-WorkflowProcessElement.json#s6) がアクティブフローノードとなる\n- ワークフローが完了した場合は [workflow_element_event_terminate](workflow-WorkflowProcessElement.json#s10) がアクティブフローノードとなる\n\nワークフローの進行状況は、このアクティブフローノードの変化によって管理される。",
-    "s4": "ワークフローインスタンスで現在ユーザ/グループが処理可能なタスク。現在のアクティブフローノードに割り当てられている担当ユーザ/グループのタスクが登録されている。"
-  }
+  ]
 }

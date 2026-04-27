@@ -1,47 +1,64 @@
 # Nablarchアンチパターン
 
-**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/repository.html#repository) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/NoInputDataBatchAction.html) [3](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/architecture.html#jsr352-batch-type)
+Nablarchが想定する使用方法を踏まえずに設計、製造すると、 大きな手戻りや性能不良、最悪の場合は本番障害となる恐れがあります。
+ここでは実際に発生した誤りの事例を紹介します。
 
 ## Webアプリケーション
 
 ### コンポーネントライフサイクルの誤解によるマルチスレッドバグ
 
-> **重要**: Nablarchのシステムリポジトリで管理されるコンポーネントのライフサイクルは`singleton`。`prototype`や`request`と誤解してコンポーネントの状態を書き換えると、同じコンポーネントを使用する他のスレッド・リクエストに影響を与えるマルチスレッドバグが発生する。
-
-- 通常の業務アプリケーションコードでシステムリポジトリからコンポーネントを取得する必要はほとんどない（システム基盤部品の作成は別）。
-- `singleton`のため、初期化処理以外でコンポーネントの状態を書き換えてはいけない。
-- コンポーネントの状態を書き換えるコードがあれば、このライフサイクル誤解によるバグを疑うこと。
-
-<details>
-<summary>keywords</summary>
-
-マルチスレッドバグ, コンポーネントライフサイクル, システムリポジトリ, singleton, DIコンテナ, prototype, request, スレッドセーフ
-
-</details>
+Nablarchの[システムリポジトリ](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/repository.html#repository)はDIコンテナ機能を持ちますが、他のDIコンテナとコンポーネントライフサイクルが異なります。
+Nablarchのシステムリポジトリで管理されるコンポーネントのライフサイクルは`singleton`になります。 デフォルトのライフサイクルを`prototype`あるいは`request`と誤解し、コンポーネントの状態を書き換えてしまうと、 同じコンポーネントを使用する他のスレッド、リクエストに影響を与えてしまいます。
+このようなバグを埋め込まないように、システムリポジトリで管理されるコンポーネントのライフサイクルを把握しておく必要があります。
+まず、Nablarchを使用する場合、通常の業務アプリケーションコードを作成する際にシステムリポジトリからコンポーネントを 取得しなければならないケースは多くありません（システム基盤部品などを作成する場合は別です）。 さらに、コンポーネントライフサイクルが`singleton`であるので、初期化処理以外でコンポーネントの状態を書き換える使い方はしません。 このため、もしコンポーネントの状態を書き換えるコードを見かけたら、上記のような誤解によるバグである可能性を疑う必要があります。
 
 ## Nablarchバッチ
 
-> **注意**: 誤った構造のバッチは業務要件を満たせることもあるが、件数が増えた時に性能劣化や異常終了を起こす恐れがある。少ない件数でテストする単体テスト工程では気づくことができず、大量のデータでテストできるプロジェクト終盤まで発覚しない恐れがある。
+バッチを設計・実装する際、フレームワークの仕組みを理解していないと、誤った構造のバッチを作ってしまう恐れがあります。 その場合でも、バッチ処理としては業務要件は満たせることもあるのですが、件数が増えた時に 性能劣化を起こしたり、異常終了してしまうこともあります。 少ない件数でテストする単体テスト工程では、そのような不具合に気づくことができず、 大量のデータでテストできるプロジェクト終盤まで発覚しない恐れがあります。 フレームワークの仕組みを理解して、誤った設計・実装を行わないようにしましょう。
+以下に誤った実装例を示します。
 
 ### N+1問題
 
-**問題**: `handle`メソッド内で入力データをもとに再度SELECTを発行することで発生。処理対象件数Nに対しN+1件のSQLが実行される（例: 100件 → 101件、10000件 → 10001件）。
+「N+1」の「N」はcreateReaderメソッドで作成したリーダが持っているデータ件数（SELECTヒット件数）のことです。 Nablarchバッチでは、handleメソッド内で、入力データを元に再度SELECTを発行ことで発生します。
+処理対象件数が増加するほど性能が劣化します。 createReaderで発行するSQLで、1回のSQLで取得する（JOIN）ことで回避可能です。
+1回のSQLでデータを取得できれば、データ取得に必要なSQLは処理対象件数に関わらず最初の1件のみですが、 N+1問題のあるバッチでは深刻な性能劣化を起こす恐れがあります。 処理対象件数が100件の場合は101件、10000件の場合は10001件のSQLが発行されることになります。
 
-**回避策**: `createReader`のSQLにJOINを使い、1回のSQLで必要なデータをすべて取得する。
+#### NG例
 
-NG例（`createReader`でSELECT後、`handle`内で再度SELECT）:
+以下の例では、売上SQLの取得件数+1回、売上明細SQLを実行することになります。
+
+##### createReaderメソッド
 
 ```sql
--- createReader
-SELECT 売上ID, 売上日 FROM 売上 WHERE 売上日 = ?
--- handle内
-SELECT 売上明細ID, 金額 FROM 売上明細 WHERE 売上ID = ?
+SELECT
+  売上ID,
+  売上日
+FROM
+  売上
+WHERE 売上日 = ?
 ```
 
-OK例（JOINで1回のSQLにまとめる）:
+##### handleメソッド
 
 ```sql
-SELECT 売上.売上ID, 売上.売上日, 売上明細.売上明細ID, 売上明細.金額
+SELECT
+  売上明細ID,
+  金額
+FROM
+  売上明細
+WHERE 売上ID = ?
+```
+
+#### OK例
+
+JOINすることで1回のSQLで必要なデータが取得でき、handleメソッド内でSQLを発行する必要がなくなります。
+createReader
+```sql
+SELECT
+  売上.売上ID,
+  売上.売上日,
+  売上明細.売上明細ID,
+  売上明細.金額
 FROM 売上
 INNER JOIN 売上明細 ON 売上.売上ID = 売上明細.売上ID
 WHERE 売上.売上日 = ?
@@ -49,50 +66,36 @@ WHERE 売上.売上日 = ?
 
 ### フレームワーク制御下にないループ処理
 
-**問題**: `handle`メソッド内で自前のループ処理を行うと、フレームワークによる一定間隔のコミットが行われず、更新件数が増えるとトランザクションログを逼迫する。
+「handleメソッドにて、自前でSELECT文を発行しループして登録更新処理をする」というアンチパターンです。 フレームワークでのループは一定間隔でコミットが行われるようになっていますが、自前でループした場合はコミットは実行されません。 このため、更新件数が増えるとトランザクションログを逼迫することになります。
 
-> **重要**: [`NoInputDataBatchAction`](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/NoInputDataBatchAction.html)を使って`handle`内でループ処理するのは典型的な誤り。
+#### NG例
 
-NG例:
-
-```java
+```{.java}
 public Result handle(ExecutionContext context) {
+   // 検索実行
    SqlResultSet sqlResultSet = search("SEARCH");
+   // 自前でループ処理
    for (SqlRow row : sqlResultSet) {
+       // :
        // 更新処理
+
    }
 }
 ```
-
-ループ内に自前でコミットを実装するのも、フレームワークの処理の再実装となり品質・生産性を低下させる。
+検索結果が大量になると、トランザクション内で大量のUPDATE文が実行されることになります。 特に、[NoInputDataBatchAction](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/NoInputDataBatchAction.html)を 使って上記のようなループ処理をしているのは典型的な誤りです。
+また、大量件数を処理できるように、ループの一定回数毎にコミットを実行するといったトランザクション制御を自前で行うケースも過去に見られました。これはフレームワークで行っている処理を独自に再実装することになるため、品質・生産性を低下させる要因となります。
 
 ### 解決法
 
-`handle`内で発行しているSQLを`createReader`で行うようにし、フレームワーク管理のループ処理で実現する。
-
-<details>
-<summary>keywords</summary>
-
-N+1問題, createReader, handleメソッド, トランザクションログ, ループ処理, NoInputDataBatchAction, コミット制御, バッチアンチパターン, ExecutionContext, SqlResultSet, SqlRow
-
-</details>
+自前のループ処理ではなく、フレームワーク管理のループ処理で実現できるようにします。 上記の例ですと、handle内で発行しているSQLをcreateReaderで行うようにします。
 
 ## Jakarta Batchに準拠したバッチ
 
 ### Batchletの誤用
 
-Chunkで設計・実装すべきバッチをBatchletで実装すると、「フレームワーク制御下にないループ処理」と同様の問題（コミット未実行によるトランザクションログ逼迫）が発生する。
-
-[バッチの種類](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/architecture.html#jsr352-batch-type)に従い適切に使い分けること:
-
+前述の「フレームワーク制御下にないループ処理」（Nablarchバッチ）と同様のアンチパターンになります。 Chunkで設計・実装すべきバッチをBatchletで実装することで同様の問題が発生します。
+[バッチの種類](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/architecture.html#jsr352-batch-type)にあるとおり、それぞれの用途を理解して適切に使い分ける必要があります。
 | バッチの種類 | 用途 |
-|---|---|
+| --- | --- |
 | Batchlet | 外部システムからのファイル取得や、SQL1つで処理が完結するような処理 |
-| Chunk | ファイルやDBなどの入力データソースからレコードを読み込み業務処理を実行するような処理 |
-
-<details>
-<summary>keywords</summary>
-
-Batchlet, Chunk, Jakarta Batch, バッチの種類, Batchlet誤用
-
-</details>
+| Chunk | ファイルやデータベースなどの入力データソースからレコードを読み込み業務処理を実行するような処理 |

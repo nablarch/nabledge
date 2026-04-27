@@ -1,0 +1,98 @@
+{
+  "id": "restful-web-service-feature-details",
+  "title": "機能詳細",
+  "content": "**目次**\n\n* Nablarchの初期化\n* 入力値のチェック\n* データベースアクセス\n* 排他制御\n* URIとリソース(アクション)クラスのマッピング\n* パスパラメータやクエリーパラメータ\n* レスポンスヘッダ\n* 国際化対応\n* 認証\n* 認可チェック\n* エラー時に返却するレスポンス\n* Webアプリケーションのスケールアウト設計\n* CSRF対策\n* CORS\n* OpenAPIドキュメントからのソースコード生成",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "Nablarchの初期化",
+      "content": "[ウェブアプリケーションのNablarchの初期化](../../processing-pattern/web-application/web-application-feature-details.md#web-feature-details-nablarch-initialization) を参照。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "入力値のチェック",
+      "content": "* [入力値のチェック](../../component/libraries/libraries-validation.md#validation)",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "データベースアクセス",
+      "content": "* [データベースアクセス](../../component/libraries/libraries-database-management.md#database-management)",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "排他制御",
+      "content": "* [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao)\n\n  * [楽観的ロックを行う](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-optimistic-lock)\n  * [悲観的ロックを行う](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-pessimistic-lock)\n\n> **Important:**\n> RESTfulウェブサービスでは ETag や If-Match を使用した楽観的ロックには対応していない。\n> そのため、RESTfulウェブサービスで楽観的ロックを行う際は、リクエストボディに直接バージョン番号を含めること。\n\n> **Important:**\n> [排他制御](../../component/libraries/libraries-exclusive-control.md#exclusive-control) 機能は、クライアント(taglib)との連動が前提であるため、\n> RESTfulウェブサービスでは使用できない。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "URIとリソース(アクション)クラスのマッピング",
+      "content": "feature_details/resource_signature\n\n* [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor)\n* [リソースクラスのメソッドのシグネチャ](../../processing-pattern/restful-web-service/restful-web-service-resource-signature.md#rest-feature-details-method-signature)",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "パスパラメータやクエリーパラメータ",
+      "content": "* [パスパラメータを扱う](../../processing-pattern/restful-web-service/restful-web-service-resource-signature.md#rest-feature-details-path-param)\n* [クエリーパラメータを扱う](../../processing-pattern/restful-web-service/restful-web-service-resource-signature.md#rest-feature-details-query-param)",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "レスポンスヘッダ",
+      "content": "* [リソースクラスのメソッドで個別にレスポンスヘッダを設定する](../../processing-pattern/restful-web-service/restful-web-service-resource-signature.md#rest-feature-details-response-header)\n* [クライアントに返すレスポンスに共通処理を追加する](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler-response-finisher)",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "国際化対応",
+      "content": "静的リソースの多言語化対応については以下を参照。\n\n* [メッセージの多言語化](../../component/libraries/libraries-message.md#message-multi-lang)\n* [コード名称の多言語化](../../component/libraries/libraries-code.md#code-use-multilingualization)",
+      "level": 2
+    },
+    {
+      "id": "s9",
+      "title": "認証",
+      "content": "認証については、プロジェクト要件により仕様が異なるため、フレークワークとしては提供していない。",
+      "level": 2
+    },
+    {
+      "id": "s10",
+      "title": "認可チェック",
+      "content": "認可チェックについては、プロジェクト要件により仕様が異なるため、フレークワークとしては提供していない。",
+      "level": 2
+    },
+    {
+      "id": "s11",
+      "title": "エラー時に返却するレスポンス",
+      "content": "* [エラー時のレスポンスにメッセージを設定する](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler-error-response-body)\n* [特定のエラーの場合に個別に定義したエラーレスポンスを返却する](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler-individually-error-response)",
+      "level": 2
+    },
+    {
+      "id": "s12",
+      "title": "Webアプリケーションのスケールアウト設計",
+      "content": "* [Webアプリケーションをステートレスにする](../../component/libraries/libraries-stateless-web-app.md#stateless-web-app)",
+      "level": 2
+    },
+    {
+      "id": "s13",
+      "title": "CSRF対策",
+      "content": "* [CSRF対策](../../component/handlers/handlers-csrf-token-verification-handler.md#csrf-token-verification-handler)",
+      "level": 2
+    },
+    {
+      "id": "s14",
+      "title": "CORS",
+      "content": "* [CORS](../../component/handlers/handlers-cors-preflight-request-handler.md#cors-preflight-request-handler)",
+      "level": 2
+    },
+    {
+      "id": "s15",
+      "title": "OpenAPIドキュメントからのソースコード生成",
+      "content": "* [Nablarch OpenAPI Generator](../../development-tools/toolbox/toolbox-NablarchOpenApiGenerator.md#nablarch-openapi-generator)",
+      "level": 2
+    }
+  ]
+}

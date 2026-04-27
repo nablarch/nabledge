@@ -1,0 +1,26 @@
+{
+  "id": "web-application-nablarch-servlet-context-listener",
+  "title": "Nablarchサーブレットコンテキスト初期化リスナー",
+  "content": "**目次**\n\n* モジュール一覧\n* システムリポジトリを初期化する\n* 初期化の成否を後続処理で取得する\n\n本クラスはサーブレットコンテキストリスナーとして定義されており、\nウェブアプリケーションの起動時、終了時に以下の処理を行う。\n\n起動時\n* [システムリポジトリ](../../component/libraries/libraries-repository.md#repository) の初期化処理\n* [ログ出力](../../component/libraries/libraries-log.md#log) の初期化処理\n終了時\n* [ログ出力](../../component/libraries/libraries-log.md#log) の終了処理",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-repository</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-applog</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "システムリポジトリを初期化する",
+      "content": "システムリポジトリの初期化を行うには、以下のとおり設定する必要がある。\n\n* サーブレットコンテキストリスナーとして、本クラスを登録する。\n* サーブレットコンテキストの初期化パラメータとして、コンポーネント設定ファイルのパスを設定する。\n\nweb.xml への設定例を以下に示す。\n\nポイント\n* コンポーネント設定ファイルのパスのパラメータ名は **di.config** とすること。\n\n```xml\n<context-param>\n  <param-name>di.config</param-name>\n  <param-value>web-boot.xml</param-value>\n</context-param>\n\n<listener>\n  <listener-class>nablarch.fw.web.servlet.NablarchServletContextListener</listener-class>\n</listener>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "初期化の成否を後続処理で取得する",
+      "content": "本クラスの初期化に成功したか否かは、NablarchServletContextListener#isInitializationCompleted を使用して取得できる。\n初期化に成功した場合は上記メソッドは `true` を返却する。\n\n本クラスの初期化に失敗するとアプリケーションの起動も失敗するが、サーブレットコンテキストリスナーを複数登録していた場合は、\n本クラスの後続のサーブレットコンテキストリスナーの処理が実行されることがある。\nこの機能を使用することで本クラスの後続のサーブレットコンテキストリスナーにおいて、\n以下のようにシステムリポジトリの初期化に成功した場合だけ処理を続行するといった分岐が可能となる。\n\n```java\npublic class CustomServletContextListener implements ServletContextListener {\n    @Override\n    public void contextInitialized(ServletContextEvent sce) {\n        if(NablarchServletContextListener.isInitializationCompleted()){\n          // システムリポジトリを使用した処理\n        }\n    }\n```\n\nなお、サーブレットコンテキストリスナーの実行順は web.xml に記載した順序となる。\nシステムリポジトリを使用するサーブレットコンテキストリスナーを登録する場合は、\n以下のように本クラスより後に web.xml に記載する必要がある。\nまた、 `@WebListener` アノテーションによるサーブレットコンテキストリスナーの登録では実行順序は保証されないため、\n必ず web.xml で定義すること。\n\n```xml\n<listener>\n  <listener-class>nablarch.fw.web.servlet.NablarchServletContextListener</listener-class>\n</listener>\n<listener>\n  <listener-class>please.change.me.CustomServletContextListener</listener-class>\n</listener>\n```\n\n> **Tip:**\n> 複数のサーブレットコンテキストリスナーが登録されている場合に、先に実行されたサーブレットコンテキストリスナーの処理の例外を検知して処理を中止するか、\n> 例外を無視して後続のサーブレットコンテキストリスナーの処理を継続するかはサーブレットコンテナの実装に依存する。",
+      "level": 2
+    }
+  ]
+}

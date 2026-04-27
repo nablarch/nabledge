@@ -1,27 +1,7 @@
 {
   "id": "web-application-12",
   "title": "JavaScriptコードを記述すると静的解析ツールでエラーが発生します。対処方法を教えてください。",
+  "content": "> **question:**\n> JavaScriptコードをHTMLコメントタグでくくって記述したところ、JSP静的解析ツールで「<!-- (at line=XX column=XX) is forbidden.」というエラーが発生しました。\n\n> HTMLコメントタグでくくらずに記述したところ、HTMLチェックツールで下記のようなエラーが発生しました。\n\n> ```java\n> nablarch.test.tool.htmlcheck.InvalidHtmlException: syntax check failed. file = []\n>     at nablarch.test.tool.htmlcheck.HtmlChecker.doCheckSyntax(HtmlChecker.java:123)\n>     ～ 省略 ～\n> Caused by: nablarch.test.tool.htmlcheck.InvalidHtmlException: nablarch.test.tool.htmlcheck.parser.TokenMgrError: Lexical error at line 31, column 28.  Encountered: \" \" (32), after : \"<\"\n>     at nablarch.test.tool.htmlcheck.HtmlSyntaxChecker.check(HtmlSyntaxChecker.java:44)\n>     ～ 省略 ～\n> Caused by: nablarch.test.tool.htmlcheck.parser.TokenMgrError: Lexical error at line 31, column 28.  Encountered: \" \" (32), after : \"<\"\n>     at nablarch.test.tool.htmlcheck.parser.ParserTokenManager.getNextToken(ParserTokenManager.java:5019)\n>     ～ 省略 ～\n> ```\n\n> JavaScriptコードはどのように記述すればいいのでしょうか。\n\n> **answer:**\n> JavaScriptコードを記述したい場合は、<n:script>タグを使用してください。\n\n> JSPの記述例を下記に示します。\n\n> ```java\n> <n:script type=\"text/javascript\">\n>     function clearChnKbn() {\n>         var element = document.getElementsByTagName(\"select\")\n>         for (var i = 0; i < element.length; i++) {\n>           var shnKbn = element[i];\n>             shnKbn.selectedIndex = 0;\n>         }\n>     }\n> </n:script>\n> ```\n\n> HTMLには下記のように出力されます。\n\n> ```java\n> <script type=\"text/javascript\">\n> <!--\n>     function clearChnKbn() {\n>         var element = document.getElementsByTagName(\"select\")\n>         for (var i = 0; i < element.length; i++) {\n>           var shnKbn = element[i];\n>             shnKbn.selectedIndex = 0;\n>         }\n>     }\n> -->\n> </script>\n> ```",
   "no_knowledge_content": false,
-  "official_doc_urls": [],
-  "index": [
-    {
-      "id": "s1",
-      "title": "JSPでJavaScriptを記述する方法（n:scriptタグの使用）",
-      "hints": [
-        "n:script",
-        "JavaScriptの記述方法",
-        "JSP静的解析ツール",
-        "HTMLチェックツール",
-        "InvalidHtmlException",
-        "JSPにJavaScript埋め込み",
-        "TokenMgrError",
-        "HtmlChecker",
-        "HtmlSyntaxChecker",
-        "ParserTokenManager"
-      ]
-    }
-  ],
-  "sections": {
-    "s1": "JSPでJavaScriptコードを記述する場合、`<n:script>`タグを使用する。\n\n- HTMLコメントタグ(`<!-- -->`)で囲んで記述すると、JSP静的解析ツールで「`<!-- (at line=XX column=XX) is forbidden.`」エラーが発生する\n- HTMLコメントタグなしで記述すると、HTMLチェックツールで`InvalidHtmlException`（`Lexical error`）が発生する（`HtmlChecker`、`HtmlSyntaxChecker`、`TokenMgrError`、`ParserTokenManager` が関与）\n\n**解決策**: `<n:script>`タグを使用する。\n\n```jsp\n<n:script type=\"text/javascript\">\n    function clearChnKbn() {\n        var element = document.getElementsByTagName(\"select\")\n        for (var i = 0; i < element.length; i++) {\n          var shnKbn = element[i];\n            shnKbn.selectedIndex = 0;\n        }\n    }\n</n:script>\n```\n\n`<n:script>`を使用すると、HTMLには自動的にHTMLコメントタグで囲まれた形式で出力される:\n\n```html\n<script type=\"text/javascript\">\n<!--\n    function clearChnKbn() {\n        var element = document.getElementsByTagName(\"select\")\n        for (var i = 0; i < element.length; i++) {\n          var shnKbn = element[i];\n            shnKbn.selectedIndex = 0;\n        }\n    }\n-->\n</script>\n```"
-  }
+  "sections": []
 }

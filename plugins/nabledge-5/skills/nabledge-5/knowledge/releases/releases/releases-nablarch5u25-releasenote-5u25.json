@@ -1,0 +1,258 @@
+{
+  "id": "releases-nablarch5u25-releasenote-5u25",
+  "title": "■Nablarch 5u25 リリースノート",
+  "content": "5u24からの変更点を記載しています。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "アプリケーションフレームワーク",
+      "content": "コンテンツ: アプリケーションフレームワーク"
+    },
+    {
+      "id": "s2",
+      "title": "公開APIの追加",
+      "content": "No.: 1\n分類: 公開API\nリリース 区分: 変更\nタイトル: 公開APIの追加\n概要: 解説書で案内しているAPIの中で公開APIになっていないものがあったため、公開APIを追加しました。\n修正後のバージョン （※1）: nablarch-core 1.7.0 nablarch-core-beans 1.5.0 nablarch-core-jdbc 1.9.0 nablarch-core-message 1.2.0 nablarch-core-transaction 1.2.0 nablarch-fw-jaxrs 1.5.0 nablarch-fw-messaging 1.3.0 nablarch-testing 1.7.0 nablarch-jackson-adaptor 1.1.0 nablarch-lettuce-adaptor 1.1.0 nablarch-micrometer-adaptor 1.3.0 nablarch-router-adaptor 1.3.0\n不具合の起因バージョン （※2） / モジュール: -\n不具合の起因バージョン （※2） / Nablarch: -\nシステムへの 影響の可能性 （※3）: なし\nシステムへの影響の可能性の内容と対処: -\n参照先: -\nJIRA issue (※4): NAB-579"
+    },
+    {
+      "id": "s3",
+      "title": "CSPのscript-srcにunsafe-inline以外を指定できるように改善",
+      "content": "No.: 2\n分類: CSP対応\nリリース 区分: 変更\nタイトル: CSPのscript-srcにunsafe-inline以外を指定できるように改善\n概要: これまではCSPのscript-srcにunsafe-inline以外を指定することができませんでしたが、以下の対応によりnonceを使用したポリシーを設定できるようになりました。 ・セキュアハンドラでCSPに対応するためのnonceを生成できるようになりました ・セキュアハンドラで生成したnonceをContent-Security-PolicyヘッダやJSP内に埋め込めるようになりました\n修正後のバージョン （※1）: nablarch-fw-web 1.14.0 nablarch-fw-web-tag 1.4.0\n不具合の起因バージョン （※2） / モジュール: -\n不具合の起因バージョン （※2） / Nablarch: -\nシステムへの 影響の可能性 （※3）: なし\nシステムへの影響の可能性の内容と対処: -\n参照先: https://nablarch.github.io/docs/5u25/doc/application_framework/application_framework/handlers/web/secure_handler.html#content-security-policy\nJIRA issue (※4): NAB-591"
+    },
+    {
+      "id": "s4",
+      "title": "明示的にバリデーションを実行するための使用方法を追加",
+      "content": "No.: 3\n分類: Bean Validation\nリリース 区分: 変更\nタイトル: 明示的にバリデーションを実行するための使用方法を追加\n概要: Bean Validationの使用方法として、以下の説明を追加しました。 ・バリデーションの明示的な実行 ・バリデーションエラー時に任意の処理を行いたい\n修正後のバージョン （※1）: nablarch-document 5u25\n不具合の起因バージョン （※2） / モジュール: -\n不具合の起因バージョン （※2） / Nablarch: -\nシステムへの 影響の可能性 （※3）: なし\nシステムへの影響の可能性の内容と対処: -\n参照先: https://nablarch.github.io/docs/5u25/doc/application_framework/application_framework/libraries/validation/bean_validation.html\nJIRA issue (※4): NAB-594"
+    },
+    {
+      "id": "s5",
+      "title": "テスト環境のデータベースを更新",
+      "content": "No.: 4\n分類: 稼働環境\nリリース 区分: 変更\nタイトル: テスト環境のデータベースを更新\n概要: Oracle Database 23cの名称が23aiに変更されたため、テスト環境のデータベースを以下の通り更新しました。赤字部分が変更箇所になります。 ・Oracle Database 12c/19c/21c/23ai ・IBM Db2 10.5/11.5 ・SQL Server 2017/2019/2022 ・PostgreSQL 10.0/11.5/12.2/13.2/14.0/15.2/16.2\n修正後のバージョン （※1）: nablarch-document 5u25\n不具合の起因バージョン （※2） / モジュール: -\n不具合の起因バージョン （※2） / Nablarch: -\nシステムへの 影響の可能性 （※3）: なし\nシステムへの影響の可能性の内容と対処: -\n参照先: https://nablarch.github.io/docs/5u25/doc/application_framework/application_framework/nablarch/platform.html\nJIRA issue (※4): NAB-604"
+    },
+    {
+      "id": "s6",
+      "title": "Maven Archetype Plugin 3.xに対応",
+      "content": "No.: 5\n分類: 全般\nリリース 区分: 変更\nタイトル: Maven Archetype Plugin 3.xに対応\n概要: これまでブランクプロジェクト作成時に警告が出力されていましたが、使用するMaven Archetype Pluginのバージョンを 3.2.1 に更新し、警告が出力されないように対応しました。 これにより、ブランクプロジェクト作成時に過去のバージョンのMaven Archetype Pluginを指定する必要がなくなったため、ブランクプロジェクト作成用のバッチファイルは削除しました。\n修正後のバージョン （※1）: nablarch-single-module-archetype 5u25\n不具合の起因バージョン （※2） / モジュール: -\n不具合の起因バージョン （※2） / Nablarch: -\nシステムへの 影響の可能性 （※3）: なし\nシステムへの影響の可能性の内容と対処: -\n参照先: https://nablarch.github.io/docs/5u25/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Web.html ※その他のブランクプロジェクトの初期セットアップ手順も同様\nJIRA issue (※4): NAB-603"
+    },
+    {
+      "id": "s7",
+      "title": "アダプタ",
+      "content": "コンテンツ: アダプタ"
+    },
+    {
+      "id": "s8",
+      "title": "テストで使用しているJacksonのバージョンを更新",
+      "content": "No.: 6\n分類: JAX-RSアダプタ\nリリース 区分: 変更\nタイトル: テストで使用しているJacksonのバージョンを更新\n概要: JAX-RSアダプタがテストで使用しているJacksonライブラリのバージョンを 2.12.7.1 に更新しました。\n修正後のバージョン （※1）: nablarch-document 5u25\n不具合の起因バージョン （※2） / モジュール: -\n不具合の起因バージョン （※2） / Nablarch: -\nシステムへの 影響の可能性 （※3）: なし\nシステムへの影響の可能性の内容と対処: -\n参照先: https://nablarch.github.io/docs/5u25/doc/application_framework/adaptors/jaxrs_adaptor.html#id2\nJIRA issue (※4): NAB-579"
+    },
+    {
+      "id": "s9",
+      "title": "OpenTelemetry Protocol（OTLP）用のレジストリファクトリを追加",
+      "content": "No.: 7\n分類: Micrometerアダプタ\nリリース 区分: 変更\nタイトル: OpenTelemetry Protocol（OTLP）用のレジストリファクトリを追加\n概要: Micrometerライブラリのバージョンを 1.13.0 に更新しました。 バージョンアップに伴い、OpenTelemetry Protocol（OTLP）用のレジストリファクトリを追加しました。これにより、OTLPをサポートしている監視サービスとの連携が可能になりました。\n修正後のバージョン （※1）: nablarch-micrometer-adaptor 1.3.0\n不具合の起因バージョン （※2） / モジュール: -\n不具合の起因バージョン （※2） / Nablarch: -\nシステムへの 影響の可能性 （※3）: あり\nシステムへの影響の可能性の内容と対処: Micrometerライブラリをバージョンアップしたため、CloudWatchもしくはDatadog連携用のライブラリを依存関係に追加している場合、バージョンの整合性が取れなくなり動作しなくなる可能性があります。 そのため、バージョンアップ手順に従ってライブラリのバージョンを更新してください。\n参照先: https://nablarch.github.io/docs/5u25/doc/application_framework/adaptors/micrometer_adaptor.html\nJIRA issue (※4): NAB-554"
+    },
+    {
+      "id": "s10",
+      "title": "Example",
+      "content": "コンテンツ: Example"
+    },
+    {
+      "id": "s11",
+      "title": "CSP対応",
+      "content": "No.: 8\n分類: ウェブアプリケーション\nリリース 区分: 変更\nタイトル: CSP対応\n概要: No.2の対応を取り込み、script-srcでnonceを使用する例に変更しました。\n修正後のバージョン （※1）: nablarch-example-web 5u25\n不具合の起因バージョン （※2） / モジュール: -\n不具合の起因バージョン （※2） / Nablarch: -\nシステムへの 影響の可能性 （※3）: なし\nシステムへの影響の可能性の内容と対処: -\n参照先: -\nJIRA issue (※4): NAB-591"
+    }
+  ],
+  "sheet_type": "P1",
+  "columns": [
+    "コンテンツ",
+    "",
+    "No.",
+    "分類",
+    "リリース 区分",
+    "タイトル",
+    "概要",
+    "修正後のバージョン （※1）",
+    "不具合の起因バージョン （※2） / モジュール",
+    "不具合の起因バージョン （※2） / Nablarch",
+    "システムへの 影響の可能性 （※3）",
+    "システムへの影響の可能性の内容と対処",
+    "参照先",
+    "JIRA issue (※4)"
+  ],
+  "data_rows": [
+    [
+      "アプリケーションフレームワーク",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "オブジェクトコード、ソースコード",
+      "1",
+      "公開API",
+      "変更",
+      "公開APIの追加",
+      "解説書で案内しているAPIの中で公開APIになっていないものがあったため、公開APIを追加しました。",
+      "nablarch-core 1.7.0\nnablarch-core-beans 1.5.0\nnablarch-core-jdbc 1.9.0\nnablarch-core-message 1.2.0\nnablarch-core-transaction 1.2.0\nnablarch-fw-jaxrs 1.5.0\nnablarch-fw-messaging 1.3.0\nnablarch-testing 1.7.0\nnablarch-jackson-adaptor 1.1.0\nnablarch-lettuce-adaptor 1.1.0\nnablarch-micrometer-adaptor 1.3.0\nnablarch-router-adaptor 1.3.0",
+      "-",
+      "-",
+      "なし",
+      "-",
+      "-",
+      "NAB-579"
+    ],
+    [
+      "",
+      "",
+      "2",
+      "CSP対応",
+      "変更",
+      "CSPのscript-srcにunsafe-inline以外を指定できるように改善",
+      "これまではCSPのscript-srcにunsafe-inline以外を指定することができませんでしたが、以下の対応によりnonceを使用したポリシーを設定できるようになりました。\n・セキュアハンドラでCSPに対応するためのnonceを生成できるようになりました\n・セキュアハンドラで生成したnonceをContent-Security-PolicyヘッダやJSP内に埋め込めるようになりました",
+      "nablarch-fw-web 1.14.0\nnablarch-fw-web-tag 1.4.0",
+      "-",
+      "-",
+      "なし",
+      "-",
+      "https://nablarch.github.io/docs/5u25/doc/application_framework/application_framework/handlers/web/secure_handler.html#content-security-policy",
+      "NAB-591"
+    ],
+    [
+      "",
+      "解説書",
+      "3",
+      "Bean Validation",
+      "変更",
+      "明示的にバリデーションを実行するための使用方法を追加",
+      "Bean Validationの使用方法として、以下の説明を追加しました。\n・バリデーションの明示的な実行\n・バリデーションエラー時に任意の処理を行いたい",
+      "nablarch-document 5u25",
+      "-",
+      "-",
+      "なし",
+      "-",
+      "https://nablarch.github.io/docs/5u25/doc/application_framework/application_framework/libraries/validation/bean_validation.html",
+      "NAB-594"
+    ],
+    [
+      "",
+      "",
+      "4",
+      "稼働環境",
+      "変更",
+      "テスト環境のデータベースを更新",
+      "Oracle Database 23cの名称が23aiに変更されたため、テスト環境のデータベースを以下の通り更新しました。赤字部分が変更箇所になります。\n・Oracle Database 12c/19c/21c/23ai\n・IBM Db2 10.5/11.5\n・SQL Server 2017/2019/2022\n・PostgreSQL 10.0/11.5/12.2/13.2/14.0/15.2/16.2",
+      "nablarch-document 5u25",
+      "-",
+      "-",
+      "なし",
+      "-",
+      "https://nablarch.github.io/docs/5u25/doc/application_framework/application_framework/nablarch/platform.html",
+      "NAB-604"
+    ],
+    [
+      "",
+      "ブランクプロジェクト",
+      "5",
+      "全般",
+      "変更",
+      "Maven Archetype Plugin 3.xに対応",
+      "これまでブランクプロジェクト作成時に警告が出力されていましたが、使用するMaven Archetype Pluginのバージョンを 3.2.1 に更新し、警告が出力されないように対応しました。\n\nこれにより、ブランクプロジェクト作成時に過去のバージョンのMaven Archetype Pluginを指定する必要がなくなったため、ブランクプロジェクト作成用のバッチファイルは削除しました。",
+      "nablarch-single-module-archetype 5u25",
+      "-",
+      "-",
+      "なし",
+      "-",
+      "https://nablarch.github.io/docs/5u25/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Web.html\n※その他のブランクプロジェクトの初期セットアップ手順も同様",
+      "NAB-603"
+    ],
+    [
+      "アダプタ",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "オブジェクトコード、ソースコード",
+      "6",
+      "JAX-RSアダプタ",
+      "変更",
+      "テストで使用しているJacksonのバージョンを更新",
+      "JAX-RSアダプタがテストで使用しているJacksonライブラリのバージョンを 2.12.7.1 に更新しました。",
+      "nablarch-document 5u25",
+      "-",
+      "-",
+      "なし",
+      "-",
+      "https://nablarch.github.io/docs/5u25/doc/application_framework/adaptors/jaxrs_adaptor.html#id2",
+      "NAB-579"
+    ],
+    [
+      "",
+      "",
+      "7",
+      "Micrometerアダプタ",
+      "変更",
+      "OpenTelemetry Protocol（OTLP）用のレジストリファクトリを追加",
+      "Micrometerライブラリのバージョンを 1.13.0 に更新しました。\n\nバージョンアップに伴い、OpenTelemetry Protocol（OTLP）用のレジストリファクトリを追加しました。これにより、OTLPをサポートしている監視サービスとの連携が可能になりました。",
+      "nablarch-micrometer-adaptor 1.3.0",
+      "-",
+      "-",
+      "あり",
+      "Micrometerライブラリをバージョンアップしたため、CloudWatchもしくはDatadog連携用のライブラリを依存関係に追加している場合、バージョンの整合性が取れなくなり動作しなくなる可能性があります。\nそのため、バージョンアップ手順に従ってライブラリのバージョンを更新してください。",
+      "https://nablarch.github.io/docs/5u25/doc/application_framework/adaptors/micrometer_adaptor.html",
+      "NAB-554"
+    ],
+    [
+      "Example",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "オブジェクトコード、ソースコード",
+      "8",
+      "ウェブアプリケーション",
+      "変更",
+      "CSP対応",
+      "No.2の対応を取り込み、script-srcでnonceを使用する例に変更しました。",
+      "nablarch-example-web 5u25",
+      "-",
+      "-",
+      "なし",
+      "-",
+      "-",
+      "NAB-591"
+    ]
+  ]
+}

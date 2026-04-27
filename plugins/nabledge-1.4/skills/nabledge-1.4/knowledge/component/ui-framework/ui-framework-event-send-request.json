@@ -1,0 +1,26 @@
+{
+  "id": "ui-framework-event-send-request",
+  "title": "XHRリクエスト送信イベントアクション",
+  "content": "[XHRリクエスト送信イベントアクション](../../component/ui-framework/ui-framework-event-send-request.md) は、 [ページ内イベント定義](../../component/ui-framework/ui-framework-event-listen.md) 及び [サブウィンドウ内イベント定義](../../component/ui-framework/ui-framework-event-listen-subwindow.md)\nが監視するイベントが発生した際に、指定したURLに対するXHR(Ajax)リクエストを送信する\nイベントアクションである。\n\n本アクションでは、Nablarch本体の機構(ウィンドウスコープ、Nablarch サブミット等) と連動し\n<n:button> <n:subimitLink> を使用した場合と同じPOSTリクエストを送信することができる。\nまた <n:param> を用いたリクエストパラメータの付与も可能となっている。\n\n> **Note:**\n> 本アクションでは、XHRレスポンスがXMLもしくはHTML形式であることを前提としている。\n> JSONなどの形式には対応していない。\n\n> **Note:**\n> 本アクションはローカル表示では動作しない。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "以下のソースコードは、商品コードを入力すると\nその商品名をXHRリクエストで検索して表示する例である。\n\n```jsp\n<event:listen\n  title     = \"商品コード入力欄からフォーカスアウトする。\"\n  event     = \"input.productCode blur\">\n  <event:send_request\n    title     = \"入力欄に値が設定されていた場合は、それに合致するコードを検索するAjaxリクエストを送信し、検索結果テーブルを取得する。\"\n    name      = \"product_ajaxRequest\"\n    uri       = \"./product/list\"\n    target    = \"table\"\n    condition = \"input.productCode:is-not-blank\">\n  </event:send_request>\n</event:listen>\n\n<event:listen\n  title = \"Ajaxリクエスト成功\"\n  event = \"ajaxSuccess\">\n  <event:write_to\n    title       = \"入力した商品コードに合致するレコードがDB上に存在すれば商品名を表示する\"\n    target      = \"span.productName\"\n    condition   = \":has(tr td)\"\n    format      = \"商品名: {td.productName}\">\n  </event:write_to>\n</event:listen>\n```\n\n> **Note:**\n> XHRリクエスト完了後の処理は、上の例のように、\n> jQueryのajax関連グローバルイベントを監視する [ページ内イベント定義](../../component/ui-framework/ui-framework-event-listen.md)\n> を作成し、その中にイベントアクションを配置することで実装する。\n\n> ajaxイベントの詳細については下記のリンク先を参照すること。\n\n> [http://api.jquery.com/Ajax_Events/](http://api.jquery.com/Ajax_Events/)",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "このアクションを実行するイベントは [ページ内イベント定義](../../component/ui-framework/ui-framework-event-listen.md)\n(もしくは [サブウィンドウ内イベント定義](../../component/ui-framework/ui-framework-event-listen-subwindow.md) ) を用いて定義する必要がある。\n\nこのアクションが実行されると、まず、イベントの発生元要素が condition 属性の\nセレクタにマッチするかをチェックし、マッチしなかった場合はなにもしない。\n\nマッチした場合、このタグを包含する **form** 要素に対してサブミット処理を実行する。\nこのサブミット処理は <n:submitLink> タグによる処理と同等である。\n\nまた、 <n:param> 等のタグについても、本タグの内側に記述することで\n<n:submitLink> と同様に利用することができる。\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | 実行する処理の簡単な説明 | 文字列 | × | × | 設計書表示用 |\n| name | サブミット名 | 文字列 | ◎ | × |  |\n| uri | リクエスト送信先URI | 文字列 | ◎ | × |  |\n| target | レスポンスの内容から取得する 要素を指定するセレクタ式 | 文字列 | ◎ | × |  |\n| condition | 本アクションを実行する事前条件。 イベント発生元要素が満たすべき セレクタ式の形式で指定する。 | 文字列 | ○ | × |  |\n| paramNameAlias | リクエストを送信する際に リクエストパラメータの置換を行う ルールを定義する。 | 文字列 | ○ | × | 置換ルールの書式は以下のとおり。  置換文字列1/置換後文字列1\\|置換文字列2/置換後文字列2 ... |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "本ウィジェットは以下のファイルによって実装されている。\n\n**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/event/send_request.tag | このウィジェットの実体となるタグファイル |\n| /js/nablarch/ui/event/AjaxAction.js | XHR処理を実装するイベントアクション |",
+      "level": 2
+    }
+  ]
+}

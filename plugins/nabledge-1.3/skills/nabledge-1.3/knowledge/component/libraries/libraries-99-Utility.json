@@ -1,0 +1,26 @@
+{
+  "id": "libraries-99-Utility",
+  "title": "ユーティリティ",
+  "content": "本フレームワークが提供するユーティリティの仕様を解説する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "日付ユーティリティ",
+      "content": "日付ユーティリティの仕様を解説する。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "クラス概要",
+      "content": "日付ユーティリティクラス。\n\n業務アプリケーションからは、本クラスを使用して日付計算やフォーマット変換などを行う。\n\n> **Note:**\n> 本ユーティリティでは、パラメータで指定される日付の妥当性チェック(形式や実在日チェック)は行わない。\n> このため、呼び出し元で正しい日付形式であることを検証してから、本機能を使用すること。\n\n> これは、本機能は繰り返し呼び出される機能であるため都度実在日チェックなどを実施すると、\n> 性能に与える影響が大きくなるためである。\n\n> 不正な形式や非実在日が指定された場合の実行結果は保証しない。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "機能一覧",
+      "content": "| 機能名 | 概要 |\n|---|---|\n| 日付オブジェクト変換 | 指定された日付(yyyyMMdd形式)をjava.util.Dateに変換する。  日付(yyyyMMdd形式)  java.util.Dateに変換した日付  例  ```java String updateDateStr = \"20110302\"; DateUtil.getDate(updateDateStr); // -> java.util.Dateオブジェクト ``` |\n| 日付フォーマット変換 | 指定された日付(yyyyMMdd形式)を指定されたフォーマットに変換する。 指定するフォーマットは、SimpleDateFormatの仕様に準拠すること。  日付(yyyyMMdd形式)  フォーマット(SimpleDateFormatの仕様に準拠すること)  指定されたフォーマットに変換した値  例  ```java // スラッシュ(/)区切りにする場合 String updateDateStr = \"20110302\"; DateUtil.formatDate(updateDateStr, \"yyyy/MM/dd\"); // -> 2011/03/02  // ハイフン(-)区切りにする場合 String updateDateStr = \"20110302\"; DateUtil.formatDate(updateDateStr, \"yyyy-MM-dd\"); // -> 2011-03-02 ``` |\n| 日数の加減算 | 指定された日付(yyyyMMdd形式)に、指定された日数を加算(負の値が指定された場合は減算)する。  日付(yyyyMMdd形式)  加算する日付(負の値の場合は、減算が行われる。)  計算後の日付(yyyyMMdd形式)  例  ```java // 10日加算する場合 String date = \"20110302\"; DateUtil.addDay(date, 10); // -> 20110312  // 10日減算する場合 String date = \"20110302\"; DateUtil.addDay(date, -10); // -> 20110220 ``` |\n| 月数の加減算 | 指定された日付(yyyyMMdd or yyyyMM形式)に、指定された月数を加算(負の値が指定された場合は減算)する。  日付(yyyyMMdd or yyyyMM形式)  月数(負の値の場合は、減算が行われる。)  計算後の日付(yyyyMMdd or yyyyMM形式)  例  ```java // 1ヶ月加算する場合(年月日指定) String date = \"20110302\"; DateUtil.addMonth(date, 1); // -> 20110402  // 1ヶ月加算する場合(年月指定) String date = \"201103\"; DateUtil.addMonth(date, 1); // -> 201104  // 1ヶ月減算する場合(年月日指定) String date = \"20110302\"; DateUtil.addMonth(date, -1); // -> 20110202  // 1ヶ月減算する場合(年月指定) String date = \"201103\"; DateUtil.addMonth(date, 1); // -> 201102 ``` |\n| 日付間の日数取得 | 指定された日付(yyyyMMdd形式)間の日数を取得する。  ２つの日付が同日の場合は0を返却する。 １つ目の日付 > ２つ目の日付の場合には、返却値は負の値となる。  被演算日付(yyyyMMdd形式)  演算日付(yyyyMMdd形式)  ２つの日付間の日数  例  ```java // 同日を指定した場合 DateUtil.getDate(\"20110302\", \"20110302\"); // -> 0  // １つ目の引数 ＜ ２つ目の引数の場合 DateUtil.getDays(\"20120229\", \"20120331\"); // -> 31  // １つ目の引数 ＞ ２つ目の引数の場合 DateUtil.getDays(\"20120401\", \"20120101\"); // -> -91 ``` |\n| 日付間の月数取得 | 指定された日付間(yyyyMMdd or yyyyMM形式)の月数を取得する。  ２つの日付が同日(同月)の場合は、0を返却する。 １つ目の日付 > ２つ目の日付の場合には、返却値は負の値となる。  被演算日付(yyyyMMdd or yyyyMM形式)  演算日付(yyyyMMdd or yyyyMM形式)  ２つの日付間の月数  例  ```java // 同日を指定した場合 DateUtil.getMonths(\"20110302\", \"20110302\"); // -> 0 DateUtil.getMonths(\"201103\", \"201103\");     // -> 0  // １つ目の引数 ＜ ２つ目の引数の場合 DateUtil.getMonths(\"20120229\", \"20120331\"); // -> 1 DateUtil.getMonths(\"201202\", \"201203\");     // -> 1  // １つ目の引数 ＞ ２つ目の引数の場合 DateUtil.getMonths(\"20120401\", \"20120101\"); // -> -3 DateUtil.getMonths(\"201204\", \"201201\");     // -> -3  // １つ目の引数:yyyyMMdd,２つ目の引数:yyyyMMの場合 DateUtil.getMonths(\"20110331\", \"201104\");   // -> 1 // １つ目の引数:yyyyMM,２つ目の引数:yyyyMMddの場合 DateUtil.getMonths(\"201103\", \"20100315\")    // -> -12 ``` |\n| 月末日取得 | 指定された日付(yyyyMMdd or yyyyMM形式)の月末日を取得する。  日付(yyyyMMdd or yyyyMM形式)  月末日(yyyyMMdd形式)  例  ```java DateUtil.getMonthEndDate(\"201103\"); // -> 20110331 DateUtil.getMonthEndDate(\"201104\"); // -> 20110431 DateUtil.getMonthEndDate(\"200802\"); // -> 20080229 ``` |",
+      "level": 3
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "handlers-file-record-writer-dispose-handler",
+  "title": "出力ファイル開放ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* ハンドラキューへの設定について\n\n業務アクションやハンドラで開いた出力ファイルを閉じる(リソースの解放)ハンドラ。\n\n> **Important:**\n> このハンドラで解放対象となるのは、 FileRecordWriterHolder を使用して開いた出力ファイルとなる。\n> それ以外のAPI(例えば、 java.io パッケージ)を使って開いたリソースについては、個別にクローズ処理を行うこと。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-file-record-writer-dispose-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.common.io.FileRecordWriterDisposeHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<!-- 汎用データフォーマット -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-dataformat</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "なし。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "ハンドラキューへの設定について",
+      "content": "このハンドラは、ハンドラキュー上に設定するだけで、後続のハンドラや業務アクションで開いた出力ファイルを自動的にクローズする。\nこのため、ファイルを出力する全てのハンドラより手前に設定する必要がある。",
+      "level": 2
+    }
+  ]
+}

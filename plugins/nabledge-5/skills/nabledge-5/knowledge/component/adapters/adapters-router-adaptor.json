@@ -1,0 +1,68 @@
+{
+  "id": "adapters-router-adaptor",
+  "title": "ルーティングアダプタ",
+  "content": "**目次**\n\n* モジュール一覧\n* ルーティングアダプタを使用するための設定を行う\n\n  * ディスパッチハンドラを設定する\n  * ルート定義ファイルを作成する\n* 業務アクションとURLを自動的にマッピングする\n* JAX-RSのPathアノテーションでマッピングする\n\n  * ディスパッチハンドラを変更する\n  * マッピングの実装方法\n  * パスパラメータの定義\n  * ルーティング定義を一覧で確認する\n\n[http-request-router(外部サイト)](https://github.com/kawasima/http-request-router) を使用して、\nリクエストURLと業務アクションのマッピングを行うアダプタ。\n\n本アダプタを使用することで、 [ウェブアプリケーション](../../processing-pattern/web-application/web-application-web.md#web-application) や [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restful-web-service) を\n構築する際に、URLと業務アクションのマッピングを容易に定義できる。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "content": "```xml\n<!-- ルーティングアダプタ -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-router-adaptor</artifactId>\n</dependency>\n```\n\n> **Tip:**\n> http-request-routerのバージョン0.1.1を使用してテストを行っている。\n> バージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "ルーティングアダプタを使用するための設定を行う",
+      "content": "本アダプタを使用するための手順を以下に示す。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "ディスパッチハンドラを設定する",
+      "content": "ディスパッチハンドラとして、 RoutesMapping をハンドラキューの最後に設定する。\n\n設定例を以下に示す。\n\nポイント\n* コンポーネント名は **packageMapping** とする。\n* basePackage属性には、アクションクラスが格納されているパッケージを設定する。\n  (アクションクラスが複数のパッケージに格納されている場合は、共通となる親パッケージを設定する。)\n* RoutesMapping を初期化対象のリストに設定する。\n\n```xml\n<component name=\"packageMapping\" class=\"nablarch.integration.router.RoutesMapping\">\n  <property name=\"basePackage\" value=\"sample.web.action\" />\n</component>\n\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <!-- その他のハンドラは省略 -->\n      <component-ref name=\"packageMapping\" />\n    </list>\n  </property>\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <!-- その他の初期化処理は省略 -->\n      <component-ref name=\"packageMapping\"/>\n    </list>\n  </property>\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "ルート定義ファイルを作成する",
+      "content": "クラスパス直下に routes.xml を作成し、\n指定したURLと業務アクションのマッピングを設定する。\n\nルート定義ファイルへの設定方法は、[ライブラリのREADMEドキュメント(外部サイト)](https://github.com/kawasima/http-request-router/blob/master/README.ja.md) を参照。\n\nルート定義ファイルは以下のタイミングで読み込まれる。\n\n* RoutesMapping の初期化時\n* ルート定義ファイル再読み込みの設定が有効であり、以下のすべての条件を満たしている時\n\n  * 最後にルート定義ファイルを読み込んでから指定された秒数が経過している\n  * URLと業務アクションのマッピング処理が行われている\n  * ルート定義ファイルが変更されている\n\nルート定義ファイルの再読み込みを有効にするには、 RoutesMapping#setCheckInterval(long) に0以上の値を指定する。\n\nRoutesMapping#setCheckInterval(long) の指定単位は秒数となる。パフォーマンスを重視する環境では-1を指定し、ルート定義ファイルの変更確認を行わないよう設定することを推奨する。",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "業務アクションとURLを自動的にマッピングする",
+      "content": "ルート定義ファイルにて、 match タグのpath属性に `:controller` や `:action`\nといったパラメータを使用することで業務アクションとURLの自動マッピングを行うことができる。\n\n> **Important:**\n> アプリケーションサーバに JBoss や WildFly を使用している場合、この機能は使用できない。\n> get タグ等を使用して個別に業務アクションとURLのマッピングを定義すること。\n\n> **Important:**\n> get タグ等を使用したマッピングの個別定義とこの機能の併用は推奨しない。\n> 併用した場合に、業務アクションとURLがどのようにマッピングされるかが、ルート定義ファイル上から読み取りづらくなる問題があるため。\n\nこの機能を有効にするには、クラスパス直下に作成した net/unit8/http/router ディレクトリに\nroutes.properties を作成し、以下のとおり値を設定する。\n\n```bash\nrouter.controllerDetector=nablarch.integration.router.NablarchControllerDetector\n```\n\nルート定義ファイルへの設定とマッピングの例を以下に示す。\n\nルート定義ファイル\n```xml\n<routes>\n  <match path=\"/action/:controller/:action\" />\n</routes>\n```\n業務アクションとマッピングするURLの例\n| 業務アクション | URL |\n|---|---|\n| PersonAction#index | /action/person/index |\n| PersonAction#search | /action/person/search |\n| LoginAction#index | /action/login/index |\n| ProjectUploadAction#index | /action/projectUpload/index |",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "JAX-RSのPathアノテーションでマッピングする",
+      "content": "本アダプタのバージョン1.2.0から、JAX-RSの `javax.ws.rs.Path` アノテーション（以下 `Path` アノテーションと表記）を使ったルーティングのマッピングができるようになった。\n\nここでは、既存の [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restful-web-service) に対して `Path` アノテーションを使ったルーティングを有効にする方法と、各種設定の詳細について説明する。\n\n> **Important:**\n> 本機能は、クラスパス配下のリソースを独自のファイルシステムで管理している一部のウェブアプリケーションサーバでは使用できない。\n\n> 例えば、JbossやWildflyでは、vfsと呼ばれるバーチャルファイルシステムで\n> クラスパス配下のリソースが管理されるため、 `Path` アノテーションで注釈されたクラスの検索ができない。\n\n> そのようなウェブアプリケーションサーバを使用する場合は、従来通りXMLを用いたルーティングの定義を使用すること。",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "ディスパッチハンドラを変更する",
+      "content": "XMLのマッピング定義を使用する場合は、ディスパッチハンドラの実装として RoutesMapping を使用していた。\n一方、 `Path` アノテーションによるマッピング定義を用いる場合は、 PathOptionsProviderRoutesMapping をディスパッチハンドラとして設定する必要がある。\n\n```xml\n<!-- Pathアノテーションによるルーティング定義を有効にする場合の設定例 -->\n<component name=\"packageMapping\" class=\"nablarch.integration.router.PathOptionsProviderRoutesMapping\">\n  <property name=\"pathOptionsProvider\">\n    <component class=\"nablarch.integration.router.jaxrs.JaxRsPathOptionsProvider\">\n      <property name=\"applicationPath\" value=\"${nablarch.webApi.applicationPath}\" />\n      <property name=\"basePackage\" value=\"${nablarch.commonProperty.basePackage}\" />\n    </component>\n  </property>\n\n  <property name=\"methodBinderFactory\">\n    <component class=\"nablarch.fw.jaxrs.JaxRsMethodBinderFactory\">\n      <property name=\"handlerList\">\n        <component class=\"nablarch.integration.jaxrs.jersey.JerseyJaxRsHandlerListFactory\"/>\n      </property>\n    </component>\n  </property>\n</component>\n\n<!-- ハンドラキュー構成 -->\n<component name=\"webFrontController\" class=\"nablarch.fw.web.servlet.WebFrontController\">\n  <property name=\"handlerQueue\">\n    <list>\n      <!-- 省略 -->\n      <component-ref name=\"packageMapping\"/>\n    </list>\n  </property>\n</component>\n```\n\n`Path` アノテーションによるルーティングを使用するには、 PathOptionsProviderRoutesMapping の `pathOptionsProvider` プロパティに JaxRsPathOptionsProvider を設定する。\n（`methodBinderFactory` プロパティの設定については [JAX-RSアダプタ](../../component/adapters/adapters-jaxrs-adaptor.md#jaxrs-adaptor) を参照）\n\nさらに、この JaxRsPathOptionsProvider には、次の２つのプロパティを設定する必要がある。\n\n**applicationPath**\n\nマッピングするパスに共通するプレフィックスを設定する。\nJAX-RS の `javax.ws.rs.ApplicationPath` アノテーションで設定する値と同じものを意味する。\n\n**basePackage**\n\n`Path` アノテーションが設定されたクラスを検索する、ルートとなるパッケージ名を設定する。\n\n定義した PathOptionsProviderRoutesMapping のコンポーネントは初期化が必要なので、初期化対象のリストに追加する。\n\n```xml\n<component name=\"initializer\"\n           class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"packageMapping\" />\n      <!-- 省略 -->\n    </list>\n  </property>\n</component>\n```\n\n以上の設定により、 `Path` アノテーションによるルーティングの登録機能が使用できるようになる。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "マッピングの実装方法",
+      "content": "`Path` アノテーションを使ってマッピングを定義した実装例を以下に示す。\n\n```java\n@Path(\"/sample\")\npublic class SampleAction {\n\n    @GET\n    @Produces(MediaType.APPLICATION_JSON)\n    public List<Person> findAll() {\n        // 省略\n    }\n\n    @POST\n    @Produces(MediaType.APPLICATION_JSON)\n    public int register(JaxRsHttpRequest request) {\n        // 省略\n    }\n}\n```\n\nアクションクラスを `Path` アノテーションで注釈することで、 `Path` アノテーションの `value` で設定したパスとアクションクラスを紐づけることができる。\nさらに、 `javax.ws.rs.GET` などのHTTPメソッドを表すアノテーションでアクションクラスのメソッドを注釈することで、HTTPメソッドとアクションクラスのメソッドを紐づけることができる。\n\n上記の実装例では、次のように HTTP リクエストがディスパッチされる。\n\n| パス | HTTPメソッド | ディスパッチされるメソッド |\n|---|---|---|\n| `/sample` | `GET` | `SampleAction#findAll()` |\n| `/sample` | `POST` | `SampleAction#register(JaxRsHttpRequest)` |\n\n> **Tip:**\n> HTTPメソッドを紐づけるアノテーションは、標準で以下のものが用意されている。\n\n> * >   `javax.ws.rs.DELETE`\n> * >   `javax.ws.rs.GET`\n> * >   `javax.ws.rs.HEAD`\n> * >   `javax.ws.rs.OPTIONS` (JAX-RS 1.1 以上)\n> * >   `javax.ws.rs.PATCH` (JAX-RS 2.1 以上)\n> * >   `javax.ws.rs.POST`\n> * >   `javax.ws.rs.PUT`\n\nさらに、以下のようにメソッドを `Path` アノテーションで注釈することで、サブパスのマッピングも定義できる。\n\n```java\n@Path(\"/sample\")\npublic class TestAction {\n\n    @GET\n    @Path(\"/foo\")\n    @Produces(MediaType.APPLICATION_JSON)\n    public Person foo() {\n        // 省略\n    }\n\n    @GET\n    @Path(\"/bar\")\n    @Produces(MediaType.APPLICATION_JSON)\n    public Person bar() {\n        // 省略\n    }\n}\n```\n\nこの場合、HTTPリクエストのディスパッチは次のようになる。\n\n| パス | HTTPメソッド | ディスパッチされるメソッド |\n|---|---|---|\n| `/sample/foo` | `GET` | `TestAction#foo()` |\n| `/sample/bar` | `GET` | `TestAction#bar()` |",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "パスパラメータの定義",
+      "content": "次のように、パスにパラメータを含めることもできる。\n\n```java\n@Path(\"/sample\")\npublic class TestAction {\n\n    @GET\n    @Path(\"/foo/{param}\")\n    @Produces(MediaType.APPLICATION_JSON)\n    public Person foo(JaxRsHttpRequest request) {\n        String param = request.getPathParam(\"param\");\n        // 省略\n    }\n\n    @GET\n    @Path(\"/bar/{id : \\\\d+}\")\n    @Produces(MediaType.APPLICATION_JSON)\n    public Person bar(JaxRsHttpRequest request) {\n        int id = Integer.parseInt(request.getPathParam(\"id\");\n        // 省略\n    }\n}\n```\n\nパスパラメータはhttp-request-routerの記法ではなく、JAX-RSの仕様に従った形で記述する。\nこれは、本機能（`Path` アノテーションによるルーティング定義）がJAX-RSの仕様に準拠しているためである。\n\nパスの一部を `{パラメータ名}` と記述することで、その部分をパラメータとして定義できる。\nここで定義したパラメータ名を JaxRsHttpRequest#getPathParam(String) に渡すことで、パスパラメータの値を取得できる。\n\nさらに、 `{パラメータ名 : 正規表現}` と記述することで、そのパスパラメータの書式を正規表現で定義できる。\n上記実装例では `\\\\d+` と正規表現を指定しているので、パスの値が数値のときのみメソッドがディスパッチされるようになる。\n\nHTTPリクエストのディスパッチの例は次のようになる。\n\n| パス | HTTPメソッド | ディスパッチされるメソッド |\n|---|---|---|\n| `/sample/foo/hello` | `GET` | `TestAction#foo(JaxRsHttpRequest)` |\n| `/sample/foo/world` | `GET` | `TestAction#foo(JaxRsHttpRequest)` |\n| `/sample/bar/123` | `GET` | `TestAction#bar(JaxRsHttpRequest)` |\n| `/sample/bar/987` | `GET` | `TestAction#bar(JaxRsHttpRequest)` |",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "ルーティング定義を一覧で確認する",
+      "content": "PathOptionsProviderRoutesMapping によって読み込まれたルーティング定義は、初期化時にデバッグレベルでログに出力される。\n\nデフォルトでは、次のようにしてルーティングの一覧がログに出力される。\n\n```text\n2020-07-20 13:35:53.092 -DEBUG- nablarch.integration.router.PathOptionsProviderRoutesMapping [null] boot_proc = [] proc_sys = [jaxrs] req_id = [null] usr_id = [null] GET /api/bar => com.example.BarAction#findAll\nGET /api/bar/fizz => com.example.BarAction#fizz\nGET /api/foo => com.example.FooAction#findAll\nPOST /api/foo => com.example.FooAction#register\nDELETE /api/foo/(:id) => com.example.FooAction#delete\nGET /api/foo/(:id) => com.example.FooAction#find\nPOST /api/foo/(:id) => com.example.FooAction#update\n```\n\nログのフォーマットを変更したい場合は、 PathOptionsFormatter を実装したクラスを作り、 PathOptionsProviderRoutesMapping の `pathOptionsFormatter` プロパティに設定する。\n\n```xml\n<component name=\"packageMapping\" class=\"nablarch.integration.router.PathOptionsProviderRoutesMapping\">\n  <property name=\"methodBinderFactory\">\n    <!-- 省略 -->\n  </property>\n  <property name=\"pathOptionsProvider\">\n    <!-- 省略 -->\n  </property>\n\n  <property name=\"pathOptionsFormatter\">\n    <!-- 自作のフォーマットクラスを設定する -->\n    <component class=\"com.example.CustomPathOptionsFormatter\" />\n  </property>\n</component>\n```",
+      "level": 3
+    }
+  ]
+}

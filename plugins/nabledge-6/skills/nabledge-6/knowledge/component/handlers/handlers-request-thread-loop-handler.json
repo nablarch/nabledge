@@ -1,0 +1,44 @@
+{
+  "id": "handlers-request-thread-loop-handler",
+  "title": "リクエストスレッド内ループ制御ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* サービス閉塞中の待機時間を設定する\n* 本ハンドラの停止方法\n* 後続ハンドラで発生した例外(エラー)に応じた処理内容\n\nプロセスの停止要求があるまで、後続のハンドラを繰り返し実行するハンドラ。\nこのハンドラは、メッセージキューやデータベース上のテーブルなどを監視し、未処理のデータを随時処理するプロセスで使用する。\n\n> **Tip:**\n> メッセージキューやデータベース上のテーブルを監視して処理するプロセスでは、個々のリクエスト(データ)は独立して扱われる。\n> 1つのリクエスト処理がエラーとなっても他のリクエスト処理はそのまま継続しなければならない。\n> このため、このハンドラで捕捉した例外は、プロセス正常停止要求や致命的な一部の例外を除き処理を継続する。\n\n> 詳細は、 [後続ハンドラで発生した例外(エラー)に応じた処理内容](../../component/handlers/handlers-request-thread-loop-handler.md#request-thread-loop-handler-error-handling) を参照。\n\n本ハンドラでは、以下の処理を行う。\n\n* 後続ハンドラを繰り返し実行\n* プロセス停止要求を示す例外発生時の後続ハンドラ実行の停止 \n  \n  詳細は、 [本ハンドラの停止方法](../../component/handlers/handlers-request-thread-loop-handler.md#request-thread-loop-handler-stop) を参照\n* 後続ハンドラで発生した例外(エラー)に応じた処理(ログ出力等) \n  \n  詳細は、 [後続ハンドラで発生した例外(エラー)に応じた処理内容](../../component/handlers/handlers-request-thread-loop-handler.md#request-thread-loop-handler-error-handling) を参照\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-request-thread-loop-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.handler.RequestThreadLoopHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-standalone</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "[リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) より後ろに配置すること\nこのハンドラでは、処理が継続可能な例外の場合に リトライ可能例外(Retryable) を送出する。\nこのため、リトライ可能例外を処理する [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) よりも後ろにこのハンドラを設定する必要がある。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "サービス閉塞中の待機時間を設定する",
+      "content": "後続のハンドラからサービス閉塞中を示す例外(ServiceUnavailable)が発生した場合の待機時間を設定することが出来る。\nこの時間を設定することで、サービスが開局されたかどうかのチェックタイミングを調整することが出来る。\n\n待機時間を長くし過ぎると、サービスが開局中に変更されても、即処理が開始されない問題があるので、要件にあわせて値を設定すること。\nなお、設定を省略した場合は、1秒待機後に後続ハンドラを再実行する。\n\n以下に設定例を示す。\n\n```xml\n<component class=\"nablarch.fw.handler.RequestThreadLoopHandler\">\n  <!-- 待機時間に5秒を設定 -->\n  <property name=\"serviceUnavailabilityRetryInterval\" value=\"5000\" />\n</component>\n```\n\n> **Tip:**\n> 後続ハンドラに [サービス提供可否チェックハンドラ](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md#serviceavailabilitycheckhandler) を設定しない場合には、本設定値は設定する必要が無い。\n> (設定したとしても、この値が使われることはない。)",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "本ハンドラの停止方法",
+      "content": "このハンドラは、プロセスの停止要求を示す例外が発生するまで、繰り返し後続のハンドラに対して処理を委譲する。\nこのため、メンテナンスなどでプロセスを停止する必要がある場合には、本ハンドラより後続に [プロセス停止制御ハンドラ](../../component/handlers/handlers-process-stop-handler.md#process-stop-handler) を設定し、\n外部からプロセスを停止できるようにする必要がある。\n\nプロセス停止要求を示す例外が発生した場合の処理内容は、 [後続ハンドラで発生した例外(エラー)に応じた処理内容](../../component/handlers/handlers-request-thread-loop-handler.md#request-thread-loop-handler-error-handling) を参照。",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "後続ハンドラで発生した例外(エラー)に応じた処理内容",
+      "content": "このハンドラで行う後続ハンドラで発生した例外(エラー)に応じた処理内容について解説する。\n\nサービス閉塞中例外(ServiceUnavailable)\n一定時間待機後に、再度後続ハンドラに処理を委譲する。\n待機時間の設定方法は、 [サービス閉塞中の待機時間を設定する](../../component/handlers/handlers-request-thread-loop-handler.md#request-thread-loop-handler-interval) を参照。\nプロセス停止要求を示す例外(ProcessStop)\nプロセス停止要求を示す例外であるため、本ハンドラの処理を終了する。\nプロセスの異常終了を示す例外(ProcessAbnormalEnd)\nプロセスの異常終了を示す例外のため、捕捉した例外を再送出する。\n処理を継続することができなかったことを示すサービスエラー(ServiceError)\n補足した例外クラスにログ出力処理を委譲し、 リトライ可能例外(Retryable) を送出する。\nハンドラの処理が異常終了したことを示す例外(Result.Error)\n`FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。\n実行時例外(RuntimeException)\n`FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。\nスレッドの停止を示す例外(ThreadDeath)\n`INFO` レベルのログを出力し、補足した例外(ThreadDeath)を再送出する。\nスタックオーバーフローエラー(StackOverflowError)\n`FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。\nヒープ不足のエラー(OutOfMemoryError)\n標準エラー出力にヒープ不足が発生したことを示すメッセージを出力し、 `FATAL` レベルのログ出力を行う。\n(ログ出力時に再度ヒープ不足が発生する可能性があるため、標準エラー出力にメッセージ出力後にログを出力する。)\n\nヒープ不足の原因不足となったオブジェクトへの参照が切れ、処理継続可能な場合があるため リトライ可能例外(Retryable) を送出する。\nJVMの異常を示すエラー(VirtualMachineError)\n発生した例外を再送出する\n上記以外のエラー\n`FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。",
+      "level": 2
+    }
+  ]
+}

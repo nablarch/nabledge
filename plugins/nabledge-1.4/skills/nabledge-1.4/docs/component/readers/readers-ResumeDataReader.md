@@ -1,59 +1,97 @@
-# レジュームデータリーダ
+
+
+![handler_structure_bg.png](../../../knowledge/assets/readers-ResumeDataReader/handler_structure_bg.png)
+
+![handler_bg.png](../../../knowledge/assets/readers-ResumeDataReader/handler_bg.png)
 
 ## レジュームデータリーダ
 
-**クラス名**: `nablarch.fw.reader.ResumeDataReader`
+ファイルを読み込むデータリーダにレジューム機能を追加するデータリーダ。
 
-ファイルを読み込むデータリーダにレジューム機能を追加するラッパーデータリーダ。レジューム機能を追加したいデータリーダを本クラスでラップすることで有効になる。レジューム機能により、バッチが途中終了した場合に未処理レコードから業務処理を再開できる。再実行時、正常処理済みレコードはスキップされる。
+本データリーダを使用すると、障害発生などの原因によりバッチが途中で終了した場合に、未処理レコードから業務処理を再開（レジューム）できる。
+再実行の際には、正常に処理できたレコードに対する業務処理はスキップされる。
+
+レジューム機能を追加したいデータリーダを本データリーダでラップすることにより、レジュームが有効となる。
+
+**クラス名**
+nablarch.fw.reader.ResumeDataReader
+**読み込むデータの型**
+ラップするデータリーダが読み込むデータの型
 
 **使用例**
 
-[FileDataReader](readers-FileDataReader.md) をラップする場合:
+* データリーダファクトリ内で [ファイルデータリーダ](../../component/readers/readers-FileDataReader.md) をラップしたレジュームデータリーダを生成する例
 
 ```java
 DataReader<DataRecord> reader = new FileDataReader()
         .setDataFile("record.dat")
         .setLayoutFile("record");
+// FileDataReaderをラップしてレジューム機能を追加する
 return new ResumeDataReader<DataRecord>().setSourceReader(reader);
 ```
 
-[ValidatableFileDataReader](readers-ValidatableFileDataReader.md) をラップする場合:
+* データリーダファクトリ内で [事前精査機能付きファイルデータリーダ](../../component/readers/readers-ValidatableFileDataReader.md) をラップしたレジュームデータリーダを生成する例
 
 ```java
 DataReader<DataRecord> reader = new ValidatableFileDataReader()
         .setValidatorAction(new FileLayoutValidatorAction())
         .setDataFile("record.dat").setLayoutFile("record");
+
+// ValidatableFileDataReaderをラップしてレジューム機能を追加する
 return new ResumeDataReader<DataRecord>().setSourceReader(reader);
 ```
 
-> **補足**: [../handler/FileBatchAction](../handlers/handlers-FileBatchAction.md) を継承したバッチ業務アクションを作成する場合、FileBatchAction がデフォルトで [ValidatableFileDataReader](readers-ValidatableFileDataReader.md) をラップしたレジュームデータリーダを生成するため、アプリケーションプログラマが実装する必要はない。
+なお、 [FileBatchAction](../../javadoc/nablarch/fw/action/FileBatchAction.html) を継承したバッチ業務アクションを作成する場合は、 [FileBatchAction](../../javadoc/nablarch/fw/action/FileBatchAction.html) がデフォルトで [事前精査機能付きファイルデータリーダ](../../component/readers/readers-ValidatableFileDataReader.md) をラップしたレジュームデータリーダを生成するので、
+アプリケーションプログラマがレジュームデータリーダや事前検証機能付きファイルデータリーダを生成するコードを実装する必要はない。
+
+詳細は [ファイル入力のバッチ業務アクションハンドラのテンプレートクラス](../../component/handlers/handlers-FileBatchAction.md) を参照すること。
 
 **レジューム処理概要**
 
-レジュームポイントはリクエスト管理テーブルに保存される。値は最後に成功した処理のread()実行回数（上書き方式）。
+レジュームは、リクエスト管理テーブルにレジュームポイントを保存することにより実現する。
 
-1回目（障害発生時）:
-1. ファイル先頭から読み込み
-2. バッチ業務アクション実行
-3. レジュームポイントをリクエスト管理テーブルに保存（[../handler/LoopHandler](../handlers/handlers-LoopHandler.md) でコミット設定時はコミット前最後の処理のみ）
-4. 障害発生で途中終了
+レジュームポイントには、一番最後に処理が成功した場所が保存される。
+たとえば、入力ファイルの7行目までの処理が成功し、8行目の処理が失敗してバッチが終了する場合、バッチ終了時点のレジュームポイントの値は「7」となる。
 
-2回目（再実行時）:
-1. リクエスト管理テーブルからレジュームポイントを読み込む
-2. ファイルからレコードを読み込む
-3. レジュームポイントに到達していない場合は、レジュームポイントに到達するまでファイル読み込み（No2）を繰り返す
-4. バッチ業務アクションを実行する
-5. レジュームポイントをリクエスト管理テーブルに保存する
+レジュームポイントとして保存される値は1つのみで、処理が成功する度にその値は上書かれる。
 
-（ファイル終端まで No2〜5 の処理を繰り返す）
+以下にファイル読み込み処理の途中で障害が発生する例をもとに、レジューム処理の流れを示す。
 
-> **注意**: レジュームデータリーダはread()メソッドの実行回数をレジュームポイントとして保存する。この値はファイルの物理的なレコード番号と一致しない場合がある。障害発生ポイントの特定には、アプリケーション実装で物理レコード番号やキー情報をログに出力すること。物理レコード数とレジュームポイントが一致していなくてもレジューム機能は問題なく動作する（同じファイルを何度読んでもデータリーダが返す値は変わらないため）。
+① 1回目のファイル読み込みバッチの実行（障害が発生し、処理が途中で終了する）
 
-> **警告**: 障害発生ポイント以前のデータ（既に正常処理済み）にパッチを当てた場合は、レジュームポイントを0クリアして1レコード目から再処理する必要がある。
+1. レジュームデータリーダが、ファイルの先頭から読み込みを行う。
+2. バッチ業務アクションを実行する。
+3. レジュームデータリーダがレジュームポイントをリクエスト管理テーブルに保存する。 [1]
+【 **No1～3** の処理を繰り返す】
+4. DB接続などの障害発生が発生し、処理が途中で終了する。
+
+② 2回目のファイル読み込みバッチの実行（ファイルの途中から処理を再開する）
+
+1. レジュームデータリーダが、リクエスト管理テーブルからレジュームポイントを読み込む。
+2. ファイルからレコードを読み込む。
+3. レジュームポイントに到達していない場合は、レジュームポイントに到達するまでファイル読み込み( **No2** )を繰り返す。
+4. バッチ業務アクションを実行する。
+5. レジュームデータリーダがレジュームポイントをリクエスト管理テーブルに保存する。
+（ファイル終端まで **No2～5** の処理を繰り返す）
+
+[トランザクションループ制御ハンドラ](../../component/handlers/handlers-LoopHandler.md) の設定により一定件数ごとにコミットを行なっている場合は、コミット前の最後の処理でのみ実施する。
+
+> **Note:**
+> レジュームデータリーダはレジュームポイントとしてラップしたデータリーダの *read()* メソッドの実行回数（データを読み込んだ回数）を保存する。
+> この実行回数は、データリーダの機能によってはファイルの物理的なレコードとは一致しない値となる。
+> このため、レジュームポイントを元に障害発生ポイントを特定するような設計にするのではなく、
+> アプリケーションの実装で障害が発生した物理レコード番号やキー情報をログに出力すること。
+
+> 物理レコード数とレジュームポイントが一致していなくても、レジューム機能は問題なく動作する。
+> これは、同じファイルを何度読んでもデータリーダが返す値は変わらないため、レジュームポイントまで読み飛ばす処理は正常に機能するからである。
+
+> > **Warning:**
+> > 障害発生ポイントのレコードにパッチを当てることは問題ないが、発生ポイント以前のデータ（既に正常に処理が終わっているデータ）
+> > に対してパッチを当てた場合は、レジュームポイントを0クリアして1レコード目から再度処理する必要があるため注意すること。
 
 **テーブル構成**
 
-リクエスト管理テーブル:
+以下は、本データリーダが参照するリクエスト管理テーブルの構造である。
 
 | 論理名 | データ型 | 備考 |
 |---|---|---|
@@ -62,27 +100,24 @@ return new ResumeDataReader<DataRecord>().setSourceReader(reader);
 
 **ジョブの設計時に考慮すべきこと**
 
-レジュームポイントは自動的にクリアされない。レジュームを使用するバッチジョブ作成時は、レジュームポイントをゼロクリアするバッチジョブもセットで作成し、事前にゼロクリアを行うよう設計すること。
+レジュームポイントは自動的にクリアされないので、レジュームを使用してファイルを読み込むバッチジョブを作成する際は、レジュームポイントをゼロクリアするバッチジョブもセットで作成し、事前にゼロクリアを行うように設計すること。
 
-<details>
-<summary>keywords</summary>
+### 設定項目
 
-ResumeDataReader, nablarch.fw.reader.ResumeDataReader, FileDataReader, ValidatableFileDataReader, FileBatchAction, LoopHandler, FileLayoutValidatorAction, レジューム機能, バッチ再実行, レジュームポイント, リクエスト管理テーブル, レジューム処理概要
+レジュームポイント管理クラス（ [ResumePointManager](../../javadoc/nablarch/fw/reader/ResumePointManager.html) ）を用いてリクエスト管理テーブルのテーブル名、カラム名やレジューム要否など、レジューム関連の設定を行うことができる。
 
-</details>
+レジュームポイント管理クラスの設定項目の一覧は以下のとおりである。
 
-## 設定項目
+| 設定項目 | プロパティ名 | データ型 | 備考 |
+|---|---|---|---|
+| リクエスト管理テーブル名 | tableName | String | 必須指定 |
+| リクエストIDカラム名 | requestIdColumnName | String | 必須指定 |
+| レジュームポイントカラム名 | resumePointColumnName | String | 必須指定 |
+| レジュームを有効にするかどうか | resumable | boolean | 任意指定(デフォルト = false(無効)) |
+| レジューム機能を無効にするリクエストIDのリスト | excludingRequestList | List<String> | 任意指定(デフォルト = 空のリスト) |
+| データベースリソース名 | dbTransactionName | String | 任意指定(デフォルト = "transaction") |
 
-`ResumePointManager` クラスを使用してリクエスト管理テーブルのテーブル名・カラム名やレジューム要否などを設定する。
-
-| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |
-|---|---|---|---|---|
-| tableName | String | ○ | | リクエスト管理テーブル名 |
-| requestIdColumnName | String | ○ | | リクエストIDカラム名 |
-| resumePointColumnName | String | ○ | | レジュームポイントカラム名 |
-| resumable | boolean | | false | レジュームを有効にするかどうか |
-| excludingRequestList | List\<String\> | | 空のリスト | レジューム機能を無効にするリクエストIDのリスト |
-| dbTransactionName | String | | "transaction" | データベースリソース名 |
+**設定例**
 
 ```xml
 <component name="resumePointManager"
@@ -100,10 +135,3 @@ ResumeDataReader, nablarch.fw.reader.ResumeDataReader, FileDataReader, Validatab
     <property name="dbTransactionName" value="transaction" />
 </component>
 ```
-
-<details>
-<summary>keywords</summary>
-
-ResumePointManager, nablarch.fw.reader.ResumePointManager, tableName, requestIdColumnName, resumePointColumnName, resumable, excludingRequestList, dbTransactionName, レジューム設定, リクエスト管理テーブル設定
-
-</details>

@@ -1,21 +1,14 @@
 # その他のテンプレートエンジンを使用した画面開発
 
-**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/feature_details/view/other.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/handler/responsewriter/CustomResponseWriter.html)
+[ウェブアプリケーション Thymeleafアダプタ](../../component/adapters/adapters-web-thymeleaf-adaptor.md#web-thymeleaf-adaptor) や [FreeMarker](../../processing-pattern/web-application/web-application-freemarker.md#view-freemarker) 以外のテンプレートエンジンを使用したい場合の対応方法を説明する。
 
-## その他のテンプレートエンジンの対応方法
+使用するテンプレートエンジンが、Servlet forwardを使用してクライアントにレスポンスを返すためのServletを提供している場合には、
+[FreeMarker](../../processing-pattern/web-application/web-application-freemarker.md#view-freemarker) と同じように `web.xml` にServletを登録するだけで対応できる。
 
-## その他のテンプレートエンジンの対応方法
+Servletを提供していないテンプレートエンジンの場合には、
+[ウェブアプリケーション Thymeleafアダプタ](../../component/adapters/adapters-web-thymeleaf-adaptor.md#web-thymeleaf-adaptor) と同じように CustomResponseWriter の実装クラスを作成することで対応できる。
 
-[web_thymeleaf_adaptor](../../component/adapters/adapters-web_thymeleaf_adaptor.md) や [FreeMarker](web-application-freemarker.md) 以外のテンプレートエンジンを使用する場合の対応方法は、Servletの有無によって異なる。
+実装方法や設定方法などの詳細は、以下の解説書やソースコードを参照すること。
 
-- **Servletを提供している場合**: [FreeMarker](web-application-freemarker.md) と同様に `web.xml` にServletを登録するだけで対応できる。
-- **Servletを提供していない場合**: [web_thymeleaf_adaptor](../../component/adapters/adapters-web_thymeleaf_adaptor.md) と同様に `CustomResponseWriter` の実装クラスを作成することで対応できる。
-
-参考: [ウェブアプリケーション Thymeleafアダプタのソースコード](https://github.com/nablarch/nablarch-web-thymeleaf-adaptor)
-
-<details>
-<summary>keywords</summary>
-
-CustomResponseWriter, nablarch.fw.web.handler.responsewriter.CustomResponseWriter, テンプレートエンジン, 画面開発, Servlet, web.xml登録
-
-</details>
+* [ウェブアプリケーション Thymeleafアダプタ](../../component/adapters/adapters-web-thymeleaf-adaptor.md#web-thymeleaf-adaptor)
+* [ウェブアプリケーション Thymeleafアダプタのソースコード](https://github.com/nablarch/nablarch-web-thymeleaf-adaptor)

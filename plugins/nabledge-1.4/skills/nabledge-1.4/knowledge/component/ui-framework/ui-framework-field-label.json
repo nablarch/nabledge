@@ -1,0 +1,26 @@
+{
+  "id": "ui-framework-field-label",
+  "title": "表示項目ウィジェット",
+  "content": "[表示項目ウィジェット](../../component/ui-framework/ui-framework-field-label.md) は [単行テキスト入力項目ウィジェット](../../component/ui-framework/ui-framework-field-text.md) や [チェックボックス入力項目ウィジェット](../../component/ui-framework/ui-framework-field-checkbox.md)\nなどの入力項目と並べて表示項目を出力するウィジェットである。\n主に、更新画面で変更対象でない項目(ユーザIDなど)を\n他の更新可能なフィールドと並べて表示したい場合に使用する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**設計成果物(ローカル動作)**\n\n```jsp\n<field:block title=\"ユーザ基本情報\">\n  <field:label\n      title=\"ログインID\"\n      sample=\"nablarch\">\n  </field:label>\n\n  <field:text\n      title=\"漢字氏名\"\n      required=\"true\"\n      sample=\"名部　楽太郎\">\n  </field:text>\n</field:block>\n```\n\n**実装成果物(サーバ動作)**\n\n```jsp\n<field:block title=\"ユーザ基本情報\">\n  <field:label\n      title=\"ログインID\"\n      name=\"W11AC03.systemAccount.loginId\"\n      sample=\"nablarch\">\n  </field:label>\n\n  <field:text\n      title=\"漢字氏名\"\n      name=\"W11AC03.users.kanjiName\"\n      required=\"true\"\n      maxlength=\"50\"\n      hint=\"全角50文字以内\"\n      sample=\"名部　楽太郎\">\n  </field:text>\n</field:block>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "**サーバ動作時の挙動**\n入力画面、確認画面ともに **name** 属性に指定した変数の値を出力する。\n該当する変数が存在しない場合は空文字を出力する。\n出力する内容はNablarch標準タグライブラリの <n:write> の解説を参照すること。\n**ローカル動作時の挙動**\n入力画面、確認画面ともに **sample** に指定した文字列をそのまま出力する。\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | 項目名 | 文字列 | ◎ | ◎ |  |\n| name | 出力対象の値を変数スコープ から取得するための名前 | 文字列 | ◎ | ○ |  |\n| id | HTMLのid属性値 | 文字列 | ○ | ○ | 省略時はname属性と同じ値 |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ |  |\n| domain | 項目のドメイン型 | 文字列 | ○ | ○ |  |\n| sample | ローカル動作時に表示する文字列 | 文字列 | × | ○ |  |\n| valueFormat | 出力時のフォーマット 詳細は、write(n:write) タグを参照 | 文字列 | ○ | × |  |\n| unit | 値の右側に表示する単位 | 文字列 | ○ | ○ | 出力対象の値が空の場合単位は表示しない  > **Note:** > ローカル表示で本属性を使用する場合 > はname属性に値を設定すること。  > name属性が未設定（ブランク）の場合、 > 単位はブランク表示となる。 |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 画面項目定義に記載する、 「表示情報取得元」.「表示項目名」 の形式で設定する。 |\n| comment | 表示項目についての備考 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |\n| formatSpec | 編集仕様に関する説明 | 文字列 | × | × | 設計書の表示時に、  画面項目定義の項目定義一覧で、 「編集仕様」に表示される。 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/label.tag | [表示項目ウィジェット](../../component/ui-framework/ui-framework-field-label.md) の実体となるタグファイル |\n| /js/jsp/taglib/nablarch.js | <n:write> のエミュレーション機能を実装する タグライブラリスタブJS |",
+      "level": 2
+    }
+  ]
+}

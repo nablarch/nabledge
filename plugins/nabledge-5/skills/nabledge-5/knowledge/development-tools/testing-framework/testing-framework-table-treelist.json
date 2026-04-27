@@ -1,0 +1,26 @@
+{
+  "id": "testing-framework-table-treelist",
+  "title": "階層(ツリー)表示テーブルウィジェット",
+  "content": "[階層(ツリー)表示テーブルウィジェット](../../development-tools/testing-framework/testing-framework-table-treelist.md) はデータベースなどからの検索結果を\n**UI標準 UI部品 階層(ツリー)表示** の内容に準拠した階層テーブルを画面に出力するUI部品である。\n検索結果を特定のカラムの値によって自動的にソート・階層化して表示できるが、\n仕様上、ページング機能には対応していない。\n\nテーブル内の各カラムの内容は、カラムの種別ごとに用意された個別のウィジェットを配置することによって定義する。\n\n* [ラベル表示用カラムウィジェット](../../development-tools/testing-framework/testing-framework-column-label.md)\n* [コード値ラベル表示用カラムウィジェット](../../development-tools/testing-framework/testing-framework-column-code.md)\n* [リンク表示用カラムウィジェット](../../development-tools/testing-framework/testing-framework-column-link.md)\n* [テーブル複数行選択用チェックボックスカラムウィジェット](../../development-tools/testing-framework/testing-framework-column-checkbox.md)\n* [テーブル行選択用ラジオボタンカラムウィジェット](../../development-tools/testing-framework/testing-framework-column-radio.md)\n\n[ラベル表示用カラムウィジェット](../../development-tools/testing-framework/testing-framework-column-label.md) については、tree_indent属性をtrueに指定することでカラム内の表示項目が階層の深さに応じて\nインデントされて表示される。\n\nなお、階層表示を使用するためには、少なくとも一つのカラムが、tree_toggler属性がtrueに指定されている\n[リンク表示用カラムウィジェット](../../development-tools/testing-framework/testing-framework-column-link.md) である必要がある。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**設計成果物(ローカル動作)**\n\n```jsp\n<table:treelist\n  title=\"リクエストID一覧\"\n  name=\"treeStatus\"\n  key=\"id\"\n  hierarchy=\"chars:6|2|2\"\n  sampleResults=\"5\">\n\n  <column:label\n    title=\"リクエストID\"\n    key=\"id\"\n    tree_indent=\"true\"\n    tree_toggler=\"true\"\n    sample=\"RW11AA|RW11AA0101|RW11AA0102|RW11AB|RW11AB0101\">\n  </column:label>\n\n  <column:label\n    title=\"リクエスト名\"\n    key=\"name\"\n    tree_indent=\"true\"\n    sample=\"ログイン機能|ログイン画面初期表示処理|ログイン処理|メニュー|メニュー表示処理\">\n  </column:label>\n\n  <column:checkbox\n    title=\"閉局中\"\n    name=\"availableRequestIds\"\n    key=\"id\">\n  </column:checkbox>\n\n</table:treelist>\n```\n\n**設計成果物(サーバ動作)**\n\n```jsp\n<table:treelist\n  title=\"リクエストID一覧\"\n  name=\"formdata.treeStatus\"\n  key=\"id\"\n  hierarchy=\"chars:6|2|2\"\n  resultSetName=\"searchResult\"\n  sampleResults=\"5\">\n\n  <column:label\n    title=\"リクエストID\"\n    key=\"id\"\n    tree_indent=\"true\"\n    tree_toggler=\"true\"\n    sample=\"RW11AA|RW11AA0101|RW11AA0102|RW11AB|RW11AB0101\">\n  </column:label>\n\n  <column:label\n    title=\"リクエスト名\"\n    key=\"name\"\n    tree_indent=\"true\"\n    sample=\"ログイン機能|ログイン画面初期表示処理|ログイン処理|メニュー|メニュー表示処理\">\n  </column:label>\n\n  <column:checkbox\n    title=\"閉局中\"\n    name=\"formdata.availableRequestIds\"\n    key=\"id\">\n  </column:checkbox>\n\n</table:treelist>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "**階層構造の定義**\n\n検索結果は **key** 属性値に指定したカラムの値に従って、自動的にソート・階層化して表示する。\n階層構造は **hirarchy** 属性値に指定した定義式によって定まり、以下の2つの書式のいずれかによって定義する。\n\n1. chars:(数値)|(数値)|...|(数値)\n  各要素のid属性値を先頭からの文字数で分割し階層を決定する方法。\n2. separator:(区切り文字列)\n  各要素のid属性値を区切り文字列で分割し階層を決定する方法。\n\n**ローカル動作時の挙動**\nローカル動作では **sampleResults** に指定した件数分だけデータ行を表示する。\nカラムの内容は各カラムウィジェットの **sample** 属性に指定した\n**\"|\"** 区切りの文字列を順に表示する。(レコード件数の方が多い場合はループする。)\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | 見出し文字列 | 文字列 | ◎ | ◎ |  |\n| id | テーブルを一意に識別するid | 文字列 | × | × | ページ内に、複数のテーブルが 存在する場合は必須。 |\n| name | ツリーの開閉状態を保持する フォーム要素名 | 文字列 | ◎ | ◎ |  |\n| key | 階層構造を決定するレコード の属性名 | 文字列 | ◎ | ◎ |  |\n| hirarchy | 階層構造を決定する定義式 | 文字列 | ◎ | ◎ |  |\n| resultSetName | 検索結果を格納する変数名 | 文字列 | ◎ | × |  |\n| resultSetCss | 検索結果表示領域に適用する CSSクラス | 文字列 | ○ | ○ |  |\n| sampleResults | サンプルで表示する件数 | 数値 | × | ◎ |  |\n| sortCondition | テーブルの初期ソート条件 | 文字列 | × | × | 設計書の表示時に、 画面概要の一覧表示のリストで、 「ソート条件」に表示される。 |\n| comment | テーブルについての備考 | 文字列 | × | × | 設計書の表示時に、 画面概要の一覧表示のリストで、 「備考」に表示される。 |\n| estimatedMaxSearchResults | 検索結果として想定される最大件数 | 文字列 | × | × | 設計書の表示時に、 画面概要の一覧表示のリストで、 「想定検索最大件数」に表示 される。 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "テーブル機能は内部的に Nabalrchが提供している **<listSearchResult:table>** タグで実装されており、\nNablarch側の設定の変更によって、ページングリストの出力パターンなどを変更できる。\n詳細は、「Nablarch アーキテクチャ解説書」を参照。\n\n**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/table/treelist.tag | ツリーリストウィジェット |\n| /WEB-INF/tags/widget/column/*.tag | テーブルカラムウィジェット群 |\n| /WEB-INF/tags/listSearchResult/*.tag | Nablarch検索結果テーブルタグファイル |\n| /css/style/nablarch.less | Nablarch関連スタイル定義 テーブルの配色などを定義している。 |\n| /css/style/content.less | 業務画面領域スタイル定義 テーブルサイズを定義している。 |\n| /js/nablarch/ui/TreeList.js | ツリーリストUI部品 |\n| /css/ui/treelist.less | ツリーリストのスタイル定義 各階層ごとの配色などを定義している。 |",
+      "level": 2
+    }
+  ]
+}

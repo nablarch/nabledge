@@ -1,0 +1,37 @@
+# ユニバーサルDAOとJakarta Persistenceとの機能比較
+
+この章では、以下の機能の比較を示す。
+
+* [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao)
+* <a href="https://jakarta.ee/specifications/persistence/" target="_blank">Jakarta Persistence(外部サイト、英語)</a>
+
+> **Important:**
+> ユニバーサルDAOでは、JPAで定義されているアノテーションのうち、 [Entityに使用できるJakarta Persistenceアノテーション](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-annotations) に記載のあるものだけをサポートしている。
+> ここに記載のないアノテーションに関連する機能については、使用できない。
+
+機能比較（○：提供あり　△：一部提供あり　×：提供なし　－:対象外）
+
+| 機能 | ユニバーサルDAO | Jakarta Persistence |
+|---|---|---|
+| リレーションシップに対応できる | × [1] | ○ |
+| Entityを元にCRUDが実行できる   SQLを作成することなくCRUDのSQLを実行できる | ○   [解説書へ](../../component/libraries/libraries-universal-dao.md#universal-dao-execute-crud-sql) | ○ |
+| 検索結果をJava Beansオブジェクトとして取得できる | ○   [解説書へ](../../component/libraries/libraries-universal-dao.md#universal-dao-bean-mapping) | ○ |
+| 任意のSQL文を実行できる | ○   [解説書へ](../../component/libraries/libraries-universal-dao.md#universal-dao-sql-file) | ○ |
+| SQLの動的組み立てができる | △ [2]   [解説書へ](../../component/libraries/libraries-universal-dao.md#universal-dao-sql-file) | ○ |
+| バッチ実行ができる | ○   [解説書へ](../../component/libraries/libraries-universal-dao.md#universal-dao-batch-execute) | × |
+| 大量データを取得する際に遅延ロードができる   (ヒープを圧迫せずに大量データを処理できる) | ○   [解説書へ](../../component/libraries/libraries-universal-dao.md#universal-dao-lazy-load) | × |
+| ページング用の範囲指定の検索ができる | ○   [解説書へ](../../component/libraries/libraries-universal-dao.md#universal-dao-paging) | ○ |
+| サロゲートキーの値を採番できる | ○   [解説書へ](../../component/libraries/libraries-universal-dao.md#universal-dao-generate-surrogate-key) | ○ |
+| Entityの状態をデータベースに反映時に   Jakarta Bean Validationが実行できる | × [3] | ○ |
+| データベースアクセス前後に   任意の処理(コールバック呼び出し)を実行できる | × [4] | ○ |
+| 排他制御ができる | △ [5]   [解説書へ(楽観ロック)](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-optimistic-lock)   [解説書へ(悲観ロック)](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-pessimistic-lock) | ○ |
+
+リレーションシップがあるテーブルの検索はSQLを作成することで対応できる。登録、更新、削除については、テーブル毎に必要な処理を呼び出すことで対応する。
+
+ユニバーサルDAOでは、条件及びソート項目に限り動的な組み立てができる。詳細は、 [SQLの動的組み立て](../../component/libraries/libraries-database.md#database-variable-condition) を参照
+
+Nablarchでは、外部からのデータを受け付けたタイミングでバリデーションを実施し、バリデーションエラーがない場合のみEntityへ変換しデータベースへ保存する。
+
+任意の処理が必要となる場合は、ユニバーサルDAOを呼び出す側で処理を行うことで対応する。
+
+ユニバーサルDAOでは、楽観的ロックのみサポートする。悲観的ロックやJakarta Persistenceで定義されている検索時のロックモードの指定などはサポートしない。(悲観的ロックは、 `select for update` などを使用することで実現できる。)

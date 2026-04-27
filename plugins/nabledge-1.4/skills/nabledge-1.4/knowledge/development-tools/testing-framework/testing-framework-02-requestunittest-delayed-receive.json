@@ -1,0 +1,38 @@
+{
+  "id": "testing-framework-02-requestunittest-delayed-receive",
+  "title": "リクエスト単体テストの実施方法（応答不要メッセージ受信処理）",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "応答不要メッセージ処理用のアクションクラスは、Nablarchの一部として提供される。\nこのため、リクエスト単体テストではこのアクションクラスを使用して、以下の テスト対象の成果物 の確認を行う。\n\n**※ 他のテストのようにアクションクラスに対する条件網羅や、限界値テストなどは実施不要である。**",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "テスト対象の成果物",
+      "content": "* 電文のレイアウトを定義したフォーマット定義ファイル\n* データベースへ電文を登録する際に使用するFormクラス\n* データベースへ電文を登録するためのINSERT文",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "テストクラスの書き方",
+      "content": "テストクラスは以下の条件を満たすように作成する。\n\n* テストクラスのパッケージは、テスト対象機能のパッケージとする。\n* <電文のリクエストID>RequestTestというクラス名でテストクラスを作成する。\n* `nablarch.test.core.messaging.MessagingReceiveTestSupport` を継承する。\n\n例えば、テスト対象機能のパッケージがnablarch.sample.ss21AA、電文のリクエストIDがRM21AA100だとすると、テストクラスは以下のようになる。\n\n```java\npackage nablarch.sample.ss21AA;\n\n// ～中略～\n\npublic class RM21AA100RequestTest extends MessagingReceiveTestSupport {\n```",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "データシートの書き方",
+      "content": "テスト対象の成果物 のテストを行うために必要なデータシートの記述方法を説明する。\n\nデータシートの記述方法は、 [リクエスト単体テストの実施方法(同期応答メッセージ受信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-real.md#real-request-test) を参照すること。\n本項では、 [リクエスト単体テストの実施方法(同期応答メッセージ受信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-real.md#real-request-test) と記述方法が異なる箇所の解説を行う。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "正常系のケース",
+      "content": "このケースでは、電文が正しくデータベースに取り込まれることを確認する。\n\n> **Note:**\n> 応答不要メッセージ受信処理では、応答電文は存在しないため応答電文が期待値通りであることの確認を行う必要はない。\n> このため、データシートには、下記の記述は不要である。\n\n> * >   期待値及び準備データの定義\n\n>   * >     「MESSAGE=expectedMessages」の定義は不要",
+      "level": 3
+    }
+  ]
+}

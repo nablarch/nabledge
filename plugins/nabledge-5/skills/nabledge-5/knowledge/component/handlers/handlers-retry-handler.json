@@ -1,0 +1,32 @@
+{
+  "id": "handlers-retry-handler",
+  "title": "リトライハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* リトライの上限を設定する\n\n本ハンドラはデータベースアクセス時のデッドロックのように、単純リトライによってリカバリ可能なエラーについて、自動的なリトライを制御する。\n\n本ハンドラでは、 Retryable を実装した実行時例外をリトライ可能なエラーとみなし、後続ハンドラを再実行する。\nなお、リトライ上限の判定に関する処理は、 RetryContext の実装クラスとして外部化されている。デフォルトでは以下の実装が提供されている。\n\n* リトライ回数による上限設定\n* 経過時間による上限設定\n\n本ハンドラでは、以下の処理を行う。\n\n* リトライ対象例外発生時のリトライ処理\n* リトライ上限到達時の例外送出処理\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-retry-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.handler.RetryHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-standalone</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "リトライ対象例外を送出するハンドラは、本ハンドラより後ろに設定すること。\n本ハンドラより手前でリトライ対象の例外を送出しても、単に例外として処理されるので注意すること。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "リトライの上限を設定する",
+      "content": "本ハンドラでは、リトライを無限に繰り返すのではなく一定の回数リトライを繰り返しても処理が成功しなかった場合は、\nリトライに失敗したとみなし処理を異常終了させる。\nこのため、本ハンドラを使用する際には必ずリトライ上限の設定が必要となる。\n\n上限設定は、上述したとおり以下の2種類から選択できる。プロジェクト要件とマッチしない場合には、プロジェクト側で実装を追加し対応すること。\n\n* リトライ回数による上限設定\n* 経過時間による上限設定\n\n以下にリトライ回数による上限設定の例を示す。\n\n```xml\n<component name=\"retryHandler\" class=\"nablarch.fw.handler.RetryHandler\">\n  <property name=\"retryContextFactory\">\n    <component class=\"nablarch.fw.handler.retry.CountingRetryContextFactory\">\n      <property name=\"retryCount\" value=\"3\" />          <!-- 最大3回リトライを行う -->\n      <property name=\"retryIntervals\" value=\"5000\" />   <!-- リトライを実行するまで5秒待機する -->\n    </component>\n  </property>\n</component>\n```\n\n> **Tip:**\n> 上限に設定する値は、想定する最大の復旧時間プラスアルファの値を設定すること。\n\n> 例えば、アクティブ/スタンバイ構成のデータベースの切り替えに最大5分かかるのであれば、\n> 5分プラスアルファの時間(例えば7分等)を上限値として設定する。\n\n> なお、複数の例外に対するリトライを実現する場合には、最も復旧まで時間をようするものをベースに上限値を設定すること。",
+      "level": 2
+    }
+  ]
+}

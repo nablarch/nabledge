@@ -1,0 +1,38 @@
+{
+  "id": "handlers-http-rewrite-handler",
+  "title": "HTTPリライトハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* 書き換えの設定\n* 変数に値を設定\n\n本ハンドラは、HTTPのリクエストおよびレスポンスに対して、リクエストパスとコンテンツパス、\nおよび変数を書き換える機能を提供する。\nこのハンドラは、「未ログイン状態の際は強制的にログイン画面に遷移させる」といった、特殊な\n遷移が必要になった際に使用する。\n\n本ハンドラでは、以下の処理を行う。\n\n* リクエストパスを書き換える\n* コンテンツパスを書き換える\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-http-rewrite-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.web.handler.HttpRewriteHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置すること\n本ハンドラで書き換えたコンテンツパスは、レスポンスハンドラにより使用される。\nこのため、本ハンドラは [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) の後ろに配置する必要がある。\n[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より前に配置すること\n本ハンドラでは、スレッドコンテキストに入れられるリクエストパスを書き換える。\nこのため、本ハンドラは [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より前に配置する必要がある。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "書き換えの設定",
+      "content": "書き換えの設定は、 本ハンドラ  のプロパティ requestPathRewriteRules または contentPathRewriteRules に対して行う。\n\n以下に設定例を示す。\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpRewriteHandler\">\n  <!-- リクエストパスに対するリライトルール -->\n  <property name=\"requestPathRewriteRules\">\n    <list>\n      <!-- サーブレットコンテキストルートへのアクセスに対して、\n           既にログインが成立していればメニュー画面へ遷移させる。 -->\n      <component class=\"nablarch.fw.web.handler.HttpRequestRewriteRule\">\n        <property name=\"pattern\" value=\"^/$\" />\n        <property name=\"conditions\">\n        <list>\n          <value>%{session:user.id} ^\\S+$</value>\n        </list>\n        </property>\n        <property name=\"rewriteTo\" value=\"/action/MenuAction/show\" />\n      </component>\n\n      <!-- ログインが成立していない場合はログイン画面へ遷移させる。 -->\n      <component class=\"nablarch.fw.web.handler.HttpRequestRewriteRule\">\n        <property name=\"pattern\"   value=\"^/$\" />\n        <property name=\"rewriteTo\" value=\"/action/LoginAction/authenticate\" />\n      </component>\n    </list>\n  </property>\n\n  <!-- レスポンスのコンテンツパスに対するリライトルール -->\n  <property name=\"contentPathRewriteRules\">\n    <list>\n\n      <!-- ステータスコードが401であった場合はログイン画面に遷移させる -->\n      <component class=\"nablarch.fw.web.handler.ContentPathRewriteRule\">\n        <property name=\"pattern\"   value=\"^.*\" />\n        <property name=\"rewriteTo\" value=\"redirect:///action/LoginAction/authenticate\" />\n        <property name=\"conditions\">\n          <list>\n          <value>%{statusCode} ^401$</value>\n          </list>\n        </property>\n      </component>\n    </list>\n  </property>\n</component>\n```\n\nこの例からわかる通り、設定は HttpRequestRewriteRule\n(リクエストパスを書き換える場合)または ContentPathRewriteRule\n(コンテンツパスを書き換える場合)を使用して行う。\n\nHttpRequestRewriteRule\nおよび ContentPathRewriteRule\nには、下記のプロパティが存在する。(プロパティは、スーパークラスの\nRewriteRule に定義されている。)\n\n| プロパティ名 | 説明 |\n|---|---|\n| pattern | 適用する対象のパスのパターン |\n| rewriteTo | 書き換え後の文字列 |\n| conditions | パス以外の追加の適用条件 |\n| exports | 変数の書き換え設定 |\n\nHttpRequestRewriteRule\nおよび ContentPathRewriteRule\nでは、conditionsの設定に変数を使用できる。\nHttpRequestRewriteRule\n、 ContentPathRewriteRule\nそれぞれで使用可能な変数は下記の通り。\n\n| 変数種別 | 書式 | 適用可能なクラス |\n|---|---|---|\n| セッションスコープ | %{session:(変数名)} | HttpRequestRewriteRule / ContentPathRewriteRule |\n| リクエストスコープ | %{request:(変数名)} | HttpRequestRewriteRule / ContentPathRewriteRule |\n| スレッドコンテキスト | %{thread:(変数名)} | HttpRequestRewriteRule / ContentPathRewriteRule |\n| リクエストパラメータ | %{param:(変数名)} | HttpRequestRewriteRule |\n| HTTPヘッダ | %{header:(ヘッダ名)} | HttpRequestRewriteRule / ContentPathRewriteRule |\n| HTTPリクエストメソッド | %{httpMethod} | HttpRequestRewriteRule |\n| HTTPバージョン | %{httpVersion} | HttpRequestRewriteRule |\n| 全リクエストパラメータ名 | %{paramNames} | HttpRequestRewriteRule |\n| ステータスコード | %{statusCode} | ContentPathRewriteRule |",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "変数に値を設定",
+      "content": "HTTPリライトハンドラでは、パスの書き換え以外に リクエストスコープ、セッションスコープ、\nスレッドコンテキスト、ウィンドウスコープへ変数を設定できる。\n\n変数を設定するには、HttpRequestRewriteRule\nまたは ContentPathRewriteRule の\nexport プロパティを設定する。\n\n以下に設定例を示す。\n\n```xml\n<!--リファラヘッダが送信された場合は、リクエストスコープにその値を設定する。-->\n<component class=\"nablarch.fw.web.handler.HttpRequestRewriteRule\">\n  <!-- 全リクエストを対象とする。 -->\n  <property name=\"pattern\" value=\".*\" />\n  <!-- リファラヘッダが定義されていた場合のみ適用する。-->\n  <property name=\"conditions\">\n    <list>\n      <value>%{header:Referer} ^\\S+$</value>\n    </list>\n  </property>\n  <!-- リクエストスコープ上の変数 prevUrl に、リファラヘッダの値を設定する。-->\n  <property name=\"exports\">\n    <list>\n      <value>%{request:prevUrl} ${header:Referer}</value>\n    </list>\n  </property>\n</component>\n```\n\nこのように、 exports プロパティに 「設定する変数名」(上記例の場合、\"%{request:prevUrl}\")と\n「設定する値」(上記例の場合 \"${header:Referer}\")をリストで設定することで、各スコープへ変数の\n設定ができる。\n\nexports で、「設定する変数名」に設定できる変数スコープは下記の通り。\n\n| 変数スコープ | 書式 | 対象 |\n|---|---|---|\n| セッションスコープ | %{session:(変数名)} | HttpRequestRewriteRule / ContentPathRewriteRule |\n| リクエストスコープ | %{request:(変数名)} | HttpRequestRewriteRule / ContentPathRewriteRule |\n| スレッドコンテキスト | %{thread:(変数名)} | HttpRequestRewriteRule / ContentPathRewriteRule |\n| ウィンドウスコープ | %{param:(変数名)} | HttpRequestRewriteRule |",
+      "level": 2
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+# OnErrorインターセプタ
+
+**目次**
+
+* インターセプタクラス名
+* モジュール一覧
+* OnErrorを使用する
+* エラー時の遷移先画面に表示するデータを取得する
+* 複数のレスポンスを指定する
+
+業務アクションでの例外発生時に、指定したレスポンスを返却するインターセプタ。
+
+[InjectForm インターセプタ](../../component/handlers/handlers-InjectForm.md#inject-form-interceptor) を使用して入力値チェックを行う場合も、
+[InjectForm インターセプタ](../../component/handlers/handlers-InjectForm.md#inject-form-interceptor) よりも前にこのインターセプタが実行されるように設定することで、
+バリデーションエラーに対するレスポンスを指定できる。
+
+このインターセプタは、業務アクションのメソッドに対して、 OnError を設定することで有効となる。
+
+> **Tip:**
+> 複数の例外に対するレスポンスを指定したい場合は、 [OnErrorsインターセプタ](../../component/handlers/handlers-on-errors.md#on-errors-interceptor) を使用すること。
+
+> **Important:**
+> 単一の例外に対して複数のレスポンスは指定できない。
+> 例外に対して複数のレスポンスを指定したい場合は、 [複数のレスポンスを指定する](../../component/handlers/handlers-on-error.md#on-error-multiple) を参照。
+
+## インターセプタクラス名
+
+* nablarch.fw.web.interceptor.OnError
+
+## モジュール一覧
+
+```xml
+<dependency>
+  <groupId>com.nablarch.framework</groupId>
+  <artifactId>nablarch-fw-web</artifactId>
+</dependency>
+```
+
+## OnErrorを使用する
+
+OnError アノテーションを、
+業務アクションのリクエストを処理するメソッドに対して設定する。
+
+以下の例では、業務アクションのメソッド内で業務エラー( ApplicationException )が発生した場合の遷移先を指定している。
+
+ポイント
+* type属性には、RuntimeException 及びそのサブクラスを指定できる。
+* type属性に指定した例外のサブクラスも処理の対象となる。
+
+```java
+@OnError(type = ApplicationException.class, path = "/WEB-INF/view/project/index.jsp")
+public HttpResponse handle(HttpRequest request, ExecutionContext context) {
+    // 業務処理は省略
+}
+```
+
+## エラー時の遷移先画面に表示するデータを取得する
+
+プルダウンの選択肢のように、エラー時の遷移先画面に表示するデータをデータベースなどから取得したい場合がある。
+
+この場合は、表示データを取得する業務アクションのメソッドに対して内部フォーワードを行い、
+初期表示用のデータをデータベースなどから取得し、リクエストスコープに設定する。
+
+詳細は [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler)  を参照。
+
+バリデーションエラー発生時に初期表示用のメソッドにフォワードする場合の実装例を以下に示す。
+
+ポイント
+* path属性に、内部フォワード用のパスを設定する。
+
+```java
+/**
+ * 入力値のチェックを行う業務アクションのメソッド。
+ */
+@InjectForm(form = PersonForm.class, prefix = "form")
+@OnError(type = ApplicationException.class, path = "forward://initializeRegisterPage")
+public HttpResponse confirmForRegister(HttpRequest request, ExecutionContext context) {
+
+  PersonForm form = context.getRequestScopedVar("form");
+
+  return new HttpResponse("/WEB-INF/view/person/confirmForRegister.jsp");
+}
+
+/**
+ * 登録画面の初期表示データを取得するメソッド。
+ */
+public HttpResponse initializeRegisterPage(HttpRequest request, ExecutionContext context) {
+  // 画面表示データをデータベースなどから取得し、リクエストスコープに設定する
+
+  return new HttpResponse("/WEB-INF/view/person/inputForRegister.jsp");
+}
+```
+
+## 複数のレスポンスを指定する
+
+本インターセプタでは、単一の例外に対して複数のレスポンスは指定できないため、
+複数のレスポンスを指定したい場合は、業務アクションのメソッド内に個別に HttpErrorResponse を生成する必要がある。
+
+以下に実装例を示す。
+
+```java
+public HttpResponse handle(HttpRequest request, ExecutionContext context) {
+    try {
+        // 業務処理は省略
+    } catch (ApplicationException e) {
+        if (/* 条件式を記述 */) {
+            return new HttpErrorResponse("/WEB-INF/view/project/index.jsp");
+        } else {
+            return new HttpErrorResponse("/WEB-INF/view/error.jsp");
+        }
+    }
+}
+```

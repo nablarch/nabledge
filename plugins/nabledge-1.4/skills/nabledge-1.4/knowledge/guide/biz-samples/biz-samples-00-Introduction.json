@@ -1,0 +1,32 @@
+{
+  "id": "biz-samples-00-Introduction",
+  "title": "iOS ライブラリについて",
+  "content": "本章ではiOS ライブラリについて、各機能で共通のビルド設定、実装方針などについて記述する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ビルド設定",
+      "content": "本ライブラリではiOSのリフレクションを利用しているため、コンパイルのリンカフラグに「-ObjC」を設定しなければ動作しない。\n下記の通り、必ずOther Linker Flagsに「-ObjC」を追加すること。\n\n![warning_LinkerFlags.png](assets/biz-samples-00-Introduction/warning_LinkerFlags.png)",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "実装方針",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "iOSエラー処理実装方針",
+      "content": "appleのプログラミング手法として、なんらかの異常が発生した場合例外を投げるのではなく、\nエラーオブジェクトを生成して処理を終了するというルールがある。\niOS ライブラリではappleの推奨するこの手法に則って実装している。\nまたエラーハンドリングの手法として、戻り値の判定によるエラーハンドリングを想定して実装している。\n\nユーザがiOS ライブラリのある機能を使用する場合のエラーハンドリングの実装例を以下に示す。\n\n```objective-c\nNSError *error = nil;\nNMMessage *response = [sender send:@\"destination\" sendMessage:sendMessage error:&error];\n\n// error != nilという判定条件にしないこと\nif (response == nil) {\n    [self outputErrorInfo:error];\n}\n```\n\niOS ライブラリの一部の機能ではユーザーにプロトコルの実装を求めるものもある。\nエラー情報を引数に持つ各メソッドでエラーが発生した場合、必ずエラー情報の設定を行い、\n戻り値がNOまたはnilとなるように実装すること。\nエラー情報には各プロジェクトの方針にあったドメイン、エラーコード、ユーザ情報を格納すればよい。\n\nエラーを発生させるメソッドの実装例を以下に示す。\n\n```objective-c\n/**\n JSONによるNMMessageのエンコード\n 正常に終了する場合はNSDataオブジェクトを、エラーが発生した場合はnilを戻り値とする。\n */\n- (NSData *)convertSend:(NMMessage *)message error:(NSError *__autoreleasing *)error {\n\n   NSDictionary *jsonMap = [message convertDictionary];\n   if ([NSJSONSerialization isValidJSONObject:jsonMap]) {\n       return [NSJSONSerialization dataWithJSONObject:jsonMap options:NSJSONWritingPrettyPrinted error:error];\n   } else {\n       // エラーオブジェクトの作成\n       *error = [NSError errorWithDomain:@\"NMJsonBodyConvertorException\" code:0 userInfo:nil];\n       // nilを返却\n       return nil;\n   }\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "initWithDictionaryメソッド実装方法",
+      "content": "iOS ライブラリで提供するプロトコルの中には指定イニシャライザであるinitWithDictionaryメソッドをもつものがある。\nこの、initWithDictionaryの引数であるNSDictionaryオブジェクトには該当する機能で作成するプロパティリスト\n(通信基盤の [プロパティリストの作成](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#connectionfwpropertylist) や 暗号化機能の [プロパティリストの作成](../../guide/biz-samples/biz-samples-01-Encryption.md#encryptionpropertylist) など)\nのinitializeListに記入された値が格納されている。\n設定書の値を取得することにより、初期化時にパラメータに任意の値を設定することが可能である。\n\n実装例を下記に示す。\n\n設定書\n\n![encryption_example_aesPropertyList.png](assets/biz-samples-00-Introduction/encryption_example_aesPropertyList.png)\n\nコード\n\n```objective-c\n@implementation NMAesEncryption\n\n@synthesize keyManager;\n@synthesize nmMode;\n@synthesize nmPaddingType;\n\n- (id)initWithDictionary:(NSDictionary *)dict {\n    self = [super init];\n    if (self != nil) {\n        self.nmMode = dict[@\"mode\"];            // 設定書のmode欄に記入された値がdict[@\"mode\"]に格納されている\n        self.nmPaddingType = dict[@\"padding\"];  // 設定書のpadding欄に記入された値がdict[@\"padding\"]に格納されている\n    }\n    return self;\n}\n```",
+      "level": 3
+    }
+  ]
+}

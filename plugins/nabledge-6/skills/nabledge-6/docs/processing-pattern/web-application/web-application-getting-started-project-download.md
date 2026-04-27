@@ -1,72 +1,102 @@
 # ファイルダウンロード機能の作成
 
-**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web/getting_started/project_download/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/Csv.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/csv/CsvFormat.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/databind/ObjectMapper.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/download/FileResponse.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html)
+Exampleアプリケーションを元に、CSVファイルをダウンロードする機能を解説する。
+
+作成する機能の説明
+1. プロジェクト一覧画面の、検索結果右横のダウンロードボタンを押下する。
+
+![project_download-list.png](../../../knowledge/assets/web-application-getting-started-project-download/project_download-list.png)
+
+1. 現在の検索結果を出力したCSVファイルがダウンロードされる。
+
+![project_download-download.png](../../../knowledge/assets/web-application-getting-started-project-download/project_download-download.png)
 
 ## CSVファイルのダウンロードを行う
 
-### ダウンロードボタンの作成
+CSVファイルをダウンロードする機能の実装方法を解説する。
 
-ファイルダウンロードアクション (`/action/project/download`) へのGETリクエストリンクを配置し、現在の検索条件をクエリパラメータとして渡す。
+プロジェクト検索機能の作成方法については、 [検索機能の作成](../../processing-pattern/web-application/web-application-getting-started-project-search.md#project-search) を参照すること。
 
+1. [ダウンロードボタンの作成](../../processing-pattern/web-application/web-application-getting-started-project-download.md#project-download-download-button)
+2. [ファイルをバインドするBeanの作成](../../processing-pattern/web-application/web-application-getting-started-project-download.md#project-download-create-bean)
+3. [業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-download.md#project-upload-file-download-action)
+
+ダウンロードボタンの作成
+ファイルダウンロードメソッドへのGETリクエストを送信するリンクを配置する。
+
+/src/main/webapp/WEB-INF/view/project/index.jsp
 ```jsp
-<c:url value="/action/project/download" var="download_uri">
-    <c:param name="searchForm.clientId" value="${searchForm.clientId}"/>
-    <c:param name="searchForm.clientName" value="${searchForm.clientName}"/>
-    <c:param name="searchForm.projectName" value="${searchForm.projectName}"/>
-    <c:param name="searchForm.projectType" value="${searchForm.projectType}"/>
-    <c:forEach items="${searchForm.projectClass}" var="projectClass">
-        <c:param name="searchForm.projectClass" value="${projectClass}" />
-    </c:forEach>
-    <c:param name="searchForm.projectStartDateBegin" value="${searchForm.projectStartDateBegin}"/>
-    <c:param name="searchForm.projectStartDateEnd" value="${searchForm.projectStartDateEnd}"/>
-    <c:param name="searchForm.projectEndDateBegin" value="${searchForm.projectEndDateBegin}"/>
-    <c:param name="searchForm.projectEndDateEnd" value="${searchForm.projectEndDateEnd}"/>
-    <c:param name="searchForm.sortKey" value="${searchForm.sortKey}"/>
-    <c:param name="searchForm.sortDir" value="${searchForm.sortDir}"/>
-    <c:param name="searchForm.pageNumber" value="${searchForm.pageNumber}"/>
-</c:url>
-<n:a href="${download_uri}">
-    <n:write name="label" />
-    <n:img src="/images/download.png" alt="ダウンロード" />
-</n:a>
+<!-- ダウンロードボタン周辺のみ記載 -->
+<div style="float:left;">
+    <span class="font-group">
+    検索結果
+    </span>
+    <span class="search-result-count">
+        <c:if test="${not empty searchResult}">
+            <n:write name="searchResult.pagination.resultCount" />
+        </c:if>
+    </span>
+    <!-- 現在の検索条件をパラメータとして設定 -->
+    <c:url value="/action/project/download" var="download_uri">
+        <c:param name="searchForm.clientId" value="${searchForm.clientId}"/>
+        <c:param name="searchForm.clientName" value="${searchForm.clientName}"/>
+        <c:param name="searchForm.projectName" value="${searchForm.projectName}"/>
+        <c:param name="searchForm.projectType" value="${searchForm.projectType}"/>
+        <c:forEach items="${searchForm.projectClass}" var="projectClass">
+            <c:param name="searchForm.projectClass" value="${projectClass}" />
+        </c:forEach>
+        <c:param name="searchForm.projectStartDateBegin" value="${searchForm.projectStartDateBegin}"/>
+        <c:param name="searchForm.projectStartDateEnd" value="${searchForm.projectStartDateEnd}"/>
+        <c:param name="searchForm.projectEndDateBegin" value="${searchForm.projectEndDateBegin}"/>
+        <c:param name="searchForm.projectEndDateEnd" value="${searchForm.projectEndDateEnd}"/>
+        <c:param name="searchForm.sortKey" value="${searchForm.sortKey}"/>
+        <c:param name="searchForm.sortDir" value="${searchForm.sortDir}"/>
+        <c:param name="searchForm.pageNumber" value="${searchForm.pageNumber}"/>
+    </c:url>
+    <n:a href="${download_uri}">
+        <n:write name="label" />
+        <n:img src="/images/download.png" alt="ダウンロード" />
+    </n:a>
+</div>
 ```
 
-### ファイルをバインドするBeanの作成
+ファイルをバインドするBeanの作成
+ファイルの内容をバインドするBeanを作成する。
 
-**アノテーション**: `@Csv`, `@CsvFormat`
-
-- CSVヘッダーとBeanプロパティの紐付けには `@Csv` を使用する。
-- CSVフォーマット指定には `@CsvFormat` を使用する。[デフォルトフォーマット](../../component/libraries/libraries-data_bind.md) を使用する場合は `@CsvFormat` は不要。
-- アノテーション設定の詳細は [data_bind-csv_format-beans](../../component/libraries/libraries-data_bind.md) を参照。
-
+ProjectDownloadDto.java
 ```java
 @Csv(headers = { /** ヘッダを記述 **/},
         properties = { /** バインド対象のプロパティ **/},
         type = Csv.CsvType.CUSTOM)
-@CsvFormat(charset = "Shift_JIS", fieldSeparator = ',', ignoreEmptyLine = true,
+@CsvFormat(charset = "Shift_JIS", fieldSeparator = ',',ignoreEmptyLine = true,
         lineSeparator = "\r\n", quote = '"',
         quoteMode = CsvDataBindConfig.QuoteMode.NORMAL, requiredHeader = true, emptyToNull = true)
 public class ProjectDownloadDto implements Serializable {
+
+    // 一部項目のみ抜粋。ゲッタ及びセッタは省略
+
+    /** プロジェクト名 */
     private String projectName;
+
+    /** プロジェクト種別 */
     private String projectType;
 }
 ```
+この実装のポイント
+* ダウンロードするCSVファイルの内容と、Beanのプロパティとの紐付けの設定は、 @Csv を使用する。
+  受け付けるCSVのフォーマットの指定は、 @CsvFormat を使用する。
+  （ [デフォルトのフォーマットの指定](../../component/libraries/libraries-data-bind.md#data-bind-csv-format-set) を使用する場合は、 @CsvFormat は不要）
+  アノテーションの設定方法の詳細は、 [CSVファイルをJava Beansクラスにバインドする場合のフォーマット指定方法](../../component/libraries/libraries-data-bind.md#data-bind-csv-format-beans) を参照。
 
-### 業務アクションメソッドの作成
+業務アクションメソッドの作成
+検索結果をCSVファイルに書きこむ業務アクションメソッドを作成する。
 
-**クラス**: `FileResponse`, `ObjectMapper`, `ObjectMapperFactory`, `TempFileUtil`, `DeferredEntityList`, `UniversalDao`  
-**アノテーション**: `@InjectForm`, `@OnError`
-
-- BeanをCSVファイルに出力するには [データバインド](../../component/libraries/libraries-data_bind.md) の `ObjectMapper` を使用する。
-- ファイルをダウンロードレスポンスとして返すには `FileResponse` を使用する（詳細: [data_bind-file_download](../../component/libraries/libraries-data_bind.md)）。
-- 大量データ取得時はメモリ逼迫防止のため `UniversalDao#defer` で [遅延ロード](../../component/libraries/libraries-universal_dao.md) する。
-- レスポンスのContent-Typeは `HttpResponse#setContentType` で設定する（詳細: [data_format-file_download](../../component/libraries/libraries-data_format.md)）。
-- ダウンロードファイル名は `HttpResponse#setContentDisposition` で設定する（詳細: [data_format-file_download](../../component/libraries/libraries-data_format.md)）。
-
+ProjectAction.java
 ```java
 @InjectForm(form = ProjectSearchForm.class, prefix = "searchForm", name = "searchForm")
 @OnError(type = ApplicationException.class, path = "/WEB-INF/view/project/index.jsp")
 public HttpResponse download(HttpRequest request, ExecutionContext context) {
+
     ProjectSearchForm searchForm = context.getRequestScopedVar("searchForm");
     ProjectSearchDto searchCondition = BeanUtil.createAndCopy(ProjectSearchDto.class, searchForm);
     LoginUserPrincipal userContext = SessionUtil.get(context, "userContext");
@@ -74,10 +104,11 @@ public HttpResponse download(HttpRequest request, ExecutionContext context) {
 
     final Path path = TempFileUtil.createTempFile();
     try (DeferredEntityList<ProjectDownloadDto> searchList = (DeferredEntityList<ProjectDownloadDto>) UniversalDao
-                .defer()
-                .findAllBySqlFile(ProjectDownloadDto.class, "SEARCH_PROJECT", searchCondition);
+            .defer()
+            .findAllBySqlFile(ProjectDownloadDto.class, "SEARCH_PROJECT", searchCondition);
          ObjectMapper<ProjectDownloadDto> mapper = ObjectMapperFactory.create(ProjectDownloadDto.class,
-                TempFileUtil.newOutputStream(path))) {
+                 TempFileUtil.newOutputStream(path))) {
+
         for (ProjectDownloadDto dto : searchList) {
             mapper.write(dto);
         }
@@ -86,13 +117,25 @@ public HttpResponse download(HttpRequest request, ExecutionContext context) {
     FileResponse response = new FileResponse(path.toFile(), true);
     response.setContentType("text/csv; charset=Shift_JIS");
     response.setContentDisposition("プロジェクト一覧.csv");
+
     return response;
 }
 ```
+この実装のポイント
+* 検索処理の実装方法については  [検索機能の作成：業務アクションの実装](../../processing-pattern/web-application/web-application-getting-started-project-search.md#project-search-create-action) を参照。
+* Beanをファイルにバインドして出力するには、 [データバインド](../../component/libraries/libraries-data-bind.md#data-bind) が提供する、
+  ObjectMapper を使用する。
+* ファイルに出力されたデータをダウンロードさせるには、 FileResponse を使用する。
+  詳細は、 [データバインドをダウンロードで使用する](../../component/libraries/libraries-data-bind.md#data-bind-file-download) を参照。
+* 大量のデータを読み込む場合は、メモリの逼迫を防ぐために UniversalDao#defer を使用して、
+  検索結果を [遅延ロード](../../component/libraries/libraries-universal-dao.md#universal-dao-lazy-load) する。
+* レスポンスのコンテンツタイプは
+  HttpResponse#setContentType を使用して設定する。
+  詳細は [汎用データフォーマットをダウンロードで使用する](../../component/libraries/libraries-data-format.md#data-format-file-download) を参照。
+* ダウンロードファイルのファイル名は
+  HttpResponse#setContentDisposition を使用して設定する。
+  詳細は [汎用データフォーマットをダウンロードで使用する](../../component/libraries/libraries-data-format.md#data-format-file-download) を参照。
 
-<details>
-<summary>keywords</summary>
+ファイルダウンロード機能の解説は以上。
 
-CSVファイルダウンロード, ファイルダウンロード, データバインド, 遅延ロード, Content-Disposition, FileResponse, ObjectMapper, ObjectMapperFactory, TempFileUtil, DeferredEntityList, UniversalDao, ProjectDownloadDto, @Csv, @CsvFormat, @InjectForm, @OnError, BeanUtil, HttpResponse, HttpRequest, ExecutionContext, CsvDataBindConfig, LoginUserPrincipal, SessionUtil, ProjectSearchForm, ProjectSearchDto, ApplicationException
-
-</details>
+[Getting Started TOPページへ](../../processing-pattern/web-application/web-application-getting-started.md#getting-started)

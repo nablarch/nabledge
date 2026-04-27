@@ -1,22 +1,117 @@
 # 検索結果の一覧表示
 
-**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/biz_samples/03/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/db/support/ListSearchInfo.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/EntityList.html)
-
-## 提供パッケージ
-
-提供パッケージ: `resources/META-INF/tags/listSearchResult`
+本サンプルは、検索結果の一覧表示を行うタグファイルの実装サンプルである。
 
 [ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-list-search-result)
 
-検索結果件数は、useResultCount属性にtrue（デフォルトはtrue）が指定され、検索結果がリクエストスコープに存在する場合に表示される。
+## 提供パッケージ
 
-デフォルトの書式:
+本サンプルは、以下のパッケージで提供される。
+
+*resources/META-INF/tags/* **listSearchResult**
+
+## 概要
+
+ここでは、検索結果の一覧表示を行うタグファイルの実装サンプルを提供する。
+タグファイルは、[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) の検索機能と連携して、次の機能を提供する。
+
+* 検索結果件数の表示機能
+* 検索結果を指定件数毎に表示する機能(以降はページングと称す)
+
+一覧画面の出力例を示す。
+
+![ListSearchResult_Example.jpg](../../../knowledge/assets/biz-samples-03/ListSearchResult_Example.jpg)
+
+## 構成
+
+本サンプルの構成を示す。
+
+### クラス図
+
+ページングを実現したい場合、フレームワークが提供するクラスとサンプル提供のタグファイルがページングに必要な処理を行うため、
+アプリケーションプログラマはページングを作り込みせずに実現できる。
+
+![ListSearchResult_Structure.png](../../../knowledge/assets/biz-samples-03/ListSearchResult_Structure.png)
+
+#### フレームワークが提供するクラスとタグファイルの責務
+
+a) フレームワーク
+
+| クラス名 | 概要 |
+|---|---|
+| UniversalDao | 汎用的なDAO機能を提供するクラス。基本的な使い方は、[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) を参照。 |
+| ListSearchInfo | 一覧検索用の情報を保持する抽象クラス。 |
+| Pagination | ListSearchInfoを継承した具象クラス。 |
+| EntityList | ユニバーサルDAOから返される結果リストの保持クラス。 |
+
+b) タグファイル
+
+| タグ名 | 概要 |
+|---|---|
+| listSearchResult | 検索結果の一覧表示を行うタグ。 |
+| listSearchPaging | ページングを出力するタグ。 |
+| listSearchSubmit | ページングのサブミット要素を出力するタグ。 |
+| table | テーブルを出力するタグ。 |
+
+## UniversalDaoクラス
+
+UniversalDao クラスは、複数件の検索結果をEntityListとして返すAPIを持つ。
+ページング機能を使う際は、[ページングを行う](../../component/libraries/libraries-universal-dao.md#universal-dao-paging) を参照。
+
+## ListSearchInfoクラス
+
+ListSearchInfoクラスは、一覧検索用の情報を保持する抽象クラスである。
+ページネーションのためのページ数や検索条件に一致した件数などのフィールドおよびアクセッサメソッドは、本クラスで定義する。
+詳細は、 nablarch.core.db.support.ListSearchInfo を参照。
+
+## Paginationクラス
+
+Paginationクラスは、ListSearchInfoを継承し、ページネーションの情報を参照するために使用される。
+
+## EntityListクラス
+
+EntityListクラスは、UniversalDaoから返される結果リストの保持クラス。
+java.util.ArrayListクラスを継承し、Paginationクラスのインスタンスをフィールドに持つ。
+
+## listSearchResultタグ
+
+[listSearchResultタグ](../../guide/biz-samples/biz-samples-03.md#listsearchresult-tag) は、検索結果のリストを表示するタグである。
+listSearchResultタグで出力する画面要素を下記に示す。
+
+![ListSearchResult_PagingTableFull.jpg](../../../knowledge/assets/biz-samples-03/ListSearchResult_PagingTableFull.jpg)
+
+### listSearchResultタグの主要な属性
+
+listSearchResultタグの主要な属性を下記に示す。全ての属性の詳細については、 [listSearchResultタグ](../../guide/biz-samples/biz-samples-03.md#listsearchresult-tag) を参照。
+
+resultSetName属性で指定された検索結果がリクエストスコープに存在しない場合、listSearchResultタグは何も出力しない。
+検索画面の初期表示が何も出力されないケースに該当する。
+
+| 属性 | 説明 |
+|---|---|
+| 全体 |  |
+| searchFormName | 検索フォームをリクエストスコープから取得する際に使用する名前。  検索フォームは検索条件とページングのためのページ番号を保持する。 一括削除確認画面など、一覧表示のみを行う場合は指定しない。 |
+| 検索結果件数 |  |
+| useResultCount | 検索結果件数を表示するか否か。  デフォルトはtrue。 |
+| ページング |  |
+| usePaging | ページングを表示するか否か。  デフォルトはtrue。 |
+| searchUri | ページングのサブミット要素に使用するURI。  ページングを表示する場合は必ず指定すること。 |
+| 検索結果 |  |
+| resultSetName(必須) | ユニバーサルDAOの検索結果 をリクエストスコープから取得する際に使用する名前。検索結果には、ページネーションのためのページ数や検索条件に一致した件数なども含まれる。 |
+| headerRowFragment | ヘッダ行のJSPフラグメント。ヘッダ行については、 [検索結果](../../guide/biz-samples/biz-samples-03.md#listsearchresult-tableelement) を参照。 |
+| bodyRowFragment | ボディ行のJSPフラグメント。ボディ行については、 [検索結果](../../guide/biz-samples/biz-samples-03.md#listsearchresult-tableelement) を参照。 |
+
+### 検索結果件数
+
+検索結果件数は、useResultCount属性にtrue(デフォルトはtrue)が指定され、検索結果がリクエストスコープに存在する場合に表示される。
+検索結果件数は、デフォルトでは下記の書式で出力される。
 
 ```jsp
 検索結果 <%-- paginationのresultCountプロパティ --%>件
 ```
 
-デフォルトの書式を変更する場合は、resultCountFragment属性にJSPフラグメントを指定する:
+デフォルトの書式を変更したい場合は、resultCountFragment属性にJSPフラグメントを指定する。
+resultCountFragment属性の指定例を下記に示す。
 
 ```jsp
 <app:listSearchResult resultSetName="searchResult" useResultCount="true">
@@ -26,42 +121,23 @@
      [サーチ結果 <n:write name="searchResult.pagination.resultCount" />件]
    </jsp:attribute>
 
+   <%-- その他の属性は省略。 --%>
+
 </app:listSearchResult>
 ```
 
-上記指定後の書式:
+上記指定後の検索結果件数の書式を下記に示す。
 
 ```jsp
 [サーチ結果 <%-- paginationのresultCountプロパティ --%>件]
 ```
 
-ページング（ページ番号）の属性:
+### ページング
 
-| プロパティ名 | 必須 | デフォルト値 | 説明 |
-|---|---|---|---|
-| usePageNumberSubmit | | false | ページ番号のページに遷移するサブミットを使用するか否か |
-| pageNumberSubmitCss | | "nablarch_pageNumberSubmit" | ページ番号のページに遷移するサブミットをラップするdivタグのclass属性 |
-| pageNumberSubmitName | | "pageNumberSubmit" | ページ番号のページに遷移するサブミットに使用するタグのname属性。ページ番号とページングの表示位置を表すサフィックス（上側は"_top"、下側は"_bottom"）を付けて出力する。例：表示位置が上側でページ番号が3の場合は"pageNumberSubmit3_top" |
+ページングは、usePaging属性にtrue(デフォルトはtrue)が指定された場合に表示される。
 
-<details>
-<summary>keywords</summary>
-
-listSearchResult, タグファイル提供パッケージ, resources/META-INF/tags, nablarch-biz-sample-all, nablarch-list-search-result, useResultCount, resultCountFragment, resultCountCss, 検索結果件数, paginationのresultCountプロパティ, 件数表示カスタマイズ, usePageNumberSubmit, pageNumberSubmitCss, pageNumberSubmitName, ページング, ページ番号サブミット, ページ番号遷移
-
-</details>
-
-## 概要
-
-[universal_dao](../../component/libraries/libraries-universal_dao.md) の検索機能と連携する一覧表示タグファイルが提供する機能:
-
-1. 検索結果件数の表示
-2. 検索結果を指定件数毎に表示するページング機能
-
-![一覧画面の出力例](../../../knowledge/guide/biz-samples/assets/biz-samples-03/ListSearchResult_Example.jpg)
-
-ページングは、usePaging属性にtrue（デフォルトはtrue）が指定された場合に表示される。
-
-ページング機能を使用する場合、searchFormNameで指定するフォームが **pageNumber** という名前でページ番号を受け取るよう実装すること:
+ページング機能を使用する場合、searchFormNameで指定するフォームがpageNumberという名前でページ番号を受け取るよう実装すること。
+例を下記に示す。
 
 ```java
 public class ProjectSearchForm {
@@ -70,11 +146,11 @@ public class ProjectSearchForm {
   @Domain("pageNumber")
   private String pageNumber;
 
-  public String getPageNumber() {
+  public String getPageNumber(){
     return this.pageNumber;
   }
 
-  public void setPageNumber(String pageNumber) {
+  public void setPageNumber(String pageNumber){
     this.pageNumber = pageNumber;
   }
 
@@ -82,113 +158,115 @@ public class ProjectSearchForm {
 }
 ```
 
-**ページングの画面要素**
-
+ページングの画面要素を下記に示す。
 ページングは、現在のページ番号とページを移動するためのサブミット要素から構成される。
-ページング全体は、検索結果件数が **1件以上** の場合に表示される。
+
+![ListSearchResult_PagingFull.jpg](../../../knowledge/assets/biz-samples-03/ListSearchResult_PagingFull.jpg)
+
+ページング全体は、検索結果件数が1件以上の場合に表示される。
+ページング全体が表示される前提で、ページングの画面要素の表示について下記に示す。
 
 | ページングの画面要素 | 説明 |
 |---|---|
-| 現在のページ番号 | useCurrentPageNumber属性にtrueを指定した場合に表示される |
-| 最初、前へ、次へ、最後 | 現在のページ番号から各画面要素が示すページに遷移可能な場合はサブミット可能な状態で表示される。遷移不可の場合はラベルで表示される |
-| ページ番号 | ページ番号全体（1..n）は、総ページ数が2以上の場合のみ表示される |
+| 現在のページ番号 | useCurrentPageNumber属性にtrueを指定した場合に表示される。 |
+| 最初、前へ、次へ、最後 | 現在のページ番号から各画面要素が示すページに遷移可能な場合は、サブミット可能な状態で表示される。遷移不可の場合はラベルで表示される。 |
+| ページ番号 | ページ番号全体(1..n)は、総ページ数が2以上の場合のみ表示される。 |
+
+ページングの画面要素で指定可能な属性のうち、代表的なものを下記に示す。
+全ての属性の詳細については、 [listSearchResultタグ](../../guide/biz-samples/biz-samples-03.md#listsearchresult-tag) を参照。
+
+* 各画面要素の使用有無
+* 各画面要素のラベル(最初、前へ、次へ、最後など)
+* 現在のページ番号はJSPフラグメントによる変更
+* ページ番号はページ番号をラベルに使用するため変更不可
 
 **ページング時の検索条件**
 
-ページング時の検索条件は、検索条件をパラメータにセットしたURIを組み立て、searchUri属性に渡すことで実現できる:
+ページング時の検索条件は、検索条件をパラメータにセットしたURIを組み立て、searchUri属性に渡すことで実現できる。
+検索条件にプロジェクト名を指定する場合の例を、下記に示す。
 
 ```jsp
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags/listSearchResult" %>
 
-<%-- 現在の検索結果の表示に使用した検索条件をパラメータとして持つURIを登録する。 --%>
+<%-- 現在の検索結果の表示に使用した検索条件をパラメータとして持つURIを、変数としてpageスコープに登録する。
+     この変数は、<app:listSearchResult>タグのページング用のURIとして使用される。--%>
 <c:url value="/action/project/list" var="uri" context="/">
    <%-- 検索フォームから取得したプロジェクト名をセットする。 --%>
    <c:param name="searchForm.projectName" value="${searchForm.projectName}"/>
 </c:url>
 
 <%-- searchUri属性に渡す。 --%>
-<app:listSearchResult resultSetName="searchResult" searchUri="${uri}" ... />
+<app:listSearchResult resultSetName="searchResult" searchUri="${uri}"
+
+<%-- その他の属性は省略。 --%>
 ```
 
 **ページング使用時に検索結果が減少した場合の動作**
 
+ここでは、ページングの各サブミット要素で検索結果ページを切り替えている最中に、他のユーザオペレーションなどにより、
+検索結果が減少した場合の動作について解説する。
+
 本フレームワークでは、指定されたページ番号に基づき検索を実施し、ページングの各画面要素を表示する。
-例: 検索結果が44件で3ページ目を選択中に、検索結果が10件に減少した状態で「前へ」を選択した場合（1ページの表示件数20件）:
+下記に検索結果が減少した場合のページングの動作例を示す。
+
+前提として、検索結果の取得件数(1ページの表示件数)は20件とする。
+
+まず、検索結果が44件であったとする。下記は3ページ目を選択した後のページングの表示である。
+
+![ListSearchResult_PagingBefore.jpg](../../../knowledge/assets/biz-samples-03/ListSearchResult_PagingBefore.jpg)
+
+次に、検索結果が10件に減少した状態で、「前へ」を選択した場合のページングの表示と表示内容の説明を示す。
+2ページ目に対する検索結果としてページングの各画面要素が表示される。
+
+![ListSearchResult_PagingAfter.jpg](../../../knowledge/assets/biz-samples-03/ListSearchResult_PagingAfter.jpg)
 
 | ページングの画面要素 | 表示内容の説明 |
 |---|---|
-| 現在のページ番号 | 2ページ目が指定され、検索結果が20件以下のため、2/1ページとなる |
-| 最初、前へ | 現在2ページ目で検索結果が10件のため、前のページに遷移可能となりリンクで表示される |
-| 次へ、最後 | 現在2ページ目で検索結果が10件のため、次のページに遷移不可となりラベルで表示される |
-| ページ番号 | 検索結果が10件で総ページ数が1のため、ページ番号は表示されない |
+| 現在のページ番号 | 2ページ目が指定され、検索結果が20件以下のため、2/1ページとなる。 |
+| 最初、前へ | 現在2ページ目で検索結果が10件のため、前のページに遷移可能となりリンクで表示される。 |
+| 次へ、最後 | 現在2ページ目で検索結果が10件のため、次のページに遷移不可となりラベルで表示される。 |
+| ページ番号 | 検索結果が10件で総ページ数が1のため、ページ番号は表示されない。 |
 
-現在のページ番号とサブミット要素の対応が取れているため操作不能な状態にならず、サブミット要素を選択することで検索結果のページに遷移可能である。
+現在のページ番号とサブミット要素の対応が取れているため、操作不能な状態にならず、
+サブミット要素を選択することで検索結果のページに遷移可能である。
+(もちろん検索フォームから検索しなおせば、1ページ目からの検索結果となる)
 
-ページング（次へ）の属性:
+次に「前へ」を選択した後のページングの表示を示す。現在のページ番号と総ページ数の対応が正常な状態に戻る。
 
-| プロパティ名 | 必須 | デフォルト値 | 説明 |
-|---|---|---|---|
-| useNextSubmit | | true | 次のページに遷移するサブミットを使用するか否か |
-| nextSubmitCss | | "nablarch_nextSubmit" | 次のページに遷移するサブミットをラップするdivタグのclass属性 |
-| nextSubmitLabel | | "次へ" | 次のページに遷移するサブミットに使用するラベル |
-| nextSubmitName | | "nextSubmit" | 次のページに遷移するサブミットに使用するタグのname属性。ページングの表示位置を表すサフィックス（上側は"_top"、下側は"_bottom"）を付けて出力する。例：表示位置が上側の場合は"nextSubmit_top" |
+![ListSearchResult_PagingAfter2.jpg](../../../knowledge/assets/biz-samples-03/ListSearchResult_PagingAfter2.jpg)
 
-<details>
-<summary>keywords</summary>
+### 検索結果
 
-検索結果件数表示, ページング, universal_dao連携, 一覧表示タグファイル, usePaging, pageNumber, searchUri, ページング時の検索条件, 検索結果が減少, ProjectSearchForm, c:url, c:param, pagingPosition, useNextSubmit, nextSubmitCss, nextSubmitLabel, nextSubmitName, 次のページ, ページングサブミット, 次へボタン
+検索結果の画面要素を下記に示す。
+検索結果は、列見出しを表示するヘッダ行と、行データを表示するボディ行から構成される。
 
-</details>
+![ListSearchResult_TableFull.jpg](../../../knowledge/assets/biz-samples-03/ListSearchResult_TableFull.jpg)
 
-## 構成
+検索結果は、検索結果がリクエストスコープに存在する場合は常に表示される。
+検索結果が0件の場合は、ヘッダ行のみ表示される。
 
-ページングの実現に必要なクラスとタグファイルの構成。アプリケーションプログラマはページングを作り込みせずに実現できる。
+ヘッダ行とボディ行は、それぞれheaderRowFragment属性、bodyRowFragment属性にJSPフラグメントで指定する。
+ボディ行のJSPフラグメントは、検索結果のループ内(JSTLのc:forEachタグ)で呼び出され評価される。
+このため、ボディ行のJSPフラグメントで行データ(c:forEachタグのvar属性)とステータス(c:forEachタグのstatus属性)にアクセスするために、
+下記の属性を設けている。
 
-**フレームワーク提供クラス**:
-
-| クラス名 | 概要 |
+| 属性 | 説明 |
 |---|---|
-| UniversalDao | 汎用的なDAO機能を提供するクラス。基本的な使い方は [universal_dao](../../component/libraries/libraries-universal_dao.md) を参照。 |
-| ListSearchInfo | 一覧検索用の情報を保持する抽象クラス。 |
-| Pagination | ListSearchInfoを継承した具象クラス。 |
-| EntityList | ユニバーサルDAOから返される結果リストの保持クラス。 |
+| varRowName | ボディ行のフラグメントで行データ(c:forEachタグのvar属性)を参照する際に使用する変数名。  デフォルトは"row"。 |
+| varStatusName | ボディ行のフラグメントでステータス(c:forEachタグのstatus属性)を参照する際に使用する変数名。  デフォルトは"status"。  > **Tip:** > n:writeタグを使用してステータスにアクセスすると、n:writeタグとEL式でアクセス方法が異なるために > エラーが発生し値を取得できない。 > n:setタグを使用してステータスにアクセスすることで、このエラーを回避できる。 > 下記に使用例を示す。  > ```jsp > <n:set var="rowCount" value="${status.count}" /> > <n:write name="rowCount" /> > ``` |
+| varCountName | ステータス(c:forEachタグのstatus属性)のcountプロパティを参照する際に使用する変数名。  デフォルトは"count"。 |
+| varRowCountName | 検索結果のカウント(検索結果の取得開始位置＋ステータスのカウント)を参照する際に使用する変数名。  デフォルトは"rowCount"。 |
 
-**タグファイル**:
+さらに、ボディ行では、1行おきに背景色を変えたい場合に対応するために、ボディ行のclass属性を指定する下記の属性を設けている。
 
-| タグ名 | 概要 |
+| 属性 | 説明 |
 |---|---|
-| listSearchResult | 検索結果の一覧表示を行うタグ。 |
-| listSearchPaging | ページングを出力するタグ。 |
-| listSearchSubmit | ページングのサブミット要素を出力するタグ。 |
-| table | テーブルを出力するタグ。 |
+| varOddEvenName | ボディ行のclass属性を参照する際に使用する変数名。  この変数名は、1行おきにclass属性の値を変更したい場合に使用する。  デフォルトは"oddEvenCss"。 |
+| oddValue | ボディ行の奇数行に使用するclass属性。  デフォルトは"nablarch_odd"。 |
+| evenValue | ボディ行の偶数行に使用するclass属性。  デフォルトは"nablarch_even"。 |
 
-検索結果は、検索結果がリクエストスコープに存在する場合は常に表示される。**検索結果が0件の場合は、ヘッダ行のみ表示される。**
-
-ヘッダ行とボディ行はheaderRowFragment属性、bodyRowFragment属性にJSPフラグメントで指定する。ボディ行のJSPフラグメントは、検索結果のループ内（JSTLのc:forEachタグ）で呼び出され評価される。
-
-ボディ行で行データ・ステータスにアクセスするための属性:
-
-| 属性名 | 必須 | デフォルト値 | 説明 |
-|---|---|---|---|
-| resultSetName | ○ | | ユニバーサルDAOの検索結果（EntityList）をリクエストスコープから取得する際に使用する名前。ページネーション情報（ページ数・検索件数）も含む |
-| headerRowFragment | | | ヘッダ行のJSPフラグメント |
-| bodyRowFragment | | | ボディ行のJSPフラグメント |
-| varRowName | | "row" | ボディ行のフラグメントで行データ（c:forEachのvar属性）を参照する変数名 |
-| varStatusName | | "status" | ボディ行のフラグメントでステータス（c:forEachのstatus属性）を参照する変数名 |
-| varCountName | | "count" | ステータスのcountプロパティを参照する変数名 |
-| varRowCountName | | "rowCount" | 検索結果のカウント（取得開始位置＋ステータスのカウント）を参照する変数名 |
-| varOddEvenName | | "oddEvenCss" | ボディ行のclass属性を参照する変数名（1行おきにclass属性を変更する際に使用） |
-| oddValue | | "nablarch_odd" | ボディ行の奇数行に使用するclass属性 |
-| evenValue | | "nablarch_even" | ボディ行の偶数行に使用するclass属性 |
-
-> **補足**: varStatusNameで指定した変数にn:writeタグでアクセスすると、n:writeタグとEL式でアクセス方法が異なるためエラーが発生し値を取得できない。n:setタグを使用すること:
-> ```jsp
-> <n:set var="rowCount" value="${status.count}" />
-> <n:write name="rowCount" />
-> ```
-
-プロジェクト検索の指定例（タグファイルのプレフィックスは app）:
+プロジェクト検索の指定例を下記に示す。タグファイルのプレフィックスは app とする。
 
 ```jsp
 <app:listSearchResult resultSetName="searchResult">
@@ -213,7 +291,9 @@ public class ProjectSearchForm {
                    <n:write name="row.projectId"/>
                </n:a>
            </td>
-           <td><n:write name="row.projectName" /></td>
+           <td>
+               <n:write name="row.projectName" />
+           </td>
            <td>
                <c:forEach var="projectType" items="<%= ProjectType.values() %>">
                    <c:if test="${projectType.code == row.projectType}">
@@ -221,361 +301,101 @@ public class ProjectSearchForm {
                    </c:if>
                </c:forEach>
            </td>
-           <td><n:write value="${n:formatByDefault('dateTime', row.projectStartDate)}" /></td>
-           <td><n:write value="${n:formatByDefault('dateTime', row.projectEndDate)}" /></td>
+           <td>
+               <n:write value="${n:formatByDefault('dateTime', row.projectStartDate)}" />
+           </td>
+           <td>
+               <n:write value="${n:formatByDefault('dateTime', row.projectEndDate)}" />
+           </td>
        </tr>
    </jsp:attribute>
 </app:listSearchResult>
 ```
 
-ページング（最後）の属性:
+上記指定後の検索結果を下記に示す。
 
-| プロパティ名 | 必須 | デフォルト値 | 説明 |
-|---|---|---|---|
-| useLastSubmit | | false | 最後のページに遷移するサブミットを使用するか否か |
-| lastSubmitCss | | "nablarch_lastSubmit" | 最後のページに遷移するサブミットをラップするdivタグのclass属性 |
-| lastSubmitLabel | | "最後" | 最後のページに遷移するサブミットに使用するラベル |
-| lastSubmitName | | "lastSubmit" | 最後のページに遷移するサブミットに使用するタグのname属性。ページングの表示位置を表すサフィックス（上側は"_top"、下側は"_bottom"）を付けて出力する。例：表示位置が上側の場合は"lastSubmit_top" |
+![ListSearchResult_TableStatus.jpg](../../../knowledge/assets/biz-samples-03/ListSearchResult_TableStatus.jpg)
 
-<details>
-<summary>keywords</summary>
+## 業務アプリケーションへのサンプル実装(タグファイル)の取り込み方法
 
-UniversalDao, ListSearchInfo, Pagination, EntityList, listSearchResult, listSearchPaging, listSearchSubmit, table, クラス構成, タグファイル一覧, resultSetName, headerRowFragment, bodyRowFragment, varRowName, varStatusName, varCountName, varRowCountName, varOddEvenName, oddValue, evenValue, 検索結果表示, 奇数偶数行CSS, n:setタグ, 0件の場合ヘッダ行のみ, c:forEach, useLastSubmit, lastSubmitCss, lastSubmitLabel, lastSubmitName, 最後のページ, ページングサブミット, 最後ボタン
+下記の通り、listSearchResultパッケージを業務アプリケーションに配置する。
 
-</details>
+コピー元
+*META-INF/tags/* **listSearchResult**
+コピー先
+業務アプリケーションの /WEB-INF/tags ディレクトリ
 
-## UniversalDaoクラス
+## タグリファレンス
 
-`UniversalDao` は複数件の検索結果をEntityListとして返すAPIを持つ。ページング機能の使用は [universal_dao-paging](../../component/libraries/libraries-universal_dao.md) を参照。
+### listSearchResultタグ
 
-listSearchResultパッケージを業務アプリケーションに配置する：
+listSearchResultタグは、検索結果の一覧表示を行う。
+画面要素毎に属性を下記に示す。
 
-- コピー元: `META-INF/tags/listSearchResult`
-- コピー先: 業務アプリケーションの `/WEB-INF/tags` ディレクトリ
-
-検索結果の表示に関する属性:
-
-| プロパティ名 | 必須 | デフォルト値 | 説明 |
-|---|---|---|---|
-| showResult | | true | 検索結果を表示するか否か |
-| resultSetName | 必須 | | ユニバーサルDAOの検索結果（nablarch.common.dao.EntityList）をリクエストスコープから取得する際に使用する名前。検索結果にはページネーションのためのページ数や検索条件に一致した件数なども含まれる |
-| resultSetCss | | "nablarch_resultSet" | 検索結果テーブルのclass属性 |
-| headerRowFragment | | | ヘッダ行のJSPフラグメント |
-| bodyRowFragment | | | ボディ行のJSPフラグメント |
-| varRowName | | "row" | ボディ行のフラグメントで行データ（c:forEachタグのvar属性）を参照する際に使用する変数名 |
-| varStatusName | | "status" | ボディ行のフラグメントでステータス（c:forEachタグのstatus属性）を参照する際に使用する変数名 |
-| varCountName | | "count" | ステータス（c:forEachタグのstatus属性）のcountプロパティを参照する際に使用する変数名 |
-| varRowCountName | | "rowCount" | 検索結果のカウント（検索結果の取得開始位置＋ステータスのカウント）を参照する際に使用する変数名 |
-| varOddEvenName | | "oddEvenCss" | ボディ行のclass属性を参照する際に使用する変数名。1行おきにclass属性の値を変更したい場合に使用する |
-| oddValue | | "nablarch_odd" | ボディ行の奇数行に使用するclass属性 |
-| evenValue | | "nablarch_even" | ボディ行の偶数行に使用するclass属性 |
-
-**注意: varStatusName の使用について**
-
-n:writeタグを使用してステータスにアクセスすると、n:writeタグとEL式でアクセス方法が異なるためにエラーが発生し値を取得できない。n:setタグを使用してステータスにアクセスすることで、このエラーを回避できる。
-
-```jsp
-<n:set var="rowCount" value="${status.count}" />
-<n:write name="rowCount" />
-```
-
-<details>
-<summary>keywords</summary>
-
-UniversalDao, nablarch.common.dao.UniversalDao, EntityList, ページング機能, 検索結果取得, listSearchResult, タグファイル配置, WEB-INF/tags, META-INF/tags, サンプル実装取り込み, showResult, resultSetName, resultSetCss, headerRowFragment, bodyRowFragment, varRowName, varStatusName, varCountName, varRowCountName, varOddEvenName, oddValue, evenValue, 検索結果テーブル, ボディ行, ヘッダ行
-
-</details>
-
-## ListSearchInfoクラス
-
-`ListSearchInfo` は一覧検索用情報を保持する抽象クラス。ページネーションのページ数・検索条件一致件数などのフィールドおよびアクセッサメソッドを定義。
-
-listSearchResultタグは検索結果の一覧表示（検索結果件数、ページング、検索結果テーブル）を行う。
-
-![ページング＋テーブル全体構成](../../../knowledge/guide/biz-samples/assets/biz-samples-03/ListSearchResult_PagingTableFull.jpg)
-
-**全体属性**
-
-| 属性名 | デフォルト値 | 説明 |
-|---|---|---|
-| listSearchResultWrapperCss | "nablarch_listSearchResultWrapper" | ページング付きテーブル全体（検索結果件数、ページング、検索結果）をラップするdivタグのclass属性 |
-| searchFormName | | 検索フォームをリクエストスコープから取得する際に使用する名前。検索フォームは検索条件とページングのためのページ番号を保持する。一括削除確認画面など一覧表示のみを行う場合は指定しない |
-
-**検索結果件数属性**
-
-| 属性名 | デフォルト値 | 説明 |
-|---|---|---|
-| useResultCount | true | 検索結果件数を表示するか否か |
-| resultCountCss | "nablarch_resultCount" | 検索結果件数をラップするdivタグのclass属性 |
-| resultCountFragment | | 検索結果件数を出力するJSPフラグメント。デフォルトは「検索結果 <paginationのresultCountプロパティ>件」 |
-
-**ページング属性**
-
-| 属性名 | デフォルト値 | 説明 |
-|---|---|---|
-| usePaging | true | ページングを表示するか否か |
-| pagingPosition | top | ページングの表示位置。top（上側のみ）/ bottom（下側のみ）/ both（両方）/ none（表示なし）のいずれかを指定する |
-| pagingCss | "nablarch_paging" | ページングのサブミット要素全体をラップするdivタグのclass属性 |
-| searchUri | | ページングのサブミット要素に使用するURI。**ページングを表示する場合は必ず指定すること** |
-
-<details>
-<summary>keywords</summary>
-
-ListSearchInfo, nablarch.core.db.support.ListSearchInfo, 一覧検索情報, ページネーション情報, 抽象クラス, listSearchResultタグ, タグリファレンス, 検索結果一覧表示, 属性一覧, listSearchResultWrapperCss, searchFormName, useResultCount, resultCountCss, resultCountFragment, usePaging, pagingPosition, pagingCss, searchUri
-
-</details>
-
-## Paginationクラス
-
-**クラス**: `Pagination` はListSearchInfoを継承し、ページネーション情報の参照に使用される。
-
-| 属性名 | デフォルト値 | 説明 |
-|---|---|---|
-| useCurrentPageNumber | true | 現在のページ番号を使用するか否か |
-| currentPageNumberCss | "nablarch_currentPageNumber" | 現在のページ番号をラップするdivタグのclass属性 |
-| currentPageNumberFragment | | 現在のページ番号を出力するJSPフラグメント。デフォルト: "[paginationのpageNumberプロパティ/paginationのpageCountプロパティ ページ]" |
-
-<details>
-<summary>keywords</summary>
-
-Pagination, ListSearchInfo, ページネーション情報参照, useCurrentPageNumber, currentPageNumberCss, currentPageNumberFragment, ページ番号表示, pageCountプロパティ
-
-</details>
-
-## EntityListクラス
-
-**クラス**: `EntityList` はUniversalDaoから返される結果リストの保持クラス。`java.util.ArrayList` を継承し、`Pagination` インスタンスをフィールドに持つ。
-
-| 属性名 | デフォルト値 | 説明 |
-|---|---|---|
-| useFirstSubmit | false | 最初のページに遷移するサブミットを使用するか否か |
-| firstSubmitCss | "nablarch_firstSubmit" | 最初のページに遷移するサブミットをラップするdivタグのclass属性 |
-| firstSubmitLabel | "最初" | 最初のページに遷移するサブミットのラベル |
-| firstSubmitName | "firstSubmit" | 最初のページに遷移するサブミットのname属性。表示位置サフィックス（上側は"_top"、下側は"_bottom"）が付与される。例: デフォルトかつ上側の場合は"firstSubmit_top" |
-
-<details>
-<summary>keywords</summary>
-
-EntityList, Pagination, java.util.ArrayList, 検索結果リスト保持, useFirstSubmit, firstSubmitCss, firstSubmitLabel, firstSubmitName, 最初のページ遷移, _top, _bottom
-
-</details>
-
-## listSearchResultタグ
-
-:ref:`ListSearchResult_Tag` は検索結果リストを表示するタグ。
-
-> **注意**: `resultSetName` 属性で指定された検索結果がリクエストスコープに存在しない場合、listSearchResultタグは何も出力しない（検索画面の初期表示が何も出力されないケースに該当）。
-
-![listSearchResultタグの出力画面要素](../../../knowledge/guide/biz-samples/assets/biz-samples-03/ListSearchResult_PagingTableFull.jpg)
-
-全属性の詳細は :ref:`ListSearchResult_Tag` を参照。
-
-| 属性名 | デフォルト値 | 説明 |
-|---|---|---|
-| usePrevSubmit | true | 前のページに遷移するサブミットを使用するか否か |
-| prevSubmitCss | "nablarch_prevSubmit" | 前のページに遷移するサブミットをラップするdivタグのclass属性 |
-| prevSubmitLabel | "前へ" | 前のページに遷移するサブミットのラベル |
-| prevSubmitName | "prevSubmit" | 前のページに遷移するサブミットのname属性。表示位置サフィックス（上側は"_top"、下側は"_bottom"）が付与される。例: デフォルトかつ上側の場合は"prevSubmit_top" |
-
-<details>
-<summary>keywords</summary>
-
-listSearchResult, 検索結果一覧表示, resultSetName, リクエストスコープ, 初期表示, usePrevSubmit, prevSubmitCss, prevSubmitLabel, prevSubmitName, 前のページ遷移, prevSubmit_top, prevSubmit_bottom
-
-</details>
-
-## 全体
+![ListSearchResult_PagingTableFull.jpg](../../../knowledge/assets/biz-samples-03/ListSearchResult_PagingTableFull.jpg)
 
 | 属性 | 説明 |
 |---|---|
-| searchFormName | 検索フォームをリクエストスコープから取得する際の名前。検索条件とページング用ページ番号を保持。一覧表示のみの場合（一括削除確認画面等）は指定不要。 |
+| 全体 |  |
+| listSearchResultWrapperCss | ページング付きテーブル全体(検索結果件数、ページング、検索結果)をラップするdivタグのclass属性。  デフォルトは"nablarch_listSearchResultWrapper"。 |
+| searchFormName | 検索フォームをリクエストスコープから取得する際に使用する名前。  検索フォームは検索条件とページングのためのページ番号を保持する。 一括削除確認画面など、一覧表示のみを行う場合は指定しない。 |
+| 検索結果件数 |  |
+| useResultCount | 検索結果件数を表示するか否か。  デフォルトはtrue。 |
+| resultCountCss | 検索結果件数をラップするdivタグのclass属性。  デフォルトは"nablarch_resultCount"。 |
+| resultCountFragment | 検索結果件数を出力するJSPフラグメント。  デフォルトは"検索結果 <paginationのresultCountプロパティ>件"。 |
+| ページング |  |
+| usePaging | ページングを表示するか否か。  デフォルトはtrue。 |
+| pagingPosition | ページングの表示位置。  下記のいずれかを指定する。  top(上側のみ)   bottom(下側のみ)   both(両方)   none(表示なし)   デフォルトはtop。 |
+| pagingCss | ページングのサブミット要素(前へ、次へなど)全体をラップするdivタグのclass属性。   デフォルトは"nablarch_paging"。 |
+| searchUri | ページングのサブミット要素に使用するURI。  ページングを表示する場合は必ず指定すること。 |
 
-<details>
-<summary>keywords</summary>
+![ListSearchResult_PagingTableFull.jpg](../../../knowledge/assets/biz-samples-03/ListSearchResult_PagingTableFull.jpg)
 
-searchFormName, 検索フォーム, リクエストスコープ取得, ページ番号, 検索条件
-
-</details>
-
-## 検索結果件数
-
-| 属性 | デフォルト値 | 説明 |
-|---|---|---|
-| useResultCount | true | 検索結果件数を表示するか否か |
-
-検索結果件数はuseResultCount=true（デフォルト）かつリクエストスコープに検索結果が存在する場合に表示される。
-
-デフォルト書式: `検索結果 <paginationのresultCountプロパティ>件`
-
-デフォルト書式を変更する場合はresultCountFragment属性にJSPフラグメントを指定する：
-
-```jsp
-<app:listSearchResult resultSetName="searchResult" useResultCount="true">
-    <jsp:attribute name="resultCountFragment">
-      [サーチ結果 <n:write name="searchResult.pagination.resultCount" />件]
-    </jsp:attribute>
-</app:listSearchResult>
-```
-
-上記指定後の書式: `[サーチ結果 <paginationのresultCountプロパティ>件]`
-
-属性：
-
-| 属性名 | デフォルト値 | 説明 |
-|---|---|---|
-| useResultCount | true | 検索結果件数を表示するか否か |
-| resultCountCss | "nablarch_resultCount" | 検索結果件数をラップするdivタグのclass属性 |
-| resultCountFragment | | 検索結果件数を出力するJSPフラグメント |
-
-<details>
-<summary>keywords</summary>
-
-useResultCount, 検索結果件数表示, デフォルトtrue, resultCountCss, resultCountFragment, resultCountプロパティ
-
-</details>
-
-## ページング
-
-| 属性 | 必須 | デフォルト値 | 説明 |
-|---|---|---|---|
-| usePaging |  | true | ページングを表示するか否か |
-| searchUri | ○ |  | ページングのサブミット要素に使用するURI。ページングを表示する場合は必ず指定すること。 |
-
-ページングはusePaging=true（デフォルト）の場合に表示される。
-
-searchFormNameで指定するフォームは `pageNumber` という名前でページ番号を受け取るよう実装すること：
-
-```java
-public class ProjectSearchForm {
-    @Required
-    @Domain("pageNumber")
-    private String pageNumber;
-    public String getPageNumber(){ return this.pageNumber; }
-    public void setPageNumber(String pageNumber){ this.pageNumber = pageNumber; }
-}
-```
-
-ページング全体は検索結果件数が1件以上の場合に表示される。ページングの画面要素：
-
-| 画面要素 | 表示条件 |
+| 属性 | 説明 |
 |---|---|
-| 現在のページ番号 | useCurrentPageNumber=trueの場合 |
-| 最初・前へ・次へ・最後 | 遷移可能な場合はサブミット、不可の場合はラベルで表示 |
-| ページ番号（1..n） | 総ページ数が2以上の場合のみ表示 |
+| 現在のページ番号 |  |
+| useCurrentPageNumber | 現在のページ番号を使用するか否か。  デフォルトはtrue。 |
+| currentPageNumberCss | 現在のページ番号をラップするdivタグのclass属性。  デフォルトは"nablarch_currentPageNumber"。 |
+| currentPageNumberFragment | 現在のページ番号を出力するJSPフラグメント。  デフォルトは"[<paginationのpageNumberプロパティ>/<paginationのpageCountプロパティ>ページ]"。 |
+| 最初 |  |
+| useFirstSubmit | 最初のページに遷移するサブミットを使用するか否か。  デフォルトはfalse。 |
+| firstSubmitCss | 最初のページに遷移するサブミットをラップするdivタグのclass属性。  デフォルトは"nablarch_firstSubmit"。 |
+| firstSubmitLabel | 最初のページに遷移するサブミットに使用するラベル。  デフォルトは"最初"。 |
+| firstSubmitName | 最初のページに遷移するサブミットに使用するタグのname属性。  デフォルトは"firstSubmit"。  ページングの表示位置を表すサフィックス(上側は"_top"、下側は"_bottom")を付けて出力する。  例えば、デフォルトかつ表示位置が上側の場合は"firstSubmit_top"となる。 |
+| 前へ |  |
+| usePrevSubmit | 前のページに遷移するサブミットを使用するか否か。  デフォルトはtrue。 |
+| prevSubmitCss | 前のページに遷移するサブミットをラップするdivタグのclass属性。  デフォルトは"nablarch_prevSubmit"。 |
+| prevSubmitLabel | 前のページに遷移するサブミットに使用するラベル。  デフォルトは"前へ"。 |
+| prevSubmitName | 前のページに遷移するサブミットに使用するタグのname属性。  デフォルトは"prevSubmit"。  ページングの表示位置を表すサフィックス(上側は"_top"、下側は"_bottom")を付けて出力する。  例えば、デフォルトかつ表示位置が上側の場合は"prevSubmit_top"となる。 |
+| ページ番号(ページ番号をラベルとして使用するためラベル指定がない) |  |
+| usePageNumberSubmit | ページ番号のページに遷移するサブミットを使用するか否か。  デフォルトはfalse。 |
+| pageNumberSubmitCss | ページ番号のページに遷移するサブミットをラップするdivタグのclass属性。  デフォルトは"nablarch_pageNumberSubmit"。 |
+| pageNumberSubmitName | ページ番号のページに遷移するサブミットに使用するタグのname属性。  デフォルトは"pageNumberSubmit"。  ページ番号とページングの表示位置を表すサフィックス(上側は"_top"、下側は"_bottom")を付けて出力する。  例えば、デフォルトかつ表示位置が上側でページ番号が3の場合は"pageNumberSubmit3_top"となる。 |
+| 次へ |  |
+| useNextSubmit | 次のページに遷移するサブミットを使用するか否か。  デフォルトはtrue。 |
+| nextSubmitCss | 次のページに遷移するサブミットをラップするdivタグのclass属性。  デフォルトは"nablarch_nextSubmit"。 |
+| nextSubmitLabel | 次のページに遷移するサブミットに使用するラベル。  デフォルトは"次へ"。 |
+| nextSubmitName | 次のページに遷移するサブミットに使用するタグのname属性。  デフォルトは"nextSubmit"。  ページングの表示位置を表すサフィックス(上側は"_top"、下側は"_bottom")を付けて出力する。  例えば、デフォルトかつ表示位置が上側の場合は"nextSubmit_top"となる。 |
+| 最後 |  |
+| useLastSubmit | 最後のページに遷移するサブミットを使用するか否か。  デフォルトはfalse。 |
+| lastSubmitCss | 最後のページに遷移するサブミットをラップするdivタグのclass属性。  デフォルトは"nablarch_lastSubmit"。 |
+| lastSubmitLabel | 最後のページに遷移するサブミットに使用するラベル。  デフォルトは"最後"。 |
+| lastSubmitName | 最後のページに遷移するサブミットに使用するタグのname属性。  デフォルトは"lastSubmit"。   ページングの表示位置を表すサフィックス(上側は"_top"、下側は"_bottom")を付けて出力する。  例えば、デフォルトかつ表示位置が上側の場合は"lastSubmit_top"となる。 |
 
-**ページング時の検索条件**: 検索条件をパラメータにセットしたURIをsearchUri属性に渡す：
+![ListSearchResult_PagingTableFull.jpg](../../../knowledge/assets/biz-samples-03/ListSearchResult_PagingTableFull.jpg)
 
-```jsp
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="app" tagdir="/WEB-INF/tags/listSearchResult" %>
-<c:url value="/action/project/list" var="uri" context="/">
-    <c:param name="searchForm.projectName" value="${searchForm.projectName}"/>
-</c:url>
-<app:listSearchResult resultSetName="searchResult" searchUri="${uri}" ...>
-```
-
-**ページング中に検索結果が減少した場合**: 指定されたページ番号に基づき検索を実施し各画面要素を表示する。現在のページ番号とサブミット要素の対応が取れており操作不能な状態にならない。
-
-属性：
-
-| 属性名 | デフォルト値 | 説明 |
-|---|---|---|
-| usePaging | true | ページングを表示するか否か |
-| pagingPosition | top | ページングの表示位置。top（上側のみ）/ bottom（下側のみ）/ both（両方）/ none（表示なし） |
-| pagingCss | "nablarch_paging" | ページングのサブミット要素全体をラップするdivタグのclass属性 |
-| searchUri | | ページングのサブミット要素に使用するURI。ページングを表示する場合は必ず指定すること |
-
-<details>
-<summary>keywords</summary>
-
-usePaging, searchUri, ページング表示, サブミット要素URI, pagingPosition, pagingCss, pageNumber, ページング, ページネーション, 検索条件URI, 前へ, 次へ, ページ切り替え
-
-</details>
-
-## 検索結果
-
-検索結果タグの主要属性：
-
-| 属性名 | 必須 | 説明 |
-|---|---|---|
-| resultSetName | ○ | `EntityList` をリクエストスコープから取得する名前。ページネーション情報（ページ数・件数等）も含む |
-| headerRowFragment | | ヘッダ行のJSPフラグメント（:ref:`ListSearchResult_TableElement` 参照） |
-| bodyRowFragment | | ボディ行のJSPフラグメント（:ref:`ListSearchResult_TableElement` 参照） |
-
-検索結果はヘッダ行（headerRowFragment）とボディ行（bodyRowFragment）で構成される。検索結果が0件の場合はヘッダ行のみ表示される。ボディ行フラグメントはJSTLの `c:forEach` タグのループ内で呼び出される。
-
-ボディ行フラグメントで行データ・ステータスにアクセスするための属性：
-
-| 属性名 | デフォルト値 | 説明 |
-|---|---|---|
-| varRowName | "row" | 行データ（c:forEachのvar属性）を参照する変数名 |
-| varStatusName | "status" | ステータス（c:forEachのstatus属性）を参照する変数名 |
-| varCountName | "count" | ステータスのcountプロパティを参照する変数名 |
-| varRowCountName | "rowCount" | 検索結果のカウント（取得開始位置＋ステータスのcount）を参照する変数名 |
-
-> **補足**: n:writeタグでステータスにアクセスするとn:writeとEL式のアクセス方法の違いによりエラーが発生する。n:setタグを使用してステータスにアクセスすること。例: `<n:set var="rowCount" value="${status.count}" /><n:write name="rowCount" />`
-
-1行おきの背景色変更用属性：
-
-| 属性名 | デフォルト値 | 説明 |
-|---|---|---|
-| varOddEvenName | "oddEvenCss" | ボディ行のclass属性を参照する変数名 |
-| oddValue | "nablarch_odd" | 奇数行のclass属性値 |
-| evenValue | "nablarch_even" | 偶数行のclass属性値 |
-
-JSP指定例（プロジェクト検索、タグファイルプレフィックスは `app`）：
-
-```jsp
-<app:listSearchResult resultSetName="searchResult">
-    <jsp:attribute name="headerRowFragment">
-        <tr>
-            <th>プロジェクトID</th>
-            <th>プロジェクト名</th>
-            <th>プロジェクト種別</th>
-            <th>開始日</th>
-            <th>終了日</th>
-        </tr>
-    </jsp:attribute>
-    <jsp:attribute name="bodyRowFragment">
-        <tr class="info">
-            <td>
-                <n:a href="/action/project/show/${row.projectId}">
-                    <n:write name="row.projectId"/>
-                </n:a>
-            </td>
-            <td><n:write name="row.projectName" /></td>
-            <td>
-                <c:forEach var="projectType" items="<%= ProjectType.values() %>">
-                    <c:if test="${projectType.code == row.projectType}">
-                        <n:write name="projectType.label" />
-                    </c:if>
-                </c:forEach>
-            </td>
-            <td><n:write value="${n:formatByDefault('dateTime', row.projectStartDate)}" /></td>
-            <td><n:write value="${n:formatByDefault('dateTime', row.projectEndDate)}" /></td>
-        </tr>
-    </jsp:attribute>
-</app:listSearchResult>
-```
-
-<details>
-<summary>keywords</summary>
-
-listSearchResult, 検索結果表示, headerRowFragment, bodyRowFragment, varRowName, varStatusName, varCountName, varRowCountName, varOddEvenName, EntityList, JSPフラグメント, ボディ行, ヘッダ行
-
-</details>
-
-## 全体ラッパーCSS
-
-全体ラッパーCSSに関する属性：
-
-| 属性名 | デフォルト値 | 説明 |
-|---|---|---|
-| listSearchResultWrapperCss | "nablarch_listSearchResultWrapper" | ページング付きテーブル全体（検索結果件数・ページング・検索結果）をラップするdivタグのclass属性 |
-
-<details>
-<summary>keywords</summary>
-
-listSearchResultWrapperCss, 全体ラッパー属性, ラッパーCSS, nablarch_listSearchResultWrapper
-
-</details>
+| 属性 | 説明 |
+|---|---|
+| 検索結果 |  |
+| showResult | 検索結果を表示するか否か。デフォルトはtrue。 |
+| resultSetName(必須) | ユニバーサルDAOの検索結果 をリクエストスコープから取得する際に使用する名前。検索結果には、ページネーションのためのページ数や検索条件に一致した件数なども含まれる。 |
+| resultSetCss | 検索結果テーブルのclass属性。  デフォルトは"nablarch_resultSet"。 |
+| headerRowFragment | ヘッダ行のJSPフラグメント。 |
+| bodyRowFragment | ボディ行のJSPフラグメント。 |
+| varRowName | ボディ行のフラグメントで行データ(c:forEachタグのvar属性)を参照する際に使用する変数名。  デフォルトは"row"。 |
+| varStatusName | ボディ行のフラグメントでステータス(c:forEachタグのstatus属性)を参照する際に使用する変数名。  デフォルトは"status"。  > **Tip:** > n:writeタグを使用してステータスにアクセスすると、n:writeタグとEL式でアクセス方法が異なるために > エラーが発生し値を取得できない。 > n:setタグを使用してステータスにアクセスすることで、このエラーを回避できる。 > 下記に使用例を示す。  > ```jsp > <n:set var="rowCount" value="${status.count}" /> > <n:write name="rowCount" /> > ``` |
+| varCountName | ステータス(c:forEachタグのstatus属性)のcountプロパティを参照する際に使用する変数名。  デフォルトは"count"。 |
+| varRowCountName | 検索結果のカウント(検索結果の取得開始位置＋ステータスのカウント)を参照する際に使用する変数名。  デフォルトは"rowCount"。 |
+| varOddEvenName | ボディ行のclass属性を参照する際に使用する変数名。  この変数名は、1行おきにclass属性の値を変更したい場合に使用する。  デフォルトは"oddEvenCss"。 |
+| oddValue | ボディ行の奇数行に使用するclass属性。  デフォルトは"nablarch_odd"。 |
+| evenValue | ボディ行の偶数行に使用するclass属性。  デフォルトは"nablarch_even"。 |

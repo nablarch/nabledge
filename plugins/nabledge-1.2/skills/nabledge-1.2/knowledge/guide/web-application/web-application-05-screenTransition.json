@@ -1,0 +1,62 @@
+{
+  "id": "web-application-05-screenTransition",
+  "title": "画面遷移処理",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "本項で説明する内容",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "説明内容",
+      "content": "本項では、以下の内容を説明する。\n\n* 画面遷移処理のJSPへの書き方",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "作成内容",
+      "content": "本項で作成するのは、下記画面遷移図の赤丸とその中にある赤文字の遷移の部分である。\n\n![screenTransition.png](assets/web-application-05-screenTransition/screenTransition.png)\n\n編集するソースコードは以下のとおり。\n\n| 名称(右クリック->保存でダウンロード) | ステレオタイプ | 処理内容 |\n|---|---|---|\n| [W11AC0201.jsp](assets/web-application-05-screenTransition/W11AC0201.jsp) [W11AC0202.jsp](assets/web-application-05-screenTransition/W11AC0202.jsp) | View | ユーザ情報登録画面に入力した内容及び、登録画面に戻るボタンと、登録処理を行うボタンを表示する。W11AC0202.jsp内でW11AC0201.jspを取り込んでいる。 |\n\nステレオタイプについては [業務コンポーネントの責務配置](../../about/about-nablarch/about-nablarch-01-NablarchOutline.md#stereotype) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "作成手順",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "View(JSP)の作成",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "画面イメージ",
+      "content": "作成するJSPの画面イメージを以下に示す。画面左下の\"登録画面へ\"ボタンと画面右下の\"確定\"ボタンを押下したときの画面遷移処理の書き方を説明する。\n\n![W11AC0202.png](assets/web-application-05-screenTransition/W11AC0202.png)",
+      "level": 4
+    },
+    {
+      "id": "s7",
+      "title": "ソースコード(実装方法)",
+      "content": "アプリケーションフレームワーク提供のカスタムタグを使用する。\nn:formタグを使用して、HTMLフォームを作成する。\n\nn:submitタグを使用して、ボタンを指定する。n:submitタグでは、uri属性にサブミットするパスを指定する。\n\n上記を参照し、以下の内容で *W11AC0201.jsp* を作成する。\n\n* W11AC0201.jsp\n\n```./_source/05/W11AC0201.jsp\n\n```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 4
+    },
+    {
+      "id": "s8",
+      "title": "\"登録画面へ\"戻る場合の入力値の復元",
+      "content": "登録画面へボタンを押下して前の画面へ戻った場合、入力内容を復元する必要がある。このためには、実装時に以下の点のみ注意しておけばよい。\nそうすれば、単純に戻り先の画面へ遷移させれば、入力内容が復元される。\n\n* 入力項目(テキストエリア、ラジオボタンなど)を作成する際は、アプリケーションフレームワーク提供のカスタムタグを使用する。\n* n:formタグのwindowScopePrefixes属性に入力項目のカスタムタグのname属性に指定したプレフィックス [(参照)](../../guide/web-application/web-application-04-validation.md#04-jspnameattribute) を指定する。",
+      "level": 4
+    },
+    {
+      "id": "s9",
+      "title": "次に読むもの",
+      "content": "* [カスタムタグの使用方法を詳しく知りたい時](../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07_WebView.html)",
+      "level": 2
+    }
+  ]
+}

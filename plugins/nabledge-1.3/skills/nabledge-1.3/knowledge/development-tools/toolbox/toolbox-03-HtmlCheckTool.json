@@ -1,55 +1,62 @@
 {
   "id": "toolbox-03-HtmlCheckTool",
   "title": "HTMLチェックツール",
+  "content": "HTMLチェックツールの目的、仕様、使用方法に関して記述する。",
   "no_knowledge_content": false,
-  "official_doc_urls": [
-    "http://www.w3.org/TR/html401/"
-  ],
-  "index": [
+  "sections": [
     {
       "id": "s1",
       "title": "目的",
-      "hints": [
-        "HTMLチェックツール",
-        "構文チェック",
-        "終了タグ検出",
-        "禁止タグ検出",
-        "HTML検証"
-      ]
+      "content": "* 終了タグ忘れ等の構文不正により、想定している画面表示とは異なる画面がユーザーに表示されることを防ぐ。\n* プロジェクトの規約により禁止されているタグが使用されることを防ぐ。",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "仕様",
-      "hints": [
-        "HTML4.01",
-        "構文チェック仕様",
-        "boolean属性",
-        "クォーテーション省略禁止",
-        "JavaScript連続ハイフン禁止",
-        "空タグ許容",
-        "HTML4.01との相違点",
-        "タグ省略不可"
-      ]
+      "content": "リクエスト単体テストにて自動生成されたHTMLファイルに対して下記のチェックを行い、不正なHTMLを検出した場合、テスト失敗とする。\n本ツールはリクエスト単体テストに標準で組み込まれており、リクエスト単体テスト実行時に本ツールも実行される。\n\n* デフォルトでは [1] HTML4.01に準拠してHTMLファイルの構文チェックを行う。 [2]\n* 開始タグ・終了タグの記述漏れをチェックする。 HTML4.01で省略可能と規定されているタグについても、省略を許可しない。\n* 設定ファイル [3] に記載されたタグ・属性を使用していないかチェックを行う。\n* 大文字・小文字の区別は行わない。 例：) <tr>, <TR>, <Tr>, <tR>\n* boolean属性は使用可能である。 例：) <textarea disabled>\n* 属性指定におけるクォーテーション省略を許可しない。 例：) ○ <table align=\"center\"> × <table align=center>\n\n設定値の変更により、チェック内容がカスタマイズできる。\n\n一部例外あり。次項『 HTML4.01との相違点 』を参照。\n\nデフォルトの設定では、 [W3C公式サイト](http://www.w3.org/TR/html401/) にて非推奨とされているタグ・属性(以下では、「非推奨タグ・属性」と略記する)が設定されている。\n設定ファイルをカスタマイズすることにより、使用を禁止するタグ・属性を変更することができる。（カスタマイズ方法は [使用禁止タグ・属性のカスタマイズ方法](../../development-tools/toolbox/toolbox-03-HtmlCheckTool.md#01-custom) を参照のこと。）\n\n> **Note:**\n> HTMLに直接記述したJavaScriptに「-」が2つ以上連続で現れた場合は、テスト失敗となる。\n> テスト失敗となるJavaScript実装例とエラーメッセージを下記に示す。\n\n> テスト失敗となるJavaScript実装例\n\n> ```jsp\n> var message = \"--\"   // 文字列で「-」が連続する。\n>   , count = 10;\n> count--;             //  デクリメント演算子で「-」が連続する。\n> ```\n\n> エラーメッセージ\n\n> ```bash\n> Lexical error at line 965, column 31.  Encountered: \"-\" (45), after : \"--\"\n> ```\n\n> 対応方法\n\n> JavaScriptをHTML(JSP)に直接記述するのではなく、外部ファイル化して記述するように対応する。",
+      "level": 2
     },
     {
       "id": "s3",
+      "title": "HTML4.01との相違点",
+      "content": "現状のWebアプリケーションでは、クライントサイドで動的なDOM操作を行うことが一般化しているため、\n本ツールではボディが空のタグを許容することとしている。\n\n例えば、以下のようなタグはエラーとはならない。\n\n```html\n<!-- 空のspanタグ -->\n<span id=\"foo\"></span>\n\n<!-- optionのないselectタグ -->\n<select id=\"bar\"></select>\n```",
+      "level": 3
+    },
+    {
+      "id": "s4",
       "title": "使用方法",
-      "hints": [
-        "htmlCheckerConfig",
-        "checkHtml",
-        "htmlChecker",
-        "HtmlChecker",
-        "InvalidHtmlException",
-        "HttpTestConfiguration",
-        "使用禁止タグカスタマイズ",
-        "HTMLチェック有効化",
-        "カスタムHTMLチェッカー"
-      ]
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "前提条件",
+      "content": "* リクエスト単体テストを実行可能であること。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "使用禁止タグ・属性のカスタマイズ方法",
+      "content": "デフォルトの設定をそのまま使用する場合、プロジェクト開始時に下記に述べる設定変更を行う必要はない。\n\nテストプロジェクトの自動テスト用設定ファイルに禁止するタグ・属性を記述した設定ファイルへのパスが記述されている。\n設定ファイルへのパスは、htmlCheckerConfigプロパティに指定するため、設定ファイルを配布時とは異なる場所に配置する場合にはこのプロパティを修正する。\n\n```xml\n<component name=\"httpTestConfiguration\" class=\"nablarch.test.core.http.HttpTestConfiguration\">\n\n     (省略)\n\n     <property name=\"htmlCheckerConfig\" value=\"test/resources/httprequesttest/html-check-config.csv\" />\n\n     (省略)\n\n</component>\n```\n\n設定ファイル（htmlCheckerConfigプロパティで指定したファイル）は、下記の記述方法で修正する。\n\n設定ファイルは一行にカンマ区切りでタグ名と属性名を記述する。\n一つのタグに複数の属性を設定する場合は、複数行にて記述する。\n\n```\nbody,bgcolor\nbody,link\nbody,text\ntable,align\ntable,bgcolor\ntd,bgcolor\ntd,height\ntd,nowrap\nth,bgcolor\nth,height\nth,nowrap\ntr,bgcolor\n```\n\nまた、属性欄を省略すれば、タグ自体の使用を指摘する。\n\n```\nbody,\n```\n\n属性欄を省略する際でも、カンマを省略することはできない。",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "HTMLチェック実行要否の設定方法",
+      "content": "リクエスト単体テスト実行時にHTMLチェックを実施するか否かは、自動テスト用設定ファイルを変更することにより、設定可能である。\n\ncheckHtmlプロパティがtrueの場合、HTMLチェックを実施する。falseの場合、実施しない。\n\n```xml\n<component name=\"httpTestConfiguration\" class=\"nablarch.test.core.http.HttpTestConfiguration\">\n\n     (省略)\n\n     <property name=\"checkHtml\" value=\"true\" />\n\n     (省略)\n\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "HTMLチェック内容の変更",
+      "content": "リクエスト単体テスト実行時に実施するHTMLチェックの内容は、 nablarch.test.core.http.HttpTestConfiguration クラスの htmlChecker プロパティを\n変更することで変更できる。\n\n例えば <html> タグが必ず初めに始めるシンプルなHTMLチェックを行うクラスは下記のように実装する。\n\n```java\npublic class SimpleHtmlChecker implements HtmlChecker {\n\n    private String encoding;\n\n    @Override\n    public void checkHtml(File html) throws InvalidHtmlException {\n        StringBuilder sb = new StringBuilder();\n        InputStreamReader reader = null;\n\n        try {\n            reader = new InputStreamReader(new FileInputStream(html), encoding);\n\n            char[] buf = new char[1024];\n            int len = 0;\n            while ((len = reader.read(buf)) > 0) {\n                sb.append(buf, 0, len);\n            }\n        } catch (Exception e) {\n            throw new RuntimeException(e);\n        } finally {\n            FileUtil.closeQuietly(reader);\n        }\n\n        if (!sb.toString().trim().startsWith(\"<html>\")) {\n            throw new InvalidHtmlException(\"html not starts with <html>\");\n        }\n    }\n\n    public void setEncoding(String encoding) {\n        this.encoding = encoding;\n    }\n}\n```\n\n上記クラスを使用してHTMLチェックを行う場合、下記のように設定すればよい。\n\n```xml\n<component name=\"httpTestConfiguration\"\n    class=\"nablarch.test.core.http.HttpTestConfiguration\">\n        (省略)\n  <!-- HTMLチェッカの設定 -->\n  <property name=\"htmlChecker\" ref=\"htmlChecker\" />\n</component>\n\n<component name=\"htmlChecker\" class=\"nablarch.test.core.http.example.htmlcheck.SimpleHtmlChecker\">\n      <property name=\"encoding\" value=\"UTF-8\"/>\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "テスト実行時指摘確認方法",
+      "content": "リクエスト単体テスト実行時、自動生成されたHTMLファイルに指摘が存在した場合、該当するテストケースは失敗する。\n\n下記のようにJUnitコンソールに指摘箇所と指摘内容が出力される。\n\n![how-to-trace-html.png](assets/toolbox-03-HtmlCheckTool/how-to-trace-html.png)\n\n該当するHTMLの出力元となるJSPを修正し、テストを再実行する。",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s1": "HTMLチェックツールの目的:\n\n- 終了タグ忘れ等の構文不正により、想定している画面表示とは異なる画面がユーザーに表示されることを防ぐ。\n- プロジェクトの規約により禁止されているタグが使用されることを防ぐ。",
-    "s2": "リクエスト単体テストに標準で組み込まれており、リクエスト単体テスト実行時に本ツールも実行される。不正なHTMLを検出した場合、テスト失敗となる。\n\nチェック仕様:\n\n- デフォルトでは HTML4.01 に準拠して構文チェックを行う（設定変更でカスタマイズ可能）。\n- 開始タグ・終了タグの記述漏れをチェックする。HTML4.01 で省略可能と規定されているタグについても、省略を許可しない。\n- 設定ファイルに記載されたタグ・属性を使用していないかチェックを行う。デフォルトでは [W3C公式サイト](http://www.w3.org/TR/html401/) にて非推奨とされているタグ・属性が設定されている（カスタマイズ方法は [01_custom](#) を参照）。\n- 大文字・小文字の区別は行わない（例：`<tr>`, `<TR>`, `<Tr>`, `<tR>`）。\n- boolean属性は使用可能（例：`<textarea disabled>`）。\n- 属性指定におけるクォーテーション省略を許可しない（例：`<table align=\"center\">` は可、`<table align=center>` は不可）。\n\n> **注意**: HTMLに直接記述したJavaScriptに「-」が2つ以上連続で現れた場合は、テスト失敗となる。対応方法: JavaScriptをHTML(JSP)に直接記述せず、外部ファイル化して記述する。\n\n### HTML4.01との相違点\n\nボディが空のタグを許容する。\n\n```html\n<!-- 空のspanタグ -->\n<span id=\"foo\"></span>\n\n<!-- optionのないselectタグ -->\n<select id=\"bar\"></select>\n```",
-    "s3": "**クラス**: `nablarch.test.core.http.HttpTestConfiguration`\n\n### 前提条件\n\nリクエスト単体テストを実行可能であること。\n\n### 使用禁止タグ・属性のカスタマイズ方法\n\n`htmlCheckerConfig` プロパティに設定ファイルのパスを指定する（デフォルト設定をそのまま使用する場合は変更不要）。\n\n```xml\n<component name=\"httpTestConfiguration\" class=\"nablarch.test.core.http.HttpTestConfiguration\">\n    <property name=\"htmlCheckerConfig\" value=\"test/resources/httprequesttest/html-check-config.csv\" />\n</component>\n```\n\n設定ファイル形式: 1行にカンマ区切りでタグ名と属性名を記述する。\n\n```\nbody,bgcolor\ntable,align\ntd,nowrap\n```\n\n属性欄を省略するとタグ自体の使用を禁止する（カンマは省略不可）:\n\n```\nbody,\n```\n\n### HTMLチェック実行要否の設定\n\n`checkHtml` プロパティで制御する（`true`: HTMLチェックを実施、`false`: 実施しない）。\n\n```xml\n<component name=\"httpTestConfiguration\" class=\"nablarch.test.core.http.HttpTestConfiguration\">\n    <property name=\"checkHtml\" value=\"true\" />\n</component>\n```\n\n### HTMLチェック内容の変更\n\n`htmlChecker` プロパティに `HtmlChecker` インターフェース実装クラスを指定することでカスタマイズできる。`checkHtml(File html)` メソッドを実装し、無効なHTMLの場合は `InvalidHtmlException` をスローする。\n\n```xml\n<component name=\"httpTestConfiguration\" class=\"nablarch.test.core.http.HttpTestConfiguration\">\n    <property name=\"htmlChecker\" ref=\"htmlChecker\" />\n</component>\n\n<component name=\"htmlChecker\" class=\"nablarch.test.core.http.example.htmlcheck.SimpleHtmlChecker\">\n    <property name=\"encoding\" value=\"UTF-8\"/>\n</component>\n```\n\n### テスト実行時指摘確認方法\n\n指摘が存在した場合、該当テストケースが失敗する。JUnitコンソールに指摘箇所と内容が出力される。\n\n![JUnitコンソールの出力例](assets/toolbox-03-HtmlCheckTool/how-to-trace-html.png)"
-  }
+  ]
 }

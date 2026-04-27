@@ -1,29 +1,7 @@
 {
   "id": "readers-MessageReader",
   "title": "受信電文リーダ",
+  "content": "指定されたメッセージキューを監視し、受信した電文オブジェクトを返すデータリーダ。\n\nこのデータリーダのread()メソッドが呼ばれると、各リクエストスレッドにバインドされている\nメッセージングコンテキストを使用して監視対象キュー上の受信電文を監視し、受信電文オブジェクトを返す。\nキューが空であった場合は、電文を受信するか、このリーダに設定されたタイムアウト時間が経過するまでブロックする。\nタイムアウト、もしくはこのリーダが既に閉じられていた場合はnullを返す。\n\nこのデータリーダは通常のデータリーダとは異なり、明示的に `close()` メソッドを呼び出さない限り終端しない。\n(`hasNext()` の結果は常に `true` となる。)\n\n受信電文読み込み時にエラーが発生した場合は、エラー応答電文オブジェクトを実行時例外として送出する。\n\n**クラス名**\nnablarch.fw.messaging.reader.MessageReader\n**読み込むデータの型**\nnablarch.fw.messaging.ReceivedMessage\n\n**設定項目一覧**\n\n| 設定項目 | プロパティ名 | データ型 | 備考 |\n|---|---|---|---|\n| 受信キュー論理名 | receiveQueueName | String | 必須設定 |\n| 受信待機タイムアウト時間(ミリ秒) | readTimeout | long | 任意設定 (デフォルト値: 5000msec) 0以下の値を設定した場合は、メッセージを受信するまで 待機し続ける。 |\n| 受信メッセージのフォーマット 定義ファイル名 | formatFileName | String | 任意設定 (受信メッセージにデフォルトフォーマット を設定したい場合のみ使用) |\n| 受信メッセージのフォーマット 定義ファイルディレクトリ論理名 | formatFileDirName | String |  |\n\n**使用例**\n\n* データリーダファクトリ内でデータリーダを作成する例\n\n  ```java\n  long readTimeout = 15 * 1000; // 15sec\n  \n  DataReader<ReceivedMessage> reader = new MessageReader()\n                                      .setReceiveQueueName(\"LOCAL.RECEIVE\")\n                                      .setReadTimeout(readTimeout);\n  ```\n* DIリポジトリに登録して使用する例\n\n  ```xml\n  <component\n    class = \"nablarch.fw.messaging.reader.MessageReader\"\n    name  = \"dataReader\">\n    <property\n      name  = \"receiveQueueName\"\n      value = \"LOCAL.RECEIVE\"\n    />\n    <property\n      name  = \"readTimeout\"\n      value = \"${readTimeout}\"\n    />\n  </component>\n  ```",
   "no_knowledge_content": false,
-  "official_doc_urls": [],
-  "index": [
-    {
-      "id": "s1",
-      "title": "受信電文リーダ",
-      "hints": [
-        "MessageReader",
-        "nablarch.fw.messaging.reader.MessageReader",
-        "ReceivedMessage",
-        "nablarch.fw.messaging.ReceivedMessage",
-        "receiveQueueName",
-        "readTimeout",
-        "formatFileName",
-        "formatFileDirName",
-        "受信電文リーダ",
-        "メッセージキュー監視",
-        "受信電文",
-        "タイムアウト制御"
-      ]
-    }
-  ],
-  "sections": {
-    "s1": "**クラス名**: `nablarch.fw.messaging.reader.MessageReader`\n\n**読み込むデータの型**: `nablarch.fw.messaging.ReceivedMessage`\n\n指定されたメッセージキューを監視し、受信した電文オブジェクトを返すデータリーダ。`read()`メソッド呼び出し時、各リクエストスレッドにバインドされているメッセージングコンテキストを使用して受信電文を監視する。\n\n- キューが空の場合、電文受信またはタイムアウト時間経過までブロックする\n- タイムアウト、またはリーダが既に閉じられていた場合は`null`を返す\n- `hasNext()`は常に`true`（明示的に`close()`を呼び出さない限り終端しない）\n- 受信電文読み込み時にエラーが発生した場合、エラー応答電文オブジェクトを実行時例外として送出する\n\n| プロパティ名 | 型 | 必須 | デフォルト値 | 説明 |\n|---|---|---|---|---|\n| receiveQueueName | String | ○ | | 受信キュー論理名 |\n| readTimeout | long | | 5000 | 受信待機タイムアウト時間(ミリ秒)。0以下の値を設定した場合はメッセージを受信するまで待機し続ける |\n| formatFileName | String | | | 受信メッセージのフォーマット定義ファイル名（デフォルトフォーマットを設定したい場合のみ使用） |\n| formatFileDirName | String | | | 受信メッセージのフォーマット定義ファイルディレクトリ論理名（受信メッセージにデフォルトフォーマットを設定したい場合のみ使用） |\n\n**使用例（Java）**:\n```java\nlong readTimeout = 15 * 1000; // 15sec\n\nDataReader<ReceivedMessage> reader = new MessageReader()\n                                    .setReceiveQueueName(\"LOCAL.RECEIVE\")\n                                    .setReadTimeout(readTimeout);\n```\n\n**使用例（XML）**:\n```xml\n<component\n  class = \"nablarch.fw.messaging.reader.MessageReader\"\n  name  = \"dataReader\">\n  <property\n    name  = \"receiveQueueName\"\n    value = \"LOCAL.RECEIVE\"\n  />\n  <property\n    name  = \"readTimeout\"\n    value = \"${readTimeout}\"\n  />\n</component>\n```"
-  }
+  "sections": []
 }

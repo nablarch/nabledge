@@ -1,76 +1,249 @@
 # リクエスト単体テストの実施方法
 
-**公式ドキュメント**: [リクエスト単体テストの実施方法](https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/02_RequestUnitTest/index.html)
-
 ## テストクラスの書き方
 
-テストクラス作成ルール: (1) テスト対象Actionクラスと同一パッケージ (2) クラス名は `{Actionクラス名}RequestTest` (3) `nablarch.test.core.http.BasicHttpRequestTestTemplate` を継承（プロジェクト拡張実装がある場合を除く）
+テストクラスは以下の条件を満たすように作成する。
+
+* テストクラスのパッケージは、テスト対象のActionクラスと同じとする。
+* <Actionクラス名>RequestTestというクラス名でテストクラスを作成する。
+* nablarch.test.core.http.BasicHttpRequestTestTemplateを継承する。
+  (プロジェクト側で拡張したTemplate実装がある場合は、この限りではない)
+
+例えば、テスト対象のActionクラスが、nablarch.sample.management.user.UserSearchActionだとすると、
+テストクラスは以下のようになる。
 
 ```java
 package nablarch.sample.management.user;
+
+// ～中略～
+
 public class UserSearchActionRequestTest extends BasicHttpRequestTestTemplate {
 ```
 
-> **補足**: `BasicHttpRequestTestTemplate` はリクエスト単体テストに必要な各種メソッドと `DbAccessTestSupport` の機能を兼ね備えており、データベース設定もクラス単体テストと同様に実行できる。
-
-**クラス**: `BasicHttpRequestTestTemplate`
-
-`BasicHttpRequestTestTemplate`を継承する。テスト実行フロー:
-
-1. データシートからtestShots LIST_MAPを取得
-2. 取得したテストケース分、以下を繰り返し実行
-   1. データベース初期化
-   2. `ExecutionContext`、HTTPリクエストを生成
-   3. `beforeExecuteRequest`メソッド呼出（業務テストコード用拡張ポイント）
-   4. トークンが必要な場合、トークンを設定
-   5. テスト対象のリクエスト実行
-   6. 実行結果の検証（HTTPステータスコード/メッセージID、HTTPレスポンス値(リクエストスコープ値)、検索結果、テーブル更新結果）
-   7. `afterExecuteRequest`メソッド呼出（業務テストコード用拡張ポイント）
-
-抽象メソッド`getBaseUri()`をオーバーライドしてURIの共通部分を返却する:
-
-```java
-public class UserSearchActionRequestTest extends BasicHttpRequestTestTemplate {
-    @Override
-    protected String getBaseUri() {
-        return "/action/management/user/UserSearchAction/";
-    }
-}
-```
-
-## リクエスト単体テストクラス作成時の注意点
-
-### ThreadContextへの値設定は不要
-
-リクエスト単体テストでは、ThreadContextへの値設定はWeb Frameworkのハンドラで実施される。**テストクラスからThreadContextへの値を設定する必要はない。**
-
-### テストクラスでのトランザクション制御は不要
-
-リクエスト単体テストでは、トランザクション制御はハンドラで行われるため、**テストクラス内で明示的にトランザクションコミットを行う必要はない。**
-
-<details>
-<summary>keywords</summary>
-
-BasicHttpRequestTestTemplate, DbAccessTestSupport, リクエスト単体テスト, テストクラス命名規則, BasicHttpRequestTestTemplate継承, testShots, getBaseUri, リクエスト単体テスト実行フロー, beforeExecuteRequest, afterExecuteRequest, ExecutionContext, ThreadContext, トランザクション制御, ハンドラ, テストクラス設定不要
-
-</details>
+> **Tip:**
+> スーパクラスBasicHttpRequestTestTemplateは、リクエスト単体テストに必要な各種メソッドを用意している。
+> DbAccessTestSupportの機能も兼ね備えているので、データベースの設定などもクラス単体テストと
+> 同じように実行できる。
 
 ## テストメソッド分割
 
-テストメソッド分割ルール:
-1. リクエストID（Actionメソッド）ごとに正常系・異常系のテストメソッドを作成する
-2. 異常系ケースがない場合（メニューからの単純な画面遷移など）は正常系メソッドのみ作成する
-3. 画面表示検証項目は正常系または異常系のメソッドに含める。同一シートでの条件分岐が煩雑になる場合は画面表示検証用メソッドを別途作成する
+以下の手順により、作成するテストメソッドを決定する。
 
-分割例（USERS00101の場合）:
+* リクエストID毎（Actionのメソッド毎）に、テストケースを正常系と異常系に分類し、それぞれテストメソッドを作成する。
 
-| リクエストID | Actionメソッド名 | 正常系 | 異常系 | 画面表示検証用 |
+  * メニューからの単純な画面遷移のように異常系のケースが無い場合は、正常系のテストメソッドのみ作成する。
+* 画面表示検証項目については、正常系、異常系のいずれかのメソッドに含められるか検討する。
+
+  * 同一シートにでの条件分岐が煩雑になる場合は画面表示検証用のテストメソッドを別途作成する。
+  * そうでない場合は、画面検証用のメソッドは作成せず、正常系または異常系のテストメソッドに含める。
+
+**メソッド分割例 （正常系、異常系、画面表示検証用で分割した場合）**
+
+| リクエストID | Actionメソッド名 | テストデータシート名 |  |  |
 |---|---|---|---|---|
 | USERS00101 | doUsers00101 | testUsers00101Normal | testUsers00101Abnormal | testUsers00101View |
 
-> **補足**: 1つのテストデータシートにさまざまなテストケースを詰め込んで可読性が下がる場合は、テストデータシートを分割する。
+> **Tip:**
+> 上記のようにメソッドを分割するのは、テストデータシートが煩雑になり可読性が下がることを避ける為である。
+> 上記以外でも、１つのテストデータシートにさまざまなテストケースを詰め込むと可読性が下がる場合は、テストデータシートを分割する。
 
-準備したテストシートに対応するメソッドを作成する:
+## テストデータの書き方
+
+テストデータを記載したExcelファイルは、クラス単体テストと同様に
+テストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。
+
+テストデータの記述方法詳細については、 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#how-to-write-excel) を参照。
+
+### テストクラスで共通のデータベース初期値
+
+テストデータを記載したExcelファイルに、 **setUpDb** という名前でシートを用意し、
+そこに共通のデータベース初期値を投入する。ここに記載されたデータは、
+自動テストフレームワークによりテストメソッド実行時に投入される。
+
+![setupdb.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/setupdb.png)
+
+### テストケース一覧
+
+LIST_MAPのデータタイプで１テストメソッド分のケース表を記載する。IDは、 **testShots** とする。
+
+![testShots.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/testShots.png)
+
+１ケース毎に以下の要素を持たせる。
+
+| カラム名 | 説明 | 必須 |
+|---|---|---|
+| no | テストケース番号を1からの連番で記載する。 | 必須 |
+| description | そのテストケースの説明を記載する。 ウェブアプリケーションのリクエスト単体テストで出力されるHTMLダンプファイルのファイル名 に使用される。  [1] | 必須 |
+| context | そのテストケースでリクエストを送る際のユーザ情報を記載する。 詳細は、 [ユーザ情報](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#request-test-user-info) を参照。 | 必須 |
+| cookie | そのテストケースで必要となるCookie情報を記載する。 詳細は、 [Cookie情報](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#request-test-cookie-info) を参照。 |  |
+| queryParams | そのテストケースで必要となるクエリパラメータ情報を記載する。 詳細は、 [クエリパラメータ情報](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#request-test-queryparams-info) を参照。 |  |
+| isValidToken | トークンを設定する場合にはtrueを設定する。トークンの詳細については、  [サーバ側の二重サブミット防止](../../component/libraries/libraries-tag.md#tag-double-submission-server-side) を参照。 |  |
+| setUpTable | 各テストケース実行前にデータベースに登録する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する。データの投入は自動テストフレームワークに より行われる。 |  |
+| expectedStatusCode | 期待するHTTPステータスコードを記載する。 | 必須 |
+| expectedMessageId | メッセージが出力されること期待する場合は、その **メッセージID** を記載する。 複数のメッセージが出力される場合はカンマ区切りで列挙する。メッセージを 期待しない場合は空欄とする。空欄にしたが、実際にはメッセージが出力され た場合は、テスト失敗となる。 |  |
+| expectedSearch | データベース検索結果がリクエストスコープに設定されることを期待する場合 、 **期待する検索結果** を記載する。検索結果は、同じシート内のLIST_MAPデータ タイプのIDで指定する。リクエストスコープから取得する際のキーは **searchResult** である。 |  |
+| expectedTable | データベースの内容を比較する場合、期待するテーブルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する。 |  |
+| forwardUri | 期待するフォワード先URIを記載する。Actionクラスで指定したフォワード先JSPへの URIを記載する。空欄の場合はJSPへのフォワードが行われないものとしてアサートされる。 システムエラー画面や認証エラー画面へ遷移することを想定するテストケースでは、 その画面を描画するJSPへのURIを記載する。例えば、システムエラー画面に遷移する場合は、  /jsp/systemError.jsp が期待するフォワード先URIとなる（デフォルト値の場合）。 |  |
+| expectedContentLength | コンテンツレングス・ヘッダの期待値を記載する。 ファイルダウンロードをテストする場合にこのカラムに指定する。 |  |
+| expectedContentType | コンテンツタイプ・ヘッダの期待値を記載する。 ファイルダウンロードをテストする場合にこのカラムに指定する。 |  |
+| expectedContentFileName | コンテンツディスポジション・ヘッダに指定したファイル名の期待値を記載する。 ファイルダウンロードをテストする場合にこのカラムを指定する。 |  |
+| expectedMessage | メッセージ同期送信処理を行う場合、期待する要求電文の [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する。メッセージの作成は自動テストフレームワークにより行われる。 |  |
+| responseMessage | メッセージ同期送信処理を行う場合、返却する応答電文の [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する。メッセージの作成は自動テストフレームワークにより行われる。 |  |
+| expectedMessageByClient | HTTPメッセージ同期送信処理を行う場合、期待する要求電文の [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する。 メッセージの作成は自動テストフレームワークにより行われる。 |  |
+| responseMessageByClient | HTTPメッセージ同期送信処理を行う場合、返却する応答電文の [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する。 メッセージの作成は自動テストフレームワークにより行われる。 |  |
+
+そのテストケースにて送信するHTTP リクエストパラメータ ついては、この表ではなく別の表に記載する（ [後述](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#request-test-req-params) ）。
+
+descriptionの内容はファイル名に使用するため、OSで規定されたファイル名に使用可能な文字以外の文字の使用や、ファイル名の長さ上限を超過した場合に、
+IOExceptionが発生するため、ファイル名として許可された内容を入力すること。
+例えば、descriptionに改行コードが含まれていた場合、ファイル名として不正であるためテスト実行時にエラーが発生する。
+
+### ユーザ情報
+
+そのテストケースでリクエストを送る際の、リクエストID、ユーザ、HTTPメソッドを、LIST_MAPのデータタイプで記載する。
+複数のユーザ情報を使い分けることで、ユーザの権限や使用するHTTPメソッドによって処理が異なる機能をテストできる。
+
+HTTPメソッド情報は任意項目である。省略した場合はPOSTが設定される。
+
+例えば、権限によって参照可能なデータが異なる場合は、以下のようにユーザ情報を使い分ける。
+
+![testcase-user.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/testcase-user.png)
+
+別の例として、同じリクエストIDで複数のHTTPメソッドを受け入れる場合は、以下のようにユーザ情報を使い分ける。
+
+![testcase-user2.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/testcase-user2.png)
+
+### Cookie情報
+
+そのテストケースで必要となるCookie情報をLIST_MAPのデータタイプで記載する。
+これにより、ケースごとに異なるCookie情報を送信してテストを行うことが可能となる。
+
+Cookie情報は、任意項目のためCookieを必要としないケースの場合には、記載不要である。
+
+例えば、ケースよってCookieの値を変更する必要がある場合には、以下のようにCookie情報を設定する。
+Cookieを必要としないケースの場合には、以下例の8ケース目のように値を記載せずに空白としておくこと。
+
+![requestCookie.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/requestCookie.png)
+
+### クエリパラメータ情報
+
+そのテストケースで必要となるクエリパラメータ情報をLIST_MAPのデータタイプで記載する。
+これにより、ケースごとに異なるクエリパラメータ情報を送信してテストを行うことが可能となる。
+
+クエリパラメータ情報は、任意項目のためクエリパラメータを必要としないケースの場合には、記載不要である。
+
+例えば、ケースよってクエリパラメータの値を変更する必要がある場合には、以下のようにクエリパラメータ情報を設定する。
+クエリパラメータを必要としないケースの場合には、以下例の3ケース目のように値を記載せずに空白としておくこと。
+
+![queryParams.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/queryParams.png)
+
+### リクエストパラメータ
+
+各テストケースで送信するHTTPパラメータを、LIST_MAPのデータタイプで記載する。
+
+[リクエスト単体データ作成ツール](../../development-tools/testing-framework/testing-framework-01-HttpDumpTool.md#http-dump-tool) を使用して、リクエストパラメータのデータを作成する。
+初期画面表示のリクエスト（例えばメニュー画面からの遷移）以外は、このツールを用いてリクエストパラメータのデータを作成する。
+
+LIST_MAPのデータタイプでHTTPリクエストパラメータを記載する。IDは、 **requestParams** とする。
+このデータと、 [テストケース一覧](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#request-test-testcases) とは、行単位で関連付けられる。
+例えば、テストケース一覧の先頭のテストケースでは、リクエストパラメータ表の先頭のデータが使用される（以下同様）。
+
+テストケースとのひもづけを分かりやすくするため [マーカーカラム](../../development-tools/testing-framework/testing-framework-01-Abstract.md#marker-column) としてテストケース番号を記載すること。
+
+![testcase_and_request.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/testcase_and_request.png)
+
+> **Tip:**
+> リクエストパラメータは必ず記載する必要がある。
+
+> 例えば初期画面表示のリクエストなど、リクエストパラメータが存在しない場合でも LIST_MAP=requestParams には必ず列を定義する必要がある。
+
+> リクエストパラメータが不要な場合は、下記のようにテストケース番号の列のみを記載する。
+> データはテストケース数分定義する。（3ケースであれば3行、10ケースであれば10行用意する）
+
+> ※[no]列は、テストケース番号を視覚的に表すもの( [マーカーカラム](../../development-tools/testing-framework/testing-framework-01-Abstract.md#marker-column) )なので、リクエストパラメータには含まれない。
+
+> ![dummy_request_param.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/dummy_request_param.png)
+
+#### ひとつのキーに対して複数の値を設定する場合
+
+HTTPリクエストパラメータは、ひとつのキーに対して複数の値を設定できる。
+リクエスト単体テストでは、 **値をカンマ区切りで記述することにより、複数の値を表現** できる。
+
+以下の例では、fooというキーに対して、oneとtwoという複数の値を設定している。
+
+| foo | bar |
+|---|---|
+| one,two | three |
+
+値にカンマそのものを含める場合には、 \ マークでエスケープする。
+値に\マークそのものを含める場合には、\マーク自身をエスケープし、 \\ と記述する。
+
+例えば、 \1,000 という値を表すには以下のように記述する。
+
+| foo | bar |
+|---|---|
+| \\\\1\\,000 | three |
+
+### 各種期待値
+
+検索結果、データベースを期待値と比較する場合は、
+それぞれのデータとテストケース一覧とをIDで紐付けする。
+
+#### 期待する検索結果
+
+期待する検索結果を、テストケース一覧とリンクさせる。
+
+![expected_search_result.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/expected_search_result.png)
+
+#### 期待するデータベースの状態
+
+更新系のテストケースでは、期待するデータベースの状態を確認する為、
+期待するデータベースの状態をテストケース一覧とリンクさせる。
+
+![expected_table.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/expected_table.png)
+
+## テストメソッドの書き方
+
+### スーパクラスについて
+
+BasicHttpRequestTestTemplateクラスを継承する。
+このクラスでは、準備したテストデータを元に以下の手順でリクエスト単体テストを実行する。
+
+* データシートからテストケースリスト(testShots LIST_MAP）を取得
+* 取得したテストケース分、以下を繰り返し実行
+
+  * データベース初期化
+  * ExecutionContext、HTTPリクエストを生成
+  * 業務テストコード用拡張ポイント呼出(beforeExecuteRequestメソッド）
+  * トークンが必要な場合、トークンを設定
+  * テスト対象のリクエスト実行
+  * 実行結果の検証
+
+  * HTTPステータスコード および メッセージID
+  * HTTPレスポンス値(リクエストスコープ値)
+  * 検索結果
+  * テーブル更新結果
+
+  * 業務テストコード用拡張ポイント呼出(afterExecuteRequestメソッド）
+
+以下のメソッドが、スーパクラスで抽象メソッドとして定義されているのでオーバーライドする。
+
+```java
+public class UserSearchActionRequestTest extends BasicHttpRequestTestTemplate {
+
+   /**
+    * {@inheritDoc}
+    * 【説明】 URIの共通部分を返却する。
+    */
+   @Override
+   protected String getBaseUri() {
+       return "/action/management/user/UserSearchAction/";
+   }
+```
+
+### テストメソッド作成
+
+準備したテストシートに対応するメソッドを作成する。
 
 ```java
 @Test
@@ -78,26 +251,14 @@ public void testMenus00101() {
 }
 ```
 
-<details>
-<summary>keywords</summary>
+### スーパクラスのメソッド呼び出し
 
-テストメソッド分割, 正常系テスト, 異常系テスト, 画面表示検証, テストデータシート分割, テストメソッド作成, @Test
+テストメソッド内で、スーパクラスの以下のいずれかのメソッドを呼び出す。
 
-</details>
+* void execute()
+* void execute(Advice advice)
 
-## テストデータの書き方
-
-テストデータを記載したExcelファイルはテストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。
-
-### setUpDb（共通DB初期値）
-
-Excelファイルに `setUpDb` という名前のシートを用意し、テストクラスで共通のデータベース初期値を記載する。テストメソッド実行時に自動テストフレームワークにより投入される。
-
-![setUpDbシート](../../../knowledge/development-tools/testing-framework/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/setupdb.png)
-
-テストメソッド内でスーパクラスの以下のいずれかのメソッドを呼び出す:
-- `void execute()` — 通常の場合に使用
-- `void execute(Advice advice)` — 固有の処理が必要な場合
+通常の場合、execute()を使用する。
 
 ```java
 @Test
@@ -106,135 +267,239 @@ public void testUsers00101Normal() {
 }
 ```
 
-固有の処理（リクエストスコープのエンティティ内容確認等）が必要な場合は`execute(Advice advice)`を使用してリクエスト送信前後に処理を挿し込む。
+#### 固有の処理を追加する場合
 
-**クラス**: `BasicAdvice`
-- `void beforeExecute(TestCaseInfo testCaseInfo, ExecutionContext context)` — リクエスト送信前にコールバック
-- `void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context)` — リクエスト送信後にコールバック
+スーパクラスでは、どんなテストケースでも必要となる処理を定型化しているが、
+テストケースによっては固有の処理が必要な場合がある。
+(例えば、リクエストスコープにエンティティが格納されており、その内容を確認したい場合等)。
 
-> **補足**: 両方のオーバーライドは不要。必要なものだけオーバーライドすること。処理が長くなる場合やテストメソッド間で共通する処理はプライベートメソッドに切り出すこと。
+シート固有の準備処理、結果確認処理が必要な場合は、
+execute(Advice advice)を使用して、リクエスト送信前後に処理を挿し込むことができる。
+BasicAdviceクラスには以下のメソッドが用意されており、それぞれリクエスト送信前、送信後にコールバックされる。
 
-### SqlResultSetが複数種類格納されている場合
+* void beforeExecute(TestCaseInfo testCaseInfo, ExecutionContext context)
+* void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context)
+
+> **Tip:**
+> これらのメソッド両方をオーバーライドする必要はない。必要なものだけをオーバーライドする。
+> また、これらのメソッド内に全ての処理を記述する必要はない。記述が長くなったり、
+> テストメソッド間で共通する処理がある場合は、プライベートメソッドに切り出すこと。
+
+```java
+@Test
+public void testMenus00102Normal() {
+    execute(new BasicAdvice() {
+        // 【説明】本メソッドはリクエスト送信前に呼び出される。
+        @Override
+        public void beforeExecute(TestCaseInfo testCaseInfo,
+                ExecutionContext context) {
+            // 【説明】ここに準備処理を記述する。
+        }
+
+        // 【説明】本メソッドはリクエスト送信後に呼び出される。
+        @Override
+        public void afterExecute(TestCaseInfo testCaseInfo,
+                ExecutionContext context) {
+            // 【説明】ここに結果確認処理を記述する。
+        }
+    });
+}
+```
+
+##### リクエストスコープに複数種類の検索結果が格納されている場合の例
+
+以下の例では、リクエストスコープに「ユーザグループ」と「ユースケース」の2種類の検索結果が含まれており、
+それぞれの検索結果が期待通りであることを検証している。
 
 ```java
 @Test
 public void testMenus00103() {
     execute(new BasicAdvice() {
         @Override
-        public void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {
-            String message = testCaseInfo.getTestCaseName();
-            String sheetName = testCaseInfo.getSheetName();
-            String no = testCaseInfo.getTestCaseNo();
+        public void afterExecute(TestCaseInfo testCaseInfo,
+                ExecutionContext context) {
 
-            SqlResultSet actualGroup = (SqlResultSet) context.getRequestScopedVar("allGroup");
+            String messgae = testCaseInfo.getTestCaseName();   // 【説明】比較失敗時のメッセージ
+            String sheetName = testCaseInfo.getSheetName();    // 【説明】シート名
+            String no = testCaseInfo.getTestCaseNo();          // 【説明】テストケース番号
+
+            // グループ検索結果の検証
+            SqlResultSet actualGroup =(SqlResultSet) context.getRequestScopedVar("allGroup");
             assertSqlResultSetEquals(message, sheetName, "expectedUgroup" + no, actualGroup);
 
-            SqlResultSet actualUseCase = (SqlResultSet) context.getRequestScopedVar("allUseCase");
+            // ユースケース検索結果の検証
+            SqlResultSet actualUseCase =(SqlResultSet) context.getRequestScopedVar("allUseCase");
             assertSqlResultSetEquals(message, sheetName, "expectedUseCase" + no, actualUseCase);
         }
     });
 }
 ```
 
-### Formやエンティティがリクエストスコープにあるとき（assertEntity）
+##### リクエストスコープに検索結果(SqlResultSet)ではなくFormやエンティティが格納されている場合の例
+
+以下の例では、リクエストスコープにエンティティが格納されており、
+それぞれの検索結果が期待通りであることを検証している。
 
 ```java
-String expectedSystemAccountId = "systemAccount" + testCaseInfo.getTestCaseNo();
-Object actualSystemAccount = context.getRequestScopedVar("systemAccount");
-assertEntity(sheetName, expectedSystemAccountId, actualSystemAccount);
+@Test
+public void testUsers00302Normal() {
+    execute(new BasicAdvice() {
+        @Override
+        public void afterExecute(TestCaseInfo testCaseInfo,
+                ExecutionContext context) {
+            String sheetName = testCaseInfo.getSheetName();
+            // システムアカウントを比較
+            // 【説明】期待値のID（接頭辞"systemAccount" + ケース番号）
+            String expectedSystemAccountId = "systemAccount" + testCaseInfo.getTestCaseNo();
+            // 【説明】実際の値をリクエストスコープから取り出す
+            Object actualSystemAccount = context.getRequestScopedVar("systemAccount");
+            // 【説明】エンティティを比較するメソッドを呼び出す。
+            assertEntity(sheetName, expectedSystemAccountId, actualSystemAccount);
+
+            // ユーザを比較
+            String expectedUsersId = "users" + testCaseInfo.getTestCaseNo();
+            Object actualUsers = context.getRequestScopedVar("users");
+            assertEntity(sheetName, expectedUsersId, actualUsers);
+        }
+    });
+}
 ```
 
-期待値はエンティティのクラス単体テスト（:ref:`entityUnitTest_SetterGetterCase`）と同様の書式で記述する（setterの欄は不要）。
+期待値は、エンティティのクラス単体テスト（ [setter、getterに対するテストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-settergettercase) ）と同様の書式で記述する。
+ただし、この場合はsetterの欄は不要である。
 
-![エンティティ比較の期待値定義例](../../../knowledge/development-tools/testing-framework/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/assert_entity.png)
+![assert_entity.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/assert_entity.png)
 
-> **補足**: FormのプロパティにFormが格納されている場合は、そのFormを取得してEntityと同様にテストできる。以下に例を示す。
->
+> **Tip:**
+> リクエストスコープにFormが格納されている場合、別のFormを設定したプロパティでなければEntityの場合と同様にテストが出来る。
+
+> 別のFormを設定したプロパティの場合、そのFormを取得してEntityと同様にテストをすればよい。以下に例を示す。
+
 > ```java
-> // Formをリクエストスコープから取り出す
-> Object actualForm = context.getRequestScopedVar("form");
-> // Formのプロパティである別のFormを取得
-> Object actualSystemAccount = actualForm.getSystemAccount();
-> // エンティティを比較するメソッドを呼び出す
-> assertEntity(sheetName, expectedSystemAccountId, actualSystemAccount);
+> @Test
+> public void testSampleNormal() {
+>     execute(new BasicAdvice() {
+>         @Override
+>         public void afterExecute(TestCaseInfo testCaseInfo,
+>                 ExecutionContext context) {
+>             String sheetName = testCaseInfo.getSheetName();
+>             // システムアカウントを比較
+>             // 【説明】期待値のID（接頭辞"systemAccount" + ケース番号）
+>             String expectedSystemAccountId = "systemAccount" + testCaseInfo.getTestCaseNo();
+>             // 【説明】Formをリクエストスコープから取り出す
+>             Object actualForm = context.getRequestScopedVar("form");
+>             // 【説明】Formのプロパティである別のFormを取得
+>             Object actualSystemAccount = actualForm.getSystemAccount();
+>             // 【説明】エンティティを比較するメソッドを呼び出す。
+>             assertEntity(sheetName, expectedSystemAccountId, actualSystemAccount);
+>         }
+>     });
+> }
 > ```
 
-### SqlRowが格納されている場合（assertSqlRowEquals）
+##### リクエストスコープにSqlResultSetではなくSqlRowが格納されている場合の例
+
+以下の例では、リクエストスコープに、検索結果一覧(SqlResultSet)ではなく、
+検索結果1件分(SqlRow)がリクエストスコープに格納されており、
+その検索結果が期待通りであることを検証している。
 
 ```java
-SqlRow actual = (SqlRow) context.getRequestScopedVar("user");
-assertSqlRowEquals(message, sheetName, "expectedUser" + no, actual);
+@Test
+public void testUsers00302Normal() {
+    execute(new BasicAdvice() {
+        @Override
+        public void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {
+            String message = testCaseInfo.getTestCaseName();   // 【説明】比較失敗時のメッセージ
+            String sheetName = testCaseInfo.getSheetName();    // 【説明】シート名
+            String no = testCaseInfo.getTestCaseNo();          // 【説明】テストケース番号
+
+            // グループ検索結果の検証
+            SqlRow actual =(SqlRow) context.getRequestScopedVar("user");
+            // 【説明】SqlRowを比較するメソッドを呼び出す。
+            assertSqlRowEquals(message, sheetName, "expectedUser" + no, actual);
+        }
+    });
+}
 ```
 
-### リクエストパラメータを検証する場合
+##### リクエストパラメータの値を検証したい場合
 
-:ref:`ウィンドウスコープ<tag-window_scope>`のリセットのためリクエストパラメータを書き換える場合など、テスト対象実行後のリクエストパラメータを検証する:
+[ウィンドウスコープ](../../component/libraries/libraries-tag.md#tag-window-scope) の値をリセットするために、
+テスト対象機能にてリクエストパラメータを書き換える場合がある。
+
+以下の例では、テスト対象実行後のリクエストパラメータが期待通りであることを検証している。
 
 ```java
-HttpRequest request = testCaseInfo.getHttpRequest();
-assertEquals("", getParam(request, "resetparameter"));
+@Test
+public void testUsers00302Normal() {
+    execute(new BasicAdvice() {
+        @Override
+        public void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {
+
+            HttpRequest request = testCaseInfo.getHttpRequest();   // 【説明】テスト実行後のHttpRequest
+            // リクエストパラメータがリセットされていること
+            assertEquals("", getParam(request, "resetparameter"));
+        }
+    });
+}
 ```
 
-### その他（SqlResultSet/SqlRow以外のオブジェクト）
+##### その他の場合
 
-Excelからデータを取得して検証する手順: (1) テストデータをExcelファイルから取得 (2) リクエストスコープ等から実際の値を取得 (3) 自動テストフレームワークまたはJUnitのAPIで結果を検証。
+前述のように、SqlResultSetやSqlRow等のよく使用されるオブジェクトについては、
+Excelに記載した期待値と直接比較するメソッドが用意されているが、
+そうでない場合については、期待値を読み込む処理を記述する必要がある。
+
+具体的には、以下の手順で検証する。
+
+* テストデータをExcelファイルから取得
+* リクエストスコープ等から実際の値を取得
+* 自動テストフレームワークまたはJUnitのAPIを用いて結果を検証する。
 
 ```java
-List<Map<String, String>> expected = getListMap("doRW25AA0303NormalEnd", "result_1");
-List<Map<String, String>> actual = context.getRequestScopedVar("pageData");
-assertListMapEquals(expected, actual);
+@Test
+public void testUsers00303Normal() {
+    execute(new BasicAdvice() {
+        @Override
+        public void afterExecute(TestCaseInfo testCaseInfo, ExecutionContext context) {
+            // 【説明】期待値をExcelファイルから取得
+            List<Map<String, String>> expected = getListMap("doRW25AA0303NormalEnd", "result_1");
+            // 【説明】テスト実行後のリクエストスコープから実際の値を取得
+            List<Map<String, String>> actual = context.getRequestScopedVar("pageData");
+            // 【説明】結果検証
+            assertListMapEquals(expected, actual);
+        }
+    });
+}
 ```
 
-テストデータの取得方法は[how_to_get_data_from_excel](testing-framework-03_Tips.md)を参照。
+> **Tip:**
+> テストデータの取得方法については、以下のリンク先を参照。
+> * >   「 [Excelファイルから、入力パラメータや戻り値に対する期待値などを取得したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#how-to-get-data-from-excel) 」
 
-<details>
-<summary>keywords</summary>
+### ダウンロードファイルのテスト
 
-テストデータシート, setUpDb, 共通DB初期値, テストクラス共通データベース初期値, Excelファイル, execute, BasicAdvice, beforeExecute, afterExecute, TestCaseInfo, ExecutionContext, assertSqlResultSetEquals, assertEntity, assertSqlRowEquals, HttpRequest, getHttpRequest, getParam, getListMap, assertListMapEquals, SqlResultSet, SqlRow, リクエストスコープ検証, 固有処理
+ダウンロードファイルをテストする場合は、
+[リクエスト単体テストの実施方法(バッチ)](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#batch-request-test) と同じ方法でファイルの期待値をExcelファイルに記載してテストする。
+以下にCSVファイルをダウンロードする場合のテスト例を示す。
 
-</details>
+**期待するファイルの定義例**
 
-## テストケース一覧（testShots）
+ファイルパスにはダンプファイルを指定する。
+ダウンロード処理の場合は、ダウンロードされたファイルがダンプされ、
+下記の命名規則でダンプファイルが出力される。
+ダンプ出力結果が格納されるディレクトリの詳細は、 [HTMLダンプ出力結果](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#html-dump-dir) を参照すること。
 
-LIST_MAPのデータタイプで1テストメソッド分のケース表を記載する。IDは `testShots`。
+```bash
+ダンプファイルの命名規則：
+  Excelファイルのシート名＋"_"＋テストケース名＋"_"＋ダウンロードされたファイル名
+```
 
-![testShotsテーブル](../../../knowledge/development-tools/testing-framework/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/testShots.png)
+![expected_download_csv.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/expected_download_csv.png)
 
-| カラム名 | 説明 | 必須 |
-|---|---|---|
-| no | テストケース番号（1からの連番） | ○ |
-| description | テストケースの説明。HTMLダンプファイルのファイル名に使用（OSで許可された文字のみ可。改行コードを含むとIOException発生） | ○ |
-| context | リクエスト送信時のユーザ情報（詳細はユーザ情報セクション参照） | ○ |
-| cookie | Cookie情報（詳細はCookie情報セクション参照） | |
-| queryParams | クエリパラメータ情報（詳細はクエリパラメータ情報セクション参照） | |
-| isValidToken | トークンを設定する場合はtrueを設定。サーバ側の二重サブミット防止参照 | |
-| setUpTable | 各テストケース実行前にDBに登録するデータの :ref:`グループID<tips_groupId>` | |
-| expectedStatusCode | 期待するHTTPステータスコード | ○ |
-| expectedMessageId | 期待するメッセージID（複数はカンマ区切り）。空欄の場合はメッセージなしとしてアサート。空欄なのにメッセージが出力された場合はテスト失敗 | |
-| expectedSearch | 期待する検索結果のLIST_MAP ID。リクエストスコープからの取得キーは `searchResult` | |
-| expectedTable | 期待するDB状態の :ref:`グループID<tips_groupId>` | |
-| forwardUri | 期待するフォワード先URI。空欄の場合はJSPフォワードなしとしてアサート。システムエラー画面（`/jsp/systemError.jsp`）などへの遷移もここで指定 | |
-| expectedContentLength | コンテンツレングスヘッダの期待値（ファイルダウンロード用） | |
-| expectedContentType | コンテンツタイプヘッダの期待値（ファイルダウンロード用） | |
-| expectedContentFileName | コンテンツディスポジションヘッダのファイル名期待値（ファイルダウンロード用） | |
-| expectedMessage | メッセージ同期送信の期待する要求電文 :ref:`グループID<tips_groupId>` | |
-| responseMessage | メッセージ同期送信で返却する応答電文 :ref:`グループID<tips_groupId>` | |
-| expectedMessageByClient | HTTPメッセージ同期送信の期待する要求電文 :ref:`グループID<tips_groupId>` | |
-| responseMessageByClient | HTTPメッセージ同期送信で返却する応答電文 :ref:`グループID<tips_groupId>` | |
+**テストメソッドの実装例**
 
-HTTP `リクエストパラメータ` はこの表ではなく別の表（`requestParams`）に記載する。
-
-:ref:`batch_request_test`と同じ方法でExcelファイルに期待値を記載してテストする。ファイルパスにはダンプファイルを指定する。
-
-ダウンロード処理の場合のダンプファイル命名規則: `Excelファイルのシート名_テストケース名_ダウンロードされたファイル名`
-
-ダンプ出力結果が格納されるディレクトリの詳細は[html_dump_dir](#)を参照。
-
-期待値定義例:
-
-![ダウンロードCSVの期待値定義例](../../../knowledge/development-tools/testing-framework/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/expected_download_csv.png)
-
-`FileSupport`クラスの`assertFile`メソッドを使用してダウンロードファイルをアサートする:
+FileSupportクラスのassertFileメソッドを使用してダウンロードファイルのアサートを行う。
 
 ```java
 private FileSupport fileSupport = new FileSupport(getClass());
@@ -251,107 +516,47 @@ public void testRW11AC0104Download() {
 }
 ```
 
-<details>
-<summary>keywords</summary>
-
-testShots, LIST_MAP, no, description, context, cookie, queryParams, isValidToken, setUpTable, expectedStatusCode, expectedMessageId, expectedSearch, expectedTable, forwardUri, expectedContentLength, expectedContentType, expectedContentFileName, expectedMessage, responseMessage, expectedMessageByClient, responseMessageByClient, FileSupport, assertFile, ダウンロードファイルテスト, batch_request_test, html_dump_dir, ダンプファイル命名規則
-
-</details>
-
-## ユーザ情報・Cookie情報・クエリパラメータ情報
-
-### ユーザ情報（context）
-
-リクエストID・ユーザ・HTTPメソッドをLIST_MAPのデータタイプで記載する。HTTPメソッドは任意項目（省略時はPOSTが設定される）。複数のユーザ情報を使い分けることで、権限やHTTPメソッドによって処理が異なる機能をテストできる。
-
-### Cookie情報（cookie）
-
-LIST_MAPのデータタイプで記載する。任意項目のためCookieを必要としないケースは記載不要。Cookieが不要なケースの場合は値を空白にする。
-
-### クエリパラメータ情報（queryParams）
-
-LIST_MAPのデータタイプで記載する。任意項目のためクエリパラメータを必要としないケースは記載不要。クエリパラメータが不要なケースの場合は値を空白にする。
+## テスト起動方法
 
 クラス単体テストと同様。通常のJUnitテストと同じように実行する。
 
-<details>
-<summary>keywords</summary>
+## テスト結果確認（目視）
 
-context, ユーザ情報, Cookie情報, クエリパラメータ情報, HTTPメソッド, リクエストID, LIST_MAP, JUnit, テスト起動方法, リクエスト単体テスト実行
+１リクエスト毎にHTMLダンプファイルが出力される。ファイルをブラウザで開き、目視確認する。
 
-</details>
+> **Tip:**
+> リクエスト単体テストで生成されたHTMLファイルは自動テストフレームワークにて自動的にチェックされる。
+> 自動テストフレームワークは、 [HTMLチェックツール](../../development-tools/testing-framework/testing-framework-guide-development-guide-08-TestTools-03-HtmlCheckTool.md) を用いて生成されたHTMLファイルをチェックする。
+> HTMLファイル内に構文エラー等の違反があった場合は、その違反内容に応じた例外が発生し、そのテストケースは失敗となる。
 
-## リクエストパラメータ
+### HTMLダンプ出力結果
 
-各テストケースで送信するHTTPパラメータをLIST_MAPのデータタイプで記載する。IDは `requestParams`。
+テストを実行すると、テスト用プロジェクトのルートディレクトリにtmp/html_dumpディレクトリが作成され、
+その配下にHTMLダンプファイルが出力される。
+HTMLダンプ出力結果が格納されるディレクトリの詳細は、 [HTMLダンプ出力ディレクトリ](../../development-tools/testing-framework/testing-framework-02-RequestUnitTest.md#dump-dir-label) の項を参照すること。
 
-:ref:`http_dump_tool` を使用してデータを作成する（初期画面表示リクエストを除く）。テストケース一覧（testShots）と行単位で関連付けられる（先頭ケース→先頭データ）。:ref:`marker_column` としてテストケース番号を記載すること。
+![htmlDumpDir.png](../../../knowledge/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/htmlDumpDir.png)
 
-> **補足**: リクエストパラメータが存在しない場合（初期画面表示など）でも `LIST_MAP=requestParams` には必ず列を定義すること。パラメータが不要な場合はテストケース番号列のみ記載し、テストケース数分の行を用意する（3ケースなら3行、10ケースなら10行）。
-> 
-> ※ `[no]` 列はテストケース番号を視覚的に表すマーカー列（:ref:`marker_column`）であるため、リクエストパラメータには含まれない。
+> **Tip:**
+> HTMLダンプファイル名には、 テストケース一覧 のテストケース説明（testShotsのdescription欄）
+> の記述が使用される。
 
-1リクエスト毎にHTMLダンプファイルが出力される。ファイルをブラウザで開き目視確認する。
+## リクエスト単体テストクラス作成時の注意点
 
-> **補足**: リクエスト単体テストで生成されたHTMLファイルは自動テストフレームワークにて自動的にチェックされる。[../../08_TestTools/03_HtmlCheckTool/index](testing-framework-guide-development-guide-08-TestTools-03-HtmlCheckTool.md)を用いてHTMLファイルをチェックし、HTMLファイル内に構文エラー等の違反があった場合は違反内容に応じた例外が発生してそのテストケースは失敗となる。
+リクエスト単体テストでは、Web Frameworkのハンドラを経由して呼び出される点がクラス単体テストと異なる。
+この違いにより注意すべき点があるので、以下に記載する。
 
-<details>
-<summary>keywords</summary>
+### ThreadContextへの値設定は不要
 
-requestParams, リクエストパラメータ, LIST_MAP, http_dump_tool, マーカー列, marker_column, HTMLダンプ, HTMLCheckTool, テスト結果確認
+リクエスト単体テストでは、Web Frameworkのハンドラが作用する為、
+ThreadContextへの値設定はハンドラで実施される。
+よって、 **テストクラスからThreadContextへの値を設定する必要はない。**
 
-</details>
+リクエスト単体テストでのユーザID設定方法については、前述の [ユーザ情報](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#request-test-user-info) を参照。
 
-## ひとつのキーに対して複数の値を設定する場合
+### テストクラスでのトランザクション制御は不要
 
-HTTPリクエストパラメータで1つのキーに複数の値を設定する場合は、**値をカンマ区切りで記述する**。
-
-例: `foo` キーに `one` と `two` を設定:
-
-| foo | bar |
-|---|---|
-| one,two | three |
-
-- 値にカンマ自体を含める場合は `\` でエスケープする（例: `\,`）
-- 値に `\` 自体を含める場合は `\\` と記述する
-
-例: `\1,000` という値を表す場合の記述: `\\1\,000`
-
-テスト用プロジェクトのルートディレクトリに`tmp/html_dump`ディレクトリが作成され、その配下にHTMLダンプファイルが出力される。ダンプ出力結果が格納されるディレクトリの詳細は[dump-dir-label](testing-framework-02_RequestUnitTest.md)を参照。
-
-![HTMLダンプ出力ディレクトリ](../../../knowledge/development-tools/testing-framework/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/htmlDumpDir.png)
-
-> **補足**: HTMLダンプファイル名には、テストケース一覧（testShots）のdescription欄の記述が使用される。
-
-<details>
-<summary>keywords</summary>
-
-複数値設定, カンマ区切り, エスケープ, リクエストパラメータ複数値, html_dump, dump-dir-label, HTMLダンプ出力結果, testShots, description
-
-</details>
-
-## 期待する検索結果
-
-テストケース一覧の `expectedSearch` カラムに期待する検索結果のLIST_MAP IDを指定することで、検索結果とテストケースを関連付ける。
-
-![期待する検索結果の設定例](../../../knowledge/development-tools/testing-framework/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/expected_search_result.png)
-
-<details>
-<summary>keywords</summary>
-
-expectedSearch, 検索結果期待値, searchResult, テストケース関連付け
-
-</details>
-
-## 期待するデータベースの状態
-
-更新系テストケースでは、テストケース一覧の `expectedTable` カラムに期待するDB状態の :ref:`グループID<tips_groupId>` を指定することで、期待するデータベース状態とテストケースを関連付ける。
-
-![期待するDB状態の設定例](../../../knowledge/development-tools/testing-framework/assets/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest/expected_table.png)
-
-<details>
-<summary>keywords</summary>
-
-expectedTable, データベース期待値, 更新系テスト, グループID
-
-</details>
+クラス単体テストでは、Web Frameworkのハンドラが作用しない為、
+テストクラス内で明示的にトランザクションコミットを行っていた。
+リクエスト単体テストでは、トランザクション制御はハンドラで行われるので、
+**テストクラス内で明示的にトランザクションコミットを行う必要はない。**

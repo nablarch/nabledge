@@ -1,0 +1,26 @@
+{
+  "id": "ui-framework-event-listen-subwindow",
+  "title": "サブウィンドウ内イベント定義",
+  "content": "[サブウィンドウ内イベント定義](../../component/ui-framework/ui-framework-event-listen-subwindow.md) はサブウィンドウ内で発生した各種イベントに対して\nあらかじめ登録しておいたJavaScript処理をイベント発生時に実行するウィジェットである。\n\n本ウィジェットの仕様の多くは [ページ内イベント定義](../../component/ui-framework/ui-framework-event-listen.md) と共通であるため、\n以下では [ページ内イベント定義](../../component/ui-framework/ui-framework-event-listen.md) との差分のみについて述べる。\n本項に記述されていない部分については別途 [ページ内イベント定義](../../component/ui-framework/ui-framework-event-listen.md) の項を参照すること。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "以下のソースコード例では、特定のボタンから開かれたサブウィンドウについて、\nサブウィンドウ内のテーブルの各行を監視対象要素としている。\nその選択リンクに対するクリックイベントが発生すると、イベントアクションを順次実行する。\n\nイベントアクションでは選択された行の内容を、親ウィンドウ上の対応する項目に出力している。\n(ここで使用しているイベントアクションの詳細については [項目内容変更イベントアクション](../../component/ui-framework/ui-framework-event-write-to.md) を参照。)\n\n```jsp\n <event:listen_subwindow\n   openTrigger = \"#openSelectUserWindow\"\n   watchTarget = \"table tr\"\n   event       = \"a.select click\">\n   <event:write_to\n     target = \".user_name\"\n     format = \"{td.userName}\">\n   </event:write_to>\n   <event:write_to\n     target = \".user_id input\"\n     format = \"{td.userId}\">\n   </event:write_to>\n\n   ... (中略) ...\n\n</event:listen_subwindow>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| event | 監視対象イベントの定義式 | 文字列 | ◎ | ◎ |  |\n| watchTarget | 監視対象とするサブウィンドウ内の 要素を指定するセレクタ式。 | 文字列 | ◎ | ◎ |  |\n| windowName | 監視対象ウィンドウ名 | 文字列 | ○ | ○ | デフォルトでは \"subwindow\" |\n| openTrigger | 監視対象ウィンドウを開く ボタン・リンクを指定する セレクタ式。 これを指定した場合、セレクタ式に 合致するボタン・リンクから 開かれたサブウィンドウのみが 監視対象となる。 | 文字列 | ○ | ○ |  |\n| title | 監視するイベントの簡単な説明 | 文字列 | × | × | 設計書表示用 |\n| operation | 監視イベントが発生する画面操作　 の説明。 | 文字列 | × | × | 設計書表示用 |\n| comment | このイベントに対する補足説明。 | 文字列 | × | × | 設計書表示用 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/event/listen_subwindow.tag | このウィジェットの実体となるタグファイル |\n| /js/nablarch/ui/event/SubwindowListener.js | イベント監視機能を実装するJS部品。 |",
+      "level": 2
+    }
+  ]
+}

@@ -1,136 +1,111 @@
 # アーキテクチャ概要
 
-**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/messaging/db/architecture.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseRecordReader.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/reader/DatabaseTableQueueReader.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/handler/ProcessStopHandler.ProcessStop.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/action/BatchAction.html)
+**目次**
+
+* 構成
+* リクエストパスによるアクションとリクエストIDの指定
+* 処理の流れ
+* 使用するハンドラ
+* ハンドラの最小構成
+* 使用するデータリーダ
+* 使用するアクションのテンプレートクラス
+
+データベースをキューとして扱うタイプのメッセージング処理では、
+定期的にデータベース上のテーブルを監視し未処理のレコードを順次処理するための機能を提供している。
+
+> **Important:**
+> 未処理のレコードの判定は、テーブルのレコード上で表す必要がある。
+> このため、処理が終わったレコードの状態を処理済みへ変更する処理が必要となる。
 
 ## 構成
 
-データベースをキューとして扱うタイプのメッセージング処理では、定期的にデータベース上のテーブルを監視し未処理のレコードを順次処理するための機能を提供している。
-
-> **重要**: 未処理のレコードの判定はテーブルのレコード上で表す必要がある。処理が終わったレコードの状態を処理済みへ変更する処理が必要。
-
-Nablarchバッチアプリケーションと同じ構成となる。詳細は [Nablarchバッチアプリケーションの構成](../nablarch-batch/nablarch-batch-architecture.md) を参照。
-
-<details>
-<summary>keywords</summary>
-
-Nablarchバッチアプリケーション構成, DBキューメッセージング構成, nablarch_batch-structure, 未処理レコード処理済み変更, DBキューメッセージング概要, 定期的なテーブル監視, 未処理レコード順次処理
-
-</details>
+Nablarchバッチアプリケーションと同じ構成となる。
+詳細は、 [Nablarchバッチアプリケーションの構成](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#nablarch-batch-structure) を参照。
 
 ## リクエストパスによるアクションとリクエストIDの指定
 
-コマンドライン引数で実行するアクションとリクエストIDを指定する（Nablarchバッチアプリケーションと同様）。詳細は [NablarchバッチアプリケーションのアクションとリクエストIDの指定](../nablarch-batch/nablarch-batch-architecture.md) を参照。
+データベースをキューとして扱うメッセージング処理では、Nablarchバッチアプリケーションと同じように
+コマンドライン引数で実行するアクションとリクエストIDを指定する。
 
-<details>
-<summary>keywords</summary>
-
-コマンドライン引数, アクション指定, リクエストID指定, nablarch_batch-resolve_action
-
-</details>
+詳細は、 [NablarchバッチアプリケーションのアクションとリクエストIDの指定](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#nablarch-batch-resolve-action) を参照。
 
 ## 処理の流れ
 
-Nablarchバッチアプリケーションと同じ処理の流れ。詳細は [nablarch_batch-process_flow](../nablarch-batch/nablarch-batch-architecture.md) を参照。
-
-<details>
-<summary>keywords</summary>
-
-処理の流れ, Nablarchバッチ処理フロー, nablarch_batch-process_flow
-
-</details>
+Nablarchバッチアプリケーションと同じ処理の流れとなる。詳細は、 [Nablarchバッチアプリケーションの処理の流れ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#nablarch-batch-process-flow) を参照。
 
 ## 使用するハンドラ
 
-プロジェクト要件に従いハンドラキューを構築すること（プロジェクトカスタムハンドラの作成が必要な場合もある）。
+Nablarchでは、データベースをキューとして扱うメッセージング処理で必要なハンドラを標準で幾つか提供している。
+プロジェクトの要件に従い、ハンドラキューを構築すること。(要件によっては、プロジェクトカスタムなハンドラを作成することになる)
 
-**リクエスト/レスポンス変換ハンドラ**:
-- [status_code_convert_handler](../../component/handlers/handlers-status_code_convert_handler.md)
-- [data_read_handler](../../component/handlers/handlers-data_read_handler.md)
+各ハンドラの詳細は、リンク先を参照すること。
 
-**実行制御ハンドラ**:
-- [duplicate_process_check_handler](../../component/handlers/handlers-duplicate_process_check_handler.md)
-- [request_path_java_package_mapping](../../component/handlers/handlers-request_path_java_package_mapping.md)
-- [multi_thread_execution_handler](../../component/handlers/handlers-multi_thread_execution_handler.md)
-- [retry_handler](../../component/handlers/handlers-retry_handler.md)
-- [process_stop_handler](../../component/handlers/handlers-process_stop_handler.md)
-- [request_thread_loop_handler](../../component/handlers/handlers-request_thread_loop_handler.md)
-
-**データベース関連ハンドラ**:
-- [database_connection_management_handler](../../component/handlers/handlers-database_connection_management_handler.md)
-- [transaction_management_handler](../../component/handlers/handlers-transaction_management_handler.md)
-
-**エラー処理ハンドラ**:
-- [global_error_handler](../../component/handlers/handlers-global_error_handler.md)
-
-**その他**:
-- [thread_context_handler](../../component/handlers/handlers-thread_context_handler.md)
-- [thread_context_clear_handler](../../component/handlers/handlers-thread_context_clear_handler.md)
-- :ref:`ServiceAvailabilityCheckHandler`
-- [file_record_writer_dispose_handler](../../component/handlers/handlers-file_record_writer_dispose_handler.md)
-
-<details>
-<summary>keywords</summary>
-
-ハンドラキュー, status_code_convert_handler, data_read_handler, duplicate_process_check_handler, request_path_java_package_mapping, multi_thread_execution_handler, retry_handler, process_stop_handler, request_thread_loop_handler, database_connection_management_handler, transaction_management_handler, global_error_handler, thread_context_handler, thread_context_clear_handler, ServiceAvailabilityCheckHandler, file_record_writer_dispose_handler
-
-</details>
+リクエストやレスポンスの変換を行うハンドラ
+* [ステータスコード→プロセス終了コード変換ハンドラ](../../component/handlers/handlers-status-code-convert-handler.md#status-code-convert-handler)
+* [データリードハンドラ](../../component/handlers/handlers-data-read-handler.md#data-read-handler)
+実行制御を行うハンドラ
+* [プロセス多重起動防止ハンドラ](../../component/handlers/handlers-duplicate-process-check-handler.md#duplicate-process-check-handler)
+* [リクエストディスパッチハンドラ](../../component/handlers/handlers-request-path-java-package-mapping.md#request-path-java-package-mapping)
+* [マルチスレッド実行制御ハンドラ](../../component/handlers/handlers-multi-thread-execution-handler.md#multi-thread-execution-handler)
+* [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler)
+* [プロセス停止制御ハンドラ](../../component/handlers/handlers-process-stop-handler.md#process-stop-handler)
+* [リクエストスレッド内ループ制御ハンドラ](../../component/handlers/handlers-request-thread-loop-handler.md#request-thread-loop-handler)
+データベースに関連するハンドラ
+* [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler)
+* [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler)
+エラー処理に関するハンドラ
+* [グローバルエラーハンドラ](../../component/handlers/handlers-global-error-handler.md#global-error-handler)
+その他
+* [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler)
+* [スレッドコンテキスト変数削除ハンドラ](../../component/handlers/handlers-thread-context-clear-handler.md#thread-context-clear-handler)
+* [サービス提供可否チェックハンドラ](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md#serviceavailabilitycheckhandler)
+* [出力ファイル開放ハンドラ](../../component/handlers/handlers-file-record-writer-dispose-handler.md#file-record-writer-dispose-handler)
 
 ## ハンドラの最小構成
 
-最小ハンドラ構成（これをベースにプロジェクト要件に従い標準ハンドラやカスタムハンドラを追加すること）:
+データベースをキューとして扱うメッセージング処理の必要最小限のハンドラキューを以下に示す。
+これをベースに、プロジェクト要件に従ってNablarchの標準ハンドラやプロジェクトで作成したカスタムハンドラを追加する。
+
+最小ハンドラ構成
 
 | No. | ハンドラ | スレッド | 往路処理 | 復路処理 | 例外処理 |
 |---|---|---|---|---|---|
-| 1 | [status_code_convert_handler](../../component/handlers/handlers-status_code_convert_handler.md) | メイン | — | ステータスコードをプロセス終了コードに変換 | — |
-| 2 | [thread_context_clear_handler](../../component/handlers/handlers-thread_context_clear_handler.md) | メイン | — | [thread_context_handler](../../component/handlers/handlers-thread_context_handler.md) でスレッドローカル上の値を全削除 | — |
-| 3 | [global_error_handler](../../component/handlers/handlers-global_error_handler.md) | メイン | — | — | 実行時例外またはエラーの場合ログ出力 |
-| 4 | [thread_context_handler](../../component/handlers/handlers-thread_context_handler.md) | メイン | コマンドライン引数からリクエストID・ユーザID等のスレッドコンテキスト変数を初期化 | — | — |
-| 5 | [retry_handler](../../component/handlers/handlers-retry_handler.md) | メイン | — | — | リトライ可能な実行時例外を捕捉しリトライ上限未達なら後続ハンドラを再実行 |
-| 6 | [database_connection_management_handler](../../component/handlers/handlers-database_connection_management_handler.md)（初期処理/終了処理用） | メイン | DB接続取得 | DB接続解放 | — |
-| 7 | [transaction_management_handler](../../component/handlers/handlers-transaction_management_handler.md)（初期処理/終了処理用） | メイン | トランザクション開始 | コミット | ロールバック |
-| 8 | [request_path_java_package_mapping](../../component/handlers/handlers-request_path_java_package_mapping.md) | メイン | コマンドライン引数をもとに呼び出すアクションを決定 | — | — |
-| 9 | [multi_thread_execution_handler](../../component/handlers/handlers-multi_thread_execution_handler.md) | メイン | サブスレッドを作成し後続ハンドラを並行実行 | 全スレッドの正常終了まで待機 | 処理中スレッド完了まで待機し起因例外を再送出 |
-| 10 | [database_connection_management_handler](../../component/handlers/handlers-database_connection_management_handler.md)（業務処理用） | サブ | DB接続取得 | DB接続解放 | — |
-| 11 | [request_thread_loop_handler](../../component/handlers/handlers-request_thread_loop_handler.md) | サブ | — | 後続ハンドラに処理を再委譲 | 例外/エラーに応じたログ出力と再送出 |
-| 12 | [process_stop_handler](../../component/handlers/handlers-process_stop_handler.md) | サブ | リクエストテーブルの処理停止フラグがオンの場合、`ProcessStop` を送出 | — | — |
-| 13 | [data_read_handler](../../component/handlers/handlers-data_read_handler.md) | サブ | データリーダで1件読み込み後続ハンドラに渡す。実行時IDを採番 | — | 読み込んだレコードをログ出力後に元例外を再送出 |
-| 14 | [transaction_management_handler](../../component/handlers/handlers-transaction_management_handler.md)（業務処理用） | サブ | トランザクション開始 | コミット | ロールバック |
-
-<details>
-<summary>keywords</summary>
-
-最小ハンドラ構成, ProcessStop, MultiThreadExecutionHandler, DataReadHandler, スレッドコンテキスト, サブスレッド, RetryHandler, ProcessStopHandler
-
-</details>
+| 1 | [ステータスコード→プロセス終了コード変換ハンドラ](../../component/handlers/handlers-status-code-convert-handler.md#status-code-convert-handler) | メイン |  | ステータスコードをプロセス終了コードに変換する。 |  |
+| 2 | [スレッドコンテキスト変数削除ハンドラ](../../component/handlers/handlers-thread-context-clear-handler.md#thread-context-clear-handler) | メイン |  | [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) でスレッドローカル上に設定した値を全て削除する。 |  |
+| 3 | [グローバルエラーハンドラ](../../component/handlers/handlers-global-error-handler.md#global-error-handler) | メイン |  |  | 実行時例外、またはエラーの場合、ログ出力を行う。 |
+| 4 | [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) | メイン | コマンドライン引数からリクエストID、ユーザID等のスレッドコンテキスト変数を初期化する。 |  |  |
+| 5 | [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) | メイン |  |  | リトライ可能な実行時例外を捕捉し、かつリトライ上限に達していなければ後続のハンドラを再実行する。 |
+| 6 | [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) (初期処理/終了処理用) | メイン | DB接続を取得する。 | DB接続を解放する。 |  |
+| 7 | [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) (初期処理/終了処理用) | メイン | トランザクションを開始する。 | トランザクションをコミットする。 | トランザクションをロールバックする。 |
+| 8 | [リクエストディスパッチハンドラ](../../component/handlers/handlers-request-path-java-package-mapping.md#request-path-java-package-mapping) | メイン | コマンドライン引数をもとに呼び出すアクションを決定する。 |  |  |
+| 9 | [マルチスレッド実行制御ハンドラ](../../component/handlers/handlers-multi-thread-execution-handler.md#multi-thread-execution-handler) | メイン | サブスレッドを作成し、後続ハンドラの処理を並行実行する。 | 全スレッドの正常終了まで待機する。 | 処理中のスレッドが完了するまで待機し起因例外を再送出する。 |
+| 10 | [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) (業務処理用) | サブ | DB接続を取得する。 | DB接続を解放する。 |  |
+| 11 | [リクエストスレッド内ループ制御ハンドラ](../../component/handlers/handlers-request-thread-loop-handler.md#request-thread-loop-handler) | サブ |  | 再度後続のハンドラに処理を委譲する。 | 例外/エラーに応じたログ出力処理と再送出処理を行う。 |
+| 12 | [プロセス停止制御ハンドラ](../../component/handlers/handlers-process-stop-handler.md#process-stop-handler) | サブ | リクエストテーブル上の処理停止フラグがオンであった場合は、後続ハンドラの処理は行なわずにプロセス停止例外( ProcessStop )を送出する。 |  |  |
+| 13 | [データリードハンドラ](../../component/handlers/handlers-data-read-handler.md#data-read-handler) | サブ | データリーダを使用してレコードを1件読み込み、後続ハンドラの引数として渡す。 また [実行時ID](../../component/libraries/libraries-log.md#log-execution-id) を採番する。 |  | 読み込んだレコードをログ出力した後、元例外を再送出する。 |
+| 14 | [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) (業務処理用) | サブ | トランザクションを開始する。 | トランザクションをコミットする。 | トランザクションをロールバックする。 |
 
 ## 使用するデータリーダ
 
-> **注意**: `DatabaseRecordReader` を使用した場合、繰り返しテーブルを監視できないので注意すること。
+データベースをキューとして扱う場合には、以下のデータリーダを使用する。
+バッチ用のDatabaseRecordReader を使用した場合、
+繰り返しテーブルを監視できないので注意すること。
 
-使用するデータリーダ: `DatabaseTableQueueReader`
+* DatabaseTableQueueReader
 
-> **重要**: プロジェクトでカスタムリーダを作成する場合の実装要件:
-> - 対象データがなくなっても継続して監視できること
-> - マルチスレッド環境で同一データを複数スレッドで処理しないこと
->
-> `DatabaseTableQueueReader` の実装:
-> - 未処理データがなくなった場合、再度検索SQLを実行して未処理データを抽出する
-> - 処理中データの識別子（主キー値）を保持し、複数スレッドによる重複処理を防ぐ
+> **Important:**
+> 上記のリーダで要件を満たすことができず、プロジェクトでリーダを作成する場合は以下の点に注意して実装すること。
 
-<details>
-<summary>keywords</summary>
+> * >   対象データがなくなった場合でも、継続して対象データを監視できるようにすること
+> * >   マルチススレッド環境下で使われる場合に、同一データを複数のスレッドで処理することがないようにすること
 
-DatabaseTableQueueReader, DatabaseRecordReader, データリーダ, キュー監視, マルチスレッド重複処理防止, db_messaging_architecture-reader
+> なお、 DatabaseTableQueueReader は、上記を満たすために以下の実装となっている
 
-</details>
+> * >   テーブルに未処理のデータが無くなった場合、再度検索用SQLを実行し未処理データを抽出する
+> * >   複数スレッドで同一データを処理することがないように、現在処理中のデータの識別子(主キーの値)を保持し、処理されていないデータを読み込んでいる
 
 ## 使用するアクションのテンプレートクラス
 
-**クラス**: `BatchAction`（汎用的なバッチアクション）
+データベースをキューとして扱う場合は、以下のテンプレートクラスを使用する。
 
-<details>
-<summary>keywords</summary>
-
-BatchAction, テンプレートクラス, nablarch.fw.action.BatchAction
-
-</details>
+* BatchAction (汎用的なバッチアクション)

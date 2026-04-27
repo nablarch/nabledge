@@ -1,0 +1,38 @@
+{
+  "id": "etl-etl-maven-plugin",
+  "title": "ETL Mavenプラグイン",
+  "content": "**目次**\n\n* モジュール一覧\n* 使用方法\n\n  * コントロールファイルを生成するための設定\n  * コントロールファイルを生成する\n  * コンパイル時に自動的にコントロールファイルを生成する\n\n[ETL](../../extension/etl/etl-etl.md#etl) のExtractフェーズで使用する、Oracle SQL*Loader用のコントロールファイルを自動生成するMavenプラグインを提供する。\n\nこのプラグインを使用することで、入力ファイル及びワークテーブルに対応した\nJava Beansクラスを元に、Oracle SQL*Loader用のコントロールファイルが生成できる。\nまた、本プラグインはMavenプラグインとして提供するため、buildプロセス上に本プラグインを組み込むことができる。\n\nなお、本プラグインはCSVフォーマット以外の形式には対応していない。\n\nプラグインの実行イメージは以下のとおり。\n\n![etl_maven_plugin.png](assets/etl-etl-maven-plugin/etl_maven_plugin.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "content": "```xml\n<plugin>\n  <groupId>com.nablarch.etl</groupId>\n  <artifactId>nablarch-etl-maven-plugin</artifactId>\n</plugin>\n```\n\n> **Tip:**\n> 本プラグインは [ETL](../../extension/etl/etl-etl.md#etl) 機能に依存している。\n> 適用プロジェクトでETL機能のバージョンを統一するために、\n> プラグインのバージョン番号をnablarch-bomのバージョン番号と一致させること。\n\n> 設定例を以下に示す。\n\n> ```xml\n> <!-- 適用プロジェクトが使用するNablarchのバージョン指定 -->\n> <dependencyManagement>\n>   <dependencies>\n>     <dependency>\n>       <groupId>com.nablarch.profile</groupId>\n>       <artifactId>nablarch-bom</artifactId>\n>       <version>5u13</version>\n>       <type>pom</type>\n>       <scope>import</scope>\n>     </dependency>\n>   </dependencies>\n> </dependencyManagement>\n> ```\n\n> ```xml\n> <!-- pluginのバージョンをnablarch-bomと一致させる -->\n> <plugin>\n>   <groupId>com.nablarch.etl</groupId>\n>   <artifactId>nablarch-etl-maven-plugin</artifactId>\n>   <version>5u13</version>\n> </plugin>\n> ```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "使用方法",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "コントロールファイルを生成するための設定",
+      "content": "指定したJava Beansクラスに設定された情報から、コントロールファイルを生成するために必要な情報を取得する。\n\nJava Beansクラスから取得する情報は以下のとおり。\n\n| 取得する情報 | 取得元 |\n|---|---|\n| ワークテーブル名 | Table のname属性より取得する。 |\n| 入力ファイルの文字コード | Csv のtype属性より取得する。 |\n| 入力ファイルのヘッダレコードの有無 | Csv のtype属性より取得する。 |\n| 入力ファイルの項目の囲み文字 | Csv のtype属性より取得する。 |\n| 入力ファイルのフィールドの区切り文字 | Csv のtype属性より取得する。 |\n| 入力ファイルのレコードの区切り文字 | Csv のtype属性より取得する。 |\n| 入力ファイルの項目名リスト | Csv のproperties属性より取得する。 |\n\nJava Beansクラスの実装例を以下に示す。\n\nポイント\n* Java Beansクラスは、 WorkItem を継承すること。\n\n```java\n@Entity\n@Table(name = \"sample_work\")\n@Csv(\n        type = CsvType.DEFAULT,\n        properties = {\"userId\", \"name\"}\n)\npublic class Sample extends WorkItem {\n\n    private String userId;\n\n    private String name;\n\n    // getter、setterは省略\n}\n```\n\n続いて、pom.xmlにプラグインを設定する。\n\npom.xmlへの設定例を以下に示す。\n\nポイント\n* `classes` にはコントロールファイル生成対象のJava Beansクラス名をFQCNで指定する。\n* `outputPath` にはコントロールファイルの出力先ディレクトリを指定する。\n  未指定の場合は、`target/etl/ctrl-file` に出力される。\n\n```xml\n<plugin>\n  <groupId>com.nablarch.etl</groupId>\n  <artifactId>nablarch-etl-maven-plugin</artifactId>\n  <version>1.0.0</version>\n  <configuration>\n    <!-- JavaBeansクラス名(FQCN) -->\n    <classes>\n      <param>sample.Bean1</param>\n      <param>sample.Bean2</param>\n    </classes>\n    <!-- 出力先ディレクトリ -->\n    <outputPath>etl/ctrl-file</outputPath>\n  </configuration>\n</plugin>\n```",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "コントロールファイルを生成する",
+      "content": "本プラグインの `generate-ctrl-file` ゴールを実行することでコントロールファイルが生成される。\n\n```bat\nmvn nablarch-etl:generate-ctrl-file\n```\n\n> **Important:**\n> 本プラグインは、Java Beansクラスのclassファイルを元にコントロールファイルを生成する。\n> そのため、プラグイン実行前に必ずcompileを実施すること。",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "コンパイル時に自動的にコントロールファイルを生成する",
+      "content": "コンパイル時に自動的に本プラグインを実行するように設定することで、\n入力ファイルの仕様変更等でJava Beansクラスの定義を修正するたびに手動で本プラグインを実行する手間を省くことができる。\n\npom.xmlへの設定例を以下に示す。\n\n```xml\n<plugin>\n  <groupId>com.nablarch.etl</groupId>\n  <artifactId>nablarch-etl-maven-plugin</artifactId>\n  <version>1.0.0</version>\n  <configuration>\n    <!-- 省略 -->\n  </configuration>\n  <executions>\n    <execution>\n      <id>generate-ctrl-file</id>\n      <phase>compile</phase>\n      <goals>\n        <goal>generate-ctrl-file</goal>\n      </goals>\n    </execution>\n  </executions>\n</plugin>\n```",
+      "level": 3
+    }
+  ]
+}

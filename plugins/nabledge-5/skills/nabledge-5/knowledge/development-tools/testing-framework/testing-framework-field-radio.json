@@ -1,0 +1,26 @@
+{
+  "id": "testing-framework-field-radio",
+  "title": "ラジオボタン入力項目ウィジェット",
+  "content": "[ラジオボタン入力項目ウィジェット](../../development-tools/testing-framework/testing-framework-field-radio.md) は **UI標準 UI部品 ラジオボタン**\nの内容に準拠したラジオボタンのリストを出力する。\n\n本部品には以下のバリエーションがあり、必要に応じて使い分けること。\n\n* [コード値ラジオボタン入力項目ウィジェット](../../development-tools/testing-framework/testing-framework-field-code-radio.md)\n  Nablarchコード定義の内容をもとにしたラジオボタンのリストを表示する場合に使用する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**設計成果物(ローカル動作)**\n\n```jsp\n<field:radio\n  title=\"性別\"\n  listFormat=\"sp\"\n  sample=\"[男性]|女性\">\n</field:radio>\n```\n\n**実装成果物(サーバ動作)**\n\n```jsp\n<field:radio\n  title=\"性別\"\n  name=\"formdata.gender\"\n  cssClass=\"gender\"\n  readonly=\"false\"\n  listName=\"gender\"\n  listFormat=\"sp\"\n  elementLabelPattern=\"$LABEL$\"\n  elementLabelProperty=\"name\"\n  elementValueProperty=\"id\"\n  sample=\"[男性]|女性\">\n</field:radio>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "このウィジェットは [入力項目ウィジェット共通テンプレート](../../development-tools/testing-framework/testing-framework-field-base.md) を用いて実装している。\n[入力項目ウィジェット共通テンプレート](../../development-tools/testing-framework/testing-framework-field-base.md) が実装する共通仕様についてはここでは記述しない。\n\n**ローカル動作時の挙動**\n入力画面では **sample** に指定したラベル分だけラジオボタンとラベルを表示する。\n各ラジオボタンとラベルの組は、listFormatに指定された形式で表示される。\n(デフォルトでは改行区切り)\n\n確認画面では、選択済み項目(**\"[]\"** で囲われた項目) のラベルの一覧を表示する。\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n([入力項目ウィジェット共通テンプレート](../../development-tools/testing-framework/testing-framework-field-base.md) の共通属性は省略)\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| domain | 項目のドメイン型 | 文字列 | ○ | ○ |  |\n| readonly | 編集可能かどうか | 真偽値 | ○ | ○ | デフォルトは 'false' |\n| disabled | サーバに対する入力値の送信を 抑制するかどうか | 真偽値 | ○ | ○ | デフォルトは 'false' |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ |  |\n| nameAlias | 一つのエラーメッセージに 対して複数の入力項目を ハイライト表示する場合に 指定する。 | 文字列 | ○ | × |  |\n| listName | 選択項目のリストの属性名 | 文字列 | ◎ | × |  |\n| elementLabelProperty | リスト要素から値を取得する ためのプロパティ名 | 文字列 | ◎ | × |  |\n| elementValueProperty | リスト要素からラベルを取得 するためのプロパティ名 | 文字列 | ◎ | × |  |\n| elementLabelPattern | ラベルを整形するための フォーマットパターン | 文字列 | ○ | × |  |\n| listFormat | リスト表示時に使用する フォーマット | 文字列 | ○ | ○ | デフォルト値は 'span' |\n| sample | ローカル動作時に表示する ラジオボタンのラベル | 文字列 | × | ○ | **\"\\|\"** 区切りで複数指定する。 **\"[]\"** で囲われた項目は選択状態 で表示される。 |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 画面項目定義に記載する、 「表示情報取得元」.「表示項目名」 の形式で設定する。 |\n| comment | ラジオボタンについての備考 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/radio.tag | [ラジオボタン入力項目ウィジェット](../../development-tools/testing-framework/testing-framework-field-radio.md) |\n| /WEB-INF/tags/widget/field/base.tag | [入力項目ウィジェット共通テンプレート](../../development-tools/testing-framework/testing-framework-field-base.md) |\n| /js/jsp/taglib/nablarch.js | <n:radioButtons> のエミュレーション機能を実装する タグライブラリスタブJS |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義。  ラジオボタンに関する定義もここに含まれる。 |",
+      "level": 2
+    }
+  ]
+}

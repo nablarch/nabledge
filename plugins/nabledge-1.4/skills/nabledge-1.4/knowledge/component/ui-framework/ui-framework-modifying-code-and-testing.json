@@ -1,0 +1,50 @@
+{
+  "id": "ui-framework-modifying-code-and-testing",
+  "title": "UI標準のカスタマイズとUI開発基盤への反映",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "UI標準のカスタマイズ",
+      "content": "UI開発基盤が提供する機能は、 Nablarchが提供する **UI標準** に準拠するように実装されている。\n\nこのUI標準は、プロジェクトのUI標準策定のためのたたき台となるものである。\n初回提案時にはこのUI標準をそのままに近い形でもちこんで、顧客要望を取り込みながら修正していくことになるが、\nその際、UI標準に対する変更点をUI開発基盤に随時反映させていく必要がある。\n\nこのように、UI部品に関する修正は必ず **UI標準** の修正に対して行われるべきものである。\n\nすなわち、\n\n**(顧客要望)** → **(UI標準修正)** → **(顧客承認)** → **(UI開発基盤の修正)**\n\nというフローを必ず経る必要がある。\n\nこのプロセスが重要なのは、PJに関わる顧客を含めた全ての担当者に対して\nUIの変更に関する以下の事実を強く認識させるという点にある。\n\n**1. UI標準を修正すると、全画面に影響が発生する**\n機能や画面単位での個別調整は認められない。\n**2. UI標準の修正にはコストが発生する**\nデフォルトのUI標準に従った場合、その実装コストは **無料** である。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "UI開発基盤の修正",
+      "content": "ここでは、UI開発基盤を修正する際に必要となる具体的な作業について述べる。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "1. 修正要件の確認",
+      "content": "前節でも述べたように、UI部品の修正は原則として **UI標準** の変更に対して実施されるものである。\n従って、修正作業を行う前に **UI標準** の変更内容を確認する。\n\n> **Warning:**\n> **UI標準** に反映されない修正をアドホックに行うことは、プロジェクトの破綻につながるリスク要因であるから\n> 真に慎むこと。\n\n> **Note:**\n> 特に、この変更内容が **UI標準** の変更履歴として記載されていることを確認すること。\n> 修正内容のコミットログにこの変更履歴番号を入力することによりトレーサビリティーを確保することができる。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "2. 修正箇所の特定",
+      "content": "次に、前節で確認した **UI標準** の変更をUI開発基盤の実装に反映するために、どこを修正すればよいかを調査する。\nこれには以下の2つの方法がある。\n\n**1. 「UI標準修正事例一覧」から類似事例を探す**\n巻末の [UI標準修正事例一覧](../../component/ui-framework/ui-framework-reference-ui-standard.md) では **UI標準** の典型的な変更要望について、\n具体的な修正内容とその影響範囲について解説している。\n\nこの中に、今回の修正内容に類似する案件がある場合は、その内容を参考にして修正を実施すること。\n**2. 「UIプラグイン一覧」から対象機能を実装するプラグインを探す**\n[UI標準修正事例一覧](../../component/ui-framework/ui-framework-reference-ui-standard.md) に類似する案件が存在しない場合は、\n[UIプラグイン一覧](../../component/ui-framework/ui-framework-reference-ui-plugin.md) を参照し、今回の修正対象機能がどのプラグインによって実装されているかを確認し、\n修正対象の絞り込みを行う。\n\n上記のいずれの方法でも、修正対象となるUIプラグインが決まる。",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "3. プラグインの追加",
+      "content": "既存のプラグインを修正する場合でも新たに追加する場合でも、既存のプラグインを別名でコピーし、それに対して修正を行う。\n(新規追加する場合ははなるべく類似のプラグインをコピー元とする。)\n\n> **Note:**\n> Nablarch提供のプラグインをそのまま修正してしまうと、不具合対応などによるNablarch UI開発基盤の更新時に\n> Nablarchでの修正内容と、プロジェクトでの修正内容が混ざってしまい、マージ作業が困難になる。\n\n> そのため、プロジェクトでプラグインを修正するなどの作業の際には、プロジェクトのプラグインとしてコピーしてから\n> 修正を行う手順としている。\n\n以下示す手順は、\n画面の共通カラースキームを定義するプラグイン **nablarch-css-color-default** を修正し、\nプロジェクト固有の配色に変更する例である。\n\n**手順1: 修正元プラグインをコピーして新規プラグインを追加する**\n下図のように、修正対象のプラグイン(**nablarch-css-color-default**)を\n別名(**xxx_project-css-color-default**)でコピーする。\n\nなお、プロジェクト側で修正したプラグインにはプロジェクト名に相当するプレフィックスを付加すること。\n(この例では **xxx_project-** がプレフィックスに相当)\n\n```bash\n└── xxx_project/\n      ├── tutorial/\n      │     │\n      │   ##後略##\n      │\n      ├── ui_demo/\n      │     │\n      │   ##後略##\n      │\n      ├── ui_plugins/\n      │     ├── package.json\n      │     ├── pjconf.json\n      │     ├── bin/\n      │     │     ├── ui_build.bat\n      │     │     │\n      │     │   ##後略##\n      │     │\n      │     └── node_modules/\n      │           ├── jquery/\n      │           ├── ...\n      │           ├── nablarch-css-color-default/ ## コピー元プラグイン\n      │           ├── ...\n      │           ├── xxx_project-css-color-default/ ## 追加プラグイン\n      │           │\n      │       ##後略##\n      │\n    ##後略##\n```\n**手順2: package.jsonの内容を修正する**\n追加したプラグインディレクトリ直下にあるpackage.jsonを修正する。\n\n修正するポイントは以下の3点。\n\n1. **手順1** で設定したプラグイン名を、nameキーに設定する。\n2. descriptionキーにはプラグインの概要を記述する。\n3. _fromキーにコピー元のプラグイン名@x.x.xを記載する。\n\n以下に例を示す:\n\n```\n{\n  \"name\": \"xxx_project-css-color-default\",\n  \"version\": \"1.0.0\",\n  \"description\": \"xxxプロジェクト用カラースキーム\",\n  \"_from\": \"nablarch-css-color-default@1.0.0\",\n  \"dependencies\": {\n  }\n}\n```\n\n**手順3: 以降のマージ作業のために、上記までの変更でリポジトリにコミットする**\n\n[Nablarch 標準プラグインの更新](../../component/ui-framework/ui-framework-update-bundle-plugin.md) 時のマージ作業で、PJの修正前の状態を元にPJの変更とNablarchの変更を取り込むため\n\n**手順2** が完了した時点で、カスタマイズするプラグイン群をリポジトリにコミットする。\n\n**手順4: 追加したプラグインを使用するように設定を変更する**\n\nプロジェクト直下の **pjconf.json** を修正し、下記の行を追記する。\nこれにより、新規に作成したプラグインが有効となる。\n(設定ファイルの詳細については [プラグインビルドコマンド仕様](../../component/ui-framework/ui-framework-plugin-build.md) を参照)\n\n```javascript\n, \"plugins\" :\n  [ { \"pattern\": \"nablarch-css-.*\" }\n  , { \"pattern\": \"nablarch-device-.*\" }\n    //  (中略)\n  , { \"pattern\": \"font-awesome\"}\n  , { \"pattern\": \"less\"}\n  , { \"pattern\": \"xxx_project-.*\"}  // <-- この行を追加\n  ]\n```\n\n> **Note:**\n> 複数のプラグインが同一のリソースを含む場合は、\n> 上記エントリーの下側に記述したプラグインが優先される。(後勝ち)\n> プロジェクト側で作成したプラグインは基本的に最優先扱いとなるはずなので、\n> この例のようにエントリーの一番最後に追加する。\n\n**手順5: 追加したプラグインの内容を修正**\n追加したプラグインの内容を必要に応じて修正する。\n\n今回追加した **xxx_project-css-color-default** のフォルダ構成は以下のようになっている。\n\n```bash\nxxx_project-css-color-default/  # 新規追加プラグイン\n  ├── package.json\n  └── ui_public/\n      └── css/\n          └── color/\n              └── default-color-scheme.less #修正対象ファイル\n```\n\n画面配色の設定は default-color-scheme.less にあるので、これを適宜修正する。(下図)\n\n```java\n// Nablarchブランドカラーを基調とした配色設定\n@baseColor  : rgb(255, 255, 255); // 白\n@mainColor1 : rgb(235, 92,  21);  // オレンジ\n@mainColor2 : rgb(76,  42,  26);  // こげ茶\n@subColor   : rgb(170, 10,  10);  // 赤\n```",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "4. ビルドと修正確認",
+      "content": "以降の手順については、 [UI開発基盤の導入](../../component/ui-framework/ui-framework-initial-setup.md) の [4. UI部品のビルドと配置](../../component/ui-framework/ui-framework-initial-setup.md#executing-ui-build) と同じなので、\nそちらを参照すること。",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "5. リポジトリへの反映",
+      "content": "画面設計担当者や業務画面の開発者はビルド後のファイルを元に作業を行うため、\nビルドした結果をリポジトリに反映すること。",
+      "level": 3
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "toolbox-02-JspStaticAnalysisInstall",
+  "title": "Jakarta Server Pages静的解析ツール 設定変更ガイド",
+  "content": "**目次**\n\n* 前提条件\n* 設定ファイル構成\n* pom.xmlの書き換え\n\n[Jakarta Server Pages静的解析ツール](../../development-tools/toolbox/toolbox-JspStaticAnalysis.md) の設定変更方法について説明する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "前提条件",
+      "content": "* アーキタイプからブランクプロジェクトの生成が完了していること。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "設定ファイル構成",
+      "content": "設定ファイルの構成は下表の通り。\n\n| ファイル名 | 説明 |\n|---|---|\n| pom.xml | 起動に必要な設定と、jspanalysis.excludePatternsを設定する。 |\n| tools/nablarch-tools.xml | Antタスクの定義ファイル [1] 。通常編集することはない。 |\n| tools/static-analysis/jspanalysis/config.txt | Jakarta Server Pages静的解析ツール設定ファイル。記述方法は、 [Jakarta Server Pages静的解析ツール設定ファイルの記述方法](../../development-tools/toolbox/toolbox-01-JspStaticAnalysis.md#01-customjspanalysis) を参照。 |\n| tools/static-analysis/jspanalysis/transform-to-html.xsl | 解析結果のXMLをHTMLに変換する際の定義ファイル。  記述方法は、 [出力結果確認方法](../../development-tools/toolbox/toolbox-01-JspStaticAnalysis.md#01-outputjspanalysis) の「JSP解析(XMLレポート出力)」を参照。 |\n| nablarch-archetype-parentのpom.xml | jspanalysis.excludePatterns以外を設定する。 |\n\n内部でAntを使用しているため存在する。利用者はMaven経由で実行するため通常意識することはない。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "pom.xmlの書き換え",
+      "content": "Jakarta Server Pages静的解析ツール用のプロパティを実行環境にあわせて修正する際は、jspanalysis.excludePatternsの修正であればツールを実行するプロジェクトのpom.xmlを修正する。それ以外の項目の修正であればnablarch-archetype-parentのpom.xmlを修正する。\n\n| 設定プロパティ | 説明 |\n|---|---|\n| jspanalysis.checkjspdir | チェック対象JSPディレクトリパスもしくはファイルパスを設定する。  CI環境のように一括でチェックを実行する場合には、  ディレクトリパスを設定する。  例:  ``` ./main/web ```  ディレクトリを指定した場合は、再帰的にチェックが実行される。 |\n| jspanalysis.xmloutput | チェック結果のXMLレポートファイルの出力パスを設定する。  例:  ``` ./build/reports/jsp/report.xml ``` |\n| jspanalysis.htmloutput | チェック結果のHTMLレポートファイルの出力パスを設定する。  例:  ``` ./build/reports/jsp/report.html ``` |\n| jspanalysis.checkconfig | Jakarta Server Pages静的解析ツール設定ファイルのファイルパスを設定する。  例:  ``` ./tool/jspanalysis/config.txt ``` |\n| jspanalysis.charset | チェック対象JSPファイルの文字コードを設定する。  例:  ``` utf-8 ``` |\n| jspanalysis.lineseparator | チェック対象JSPファイルで使用されている改行コードを   設定する。  例:  ``` \\\\n ``` |\n| jspanalysis.xsl | チェック結果のXMLをHTMLファイルに変換する際のXSLT   ファイルパスを設定する。  例:  ``` ./tool/jspanalysis/transform-to-html.xsl ``` |\n| jspanalysis.additionalext | チェック対象とするJSPファイルの拡張子を設定する。  複数の拡張子を指定する場合には、カンマ(,)区切りで指定する。  この設定値の内容にかかわらず、拡張子が `jsp` のファイル   は必ずチェック対象となる。  例:  ``` tag ``` |\n| jspanalysis.excludePatterns [2] | チェック対象外とするディレクトリ（ファイル）名を正規表現で設   定する。  複数のパターンを設定する場合にはカンマ(,)区切りで指定する。  例:  ``` ui_local,ui_test,ui_test/.*/set.tag ``` |\n\n本設定は、デフォルトではコメントアウトしている。本設定を使用する場合は、pom.xmlと、toolsディレクトリのnablarch-tools.xmlについてコメントアウトを解除すること。\n\n> **Tip:**\n> ファイルパス(ディレクトリパス)は、絶対パスでの指定も可能となっている。",
+      "level": 2
+    }
+  ]
+}

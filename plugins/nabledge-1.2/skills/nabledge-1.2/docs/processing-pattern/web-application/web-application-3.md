@@ -1,24 +1,29 @@
 # 子画面を開くタグのname属性には、何を指定したらいいのでしょうか?
 
-## popupSubmit / popupButton / popupLink の name 属性指定方法
+> **question:**
+> 以下のタグに必須属性としてname属性がありますが、何を設定したらいいのでしょうか?
 
-## popupSubmit / popupButton / popupLink の name 属性指定方法
+> * >   popupSubmit
+> * >   popupButton
+> * >   popupLink
 
-`popupSubmit`、`popupButton`、`popupLink` タグの `name` 属性にはフォーム内で一意となる名前を設定すること。重複した場合、以下の例外が発生する。
+> また、一覧表示時( *n:listSearchResult* を使用した場合)に上記タグを使用した場合に固定の名称を設定したところ、以下の例外が発生してしまいました。
+> name属性が重複しているためエラーが発生していることは分かりますが、name属性を一意にする方法が分かりません。
+> どのように実装したらいいのでしょうか？
 
-```java
-java.lang.IllegalArgumentException: name attribute of submission tag has duplicated. formName = [xxxx] submissionName = [yyyy]
-// xxxx -> フォーム名称
-// yyyy -> name属性に設定した値
-```
+> ```java
+> java.lang.IllegalArgumentException: name attribute of submission tag has duplicated. formName = [xxxx] submissionName = [yyyy]
+> 
+> // xxxx -> フォーム名称
+> // yyyy -> name属性に設定した値
+> ```
 
-特に一覧画面などでこれらのタグを使用する場合は、`name` 属性に連番を付加して重複しないように注意すること。
+> **answer:**
+> フォーム内で一意となる名前を設定してください。特に一覧画面などで、これらのタグを使用する場合にはname属性には連番を付加して、重複しないように注意してください。
 
-一覧画面（`n:listSearchResult` 使用時）でこれらのタグを使用する場合は、行番号を取得できる `count` 変数を name 属性に付加することで一意の名称を設定できる。
+> 一覧画面の場合( *n:listSearchResult* を使用した場合)は、行番号が取得出来る *count* 変数をname属性に付加することにより一意の名称が設定できるようになります。
 
-<details>
-<summary>keywords</summary>
+> 詳細は、以下のドキュメントを参照してください。
 
-popupSubmit, popupButton, popupLink, n:listSearchResult, count変数, name属性重複, IllegalArgumentException, サブミットタグ一意性, 一覧画面サブミット, 連番, name属性連番
-
-</details>
+> * >   **[Nablarch プログラミング・単体テストガイド]** -> **[アプリケーション実装例集]** -> **[画面オンライン処理の実装例集]** -> **[ボタン又はリンクによるサブミット]**
+> * >   **[Nablarch プログラミング・単体テストガイド]** -> **[アプリケーション実装例集]** -> **[画面オンライン処理の実装例集]** -> **[ページングを使用した一覧表示]**

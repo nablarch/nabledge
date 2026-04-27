@@ -1,0 +1,32 @@
+{
+  "id": "handlers-messaging-context-handler",
+  "title": "メッセージングコンテキスト管理ハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* MQの接続先を設定する\n\n後続のハンドラ及びライブラリで使用するためのMQ接続を、スレッド上で管理するハンドラ。\n\nMOMメッセージングの詳細は、 [システム間メッセージング](../../component/libraries/libraries-system-messaging.md#system-messaging) を参照。\n\n本ハンドラでは、以下の処理を行う。\n\n* MQ接続の取得\n* MQ接続の解放\n\n処理の流れは以下のとおり。\n\n![MessagingContextHandler_flow.png](assets/handlers-messaging-context-handler/MessagingContextHandler_flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.messaging.handler.MessagingContextHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-messaging</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "なし。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "MQの接続先を設定する",
+      "content": "このハンドラは、 messagingProvider\nプロパティに設定されたプロバイダクラス( MessagingProvider 実装クラス)を使用してMQ接続を取得する。\n\n以下に設定例を示す。\nプロバイダクラスの設定内容については、使用する\nMessagingProvider 実装クラスのJavadocを参照。\n\n```xml\n<!-- メッセージコンテキスト管理ハンドラ -->\n<component class=\"nablarch.fw.messaging.handler.MessagingContextHandler\">\n  <property name=\"messagingProvider\" ref=\"messagingProvider\" />\n</component>\n\n<!-- プロバイダクラス -->\n<component name=\"messagingProvider\"\n    class=\"nablarch.fw.messaging.provider.JmsMessagingProvider\">\n  <!-- プロパティの設定は省略 -->\n</component>\n```",
+      "level": 2
+    }
+  ]
+}

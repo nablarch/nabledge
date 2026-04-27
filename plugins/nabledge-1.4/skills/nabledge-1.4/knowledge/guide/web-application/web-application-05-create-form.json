@@ -1,0 +1,50 @@
+{
+  "id": "web-application-05-create-form",
+  "title": "Formクラスの実装",
+  "content": "ユーザ登録画面に対応するFormクラスを以下のステップで実装する。\n\nFormクラスは、業務画面JSPから自動生成したFormBaseクラスを継承し、\n前画面や別取引からの引継ぎ項目など、画面入力項目に対応しないプロパティを保持する。\n\nまた、精査用メソッドとリクエストからフォームを生成するためのメソッドも実装する。\n\n* Formクラスの作成\n* Formクラスの精査処理実装\n\n  * Formクラスに実装する精査処理の単体テストを作成\n  * Formクラスの単体テストを実行\n  * Formクラスに精査処理を実装\n  * Formクラスの単体テストを実行\n* 精査処理とFormの生成を行うメソッドの実装",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "Formクラスの作成",
+      "content": "本機能で使用するFormクラスを作成する。\n\n本機能では、前画面や別取引からの引継ぎ項目が存在しないため、精査用メソッドと\nフォーム生成用メソッドのみ実装する。\n\nここでは、クラスを作成し、デフォルトコンストラクタと、Mapを引数に取るコンストラクタを作成しておく。\n\n| ソース格納フォルダ | クラス名 |\n|---|---|\n| main/java/nablarch/sample/ss11AC | W11AC02Form |\n\n```java\n/**\n * ユーザ情報登録で使用するユーザ情報を保持するフォーム。\n *\n * @author Nablarch Taro\n * @since 1.0\n */\npublic class W11AC02Form extends W11AC02FormBase {\n\n    /** コンストラクタ。 */\n    public W11AC02Form() {\n    }\n\n    /**\n     * Mapを引数に取るコンストラクタ。\n     *\n     * @param data 各プロパティのデータを保持したMap\n     */\n    public W11AC02Form(Map<String, Object> data) {\n        super(data);\n    }\n}\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "Formクラスの精査処理実装",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "Formクラスに実装する精査処理の単体テストを作成",
+      "content": "1. Form単体テストデータの作成\n\n  Formクラスに実装する精査処理の単体テストでは、以下を検証する。 [1]\n\n  * 精査対象となっているプロパティに対して、精査が行われていること。\n  * 精査対象となっていないプロパティに対して、精査が行われていないこと。\n\n  | データシート格納フォルダ | データシートファイル名 | シート名 |\n  |---|---|---|\n  | test/java/nablarch/sample/ss11AC | W11AC02FormTest.xlsx | testValidateForRegister |\n\n  以下に、テストデータの例を示しておく。（詳細は、 [Form/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTest.md#entityunittest) 参照）\n\n  ![form_test_validation_01.png](assets/web-application-05-create-form/form_test_validation_01.png)\n\n  前画面や別取引からの引継ぎ項目が存在し、Formクラスにプロパティを実装する場合には、\n  それらのプロパティに対して単項目精査が正しく実装されていることをテストする必要がある。\n\n  そのような場合の実装方法については [入力内容の精査](../../guide/web-application/web-application-04-validation.md#how-to-validate) や [精査処理の実装例集](../../guide/web-application/web-application-Validation.md#validation-example) を、\n  テスト方法については [Form/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTest.md#entityunittest) を参照すること。\n2. Form単体テストコードの作成\n\n  実装するFormクラスの単体テストコードとして登録機能用のテストメソッド(`testValidateForRegister`)を追加する。\n\n  | テストクラス格納フォルダ | テストクラス名 | テストメソッド名 |\n  |---|---|---|\n  | test/java/nablarch/sample/ss11AC | W11AC02FormTest | testValidateForRegister |\n\n  ```java\n  /**\n   * {@link W11AC02Form}のテスト。\n   *\n   * @author Nablarch Taro\n   * @since 1.0\n   */\n  public class W11AC02FormTest extends SampleEntityTestSupport {\n  \n      /**\n       * {@link W11AC02Form#validateForRegister(nablarch.core.validation.ValidationContext)} のテスト。\n       */\n      @Test\n      public void testValidateForRegister() {\n          testValidateAndConvert(W11AC02Form.class, \"testValidateForRegister\", \"register\");\n      }\n  }\n  ```",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "Formクラスの単体テストを実行",
+      "content": "単体テストを実行し、テストが失敗することを確認する。（精査メソッドを実装していない為）\n\n> **Note:**\n> クラス単体テストは、テスト対象のクラス(～Test.java)を右クリックし、[実行]→[Junitテスト]を選択して実行する。\n> テスト失敗時には下記のように JUnit ビューにエラーが表示される。\n\n> ![junit_ng.png](assets/web-application-05-create-form/junit_ng.png)",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "Formクラスに精査処理を実装",
+      "content": "| ソース格納フォルダ | クラス名 | メソッド名 |\n|---|---|---|\n| main/java/nablarch/sample/ss11AC | W11AC02Form | validateForRegister |\n\n単項目精査の対象とするプロパティ名の配列を引数として、\n単項目精査を実行するメソッド(`ValidationUtil#validate(ValidationContext, String[])`)を呼び出す。\n\n```java\n/**\n * ユーザ情報登録時に実施するバリデーション\n *\n * @param context バリデーションの実行に必要なコンテキスト\n */\n@ValidateFor(\"register\")\npublic static void validateForRegister(ValidationContext<W11AC02Form> context) {\n\n    // 【説明】単項目精査対象項目変数のセット\n    // FormBaseクラスに定義されている、画面入力項目に対応したプロパティを設定しておく。\n    ValidationUtil.validate(context, new String[] {\"kanjiName\", \"kanaName\"});\n}\n```\n\nなお、Nablarchでは単項目精査の **対象外** とするプロパティ名を渡すメソッドも準備されており、\n今回の場合は、そちらを利用しても良い。\n\n```java\n// 【説明】単項目精査対象外項目変数のセット\n// すべてのプロパティを単項目精査の対象とするので、空の配列を渡す。\nValidationUtil.validateWithout(context, new String[0]);\n```",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "Formクラスの単体テストを実行",
+      "content": "Form単体テストを実行し、精査対象とするプロパティの精査が行われていることを確認する。",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "精査処理とFormの生成を行うメソッドの実装",
+      "content": "Formクラスに、精査処理とForm生成を行うstaticメソッドを実装しておくことでActionの実装が容易になる。\n\n`W11AC02Form` に、精査処理とForm生成を行うstaticメソッドを実装しておく。\n\n```java\n/**\n * 【説明】\n * 入力パラメータの精査処理と、Formの生成を行うメソッド。\n *\n * @param req 入力パラメータ情報\n * @param validationName 使用するバリデーションの名前\n * @return 入力パラメータを精査後に生成した本フォーム\n */\npublic static W11AC02Form validate(HttpRequest req, String validationName) {\n    // 【説明】\n    //  入力パラメータの精査処理を実行する。\n    ValidationContext<W11AC02Form> context = ValidationUtil.validateAndConvertRequest(\n            \"W11AC02\", W11AC02Form.class, req, validationName);\n\n    // 【説明】\n    //  精査エラーが発生した場合には、ApplicationExceptionを発生させる。\n    context.abortIfInvalid();\n\n    // 【説明】\n    //  精査エラーが発生しなかった場合には、入力パラメータからフォームオブジェクトを生成する。\n    return context.createObject();\n}\n```",
+      "level": 2
+    }
+  ]
+}

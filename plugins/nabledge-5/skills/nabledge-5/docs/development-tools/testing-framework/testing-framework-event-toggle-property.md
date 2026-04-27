@@ -1,0 +1,59 @@
+# 属性値の動的切替
+
+[属性値の動的切替](../../development-tools/testing-framework/testing-framework-event-toggle-property.md) は、
+チェックボックス・ラジオボタン・プルダウン要素の内容に応じて、
+特定の要素の属性値を動的に切替えるイベントアクションである。
+なお、切替えの対象となる属性値は真偽値型のDOM属性値(readonly/disabled/checked/selected) に限る。
+
+## コードサンプル
+
+このアクションを実行するイベントは [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.md)
+(もしくは [サブウィンドウ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen-subwindow.md) ) を用いて定義する必要がある。
+
+以下のソースコードは、
+フォーム内の全てのチェックボックスをON/OFFするチェックボックスを作成する例である。
+
+class属性に allCheck CSSクラスを指定したチェックボックスをクリックすると
+<event:toggle_property> イベントアクションが実行され、
+チェックボックスの全チェック・解除が行われる。
+
+```jsp
+<n:form>
+  <event:listen
+    event="input[type='checkbox'].allCheck click">
+    <event:toggle_property
+      title="全てチェック/クリア"
+      type="checked"
+      toggleTarget="input[type='checkbox']:not('.allCheck')"
+      condition=".allCheck">
+
+    </event:toggle_property>
+  </event:listen>
+
+  ... (中略) ...
+
+</n:form>
+```
+
+## 仕様
+
+**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]
+
+| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |
+|---|---|---|---|---|---|
+| type | 切替え対象属性 | 文字列 | ◎ | ◎ | 以下のいずれかを指定する。  - disabled   - readonly   - checkbox   - selected |
+| title | 実行する処理の簡単な説明 | 文字列 | × | × | 設計書表示用 |
+| target | 属性を切替える対象要素 を指定するセレクタ式 | 文字列 | ◎ | ◎ |  |
+| condition | 属性値をtrueに設定する条件を イベント発生元要素が満たすべき セレクタ式の形式で指定する。 | 文字列 | ◎ | ◎ |  |
+| reverse | 要素を指定するセレクタ式。 | 文字列 | ○ | ○ |  |
+
+## 内部構造・改修時の留意点
+
+本ウィジェットは以下のファイルによって実装されている。
+
+**部品一覧**
+
+| パス | 内容 |
+|---|---|
+| /WEB-INF/tags/widget/event/toggle_property.tag | このウィジェットの実体となるタグファイル |
+| /js/nablarch/ui/event/TogglePropertyAction.js | 属性値の切替え機能を実装するイベントアクション |

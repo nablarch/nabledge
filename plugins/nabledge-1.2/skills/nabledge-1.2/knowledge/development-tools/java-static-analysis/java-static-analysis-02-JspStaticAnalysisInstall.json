@@ -1,0 +1,50 @@
+{
+  "id": "java-static-analysis-02-JspStaticAnalysisInstall",
+  "title": "JSP静的解析ツール インストールガイド",
+  "content": "[JSP静的解析ツール](../../development-tools/java-static-analysis/java-static-analysis-04-JspStaticAnalysis.md) のインストール方法について説明する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "前提条件",
+      "content": "* Nablarch開発環境構築ガイドに従ってNablarchサンプルアプリケーションがインストールされていること。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "インストール",
+      "content": "本ツールはNablarchサンプルアプリケーションの <プロジェクトルート>/tool/jspanalysis 直下に配置した状態で配布されている。\nディレクトリごと任意の場所にコピーすればインストールは完了する。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "ツール構成",
+      "content": "ツールの構成は下表の通り。\n\n| ファイル名 | 説明 |\n|---|---|\n| jsp-analysis-build.properties | 環境設定ファイル |\n| jsp-analysis-build.xml | Antビルドファイル |\n| config.txt | JSP静的解析ツール設定ファイル |\n| transform-to-html.xsl | JSP静的解析結果XMLをHTMLに変換する際の定義ファイル |",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "プロパティファイルの書き換え",
+      "content": "jsp-analysis-build.properties を各環境にあわせて設定する。\n\n設定プロパティは次のとおりである。パスは相対パス、絶対パスが使用可能である。\n\n| 設定プロパティ | 説明 |\n|---|---|\n| project.test | テストディレクトリパス |\n| project.test.lib | テスト用ライブラリディレクトリパス |\n| checkjspdir | チェック対象JSPディレクトリパスもしくはファイルパス |\n| xmloutput | 出力先XMLファイルパス |\n| checkconfig | 使用を許可するタグの設定ファイルパス |\n| charset | チェック対象JSPファイルの文字コード |\n| lineseparator | チェック対象JSPファイルで使用されている改行コード |\n| htmloutput | チェック結果を出力するHTMLファイルパス |\n| xsl | チェック結果のXMLをHTMLファイルに変換する際のXSLTファイルパス |",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "Eclipseとの連携設定",
+      "content": "以下に、Eclipseから本ツールを起動する手順を示す。",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "Antビュー起動",
+      "content": "ツールバーから、ウィンドウ(Window)→設定(Show View)を選択し、Antビューを開く。\n\n![displayAntView.png](assets/java-static-analysis-02-JspStaticAnalysisInstall/displayAntView.png)",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "ビルドファイル登録",
+      "content": "＋印のアイコンを押下し、ビルドスクリプトを選択する。\n\n![addJspAnt.png](assets/java-static-analysis-02-JspStaticAnalysisInstall/addJspAnt.png)\n\nAntビルドファイル(jsp_analysis_build.xml)を選択する。\n\n![selectJspAnt.png](assets/java-static-analysis-02-JspStaticAnalysisInstall/selectJspAnt.png)\n\nAntビューに登録したビルドファイルが表示されることを確認する。\n\n![startJspAnalysis.png](assets/java-static-analysis-02-JspStaticAnalysisInstall/startJspAnalysis.png)",
+      "level": 3
+    }
+  ]
+}

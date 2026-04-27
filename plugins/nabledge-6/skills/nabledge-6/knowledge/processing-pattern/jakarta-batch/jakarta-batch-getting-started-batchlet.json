@@ -1,53 +1,14 @@
 {
   "id": "jakarta-batch-getting-started-batchlet",
-  "no_knowledge_content": false,
   "title": "対象テーブルのデータを削除するバッチの作成(Batchletステップ)",
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/getting_started/batchlet/index.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/batch/api/Batchlet.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/batch/api/AbstractBatchlet.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/inject/Named.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/enterprise/context/Dependent.html"
-  ],
-  "index": [
+  "content": "Exampleアプリケーションを元に、 batchletステップ で対象テーブルのデータを削除するバッチを解説する。\n\n作成する機能の説明\n1. 現在のDBの状態の確認\n\n  H2のコンソールから下記SQLを実行する。\n\n  ```sql\n  SELECT * FROM ZIP_CODE_DATA;\n  SELECT * FROM ZIP_CODE_DATA_WORK;\n  ```\n\n  データが登録されていない場合は 2の手順を実施する。\n2. (データが登録されていない場合)データベースを初期状態にリセット\n\nコマンドプロンプトから下記コマンドを実行する。\n\n```bash\n$cd {nablarch-example-batch-eeシステムリポジトリ}\n$mvn generate-resources\n```\n\nH2のコンソールから下記SQLを実行してデータが登録されたことを確認する。\n\n```sql\nSELECT * FROM ZIP_CODE_DATA;\nSELECT * FROM ZIP_CODE_DATA_WORK;\n```\n\n1. 住所テーブル削除バッチを実行\n\nコマンドプロンプトから下記コマンドを実行する。\n\n```bash\n$cd {nablarch-example-batch-eeシステムリポジトリ}\n$mvn exec:java -Dexec.mainClass=nablarch.fw.batch.ee.Main ^\n    -Dexec.args=zip-code-truncate-table\n```\n\n1. 対象テーブルのデータが削除されていることを確認\n\n  H2のコンソールから下記SQLを実行し、データが削除されていることを確認する。\n\n  ```sql\n  SELECT * FROM ZIP_CODE_DATA;\n  SELECT * FROM ZIP_CODE_DATA_WORK;\n  ```",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
-      "title": "バッチの実行方法",
-      "hints": [
-        "nablarch.fw.batch.ee.Main",
-        "メインクラス",
-        "ジョブ名指定",
-        "exec:java",
-        "zip-code-truncate-table",
-        "バッチ起動コマンド",
-        "JSR-352バッチ実行"
-      ]
-    },
-    {
-      "id": "s2",
       "title": "対象テーブルのデータを削除する",
-      "hints": [
-        "TruncateTableBatchlet",
-        "AbstractBatchlet",
-        "Batchlet",
-        "jakarta.batch.api.Batchlet",
-        "@Dependent",
-        "@Named",
-        "@Inject",
-        "@BatchProperty",
-        "AppDbConnection",
-        "DbConnectionContext",
-        "SqlPStatement",
-        "Batchletステップ実装",
-        "テーブルデータ削除バッチ",
-        "CDI管理Bean登録",
-        "ジョブ定義ファイル設定",
-        "バッチプロパティインジェクション"
-      ]
+      "content": "住所情報を削除するバッチの実装方法を説明する。\n\n処理フローについては、 [Batchletステップのバッチの処理フロー](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-batch-flow-batchlet) を参照。\n責務配置については [Batchletステップの責務配置](../../processing-pattern/jakarta-batch/jakarta-batch-application-design.md#jsr352-batchlet-design) を参照。\n\n1. [Batchletの作成](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-batchlet.md#getting-started-batchlet-create)\n2. [JOB設定ファイルの作成](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-batchlet.md#getting-started-batchlet-job)\n\nBatchletの作成\n住所情報を削除するバッチのBatchletクラスを作成する。\n\n実装すべきインタフェースとその責務\nBatchletクラスに以下のインタフェースを実装してバッチ処理を作成する。オーバーライドしたメソッドは、Batch Runtimeによって適切なタイミングで呼び出される。\n\n| インタフェース | 実装 |\n|---|---|\n| Batchlet | バッチ処理を実装する。  デフォルト実装を提供する AbstractBatchlet を継承する。  * Batchlet#process * Batchlet#stop |\n\n> **Tip:**\n> バッチ処理は、上記のインタフェースの実装に加えて、トランザクション制御などの共通的な処理を提供するリスナーによって構成する。\n> リスナーの詳細は [バッチアプリケーションで使用するリスナー](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-listener) 及び [リスナーの指定方法](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-listener-definition) を参照。\n\nTruncateTableBatchlet.java\n```java\n@Dependent\n@Named\npublic class TruncateTableBatchlet extends AbstractBatchlet {\n\n    @Inject\n    @BatchProperty\n    private String tableName;\n\n    @Override\n    public String process() {\n\n        final AppDbConnection conn = DbConnectionContext.getConnection();\n        final SqlPStatement statement\n            = conn.prepareStatement(\"TRUNCATE TABLE \" + tableName);\n        statement.executeUpdate();\n\n        return \"SUCCESS\";\n    }\n}\n```\n\nこの実装のポイント\n* AbstractBatchlet を継承し、 process メソッドで業務処理を行う。\n\n* Named と Dependent をクラスに付与する。 \n  \n  Named及びDependentアノテーションを設定することで、Batchlet実装クラスをCDIの管理Beanにできる。\n  これにより、ジョブ定義に指定するBatchletクラス名をCDIの管理名で記述出来るようになる。 \n  \n  (CDI管理Beanとしなかった場合は、完全修飾名(FQCN)で記述する)\n* [データベースアクセス](../../component/libraries/libraries-database.md#database) を使用してTRUNCATE文を実行する。\n\nジョブ定義ファイルの作成\nジョブの実行設定を定義したファイルを作成する。\n\nzip-code-truncate-table.xml\n```xml\n<job id=\"zip-code-truncate-table\" xmlns=\"https://jakarta.ee/xml/ns/jakartaee\" version=\"2.0\">\n  <listeners>\n    <listener ref=\"nablarchJobListenerExecutor\" />\n  </listeners>\n\n  <step id=\"step1\" next=\"step2\">\n    <listeners>\n      <listener ref=\"nablarchStepListenerExecutor\" />\n    </listeners>\n    <batchlet ref=\"truncateTableBatchlet\">\n      <properties>\n        <property name=\"tableName\" value=\"ZIP_CODE_DATA\" />\n      </properties>\n    </batchlet>\n  </step>\n  <step id=\"step2\">\n    <listeners>\n      <listener ref=\"nablarchStepListenerExecutor\" />\n    </listeners>\n    <batchlet ref=\"truncateTableBatchlet\">\n      <properties>\n        <property name=\"tableName\" value=\"ZIP_CODE_DATA_WORK\" />\n      </properties>\n    </batchlet>\n  </step>\n</job>\n```\nこの実装のポイント\n* ジョブ定義ファイルは、/src/main/resources/META-INF/batch-jobs/ 配下に配置する。\n* job 要素 の id 属性で、ジョブ名称を指定する。\n* 複数ステップで構成されるバッチジョブの場合は、 step 要素を複数定義し、処理を順次実行する。\n* batchlet 要素の ref 属性には、Batchletクラス名の頭文字を小文字にした名称を指定する。\n* property 要素で、Batchletクラスのプロパティにインジェクトする値を指定する。\n* 設定ファイルの詳細な記述方法は <a href=\"https://jakarta.ee/specifications/batch/\" target=\"_blank\">Jakarta Batch(外部サイト、英語)</a> を参照",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "JSR-352バッチジョブは `nablarch.fw.batch.ee.Main` をメインクラスとして起動し、ジョブ名を引数として渡す。\n\n```\n$mvn exec:java -Dexec.mainClass=nablarch.fw.batch.ee.Main ^\n    -Dexec.args=zip-code-truncate-table\n```\n\n実行ポイント:\n- **メインクラス**: `nablarch.fw.batch.ee.Main` がNablarchのJSR-352バッチ起動クラスである。\n- **ジョブ名**: `-Dexec.args` にジョブ定義ファイルの `job` 要素 `id` 属性で指定したジョブ名（例: `zip-code-truncate-table`）を渡す。",
-    "s2": "**Batchletクラスの作成**\n\n**クラス**: `Batchlet`, `AbstractBatchlet`\n\n| インタフェース | 実装内容 |\n|---|---|\n| `Batchlet` | バッチ処理を実装する。デフォルト実装 `AbstractBatchlet` を継承する。オーバーライドメソッド: `Batchlet#process`, `Batchlet#stop` |\n\n> **補足**: バッチ処理はインタフェース実装に加え、トランザクション制御などの共通処理を提供するリスナーで構成する。[バッチアプリケーションで使用するリスナー](jakarta-batch-architecture.json) 及び [リスナーの指定方法](jakarta-batch-architecture.json#s7) を参照。\n\n```java\n@Dependent\n@Named\npublic class TruncateTableBatchlet extends AbstractBatchlet {\n\n    @Inject\n    @BatchProperty\n    private String tableName;\n\n    @Override\n    public String process() {\n        final AppDbConnection conn = DbConnectionContext.getConnection();\n        final SqlPStatement statement\n            = conn.prepareStatement(\"TRUNCATE TABLE \" + tableName);\n        statement.executeUpdate();\n        return \"SUCCESS\";\n    }\n}\n```\n\n実装ポイント:\n- `AbstractBatchlet` を継承し `process` メソッドで業務処理を実装する。\n- **アノテーション**: `Named` と `Dependent` をクラスに付与してCDI管理Beanにする。ジョブ定義でCDI管理名を使用できる（CDI管理Beanとしない場合はFQCNで記述）。\n- [データベースアクセス](../../component/libraries/libraries-database.json#s1) を使用してTRUNCATE文を実行する。\n\n**ジョブ定義ファイルの作成**\n\nジョブ定義ファイルは `/src/main/resources/META-INF/batch-jobs/` 配下に配置する。\n\n```xml\n<job id=\"zip-code-truncate-table\" xmlns=\"https://jakarta.ee/xml/ns/jakartaee\" version=\"2.0\">\n  <listeners>\n    <listener ref=\"nablarchJobListenerExecutor\" />\n  </listeners>\n  <step id=\"step1\" next=\"step2\">\n    <listeners>\n      <listener ref=\"nablarchStepListenerExecutor\" />\n    </listeners>\n    <batchlet ref=\"truncateTableBatchlet\">\n      <properties>\n        <property name=\"tableName\" value=\"ZIP_CODE_DATA\" />\n      </properties>\n    </batchlet>\n  </step>\n  <step id=\"step2\">\n    <listeners>\n      <listener ref=\"nablarchStepListenerExecutor\" />\n    </listeners>\n    <batchlet ref=\"truncateTableBatchlet\">\n      <properties>\n        <property name=\"tableName\" value=\"ZIP_CODE_DATA_WORK\" />\n      </properties>\n    </batchlet>\n  </step>\n</job>\n```\n\n実装ポイント:\n- `job` 要素の `id` 属性でジョブ名称を指定する。\n- 複数ステップ構成の場合は `step` 要素を複数定義し順次実行する。\n- `batchlet` 要素の `ref` 属性にはBatchletクラス名の頭文字を小文字にした名称を指定する。\n- `property` 要素でBatchletクラスのプロパティにインジェクトする値を指定する。"
-  }
+  ]
 }

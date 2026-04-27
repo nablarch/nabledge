@@ -1,24 +1,20 @@
 # 文字列からBigDecimal変換時に発生する可能性のあるヒープ不足について
 
-## 文字列からBigDecimal変換時のヒープ不足防止機能
+文字列からBigDecimalに変換する際に指数表現(例えば、 `9e100000` のような値)を指定した場合に、以下の問題が発生する場合がある。
 
-文字列からBigDecimalへの変換時に指数表現（例: `9e100000`）を指定すると以下の問題が発生する可能性がある:
-- `BigDecimal#toPlainString()` の呼び出しで非常に大きい文字列が生成されヒープが圧迫される
-- `java.text.DecimalFormat` を使用してフォーマットする際に非常に大きい文字列が生成されヒープが圧迫される
+* BigDecimal#toPlainString()の呼び出しで、非常に大きい文字列が生成されヒープが圧迫される
+* java.text.DecimalFormatを使用してフォーマットする際に非常に大きい文字列が生成されヒープが圧迫される
 
-Nablarchでは `BigDecimal#scale` を使用して桁数チェックを行い、ヒープを圧迫するような大きな値の取り込みを防止している。許容するscaleの範囲は `-9999` から `9999` で、この範囲を超える指数表現の値を変換しようとした場合は例外を送出する。
+このため、Nablarchでは文字列からBigDecimalに変換する際に、 BigDecimal#scale
+を使用して桁数チェックを行い、ヒープを圧迫するような大きな値を取り込むことを防止している。
+この機能では、許容するscaleの範囲を `-9999` から `9999` の範囲とし、この範囲を超える指数表現の値を変換しようとした場合、例外を送出しヒープが圧迫されないようにしている。
 
-許容するscaleの範囲は設定で変更可能。設定はシステムリポジトリ機能の環境設定ファイルに指定する（[repository_config_load](../../component/libraries/libraries-02_01_Repository_config.md) 参照）。
+なお、許容するscaleの範囲は設定で変更可能となっている。
+設定はシステムリポジトリ機能の環境設定ファイルに指定する。
+設定方法は、 [環境設定ファイルからの読み込み](../../component/libraries/libraries-02-01-Repository-config.md#repository-config-load) を参照。
 
-例えば `-10` から `10` に変更する場合:
+例えば、許容する範囲を `-10` から `10` としたい場合には、下のように設定を追加する。
 
 ```properties
 nablarch.max_scale=10
 ```
-
-<details>
-<summary>keywords</summary>
-
-BigDecimal, BigDecimal#scale, BigDecimal#toPlainString, java.text.DecimalFormat, nablarch.max_scale, ヒープ不足, 指数表現, スケール設定, 桁数チェック
-
-</details>

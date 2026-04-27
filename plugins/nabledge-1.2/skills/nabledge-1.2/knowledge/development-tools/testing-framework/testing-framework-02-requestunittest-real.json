@@ -1,0 +1,110 @@
+{
+  "id": "testing-framework-02-requestunittest-real",
+  "title": "リクエスト単体テストの実施方法(同期応答メッセージ受信処理)",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "テストクラスの書き方",
+      "content": "テストクラスは以下の条件を満たすように作成する。\n\n* テストクラスのパッケージは、テスト対象のActionクラスと同じとする。\n* <Actionクラス名>RequestTestというクラス名でテストクラスを作成する。\n* `nablarch.test.core.http.MessagingRequestTestSupport` を継承する。\n\n例えば、テスト対象のActionクラスが、 `nablarch.sample.ss21AA.RM21AA001Action` だとすると、\nテストクラスは以下のようになる。\n\n```java\npackage nablarch.sample.ss21AA;\n\n// ～中略～\n\npublic class RM21AA001ActionRequestTest extends MessagingRequestTestSupport {\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "テストメソッド分割",
+      "content": "１テストクラスにつき１テストメソッド、１テストシートを原則とする。\n\nケースが複雑であったりデータ量が多い場合は、メソッドやシートを分割しても良い。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "テストデータの書き方",
+      "content": "テストデータを記載したExcelファイルは、クラス単体テストと同様に\nテストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。\n\nテストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#how-to-write-excel) 」を参照。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "テストクラスで共通のデータベース初期値",
+      "content": "画面オンラインの場合と同様である。「 [テストクラスで共通のデータベース初期値](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-setup-db) 」を参照。",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "テストショット一覧",
+      "content": "LIST_MAPのデータタイプで１テストメソッド分のテストショット表を記載する。IDは、 **testShots** とする。\n\n１ケース毎に以下の要素を持たせる。\n\n| カラム名 | 説明 | 必須 |\n|---|---|---|\n| no | テストケース番号を1からの連番で記載する。 | 必須 |\n| description | そのテストケースの説明を記載する。 | 必須 |\n| expectedStatusCode | 期待するステータスコード | 必須 |\n| setUpTable | 各テストケース実行前にデータベースに登録する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。データの投入は自動テストフレーム ワークにより行われる。 |  |\n| expectedTable | データベースの内容を比較する場合、期待するテーブルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。 |  |\n| expectedLog | 期待するログメッセージのIDを記載する。そのログメッセージが実際に出力されたかどうか、 自動テストフレームワークにて検証される。 |  |\n| diConfig | 常駐プロセスを実行する際のコンポーネント設定ファイルへのパスを記載する。( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照)  [2] | 必須 |\n| requestPath | 常駐プロセスを実行する際のリクエストパスを記載する。( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照)  [2] | 必須 |\n| userId | 常駐プロセス実行ユーザIDを記載する。( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照)  [2] | 必須 |\n\nデフォルトのグループIDを使用したい（グループIDを使わない）場合は、 default と記載する。\nデフォルトのグループIDと個別のグループを併用することも可能である。\n両方のデータが混在した場合、デフォルトのグループIDのデータとグループID指定のデータ両方が有効になる。\n\nここで言う「常駐プロセス」とは、メッセージ送受信を行うプロセスのことである。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "各種準備データ",
+      "content": "テスト実施に際して必要となる各種準備データの記述方法を説明する。\nバッチでは、データベース、リクエストメッセージの準備を行う。",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "データベースの準備",
+      "content": "[オンライン](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-testcases) と同様に、グループIDで対応付けを行う。\n\n![msg_shot_to_db.png](assets/testing-framework-02-requestunittest-real/msg_shot_to_db.png)\n\nテストショット一覧 にて、setUpTableの欄がない場合、または空欄の場合、データベース準備は行われない。",
+      "level": 4
+    },
+    {
+      "id": "s8",
+      "title": "リクエストメッセージ",
+      "content": "テストの入力データとなる要求電文を記載する。以下に例を示す。\n\n-----\n\nMESSAGE=setUpMessages\n\n// 共通情報（ディレクティブ、フレームワーク制御ヘッダ）\n\n| text-encoding | Windows-31J |  |\n|---|---|---|\n| record-separator | CRLF |  |\n| requestId | RM11AC0101 |  |\n\n// メッセージボディ\n\n| no | レコード区分 | ユーザID |\n|---|---|---|\n| 1 | 7 | 0000000001 |\n| 2 | 2 | 0000000001 |\n\n-----\n\n1. 先頭行\n\nテスト対象リクエストに対する要求電文を準備する。名前は、 `MESSAGE=setUpMessages` 固定とする。\n\n1. 共通情報\n\n名前の次行以降には以下の情報を記載する。これらの値は、リクエストメッセージの全メッセージで共通の値となる。\n\n* ディレクティブ\n* フレームワーク制御ヘッダ\n\n書式は、key-value形式である。\n\n| キー | 値 |\n|---|---|\n\n1. メッセージボディ\n\nフレームワーク制御ヘッダ以降のメッセージを記載する。\n1行目～3行目は、外部インターフェース設計書の記載内容と同じであり、\n設計書から行列を入れ替えてコピーすると効率良く作成できる。\n\n| 行 | 記述内容 | 備考 |\n|---|---|---|\n| 1行目 | フィールド名称 | 先頭セルは\"no\"とする。 |\n| 2行目 | データタイプ | 先頭セルは空白 |\n| 3行目 | フィールド長 | 先頭セルは空白 |\n| 4行目以降 | データ | 先頭セルは1からの通番 |\n\n> **Warning:**\n> フィールド名称に **重複した名称は許容されない** 。\n> 例えば、「氏名」というフィールドが2つ以上存在してはならない。\n> （通常、このような場合は「本会員氏名」と「家族会員氏名」のようにユニークなフィールド名称が付与される）\n\n本表は、 テストショット一覧 のnoと対応関係にある。\nすなわち、テストショットno1で使用される要求電文は、本表の1行目（no 1）のデータとなる。\n\n![msg_shot_to_req.png](assets/testing-framework-02-requestunittest-real/msg_shot_to_req.png)",
+      "level": 4
+    },
+    {
+      "id": "s9",
+      "title": "各種期待値",
+      "content": "検索結果、データベースを期待値と比較する場合は、\nそれぞれのデータとテストケース一覧とをIDで紐付けする。",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "レスポンスメッセージ",
+      "content": "リクエストメッセージ と同じ。\n\nただし、名前が `MESSAGE=expectedMessages` となる。",
+      "level": 4
+    },
+    {
+      "id": "s11",
+      "title": "期待するデータベースの状態",
+      "content": "データベースの準備 と同様に、期待するデータベースの状態をテストケース一覧とリンクさせる。",
+      "level": 4
+    },
+    {
+      "id": "s12",
+      "title": "テストメソッドの書き方",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s13",
+      "title": "スーパクラスについて",
+      "content": "`MessagingRequestTestSupport` クラスを継承する。\nこのクラスでは、準備したテストデータを元に以下の手順でリクエスト単体テストを実行する。",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "テストメソッド作成",
+      "content": "準備したテストシートに対応するメソッドを作成する。\n\n```java\n@Test\npublic void testRegisterUser() {\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s15",
+      "title": "スーパクラスのメソッド呼び出し",
+      "content": "テストメソッド内で、スーパクラスの以下のいずれかのメソッドを呼び出す。\n\n* void execute()\n* void execute(String sheetName)\n\n引数ありのexecuteメソッドでは、テストデータのシート名を指定できる。\n引数なしのexecuteメソッドを使用すると、引数ありのexecuteメソッドに\nテストデータのシート名にテストメソッド名を指定した場合と同じ動作となる。\n\n通常、テストシート名とテストメソッド名は同一であるので、\n引数なしのexecuteメソッドを使用するとよい。\n\n```java\n@Test\npublic void testRegisterUser() {\n    execute();   // 【説明】execute(\"testRegisterUser\") と等価\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s16",
+      "title": "テスト起動方法",
+      "content": "クラス単体テストと同様。通常のJUnitテストと同じように実行する。",
+      "level": 2
+    },
+    {
+      "id": "s17",
+      "title": "テスト結果検証",
+      "content": "自動テストフレームワーク側で以下の結果検証が行われる。\n\n* レスポンスメッセージの結果検証（必須）\n* データベースの結果検証\n* ログの結果検証\n\nデータベースとログの結果検証は、 テストショット一覧 に期待値の記載が無い場合（空欄であれば）、\nスキップされる。",
+      "level": 2
+    }
+  ]
+}

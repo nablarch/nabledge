@@ -1,0 +1,38 @@
+{
+  "id": "blank-project-setup-Java17",
+  "title": "Java17で使用する場合のセットアップ方法",
+  "content": "ブランクプロジェクトをJava17で使用する場合、各ブランクプロジェクトの疎通確認前に以下の手順を行う。\n\n* 依存モジュールの追加\n* gsp-dba-maven-pluginがJava17で動くように設定する\n* 自動テストで使用するJettyのモジュール変更(ウェブプロジェクト または RESTfulウェブサービスプロジェクトの場合のみ)\n* --add-opensオプションの追加（JSR352に準拠したバッチプロジェクトの場合のみ）\n* Javaバージョンの変更",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "依存モジュールの追加",
+      "content": "Java 11で、JAXBなど一部のモジュールが標準ライブラリから削除された。\n削除されたモジュールは明示的に依存関係に追加する必要がある。\nこのため、作成したブランクプロジェクトのPOMに以下のモジュールを追加する。\n\nなお、 [Java 11 の依存モジュールの追加](../../setup/blank-project/blank-project-setup-Java11.md#setup-blank-project-for-java11-add-dependencies) とは、以下2点の違いがある。\n\n* `jaxb-impl` のバージョンに `2.3.5` を指定する\n\n  * Java 17 で強化されたカプセル化への対応が、このバージョンでは入っているため\n* `jaxb-api` のアーティファクトを外す\n\n  * `jaxb-impl` の `2.3.5` が、 `jakarta.xml.bind-api` という別のアーティファクトを推移的に使用するため\n\n```xml\n<dependencies>\n  <!-- 中略 -->\n  <!-- 以下を追加する。 -->\n  <dependency>\n    <groupId>com.sun.activation</groupId>\n    <artifactId>javax.activation</artifactId>\n    <version>1.2.0</version>\n  </dependency>\n  <dependency>\n    <groupId>com.sun.xml.bind</groupId>\n    <artifactId>jaxb-core</artifactId>\n    <version>2.3.0</version>\n  </dependency>\n  <dependency>\n    <groupId>com.sun.xml.bind</groupId>\n    <artifactId>jaxb-impl</artifactId>\n    <version>2.3.5</version>\n  </dependency>\n  <dependency>\n    <groupId>javax.annotation</groupId>\n    <artifactId>javax.annotation-api</artifactId>\n    <version>1.3.2</version>\n  </dependency>\n</dependencies>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "gsp-dba-maven-pluginがJava17で動くように設定する",
+      "content": "以下を参照して設定する。\n\n[Java 17 での設定](https://github.com/coastland/gsp-dba-maven-plugin/tree/4.x.x-main?tab=readme-ov-file#java17%E3%81%A7%E3%81%AE%E8%A8%AD%E5%AE%9A) (外部サイト)",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "自動テストで使用するJettyのモジュール変更(ウェブプロジェクト または RESTfulウェブサービスプロジェクトの場合のみ)",
+      "content": "ブランクプロジェクトのデフォルトで設定されているJettyのバージョンはJava17に対応していない。\nそのため以下のように2ファイルを変更する。\n\n* pom.xml\n\n```xml\n<!-- nablarch-testing-jetty6の箇所を以下のように変更する -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-testing-jetty9</artifactId>\n  <scope>test</scope>\n</dependency>\n```\n\n* src/test/resources/unit-test.xml\n\n```xml\n<!-- HttpServerFactoryJetty6の箇所を以下のように変更する -->\n<component name=\"httpServerFactory\" class=\"nablarch.fw.web.httpserver.HttpServerFactoryJetty9\"/>\n```",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "--add-opensオプションの追加（JSR352に準拠したバッチプロジェクトの場合のみ）",
+      "content": "Java 17でカプセル化が強化され、デフォルトでは標準APIなど内部APIをリフレクションで使用できなくなった。\nこの変更に対する正規の対応は、代替APIへの移行となる。しかし、JSR352に準拠したバッチプロジェクトで使用しているJSR352の実装であるjBeretにはこの対応が入っていない。\n\nこのため、Java 17でもJSR352に準拠したバッチプロジェクトを動かすためには、以下のJVMオプションを設定して内部APIをリフレクションで使用できるようにする必要がある。\n\n* `--add-opens java.base/java.lang=ALL-UNNAMED`\n* `--add-opens java.base/java.security=ALL-UNNAMED`\n\n> **Tip:**\n> このJVMオプションの指定は、jBeretを組み込んでいるWildFlyでも使用されている方法になる。\n\n> * >   [Running WildFly with SE 17 (外部サイト、英語)](https://www.wildfly.org/news/2021/12/16/WildFly26-Final-Released/#running-wildfly-with-se-17)\n\n以下に、オプションを指定した場合のコマンドの例を記載する。\n\n```batch\n> java --add-opens java.base/java.lang=ALL-UNNAMED ^\n       --add-opens java.base/java.security=ALL-UNNAMED ^\n       -jar target\\myapp-batch-ee-0.1.0\\myapp-batch-ee-0.1.0.jar ^\n       sample-batchlet\n```\n\n> **Tip:**\n> Mavenから実行する場合は、環境変数 [MAVEN_OPTS (外部サイト)](https://maven.apache.org/configure.html#MAVEN_OPTS_environment_variable.3A) を使うことでJVMオプションを設定できる。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "Javaバージョンの変更",
+      "content": "ブランクプロジェクトではソース及びclassファイルが準拠するJavaのバージョンとしてJava8が設定されているため\n以下のようにファイルを変更する。\n\n* pom.xml\n\n```xml\n<!-- Javaバージョンの箇所を以下のように変更する-->\n<java.version>17</java.version>\n```",
+      "level": 2
+    }
+  ]
+}

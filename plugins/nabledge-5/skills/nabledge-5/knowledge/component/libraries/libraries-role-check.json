@@ -1,0 +1,110 @@
+{
+  "id": "libraries-role-check",
+  "title": "アノテーションによる認可チェック",
+  "content": "**目次**\n\n* 機能概要\n\n  * 煩雑なデータ管理をせずに認可チェックができる\n  * アノテーションで認可チェックができる\n  * ハンドラによる認可チェックとの使い分け\n* モジュール一覧\n* 使用方法\n\n  * 事前準備\n\n    * コンポーネントを定義する\n    * interceptorsOrderに追加する\n    * ロールを定義する\n    * ユーザのロールを保存する\n  * アクションのメソッドにアノテーションでロールを割り当てる\n  * アノテーションに割り当てた CheckRole の設定を一覧で確認する\n  * プログラムで判定する\n  * JSPで判定する\n* 仕組み\n* 拡張方法\n\nこの機能は、 [ハンドラによる認可チェック](../../component/libraries/libraries-authorization-permission-check.md) と同様にアプリケーションが提供する機能に対して認可チェックを行う。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "機能概要",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "煩雑なデータ管理をせずに認可チェックができる",
+      "content": "![conceptual_model.jpg](assets/libraries-role-check/conceptual_model.jpg)\n\nアノテーションによる認可チェックでは、ユーザに対してロール(役割)を割り当てる。\nまた、認可チェックを行いたい機能に対しても、その機能を実行するのに必要なロールを割り当てる。\nそして、現在のユーザが実行対象の機能に割り当てられたロールを有するかどうかで、認可の判定を行う。\n\n機能とロールの割り当ては、基本的にアノテーションを用いてJavaのプログラム上で行う。\nまた、ユーザとロールの割り当てについては、フレームワークでは特に方法を規定しておらず自由な方法を選択できるようにしている。\n\nこのようにアノテーションによる認可チェックでは、 [ハンドラによる認可チェック](../../component/libraries/libraries-authorization-permission-check.md) よりも単純なデータ構造で権限を管理できるようになっている。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "アノテーションで認可チェックができる",
+      "content": "```java\n@CheckRole(\"ADMIN\")\npublic HttpResponse index(HttpRequest request, ExecutionContext context) {\n```\n\nアノテーションによる認可チェックでは、アクションクラスのメソッドに対してアノテーションを使ってロールを割り当てることができる。\n上記例では、 `index` メソッドを実行するために `ADMIN` ロールが必要であることを定義している。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "ハンドラによる認可チェックとの使い分け",
+      "content": "本認可チェックと [ハンドラによる認可チェック](../../component/libraries/libraries-authorization-permission-check.md) を使い分ける基準について説明する。\n\nアノテーションによる認可チェックは、前述のとおりロール単位で権限を管理する。\nまた、ロールと機能の割り当てはJavaのアノテーションで行う仕組みとなっている。\nしたがって、本認可チェックを用いることが適しているのは、ロール自体の増減やロールに割り当てる機能の変更が頻繁に発生しない場合となる。\n\n例えば、権限管理が必要なロールの種類と機能の組み合わせが決まっており今後それらが大きく変化する予定がない場合は、本認可チェックを用いることで簡単に認可チェックを実現できる。\n\n一方で、ユーザが所属する部署によって権限を制御したいようなシステムでは、組織変更で部署の構成や利用できる機能の組み合わせも大きく変わることが予想される。このようなシステムで本認可チェックを用いると、変更のたびにアノテーションの書き換えが必要になり大きな修正工数が必要となる。\nこのようなシステムでは、 [ハンドラによる認可チェック](../../component/libraries/libraries-authorization-permission-check.md) を用いて権限の組み合わせをデータで管理することを推奨する。",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-auth-session</artifactId>\n</dependency>\n<!-- デフォルトコンフィグレーションを利用する場合 -->\n<dependency>\n  <groupId>com.nablarch.configuration</groupId>\n  <artifactId>nablarch-main-default-configuration</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "使用方法",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "事前準備",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "コンポーネントを定義する",
+      "content": "```xml\n<component name=\"roleEvaluator\"\n           class=\"nablarch.common.authorization.role.BasicRoleEvaluator\">\n    <property name=\"userRoleResolver\" ref=\"userRoleResolver\" />\n</component>\n\n<component name=\"userRoleResolver\"\n           class=\"nablarch.common.authorization.role.session.SessionStoreUserRoleResolver\" />\n```\n\nアノテーションによる認可チェックを使用するためには、まず BasicRoleEvaluator のコンポーネントを定義する。\nまた、このとき `userRoleResolver` プロパティには SessionStoreUserRoleResolver を設定する。\n\nなお、この設定はデフォルトコンフィグレーションとしても提供している。\nデフォルトコンフィグレーションを使う場合は、以下のようにファイルをインポートすることで同様の設定となる。\n\n```xml\n<import file=\"nablarch/common/authorization/role/session/authorization-session.xml\" />\n```",
+      "level": 4
+    },
+    {
+      "id": "s9",
+      "title": "interceptorsOrderに追加する",
+      "content": "アノテーションによるチェックは、Nablarchの インターセプタ の仕組みを用いて実現している。\nしたがって、既にコンポーネント定義にて `interceptorsOrder` を定義している場合は、 CheckRole を追加する必要がある。\n\n```xml\n<!-- インターセプタの実行順定義 -->\n<list name=\"interceptorsOrder\">\n  <!-- CheckRole を追加する -->\n  <value>nablarch.common.authorization.role.CheckRole</value>\n  <!-- 他のインターセプターの記述は省略 -->\n</list>\n```\n\n`interceptorsOrder` を定義していない場合は、この対応は不要である。\n\nまた、デフォルトコンフィグレーションの `nablarch/webui/interceptors.xml` を読み込んでいる場合も特に対応は必要ない。",
+      "level": 4
+    },
+    {
+      "id": "s10",
+      "title": "ロールを定義する",
+      "content": "```java\npublic class Roles {\n    /** システム管理者のロール。 */\n    public static final String ROLE_ADMIN = \"ADMIN\";\n    /** プロジェクト管理者のロール。 */\n    public static final String ROLE_PROJECT_MANAGER = \"PROJECT_MANAGER\";\n}\n```\n\nアノテーションなどで指定するロールを定義する。\n\nロールは任意の文字列として定義する。\nシステムで扱えるのであれば文字種やフォーマットに制限はないが、管理しやすいように何のロールか理解しやすい値にすることを推奨する。\n\nまた、アノテーションで指定する際は定数ではなく文字列リテラルを直接指定することも可能だが、修正が容易になるように定数で管理することを推奨する。\nなお、上記例では専用の定数クラスを用意しているが、より適切なクラスがある場合はプロジェクトの事情に合わせて変更して構わない。",
+      "level": 4
+    },
+    {
+      "id": "s11",
+      "title": "ユーザのロールを保存する",
+      "content": "アノテーションによる認可チェックでは、ユーザに割り当てられたロールをセッションストアに保存する実装をデフォルトで提供している。\nログイン時に、ユーザに割り当てられたロールを解決してセッションストアに保存しておくことで、その後の認可チェックはセッションストアに保存されたロールの情報を用いて行われるようになる。\n\n以下に、ログイン時にロールをセッションストアに保存する実装例を記載する。\n\n```java\nList<String> userRoles = resolveUserRoles(loginId);\nSessionStoreUserRoleUtil.save(userRoles, executionContext);\n```\n\nここでは、ログインIDを元にユーザに割り当てられたロールの一覧を解決し、それを SessionStoreUserRoleUtil の `save` メソッドでセッションストアに保存している。\n\n> **Tip:**\n> `resolveUserRoles` メソッドが行う、ユーザからロールを解決する方法については、フレームワークでは特に規定していない。\n> したがって、プロジェクトごとの事情に合わせてロールを解決する実装を作りこむことになる。\n\n> 多くの場合はデータベースから解決することが想定される。\n> 例えば、ロールが「管理者」だけのようなシステムでは、ユーザの情報を管理するテーブルの「管理者フラグ」の値を見て解決するような方法が考えられる。\n> また、ユーザにいくつかのロールを割り当てるようなシステムでは、ユーザとロールを関連付けるテーブルを検索することで解決するような方法が考えられる。",
+      "level": 4
+    },
+    {
+      "id": "s12",
+      "title": "アクションのメソッドにアノテーションでロールを割り当てる",
+      "content": "```java\n@CheckRole(Roles.ROLE_ADMIN)\npublic HttpResponse index(HttpRequest request, ExecutionContext context) {\n```\n\nCheckRole アノテーションをアクションメソッドに設定し `value` にロールを指定することで、アクションメソッドにロールを割り当てることができる。\n上記例では、 `index` メソッドに対して `ADMIN` ロールを割り当てている。\nこれにより、 `index` メソッドは `ADMIN` ロールを持つユーザだけが実行できるようになる。\nもし `ADMIN` ロールを持たないユーザがメソッドを実行しようとした場合は、 Forbidden がスローされる。\n\n複数のロールを割り当てたい場合は、配列で指定できる。\n以下に実装例を示す。\n\n```java\n@CheckRole({Roles.ROLE_ADMIN, Roles.ROLE_PROJECT_MANAGER})\npublic HttpResponse index(HttpRequest request, ExecutionContext context) {\n```\n\nこの場合、 `index` メソッドを実行するためには `ADMIN` と `PROJECT_MANAGER` の両方のロールを保有している必要がある(AND条件)。\n\nOR条件にしたい場合は、 `anyOf` に `true` を設定する。\n以下に実装例を示す。\n\n```java\n@CheckRole(\n    value = {Roles.ROLE_ADMIN, Roles.ROLE_PROJECT_MANAGER},\n    anyOf = true\n)\npublic HttpResponse index(HttpRequest request, ExecutionContext context) {\n```\n\n上記例では、 `index` メソッドを実行するためには `ADMIN` か `PROJECT_MANAGER` のいずれかのロールを保有していれば良いということになる。",
+      "level": 3
+    },
+    {
+      "id": "s13",
+      "title": "アノテーションに割り当てた CheckRole の設定を一覧で確認する",
+      "content": "アクションメソッドに設定した CheckRole アノテーションに誤りがないかチェックするために、アノテーションの設定状況を一覧表示する機能を提供している。\n本機能を利用することで、アノテーションの設定に漏れが無いか、設定されている内容に過不足がないかをチェックできるようになる。\n\n本機能は、システム起動時にアノテーションの設定情報を収集して、デバッグレベルでログに出力するという方法で実現している。\n以下で、設定方法について説明する。\n\nまず、 CheckRoleLogger のコンポーネントを以下のように定義する。\n\n```xml\n<!-- 初期化が必要なコンポーネント -->\n<component name=\"initializer\"\n           class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <!-- 他の初期化が必要なコンポーネントの記述は省略 -->\n\n      <component class=\"nablarch.common.authorization.role.CheckRoleLogger\">\n        <property name=\"targetPackage\" value=\"com.nablarch.example.app.web.action\" />\n      </component>\n    </list>\n  </property>\n</component>\n```\n\nCheckRoleLogger は、初期化が必要なコンポーネントとして BasicApplicationInitializer の `initializeList` に設定する。\nまたこのとき、 `targetPackage` プロパティにアクションクラスが存在するパッケージを指定する(サブパッケージも対象となる)。\n\nなお、デフォルトでは末尾が `Action` で終わる名前のクラスが処理の対象となる。\nこの設定は `targetClassPattern` プロパティに任意の正規表現を指定することで変更できる。\n詳細は CheckRoleLogger のJavadocを参照のこと。\n\n上記設定が完了したら、ログレベルをデバッグレベルにしてシステムを起動する。\nこれにより、システム起動時に以下のようなログが出力されるようになる。\n\n```text\n2023-01-11 14:29:31.643 -DEBUG- nablarch.common.authorization.role.CheckRoleLogger [null] boot_proc = [] proc_sys = [nablarch-example-web] req_id = [null] usr_id = [null] CheckRole Annotation Settings\nclass signature       role    anyOf\ncom.nablarch.example.app.web.action.AuthenticationAction      index(nablarch.fw.web.HttpRequest, nablarch.fw.ExecutionContext)\n(中略)\ncom.nablarch.example.app.web.action.ProjectBulkAction update(nablarch.fw.web.HttpRequest, nablarch.fw.ExecutionContext)\ncom.nablarch.example.app.web.action.ProjectUploadAction       index(nablarch.fw.web.HttpRequest, nablarch.fw.ExecutionContext)        ADMIN   true\ncom.nablarch.example.app.web.action.ProjectUploadAction       index(nablarch.fw.web.HttpRequest, nablarch.fw.ExecutionContext)        PROJECT_MANAGER true\n```\n\nログには、以下の要素がタブ区切りで出力されるようになっている。\n\nログ出力要素\n\n| 要素 | 説明 | 出力例 |\n|---|---|---|\n| `class` | クラスの完全修飾名 | `com.nablarch.example.app.web.action.ProjectUploadAction` |\n| `signature` | メソッドのシグネチャ | `upload(nablarch.fw.web.HttpRequest, nablarch.fw.ExecutionContext)` |\n| `role` | 割り当てられているロール(アノテーション未設定の場合は空) | `ADMIN` |\n| `anyOf` | `@CheckRole` の `anyOf` に設定された値(アノテーション未設定の場合は空) | `false` |\n\n複数のロールが割り当てられている場合、それぞれのロールは別の行に分けて出力される。\n例えば上記出力例では、 `ProjectUploadAction` の `index` メソッドには `ADMIN` と `PROJECT_MANAGER` の2つのロールが割り当てられていることが分かる。\n実装に置き換えると、以下のように設定されていることになる。\n\n```java\n@CheckRole(\n    value = {Roles.ROLE_ADMIN, Roles.ROLE_PROJECT_MANAGER},\n    anyOf = true\n)\npublic HttpResponse index(HttpRequest request, ExecutionContext context) {\n```",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "プログラムで判定する",
+      "content": "ロールの有無を、プログラム上の任意の場所で判定できる。\n\n```java\nif (CheckRoleUtil.checkRole(Roles.ROLE_ADMIN, executionContext)) {\n    // ADMIN ロールを持つ場合の処理\n}\n```\n\nプログラムでロールの有無を判定する場合は、 CheckRoleUtil を使用する。\n上記例では、 `checkRole` メソッドを使って現在のユーザが `ADMIN` ロールを持っているかどうかを判定している。\n\n複数のロールを指定する場合は、 `checkRoleAllOf` メソッドか `checkRoleAnyOf` メソッドを使用して判定できる。",
+      "level": 3
+    },
+    {
+      "id": "s15",
+      "title": "JSPで判定する",
+      "content": "[ハンドラによる認可チェック](../../component/libraries/libraries-authorization-permission-check.md) では、JSPのカスタムタグで認可チェックを行い自動的にボタンの表示・非表示を切り替えるような仕組みが提供されている。\nしかし本認可チェックでは、このような仕組みは提供していない。\n\nそこでここでは、本認可チェックを採用したうえでJSPの表示・非表示をロールの有無で制御する方法について説明する。\n\nロールによる表示の制御は、サーバー側で判定した結果をセッションストアなどに保存することで実現する。\n実装例を以下に示す。\n\n```java\nUserContext userContext = new UserContext();\nuserContext.setAdmin(CheckRoleUtil.checkRole(Roles.ROLE_ADMIN, executionContext));\nuserContext.setProjectManager(CheckRoleUtil.checkRole(Roles.ROLE_PROJECT_MANAGER, executionContext));\n\nSessionUtil.put(executionContext, \"userContext\", userContext);\n```\n\nこの例では、ログイン時にユーザのロールを判定した結果を `UserContext` クラスに保存してセッションストアに格納している(`UserContext` はただのJava Beansで、プロジェクトごとに必要に応じて作成する)。\nこれにより、JSPではEL式やJSTLを使うことで以下のように表示を制御できるようになる。\n\n```jsp\n<c:if test=\"${userContext.admin}\">\n  <%-- ADMIN ロールを持つ場合に表示する --%>\n</c:if>\n<c:if test=\"${userContext.projectManager}\">\n  <%-- PROJECT_MANAGER ロールを持つ場合に表示する  --%>\n</c:if>\n```",
+      "level": 3
+    },
+    {
+      "id": "s16",
+      "title": "仕組み",
+      "content": "ここでは、アノテーションによる認可チェックの仕組みについて説明する。\n\n![architecture.png](assets/libraries-role-check/architecture.png)\n\nアノテーションを用いたチェック処理の実行は、Nablarchの インターセプタ の仕組みを利用して実現している。\nCheckRole アノテーションは、このインターセプタを実装したものとなっている。\n\nCheckRole と CheckRoleUtil 自体は直接認可チェックは行わず、 RoleEvaluator に処理を委譲する。\nこのとき、 RoleEvaluator のインスタンスは SystemRepository から `roleEvaluator` という名前で取得したものを使用する。\nまた、チェック処理に渡すユーザIDは、 ThreadContext の `getUserId` メソッドで取得したものを使用する。\n\nRoleEvaluator のデフォルトの実装クラスとして、本認可チェックでは BasicRoleEvaluator というクラスを提供している。\nこのクラスは、ユーザに紐づくロールと引数で渡されたロールとを比較し、条件を満たすかどうかを判定するシンプルな作りとなっている。\nなお、ユーザに紐づくロールの解決は UserRoleResolver に委譲している。\n\nUserRoleResolver のデフォルト実装としては、　SessionStoreUserRoleResolver を提供している。\nこのクラスは、セッションストアに保存された情報でユーザのロールを解決する仕組みとなっている。",
+      "level": 2
+    },
+    {
+      "id": "s17",
+      "title": "拡張方法",
+      "content": "前述の仕組みの説明から、 RoleEvaluator または UserRoleResolver の実体を差し替えることで任意の処理に拡張できることがわかる。\n\nRoleEvaluator の実体の差し替えは、 RoleEvaluator を実装した独自クラスを作成し、そのクラスを `roleEvaluator` という名前でコンポーネント登録することで実現できる。\n\n```xml\n<component name=\"roleEvaluator\" class=\"com.example.CustomRoleEvaluator\" />\n```\n\nRoleEvaluator の実体には BasicRoleEvaluator を使いつつ、 UserRoleResolver の実体だけを差し替えたい場合は、 BasicRoleEvaluator の `userRoleResolver` プロパティに設定するコンポーネントを差し替えればいい。\nデフォルトコンフィグレーションを利用している場合は、 `userRoleResolver` という名前のコンポーネントを設定するように定義されているので、同じ名前で独自クラスのコンポーネントを定義することで差し替えができる。\n\n```xml\n<component name=\"userRoleResolver\" class=\"com.example.CustomUserRoleResolver\" />\n```",
+      "level": 2
+    }
+  ]
+}

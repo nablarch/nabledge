@@ -1,69 +1,32 @@
 {
   "id": "about-nablarch-architecture",
   "title": "アーキテクチャ",
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/nablarch/architecture.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/OnDoubleSubmission.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/token/UseToken.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnErrors.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnError.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/interceptor/InjectForm.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Interceptor.Factory.html"
-  ],
-  "index": [
+  "content": "**目次**\n\n* Nablarchアプリケーションフレームワークの主な構成要素\n* ハンドラキュー(handler queue)\n\n  * インターセプタ(interceptor)\n* [ライブラリ(library)](../../component/libraries/libraries-libraries.md#library)\n\nNablarchアプリケーションフレームワークのアーキテクチャについて解説する。\n\n> **Warning:**\n> 本項で解説するアーキテクチャは、 [JSR352に準拠したバッチアプリケーション](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.md#jsr352-batch) には該当しない（詳細については、 [JSR352に準拠したバッチアプリケーション](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.md#jsr352-batch) の [アーキテクチャ概要](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-architecture) を参照）。",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "Nablarchアプリケーションフレームワークの主な構成要素",
-      "hints": [
-        "Nablarchアプリケーションフレームワーク",
-        "アーキテクチャ",
-        "構成要素",
-        "フレームワーク概要",
-        "jsr352_batch",
-        "JSR352",
-        "適用範囲",
-        "スコープ"
-      ]
+      "content": "Nablarchアプリケーションフレームワークの主な構成要素を以下に示す。\n\n![fw-design.png](assets/about-nablarch-architecture/fw-design.png)",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "ハンドラキュー(handler queue)",
-      "hints": [
-        "ハンドラキュー",
-        "handler queue",
-        "ハンドラ",
-        "インターセプタ",
-        "interceptor",
-        "CDI",
-        "JSR-346",
-        "OnDoubleSubmission",
-        "UseToken",
-        "OnErrors",
-        "OnError",
-        "InjectForm",
-        "Interceptor.Factory",
-        "横断的処理",
-        "リクエスト処理",
-        "レスポンス処理",
-        "ハンドラ実行順序"
-      ]
+      "content": "ハンドラキューとは、リクエストやレスポンスに対する横断的な処理を行うハンドラ群を予め定められた順序に沿って定義したキューを指す。\n\nハンドラキューは、以下図のようにサーブレットフィルタのチェーン実行と同じように処理を実行する。\n\n![handlers.png](assets/about-nablarch-architecture/handlers.png)\n\nハンドラでは主に以下の様な処理を行う。\n\n* リクエストのフィルタリング(アクセス権限のあるリクエストのみ受け付ける処理など)\n* リクエスト、レスポンスの変換\n* リソースの取得・解放(データベース接続の取得・開放など)\n\n> **Tip:**\n> リクエストやレスポンスに対する処理や、共通で行うような処理はプロジェクト側でハンドラを実装して対応すること。\n\n> 業務ロジックを実装するクラスの親クラスで共通処理を実装するようなケースを多く見かけるが、\n> 個別のハンドラとして実装することを推奨する。\n> (個別のハンドラの前後に処理を追加したい場合には [インターセプタ(interceptor)](../../about/about-nablarch/about-nablarch-architecture.md#nablarch-architecture-interceptor) を使用することを推奨する。)\n\n> 個別のハンドラで実装した場合\n> 個々のハンドラの責務が明確になるため、テストが容易であり保守性が高くなる。\n> また、ハンドラ毎処理が独立しているため、共通処理の抜き差しが容易に出来る。\n> 親クラスに共通処理を実装した場合\n> 共通処理が増えた場合に親クラスが肥大化し複数の責務を持つことになる。\n> これは、メンテナンス時のコストが増大するだけではなく、テストも複雑になり不具合の温床ともなる。\n> 本来継承すべきクラスを正しく継承をしなかった場合でも、共通処理の内容によっては異常終了とならずに処理が実行出来るため、\n> 不具合を検知しづらい問題もある。\n\nNablarchは受け取ったリクエストに対し、ハンドラキュー上に定義されたハンドラを先頭から順に処理を実行する。\nリクエストに対するハンドラの処理内でレスポンスが返却された場合、レスポンスに対しこれまでに実行されたハンドラを逆順に実行する。\n\nハンドラは、前後関係を意識してハンドラキューに設定しないと正常に動作しないものがある。\nハンドラの制約等(前後関係など)は、各ハンドラの章で説明するので、ハンドラキューを構築する際には各ハンドラのドキュメントを参照すること。",
+      "level": 2
     },
     {
       "id": "s3",
+      "title": "インターセプタ(interceptor)",
+      "content": "インターセプタとは、実行時に動的にハンドラキューに追加されるハンドラのことを指す。\n\n例えば、特定のリクエストの場合のみ処理（ハンドラ）を追加する場合や、\nリクエストごとに設定値を切り替えて処理(ハンドラ)を実行したい場合にはハンドラよりもインターセプタが適している。\n\n> **Tip:**\n> インターセプタは、Java EEのCDI(JSR-346)で定義されているインターセプタと同じように処理を実行する。\n\n> **Important:**\n> インターセプタの実行順序は、設定ファイルに設定する必要がある。\n> 設定がない場合、インターセプタの実行順はJVM依存となるため注意すること。\n\n> Nablarchがデフォルトで提供するインターセプタの実行順は、以下のとおり設定する必要がある。\n\n> 1. >   nablarch.common.web.token.OnDoubleSubmission\n> 2. >   nablarch.common.web.token.UseToken\n> 3. >   nablarch.fw.web.interceptor.OnErrors\n> 4. >   nablarch.fw.web.interceptor.OnError\n> 5. >   nablarch.common.web.interceptor.InjectForm\n\n> インターセプタの実行順設定に関する詳細は、 nablarch.fw.Interceptor.Factory を参照。",
+      "level": 3
+    },
+    {
+      "id": "s4",
       "title": "ライブラリ(library)",
-      "hints": [
-        "ライブラリ",
-        "library",
-        "データベースアクセス",
-        "ファイルアクセス",
-        "ログ出力",
-        "コンポーネント"
-      ]
+      "content": "ライブラリとは、データベースアクセスやファイルアクセス、ログ出力などのようにハンドラから呼び出されるコンポーネント群のことを指す。\n\nNablarchアプリケーションフレームワークが提供するライブラリは、 [Nablarchが提供するライブラリ](../../component/libraries/libraries-libraries.md#library) を参照。",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "> **警告**: 本項で解説するアーキテクチャは、JSR352バッチ（jsr352_batch）には該当しない。JSR352バッチのアーキテクチャについては、jsr352_batchのjsr352_architectureを参照。\n\n![Nablarchアプリケーションフレームワークの主な構成要素](assets/about-nablarch-architecture/fw-design.png)",
-    "s2": "ハンドラキューとは、リクエスト/レスポンスへの横断的処理を行うハンドラ群を定められた順序で定義したキュー。サーブレットフィルタのチェーン実行と同様に処理を実行する。\n\n![ハンドラキューの処理フロー](assets/about-nablarch-architecture/handlers.png)\n\nハンドラでの主な処理:\n- リクエストのフィルタリング（アクセス権限のあるリクエストのみ受け付けるなど）\n- リクエスト/レスポンスの変換\n- リソースの取得・解放（DB接続の取得・解放など）\n\n処理フロー:\n1. ハンドラキュー上のハンドラを先頭から順に実行\n2. レスポンス返却時は、これまでに実行されたハンドラを逆順に実行\n\nハンドラは前後関係を意識してハンドラキューに設定しないと正常に動作しないものがある。各ハンドラのドキュメントを参照してハンドラキューを構築すること。\n\n> **補足**: リクエスト/レスポンス処理や共通処理は、親クラスではなく個別ハンドラとして実装することを推奨。個別のハンドラの前後に処理を追加したい場合にはインターセプタを使用することを推奨する。\n> - **個別ハンドラ実装**: 各ハンドラの責務が明確でテスト容易・保守性高。共通処理の抜き差しも容易。\n> - **親クラスへの共通処理実装**: 処理増加で親クラスが肥大化し複数責務を持つことになる。メンテコスト増大・テスト複雑化・不具合検知困難の問題がある。本来継承すべきクラスを継承しなかった場合でも、共通処理の内容によっては異常終了とならずに処理が実行されるため不具合を検知しづらい。\n\n## インターセプタ(interceptor)\n\nインターセプタとは、実行時に動的にハンドラキューに追加されるハンドラ。特定リクエストのみ処理（ハンドラ）を追加する場合や、リクエストごとに設定値を切り替えて処理を実行したい場合は、ハンドラよりインターセプタが適している。\n\n> **補足**: インターセプタは、Java EEのCDI（JSR-346）で定義されているインターセプタと同じように処理を実行する。\n\n> **重要**: インターセプタの実行順序は設定ファイルへの設定が必要。設定がない場合、実行順はJVM依存となる。Nablarchがデフォルトで提供するインターセプタの実行順は以下の順序で設定する必要がある:\n> 1. `OnDoubleSubmission`\n> 2. `UseToken`\n> 3. `OnErrors`\n> 4. `OnError`\n> 5. `InjectForm`\n>\n> 実行順設定の詳細は `Factory` を参照。",
-    "s3": "ライブラリとは、データベースアクセス、ファイルアクセス、ログ出力などのようにハンドラから呼び出されるコンポーネント群。\n\nNablarchアプリケーションフレームワークが提供するライブラリは [library](../../component/libraries/libraries-libraries.json) を参照。"
-  }
+  ]
 }

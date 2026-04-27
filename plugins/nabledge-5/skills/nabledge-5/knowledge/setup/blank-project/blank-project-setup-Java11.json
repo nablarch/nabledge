@@ -1,0 +1,32 @@
+{
+  "id": "blank-project-setup-Java11",
+  "title": "Java11で使用する場合のセットアップ方法",
+  "content": "ブランクプロジェクトをJava11で使用する場合、各ブランクプロジェクトの疎通確認前に以下の手順を行う。\n\n* 依存モジュールの追加\n* gsp-dba-maven-pluginが使用する依存モジュールの追加\n* 自動テストで使用するJettyのモジュール変更(ウェブプロジェクト または RESTfulウェブサービスプロジェクトの場合のみ)\n* Javaバージョンの変更\n\n> **Tip:**\n> コンテナ用のブランクプロジェクトはJava11を前提としており、本章で説明している修正があらかじめ適用されている。\n> したがって、コンテナ用のブランクプロジェクトでは本章の手順は必要ない。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "依存モジュールの追加",
+      "content": "Java 11で、JAXBなど一部のモジュールが標準ライブラリから削除された。\n削除されたモジュールは明示的に依存関係に追加する必要がある。\nこのため、作成したブランクプロジェクトのPOMに以下のモジュールを追加する。\n\n```xml\n<dependencies>\n  <!-- 中略 -->\n  <!-- 以下を追加する。 -->\n  <dependency>\n    <groupId>com.sun.activation</groupId>\n    <artifactId>javax.activation</artifactId>\n    <version>1.2.0</version>\n  </dependency>\n  <dependency>\n    <groupId>javax.xml.bind</groupId>\n    <artifactId>jaxb-api</artifactId>\n    <version>2.3.0</version>\n  </dependency>\n  <dependency>\n    <groupId>com.sun.xml.bind</groupId>\n    <artifactId>jaxb-core</artifactId>\n    <version>2.3.0</version>\n  </dependency>\n  <dependency>\n    <groupId>com.sun.xml.bind</groupId>\n    <artifactId>jaxb-impl</artifactId>\n    <version>2.3.0</version>\n  </dependency>\n  <dependency>\n    <groupId>javax.annotation</groupId>\n    <artifactId>javax.annotation-api</artifactId>\n    <version>1.3.2</version>\n  </dependency>\n</dependencies>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "gsp-dba-maven-pluginが使用する依存モジュールの追加",
+      "content": "以下を参照して設定する。\n\n[Java 11 での設定](https://github.com/coastland/gsp-dba-maven-plugin/tree/4.x.x-main?tab=readme-ov-file#java11%E3%81%A7%E3%81%AE%E8%A8%AD%E5%AE%9A) (外部サイト)",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "自動テストで使用するJettyのモジュール変更(ウェブプロジェクト または RESTfulウェブサービスプロジェクトの場合のみ)",
+      "content": "ブランクプロジェクトのデフォルトで設定されているJettyのバージョンはJava11に対応していない。\nそのため以下のように2ファイルを変更する。\n\n* pom.xml\n\n```xml\n<!-- nablarch-testing-jetty6の箇所を以下のように変更する -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-testing-jetty9</artifactId>\n  <scope>test</scope>\n</dependency>\n```\n\n* src/test/resources/unit-test.xml\n\n```xml\n<!-- HttpServerFactoryJetty6の箇所を以下のように変更する -->\n<component name=\"httpServerFactory\" class=\"nablarch.fw.web.httpserver.HttpServerFactoryJetty9\"/>\n```",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "Javaバージョンの変更",
+      "content": "ブランクプロジェクトではソース及びclassファイルが準拠するJavaのバージョンとしてJava8が設定されているため\n以下のようにファイルを変更する。\n\n* pom.xml\n\n```xml\n<!-- Javaバージョンの箇所を以下のように変更する-->\n<java.version>11</java.version>\n```",
+      "level": 2
+    }
+  ]
+}

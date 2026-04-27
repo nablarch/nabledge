@@ -1,0 +1,26 @@
+{
+  "id": "handlers-session-concurrent-access-handler",
+  "title": "セッション並行アクセスハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n\n> **Important:**\n> 新規プロジェクトにおける本ハンドラの使用は推奨しない。セッション変数保存ハンドラを使用すること。\n\n本ハンドラはセッションごとにリクエスト処理の並行同時アクセスに対して、同時実行に\nよって発生するスレッド間の処理不整合を防ぐ機能を提供する。\n\n本ハンドラでは、以下の処理を行う。\n\n* セッションに保持した情報のコピーを作成する\n* 処理終了後、他のスレッドによってセッションが更新されていないかチェックし、更新済みであればエラーとする\n* 処理終了後、セッション情報のコピーをセッションに反映する\n\n![flow.png](assets/handlers-session-concurrent-access-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.web.handler.SessionConcurrentAccessHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "なし。",
+      "level": 2
+    }
+  ]
+}

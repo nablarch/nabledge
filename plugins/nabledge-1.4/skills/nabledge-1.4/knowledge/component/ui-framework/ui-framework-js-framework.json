@@ -1,0 +1,74 @@
+{
+  "id": "ui-framework-js-framework",
+  "title": "JavaScript UI部品",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "[JavaScript UI部品](../../component/ui-framework/ui-framework-js-framework.md) は、カレンダー表示やページ内タブページのように、\n通常のHTMLの範疇では実現できないUI機能を実装するJavaScript部品群である。\nこれらの部品群は、以下の指針に基づき、独自実装されている。\n\n* Nablarchフレームワークの動作を前提とし、エラー時の入力データ復帰や、\n  非活性項目・変更不可項目など、サーバ処理との連携の整合性を重視する。\n* 可能な限りJavaScriptを直接記述しなくてもカスタマイズできるようにする。\n* UI標準に準じた挙動、統一的なデザインが実現されること。\n\n利用可能な各部品の仕様については [JavaScript UI部品一覧](../../component/ui-framework/ui-framework-reference-js-framework.md) を参照すること。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "使用例",
+      "content": "以下のソースコードは、画面内の入力要素に対してカレンダー入力部品を使用している例である。\n\n```jsp\n<div class=\"field\">\n  <label>適用開始日：</label>\n  <input id=\"effectiveDate\" type=\"text\" value=\"\" />\n  <button class=\"nablarch_DatePicker\n                -format yyyy/MM/dd\n                -locale ja\n                -input  effectiveDate\">\n    <i class=\"fa fa-calendar\"></i>\n  </button>\n</div>\n```\n\n<button> 要素に指定された **class** 属性の内容に注目してほしい。\nここでは、 <button> 要素に適用する [JavaScript UI部品](../../component/ui-framework/ui-framework-js-framework.md) を指定する **マーカCSS** と呼ばれる識別子(**nablarch_DatePicker**)\nの後に当該の部品の挙動を定義する各種オプション(**-format yyyy/MM/dd -locale ja -input effectiveDate**)\nが続いている。\nこのように [JavaScript UI部品](../../component/ui-framework/ui-framework-js-framework.md) の利用するには上記のようなCSSの指定のみを行えばよく、JavaScriptを直接記述する必要はない。\n\n**注)**  [JavaScript UI部品](../../component/ui-framework/ui-framework-js-framework.md) は基本的には [UI部品ウィジェット](../../component/ui-framework/ui-framework-jsp-widgets.md) 内で使用することを想定しており、\n一般の業務画面実装者がこれらのAPIを直接使用することは想定していない。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "依存ライブラリ",
+      "content": "本機能は、以下の外部ライブラリに依存している。\n\n| ライブラリ名 | 用途 | ライセンス |\n|---|---|---|\n| require.js | JavaScriptの分割モジュール管理 | MIT |\n| sugar.js | ECMAScript5互換関数を含むユーティリティAPI群の提供 | ライセンスフリー |\n| jQuery | DOM関連APIの簡易化およびブラウザ互換レイヤの提供 | MIT |",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "初期処理",
+      "content": "[JavaScript UI部品](../../component/ui-framework/ui-framework-js-framework.md) の初期処理は各業務画面のJSPから参照している /js/nablarch.js もしくは\nそれをミニファイした /js/nablarch-minify.js によって行われる。\n\n> **Note:**\n> 本番環境では、処理性能を最大化するため、全てのJavaScriptを事前にミニファイし、単一のJavaScriptとして\n> ロードするが、開発環境では、開発効率性を重視するため、各スクリプトは個別に動的ロード(XHR)される。\n\n初期処理は上記スクリプトのロードが完了した時点に行われる処理と、\n業務画面JSPのDOM構造が確定した時点(ドキュメントロード)の処理の2段階に分けて実行される。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "スクリプトロード時の挙動",
+      "content": "[JavaScript UI部品](../../component/ui-framework/ui-framework-js-framework.md) は AMD(Asynchronous Module Definition) 形式に沿って実装されており、\nAMDモジュール管理ライブラリである **require.js** により、動的にロードもしくは事前にミニファイされる。\n\n[JavaScript UI部品](../../component/ui-framework/ui-framework-js-framework.md) のロードは /js/nablarch.js 内の以下の処理によって開始される。\n\n```javascript\n// 初期ロード対象コンポーネント\nrequire([\"nablarch/ui\"], function(ui) {\n  $(function() {\n    ui.Widget.init(); //ドキュメントロード後の初期化処理を実行\n  });\n});\n```\n\n上記ソースコードによってロードされるモジュールが [/js/nablarch/ui.js](../_static/yuidoc/files/js_nablarch_ui.js.html) である。\nこのモジュールは、プロジェクトで使用する全UI部品を以下のように依存モジュールとして定義している。\n\n```javascript\ndefine([\n  \"nablarch/ui/Widget\"\n, \"nablarch/ui/event\"\n, \"nablarch/ui/ListBuilder\"\n, \"nablarch/ui/DatePicker\"\n, \"nablarch/ui/AutoSum\"\n, \"nablarch/ui/Collapsible\"\n, \"nablarch/ui/TreeList\"\n, \"nablarch/ui/readonly\"\n, \"nablarch/ui/Placeholder\"\n, \"nablarch/ui/Tab\"\n], function(Widget) { \"use strict\";\n  return {\n    Widget: Widget\n  };\n});\n```\n\n各UI部品側では、先に述べた **マーカCSS** の宣言と、UI部品の登録処理\n([Widget.register()](../_static/yuidoc/classes/nablarch.ui.Widget.html))を呼び出す。\n以下は [/js/nablarch/ui/DatePicker.js](../_static/yuidoc/classes/nablarch.ui.DatePicker.html) の例である。\n\n```javascript\nDatePicker.widgetType = \"nablarch_DatePicker\"; //マーカCSS\nWidget.register(DatePicker); // UI部品の登録\n```\n\nこのように全てのUI部品の初期化と登録が完了すると、最初の /js/nablarch.js に制御が戻り\n[Widget.init()](../_static/yuidoc/classes/nablarch.ui.Widget.html) をドキュメントロード後に呼び出す。\n(イベントハンドラ登録する。)",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "ドキュメントロード時の挙動",
+      "content": "ドキュメントロード後に呼び出される\n[Widget.init()](../_static/yuidoc/classes/nablarch.ui.Widget.html) では、各UI部品に対して以下の初期処理を実行する。\n\n1. **マーカCSS** にマッチするドキュメント上の各要素に対してUI部品のインスタンスを作成する。\n  この際、要素のNodeインスタンスおよびマーカCSSに付随するオプションをパースしたオブジェクトが\n  コンストラクタの引数として渡される。\n2. 生成したインスタンスを当該要素の **data-** プロパティとして設定し\n  UI部品のインスタンスがGCの対象とならないようにする。\n  なお、1. の初期化処理の前に、この **data-** プロパティの内容をチェックするので\n  同じ要素に対して複数回初期化が行われることはない。",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "UI部品の再初期化",
+      "content": "JavaScriptのテンプレート処理などによって、画面ロード完了後に **マーカCSS** を含むドキュメントノードを\n動的に追加しても、そのままでは上で述べた初期化処理は実行されず、期待された動作とならない。\nこのような場合は明示的に [Widget.init()](../_static/yuidoc/classes/nablarch.ui.Widget.html)\nを呼び出す必要がある。\n\n上で述べたように、既に初期化されている要素に対しては何もしないので、複数回実行しても\n既にドキュメント上に存在しているUI部品に影響を与えることはない。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "ファイル構成",
+      "content": "**構成ファイル一覧**\n\n| 名称 | 動作環境 [2] |  | パス | 内容 |\n|---|---|---|---|---|\n| 初期ロードスクリプト | ○ | △ | /js/nablarch.js | AMDロードパスを設定し、PJで使用するUIモジュールの初期化ルーチンを実行する。 また、スクリプトロード直後でしか実行できない処理をあわせて行う。 (iPadでの画面ロードサイズに関する問題の対処スクリプトの適用など) |\n| ミニファイ済みスクリプト | × | ○ | /js/nablarch-minify.js | 初期ロードスクリプトの依存ライブラリを全て結合し、ミニファイした スクリプト。 本番環境では、このスクリプトと require.js のみを使用する。 |\n| AMDスクリプトローダ | △ | ○ | /js/require.js | AMD形式で記述されたJavaScript部品のローダ |\n| テキストリソースローダ | ○ | △ | /js/text.js | require.js の拡張プラグイン。JavaScript以外のテキストリソースを XHR経由で動的にロードする。 |\n| jQueryライブラリ | ○ | △ | /js/jquery.js | DOM操作API/イベント管理APIのブラウザ間互換レイヤーを提供する。 |\n| sugar.js | ○ | △ | /js/sugar.js | ECMAScript5互換関数および、その他のユーティリティ系API群の提供 |\n| 簡易BigDecimal | ○ | △ | /js/nablarch/util/ BigDecimal.js | JavaScriptによる簡易BigDecimal実装。 |\n| 簡易SimpleDateFormat | ○ | △ | /js/nablarch/util/ SimpleDateFormat.js | Java SDK SimpleDateFormat の仕様のうち、 日付に関する処理のサブセットを実装する。 |\n| 日付ライブラリ | ○ | △ | /js/nablarch/util/ DateUtil.js | JavaScriptネイティブ日付型(Date)と 日付文字列との相互変換を行うためのライブラリ。 |\n| UI部品共通プロトタイプ | ○ | △ | /js/nablarch/ui/ Widget.js | UI部品の実装に必要な共通機能(HTMLノードへのバインド /イベント定義/画面ロード時処理の起動)などを実装 する共通プロトタイプ。 |\n| 自動集計 | ○ | △ | /js/nablarch/ui/ AutoSum.js | 入出力項目の自動集計を行うUI部品。 |\n| 日付入力部品 | ○ | △ | /js/nablarch/ui/ DatePicker.js | カレンダーを用いた日付入力を実装するUI部品 |\n| カレンダーテンプレート | △ | △ | /js/nablarch/ui/ DatePicker.template | 日付入力部品のカレンダー部分に表示する HTMLを記述するテキストファイル。 |\n| リストビルダー部品 | ○ | △ | /js/nablarch/ui/ ListBuilder.js | 2つのセレクトボックスを用いた、複数選択用のUI |\n| リストビルダーテンプレート | △ | △ | /js/nablarch/ui/ ListBuilder.template | リストビルダーの制御ボタン部分に表示する HTMLを記述するテキストファイル。 |\n| タブ切り替え部品 | ○ | △ | /js/nablarch/ui/ Tab.js | JavaScriptによるページ内タブ切り替えUIを実装する部品。 |\n| Nablarchサブミット連動 | ○ | △ | /js/nablarch/ui/ event.js | Nablarchのサブミット制御管理機構に連動して、 画面サブミットの前後に発火するカスタムイベントを 定義する。 |\n\n**「サーバ」:**\n実働環境にデプロイして使用するかどうか\n**「ローカル」:**\nローカル動作時に使用するかどうか\n**○ :**\n使用する\n**△ :**\n直接は使用しないがミニファイしたファイルの一部として使用する。\n**× :**\n使用しない",
+      "level": 2
+    },
+    {
+      "id": "s9",
+      "title": "新規 JavaScript UI部品の作成方法",
+      "content": "本ドキュメントでは、UI部品カタログに収録されている既存のもの以外の\nUI部品を作成する方法について解説する。",
+      "level": 2
+    },
+    {
+      "id": "s10",
+      "title": "作成するファイル",
+      "content": "標準的なUI部品は以下の3つのファイルから構成される。\n\n**1. モジュール定義ファイル(.js)**\nウィジェットの処理を記述したJavaScriptファイルである。\n以下の場所に配置する。:\n\n```\n(コンテキストルート)/js/(PJ名)/ui/(ウィジェット名).js\n```\n**2. テンプレートファイル(.template)**\nウィジェット内のUIを定義するHTMLファイルである。\nモジュール定義ファイルと同じ場所に配置する。:\n\n```\n(コンテキストルート)/js/(PJ名)/ui/(ウィジェット名).template\n```\n**3. スタイル定義(.less)**\nウィジェットのスタイルを定義するCSS(LESS)ファイルである。\n以下の場所に配置する。:\n\n```\n(コンテキストルート)/css/ui/(ウィジェット名).less\n```",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "ウィジェットの実装例",
+      "content": "以下のソースコードは、単純なモーダルダイアログを実装するサンプルである。\n\n```javascript\n// ==============================================\n// モジュール定義\n// ===============================================\n// グローバル関数define() によりモジュールを定義する。\n//\n// 依存関係の定義\n// -----------------------------------\n// この関数の第一引数には、このモジュールが依存するモジュールのパスの配列を指定する。\n// モジュールのパスは、(コンテキストルート)/js/ からの相対パスを指定する。\n// また、\"./\"で始まるパスは、このソースファイルからの相対パスとみなされる。\n// パスの先頭に\"text!\"を指定した場合、当該のファイルはJavaScriptとして評価されず、\n// ファイルの内容を文字列として読み込む。\n//\ndefine([\n  \"jquery\"                       // jQueryライブラリ\n, \"nablarch/ui/Widget\"           // ウィジェットの共通基底クラス\n, \"text!./ModalDialog.template\"  // モーダルダイアログのHTML\n, \"nablarch/ui/event\"            // nablarchの動作に関連したイベントの定義\n, \"sugar\"                        // sugar.js\n],\n// ----------------------------------\n// モジュールの初期化\n// ----------------------------------\n// define の第2引数には、このモジュールの初期化を行う関数を指定する。\n// この初期化関数の引数には、defineの第1引数に指定した各モジュールの内容が渡される。\n//\nfunction($, Widget, template) { \"use strict\";\n  //\n  // モジュール定義を行う関数\n  // =================================\n  // モジュールの初期化を行う関数を冒頭に定義し、この関数の最後で呼び出す。\n  // (このコードが冒頭に記述することで、モジュールの内容を把握し易くなる。)\n  function define() {\n    // jQueryプラグインメソッド $.fn.widgets() を使用して、マーカCSSが指定された\n    // 各ノードに対して画面上のウィジェットを初期化する。\n    // マーカCSSの名称は (プロジェクト名)_(ウィジェット名) とする。\n    $(function() {\n      $(\".sample_ModalDialog.-content\").widgets(ModalDialog);\n    });\n    // このモジュールの内容(=ウィジェットのコンストラクタ関数)をリターンする。\n    return ModalDialog;\n  }\n\n  // ウィジェットクラスのプロトタイプ定義\n  // ========================================\n  // 本PJでのクラス定義はJavaScriptの言語仕様のみを用いたオーソドックスなスタイルで行う。\n  // 下記のように、ウィジェットのプロトタイプを定義する。\n  //\n  ModalDialog.prototype = Object.merge(new Widget(), {   // Widgetコンストラクタのプロトタイプを継承する。\n    // コンストラクタ\n    constructor : ModalDialog   // instanceof 演算子を正常に動作させるために必要。\n    // プロパティ\n  , $dialog   : null\n  , contentId : null\n  , isActive  : null\n    // メソッド\n  , show : ModalDialog_show\n  , hide : ModalDialog_hide\n  });\n\n  // イベント定義\n  // ============================================\n  // ウィジェットおよび、ウィジェットのプロパティとして定義されたノード上のイベントと、\n  // それを処理するイベントハンドラとの対応を以下の書式に従って記述する。\n  //\n  //   1. \"(イベント名)\" : (イベントハンドラ)\n  //   2. \"(セレクタ式) (イベント名)\" : (イベントハンドラ)\n  //   3. \"(コンテキストノード) (イベント名)\" : (イベントハンドラ)\n  //   4. \"(コンテキストノード) (セレクタ式) (イベント名)\" : (イベントハンドラ)\n  //\n  // 1.ではマーカCSSを指定したノード(this.$node)上で発生するイベントに対するハンドラを登録する。\n  // また2.のようにセレクタ式を指定することで、イベントの発生元がセレクタに合致する場合のみ処理を\n  // 行うようにすることができる。(event deligation)\n  //\n  // 3. 4. では、(コンテキストノード)に指定したノード内で発生したイベントが対象となる。\n  // (コンテキストノード)には $で開始されるプロパティ名もしくは \"document\" を指定する。\n  //\n  // (イベントハンドラ) には文字列および関数を使用できる。\n  // 文字列の場合は、このウィジェットの同名のメソッドを呼び出す。\n  // 関数の場合は、このウィジェットをbind()したものが呼び出される。\n  //\n  ModalDialog.event = {\n    // 1. 起動要素がクリックされたらモーダルダイアログを開く\n    //   -> this.$node.on(\"click\", function(evt) { return this.show(evt) }) と等価\n    //\n    \"click\" : \"show\"\n\n    // 2. ダイアログの閉じるボタンが押されたらダイアログを閉じる。\n    //   -> this.$dialog.on(\"click\", \"button.close\", function(evt) { return this.hide(evt) }) と等価\n    //\n  , \"$dialog button.close click\" : \"hide\"\n\n    // 3. ダイアログが開いている間は画面上のサブミット処理を全て無効化する。\n    //   -> $(document).on(\"beforeSubmit\", (function() {return false}).bind(this)) と等価\n    //   ※  カスタムイベント \"beforeSubmit.nablarch\" は \"nablarch/ui/event\" の中で定義されており、\n    //      グローバル関数 nablarch_submit() によってサブミットが行われる直前に呼ばれる。\n    //\n  , \"document beforeSubmit\" : function() { return !isActive }\n  };\n\n  // ウィジェットの識別子\n  // ===================================\n  // 内部的に使用される。\n  // マーカCSSと同じ (PJ名)_(ウィジェット名) とする。\n  ModalDialog.widgetType = \"sample_ModalDialog\";\n\n  // ウィジェットのコンストラクタ関数\n  // ===============================================\n  // 第1引数にウィジェットのマーカCSSを指定したDOMノード、\n  // 第2引数にはマーカCSSの後に指定したオプションが渡される。\n  // なお、JavaScriptでは親クラスのコンストラクタは呼ばれないので、明示的に呼び出す必要がある。\n  //\n  function ModalDialog(element, option) {\n\n    // プロパティの初期化\n    // -------------------------------------------\n    // 各プロパティの初期化を行う。\n    // 特に、ノードプロパティの初期化Widgetコンストラクタの呼び出しよりも先に行う必要がある。\n    // ※  ノードの内容は後でカスタマイズしやすいように、テンプレートファイルを使用すること。\n    this.contentId = option.content\n    this.isActive  = false;\n    this.$dialog   = $(template).css({\n                       display   : \"none\"\n                     , position  : \"absolute\"\n                     , \"z-index\" : \"5\"\n                     }).appendTo(document);\n\n    // Widgetコンストラクタの呼び出し\n    // --------------------------------------------------\n    // 共通初期化処理を行う。\n    // (詳細な内容については、 nablarch/ui/Widget.js 内のドキュメントを参照)\n    Widget.call(this, element);\n\n    // -content オプションに指定されたidの内容をダイアログの内容として取り込む。\n    this.$dialog.find(\"div.content\").append(\"#\" + contentId);\n  }\n\n  // ウィジェットのメソッド、イベントハンドラの定義\n  // ===============================================\n  // イベントハンドラとして登録した場合、第一引数にはイベントオブジェクト(jQuery.Event) が渡される。\n  // イベントオブジェクトのtarget属性には、イベントの発生元のDOMノードオブジェクトが設定されている。\n  // また、明示的にfalseをリターンすることで、イベントのプロパゲーションとデフォルトアクションの実行を抑止する\n  // ことができる。\n\n  function ModalDialog_show(event) {\n    this.isActive = true;\n    this.$dialog.slideDown(\"fast\");\n    return false; // デフォルトアクションを抑止する。\n  }\n\n  function ModalDialog_hide(event) {\n    this.isActive = false;\n    this.$dialog.slideUp(\"fast\");\n    return false; // デフォルトアクションを抑止する。\n  }\n\n  return define();  // モジュールの内容をリターンする。\n});\n```",
+      "level": 3
+    }
+  ]
+}

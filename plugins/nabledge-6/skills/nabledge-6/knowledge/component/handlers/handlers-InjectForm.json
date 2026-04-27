@@ -1,86 +1,38 @@
 {
   "id": "handlers-InjectForm",
   "title": "InjectForm インターセプタ",
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/web_interceptor/InjectForm.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/web/interceptor/InjectForm.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/interceptor/OnError.html"
-  ],
-  "index": [
+  "content": "**目次**\n\n* インターセプタクラス名\n* モジュール一覧\n* InjectFormを使用する\n* バリデーションエラー時の遷移先を指定する\n* Bean Validationのグループを指定する\n\n入力値に対するバリデーションを行い、生成したフォームオブジェクトをリクエストスコープに設定するインターセプタ。\n\nこのインターセプタは、業務アクションのメソッドに対して、 InjectForm を設定することで有効となる。",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "インターセプタクラス名",
-      "hints": [
-        "InjectForm",
-        "nablarch.common.web.interceptor.InjectForm",
-        "インターセプタクラス名"
-      ]
+      "content": "* nablarch.common.web.interceptor.InjectForm",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "モジュール一覧",
-      "hints": [
-        "nablarch-fw-web",
-        "nablarch-core-validation-ee",
-        "nablarch-core-validation",
-        "BeanValidation",
-        "NablarchValidation",
-        "モジュール依存関係"
-      ]
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n\n<!-- 入力値チェックにBeanValidationを使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-validation-ee</artifactId>\n</dependency>\n\n<!-- 入力値チェックにNablarchValidationを使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-validation</artifactId>\n</dependency>\n```",
+      "level": 2
     },
     {
       "id": "s3",
       "title": "InjectFormを使用する",
-      "hints": [
-        "@InjectForm",
-        "@OnError",
-        "InjectForm#form",
-        "InjectForm#name",
-        "InjectForm#prefix",
-        "UserForm",
-        "バリデーション",
-        "リクエストスコープ",
-        "フォームオブジェクト",
-        "入力値チェック",
-        "ApplicationException",
-        "バリデーション対象外",
-        "プレフィックス",
-        "form.userId",
-        "form.password",
-        "validate"
-      ]
+      "content": "InjectForm アノテーションを、業務アクションのリクエストを処理するメソッドに対して設定する。\n\n以下に実装例を示す。\n\n入力画面のhtml例\n```html\n<!-- バリデーション対象外-->\n<input name=\"flag\" type=\"hidden\" />\n\n<!-- バリデーション対象 -->\n<input name=\"form.userId\" type=\"text\" />\n<input name=\"form.password\" type=\"password\" />\n```\n業務アクションの例\nこの例では、画面から送信された `form` から始まるリクエストパラメータに対してバリデーションが実行される。\nバリデーションでエラーが発生しなかった場合は、リクエストスコープに InjectForm#form で指定したクラスのオブジェクトが格納される。\n\nリクエストスコープにバリデーション済みのフォームを格納する際に使用する変数名は、 InjectForm#name に指定する。\n指定しなかった場合は、 `form` という変数名でフォームが格納される。\n\n業務アクションが実行された場合には、必ずリクエストスコープからオブジェクトが取得できる。\n\n```java\n@InjectForm(form = UserForm.class, prefix = \"form\", validate = \"register\")\n@OnError(type = ApplicationException.class, path = \"forward://registerForm.jsp\")\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n\n  // リクエストスコープからバリデーション済みのフォームを取得する。\n  UserForm form = ctx.getRequestScopedVar(\"form\");\n\n  // formを元に業務処理を行う。\n}\n```\n\n> **Tip:**\n> バリデーションに [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を使用する場合、バリデーションエラー時にもリクエストスコープから\n> オブジェクトを取得可能となるよう設定ができる。詳細は『 [バリデーションエラー時にもリクエストパラメータをリクエストスコープから取得したい](../../component/libraries/libraries-bean-validation.md#bean-validation-onerror) 』を参照。",
+      "level": 2
     },
     {
       "id": "s4",
       "title": "バリデーションエラー時の遷移先を指定する",
-      "hints": [
-        "@OnError",
-        "OnError",
-        "nablarch.fw.web.interceptor.OnError",
-        "ApplicationException",
-        "バリデーションエラー",
-        "遷移先",
-        "システムエラー"
-      ]
+      "content": "バリデーションエラー発生時の遷移先画面は、 OnError アノテーションを使用して設定する。\n\nOnError アノテーションは、InjectForm を設定した業務アクションのメソッドに対して設定する。\nOnError が設定されていない場合、バリデーションエラーがシステムエラー扱いとなるため注意すること。\n\nバリデーションエラー発生時に、遷移先画面で表示するデータを取得したい場合は、[エラー時の遷移先画面に表示するデータを取得する](../../component/handlers/handlers-on-error.md#on-error-forward) を参照。",
+      "level": 2
     },
     {
       "id": "s5",
       "title": "Bean Validationのグループを指定する",
-      "hints": [
-        "@InjectForm",
-        "InjectForm#validationGroup",
-        "nablarch.common.web.interceptor.InjectForm",
-        "Bean Validationグループ",
-        "validationGroup",
-        "バリデーショングループ指定"
-      ]
+      "content": "バリデーションに [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を使用する場合は、 InjectForm#validationGroup にグループを指定することができる。\n\n以下に実装例を示す。\n\n```java\n// UserFormクラス内で設定されたバリデーションルールのうち、Createグループに所属するルールのみを使用して検証する。\n@InjectForm(form = UserForm.class, prefix = \"form\", validationGroup = Create.class)\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n\n  // リクエストスコープからバリデーション済みのフォームを取得する。\n  UserForm form = ctx.getRequestScopedVar(\"form\");\n\n  // formを元に業務処理を行う。\n}\n```",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "**クラス**: `nablarch.common.web.interceptor.InjectForm`",
-    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n\n<!-- 入力値チェックにBeanValidationを使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-validation-ee</artifactId>\n</dependency>\n\n<!-- 入力値チェックにNablarchValidationを使用する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-validation</artifactId>\n</dependency>\n```",
-    "s3": "業務アクションのリクエスト処理メソッドに `InjectForm` アノテーションを設定することで有効になる。\n\n- `prefix` で指定したプレフィックスから始まるリクエストパラメータに対してバリデーションが実行される\n- バリデーション成功時、リクエストスコープに `InjectForm#form` で指定したクラスのオブジェクトが格納される\n- リクエストスコープの変数名は `InjectForm#name` で指定。未指定の場合は `form` となる\n- 業務アクションが実行された場合には、必ずリクエストスコープからオブジェクトが取得できる\n\n**入力画面のhtml例**:\n\n```html\n<!-- バリデーション対象外 -->\n<input name=\"flag\" type=\"hidden\" />\n\n<!-- バリデーション対象 -->\n<input name=\"form.userId\" type=\"text\" />\n<input name=\"form.password\" type=\"password\" />\n```\n\n**業務アクションの例**:\n\n```java\n@InjectForm(form = UserForm.class, prefix = \"form\", validate = \"register\")\n@OnError(type = ApplicationException.class, path = \"forward://registerForm.jsp\")\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n  UserForm form = ctx.getRequestScopedVar(\"form\");\n  // formを元に業務処理を行う。\n}\n```\n\n> **補足**: [bean_validation](../libraries/libraries-bean_validation.json#s1) を使用する場合、バリデーションエラー時にもリクエストスコープからオブジェクトを取得可能となるよう設定できる。詳細は [bean_validation_onerror](../libraries/libraries-bean_validation.json#s14) を参照。",
-    "s4": "バリデーションエラー発生時の遷移先は `OnError` アノテーションで指定する。`InjectForm` を設定した業務アクションのメソッドに対して設定する。\n\n> **重要**: `OnError` が設定されていない場合、バリデーションエラーがシステムエラー扱いとなる。\n\nバリデーションエラー発生時に遷移先画面で表示するデータを取得したい場合は、[on_error-forward](handlers-on_error.json#s3) を参照。",
-    "s5": "[bean_validation](../libraries/libraries-bean_validation.json#s1) を使用する場合、`InjectForm#validationGroup` にグループを指定できる。\n\n```java\n// UserFormクラス内で設定されたバリデーションルールのうち、Createグループに所属するルールのみを使用して検証する。\n@InjectForm(form = UserForm.class, prefix = \"form\", validationGroup = Create.class)\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n  UserForm form = ctx.getRequestScopedVar(\"form\");\n}\n```"
-  }
+  ]
 }

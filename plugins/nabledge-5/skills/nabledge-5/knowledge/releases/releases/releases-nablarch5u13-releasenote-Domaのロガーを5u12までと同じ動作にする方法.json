@@ -1,0 +1,8 @@
+{
+  "id": "releases-nablarch5u13-releasenote-Domaのロガーを5u12までと同じ動作にする方法",
+  "title": "■Domaのロガーを5u12までと同じ動作にする方法",
+  "content": "5u13からDomaのロガーとしてNablarchJdbcLoggerを提供するようになりました。\nデフォルトではこのNablarchJdbcLoggerが使われます。\n5u12まではjava.util.loggingパッケージを使ったロギングを行うorg.seasar.doma.jdbc.UtilLoggingJdbcLoggerが使われていました(ログレベルはFINE)。\n5u12までと同じ設定にしたい場合、次の手順に従って、コンポーネント定義を追加してください。\n1. UtilLoggingJdbcLoggerのインスタンスを生成するComponentFactoryを実装する\n2. コンポーネント定義に1を設定する\n1のコード例です:\npackage com.example;\nimport java.util.logging.Level;\nimport org.seasar.doma.jdbc.JdbcLogger;\nimport org.seasar.doma.jdbc.UtilLoggingJdbcLogger;\nimport nablarch.core.repository.di.ComponentFactory;\npublic class JdbcLoggerFactory implements ComponentFactory<JdbcLogger> {\n@Override\npublic JdbcLogger createObject() {\nreturn new UtilLoggingJdbcLogger(Level.FINE);\n}\n}\n2の設定例です:\n<component class=\"com.example.JdbcLoggerFactory\" name=\"domaJdbcLogger\" />",
+  "no_knowledge_content": false,
+  "sections": [],
+  "sheet_type": "P2"
+}

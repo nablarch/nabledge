@@ -1,0 +1,74 @@
+{
+  "id": "web-application-06-sharingInputAndConfirmationJsp",
+  "title": "入力画面と確認画面の共通化",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "本項で説明する内容",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "説明内容",
+      "content": "本項では、以下の内容を説明する。\n\n* 入力画面と確認画面とでJSPファイルを共通化する方法\n\nNablarch Application Frameworkでは、入力画面と確認画面が1対1に対応するような画面を作成する場合に、\nJSPを共通化する機能を提供する。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "作成内容",
+      "content": "本項で作成するのは、下記画面遷移図の赤丸の部分である。\n\n![screenTransition.png](assets/web-application-06-sharingInputAndConfirmationJsp/screenTransition.png)\n\n編集するソースコードは以下のとおり。\n\n| 名称(右クリック->保存でダウンロード) | ステレオタイプ | 処理内容 |\n|---|---|---|\n| [W11AC0201.jsp](assets/web-application-06-sharingInputAndConfirmationJsp/W11AC0201.jsp) [W11AC0202.jsp](assets/web-application-06-sharingInputAndConfirmationJsp/W11AC0202.jsp) | View | ユーザ情報登録画面に入力した内容及び、登録画面に戻るボタンと、登録処理を行うボタンを表示する。W11AC0202.jsp内でW11AC0201.jspを取り込んでいる。 |\n\nステレオタイプについては [業務コンポーネントの責務配置](../../about/about-nablarch/about-nablarch-01-NablarchOutline.md#stereotype) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "作成手順",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "View(JSP)の作成",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "画面イメージ",
+      "content": "作成するJSPの画面イメージを以下に示す。\n\n![W11AC0202.png](assets/web-application-06-sharingInputAndConfirmationJsp/W11AC0202.png)",
+      "level": 4
+    },
+    {
+      "id": "s7",
+      "title": "概要",
+      "content": "入力画面と確認画面を共通化する場合、入力画面のJSPに全ての情報を記載する。\n確認画面のJSPには、入力画面とJSPを共通化する旨のカスタムタグを記載するだけである。\n\n入力画面と確認画面とで表示内容が異なる箇所については、入力画面のほうに\n分岐処理を埋め込んで、入力画面用の表示処理、確認画面用の表示処理を記述する。",
+      "level": 4
+    },
+    {
+      "id": "s8",
+      "title": "入力画面の作成方法",
+      "content": "両方の画面に含まれる内容を記述する\n\n入力画面でのみ表示する内容は、n:forInputPageタグを使用して記述する。\n\n確認画面でのみ表示する内容は、n:forConfirmationPageタグを使用して記述する\n\n> **Note:**\n> n:textタグ、n:passwordタグ、n:selectタグは、入力画面ではinputタグやselectタグとして出力されるが、\n> 確認画面として描画される場合はタグではなく文字列として表示される。詳細については、 [入力項目の確認画面用の出力](../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07/07_FormTag.html#output-for-confirmation-page) を参照。\n\n> ※サンプル提供のタグファイルを使用した場合、「nタグ」を直接使用するのではなく「fieldタグ」内で「nタグ」が出力される。\n\n> **Note:**\n> n:forInputPageタグで囲まれた箇所は入力画面でのみ評価され、n:forConfirmationPageタグで囲まれた箇所は確認画面でのみ評価される。詳細については、 [入力画面と確認画面の表示切り替え](../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07/07_FacilitateTag.html#id13) を参照。\n\n上記を参照し、以下の内容で *W11AC0201.jsp* を作成する。\n\n* W11AC0201.jsp\n\n```./_source/06/W11AC0201.jsp\n\n```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 4
+    },
+    {
+      "id": "s9",
+      "title": "確認画面の作成方法",
+      "content": "確認画面JSPに、n:confirmationPageタグを使用して、path属性には共通化する入力画面へのパスを指定する\n\n上記を参照し、以下の内容で *W11AC0202.jsp* を作成する。\n\n* W11AC0202.jsp\n\n```./_source/06/W11AC0202.jsp\n\n```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)\n\n> **Note:**\n> 本ソースコードをそのままファイルに保管しようとすると、文字コードに関するエラーが出る。\n> 必ず、【説明】で始まるコメント行を削除してからファイルを保管すること。",
+      "level": 4
+    },
+    {
+      "id": "s10",
+      "title": "共通化の指針",
+      "content": "入力画面と確認画面がほぼ同一の内容であるような、シンプルな登録処理であれば、\n入力画面と確認画面を共通化することにより、JSP記述量を減らすことができる。\nこのような場合は、生産性向上が見込まれるので本機能を使用するべきである。\n\n逆に、複雑な業務で、入力画面と確認画面での差異が大きい場合は、\n入力画面と確認画面との場合分けの記述を１画面に詰め込むことになるので\nかえって煩雑で保守性の低いコードになる恐れがある。\nこのような場合には、無理に共通化はせず別々のJSPファイルを作成すべきである。",
+      "level": 2
+    },
+    {
+      "id": "s11",
+      "title": "次に読むもの",
+      "content": "* [画面共通化のカスタムタグ使用方法を詳しく知りたい時](../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07/07_FacilitateTag.html#webview-inputconfirmationcommon)",
+      "level": 2
+    }
+  ]
+}

@@ -1,76 +1,56 @@
 {
   "id": "libraries-generator",
   "title": "サロゲートキーの採番",
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/database/generator.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/BasicDaoContextFactory.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/idgenerator/IdGenerator.html"
-  ],
-  "index": [
+  "content": "**目次**\n\n* 機能概要\n\n  * シーケンスを使った値の採番が出来る\n  * テーブルを使った値の採番が出来る\n* モジュール一覧\n* 使用方法\n\n  * ユニバーサルDAO用に採番を設定する\n* 拡張例\n\n  * テーブル採番やシーケンス採番を置き換える\n\nデータベースのサロゲートキー(代理キー)の値を採番するための機能を提供する。\n\nこの機能は、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) でサロゲートキーを採番(単純な連番を採番)する際に使用する。\n\nなお、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) 以外でも使用できるが、\n以下の理由によりアプリケーション側で対応することを推奨する。\n\n理由\nサロゲートキーの採番処理は、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) が行うためアプリケーション側で直接採番機能を使用する必要が無い。\nそれ以外の用途で値を採番する場合には、採番ルールが複雑であったり、採番した値を編集することが想定される。\nこのような場合は、単純な連番を採番する本機能を使用できないため、アプリケーション側で設計、実装する必要がある。\n(本機能でも実現可能だが、設計及び実装(設定)が必要となるため、本機能を使うメリットは無い)\n\n例えば、親キーの中での連番を採番するケースでは、以下の手順にて値を採番できる。\n\n1. 親キーの毎に連番を採番するための専用テーブルを作成する。\n2. アプリケーションでは、親のキーが登録されたタイミングで専用テーブルにレコードを登録する。\n3. 採番が必要なタイミングで親キーに対応する採番済みの値をインクリメントすることで、親キー内での連番を採番できる。",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
-      "title": "概要と使用判断",
-      "hints": [
-        "universal_dao",
-        "サロゲートキー採番",
-        "使用判断",
-        "アプリケーション側実装",
-        "親キー連番",
-        "採番推奨外ケース"
-      ]
+      "title": "機能概要",
+      "content": "",
+      "level": 2
     },
     {
       "id": "s2",
-      "title": "機能概要",
-      "hints": [
-        "シーケンス採番",
-        "テーブル採番",
-        "サロゲートキー採番",
-        "一意値生成",
-        "SequenceIdGenerator",
-        "TableIdGenerator",
-        "採番識別名",
-        "バッチ処理ボトルネック"
-      ]
+      "title": "シーケンスを使った値の採番が出来る",
+      "content": "データベース上に作成されたシーケンスオブジェクトを使って、一意の値を採番出来る。\n\nなお、シーケンスを使って次の値を取得するためのSQL文は、\nデータベースアクセス機能のダイアレクトを使用して構築する。\n\nダイアレクト機能については、 [ダイアレクト](../../component/libraries/libraries-database.md#database-dialect) を参照。",
+      "level": 3
     },
     {
       "id": "s3",
-      "title": "モジュール一覧",
-      "hints": [
-        "nablarch-common-idgenerator",
-        "nablarch-common-idgenerator-jdbc",
-        "モジュール依存関係"
-      ]
+      "title": "テーブルを使った値の採番が出来る",
+      "content": "テーブルのレコード単位に現在値を管理し、一意の値を採番出来る。\n\nテーブルのレイアウトは以下のものを想定する。\n\n| 採番識別名(PK) | 採番対象を識別するための値 |\n|---|---|\n| 現在値 | 現在の値(採番を行うとこの値に1を加算したものが取得できる) |\n\n> **Important:**\n> 必要なレコードは予めセットアップしておくこと。\n> 採番実行時に、指定した採番識別名(PK)に対応するレコードが存在しない場合、\n> 新規にレコードを追加するのではなく、異常終了(例外を送出)する。\n\n> **Important:**\n> テーブルを使った採番は、大量にデータを処理するようなバッチ処理ではボトルネックとなることが多い。\n> このため、テーブルを使った採番を使うのではなく、データベース側の採番カラムやシーケンスを用いた採番を使うことを強く推奨する。\n\n> データベースの機能として、採番カラム及びシーケンスオブジェクトが使用できない場合のみ、テーブルを使った採番機能を使用すること。",
+      "level": 3
     },
     {
       "id": "s4",
-      "title": "使用方法",
-      "hints": [
-        "BasicDaoContextFactory",
-        "SequenceIdGenerator",
-        "TableIdGenerator",
-        "sequenceIdGenerator",
-        "tableIdGenerator",
-        "ユニバーサルDAO採番設定",
-        "自動採番カラム"
-      ]
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-idgenerator</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-idgenerator-jdbc</artifactId>\n</dependency>\n```",
+      "level": 2
     },
     {
       "id": "s5",
+      "title": "使用方法",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "ユニバーサルDAO用に採番を設定する",
+      "content": "[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) で本機能を使用するためには、 BasicDaoContextFactory に対する設定が必要となる。\n\nこの例では、シーケンス採番とテーブル採番の両方を設定しているが、使用しない採番の設定はしなくてよい。\nテーブル採番は推奨しないため、サロゲートキーの採番でシーケンス採番を使用する場合に sequenceIdGenerator を設定すれば良い。\n\nもし、シーケンス採番を使用せずにデータベース側の採番機能(自動採番カラム)を使う場合には、採番の設定自体が不要となる。\n\n```xml\n<component name=\"daoContextFactory\" class=\"nablarch.common.dao.BasicDaoContextFactory\">\n  <!-- シーケンス採番の設定 -->\n  <property name=\"sequenceIdGenerator\">\n    <component class=\"nablarch.common.idgenerator.SequenceIdGenerator\"/>\n  </property>\n\n  <!-- テーブル採番の設定 -->\n  <property name=\"tableIdGenerator\">\n    <component class=\"nablarch.common.idgenerator.TableIdGenerator\">\n        <property name=\"tableName\" value=\"GENERATOR\" />\n        <property name=\"idColumnName\" value=\"ID\" />\n        <property name=\"noColumnName\" value=\"NO\" />\n    </component>\n  </property>\n\n  <!-- 採番に関係のない設定は省略 -->\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s7",
       "title": "拡張例",
-      "hints": [
-        "IdGenerator",
-        "カスタム採番実装",
-        "採番拡張",
-        "採番置き換え"
-      ]
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "テーブル採番やシーケンス採番を置き換える",
+      "content": "テーブルやシーケンスを使った採番の実装を新しいものに置き換える場合には、\nIdGenerator を実装したクラスを作成することで対応できる。\n\n作成したクラスは、 ユニバーサルDAO用に採番を設定する に従いコンポーネント設定ファイルに定義することで使用可能となる。",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s1": "この機能は、[universal_dao](libraries-universal_dao.json#s1) でサロゲートキーを採番（単純な連番を採番）する際に使用する。\n\n[universal_dao](libraries-universal_dao.json#s1) 以外でも使用できるが、以下の理由によりアプリケーション側で対応することを推奨する。\n\n**理由**: サロゲートキーの採番処理は [universal_dao](libraries-universal_dao.json#s1) が行うため、アプリケーション側で直接採番機能を使用する必要がない。それ以外の用途で値を採番する場合には、採番ルールが複雑であったり、採番した値を編集することが想定される。このような場合は単純な連番を採番する本機能を使用できないため、アプリケーション側で設計・実装する必要がある。（本機能でも実現可能だが、設計及び実装（設定）が必要となるため、本機能を使うメリットは無い）\n\n**例: 親キーの中での連番を採番するケース（アプリケーション側実装）**\n\n1. 親キーごとに連番を採番するための専用テーブルを作成する。\n2. アプリケーションでは、親のキーが登録されたタイミングで専用テーブルにレコードを登録する。\n3. 採番が必要なタイミングで親キーに対応する採番済みの値をインクリメントすることで、親キー内での連番を採番できる。",
-    "s2": "## シーケンス採番\nデータベース上のシーケンスオブジェクトを使って一意の値を採番できる。次の値を取得するSQL文はダイアレクト機能（[ダイアレクト](libraries-database.json#s1)）を使って構築する。\n\n## テーブル採番\nテーブルのレコード単位に現在値を管理し、一意の値を採番できる。\n\nテーブルレイアウト:\n\n| カラム | 説明 |\n|---|---|\n| 採番識別名(PK) | 採番対象を識別するための値 |\n| 現在値 | 現在の値（採番実行時に1加算した値が取得できる） |\n\n> **重要**: 必要なレコードは予めセットアップしておくこと。採番実行時に指定した採番識別名(PK)に対応するレコードが存在しない場合、新規レコードは追加されず異常終了（例外送出）する。\n\n> **重要**: テーブル採番は大量データを処理するバッチ処理でボトルネックとなることが多い。データベースの採番カラムやシーケンスを用いた採番を強く推奨する。DB側の採番カラムおよびシーケンスオブジェクトが使用できない場合のみテーブル採番を使用すること。",
-    "s3": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-idgenerator</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-idgenerator-jdbc</artifactId>\n</dependency>\n```",
-    "s4": "[universal_dao](libraries-universal_dao.json#s1) で使用するには `BasicDaoContextFactory` への設定が必要。\n\n- シーケンス採番を使う場合: `sequenceIdGenerator` に `SequenceIdGenerator` を設定\n- テーブル採番を使う場合: `tableIdGenerator` に `TableIdGenerator` を設定（`tableName`、`idColumnName`、`noColumnName` を指定）\n- データベース側の自動採番カラムを使う場合: 採番設定不要\n\n> **重要**: テーブル採番は推奨しない。シーケンス採番を使用する場合は `sequenceIdGenerator` のみ設定すれば良い。\n\n```xml\n<component name=\"daoContextFactory\" class=\"nablarch.common.dao.BasicDaoContextFactory\">\n  <property name=\"sequenceIdGenerator\">\n    <component class=\"nablarch.common.idgenerator.SequenceIdGenerator\"/>\n  </property>\n  <property name=\"tableIdGenerator\">\n    <component class=\"nablarch.common.idgenerator.TableIdGenerator\">\n      <property name=\"tableName\" value=\"GENERATOR\" />\n      <property name=\"idColumnName\" value=\"ID\" />\n      <property name=\"noColumnName\" value=\"NO\" />\n    </component>\n  </property>\n</component>\n```",
-    "s5": "`IdGenerator` を実装したクラスを作成し、コンポーネント設定ファイルに定義することで、テーブル採番・シーケンス採番の実装を置き換え可能。設定方法は [generator_dao_setting](#s4) に従う。"
-  }
+  ]
 }

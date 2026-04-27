@@ -1,143 +1,143 @@
 # 使用不許可APIチェックツール
 
+使用不許可APIチェックツールの仕様と使用方法を記述する。
+
 ## 概要
 
-Javaコーディング規約で規定された公開API以外の使用をチェックするツール。公開APIはホワイトリスト形式の設定ファイルで指定し、プロジェクトのコーディング規約に合わせてカスタマイズ可能。
+本ツールは、Javaコーディング規約にて規定されている使用許可API以外のAPIを使用させないため、使用されているAPIをチェックするツールである。
 
-<details>
-<summary>keywords</summary>
-
-使用不許可APIチェックツール, FindBugsカスタムルール, ホワイトリスト, 公開API
-
-</details>
+使用できるAPIを限定することにより、安全でない実装を抑制でき、また、保守性向上などのメリットも得られる。
 
 ## 前提条件
 
-Nablarch開発環境構築ガイドに従って開発環境を構築済みであること。
-
-<details>
-<summary>keywords</summary>
-
-前提条件, Nablarch開発環境構築ガイド, 開発環境構築
-
-</details>
+* Nablarch開発環境構築ガイドに従って開発環境を構築済みであること。
 
 ## 仕様
 
-公開API以外の呼び出しを以下のルールでチェックする:
-- 非公開クラスの参照（インスタンス化、クラスメソッドの呼び出し）
-- 非公開メソッドの呼び出し
-- 非公開例外の補足および送出
+本ツールは、コーディング規約で定められた使用を許可するAPI(以下、公開API)以外を使用していないことをチェックするツールである。
+公開APIの指定は、ホワイトリスト形式で設定ファイルに記述する仕様となっているため、Nablarch導入プロジェクトのコーディング規約に従いカスタマイズを行うことが可能である。
 
-設定ファイルには以下の単位で公開APIを指定できる:
-- パッケージ
-- クラスまたはインタフェース
-- コンストラクタまたはメソッド
+公開APIは設定ファイルで指定する。詳細は [設定ファイル記述方法](../../development-tools/java-static-analysis/java-static-analysis-UnpublishedApi.md#01-customjavaanalysis) を参照のこと。
 
-デフォルト提供設定ファイル:
+公開API以外の呼び出しは、下記ルールに従いチェックを行う。
+
+* 非公開クラスの参照（インスタンス化、クラスメソッドの呼び出し）
+* 非公開メソッドの呼び出し
+* 非公開例外の補足、及び送出
+
+設定ファイルには次の単位で公開APIを指定できる。
+
+* パッケージ
+* クラスまたはインタフェース
+* コンストラクタまたはメソッド
+
+デフォルトでは、Nablarchが提供する標準のJavaコーディング規約に準拠した以下の設定ファイルを提供する。
 
 | 設定ファイル名 | 概要 |
 |---|---|
-| `JavaOpenApi.config` | Java標準ライブラリ使用可能API |
-| `NablarchApiForProgrammer.config` | プログラマ向けNAF使用可能API（業務機能実装） |
-| `NablarchTFWApiForProgrammer.config` | プログラマ向けNTF使用可能API（業務機能テスト） |
-| `NablarchApiForArchitect.config` | アーキテクト向けNAF使用可能API（機能拡張等） |
-| `NablarchTFWApiForArchitect.config` | アーキテクト向けNTF使用可能API（機能拡張等） |
+| JavaOpenApi.config | Nablarchが規定するJava標準ライブラリ使用可能API |
+| NablarchApiForProgrammer.config | プログラマ向け Nablarch Application Framework 使用可能API （業務機能の実装に必要なAPI） |
+| NablarchTFWApiForProgrammer.config | プログラマ向け Nablarch Testing Framework 使用可能API （業務機能のテストに必要なAPI） |
+| NablarchApiForArchitect.config | アーキテクト向け Nablarch Application Framework 使用可能API （NAFの機能拡張などで利用する必要があるAPI） |
+| NablarchTFWApiForArchitect.config | アーキテクト向け Nablarch Testing Framework 使用可能API （NTFの機能拡張などで利用する必要があるAPI） |
 
-FindBugsカスタムルールとして提供。バグコード: `UPU`、バグタイプ: `UPU_UNPUBLISHED_API_USAGE`。
-実行方法: Antタスクまたは Eclipse Plugin。
+本ツールはFindBugsのカスタムルールとして提供する。
+つまり、次のように通常のFindBugs使用と同じ方法で使用できる。また、チェック結果も他のFindBugsのバグと同様の方法で確認できる。
 
-<details>
-<summary>keywords</summary>
+* Antを使用して実行
+* Eclipse Pluginとして実行
 
-UPU_UNPUBLISHED_API_USAGE, JavaOpenApi.config, NablarchApiForProgrammer.config, NablarchTFWApiForProgrammer.config, NablarchApiForArchitect.config, NablarchTFWApiForArchitect.config, 非公開API使用チェック, バグコード UPU
+各使用方法についての詳細は [Eclipse Pluginとして使用](../../development-tools/java-static-analysis/java-static-analysis-UnpublishedApi.md#01-customjavaanalysiseclipse) 、 [FindBugsのAntタスクとして使用](../../development-tools/java-static-analysis/java-static-analysis-UnpublishedApi.md#01-customjavaanalysisant) を参照のこと。
 
-</details>
+本ツールが提供するFindBugsのカスタムルールのバグコード、バグタイプは次のとおりである。
 
-## 継承・インタフェース実装に関するチェック仕様
+* バグコード ： UPU
+* バグタイプ ： UPU_UNPUBLISHED_API_USAGE
 
-インタフェースを型として宣言していることを前提とする（Javaコーディング規約に従う）。
+### 継承・インタフェース実装に関するチェック仕様
 
-宣言型に基づいてチェックを行う:
-```java
+継承されたメソッド、インタフェースにて定義されたメソッドに対するチェック仕様は通常のチェック仕様とは異なる。
+ここでは継承・インタフェース実装に関するチェック仕様について詳述する。
+なお、本ツールはJavaコーディング規約に従い、インタフェース実装クラスへのアクセスはインタフェースを型として宣言していることを前提としている。
+
+* 以下に、SubClassがSuperClassを継承している場合のチェック仕様を示す。
+
+例：
+
+```
 List list = new ArrayList();
-list.add(test); // Listインタフェースのaddメソッドが公開されているかをチェック
+list.add(test); // Listインタフェースのaddメソッドが公開されていることをチェックする
 
 SuperClass varSuper = new SubClass();
-varSuper.testMethod(); // SuperClass.testMethodが公開されているかをチェック
+varSuper.testMethod(); // SuperClass.testMethodが公開されていることをチェックする。
 
 SubClass varSub = new SubClass();
-varSub.testMethod(); // SubClass.testMethod()が公開されているかをチェック
+varSub.testMethod(); // SubClass.testMethod()が公開されていることをチェックする。
 ```
 
-宣言されたクラス・インタフェースに対象APIが定義されていない場合、親クラス/インタフェースを自クラスに近い方から順次検索し、最初にAPIが定義されたクラスのメソッドが公開されているか否かを判定する。
+* 宣言されているクラス・インタフェースに当該のAPIが定義されていない場合、その親クラスまたはインタフェースを自クラスに近い方から順次検索する。
+  そして、最初にそのAPIが定義されているクラスが見つかったら、そのクラスのメソッドが公開されているか否かを判定する。
 
-継承関係の例:
-```java
-ClassC hoge = new ClassC();
-hoge.methodA(); // 使用可能
-hoge.methodB(); // 使用不可
-```
+  例：
 
-<details>
-<summary>keywords</summary>
+  下図のような継承関係を考える。
 
-継承チェック仕様, インタフェース実装チェック, 宣言型によるチェック, 親クラス検索
+  ![InheritClasses.jpg](../../../knowledge/assets/java-static-analysis-UnpublishedApi/InheritClasses.jpg)
 
-</details>
+  この時、使用可能か否かは次のとおりである。
 
-## 設定ファイル配置方法
+  ```
+  ClassC hoge = new ClassC();
+  hoge.methodA(); // 使用可能
+  hoge.methodB(); // 使用不可
+  ```
 
-設定ファイルの拡張子は `config` とすること。設定ファイルディレクトリには複数の設定ファイルを配置可能。
+## 設定ファイル
 
-> **警告**: 本ツールは使用されている全APIをチェックするため、デフォルト設定ファイルのみでは自プロジェクトで宣言しているAPIもチェック対象になる。デフォルトの2つの設定ファイルとは別に、**自プロジェクト用の設定ファイルを設定ファイルディレクトリに配置し、自プロジェクトのパッケージを一意に特定できるパッケージを記述すること。**
-> 例: 全パッケージが `jp.co.tis.sample` で始まる場合、`jp.co.tis.sample` と記述したテキストファイルを設定ファイルディレクトリに配置する。
+ここでは、本ツールの設定ファイルの配置方法、記述方法を記述する。
 
-設定ファイル配置例（プロダクションコード用とテストコード用でディレクトリを分ける）:
-```
-<ワークスペース>
-└─<プロジェクト>
-   └─tool/staticanalysis/
-      ├─production/（プロダクションコード用）
-      │  └─NablarchApiForProgrammer.config
-      └─test/（テストコード用）
-         ├─NablarchApiForProgrammer.config
-         └─NablarchTFWApiForProgrammer.config
-```
+### 設定ファイル配置方法
 
-フレームワーク拡張コードをチェックする場合は `NablarchApiForArchitect.config`、`NablarchTFWApiForArchitect.config` を使用する。
+設定ファイルを格納したディレクトリ（以後、設定ファイルディレクトリ）には、複数の設定ファイルを配置することが可能である。
+設定ファイルの拡張子は「config」とすること。
 
-<details>
-<summary>keywords</summary>
+> **Warning:**
+> 当ツールは、使用されている全てのAPIに対してチェックを行う。そのため、デフォルトで提供する設定ファイルのみでは、自プロジェクトで宣言しているAPIにもチェックしてしまう。
+> そのため、自プロジェクトで宣言しているAPIを公開する設定を行う必要がある。
+> **デフォルトの2つの設定ファイルとは別に、自プロジェクト用の設定ファイルを設定ファイルディレクトリに配置し、自プロジェクトのパッケージを一意に特定できるパッケージを記述すること。**
 
-設定ファイルディレクトリ, プロジェクト用設定ファイル, プロダクションコード設定, テストコード設定, nablarch-findbugs-config
+> 例：プロジェクトにて作成する全てのパッケージが「jp.co.tis.sample」で始まる場合、「jp.co.tis.sample」と記述したテキストファイルを1つ設定ファイルディレクトリに配置する。
 
-</details>
+また上記の通り、Nablarchは対象とする開発者・スコープごとに4種類の設定ファイルを提供している。これらの設定ファイルの配置例を以下に示す。
 
-## 設定ファイル記述方法
+* チェックする単位（各Eclipseプロジェクトなど）毎に、プロダクションコード向けの設定ファイルディレクトリとテストコード向けの設定ファイルディレクトリを用意し、下記のようにファイルを配置する
 
-1行につき1つの公開APIを記述。記述順序は問わない。
+  ```
+  <ワークスペース>
+  ├─<プロジェクト>
+  │  │  ├─tool
+  │  │  │   ├─staticanalysis
+  │  │  │   │  ├─production（プロダクションコード用設定ファイルディレクトリ）
+  │  │  │   │  │  └─ NablarchApiForProgrammer.config
+  │  │  │   │  ├─test（テストコード用設定ファイルディレクトリ）
+  │  │  │   │  │  ├─ NablarchApiForProgrammer.config
+  │  │  │   │  │  └─ NablarchTFWApiForProgrammer.config
+  ```
+* チェック対象がフレームワークの拡張などを行うためのコードの場合には、NablarchApiForArchitect.config, NablarchTFWApiForArchitect.configを利用する。
 
-| 指定レベル | 説明 | 設定例 |
-|---|---|---|
-| パッケージ | 指定パッケージ配下の全API（サブパッケージ含む）を公開 | `java.lang`、`nablarch.fw.web` |
-| クラス・インタフェース | 指定クラス/インタフェースの全APIを公開。完全修飾クラス名を記述 | `nablarch.common.code.CodeUtil`、`nablarch.fw.Result.Success` |
-| コンストラクタ・メソッド | 指定コンストラクタ/メソッドを公開。完全修飾名で記述（参照型引数も完全修飾名） | `java.lang.Boolean.Boolean(boolean)`、`java.lang.String.indexOf(int)` |
+### 設定ファイル記述方法
 
-**ネストクラスのコンストラクタは通常の完全修飾名とは異なる記述方法が必要**:
+設定ファイルには、パッケージ、クラス、インタフェース、コンストラクタ、メソッドのレベルで公開したいAPIを指定できる。
 
-```
-// SuccessがResultのネストクラスの場合（引数なしコンストラクタ）
-nablarch.fw.Result.Success.Result.Success()
-// 引数ありコンストラクタ
-nablarch.fw.Result.Success.Result.Success(java.lang.String)
-// メソッドの場合
-nablarch.fw.Result.Success.Result.getStatusCode()
-```
+| 指定レベル | 説明と記述方法 |
+|---|---|
+| パッケージ | 指定されたパッケージに含まれる全てのAPI（サブパッケージのAPIを含める。）を公開する。  > **設定例:** > ```java > // java.lang配下を公開する場合 > java.lang > // nablarch.fw.web配下を公開する場合 > nablarch.fw.web > ``` |
+| クラス、インタフェース | 指定されたクラスまたはインタフェースに含まれる全てのAPIを公開する。  クラスの完全修飾名を記述する。  > **設定例:** > ```java > // CodeUtilの全ての機能を公開する場合 > nablarch.common.code.CodeUtil > // Result.Successの全ての機能を公開する場合 > // Successは、Resultのネストクラス > nablarch.fw.Result.Success > ``` |
+| コンストラクタ、メソッド | 指定されたコンストラクタまたはメソッドを公開する。  コンストラクタまたはメソッドの完全修飾名を記述する。 参照型の引数も完全修飾名を記述すること。  > **設定例:** > ```java > // コンストラクタの場合 > java.lang.Boolean.Boolean(boolean) > java.lang.StringBuilder.StringBuilder(java.lang.String) > nablarch.fw.web.HttpResponse.HttpResponse() >  > // メソッド呼出の場合 > java.lang.String.indexOf(int) > nablarch.core.validation.ValidationContext.isValid() > nablarch.fw.web.HttpResponse.write(byte[]) > nablarch.fw.web.HttpRequest.setParam(java.lang.String, java.lang.String...) >  > //******************************************************************* > // ネストクラスのコンストラクタの場合 > //******************************************************************* > // ネストクラスの場合は、記述方法が完全修飾名とは異なるため注意すること。 > // 以下にネストクラスの場合の記述例を示す。 >  > // コンストラクタの場合 > // SuccessがResultクラスのネストクラスの場合で引数なしコンストラクタを公開する場合は、 > // コンストラクタ名は「Result.Success()」と設定すること。 > // ※nablarch.fw.Result.Success.Success()と設定した場合、 > // Result.Successクラスのコンストラクタは使用可能とはならないので注意すること。 > nablarch.fw.Result.Success.Result.Success() > // 引数ありコンストラクタの場合 > nablarch.fw.Result.Success.Result.Success(java.lang.String) >  > // メソッド呼出の場合 > nablarch.fw.Result.Success.Result.getStatusCode() > ``` |
 
-> **注意**: `nablarch.fw.Result.Success.Success()` と設定した場合、Result.Successクラスのコンストラクタは使用可能とはならない。
+設定ファイルの1行につき、1つの公開APIを記述する。記述の順序は問わない。
+次は、設定ファイルの記述例である。
 
-設定ファイルの記述例:
 ```
 java.lang
 nablarch.fw.web
@@ -152,50 +152,51 @@ nablarch.fw.web.HttpResponse.write(byte[])
 nablarch.fw.web.HttpRequest.setParam(java.lang.String, java.lang.String...)
 ```
 
-<details>
-<summary>keywords</summary>
-
-パッケージ指定, クラス指定, メソッド指定, ネストクラスコンストラクタ, ValidationContext, 完全修飾名, HttpResponse, HttpRequest, CodeUtil
-
-</details>
-
 ## Eclipse Pluginとして使用
 
-> **注意**: Eclipseではアーキテクトとプログラマやプロダクションコードとテストコードの分類に従ったチェックができない。CIなどでAntタスクとしても実行し、分類に従ったチェックを定期的に必ず実施すること。
+ここでは、Eclipse Pluginとして本使用する場合の設定方法とチェック結果確認方法を記述する。
 
-**設定手順**（Nablarch開発環境構築ガイドに従って環境構築済みの場合は不要）:
+なお、Eclipseでのチェックではアーキテクト向けとプログラマ向け、プロダクションコードとテストコードなどの分類に従ったチェックを行うことができない。
+CIなどでAntタスクとしても実行し、使用不許可APIが使用されていないことを分類に従って定期的に必ずチェックすること。
 
-1. `nablarch-tfw.jar` をFindBugsEclipsePluginホームディレクトリ配下の `plugin` ディレクトリに配置:
-   ```
-   <Eclipseホームディレクトリ>/dropins(またはplugins)/<FindBugsEclipsePluginホームディレクトリ>/plugin/nablarch-tfw.jar
-   ```
+* 設定方法は次のとおりである。Nablarch開発環境構築ガイドに従って環境構築を行った場合、この設定を行わなくてよい。
 
-2. `eclipse.ini` の `-vmargs` 配下にシステムプロパティ `nablarch-findbugs-config` を設定:
-   ```
-   -vmargs
-   -Dnablarch-findbugs-config=<テストコード用設定ファイルディレクトリの絶対パス>
-   ```
+  * 下記のように、本ツールが含まれるJAR「nablarch-tfw.jar」をFindBugsEclipsePluginホームディレクトリ直下にあるpluginディレクトリに配置する。
 
-3. Eclipseを再起動する。
+    ```
+    <Eclipseホームディレクトリ>
+    ├─dropins(またはplugins)
+    │  │  ├─<FindBugsEclipsePluginホームディレクトリ>
+    │  │  │   ├─plugin
+    │  │  │   │  └─ nablarch-tfw.jar
+    ```
+  * Eclipseホームディレクトリにある、eclipse.iniファイルを修正する。
 
-チェック結果はエディターの左端のバグマークまたはFindBugsパースペクティブで確認できる。
+    システムプロパティに「nablarch-findbugs-config」をキーとして設定ファイルディレクトリの絶対パスを設定する。
+    具体的には、次のように「-vmargs」の下に「-Dnablarch-findbugs-config=<テストコード用設定ファイルディレクトリの絶対パス>」を記述する。
 
-<details>
-<summary>keywords</summary>
-
-Eclipse Plugin, nablarch-findbugs-config, nablarch-tfw.jar, FindBugsパースペクティブ, eclipse.ini
-
-</details>
+    ```
+    -vmargs
+    -Dnablarch-findbugs-config=C:/nablarch/workspace/Nablarch_sample/tool/staticanalysis/published-config/test
+    ```
+  * Eclipseを再起動する。
+* チェック結果は、エディターの左端に現れるバグマークまたは、FindBugsパースペクティブにて確認することができる。
 
 ## FindBugsのAntタスクとして使用
 
-FindBugsをAntから実行する際の設定:
-- `nablarch-tfw.jar` をクラスパスに含める。
-- `systemProperty` 要素にキー `nablarch-findbugs-config` で設定ファイルディレクトリの絶対パスを設定する。
-  - プロダクションコードチェックタスク: プロダクションコード用設定ファイルディレクトリの絶対パス
-  - テストコードチェックタスク: テストコード用設定ファイルディレクトリの絶対パス
+ここでは、Antから本ツールを実行する場合の方法を記述する。チェック結果の確認方法は、各プロジェクトでFindBugsをどう使用するかによって異なるためここでは述べない（CI上で使用することを想定している）。
 
-findbugsタスク定義例:
+FindBugsをAntから実行する場合、「nablarch-tfw.jar」をクラスパスに含めること。
+
+また、systemProperty要素に「nablarch-findbugs-config」というキーで、設定ファイルディレクトリの絶対パスを下記のように設定する必要がある。
+
+* プロダクションコードに対してチェックするタスク
+  プロダクションコード用設定ファイルディレクトリの絶対パスを設定する
+* テストコードに対してチェックするタスク
+  テストコード用設定ファイルディレクトリの絶対パスを設定する
+
+以下に、本ツールを使用する際のfindbugsタスクの定義例を示す。 (findbugsタスクの詳細は [Findbugs公式サイト](http://findbugs.sourceforge.net/ja/manual/anttask.html) を参照のこと。)
+
 ```xml
 <target name="findbugs">
   <taskdef name="findBugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="tool_lib/findbugs-1.3.9-rc1/findbugs-ant.jar" />
@@ -212,10 +213,3 @@ findbugsタスク定義例:
   </findbugs>
 </target>
 ```
-
-<details>
-<summary>keywords</summary>
-
-Antタスク, nablarch-findbugs-config, nablarch-tfw.jar, systemProperty, findbugsタスク定義
-
-</details>

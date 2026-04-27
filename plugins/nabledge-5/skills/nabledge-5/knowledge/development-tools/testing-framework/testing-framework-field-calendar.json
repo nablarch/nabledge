@@ -1,0 +1,26 @@
+{
+  "id": "testing-framework-field-calendar",
+  "title": "カレンダー日付入力ウィジェット",
+  "content": "[カレンダー日付入力ウィジェット](../../development-tools/testing-framework/testing-framework-field-calendar.md) は **UI標準 UI部品 カレンダー日付入力** の内容に準拠したカレンダーを使用した日付入力欄を出力する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**設計成果物(ローカル動作)**\n\n```jsp\n<field:calendar\n    title=\"日付\"\n    name=\"date1\"\n    required=\"true\"\n    hint=\"(入力例 ： 2012/05/12)\"\n    sample=\"2013/09/30\">\n</field:calendar>\n```\n\n**実装成果物(サーバ動作)**\n\n```jsp\n<field:calendar\n    title=\"日付\"\n    name=\"W99ZZ64.date1\"\n    required=\"true\"\n    hint=\"(入力例 ： 2012/05/12)\"\n    sample=\"2013/09/30\">\n</field:calendar>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "このウィジェットは [入力項目ウィジェット共通テンプレート](../../development-tools/testing-framework/testing-framework-field-base.md) を用いて実装している。 [入力項目ウィジェット共通テンプレート](../../development-tools/testing-framework/testing-framework-field-base.md) が実装する共通仕様についてはここでは記述しない。\n\n**ローカル動作時の挙動**\n\n入力画面では **sample** に指定した値を初期表示値としてテキストボックスに表示する。\n\n確認画面では **sample** に指定した値を、ラベルとして表示する。\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| id | htmlのid属性 | 文字列 | ○ | ○ | 省略時は **name** 属性と同じ値。  (ローカル動作においても**id** 属性か **name** 属性のいずれかは必須。) |\n| domain | 項目のドメイン型 | 文字列 | ○ | ○ |  |\n| readonly | 編集可能かどうか | 真偽値 | ○ | ○ | デフォルトは 'false' |\n| disabled | サーバに対する入力値の送信を 抑制するかどうか | 真偽値 | ○ | ○ | デフォルトは 'false' |\n| example | 具体的な入力例を表すテキスト (placeholderなどの 形式で表示する) | 文字列 | ○ | ○ |  |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ |  |\n| nameAlias | 一つのエラーメッセージに 対して複数の入力項目を ハイライト表示する場合に 指定する。 | 文字列 | ○ | × |  |\n| format | 日付のフォーマット | 文字列 | ○ | ○ | デフォルトは 'yyyy/MM/dd' |\n| locale | 言語設定 | 文字列 | ○ | ○ | デフォルトは 'ja' |\n| sample | ローカル動作時に表示する日付 | 文字列 | × | ○ |  |\n| maxlength | 入力文字数の上限 | 数値 | ○ | ○ | **format** が未指定の場合は \"10\" |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 画面項目定義に記載する、 「表示情報取得元」.「表示項目名」 の形式で設定する。 |\n| comment | カレンダーについての備考 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/calendar.tag | [カレンダー日付入力ウィジェット](../../development-tools/testing-framework/testing-framework-field-calendar.md) |\n| /WEB-INF/tags/widget/field/base.tag | [入力項目ウィジェット共通テンプレート](../../development-tools/testing-framework/testing-framework-field-base.md) |\n| /js/jsp/taglib/nablarch.js | カレンダー日付入力ウィジェットが使用する <n:text> のエミュレーション機能を実装する タグライブラリスタブJS |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義。  カレンダーに関する定義もここに含まれる。 |",
+      "level": 2
+    }
+  ]
+}

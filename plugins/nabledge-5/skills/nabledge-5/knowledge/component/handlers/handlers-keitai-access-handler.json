@@ -1,0 +1,38 @@
+{
+  "id": "handlers-keitai-access-handler",
+  "title": "携帯端末アクセスハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* JavaScript出力が抑制されるタグ\n* URLの関連付け\n\n本ハンドラでは、いわゆる feature phone と呼ばれる携帯電話など、JavaScriptが動作しない環境で\nウェブアプリケーションを動作させるために、下記を実現する。\n\n* 画面で押されたボタンのボタン名から、想定されるURLにディスパッチする\n* JSP上にJavaScriptを出力しないよう変数を設定する\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-keitai-access-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.web.handler.KeitaiAccessHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置すること\n本ハンドラは、通常クライントからのJSP上にJavaScriptを出力しないよう変数を設定するため、\nJSPへのフォワード処理を行う [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後に配置する必要がある。\n[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より前に配置すること\n通常JSPが出力するJavaScriptで決定されるURIを決定する処理が含まれるため、\nURIを使用する [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より前に配置する必要がある。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "JavaScript出力が抑制されるタグ",
+      "content": "携帯端末アクセスハンドラを使用したURLにアクセスした際は、 下記Nablarch\nタグライブラリが通常出力するJavaScriptが一切出力されなくなる。\n\n* [n:form タグ](../../component/libraries/libraries-tag-reference.md#tag-form-tag)\n* [n:script タグ](../../component/libraries/libraries-tag-reference.md#tag-script-tag)\n* [サブミット関連のタグ](../../component/libraries/libraries-tag-reference.md#tag-reference-submit)\n\n> **Important:**\n> 下記のタグは、元々想定していた機能が実現できないため、使用できなくなる。\n\n> * >   [n:submitLink タグ](../../component/libraries/libraries-tag-reference.md#tag-submit-link-tag)\n\n> n:submitLink タグの代替として、 n:a タグを使用すること。\n> 特にリクエストパラメータについては、GETメソッドのパラメータで送信する必要がある。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "URLの関連付け",
+      "content": "携帯端末アクセスハンドラを適用した場合、下記の動作で、通常NablarchでJavaScriptで行っているformのURI属性の書き換えがサーバサイドで実施される。\n\n1. JSP表示時の動作\n\n1.1. n:submit、 n:button を記載した個所で出力するHTMLのinputタグについて、 name 属性に設定する値を `nablarch_uri_override_<JSP上のname属性>|<サブミット先のURI>` に出力\n\n1.2. n:form タグでは、単純に HTML の <form> タグを出力する。\nつまり、ボタン押下時にはHTMLの<form>タグに記載したURLに押下したボタンのname属性が送られる。\n(通常、閉じタグの</form>には、押下したボタンに合わせたURLに <form> タグのuri属性を変更するJavaScriptが挿入される。)\n\n1. form サブミット時の動作\n\n2.1. KeitaiAccessHandler にて、サブミット時に押下したボタンに設定された name 属性(1.1. で設定した  `nablarch_uri_override_` から始まる文字列)から、元のJSPタグに設定されていたURI属性を取得。\n\n2.2. KeitaiAccessHandler にて、リクエストパラメータに処理対象のURIとして扱われるパラメータキー `nablarch_submit` で取得したURI属性を設定。\n(つまり、通常NablarchでJavaScriptで行っているformのURI属性の書き換えを、サーバサードで実施している)\n\n2.3. 後続処理に委譲する。(以降、クライアントからのリクエスト時にボタンに対応するURIが指定された場合と同じ動作をする)",
+      "level": 2
+    }
+  ]
+}

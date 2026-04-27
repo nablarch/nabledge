@@ -1,0 +1,110 @@
+{
+  "id": "nablarch-batch-04-fileInputBatch",
+  "title": "ファイルを入力とするバッチ",
+  "content": "[ユーザ情報入力バッチ](../../guide/nablarch-batch/nablarch-batch-01-userInputBatchSpec.md)\nを例に、ファイルを入力とするバッチ処理の実装方法を説明する。\n\n![userInputBatch.jpg](assets/nablarch-batch-04-fileInputBatch/userInputBatch.jpg)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "フォーマット定義ファイル",
+      "content": "ファイル入力を行う場合、そのファイルがどのようなレイアウトであるかを指定するために\nフォーマット定義ファイルを作成する必要がある。\n\nフォーマット定義ファイルは、外部インタフェース設計書を入力元として、\nフォーマット定義ファイル自動生成ツールにより作成する。\n\n参考として、本サンプルで使用するファイルフォーマット定義を以下に示す。\n\n```bash\n#-------------------------------------------------------------------------------\n# ユーザ情報一覧の固定長ファイルフォーマット\n#-------------------------------------------------------------------------------\ntext-encoding:    \"MS932\" # 文字列型フィールドの文字エンコーディング\nrecord-length:    420     # 各レコードの長さ\nrecord-separator: \"\\r\\n\"  # 改行コード(crlf)\nfile-type:      \"Fixed\"\n\n[Classifier] # レコードタイプ識別フィールド定義\n1   recordKbn   X(1) #       データ区分\n                     #    1: ヘッダー、2: データレコード\n                     #    8: トレーラー、9: エンドレコード\n\n[header]  # ヘッダーレコード\nrecordKbn = \"1\"\n1   recordKbn                   X(1)  \"1\"   # データ区分\n2   date                        X(8)        # システム日付\n10  ?filler                     X(411)      # 空白領域\n\n[data] # データレコード\nrecordKbn  =  \"2\"\n1   recordKbn                   X(1)  \"2\"   # データ区分\n2   loginId                     X(20)       # ログインID\n22  kanjiName                   N(100)      # 漢字氏名\n122 kanaName                    N(100)      # カナ氏名\n222 ?filler1                    X(50)       # 空白領域\n272 mailAddress                 X(100)      # メールアドレス\n372 extensionNumberBuilding     X(2)        # 内線番号（ビル番号）\n374 extensionNumberPersonal     X(4)        # 内線番号（個人番号）\n378 mobilePhoneNumberAreaCode   X(3)        # 携帯番号（市外）\n381 mobilePhoneNumberCityCode   X(4)        # 携帯電話番号(市内)\n385 mobilePhoneNumberSbscrCode  X(4)        # 携帯電話番号(加入)\n389 ?filler2                    X(32)       # 空白領域\n\n[trailer] # トレーラレコード\nrecordKbn = \"8\"\n1   recordKbn                   X(1)  \"8\"   # データ区分\n2   totalCount                  X(19)       # 総件数\n21  ?filler                     X(400)      # 空白領域\n\n[end]\nrecordKbn = \"9\"\n1   recordKbn                   X(1)  \"9\"    # データ区分\n2   ?filler                     X(419)      # 空白領域\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "初期化処理",
+      "content": "初期化処理では、コマンドライン引数  [1] で指定された値を取得している。\n\n```java\n/**\n * 初期化処理。\n * <p/>\n * 本処理では、コマンドライン引数で指定されたオプション(-DallowZeroRecord)を取得する。\n *\n * @param command 起動コマンドライン\n * @param context 実行コンテキスト\n */\n@Override\nprotected void initialize(CommandLine command, ExecutionContext context) {\n    this.allowZeroRecord = Boolean.valueOf(command.getParam(\"allowZeroRecord\"));\n}\n```\n\nコマンドライン引数は、initilizeメソッドの引数で渡されるCommandLineから取得する。\n詳細は、 [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照。\n\n初期化処理の実装は必須ではないが、以下のような場合には、\ninitializeメソッドをオーバーライドすること。\n\n* コマンドライン引数の取得が必要な場合\n* インスタンス変数の初期化が必要な場合\n\n> **Warning:**\n> バッチアクションでインスタンス変数を使用する場合、以下の制約が生じる。\n\n> * >   インスタンス変数を使用するバッチアクションは **マルチスレッド実行できない** 。\n> * >   インスタンス変数は、初期化処理(initializeメソッド)で **明示的に初期化しなければならない** 。\n\n> ただし、インスタンス変数を使用する場合であっても、以下の条件を満たす場合はマルチスレッド実行が可能である。\n\n> * >   インスタンス変数の初期化（代入）が初期化処理で行われ、それ以降は値が更新されないこと（読取専用）。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "リーダ生成",
+      "content": "下記メソッドを実装しておくと、スーパークラスにてリーダを生成してくれる。\n\n```java\n/** ファイルID */\nprivate static final String FILE_ID = \"N11AA002\";\n\n@Override\npublic String getDataFileName() {\n    return FILE_ID;\n}\n\n@Override\npublic String getFormatFileName() {\n    return FILE_ID;\n}\n```",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "ファイルバリデータ生成",
+      "content": "本バッチでは、ファイルレイアウトの精査が必要であるため、\ngetValidatorActionをオーバーライドし、ファイルレイアウト精査クラスを返却している。\n精査クラスは内部クラスとして実装している。\n\n```java\n@Override\npublic ValidatableFileDataReader.FileValidatorAction getValidatorAction() {\n    return new FileLayoutValidatorAction();\n}\n\n// 【説明】 中略\n\nprivate class FileLayoutValidator implements FileValidator {\n    /** ファイルレイアウト不正の場合の障害コード */\n    private static final String INVALID_FILE_LAYOUT_FAILURE_CODE = \"NB11AA0102\";\n\n    /** トレーラレコードのエラー */\n    private static final String TRAILER_RECORD_ERROR_FAILURE_CODE = \"NB11AA0103\";\n\n    /** ヘッダーレコードのエラー */\n    private static final String HEADER_RECORD_ERROR_FAILURE_CODE = \"NB11AA0104\";\n\n    /** レコード区分 */\n    private String preRecordKbn;\n\n    /** ヘッダーレコード */\n    private static final String HEADER_RECORD = \"1\";\n\n    /** データレコード */\n    private static final String DATA_RECORD = \"2\";\n\n    /** トレーラレコード */\n    private static final String TRAILER_RECORD = \"8\";\n\n    /** レコードカウント */\n    private int recordCount;\n\n    /** エンドレコード */\n    private static final String END_RECORD = \"9\";\n\n    /** データレコード件数 */\n    private int dataRecordCount;\n\n    // 【説明】 後略\n```\n\n> **Note:**\n> 本項では実際の精査処理内容は省略している。\n> 具体的な精査処理についてははサンプルソースコードを参照。\n\n本精査クラスの精査内容は以下のとおり。\n\n**【レイアウト精査】**\n\n1. １レコード目はヘッダーレコードであること。\n2. ２レコード目以降にデータレコードが複数存在していること。ただし、データレコードが存在しない場合は、トレーラレコードであること。\n3. データレコードの次のレコードは、トレーラレコードであること。\n4. 最終レコードはエンドレコードであること。\n\n**【トレーラレコードの精査】**\n\n1. トレーラレコードの総レコード数が、データレコードのレコード数と一致すること。\n\n**【イメージ図】**\n\n```text\n+------------------+\n|ヘッダーレコード  |先頭に必ず1件\n+------------------+\n|データコレード    |0件以上(無くても良い)\n+------------------+\n|       ：         |\n+------------------+\n|データコレード    |\n+------------------+\n|トレーラレコード  |必ず1件かつ総レコード＝データレコード数\n+------------------+\n|エンドレコード    |末尾に必ず1件\n+------------------+\n```",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "ファイルバリデータ実装",
+      "content": "RecordTypeBindingハンドラにより、入力レコードのレコードタイプに応じてメソッドが呼び分けられる [2] 。\n各メソッドにて精査処理を行っている。\n\n| レコードタイプ | レコードタイプ名 | 呼び出されるメソッド名 |\n|---|---|---|\n| ヘッダーレコード | header | doHeader |\n| データレコード | data | doData |\n| トレーラレコード | trailer | doTrailer |\n| エンドレコード | end | doEnd |\n\n接頭辞 `do` にレコードタイプ名を付与したメソッドが起動される。\n`public Result \"do\" + [レコードタイプ名](DataRecord record, ExecutionContext ctx);`",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "ヘッダーレコードの精査処理",
+      "content": "以下のチェックを行う。\n\n* ヘッダーレコードは1レコード目であること\n* ヘッダーレコードの日付フィールドと業務日付が一致すること\n\n```java\n/**\n * ヘッダーレコードの精査。\n * <p/>\n * ヘッダーレコードは、1レコード目であること。\n *\n * @param inputData 入力データ\n * @param ctx 実行コンテキスト\n * @return 結果オブジェクト\n */\npublic Result doHeader(DataRecord inputData, ExecutionContext ctx) {\n\n    if (preRecordKbn != null) {\n        // 前レコードの値がnull以外の場合は、1レコード目以外のためエラーとする。\n        throw new TransactionAbnormalEnd(FILE_LAYOUT_ERROR_EXIT_CODE,\n                INVALID_FILE_LAYOUT_FAILURE_CODE, inputData.getRecordNumber());\n    }\n\n    String date = inputData.getString(\"date\");\n    String businessDate = BusinessDateUtil.getDate();\n    if (!businessDate.equals(date)) {\n        // 日付が業務日付と不一致の場合\n        throw new TransactionAbnormalEnd(102,\n                HEADER_RECORD_ERROR_FAILURE_CODE,\n                date, businessDate);\n    }\n    preRecordKbn = HEADER_RECORD;\n    return new Success();\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "データレコードの精査処理",
+      "content": "前レコードのレコード区分は、ヘッダーレコードまたはデータレコードであることを確認する。\nそうでない場合は、例外を送出し処理を終了する。\n\n```java\n/**\n * データレコードの精査。\n * <p/>\n * 前レコードのレコード区分は、ヘッダーレコードまたはデータレコードであること。\n *\n * @param inputData 入力データ\n * @param ctx 実行コンテキスト\n * @return 結果オブジェクト\n */\npublic Result doData(DataRecord inputData, ExecutionContext ctx) {\n\n    dataRecordCount++;\n\n    if (!HEADER_RECORD.equals(preRecordKbn)\n            && !DATA_RECORD.equals(preRecordKbn)) {\n        // 前レコードがヘッダー、データで無い場合\n        throw new TransactionAbnormalEnd(FILE_LAYOUT_ERROR_EXIT_CODE,\n                INVALID_FILE_LAYOUT_FAILURE_CODE, inputData.getRecordNumber());\n    }\n    preRecordKbn = DATA_RECORD;\n    return new Success();\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "トレーラレコードの精査処理",
+      "content": "以下の精査処理を行う。\n\n* 前レコードのレコード区分は、データレコードであること。\n* 総件数項目の値がデータレコード数と一致すること。\n\n```java\n/**\n * トレーラレコードの精査。\n * <p/>\n * 前レコードのレコード区分は、データレコードであること。\n * また、総レコード数項目の値がデータレコード数と一致すること。\n *\n * データレコードの総レコード数が\n *\n * @param inputData 入力データ\n * @param ctx 実行コンテキスト\n * @return 結果オブジェクト\n */\npublic Result doTrailer(DataRecord inputData, ExecutionContext ctx) {\n\n    if (!DATA_RECORD.equals(preRecordKbn)\n            && !HEADER_RECORD.equals(preRecordKbn)) {\n        // 前レコードがヘッダー、データでない場合\n        throw new TransactionAbnormalEnd(FILE_LAYOUT_ERROR_EXIT_CODE,\n                INVALID_FILE_LAYOUT_FAILURE_CODE, inputData.getRecordNumber());\n    }\n\n    int totalCount = inputData.getBigDecimal(\"totalCount\").intValue();\n    if (dataRecordCount != totalCount) {\n        // データレコードのレコード数と総レコード数が一致しない場合\n        throw new TransactionAbnormalEnd(101,\n                TRAILER_RECORD_ERROR_FAILURE_CODE,\n                totalCount, dataRecordCount);\n    }\n\n    if (dataRecordCount == 0 && !allowZeroRecord) {\n        // データレコードのレコード数が0で、0レコードを許容しない設定の場合\n        throw new TransactionAbnormalEnd(104, \"NB11AA0106\");\n    }\n\n    preRecordKbn = TRAILER_RECORD;\n    return new Success();\n\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "エンドレコードの精査処理",
+      "content": "前レコードのレコード区分は、トレーラであることを確認する。\n\n```java\n/**\n * エンドレコードの精査\n * <p/>\n * 前レコードのレコード区分は、トレーラであること。\n *\n * @param inputData 入力データ\n * @param ctx 実行コンテキスト\n * @return 結果オブジェクト\n */\npublic Result doEnd(DataRecord inputData, ExecutionContext ctx) {\n    if (!TRAILER_RECORD.equals(preRecordKbn)) {\n        // 前レコードがトレーラでない場合\n        throw new TransactionAbnormalEnd(FILE_LAYOUT_ERROR_EXIT_CODE,\n                INVALID_FILE_LAYOUT_FAILURE_CODE, inputData.getRecordNumber());\n    }\n    preRecordKbn = END_RECORD;\n    return new Success();\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "バリデータクラスの終了処理",
+      "content": "全レコードの精査が終了後に、 `onFileEnd` が起動される。\n本サンプルでは、以下の処理を行っている。\n\n* 最終レコードのレコードタイプがエンドレコードであることの確認\n* 精査レコード件数のログ出力\n\n```java\n/**\n * {@inheritDoc}\n * <p/>\n * 最終レコードがエンドレコードであることをチェックする。\n */\npublic void onFileEnd(ExecutionContext ctx) {\n    if (!END_RECORD.equals(preRecordKbn)) {\n        // 最終レコードがエンドレコードで無い場合\n        throw new TransactionAbnormalEnd(FILE_LAYOUT_ERROR_EXIT_CODE,\n                INVALID_FILE_LAYOUT_FAILURE_CODE, ctx.getLastRecordNumber());\n    }\n    // レコード数をログに出力\n    writeLog(\"M000000002\", ctx.getLastRecordNumber());\n    writeLog(\"M000000003\", dataRecordCount);\n}\n```\n\nwriteLogメソッドについては「 [データベースを入力とするバッチ](../../guide/nablarch-batch/nablarch-batch-03-dbInputBatch.md) 」の [ログ出力](../../guide/nablarch-batch/nablarch-batch-03-dbInputBatch.md#log-output-in-batch-action) の項を参照。",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "１件ごとの処理",
+      "content": "ファイルバリデータクラスと同様に、RecordTypeBindingハンドラにより、\n入力レコードのレコードタイプに応じてメソッドが呼び分けられる。\n\n> **Note:**\n> ファイルバリデータクラスにてファイル形式の精査は実施済みであり、\n> 1件ごとの本処理ではファイル形式異常は考慮しなくて良い。",
+      "level": 2
+    },
+    {
+      "id": "s12",
+      "title": "ヘッダーレコードの処理",
+      "content": "ヘッダーレコードの妥当性は前処理で確認済みであるため、\n本処理においては処理は行わない。\n\n```java\n/**\n * ヘッダーレコードの処理。\n * <p/>\n * ヘッダーレコードの場合は、処理を行わない。\n *\n * @param inputData 入力データ\n * @param ctx 実行コンテキスト\n * @return 結果オブジェクト\n */\npublic Result doHeader(DataRecord inputData, ExecutionContext ctx) {\n    return new Success();\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s13",
+      "title": "データレコードの処理",
+      "content": "データレコード1件分の処理を行う。\n精査処理およびテンポラリテーブルへの登録を行っている。\n\n精査処理の実施方法は画面オンライン処理と同様である。\n違いは、精査対象となるデータの種類のみである。\n\n| 実行制御基盤 | 精査対象データ |\n|---|---|\n| 画面オンライン | HTTPリクエストパラメータ |\n| バッチ | DB検索結果、ファイルのレコード等 |\n\n```java\n/**\n * データレコードの処理。\n *\n * @param inputData 入力データ\n * @param ctx 実行コンテキスト\n * @return 結果オブジェクト\n */\npublic Result doData(DataRecord inputData, ExecutionContext ctx) {\n\n    // 【説明】\n    // ValidationUtilを使用して、データレコードの精査および\n    // エンティティへのマッピングを行う。\n    ValidationContext<UserInfoTempEntity> validationContext = ValidationUtil\n            .validateAndConvertRequest(UserInfoTempEntity.class,\n                    inputData, \"validateRegister\");\n\n    if (!validationContext.isValid()) {\n        // 精査エラーの場合は異常終了\n        throw new TransactionAbnormalEnd(103,\n                new ApplicationException(validationContext.getMessages()),\n                \"NB11AA0105\", recordNo);\n    }\n\n    // ユーザ情報IDを採番し、ユーザ情報テンポラリを登録する。\n    UserInfoTempEntity entity = validationContext.createObject();\n    entity.setUserInfoId(IdGeneratorUtil.generateUserInfoId());\n\n    ParameterizedSqlPStatement statement = getParameterizedSqlStatement(\n            \"INSERT_USER_INFO_TEMP\");\n    statement.executeUpdateByObject(entity);\n\n    return new Success();\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "トレーラレコードの処理",
+      "content": "特に処理はないが、トレーラレコードが読み込まれたときに\n呼び出されるメソッドが必要であるため実装している。\n\n```java\n/**\n * トレーラレコードの処理。\n *\n * @param inputData 入力データ\n * @param ctx 実行コンテキスト\n * @return 結果オブジェクト\n */\npublic Result doTrailer(DataRecord inputData, ExecutionContext ctx) {\n    return new Success();\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s15",
+      "title": "エンドレコードの処理。",
+      "content": "特に処理はないが、エンドレコードが読み込まれたときに\n呼び出されるメソッドが必要であるため実装している。\n\n```java\n/**\n * エンドレコードの処理。\n *\n * @param inputData 入力データ\n * @param ctx 実行コンテキスト\n * @return 結果オブジェクト\n */\npublic Result doEnd(DataRecord inputData, ExecutionContext ctx) {\n    return new Success();\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s16",
+      "title": "エラー発生時の処理",
+      "content": "特別な処理は必要ないため、実装しない。",
+      "level": 2
+    },
+    {
+      "id": "s17",
+      "title": "終了処理",
+      "content": "特別な処理は必要ないため、実装しない。",
+      "level": 2
+    }
+  ]
+}

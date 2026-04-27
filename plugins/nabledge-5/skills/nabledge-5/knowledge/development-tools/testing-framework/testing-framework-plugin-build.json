@@ -1,0 +1,134 @@
+{
+  "id": "testing-framework-plugin-build",
+  "title": "プラグインビルドコマンド仕様",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "本章では [想定されるプロジェクト構成ごとの設定例](../../development-tools/testing-framework/testing-framework-plugin-build.md#project-structure) および [プラグインビルドで使用するコマンドや設定ファイルの詳細仕様](../../development-tools/testing-framework/testing-framework-plugin-build.md#config-command-detail) を示す。\n\nプラグインビルドコマンドが使用されるプロジェクトの標準的な構成については [標準プロジェクト構成](../../development-tools/testing-framework/testing-framework-directory-layout.md) を、\n開発時のフローについては [UI開発基盤の導入](../../development-tools/testing-framework/testing-framework-initial-setup.md) を参照。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "想定されるプロジェクト構成ごとの設定例",
+      "content": "想定されるプロジェクト構成について、プラグインビルドコマンドの設定ファイルや実行ファイルの具体的な設定例を示す。\n下記の設定例に示していない項目については、後述する [設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#config-file) や [ビルドコマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#build-command) を参照し、必要に応じて修正すること。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "デプロイ対象プロジェクトが１つの場合",
+      "content": "以下にプロジェクトの構成図および設定例を示す。\n\n本構成は全ての画面で共通のプラグインを使用する場合に使用する。\n\n**構成図**\n\nNablarch標準UIプラグイン、プロジェクト固有UIプラグイン、UIローカルデモ用プロジェクト、UI開発基盤テスト用プロジェクト、デプロイ対象プロジェクトがそれぞれ１つずつ配置される。\n\n![project_structure1.png](assets/testing-framework-plugin-build/project_structure1.png)\n\n**設定例**\n\n* [インストールコマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#install) の設定\n\n  本構成では、以下のファイルとなる。\n\n  /nablarch_plugins_bundle/bin/install.bat\n\n  プロジェクトルートおよびプロジェクト固有UIプラグインのフォルダを設定する。\n\n  | 環境変数名 | 設定値 | 備考 |\n  |---|---|---|\n  | PROJECT_ROOT | \"../../web_project\" | コマンドの起動フォルダはnablarch_plugins_bundle/binとなるため、そこからの相対パス |\n  | UI_PLUGINS_DIRS | \"ui_plugins\" |  |\n* [ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json) の設定\n\n  本構成では、以下のファイルとなる。\n\n  /web_project/ui_plugins/pjconf.json\n\n  プロジェクトルートおよび各プロジェクトのフォルダを設定する。\n\n  | 設定項目 | 設定値 | 備考 |\n  |---|---|---|\n  | pathSettings/projectRootPath | \"../..\" | コマンドの起動フォルダはweb_project/ui_plugins/binとなるため、そこからの相対パス |\n  | pathSettings/webProjectPath | \"web/src/main/webapp\" |  |\n  | pathSettings/demoProjectPath | \"ui_demo\" |  |\n  | pathSettings/testProjectPath | \"ui_test\" |  |\n  | pathSettings/pluginProjectPath | \"ui_plugins\" |  |",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "デプロイ対象プロジェクト複数の場合(プラグインは共通)",
+      "content": "以下にプロジェクトの構成図および設定例を示す。\n\n本構成は外部公開サイトと管理用サイト等、いくつかの画面単位でデプロイ対象プロジェクトを分割する場合で、\nサイト間で基本的な画面レイアウト等が大きく変化しないような場合（同一のUI標準を適用する場合）に使用する。\n\n**構成図**\n\nNablarch標準UIプラグイン、プロジェクト固有UIプラグイン、UI開発基盤テスト用プロジェクトがそれぞれ１つ、\nUIローカルデモ用プロジェクト、デプロイ対象プロジェクトが外部公開サイト用および管理サイト用でそれぞれ２つずつ配置される。\n\n![project_structure2.png](assets/testing-framework-plugin-build/project_structure2.png)\n\n**設定例**\n\n* [インストールコマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#install) の設定\n\n  本構成では、以下のファイルとなる。\n\n  /nablarch_plugins_bundle/bin/install.bat\n\n  プロジェクトルートおよびプロジェクト固有UIプラグインのフォルダを設定する。\n\n  | 環境変数名 | 設定値 | 備考 |\n  |---|---|---|\n  | PROJECT_ROOT | \"../../web_project\" | コマンドの起動フォルダはnablarch_plugins_bundle/binとなるため、そこからの相対パス |\n  | UI_PLUGINS_DIRS | \"ui_plugins\" |  |\n* [ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json) の設定(外部公開サイト用)\n\n  本構成では、以下のファイルとなる。\n\n  /web_project/ui_plugins/pjconf_public.json (標準のpjconf.jsonファイルをコピーする)\n\n  プロジェクトルートおよび各プロジェクトのフォルダを設定する。\n\n  | 設定項目 | 設定値 | 備考 |\n  |---|---|---|\n  | pathSettings/projectRootPath | \"../..\" | コマンドの起動フォルダはweb_project/ui_plugins/binとなるため、そこからの相対パス |\n  | pathSettings/webProjectPath | \"web_public/src/main/webapp\" |  |\n  | pathSettings/demoProjectPath | \"ui_demo_public\" | 業務画面は個別で作成するため、管理サイトと分ける |\n  | pathSettings/testProjectPath | \"ui_test\" | プラグインは共通のため、UI開発基盤テスト用プロジェクトは管理サイト用と共用 |\n  | pathSettings/pluginProjectPath | \"ui_plugins\" | プラグインは共通のため、プロジェクト固有UIプラグインは管理サイト用と共用 |\n* [UIビルドコマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#ui-build) の設定(外部公開サイト用)\n\n  本構成では、以下のファイルとなる。\n\n  /web_project/ui_plugins/bin/ui_build_public.bat (標準のui_build.batコマンドをコピーする)\n\n  外部公開サイト用プロジェクト設定ファイルを設定する。\n\n  | 環境変数名 | 設定値 | 備考 |\n  |---|---|---|\n  | PROJECT_CONF | \"../pjconf_public.json\" | コマンドの起動フォルダはnablarch_plugins_bundle/binとなるため、そこからの相対パス |\n* [ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json) の設定(管理サイト用)\n\n  本構成では、以下のファイルとなる。\n\n  /web_project/ui_plugins/pjconf_manage.json (標準のpjconf.jsonファイルをコピーする)\n\n  プロジェクトルートおよび各プロジェクトのフォルダを設定する。\n\n  | 設定項目 | 設定値 | 備考 |\n  |---|---|---|\n  | pathSettings/projectRootPath | \"../..\" | コマンドの起動フォルダはweb_project/ui_plugins/binとなるため、そこからの相対パス |\n  | pathSettings/webProjectPath | \"web_manage/src/main/webapp\" |  |\n  | pathSettings/demoProjectPath | \"ui_demo_manage\" | 業務画面は個別で作成するため、外部公開サイトと分ける |\n  | pathSettings/testProjectPath | \"ui_test\" | プラグインは共通のため、UI開発基盤テスト用プロジェクトは外部公開サイト用と共用 |\n  | pathSettings/pluginProjectPath | \"ui_plugins\" | プラグインは共通のため、プロジェクト固有UIプラグインは外部公開サイト用と共用 |\n* [UIビルドコマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#ui-build) の設定(管理サイト用)\n\n  本構成では、以下のファイルとなる。\n\n  /web_project/ui_plugins/bin/ui_build_manage.bat (標準のui_build.batコマンドをコピーする)\n\n  管理サイト用プロジェクト設定ファイルを設定する。\n\n  | 環境変数名 | 設定値 | 備考 |\n  |---|---|---|\n  | PROJECT_CONF | \"../pjconf_manage.json\" | コマンドの起動フォルダはnablarch_plugins_bundle/binとなるため、そこからの相対パス |",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "デプロイ対象プロジェクト複数の場合(プラグインも個別)",
+      "content": "以下にプロジェクトの構成図および設定例を示す。\n\n本構成は外部公開サイトと管理用サイト等、いくつかの画面単位でデプロイ対象プロジェクトを分割する場合で、\nサイト間で基本的な画面レイアウト等が大きく変化するような場合（適用するUI標準が変化する場合）に使用する。\n\n**構成図**\n\nNablarch標準UIプラグインがそれぞれ１つ、\nプロジェクト固有UIプラグイン、UI開発基盤テスト用プロジェクト、UIローカルデモ用プロジェクト、デプロイ対象プロジェクトが外部公開サイト用および管理サイト用でそれぞれ２つずつ配置される。\n\n![project_structure3.png](assets/testing-framework-plugin-build/project_structure3.png)\n\n**設定例**\n\n* [インストールコマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#install) の設定\n\n  本構成では、以下のファイルとなる。\n\n  /nablarch_plugins_bundle/bin/install.bat\n\n  プロジェクトルートおよびプロジェクト固有UIプラグインのフォルダを設定する。\n\n  | 環境変数名 | 設定値 | 備考 |\n  |---|---|---|\n  | PROJECT_ROOT | \"../../web_project\" | コマンドの起動フォルダはnablarch_plugins_bundle/binとなるため、そこからの相対パス |\n  | UI_PLUGINS_DIRS | \"ui_plugins_public,ui_plugins_manage\" |  |\n* [ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json) の設定(外部公開サイト用)\n\n  本構成では、以下のファイルとなる。\n\n  /web_project/ui_plugins_public/pjconf.json (標準のui_pluginsフォルダ全体をコピーする)\n\n  プロジェクトルートおよび各プロジェクトのフォルダを設定する。\n\n  | 設定項目 | 設定値 | 備考 |\n  |---|---|---|\n  | pathSettings/projectRootPath | \"../..\" | コマンドの起動フォルダはweb_project/ui_plugins_public/binとなるため、そこからの相対パス |\n  | pathSettings/webProjectPath | \"web_public/src/main/webapp\" |  |\n  | pathSettings/demoProjectPath | \"ui_demo_public\" | 業務画面は個別で作成するため、管理サイトと分ける |\n  | pathSettings/testProjectPath | \"ui_test_public\" | プラグインも個別のため、UI開発基盤テスト用プロジェクトも管理サイトと分ける |\n  | pathSettings/pluginProjectPath | \"ui_plugins_public\" | プラグインも個別のため、プロジェクト固有UIプラグインも管理サイトと分ける |\n* [ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json) の設定(管理サイト用)\n\n  本構成では、以下のファイルとなる。\n\n  /web_project/ui_plugins_manage/pjconf.json (標準のui_pluginsフォルダ全体をコピーする)\n\n  プロジェクトルートおよび各プロジェクトのフォルダを設定する。\n\n  | 設定項目 | 設定値 | 備考 |\n  |---|---|---|\n  | pathSettings/projectRootPath | \"../..\" | コマンドの起動フォルダはweb_project/ui_plugins_manage/binとなるため、そこからの相対パス |\n  | pathSettings/webProjectPath | \"web_manage/src/main/webapp\" |  |\n  | pathSettings/demoProjectPath | \"ui_demo_manage\" | 業務画面は個別で作成するため、外部公開サイトと分ける |\n  | pathSettings/testProjectPath | \"ui_test_manage\" | プラグインも個別のため、UI開発基盤テスト用プロジェクトも外部公開サイトと分ける |\n  | pathSettings/pluginProjectPath | \"ui_plugins_manage\" | プラグインも個別のため、プロジェクト固有UIプラグインも外部公開サイトと分ける |",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "プラグインビルドで使用するコマンドや設定ファイルの詳細仕様",
+      "content": "以降はプラグインビルドで使用するコマンドや設定ファイルについての詳細として、以下の項目について記述する。\n\n* [設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#config-file)\n* [ファイルの自動生成](../../development-tools/testing-framework/testing-framework-plugin-build.md#generate-file)\n* [プラグイン、外部ライブラリの展開](../../development-tools/testing-framework/testing-framework-plugin-build.md#build-file)\n* [ビルドコマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#build-command)",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "設定ファイル",
+      "content": "以下にプラグインビルドコマンドで使用する設定ファイルを示す。\n\n| ファイル名 | 実ファイル名 | ファイル概要 |\n|---|---|---|\n| [ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json) | pjconf.json | 環境毎のファイル展開設定ファイル。 |\n| [lessインポート定義ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#lessimport-less) | ${cssMode}.less | 表示モードごとにインポートするファイルの定義。 |",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "ビルドコマンド用設定ファイル",
+      "content": "**設定ファイル**\n\n| 配置フォルダ | ファイル名 |\n|---|---|\n| ui_plugins ( [インストールコマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#install) で任意のフォルダに変更可能) | pjconf.json ( [UIビルドコマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#ui-build) で任意のフォルダに変更可能) |\n\n**ファイル概要**\n\nプラグインの展開先ごとに定義する環境毎のビルドコマンド用設定ファイル。\n\n以下の形式で定義する。\n\n```json\n{ \"pathSettings\" :\n  { \"projectRootPath\"   : \"<プロジェクトルートパス(絶対パスまたは起動フォルダからの相対パス)>\"\n  , \"webProjectPath\"    : \"<ウェブプロジェクトのパス(プロジェクトルートからの相対パス)>\"\n  , \"demoProjectPath\"   : \"<ui_demoプロジェクトのパス(プロジェクトルートからの相対パス)>\"\n  , \"testProjectPath\"   : \"<ui_testプロジェクトのパス(プロジェクトルートからの相対パス)>\"\n  , \"pluginProjectPath\" : \"<プラグインプロジェクトのパス(プロジェクトルートからの相対パス)>\"\n  }\n, \"cssMode\" : \"<ビルド対象のCSSのモードリスト>\"\n, \"plugins\" : \"<展開対象のプラグインリスト>\"\n, \"libraryDeployMappings\":\n    { \"<パッケージ名>\" :\n      { \"展開元のファイル(orフォルダ)\": \"展開先のファイル(orフォルダ)\" }\n    }\n, \"imgcopy\" :\n  { \"fromdirs\" : \"<画像ファイルコピー元ディレクトリ名リスト>\"\n  , \"todirs\"   : \"<画像ファイルコピー先ディレクトリ名リスト>\"\n  }\n, \"excludedirs\" : \"<コピー対象外ディレクトリ名リスト>\"\n}\n```\n\n以下に各設定値の定義方法を示す。\n\n| 設定項目 | 必須 | 設定内容 |\n|---|---|---|\n| pathSettings/projectRootPath | 必須 | 以下のオプションで示す各パスを指定する。  \\| オプション \\| 必須 \\| 設定内容 \\| \\|---\\|---\\|---\\| \\| projectRootPath \\| 必須 \\| プロジェクトルートパス。   絶対パスまたは起動ディレクトリからの相対パスで指定する。 \\| \\| webProjectPath \\| 必須 \\| デプロイ対象プロジェクトのパス。   プロジェクトルートからの相対パスで指定する。 \\| \\| demoProjectPath \\| 任意 \\| UIローカルデモプロジェクトのパス。   プロジェクトルートからの相対パスで指定する。   省略した場合は\"ui_demo\"となる。 \\| \\| testProjectPath \\| 任意 \\| UI開発基盤テストプロジェクトのパス。   プロジェクトルートからの相対パスで指定する。   省略した場合は\"ui_test\"となる。 \\| \\| pluginProjectPath \\| 任意 \\| プラグインプロジェクトのパス。   プロジェクトルートからの相対パスで指定する。   省略した場合は\"ui_plugins\"となる。 \\| |\n| cssMode | 任意 | ビルド対象のCSSのモードを配列で指定する。   省略した場合は[\"wide\", \"compact\", \"narrow\"]となる。 |\n| plugins | 任意 | 展開対象のプラグインリストをオブジェクトで指定する。   省略した場合は全てのプラグインおよびファイルが展開対象となる。   各プラグインはこのリストで定義された順に展開される。   オブジェクトの値は以下のオプションを指定する。  \\| オプション \\| 必須 \\| 設定内容 \\| \\|---\\|---\\|---\\| \\| pattern \\| 必須 \\| 展開対象のプラグイン名を正規表現で指定する。 \\| \\| exclude \\| 任意 \\| プラグイン内で展開しないファイルを正規表現の配列で指定する。  省略した場合はプラグイン内の全てのファイルが展開対象となる。 \\| |\n| libraryDeployMappings | 任意 | サードパーティライブラリで展開するファイルを設定する。  対象のパッケージ名をキーとして、値にはファイルの展開元、展開先を定義したオブジェクトを設定する。  展開元のファイルはパッケージ内の相対パスで指定する。   展開元のファイルとしてフォルダが指定された場合、フォルダ配下のファイルが全て展開される。 展開先のファイルは展開先(ui_test等)からの相対パスで指定する。   この時展開元と異なるファイル名を指定することでリネームして配置することが可能である。 |\n| imgcopy | 任意 | 画像ファイルのコピーを行うディレクトリを指定する。   展開時に高解像度版の画像ファイルを低解像度版の画像ファイルディレクトリにコピーする際に使用される。  省略した場合は画像ファイルのコピーが行われない。  \\| オプション \\| 必須 \\| 設定内容 \\| \\|---\\|---\\|---\\| \\| fromdirs \\| 必須 \\| コピー元ディレクトリを配列で指定する。 \\| \\| todirs \\| 必須 \\| コピー先ディレクトリを配列で指定する。 \\| |\n| excludedirs | 任意 | 展開時に共通的に除外されるディレクトリを指定する場合、ディレクトリ名を配列で指定する。  省略した場合は隠しディレクトリ（.始まり）が除外対象となる。 |\n\n**設定例**\n\n以下に本設定ファイルの設定例を示す。\n\n```json\n{ \"pathSettings\" :\n  { \"projectRootPath\"   : \"../..\"\n  , \"webProjectPath\"    : \"web/main/web\"\n  , \"demoProjectPath\"   : \"ui_demo\"\n  , \"testProjectPath\"   : \"ui_test\"\n  , \"pluginProjectPath\" : \"ui_plugins\"\n  }\n, \"cssMode\" : [\"wide\", \"compact\", \"narrow\"]\n, \"plugins\" :\n  [ { \"pattern\": \"nablarch-.*\", \"exclude\" : [ \"hogeRegExp1\", \"hogeRegExp2\" ] }\n  , { \"pattern\": \"web_project-.*\" }\n  , { \"pattern\": \"requirejs\" }\n  , { \"pattern\": \"sugar\" }\n  , { \"pattern\": \"jquery\" }\n  , { \"pattern\": \"requirejs-text\" }\n  , { \"pattern\": \"font-awesome\" }\n  , { \"pattern\": \"less\" }\n  ]\n, \"libraryDeployMappings\":\n  { \"jquery\" :\n    { \"dist/jquery.js\": \"js/jquery.js\"\n    }\n  , \"requirejs\" :\n    { \"require.js\": \"js/require.js\"\n    }\n  , \"sugar\" :\n    { \"release/sugar-full.development.js\": \"js/sugar.js\"\n    }\n  , \"font-awesome\":\n    { \"fonts/fonts*\": \"fonts/fonts*\"\n    , \"css/font-awesome.min.css\": \"css/font-awesome.min.css\"}\n  }\n, \"imgcopy\":\n  { \"fromdirs\": [ \"img/narrow/high\", \"img/wide/high\" ]\n  , \"todirs\":   [ \"img/wide/low\", \"img/narrow/high\", \"img/narrow/low\" ]\n  }\n, \"excludedirs\" : [ \"hoge\" ]\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "lessインポート定義ファイル",
+      "content": "**設定ファイル**\n\n| 配置フォルダ | ファイル名 |\n|---|---|\n| ui_plugins/css/${デプロイ先種別} ( [インストールコマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#install) で任意のフォルダに変更可能) | ${表示モード}.less |\n\n**ファイル概要**\n\n表示モードごとにインポートするファイルの定義。\nデプロイ先種別ごと、表示モードごとにファイルを作成する。\n（表示モードおよびlessファイルの内容については [CSSフレームワーク](../../development-tools/testing-framework/testing-framework-css-framework.md) 参照）\n\nデプロイ先種別として指定可能な値とデプロイ先を以下に示す。\n\n| デプロイ先種別 | デプロイ先 |\n|---|---|\n| ui_public | デプロイ対象プロジェクトのルートフォルダ(web) |\n| ui_test | UI開発基盤テスト用フォルダ(ui_test)   UIローカルデモ用フォルダ(ui_demo) |\n\nlessファイルは [ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json) の\"cssMode\"で指定されたモードと対応するファイルをそれぞれ作成する必要がある。\n例えば\"cssMode\"で[\"wide\", \"compact\", \"narrow\"]を指定した場合、以下のファイルを作成する。\n\n```bash\nui_plugins/\n └── css/\n      ├── ui_public/\n      │    ├── wide.less\n      │    ├── compact.less\n      │    └── narrow.less\n      └── ui_test/\n           ├── wide.less\n           ├── compact.less\n           └── narrow.less\n```\n\nlessファイルは以下の形式で定義する。\n\n```none\n@import \"インポート対象ファイル名\";\n@import \"インポート対象ファイル名\";\n                ：\n```\n\nインポート対象ファイル名はファイルの配置フォルダからの相対パスで指定する。\n\n以下に定義例を示す。\n```css\n@import \"../../node_modules/nablarch-widget-field-base/ui_public/css/field/base\";\n@import \"../../node_modules/nablarch-widget-field-base/ui_public/css/field/base-wide\";\n```\n\nなお、lessファイルは [lessインポート定義雛形生成コマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#ui-genless) を使用して各プラグインからlessファイルを抽出した雛形を作成することができる。\n複数のlessファイル内で同一のセレクタが記述されている場合、後に記述されたセレクタの内容で上書きされる。\nそのためlessファイルをインポートする順序が大きな意味を持ち、作成された雛形を適宜修正する必要がある。",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "ファイルの自動生成",
+      "content": "本プラグインビルドコマンドではプラグインや外部ライブラリをui_test、ui_demoなどの環境毎に展開後、CSSおよびJavaScriptファイルの一部を各環境毎に自動生成する。",
+      "level": 2
+    },
+    {
+      "id": "s11",
+      "title": "CSSの自動生成",
+      "content": "**CSS自動生成ファイル一覧**\n\n以下に自動生成されるCSSファイルの一覧を示す。\n\n| 生成先フォルダ | 生成ファイル | 元になるファイル |\n|---|---|---|\n| css/built | ${cssMode}-minify.css | [lessインポート定義ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#lessimport-less) で定義されたされたcssファイル。 |\n\n**CSSファイル生成イメージ**\n\n以下に自動生成されるCSSファイルの生成イメージを示す。\n\n![build_css_gen.png](assets/testing-framework-plugin-build/build_css_gen.png)\n\n**CSSのモードについて**\n\nファイル展開設定ファイルの\"cssMode\"で指定されたCSS表示モードのみが生成対象となる。\n（表示モードおよびlessファイルの内容については [CSSフレームワーク](../../development-tools/testing-framework/testing-framework-css-framework.md) 参照）\n\nプラグインに含まれるlessファイルをインポートした [lessインポート定義ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#lessimport-less) を参照し、各cssファイルを作成する。\n例えば\"cssMode\"で[\"wide\", \"compact\", \"narrow\"]を指定した場合、以下のファイルが生成される。\n\n```bash\ncss/\n └── built/\n      ├── wide-minify.css\n      ├── compact-minify.css\n      └── narrow-minify.css\n```",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "JavaScriptの自動生成",
+      "content": "**JavaScript自動生成ファイル一覧**\n\n以下に自動生成されるJavaScriptファイルの一覧を示す。表の記述順にファイルが生成される。\n\n| 生成先フォルダ | 生成ファイル | 元になるファイル |\n|---|---|---|\n| js/nablarch | ui.js | js/nablarch/ui配下のJavaScriptファイル。 |\n| js | nablarch-minify.js | 業務画面から参照されるJavaScriptファイル。 |\n| js/build | devtool_conf.js | autoconf.jsで検出されたJavaScriptファイル。 |\n| js | devtool.js | devtool_conf.jsで定義されたJavaScriptファイル。 |\n\n**JavaScriptファイル生成イメージ**\n\n以下に自動生成されるJavaScriptファイルの生成イメージを示す。\n\n![build_js_gen.png](assets/testing-framework-plugin-build/build_js_gen.png)",
+      "level": 3
+    },
+    {
+      "id": "s13",
+      "title": "プラグイン、外部ライブラリの展開",
+      "content": "本プラグインビルドコマンドではプラグインや外部ライブラリを各種設定ファイルの内容に基づきui_test、ui_demoなどの環境毎に展開する。",
+      "level": 2
+    },
+    {
+      "id": "s14",
+      "title": "プラグインの展開",
+      "content": "**参照設定ファイル**\n\n* [ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json)\n\n**展開仕様**\n\n各プラグインに含まれるフォルダごとに以下のように展開する。\n\n| プラグイン内のフォルダ | プロジェクト上の配布先 |\n|---|---|\n| ui_public | UIローカルデモ用プロジェクト, UI開発基盤テスト用プロジェクト, デプロイ対象プロジェクト |\n| ui_local | UIローカルデモ用プロジェクト, UI開発基盤テスト用プロジェクト |\n| ui_test | UI開発基盤テスト用プロジェクト |\n\nただし、各プラグインに含まれるlessファイルは展開されず、自動生成された*-minify.cssファイルのみ展開される。\n自動生成ファイルについては [ファイルの自動生成](../../development-tools/testing-framework/testing-framework-plugin-build.md#generate-file) を参照。\n\n> **Tip:**\n> プラグイン間で同一の展開先となるファイルを検出した場合、重複ファイルとして下記フォーマットでコマンド終了時に該当ファイルの一覧が表示される。\n\n> ```none\n> duplicate file detected!!\n> {\n>   \"<展開先ファイル名>\": [\n>     \"<プラグイン1>\",\n>     \"<プラグイン2>\",\n>       :\n>     \"<プラグインn>\n>   ]\n> }\n> ```\n\n> 各ファイルの最後に表示されたプラグインに含まれるファイルが適用されている。\n> 問題がある場合は [ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json) を見直し反映順序を制御するか、プラグイン内のファイル構成を見直す必要がある。",
+      "level": 3
+    },
+    {
+      "id": "s15",
+      "title": "外部ライブラリの展開",
+      "content": "**参照設定ファイル**\n\n* [ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json)\n\n**展開仕様**\n\n[ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json) に定義されている\"libraryDeployMappings\"の内容に従い、\nライブラリ内の必要なファイルのみを配布する。\n\"libraryDeployMappings\"の内容については [ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s16",
+      "title": "ビルドコマンド",
+      "content": "プラグインビルドコマンド用のコマンドとして以下のコマンドが提供されている。\n\n| コマンド名 | Windows用実行ファイル名 | 概要 |\n|---|---|---|\n| [インストールコマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#install) | install.bat | Nablarch提供プラグインおよび外部ライブラリをプロジェクトフォルダ配下に取り込む。 |\n| [UIビルドコマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#ui-build) | ui_build.bat | Nablarch提供プラグイン、プロジェクト開発プラグインおよび外部ライブラリをプロジェクトフォルダ内の各フォルダに展開する。  同時に各環境固有の自動生成ファイルを生成する。 |\n| [lessインポート定義雛形生成コマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#ui-genless) | ui_genless.bat | 各表示モード毎のlessインポート定義ファイルの雛形を作成する。 |\n| [ローカル動作確認用サーバ起動コマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#localserver) | ローカル画面確認.bat | ローカル動作確認用のサーバを起動する。 |\n| [サーバ動作確認用サーバ起動コマンド](../../development-tools/testing-framework/testing-framework-plugin-build.md#ui-demo) | サーバ動作確認.bat | サーバ動作確認用のサーバを起動する。 |\n\nそれぞれのコマンドについて詳細を示す。",
+      "level": 2
+    },
+    {
+      "id": "s17",
+      "title": "インストールコマンド",
+      "content": "**実行ファイル**\n\n| 配置プロジェクト | 配置フォルダ | Windows用実行ファイル名 | Linux用実行ファイル名 |\n|---|---|---|---|\n| nablarch_plugins_bundle | /bin | install.bat | install.sh |\n\n**設定項目**\n\n| 環境変数名 | 必須 | 設定内容 |\n|---|---|---|\n| PROJECT_ROOT | 必須 | インストール先業務プロジェクトのルートフォルダを指定する。  本書の例ではweb_projectにあたる。 |\n| UI_PLUGINS_DIRS | 任意 | プラグインのインストール先をプロジェクトルートフォルダからの相対パスで指定する。  複数存在する場合はカンマ区切りで指定する。  省略した場合\"ui_plugins\"となる。 |\n\n**処理内容詳細**\n\nNablarch提供プラグインおよび外部ライブラリを以下の手順でプロジェクトフォルダ配下に取り込む。\n\n* 配布先プロジェクトのpackage.jsonとlastInstallPackage.jsonを比較し、不要となったパッケージを削除する。\n  また、配布先プロジェクトに登録されているキャッシュ情報を削除する。\n* 配布先プロジェクトにキャッシュとして全てのプラグインを登録する。\n  また、ローカルのレジストリサーバを起動し、配布先プロジェクトのpackage.jsonに定義されている\n  \"dependencies\"および\"devDependencies\"の内容に従い、必要なパッケージをインストールする。\n\n> **Tip:**\n> install.batを使用して、変更管理済みのpluginを削除するとIDE上からコミットできないことがある。\n> その場合、別のクライアントを使用してコミットすること。\n\n![build_install.png](assets/testing-framework-plugin-build/build_install.png)",
+      "level": 3
+    },
+    {
+      "id": "s18",
+      "title": "UIビルドコマンド",
+      "content": "**実行ファイル**\n\n| 配置プロジェクト | 配置フォルダ | Windows用実行ファイル名 | Linux用実行ファイル名 |\n|---|---|---|---|\n| 業務プロジェクト(web_project) | /ui_plugins/bin | ui_build.bat | ui_build.sh |\n\n**設定項目**\n\n| 環境変数名 | 必須 | 設定内容 |\n|---|---|---|\n| PROJECT_CONF | 必須 | 使用するファイル展開設定ファイルのパスを指定する。 |\n\n**処理内容詳細**\n\n配布されたプラグインおよびプロジェクト開発プラグインを、以下の手順でプロジェクトフォルダ内の各フォルダに展開および自動生成する。\n\n* 前回ビルドファイルの削除\n* Nablarch提供プラグインの展開\n* 外部ライブラリの展開\n* JavaScriptの自動生成\n* CSSの自動生成\n* ドキュメントの生成\n* 画像ファイルのコピー\n* 重複ファイルの表示\n\n![build_ui_build.png](assets/testing-framework-plugin-build/build_ui_build.png)",
+      "level": 3
+    },
+    {
+      "id": "s19",
+      "title": "lessインポート定義雛形生成コマンド",
+      "content": "**実行ファイル**\n\n| 配置プロジェクト | 配置フォルダ | Windows用実行ファイル名 | Linux用実行ファイル名 |\n|---|---|---|---|\n| 業務プロジェクト(web_project) | /ui_plugins/bin | ui_genless.bat | ui_genless.sh |\n\n**設定項目**\n\n| 環境変数名 | 必須 | 設定内容 |\n|---|---|---|\n| PROJECT_CONF | 必須 | 使用するファイル展開設定ファイルのパスを指定する。 |\n\n**処理内容詳細**\n\n配布されたプラグインおよびプロジェクト開発プラグインからlessファイルを抽出し、lessインポート定義ファイルの雛形を自動生成する。\nlessファイルはインポートする順序が大きな意味を持つため、作成された雛形を適宜修正する必要がある。\n\nインポート定義は以下の順でソートされる。\n\n* nablarch-css-core/**/reset.less\n* nablarch-css-core/**/*.less\n* nablarch-css-*/**/*.less\n* (プラグイングループ)-base/**/*.less\n* (プラグイングループ)-base/**/*-(表示モード).less\n* (プラグイングループ)-*/**/*.less\n* (プラグイングループ)-*/**/*-(表示モード).less\n\nプラグイングループはプラグイン名の最後のハイフンより前でグルーピングされたものである。\n例えば、nablarch-widget-box-base, nablarch-widget-box-content, nablarch-widget-box-imgはnablarch-widget-boxとして同一のグループとみなされる。\nまた、nablarch-css-*以外の各プラグインは [ビルドコマンド用設定ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#pjconf-json) のpluginsで指定された順序でソートされる。",
+      "level": 3
+    },
+    {
+      "id": "s20",
+      "title": "ローカル動作確認用サーバ起動コマンド",
+      "content": "**実行ファイル**\n\n| 配置プロジェクト | 配置フォルダ | Windows用実行ファイル名 | Linux用実行ファイル名 |\n|---|---|---|---|\n| 業務プロジェクト(web_project     ) | /ui_test   /ui_demo | ローカル画面確認.bat | localServer.sh |\n\n**処理内容詳細**\n\nローカル動作確認用のサーバを起動する。",
+      "level": 3
+    },
+    {
+      "id": "s21",
+      "title": "サーバ動作確認用サーバ起動コマンド",
+      "content": "**実行ファイル**\n\n| 配置プロジェクト | 配置フォルダ | Windows用実行ファイル名 | Linux用実行ファイル名 |\n|---|---|---|---|\n| 業務プロジェクト(web_project) | /ui_test | サーバ動作確認.bat | uiTestServer.sh |\n\n**処理内容詳細**\n\nサーバ動作確認用のサーバを起動する。",
+      "level": 3
+    }
+  ]
+}

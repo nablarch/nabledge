@@ -1,93 +1,38 @@
 {
   "id": "jakarta-batch-getting-started-chunk",
   "title": "データを導出するバッチの作成(Chunkステップ)",
+  "content": "Exampleアプリケーションを元に、既存データから計算を行い新たにデータを導出する [Chunkステップ](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-batch-type-chunk) 方式のバッチを解説する。\n\n作成する機能の概要\n![overview.png](assets/jakarta-batch-getting-started-chunk/overview.png)\n動作確認手順\n1. 登録対象テーブル(賞与テーブル)のデータを削除\n\n  H2のコンソールから下記SQLを実行し、賞与テーブルのデータを削除する。\n\n  ```sql\n  TRUNCATE TABLE BONUS;\n  ```\n2. 賞与計算バッチを実行\n\n  コマンドプロンプトから賞与計算バッチを実行する。\n\n```bash\n$cd {nablarch-example-batch-eeシステムリポジトリ}\n$mvn exec:java -Dexec.mainClass=nablarch.fw.batch.ee.Main ^\n    -Dexec.args=bonus-calculate\n```\n\n1. バッチ実行後の状態の確認\n\nH2のコンソールから下記SQLを実行し、賞与情報が登録されたことを確認する。\n\n```sql\nSELECT * FROM BONUS;\n```",
   "no_knowledge_content": false,
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/batch/jsr352/getting_started/chunk/index.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/api/chunk/ItemReader.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/api/chunk/AbstractItemReader.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/javax/inject/Named.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/javax/enterprise/context/Dependent.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/api/chunk/ItemProcessor.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/api/chunk/ItemWriter.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/javax/batch/api/chunk/AbstractItemWriter.html"
-  ],
-  "index": [
+  "sections": [
     {
       "id": "s1",
-      "title": "入力データソースからデータを読み込む",
-      "hints": [
-        "AbstractItemReader",
-        "ItemReader",
-        "DeferredEntityList",
-        "UniversalDao",
-        "@Named",
-        "@Dependent",
-        "ItemReader実装",
-        "遅延ロード",
-        "大量データ読み込み",
-        "フォーム",
-        "Chunkステップ入力",
-        "open",
-        "readItem",
-        "close",
-        "EmployeeSearchReader",
-        "EmployeeForm"
-      ]
+      "title": "データを導出する",
+      "content": "既存データから新たにデータを導出するバッチの実装方法を以下の順に説明する。\n\n1. [入力データソースからデータを読み込む](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-chunk.md#getting-started-chunk-read)\n2. [業務ロジックを実行する](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-chunk.md#getting-started-chunk-business-logic)\n3. [永続化処理を行う](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-chunk.md#getting-started-chunk-persistence)\n4. [JOB設定ファイルを作成する](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-chunk.md#getting-started-chunk-job)\n\n処理フローについては、 [Chunkステップのバッチの処理フロー](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-batch-flow-chunk) を参照。\n責務配置については [Chunkステップの責務配置](../../processing-pattern/jakarta-batch/jakarta-batch-application-design.md#jsr352-chunk-design) を参照。\n\nバッチ処理は、 <a href=\"https://jcp.org/en/jsr/detail?id=352\" target=\"_blank\">JSR352(外部サイト、英語)</a> で規定されたインターフェースの実装に加えて、トランザクション制御などの共通的な処理を提供するリスナーによって構成する。\nリスナーの詳細は [バッチアプリケーションで使用するリスナー](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-listener) 及び [リスナーの指定方法](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-listener) を参照。",
+      "level": 2
     },
     {
       "id": "s2",
-      "title": "業務ロジックを実行する",
-      "hints": [
-        "ItemProcessor",
-        "業務ロジック実装",
-        "Chunkステップ処理",
-        "processItem",
-        "BonusCalculateProcessor",
-        "@Named",
-        "@Dependent",
-        "Bonus",
-        "EmployeeForm"
-      ]
+      "title": "入力データソースからデータを読み込む",
+      "content": "計算に必要なデータを取得する処理を実装する。\n\n1. [フォームの作成](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-chunk.md#getting-started-chunk-form)\n2. [ItemReaderの作成](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-chunk.md#getting-started-chunk-reader)\n\nフォームの作成\nChunkステップでは、 ItemReader と\nItemProcessor とのデータ連携にフォームを使用する。\n\nEmployeeForm.java\n```java\npublic class EmployeeForm {\n\n    //一部のみ抜粋\n\n    /** 社員ID */\n    private Long employeeId;\n\n    /**\n     * 社員IDを返します。\n     *\n     * @return 社員ID\n     */\n    public Long getEmployeeId() {\n        return employeeId;\n    }\n\n    /**\n     * 社員IDを設定します。\n     *\n     * @param employeeId 社員ID\n     */\n    public void setEmployeeId(Long employeeId) {\n        this.employeeId = employeeId;\n    }\n}\n```\n\nItemReaderの作成\nAbstractItemReader を継承し、データの読み込みを行う。\n\n| インタフェース名 | 責務 |\n|---|---|\n| ItemReader | データの読み込みを行う。  空実装を提供する AbstractItemReader を継承する。  * ItemReader#open * ItemReader#readItem * ItemReader#close |\n\nEmployeeSearchReader.java\n```java\n@Dependent\n@Named\npublic class EmployeeSearchReader extends AbstractItemReader {\n\n    /** 社員情報のリスト */\n    private DeferredEntityList<EmployeeForm> list;\n\n    /** 社員情報を保持するイテレータ */\n    private Iterator<EmployeeForm> iterator;\n\n    @Override\n    public void open(Serializable checkpoint) throws Exception {\n        list = (DeferredEntityList<EmployeeForm>) UniversalDao.defer()\n                .findAllBySqlFile(EmployeeForm.class, \"SELECT_EMPLOYEE\");\n        iterator = list.iterator();\n    }\n\n    @Override\n    public Object readItem() {\n        if (iterator.hasNext()) {\n            return iterator.next();\n        }\n        return null;\n    }\n\n    @Override\n    public void close() throws Exception {\n        list.close();\n    }\n}\n```\nEmployeeForm.sql\n```java\nSELECT_EMPLOYEE=\nSELECT\n    EMPLOYEE.EMPLOYEE_ID,\n    EMPLOYEE.FULL_NAME,\n    EMPLOYEE.BASIC_SALARY,\n    EMPLOYEE.GRADE_CODE,\n    GRADE.BONUS_MAGNIFICATION,\n    GRADE.FIXED_BONUS\nFROM\n    EMPLOYEE\nINNER JOIN GRADE ON EMPLOYEE.GRADE_CODE = GRADE.GRADE_CODE\n```\nこの実装のポイント\n* Named と Dependent をクラスに付与する。\n  詳細は、 [BatchletのNamedとDependentの説明](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-batchlet.md#getting-started-batchlet-cdi) を参照。\n* open メソッドで処理対象のデータを読み込む。\n* SQLファイルの配置場所や作成方法などは、 [任意のSQL(SQLファイル)で検索する](../../component/libraries/libraries-universal-dao.md#universal-dao-sql-file) を参照。\n* 大量のデータを読み込む場合は、メモリの逼迫を防ぐために UniversalDao#defer を使用して\n  検索結果を [遅延ロード](../../component/libraries/libraries-universal-dao.md#universal-dao-lazy-load) する。\n* readItem メソッドで読み込んだデータから一行分のデータを返却する。\n  このメソッドで返却したオブジェクトが、後続する ItemProcessor の processItem メソッドの引数として与えられる。",
+      "level": 3
     },
     {
       "id": "s3",
-      "title": "永続化処理を行う",
-      "hints": [
-        "ItemWriter",
-        "AbstractItemWriter",
-        "UniversalDao",
-        "batchInsert",
-        "一括登録",
-        "トランザクションコミット",
-        "永続化処理",
-        "writeItems",
-        "BonusWriter",
-        "@Named",
-        "@Dependent"
-      ]
+      "title": "業務ロジックを実行する",
+      "content": "賞与の計算等の業務ロジックを実装する。\n\nItemProcessorの作成\nItemProcessor を実装し、\n業務ロジックを行う(永続化処理は ItemWriter の責務であるため実施しない)。\n\n| インタフェース名 | 責務 |\n|---|---|\n| ItemProcessor | 一行分のデータに対する業務処理を行う。  * ItemProcessor#processItem |\n\nBonusCalculateProcessor.java\n```java\n@Dependent\n@Named\npublic class BonusCalculateProcessor implements ItemProcessor {\n\n    @Override\n    public Object processItem(Object item) {\n\n        EmployeeForm form = (EmployeeForm) item;\n        Bonus bonus = new Bonus();\n        bonus.setEmployeeId(form.getEmployeeId());\n        bonus.setPayments(calculateBonus(form));\n\n        return bonus;\n    }\n\n    /**\n     * 社員情報をもとに賞与計算を行う。\n     *\n     * @param form 社員情報Form\n     * @return 賞与\n     */\n    private static Long calculateBonus(EmployeeForm form) {\n        if (form.getFixedBonus() == null) {\n            return form.getBasicSalary() * form.getBonusMagnification() / 100;\n        } else {\n            return form.getFixedBonus();\n        }\n    }\n}\n```\nこの実装のポイント\n* processItem メソッドで一定数( [JOB設定ファイルを作成する](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-chunk.md#getting-started-chunk-job) にて設定方法を解説)のエンティティを返却した時点で、\n  後続する ItemWriter の writeItems メソッドが実行される。",
+      "level": 3
     },
     {
       "id": "s4",
+      "title": "永続化処理を行う",
+      "content": "DB更新等の、永続化処理を実装する。\n\nItemWriterの作成\nItemWriter を実装し、データの永続化を行う。\n\n| インタフェース名 | 責務 |\n|---|---|\n| ItemWriter | データを永続化する。  * ItemWriter#writeItems |\n\nBonusWriter.java\n```java\n@Dependent\n@Named\npublic class BonusWriter extends AbstractItemWriter {\n\n    @Override\n    public void writeItems(List<Object> items) {\n        UniversalDao.batchInsert(items);\n    }\n}\n```\nこの実装のポイント\n* UniversalDao#batchInsert を使用してエンティティのリストを一括登録する。\n* writeItems メソッド実行後にトランザクションがコミットされ、新たなトランザクションが開始される。\n* writeItems メソッド実行後、バッチ処理が readItem メソッド実行から繰り返される。",
+      "level": 3
+    },
+    {
+      "id": "s5",
       "title": "JOB設定ファイルを作成する",
-      "hints": [
-        "ジョブ定義XML",
-        "batch-jobs",
-        "item-count",
-        "META-INF/batch-jobs",
-        "chunk要素",
-        "nablarchJobListenerExecutor",
-        "nablarchStepListenerExecutor",
-        "nablarchItemWriteListenerExecutor",
-        "ジョブ名称"
-      ]
+      "content": "JOBの実行設定を記載したファイルを作成する。\n\nbonus-calculate.xml\n```xml\n<job id=\"bonus-calculate\" xmlns=\"http://xmlns.jcp.org/xml/ns/javaee\" version=\"1.0\">\n  <listeners>\n    <listener ref=\"nablarchJobListenerExecutor\" />\n  </listeners>\n\n  <step id=\"step1\">\n    <listeners>\n      <listener ref=\"nablarchStepListenerExecutor\" />\n      <listener ref=\"nablarchItemWriteListenerExecutor\" />\n    </listeners>\n\n    <chunk item-count=\"1000\">\n      <reader ref=\"employeeSearchReader\" />\n      <processor ref=\"bonusCalculateProcessor\" />\n      <writer ref=\"bonusWriter\" />\n    </chunk>\n  </step>\n</job>\n```\nこの実装のポイント\n* ジョブ定義ファイルは /src/main/resources/META-INF/batch-jobs/ 配下に配置する。\n* job 要素 の id 属性で、ジョブ名称を指定する。\n* chunk 要素の item-count 属性で writeItems 一回当たりで処理する件数を設定する。\n* 設定ファイルの詳細な記述方法は [JSR352 Specificationを参照(外部サイト、英語)](https://jcp.org/en/jsr/detail?id=352) を参照。",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s1": "## フォームの作成\n\nItemReaderとItemProcessorとのデータ連携にはフォームを使用する。\n\n```java\npublic class EmployeeForm {\n\n    //一部のみ抜粋\n\n    /** 社員ID */\n    private Long employeeId;\n\n    public Long getEmployeeId() {\n        return employeeId;\n    }\n\n    public void setEmployeeId(Long employeeId) {\n        this.employeeId = employeeId;\n    }\n}\n```\n\n## ItemReaderの作成\n\n`AbstractItemReader` を継承して実装する。**アノテーション**: `@Named`, `@Dependent` をクラスに付与する。\n\n実装するメソッド:\n\n| メソッド | 責務 |\n|---|---|\n| `open` | 処理対象データの読み込み |\n| `readItem` | 一行分のデータを返却（nullを返すと処理終了） |\n| `close` | リソースのクローズ |\n\n```java\n@Dependent\n@Named\npublic class EmployeeSearchReader extends AbstractItemReader {\n    private DeferredEntityList<EmployeeForm> list;\n    private Iterator<EmployeeForm> iterator;\n\n    @Override\n    public void open(Serializable checkpoint) throws Exception {\n        list = (DeferredEntityList<EmployeeForm>) UniversalDao.defer()\n                .findAllBySqlFile(EmployeeForm.class, \"SELECT_EMPLOYEE\");\n        iterator = list.iterator();\n    }\n\n    @Override\n    public Object readItem() {\n        if (iterator.hasNext()) {\n            return iterator.next();\n        }\n        return null;\n    }\n\n    @Override\n    public void close() throws Exception {\n        list.close();\n    }\n}\n```\n\nSQLファイル例 (EmployeeForm.sql):\n\n```sql\nSELECT_EMPLOYEE=\nSELECT\n    EMPLOYEE.EMPLOYEE_ID, EMPLOYEE.FULL_NAME, EMPLOYEE.BASIC_SALARY,\n    EMPLOYEE.GRADE_CODE, GRADE.BONUS_MAGNIFICATION, GRADE.FIXED_BONUS\nFROM EMPLOYEE\nINNER JOIN GRADE ON EMPLOYEE.GRADE_CODE = GRADE.GRADE_CODE\n```\n\n- 大量データの場合は `UniversalDao#defer` で [遅延ロード](../../component/libraries/libraries-universal_dao.json#s5) する（メモリ逼迫防止）\n- `readItem` で返却したオブジェクトが後続の `ItemProcessor` の `processItem` の引数になる",
-    "s2": "`ItemProcessor` を実装して業務ロジックを実行する。永続化処理は `ItemWriter` の責務のため、ItemProcessorでは実施しない。\n\n実装するメソッド:\n\n| メソッド | 責務 |\n|---|---|\n| `processItem` | 一行分のデータに対する業務処理 |\n\n```java\n@Dependent\n@Named\npublic class BonusCalculateProcessor implements ItemProcessor {\n    @Override\n    public Object processItem(Object item) {\n        EmployeeForm form = (EmployeeForm) item;\n        Bonus bonus = new Bonus();\n        bonus.setEmployeeId(form.getEmployeeId());\n        bonus.setPayments(calculateBonus(form));\n        return bonus;\n    }\n}\n```\n\n- `processItem` で一定数（`item-count` 属性で設定）のエンティティを返却した時点で、後続の `ItemWriter` の `writeItems` が実行される",
-    "s3": "`ItemWriter` を実装してデータを永続化する。\n\n実装するメソッド:\n\n| メソッド | 責務 |\n|---|---|\n| `writeItems` | データの永続化 |\n\n```java\n@Dependent\n@Named\npublic class BonusWriter extends AbstractItemWriter {\n    @Override\n    public void writeItems(List<Object> items) {\n        UniversalDao.batchInsert(items);\n    }\n}\n```\n\n- `UniversalDao#batchInsert` でエンティティリストを一括登録する\n- `writeItems` 実行後にトランザクションがコミットされ、新たなトランザクションが開始される\n- `writeItems` 実行後、バッチ処理は `readItem` から繰り返される",
-    "s4": "ジョブ定義XMLファイルを `/src/main/resources/META-INF/batch-jobs/` に配置する。\n\n- `job` 要素の `id` 属性でジョブ名称を指定する\n- `chunk` 要素の `item-count` 属性で `writeItems` 一回当たりの処理件数を設定する\n\n```xml\n<job id=\"bonus-calculate\" xmlns=\"http://xmlns.jcp.org/xml/ns/javaee\" version=\"1.0\">\n  <listeners>\n    <listener ref=\"nablarchJobListenerExecutor\" />\n  </listeners>\n  <step id=\"step1\">\n    <listeners>\n      <listener ref=\"nablarchStepListenerExecutor\" />\n      <listener ref=\"nablarchItemWriteListenerExecutor\" />\n    </listeners>\n    <chunk item-count=\"1000\">\n      <reader ref=\"employeeSearchReader\" />\n      <processor ref=\"bonusCalculateProcessor\" />\n      <writer ref=\"bonusWriter\" />\n    </chunk>\n  </step>\n</job>\n```"
-  }
+  ]
 }

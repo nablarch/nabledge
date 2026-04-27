@@ -1,6 +1,6 @@
 # Index-Based Search
 
-Fallback route when full-text search returns no hits. Executes file-search.md followed by section-search.md.
+Fallback route when full-text search returns no hits. Selects candidate files from `index.toon`, then enumerates their sections as candidates for judgement.
 
 ## Input
 
@@ -8,7 +8,7 @@ Search query + keyword list
 
 ## Output
 
-List of candidate sections
+List of candidate sections in `file|section_id` format
 
 ## Steps
 
@@ -22,13 +22,22 @@ List of candidate sections
 
 **Branch**: If 0 candidate files, return empty list and exit.
 
-### Step 2: Section selection
+### Step 2: Enumerate sections of candidate files
 
-**Tool**: _knowledge-search/_section-search.md
+**Tool**: Bash (jq)
 
-**Action**: Execute `_knowledge-search/_section-search.md`. Input is the candidate file list from Step 1 and the keyword list.
+**Action**: For each candidate file, enumerate all sections. Section judgement (the next common step) reads each section and decides relevance, so there is no pre-filter here.
 
-**Output**: List of candidate sections
+**Command**:
+```bash
+for file in component/libraries/libraries-universal-dao.json \
+            component/libraries/libraries-database.json; do
+  jq -r --arg f "$file" '.sections[] | "\($f)|\(.id)"' \
+    .claude/skills/nabledge-1.2/knowledge/"$file"
+done
+```
+
+**Output**: List of candidate sections in `file|section_id` format
 
 ### Step 3: Return results
 

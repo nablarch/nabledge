@@ -1,0 +1,86 @@
+{
+  "id": "libraries-enterprise-messaging-http",
+  "title": "",
+  "content": "![handler_structure_bg.png](assets/libraries-enterprise-messaging-http/handler_structure_bg.png)\n\n![handler_bg.png](assets/libraries-enterprise-messaging-http/handler_bg.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "HTTPメッセージング",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "概要",
+      "content": "本節では、本フレームワークが提供するシステム間メッセージング機能のうち、HTTPメッセージングについて解説する。\n\nフレームワーク利用者向けに提供されている各種機能については、 レイヤ（フレームワーク機能） を参照。",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "要求",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "実装済み",
+      "content": "* HTTP(S)を使用して同期通信を行うことができる。\n* 以下の内容で送受信できる。\n\n  * 任意のHTTPメソッド\n  * 任意のHTTPヘッダ\n  * メッセージボディにJSONまたはXML形式を利用\n* HTTP接続について、以下のタイムアウトを設定できる。\n\n  * 接続タイムアウト\n  * 読み取りタイムアウト\n* proxy経由で接続できる。\n* 送受信時に、データを加工する実装を差し込むことができる。（例えば、特定の項目を暗号化／復号する実装を差し込むことができる）",
+      "level": 4
+    },
+    {
+      "id": "s5",
+      "title": "未実装",
+      "content": "* BASIC認証、Digest認証を行うことができる。\n* HTTPSの場合、プライベート認証局が発行した証明書を使って通信できる。\n* 以下の内容で送受信できる。\n\n  * パラメータをURLの一部に含めた送受信\n  * パラメータをクエリストリングとした送受信\n* 受信時にメッセージID/関連IDをHTTPヘッダ以外（たとえばクエリパラメータや電文本文）から取得できる。",
+      "level": 4
+    },
+    {
+      "id": "s6",
+      "title": "未検討",
+      "content": "* メッセージボディをマルチパート形式にして送信する。\n* FORM認証の対応\n* HTTPリクエストの再送（NAF側で自動で再送は行わない。actionで再送処理を行うことは可能。）\n* Keep Aliveの対応（仕向けの場合にKeep Aliveを対応することで性能向上が見込まれる。）\n* 仕向け通信のレスポンスとして正常時とエラー時でフォーマットを切り替える",
+      "level": 4
+    },
+    {
+      "id": "s7",
+      "title": "全体構成",
+      "content": "次の図に示されるように、本機能は大きく分けると2つのレイヤによって構成されている。\n\n![messaging_components_http.png](assets/libraries-enterprise-messaging-http/messaging_components_http.png)",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "レイヤ（フレームワーク機能）",
+      "content": "**メッセージング基盤API** を使用して実装されたフレームワークが提供する各種機能。\nこれらの機能は、後述する「フレームワーク制御ヘッダ」の利用を前提として設計されている。\n\n* [メッセージング実行制御基盤](../../processing-pattern/mom-messaging/mom-messaging-messaging.md)\n\n  NAFの実行制御基盤の1つであり、外部から送信される要求電文に対して適切な業務アプリケーションを実行する制御基盤である。\n  MOMを使用した場合と同一のインタフェースでメッセージ受信アプリケーションを実装することができる。\n\n  以下の処理を実行するためのAPIが定義された本機能の中心となるクラス群の１つである。\n\n  * HTTPメッセージ受信\n* [同期応答メッセージ送信ユーティリティ](../../component/libraries/libraries-messaging-sender-util.md)\n\n  対外システムに対してメッセージの同期送信を行うユーティリティクラス。\n  MOMを使用した場合と同一のインタフェースでメッセージの同期送信を行うことができる。",
+      "level": 4
+    },
+    {
+      "id": "s9",
+      "title": "レイヤ（通信クライアント）",
+      "content": "* HTTP通信クライアント\n\n  HTTP通信インターフェースの実装系を使用したHTTP通信の実装。\n  以下の処理を実行するためのAPIが定義された本機能の中心となるクラス群の１つである。\n\n  * HTTPメッセージ送信\n\n-----",
+      "level": 4
+    },
+    {
+      "id": "s10",
+      "title": "データモデル",
+      "content": "**送受信電文のデータモデル**\n本機能では、送受信電文の内容を以下のようなデータモデルで表現している。\n\n![messaging_message_model_http.png](assets/libraries-enterprise-messaging-http/messaging_message_model_http.png)\n\n**プロトコルヘッダー**\n主にWebコンテナによるメッセージ送受信処理において使用される情報を格納したヘッダー領域である。\nプロトコルヘッダーはMapインターフェースでアクセスすることが可能となっている。\n**共通プロトコルヘッダー**\n下記のプロトコルヘッダーのうち、以下のヘッダーについては、\n特定のキー名でアクセスすることができる。\n\n| ヘッダー論理名 | キー名 | 内容 | HTTP通信実装の場合 |\n|---|---|---|---|\n| メッセージID | X-Message-Id | 電文ごとに一意採番される文字列。  **送信時** 送信処理の際、採番した値が設定される。 **受信時** 送信側の発番した値が設定されている。 | HTTPヘッダーの値を設定 |\n| 関連メッセージID | X-Correlation-Id | 電文が関連する電文のメッセージID。 応答電文および再送要求電文で使用され、それぞれ、以下の値を 設定する。  **応答電文** 要求電文のメッセージIDを設定する。 **再送要求** 応答再送を要求する要求電文のメッセージIDを設定する。 | HTTPヘッダーの値を設定 |\n**メッセージボディ**\nHTTPリクエストのデータ領域をメッセージボディと呼ぶ。\nフレームワーク機能は、原則としてプロトコルヘッダー領域のみを使用する。\nそれ以外のデータ領域については、未解析の単なるバイナリデータとして扱うものとする。\n\nメッセージボディの解析は、 [汎用データフォーマット機能](../../component/libraries/libraries-record-format.md) によって行う。\nこれにより、電文の内容をフィールド名をキーとするMap形式で読み書きすることが可能である。\n\n**フレームワーク制御ヘッダー**\n本フレームワークが提供する機能の中には、電文中に特定の制御項目が定義されている\nことを前提として設計されているものが多く存在する。\nそのような制御項目のことを「フレームワーク制御ヘッダ」とよぶ。\n\nフレームワーク制御ヘッダの一覧とそれを使用するハンドラの対応は以下のとおり。\n\n| フレームワーク制御ヘッダ | 役割 | このヘッダを使用する主要なハンドラ |\n|---|---|---|\n| リクエストID | この電文を受信したアプリケーションが 実行すべき業務処理を識別するためのID。 | [リクエストディスパッチハンドラ](../../component/handlers/handlers-RequestPathJavaPackageMapping.md) [リクエストハンドラエントリ](../../component/handlers/handlers-RequestHandlerEntry.md) [開閉局制御ハンドラ](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md) [認可制御ハンドラ](../../component/handlers/handlers-PermissionCheckHandler.md) [要求電文(FWヘッダ)リーダ](../../component/readers/readers-FwHeaderReader.md) ...他 |\n| ユーザID | この電文の実行権限を表す文字列。 | [認可制御ハンドラ](../../component/handlers/handlers-PermissionCheckHandler.md) |\n| 再送要求フラグ | 再送要求電文送信時に設定されるフラグ。 | [再送電文制御ハンドラ](../../component/handlers/handlers-MessageResendHandler.md) |\n| ステータスコード | 要求電文に対する処理結果を表すコード値 応答電文に設定される。 | [電文応答制御ハンドラ](../../component/handlers/handlers-MessageReplyHandler.md) |\n\nフレームワークヘッダーは、デフォルトの設定では、メッセージボディの最初のデータレコード中に、\nそれぞれ以下のフィールド名で定義されている必要がある。\n\n| フレームワーク制御ヘッダ | フィールド名 |\n|---|---|\n| リクエストID | requestId |\n| ユーザID | userId |\n| 再送要求フラグ | resendFlag |\n| ステータスコード | statusCode |\n\n以下は、標準的なフレームワーク制御ヘッダの定義例である。\n\n```bash\n#===================================================================\n# フレームワーク制御ヘッダ部 (50byte)\n#===================================================================\n[NablarchHeader]\n1   requestId   X(10)       # リクエストID\n11  userId      X(10)       # ユーザID\n21  resendFlag  X(1)  \"0\"   # 再送要求フラグ (0: 初回送信 1: 再送要求)\n22  statusCode  X(4)  \"200\" # ステータスコード\n26 ?filler      X(25)       # 予備領域\n#====================================================================\n```\n\nフォーマット定義にフレームワーク制御ヘッダ以外の項目を含めた場合、\nフレームワーク制御ヘッダの任意ヘッダ項目としてアクセスすることができ、\nPJ毎にフレームワーク制御ヘッダを簡易的に拡張する目的で使用することができる。\n\nまた、将来的な任意項目の追加およびフレームワークの機能追加に伴うヘッダ追加に対応するため、\n予備領域を設けておくことを強く推奨する。\n\n-----",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "フレームワーク機能",
+      "content": "ここでは、以下の2つのクラスを使用する。\n\n* 被仕向けメッセージング基底クラス ([MessagingAction](../../javadoc/nablarch/fw/action/MessagingAction.html))\n\n  メッセージ受信時に実行されるアクションクラスの基底クラス。業務アプリケーションは本クラスを継承する必要がある。\n* 受信電文オブジェクト ([ReceivedMessage](../../javadoc/nablarch/fw/messaging/ReceivedMessage.html))\n\n  受信した電文に関する情報を格納するクラス。\n\n以下の説明では、本機能を使用することで実装可能な以下の処理パターンについて、\n処理フローの概要とサンプルコードを示す。\n\n**1. HTTPメッセージ受信**\n\n通信先システムからメッセージを受信し、その応答を送信する。\n\n以下の図は、本処理のフローを表したものである。\n\n![messaging_http_receive.png](assets/libraries-enterprise-messaging-http/messaging_http_receive.png)\n\n以下は、ここで述べた受信処理を実際に行うコードサンプルである。\n受信処理はフレームワーク機能により自動的に業務アプリケーションクラスが実行される。\nそのため明示的に受信処理を行うコードを記述する必要はない。\n\n```java\npublic class SampleAction extends MessagingAction {\n    protected ResponseMessage onReceive(RequestMessage request,\n                                        ExecutionContext context) {\n        // 受信データ処理\n        Map<String, Object> reqData = request.getParamMap();\n\n        // (省略)\n\n        // 応答データ返却\n        return request.reply()\n                .setStatusCodeHeader(\"200\")\n                .addRecord(new HashMap() {{     // メッセージボディの内容\n                     put(\"FIcode\",     \"9999\");\n                     put(\"FIname\",     \"ﾅﾌﾞﾗｰｸｷﾞﾝｺｳ\");\n                     put(\"officeCode\", \"111\");\n                     /*\n                      * (後略)\n                      */\n                  }});\n    }\n}\n```\n\n-----",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "通信クライアント",
+      "content": "本節では、送信処理を実行するためのAPIが定義された本機能の中心となるクラス群(通信クライアント)について解説する。\n\nここでは、以下の2つのクラスを使用する。\n\n* メッセージング送信ユーティリティ ([MessageSender](../../javadoc/nablarch/fw/messaging/MessageSender.html))\n\n  同期送信機能を実装したクラス。\n* 送受信電文オブジェクト ([SyncMessage](../../javadoc/nablarch/fw/messaging/SyncMessage.html))\n\n  送受信電文に関する情報を格納するクラス。\n\n以下の説明では、本機能を使用することで実装可能な以下の処理パターンについて、\n処理フローの概要とサンプルコードを示す。\n\n**1. HTTPメッセージ送信**\n\n通信先システムに対してメッセージを送信し、その応答を受信する。\n応答メッセージを受信するか、待機タイムアウト時間が経過するまで待機する。\n\n規定時間内に応答を受信できずにタイムアウトした場合は、\n何らかの補償処理を行う必要がある。\n\n以下の図は、本処理のフローを表したものである。\n\n![messaging_http_send.png](assets/libraries-enterprise-messaging-http/messaging_http_send.png)\n\n以下は、ここで述べた送信処理を実際に行うコードサンプルである。\n\n```java\n// 要求電文の作成\nSyncMessage requestMessage = new SyncMessage(\"RM11AC0202\")        // メッセージIDを設定\n                               .addDataRecord(new HashMap() {{    // メッセージボディの内容\n                                    put(\"FIcode\",     \"9999\");\n                                    put(\"FIname\",     \"ﾅﾌﾞﾗｰｸｷﾞﾝｺｳ\");\n                                    put(\"officeCode\", \"111\");\n                                    /*\n                                     * (後略)\n                                     */\n                                }})\n// 要求電文の送信\nSyncMessage responseMessage = MessageSender.sendSync(requestMessage);\n```\n\nまた、HTTPヘッダーとして独自の項目を送信したい場合は、\n下記のように作成したメッセージのヘッダーレコードに設定すること。\n\n```java\n// メッセージヘッダの内容\nrequestMessage.getHeaderRecord().put(\"Accept-Charset\", \"UTF-8\");\n```",
+      "level": 3
+    },
+    {
+      "id": "s13",
+      "title": "HTTP通信クライアント",
+      "content": "HTTP通信プロトコル向けのHTTP通信インターフェースの実装である。\n使用する場合は下記の設定をリポジトリの定義ファイルに追加すること。\n\n**リポジトリによる初期化設定例**\n\n```xml\n<!-- HTTP通信用クライアント定義 -->\n<component\n  name=\"defaultMessageSenderClient\"\n  class=\"nablarch.fw.messaging.realtime.http.client.HttpMessagingClient\">\n</component>\n```\n\nmessaging_sending_batch\nmessaging_sender_util\n\n> **Note:**\n> HttpMessagingClient.sendSync(MessageSenderSettings, SyncMessage)を用いたHTTPメッセージングにおいて、\n> 通信先からHTTPステータスコードとして\"302\"が返却された場合、フレームワーク側ではリダイレクト処理が実施される。\n\n> なお、フレームワーク側でのリダイレクト処理を実施を行いたくない場合は、\n> 下記の例を参考にリダイレクトを許可しない設定を行う必要がある。\n\n> コンポーネント定義\n\n> ```xml\n> <!-- プロジェクト固有のHTTP通信用クライアントを設定 -->\n> <component\n>   name=\"defaultMessageSenderClient\"\n>   class=\"please.change.me.common.CustomHttpMessagingClient\">\n> </component>\n> ```\n\n> プロジェクト固有のHTTP通信用クライアントのクラス\n\n> ```java\n> public class CustomHttpMessagingClient extends HttpMessagingClient {\n>   protected HttpProtocolClient createHttpProtocolClient() {\n>     //HTTPプロトコルの通信クライアントを差し替え\n>     return new CustomHttpProtocolBasicClient();\n>   }\n> }\n> ```\n\n> プロジェクト固有のHTTPプロトコル通信クライアントのクラス\n\n> ```java\n> public class CustomHttpProtocolBasicClient extends HttpProtocolBasicClient {\n> \n>   @Override\n>   protected HttpURLConnection createHttpConnection(String targetUrl, HttpRequestMethodEnum method, Map<String, List<String>> headerInfo)\n>       throws IOException {\n>     HttpURLConnection httpConnection = super.createHttpConnection(targetUrl, method, headerInfo);\n>     // リダイレクトを自動で許可しない設定\n>     httpConnection.setInstanceFollowRedirects(false);\n>     return httpConnection;\n>   }\n> \n> }\n> ```",
+      "level": 4
+    }
+  ]
+}

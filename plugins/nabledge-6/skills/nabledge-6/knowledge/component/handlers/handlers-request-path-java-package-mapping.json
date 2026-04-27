@@ -1,0 +1,56 @@
+{
+  "id": "handlers-request-path-java-package-mapping",
+  "title": "リクエストディスパッチハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* ベースパッケージ、ベースパスの設定\n* 複数パッケージのクラスにディスパッチする\n* クラス名のプレフィクス、サフィックスの設定\n* 複雑なパッケージへのディスパッチ\n* ディスパッチ対象クラスを遅延実行する\n\n本ハンドラは、アプリケーションの機能ごとに行う処理を記載するアクションに処理を委譲する。\n本ハンドラは、主に [メッセージング](../../processing-pattern/db-messaging/db-messaging-messaging.md#messaging) の機能で、任意のアクションにディスパッチする目的で使用する。\n\n本ハンドラでは、 Request#getRequestPath() で取得した\nリクエストパスを元に、ディスパッチ先のアクションを選択する。\nリクエストパスの形式は以下を想定している。\n\nリクエストパスの形式: /<basePath>/<className>\n\n上記形式の<>で囲まれた部分はそれぞれ下記を意味する。\n\n| ラベル | 意味 |\n|---|---|\n| basePath | ディスパッチ対象を表すベースパス |\n| className | クラス名 (必須) |\n\nたとえば、クラス `xxx.yyy.ExampleBatchAction` を呼び出す場合に、ベースパスが `batch` の場合は\n`/batch/ExampleBatchAction` のようにリクエストパスを指定する。\n\n> **Important:**\n> 通常、 Request#getRequestPath() で取得されるリクエストパスは、\n> [共通起動ランチャ](../../component/handlers/handlers-main.md#main) に記載の通り、コマンドラインで起動する際に `-requestPath` オプションで指定する。\n\n本ハンドラでは、以下の処理を行う。\n\n* リクエストパスを解析し、対応するアクションの handle メソッドを呼び出す。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-request-path-java-package-mapping/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.handler.RequestPathJavaPackageMapping",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "なし。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "ベースパッケージ、ベースパスの設定",
+      "content": "本ハンドラのディスパッチ先のクラスを配置するベースパッケージと、リクエストパスにつけるベースパスは、\nプロパティ `basePackage` および `basePath` で設定できる。\n\nベースパッケージを `nablarch.application` 、ベースパスを `/app/action` に設定する例を以下に示す。\n\n```xml\n<component class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n  <property name=\"basePath\"    value=\"/app/action/\" />\n  <property name=\"basePackage\" value=\"nablarch.application\" />\n</component>\n```",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "複数パッケージのクラスにディスパッチする",
+      "content": "本ハンドラを使ってディスパッチする場合、ディスパッチ先のクラスは、リクエストパスの指定によって複数振り分けることができる。\nこの際は、リクエストパスでクラス名を指定する箇所で、ベースパッケージからの相対パッケージ名を指定する。\n\nたとえば上記 [ベースパッケージ、ベースパスの設定](../../component/handlers/handlers-request-path-java-package-mapping.md#request-path-java-package-mapping-path-setting) を設定した際に、 `nablarch.application.xxx.ExampleBatchAction`\nクラスにディスパッチする場合、リクエストパスには `/app/action/xxx/ExampleBatchAction` を指定すればよい。",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "クラス名のプレフィクス、サフィックスの設定",
+      "content": "クラス名のプレフィクス、サフィックスをリクエストパスに出したくない場合、本ハンドラの `classNamePrefix` および `classNameSuffix`\nを設定することでリクエストパスでの指定を省略できる。\n\nたとえば、クラス名を `XxxProjectXxxxBatchAction` のように、プレフィクスに `XxxProject` というプロジェクト名、\nサフィックスに `BatchAction` を指定するルールを取った場合、以下のように設定することでリクエストパスを\n`/app/action/Xxxx` のように省略できる。\n\n```xml\n<component class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n  <property name=\"basePath\"    value=\"/app/action/\" />\n  <property name=\"basePackage\" value=\"nablarch.application\" />\n  <property name=\"classNamePrefix\" value=\"XxxProject\" />\n  <property name=\"classNameSuffix\" value=\"BatchAction\" />\n</component>\n```",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "複雑なパッケージへのディスパッチ",
+      "content": "[複数パッケージのクラスにディスパッチする](../../component/handlers/handlers-request-path-java-package-mapping.md#request-path-java-package-mapping-multi-package-dispatch) で示した方法では、\n「アクションを配置するパッケージを同じパッケージ配下のサブパッケージにまとめないといけない」制約がある。\n本ハンドラでは、このようなディスパッチでは問題がある場合に、 アクションを配置するパッケージをリクエストパスごとに別々に設定する方法を提供している。\n\nたとえば、以下のようなリクエストパスとディスパッチ先を設定する場合を考える。\n\n| リクエストパス | ディスパッチ対象クラス |\n|---|---|\n| /admin/AdminApp | nablarch.sample.apps1.admin.AdminApp |\n| /user/UserApp | nablarch.sample.apps2.user.UserApp |\n| /BaseApp | nablarch.sample.base.BaseApp |\n\nこのようなディスパッチを行う場合、以下のように `optionalPackageMappingEntries` プロパティに\nJavaPackageMappingEntry クラスを使用して設定する。\n\n```xml\n<component class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n    <property name=\"optionalPackageMappingEntries\">\n      <!-- リクエストパスのパターンとJavaパッケージの組み合わせをマッチさせたい順番に記載する。 -->\n      <list>\n        <component class=\"nablarch.fw.handler.JavaPackageMappingEntry\">\n          <property name=\"requestPattern\" value=\"/admin//\" />\n          <property name=\"basePackage\" value=\"nablarch.sample.apps1\" />\n        </component>\n        <component class=\"nablarch.fw.handler.JavaPackageMappingEntry\">\n          <property name=\"requestPattern\" value=\"/user//\" />\n          <property name=\"basePackage\" value=\"nablarch.sample.apps2\" />\n        </component>\n      </list>\n    </property>\n    <!-- optionalPackageMappingEntriesにマッチするものが存在しない場合に使用されるJavaパッケージ -->\n    <property name=\"basePackage\" value=\"nablarch.sample.base\" />\n</component>\n```",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "ディスパッチ対象クラスを遅延実行する",
+      "content": "デフォルトではディスパッチ対象クラスへの委譲は即時実行されるが、ハンドラキュー上の後続のハンドラ実行後にディスパッチ対象クラスへ委譲したい場合は、以下の例を参照して `immediate` プロパティにfalseを設定すること。\n\n```xml\n<component class=\"nablarch.fw.handler.RequestPathJavaPackageMapping\">\n  <property name=\"basePackage\" value=\"${nablarch.commonProperty.basePackage}\" />\n  <property name=\"immediate\" value=\"false\" />\n</component>\n```",
+      "level": 2
+    }
+  ]
+}

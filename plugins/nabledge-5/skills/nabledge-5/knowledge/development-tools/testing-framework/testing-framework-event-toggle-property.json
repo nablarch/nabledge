@@ -1,0 +1,26 @@
+{
+  "id": "testing-framework-event-toggle-property",
+  "title": "属性値の動的切替",
+  "content": "[属性値の動的切替](../../development-tools/testing-framework/testing-framework-event-toggle-property.md) は、\nチェックボックス・ラジオボタン・プルダウン要素の内容に応じて、\n特定の要素の属性値を動的に切替えるイベントアクションである。\nなお、切替えの対象となる属性値は真偽値型のDOM属性値(readonly/disabled/checked/selected) に限る。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "このアクションを実行するイベントは [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.md)\n(もしくは [サブウィンドウ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen-subwindow.md) ) を用いて定義する必要がある。\n\n以下のソースコードは、\nフォーム内の全てのチェックボックスをON/OFFするチェックボックスを作成する例である。\n\nclass属性に allCheck CSSクラスを指定したチェックボックスをクリックすると\n<event:toggle_property> イベントアクションが実行され、\nチェックボックスの全チェック・解除が行われる。\n\n```jsp\n<n:form>\n  <event:listen\n    event=\"input[type='checkbox'].allCheck click\">\n    <event:toggle_property\n      title=\"全てチェック/クリア\"\n      type=\"checked\"\n      toggleTarget=\"input[type='checkbox']:not('.allCheck')\"\n      condition=\".allCheck\">\n\n    </event:toggle_property>\n  </event:listen>\n\n  ... (中略) ...\n\n</n:form>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| type | 切替え対象属性 | 文字列 | ◎ | ◎ | 以下のいずれかを指定する。  - disabled   - readonly   - checkbox   - selected |\n| title | 実行する処理の簡単な説明 | 文字列 | × | × | 設計書表示用 |\n| target | 属性を切替える対象要素 を指定するセレクタ式 | 文字列 | ◎ | ◎ |  |\n| condition | 属性値をtrueに設定する条件を イベント発生元要素が満たすべき セレクタ式の形式で指定する。 | 文字列 | ◎ | ◎ |  |\n| reverse | 要素を指定するセレクタ式。 | 文字列 | ○ | ○ |  |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "本ウィジェットは以下のファイルによって実装されている。\n\n**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/event/toggle_property.tag | このウィジェットの実体となるタグファイル |\n| /js/nablarch/ui/event/TogglePropertyAction.js | 属性値の切替え機能を実装するイベントアクション |",
+      "level": 2
+    }
+  ]
+}

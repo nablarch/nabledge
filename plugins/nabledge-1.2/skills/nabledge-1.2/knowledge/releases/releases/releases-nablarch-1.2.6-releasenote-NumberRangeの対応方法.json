@@ -1,0 +1,8 @@
+{
+  "id": "releases-nablarch-1.2.6-releasenote-NumberRangeの対応方法",
+  "title": "■NumberRangeの対応方法",
+  "content": "NumberRangeは整数専用となります。\nこのため、NumberRangeのminまたはmax属性に小数部ありの値を使用している箇所は\nDecimalRangeを使用するよう変更する必要があります。\nNumberRangeの該当箇所はコンパイルエラーにより検知可能です。\n変更例:\n変更前:@NumberRange(min=0.0001, max=0.9999)\n変更後:@DecimalRange(min=\"0.0001\", max=\"0.9999\")\nメッセージ定義については、NumberRangeValidatorで使用していたメッセージと同じものを、\nDecimalRangeValidatorに設定することで、今までと同じメッセージが画面上に表示されるようになります。\nなお、DecimalRangeを使用するためには、ValidationManagerにDecimalRangeValidatorの追加が必要となります。\n設定方法は、解説書(下のリンク)を参照してください。\n※アクセス時にtias認証が必要になります。\nhttp://adc.intra.tis.co.jp/nablarchDoc/nablarch1.2.6/nablarch/app_exe_env/fw_doc/doc/02_FunctionDemandSpecifications/01_Core/08/08_05_custom_validator.html",
+  "no_knowledge_content": false,
+  "sections": [],
+  "sheet_type": "P2"
+}

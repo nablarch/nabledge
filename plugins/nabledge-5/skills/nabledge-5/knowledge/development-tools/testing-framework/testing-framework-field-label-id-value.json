@@ -1,0 +1,26 @@
+{
+  "id": "testing-framework-field-label-id-value",
+  "title": "ID:値セット項目表示ウィジェット",
+  "content": "[ID:値セット項目表示ウィジェット](../../development-tools/testing-framework/testing-framework-field-label-id-value.md) は、 **ID:値** の組を\n他の入力項目と並べて表示するウィジェットである。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**設計成果物(ローカル動作)**\n\n```jsp\n<field:label_id_value\n    title=\"グループ\"\n    sample=\"0000000000: お客様グループ\">\n</field:label_id_value>\n```\n\n**実装成果物(サーバ動作)**\n\n```jsp\n<field:label_id_value\n    title=\"グループ\"\n    idName=\"ugroupInfo.ugroupId\"\n    valueName=\"ugroupInfo.ugroupName\"\n    sample=\"0000000000: お客様グループ\">\n</field:label_id_value>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "**サーバ動作時の挙動**\n入力画面、確認画面ともに **idName** 属性に指定した変数の値と **valueName** 属性に指定した変数の値とを\nセパレータ **\":\"** で連結した文字列を表示する。\n**ローカル動作時の挙動**\n入力画面、確認画面ともに **sample** に指定した文字列を出力する。\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | 項目名 | 文字列 | ◎ | ◎ |  |\n| domain | 項目のドメイン型 | 文字列 | ○ | ○ |  |\n| idName | ID値として表示する変数名 | 文字列 | ◎ | ○ |  |\n| valueName | 名称として表示する変数名 | 文字列 | ◎ | ○ |  |\n| sample | ローカル動作時に表示する文字列 | 文字列 | × | ○ |  |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 画面項目定義に記載する、 「表示情報取得元」.「表示項目名」 の形式で設定する。 |\n| comment | 表示項目についての備考 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/label_id_value.tag | [ID:値セット項目表示ウィジェット](../../development-tools/testing-framework/testing-framework-field-label-id-value.md) の実体となるタグファイル |\n| /js/jsp/taglib/nablarch.js | <n:write> のエミュレーション機能を実装する タグライブラリスタブJS |",
+      "level": 2
+    }
+  ]
+}

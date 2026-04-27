@@ -1,0 +1,74 @@
+{
+  "id": "libraries-04-Connection",
+  "title": "データベース接続部品の構造",
+  "content": "本章では、データベース接続部分についての解説を行う。\n\n本機能で提供する接続方式については、 [概要](../../component/libraries/libraries-04-DbAccessSpec.md#db-summary-label) を参照すること。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "クラス図",
+      "content": "![DbAccessSpec_ConnectionClassDesign.jpg](assets/libraries-04-Connection/DbAccessSpec_ConnectionClassDesign.jpg)",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "各クラスの責務",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "インタフェース定義",
+      "content": "| インタフェース名 | 概要 |\n|---|---|\n| nablarch.core.db.connectionパッケージ |  |\n| ConnectionFactory | データベース接続を生成するインターフェース。  データベース接続方式を追加する場合や、 [実装クラス](../../component/libraries/libraries-04-Connection.md#db-connectionfactory-sub-label) で生成されるBasicDbConnectionを入れ替える場合には、 本インタフェースの実装クラスを追加する必要がある。 |\n| AppDbConnection | データベース接続を保持したインタフェース。  アプリケーションでは、本インタフェースを使用して、SQL文実行用オブジェクトを取得する。 |\n| TransactionManagerConnection | トランザクション制御を行うインタフェース(AppDbConnectionのサブインタフェース)。  本機能の特徴である [リソース解放機能](../../component/libraries/libraries-04-DbAccessSpec.md#db-feature-2-label) は、本インタフェースの実装クラスで提供される。 |",
+      "level": 4
+    },
+    {
+      "id": "s4",
+      "title": "クラス定義",
+      "content": "a) nablarch.core.db.connection.ConnectionFactoryの実装クラス\n\n| クラス名 | 概要 |\n|---|---|\n| nablarch.core.db.connectionパッケージ |  |\n| ConnectionFactorySupport | ConnectionFactoryインタフェースを実装したクラスをサポートするクラス。  本クラスの実装は、サブクラスで必要となる共通設定を保持するのみである。 |\n| BasicDbConnectionFactoryForJndi | JNDI経由でWebアプリケーションサーバ等からデータベース接続(java.sql.Connection)を取得し、 BasicDbConnectionを生成するクラス。  JNDI経由でデータベース接続を取得するための情報は、 [リポジトリ](../../component/libraries/libraries-02-Repository.md) を使用して本クラスに設定をする必要がある。 設定ファイルの記述方法は、 [設定ファイル例(JNDIを使用してデータベース接続を行う場合)](../../component/libraries/libraries-04-Connection.md#database-connection-config-from-jndi-label) を参照すること。 |\n| BasicDbConnectionFactoryForDataSource | javax.sql.DataSourceからデータベース接続(java.sql.Connection)を取得し、 BasicDbConnectionを生成するクラス。  javax.sql.DataSourceは、 [リポジトリ](../../component/libraries/libraries-02-Repository.md) を使用して本クラスに設定をする必要がある。 設定ファイルの記述方法は、 [設定ファイル例(DataSourceを使用してデータベース接続を行う場合)](../../component/libraries/libraries-04-Connection.md#db-connection-config-label) を参照すること。 |\n\nb) nablarch.core.db.connection.TransactionManagerConnectionの実装クラス\n\n| クラス名 | 概要 |\n|---|---|\n| nablarch.core.db.connectionパッケージ |  |\n| BasicDbConnection | TransactionManagerConnection(AppDbConnection)の基本実装クラス。  > **Note:** > 本クラスは、データベースベンダー非依存の実装となっている。  > 各プロジェクトにおいて、データベースベンダーに依存するような実装が出てきた場合には、 > TransactionManagerConnectionの実装クラスを新たに追加し、本クラスから差し替えて使用すること。 |\n\nc) その他のクラス\n\n| クラス名 | 概要 |\n|---|---|\n| nablarch.core.db.transactionパッケージ |  |\n| SimpleDbTransactionManager | 簡易的にトランザクション制御を行うクラス。  本クラスを使用して、トランザクションを開始するとAppDbConnectionが生成され、DbConnectionContextに設定される。 |\n| SimpleDbTransactionExecutor | SimpleDbTransactionManagerを使用してSQL文を実行するための抽象クラス。  本クラス経由でSQL文を実行することにより、全ての機能で統一的な例外処理を提供することが出来る。 |\n| nablarch.core.db.connectionパッケージ |  |\n| DbConnectionContext | AppDbConnectionをThreadLocalで保持するクラス。  保持するAppDbConnectionには、任意の名前(データベースコネクション名)を付加することができる。  データベースコネクション名の詳細は、下記ドキュメントを参照  04_TransactionConnectionName  > **Attention:** > ThreadLocalでAppDbConnectionが管理されるため、アプリケーションのスレッドと同一のスレッドでAppDbConnectionを設定する必要がある。 > マルチスレッド環境では、各スレッドに対してAppDbConnectionを設定する必要があるため、注意が必要である。 |",
+      "level": 4
+    },
+    {
+      "id": "s5",
+      "title": "トランザクション制御、データベースアクセスの使用例",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "処理シーケンス",
+      "content": "![DbAccessSpec_ConnectionSequence.jpg](assets/libraries-04-Connection/DbAccessSpec_ConnectionSequence.jpg)",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "Javaの実装例",
+      "content": "```java\n// ******** 注意 ********\n// SimpleDbTransactionManagerは、フレームワーク専用のトランザクション制御クラスである。\n// このため、アプリケーションプログラマがSimpleDbTransactionManagerや、\n// SimpleDbTransactionExecutorを参照する下記のような実装を行うことはない。\n\n// リポジトリからSimpleDbTransactionManagerを取得する。\n// （SimpleDbTransactionManagerは、setterインジェクションでインジェクションを行うか本サンプルのようにリポジトリから取得する。)\nSimpleDbTransactionManager transactionManager = (SimpleDbTransactionManager) SystemRepository.getObject(\"transactionManager\");\n\n// SimpleDbTransactionExecutorを継承し、executeメソッドを実装する。\n// executeメソッドでは、パラメータのデータベース接続を使用してSQL文を実行する。\nSqlResultSet resultSet = new SimpleDbTransactionExecutor<SqlResultSet>(\n        transactionManager) {\n    @Override\n    public SqlResultSet execute(AppDbConnection connection) {\n        SqlPStatement prepared = connection.prepareStatement(query);\n        int parameterIndex = 1;\n        prepared.setString(parameterIndex++, requestId);\n        prepared.setString(parameterIndex,\n                requestTableServiceAvailableOkStatus);\n        return prepared.retrieve();\n    }\n// SimpleDbTransactionExecutorを実装したクラスのdoTransactionを実行する。\n// これにより、上記で説明したexecuteメソッドがコールバックされSQL文を簡易的に実行することが可能となる。\n}.doTransaction();\n```\n\n> **Attention:**\n> SimpleDbTransactionExecutorを使用してSQL文を実行するのは、既に開始されている業務トランザクション以外のトランザクションを使用してSQL文を実行する場合である。\n> 主に、Webアプリケーションの認証機能や開閉局チェック機能のように、ビジネスロジックとは異なる独立したトランザクションが必要となるコンポーネントで使用する。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "設定ファイル例(DataSourceを使用してデータベース接続を行う場合)",
+      "content": "本設定ファイルは、 DataSourceからデータベース接続を取得する場合の 設定例となっている。\nJNDI経由でデータベース接続を取得する場合 は、 [設定ファイル例(JNDIを使用してデータベース接続を行う場合)](../../component/libraries/libraries-04-Connection.md#database-connection-config-from-jndi-label) を参照すること。\n\n```xml\n<!-- SimpleDbTransactionManagerの設定 -->\n<component name=\"transactionManager\" class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">\n    <!-- ConnectionFactoryを実装したクラスの設定 -->\n    <property name=\"connectionFactory\">\n\n        <!-- DataSourceからConnectionを取得するBasicDbConnectionFactoryForDataSourceを設定 -->\n        <component class=\"nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource\">\n            <property name=\"statementReuse\" value=\"true\"/>\n\n            <!-- DataSourceには、Oracleのデータソースを設定 -->\n            <property name=\"dataSource\">\n                <component class=\"oracle.jdbc.pool.OracleDataSource\">\n                    <property name=\"user\" value=\"ssd\"/>\n                    <property name=\"password\" value=\"ssd\"/>\n                    <property name=\"URL\"\n                              value=\"jdbc:oracle:thin:ssd/ssd@localhost:1521/xe\"/>\n                </component>\n            </property>\n\n            <!-- statementFactoryを実装したクラスの設定 -->\n            <property name=\"statementFactory\">\n                <component name=\"statementFactory\"\n                           class=\"nablarch.core.db.statement.BasicStatementFactory\">\n                    <property name=\"fetchSize\" value=\"500\"/>\n                    <property name=\"queryTimeout\" value=\"600\" />\n                    <property name=\"sqlStatementExceptionFactory\">\n                        <component class=\"nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory\">\n                            <property name=\"duplicateErrorSqlState\" value=\"\"/>\n                            <property name=\"duplicateErrorErrCode\" value=\"1\"/>\n                        </component>\n                    </property>\n                </component>\n            </property>\n        </component>\n    </property>\n\n    <!-- TransactionFactoryを実装したクラスの設定 -->\n    <property name=\"transactionFactory\">\n        <component class=\"nablarch.core.db.transaction.JdbcTransactionFactory\">\n            <property name=\"isolationLevel\" value=\"READ_COMMITTED\"/>\n            <property name=\"initSqlList\">\n                <list>\n                    <value>ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'yyyy-mm-dd hh24:mi:ss.ff'</value>\n                </list>\n            </property>\n        </component>\n    </property>\n    <property name=\"dbTransactionName\" value=\"generator-transaction\"/>\n</component>\n```",
+      "level": 2
+    },
+    {
+      "id": "s9",
+      "title": "設定内容詳細",
+      "content": "a) SimpleDbTransactionManagerの設定\n\n| property名 | 設定内容 |\n|---|---|\n| connectionFactory(必須) | nablarch.core.db.connection.ConnectionFactoryを実装したクラスの設定を行う。  本サンプルでは、「nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource」を設定している。 |\n| transactionFactory(必須) | nablarch.core.transaction.TransactionFactoryを実装したクラスの設定を行う。  本サンプルでは、「nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource」を設定している。 |\n| dbTransactionName | データベーストランザクション名を任意の値で設定する。  設定を行わない場合、デフォルトのデータベーストランザクション名が本プロパティに自動的に設定される。 |\n\nb) nablarch.core.db.connection.BasicDbConnectionFactoryForDataSourceの設定\n\n| property名 | 設定内容 |\n|---|---|\n| statementReuse(必須) | Statementをキャッシュするか否かの設定を、trueまたはfalseで設定する。  trueを設定すると、BasicDbConnectionのインスタンス単位でStatementオブジェクトがキャッシュされる。  > **Note:** > キャッシュを有効にした場合は、同一のSQLを複数回実行した場合、 > 2回目以降はキャッシュされたStatementオブジェクトが使用される。 > このため、複数回同一のSQL文を実行した場合はオブジェクトの生成コストを削減でき性能改善が期待できる。 > 特に1処理で同一のSQL文を多数実行する可能性のあるバッチ処理(バッチ処理では、大量データを繰り返し実行するので、 > 同一のSQL文を複数回実行する。)では効果が期待できる。  > 逆に、画面処理では1処理で同一のSQL文を繰り返し実行する事が少く、 > キャッシュが有効に使用されない可能性が高いため、本機能を使用するメリットはあまりない。 |\n| dataSource(必須) | javax.sql.DataSourceを実装したクラスを設定する。  本サンプルでは、「oracle.jdbc.pool.OracleDataSource」を設定し、OracleDataSourceのproperyに必要な情報を設定している。  > **Note:** > 本propertyに設定する値は、各データベースベンダーのJDBC関連ドキュメントを参照し設定すること。 |\n| statementFactory(必須) | nablarch.core.statement.StatementFactoryを実装したクラスを設定する。  本サンプルでは、「nablarch.core.db.statement.BasicStatementFactory」を設定している。  > **Note:** > statementFactoryの設定は、後述の [SQL文実行部品の構造とその使用方法](../../component/libraries/libraries-04-Statement.md#db-sqlstatement-label) を参照 |\n\nc) nablarch.core.db.transaction.JdbcTransactionFactoryへの設定\n\n| property名 | 設定内容 |\n|---|---|\n| isolationLevel | アイソレーションレベルを設定する。  設定可能なアイソレーションレベル  * READ_COMMITTED(java.sql.Connection#TRANSACTION_READ_COMMITTED) * READ_UNCOMMITTED(java.sql.Connection#TRANSACTION_READ_UNCOMMITTED) * REPEATABLE_READ(java.sql.Connection#TRANSACTION_REPEATABLE_READ) * SERIALIZABLE(java.sql.Connection#TRANSACTION_SERIALIZABLE)  本設定を記述しない場合は、デフォルトでREAD_COMMITTEDが設定される。  > **Note:** > データベースによっては、使用できるアイソレーションレベルが限られている。 > データベースベンダーのマニュアルを参照し、適切なアイソレーションレベルを設定すること。 |\n| initSqlList | トランザクション開始時に実行したいSQL文をlist形式で設定する。  SQL文を実行する必要がない場合には、設定は不要である。 |",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "設定ファイル例(JNDIを使用してデータベース接続を行う場合)",
+      "content": "本設定例は、JNDI経由でデータベース接続を取得する際に必要となる箇所のみを記載している。\nJNDIに関連のない設定については、 [設定ファイル例(DataSourceを使用してデータベース接続を行う場合)](../../component/libraries/libraries-04-Connection.md#db-connection-config-label) を参照し、必要な設定を行うこと。\n\n```xml\n<component class=\"nablarch.core.db.connection.BasicDbConnectionFactoryForJndi\">\n\n    <!-- jndiPropertiesの設定 -->\n    <property name=\"jndiProperties\">\n        <map>\n            <entry key=\"java.naming.factory.initial\" value=\"weblogic.jndi.WLInitialContextFactory\"/>\n            <entry key=\"java.naming.provider.url\" value=\"t3://localhost:7001\"/>\n        </map>\n    </property>\n    <!-- jndiリソース名 -->\n    <property name=\"jndiResourceName\" value=\"NablarchDataSource\"/>\n\n    <!-- statementFactoryを実装したクラスの設定 -->\n    <property name=\"statementFactory\">\n        <component name=\"statementFactory\"\n                   class=\"nablarch.core.db.statement.BasicStatementFactory\">\n            <property name=\"fetchSize\" value=\"500\"/>\n            <property name=\"queryTimeout\" value=\"600\" />\n            <property name=\"sqlStatementExceptionFactory\">\n                <component class=\"nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory\">\n                    <property name=\"duplicateErrorSqlState\" value=\"\"/>\n                    <property name=\"duplicateErrorErrCode\" value=\"1\"/>\n                </component>\n            </property>\n        </component>\n    </property>\n    <property name=\"statementReuse\" value=\"true\"/>\n</component>\n```",
+      "level": 2
+    },
+    {
+      "id": "s11",
+      "title": "設定内容詳細",
+      "content": "| property名 | 設定内容 |\n|---|---|\n| statementReuse(必須) | [BasicDbConnectionFactoryForDataSourceへの設定](../../component/libraries/libraries-04-Connection.md#db-datasourceconnectionfactory-label) の同一項目を参照すること。 |\n| statementFactory(必須) | [BasicDbConnectionFactoryForDataSourceへの設定](../../component/libraries/libraries-04-Connection.md#db-datasourceconnectionfactory-label) の同一項目を参照すること。 |\n| jndiProperties | JNDI経由でDataSourceを取得するための、環境設定を行う。 Webサーバ上で稼働する場合や、クラスパス配下に「jndi.properties」を配置している場合には、本設定値は省略して良い。  > **Note:** > 設定に関する詳細は、Webサーバのベンダーマニュアルなどを参照すること。  > 本設定例は、WebLogicサーバ上にDataSourceが登録されていることを想定した設定例となっている。 |\n| jndiResourceName(必須) | JNDIリソース名を設定する。  > **Note:** > 設定に関する詳細は、Webサーバのベンダーマニュアルなどを参照すること。  > 例えば、WebLogicサーバの場合は、管理コンソールからDataSourceを登録する際に「JNDI Name」に入力した値を設定する。 |",
+      "level": 3
+    }
+  ]
+}

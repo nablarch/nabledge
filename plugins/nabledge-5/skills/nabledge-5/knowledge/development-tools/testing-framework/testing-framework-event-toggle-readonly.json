@@ -1,0 +1,26 @@
+{
+  "id": "testing-framework-event-toggle-readonly",
+  "title": "readonly 項目切替えイベントアクション",
+  "content": "[readonly 項目切替えイベントアクション](../../development-tools/testing-framework/testing-framework-event-toggle-readonly.md) は、\nチェックボックス・ラジオボタン・プルダウン要素の選択状態に応じて、\n特定の要素の readonly 属性値を動的に切替えるイベントアクションである。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "以下のソースコード例では、ある入力項目のグループについて、\nその readonly属性を、一括で切り替えるラジオボタンを実装する例である。\n\n```jsp\n<n:form>\n  <event:listen\n    event=\"input[type='radio'].editProfile click\">\n    <event:toggle_readonly\n      condition=\"[value='edit']\"\n      reverse=\"true\"\n      toggleTarget=\"div.profile :input:not('.editProfile')\">\n    </event:toggle_readonly>\n  </event:listen>\n\n  ... (中略) ...\n\n</n:form>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "このアクションを実行するイベントは [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.md)\n(もしくは [サブウィンドウ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen-subwindow.md) ) を用いて定義する必要がある。\n\nこのアクションが実行されると、まず、イベントの発生元要素が condition 属性の\nセレクタにマッチするかをチェックする。\n\nマッチした場合、このタグと同じ <event:listen> タグ内に存在し、\ntarget 属性のセレクタにマッチする全ての要素の readonly 属性を設定する。\n設定する値は、イベントの発生元要素の選択状態に一致するが\nreverse 属性が true であった場合のその逆の値を設定する。\n\nマッチしなかった場合、読取専用を解除する(reverse属性がtrueの場合、読取専用にする)。\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | 実行する処理の簡単な説明 | 文字列 | × | × | 設計書表示用 |\n| target | 属性を切替える対象要素 を指定するセレクタ式 | 文字列 | ◎ | ◎ |  |\n| condition | 本アクションを実行する事前条件。 イベント発生元要素が満たすべき セレクタ式の形式で指定する。 | 文字列 | ◎ | ◎ | > **Tip:** > ローカルレンダリングではvalue属性が > 使用できないので動作しない。 |\n| reverse | イベント発生元要素の選択状態を 反転した値をreadonly属性に設定 する。 | 真偽値 | ○ | ○ | デフォルトはfalse |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "本ウィジェットは以下のファイルによって実装されている。\n\n**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/event/toggle_readonly.tag | このウィジェットの実体となるタグファイル |\n| /js/nablarch/ui/event/TogglePropertyAction.js | 属性値の切替え機能を実装するイベントアクション |",
+      "level": 2
+    }
+  ]
+}

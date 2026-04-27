@@ -1,12 +1,39 @@
 # Excelのテストデータに設定した整数値が、テスト実行時には小数部ありの数値となってしまいます。回避方法を教えてください
 
-## Excelテストデータの整数値が小数に変換される問題と回避方法
+> **question:**
+> テストデータのExcelに以下のように数値データ(AGE列)を定義した場合、テスト実行時に小数部有りの数値に変換されてしまいます。
+> 例えば、1レコード目の「20」は、「20.0」に変換されてしまいます。
 
-Excelのテストデータの書式は全て**文字列書式**で設定すること。標準・数値書式の場合、自動テストFWがデータを正しく読めない（例: AGE列の整数「20」が「20.0」に変換される）。
+> これでは、テストを実施することができないので回避方法を教えてください。
 
-<details>
-<summary>keywords</summary>
+SETUP_TABLE=USERS
+<table width="300" style="border:solid 1px; border-collapse: collapse;">
+    <tr style="background-color:#ffff99; border:solid 1px; border-collapse: collapse;">
+        <th style="border:solid 1px;">USER_ID</th>
+        <th style="border:solid 1px;">NAME</th>
+        <th style="border:solid 1px;">AGE</th>
+    </tr>
+    <tr style="border:solid 1px; border-collapse: collapse;">
+        <td style="border:solid 1px;">001</td>
+        <td style="border:solid 1px;">ほげ</td>
+        <td style="border:solid 1px;">20</td>
+    </tr>
+    <tr style="border:solid 1px; border-collapse: collapse;">
+        <td style="border:solid 1px;">002</td>
+        <td style="border:solid 1px;">ふが</td>
+        <td style="border:solid 1px;">25</td>
+    </tr>
+    <tr style="border:solid 1px; border-collapse: collapse;">
+        <td style="border:solid 1px;">003</td>
+        <td style="border:solid 1px;">ほげふが</td>
+        <td style="border:solid 1px;">30</td>
+    </tr>
+</table>
 
-Excelテストデータ, 整数値小数変換, 文字列書式, セルの書式, 自動テストフレームワーク
+> **answer:**
+> Excelに記述するテストデータの書式は全て **文字列書式** で設定してください。
+> 文字列書式以外（例えば、標準や数値書式）の場合、Excelに設定されたデータを自動テストFWが正しく読むことができません。
 
-</details>
+> 詳細は、以下を参照してください。
+
+> * >   **[Nablarchプログラミング・単体テストガイド]** -> **[自動テストフレームワークの使用方法]** -> **[自動テストフレームワーク]** -> **[セルの書式]**

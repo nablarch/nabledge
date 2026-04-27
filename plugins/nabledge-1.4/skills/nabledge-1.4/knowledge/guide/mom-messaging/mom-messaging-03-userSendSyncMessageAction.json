@@ -1,0 +1,38 @@
+{
+  "id": "mom-messaging-03-userSendSyncMessageAction",
+  "title": "同期応答メッセージ送信処理",
+  "content": "[ユーザ情報登録サービス](../../guide/mom-messaging/mom-messaging-01-userSendSyncMessageSpec.md) を例に、同期応答メッセージ送信処理の実装方法を説明する。\n\n![userSendSyncMessage.png](assets/mom-messaging-03-userSendSyncMessageAction/userSendSyncMessage.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "アプリケーションプログラマが実装する成果物",
+      "content": "アプリケーションプログラマが作成する成果物は以下のとおりである。\n\n* 要求電文および応答電文のフォーマット定義ファイル\n* 同期応答メッセージ送信処理を行うActionクラス",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "フォーマット定義ファイル",
+      "content": "フォーマット定義ファイルの配置場所と拡張子は、下記設定例のように、FilePathSettingクラスのコンポーネント定義により設定される。\n通常、この設定値はアーキテクトが設定するものでありアプリケーションプログラマが設定する必要はない。\n\n```xml\n<component name=\"filePathSetting\"\n         class=\"nablarch.core.util.FilePathSetting\" autowireType=\"None\">\n   <property name=\"basePathSettings\">\n     <map>\n       <!-- 実際のサンプルでは、以下のvalue属性の部分はプレースホルダになっているが、\n                                  ここでは説明を分かりやすくするため、直接パスをvalue属性に記載する。-->\n       <entry key=\"format\" value=\"classpath:web/format\" />\n     </map>\n   </property>\n   <property name=\"fileExtensions\">\n     <map>\n       <!-- 拡張子を設定する -->\n       <entry key=\"format\" value=\"fmt\" />\n     </map>\n   </property>\n</property>\n```\n\nフォーマット定義ファイルの名前は以下の命名規約に従うこと。\n\n* 要求電文: リクエストID + “_SEND”\n* 応答電文: リクエストID + “_RECEIVE”\n\n参考として、サンプルで使用している要求電文と応答電文のフォーマット定義ファイルを以下に示す。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "要求電文のフォーマット定義ファイル",
+      "content": "ファイルパス： web/format/RM11AC0201_SEND.fmt\n\n```bash\n#-------------------------------------------------------------------------------\n# ユーザ情報登録電文の業務データ部レイアウト定義\n#-------------------------------------------------------------------------------\nfile-type:        \"Fixed\" # 固定長\ntext-encoding:    \"MS932\" # 文字列型フィールドの文字エンコーディング\nrecord-length:    420     # 各レコードの長さ\nrecord-separator: \"\\r\\n\"  # 改行コード\n\n[data]\n1   dataKbn                     X(1)  \"2\"   # レコード区分(固定)\n2   loginId                     X(20)       # ログインID\n22  kanjiName                   N(100)      # 漢字氏名\n122 kanaName                    N(100)      # カナ氏名\n222 ?filler1                    X(50)       # 空白領域\n272 mailAddress                 X(100)      # メールアドレス\n372 extensionNumberBuilding     X(2)        # 内線番号（ビル番号）\n374 extensionNumberPersonal     X(4)        # 内線番号（個人番号）\n378 mobilePhoneNumberAreaCode   X(3)        # 携帯番号（市外）\n381 mobilePhoneNumberCityCode   X(4)        # 携帯電話番号(市内)\n385 mobilePhoneNumberSbscrCode  X(4)        # 携帯電話番号(加入)\n389 ?filler2                    X(32)       # 空白領域\n```\n\n> **Warning:**\n> 同期応答送信処理に使用するフォーマット定義ファイル(～_SEND.fmt)の\n> レコードタイプ名は\" `data` \"固定である。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "応答電文のフォーマット定義ファイル",
+      "content": "ファイルパス： web/format/RM11AC0201_RECEIVE.fmt\n\n```bash\n#-------------------------------------------------------------------------------\n# ユーザ情報登録応答電文の業務データ部フォーマット定義\n#-------------------------------------------------------------------------------\nfile-type:        \"Fixed\" # 固定長\ntext-encoding:    \"MS932\" # 文字列型フィールドの文字エンコーディング\nrecord-length:    420     # 各レコードの長さ\nrecord-separator: \"\\r\\n\"  # 改行コード\n\n[data]\n1   dataKbn                     X(1)  \"0\"   # データ区分(固定)\n2   userId                      X(10)       # 採番したユーザID\n12  failureCode                 X(20)       # 障害事由コード\n32  userInfoId                  X(20)       # 問い合わせID\n52  ?filler                     X(369)      # 空白領域\n```",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "同期応答メッセージ送信処理を行うActionクラス",
+      "content": "サンプルでは、同期応答メッセージ送信時に以下の処理を行う。\n\n① リクエストを精査しEntityへ変換する。\n② Entityの内容からSyncMessageオブジェクトを生成する。\n③ MessageSenderでメッセージを送信する。\n④ 応答電文のSyncMessageオブジェクトからデータを取得する。\n\n```java\n/**\n * ユーザ情報登録確認画面の「メッセージ送信」イベントの処理を行う。\n *\n * @param req リクエストコンテキスト\n * @param ctx HTTPリクエストの処理に関連するサーバ側の情報\n * @return HTTPレスポンス\n */\n@OnError(type = ApplicationException.class, path = \"forward://RW11AC0201\")\n@OnDoubleSubmission(path = \"forward://RW11AC0201\")\npublic HttpResponse doRW11AC0205(HttpRequest req, ExecutionContext ctx) {\n\n    // ①精査とエンティティ生成\n    W11AC02Form form = validateForSendUser(req);\n\n    // エンティティ取得\n    SystemAccountEntity systemAccount = form.getSystemAccount();\n    UsersEntity users = form.getUsers();\n\n    // ②要求電文のデータレコードの作成\n    Map<String, Object> dataRecord = new HashMap<String, Object>();\n    dataRecord.put(\"dataKbn\", REQUEST_MESSAGE_DATA_KBN);\n    dataRecord.put(\"loginId\", systemAccount.getLoginId());\n    dataRecord.put(\"kanjiName\", users.getKanjiName());\n    dataRecord.put(\"kanaName\", users.getKanaName());\n    dataRecord.put(\"mailAddress\", users.getMailAddress());\n    dataRecord.put(\"extensionNumberBuilding\", users.getExtensionNumberBuilding());\n    dataRecord.put(\"extensionNumberPersonal\", users.getExtensionNumberPersonal());\n    dataRecord.put(\"mobilePhoneNumberAreaCode\", users.getMobilePhoneNumberAreaCode());\n    dataRecord.put(\"mobilePhoneNumberCityCode\", users.getMobilePhoneNumberCityCode());\n    dataRecord.put(\"mobilePhoneNumberSbscrCode\", users.getMobilePhoneNumberSbscrCode());\n\n    // ③要求電文の送信\n    SyncMessage responseMessage\n        = MessageSender.sendSync(new SyncMessage(\"RM11AC0201\").addDataRecord(dataRecord));\n\n    // ④応答電文からデータ取得\n    String userId = (String) responseMessage.getDataRecord().get(\"userId\");\n    systemAccount.setUserId(userId); // 採番されたユーザIDの設定\n\n    // 引き継ぎ項目を格納\n    W11AC01SearchForm successionForm = new W11AC01SearchForm();\n    successionForm.setSystemAccount(systemAccount);\n    ctx.setRequestScopedVar(\"11AC_W11AC01\", successionForm);\n\n    return new HttpResponse(\"/ss11AC/W11AC0203.jsp\");\n}\n```\n\nタイムアウト時は、MessageSendSyncTimeoutException例外がスローされるので、\n必要に応じて例外をキャッチし、エラー画面への遷移を行うこと。",
+      "level": 2
+    }
+  ]
+}

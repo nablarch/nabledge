@@ -28,6 +28,6 @@ for pair in "$@"; do
   esac
 
   echo "=== $file : $section ==="
-  jq -r --arg sec "$section" '.sections[$sec] // "SECTION_NOT_FOUND"' "$KNOWLEDGE_DIR/$file" 2>/dev/null || echo "FILE_NOT_FOUND"
+  jq -r --arg sec "$section" 'first(.sections[]? | select(.id == $sec) | .content) // "SECTION_NOT_FOUND"' "$KNOWLEDGE_DIR/$file" 2>/dev/null || echo "FILE_NOT_FOUND"
   echo "=== END ==="
 done

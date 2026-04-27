@@ -1,0 +1,26 @@
+{
+  "id": "testing-framework-field-label-block",
+  "title": "表示ブロックウィジェット",
+  "content": "[表示ブロックウィジェット](../../development-tools/testing-framework/testing-framework-field-label-block.md) はボディ部に記述したマークアップを\nフィールドの内容としてそのまま表示するウィジェットである。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**設計成果物(ローカル動作)**\n\n```jsp\n<field:block title=\"配送予定\">\n\n  <field:calendar\n      title=\"配送希望日\"\n      required=\"true\"\n      sample=\"\">\n  </field:calendar>\n\n  <field:label_block\n      title=\"配送オプション\">\n      <p>配送オプションの指定はプレミアム会員の方のみ可能です。</p>\n  </field:label_block>\n\n</field:block>\n```\n\n**実装成果物(サーバ動作)**\n\n```jsp\n<field:block title=\"配送設定\">\n\n  <field:calendar\n      title=\"配送希望日\"\n      required=\"true\"\n      name=\"W11AC03.deliveryDate\"\n      sample=\"\">\n  </field:calendar>\n\n  <field:label_block\n      title=\"配送オプション\">\n      <p>配送オプションの指定はプレミアム会員の方のみ可能です。</p>\n  </field:label_block>\n\n</field:block>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "このウィジェットはボディ部に指定された内容をそのまま出力するだけの機能を提供する。\nローカル動作とサーバ動作での挙動は同じである。\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| title | 項目名 | 文字列 | ◎ | ◎ |  |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 画面項目定義に記載する、 「表示情報取得元」.「表示項目名」 の形式で設定する。 |\n| comment | ラベル表示についての備考 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/label_block.tag | [表示ブロックウィジェット](../../development-tools/testing-framework/testing-framework-field-label-block.md) の実体となるタグファイル |",
+      "level": 2
+    }
+  ]
+}

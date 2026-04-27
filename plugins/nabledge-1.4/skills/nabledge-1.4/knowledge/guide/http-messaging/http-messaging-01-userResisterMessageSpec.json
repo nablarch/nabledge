@@ -1,0 +1,38 @@
+{
+  "id": "http-messaging-01-userResisterMessageSpec",
+  "title": "ユーザ情報登録サービスの仕様",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "機能概要",
+      "content": "外部システムからの送信電文を入力として、ユーザ情報テンポラリテーブルにレコードを登録する。\n\n![userRegisterMessage.png](assets/http-messaging-01-userResisterMessageSpec/userRegisterMessage.png)\n\nユーザ情報テンポラリテーブルは、後続処理(常駐バッチ)によって一定時間間隔で監視され、\n未処理のデータが存在する場合にユーザ情報を登録する。\n\n常駐バッチの実装方法は、 [業務アプリケーションの実装方法 (バッチ処理編)](../../guide/nablarch-batch/nablarch-batch-04-Explanation-batch.md) を参照すること。\n\n主な仕様は、以下の通り。\n\n1. ユーザ情報登録処理\n\nユーザ情報登録電文を受信すると、データレコードの情報をユーザ情報テンポラリに登録し、処理結果を応答する。\n\n【INPUTデータ】\n* ユーザ情報登録電文\n【OUTPUTデータ】\n* ユーザ情報テンポラリ\n* 応答電文\n【精査仕様】\n* 要求電文のレイアウトは、フレームワーク制御ヘッダ(以降ヘッダレコード)、データレコードが存在すること。\n* ヘッダレコード、データレコードのレイアウト仕様については  要求電文仕様 を参照。\n* データレコードの各項目に対するドメイン精査については 要求電文仕様 を参照。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "要求電文仕様",
+      "content": "【データレコード】\n\n| 項目名 | データタイプ | 多重度 | 説明 |\n|---|---|---|---|\n| データ区分 | X | 1 | 半角:1桁 |\n| ログインID | X | 1 | 半角:20桁以下:必須 |\n| 漢字氏名 | XN | 1 | 全角:50桁以下:必須 |\n| カナ氏名 | N | 1 | 全角カナ:50桁以下:必須 |\n| メールアドレス | X | 1 | 半角:100桁以下:必須 |\n| 内線番号(ビル番号) | X | 1 | 半角数字:2桁以下:必須 |\n| 内線番号(個人番号) | X | 1 | 半角数字:4桁以下:必須 |\n| 携帯電話番号(市外) | X | 0..1 | 半角数字:3桁以下 |\n| 携帯電話番号(市内) | X | 0..1 | 半角数字:4桁以下 ※携帯電話番号(市外)が入力された場合は必須 携帯電話番号(市外)が未入力の場合は、未入力であること |\n| 携帯電話番号(加入) | X | 0..1 | 半角数字:4桁以下:必須 ※携帯電話番号(市外)が入力された場合は必須 携帯電話番号(市外)が未入力の場合は、未入力であること |\n\nXMLの場合の記述例を以下に示す。\n\n```xml\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<request dataKbn=\"0\">\n\n  <loginId>nablarch</loginId>\n  <kanjiName>名部　楽太郎</kanjiName>\n  <kanaName>ナブ　ラクタロウ</kanaName>\n  <mailAddress>nablarch@mail.co.jp</mailAddress>\n  <extensionNumberBuilding>11</extensionNumberBuilding>\n  <extensionNumberPersonal>1001</extensionNumberPersonal>\n  <mobilePhoneNumberAreaCode>201</mobilePhoneNumberAreaCode>\n  <mobilePhoneNumberCityCode>3001</mobilePhoneNumberCityCode>\n  <mobilePhoneNumberSbscrCode>4001</mobilePhoneNumberSbscrCode>\n\n  <_nbctlhdr>\n    <userId>0000000101</userId>\n    <resendFlag>0</resendFlag>\n  </_nbctlhdr>\n\n</request>\n```\n\n> **Note:**\n> XML属性のサンプルを記載するため、データ区分を属性としている。\n\nJSONの場合の記述例を以下に示す。\n\n```bash\n {\n      \"dataKbn\": \"0\"\n    , \"loginId\": \"nablarch\"\n    , \"kanjiName\": \"名部　楽太郎\"\n    , \"kanaName\": \"ナブ　ラクタロウ\"\n    , \"mailAddress\": \"nablarch@mail.co.jp\"\n    , \"extensionNumberBuilding\": \"11\"\n    , \"extensionNumberPersonal\": \"1001\"\n    , \"mobilePhoneNumberAreaCode\": \"201\"\n    , \"mobilePhoneNumberCityCode\": \"3001\"\n    , \"mobilePhoneNumberSbscrCode\": \"4001\"\n    , \"_nbctlhdr\": {\n                        \"userId\": \"user01\"\n                      , \"resendFlag\": \"0\"\n                   }\n}\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "応答電文仕様",
+      "content": "【データレコード】\n\n| 項目名 | データタイプ | 多重度 | 説明 |\n|---|---|---|---|\n| 障害事由コード | X | 0..1 | 障害事由を表すコード値 詳細は、 ステータスコード/障害コード/HTTPレスポンスコード仕様 を参照 |\n| 問い合わせID | X | 0..1 | ユーザ情報テンポラリ.ユーザ情報IDに登録した値 |\n| データ区分 | X | 1 | データ区分 |\n| フレームワーク制御ヘッダ | X | 1 | フレームワーク制御項目(自動追加) |\n\n【ヘッダレコード】\n\n| 項目名 | データタイプ | 多重度 | 説明 |\n|---|---|---|---|\n| ステータスコード | X | 1 | 本サービス側の処理結果を表すコード 詳細は、 ステータスコード/障害コード/HTTPレスポンスコード仕様 を参照 |",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "ステータスコード/障害コード/HTTPレスポンスコード仕様",
+      "content": "| No | ステータスコード | 障害コード | HTTPレスポンスコード | 原因 | 備考 |\n|---|---|---|---|---|---|\n| 1 | 200 | (空白) | 200 | 正常終了 |  |\n| 2 | 400 | NR11AC4001 | 400 | 要求電文データレコード部項目精査エラー |  |\n| 3 | -- | -- | 400 | 要求電文のデータレコード部レイアウト不正 | FWでエラーが検出されエラー応答が返却される |\n| 4 | 500 | NR11AC5000 | 500 | その他の意図しないエラーにより 業務処理が失敗した場合 |  |",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "エンティティ情報",
+      "content": "エンティティ論理名：ユーザ情報テンポラリ\n\n| カラム論理名 | 入力データ |\n|---|---|\n| ユーザ情報ID | ユーザ情報IDで採番した値 |\n| ログインID | 要求電文.データレコード.ログインID |\n| 漢字氏名 | 要求電文.データレコード.漢字氏名 |\n| カナ氏名 | 要求電文.データレコード.カナ氏名 |\n| メールアドレス | 要求電文.データレコード.メールアドレス |\n| 内線番号(ビル番号) | 要求電文.データレコード.内線番号(ビル番号) |\n| 内線番号(個人番号) | 要求電文.データレコード.内線番号(個人番号) |\n| 携帯電話番号(市外) | 要求電文.データレコード.携帯電話番号(市外) |\n| 携帯電話番号(市内) | 要求電文.データレコード.携帯電話番号(市内) |\n| 携帯電話番号(加入) | 要求電文.データレコード.携帯電話番号(加入) |\n| ステータス | 未処理('0') |",
+      "level": 2
+    }
+  ]
+}

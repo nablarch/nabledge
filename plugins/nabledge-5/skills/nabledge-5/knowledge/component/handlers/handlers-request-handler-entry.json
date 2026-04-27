@@ -1,0 +1,38 @@
+{
+  "id": "handlers-request-handler-entry",
+  "title": "リクエストハンドラエントリ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* 本ハンドラの使用例\n* リクエストパターン指定のバリエーション\n\n本ハンドラは、特定のリクエストパスのみ委譲先のハンドラを呼び出す特殊なハンドラである。\n本ハンドラを使用することで、「ウェブアプリケーションで特定のURLのみハンドラの処理を行う」といった機能を、\nハンドラを修正することなく実現できる。\n\n本ハンドラの主な用途は、 [リソースマッピングハンドラ](../../component/handlers/handlers-resource-mapping.md#resource-mapping) を使用した、「静的コンテンツのダウンロードを一括処理する」機能の実現である。\nその他にも、 [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) や [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) と同時に使用することで\n「特定のURLのみ使用するデータベース接続を変える」といった用途にも使用できる。\n\n本ハンドラでは、以下の処理を行う。\n\n* リクエストパスがマッチするか判定し、対象であれば委譲先のハンドラを呼び出す。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-request-handler-entry/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.RequestHandlerEntry",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "なし。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "本ハンドラの使用例",
+      "content": "本ハンドラを使用する際は、処理対象とするリクエストパスを指定する `requestPattern` プロパティと、\n委譲先のハンドラを指定する `handler` プロパティを設定する。\n\n[リソースマッピングハンドラ](../../component/handlers/handlers-resource-mapping.md#resource-mapping) を使用して、JPEGファイルの静的コンテンツをダウンロードする設定例を以下に示す。\n\n```xml\n<!-- 画像ファイルの静的リソースダウンロードを行うハンドラ -->\n<component name=\"imgMapping\"\n           class=\"nablarch.fw.web.handler.ResourceMapping\">\n  <property name=\"baseUri\" value=\"/\"/>\n  <property name=\"basePath\" value=\"servlet:///\"/>\n</component>\n\n<!-- ハンドラキュー構成 -->\n<component name=\"webFrontController\"\n           class=\"nablarch.fw.web.servlet.WebFrontController\">\n\n  <property name=\"handlerQueue\">\n    <list>\n\n      <component class=\"nablarch.fw.handler.GlobalErrorHandler\"/>\n      <component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\"/>\n      <component class=\"nablarch.common.io.FileRecordWriterDisposeHandler\" />\n      <component class=\"nablarch.fw.web.handler.HttpResponseHandler\"/>\n\n      <!-- 拡張子が \".jpg\" である静的JPGファイルのダウンロードを行う設定 -->\n      <component class=\"nablarch.fw.RequestHandlerEntry\">\n        <property name=\"requestPattern\" value=\"//*.jpg\"/>\n        <property name=\"handler\" ref=\"imgMapping\"/>\n      </component>\n\n      <!--\n        \"*.jpg\" で終わるJPEGファイルのダウンロード以外のリクエストでは、\n        以下のハンドラの呼び出しが行われる\n        -->\n      <component-ref name=\"multipartHandler\"/>\n      <component-ref name=\"sessionStoreHandler\" />\n```",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "リクエストパターン指定のバリエーション",
+      "content": "[本ハンドラの使用例](../../component/handlers/handlers-request-handler-entry.md#request-handler-entry-usage) の設定例からわかるとおり、本ハンドラに指定する `requestPattern` プロパティ\nには、 `//*.jpg` のようなGlob式に似た書式での設定が行える。\n\nワイルドカードの設定例を以下に示す。\n\n| requestPattern | リクエストパス | 結果 |\n|---|---|---|\n| / | / | 呼ばれる |\n|  | /index.jsp | 呼ばれない |\n| /* | / | 呼ばれる |\n|  | /app | 呼ばれる |\n|  | /app/ | 呼ばれない (* は'/'にはマッチしない) |\n|  | /index.jsp | 呼ばれない (* は'.'にはマッチしない) |\n| /app/*.jsp | /app/index.jsp | 呼ばれる |\n|  | /app/admin | 呼ばれない |\n| /app/*/test | /app/admin/test | 呼ばれる |\n|  | /app/test/ | 呼ばれない |\n\nまた、最後尾の’/’が’//’と重ねられていた場合、それ以前の文字列について前方一致すればマッチ成功と判定する記法も使用できる。\n\n以下に設定例を示す。\n\n| requestPattern | リクエストパス | 結果 |\n|---|---|---|\n| /app// | / | 呼ばれない |\n|  | /app/ | 呼ばれる |\n|  | /app/admin/ | 呼ばれる |\n|  | /app/admin/index.jsp | 呼ばれる |\n| //*.jsp | /app/index.jsp | 呼ばれる |\n|  | /app/admin/index.jsp | 呼ばれる |\n|  | /app/index.html | 呼ばれない('*.jsp'がマッチしない) |",
+      "level": 2
+    }
+  ]
+}

@@ -1,95 +1,116 @@
 {
   "id": "biz-samples-11",
   "title": "メッセージング基盤テストシミュレータサンプル",
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/biz_samples/11/index.html"
-  ],
-  "index": [
+  "content": "**目次**\n\n* 用途\n\n  * 疎通テスト\n  * 結合テスト\n  * 負荷テスト\n* 特徴\n\n  * 取引単体テストと同じ手順でテストデータを作成できる\n  * 特殊および複雑なテストケースにも、カスタマイズすることで対応可能(メッセージ受信)\n  * マルチスレッドで要求電文を送信することが可能（メッセージ送信）\n* 要求\n\n  * シミュレータがメッセージ受信する場合\n  * シミュレータがメッセージ送信する場合\n* 使用方法\n\n  * シミュレータの実行モジュールを作成する\n  * シミュレータを起動する\n* 拡張例\n\n  * メッセージ送信時にリクエスト送信回数を指定する\n  * メッセージ受信時にリクエストの種類に応じてレスポンスを切り替える\n  * メッセージ受信時に意図的にレスポンスを遅延させる\n\n[ソースコード](https://github.com/nablarch/nablarch-messaging-simulator)\n\n本サンプルは、Nablarchアプリケーションフレームワークの [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#mom-system-messaging) 、 [HTTPメッセージング](../../component/libraries/libraries-http-system-messaging.md#http-system-messaging) を使用する\nアプリケーションのテストにて、対向先システムをシミュレートするサンプル実装を提供する。\n\nテスト環境構築後の疎通テストやアプリケーションの結合テスト等で、アプリケーションの接続先として、\n使用することを想定している。\n\nシミュレータの動作イメージを以下に示す。\n\nシミュレータがメッセージ受信する場合\n![behavior_illustration01.png](assets/biz-samples-11/behavior_illustration01.png)\nシミュレータがメッセージ送信する場合\n![behavior_illustration02.png](assets/biz-samples-11/behavior_illustration02.png)\n\n> **Important:**\n> 本サンプルではMOMとしてIBM MQ 9.3 を使用している。\n> IBM MQ 9.3 はJavaのバージョン 8 以上がサポート対象であるため、本サンプルでは Java 8を使用する。",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "用途",
-      "hints": [
-        "疎通テスト",
-        "結合テスト",
-        "負荷テスト",
-        "メッセージングシミュレータ",
-        "mom_system_messaging",
-        "http_system_messaging",
-        "IBM MQ",
-        "Java 8",
-        "対向先システム"
-      ]
+      "content": "",
+      "level": 2
     },
     {
       "id": "s2",
-      "title": "特徴",
-      "hints": [
-        "テストデータ作成",
-        "マルチスレッド",
-        "異常系テスト",
-        "タイムアウトテスト",
-        "メッセージ受信",
-        "メッセージ送信",
-        "取引単体テスト",
-        "カスタマイズ"
-      ]
+      "title": "疎通テスト",
+      "content": "テスト環境を構築後のNablarchアプリケーションフレームワーク、ミドルウェア、ハードウェア等の設定を確認するための疎通テストにて、\n簡易的に通信する対向先システムとして使用できる。",
+      "level": 3
     },
     {
       "id": "s3",
-      "title": "要求",
-      "hints": [
-        "HTTPメッセージ受信",
-        "MOM同期応答メッセージ受信",
-        "HTTPステータスコード",
-        "応答電文",
-        "要求電文",
-        "ログ出力",
-        "Excelファイル",
-        "シナリオ",
-        "MOM応答不要メッセージ送信"
-      ]
+      "title": "結合テスト",
+      "content": "アプリケーションの結合テストの際に、システム間通信の擬似的な対向先システムとして使用できる。\nシミュレータに要求電文/応答電文として使用するデータを設定することで、シナリオを用いたテストができる。\n\nシナリオを用いたテストは取引単体テストにて可能であるが、\nシミュレータを使用したテストではOSやミドルウェアも含めた動作を確認できる点が異なる。",
+      "level": 3
     },
     {
       "id": "s4",
-      "title": "使用方法",
-      "hints": [
-        "シミュレータ起動",
-        "http-incoming-startup.bat",
-        "http-outgoing-startup.bat",
-        "mom-incoming-startup.bat",
-        "mom-outgoing-startup.bat",
-        "実行モジュール作成",
-        "Maven",
-        "nablarch-messaging-simulator",
-        "ビルド",
-        "ソースコード提供",
-        "カスタマイズ"
-      ]
+      "title": "負荷テスト",
+      "content": "アプリケーションの負荷テストを行う際に、負荷をかけるための大量のメッセージ送受信ができる。",
+      "level": 3
     },
     {
       "id": "s5",
+      "title": "特徴",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "取引単体テストと同じ手順でテストデータを作成できる",
+      "content": "本シミュレータで使用するテストデータは、取引単体テストと同様の手順で作成できる。\nそのため、本シミュレータの使用時に余計な学習コストが発生しない。",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "特殊および複雑なテストケースにも、カスタマイズすることで対応可能(メッセージ受信)",
+      "content": "ソースコード提供しているシミュレータのソースコードを修正することによって、\n特殊および複雑なテストケースに合わせた、以下のようなテストが可能である。\n\n* 要求電文の内容に応じて、応答電文の内容を動的に変更する必要があるテストを行う。\n* 意図的に応答の時間を遅らせることによってタイムアウトを発生させるなど、異常系のテストを行う。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "マルチスレッドで要求電文を送信することが可能（メッセージ送信）",
+      "content": "Nablarchアプリケーションフレームワークのマルチスレッド実行制御ハンドラをシミュレータ内部で使用しており、\nマルチスレッドで要求電文を送信するこで、大量メッセージを送信した負荷テストが可能である。",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "要求",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s10",
+      "title": "シミュレータがメッセージ受信する場合",
+      "content": "* HTTPメッセージ受信、MOM同期応答メッセージ受信用の応答電文を送信できる。\n* 要求電文のログを出力できる。\n* 任意のHTTPステータスコードを返却できる。\n* シミュレータへの要求順序にあわせた応答電文を送信可能(単体テスト時と同様、Excelファイルに記述された内容を上から順に返却する)。",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "シミュレータがメッセージ送信する場合",
+      "content": "* HTTPメッセージ送信、MOM同期応答メッセージ送信、MOM応答不要メッセージ送信用の要求電文を送信できる。\n* 指定回数、同じ電文を送信する。\n* 応答電文のログを出力できる。\n* Excelファイルに記述された内容を順に送信できる。",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "使用方法",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s13",
+      "title": "シミュレータの実行モジュールを作成する",
+      "content": "本サンプルは、利用者が目的とするテストを実施するために、Javaファイル等をカスタマイズすることを想定しているため、\nソースコードや設定ファイルをサンプル提供する形態としている。\n\nそのため、シミュレータを使用するには、以下の手順に従ってビルドを実行し、実行モジュールを作成する必要がある。\n\nシミュレータの取得\n以下のコマンドを実行してシミュレータのソースコードを取得する。\n\n```bash\ngit clone https://github.com/nablarch/nablarch-messaging-simulator.git\n```\n実行モジュールの作成\n以下のコマンドを実行し、 `target/build` 配下に実行モジュールを作成する。\n\n```bat\nmvn clean dependency:copy-dependencies -DoutputDirectory=target/build/lib package\n```\n\n作成した実行モジュールは、シミュレータを実行する環境に配置する。",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "シミュレータを起動する",
+      "content": "実行モジュールに含まれる以下のbatファイルを実行することでシミュレータが起動する。\n\nhttp-incoming-startup.bat\n\nhttp-outgoing-startup.bat\n\nmom-incoming-startup.bat\n\nmom-outgoing-startup.bat",
+      "level": 3
+    },
+    {
+      "id": "s15",
       "title": "拡張例",
-      "hints": [
-        "sendCount",
-        "getRequestId",
-        "HttpIncomingSimulateAction",
-        "レスポンス遅延",
-        "TimeUnit",
-        "リクエスト送信回数",
-        "レスポンス切り替え",
-        "handle",
-        "Handler",
-        "HttpRequest",
-        "HttpResponse",
-        "ExecutionContext"
-      ]
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s16",
+      "title": "メッセージ送信時にリクエスト送信回数を指定する",
+      "content": "デフォルトでは、送信リストファイル(CSV)に記載した行数分のリクエストを送信するが、\n同一のデータを繰り返し送信したい場合などは、 `sendCount` オプションでリクエスト送信回数を指定できる。\n\nオプションの指定例を以下に示す。\n\n```bat\njava <省略> nablarch.fw.launcher.Main <省略> -sendCount 10000\n```",
+      "level": 3
+    },
+    {
+      "id": "s17",
+      "title": "メッセージ受信時にリクエストの種類に応じてレスポンスを切り替える",
+      "content": "リクエストの種類に応じてレスポンスを切り替えるには、アクションクラスの `getRequestId` メソッドを修正する。\n\nHTTPメッセージの受信時に、リクエストURIによってレスポンスを切り替える場合の実装例を以下に示す。\n\n```java\npublic class HttpIncomingSimulateAction implements Handler<HttpRequest, HttpResponse> {\n\n    // 省略\n\n    protected String getRequestId(HttpRequest request) {\n        // リクエストURIをもとに、レスポンスのリクエストIDを切り替える。\n        return request.getRequestUri().endsWith(\"RM11AC0101\") ? \"RM11AC0201\" : \"RM11AC0202\";\n    }\n}\n```\n\n> **Tip:**\n> MOMメッセージの受信時にレスポンスを切り替えたい場合も、HTTPメッセージの受信時と同様に、\n> アクションクラスの `getRequestId` メソッドを修正すればよい。",
+      "level": 3
+    },
+    {
+      "id": "s18",
+      "title": "メッセージ受信時に意図的にレスポンスを遅延させる",
+      "content": "メッセージ受信時に意図的にレスポンスを遅延させるには、\n以下の様にアクションクラスの `handle` メソッドに直接遅延処理を実装する。\n\n```java\npublic class HttpIncomingSimulateAction implements Handler<HttpRequest, HttpResponse> {\n\n  public HttpResponse handle(HttpRequest request, ExecutionContext context) {\n\n      try {\n          // 10秒遅延させる\n          TimeUnit.SECONDS.sleep(10);\n      } catch (InterruptedException e) {\n          // 例外処理\n      }\n\n      // 省略\n  }\n}\n```",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s1": "> **重要**: 本サンプルではMOMとしてIBM MQ 9.3 を使用。IBM MQ 9.3 はJava 8以上がサポート対象のため、本サンプルではJava 8を使用する。\n\n[mom_system_messaging](../../component/libraries/libraries-mom_system_messaging.json#s1)、[http_system_messaging](../../component/libraries/libraries-http_system_messaging.json#s1) を使用するアプリケーションのテストで、対向先システムをシミュレートするサンプル実装を提供する。\n\n- **疎通テスト**: テスト環境構築後のNablarchフレームワーク、ミドルウェア、ハードウェア等の設定確認用の簡易通信対向先として使用可能。\n- **結合テスト**: システム間通信の擬似対向先として使用可能。Excelファイルで設定したシナリオによるテストができる。取引単体テストと異なり、OSやミドルウェアも含めた動作確認が可能。\n- **負荷テスト**: 大量メッセージ送受信による負荷テストが可能。",
-    "s2": "**取引単体テストと同じ手順でテストデータ作成可能**: 余計な学習コストが発生しない。\n\n**特殊・複雑なテストケースへの対応（メッセージ受信、カスタマイズが必要）**:\n- 要求電文の内容に応じて応答電文の内容を動的に変更するテスト\n- 意図的な応答遅延によるタイムアウト等の異常系テスト\n\n**マルチスレッドで要求電文送信可能（メッセージ送信）**: Nablarchのマルチスレッド実行制御ハンドラを使用。大量メッセージの負荷テストが可能。",
-    "s3": "### メッセージ受信時の機能\n\n- HTTPメッセージ受信・MOM同期応答メッセージ受信用の応答電文を送信できる。\n- 要求電文のログを出力できる。\n- 任意のHTTPステータスコードを返却できる。\n- シミュレータへの要求順序にあわせた応答電文を送信可能（Excelファイルに記述された内容を上から順に返却）。\n\n### メッセージ送信時の機能\n\n- HTTPメッセージ送信・MOM同期応答メッセージ送信・MOM応答不要メッセージ送信用の要求電文を送信できる。\n- 指定回数、同じ電文を送信する。\n- 応答電文のログを出力できる。\n- Excelファイルに記述された内容を順に送信できる。",
-    "s4": "本サンプルは、利用者が目的とするテストを実施するためにJavaファイル等をカスタマイズすることを想定しているため、バイナリではなくソースコードや設定ファイルの形で提供されている。そのため、シミュレータを使用するには以下の手順でビルドを実行し、実行モジュールを作成する必要がある。\n\n1. シミュレータのソースコードを取得する:\n\n```bash\ngit clone https://github.com/nablarch/nablarch-messaging-simulator.git\n```\n\n2. `target/build` 配下に実行モジュールを作成し、実行環境に配置する:\n\n```bat\nmvn clean dependency:copy-dependencies -DoutputDirectory=target/build/lib package\n```\n\n3. 以下のbatファイルを実行してシミュレータを起動する:\n\n| 種別 | batファイル |\n|---|---|\n| HTTPメッセージ受信 | `http-incoming-startup.bat` |\n| HTTPメッセージ送信 | `http-outgoing-startup.bat` |\n| MOMメッセージ受信 | `mom-incoming-startup.bat` |\n| MOMメッセージ送信 | `mom-outgoing-startup.bat` |",
-    "s5": "**リクエスト送信回数の指定（`sendCount`オプション）**: デフォルトはCSVファイルの行数分。同一データを繰り返し送信する場合に使用。\n\n```bat\njava <省略> nablarch.fw.launcher.Main <省略> -sendCount 10000\n```\n\n**リクエスト種類に応じたレスポンス切り替え（メッセージ受信）**: アクションクラスの `getRequestId` メソッドを修正する。HTTPとMOM共通。\n\n```java\npublic class HttpIncomingSimulateAction implements Handler<HttpRequest, HttpResponse> {\n\n    protected String getRequestId(HttpRequest request) {\n        // リクエストURIをもとに、レスポンスのリクエストIDを切り替える。\n        return request.getRequestUri().endsWith(\"RM11AC0101\") ? \"RM11AC0201\" : \"RM11AC0202\";\n    }\n}\n```\n\n> **補足**: MOMメッセージ受信時のレスポンス切り替えも、HTTPと同様に `getRequestId` メソッドを修正する。\n\n**意図的なレスポンス遅延（メッセージ受信）**: アクションクラスの `handle` メソッドに遅延処理を直接実装する。\n\n```java\npublic class HttpIncomingSimulateAction implements Handler<HttpRequest, HttpResponse> {\n\n    public HttpResponse handle(HttpRequest request, ExecutionContext context) {\n        try {\n            TimeUnit.SECONDS.sleep(10); // 10秒遅延\n        } catch (InterruptedException e) {\n            // 例外処理\n        }\n        // ...\n    }\n}\n```"
-  }
+  ]
 }

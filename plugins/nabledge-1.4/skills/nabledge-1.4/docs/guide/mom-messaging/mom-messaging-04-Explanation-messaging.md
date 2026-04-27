@@ -1,0 +1,10 @@
+# 業務アプリケーションの実装方法 (メッセージング処理編)
+
+メッセージング処理の実装方法について処理形態毎に解説を行う。
+
+04_Explanation_real/index
+04_Explanation_delayed_receive/index
+04_Explanation_http_real/index
+04_Explanation_delayed_send/index
+04_Explanation_send_sync/index
+04_Explanation_http_send_sync/index

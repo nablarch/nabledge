@@ -1,34 +1,32 @@
 # サービス提供可否チェックハンドラ
 
-**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/common/ServiceAvailabilityCheckHandler.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/availability/ServiceAvailability.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/availability/ServiceAvailabilityCheckHandler.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/ThreadContext.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/results/ServiceUnavailable.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/handler/threadcontext/InternalRequestIdAttribute.html)
+**目次**
 
-## 概要
+* ハンドラクラス名
+* モジュール一覧
+* 制約
+* リクエストに対するサービス提供可否チェック
 
-サービス提供可否チェックは、ライブラリの :ref:`service_availability` を使用して行う。
+本ハンドラでは、 [リクエストに対するサービス提供可否チェック](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md#serviceavailabilitycheckhandler-request-checking) を行う。
 
-**前提条件**: 本ハンドラを使用するには、`ServiceAvailability` を実装したクラスを本ハンドラに設定する必要がある。
+サービス提供可否チェックは、ライブラリの [サービス提供可否チェック](../../component/libraries/libraries-service-availability.md#service-availability) を使用して行う。
+そのため、本ハンドラを使用するには、
+ServiceAvailability を実装したクラスを本ハンドラに設定する必要がある。
 
-<details>
-<summary>keywords</summary>
+本ハンドラでは、以下の処理を行う。
 
-ServiceAvailability, サービス提供可否チェック, 前提条件, 設定必須
+* サービス提供可否チェック
 
-</details>
+処理の流れは以下のとおり。
+
+![ServiceAvailabilityCheckHandler_flow.png](../../../knowledge/assets/handlers-ServiceAvailabilityCheckHandler/ServiceAvailabilityCheckHandler_flow.png)
 
 ## ハンドラクラス名
 
-**クラス名**: `nablarch.common.availability.ServiceAvailabilityCheckHandler`
-
-<details>
-<summary>keywords</summary>
-
-ServiceAvailabilityCheckHandler, nablarch.common.availability.ServiceAvailabilityCheckHandler, ハンドラクラス名
-
-</details>
+* nablarch.common.availability.ServiceAvailabilityCheckHandler
 
 ## モジュール一覧
 
-**モジュール**:
 ```xml
 <dependency>
   <groupId>com.nablarch.framework</groupId>
@@ -36,40 +34,26 @@ ServiceAvailabilityCheckHandler, nablarch.common.availability.ServiceAvailabilit
 </dependency>
 ```
 
-<details>
-<summary>keywords</summary>
-
-nablarch-common-auth, com.nablarch.framework, モジュール依存関係, Maven依存
-
-</details>
-
 ## 制約
 
-- [thread_context_handler](handlers-thread_context_handler.md) より後ろに配置すること: スレッドコンテキスト上のリクエストIDを使用するため、[thread_context_handler](handlers-thread_context_handler.md) より後ろに配置する必要がある。
-- [forwarding_handler](handlers-forwarding_handler.md) より後ろに配置すること: 内部フォーワード時にフォーワード先の [内部リクエストID](handlers-forwarding_handler.md) でチェックしたい場合。あわせて [thread_context_handler](handlers-thread_context_handler.md) の `attributes` に `InternalRequestIdAttribute` を追加すること。
-
-<details>
-<summary>keywords</summary>
-
-thread_context_handler, forwarding_handler, InternalRequestIdAttribute, ハンドラ配置順序, 制約
-
-</details>
+[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに配置すること
+本ハンドラではスレッドコンテキスト上に設定されたリクエストIDをもとにサービス提供可否チェックを行うため、
+[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに本ハンドラを配置する必要がある。
+[内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler) より後ろに配置すること
+内部フォーワードが行われた際に、フォーワード先のリクエストID（ [内部リクエストID](../../component/handlers/handlers-forwarding-handler.md#internal-request-id) ）をもとに
+サービス提供可否チェックを行いたい場合は、 [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler) より後ろに本ハンドラを配置する必要がある。
+合わせて、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) の `attributes` に InternalRequestIdAttribute を追加すること。
 
 ## リクエストに対するサービス提供可否チェック
 
-`ThreadContext` からリクエストIDを取得し、:ref:`service_availability` を使用してサービス提供可否をチェックする。
+ThreadContext からリクエストIDを取得し、サービス提供可否をチェックする。
+チェックの詳細は、 [サービス提供可否チェック](../../component/libraries/libraries-service-availability.md#service-availability) を参照。
 
-処理フロー:
-1. `ThreadContext` からリクエストIDを取得
-2. :ref:`service_availability` を使用してサービス提供可否チェック
-3. OK（サービス提供可）→ 後続ハンドラを呼び出す
-4. NG（サービス提供不可）→ `ServiceUnavailable` (503) を送出
+OK(サービス提供可)の場合
+後続ハンドラを呼び出す。
+NG(サービス提供不可)の場合
+ServiceUnavailable (503) を送出する。
 
-フォーワード先のリクエストIDでチェックしたい場合は、`ServiceAvailabilityCheckHandler.setUsesInternalRequestId(boolean)` で `true` を指定（デフォルト: `false`）。
-
-<details>
-<summary>keywords</summary>
-
-ThreadContext, ServiceUnavailable, setUsesInternalRequestId, サービス提供可否チェック, リクエストID, 503
-
-</details>
+チェック対象のリクエストIDをフォーワード先のリクエストIDに変更したい場合は、
+ServiceAvailabilityCheckHandler.setUsesInternalRequestId
+でtrueを指定する。デフォルトはfalseである。

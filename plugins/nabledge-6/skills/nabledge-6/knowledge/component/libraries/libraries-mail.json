@@ -1,168 +1,98 @@
 {
   "id": "libraries-mail",
   "title": "メール送信",
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/mail.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailRequestTable.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailRecipientTable.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailAttachedFileTable.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailTemplateTable.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailConfig.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailRequester.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailRequestConfig.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailSessionConfig.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailUtil.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/FreeTextMailContext.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/TemplateMailContext.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/AttachedFile.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/TinyTemplateEngineMailProcessor.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/MailSender.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/mail/internet/AddressException.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/mail/InvalidCharacterException.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/jakarta/mail/SendFailedException.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/java/lang/Exception.html"
-  ],
-  "index": [
+  "content": "**目次**\n\n* 機能概要\n\n  * テンプレートを使った定型メールを送信できる。\n  * キャンペーン通知のような大量メールの一斉送信には対応していない\n* モジュール一覧\n* 使用方法\n\n  * メール送信を使うための設定\n  * メール送信要求を登録する\n  * メールを送信する(メール送信バッチを実行する)\n  * メール送信時のエラー処理\n  * メール送信をマルチプロセス化する\n  * メールヘッダインジェクション攻撃への対策\n* 拡張例\n\n  * 電子署名を付加したりメール本文を暗号化するなどメール送信処理を変更する\n  * メール送信に失敗した際の処理を変更する\n  * メール送信要求時に使用するトランザクションを指定する\n\nメールを送信する機能を提供する。\n\nこの機能では、ディレードオンライン処理と呼ばれる方式を採用しており、\nメール送信を即時に行うのではなく、一旦、メール送信要求をデータベースに格納しておき、\n[常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#nablarch-batch-resident-batch) を使い非同期にメールを送信する。\n\n![mail_system.png](assets/libraries-mail/mail_system.png)\n\nこの方式を採用した理由は以下の通り。\n\n* メール送信要求を出すアプリケーションで、メール送信を業務トランザクションに含めることができる。\n* メールサーバやネットワークの障害により、メール送信が失敗しても、アプリケーションの処理に影響を与えない。\n\nこの機能では、上記方式を実現するため、2つの機能を提供する。\n\n* [メール送信要求をデータベースに登録する機能](../../component/libraries/libraries-mail.md#mail-request)\n* [メール送信要求に基づいてメールを送信するバッチ機能](../../component/libraries/libraries-mail.md#mail-send)\n\nアプリケーションがメール送信要求を出す毎に1つのメール送信要求を作成し、\nメール送信要求1つにつきメールを1通送信する。\n\n> **Tip:**\n> 本機能は、即時にメールを送信するAPIは提供していない。\n> この場合は、 <a href=\"https://jakarta.ee/specifications/platform/10/apidocs/jakarta/mail/package-summary.html\" target=\"_blank\">Jakarta Mail (外部サイト、英語)</a> を直接使用すること。",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "機能概要",
-      "hints": [
-        "メール送信",
-        "ディレードオンライン処理",
-        "非同期メール送信",
-        "テンプレートメール",
-        "定型メール",
-        "大量メール一斉送信非対応",
-        "TinyTemplateEngineMailProcessor",
-        "mail_sender_freemarker_adaptor",
-        "mail_sender_thymeleaf_adaptor",
-        "mail_sender_velocity_adaptor",
-        "MailRequestTable",
-        "MailRecipientTable",
-        "MailAttachedFileTable",
-        "MailTemplateTable",
-        "MailConfig",
-        "MailRequester",
-        "MailRequestConfig",
-        "MailSessionConfig",
-        "mailRequestSbnId",
-        "recipientTypeTO",
-        "recipientTypeCC",
-        "recipientTypeBCC",
-        "statusUnsent",
-        "statusSent",
-        "statusFailure",
-        "mailRequestCountMessageId",
-        "sendSuccessMessageId",
-        "sendFailureCode",
-        "abnormalEndExitCode",
-        "defaultReplyTo",
-        "defaultReturnPath",
-        "defaultCharset",
-        "maxRecipientCount",
-        "maxAttachedFileSize",
-        "mailSmtpHost",
-        "mailHost",
-        "mailSmtpPort",
-        "mailSmtpConnectionTimeout",
-        "mailSmtpTimeout",
-        "mailSendPatternIdColumnName",
-        "sendProcessIdColumnName",
-        "メール送信設定",
-        "テーブルスキーマ設定",
-        "SMTPサーバ設定",
-        "コード値設定",
-        "メール送信要求コンポーネント設定",
-        "MailSender",
-        "メール送信バッチ",
-        "常駐バッチ",
-        "二重送信防止",
-        "statusUpdateTransaction",
-        "mailSendPatternId",
-        "メール送信パターンID",
-        "未送信データ抽出"
-      ]
+      "content": "",
+      "level": 2
     },
     {
       "id": "s2",
-      "title": "モジュール一覧",
-      "hints": [
-        "nablarch-mail-sender",
-        "nablarch-common-idgenerator",
-        "nablarch-common-idgenerator-jdbc",
-        "メール送信モジュール",
-        "Maven依存関係",
-        "MailRequester",
-        "MailUtil",
-        "FreeTextMailContext",
-        "TemplateMailContext",
-        "AttachedFile",
-        "requestToSend",
-        "getMailRequester",
-        "setVariable",
-        "addAttachedFile",
-        "メール送信要求登録",
-        "定型メール",
-        "非定型メール",
-        "テンプレートメール",
-        "添付ファイル",
-        "MailSender",
-        "AddressException",
-        "InvalidCharacterException",
-        "SendFailedException",
-        "リトライ",
-        "メール送信エラー",
-        "例外処理",
-        "ログ出力"
-      ]
+      "title": "テンプレートを使った定型メールを送信できる。",
+      "content": "システムのメール送信では、登録完了通知メールのように、同じ文言で、一部の項目のみ異なるメールを送信することが多い。\nそこで、本機能では、テンプレートを用意しておき、プレースホルダを変換して、件名と本文を作成する機能を提供している。\n機能の詳細は、 [メール送信要求を登録する](../../component/libraries/libraries-mail.md#mail-request) を参照。\n\n> **Important:**\n> Nablarch 5u13からテンプレートエンジンを使用した定型メールがサポートされた。\n\n> 5u12までの定型メール機能もテンプレートエンジンの1つとして残されており、\n> `TinyTemplateEngineMailProcessor` を設定することで使用可能だが、以下のように機能が限定的である。\n\n> * >   プレースホルダを置換できる値は単純な文字列のみで、構造化されたオブジェクトをサポートしていない\n> * >   条件分岐や繰り返しといった制御構文をサポートしていない\n\n> 既存の定型メール機能の代わりに、より高機能な下記のテンプレートエンジンを使用した定型メール機能を推奨する。\n\n> * >   [E-mail FreeMarkerアダプタ](../../component/adapters/adapters-mail-sender-freemarker-adaptor.md#mail-sender-freemarker-adaptor)\n> * >   [E-mail Thymeleafアダプタ](../../component/adapters/adapters-mail-sender-thymeleaf-adaptor.md#mail-sender-thymeleaf-adaptor)\n> * >   [E-mail Velocityアダプタ](../../component/adapters/adapters-mail-sender-velocity-adaptor.md#mail-sender-velocity-adaptor)",
+      "level": 3
     },
     {
       "id": "s3",
-      "title": "メール送信をマルチプロセス化する",
-      "hints": [
-        "MailRequestTable",
-        "sendProcessIdColumnName",
-        "mailMultiProcessTransaction",
-        "悲観ロック",
-        "マルチプロセス",
-        "冗長構成",
-        "排他制御"
-      ]
+      "title": "キャンペーン通知のような大量メールの一斉送信には対応していない",
+      "content": "本機能では、キャンペーン通知のような一斉送信には対応していない。\n下記に当てはまる場合は、プロダクトの使用を推奨する。\n\n* キャンペーン通知やメールマガジンなど、一括で大量のメールを送信する。\n* 配信したメールの開封率、クリックカウントの効果を測定する。\n* メールアドレスからクライアント(例えば、フィーチャーフォンか否か)を判別し、送信するメールを切り替える。",
+      "level": 3
     },
     {
       "id": "s4",
-      "title": "メールヘッダインジェクション攻撃への対策",
-      "hints": [
-        "InvalidCharacterException",
-        "メールヘッダインジェクション",
-        "セキュリティ対策",
-        "改行コード",
-        "件名",
-        "差し戻し先メールアドレス",
-        "JavaMail"
-      ]
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-mail-sender</artifactId>\n</dependency>\n\n<!-- メール送信要求IDの採番に使用する -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-idgenerator</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-idgenerator-jdbc</artifactId>\n</dependency>\n```",
+      "level": 2
     },
     {
       "id": "s5",
+      "title": "使用方法",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "メール送信を使うための設定",
+      "content": "この機能では、データベースを使用してメール送信に使うデータを管理する。\nテーブルのレイアウトは以下となる。\n\nメール送信要求\n\n| メール送信要求ID `PK` | 文字列型 | メール送信要求を一意に識別するID |\n|---|---|---|\n| メール送信パターンID（任意項目） | 文字列型 | メールの送信方法のパターンを識別するためのID。   パターンを使用した未送信データの抽出をする場合に定義する。（ [未送信のデータを抽出する際の条件](../../component/libraries/libraries-mail.md#mail-mail-send-pattern) を参照） |\n| メール送信バッチのプロセスID（任意項目） | 文字列型 | マルチプロセス実行時に各プロセスがレコードを悲観ロックするために使用するカラム。   マルチプロセス実行する場合に定義する。（ [メール送信をマルチプロセス化する](../../component/libraries/libraries-mail.md#mail-mail-multi-process) を参照） |\n| 件名 | 文字列型 |  |\n| 送信者メールアドレス | 文字列型 | メールのFromヘッダに指定するメールアドレス |\n| 返信先メールアドレス | 文字列型 | メールのReply-Toヘッダに指定するメールアドレス |\n| 差戻し先メールアドレス | 文字列型 | メールのReturn-Pathヘッダに指定するメールアドレス |\n| 文字セット | 文字列型 | メールのContent-Typeヘッダに指定する文字セット |\n| ステータス | 文字列型 | メールの送信状態(未送信／送信済／送信失敗)を表すコード値 |\n| 要求日時 | タイムスタンプ型 |  |\n| 送信日時 | タイムスタンプ型 |  |\n| 本文 | 文字列型 |  |\n\nメール送信先\n\n| メール送信要求ID `PK` | 文字列型 |  |\n|---|---|---|\n| 連番 `PK` | 数値型 | １つのメール送信要求内の連番 |\n| 送信先区分 | 文字列型 | メールの送信先区分(TO／CC／BCC)を表すコード値 |\n| メールアドレス | 文字列型 |  |\n\nメール添付ファイル\n\n| メール送信要求ID `PK` | 文字列型 |  |\n|---|---|---|\n| 連番 `PK` | 数値型 | １つのメール送信要求内の連番 |\n| 添付ファイル名 | 文字列型 |  |\n| Content-Type | 文字列型 |  |\n| 添付ファイル | バイト配列型 |  |\n\nメールテンプレート\n\n| メールテンプレートID `PK` | 文字列型 |  |\n|---|---|---|\n| 言語 `PK` | 文字列型 |  |\n| 件名 | 文字列型 |  |\n| 本文 | 文字列型 |  |\n| 文字セット | 文字列型 | メール送信時に指定する文字セット |\n\nメール送信を使うには、以下のとおり設定する。\n\n* [メール送信要求とメール送信バッチの共通設定](../../component/libraries/libraries-mail.md#mail-common-settings)\n* [メール送信要求の設定](../../component/libraries/libraries-mail.md#mail-mail-requester-settings)\n* [メール送信バッチの設定](../../component/libraries/libraries-mail.md#mail-mail-sender-settings)\n\nメール送信要求とメール送信バッチの共通設定\n共通設定では、以下のとおり設定する。\n\n* [テーブルスキーマ](../../component/libraries/libraries-mail.md#mail-common-settings-table-schema)\n* [コード値とメッセージ](../../component/libraries/libraries-mail.md#mail-common-settings-mail-config)\n\nテーブルスキーマ\n次のクラスの設定をコンポーネント定義に追加する。\n設定項目の詳細はリンク先のJavadocを参照。\n\n* MailRequestTable (メール送信要求テーブル)\n* MailRecipientTable (メール送信先テーブル)\n* MailAttachedFileTable (添付ファイルテーブル)\n* MailTemplateTable (メールテンプレートテーブル)\n\n設定例を以下に示す。\n\n```xml\n<!-- メール送信要求テーブルのスキーマ -->\n<component name=\"mailRequestTable\" class=\"nablarch.common.mail.MailRequestTable\">\n  <!-- テーブル名とカラム名を指定する。ここでは省略する。 -->\n</component>\n\n<!-- メール送信先テーブルのスキーマ -->\n<component name=\"mailRecipientTable\" class=\"nablarch.common.mail.MailRecipientTable\">\n  <!-- テーブル名とカラム名を指定する。ここでは省略する。 -->\n</component>\n\n<!-- 添付ファイルテーブルのスキーマ -->\n<component name=\"mailAttachedFileTable\" class=\"nablarch.common.mail.MailAttachedFileTable\">\n  <!-- テーブル名とカラム名を指定する。ここでは省略する。 -->\n</component>\n\n<!-- メールテンプレートテーブルのスキーマ -->\n<component name=\"mailTemplateTable\" class=\"nablarch.common.mail.MailTemplateTable\">\n  <!-- テーブル名とカラム名を指定する。ここでは省略する。 -->\n</component>\n\n<!-- 初期化設定 -->\n<component name=\"initializer\"\n           class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <!-- 他のコンポーネントは省略 -->\n      <component-ref name=\"mailRequestTable\" />\n      <component-ref name=\"mailRecipientTable\" />\n      <component-ref name=\"mailAttachedFileTable\" />\n      <component-ref name=\"mailTemplateTable\" />\n    </list>\n  </property>\n</component>\n```\n\n> **Tip:**\n> MailRequestTableのmailSendPatternIdColumnNameプロパティ, sendProcessIdColumnNameプロパティは任意項目であり、機能を使用したい場合に設定する。\n> mailSendPatternIdColumnNameプロパティについては [未送信のデータを抽出する際の条件](../../component/libraries/libraries-mail.md#mail-mail-send-pattern) を、\n> sendProcessIdColumnNameプロパティについては [メール送信をマルチプロセス化する](../../component/libraries/libraries-mail.md#mail-mail-multi-process) を参照すること。\n\nコード値とメッセージ\nメール送信に使用するコード値、メッセージID、障害コードを設定する。\nMailConfig の設定をコンポーネント定義に追加する。\n設定項目の詳細は、 MailConfigのJavadoc を参照。\n\n設定例を以下に示す。\n\n```xml\n<component name=\"mailConfig\" class=\"nablarch.common.mail.MailConfig\">\n\n  <!-- メール送信要求IDの採番対象識別ID -->\n  <property name=\"mailRequestSbnId\" value=\"MAIL_REQUEST_ID\" />\n\n  <!-- メールの送信先区分(TO／CC／BCC)を表すコード値 -->\n  <property name=\"recipientTypeTO\" value=\"0\" />\n  <property name=\"recipientTypeCC\" value=\"1\" />\n  <property name=\"recipientTypeBCC\" value=\"2\" />\n\n  <!-- メールの送信状態(未送信／送信済／送信失敗)を表すコード値 -->\n  <property name=\"statusUnsent\" value=\"0\" />\n  <property name=\"statusSent\" value=\"1\" />\n  <property name=\"statusFailure\" value=\"2\" />\n\n  <!-- メール送信要求件数出力時のメッセージID -->\n  <property name=\"mailRequestCountMessageId\" value=\"mail.request.count\" />\n\n  <!-- メール送信成功時のメッセージID -->\n  <property name=\"sendSuccessMessageId\" value=\"mail.send.success\" />\n\n  <!-- 送信失敗時の障害コード -->\n  <property name=\"sendFailureCode\" value=\"mail.send.failure\" />\n\n  <!-- 送信失敗時の終了コード -->\n  <property name=\"abnormalEndExitCode\" value=\"199\" />\n\n</component>\n```\n\nメール送信要求の設定\n以下のクラスをコンポーネント定義に追加する。\n設定項目の詳細はリンク先のJavadocを参照。\n\n* MailRequester (メール送信要求をデータベースに登録するコンポーネント)\n* MailRequestConfig (メール送信要求時の設定値を保持するクラス)\n\nMailRequester は、\nメール送信要求をデータベースに登録する際、\n[採番](../../component/libraries/libraries-generator.md#generator) を使ってメール送信要求IDを生成する。\nそのため、 [採番](../../component/libraries/libraries-generator.md#generator) の設定も別途必要となる。\n\n設定例を以下に示す。\n\nポイント\n* MailRequester は名前でルックアップされるため、\n  コンポーネント名に `mailRequester` と指定する。\n\n```xml\n<!-- メール送信要求コンポーネント。 -->\n<component name=\"mailRequester\" class=\"nablarch.common.mail.MailRequester\">\n\n  <!-- メール送信要求時の設定値(以下のコンポーネント定義を参照) -->\n  <property name=\"mailRequestConfig\" ref=\"mailRequestConfig\" />\n\n  <!-- メール送信要求IDの採番に使用するIdGenerator -->\n  <property name=\"mailRequestIdGenerator\" ref=\"idGenerator\" />\n\n  <!-- テーブルのスキーマ -->\n  <property name=\"mailRequestTable\" ref=\"mailRequestTable\" />\n  <property name=\"mailRecipientTable\" ref=\"mailRecipientTable\" />\n  <property name=\"mailAttachedFileTable\" ref=\"mailAttachedFileTable\" />\n  <property name=\"templateEngineMailProcessor\">\n    <component class=\"nablarch.common.mail.TinyTemplateEngineMailProcessor\">\n      <property name=\"mailTemplateTable\" ref=\"mailTemplateTable\" />\n    </component>\n  </property>\n\n</component>\n\n<!-- メール送信要求時の設定値 -->\n<component name=\"mailRequestConfig\" class=\"nablarch.common.mail.MailRequestConfig\">\n\n  <!-- デフォルトの返信先メールアドレス -->\n  <property name=\"defaultReplyTo\" value=\"default.reply.to@nablarch.sample\" />\n\n  <!-- デフォルトの差戻し先メールアドレス -->\n  <property name=\"defaultReturnPath\" value=\"default.return.path@nablarch.sample\" />\n\n  <!-- デフォルトの文字セット -->\n  <property name=\"defaultCharset\" value=\"ISO-2022-JP\" />\n\n  <!-- 最大宛先数 -->\n  <property name=\"maxRecipientCount\" value=\"100\" />\n\n  <!-- 最大添付ファイルサイズ(byte数で記述) -->\n  <property name=\"maxAttachedFileSize\" value=\"2097152\" />\n\n</component>\n```\n\n※説明のため `TinyTemplateEngineMailProcessor` を設定しているが限定的な機能しか持たないため、FreeMarkerなどのテンプレートエンジンの使用を推奨する。\n詳しくは [テンプレートを使った定型メールを送信できる。](../../component/libraries/libraries-mail.md#mail-template) を参照。\n\nメール送信バッチの設定\nメール送信バッチが使用するSMTPサーバへの接続情報を設定する。\nMailSessionConfig をコンポーネント定義に追加する。\n設定項目の詳細は、リンク先のJavadocを参照。\n\n設定例を以下に示す。\n\n```xml\n<component name=\"mailSessionConfig\" class=\"nablarch.common.mail.MailSessionConfig\">\n  <property name=\"mailSmtpHost\" value=\"localhost\" />\n  <property name=\"mailHost\" value=\"localhost\" />\n  <property name=\"mailSmtpPort\" value=\"25\" />\n  <property name=\"mailSmtpConnectionTimeout\" value=\"100000\" />\n  <property name=\"mailSmtpTimeout\" value=\"100000\" />\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "メール送信要求を登録する",
+      "content": "メール送信要求の登録には、以下のクラスを使用する。\n\n* MailRequester (メール送信要求をデータベースに登録する)\n* MailUtil ( MailRequester を取得する)\n* FreeTextMailContext (非定型メールの送信要求)\n* TemplateMailContext (定型メールの送信要求)\n* AttachedFile (添付ファイル)\n\nこの機能では、フリーフォーマットの非定型メールと、\n予め登録しておいたテンプレートを使用する定型メールに対応しており、\nそれぞれに対応したクラスを使用して、メール送信要求を作成する。\n\nここでは、定型メールの実装例を以下に示す。\n\n```java\n// メール送信要求を作成する。\nTemplateMailContext mailRequest = new TemplateMailContext();\nmailRequest.setFrom(\"from@tis.co.jp\");\nmailRequest.addTo(\"to@tis.co.jp\");\nmailRequest.addCc(\"cc@tis.co.jp\");\nmailRequest.addBcc(\"bcc@tis.co.jp\");\nmailRequest.setSubject(\"件名\");\nmailRequest.setTemplateId(\"テンプレートID\");\nmailRequest.setLang(\"ja\");\n\n// テンプレートのプレースホルダに対する値を設定する。\nmailRequest.setVariable(\"name\", \"名前\");\nmailRequest.setVariable(\"address\", \"住所\");\nmailRequest.setVariable(\"tel\", \"電話番号\");\n// 以下のように値にnullを設定した場合、空文字列で置き換えが行われる。\nmailRequest.setVariable(\"opeion\", null);\n\n// 添付ファイルを設定する。\nAttachedFile attachedFile = new AttachedFile(\"text/plain\", new File(\"path/to/file\"));\nmailRequest.addAttachedFile(attachedFile);\n\n// メール送信要求を登録する。\nMailRequester requester = MailUtil.getMailRequester();\nString mailRequestId = requester.requestToSend(mailRequest);\n```\n\n> **Important:**\n> 定型メールで、テンプレートのプレースホルダに対する値を設定する場合は、以下の点に注意する。\n\n> * >   キーに `null` を指定した場合は、例外を送出する。\n> * >   値に `null` を指定した場合、空文字列で置き換えを行う。\n> * >   テンプレートのプレースホルダと、プレースホルダに対して設定されたキー/値の整合性をチェックしない。\n>   そのため、テンプレート中にプレースホルダがあるにも関わらず、値が設定されなかった場合、プレースホルダが変換されずにメールが送信される。\n>   反対に、対応するプレースホルダがない値は、単に無視され、メールが送信される。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "メールを送信する(メール送信バッチを実行する)",
+      "content": "メール送信バッチには、 MailSender を使用する。\nMailSender は、 [常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#nablarch-batch-resident-batch)\nを使用して動作させるバッチアクションとして作成している。\n\nメール送信処理では、障害発生時に同一のメールが複数送信されないように、以下のような処理の流れとなっている。\nこれにより、メール送信成功時にはステータスが確実に送信済みとなっているため、二重送信を防止できる。\n\nメール送信の処理の流れ\n![mail_sender_flow.png](assets/libraries-mail/mail_sender_flow.png)\n\n> **Important:**\n> メール送信失敗時に行うステータス更新(送信失敗への変更)で例外(例えばデータベースやネットワーク障害時に発生する)が発生した場合は、ステータスが送信済みのままとなる。\n> この場合は、該当データに対してパッチを適用(ステータスを送信失敗へ変更する)する必要がある。\n> なお、例外にはパッチ適用を促すメッセージが付加されている。\n\n> **Tip:**\n> 上記図の通りステータスの更新処理は別トランザクションで実行される。\n> このため、これらの処理で使用するためのトランザクション設定が必要となる。\n> このトランザクションのコンポーネント名は `statusUpdateTransaction` としてコンポーネント設定ファイルに登録する必要がある。\n> 詳細は、 [現在のトランザクションとは異なるトランザクションでSQLを実行する](../../component/libraries/libraries-database.md#database-new-transaction) を参照。\n\n以下に実行例を示す。\n実行方法の詳細については、 [アプリケーションを起動する](../../component/handlers/handlers-main.md#main-run-application) を参照。\n\nポイント\n* requestPathオプションで MailSender を指定する。\n\n```bash\njava nablarch.fw.launcher.Main \\\n  -diConfig file:./mail-batch-config.xml \\\n  -requestPath nablarch.common.mail.MailSender/SENDMAIL00 \\\n  -userId mailBatchUser\n```\n\n未送信のデータを抽出する際の条件\nMailSender は、\nメール送信要求テーブルから未送信のデータを抽出し、メールを送信する。\n未送信のデータを抽出する際の条件は、次の2つから選択可能となっている。\n\n* テーブル全体から未送信のデータを抽出する\n* メール送信パターンID毎に未送信のデータを抽出する\n\nメール送信パターンIDを使うケースとしては、\n例えば、送信までの時間をできるだけ短くしたい優先度が高いメールと、\n1時間に1回程度の間隔で送信すればよい優先度の低いメールを扱うようなシステムが考えられる。\n\nメール送信パターンID毎に未送信のデータを抽出する場合には、\n監視対象のメール送信パターンID毎にメール送信バッチのプロセスを起動する。\nそのため、プロセス起動時には、処理対象のメール送信パターンID(mailSendPatternId)を起動引数に指定する。\n\n以下に実行例を示す。\n\nポイント\n* `mailSendPatternId` という名前のオプションでメール送信パターンIDを指定する。\n\n```bash\njava nablarch.fw.launcher.Main \\\n  -diConfig file:./mail-batch-config.xml \\\n  -requestPath nablarch.common.mail.MailSender/SENDMAIL00 \\\n  -userId mailBatchUser\n  -mailSendPatternId 02\n```",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "メール送信時のエラー処理",
+      "content": "MailSender は、外部からの入力データ(アドレスやヘッダ)に起因する例外やメール送信失敗の例外が発生した場合、\n対象のメール送信要求のステータスを送信失敗にして次のメール送信処理を行う。\nまた、上記以外の例外が発生した場合は、メール送信要求のステータスを送信失敗にしてリトライする。\n\n以下の表に例外の種類とそのエラー処理を示す。\n\nメール送信時の例外と処理\n\n| 例外 | 処理 |\n|---|---|\n| 送信要求のメールアドレス変換時の Jakarta MailのAddressException | 変換に失敗したアドレスをログ出力(ログレベル: ERROR)する。 |\n| [メールヘッダインジェクション攻撃への対策](../../component/libraries/libraries-mail.md#mail-mail-header-injection) での InvalidCharacterException | ヘッダ文字列をログ出力(ログレベル: ERROR)する。 |\n| メール送信失敗時の Jakarta MailのSendFailureException | 送信されたアドレス、送信されなかったアドレス、不正なアドレスをログ出力(ログレベル: ERROR)する。 |\n| 上記以外のメール送信時の Exception | 例外をラップしてリトライ例外を送出する。 |\n\nなお、ステータスの送信失敗への更新に失敗した場合、または、リトライ上限に達した場合、メール送信バッチは異常終了する。\n\n> **Important:**\n> 送信失敗の検知は、別プロセスでログファイルをチェックするなどして対応する必要がある。\n\nログ出力の処理を変更したい場合や、リトライの処理を変更したい場合は、 [拡張例](../../component/libraries/libraries-mail.md#mail-mail-extension-sample) を参照すること。",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "メール送信をマルチプロセス化する",
+      "content": "メール送信をマルチプロセス化する場合（例えば冗長構成のサーバで実行する場合）、\nメール送信要求テーブルのプロセスIDカラムを使用して悲観ロックを行い、複数のプロセスが同一の送信要求を処理しないようにする。\nこの機能を使用するには、 次の設定が必要となる。\n\n1. メール送信要求テーブルにメール送信バッチのプロセスIDのカラムを定義する\n2. MailRequestTable のsendProcessIdColumnNameのプロパティの値にメール送信バッチのプロセスIDのカラム名を設定し、コンポーネント定義に追加する\n3. メール送信バッチのプロセスID更新用のトランザクションを `mailMultiProcessTransaction` の名前でコンポーネント定義に追加する(トランザクションの設定方法は [現在のトランザクションとは異なるトランザクションでSQLを実行する](../../component/libraries/libraries-database.md#database-new-transaction) を参照)\n\n> **Important:**\n> 2. の設定がされていない場合、排他制御がされないため１件のメール送信要求を複数プロセスが処理する可能性がある。\n> しかし、見かけ上メール送信バッチが動作するため、設定漏れを検知しづらい。\n> メール送信をマルチプロセス化する場合は上記の設定を漏れなく行うこと。\n\n> **Important:**\n> Nablarchのメール送信機能では [キャンペーン通知のような大量メールの一斉送信には対応していない](../../component/libraries/libraries-mail.md#do-not-use-for-campaign-mail) 。マルチプロセス化についても、大量メールを分散して送信することが目的ではなく\n> 冗長構成のサーバで一部のサーバに障害が発生してもメール送信機能を継続できることを目的としている。\n> そのため、各プロセスが送信対象とするメールはプロセス起動時点で未送信のメール全て(※)となり、プロセス間での均等分散は行わない。\n\n> ※メール送信パターンIDを指定している場合は該当のメール送信パターンIDのうち未送信のメール全てが対象",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "メールヘッダインジェクション攻撃への対策",
+      "content": "メールヘッダインジェクション攻撃への根本的対策として、以下の対策を実施する必要がある。\n\n* メールヘッダは固定値を使用する。外部からの入力値を使用しない。\n* プログラミング言語の標準APIを使用してメールを送信する。Javaの場合は <a href=\"https://jakarta.ee/specifications/platform/10/apidocs/jakarta/mail/package-summary.html\" target=\"_blank\">Jakarta Mail (外部サイト、英語)</a> を使用する。\n\nメールヘッダは固定値を使用する。外部からの入力値を使用しない。\nこれについては、プロジェクトで対応する。\n固定値にできない場合は、改行コードを変換するか、取り除く対応をプロジェクトで行う。\nプログラミング言語の標準APIを使用してメールを送信する。Javaの場合は <a href=\"https://jakarta.ee/specifications/platform/10/apidocs/jakarta/mail/package-summary.html\" target=\"_blank\">Jakarta Mail (外部サイト、英語)</a> を使用する。\n本機能では <a href=\"https://jakarta.ee/specifications/platform/10/apidocs/jakarta/mail/package-summary.html\" target=\"_blank\">Jakarta Mail (外部サイト、英語)</a> を使用している。\nしかし、 <a href=\"https://jakarta.ee/specifications/platform/10/apidocs/jakarta/mail/package-summary.html\" target=\"_blank\">Jakarta Mail (外部サイト、英語)</a> を使用しても、一部のメールヘッダの項目に改行コードが含まれていてもメール送信可能な項目がある。\nそのため、保険的対策として、これらの項目に対して改行コードが含まれている場合にはメール送信を実施しないチェック機能を設けている。\n改行コードが含まれていた場合には、\nInvalidCharacterException\nの送出およびログ出力(ログレベル: ERROR)を行い、該当のメールは送信処理を失敗として扱うこととする。\n\nこの保険的対策は、脆弱性となる可能性のある以下の項目を対象としている。\n\n* 件名\n* 差し戻し先メールアドレス",
+      "level": 3
+    },
+    {
+      "id": "s12",
       "title": "拡張例",
-      "hints": [
-        "MailSender",
-        "MailRequester",
-        "mailTransactionManager",
-        "電子署名",
-        "メール本文暗号化",
-        "トランザクション指定",
-        "拡張",
-        "SimpleDbTransactionManager",
-        "TableIdGenerator"
-      ]
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s13",
+      "title": "電子署名を付加したりメール本文を暗号化するなどメール送信処理を変更する",
+      "content": "MailSender は、\nメール送信要求やテンプレートで指定された内容をそのまま送信する。\nアプリケーション要件によっては、電子署名を付加したりメール本文を暗号化する必要が出てくる。\n\nそのような場合は、 MailSender\nを継承したクラスをプロジェクトで作成して対応する。\n詳細は、 MailSenderのJavadoc を参照。",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "メール送信に失敗した際の処理を変更する",
+      "content": "メール送信に失敗した際のエラー処理(詳細は [メール送信時のエラー処理](../../component/libraries/libraries-mail.md#mail-mail-error-process) を参照)を、例えば、ログレベルを変更したり、\nリトライ対象の例外を変更するなど、アプリケーションの要件によって変更したい場合がある。\n\nそのような場合は、上の例と同様、MailSender を継承したクラスを作成して対応する。",
+      "level": 3
+    },
+    {
+      "id": "s15",
+      "title": "メール送信要求時に使用するトランザクションを指定する",
+      "content": "業務アプリケーションが失敗してもメール送信要求を確実に行いたい場合など、\nメール送信要求 MailRequester とメール送信要求IDの [採番](../../component/libraries/libraries-generator.md#generator)\nで実行されるトランザクションを、業務アプリケーションのトランザクションとは独立して指定したい場合がある。\n\nその場合の設定例を以下に示す。\n\nポイント\n* トランザクションマネージャとメール送信要求IDの採番で指定するトランザクション名を同じにする。\n\n```xml\n<!-- メール送信要求コンポーネント -->\n<component name=\"mailRequester\" class=\"nablarch.common.mail.MailRequester\">\n  <!-- メール送信に用いるトランザクションを指定 -->\n  <property name=\"mailTransactionManager\" ref=\"txManager\" />\n</component>\n\n<!-- トランザクションマネージャ  -->\n<component name=\"txManager\" class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">\n  <property name=\"dbTransactionName\" value=\"mail-transaction\" />\n</component>\n\n<!-- メール送信要求IDジェネレータ -->\n<component name=\"mailRequestIdGenerator\"\n    class=\"nablarch.common.idgenerator.TableIdGenerator\">\n    <!-- トランザクションマネージャで指定したトランザクション名を指定 -->\n    <property name=\"dbTransactionName\" value=\"mail-transaction\" />\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <!-- TableIdGeneratorは初期化が必要 -->\n      <component-ref name=\"mailRequestIdGenerator\" />\n    </list>\n  </property>\n</component>\n```",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s1": "メール送信機能は、ディレードオンライン処理方式を採用している。メール送信を即時に行うのではなく、メール送信要求をDBに格納し、[常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.json#s1) で非同期にメール送信する。\n\nこの方式の理由:\n- メール送信をアプリケーションの業務トランザクションに含められる\n- メールサーバ・ネットワーク障害時もアプリケーション処理に影響を与えない\n\n提供する2つの機能:\n- :ref:`メール送信要求をデータベースに登録する機能<mail-request>`\n- :ref:`メール送信要求に基づいてメールを送信するバッチ機能<mail-send>`\n\nメール送信要求1件につきメール1通を送信する。\n\n> **補足**: 即時メール送信APIは提供していない。即時送信が必要な場合は Jakarta Mail を直接使用すること。\n\n## テンプレートを使った定型メール\n\nテンプレートとプレースホルダ変換で件名・本文を作成できる。詳細は :ref:`mail-request` を参照。\n\n> **重要**: Nablarch 5u13からテンプレートエンジンを使用した定型メールがサポートされた。5u12までの `TinyTemplateEngineMailProcessor` は機能が限定的（単純な文字列置換のみ、条件分岐・繰り返し非対応）。以下の高機能テンプレートエンジンの使用を推奨:\n> - [mail_sender_freemarker_adaptor](../adapters/adapters-mail_sender_freemarker_adaptor.json#s1)\n> - [mail_sender_thymeleaf_adaptor](../adapters/adapters-mail_sender_thymeleaf_adaptor.json#s1)\n> - [mail_sender_velocity_adaptor](../adapters/adapters-mail_sender_velocity_adaptor.json#s1)\n\n## 大量メール一斉送信非対応\n\n以下のケースには本機能を使用せず、専用プロダクトの使用を推奨:\n- キャンペーン通知・メールマガジンなど大量メールの一括送信\n- 開封率・クリックカウントの効果測定\n- メールアドレスによるクライアント判別と送信メール切り替え\n\nメール送信機能はデータベースでメール送信データを管理する。以下の4テーブルが必要。\n\n**メール送信要求テーブル**\n\n| カラム | 型 | 説明 |\n|---|---|---|\n| メール送信要求ID (PK) | 文字列型 | メール送信要求を一意に識別するID |\n| メール送信パターンID（任意） | 文字列型 | 送信方法パターン識別ID（:ref:`mail-mail_send_pattern` 参照） |\n| メール送信バッチのプロセスID（任意） | 文字列型 | マルチプロセス実行時の悲観ロック用カラム（:ref:`mail-mail_multi_process` 参照） |\n| 件名 | 文字列型 | |\n| 送信者メールアドレス | 文字列型 | Fromヘッダのメールアドレス |\n| 返信先メールアドレス | 文字列型 | Reply-Toヘッダのメールアドレス |\n| 差戻し先メールアドレス | 文字列型 | Return-Pathヘッダのメールアドレス |\n| 文字セット | 文字列型 | Content-Typeヘッダの文字セット |\n| ステータス | 文字列型 | 送信状態（未送信／送信済／送信失敗）のコード値 |\n| 要求日時 | タイムスタンプ型 | |\n| 送信日時 | タイムスタンプ型 | |\n| 本文 | 文字列型 | |\n\n**メール送信先テーブル**\n\n| カラム | 型 | 説明 |\n|---|---|---|\n| メール送信要求ID (PK) | 文字列型 | |\n| 連番 (PK) | 数値型 | 1つのメール送信要求内の連番 |\n| 送信先区分 | 文字列型 | 送信先区分（TO／CC／BCC）のコード値 |\n| メールアドレス | 文字列型 | |\n\n**メール添付ファイルテーブル**\n\n| カラム | 型 | 説明 |\n|---|---|---|\n| メール送信要求ID (PK) | 文字列型 | |\n| 連番 (PK) | 数値型 | 1つのメール送信要求内の連番 |\n| 添付ファイル名 | 文字列型 | |\n| Content-Type | 文字列型 | |\n| 添付ファイル | バイト配列型 | |\n\n**メールテンプレートテーブル**\n\n| カラム | 型 | 説明 |\n|---|---|---|\n| メールテンプレートID (PK) | 文字列型 | |\n| 言語 (PK) | 文字列型 | |\n| 件名 | 文字列型 | |\n| 本文 | 文字列型 | |\n| 文字セット | 文字列型 | メール送信時に指定する文字セット |\n\n## テーブルスキーマ設定\n\n以下のクラスをコンポーネント定義に追加し、initializerの`initializeList`に登録する:\n- `MailRequestTable`（メール送信要求テーブル）\n- `MailRecipientTable`（メール送信先テーブル）\n- `MailAttachedFileTable`（添付ファイルテーブル）\n- `MailTemplateTable`（メールテンプレートテーブル）\n\n```xml\n<component name=\"mailRequestTable\" class=\"nablarch.common.mail.MailRequestTable\" />\n<component name=\"mailRecipientTable\" class=\"nablarch.common.mail.MailRecipientTable\" />\n<component name=\"mailAttachedFileTable\" class=\"nablarch.common.mail.MailAttachedFileTable\" />\n<component name=\"mailTemplateTable\" class=\"nablarch.common.mail.MailTemplateTable\" />\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"mailRequestTable\" />\n      <component-ref name=\"mailRecipientTable\" />\n      <component-ref name=\"mailAttachedFileTable\" />\n      <component-ref name=\"mailTemplateTable\" />\n    </list>\n  </property>\n</component>\n```\n\n> **補足**: `MailRequestTable`の`mailSendPatternIdColumnName`（:ref:`mail-mail_send_pattern` 参照）と`sendProcessIdColumnName`（:ref:`mail-mail_multi_process` 参照）は任意項目。使用する場合のみ設定する。\n\n## コード値とメッセージ設定（MailConfig）\n\n`MailConfig` をコンポーネント定義に追加する。\n\n```xml\n<component name=\"mailConfig\" class=\"nablarch.common.mail.MailConfig\">\n  <property name=\"mailRequestSbnId\" value=\"MAIL_REQUEST_ID\" />\n  <property name=\"recipientTypeTO\" value=\"0\" />\n  <property name=\"recipientTypeCC\" value=\"1\" />\n  <property name=\"recipientTypeBCC\" value=\"2\" />\n  <property name=\"statusUnsent\" value=\"0\" />\n  <property name=\"statusSent\" value=\"1\" />\n  <property name=\"statusFailure\" value=\"2\" />\n  <property name=\"mailRequestCountMessageId\" value=\"mail.request.count\" />\n  <property name=\"sendSuccessMessageId\" value=\"mail.send.success\" />\n  <property name=\"sendFailureCode\" value=\"mail.send.failure\" />\n  <property name=\"abnormalEndExitCode\" value=\"199\" />\n</component>\n```\n\n## メール送信要求設定（MailRequester・MailRequestConfig）\n\n`MailRequester` と `MailRequestConfig` をコンポーネント定義に追加する。\n\n- `MailRequester`は名前でルックアップされるため、コンポーネント名を`mailRequester`とすること。\n- `MailRequester`はメール送信要求IDの生成に [採番](libraries-generator.json#s1) を使用するため、[採番](libraries-generator.json#s1) の設定も別途必要。\n\n```xml\n<component name=\"mailRequester\" class=\"nablarch.common.mail.MailRequester\">\n  <property name=\"mailRequestConfig\" ref=\"mailRequestConfig\" />\n  <property name=\"mailRequestIdGenerator\" ref=\"idGenerator\" />\n  <property name=\"mailRequestTable\" ref=\"mailRequestTable\" />\n  <property name=\"mailRecipientTable\" ref=\"mailRecipientTable\" />\n  <property name=\"mailAttachedFileTable\" ref=\"mailAttachedFileTable\" />\n  <property name=\"templateEngineMailProcessor\">\n    <component class=\"nablarch.common.mail.TinyTemplateEngineMailProcessor\">\n      <property name=\"mailTemplateTable\" ref=\"mailTemplateTable\" />\n    </component>\n  </property>\n</component>\n<component name=\"mailRequestConfig\" class=\"nablarch.common.mail.MailRequestConfig\">\n  <property name=\"defaultReplyTo\" value=\"default.reply.to@nablarch.sample\" />\n  <property name=\"defaultReturnPath\" value=\"default.return.path@nablarch.sample\" />\n  <property name=\"defaultCharset\" value=\"ISO-2022-JP\" />\n  <property name=\"maxRecipientCount\" value=\"100\" />\n  <property name=\"maxAttachedFileSize\" value=\"2097152\" />\n</component>\n```\n\n> **補足**: `TinyTemplateEngineMailProcessor`は機能が限定的なため、FreeMarkerなどのテンプレートエンジンの使用を推奨する（:ref:`mail-template` 参照）。\n\n## メール送信バッチ設定（MailSessionConfig）\n\n`MailSessionConfig` でSMTPサーバへの接続情報を設定する。\n\n```xml\n<component name=\"mailSessionConfig\" class=\"nablarch.common.mail.MailSessionConfig\">\n  <property name=\"mailSmtpHost\" value=\"localhost\" />\n  <property name=\"mailHost\" value=\"localhost\" />\n  <property name=\"mailSmtpPort\" value=\"25\" />\n  <property name=\"mailSmtpConnectionTimeout\" value=\"100000\" />\n  <property name=\"mailSmtpTimeout\" value=\"100000\" />\n</component>\n```\n\n**クラス**: `nablarch.common.mail.MailSender`\n\n`MailSender` は [常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.json#s1) として動作するバッチアクション。障害発生時に同一メールが複数送信されないよう、メール送信成功時にステータスが確実に送信済みとなる処理フローにより二重送信を防止する。\n\n![メール送信バッチの処理フロー](assets/libraries-mail/mail_sender_flow.png)\n\n> **重要**: 送信失敗時のステータス更新（送信失敗への変更）で例外（例: DB/ネットワーク障害時）が発生した場合、ステータスが送信済みのままになる。この場合は該当データにパッチを適用（ステータスを送信失敗へ変更）する必要がある。なお、例外にはパッチ適用を促すメッセージが付加されている。\n\n> **補足**: ステータス更新処理は別トランザクションで実行される。このトランザクションのコンポーネント名は `statusUpdateTransaction` としてコンポーネント設定ファイルに登録する必要がある。詳細は [database-new_transaction](libraries-database.json) を参照。\n\n実行例（`requestPath` オプションに `MailSender` を指定）。詳細は [main-run_application](../handlers/handlers-main.json#s2) を参照。\n\n```bash\njava nablarch.fw.launcher.Main \\\n  -diConfig file:./mail-batch-config.xml \\\n  -requestPath nablarch.common.mail.MailSender/SENDMAIL00 \\\n  -userId mailBatchUser\n```\n\n未送信データ抽出条件は以下の2つから選択可能:\n- テーブル全体から未送信データを抽出する\n- メール送信パターンID毎に未送信データを抽出する\n\nメール送信パターンIDを使うケースとしては、例えば、送信までの時間をできるだけ短くしたい優先度が高いメールと、1時間に1回程度の間隔で送信すればよい優先度の低いメールを扱うようなシステムが考えられる。\n\nメール送信パターンID毎に抽出する場合は、対象パターンID毎にバッチプロセスを起動し、`mailSendPatternId` オプションで対象パターンIDを指定する。\n\n```bash\njava nablarch.fw.launcher.Main \\\n  -diConfig file:./mail-batch-config.xml \\\n  -requestPath nablarch.common.mail.MailSender/SENDMAIL00 \\\n  -userId mailBatchUser\n  -mailSendPatternId 02\n```",
-    "s2": "**モジュール**:\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-mail-sender</artifactId>\n</dependency>\n\n<!-- メール送信要求IDの採番に使用する -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-idgenerator</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-common-idgenerator-jdbc</artifactId>\n</dependency>\n```\n\n**クラス**: `MailRequester`, `MailUtil`, `FreeTextMailContext`, `TemplateMailContext`, `AttachedFile`\n\n非定型メール（`FreeTextMailContext`）と定型メール（`TemplateMailContext`）の2種類に対応。\n\n定型メールの実装例:\n\n```java\nTemplateMailContext mailRequest = new TemplateMailContext();\nmailRequest.setFrom(\"from@tis.co.jp\");\nmailRequest.addTo(\"to@tis.co.jp\");\nmailRequest.addCc(\"cc@tis.co.jp\");\nmailRequest.addBcc(\"bcc@tis.co.jp\");\nmailRequest.setSubject(\"件名\");\nmailRequest.setTemplateId(\"テンプレートID\");\nmailRequest.setLang(\"ja\");\n\nmailRequest.setVariable(\"name\", \"名前\");\nmailRequest.setVariable(\"address\", \"住所\");\nmailRequest.setVariable(\"tel\", \"電話番号\");\n// 値にnullを設定した場合、空文字列で置き換えが行われる\nmailRequest.setVariable(\"opeion\", null);\n\nAttachedFile attachedFile = new AttachedFile(\"text/plain\", new File(\"path/to/file\"));\nmailRequest.addAttachedFile(attachedFile);\n\nMailRequester requester = MailUtil.getMailRequester();\nString mailRequestId = requester.requestToSend(mailRequest);\n```\n\n> **重要**: テンプレートのプレースホルダ変数設定時の注意:\n> - キーに`null`を指定した場合は例外を送出する\n> - 値に`null`を指定した場合、空文字列で置き換える\n> - テンプレートのプレースホルダとキー/値の整合性チェックは行わない。プレースホルダに対応する値が未設定の場合、プレースホルダが変換されずにメールが送信される。対応するプレースホルダがない値は無視されてメールが送信される。\n\n`MailSender` は例外の種類に応じて以下の処理を行う。外部入力データ（アドレスやヘッダ）に起因する例外やメール送信失敗例外が発生した場合は、対象のメール送信要求のステータスを送信失敗にして次のメール送信処理を行う。上記以外の例外が発生した場合は、メール送信要求のステータスを送信失敗にしてリトライする。\n\n| 例外 | 処理 |\n|---|---|\n| `AddressException` (送信要求のアドレス変換時) | 変換失敗アドレスをログ出力(ERROR)し、次のメール送信処理に進む |\n| `InvalidCharacterException` (:ref:`mail-mail_header_injection`) | ヘッダ文字列をログ出力(ERROR)し、次のメール送信処理に進む |\n| `SendFailedException` (メール送信失敗時) | 送信済み/未送信/不正アドレスをログ出力(ERROR)し、次のメール送信処理に進む |\n| 上記以外の `Exception` | メール送信要求のステータスを送信失敗にしてリトライ例外を送出 |\n\nステータスの送信失敗への更新に失敗した場合、またはリトライ上限に達した場合、メール送信バッチは異常終了する。\n\n> **重要**: 送信失敗の検知は、別プロセスでログファイルをチェックするなどして対応する必要がある。\n\nログ出力処理やリトライ処理を変更したい場合は :ref:`mail-mail_extension_sample` を参照。",
-    "s3": "メール送信要求テーブルのプロセスIDカラムを使用した悲観ロックにより、複数プロセスが同一送信要求を処理しないようにする。\n\n以下の設定が必要:\n1. メール送信要求テーブルにメール送信バッチのプロセスIDのカラムを定義する\n2. `MailRequestTable` の `sendProcessIdColumnName` プロパティにプロセスIDのカラム名を設定し、コンポーネント定義に追加する\n3. プロセスID更新用のトランザクションを `mailMultiProcessTransaction` の名前でコンポーネント定義に追加する（[database-new_transaction](libraries-database.json) 参照）\n\n> **重要**: 2. の設定がされていない場合、排他制御がされないため1件のメール送信要求を複数プロセスが処理する可能性がある。見かけ上メール送信バッチが動作するため設定漏れを検知しづらい。メール送信をマルチプロセス化する場合は上記の設定を漏れなく行うこと。\n\n> **重要**: マルチプロセス化の目的は大量メールの分散送信ではなく（:ref:`do-not-use-for-campaign-mail` 参照）、冗長構成のサーバで一部に障害が発生してもメール送信を継続できることである。各プロセスが送信対象とするメールはプロセス起動時点での未送信メール全てであり（メール送信パターンIDを指定している場合は該当パターンIDのうち未送信メール全て）、プロセス間での均等分散は行わない。",
-    "s4": "メールヘッダインジェクション攻撃への根本的対策として以下を実施する:\n- メールヘッダは固定値を使用する。外部からの入力値は使用しない。\n- プログラミング言語の標準API（JavaではJavaMail）を使用してメールを送信する。\n\n固定値にできない場合は、プロジェクトで改行コードを変換または除去する対応を行う。\n\nただし、JavaMailを使用しても、一部のメールヘッダの項目に改行コードが含まれていてもメール送信可能な項目がある。そのため、保険的対策として、これらの項目に対して改行コードが含まれている場合はメール送信を実施しないチェック機能を設けている。改行コードが含まれていた場合は `InvalidCharacterException` を送出してログ出力(ERROR)し、該当メールは送信失敗として扱う。\n\n対象項目:\n- 件名\n- 差し戻し先メールアドレス",
-    "s5": "**電子署名付加・メール本文暗号化などの送信処理変更**\n\n`MailSender` を継承したクラスをプロジェクトで作成する。詳細は `MailSenderのJavadoc` を参照。\n\n**メール送信失敗時の処理変更**（ログレベル変更・リトライ対象の例外変更など。詳細は :ref:`mail-mail_error_process` 参照）\n\n`MailSender` を継承したクラスを作成して対応する。\n\n**メール送信要求時のトランザクション指定**\n\n`MailRequester` の `mailTransactionManager` プロパティにトランザクションマネージャを設定する。トランザクションマネージャと [採番](libraries-generator.json#s1) で指定するトランザクション名を同じにする。\n\n```xml\n<!-- メール送信要求コンポーネント -->\n<component name=\"mailRequester\" class=\"nablarch.common.mail.MailRequester\">\n  <property name=\"mailTransactionManager\" ref=\"txManager\" />\n</component>\n\n<!-- トランザクションマネージャ -->\n<component name=\"txManager\" class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">\n  <property name=\"dbTransactionName\" value=\"mail-transaction\" />\n</component>\n\n<!-- メール送信要求IDジェネレータ -->\n<component name=\"mailRequestIdGenerator\"\n    class=\"nablarch.common.idgenerator.TableIdGenerator\">\n  <property name=\"dbTransactionName\" value=\"mail-transaction\" />\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <!-- TableIdGeneratorは初期化が必要 -->\n      <component-ref name=\"mailRequestIdGenerator\" />\n    </list>\n  </property>\n</component>\n```"
-  }
+  ]
 }

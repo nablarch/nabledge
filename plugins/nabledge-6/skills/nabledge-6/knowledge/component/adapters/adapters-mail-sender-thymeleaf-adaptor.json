@@ -1,0 +1,32 @@
+{
+  "id": "adapters-mail-sender-thymeleaf-adaptor",
+  "title": "E-mail Thymeleafアダプタ",
+  "content": "**目次**\n\n* モジュール一覧\n* E-mail Thymeleafアダプタを使用するための設定を行う\n* メールのテンプレートを作成する\n* メール送信要求を登録する\n\n[Thymeleaf(外部サイト)](https://www.thymeleaf.org) を使用した定型メール送信処理を行うためのアダプタを提供する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "content": "```xml\n<!-- E-mail Thymeleafアダプタ -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-mail-sender-thymeleaf-adaptor</artifactId>\n</dependency>\n```\n\n> **Tip:**\n> Thymeleafのバージョン3.1.1.RELEASEを使用してテストを行っている。\n> バージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "E-mail Thymeleafアダプタを使用するための設定を行う",
+      "content": "本アダプタを使用するためには、コンポーネント設定ファイルで ThymeleafMailProcessor を MailRequester へ設定する。\n\n`ThymeleafMailProcessor` にはThymeleafが提供する `TemplateEngine` を設定する必要がある。\n\nコンポーネント設定ファイルの設定例を以下に示す。\n\n```xml\n<component name=\"templateEngine\" class=\"org.thymeleaf.TemplateEngine\" autowireType=\"None\">\n  <property name=\"templateResolver\">\n    <component class=\"org.thymeleaf.templateresolver.ClassLoaderTemplateResolver\" autowireType=\"None\">\n      <property name=\"prefix\" value=\"com/example/template/\" />\n    </component>\n  </property>\n</component>\n\n<component name=\"templateEngineMailProcessor\"\n  class=\"nablarch.integration.mail.thymeleaf.ThymeleafMailProcessor\" autowireType=\"None\">\n  <property name=\"templateEngine\" ref=\"templateEngine\" />\n</component>\n\n<!-- メール送信要求API -->\n<component name=\"mailRequester\" class=\"nablarch.common.mail.MailRequester\">\n  <property name=\"templateEngineMailProcessor\" ref=\"templateEngineMailProcessor\"/>\n  <!-- その他の設定は省略 -->\n</component>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "メールのテンプレートを作成する",
+      "content": "Thymeleafを使用した定型メール処理では件名と本文を1つのテンプレートに記述する。\n\n件名と本文はデリミタと呼ばれる行で分割される。\nデフォルトのデリミタは `---` である（半角のハイフンが3つ）。\n\nテンプレートの例を以下に示す。\n\n```none\n[(${title})]について[(${option})]\n---\n[(${title})]は、申請番号[(${requestId})]で申請されました。\n[(${approver})]は速やかに[(${title})]を承認してください。[(${option})]\n```\n\nより詳しい件名と本文の分割ルールは TemplateEngineProcessedResult#valueOf を参照。\n\nテンプレートファイルを配置する場所は `TemplateEngine` の設定によって異なる。\n例えば、前節で示した設定例だとテンプレートファイルはクラスパスからロードされる。\nまた、 `ClassLoaderTemplateResolver` の `prefix` に `com/example/template/` と設定されているので、クラスパス上の `com/example/template/` ディレクトリにテンプレートファイルを配置することになる。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "メール送信要求を登録する",
+      "content": "単に定型メールの送信要求を登録すればよい。\n[メール送信要求を登録する](../../component/libraries/libraries-mail.md#mail-request) を参照。",
+      "level": 2
+    }
+  ]
+}

@@ -24,24 +24,6 @@ Caller converts to pointer JSON.
 
 ## Steps
 
-### Step 0: hints-based pre-filter
-
-**Tool**: Bash (jq)
-
-**Action**: Retrieve index.hints for candidate sections and perform a quick relevance check against search keywords. Exclude clearly irrelevant sections before reading their content.
-
-**Command**:
-```bash
-bash .claude/skills/nabledge-1.2/scripts/get-hints.sh "component/libraries/libraries-universal_dao.json:s3" "component/libraries/libraries-universal_dao.json:s1" "component/libraries/libraries-database.json:s2"
-```
-
-**Judgment rules** (agent matches against search keywords in memory):
-- hints contains one or more search keywords (partial match, case-insensitive) → **keep as candidate**
-- hints contains no search keywords → **exclude**
-- hints is empty or section not found in index → **keep as candidate** (err on the safe side)
-
-**Output**: Filtered candidate section list → pass to Step A
-
 ### Step A: Bulk read candidate section content
 
 **Tool**: Bash (`scripts/read-sections.sh`)

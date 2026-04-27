@@ -1,26 +1,28 @@
 # 子画面を開くタグのname属性には、何を指定したらいいのでしょうか?
 
-## popupSubmit / popupButton / popupLink のname属性設定
+> **question:**
+> 以下のタグに必須属性としてname属性がありますが、何を設定したらいいのでしょうか?
 
-## popupSubmit / popupButton / popupLink のname属性設定
+> * >   popupSubmit
+> * >   popupButton
+> * >   popupLink
 
-`popupSubmit`、`popupButton`、`popupLink` タグのname属性には、**フォーム内で一意となる名前**を設定する。
+> また、一覧表示時にて上記タグを使用した場合に固定の名称を設定したところ、以下の例外が発生してしまいました。
+> name属性が重複しているためエラーが発生していることは分かりますが、name属性を一意にする方法が分かりません。
+> どのように実装したらいいのでしょうか？
 
-一覧画面でこれらのタグを使用する場合、固定の名称を設定すると以下の例外が発生する:
+> ```java
+> java.lang.IllegalArgumentException: name attribute of submission tag has duplicated. formName = [xxxx] submissionName = [yyyy]
+> 
+> // xxxx -> フォーム名称
+> // yyyy -> name属性に設定した値
+> ```
 
-```java
-java.lang.IllegalArgumentException: name attribute of submission tag has duplicated.
-formName = [xxxx] submissionName = [yyyy]
+> **answer:**
+> フォーム内で一意となる名前を設定してください。特に一覧画面などで、これらのタグを使用する場合にはname属性には連番を付加して、重複しないように注意してください。
 
-// xxxx -> フォーム名称
-// yyyy -> name属性に設定した値
-```
+> 一覧画面の場合は、行番号が取得し、name属性に付加することにより一意の名称が設定できるようになります。
 
-> **重要**: 一覧画面では、行番号を取得してname属性に付加することで一意の名称を設定できる。連番を付加して重複しないようにすること。
+> 詳細は、以下のドキュメントを参照してください。
 
-<details>
-<summary>keywords</summary>
-
-popupSubmit, popupButton, popupLink, IllegalArgumentException, サブミットタグ name属性, 一覧画面 連番, name属性重複エラー, 子画面 name属性
-
-</details>
+> * >   **[Nablarch プログラミング・単体テストガイド]** -> **[アプリケーション実装例集]** -> **[画面オンライン処理の実装例集]** -> **[ボタン又はリンクによるサブミット]**

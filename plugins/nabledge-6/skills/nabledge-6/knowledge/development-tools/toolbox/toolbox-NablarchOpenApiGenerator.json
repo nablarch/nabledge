@@ -1,316 +1,182 @@
 {
   "id": "toolbox-NablarchOpenApiGenerator",
   "title": "Nablarch OpenAPI Generator",
-  "official_doc_urls": [
-    "https://nablarch.github.io/docs/LATEST/doc/development_tools/toolbox/NablarchOpenApiGenerator/NablarchOpenApiGenerator.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/web/HttpResponse.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/JaxRsHttpRequest.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/ExecutionContext.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/jaxrs/EntityResponse.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Required.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/NumberRange.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/DecimalRange.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Length.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Size.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/validation/ee/Domain.html",
-    "https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/beans/BeanUtil.html"
-  ],
-  "index": [
+  "content": "**目次**\n\n* ツールの概要\n* 前提条件\n* 動作概要\n* 運用方法\n* 使用方法\n\n  * [Mavenプラグインの設定](../../setup/blank-project/blank-project-maven.md#maven)\n  * 実行方法\n  * 出力先\n  * [Generatorの設定項目](../../component/libraries/libraries-generator.md#generator)\n  * Bean Validationを使用するソースコードを生成する\n  * CLIとして実行する\n* ソースコード生成仕様\n\n  * リソース(アクション)インターフェース生成仕様\n  * モデル生成仕様\n  * 生成されるソースコードが依存するモジュール\n  * OpenAPIドキュメントのデータ型およびフォーマットとJavaのデータ型の対応仕様\n  * OpenAPIドキュメントのバリデーション定義とBean Validationの対応仕様\n\n    * OpenAPI仕様にて規定されているプロパティに対応するバリデーション\n    * ドメインバリデーション\n  * バリデーションに関する運用上の注意点\n\n    * OpenAPI仕様の規定範囲では項目単位や相関バリデーションの要求を満たせない場合の注意点\n    * ドメインバリデーションを使用する場合の注意点\n* OpenAPIドキュメントと生成されるソースコードの例\n\n  * OpenAPIドキュメントのパスおよびオペレーションの定義とソースコードの生成例\n  * OpenAPIドキュメントのスキーマの定義とソースコードの生成例\n  * Bean Validationを使用するソースコードの生成例\n  * ドメインバリデーションを使用するソースコードの生成例\n  * ファイルアップロードの定義例\n  * ファイルダウンロードの定義例",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "ツールの概要",
-      "hints": [
-        "OpenAPI Generator",
-        "nablarch-jaxrs",
-        "ソースコード生成",
-        "リソースインターフェース生成",
-        "モデル生成",
-        "RESTfulウェブサービス",
-        "nablarch-openapi-generator",
-        "OpenAPIジェネレーター",
-        "NablarchOpenApiGenerator",
-        "restful_web_service_architecture",
-        "router_adaptor_path_annotation",
-        "inputSpec",
-        "generatorName",
-        "sourceFolder",
-        "apiPackage",
-        "modelPackage",
-        "OpenAPIコード生成"
-      ]
+      "content": "Nablarch OpenAPI Generatorは、 [OpenAPI(外部サイト、英語)](https://www.openapis.org/) ドキュメントからソースコードを生成する  [OpenAPI Generator(外部サイト、英語)](https://openapi-generator.tech/) のGenerator実装である。\n\n本ツールはNablarch RESTfulウェブサービス用のGeneratorを提供しており、 [OpenAPI GeneratorのMavenプラグイン(外部サイト、英語)](https://openapi-generator.tech/docs/plugins) に組み込み実行することでソースコードを生成する。\n\n生成されたソースコードを使用することで、OpenAPIドキュメントで定義したREST APIのインターフェースに従ったアクションクラスの実装が容易となる。",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "前提条件",
-      "hints": [
-        "OpenAPI 3.0.3",
-        "前提条件",
-        "OpenAPIドキュメント",
-        "JaxRsHttpRequest",
-        "ExecutionContext",
-        "EntityResponse",
-        "HttpResponse",
-        "nablarch.fw.jaxrs.JaxRsHttpRequest",
-        "nablarch.fw.ExecutionContext",
-        "nablarch.fw.jaxrs.EntityResponse",
-        "nablarch.fw.web.HttpResponse",
-        "@GET",
-        "@POST",
-        "@PUT",
-        "@DELETE",
-        "@PATCH",
-        "@HEAD",
-        "@OPTIONS",
-        "@Consumes",
-        "@Produces",
-        "@Valid",
-        "@Path",
-        "@Generated",
-        "リソースインターフェース生成",
-        "operationId",
-        "useTags",
-        "useBeanValidation",
-        "ProjectsApi",
-        "createProject",
-        "findProjectById",
-        "ProjectCreateRequest",
-        "ProjectResponse"
-      ]
+      "content": "* Nablarch RESTfulウェブサービスのソースコード生成元となるOpenAPIドキュメントが作成されていること\n* OpenAPIドキュメントは [OpenAPI 3.0.3(外部サイト、英語)](https://spec.openapis.org/oas/v3.0.3.html) 仕様で記述されていること",
+      "level": 2
     },
     {
       "id": "s3",
       "title": "動作概要",
-      "hints": [
-        "ソースコード生成",
-        "リソースインターフェース",
-        "モデル生成",
-        "アクションインターフェース",
-        "@JsonTypeName",
-        "@JsonProperty",
-        "Bean Validation対応",
-        "useBeanValidation",
-        "nablarch.core.validation.ee.Required",
-        "nablarch.core.validation.ee.NumberRange",
-        "nablarch.core.validation.ee.DecimalRange",
-        "nablarch.core.validation.ee.Length",
-        "nablarch.core.validation.ee.Size",
-        "nablarch.core.validation.ee.Domain",
-        "@Required",
-        "@NumberRange",
-        "@DecimalRange",
-        "@Length",
-        "@Size",
-        "@Domain",
-        "@Pattern",
-        "jakarta.validation.constraints",
-        "ProjectResponse",
-        "UUID",
-        "Long",
-        "LocalDate",
-        "スキーマ定義",
-        "uuid",
-        "int64",
-        "date"
-      ]
+      "content": "本ツールではソースコード生成元となるOpenAPIドキュメントを入力として指定することで、OpenAPIドキュメントから以下のソースコードを生成する。\n\n* パスおよびオペレーション定義を元にした、リソース(アクション)インターフェース\n* スキーマ定義を元にした、リクエスト、レスポンスに対応するモデル\n\n> **Tip:**\n> OpenAPI Generatorの仕様上 `.openapi-generator-ignore` 、 `.openapi-generator/FILES` 、 `.openapi-generator/VERSION` が [Generatorの設定項目](../../development-tools/toolbox/toolbox-NablarchOpenApiGenerator.md#nablarchopenapigeneratorconfiguration) の `output` で指定したディレクトリ配下に生成されるが、これらは使用しない。",
+      "level": 2
     },
     {
       "id": "s4",
       "title": "運用方法",
-      "hints": [
-        "運用手順",
-        "ソースコード再生成",
-        "アクションクラス実装",
-        "繰り返し実行",
-        "nablarch-fw-jaxrs",
-        "nablarch-core-validation-ee",
-        "jackson-annotations",
-        "jakarta.ws.rs-api",
-        "jakarta.annotation-api",
-        "ProjectCreateRequest",
-        "@Valid",
-        "@Required",
-        "@Length",
-        "@JsonTypeName",
-        "useBeanValidation",
-        "Bean Validation",
-        "ProjectsApi",
-        "EntityResponse",
-        "LocalDate"
-      ]
+      "content": "本ツールは以下の運用方法を想定している。\n\n1. ウェブサービスの設計情報を元にOpenAPIドキュメントを作成する\n2. Nablarch RESTfulウェブサービスのプロジェクトを作成し、MavenプラグインとしてOpenAPI Generatorおよび本ツールの設定を行う\n3. プロジェクトをビルドし、リソース(アクション)インターフェースとモデルを生成する\n4. 生成したリソース(アクション)インターフェースとモデルを使用して、Nablarch RESTfulウェブサービスの実装を行う\n\n> **Tip:**\n> 本ツールはOpenAPIドキュメントの修正に合わせて繰り返し実行されることを想定している。Nablarch RESTfulウェブサービスのアクションクラスは生成されたリソース(アクション)インターフェースを実装して作成するため、本ツールによる自動生成を再度行ってもアクションクラスに実装した内容が失われることはない。\n\n> **Tip:**\n> OpenAPI Generatorおよび本ツールはMavenプラグインとしての実行形態を想定しているが、CLIでも使用可能である。詳しくは [CLIとして実行する](../../development-tools/toolbox/toolbox-NablarchOpenApiGenerator.md#nablarchopenapigeneratorascli) を参照すること。",
+      "level": 2
     },
     {
       "id": "s5",
-      "title": "Mavenプラグインの設定",
-      "hints": [
-        "openapi-generator-maven-plugin",
-        "Maven設定",
-        "inputSpec",
-        "generatorName",
-        "nablarch-jaxrs",
-        "nablarch-openapi-generator",
-        "依存関係",
-        "OpenAPI Generator 7.10.0",
-        "データ型対応表",
-        "OpenAPIデータ型",
-        "type",
-        "format",
-        "integer",
-        "number",
-        "boolean",
-        "string",
-        "array",
-        "object",
-        "java.lang.Integer",
-        "java.lang.Long",
-        "java.math.BigDecimal",
-        "java.lang.Float",
-        "java.lang.Double",
-        "java.lang.Boolean",
-        "java.lang.String",
-        "byte[]",
-        "java.time.LocalDate",
-        "java.time.OffsetDateTime",
-        "java.util.UUID",
-        "java.net.URI",
-        "java.util.List",
-        "java.util.Set",
-        "uniqueItems",
-        "multipart/form-data",
-        "binary",
-        "@Domain",
-        "x-nablarch-domain",
-        "ドメインバリデーション",
-        "@JsonTypeName",
-        "ProjectCreateRequest",
-        "useBeanValidation",
-        "@Required"
-      ]
+      "title": "使用方法",
+      "content": "",
+      "level": 2
     },
     {
       "id": "s6",
-      "title": "実行方法",
-      "hints": [
-        "mvn compile",
-        "Mavenビルド",
-        "sourceFolder",
-        "コンパイル対象",
-        "Bean Validation対応",
-        "ドメインバリデーション",
-        "useBeanValidation",
-        "x-nablarch-domain",
-        "@Required",
-        "@NumberRange",
-        "@DecimalRange",
-        "@Length",
-        "@Size",
-        "@Domain",
-        "@Pattern",
-        "required",
-        "minimum",
-        "maximum",
-        "minLength",
-        "maxLength",
-        "minItems",
-        "maxItems",
-        "pattern",
-        "Domain",
-        "nablarch.core.validation.ee.Domain",
-        "CustomersApi",
-        "CustomersCsvFileUploadRequest",
-        "CustomersCsvFileUploadResultResponse",
-        "multipart/form-data",
-        "ファイルアップロード",
-        "format: binary",
-        "@Consumes",
-        "JaxRsHttpRequest",
-        "EntityResponse"
-      ]
+      "title": "Mavenプラグインの設定",
+      "content": "本ツールを使用するために最低限必要な、OpenAPI GeneratorのMavenプラグインの設定例を以下に示す。\n\n```xml\n<plugin>\n  <groupId>org.openapitools</groupId>\n  <artifactId>openapi-generator-maven-plugin</artifactId>\n  <version>7.10.0</version>\n  <dependencies>\n    <!-- 本ツールのモジュールを依存関係に追加 -->\n    <dependency>\n      <groupId>com.nablarch.tool</groupId>\n      <artifactId>nablarch-openapi-generator</artifactId>\n      <version>1.0.0</version>\n    </dependency>\n  </dependencies>\n  <executions>\n    <execution>\n      <goals>\n        <goal>generate</goal>\n      </goals>\n      <configuration>\n        <!-- OpenAPIドキュメントのファイルパスを指定する -->\n        <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>\n        <generatorName>nablarch-jaxrs</generatorName>\n        <configOptions>\n          <sourceFolder>src/gen/java</sourceFolder>\n          <apiPackage>com.example.api</apiPackage>\n          <modelPackage>com.example.model</modelPackage>\n\n          <!-- その他、本ツールのオプションを指定する -->\n        </configOptions>\n      </configuration>\n    </execution>\n  </executions>\n</plugin>\n```\n\n本ツールは以下の依存関係により提供される。\n\n```xml\n<dependency>\n  <groupId>com.nablarch.tool</groupId>\n  <artifactId>nablarch-openapi-generator</artifactId>\n  <version>1.0.0</version>\n</dependency>\n```\n\nOpenAPI GeneratorのMavenプラグインを使用するにあたり、最低限必要な設定はソースコードの生成対象となるOpenAPIドキュメントを指定する `inputSpec` と、どのGeneratorを使用するかを指定する `generatorName` の2つである。\n\n`generatorName` には `nablarch-jaxrs` を指定することで、本ツールを利用できる。\n\nその他の設定項目については [Generatorの設定項目](../../development-tools/toolbox/toolbox-NablarchOpenApiGenerator.md#nablarchopenapigeneratorconfiguration) を参照すること。\n\n> **Tip:**\n> 本ツールはOpenAPI Generator 7.10.0を使用して開発、テストをしている。\n> OpenAPI Generatorのバージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。",
+      "level": 3
     },
     {
       "id": "s7",
-      "title": "出力先",
-      "hints": [
-        "出力先",
-        "target/generated-sources/openapi",
-        "output",
-        "sourceFolder",
-        "バリデーション運用上の注意点",
-        "BeanUtil",
-        "ValidatorUtil",
-        "nablarch.core.beans.BeanUtil",
-        "bean_validation-execute_explicitly",
-        "ApplicationException",
-        "相関バリデーション",
-        "ドメインバリデーション",
-        "ProjectValidatorUtil",
-        "CustomersApi",
-        "HttpResponse",
-        "text/csv",
-        "ファイルダウンロード",
-        "format: binary",
-        "@GET",
-        "JaxRsHttpRequest"
-      ]
+      "title": "実行方法",
+      "content": "本ツールはMavenのcompileゴールで実行できる。\n\n```text\nmvn compile\n```\n\nなお [Generatorの設定項目](../../development-tools/toolbox/toolbox-NablarchOpenApiGenerator.md#nablarchopenapigeneratorconfiguration) の `sourceFolder` を明示的に設定した場合、 `mvn compile` 時に生成されたソースコードをMavenプラグインを設定したプロジェクトのコンパイル対象に含めるようになる。\n\nこの動作はOpenAPI GeneratorのMavenプラグインによって行われる。",
+      "level": 3
     },
     {
       "id": "s8",
-      "title": "Generatorの設定項目",
-      "hints": [
-        "inputSpec",
-        "generatorName",
-        "output",
-        "apiPackage",
-        "modelPackage",
-        "hideGenerationTimestamp",
-        "sourceFolder",
-        "useTags",
-        "serializableModel",
-        "generateBuilders",
-        "useBeanValidation",
-        "additionalModelTypeAnnotations",
-        "additionalEnumTypeAnnotations",
-        "primitivePropertiesAsString",
-        "supportConsumesMediaTypes",
-        "supportProducesMediaTypes",
-        "configOptions",
-        "設定項目"
-      ]
+      "title": "出力先",
+      "content": "OpenAPI GeneratorのMavenプラグインのデフォルト設定では、生成されたソースコードは `target/generated-sources/openapi/src/gen/java` に出力される。\n\n出力先を変更したい場合は [Generatorの設定項目](../../development-tools/toolbox/toolbox-NablarchOpenApiGenerator.md#nablarchopenapigeneratorconfiguration) の `output` と `sourceFolder` を参照すること。",
+      "level": 3
     },
     {
       "id": "s9",
-      "title": "Bean Validationを使用するソースコードを生成する",
-      "hints": [
-        "useBeanValidation",
-        "Bean Validation",
-        "バリデーション",
-        "bean_validation"
-      ]
+      "title": "Generatorの設定項目",
+      "content": "OpenAPI GeneratorのMavenプラグインの主要な設定項目を以下に示す。これらは `configuration` タグ内直下のタグとして指定する。\n\n| 項目名 | 設定内容 | 必須/任意 | デフォルト値 |\n|---|---|---|---|\n| `inputSpec` | 入力となるOpenAPIドキュメントのファイルパスを指定する。 | 必須 | なし |\n| `generatorName` | ソースコードを生成するGeneratorの名前を指定する。   本ツールでは `nablarch-jarxrs` と指定すること。 | 必須 | なし |\n| `output` | ソースコードの生成先ディレクトリを指定する。 | 任意 | `generated-sources/openapi` |\n\n本ツールの設定項目を以下に示す。すべて任意項目であり、これらは `configOptions` タグ内に指定する。\n\n| 項目名 | 設定内容 | デフォルト値 |\n|---|---|---|\n| `apiPackage` | 生成するリソース(アクション)インターフェースのパッケージを   指定する。 | `org.openapitools.api` |\n| `modelPackage` | 生成するモデルのパッケージを指定する。 | `org.openapitools.model` |\n| `hideGenerationTimestamp` | `Generated` アノテーションを注釈する時に `date` 属性を   付与するか否か。デフォルトではソースコードを生成した日時が   出力される。 | `false` |\n| `sourceFolder` | ソースコードの生成先ディレクトリを指定する。    OpenAPI GeneratorのMavenプラグイン設定の `output` からの   相対パスとして解釈される。   この項目を指定すると、本ツールにより生成したソースコードが   `mvn compile` 時のコンパイル対象に含まれるようになる。 | `src/gen/java` |\n| `useTags` | 生成するリソース(アクション)インターフェースの単位を   パスではなくエンドポイントに付与されているタグの単位とする。   なお、エンドポイントに複数のタグが付与されている場合は最初の   タグが有効となる。 | `false` |\n| `serializableModel` | 生成するモデルに `java.io.Serializable`   インターフェースを実装する。 | `false` |\n| `generateBuilders` | モデルに対するビルダークラスを生成する。 | `false` |\n| `useBeanValidation` | OpenAPIドキュメントのバリデーション定義から、  [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) の機能を使った   バリデーションを行うようにソースコードを生成する。 | `false` |\n| `additionalModelTypeAnnotations` | 生成するモデルのクラス宣言に追加のアノテーションを注釈する。   複数のアノテーションを追加する場合は `;` 区切りで指定する。 | なし |\n| `additionalEnumTypeAnnotations` | 生成するenum型に追加のアノテーションを注釈する。   複数のアノテーションを追加する場合は `;` 区切りで指定する。 | なし |\n| `primitivePropertiesAsString` | モデルのプリミティブなデータ型のプロパティをすべて   `String` として出力する。 | `false` |\n| `supportConsumesMediaTypes` | 生成するリソース(アクション)インターフェースがリクエストを   受け付けるメディアタイプを `,` 区切りで指定する。 | `application/json,multipart/form-data` |\n| `supportProducesMediaTypes` | 生成するリソース(アクション)インターフェースがレスポンス   とするメディアタイプを `,` 区切りで指定する。 | `application/json` |",
+      "level": 3
     },
     {
       "id": "s10",
+      "title": "Bean Validationを使用するソースコードを生成する",
+      "content": "[Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を使用するようにソースコードを生成する場合は、 `useBeanValidation` の値を `true` に設定する。\n\n以下に設定例を示す。\n\n```xml\n<configuration>\n  <!-- OpenAPIドキュメントのファイルパスを指定する -->\n  <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>\n  <generatorName>nablarch-jaxrs</generatorName>\n  <configOptions>\n    <sourceFolder>src/gen/java</sourceFolder>\n    <apiPackage>com.example.api</apiPackage>\n    <modelPackage>com.example.model</modelPackage>\n\n    <!-- Bean Validationを使用するソースコードを生成する -->\n    <useBeanValidation>true</useBeanValidation>\n  </configOptions>\n</configuration>\n```\n\n`useBeanValidation` のデフォルト値は `false` のため、デフォルトでは [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) の機能を使用するアノテーションは注釈されない。\n\nこれは、OpenAPI仕様にて規定されてるバリデーション定義では業務要件を満たせないことが多いと考えられ、また相関バリデーションの定義も行えないためである。\n\nこのような観点も含め、バリデーション機能を使用するようにソースコード生成する場合の仕様や運用上の注意点は [OpenAPIドキュメントのバリデーション定義とBean Validationの対応仕様](../../development-tools/toolbox/toolbox-NablarchOpenApiGenerator.md#openapi-property-to-bean-validation) に詳細に記載しているので参照すること。",
+      "level": 3
+    },
+    {
+      "id": "s11",
       "title": "CLIとして実行する",
-      "hints": [
-        "CLI",
-        "CLIとして実行",
-        "java -cp",
-        "openapi-generator-cli",
-        "--generator-name",
-        "--input-spec",
-        "--additional-properties",
-        "JARファイル"
-      ]
+      "content": "本ツールは主にMavenプラグインとして使用することを想定しているが、CLIとしても使用可能である。ここでは補足としてCLIでの実行方法を紹介する。\n\nCLIとして実行するには、 [OpenAPI Generator 7.10.0のJARファイル(外部サイト)](https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.10.0/openapi-generator-cli-7.10.0.jar) および [本ツールのJARファイル(外部サイト)](https://repo1.maven.org/maven2/com/nablarch/tool/nablarch-openapi-generator/1.0.0/nablarch-openapi-generator-1.0.0.jar) をダウンロードしてjavaコマンドで実行する。実行例を以下に示す。\n\n```text\njava -cp openapi-generator-cli-7.10.0.jar:nablarch-openapi-generator-1.0.0.jar org.openapitools.codegen.OpenAPIGenerator generate --generator-name nablarch-jaxrs --input-spec openapi.yaml --output out --additional-properties=apiPackage=com.example.api,modelPackage=com.example.model,useBeanValidation=true,hideGenerationTimestamp=true\n```\n\n`--generator-name` には `nablarch-jaxrs` を指定する。 [Generatorの設定項目](../../development-tools/toolbox/toolbox-NablarchOpenApiGenerator.md#nablarchopenapigeneratorconfiguration) のうちOpenAPI Generatorの設定項目はOpenAPI GeneratorのCLIでも指定できる。詳しくは以下のコマンドの結果を参照。\n\n```text\njava -jar openapi-generator-cli-7.10.0.jar help generate\n```\n\n> **Tip:**\n> OpenAPI Generatorの設定項目は、 `--generator-name` のようにハイフン区切りの形式になる。\n\n[Generatorの設定項目](../../development-tools/toolbox/toolbox-NablarchOpenApiGenerator.md#nablarchopenapigeneratorconfiguration) のうち本ツール固有の設定項目については、 `--additional-properties` に `key=value` の形式で指定する。複数指定する場合は `,` 区切りでの指定となる。\n\n> **Tip:**\n> 本ツール固有の設定項目は、 `--additional-properties=hideGenerationTimestamp=true` のように `--additional-properties=` に続けて項目名をそのまま指定する。",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "ソースコード生成仕様",
+      "content": "以降では、本ツールがOpenAPIドキュメントを元にソースコードを生成する仕様について記載する。\n\n> **Important:**\n> Nablarch RESTfulウェブサービスはJakarta RESTful Web Servicesが提供するすべてのアノテーションをサポートしているわけではないため、ここで記載する内容以外のOpenAPIドキュメントの内容は生成されるソースコードに反映されないことに注意すること。\n\n> Nablarch RESTfulウェブサービスがサポートしているアノテーションについては [アーキテクチャ概要](../../processing-pattern/restful-web-service/restful-web-service-architecture.md#restful-web-service-architecture) および、ルーティングアダプタの [Jakarta RESTful Web ServicesのPathアノテーションでマッピングする](../../component/adapters/adapters-router-adaptor.md#router-adaptor-path-annotation) を参照すること。",
+      "level": 2
+    },
+    {
+      "id": "s13",
+      "title": "リソース(アクション)インターフェース生成仕様",
+      "content": "ここではリソース(アクション)インターフェースの生成仕様を記載する。 [リソースクラスのメソッドのシグネチャ](../../processing-pattern/restful-web-service/restful-web-service-resource-signature.md#rest-feature-details-method-signature) に則った形で生成するのでこちらも参照すること。\n\nリソース(アクション)インターフェースの生成単位や型定義に関する仕様を以下に示す。\n\n* OpenAPIドキュメントに定義されたパスおよびオペレーションの情報を元に生成する。\n* Javaのインターフェースとして生成する。\n* リソース(アクション)インターフェースの生成単位は、以下から選択する。\n\n  * デフォルトではOpenAPIドキュメントのパスの第一階層でまとめられたものとなる。\n  * `useTags` を `true` にした場合はオペレーションに付与されているタグの単位となる。\n* リソース(アクション)インターフェースの宣言には `Path` アノテーションを注釈する。\n* `Generated` アノテーションを注釈する。\n\nリソース(アクション)インターフェースのメソッド生成に関する仕様を以下に示す。\n\n**メソッド宣言に注釈するアノテーション**\n\n| アノテーション | 説明 |\n|---|---|\n| `GET` | オペレーションのHTTPメソッドがGETの場合に注釈する。 |\n| `POST` | オペレーションのHTTPメソッドがPOSTの場合に注釈する。 |\n| `PUT` | オペレーションのHTTPメソッドがPUTの場合に注釈する。 |\n| `DELETE` | オペレーションのHTTPメソッドがDELETEの場合に注釈する。 |\n| `PATCH` | オペレーションのHTTPメソッドがPATCHの場合に注釈する。 |\n| `HEAD` | オペレーションのHTTPメソッドがHEADの場合に注釈する。 |\n| `OPTIONS` | オペレーションのHTTPメソッドがOPTIONSの場合に注釈する。 |\n| `Consumes` | リクエストのコンテンツタイプがある場合に注釈する。 |\n| `Produces` | レスポンスのコンテンツタイプがあり、 `type: string` かつ `format: binary` 以外の場合に注釈する。 |\n| `Valid` | リクエストボディがあり、 `useBeanValidation`  が `true` の場合に注釈する。 |\n\n> **Tip:**\n> `type: string` かつ `format: binary` はファイルダウンロードを意味しており、この場合のコンテンツタイプは HttpResponse#setContentType を使用して設定する。\n\n**メソッド名の生成仕様**\n\n* OpenAPIドキュメントの `operationId` 要素の値をメソッド名として使用する。\n* `operationId` 要素が指定されていない場合は、 パスの値とHTTPメソッド名を組み合わせてメソッド名を生成する。\n\n**メソッド引数の生成仕様**\n\n| メソッド引数の型 | 説明 |\n|---|---|\n| リクエストモデルの型 | リクエストボディを受け取り、かつリクエストのコンテンツタイプがマルチパート以外の場合、対応するモデルの型の引数を設定する。 |\n| JaxRsHttpRequest | 常に生成し、引数に設定する。 |\n| ExecutionContext | 常に生成し、引数に設定する。 |\n\n> **Tip:**\n> * >   RESTfulウェブサービスはJakarta RESTful Web Servicesで規定されている `PathParam` や `QueryParam` 等には対応していないため、 `parameters` の定義はメソッド引数には反映されない。これらの情報は JaxRsHttpRequest より取得すること。\n> * >   リクエストのコンテンツタイプが `multipart/form-data` の場合は、リクエストモデルの型の引数は生成されない。アップロードされたファイルは JaxRsHttpRequest より取得すること。\n\n**メソッド戻り値の生成仕様**\n\n| メソッド戻り値の型 | 説明 |\n|---|---|\n| EntityResponse | レスポンスがモデルの場合に生成する。型パラメータにはモデルの型を反映する。 |\n| HttpResponse | レスポンスがモデルでない場合やHTTPステータスコードが `200` 以外の場合に生成する。 |",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "モデル生成仕様",
+      "content": "モデルの生成単位や型定義に関する仕様を以下に示す。\n\n* スキーマとして定義しているモデルに対して生成する。\n* Javaのクラスとして生成する。\n* `JsonTypeName` アノテーションを注釈する。\n* `Generated` アノテーションを注釈する。\n\nモデルのプロパティに関する生成仕様を以下に示す。\n\n* OpenAPIドキュメントのスキーマに定義されたフィールドに対応するプロパティを生成する。\n* プロパティに対するgetterおよびsetterを生成し、 `JsonProperty` アノテーションを注釈する。\n* プロパティの値を設定してモデル自身の型を返す、メソッドチェインが可能なメソッドを生成する。\n* `useBeanValidation` が `true` かつOpenAPIドキュメントにバリデーション定義がある場合、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を使用したバリデーションを有効にする。\n* バリデーションで使用するアノテーションは、Nablarchの提供する [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) 固有のものとJakarta EE標準の jakarta.validation.constraints パッケージのものを使用する。\n\nOpenAPIドキュメントでのデータ型やフォーマットとJavaのデータ型との対応仕様は [OpenAPIドキュメントのデータ型およびフォーマットとJavaのデータ型の対応仕様](../../development-tools/toolbox/toolbox-NablarchOpenApiGenerator.md#openapi-datatypes-format-to-java-datatypes) 、バリデーション定義とバリデーションで使用するアノテーションの対応仕様は [OpenAPIドキュメントのバリデーション定義とBean Validationの対応仕様](../../development-tools/toolbox/toolbox-NablarchOpenApiGenerator.md#openapi-property-to-bean-validation) に記載する。\n\nモデルのその他の生成仕様を以下に示す。\n\n* `hashCode` 、 `equals` 、 `toString` メソッドを生成する。",
+      "level": 3
+    },
+    {
+      "id": "s15",
+      "title": "生成されるソースコードが依存するモジュール",
+      "content": "本ツールで生成されるソースコードをビルドするには、依存関係に以下のモジュールが必要になる。\n\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-jaxrs</artifactId>\n</dependency>\n<dependency>\n   <groupId>com.nablarch.framework</groupId>\n   <artifactId>nablarch-core-validation-ee</artifactId>\n</dependency>\n<dependency>\n  <groupId>jakarta.ws.rs</groupId>\n  <artifactId>jakarta.ws.rs-api</artifactId>\n</dependency>\n<dependency>\n  <groupId>jakarta.annotation</groupId>\n  <artifactId>jakarta.annotation-api</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.fasterxml.jackson.core</groupId>\n  <artifactId>jackson-annotations</artifactId>\n  <version>2.17.1</version>\n</dependency>\n```\n\nRESTfulウェブサービスのブランクプロジェクトに設定されている依存関係にはこれらはすべて含まれている。",
+      "level": 3
+    },
+    {
+      "id": "s16",
+      "title": "OpenAPIドキュメントのデータ型およびフォーマットとJavaのデータ型の対応仕様",
+      "content": "OpenAPIドキュメント上で定義されたデータ型とフォーマットに対して、本ツールによるJavaのデータ型の対応表を以下に示す。\n\n| OpenAPIでのデータ型( `type` ) | OpenAPIでのフォーマット( `format` ) | モデルのプロパティのデータ型 |\n|---|---|---|\n| `integer` |  | `java.lang.Integer` |\n| `integer` | `int32` | `java.lang.Integer` |\n| `integer` | `int64` | `java.lang.Long` |\n| `number` |  | `java.math.BigDecimal` |\n| `number` | `float` | `java.lang.Float` |\n| `number` | `double` | `java.lang.Double` |\n| `boolean` |  | `java.lang.Boolean` |\n| `string` |  | `java.lang.String` |\n| `string` | `byte` | `byte[]` |\n| `string` | `date` | `java.time.LocalDate` |\n| `string` | `date-time` | `java.time.OffsetDateTime` |\n| `string` | `number` | `java.math.BigDecimal` |\n| `string` | `uuid` | `java.util.UUID` |\n| `string` | `uri` | `java.net.URI` |\n| `string` |  | enum ( `enum` を指定すると対応するEnum型を生成する ) |\n| `array` |  | `java.util.List` |\n| `array` |  | `java.util.Set` ( `uniqueItems: true` の場合) |\n| `object` |  | 対応するモデルの型 |\n| `object` |  | 対応する型がない場合は `java.lang.Object` |\n\n> **Tip:**\n> * >   `type: string` かつ `format: binary` はリクエストのコンテンツタイプが `multipart/form-data` の場合のみ利用可能で、それ以外コンテンツタイプやレスポンスのモデル定義内で使用した場合はモデルの生成を中止する。\n> * >   `type: string` の場合は上記表以外にも多数のフォーマットがあるが、すべて `java.lang.String` として生成する。",
+      "level": 3
+    },
+    {
+      "id": "s17",
+      "title": "OpenAPIドキュメントのバリデーション定義とBean Validationの対応仕様",
+      "content": "本ツールでは `useBeanValidation` のデフォルト値が `false` のためOpenAPIドキュメントの定義に関わらずデフォルトでは [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) で使用するアノテーションは注釈しないが、 `true` とした場合はOpenAPIドキュメントの記述内容によって以下の2つの方針でプロパティにアノテーションを注釈する。\n\n* OpenAPI仕様にて規定されているプロパティに対応するバリデーション\n* ドメインバリデーション",
+      "level": 3
+    },
+    {
+      "id": "s18",
+      "title": "OpenAPI仕様にて規定されているプロパティに対応するバリデーション",
+      "content": "[OpenAPI仕様にて規定されているプロパティ(外部サイト、英語)](https://spec.openapis.org/oas/v3.0.3.html#properties) を使用してバリデーション定義を行った場合、以下の対応表に沿ってアノテーションを注釈する。\n\n| OpenAPIでのデータ型( `type` ) | OpenAPIでのフォーマット( `format` ) | OpenAPIで使用しているプロパティ | 注釈するバリデーション用のアノテーション |\n|---|---|---|---|\n| `integer` | (フォーマットは問わない) | `required` | Required |\n| `integer` |  | `minimum` および `maximum` | NumberRange(min = {minimum}, max = {maximum}) |\n| `integer` | `int32` | `required` | Required |\n| `integer` | `int32` | `minimum` および `maximum` | NumberRange(min = {minimum}, max = {maximum}) |\n| `integer` | `int64` | `required` | Required |\n| `integer` | `int64` | `minimum` および `maximum` | NumberRange(min = {minimum}, max = {maximum}) |\n| `number` | (フォーマットは問わない) | `required` | Required |\n| `number` |  | `minimum` および `maximum` | DecimalRange(min = \"{minimum}\", max = \"{maximum}\") |\n| `number` | `float` | `required` | Required |\n| `number` | `float` | `minimum` および `maximum` | DecimalRange(min = \"{minimum}\", max = \"{maximum}\") |\n| `number` | `double` | `required` | Required |\n| `number` | `double` | `minimum` および `maximum` | DecimalRange(min = \"{minimum}\", max = \"{maximum}\") |\n| `boolean` |  | `required` | Required |\n| `string` | (フォーマットは問わない) | `required` | Required |\n| `string` |  | `minLength` および `maxLength` | Length(min = {minLength}, max = {maxLength}) |\n| `string` |  | `pattern` | Pattern(regexp = \"{pattern}\") |\n| `array` |  | `required` | Required |\n| `array` |  | `minItems` および `maxItems` | Size(min = {minItems}, max = {maxItems}) |\n\n> **Tip:**\n> * >   `multipleOf` 、 `exclusiveMinimum` 、 `exclusiveMaximum` 、 `minProperties` 、 `maxProperties` には対応していない。\n> * >   `minimum` および `maximum` 、 `minLength` および `maxLength` 、 `minItems` および `maxItems` はどちらか片方だけでも指定可能。\n> * >   Javaのデータ型が `java.math.BigDecimal` 、 `java.util.List` 、 `java.util.Set` またはモデルの場合は `Valid` アノテーションを注釈する。\n> * >   Pattern のみJakarta Bean Validation標準のアノテーションを注釈し、それ以外はNablarchの提供する [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) 固有のアノテーションを注釈する。",
+      "level": 4
+    },
+    {
+      "id": "s19",
+      "title": "ドメインバリデーション",
+      "content": "本ツールでは、 [OpenAPI仕様の拡張プロパティ(外部サイト、英語)](https://spec.openapis.org/oas/v3.0.3.html#specification-extensions) を使用してOpenAPI仕様では表現できない [ドメインバリデーションを使う](../../component/libraries/libraries-bean-validation.md#bean-validation-domain-validation) ことをサポートする。\n\n拡張プロパティには `x-nablarch-domain` を使用し、値にはドメイン名を指定する。\n\n```yaml\npropertyName:\n  type: string\n  x-nablarch-domain: \"domainName\"\n```\n\n`useBeanValidation` を `true` に指定してソースコードを生成すると、対象のプロパティに Domain(\"{domainName}\") が注釈される。\n\nなお、ドメインバリデーションには様々なバリデーション定義を含めることができるため、 競合する可能性があるバリデーション定義を検出した場合はソースコードの生成を中止する。これは、ドメインに含まれているバリデーションルールと同じものが指定された場合、重複してバリデーションが行われることになるためである。\n\n具体的には、 `x-nablarch-domain` を指定したプロパティに対して、 `minimum` 、 `maximum` 、 `minLength` 、 `maxLength` 、 `minItems` 、 `maxItems` 、 `pattern` のいずれかが指定されている場合はソースコードの生成を中止する。\n\n`required` は必須項目を表しドメイン側で強制するものではないため、併用を可能とする。",
+      "level": 4
+    },
+    {
+      "id": "s20",
+      "title": "バリデーションに関する運用上の注意点",
+      "content": "本ツールを使用して、バリデーション定義を含めたソースコードを生成する場合の運用上の注意点を記載する。",
+      "level": 3
+    },
+    {
+      "id": "s21",
+      "title": "OpenAPI仕様の規定範囲では項目単位や相関バリデーションの要求を満たせない場合の注意点",
+      "content": "OpenAPI仕様で規定されているバリデーションは必須定義と長さチェック、正規表現によるチェックのみのため、業務アプリケーションが求めるものとしては不足することも想定される。\n\nまた自動生成されたソースコードを直接修正することは望ましくないため、ドメインバリデーションを使用しても生成されたモデルに相関バリデーションを実装できない。\n\nこのため、OpenAPI仕様や本ツールのカバー範囲ではバリデーションの要件を満たすことができず別途実装が必要となり、結果として自動生成したモデルと手動で実装したフォーム等でバリデーション定義が分散されやすい状況になることに注意すること。\n\n**自動生成したモデルにはバリデーション定義を含めない場合の実装方法**\n\nここでは、バリデーション定義として自動生成したモデルと同じ定義のフォーム等を作成し、 BeanUtil を使用してプロパティ値をコピー後、バリデーションを実施する方法を紹介する。\n\n本ツールがデフォルトでバリデーション用のアノテーションを注釈しないのは、前述のとおりバリデーション定義が分散される状況が生まれやすいことを想定しており、それは望ましくないと考えているからである。\n\n考え方としては [バリデーションの明示的な実行](../../component/libraries/libraries-bean-validation.md#bean-validation-execute-explicitly) と同様で、実装イメージを以下に記載する。\n\n```java\npublic class ProjectAction implements ProjectsApi {  // ProjectsApiは本ツールで生成したインターフェース\n\n    // インターフェースに定義されたメソッドを実装\n    @Override\n    public EntityResponse<ProjectResponse> createProject(ProjectCreateRequest projectCreateRequest, JaxRsHttpRequest jaxRsHttpRequest, ExecutionContext context) {\n        // モデルと同じプロパティ定義に、単項目バリデーションや相関バリデーションを加えたフォーム\n        ProjectCreateForm form;\n\n        try {\n            // ユーティリティクラス内でモデルからフォームに値をコピーした後、バリデーションを明示的に実行する\n            form = ProjectValidatorUtil.validate(ProjectCreateForm.class, projectCreateRequest);\n        } catch (ApplicationException e) {\n            // バリデーションエラー時に任意の処理を行う\n            // ...\n\n            throw e;\n        }\n\n        // 省略\n\n        return response;\n    }\n}\n\n// ユーティリティクラスのイメージ\npublic final class ProjectValidatorUtil {\n    // その他の処理は省略\n\n    /**\n     * HTTPリクエストからBeanを生成し、バリデーションを行う。\n     *\n     * @param beanClass 生成したいBeanクラス\n     * @param src プロパティのコピー元オブジェクト\n     * @return  プロパティに値が登録されたBeanオブジェクト\n     */\n    public static <T> T validate(Class<T> beanClass, Object src) {\n        T bean = BeanUtil.createAndCopy(beanClass, src));\n        ValidatorUtil.validate(bean);\n        return bean;\n    }\n}\n```",
+      "level": 4
+    },
+    {
+      "id": "s22",
+      "title": "ドメインバリデーションを使用する場合の注意点",
+      "content": "ドメインバリデーションを使用すると、モデルのプロパティに対するドメインを定義することでバリデーション定義をまとめたりOpenAPI仕様でサポートしていないバリデーションを使用できる。\n\nただしOpenAPI仕様でサポートしているバリデーション範囲も含めてバリデーション仕様がドメイン側に隠蔽されやすくなり、OpenAPIドキュメントからバリデーション仕様が見えなくなる可能性がある点に注意すること。",
+      "level": 4
+    },
+    {
+      "id": "s23",
+      "title": "OpenAPIドキュメントと生成されるソースコードの例",
+      "content": "以下に、OpenAPIドキュメントと生成されるソースコードの例を記載する。\n\nソースコード生成時の本ツールの設定例は以下とする。この設定と異なる設定項目が必要になる例では、本ツールの設定例も併記する。\n\n```xml\n<configuration>\n  <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>\n  <generatorName>nablarch-jaxrs</generatorName>\n  <configOptions>\n    <sourceFolder>src/gen/java</sourceFolder>\n    <apiPackage>com.example.api</apiPackage>\n    <modelPackage>com.example.model</modelPackage>\n  </configOptions>\n</configuration>\n```\n\nなお、記載している各種例はイメージを掴むことを目的とするため抜粋での記載としている。",
+      "level": 2
+    },
+    {
+      "id": "s24",
+      "title": "OpenAPIドキュメントのパスおよびオペレーションの定義とソースコードの生成例",
+      "content": "OpenAPIドキュメント例\n\n```yaml\n/projects:\n  post:\n    tags:\n    - project\n    summary: プロジェクトを登録する\n    description: プロジェクトを登録する\n    operationId: createProject\n    requestBody:\n      description: プロジェクト登録情報\n      content:\n        application/json:\n          schema:\n            $ref: '#/components/schemas/ProjectCreateRequest'\n    responses:\n      \"200\":\n        description: 登録したプロジェクト情報\n        content:\n          application/json:\n            schema:\n              $ref: '#/components/schemas/ProjectResponse'\n/projects/{id}:\n  get:\n    tags:\n    - project\n    summary: プロジェクトを取得する\n    description: プロジェクトIDを指定してプロジェクトを取得する\n    operationId: findProjectById\n    parameters:\n    - name: id\n      in: path\n      description: ID\n      required: true\n      schema:\n        type: string\n    responses:\n      \"200\":\n        description: 取得したプロジェクト情報\n        content:\n          application/json:\n            schema:\n              $ref: '#/components/schemas/ProjectResponse'\n      \"404\":\n        description: プロジェクトが見つからなかった場合\n```\n\n本ツールにより生成されるリソース(アクション)インターフェース例\n\n```java\n@Path(\"/projects\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", date = \"2024-12-10T13:54:26.470544738+09:00[Asia/Tokyo]\", comments = \"Generator version: 7.10.0\")\npublic interface ProjectsApi {\n    /**\n     * POST  : プロジェクトを登録する\n     *\n     * プロジェクトを登録する\n     *\n     * @param projectCreateRequest プロジェクト登録情報\n     * @param jaxRsHttpRequest HTTPリクエスト\n     * @param context ハンドラ実行コンテキスト\n     * @return 登録したプロジェクト情報\n     */\n    @POST\n    @Consumes({ \"application/json\" })\n    @Produces({ \"application/json\" })\n    EntityResponse<ProjectResponse> createProject(ProjectCreateRequest projectCreateRequest, JaxRsHttpRequest jaxRsHttpRequest, ExecutionContext context);\n\n    /**\n     * GET /{id} : プロジェクトを取得する\n     *\n     * プロジェクトIDを指定してプロジェクトを取得する\n     *\n     * @param jaxRsHttpRequest HTTPリクエスト\n     * @param context ハンドラ実行コンテキスト\n     * @return 取得したプロジェクト情報\n     * @return プロジェクトが見つからなかった場合\n     */\n    @GET\n    @Path(\"/{id}\")\n    @Produces({ \"application/json\" })\n    EntityResponse<ProjectResponse> findProjectById(JaxRsHttpRequest jaxRsHttpRequest, ExecutionContext context);\n\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s25",
+      "title": "OpenAPIドキュメントのスキーマの定義とソースコードの生成例",
+      "content": "OpenAPIドキュメント例\n\n```yaml\nProjectResponse:\n  description: プロジェクト情報\n  type: object\n  properties:\n    id:\n      format: uuid\n      description: プロジェクトID\n      type: string\n    name:\n      description: プロジェクト名\n      type: string\n    sales:\n      format: int64\n      description: 売上\n      type: integer\n    startDate:\n      format: date\n      description: 開始日\n      type: string\n    endDate:\n      format: date\n      description: 終了日\n      type: string\n```\n\n本ツールにより生成されるモデル例\n\n```java\n@JsonTypeName(\"ProjectResponse\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", date = \"2024-12-10T13:54:26.470544738+09:00[Asia/Tokyo]\", comments = \"Generator version: 7.10.0\")\npublic class ProjectResponse   {\n  private UUID id;\n  private String name;\n  private Long sales;\n  private LocalDate startDate;\n  private LocalDate endDate;\n\n    /**\n     * プロジェクトID\n     */\n    public ProjectResponse id(UUID id) {\n        this.id = id;\n        return this;\n    }\n\n    @JsonProperty(\"id\")\n    public UUID getId() {\n        return id;\n    }\n\n    @JsonProperty(\"id\")\n    public void setId(UUID id) {\n        this.id = id;\n    }\n\n    /**\n     * プロジェクト名\n     */\n    public ProjectResponse name(String name) {\n        this.name = name;\n        return this;\n    }\n\n    @JsonProperty(\"name\")\n    public String getName() {\n        return name;\n    }\n\n    @JsonProperty(\"name\")\n    public void setName(String name) {\n        this.name = name;\n    }\n\n    /**\n     * 売上\n     */\n    public ProjectResponse sales(Long sales) {\n        this.sales = sales;\n        return this;\n    }\n\n    @JsonProperty(\"sales\")\n    public Long getSales() {\n        return sales;\n    }\n\n    @JsonProperty(\"sales\")\n    public void setSales(Long sales) {\n        this.sales = sales;\n    }\n\n    /**\n     * 開始日\n     */\n    public ProjectResponse startDate(LocalDate startDate) {\n        this.startDate = startDate;\n        return this;\n    }\n\n    @JsonProperty(\"startDate\")\n    public LocalDate getStartDate() {\n        return startDate;\n    }\n\n    @JsonProperty(\"startDate\")\n    public void setStartDate(LocalDate startDate) {\n        this.startDate = startDate;\n    }\n\n    /**\n     * 終了日\n     */\n    public ProjectResponse endDate(LocalDate endDate) {\n        this.endDate = endDate;\n        return this;\n    }\n\n    @JsonProperty(\"endDate\")\n    public LocalDate getEndDate() {\n        return endDate;\n    }\n\n    @JsonProperty(\"endDate\")\n    public void setEndDate(LocalDate endDate) {\n        this.endDate = endDate;\n    }\n\n    // hashCode、equals、toString等は省略\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s26",
+      "title": "Bean Validationを使用するソースコードの生成例",
+      "content": "OpenAPIドキュメント例\n\n```yaml\n## パスおよびオペレーション\n/projects:\n  post:\n    tags:\n    - project\n    summary: プロジェクトを作成する\n    description: プロジェクトを作成する\n    operationId: createProject\n    requestBody:\n      description: プロジェクト登録情報\n      content:\n        application/json:\n          schema:\n            $ref: '#/components/schemas/ProjectCreateRequest'\n    responses:\n      \"200\":\n        description: project created\n        content:\n          application/json:\n            schema:\n              $ref: '#/components/schemas/ProjectResponse'\n\n  ## スキーマ\n  ProjectCreateRequest:\n    description: プロジェクト作成リクエスト\n    required:\n    - projectName\n    - projectType\n    - startDate\n    type: object\n    properties:\n      projectName:\n        description: プロジェクト名\n        maxLength: 100\n        minLength: 1\n        type: string\n      projectType:\n        description: プロジェクト種別\n        maxLength: 100\n        minLength: 1\n        type: string\n      startDate:\n        format: date\n        description: 開始日\n        type: string\n      endDate:\n        format: date\n        description: 終了日\n        type: string\n```\n\n本ツールの設定例\n\n```xml\n<configuration>\n  <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>\n  <generatorName>nablarch-jaxrs</generatorName>\n  <configOptions>\n    <sourceFolder>src/gen/java</sourceFolder>\n    <apiPackage>com.example.api</apiPackage>\n    <modelPackage>com.example.model</modelPackage>\n    <!-- Bean Validationを使用する場合はuseBeanValidationにtrueを指定する -->\n    <useBeanValidation>true</useBeanValidation>\n  </configOptions>\n</configuration>\n```\n\n本ツールにより生成されるリソース(アクション)インターフェース例\n\n```java\n@Path(\"/projects\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", date = \"2024-12-10T13:54:26.470544738+09:00[Asia/Tokyo]\", comments = \"Generator version: 7.10.0\")\npublic interface ProjectsApi {\n    /**\n     * POST  : プロジェクトを作成する\n     *\n     * プロジェクトを作成する\n     *\n     * @param projectCreateRequest プロジェクト登録情報\n     * @param jaxRsHttpRequest HTTPリクエスト\n     * @param context ハンドラ実行コンテキスト\n     * @return project created\n     */\n    @POST\n    @Consumes({ \"application/json\" })\n    @Produces({ \"application/json\" })\n    // HTTPボディでリクエストを受け取る場合に@Validアノテーションが付与される\n    @Valid\n    EntityResponse<ProjectResponse> createProject(ProjectCreateRequest projectCreateRequest, JaxRsHttpRequest jaxRsHttpRequest, ExecutionContext context);\n\n}\n```\n\n本ツールにより生成されるモデル例\n\n```java\n@JsonTypeName(\"ProjectCreateRequest\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", date = \"2024-12-10T13:54:26.470544738+09:00[Asia/Tokyo]\", comments = \"Generator version: 7.10.0\")\npublic class ProjectCreateRequest   {\n  private String projectName;\n  private String projectType;\n  private LocalDate startDate;\n  private LocalDate endDate;\n\n    /**\n     * プロジェクト名\n     */\n    public ProjectCreateRequest projectName(String projectName) {\n        this.projectName = projectName;\n        return this;\n    }\n\n    @JsonProperty(\"projectName\")\n    @Required @Length(min = 1, max = 100)\n    public String getProjectName() {\n        return projectName;\n    }\n\n    @JsonProperty(\"projectName\")\n    public void setProjectName(String projectName) {\n        this.projectName = projectName;\n    }\n\n    /**\n     * プロジェクト種別\n     */\n    public ProjectCreateRequest projectType(String projectType) {\n        this.projectType = projectType;\n        return this;\n    }\n\n    @JsonProperty(\"projectType\")\n    @Required @Length(min = 1, max = 100)\n    public String getProjectType() {\n        return projectType;\n    }\n\n    @JsonProperty(\"projectType\")\n    public void setProjectType(String projectType) {\n        this.projectType = projectType;\n    }\n\n    /**\n     * 開始日\n     */\n    public ProjectCreateRequest startDate(LocalDate startDate) {\n        this.startDate = startDate;\n        return this;\n    }\n\n    @JsonProperty(\"startDate\")\n    @Required\n    public LocalDate getStartDate() {\n        return startDate;\n    }\n\n    @JsonProperty(\"startDate\")\n    public void setStartDate(LocalDate startDate) {\n        this.startDate = startDate;\n    }\n\n    /**\n     * 終了日\n     */\n    public ProjectCreateRequest endDate(LocalDate endDate) {\n        this.endDate = endDate;\n        return this;\n    }\n\n    @JsonProperty(\"endDate\")\n\n    public LocalDate getEndDate() {\n        return endDate;\n    }\n\n    @JsonProperty(\"endDate\")\n    public void setEndDate(LocalDate endDate) {\n        this.endDate = endDate;\n    }\n\n    // hashCode、equals、toString等は省略\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s27",
+      "title": "ドメインバリデーションを使用するソースコードの生成例",
+      "content": "OpenAPIドキュメント例\n\n```yaml\n## パスおよびオペレーション\n/projects:\n  post:\n    tags:\n    - project\n    summary: プロジェクトを作成する\n    description: プロジェクトを作成する\n    operationId: createProject\n    requestBody:\n      description: プロジェクト登録情報\n      content:\n        application/json:\n          schema:\n            $ref: '#/components/schemas/ProjectCreateRequest'\n    responses:\n      \"200\":\n        description: project created\n        content:\n          application/json:\n            schema:\n              $ref: '#/components/schemas/ProjectResponse'\n\n  ## スキーマ\n  ProjectCreateRequest:\n    description: プロジェクト作成リクエスト\n    required:\n    - projectName\n    type: object\n    properties:\n      projectName:\n        description: プロジェクト名\n        type: string\n        ## ドメインバリデーションの使用\n        x-nablarch-domain: \"projectName\"\n```\n\n本ツールの設定例\n\n```xml\n<configuration>\n  <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>\n  <generatorName>nablarch-jaxrs</generatorName>\n  <configOptions>\n    <sourceFolder>src/gen/java</sourceFolder>\n    <apiPackage>com.example.api</apiPackage>\n    <modelPackage>com.example.model</modelPackage>\n    <!-- Bean Validationを使用する場合はuseBeanValidationにtrueを指定する -->\n    <useBeanValidation>true</useBeanValidation>\n  </configOptions>\n</configuration>\n```\n\n本ツールにより生成されるモデル例\n\n```java\n@JsonTypeName(\"ProjectCreateRequest\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", date = \"2024-12-10T13:54:26.470544738+09:00[Asia/Tokyo]\", comments = \"Generator version: 7.10.0\")\npublic class ProjectCreateRequest   {\n  private String projectName;\n\n    /**\n     * プロジェクト名\n     */\n    public ProjectCreateRequest projectName(String projectName) {\n        this.projectName = projectName;\n        return this;\n    }\n\n    @JsonProperty(\"projectName\")\n    @Required @Domain(\"projectName\")\n    public String getProjectName() {\n        return projectName;\n    }\n\n    @JsonProperty(\"projectName\")\n    public void setProjectName(String projectName) {\n        this.projectName = projectName;\n    }\n\n    // hashCode、equals、toString等は省略\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s28",
+      "title": "ファイルアップロードの定義例",
+      "content": "OpenAPIドキュメント例\n\n```yaml\n## パスおよびオペレーション\n/customers/upload:\n  post:\n    tags:\n    - customer\n    summary: 顧客CSVファイルをアップロードする\n    description: 顧客CSVファイルをアップロードして顧客情報を取り込む\n    operationId: uploadCustomersCsvFile\n    requestBody:\n      description: 顧客CSVファイル情報\n      content:\n        multipart/form-data:\n          schema:\n            $ref: '#/components/schemas/CustomersCsvFileUploadRequest'\n    responses:\n      \"200\":\n        description: 顧客CSVファイルアップロード取り込み結果\n        content:\n          application/json:\n            schema:\n              $ref: '#/components/schemas/CustomersCsvFileUploadResultResponse'\n\n  ## スキーマ\n  CustomersCsvFileUploadRequest:\n    description: 顧客CSVファイル情報\n    required:\n    - fileName\n    - file\n    type: object\n    properties:\n      fileName:\n        description: ファイル名\n        type: string\n      file:\n        description: 顧客CSVファイル\n        type: string\n        format: binary\n```\n\n本ツールにより生成されるリソース(アクション)インターフェース例\n\n```java\n@Path(\"/customers/upload\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", date = \"2024-12-10T14:36:36.602623815+09:00[Asia/Tokyo]\", comments = \"Generator version: 7.10.0\")\npublic interface CustomersApi {\n    /**\n     * POST  : 顧客CSVファイルをアップロードする\n     *\n     * 顧客CSVファイルをアップロードして顧客情報を取り込む\n     *\n     * @param jaxRsHttpRequest HTTPリクエスト\n     * @param context ハンドラ実行コンテキスト\n     * @return 顧客CSVファイルアップロード取り込み結果\n     */\n    @POST\n    @Consumes({ \"multipart/form-data\" })\n    @Produces({ \"application/json\" })\n    EntityResponse<CustomersCsvFileUploadResultResponse> uploadCustomersCsvFile(JaxRsHttpRequest jaxRsHttpRequest, ExecutionContext context);\n\n}\n```\n\n> **Tip:**\n> ファイルアップロードの場合、リクエストのコンテンツタイプには `multipart/form-data` を指定する。またアップロードファイルには `type: string` かつ `format: binary` を指定する。この時、スキーマに対応するモデルのソースコードは生成されない。アップロードされたファイルは JaxRsHttpRequest より取得する。",
+      "level": 3
+    },
+    {
+      "id": "s29",
+      "title": "ファイルダウンロードの定義例",
+      "content": "OpenAPIドキュメント例\n\n```yaml\n/customers/upload:\n  get:\n    tags:\n    - customer\n    summary: 顧客情報をCSVファイルとしてダウンロードする\n    description: 顧客情報をCSVファイルとしてダウンロードする\n    operationId: downloadCustomersCsvFile\n    responses:\n      \"200\":\n        description: 顧客CSVファイル\n        content:\n          text/csv:\n            schema:\n              type: string\n              format: binary\n```\n\n本ツールにより生成されるリソース(アクション)インターフェース例\n\n```java\n@Path(\"/customers/upload\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", date = \"2024-12-10T14:48:03.670170037+09:00[Asia/Tokyo]\", comments = \"Generator version: 7.10.0\")\npublic interface CustomersApi {\n    /**\n     * GET  : 顧客情報をCSVファイルとしてダウンロードする\n     *\n     * 顧客情報をCSVファイルとしてダウンロードする\n     *\n     * @param jaxRsHttpRequest HTTPリクエスト\n     * @param context ハンドラ実行コンテキスト\n     * @return 顧客CSVファイル\n     */\n    @GET\n    HttpResponse downloadCustomersCsvFile(JaxRsHttpRequest jaxRsHttpRequest, ExecutionContext context);\n\n}\n```\n\n> **Tip:**\n> ファイルダウンロードではレスポンスのコンテンツタイプは任意となる。レスポンスのスキーマ定義は `type: string` かつ `format: binary` とし、ダウンロードするファイルの内容やレスポンスヘッダは HttpResponse を使って設定する。",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s1": "[OpenAPI](https://www.openapis.org/) ドキュメントからソースコードを生成する [OpenAPI Generator](https://openapi-generator.tech/) のGenerator実装。Nablarch RESTfulウェブサービス用のGeneratorを提供し、[OpenAPI GeneratorのMavenプラグイン](https://openapi-generator.tech/docs/plugins)に組み込んで実行することでソースコードを生成する。\n\n生成されたソースコードを使用することで、OpenAPIドキュメントで定義したREST APIのインターフェースに従ったアクションクラスの実装が容易となる。\n\n生成物:\n- パス・オペレーション定義 → リソース(アクション)インターフェース\n- スキーマ定義 → リクエスト/レスポンス対応モデル\n\n> **重要**: NablarchのRESTfulウェブサービスはJakarta RESTful Web Servicesのすべてのアノテーションをサポートしているわけではないため、ここで記載する内容以外のOpenAPIドキュメントの内容は生成されるソースコードに反映されない。サポートしているアノテーションは :ref:`restful_web_service_architecture` および [router_adaptor_path_annotation](../../component/adapters/adapters-router_adaptor.json#s3) を参照。\n\nソースコード生成時のデフォルト設定例:\n\n```xml\n<configuration>\n  <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>\n  <generatorName>nablarch-jaxrs</generatorName>\n  <configOptions>\n    <sourceFolder>src/gen/java</sourceFolder>\n    <apiPackage>com.example.api</apiPackage>\n    <modelPackage>com.example.model</modelPackage>\n  </configOptions>\n</configuration>\n```\n\n各種例はイメージを掴むことを目的とするため抜粋での記載となっている。",
-    "s2": "- Nablarch RESTfulウェブサービスのソースコード生成元となるOpenAPIドキュメントが作成済みであること\n- OpenAPIドキュメントは[OpenAPI 3.0.3](https://spec.openapis.org/oas/v3.0.3.html)仕様で記述されていること\n\n[rest_feature_details-method_signature](../../processing-pattern/restful-web-service/restful-web-service-resource_signature.json#s1) に則った形で生成する。\n\n**生成単位・型定義**:\n- OpenAPIドキュメントのパスおよびオペレーション情報を元にJavaインターフェースとして生成\n- 生成単位: デフォルトはパスの第一階層でまとめたもの。`useTags: true` の場合はオペレーションのタグ単位\n- インターフェース宣言に `Path`、`Generated` アノテーションを注釈\n\n**メソッド宣言に注釈するアノテーション**:\n\n| アノテーション | 条件 |\n|---|---|\n| `GET` | HTTPメソッドがGETのオペレーション |\n| `POST` | HTTPメソッドがPOSTのオペレーション |\n| `PUT` | HTTPメソッドがPUTのオペレーション |\n| `DELETE` | HTTPメソッドがDELETEのオペレーション |\n| `PATCH` | HTTPメソッドがPATCHのオペレーション |\n| `HEAD` | HTTPメソッドがHEADのオペレーション |\n| `OPTIONS` | HTTPメソッドがOPTIONSのオペレーション |\n| `Consumes` | リクエストのコンテンツタイプがある場合 |\n| `Produces` | レスポンスのコンテンツタイプがあり、`type: string` かつ `format: binary` 以外の場合 |\n| `Valid` | リクエストボディがあり、`useBeanValidation: true` の場合 |\n\n> **補足**: `type: string` かつ `format: binary` はファイルダウンロードを意味する。この場合のコンテンツタイプは `HttpResponse#setContentType` で設定する。\n\n**メソッド名の生成仕様**:\n- `operationId` の値をメソッド名として使用\n- `operationId` が未指定の場合はパス値とHTTPメソッド名を組み合わせて生成\n\n**メソッド引数の生成仕様**:\n\n| 引数の型 | 条件 |\n|---|---|\n| リクエストモデルの型 | リクエストボディあり、かつコンテンツタイプがマルチパート以外の場合 |\n| `JaxRsHttpRequest` | 常に生成 |\n| `ExecutionContext` | 常に生成 |\n\n> **補足**: `PathParam`、`QueryParam` 等には対応していないため、`parameters` 定義はメソッド引数に反映されない。これらは `JaxRsHttpRequest` から取得すること。コンテンツタイプが `multipart/form-data` の場合はリクエストモデル引数は生成されない。アップロードされたファイルも `JaxRsHttpRequest` から取得する。\n\n**メソッド戻り値の生成仕様**:\n\n| 戻り値の型 | 条件 |\n|---|---|\n| `EntityResponse` | レスポンスがモデルの場合。型パラメータにモデルの型を反映 |\n| `HttpResponse` | レスポンスがモデルでない場合、またはHTTPステータスコードが `200` 以外の場合 |\n\nOpenAPIドキュメント例:\n\n```yaml\n/projects:\n  post:\n    operationId: createProject\n    requestBody:\n      content:\n        application/json:\n          schema:\n            $ref: '#/components/schemas/ProjectCreateRequest'\n    responses:\n      \"200\":\n        content:\n          application/json:\n            schema:\n              $ref: '#/components/schemas/ProjectResponse'\n/projects/{id}:\n  get:\n    operationId: findProjectById\n    parameters:\n    - name: id\n      in: path\n      required: true\n      schema:\n        type: string\n    responses:\n      \"200\":\n        content:\n          application/json:\n            schema:\n              $ref: '#/components/schemas/ProjectResponse'\n      \"404\":\n        description: プロジェクトが見つからなかった場合\n```\n\n生成されるリソース(アクション)インターフェース例:\n\n```java\n@Path(\"/projects\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", ...)\npublic interface ProjectsApi {\n    @POST\n    @Consumes({ \"application/json\" })\n    @Produces({ \"application/json\" })\n    EntityResponse<ProjectResponse> createProject(ProjectCreateRequest projectCreateRequest, JaxRsHttpRequest jaxRsHttpRequest, ExecutionContext context);\n\n    @GET\n    @Path(\"/{id}\")\n    @Produces({ \"application/json\" })\n    EntityResponse<ProjectResponse> findProjectById(JaxRsHttpRequest jaxRsHttpRequest, ExecutionContext context);\n}\n```",
-    "s3": "OpenAPIドキュメントを入力として以下を生成:\n\n1. パス・オペレーション定義 → リソース(アクション)インターフェース\n2. スキーマ定義 → リクエスト/レスポンス対応モデル\n\n> **補足**: `.openapi-generator-ignore`、`.openapi-generator/FILES`、`.openapi-generator/VERSION` が `output` 指定ディレクトリ配下に生成されるが、これらは使用しない。\n\n**生成単位・型定義**:\n- スキーマとして定義しているモデルに対してJavaクラスとして生成\n- `JsonTypeName`、`Generated` アノテーションを注釈\n\n**プロパティ生成仕様**:\n- スキーマに定義されたフィールドに対応するプロパティを生成\n- getter/setterを生成し、`JsonProperty` アノテーションを注釈\n- メソッドチェイン可能なセッターメソッドを生成（モデル自身の型を返す）\n- `useBeanValidation: true` かつOpenAPIドキュメントにバリデーション定義がある場合、 [bean_validation](../../component/libraries/libraries-bean_validation.json#s1) を使用したバリデーションを有効化\n- バリデーションアノテーションはNablarch固有の [bean_validation](../../component/libraries/libraries-bean_validation.json#s1) アノテーションと `jakarta.validation.constraints` パッケージのものを使用\n\n**その他の生成仕様**:\n- `hashCode`、`equals`、`toString` メソッドを生成\n\nフォーマット→Javaの型変換: `uuid`→`UUID`、`int64`→`Long`、`date`→`LocalDate`\n\nOpenAPIドキュメント例:\n\n```yaml\nProjectResponse:\n  description: プロジェクト情報\n  type: object\n  properties:\n    id:\n      format: uuid\n      type: string\n    name:\n      type: string\n    sales:\n      format: int64\n      type: integer\n    startDate:\n      format: date\n      type: string\n    endDate:\n      format: date\n      type: string\n```\n\n生成されるモデル例:\n\n```java\n@JsonTypeName(\"ProjectResponse\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", ...)\npublic class ProjectResponse {\n    private UUID id;\n    private String name;\n    private Long sales;\n    private LocalDate startDate;\n    private LocalDate endDate;\n\n    @JsonProperty(\"id\")\n    public UUID getId() { return id; }\n    @JsonProperty(\"id\")\n    public void setId(UUID id) { this.id = id; }\n\n    // 他フィールドも同様に@JsonProperty付きgetter/setter\n    // hashCode、equals、toString等は省略\n}\n```",
-    "s4": "1. ウェブサービスの設計情報を元にOpenAPIドキュメントを作成する\n2. Nablarch RESTfulウェブサービスのプロジェクトを作成し、MavenプラグインとしてOpenAPI Generatorおよび本ツールの設定を行う\n3. プロジェクトをビルドし、リソース(アクション)インターフェースとモデルを生成する\n4. 生成したリソース(アクション)インターフェースとモデルを使用して、Nablarch RESTfulウェブサービスの実装を行う\n\n> **補足**: 本ツールはOpenAPIドキュメントの修正に合わせて繰り返し実行可能。アクションクラスは生成されたリソース(アクション)インターフェースを実装して作成するため、再実行してもアクションクラスの実装内容は失われない。\n\n> **補足**: CLIでも使用可能。詳しくは「CLIとして実行する」を参照。\n\n本ツールで生成されるソースコードをビルドするには、依存関係に以下のモジュールが必要になる。\n\n```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-jaxrs</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core-validation-ee</artifactId>\n</dependency>\n<dependency>\n  <groupId>jakarta.ws.rs</groupId>\n  <artifactId>jakarta.ws.rs-api</artifactId>\n</dependency>\n<dependency>\n  <groupId>jakarta.annotation</groupId>\n  <artifactId>jakarta.annotation-api</artifactId>\n</dependency>\n<dependency>\n  <groupId>com.fasterxml.jackson.core</groupId>\n  <artifactId>jackson-annotations</artifactId>\n  <version>2.17.1</version>\n</dependency>\n```\n\nRESTfulウェブサービスのブランクプロジェクトの依存関係にはこれらがすべて含まれている。\n\n`useBeanValidation`に`true`を指定する:\n\n```xml\n<configOptions>\n  <!-- Bean Validationを使用する場合はuseBeanValidationにtrueを指定する -->\n  <useBeanValidation>true</useBeanValidation>\n</configOptions>\n```\n\n- `required`フィールドのgetterに`@Required`が付与される\n- `maxLength`/`minLength`指定時のgetterに`@Length(min=..., max=...)`が付与される\n- HTTPボディでリクエストを受け取るアクションメソッドに`@Valid`が付与される\n\nOpenAPIドキュメント例:\n\n```yaml\nProjectCreateRequest:\n  required:\n  - projectName\n  - projectType\n  - startDate\n  properties:\n    projectName:\n      maxLength: 100\n      minLength: 1\n      type: string\n    projectType:\n      maxLength: 100\n      minLength: 1\n      type: string\n    startDate:\n      format: date\n      type: string\n    endDate:\n      format: date\n      type: string\n```\n\n生成されるリソース(アクション)インターフェース例（HTTPボディ受け取り時に`@Valid`が付与される）:\n\n```java\n@Path(\"/projects\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", ...)\npublic interface ProjectsApi {\n    @POST\n    @Consumes({ \"application/json\" })\n    @Produces({ \"application/json\" })\n    @Valid\n    EntityResponse<ProjectResponse> createProject(ProjectCreateRequest projectCreateRequest, JaxRsHttpRequest jaxRsHttpRequest, ExecutionContext context);\n}\n```\n\n生成されるモデル例:\n\n```java\n@JsonTypeName(\"ProjectCreateRequest\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", ...)\npublic class ProjectCreateRequest {\n    @JsonProperty(\"projectName\")\n    @Required @Length(min = 1, max = 100)\n    public String getProjectName() { ... }\n\n    @JsonProperty(\"projectType\")\n    @Required @Length(min = 1, max = 100)\n    public String getProjectType() { ... }\n\n    @JsonProperty(\"startDate\")\n    @Required\n    public LocalDate getStartDate() { ... }\n\n    @JsonProperty(\"endDate\")\n    public LocalDate getEndDate() { ... }\n    // hashCode、equals、toString等は省略\n}\n```",
-    "s5": "本ツールを使用するために最低限必要な、OpenAPI GeneratorのMavenプラグインの設定例:\n\n```xml\n<plugin>\n  <groupId>org.openapitools</groupId>\n  <artifactId>openapi-generator-maven-plugin</artifactId>\n  <version>7.10.0</version>\n  <dependencies>\n    <!-- 本ツールのモジュールを依存関係に追加 -->\n    <dependency>\n      <groupId>com.nablarch.tool</groupId>\n      <artifactId>nablarch-openapi-generator</artifactId>\n      <version>1.0.0</version>\n    </dependency>\n  </dependencies>\n  <executions>\n    <execution>\n      <goals>\n        <goal>generate</goal>\n      </goals>\n      <configuration>\n        <!-- OpenAPIドキュメントのファイルパスを指定する -->\n        <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>\n        <generatorName>nablarch-jaxrs</generatorName>\n        <configOptions>\n          <sourceFolder>src/gen/java</sourceFolder>\n          <apiPackage>com.example.api</apiPackage>\n          <modelPackage>com.example.model</modelPackage>\n          <!-- その他、本ツールのオプションを指定する -->\n        </configOptions>\n      </configuration>\n    </execution>\n  </executions>\n</plugin>\n```\n\n本ツールは以下の依存関係により提供される:\n\n```xml\n<dependency>\n  <groupId>com.nablarch.tool</groupId>\n  <artifactId>nablarch-openapi-generator</artifactId>\n  <version>1.0.0</version>\n</dependency>\n```\n\n必須設定: `inputSpec`（OpenAPIドキュメントのファイルパス）と `generatorName`（`nablarch-jaxrs` を指定）。その他の設定項目は「Generatorの設定項目」を参照。\n\n> **補足**: 本ツールはOpenAPI Generator 7.10.0で開発・テスト済み。バージョンを変更する場合はプロジェクト側でテストを行うこと。\n\nOpenAPIドキュメント上で定義されたデータ型とフォーマットに対して、本ツールによるJavaのデータ型の対応表を以下に示す。\n\n| OpenAPIのtype | OpenAPIのformat | Javaのデータ型 |\n|---|---|---|\n| `integer` | (なし) | `java.lang.Integer` |\n| `integer` | `int32` | `java.lang.Integer` |\n| `integer` | `int64` | `java.lang.Long` |\n| `number` | (なし) | `java.math.BigDecimal` |\n| `number` | `float` | `java.lang.Float` |\n| `number` | `double` | `java.lang.Double` |\n| `boolean` | (なし) | `java.lang.Boolean` |\n| `string` | (なし) | `java.lang.String` |\n| `string` | `byte` | `byte[]` |\n| `string` | `date` | `java.time.LocalDate` |\n| `string` | `date-time` | `java.time.OffsetDateTime` |\n| `string` | `number` | `java.math.BigDecimal` |\n| `string` | `uuid` | `java.util.UUID` |\n| `string` | `uri` | `java.net.URI` |\n| `string` | (`enum` 指定時) | 対応するEnum型を生成 |\n| `array` | (なし) | `java.util.List` |\n| `array` | (`uniqueItems: true`) | `java.util.Set` |\n| `object` | (なし) | 対応するモデルの型 |\n| `object` | (対応する型がない場合) | `java.lang.Object` |\n\n> **補足**: `type: string` かつ `format: binary` はリクエストのコンテンツタイプが `multipart/form-data` の場合のみ利用可能。それ以外のコンテンツタイプやレスポンスのモデル定義内で使用した場合はモデルの生成を中止する。上記表以外の `type: string` フォーマットはすべて `java.lang.String` として生成する。\n\n`x-nablarch-domain`拡張属性に値を指定すると`@Domain`アノテーションが生成される（`useBeanValidation`も`true`にする）:\n\nOpenAPIドキュメント例:\n\n```yaml\nProjectCreateRequest:\n  required:\n  - projectName\n  properties:\n    projectName:\n      type: string\n      x-nablarch-domain: \"projectName\"\n```\n\n生成されるモデル例:\n\n```java\n@JsonTypeName(\"ProjectCreateRequest\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", ...)\npublic class ProjectCreateRequest {\n    @JsonProperty(\"projectName\")\n    @Required @Domain(\"projectName\")\n    public String getProjectName() { ... }\n}\n```",
-    "s6": "本ツールはMavenの `compile` ゴールで実行できる:\n\n```\nmvn compile\n```\n\n`sourceFolder` を明示的に設定した場合、`mvn compile` 時に生成されたソースコードがコンパイル対象に含まれる（OpenAPI GeneratorのMavenプラグインによる動作）。\n\n`useBeanValidation` のデフォルト値は `false`。`true` に設定した場合、以下の2方針でプロパティにアノテーションを注釈する。\n\n## OpenAPI仕様プロパティによるバリデーション\n\n[OpenAPI仕様のプロパティ(外部サイト、英語)](https://spec.openapis.org/oas/v3.0.3.html#properties) を使用したバリデーション定義の対応表:\n\n| OpenAPIのtype | OpenAPIのformat | 使用プロパティ | 注釈するアノテーション |\n|---|---|---|---|\n| `integer` | (フォーマット問わない) | `required` | `Required` |\n| `integer` | (なし/`int32`/`int64`) | `minimum`/`maximum` | `NumberRange(min, max)` |\n| `number` | (フォーマット問わない) | `required` | `Required` |\n| `number` | (なし/`float`/`double`) | `minimum`/`maximum` | `DecimalRange(min, max)` |\n| `boolean` | (なし) | `required` | `Required` |\n| `string` | (フォーマット問わない) | `required` | `Required` |\n| `string` | (なし) | `minLength`/`maxLength` | `Length(min, max)` |\n| `string` | (なし) | `pattern` | `Pattern(regexp)` |\n| `array` | (なし) | `required` | `Required` |\n| `array` | (なし) | `minItems`/`maxItems` | `Size(min, max)` |\n\n> **補足**: `multipleOf`、`exclusiveMinimum`、`exclusiveMaximum`、`minProperties`、`maxProperties` には対応していない。`minimum`/`maximum`、`minLength`/`maxLength`、`minItems`/`maxItems` はどちらか片方のみでも指定可能。Javaのデータ型が `java.math.BigDecimal`、`java.util.List`、`java.util.Set`、またはモデルの場合は `Valid` アノテーションを注釈する。`Pattern` のみJakarta Bean Validation標準のアノテーションで、それ以外はNablarch固有のアノテーション。\n\n## ドメインバリデーション\n\n[OpenAPI仕様の拡張プロパティ(外部サイト、英語)](https://spec.openapis.org/oas/v3.0.3.html#specification-extensions) `x-nablarch-domain` を使用して [bean_validation-domain_validation](../../component/libraries/libraries-bean_validation.json#s5) をサポートする。値にはドメイン名を指定する。\n\n```yaml\npropertyName:\n  type: string\n  x-nablarch-domain: \"domainName\"\n```\n\n`useBeanValidation: true` でソースコードを生成すると、対象プロパティに `Domain(\"{domainName}\")` が注釈される。\n\n> **重要**: ドメインバリデーションと競合する可能性があるバリデーション定義を検出した場合はソースコードの生成を中止する。`x-nablarch-domain` を指定したプロパティに `minimum`、`maximum`、`minLength`、`maxLength`、`minItems`、`maxItems`、`pattern` のいずれかが指定されている場合は生成を中止する。`required` のみ併用可能。\n\nファイルアップロードの場合、リクエストのコンテンツタイプには `multipart/form-data` を指定する。アップロードファイルには `type: string` かつ `format: binary` を指定する。この時、スキーマに対応するモデルのソースコードは生成されない。アップロードされたファイルは `JaxRsHttpRequest` より取得する。\n\nOpenAPIドキュメント例:\n\n```yaml\n/customers/upload:\n  post:\n    operationId: uploadCustomersCsvFile\n    requestBody:\n      content:\n        multipart/form-data:\n          schema:\n            $ref: '#/components/schemas/CustomersCsvFileUploadRequest'\n    responses:\n      \"200\":\n        content:\n          application/json:\n            schema:\n              $ref: '#/components/schemas/CustomersCsvFileUploadResultResponse'\n```\n\nスキーマ定義（`format: binary`のフィールドを含む場合、モデルクラスは生成されない）:\n\n```yaml\nCustomersCsvFileUploadRequest:\n  required:\n  - fileName\n  - file\n  type: object\n  properties:\n    fileName:\n      type: string\n    file:\n      type: string\n      format: binary\n```\n\n生成されるリソース(アクション)インターフェース例:\n\n```java\n@Path(\"/customers/upload\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", ...)\npublic interface CustomersApi {\n    @POST\n    @Consumes({ \"multipart/form-data\" })\n    @Produces({ \"application/json\" })\n    EntityResponse<CustomersCsvFileUploadResultResponse> uploadCustomersCsvFile(JaxRsHttpRequest jaxRsHttpRequest, ExecutionContext context);\n}\n```",
-    "s7": "OpenAPI GeneratorのMavenプラグインのデフォルト設定では、生成されたソースコードは `target/generated-sources/openapi/src/gen/java` に出力される。\n\n出力先を変更したい場合は「Generatorの設定項目」の `output` と `sourceFolder` を参照。\n\n本ツールを使用して、バリデーション定義を含めたソースコードを生成する場合の運用上の注意点を記載する。\n\n## OpenAPI仕様の規定範囲でバリデーション要件を満たせない場合\n\nOpenAPI仕様で規定されているバリデーションは必須定義・長さチェック・正規表現のみのため、業務アプリケーションが求めるものとして不足することがある。自動生成されたソースコードを直接修正することは望ましくないため、ドメインバリデーションを使用しても生成されたモデルに相関バリデーションを実装できない。\n\n> **重要**: バリデーション定義が自動生成モデルと手動実装フォーム等に分散されやすい状況になる点に注意すること。本ツールがデフォルトでバリデーションアノテーションを注釈しないのは、この分散が望ましくないと考えているためである。\n\n[bean_validation-execute_explicitly](../../component/libraries/libraries-bean_validation.json#s16) と同様のアプローチで実装する。自動生成モデルと同じプロパティ定義のフォームを作成し、 `BeanUtil` でプロパティ値をコピー後、バリデーションを実施する:\n\n```java\npublic class ProjectAction implements ProjectsApi {\n    @Override\n    public EntityResponse<ProjectResponse> createProject(ProjectCreateRequest projectCreateRequest, JaxRsHttpRequest jaxRsHttpRequest, ExecutionContext context) {\n        ProjectCreateForm form;\n        try {\n            form = ProjectValidatorUtil.validate(ProjectCreateForm.class, projectCreateRequest);\n        } catch (ApplicationException e) {\n            throw e;\n        }\n        return response;\n    }\n}\n\npublic final class ProjectValidatorUtil {\n    public static <T> T validate(Class<T> beanClass, Object src) {\n        T bean = BeanUtil.createAndCopy(beanClass, src);\n        ValidatorUtil.validate(bean);\n        return bean;\n    }\n}\n```\n\n## ドメインバリデーション使用時の注意点\n\n> **重要**: ドメインバリデーションを使用すると、バリデーション仕様がドメイン側に隠蔽されやすくなり、OpenAPIドキュメントからバリデーション仕様が見えなくなる可能性がある点に注意すること。\n\nファイルダウンロードではレスポンスのコンテンツタイプは任意となる。レスポンスのスキーマ定義は `type: string` かつ `format: binary` とし、ダウンロードするファイルの内容やレスポンスヘッダは `HttpResponse` を使って設定する。\n\nOpenAPIドキュメント例:\n\n```yaml\n/customers/upload:\n  get:\n    operationId: downloadCustomersCsvFile\n    responses:\n      \"200\":\n        content:\n          text/csv:\n            schema:\n              type: string\n              format: binary\n```\n\n生成されるリソース(アクション)インターフェース例:\n\n```java\n@Path(\"/customers/upload\")\n@jakarta.annotation.Generated(value = \"nablarch.tool.openapi.codegen.JavaNablarchJaxrsServerCodegen\", ...)\npublic interface CustomersApi {\n    @GET\n    HttpResponse downloadCustomersCsvFile(JaxRsHttpRequest jaxRsHttpRequest, ExecutionContext context);\n}\n```",
-    "s8": "`configuration` タグ内直下の設定:\n\n| 項目名 | 設定内容 | 必須/任意 | デフォルト値 |\n|---|---|---|---|\n| `inputSpec` | 入力OpenAPIドキュメントのファイルパス | 必須 | なし |\n| `generatorName` | Generatorの名前。`nablarch-jaxrs` を指定 | 必須 | なし |\n| `output` | ソースコード生成先ディレクトリ | 任意 | `generated-sources/openapi` |\n\n`configOptions` タグ内の本ツール固有設定（すべて任意）:\n\n| 項目名 | 設定内容 | デフォルト値 |\n|---|---|---|\n| `apiPackage` | リソース(アクション)インターフェースのパッケージ | `org.openapitools.api` |\n| `modelPackage` | モデルのパッケージ | `org.openapitools.model` |\n| `hideGenerationTimestamp` | `Generated` アノテーションに `date` 属性を付与するか否か（falseでは生成日時が出力される） | `false` |\n| `sourceFolder` | ソースコード生成先（`output` からの相対パス）。指定するとコンパイル対象に含まれる | `src/gen/java` |\n| `useTags` | インターフェース単位をパスではなくタグ単位にする（複数タグ時は最初のタグが有効） | `false` |\n| `serializableModel` | モデルに `java.io.Serializable` を実装 | `false` |\n| `generateBuilders` | モデルのビルダークラスを生成 | `false` |\n| `useBeanValidation` | OpenAPIドキュメントのバリデーション定義から Bean Validation アノテーションを生成 | `false` |\n| `additionalModelTypeAnnotations` | モデルクラス宣言に追加アノテーション（複数は `;` 区切り） | なし |\n| `additionalEnumTypeAnnotations` | enum型に追加アノテーション（複数は `;` 区切り） | なし |\n| `primitivePropertiesAsString` | プリミティブ型プロパティをすべて `String` として出力 | `false` |\n| `supportConsumesMediaTypes` | リクエストを受け付けるメディアタイプ（`,` 区切り） | `application/json,multipart/form-data` |\n| `supportProducesMediaTypes` | レスポンスとするメディアタイプ（`,` 区切り） | `application/json` |",
-    "s9": "`useBeanValidation` を `true` に設定することで、OpenAPIドキュメントのバリデーション定義から Bean Validation の機能を使ったバリデーションを行うソースコードを生成する。デフォルトは `false`。\n\n設定例:\n```xml\n<configuration>\n  <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>\n  <generatorName>nablarch-jaxrs</generatorName>\n  <configOptions>\n    <sourceFolder>src/gen/java</sourceFolder>\n    <apiPackage>com.example.api</apiPackage>\n    <modelPackage>com.example.model</modelPackage>\n    <!-- Bean Validationを使用するソースコードを生成する -->\n    <useBeanValidation>true</useBeanValidation>\n  </configOptions>\n</configuration>\n```\n\n> **補足**: OpenAPI仕様のバリデーション定義では業務要件を満たせないことが多く、相関バリデーションも定義できないため、デフォルトは `false`。バリデーション機能を使用する場合の仕様や運用上の注意点は Bean Validationのプロパティ変換 に詳細に記載されている。",
-    "s10": "本ツールは主にMavenプラグインとして使用することを想定しているが、CLIとしても使用可能。\n\n[OpenAPI Generator 7.10.0のJAR](https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.10.0/openapi-generator-cli-7.10.0.jar)と[本ツールのJAR](https://repo1.maven.org/maven2/com/nablarch/tool/nablarch-openapi-generator/1.0.0/nablarch-openapi-generator-1.0.0.jar)をダウンロードして実行:\n\n```\njava -cp openapi-generator-cli-7.10.0.jar:nablarch-openapi-generator-1.0.0.jar org.openapitools.codegen.OpenAPIGenerator generate --generator-name nablarch-jaxrs --input-spec openapi.yaml --output out --additional-properties=apiPackage=com.example.api,modelPackage=com.example.model,useBeanValidation=true,hideGenerationTimestamp=true\n```\n\n- `--generator-name` には `nablarch-jaxrs` を指定\n- OpenAPI Generator設定項目はCLIでもハイフン区切り形式で指定可能（詳細: `java -jar openapi-generator-cli-7.10.0.jar help generate`）\n- 本ツール固有の設定項目は `--additional-properties` に `key=value` 形式で指定（複数は `,` 区切り）\n\n> **補足**: 本ツール固有の設定項目は `--additional-properties=hideGenerationTimestamp=true` のように `--additional-properties=` に続けて項目名をそのまま指定する。"
-  }
+  ]
 }

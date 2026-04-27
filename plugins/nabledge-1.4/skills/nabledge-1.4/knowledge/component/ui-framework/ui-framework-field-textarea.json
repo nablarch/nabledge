@@ -1,0 +1,26 @@
+{
+  "id": "ui-framework-field-textarea",
+  "title": "複数行テキスト入力項目ウィジェット",
+  "content": "[複数行テキスト入力項目ウィジェット](../../component/ui-framework/ui-framework-field-textarea.md) は **UI標準 UI部品 複数行テキスト入力**\nの内容に準拠したテキストエリアを出力する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**設計成果物(ローカル動作)**\n\n```jsp\n<field:textarea\n  title=\"漢字氏名\"\n  hint=\"全角50文字以内で入力してください。\"\n  required=\"true\"\n  maxlength=\"50\">\n</field:textarea>\n```\n\n**実装成果物(サーバ動作)**\n\n```jsp\n<field:textarea\n  title=\"漢字氏名\"\n  required=\"true\"\n  maxlength=\"50\"\n  hint=\"全角50文字以内\"\n  name=\"W11AC02.users.kanjiName\">\n</field:textarea>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "このウィジェットは [入力項目ウィジェット共通テンプレート](../../component/ui-framework/ui-framework-field-base.md) を用いて実装している。\n[入力項目ウィジェット共通テンプレート](../../component/ui-framework/ui-framework-field-base.md) が実装する共通仕様についてはここでは記述しない。\n\n**ローカル動作時の挙動**\n入力画面では **sample** に指定した文字列を初期表示するテキストエリアを表示する。\n\n確認画面では、 **sample** に指定した文字列をラベル表示する。\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n([入力項目ウィジェット共通テンプレート](../../component/ui-framework/ui-framework-field-base.md) の共通属性は省略)\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| domain | 項目のドメイン型 | 文字列 | ○ | ○ |  |\n| readonly | 編集可能かどうか | 真偽値 | ○ | ○ | デフォルトは 'false' |\n| disabled | サーバに対する入力値の送信を 抑制するかどうか | 真偽値 | ○ | ○ | デフォルトは 'false' |\n| id | HTMLのid属性値 (省略時はname属性と同じ 値を使用する) | 文字列 | ○ | ○ |  |\n| cssClass | HTMLのclass属性値 | 文字列 | ○ | ○ |  |\n| maxlength | 入力文字数の上限 | 文字列 | ○ | ○ |  |\n| example | 具体的な入力例を表すテキスト (placeholderなどの形式で 表示する) | 文字列 | ○ | ○ |  |\n| nameAlias | 一つのエラーメッセージに 対して複数の入力項目を ハイライト表示する場合に 指定する。 | 文字列 | ○ | × |  |\n| sample | ローカル動作時にテキスト エリアに表示する文字列 | 文字列 | × | ○ |  |\n| rows | 表示行数 | 数値 | ○ | ○ | デフォルトは '4' |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 画面項目定義に記載する、 「表示情報取得元」.「表示項目名」 の形式で設定する。 |\n| comment | テキストエリアについての備考 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/field/textarea.tag | [複数行テキスト入力項目ウィジェット](../../component/ui-framework/ui-framework-field-textarea.md) |\n| /WEB-INF/tags/widget/field/base.tag | [入力項目ウィジェット共通テンプレート](../../component/ui-framework/ui-framework-field-base.md) |\n| /js/jsp/taglib/nablarch.js | <n:textarea> のエミュレーション機能を実装する タグライブラリスタブJS |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義。 チェックボックスに関する定義もここに含まれる。 |",
+      "level": 2
+    }
+  ]
+}

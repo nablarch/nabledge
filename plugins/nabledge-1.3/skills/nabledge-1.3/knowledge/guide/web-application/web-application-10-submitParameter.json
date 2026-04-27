@@ -1,0 +1,68 @@
+{
+  "id": "web-application-10-submitParameter",
+  "title": "一覧表示から個別の情報を扱う画面への遷移",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "本項で説明する内容",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "説明内容",
+      "content": "本項では、以下の内容を説明する。\n\n* 検索結果などの一覧表示されているリンクごとに異なる情報をパラメータとして送る方法",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "作成内容",
+      "content": "本項で作成するのは、下記画面遷移図の赤丸の部分である。\n\n![screenTransition.png](assets/web-application-10-submitParameter/screenTransition.png)\n\n編集するソースコードは以下のとおり。\n\n| 名称(右クリック->保存でダウンロード) | ステレオタイプ | 処理内容 |\n|---|---|---|\n| [W11AC03Action.java](assets/web-application-10-submitParameter/W11AC03Action.java) | Action | 一覧から送られてきたパラメータを元に検索を行う。検索結果をリクエストに格納、更新画面への遷移を行う。 |\n| [W11AC0101.jsp](assets/web-application-10-submitParameter/W11AC0101.jsp) [W11AC0301.jsp](assets/web-application-10-submitParameter/W11AC0301.jsp) | View | W11AC0101.jspは検索結果の一覧表示および個別の情報のサブミットを行う。 W11AC0301.jspは更新画面に検索結果を初期値として表示する。 |\n\nステレオタイプについては [業務コンポーネントの責務配置](../../about/about-nablarch/about-nablarch-01-NablarchOutline.md#stereotype) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "作成手順",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "View(JSP)の作成",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "画面イメージ",
+      "content": "作成するJSPの画面イメージを以下に示す。\n\n![W11AC0101.png](assets/web-application-10-submitParameter/W11AC0101.png)",
+      "level": 4
+    },
+    {
+      "id": "s7",
+      "title": "概要",
+      "content": "一覧に表示された *更新* リンクをクリックすると、そのユーザのキー情報（ユーザID）をサブミットする。\n\nリンク毎に異なるパラメータを送りたい場合、\nサブミット用のリンクを表すカスタムタグの内容にパラメータを表すカスタムタグを指定すればよい。",
+      "level": 4
+    },
+    {
+      "id": "s8",
+      "title": "パラメータをサブミットするリンクの作成方法",
+      "content": "サンプル提供のcolumn:linkタグでリンクを作成する。\n\ncolumn:linkタグの内容として、<n:param>タグを記述する。\n\n上記を参照し、以下の内容で *W11AC0101.jsp* を作成する。\n\n* W11AC0101.jsp\n\n```./_source/10/W11AC0101.jsp\n\n```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 4
+    },
+    {
+      "id": "s9",
+      "title": "更新画面初期表示までの実装",
+      "content": "更新画面の初期表示までには以下の処理を行う必要がある。\n\n送られてきたパラメータの取得\n\nパラメータをキーとした検索\n\n検索結果をリクエストスコープに格納\n\n更新画面の初期表示\n\n上記を参照し、以下の内容で *W11AC03Actionクラス* および *W11AC0301.jsp* を作成する。\n\n* W11AC03Action.java\n\n```java\n/**\n * ユーザ更新機能のアクションクラス。\n */\npublic class W11AC03Action extends DbAccessSupport {\n\n    // ～中略～\n\n    /**\n     * ユーザ情報更新画面を表示する。\n     *\n     * @param req リクエストコンテキスト\n     * @param ctx HTTPリクエストの処理に関連するサーバ側の情報\n     * @return HTTPレスポンス\n     */\n    @OnError(type = ApplicationException.class,\n             path = \"forward:///action/ss11AC/W11AC01Action/RW11AC0102\")\n    public HttpResponse doRW11AC0301(HttpRequest req, ExecutionContext ctx) {\n\n        // 引継いだユーザIDの取得\n        // 【説明】送られてきたパラメータの取得\n        ValidationContext<W11AC03Form> userSearchFormContext =\n            ValidationUtil.validateAndConvertRequest(\"W11AC03\", W11AC03Form.class, req, \"selectUserInfo\");\n\n        // hidden暗号化を行っていれば発生しないエラー\n        userSearchFormContext.abortIfInvalid();\n\n        String userId = userSearchFormContext.createObject().getSystemAccount().getUserId();\n\n        // ～中略～\n\n        // 更新対象ユーザ情報の取得\n        // 【説明】パラメータをキーとして検索\n        CM311AC1Component comp = new CM311AC1Component();\n        SqlResultSet sysAcct = comp.selectSystemAccount(userId);\n        SqlResultSet users = comp.selectUsers(userId);\n        SqlResultSet permissionUnit = comp.selectPermissionUnit(userId);\n        SqlResultSet ugroup = comp.selectUgroup(userId);\n\n        // ～中略～\n\n        // 検索結果をリクエストコープに設定\n        ctx.setRequestScopedVar(\"W11AC03\", getWindowScopeObject(sysAcct, users, permissionUnit, ugroup));\n\n        return new HttpResponse(\"/ss11AC/W11AC0301.jsp\");\n    }\n\n    /**\n     * 更新対象ユーザの検索結果を設定したFormを返す。\n     *\n     * @param sysAcct システムアカウント情報\n     * @param users ユーザ情報\n     * @param permissionUnit 認可単位情報\n     * @param ugroup グループ情報\n     * @return 引数のデータを設定したMap\n     */\n     // 【説明】検索結果を設定したFormを返すメソッド\n    private W11AC03Form getWindowScopeObject(SqlResultSet sysAcct, SqlResultSet users,\n            SqlResultSet permissionUnit, SqlResultSet ugroup) {\n        W11AC03Form userForm = new W11AC03Form();\n\n        // ～中略～\n\n        return userForm;\n    }\n\n// ～後略～\n```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)\n\n* W11AC0301.jsp\n\n```./_source/10/W11AC0301.jsp\n\n```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "次に読むもの",
+      "content": "* [データベースアクセス処理を詳しく知りたい時](../../../fw/reference/02_FunctionDemandSpecifications/01_Core/04_DbAccessSpec.html)\n* [データベースアクセス処理の実例を知りたい時](./DB/01_DbAccessSpec_Example.html)\n* [カスタムタグの使用方法を詳しく知りたい時](../../../fw/reference/02_FunctionDemandSpecifications/03_Common/07_WebView.html)",
+      "level": 2
+    }
+  ]
+}

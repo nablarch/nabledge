@@ -1,0 +1,20 @@
+{
+  "id": "http-messaging-03-userQueryMessageAction",
+  "title": "HTTP同期応答型メッセージ受信処理",
+  "content": "[ユーザ情報登録サービス](../../guide/http-messaging/http-messaging-01-userResisterMessageSpec.md) を例に、HTTP同期応答型メッセージ受信処理の実装方法を説明する。\n\n業務Actionの実装内容は、MOMによるメッセージング処理と同様の実装にて、HTTPメッセージングを実現できる。\n\n![userRegisterMessage.png](assets/http-messaging-03-userQueryMessageAction/userRegisterMessage.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "電文受信時の処理",
+      "content": "サンプルでは、電文受信時に以下の処理を行う。\n\n① 要求電文を精査しEntityへ変換する。\n② Entityを使用して要求電文の内容をデータベースに登録する。\n③ 応答電文を作成し返却する。\n\n```java\npublic class RM11AC0102Action extends MessagingAction {\n\n    /**\n     * データ部に格納された登録ユーザレコードの項目精査を行った後、\n     * データベースに登録する。\n     *\n     * 精査エラーとなった場合は、処理をロールバックしてエラー応答を送信する。\n     *\n     * @param request 要求電文オブジェクト\n     * @param context 実行コンテキスト\n     * @return 応答電文オブジェクト\n     */\n    @Override\n    protected ResponseMessage onReceive(RequestMessage   request,\n                                        ExecutionContext context) {\n\n        // 【説明】要求電文を精査しEntityに変換する\n        RM11AC0102RequestForm reqForm = RM11AC0102RequestForm.validate(request.getParamMap(), \"insert\");\n        UserInfoTempEntity entity = reqForm.getUserInfoTempEntity();\n\n        // 【説明】Entityをデータベースに登録する\n        String userInfoId = registerRecord(entity);\n\n        // 【説明】応答電文を作成する\n        RM11AC0102ResponseForm resForm = new RM11AC0102ResponseForm();\n        resForm.setDataKbn(\"0\");\n        resForm.setUserInfoId(userInfoId);\n\n        // 【説明】応答電文を返却する\n        return request.reply()\n                      .setStatusCodeHeader(\"200\")\n                      .addRecord(resForm);\n    }\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "エラー時の処理",
+      "content": "エラー時の処理では、発生したエラーに応じて応答電文を作成し返却している。\n\n```java\n/**\n * 業務処理がエラー終了した場合に送信する応答電文の内容を設定する。\n * <p/>\n * <b>処理結果コード/障害コード仕様</b>\n * <pre>\n * ==== =============== =============== ==================================================\n * No   終了コード      障害コード      原因\n * ==== =============== =============== ==================================================\n * 1    200             (空白)          正常終了\n * 2    400             NR11AC4001      要求電文のデータレコード部項目精査エラー\n * 3    500             NR11AC5000      その他の意図しないエラーにより業務処理が失敗した場合。\n * ==== =============== =============== ===================================================\n * 要求電文データレコード部レイアウト不正の場合、FWでエラー(ステータスコード400)となるため、本処理まで到達しない。\n * </pre>\n * @param e       発生した例外オブジェクト\n * @param request 要求電文オブジェクト\n * @param context 実行コンテキスト\n * @return 応答電文オブジェクト\n */\n@Override\nprotected ResponseMessage onError(Throwable        e,\n                                  RequestMessage   request,\n                                  ExecutionContext context) {\n\n    String statusCode = \"500\";\n    String failureCode = \"NR11AC5000\";\n\n    // 【説明】 要求電文のデータレコード精査エラーが発生した場合\n    if (e instanceof ApplicationException) {\n        statusCode = \"400\";\n        failureCode = \"NR11AC4001\";\n    }\n\n    // 【説明】 応答電文（エラー）を作成する\n    RM11AC0102ResponseForm resForm = new RM11AC0102ResponseForm();\n    resForm.setDataKbn(\"0\");\n    resForm.setFailureCode(failureCode);\n\n    // 【説明】 応答電文（エラー）を返却する\n    return request.reply()\n                  .setStatusCodeHeader(statusCode)\n                  .addRecord(resForm);\n}\n```",
+      "level": 2
+    }
+  ]
+}

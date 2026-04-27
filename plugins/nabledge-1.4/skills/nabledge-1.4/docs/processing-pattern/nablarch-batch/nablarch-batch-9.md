@@ -1,20 +1,14 @@
 # 入力データが存在しないバッチ処理はどのように作成するのでしょうか？
 
-## 入力データが存在しないバッチ処理の実装方法
+> **question:**
+> 業務日付更新処理や、一括開閉局制御処理のようにインプットデータが存在しないバッチ処理が存在します。
+> このようなバッチ処理の場合はどのように実装したらいいのでしょうか？
 
-インプットデータが存在しないバッチ処理（業務日付更新処理、一括開閉局制御処理など）は、`nablarch.fw.action.NoInputDataBatchAction` を継承してバッチアクションクラスを実装する。
+> **answer:**
+> *nablarch.fw.action.NoInputDataBatchAction* を継承してバッチアクションクラスを実装してください。
+> *NoInputDataBatchAction* を継承した場合、*handle* メソッドが一度だけ実行されるので、
+> *handle* メソッドに必要となる処理を実装してください。
 
-**クラス**: `nablarch.fw.action.NoInputDataBatchAction`
+> 実装方法が不明な場合は、チュートリアルに含まれている下記クラスを参照してください。
 
-`NoInputDataBatchAction` を継承した場合、`handle` メソッドが一度だけ実行される。必要な処理を `handle` メソッドに実装すること。
-
-実装方法が不明な場合は、チュートリアルに含まれている下記クラスを参照すること。
-
-- `please.change.me.tutorial.ss99ZZ.B99ZZ011Action`
-
-<details>
-<summary>keywords</summary>
-
-NoInputDataBatchAction, nablarch.fw.action.NoInputDataBatchAction, handle, インプットデータなしバッチ処理, 業務日付更新処理, 一括開閉局制御処理, NoInputDataBatchAction継承, B99ZZ011Action, please.change.me.tutorial.ss99ZZ.B99ZZ011Action
-
-</details>
+> * >   please.change.me.tutorial.ss99ZZ.B99ZZ011Action

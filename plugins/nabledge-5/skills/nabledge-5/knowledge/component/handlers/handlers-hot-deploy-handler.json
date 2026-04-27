@@ -1,0 +1,32 @@
+{
+  "id": "handlers-hot-deploy-handler",
+  "title": "ホットデプロイハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* ホットデプロイ対象のパッケージを指定する\n\n開発時にアプリケーションのホットデプロイを行うハンドラ。\n\n本ハンドラを使用することで、アプリケーションサーバを再起動することなくアクションクラスやフォームクラスの変更を即座に反映できる。\nそれにより、ソースコードを修正するたびにアプリケーションサーバを再起動するといった手間を省き、効率よく作業を進めることができる。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-hot-deploy-handler/flow.png)\n\n> **Important:**\n> 本ハンドラはリクエスト毎にクラスの再ロードを行うため、レスポンス速度の低下につながる可能性がある。\n> そのため、開発環境での使用のみ想定しており、 **本番環境では絶対に使用してはならない。**\n\n> **Important:**\n> 本ハンドラを使用した場合、リクエスト単体テストが正常に動作しない可能性があるため、リクエスト単体テスト時には本ハンドラを使用しないこと。\n\n> **Tip:**\n> 本ハンドラを使用する場合は、サーバのホットデプロイ機能は無効化すること。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.hotdeploy.HotDeployHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web-hotdeploy</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "なし。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "ホットデプロイ対象のパッケージを指定する",
+      "content": "ホットデプロイ対象となるパッケージは、targetPackages プロパティに設定する。\n\n設定例を以下に示す。\n\n```xml\n<component class=\"nablarch.fw.hotdeploy.HotDeployHandler\">\n  <property name=\"targetPackages\">\n    <list>\n      <value>please.change.me.web.action</value>\n      <value>please.change.me.web.form</value>\n    </list>\n  </property>\n</component>\n```\n\n> **Important:**\n> 以下に示す理由により、エンティティクラスはホットデプロイ対象にしてはならない。\n\n> * >   リクエスト毎に対象パッケージ内の全てのクラスが再ロードされるため、\n>   エンティティクラスのような頻繁に変更されないクラスもホットデプロイ対象にしてしまうとレスポンス速度の低下につながる恐れがある。\n> * >   リクエスト毎にクラスローダが変わるため、 [セッションストア](../../component/libraries/libraries-session-store.md#session-store) を使用した場合などでエンティティクラスのキャストに失敗する場合がある。",
+      "level": 2
+    }
+  ]
+}

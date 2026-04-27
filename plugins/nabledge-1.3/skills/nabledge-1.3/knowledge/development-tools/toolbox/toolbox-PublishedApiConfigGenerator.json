@@ -1,57 +1,26 @@
 {
   "id": "toolbox-PublishedApiConfigGenerator",
   "title": "使用許可API一覧作成ツール",
+  "content": "",
   "no_knowledge_content": false,
-  "official_doc_urls": [],
-  "index": [
+  "sections": [
     {
       "id": "s1",
       "title": "概要",
-      "hints": [
-        "使用許可API一覧作成ツール",
-        "使用不許可APIチェックツール",
-        "公開API一覧生成",
-        "Javadoc生成",
-        "Published",
-        "基盤部品",
-        "プロジェクト実装"
-      ]
+      "content": "本ツールは、使用不許可APIチェックツールの設定ファイルとなる公開APIの一覧と、公開APIのJavadocを生成する。\n\n生成される使用許可API一覧をそのまま「使用不許可APIチェックツール」の設定ファイルとして利用することで、\nプロジェクトで実装した基盤部品などについて、業務アプリからの利用を想定していない非公開APIが利用されていないかどうかを使用不許可APIチェックツールを利用してチェックすることができる。",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "使用方法",
-      "hints": [
-        "PublishedDoclet",
-        "nablarch.tool.published.doclet.PublishedDoclet",
-        "nablarch.core.util.annotation.Published",
-        "output",
-        "tag",
-        "docletpath",
-        "使用許可API一覧設定ファイル"
-      ]
+      "content": "本ツールは、Javadocを生成する際に利用するDocletとして提供される。\n\nJavadoc生成時に以下のDocletを利用し、必要なオプションを渡すことで使用許可API一覧および使用許可APIのみが出力されているJavadocが生成される。\n\nなお、実行時にはNablarch Application Framework, Nablarch ToolboxおよびJDKに付属のtools.jarをdocletpathに指定する必要がある。\n\n**本ツールが提供するDoclet**\nnablarch.tool.published.doclet.PublishedDoclet\n**必要な引数**\n| 引数 | 説明 | 必須 |\n|---|---|---|\n| output | 使用許可API一覧の出力先ファイルを指定する。 使用不許可APIチェックツールの設定ファイルとして利用する場合には、拡張子を **config** とすること。 | ○ |\n| tag | 出力対象とするタグを指定する。カンマ区切りで複数指定することができる。 | × |\n**出力対象**\nnablarch.core.util.annotation.Publishedアノテーションの付与された、\n\n* クラス\n* コンストラクタ\n* メソッド\n* フィールド\n* アノテーション\n\nが出力対象となる。\n\n引数tagに出力対象タグが指定されている場合、該当するtag属性が指定されているPublishedアノテーションが付与されたものと、\ntag属性が指定されていないPublishedアノテーションが付与されたものが出力対象となる。\n\n引数tagが指定されない場合には、tag属性が指定されていないPublishedアノテーションが付与されたものが出力対象となる。",
+      "level": 2
     },
     {
       "id": "s3",
       "title": "Ant Javadocタスクの設定方法",
-      "hints": [
-        "Ant Javadocタスク設定",
-        "javadocタグ",
-        "docletタグ",
-        "pathref",
-        "lib.path",
-        "path id",
-        "nablarch.jar",
-        "nablarch-toolbox.jar",
-        "tools.jar",
-        "param",
-        "-output",
-        "-tag"
-      ]
+      "content": "本ツールを利用してAntのJavadocタスクを実行する場合は、javadocタグ内で以下のように設定すればよい。\n\n| 設定項目 | 設定値 | 備考 |\n|---|---|---|\n| **docletタグ** |  |  |\n| docletタグのname属性 | nablarch.tool.published.doclet.PublishedDoclet |  |\n| docletタグのpath属性 | nablarch.jar, nablarch-toolbox.jar, tools.jar のパス（;区切り） | pathref属性で、pathタグのidを指定しても可 |\n| **docletタグ内のparamタグ（出力先ファイルを指定）** |  |  |\n| paramタグのname属性 | -output | 必ず設定する必要がある |\n| paramタグのvalue属性 | 出力先ファイル |  |\n| **docletタグ内のparamタグ（出力対象タグを指定）** |  |  |\n| paramタグのname属性 | -tag | 引数tagを指定しない場合は、このparamタグは不要 |\n| paramタグのvalue属性 | 出力対象とするタグ |  |\n\n実際のAntファイルの例を以下に記載する。\n\nただし、以下の例では、本ツールの設定に必要な項目のみ設定している。Javadocタスクに必要なその他の設定については、\n[Ant Javadoc Task](http://ant.apache.org/manual/Tasks/javadoc.html) を参照すること。\n\n```xml\n<!-- 本ツールの実行時にクラスパスに含める必要があるパスを定義する。-->\n<!-- 以下は、Nablarch_totorialワークスペースの場合の値。実際に利用する際には適切な値に修正すること。 -->\n<path id=\"lib.path\">\n  <!-- nablarch.jarをクラスパスに含める。-->\n  <pathelement location=\"main/web/WEB-INF/lib/nablarch.jar\" />\n  <!-- Nablarch Toolboxをクラスパスに含める。 -->\n  <pathelement location=\"tool_lib/nablarch-toolbox.jar\" />\n  <!-- Oracle JDK付属の tools.jar をクラスパスに含める。 -->\n  <pathelement location=\"tool_lib/tools.jar\" />\n</path>\n\n<javadoc>\n  <!-- docletタグで、使用許可API一覧作成ツールのDocletクラスと、必要なクラスパスを設定する。 -->\n  <doclet name=\"nablarch.tool.published.doclet.PublishedDoclet\" pathref=\"lib.path\">\n    <!-- 出力対象とするタグを指定する。指定しない場合には不要。 -->\n    <param name=\"-tag\" value=\"architect\"/>\n    <!-- 使用許可API一覧の出力先ファイルを指定する。 -->\n    <param name=\"-output\" value=\"ProjectOpenApiForArchitect.config\"/>\n  </doclet>\n</javadoc>\n```",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s1": "使用不許可APIチェックツールの設定ファイルとなる公開APIの一覧と、公開APIのJavadocを生成するツール。\n\n生成した使用許可API一覧を「使用不許可APIチェックツール」の設定ファイルとして利用することで、プロジェクトで実装した基盤部品などについて、業務アプリからの利用を想定していない非公開APIが使われていないかチェックできる。",
-    "s2": "**Docletクラス**: `nablarch.tool.published.doclet.PublishedDoclet`\n\n実行時に `nablarch.jar`、`nablarch-toolbox.jar`、`tools.jar` を `docletpath` に指定する必要がある。\n\n**引数**\n\n| 引数 | 説明 | 必須 |\n|---|---|---|\n| output | 使用許可API一覧の出力先ファイルを指定する。使用不許可APIチェックツールの設定ファイルとして利用する場合は拡張子を **config** にする。 | ○ |\n| tag | 出力対象とするタグをカンマ区切りで複数指定可能。 | × |\n\n**出力対象**\n\n`nablarch.core.util.annotation.Published` アノテーションが付与されたクラス、コンストラクタ、メソッド、フィールド、アノテーション。\n\n- `tag` 指定あり: 指定タグ属性付き `Published` アノテーションの付与されたものと、`tag` 属性なし `Published` アノテーションの付与されたものが対象\n- `tag` 指定なし: `tag` 属性なし `Published` アノテーションの付与されたもののみが対象",
-    "s3": "AntのJavadocタスクで本ツールを利用する場合の設定。\n\n| 設定項目 | 設定値 | 備考 |\n|---|---|---|\n| docletタグ name属性 | `nablarch.tool.published.doclet.PublishedDoclet` | |\n| docletタグ path属性 | nablarch.jar, nablarch-toolbox.jar, tools.jar のパス（;区切り） | pathref属性でpathタグのid指定も可 |\n| paramタグ name属性（出力先指定） | `-output` | 必須 |\n| paramタグ value属性（出力先指定） | 出力先ファイルパス | |\n| paramタグ name属性（タグ指定） | `-tag` | tagを指定しない場合は不要 |\n| paramタグ value属性（タグ指定） | 出力対象とするタグ | |\n\n```xml\n<!-- 本ツールの実行時にクラスパスに含める必要があるパスを定義する。-->\n<path id=\"lib.path\">\n  <pathelement location=\"main/web/WEB-INF/lib/nablarch.jar\" />\n  <pathelement location=\"tool_lib/nablarch-toolbox.jar\" />\n  <pathelement location=\"tool_lib/tools.jar\" />\n</path>\n\n<javadoc>\n  <doclet name=\"nablarch.tool.published.doclet.PublishedDoclet\" pathref=\"lib.path\">\n    <param name=\"-tag\" value=\"architect\"/>\n    <param name=\"-output\" value=\"ProjectOpenApiForArchitect.config\"/>\n  </doclet>\n</javadoc>\n```"
-  }
+  ]
 }

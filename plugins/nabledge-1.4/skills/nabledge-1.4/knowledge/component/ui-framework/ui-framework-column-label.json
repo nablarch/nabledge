@@ -1,0 +1,26 @@
+{
+  "id": "ui-framework-column-label",
+  "title": "ラベル表示用カラムウィジェット",
+  "content": "[ラベル表示用カラムウィジェット](../../component/ui-framework/ui-framework-column-label.md) は、カラムの値をラベル出力する行をテーブル中に追加するウィジェットである。\n[検索結果テーブルウィジェット](../../component/ui-framework/ui-framework-table-search-result.md) や、 [一覧テーブルウィジェット](../../component/ui-framework/ui-framework-table-plain.md) 、 [階層(ツリー)表示テーブルウィジェット](../../component/ui-framework/ui-framework-table-treelist.md) と組み合わせて使用する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**設計成果物(ローカル動作)**\n\n```jsp\n<table:search_result\n  title         = \"検索結果\"\n  sampleResults = \"15\">\n\n  <column:checkbox\n    title = \"選択\">\n  </column:checkbox>\n\n  <column:label\n    title  = \"ログインID\"\n    sample = \"user001|user002|user003\">\n  </column:label>\n\n</table:search_result>\n```\n\n**実装成果物(サーバ動作)**\n\n```jsp\n<table:search_result\n  title               = \"検索結果\"\n  searchUri           = \"/action/ss11AC/W11AC01Action/RW11AC0102\"\n  listSearchInfoName  = \"11AC_W11AC01\"\n  resultSetName       = \"searchResult\"\n  sampleResults       = \"15\">\n\n  <column:checkbox\n    title    = \"選択\"\n    key      = \"userId\"\n    name     = \"W11AC05.systemAccountEntityArray[${count-1}].userId\"\n    offValue = \"0000000000\">\n  </column:checkbox>\n\n  <column:label\n    title  = \"ログインID\"\n    key    = \"loginId\"\n    sample = \"user001|user002|user003\">\n  </column:label>\n\n</table:search_result>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "**ローカル動作時の挙動**\nカラムの内容には **sample** 属性に指定した **\"|\"** 区切りの文字列を順に表示する。\n(テーブルのsampleResultsに指定された件数の方が多い場合はループする。)\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| key | 表示する文字列を、 行データから取得するキー | 文字列 | ◎ | × |  |\n| title | カラムヘッダーに表示する文字列 | 文字列 | ◎ | × |  |\n| value | カラムの表示内容 | 文字列 | ○ | ○ | 指定されない場合は、行データ から、key属性に指定した名前で 取得した値を利用する。 |\n| domain | データのドメイン型 | 文字列 | ○ | ○ | 指定されたドメイン型は、 設計書ビューの当該項目に表示 される。また、 <td> 要素の CSSクラス属性に追加される。 |\n| cssClass | 各カラムに指定するCSSクラス | 文字列 | ○ | ○ |  |\n| sortable | カラムのソートリンクを表示 するかどうか | 文字列 | ○ | ○ | デフォルトは'false'。 [検索結果テーブルウィジェット](../../component/ui-framework/ui-framework-table-search-result.md) でのみ利用可能 |\n| valueFormat | 出力する値のフォーマット指定 | 文字列 | ○ | × |  |\n| sample | テスト用のダミー表示値 | 文字列 | × | ○ | \"\\|\" 区切りで複数指定する。 |\n| width | カラムの横幅の指定 | 文字列 | ○ | ○ |  |\n| additional | 付加情報として扱うかどうか | 真偽値 | ○ | ○ | trueを指定した場合、narrow表示モードで 別形式での表示となる。下図では メールアドレス・登録日にadditional属性 を設定しており、narrow表示モードでは インラインに展開するパネルに表示される。 (デフォルトはfalse)  ![additional_column.png](assets/ui-framework-column-label/additional_column.png)  > **Warning:** > autospan/rowspan 属性を使用している > テーブルではadditional 属性を使用することは > できない。 |\n| colspan | 横方向に結合するカラム数 | 数値 | ○ | ○ | 使用方法は、 [マルチレイアウトテーブル](../../component/ui-framework/ui-framework-table-row.md) を参照 |\n| rowspan | 縦方向に結合するカラム数 | 数値 | ○ | ○ | 使用方法は、 [マルチレイアウトテーブル](../../component/ui-framework/ui-framework-table-row.md) を参照 |\n| autospan | 項目値による自動カラム連結 | 真偽値 | ○ | ○ | 隣接する行の値が同じあった場合に上下方向に 自動的にセルを連結する。 なお、データのソートはサーバ側の処理で 事前に行っておく必要がある。  > **Note:** > 連結された各セルの背景色は、その中で一番上の > セルの背景色に一致する。 |\n| tree_indent | 階層の深さに応じたインデ ントで表示するかどうか。 | 文字列 | ○ | ○ | デフォルトは'false'。 [階層(ツリー)表示テーブルウィジェット](../../component/ui-framework/ui-framework-table-treelist.md) でのみ有効。 |\n| tree_toggler | 各階層の開閉を行うボタンを このカラム内に表示するか どうか。 | 文字列 | ○ | ○ | デフォルトは'false'。 [階層(ツリー)表示テーブルウィジェット](../../component/ui-framework/ui-framework-table-treelist.md) でのみ有効。 |\n| dataFrom | 表示するデータの取得元 | 文字列 | × | × | 画面項目定義に記載する、 「表示情報取得元」.「表示項目名」 の形式で設定する。 |\n| comment | 表示項目についての備考 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |\n| formatSpec | 編集仕様に関する説明 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「編集仕様」に表示される。 |\n| initialValueDesc | 初期表示内容に関する説明 | 文字列 | × | × | 設計書の表示時に、 画面項目定義の項目定義一覧で、 「備考」に表示される。 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/column/label.tag | [リンク表示用カラムウィジェット](../../component/ui-framework/ui-framework-column-link.md) |\n| /WEB-INF/tags/listSearchResult/*.tag | Nablarch検索結果テーブルタグファイル |\n| /css/style/nablarch.less | Nablarch関連スタイル定義 テーブルの配色などを定義している。 |\n| /css/style/base.less | 基本HTMLの要素のスタイル定義。 リンクに関する定義もここに含まれる。 |",
+      "level": 2
+    }
+  ]
+}

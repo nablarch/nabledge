@@ -1,0 +1,86 @@
+{
+  "id": "testing-framework-04-MasterDataRestore",
+  "title": "マスタデータ復旧機能",
+  "content": "**目次**\n\n* 概要\n* 特徴\n* 必要となるスキーマ\n* 動作イメージ\n* 環境構築\n\n  * バックアップ用スキーマの作成、データ投入\n  * 外部キーが設定されたテーブルを使用する場合について\n  * コンポーネント設定ファイルに監視対象テーブルを記載\n  * ログ出力設定",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "通常の場合、テスト行う際にマスタデータを書き換えることはない。\nしかし、マスタメンテナンス機能等のテストでは、マスタデータを変更しないと\n実施できないテストケースが存在する。例えば、存在するはずのデータが存在しなかった場合のような\n異常系テストケースでは、マスタデータからレコードを削除する必要がある。\n\nテスト中にマスタデータを変更した場合、それ以降のテストクラスのテストでは、\nマスタデータが意図しない状態になっている為にテストが失敗することがある。\n\nこのような、マスタデータ変更による意図しないテスト失敗を防止するため、\n自動テスト中にマスタデータが更新された場合、そのテストメソッドが終了した時点で、\nマスタデータを元の状態に復旧する機能を提供する。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "content": "* テストの実行順序に依存せずに、常に正しい状態のマスタデータでテストできる。\n* マスタデータ復旧は自動で行われるので、各テストクラスで復旧処理、復旧用データを用意する必要ない。\n* バックアップ用スキーマからテーブル毎に一括で復旧するので、1件ずつINSERTする場合に比べて高速に復旧できる。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "必要となるスキーマ",
+      "content": "本機能を使用するにあたり、以下の２つのスキーマが必要となる。\n\n| スキーマ | 説明 |\n|---|---|\n| 自動テスト用スキーマ | 自動テストに使用するスキーマ。 |\n| バックアップ用スキーマ | 復旧に使用するためのマスタデータを保存しておくためのスキーマ。 |",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "動作イメージ",
+      "content": "自動テストフレームワークはコンポーネント設定ファイルより、監視対象テーブル名一覧を取得する。\nテスト実行中、自動テストフレームワークはSQLログを監視することにより、\n監視対象テーブルを変更するSQL文が発行されたかどうかを検出する。\n\n![modification_detected.png](assets/testing-framework-04-MasterDataRestore/modification_detected.png)\n\n監視対象テーブルを変更するSQL文が発行された場合、テストメソッド終了後に変更があったテーブルを復旧する。\nテーブルを復旧する際、いったんテーブル内のレコードを全件削除する。\nその後、バックアップ用スキーマのテーブルからレコードを全件挿入する。\n\n![copy_from_backup.png](assets/testing-framework-04-MasterDataRestore/copy_from_backup.png)",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "環境構築",
+      "content": "以下の環境構築を実施し、自動テストフレームワークのマスタデータ復旧機能を有効にする。",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "バックアップ用スキーマの作成、データ投入",
+      "content": "マスタデータ復旧用スキーマを作成する。\nマスタデータ復旧用スキーマに自動テスト用のスキーマと同じテーブルを作成し復旧用のデータを投入しておく。\n\n> **Tip:**\n> マスタデータ復旧用スキーマには全てのテーブルを作成する必要はない。\n> マスタデータ復旧対象とするテーブルのみ存在すればよい（復旧対象以外のテーブルがあっても問題ない）。",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "外部キーが設定されたテーブルを使用する場合について",
+      "content": "外部キーが設定されたテーブルに対してデータを復旧する場合には、親子関係を意識して復旧処理を行う必要がある。\nこのため、本機能ではデフォルトの動作としてJDBCの機能を用いて親子関係を取得・構築し、\n削除処理は子テーブルから、挿入処理は親テーブルから順に行うよう制御している。\n\nしかし、テーブル数が膨大なプロジェクトの場合、JDBCの機能を元に親子関係を構築する処理が原因で、slow test問題が発生する場合がある。\nこの問題を回避するために、JDBC機能を使用するのではなく、記述順 ([設定例](../../development-tools/testing-framework/testing-framework-04-MasterDataRestore.md#masterdatarestore-configuration) を参照)を元にテーブルの削除及び挿入処理を行う機能を提供している。\n\n記述順を元にマスタデータを復旧させたい場合には、環境設定ファイルに以下を追加する。\n\n```jproperties\nnablarch.suppress-table-sort=true\n```",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "コンポーネント設定ファイルに監視対象テーブルを記載",
+      "content": "自動テスト用のコンポーネント設定ファイルに、監視対象テーブルを列挙する。",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "設定項目一覧",
+      "content": "| 設定項目名 | 説明 | デフォルト値 |\n|---|---|---|\n| backupSchema | マスタデータ復旧用スキーマ名を記載する。 | なし |\n| tablesTobeWatched | 監視対象とするテーブル名をリスト形式で列挙する。 | なし |\n| testEventListeners | テストイベントリスナーの一覧。 ここにマスタデータ復旧クラス(nablarch.test.core.db.MasterDataRestorer)を登録することで、 テストメソッド終了時にマスタデータが行われるようになる。 | なし |",
+      "level": 4
+    },
+    {
+      "id": "s10",
+      "title": "設定例",
+      "content": "```xml\n<!-- マスタデータ復旧クラス -->\n<component name=\"masterDataRestorer\"\n           class=\"nablarch.test.core.db.MasterDataRestorer\">\n  <!-- バックアップスキーマ -->\n  <property name=\"backupSchema\" value=\"nablarch_test_master\"/>\n  <!-- 監視対象テーブル一覧 -->\n  <property name=\"tablesTobeWatched\">\n    <list>\n      <value>MESSAGE</value>\n      <value>ID_GENERATE</value>\n      <value>BUSINESS_DATE</value>\n      <value>PERMISSION_UNIT</value>\n      <value>REQUEST</value>\n      <value>PERMISSION_UNIT_REQUEST</value>\n    </list>\n  </property>\n</component>\n```",
+      "level": 4
+    },
+    {
+      "id": "s11",
+      "title": "ログ出力設定",
+      "content": "本機能ではSQLログを監視することにより、マスタデータへの変更を検出する。\nよって、そのためのログ出力が必要である。",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "app-log.properties",
+      "content": "sqlLogFormatter のクラス名に、本機能の提供クラスを指定する。\n\n```none\nsqlLogFormatter.className=nablarch.test.core.db.MasterDataRestorer$SqlLogWatchingFormatter\n```",
+      "level": 4
+    },
+    {
+      "id": "s13",
+      "title": "log.properties",
+      "content": "log.propertiesにSQLログをデバッグレベル以上で出力する設定をする。\n以下の例では、SQLログを標準出力に表示させないよう専用のロガー（何もしないロガー）を\n設定している\n\n```none\n# ロガーファクトリ実装クラス\nloggerFactory.className=nablarch.core.log.basic.BasicLoggerFactory\n\n# ログライター名\nwriterNames=stdout,nop\n\n#デバッグ用の標準出力\nwriter.stdout.className=nablarch.core.log.basic.StandardOutputLogWriter\nwriter.nop.className=nablarch.test.core.log.NopLogWriter   # 【説明】何もしないロガー\n\n# 利用可能なロガー名順序\navailableLoggersNamesOrder=sql,root\n\n#全てのロガー取得を対象に、DEBUGレベル以上を標準出力に出力する。\nloggers.root.nameRegex=.*\nloggers.root.level=DEBUG\nloggers.root.writerNames=stdout\n\n#ロガー名に\"SQL\"を指定したロガー取得を対象に、DEBUGレベル以上を出力する。\nloggers.sql.nameRegex=SQL\nloggers.sql.level=DEBUG      # 【説明】DEBUGレベル以上に設定すること\nloggers.sql.writerNames=nop\n```",
+      "level": 4
+    }
+  ]
+}

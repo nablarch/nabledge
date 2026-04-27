@@ -1,0 +1,42 @@
+# Jakarta Batchに準拠したバッチアプリケーションとNablarchバッチアプリケーションとの機能比較
+
+この章では、以下の機能の比較を示す。
+
+* [Jakarta Batchに準拠したバッチアプリケーション](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.md)
+* [Nablarchバッチアプリケーション](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch.md)
+
+機能比較（◎：Jakarta Batchの仕様で定義されている　○：提供あり　△：一部提供あり　×：提供なし　－：対象外）
+
+| 機能 | Jakarta Batchに準拠 [1] | Nablarchバッチ |
+|---|---|---|
+| 起動時に任意のパラメータを設定できる | ◎ | ○   [解説書へ](../../component/handlers/handlers-main.md#main-option-parameter) |
+| 同一バッチアプリケーションの同時実行を防止できる | ○   Javadocへ | ○   [解説書へ](../../component/handlers/handlers-duplicate-process-check-handler.md#duplicate-process-check-handler) |
+| 実行中のバッチアプリケーションを   外部から安全に停止できる | ◎ | ○   [解説書へ](../../component/handlers/handlers-process-stop-handler.md#process-stop-handler) |
+| 1回の実行で処理する最大の件数を指定できる | ×   [2] | ○   [解説書へ](../../component/handlers/handlers-data-read-handler.md#data-read-handler-max-count) |
+| 一定件数単位のコミットができる | ◎ | ○   [解説書へ](../../component/handlers/handlers-loop-handler.md#loop-handler-commit-interval) |
+| 障害発生ポイントから再実行できる | ◎ | △   [3] |
+| 業務処理を複数スレッドで並列実行できる | ◎ | ○   [解説書へ](../../component/handlers/handlers-multi-thread-execution-handler.md#multi-thread-execution-handler) |
+| 特定の例外を無視して処理を継続できる   (ロールバック後に処理を継続できる) | ◎ | ×   [4] |
+| 特定の例外発生時に処理をリトライできる | ◎ | △   [5] |
+| バッチアプリケーションの結果を元に   次に実行する処理を切り替えられる | ◎ | ×   [6] |
+| 入力データソースを一定間隔で監視し   バッチを実行出来る | × [7] | ○   [解説書へ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#nablarch-batch-resident-batch) |
+
+◎の箇所は、Jakarta Batchで規定されている仕様に従う。
+詳細は、 [Jakarta Batch(外部サイト、英語)](https://jakarta.ee/specifications/batch/) のSpecificationを参照すること。
+
+ItemReader の実装クラスに、1回の実行で読み込む最大件数を指定できるプロパティを持たせるなどで対応可能。
+
+ResumeDataReader (レジューム機能付き読み込み) を使用することで障害発生ポイントからの再実行が可能。
+ただし、この機能はファイルを入力としている場合にのみ使用できる。それ以外のデータを入力とする場合には、アプリケーション側で設計及び実装が必要となる。
+
+特定例外を無視して処理を継続したい場合は、ハンドラを追加して対応すること。
+
+[リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) でリトライ可能例外の場合にリトライできるが、Jakarta Batchのように例外が発生したデータの単純なリトライはできない。
+[リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) では、リトライ対象の例外を柔軟に指定できない。
+
+[リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) で要件を満たすことができない(例外が発生したデータの単純なリトライや柔軟に例外を指定したい)場合は、ハンドラを追加して対応すること。
+
+ジョブスケジューラなどで対応すること。例えば、終了コードを元に次に実行するジョブを切り替える等の対応が必要になる。
+
+Jakarta Batchに準拠したバッチアプリケーションでは、一定間隔で入力データソースを監視するようなバッチ処理は実現できない。
+このため、このようなバッチアプリケーションが必要となった場合は、 [Nablarchバッチアプリケーションの常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#nablarch-batch-resident-batch) を使用して実現すること。

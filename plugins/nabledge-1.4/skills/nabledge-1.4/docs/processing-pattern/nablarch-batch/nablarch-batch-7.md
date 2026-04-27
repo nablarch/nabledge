@@ -1,21 +1,28 @@
-# バッチ処理を実行するとDuplicateProcessが発生し、処理が異常終了してしまいます。対処方法を教えてください
+# バッチ処理を実行すると **DuplicateProcess** が発生し、処理が異常終了してしまいます。対処方法を教えてください
 
-## DuplicateProcess エラーの原因と対処法
+> **question:**
+> バッチ処理を実行すると、以下のメッセージがログに出力されてバッチ処理が異常終了してしまいます。
+> 対処方法を教えてください。
 
-## DuplicateProcess エラーの原因と対処法
+> ```java
+> [500 DuplicateProcess] specified request_id is already used by another process. you can not start two or more processes with same request_id.
+> ```
 
-**エラーメッセージ**:
-```
-[500 DuplicateProcess] specified request_id is already used by another process. you can not start two or more processes with same request_id.
-```
+> **answer:**
+> Nablarchでは、同一の処理が同時に実行されデータ不整合が発生するのを防止するために、多重起動防止機能を提供しています。
 
-**原因**: 多重起動防止機能はデータベースの実行中フラグで多重起動チェックを行う。実行中フラグが適切にクリアされないと（例：デバッグ実行中に処理を停止した場合）、何度バッチ処理を実行しても DuplicateProcess が発生し続ける。
+> この機能を使用した場合、データベースの実行中フラグを用いて多重起動かのチェックを行ないます。
+> このため、実行中フラグが適切にクリアされないと [1] 、何度バッチ処理を実行しても *DuplicateProcess* が発生してしまいます。
 
-**対処方法**: プロセス管理テーブルの実行中フラグをクリアする。リクエストIDをキーに、問題が起きているリクエストIDを条件として実行中フラグを 0 で更新する。これにより再度バッチ処理を実行できるようになる。
+> この問題を回避するためには、実行中フラグを管理するテーブル [2] の実行中フラグをクリアする必要があります。
+> このテーブルは、リクエストIDをキーにステータスを管理するテーブルとなっているので、
+> 問題の起きているリクエストIDを条件にして実行中フラグを更新（0で更新）してください。
+> これにより、再度バッチ処理を実行することができるようになります。
 
-<details>
-<summary>keywords</summary>
+> 詳細は、以下のドキュメントを参照してください。
 
-DuplicateProcess, 多重起動防止, 実行中フラグ, プロセス管理テーブル, バッチ異常終了, request_id
+> * >   **[Nablarch Application Framework 解説書]** -> **[リファレンス]** -> **[ハンドラリファレンス]** -> **[プロセス多重起動防止ハンドラ]**
 
-</details>
+> デバッグ実行中に処理を停止した場合などに、実行中フラグのクリアが行われずにフラグが実行中のままとなります。
+
+> Nablarchでは、プロセス管理テーブルと定義しています。

@@ -1,0 +1,68 @@
+{
+  "id": "handlers-multipart-handler",
+  "title": "マルチパートリクエストハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* このハンドラの動作条件\n* アップロードファイルの一時保存先を指定する\n* 巨大なファイルのアップロードを防ぐ\n* ファイルの大量アップロードを防ぐ\n* 一時ファイルの削除（クリーニング）を行う\n* マルチパート解析エラー及びファイルサイズ上限超過時の遷移先画面を設定する\n* アップロードしたファイルを読み込む\n\nHTTPリクエストがマルチパート形式の場合に、ボディ部を解析しアップロードファイルを一時ファイルとして保存するハンドラ。\n\n本ハンドラでは、以下の処理を行う。\n\n* マリチパートリクエストの解析\n* アップロードファイルを一時ファイルとして保存\n* 保存した一時ファイルの削除\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-multipart-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.web.upload.MultipartHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n\n<!-- 一時保存先を指定する場合のみ -->\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-core</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "なし。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "このハンドラの動作条件",
+      "content": "このハンドラはマルチパート形式のリクエストの場合のみ、リクエストボディを解析する。マルチパート形式かどうかは、リクエストヘッダの `Content-Type` で判断する。\n\n`Content-Type` が `multipart/form-data` と一致する場合は、リクエストがマルチパート形式だと判断し、ボディの解析処理を行う。\nそれ以外の場合には、このハンドラは何もせずに後続のハンドラに処理を委譲する。",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "アップロードファイルの一時保存先を指定する",
+      "content": "アップロードファイルの一時保存先ディレクトリは、 [ファイルパス管理](../../component/libraries/libraries-file-path-management.md#file-path-management) に設定する。\n\nファイルパス管理に一時保存先ディレクトリの指定がない場合は、デフォルトの保存先としてシステムプロパティの java.io.tmpdir の値を使用する。\n\n以下に一時ファイルの保存先ディレクトリの設定例を示す。\n\nポイント\n* 保存先ディレクトリの論理名は、 `uploadFileTmpDir` とすること。\n\n```xml\n<component name=\"filePathSetting\" class=\"nablarch.core.util.FilePathSetting\">\n  <!-- ディレクトリの設定 -->\n  <property name=\"basePathSettings\">\n    <map>\n      <!-- アップロードファイルの一時保存ディレクトリ -->\n      <entry key=\"uploadFileTmpDir\" value=\"file:/var/nablarch/uploadTmpDir\" />\n    </map>\n  </property>\n</component>\n```\n\n> **Tip:**\n> 上記の例では、保存先ディレクトリを直接指定しているが、この値は環境ごとに異なることが想定される。\n> このため、直接コンポーネント設定ファイルに設定するのではなく、環境設定ファイルに設定することを推奨する。\n\n> 詳細は、[依存値を設定する](../../component/libraries/libraries-repository.md#repository-environment-configuration) を参照。",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "巨大なファイルのアップロードを防ぐ",
+      "content": "巨大なファイルをアップロードされると、ディスクリソースが枯渇するなどが原因でシステムが正常に稼働しなくなる可能性がある。\nこのため、このハンドラではアップロードサイズの上限を超過した場合には、413(Payload Too Large)をクライアントに返却する。\n\nアップロードサイズの上限は、バイト数で設定する。設定を省略した場合は、無制限となる。\nDoS攻撃を防ぐためにも、アップロードサイズの上限は常に設定しておくこと。\n\n以下にアップロードサイズの設定例を示す。\n\n```xml\n<component class=\"nablarch.fw.web.upload.MultipartHandler\" name=\"multipartHandler\">\n  <property name=\"uploadSettings\">\n    <component class=\"nablarch.fw.web.upload.UploadSettings\">\n      <!-- アップロードサイズ(Content-Length)の上限(約1MB) -->\n      <property name=\"contentLengthLimit\" value=\"1000000\" />\n    </component>\n  </property>\n</component>\n```\n\n> **Tip:**\n> アップロードサイズの上限は、ファイル単位ではなく1リクエストでアップロード出来る上限となる。\n\n> このため、複数のファイルをアップロードした場合には、それらのファイルサイズの合計値(厳密には、Content-Length)により、上限チェックが実施される。\n\n> もし、ファイル単位でサイズチェックをする必要がある場合には、アクション側で実装すること。",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "ファイルの大量アップロードを防ぐ",
+      "content": "アップロードサイズの上限を設定しても、1つ1つのファイルサイズを小さくすることで一度に大量のファイルをアップロードできる。\n不必要な処理を減らすため、マルチパートリクエストハンドラでは一度にアップロードできるファイル数に上限を設定できるようになっている。\n上限を超えるファイルがアップロードされた場合、このハンドラは400(Bad Request)を返す。\n\n以下に設定例を示す。\n\n```xml\n<component class=\"nablarch.fw.web.upload.MultipartHandler\" name=\"multipartHandler\">\n  <property name=\"uploadSettings\">\n    <component class=\"nablarch.fw.web.upload.UploadSettings\">\n      <!-- アップロードファイル数の上限 -->\n      <property name=\"maxFileCount\" value=\"100\" />\n    </component>\n  </property>\n</component>\n```\n\n`maxFileCount` に0以上の値を設定すると、その値が一度にアップロードできるファイル数の上限となる。\n負数を設定した場合は無制限となる。\n未設定の場合はデフォルトで-1となる。",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "一時ファイルの削除（クリーニング）を行う",
+      "content": "保存されたアップロードファイルを以下の条件でクリーニングする。\n\n* ボディの解析中に例外が発生した場合\n* ハンドラの復路で自動削除設定が有効な場合\n\n自動削除設定は、デフォルトで有効に設定されている。\nこの設定は本番環境で安易に無効にすると、大量の一時ファイルがディスク上に残り、最悪の場合ディスクフルの原因となるため注意すること。\n\n設定値を無効にする場合には、 UploadSettings#autoCleaning に false を設定する。",
+      "level": 2
+    },
+    {
+      "id": "s9",
+      "title": "マルチパート解析エラー及びファイルサイズ上限超過時の遷移先画面を設定する",
+      "content": "このハンドラでは、マルチパート解析エラー [1] や [ファイルサイズの上限超過時](../../component/handlers/handlers-multipart-handler.md#multipart-handler-file-limit) に、\n不正なリクエストとしてクライアントに 400(BadRequest) を返却する。\n\nこのため、 400(BadRequest) に対応したエラーページの設定を web.xml に行う必要がある。\nweb.xml へのエラーページ設定を省略した場合は、ウェブアプリケーションサーバが持つデフォルトのページなどがクライアントに返却される。\n\n> **Important:**\n> このハンドラは、[制約](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler-constraint) にあるとおり、 [セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler) より手前に設定する必要がある。\n> このため、 [セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler) の後続に設定される [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler) の [デフォルトページの設定](../../component/handlers/handlers-HttpErrorHandler.md#httperrorhandler-defaultpage) は使用できない。\n\nマルチパート解析エラーが発生するケース\n\n* アップロード中にクライアントからの切断要求があり、ボディ部が不完全な場合\n* バウンダリーが存在しない",
+      "level": 2
+    },
+    {
+      "id": "s10",
+      "title": "アップロードしたファイルを読み込む",
+      "content": "アップロードされたファイル(一時保存されたファイル)は、 HttpRequest から取得する。\n\n以下に実装例を示す。\n\nポイント\n* HttpRequest#getPart を呼び出してアップロードされたファイルを取得する。\n* HttpRequest#getPart の引数には、パラメータ名を指定する。\n\n```java\npublic HttpResponse upload(HttpRequest request, ExecutionContext context) throws IOException {\n  // アップロードファイルの取得\n  List<PartInfo> partInfoList = request.getPart(\"uploadFile\");\n\n  if (partInfoList.isEmpty()) {\n    // アップロードファイルが指定されていなかった場合は業務エラー\n  }\n\n  // アップロードされたファイルを処理する\n  InputStream file = partInfoList.get(0).getInputStream()\n\n  // 以下アップロードファイルを読み込み処理を行う。\n}\n```\n\nアップロードファイルを処理する詳細な実装方法は、以下のドキュメントを参照。\nなお、 [様々なフォーマットのデータへのアクセス](../../component/libraries/libraries-data-converter.md#data-converter) に記載がある通り、 [データバインド](../../component/libraries/libraries-data-bind.md#data-bind) が推奨となる。\n([データバインド](../../component/libraries/libraries-data-bind.md#data-bind) で扱うことのできない形式の場合は、 [汎用データフォーマット](../../component/libraries/libraries-data-format.md#data-format) を使用すること。)\n\n* [データバインドを使ってアップロードファイルを処理する](../../component/libraries/libraries-data-bind.md#data-bind-upload-file)\n* [汎用データフォーマットを使ってアップロードファイルを処理する](../../component/libraries/libraries-data-format.md#data-format-load-upload-file)\n\n> **Tip:**\n> アップロードされたファイルが画像ファイル等のバイナリファイルの場合は、読み込んだバイナリデータを使用して処理を行うこと。\n\n> Java8であれば以下の様に実装することでアップロードファイルのバイトデータを読み込むことができる。\n\n> ```java\n> File savedFile = partInfo.getSavedFile();\n> try {\n>     byte[] bytes = Files.readAllBytes(savedFile.toPath());\n> } catch (IOException e) {\n>     throw new RuntimeException(e);\n> }\n> ```",
+      "level": 2
+    }
+  ]
+}

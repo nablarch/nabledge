@@ -1,33 +1,39 @@
 # 共通起動ランチャ
 
-**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/handlers/standalone/main.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/launcher/CommandLine.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/launcher/logging/LauncherLogFormatter.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/launcher/Main.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/core/log/app/ApplicationSettingLogFormatter.html) [6](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/ExecutionContext.html) [7](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Result.Error.html) [8](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/Request.html)
+**目次**
+
+* ハンドラクラス名
+* モジュール一覧
+* アプリケーションを起動する
+* アプリケーション起動に任意のオプションを設定する
+* 例外及びエラーに応じた処理内容
+
+スタンドアロンで起動するアプリケーションの起点となるハンドラ。
+
+javaコマンドから直接起動することで、システムリポジトリの初期化を行い、そこに定義されたハンドラキューを実行させることができる。
+
+本ハンドラでは、以下の処理を行う。
+処理の詳細は、カッコ内のJavadocを参照。
+
+* コマンドライン引数のパース( CommandLine )
+* 起動ログの出力( LauncherLogFormatter#getStartLogFormat )
+* システムリポジトリの初期化
+* 実行コンテキストの初期化( Main#setupExecutionContext )
+* アプリケーション設定ログの出力( ApplicationSettingLogFormatter )
+* ハンドラキューの実行
+* 例外及びエラーに応じたログの出力
+* 終了ログの出力( LauncherLogFormatter#getEndLogFormat )
+
+処理の流れは以下のとおり。
+
+![Main_flow.png](../../../knowledge/assets/handlers-main/Main_flow.png)
 
 ## ハンドラクラス名
 
-スタンドアロンアプリケーションの起点となるハンドラ。javaコマンドから直接起動し、システムリポジトリを初期化してハンドラキューを実行する。
-
-**クラス名**: `nablarch.fw.launcher.Main`
-
-処理の流れ:
-1. コマンドライン引数のパース（`CommandLine`）
-2. 起動ログの出力（`LauncherLogFormatter#getStartLogFormat`）
-3. システムリポジトリの初期化
-4. 実行コンテキストの初期化（`Main#setupExecutionContext`）
-5. アプリケーション設定ログの出力（`ApplicationSettingLogFormatter`）
-6. ハンドラキューの実行
-7. 例外・エラーに応じたログの出力
-8. 終了ログの出力（`LauncherLogFormatter#getEndLogFormat`）
-
-<details>
-<summary>keywords</summary>
-
-nablarch.fw.launcher.Main, Main, CommandLine, nablarch.fw.launcher.CommandLine, ApplicationSettingLogFormatter, nablarch.core.log.app.ApplicationSettingLogFormatter, LauncherLogFormatter, nablarch.fw.launcher.logging.LauncherLogFormatter, setupExecutionContext, 共通起動ランチャ, スタンドアロン起動, ハンドラキュー実行, システムリポジトリ初期化
-
-</details>
+* nablarch.fw.launcher.Main
 
 ## モジュール一覧
 
-**モジュール**:
 ```xml
 <dependency>
   <groupId>com.nablarch.framework</groupId>
@@ -35,22 +41,33 @@ nablarch.fw.launcher.Main, Main, CommandLine, nablarch.fw.launcher.CommandLine, 
 </dependency>
 ```
 
-<details>
-<summary>keywords</summary>
-
-nablarch-fw-standalone, com.nablarch.framework, モジュール依存関係, Maven
-
-</details>
-
 ## アプリケーションを起動する
 
-javaコマンドで `Main` を起動する。以下の3オプションは必須（いずれかが欠けると即座に異常終了、終了コード=127）。
+javaコマンドで Mainクラス を指定してアプリケーションを起動する。
 
-| オプション | 説明 |
-|---|---|
-| `-diConfig` | システムリポジトリ設定ファイルのパス |
-| `-requestPath` | `実行アクションクラス名/リクエストID` 形式。`Request#getRequestPath` が返す値として設定される |
-| `-userId` | ユーザID。セッションコンテキスト変数 `user.id` に格納 |
+フレームワークの動作に必要となる以下の3つのオプションは、必ず指定する必要がある。
+以下のオプションのうちいずれかが欠けていた場合は、即座に異常終了する。(終了コード = 127)
+
+-diConfig
+システムリポジトリの設定ファイルのパスを指定する。
+このオプションで指定されたパスを使ってシステムリポジトリを初期化する。
+-requestPath
+実行するアクションとリクエストIDを指定する。
+
+以下の書式で定義される文字列を設定する。
+
+```bash
+実行するアクションのクラス名/リクエストID
+```
+
+このオプションで指定されたリクエストパスを
+Request#getRequestPath
+が返すようになる。
+-userId
+ユーザIDを設定する。
+この値はセッションコンテキスト変数に `user.id` という名前で格納される。
+
+以下に実行例を示す。
 
 ```bash
 java nablarch.fw.launcher.Main \
@@ -59,47 +76,41 @@ java nablarch.fw.launcher.Main \
   -userId testUser
 ```
 
-<details>
-<summary>keywords</summary>
-
-diConfig, requestPath, userId, アプリケーション起動, コマンドライン引数, 終了コード 127, nablarch.fw.launcher.Main, Request#getRequestPath, nablarch.fw.Request.getRequestPath, user.id, 必須オプション
-
-</details>
-
 ## アプリケーション起動に任意のオプションを設定する
 
-任意のオプションパラメータを「オプション名称」と「オプションの値」のペアで指定可能。
+Mainクラス 起動時に、任意のオプションパラメータを指定することが出来る。
+
+オプションパラメータは、「オプション名称」と「オプションの値」のペアで設定する。
+
+例えば、オプション名称が `optionName` で 値が `optionValue` の場合は、以下のように指定する。
 
 ```bash
 java nablarch.fw.launcher.Main \
   -optionName optionValue
 ```
 
-アプリケーションでは `ExecutionContext` の `getSessionScopedVar` でオプション名称を指定して取得する。
+アプリケーションでオプションを使用する場合は、 ExecutionContext から取得する。
 
 ```java
-final String value = ctx.getSessionScopedVar("optionName");
+ @Override
+public Result handle(String inputData, ExecutionContext ctx) {
+  // getSessionScopedVarにオプション名称を指定して、値を取得する。
+  final String value = ctx.getSessionScopedVar("optionName");
+
+  // 処理
+
+  return new Result.Success();
+}
 ```
 
-> **補足**: 必須オプションは [main-run_application](#s2) を参照
-
-<details>
-<summary>keywords</summary>
-
-getSessionScopedVar, ExecutionContext, nablarch.fw.ExecutionContext, オプションパラメータ, 任意オプション, セッションスコープ変数
-
-</details>
+> **Tip:**
+> アプリケーション起動時に必ず指定する必要があるオプションは、 [アプリケーションを起動する](../../component/handlers/handlers-main.md#main-run-application) を参照
 
 ## 例外及びエラーに応じた処理内容
 
+このハンドラでは捕捉した例外及びエラーの内容に応じて、以下の処理と結果を返す。
+
 | 例外クラス | 処理内容 |
 |---|---|
-| `Result.Error`（サブクラス含む） | FATALログ出力後、ステータスコードが0〜127の場合はそのまま返す。0〜127以外の場合は127を返す |
-| 上記以外の例外クラス | FATALログ出力後、127を返す |
-
-<details>
-<summary>keywords</summary>
-
-Result.Error, nablarch.fw.Result.Error, 例外ハンドリング, 終了コード 127, FATALログ, 異常終了
-
-</details>
+| Result.Error  (サブクラス含む) | FATALレベルのログ出力を行う。  ログ出力後、ハンドラの処理結果として、以下の値を返す。  ステータスコードが0～127の場合 ステータスコードをそのまま返す。 ステータスコードが0～127以外の場合 127を返す。 |
+| 上記以外の例外クラス | FATALレベルのログ出力を行う。  ログ出力後、ハンドラの処理結果として、127を返す。 |

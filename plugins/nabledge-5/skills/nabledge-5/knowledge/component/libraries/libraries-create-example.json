@@ -1,0 +1,32 @@
+{
+  "id": "libraries-create-example",
+  "title": "登録機能での実装例",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "入力画面の初期表示",
+      "content": "```java\n// ブラウザを直接閉じた場合などにセッションが残っている場合があるので削除\nSessionUtil.delete(ctx, \"project\");\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "入力画面から確認画面へ遷移",
+      "content": "```java\n// リクエストスコープから入力情報を取得\nProjectForm form = context.getRequestScopedVar(\"form\");\n\n// FormからEntityへ変換\nProject project = BeanUtil.createAndCopy(Project.class, form);\n\n// 入力情報をセッションストアに保存\nSessionUtil.put(ctx, \"project\", project);\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "確認画面から入力画面へ戻る",
+      "content": "```java\n// セッションストアから入力情報を取得\nProject project = SessionUtil.get(ctx, \"project\");\n\n// EntityからFormへ変換\nProjectForm form = BeanUtil.createAndCopy(ProjectForm.class, project);\n\n// 入力情報をリクエストスコープに設定\ncontext.setRequestScopedVar(\"form\", form);\n\n// セッションストアから入力情報を削除\nSessionUtil.delete(ctx, \"project\");\n```",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "登録処理を実行",
+      "content": "```java\n// セッションストアから入力情報を取得\nProject project = SessionUtil.get(ctx, \"project\");\n\n// 登録処理は省略\n\n// セッションストアから入力情報を削除\nSessionUtil.delete(ctx, \"project\");\n```",
+      "level": 2
+    }
+  ]
+}

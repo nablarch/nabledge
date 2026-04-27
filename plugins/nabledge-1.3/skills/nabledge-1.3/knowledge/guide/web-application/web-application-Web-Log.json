@@ -1,0 +1,68 @@
+{
+  "id": "web-application-Web-Log",
+  "title": "ログ出力の設定方法とログの見方(画面オンライン処理編)",
+  "content": "本フレームワークでは、アプリケーションプログラマが開発時に必要な情報をDEBUGレベルでログ出力している。\nこのログを開発ログと呼ぶ。\n\n画面オンライン処理の開発時は、開発ログを含めた下記のログを出力し、デバッグ作業に必要な情報を収集する。\n\n| ログの種類 | 説明 |\n|---|---|\n| HTTPアクセスログ | 画面オンライン処理において、アプリケーションの実行状況を把握するための情報を出力する。 アプリケーションの性能測定に必要な情報、アプリケーションの負荷測定に必要な情報の出力も含む。 さらに、アプリケーションの不正使用を検知するために、全てのリクエスト及びレスポンス情報を出力する証跡ログとしても使用する。 |\n| SQLログ | 深刻なパフォーマンス劣化の要因となりやすいSQL文の実行について、パフォーマンスチューニングに使用するために、 SQL文の実行時間とSQL文を出力する。 |\n| 開発ログ | アプリケーションプログラマが開発時に必要な情報を出力する。 |\n\nHTTPアクセスログとSQLログの出力内容については、 [HTTPアクセスログの出力](../../component/libraries/libraries-04-HttpAccessLog.md#httpaccesslog) 、 [SQLログの出力](../../component/libraries/libraries-02-SqlLog.md#sqllog) を参照。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "開発時のログ出力の設定方法",
+      "content": "開発時は、ログ出力の設定において下記を指定する。\n下記の設定により、標準出力(EclipseのConsoleビュー)にログが出力される。\n\n①出力先として標準出力を追加する。\n②開発時にデバッグ用に埋め込んだログを標準出力に出力する。\n③HTTPアクセスログを標準出力に出力する。\n④SQLログを標準出力に出力する。\n⑤開発ログを標準出力に出力する。\n\n下記に設定例を示す。\n\n![Web_Log_LogProp.jpg](assets/web-application-Web-Log/Web_Log_LogProp.jpg)",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "開発時のログの見方",
+      "content": "サンプルアプリケーションを使用して、開発時のログの見方を説明する。\nログ出力の設定は、 [開発時のログ出力の設定方法](../../guide/web-application/web-application-Web-Log.md#web-log-settings) の説明で使用した設定例を使用する。\n\nここでは、下記のケースを取り上げる。\n\n* [リクエスト処理を正常に完了した場合](../../guide/web-application/web-application-Web-Log.md#web-log-normallog)\n* [JSPで例外が発生した場合](../../guide/web-application/web-application-Web-Log.md#web-log-jsperrorlog)\n* [リクエストURLに対応するアクションが見つからない場合](../../guide/web-application/web-application-Web-Log.md#web-log-noactionlog)\n* [リクエストURLに対応するアクションのメソッドが見つからない場合](../../guide/web-application/web-application-Web-Log.md#web-log-noactionmethodlog)\n\n> **Note:**\n> 上記ケースでエラーが発生するものについては、あくまで一例であり、全てのケースを網羅しているわけではない。\n> 実際の開発時は、 [リクエスト処理を正常に完了した場合](../../guide/web-application/web-application-Web-Log.md#web-log-normallog) を参考に、デバッグ作業に必要な情報を収集する。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "リクエスト処理を正常に完了した場合",
+      "content": "ログイン処理の出力例を使用して、1回のリクエスト処理において出力されるログの順番と出力内容を説明する。\n説明は、ログの出力例に追記している。\n\nログイン処理の画面遷移とログの出力例を下記に示す。",
+      "level": 3
+    },
+    {
+      "id": "s4",
+      "title": "ログイン処理の画面遷移",
+      "content": "![Web_Log_LoginWindow.jpg](assets/web-application-Web-Log/Web_Log_LoginWindow.jpg)",
+      "level": 4
+    },
+    {
+      "id": "s5",
+      "title": "アクション実行前",
+      "content": "![Web_Log_LoginLogBefore.jpg](assets/web-application-Web-Log/Web_Log_LoginLogBefore.jpg)",
+      "level": 4
+    },
+    {
+      "id": "s6",
+      "title": "アクション実行中",
+      "content": "![Web_Log_LoginLogRunning.jpg](assets/web-application-Web-Log/Web_Log_LoginLogRunning.jpg)",
+      "level": 4
+    },
+    {
+      "id": "s7",
+      "title": "アクション実行後",
+      "content": "![Web_Log_LoginLogAfter.jpg](assets/web-application-Web-Log/Web_Log_LoginLogAfter.jpg)\n\n> **Note:**\n> 上記出力例において、HTTPアクセスログとSQLログのフォーマットは、デフォルトのフォーマットを使用した場合の出力例である。",
+      "level": 4
+    },
+    {
+      "id": "s8",
+      "title": "JSPで例外が発生した場合",
+      "content": "JSPで例外が発生した場合は、「リクエスト処理の終了（END）」の後にスタックトレースが出力される。\n\n![Web_Log_JspErrorLog.jpg](assets/web-application-Web-Log/Web_Log_JspErrorLog.jpg)",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "リクエストURLに対応するアクションが見つからない場合",
+      "content": "リクエストURLに対応するアクションが見つからない場合は、「ディスパッチ先クラス（DISPATCHING CLASS）」の後にスタックトレースが出力される。\n\n![Web_Log_NoActionLog.jpg](assets/web-application-Web-Log/Web_Log_NoActionLog.jpg)",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "リクエストURLに対応するアクションのメソッドが見つからない場合",
+      "content": "リクエストURLに対応するアクションが見つからない場合は、「ディスパッチ先メソッド（DISPATCHING METHOD）」にエラーメッセージが出力される。\n\n![Web_Log_NoActionMethodLog.jpg](assets/web-application-Web-Log/Web_Log_NoActionMethodLog.jpg)\n\n上記出力例のエラーメッセージを下記に示す。\n\n```bash\nmethod not found. class = [nablarch.sample.management.user.UserSearchAction], method signature = [HttpResponse dousers00101(HttpRequest, ExecutionContext)]\n```",
+      "level": 3
+    }
+  ]
+}

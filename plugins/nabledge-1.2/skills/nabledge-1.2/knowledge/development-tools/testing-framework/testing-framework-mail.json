@@ -1,34 +1,26 @@
 {
   "id": "testing-framework-mail",
-  "title": "リクエスト単体テストの実施方法(メール送信)",
+  "title": "",
+  "content": "ma.. mail_request_test:",
   "no_knowledge_content": false,
-  "official_doc_urls": [],
-  "index": [
+  "sections": [
     {
       "id": "s1",
-      "title": "メール送信処理の構造とテスト範囲",
-      "hints": [
-        "リクエスト単体テスト",
-        "メール送信テスト範囲",
-        "メール送信要求API",
-        "メール送信処理",
-        "テスト範囲"
-      ]
+      "title": "リクエスト単体テストの実施方法(メール送信)",
+      "content": "",
+      "level": 2
     },
     {
       "id": "s2",
+      "title": "メール送信処理の構造とテスト範囲",
+      "content": "[メール送信処理のアプリケーション構造](../../guide/libraries/libraries-02-basic.md) で説明した通り、本フレームワークを使用したメール送信では、\n業務アプリケーションは本フレームワークが提供するメール送信要求APIを呼び出すだけである。\n\nよってリクエスト単体テストの範囲は、\nメール送信要求が正常に受け付けられデータベースに格納されることを確認するところまでとなる。\n\nメール送信処理の処理概要と業務アプリケーションのテスト範囲を、下図に示す。\n\n![mail_overview.jpg](assets/testing-framework-mail/mail_overview.jpg)",
+      "level": 3
+    },
+    {
+      "id": "s3",
       "title": "テストの実施方法",
-      "hints": [
-        "メール送信要求テーブル",
-        "メール送信先テーブル",
-        "メール添付ファイルテーブル",
-        "Excelシート",
-        "mailTables"
-      ]
+      "content": "上述の通り、メール送信に関してリクエスト単体テストで確認すべきことは、\nメール送信要求が [各テーブル（メール送信要求テーブル、メール送信先テーブル、メール添付ファイルテーブル）](../../component/libraries/libraries-mail.md#mailtables) に\n正しく格納されることである。\n\nそのため、他の単体テストの実施方法と同様に、期待する上記3テーブルの状態をExcelシートに記述すればよい。",
+      "level": 3
     }
-  ],
-  "sections": {
-    "s1": "## メール送信処理の構造とテスト範囲\n\n[../../04_Explanation_other/04_Explanation_mail/02_basic](../../guide/libraries/libraries-02_basic.json) で説明の通り、業務アプリケーションはメール送信要求APIを呼び出すだけである。\n\nリクエスト単体テストの範囲は、メール送信要求が正常に受け付けられデータベースに格納されることを確認するところまでとなる。\n\n![メール送信処理の概要](assets/testing-framework-mail/mail_overview.jpg)",
-    "s2": "## テストの実施方法\n\nリクエスト単体テストで確認すべきことは、メール送信要求が :ref:`各テーブル（メール送信要求テーブル、メール送信先テーブル、メール添付ファイルテーブル）<mailTables>` に正しく格納されることである。\n\n他の単体テストと同様に、期待する上記3テーブルの状態をExcelシートに記述する。"
-  }
+  ]
 }

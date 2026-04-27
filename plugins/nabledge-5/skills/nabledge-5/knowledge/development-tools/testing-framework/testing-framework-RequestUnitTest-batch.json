@@ -1,0 +1,110 @@
+{
+  "id": "testing-framework-RequestUnitTest-batch",
+  "title": "リクエスト単体テスト（バッチ処理）",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "リクエスト単体テスト（バッチ処理)では、実際にバッチをコマンドラインから起動したときの動作を擬似的に再現し、テストを行う。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "全体像",
+      "content": "![batch_request_test_class.png](assets/testing-framework-RequestUnitTest-batch/batch_request_test_class.png)",
+      "level": 3
+    },
+    {
+      "id": "s3",
+      "title": "主なクラス, リソース",
+      "content": "| 名称 | 役割 | 作成単位 |\n|---|---|---|\n| リクエスト単体 テストクラス | テストロジックを実装する。 | テスト対象クラス(Action)につき１つ作成 |\n| Excelファイル （テストデータ） | テーブルに格納する準備データや期待する結果、 入力ファイルなど、テストデータを記載する。 | テストクラスにつき１つ作成 |\n| StandaloneTest SupportTemplate | バッチやメッセージング処理などコンテナ外で動作する 処理のテスト実行環境を提供する。 | － |\n| BatchRequest TestSupport | バッチリクエスト単体テストで必要とな るテスト準備機能、各種アサートを提供する。 | － |\n| TestShot | データシートに定義されたテストケース1件分の情報を 格納するクラス。 | － |\n| MainForRequestTesting | テスト用メインクラス。テスト実行時の差分を吸収する。 | － |\n| DbAccessTestSupport | DB準備データ投入などデータベースを使用するテストに 必要な機能を提供する。 | － |\n| FileSupport | 入力ファイル作成などファイルを使用するテストに 必要な機能を提供する。 | － |",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "構造",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "StandaloneTestSupportTemplate",
+      "content": "バッチやメッセージング処理などコンテナ外で動作する処理のテスト実行環境を提供する。\nテストデータを読み取り、全テストショット( TestShot  )を実行する。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "TestShot",
+      "content": "1テストショットの情報保持とテストショットを実行する。\nテストショットは以下の要素で成り立っている。\n\n* 入力データの準備\n* メインクラス起動\n* 出力結果の確認\n\nバッチやメッセージング処理などコンテナ外で動作する処理のテストにおいて\n共通の準備処理、結果確認機能を提供する。\n\n| 準備処理 | 結果確認 |\n|---|---|\n| データベースのセットアップ | データベース更新内容確認 |\n|  | ログ出力結果確認 |\n|  | ステータスコード確認 |\n\n入力データ準備や結果確認ロジックはバッチや各種メッセージング処理ごとに異なるので\n方式に応じたカスタマイズが可能となっている。",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "BatchRequestTestSupport",
+      "content": "バッチ処理テスト用のスーパクラス。\nアプリケーションプログラマは本クラスを継承してテストクラスを作成する。\n\n本クラスは、 TestShot が提供する準備処理、結果確認に以下の機能を追加する。\n\n| 準備処理 | 結果確認 |\n|---|---|\n| 入力ファイルの作成 | 出力ファイルの内容確認 |\n\n本クラスを使用することで、リクエスト単体テストのテストソース、テストデータを定型化でき、\nテストソース記述量を大きく削減できる。\n\n具体的な使用方法は、 [リクエスト単体テストの実施方法(バッチ)](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md) を参照。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "MainForRequestTesting",
+      "content": "リクエスト単体テスト用のメインクラス。\n本番用メインクラスとの主な差異は以下の通り。\n\n* テスト用のコンポーネント設定ファイルからシステムリポジトリを初期化する。\n* 常駐化機能を無効化する。",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "FileSupport",
+      "content": "ファイルに関する操作を提供するクラス。\n主に以下の機能を提供する。\n\n* テストデータから入力ファイルを作成する\n* テストデータの期待値と実際に出力されたファイルと内容を比較する。\n\nファイルに関する操作は、バッチ処理以外でも必要となるため（例えば、ファイルダウンロード等）、\n独立したクラスとして提供している。",
+      "level": 3
+    },
+    {
+      "id": "s10",
+      "title": "テストデータ",
+      "content": "バッチ処理固有のテストデータについて説明する。",
+      "level": 2
+    },
+    {
+      "id": "s11",
+      "title": "固定長ファイル",
+      "content": "基本的な記述方法は、\n[リクエスト単体テストの実施方法(バッチ)](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#batch-request-test)\nを参照。",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "パディング",
+      "content": "指定したフィールド長に対して、データのバイト長が短い場合、\nそのフィールドのデータ型に応じたパディングが行われる。\nパディングのアルゴリズムはNablarch Application Framework本体と同様である。",
+      "level": 4
+    },
+    {
+      "id": "s13",
+      "title": "バイナリデータの記述方法",
+      "content": "バイナリデータを表現するには、16進数形式でテストデータを記述する。\n例えば、 `0x4AD` と記述した場合、 `0000 0100 1010 1101`  ( `0x04AD` )という2バイトのバイト配列に解釈される。\n\n> **Tip:**\n> テストデータに、プレフィックス0xが付与されていない場合、そのデータを文字列とみなし、\n> その文字列をディレクティブの文字コードでエンコードしてバイト配列に変換する。\n\n> 例えば、文字コードがWindows-31Jのファイルのテストデータにて、\n> データ型がバイナリのフィールドに `4AD` と記載した場合、 `0011 0100 0100 0001 0100 0100`  ( `0x344144` )\n> という3バイトのバイト配列に変換される。",
+      "level": 4
+    },
+    {
+      "id": "s14",
+      "title": "可変長ファイル",
+      "content": "基本的な記述方法は、\n[リクエスト単体テストの実施方法(バッチ)](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#batch-request-test)\nを参照。",
+      "level": 3
+    },
+    {
+      "id": "s15",
+      "title": "各種設定値",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s16",
+      "title": "常駐バッチのテスト用ハンドラ構成",
+      "content": "常駐バッチのテストを実施する際には、プロダクション用ハンドラ構成をテスト用に変更する必要がある。\nこの変更をせずにテストを実施した場合、テスト対象の常駐バッチアプリケーションの処理が終わらないため、テストが正常に実施できなくなる。\n\n**【変更が必要なハンドラ】**\n\n| 変更対象のハンドラ | 変更後のハンドラ | 変更理由 |\n|---|---|---|\n| RequestThreadLoopHandler | OneShotLoopHandler | RequestThreadLoopHandlerでテストを実施すると、 バッチ実行が終わらずにテストコードに制御が戻らなくなるため。  OneShotLoopHandlerにハンドラを差し替えることで、 テスト実行前にセットアップした要求データを全件処理後に バッチ実行が終了しテストコードに制御が戻るようになる。 |\n\n以下にコンポーネント設定ファイルの設定例を示す。\n\n* プロダクション用設定\n\n  ```xml\n  <!-- リクエストスレッドループ -->\n  <component name=\"requestThreadLoopHandler\" class=\"nablarch.fw.handler.RequestThreadLoopHandler\">\n    <!-- プロパティへの値設定は省略 -->\n  </component>\n  ```\n* テスト用設定\n\n  プロダクション用設定と同名でコンポーネントを設定し、テスト用のハンドラを使用するように上書きする。\n\n  ```xml\n  <!-- リクエストスレッドループハンドラをテスト用のハンドラに置き換える設定 -->\n  <component name=\"requestThreadLoopHandler\" class=\"nablarch.test.OneShotLoopHandler\" />\n  ```",
+      "level": 3
+    },
+    {
+      "id": "s17",
+      "title": "ディレクティブのデフォルト値",
+      "content": "ファイルのディレクティブがシステム内である程度統一されている場合、\n個々のテストデータに同じディレクティブを記載することは冗長である。\n\nこのような場合には、デフォルトのディレクティブを\nコンポーネント設定ファイルに記載することで、\n個々のテストデータではディレクティブの記述を省略できる。\n\nコンポーネント設定ファイルにmap形式で記載する。ネーミングルールは以下のとおり。\n\n| 対象となるファイル種別 | name属性 |\n|---|---|\n| 共通 | defaultDirectives |\n| 固定長ファイル | fixedLengthDirectives |\n| 可変長ファイル | variableLengthDirectives |\n\n設定例を以下に例を示す。\n\n```xml\n<!-- ディレクティブ（共通） -->\n<map name=\"defaultDirectives\">\n  <entry key=\"text-encoding\" value=\"Windows-31J\" />\n</map>\n\n<!-- ディレクティブ（固定長） -->\n<map name=\"variableLengthDirectives\">\n  <entry key=\"record-separator\" value=\"NONE\"/>\n</map>\n\n<!-- ディレクティブ（可変長） -->\n<map name=\"variableLengthDirectives\">\n  <entry key=\"quoting-delimiter\" value=\"\" />\n  <entry key=\"record-separator\" value=\"CRLF\"/>\n</map>\n```",
+      "level": 3
+    }
+  ]
+}

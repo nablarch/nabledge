@@ -1,0 +1,182 @@
+{
+  "id": "workflow-tool-doc-index",
+  "title": "ワークフロー定義データ生成ツール",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "本ツールは、BPMN2.0に準拠したワークフロー定義ファイル(xmlファイル)を読み込み、マスタデータとして投入可能な形式でExcelファイルを出力する。\n※本ガイドでは、ツールのインプットとなるファイルをワークフロー定義ファイルと呼称する。ワークフロー定義ファイルの作成方法については「ワークフロー設計ガイド」を参照すること。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "前提",
+      "content": "* ワークフロー設計ガイドに従ってワークフロー定義ファイルが作られていること\n* ツールで出力するテーブル・カラム名称について、ワークフローライブラリで使用するテーブル・カラム名称と同一であること",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "ツール配置場所",
+      "content": "本ツールはサンプルプロジェクトの `tool/workflowDefinitionGenerator` ディレクトリに配置されている。\n\n配下のファイル/ディレクトリを以下に示す。\n\n| ファイル/ディレクトリ | 説明 |\n|---|---|\n| output | 自動生成されるワークフロー定義データの出力ディレクトリ。 |\n| resources | 本ツールの設定ファイル格納ディレクトリ。（ 利用の準備 を参照） |\n| log | エラー情報出力ファイルの出力ディレクトリ。 |\n| WorkflowDefinitionGenerator_build.xml | 本ツールを実行するためのAntビルドファイル（通常、変更の必要なし）。 |\n| WorkflowDefinitionGenerator_build.properties | Antビルドファイルのプロパティファイル。 |",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "利用の準備",
+      "content": "本ツールの設定ファイルに、実行に必要な設定を記述する。\n設定ファイルは下記の通り。\n\n| ファイル | 説明 |\n|---|---|\n| WorkflowDefinitionGenerator.config | 環境設定ファイル。（出力先ファイルパス、入力ファイル拡張子等を設定） |\n| WorkflowDefinitionGenerator.xml | コンポーネント定義ファイル。 |",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "環境設定ファイル",
+      "content": "実行に必要な設定を行う。設定内容は下記の通り。\n\n| キー名 | 設定内容 |\n|---|---|\n| inputFileDir | ワークフロー定義ファイルを格納するルートディレクトリ。 ツール実行時、ルートディレクトリ配下のファイルを再帰的に読み込む。 |\n| inputFileExtension | 入力ファイルの拡張子。（カンマ区切りで設定） 例：bpmn,xml |\n| outputFilePath | 出力ファイルパス。 ※ファイルが既に存在する場合、既存の内容は破棄される。そのため、出力ファイルにワークフロー定義テーブル以外のデータを設定しないこと。 |\n| logFilePath | エラー情報出力ファイルパス。 |\n| workflowIdColumnLength | ワークフローID桁数。（※） |\n| laneIdColumnLength | レーンID桁数。（※） |\n| flowNodeIdColumnLength | フローノードID桁数。（※） |\n| boundaryEventTriggerIdColumnLength | 境界イベントトリガーID桁数。（※） |\n\n　※ID体系で定義された桁数。ワークフロー定義ファイル内に定義したIDの桁数指定が正しいか精査を行うための設定値。",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "コンポーネント定義ファイル",
+      "content": "コンポーネント定義ファイルには以下の設定が記載されている。\n\n* Reader、Writerクラスの設定\n* モデリングツール上で入力する条件クラス用省略記法の設定\n\n上記設定を変更する場合、 プロジェクト固有の設定について を参照。",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "利用手順",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "ツール実行",
+      "content": "ツールは以下のように実行する。\n\n```bash\nant -f WorkflowDefinitionGenerator_build.xml\n```\n\nツールを実行すると、全てのワークフロー定義ファイルを読み込み、精査を行う。（精査については 精査仕様 を参照）\nワークフロー定義ファイルが正常な場合、ワークフロー定義データを1つのExcelファイルに集約して出力する。\n出力されるExcelファイルのファイル名は、環境設定ファイルに記載したもの。（デフォルトは、MASTER_DATA_WF.xls）",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "精査エラー発生時の動作",
+      "content": "精査エラーが発生した場合、そのワークフロー定義ファイルのデータはExcelファイルに出力されない。\n（正常なワークフロー定義ファイルのデータのみ出力する。全てのワークフロー定義ファイルが不正な場合、Excelファイル自体を出力しない）\nまた、エラー情報出力ファイルにファイル名・エラーメッセージを出力する。出力例は下記の通り。\n\n```bash\nfileName = [WF0001_交通費申請_ver1_20140805.bpmn] フローノードIDの桁数がID体系で定められた桁数と異なります。IDを修正してください。 id = [T00001] name = [確認] （設定値:10 実際:6）\n```",
+      "level": 4
+    },
+    {
+      "id": "s10",
+      "title": "仕様",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s11",
+      "title": "読込対象",
+      "content": "本ツールはModeler上の下記要素に設定された値を読込、ワークフロー定義データとして出力する。\n\n* プール\n* レーン\n* ユーザタスク\n* XORゲートウェイ\n* 開始イベント\n* 停止イベント\n* 中断メッセージ境界イベント\n* シーケンスフロー",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "データ作成対象テーブル",
+      "content": "ワークフロー定義データとして出力するテーブルの項目と、値の取得元について以下に示す。",
+      "level": 3
+    },
+    {
+      "id": "s13",
+      "title": "ワークフロー定義",
+      "content": "| 定義 | 内容 |\n|---|---|\n| ワークフローID | ワークフロー定義ファイル名から取得する。（フォーマット：[ワークフローID]_[ワークフロー名]_ver[バージョン]_[適用日].bpmn） 　例）ワークフロー定義ファイル名が「WF0001_交通費申請_ver1_20140805.bpmn」の場合 　　ワークフローID：「WF0001」 　　バージョン：「1」 　　ワークフロー名：「交通費申請」 　　適用日：「20140805」 |\n| バージョン |  |\n| ワークフロー名 |  |\n| 適用日 |  |",
+      "level": 4
+    },
+    {
+      "id": "s14",
+      "title": "レーン",
+      "content": "| 定義 | 内容 |\n|---|---|\n| ワークフローID | レーンが属しているワークフローID。 |\n| バージョン | レーンが属しているワークフローのバージョン。 |\n| レーンID | Modeler上でレーンの「Id」に指定したID。 |\n| レーン名 | Modeler上でレーンの「Name」に指定した名称。 |",
+      "level": 4
+    },
+    {
+      "id": "s15",
+      "title": "フローノード",
+      "content": "| 定義 | 内容 |\n|---|---|\n| ワークフローID | フローノードが属しているワークフローID。 |\n| バージョン | フローノードが属しているワークフローのバージョン。 |\n| フローノードID | Modeler上でフローノードの「Id」に指定したID。 |\n| レーンID | フローノードが属しているレーンID。 |\n| フローノード名 | Modeler上でフローノードの「Name」に指定した名称。 |",
+      "level": 4
+    },
+    {
+      "id": "s16",
+      "title": "シーケンスフロー",
+      "content": "| 定義 | 内容 |\n|---|---|\n| ワークフローID | シーケンスフローが属しているワークフローID。 |\n| バージョン | シーケンスフローが属しているワークフローのバージョン。 |\n| シーケンスフローID | Modeler上でシーケンスフローの「Id」に指定したID。 |\n| 接続元フローノードID | シーケンスフローの接続元フローノードID。 |\n| 接続先フローノードID | シーケンスフローの接続先フローノードID。 |\n| フロー進行条件 | Modeler上でシーケンスフローに指定した「Condition」に応じた値。 　　「Condition」にクラスの完全修飾名を指定した場合：「Condition」に指定した値 　　「Condition」に省略記法を指定した場合：省略記法に紐付くクラスの完全修飾名 　　（省略記法については 省略記法について を参照） |\n| シーケンスフロー名 | Modeler上でシーケンスフローの「Name」に指定した名称。 |",
+      "level": 4
+    },
+    {
+      "id": "s17",
+      "title": "境界イベントトリガー",
+      "content": "| 定義 | 内容 |\n|---|---|\n| ワークフローID | 境界イベントが属しているワークフローID。 |\n| バージョン | 境界イベントが属しているワークフローのバージョン。 |\n| 境界イベントトリガーID | Modeler上で境界イベントの「Messages」に指定した値。 |\n| 境界イベントトリガー名 | Modeler上で境界イベントの「Messages」に指定した値。 |",
+      "level": 4
+    },
+    {
+      "id": "s18",
+      "title": "境界イベント",
+      "content": "| 定義 | 内容 |\n|---|---|\n| ワークフローID | 境界イベントが属しているワークフローID。 |\n| バージョン | 境界イベントが属しているワークフローのバージョン。 |\n| フローノードID | Modeler上で境界イベントの「Id」に指定したID。 |\n| 境界イベントトリガーID | Modeler上で境界イベントの「Message」に指定した値。 |\n| 接続先タスクID | 境界イベントが接続しているフローノードID。 |",
+      "level": 4
+    },
+    {
+      "id": "s19",
+      "title": "タスク",
+      "content": "| 定義 | 内容 |\n|---|---|\n| ワークフローID | タスクが属しているワークフローID。 |\n| バージョン | タスクが属しているワークフローのバージョン。 |\n| フローノードID | Modeler上でアクティビティに指定したID。 |\n| マルチインスタンス種別 | Modeler上でマルチインスタンス・アクティビティに指定した「Is Sequential」に応じた値。 　　「Is Sequential」のチェックをONにした場合：SEQUENTIAL（順次マルチインスタンス） 　　「Is Sequential」のチェックをOFFにした場合：PARALLEL（並行マルチインスタンス） アクティビティがマルチインスタンス・アクティビティではない場合、NONEが出力される。 |\n| 完了条件 | Modeler上でマルチインスタンス・アクティビティに指定した「Completion condition」に応じた値。 　　「Completion condition」にクラスの完全修飾名を指定した場合：「Completion condition」に指定した値 　　「Completion condition」に省略記法を指定した場合：省略記法に紐付くクラスの完全修飾名 　　（省略記法については 省略記法について を参照） |",
+      "level": 4
+    },
+    {
+      "id": "s20",
+      "title": "イベント",
+      "content": "| 定義 | 内容 |\n|---|---|\n| ワークフローID | イベントノードが属しているワークフローID。 |\n| バージョン | イベントノードが属しているワークフローのバージョン。 |\n| フローノードID | Modeler上で開始イベント（または停止イベント）の「Id」に指定したID。 |\n| イベント種別 | Modeler上で配置したイベントの種類に応じた値。 　　開始イベントの場合：START 　　停止イベントの場合：TERMINATE |",
+      "level": 4
+    },
+    {
+      "id": "s21",
+      "title": "ゲートウェイ",
+      "content": "| 定義 | 内容 |\n|---|---|\n| ワークフローID | ゲートウェイが属しているワークフローID。 |\n| バージョン | ゲートウェイが属しているワークフローのバージョン。 |\n| フローノードID | Modeler上でゲートウェイの「Id」に指定したID。 |\n| ゲートウェイ種別 | Modeler上で配置したゲートウェイの種類に応じた値。 　　XORゲートウェイの場合：EXCLUSIVE |",
+      "level": 4
+    },
+    {
+      "id": "s22",
+      "title": "精査仕様",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s23",
+      "title": "構文精査",
+      "content": "ワークフロー定義ファイルが、BPMN 2.0のxsd定義に準拠しているか精査を行う。（idの重複等）\n\n> **Note:**\n> ワークフロー定義ファイルがBPMN 2.0のxsd定義に違反している場合、そのファイルのワークフロー定義データを出力しない（正常に読み込みが行えたファイルのみ出力）",
+      "level": 4
+    },
+    {
+      "id": "s24",
+      "title": "ワークフローライブラリの制約に関する精査",
+      "content": "ワークフロー定義ファイルが、ワークフローライブラリが提供するワークフロー機能の制約に準拠し、正常動作する構文であるか精査を行う。（プール数、利用可能フローノード等）\n\n> **Note:**\n> 精査エラーが発生した場合、そのファイルのワークフロー定義データを出力しない（正常に読み込みが行えたファイルについては出力する）\n\nフロー進行条件と完了条件については、設計時にクラスが存在しているとは限らないためクラスの存在確認を行っていない。\nクラス名が誤っている場合、システムリポジトリの初期化時に行われる、ワークフローエンジンの初期化処理時に例外が発生する。\nなお、これらの項目に対して本ツールでは以下の精査を行っている。\n\n* クラス名（省略記法） + (パラメータ1, パラメータ2, ....)の形式であること。※パラメータが無い場合、括弧を書かないこと\n* クラス名（省略記法）部分が、.（ピリオド）で開始、終了していないこと。\n* クラス名（省略記法）部分に、連続する.（ピリオド）を含まないこと。\n* クラス名（省略記法）部分に、空白文字（全角空白を含む）を含まないこと。\n* 空白文字のみのパラメータが指定されていないこと。",
+      "level": 4
+    },
+    {
+      "id": "s25",
+      "title": "プロジェクト固有の設定について",
+      "content": "プロジェクトで以下の変更がある場合、コンポーネント定義ファイルを修正する必要がある。\n\n| 変更内容 | 修正対象（コンポーネント定義ファイル内のコンポーネント名、及びマップ名） |\n|---|---|\n| ワークフロー定義ファイルの読込元、出力先 | workflowDefinitionReader、workflowDefinitionWriter |\n| フロー進行条件、完了条件クラスの省略記法 | flowProceedCondition、completionCondition |",
+      "level": 2
+    },
+    {
+      "id": "s26",
+      "title": "ワークフロー定義ファイル読込元、ワークフロー定義データ出力先の変更",
+      "content": "ワークフロー定義ファイルの読み込み元、出力先を修正する場合、コンポーネント定義ファイルで定義しているworkflowDefinitionReader、workflowDefinitionWriterの「class」をプロジェクト固有のクラスに差し替える。\nReaderクラスを変更する例を以下に示す。\n\n**コンポーネント定義ファイル設定例**\n\n```xml\n<component name=\"workflowDefinitionReader\" class=\"please.change.me.sample.ss11.CustomWorkflowDefinitionReader\"/><!-- PJ固有のReaderクラス -->\n\n<component name=\"workflowDefinitionWriter\" class=\"nablarch.tool.workflow.WorkflowDefinitionExcelWriter\">\n    <property name=\"workflowDefinitionSchema\" ref=\"workflowDefinitionSchema\"/>\n    <property name=\"outputFilePath\" value=\"${outputFilePath}\"/>\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s27",
+      "title": "フロー進行条件、完了条件クラスの省略記法の変更",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s28",
+      "title": "省略記法について",
+      "content": "コンポーネント定義ファイルで、任意の文字列とクラスの完全修飾名のマッピングを登録しておくことで、\nModeler上でフロー進行条件、完了条件クラスを指定する際、クラスの完全修飾名の代わりに登録した文字列を使用することが出来る。\n\n**コンポーネント定義ファイル設定例**\n\n```xml\n<!-- フロー進行条件クラスの省略記法設定 -->\n<map name=\"flowProceedCondition\">\n    <entry key=\"eq\" value=\"nablarch.tool.workflow.EqFlowProceedCondition\"/>\n    <entry key=\"ge\" value=\"nablarch.tool.workflow.GeFlowProceedCondition\"/>\n    <entry key=\"gt\" value=\"nablarch.tool.workflow.GtFlowProceedCondition\"/>\n    <entry key=\"le\" value=\"nablarch.tool.workflow.LeFlowProceedCondition\"/>\n    <entry key=\"lt\" value=\"nablarch.tool.workflow.LtFlowProceedCondition\"/>\n    <entry key=\"ne\" value=\"nablarch.tool.workflow.NeFlowProceedCondition\"/>\n</map>\n\n<!-- 完了条件クラスの省略記法設定 -->\n<map name=\"completionCondition\">\n    <entry key=\"all\" value=\"nablarch.tool.workflow.AllCompletionCondition\"/>\n    <entry key=\"or\" value=\"nablarch.tool.workflow.OrCompletionCondition\"/>\n</map>\n```\n\n**Modeler上の入力、及び出力結果**\n\n| Modeler上の入力値 | 出力結果 |\n|---|---|\n| all | nablarch.tool.workflow.AllCompletionCondition |\n| or(1) | nablarch.tool.workflow.OrCompletionCondition(1) |",
+      "level": 4
+    },
+    {
+      "id": "s29",
+      "title": "省略記法の追加・変更",
+      "content": "コンポーネント定義ファイルで定義しているflowProceedCondition、completionConditionの「key」「value」を編集する。\n完了条件クラスの省略記法を変更する例を以下に示す。\n\n**コンポーネント定義ファイル設定例**\n\n```xml\n<!-- 完了条件クラスの省略記法設定 -->\n<map name=\"completionCondition\">\n    <entry key=\"all\" value=\"please.change.me.sample.ss11.component.CM111004Component\"/><!-- PJ固有の完了条件クラス -->\n    <entry key=\"or\" value=\"nablarch.tool.workflow.OrCompletionCondition\"/>\n</map>\n```",
+      "level": 4
+    }
+  ]
+}

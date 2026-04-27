@@ -1,36 +1,39 @@
 # 送信ボタンやリンクを押すと、IEでのみ「オブジェクトでサポートされていないプロパティまたはメソッドです」と表示され画面が遷移しません。
 
-## IEでのみ画面遷移エラーが発生する原因と対処
+> **question:**
+> 送信ボタンやリンクを押した際、IEでのみ「オブジェクトでサポートされていないプロパティまたはメソッドです」
+> と表示され画面が遷移しません。
+> 他のブラウザでは問題無く動作していて、実装上の問題ではなさそうなのですが、原因が分からず困っています。
 
-**原因**: フォーム内の要素のname属性値がFORMオブジェクトのメソッド・プロパティ名とバッティングすると、IEでのみ「オブジェクトでサポートされていないプロパティまたはメソッドです」エラーが発生し画面遷移しない。
+> **answer:**
+> 送信するフォームの内部に、下記例のように name属性が "submit" となっている項目が存在している場合にこのようなエラーが
+> 発生します。
 
-**対象ブラウザ**: InternetExplorer全般 (IE6/IE7/IE8) および旧バージョンのFirefox (4以前)
+> ```jsp
+> <%-- 問題のあるタグの例 --%>
+> <n:submit type="submit" uri="RW11BA0102" name="submit" value="登録"/>
+> ```
 
-**問題のあるコード例** (`name="submit"` がバッティング):
-```jsp
-<n:submit type="submit" uri="RW11BA0102" name="submit" value="登録"/>
-```
+> この事象は、FORMオブジェクトのメソッド・プロパティ名と、フォーム内各要素のname属性値がバッティングすることによって発生します。
+> 対象となるブラウザは InternetExplorer全般 (IE6/IE7/IE8) および、旧バージョンのFirefox (4以前) です。
 
-**修正**: name属性の値を別の名前に変更する。
-```jsp
-<n:submit type="submit" uri="RW11BA0102" name="register" value="登録"/>
-```
+> この場合、name属性の値を別のものに変更することで問題が解消します。
+> 上記の例であれば、以下のように修正することで正常に動作するようになります。
 
-> **警告**: 以下の文字列はname属性の値として使用してはならない:
-> - `action`
-> - `elements`
-> - `enctype`
-> - `length`
-> - `method`
-> - `name`
-> - `target`
-> - `submit`
-> - `reset`
-> - 数値文字列 (`0`, `1`, `2` ...)
+> ```jsp
+> <%-- 修正例 --%>
+> <n:submit type="submit" uri="RW11BA0102" name="register" value="登録"/>
+> ```
 
-<details>
-<summary>keywords</summary>
+> また、同様の理由により、以下の文字列をname属性の値として使用することは避けてください。
 
-name属性, FORMオブジェクト, submit, InternetExplorer, n:submit, IEエラー, 画面遷移エラー, フォーム要素名バッティング
-
-</details>
+> * >   action
+> * >   elements
+> * >   enctype
+> * >   length
+> * >   method
+> * >   name
+> * >   target
+> * >   submit
+> * >   reset
+> * >   数値文字列 (0, 1, 2 ...)

@@ -1,134 +1,68 @@
 {
   "id": "web-application-Other",
   "title": "その他実装例集",
-  "official_doc_urls": [],
-  "index": [
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
     {
       "id": "s1",
       "title": "本ページの構成",
-      "hints": [
-        "ログ出力",
-        "設定値取得",
-        "メッセージ取得",
-        "エラーメッセージ通知",
-        "DBアクセス精査",
-        "コード値取得",
-        "コード値バリデーション",
-        "警告メッセージ",
-        "実装例集",
-        "CodeUtil",
-        "getName",
-        "getShortName",
-        "getOptionalName",
-        "getValues",
-        "コード名称取得",
-        "コード略称取得",
-        "オプション名称取得",
-        "ThreadContext言語",
-        "パターンカラム指定"
-      ]
+      "content": "本ページでは以下の使用例を説明する。\n\n* [ログの出力方法](../../guide/web-application/web-application-Other.md#other-example-log-write)\n* [設定値の取得方法](../../guide/web-application/web-application-Other.md#other-example-repository-get-settings)\n* [メッセージの取得方法](../../guide/web-application/web-application-Other.md#other-example-message-get)\n* [エラーメッセージの通知方法](../../guide/web-application/web-application-Other.md#other-example-message-notify)\n* [データベースアクセスを伴う精査を行う方法](../../guide/web-application/web-application-Other.md#other-database-access-error)\n* [エラーメッセージを任意の個所に表示する方法](../../guide/web-application/web-application-Other.md#other-error-message-for-property)\n* [コード名称と値の取得方法](../../guide/web-application/web-application-Other.md#other-example-code-get)\n* [コード値のバリデーション方法](../../guide/web-application/web-application-Other.md#other-example-code-validate)\n* [正常な画面遷移においてメッセージを表示する方法](../../guide/web-application/web-application-Other.md#other-example-warn-message)",
+      "level": 2
     },
     {
       "id": "s2",
       "title": "ログの出力方法",
-      "hints": [
-        "Logger",
-        "LoggerManager",
-        "logDebug",
-        "isDebugEnabled",
-        "ログ出力",
-        "デバッグログ",
-        "@CodeValue",
-        "CodeValue",
-        "@PropertyName",
-        "PropertyName",
-        "codeId",
-        "pattern",
-        "コード値バリデーション",
-        "バリデーションアノテーション"
-      ]
+      "content": "開発時にデバッグ目的で出力するログの出力方法を示す。\nログ出力の設定方法については、 [ログ出力の設定方法とログの見方(画面オンライン処理編)](../../guide/web-application/web-application-Web-Log.md#web-log) を参照。\n\n* 実装例\n\n  ```java\n  /* 【説明】\n      ログ出力を行うためのロガーの取得方法。\n  \n      クラス変数にロガーを設定する。\n      LoggerManagerのgetメソッドを使用してLoggerを取得する。\n      getメソッドの引数には自身のクラスを指定する。 */\n  \n  /* 【説明】CM311AC1ComponentクラスのJavaDocは省略。 */\n  public class CM311AC1Component {\n  \n      /** ロガー */\n      private static final Logger LOGGER = LoggerManager.get(CM311AC1Component.class);\n  }\n  ```\n\n  ```java\n  /* 【説明】\n      ログの出力方法。\n  \n      LoggerのlogDebugメソッドを使用してログを出力する。\n      メッセージの組み立て処理が必要な場合は事前に出力有無をチェックする。\n      ログの出力を行わない場合に不必要なログ組み立て処理が実行されることによる\n      性能劣化を防ぐためである。*/\n  if (LOGGER.isDebugEnabled()) {\n      String message = String.format(\"user was not found. userId = [%s], name = [%s]\",\n                                     user.getUserId(), user.getName());\n      LOGGER.logDebug(message);\n  }\n  ```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 2
     },
     {
       "id": "s3",
       "title": "設定値の取得方法",
-      "hints": [
-        "SystemRepository",
-        "getString",
-        "getBoolean",
-        "設定値取得",
-        "環境設定ファイル",
-        "config-file",
-        "WebUtil",
-        "MessageUtil",
-        "notifyMessages",
-        "createMessage",
-        "n:errors",
-        "MessageLevel",
-        "警告メッセージ表示",
-        "正常画面遷移メッセージ",
-        "nablarch_warn",
-        "nablarch_info",
-        "nablarch_error"
-      ]
+      "content": "リポジトリ機能を用いた設定値の取得方法を示す。\n\n環境設定ファイルは下記のとおり配置されているものとして実装例を示す。\n実際の開発ではプロジェクトで規定された環境設定ファイルに設定値を指定すること。\n\n* 環境設定ファイルの配置例\n\n  ```bash\n  # 【説明】\n  #  コンポーネント設定ファイルはフレームワークにより読み込まれる。\n  #  ここでは画面オンライン用のコンポーネント設定ファイルを想定している。\n  resources\n    +-application\n    |   +-system.config(環境設定ファイル)\n    |\n    +-web-component-configuration.xml(コンポーネント設定ファイル)\n  ```\n* コンポーネント設定ファイル(web-component-configuration.xml)の設定例\n\n  ```xml\n  <!-- 【説明】\n        リポジトリに環境設定ファイルを読み込ませるために\n        コンポーネント設定ファイルにconfig-fileタグを定義する。 -->\n  <!-- 設定値項目 -->\n  <config-file file=\"application/system.config\" />\n  ```\n* 環境設定ファイル(system.config)の設定例\n\n  ```bash\n  #エラーメッセージID\n  notPermissionMessage=MSG00001\n  \n  #登録可能フラグ\n  registerUserPermission=false\n  \n  #ユーザの有効期限を現在日付から何ヶ月後にするか\n  userEffectiveDateTo=12\n  ```\n\n  > **Note:**\n> 環境設定ファイルの記述ルールの詳細については、 [環境設定ファイルの記述ルール](../../../../fw/reference/02_FunctionDemandSpecifications/01_Core/02/02_01_Repository_config.html#repository-config-loader-setting) を参照。\n* 実装例\n\n  ```java\n  /* 【説明】\n      文字列の取得方法。\n      SystemRepositoryのgetStringメソッドを使用する。 */\n  String messageId = SystemRepository.getString(\"notPermissionMessage\");\n  \n  /* 【説明】\n      真偽値の取得方法。\n      SystemRepositoryのgetBooleanメソッドを使用する。 */\n  boolean registerFlg = SystemRepository.getBoolean(\"registerUserPermission\");\n  \n  /* 【説明】\n      文字列または真偽値以外の取得方法。\n      SystemRepositoryのgetStringメソッドで取得後に変換処理を行う。 */\n  int effectiveDateTo = Integer.parseInt(\n                            SystemRepository.getString(\"userEffectiveDateTo\"));\n  ```\n\n> **Warning:**\n> 環境設定値を取得する際に指定するキー値には、ユーザ入力値やデータベースから取得した値を使用しないこと。\n> この様なキー値を使用した場合、環境設定値が取得できないことにより、障害が発生する可能性が高くなる。\n> また、設定値が取得せずに障害が発生した場合も、キー値が可変であることが原因で障害解析が非常に困難となる。\n\n> キー値を常に固定値としていた場合、仮に設定値が取得出来なかった場合でも障害発生箇所を元に、\n> キー値を割り出すことが容易であるため、上記のような問題は発生しない。\n\n> 以下に良くない例を示す。\n\n> ```java\n> /* 【説明】\n>     Entityから取得した値をキー値の一部として使用しているため、良くない実装 */\n> String message = SystemRepository.getString(\"user\" + userEntity.getUserId() + \".message\");\n> \n> /* 【説明】\n>     データベースから取得した値をキー値の一部として使用しているため、良くない実装 */\n> String message = SystemRepository.getString(\"user\" + row.getString(\"userId\") + \".message\");\n> ```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 2
     },
     {
       "id": "s4",
       "title": "メッセージの取得方法",
-      "hints": [
-        "MessageUtil",
-        "Message",
-        "StringResource",
-        "createMessage",
-        "formatMessage",
-        "getStringResource",
-        "MessageLevel",
-        "メッセージ取得",
-        "国際化"
-      ]
+      "content": "メッセージ管理機能を用いたメッセージの取得方法を示す。\n\nメッセージテーブルは下記のとおりデータが設定されているものとして実装例を示す。\n\n* メッセージテーブルのデータ例\n\n  | メッセージID | 言語 | メッセージ |\n  |---|---|---|\n  | MSG0001 | en | User id is already registered. |\n  | MSG0001 | ja | そのユーザIDは既に登録されています。 |\n  | MSG0002 | en | value of {0} is not valid. |\n  | MSG0002 | ja | {0}の値が不正です。 |\n  | PRP0002 | en | name |\n  | PRP0002 | ja | 名前 |\n* 実装例\n\n  ```java\n  /* 【説明】\n      メッセージの取得方法。\n  \n      MessageUtilのcreateMessageメソッドを使用する。\n      messageStr変数はThreadContextに保持した言語に合わせたメッセージとなる。\n  \n      ThreadContextに保持した言語 -> messageStr変数に設定されるメッセージ\n      en -> \"User id is already registered.\"\n      ja -> \"そのユーザIDは既に登録されています。\" */\n  Message message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0001\");\n  String messageStr = message.formatMessage();\n  ```\n\n  ```java\n  /* 【説明】\n      メッセージのフォーマット方法。\n  \n      MessageUtilのcreateMessageメソッドにオプション引数を指定する。\n      国際化を行う場合はオプション引数にStringResourceまたはMessageを指定する。\n      国際化を行わない場合はオプション引数に直接文字列を指定してもよい。\n  \n      ThreadContextに保持した言語 -> messageStr変数に設定されるメッセージ\n      en -> \"value of name is not valid.\"\n      ja -> \"名前の値が不正です。\" */\n  StringResource nameResource = MessageUtil.getStringResource(\"PRP0002\");\n  Message message = MessageUtil.createMessage(\n                        MessageLevel.ERROR, \"MSG0002\", nameResource);\n  String messageStr = message.formatMessage();\n  ```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 2
     },
     {
       "id": "s5",
       "title": "エラーメッセージの通知方法",
-      "hints": [
-        "ApplicationException",
-        "MessageLevel",
-        "エラーメッセージ通知",
-        "業務エラー",
-        "例外処理"
-      ]
+      "content": "業務的なエラーが発生した際は、エラー内容を使用者に伝えるためにメッセージの出力が必要になる。\nApplicationExceptionクラス(またはApplicationExceptionクラスのサブクラス)を使用することで、\nフレームワークが提供する例外処理機構を使用してエラー内容を使用者に伝えることができる。\n\n* 実装例\n\n  ```java\n  /* 【説明】\n      メッセージの通知方法。\n      メッセージを指定したApplicationExceptionを送出する。 */\n  Message message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0001\");\n  throw new ApplicationException(message);\n  ```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 2
     },
     {
       "id": "s6",
       "title": "データベースアクセスを伴う精査を行う方法",
-      "hints": [
-        "ApplicationException",
-        "SqlPStatement",
-        "retrieve",
-        "MessageLevel",
-        "DBアクセス精査",
-        "重複チェック",
-        "Action"
-      ]
+      "content": "アプリケーションにおいて、データベースアクセスを伴う精査は\n単体項目、複合項目を問わず Entity ではなく Action に実装する。\n\n精査エラーは、 [エラーメッセージの通知方法](../../guide/web-application/web-application-Other.md#other-example-message-notify) に示した ApplicationException\nクラスを使用する方法で使用者にメッセージを通知する。\n\n以下にユーザ登録時に行うログインIDの重複チェックを行う実装例を示す。\n\n* 実装例\n\n  ```java\n  /* 【説明】\n      データベースアクセスを伴う精査の実装例。\n      Entityではなく Action (業務共通コンポーネントを含む) に精査の実装を行う。 */\n  // form 生成\n  W11AC02Form form = context.createObject();\n  \n  // form から entity 取得\n  SystemAccountEntity systemAccount = form.getSystemAccount();\n  \n  // entityからログインIDの取得\n  String loginId = systemAccount.getLoginId();\n  \n  // ログインIDが登録済みか、DBを検索する\n  SqlPStatement statement = getSqlPStatement(\"SELECT_SYSTEM_ACCOUNT\");\n  statement.setString(1, loginId);\n  if (!statement.retrieve().isEmpty()) {\n      // ログインIDが登録済みの場合、 ApplicationException を送出\n      throw new ApplicationException(MessageUtil.createMessage(MessageLevel.ERROR, \"MSG00001\"));\n  }\n  ```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 2
     },
     {
       "id": "s7",
       "title": "エラーメッセージを任意の個所に表示する方法",
-      "hints": [
-        "ValidationUtil",
-        "createMessageForProperty",
-        "n:error",
-        "エラーメッセージ表示位置",
-        "プロパティ別エラー"
-      ]
+      "content": "[データベースアクセスを伴う精査を行う方法](../../guide/web-application/web-application-Other.md#other-database-access-error) で示した例のような、データベースアクセスを伴う精査など、\nAction 内で実装した精査でも、通常のバリデーション結果同様にエラーを発生させた入力値と同じ場所に表示させたいことがある。\n\nこのような場合、 MessageUtil.createMessage メソッドではなく、\nValidationUtil.createMessageForProperty メソッドを使用してエラーメッセージを作成することで、\nエラーメッセージを任意の箇所に出力できる。\n\n以下に [データベースアクセスを伴う精査を行う方法](../../guide/web-application/web-application-Other.md#other-database-access-error) と同じログインIDの重複チェックを行う実装例でエラーメッセージをログインIDの近くに表示する方法を示す。\n\n* 実装例\n\n  ```java\n  /* 【説明】\n      プロパティに紐付くエラーメッセージを設定する例。\n      */\n  \n  // form 生成\n  W11AC02Form form = context.createObject();\n  \n  // form から entity 取得\n  SystemAccountEntity systemAccount = form.getSystemAccount();\n  \n  // entityからログインIDの取得\n  String loginId = systemAccount.getLoginId();\n  \n  // ログインIDが登録済みか、DBの状態をチェック\n  SqlPStatement statement = getSqlPStatement(\"SELECT_SYSTEM_ACCOUNT\");\n  statement.setString(1, loginId);\n  if (!statement.retrieve().isEmpty()) {\n      // ログインIDが登録済みの場合、 ApplicationException を送出\n      // ValidationUtil.createMessageForProperty メソッドでメッセージを作成する。\n      // 第1引数には n:error タグの name 属性で指定した名称を渡す。\n      throw new ApplicationException(ValidationUtil.createMessageForProperty(\n              \"W11AC02.systemAccount.loginId\", \"MSG00001\"));\n  }\n  ```\n\n  ```jsp\n  <%--\n    【説明】\n    エラーメッセージを表示させるJSPの例。\n  --%>\n  <th>\n      ログインID <n:forInputPage><span class=\"essential\">*</span></n:forInputPage>\n  </th>\n  <td>\n      <n:text name=\"W11AC02.systemAccount.loginId\"\n              size=\"50\" maxlength=\"20\"/>\n      <n:forInputPage>\n          (半角英数記号20文字以内)\n      </n:forInputPage>\n      <%--\n        【説明】\n        エラーメッセージを表示させる個所の書き方は、通常のバリデーション結果のエラー表示と同様。\n      --%>\n      <n:error name=\"W11AC02.systemAccount.loginId\"/>\n  </td>\n  ```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "コード名称と値の取得方法",
+      "content": "コード管理機能を用いたコード名称と値の取得方法を示す。\n\nコードパターンテーブルとコード名称テーブルは、下記のとおりデータ設定されているものとして実装例を示す。\n\n* コードパターンテーブルのデータ例\n\n  | ID | VALUE | PATTERN1 | PATTERN2 | PATTERN3 |\n  |---|---|---|---|---|\n  | 0001 | 1 | 1 | 0 | 0 |\n  | 0001 | 2 | 1 | 0 | 0 |\n  | 0001 | 9 | 0 | 0 | 0 |\n* コード名称テーブルのデータ例\n\n  | ID | VALUE | SORT_ORDER | LANG | NAME | SHORT_NAME | NAME_WITH_VALUE |\n  |---|---|---|---|---|---|---|\n  | 0001 | 1 | 1 | ja | 男性 | 男 | 1:男性 |\n  | 0001 | 2 | 2 | ja | 女性 | 女 | 2:女性 |\n  | 0001 | 9 | 3 | ja | 不明 | 不 | 9:不明 |\n  | 0001 | 1 | 2 | en | Male | M | 1:Male |\n  | 0001 | 2 | 1 | en | Female | F | 2:Female |\n  | 0001 | 9 | 3 | en | Unknown | U | 9:Unknown |\n* 実装例\n\n  ```java\n  /* 【説明】\n      コード名称の取得方法。\n  \n      CodeUtilのgetNameメソッドを使用する。\n      name変数はThreadContextに保持した言語に合わせた名称となる。\n  \n      ThreadContextに保持した言語 -> name変数に設定される名称\n      en -> \"Male\"\n      ja -> \"男性\" */\n  String name = CodeUtil.getName(\"0001\", \"1\");\n  ```\n\n  ```java\n  /* 【説明】\n      コード略称の取得方法。\n  \n      CodeUtilのgetShortNameメソッドを使用する。\n      name変数はThreadContextに保持した言語に合わせた略称となる。\n  \n      ThreadContextに保持した言語 -> name変数に設定される略称\n      en -> \"男\"\n      ja -> \"M\" */\n  String name = CodeUtil.getShortName(\"0001\", \"1\");\n  ```\n\n  ```java\n  /* 【説明】\n      オプション名称の取得方法。\n  \n      コード名称テーブルのNAME_WITH_VALUEカラムは、\n      任意のカラム名を指定したオプション名称用のカラムである。\n  \n      CodeUtilのgetOptionalNameメソッドを使用し、オプション名称用カラムの名前を指定する。\n      name変数はThreadContextに保持した言語に合わせたオプション名称となる。\n  \n      ThreadContextに保持した言語 -> name変数に設定されるオプション名称\n      en -> \"1:Male\"\n      ja -> \"1:男性\" */\n  String name = CodeUtil.getOptionalName(\"0001\", \"1\", \"NAME_WITH_VALUE\");\n  ```\n\n  ```java\n  /* 【説明】\n      コード値の取得方法。\n  \n      CodeUtilのgetValuesメソッドを使用する。\n      value変数はThreadContextに保持した言語に合わせた値となる。\n  \n      ThreadContextに保持した言語 -> values変数に設定される値\n      en -> {\"2\", \"1\", \"9\"}\n      ja -> {\"1\", \"2\", \"9\" }\n      コードパターンテーブルのSORT_ORDERカラムの昇順にソートされた順序で\n      コード値が取得される。\n      */\n  List<String> values = CodeUtil.getValues(\"0001\");\n  ```\n\n  ```java\n  /* 【説明】\n      パターンごとのコード値の取得方法。\n  \n      コードパターンテーブルのPATTERN1からPATTERN3カラムは、\n      任意のカラム名を指定したパターン用のカラムである。\n      各カラムが表すパターンに含める行には\"1\"を指定する。\n  \n      CodeUtilのgetValuesメソッドを使用し、パターン用カラムの名前を指定する。\n      value変数はThreadContextに保持した言語に合わせた値となる。\n  \n      ThreadContextに保持した言語 -> values変数に設定される値\n      en -> {\"2\" , \"1\"}\n      ja -> {\"1\" , \"2\"}\n      コードパターンテーブルのSORT_ORDERカラムの昇順にソートされた順序で\n      コード値が取得される。\n      */\n  List<String> values = CodeUtil.getValues(\"0001\", \"PATTERN1\");\n  ```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 2
+    },
+    {
+      "id": "s9",
+      "title": "コード値のバリデーション方法",
+      "content": "コード値のバリデーション方法を示す。\nここでは、 [コード名称と値の取得方法](../../guide/web-application/web-application-Other.md#other-example-code-get) に示したコード管理用のデータがデータベースに設定されているものとする。\n\n* 実装例\n\n  ```java\n  /* 【説明】CustomerEntityクラスのJavaDocは省略。 */\n  public class CustomerEntity {\n  \n      /* 【説明】その他のプロパティおよびメソッドは省略。 */\n  \n      /** 性別 */\n      private String gender;\n  \n      /* 【説明】\n          コード値のバリデーションはCodeValueバリデータを使用する。\n          genderプロパティに対する値が\"1\"、\"2\"以外の場合は、\n          バリデーション結果がエラーとなる。\n          pattern属性には、使用するパターンのカラム名を指定する。*/\n      @PropertyName(\"性別\")\n      @CodeValue(codeId=\"0001\", pattern=\"PATTERN1\")\n      public String setGender(String gender) {\n          this.gender = gender;\n      }\n  }\n  ```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 2
+    },
+    {
+      "id": "s10",
+      "title": "正常な画面遷移においてメッセージを表示する方法",
+      "content": "ここでは正常な画面遷移においてメッセージを表示する方法を示す。\n\n精査エラーの場合と異なり、何らかの業務仕様上のチェックを行い、チェック結果によって警告メッセージを次画面に表示したい場合がある。\nこのように正常な画面遷移においてメッセージを表示したい場合は、ActionでWebUtilのnotifyMessagesメソッドを使用してメッセージを設定し、\nn:errorsタグを使用して画面表示を行う。\nユーザ情報更新確認画面に警告メッセージ(MSG00022)を表示する実装例を示す。\n\n* 実装例\n\n  ```java\n  /* 【説明】Actionのメソッド実装例。\n             JavaDocは省略。*/\n  public HttpResponse doRW11AC0302(HttpRequest req, ExecutionContext ctx) {\n  \n      /* 【説明】入力精査および業務処理は省略。 */\n  \n      /* 【説明】\n          Actionでメッセージを設定する。\n          WebUtilのnotifyMessagesメソッドを使用してメッセージを設定する。\n          指定したメッセージは n:errors タグを使用して出力する。 */\n      Message message = MessageUtil.createMessage(MessageLevel.WARN, \"MSG00022\");\n      WebUtil.notifyMessages(ctx, message);\n  \n      return new HttpResponse(\"/ss11AC/W11AC0302.jsp\");\n  }\n  ```\n\n  ```jsp\n  <%-- 【説明】JSPの実装例。\n        WebUtilのnotifyMessagesメソッドで設定したメッセージを出力する。 --%>\n  <n:errors />\n  ```\n\n  ```css\n  /* 【説明】CSSの実装例。\n      CSS定義により警告メッセージを装飾する。\n      n:errors タグはメッセージレベル(MessageLevel)に応じたCSSクラス名が出力される。\n      デフォルトでは下記の対応でクラス名が出力される。\n  \n          情報レベル(MessageLevel.INFO): \"nablarch_info\"\n          警告レベル(MessageLevel.WARN): \"nablarch_warn\"\n          エラーレベル(MessageLevel.ERROR): \"nablarch_error\"\n  */\n  li.nablarch_warn {\n      color: #0000FF;\n  }\n  ```\n\n( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)",
+      "level": 2
     }
-  ],
-  "sections": {
-    "s1": "このドキュメントで説明する実装例の一覧。\n\n- ログの出力方法 (:ref:`other_example_log_write`)\n- 設定値の取得方法 (:ref:`other_example_repository_get_settings`)\n- メッセージの取得方法 (:ref:`other_example_message_get`)\n- エラーメッセージの通知方法 (:ref:`other_example_message_notify`)\n- データベースアクセスを伴う精査を行う方法 (:ref:`other_database_access_error`)\n- エラーメッセージを任意の個所に表示する方法 (:ref:`other_error_message_for_property`)\n- コード値の取得方法 (:ref:`other_example_code_get`)\n- コード値を使ったバリデーション (:ref:`other_example_code_validate`)\n- 警告メッセージの表示方法 (:ref:`other_example_warn_message`)\n\n**クラス**: `CodeUtil`\n\nコード管理機能でコード名称・コード値を取得する。全メソッドはThreadContextの言語設定に応じた値を返す。\n\n### コード名称の取得\n\n`CodeUtil.getName(codeId, value)` — コード名称テーブルのNAMEカラムの値を取得。\n\n```java\nString name = CodeUtil.getName(\"0001\", \"1\");\n// en -> \"Male\", ja -> \"男性\"\n```\n\n### コード略称の取得\n\n`CodeUtil.getShortName(codeId, value)` — コード名称テーブルのSHORT_NAMEカラムの値を取得。\n\n```java\nString name = CodeUtil.getShortName(\"0001\", \"1\");\n// en -> \"男\", ja -> \"M\"\n```\n\n### オプション名称の取得\n\n`CodeUtil.getOptionalName(codeId, value, columnName)` — コード名称テーブルの任意カラム（NAME_WITH_VALUE等）の値を取得。カラム名を第3引数に指定する。\n\n```java\nString name = CodeUtil.getOptionalName(\"0001\", \"1\", \"NAME_WITH_VALUE\");\n// en -> \"1:Male\", ja -> \"1:男性\"\n```\n\n### コード値の取得\n\n`CodeUtil.getValues(codeId)` — コード値リストをSORT_ORDERカラムの昇順で返す。\n\n```java\nList<String> values = CodeUtil.getValues(\"0001\");\n// en -> {\"2\", \"1\", \"9\"}, ja -> {\"1\", \"2\", \"9\"}\n```\n\n### パターンごとのコード値の取得\n\n`CodeUtil.getValues(codeId, patternColumn)` — コードパターンテーブルのパターンカラムを指定してコード値リストを取得。パターンカラムに\"1\"が設定された行のみ対象。値はSORT_ORDERカラムの昇順で返す。\n\n```java\nList<String> values = CodeUtil.getValues(\"0001\", \"PATTERN1\");\n// en -> {\"2\", \"1\"}, ja -> {\"1\", \"2\"}\n```",
-    "s2": "**クラス**: `Logger`, `LoggerManager`\n\nロガーはクラス変数に設定し、`LoggerManager.get(ClassName.class)` で取得する。\n\n```java\nprivate static final Logger LOGGER = LoggerManager.get(CM311AC1Component.class);\n```\n\nデバッグログ出力前に `isDebugEnabled()` で出力有無を確認し、不要なメッセージ組み立て処理による性能劣化を防ぐ。\n\n```java\nif (LOGGER.isDebugEnabled()) {\n    String message = String.format(\"user was not found. userId = [%s], name = [%s]\",\n                                   user.getUserId(), user.getName());\n    LOGGER.logDebug(message);\n}\n```\n\nログ出力設定については :ref:`Web_Log` を参照。\n\n**アノテーション**: `@CodeValue`\n\nコード値のバリデーションには`@CodeValue`バリデータを使用する。\n\n```java\n@PropertyName(\"性別\")\n@CodeValue(codeId=\"0001\", pattern=\"PATTERN1\")\npublic String setGender(String gender) {\n    this.gender = gender;\n}\n```\n\n- `codeId`: 対象のコードID\n- `pattern`: パターンのカラム名。指定したパターンに含まれる値（パターンカラムが\"1\"の行）のみ有効とする。パターンに含まれない値はバリデーションエラーとなる。",
-    "s3": "**クラス**: `SystemRepository`\n\n| 型 | メソッド |\n|---|---|\n| 文字列 | `SystemRepository.getString(\"key\")` |\n| 真偽値 | `SystemRepository.getBoolean(\"key\")` |\n| その他 | `getString()` で取得後に変換 |\n\n```java\nString messageId = SystemRepository.getString(\"notPermissionMessage\");\nboolean registerFlg = SystemRepository.getBoolean(\"registerUserPermission\");\nint effectiveDateTo = Integer.parseInt(SystemRepository.getString(\"userEffectiveDateTo\"));\n```\n\nコンポーネント設定ファイルに `config-file` タグで環境設定ファイルを読み込む:\n\n```xml\n<config-file file=\"application/system.config\" />\n```\n\n> **警告**: キー値にユーザ入力値やデータベースから取得した値を使用しないこと。キー値が可変の場合、障害発生時の解析が困難になる。キー値は常に固定値を使用すること。\n\n悪い例:\n```java\n// Entityから取得した値をキー値に使用（不可）\nString message = SystemRepository.getString(\"user\" + userEntity.getUserId() + \".message\");\n// DBから取得した値をキー値に使用（不可）\nString message = SystemRepository.getString(\"user\" + row.getString(\"userId\") + \".message\");\n```\n\n**クラス**: `WebUtil`, `MessageUtil`\n\n正常な画面遷移でメッセージを表示する場合、ActionでWebUtilの`notifyMessages`メソッドを使用してメッセージを設定し、JSPで`<n:errors />`タグで出力する。精査エラーではなく業務仕様上のチェック結果として警告メッセージを次画面に表示する場合に使用する。\n\n```java\nMessage message = MessageUtil.createMessage(MessageLevel.WARN, \"MSG00022\");\nWebUtil.notifyMessages(ctx, message);\nreturn new HttpResponse(\"/ss11AC/W11AC0302.jsp\");\n```\n\n```jsp\n<n:errors />\n```\n\n`n:errors`タグはMessageLevelに応じたCSSクラス名を出力する：\n\n| MessageLevel | CSSクラス名 |\n|---|---|\n| INFO | `nablarch_info` |\n| WARN | `nablarch_warn` |\n| ERROR | `nablarch_error` |",
-    "s4": "**クラス**: `MessageUtil`, `Message`, `StringResource`\n\nメッセージはThreadContextに保持した言語に対応した文言が返る。\n\n```java\n// 基本的なメッセージ取得\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0001\");\nString messageStr = message.formatMessage();\n```\n\nプレースホルダ（`{0}` など）付きメッセージをフォーマットする場合、国際化するときは `StringResource` または `Message` を引数に渡す。国際化を行わない場合はオプション引数に直接文字列を指定してもよい:\n\n```java\nStringResource nameResource = MessageUtil.getStringResource(\"PRP0002\");\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0002\", nameResource);\nString messageStr = message.formatMessage();\n```",
-    "s5": "**クラス**: `ApplicationException`\n\n業務エラーは `ApplicationException`（またはそのサブクラス）をスローすることで、フレームワークの例外処理機構を通じてエラー内容をユーザに通知する。\n\n```java\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"MSG0001\");\nthrow new ApplicationException(message);\n```",
-    "s6": "**クラス**: `ApplicationException`, `SqlPStatement`, `MessageUtil`\n\nDBアクセスを伴う精査（単体項目・複合項目を問わず）は Entity ではなく Action に実装する。精査エラーは `ApplicationException` でユーザに通知する（:ref:`other_example_message_notify` 参照）。\n\nログインIDの重複チェックの実装例:\n\n```java\nW11AC02Form form = context.createObject();\nSystemAccountEntity systemAccount = form.getSystemAccount();\nString loginId = systemAccount.getLoginId();\n\nSqlPStatement statement = getSqlPStatement(\"SELECT_SYSTEM_ACCOUNT\");\nstatement.setString(1, loginId);\nif (!statement.retrieve().isEmpty()) {\n    throw new ApplicationException(MessageUtil.createMessage(MessageLevel.ERROR, \"MSG00001\"));\n}\n```",
-    "s7": "**クラス**: `ValidationUtil`, `ApplicationException`\n\nAction内の精査でも通常のバリデーション結果と同様に入力値の近くにエラーを表示したい場合は、`MessageUtil.createMessage` の代わりに `ValidationUtil.createMessageForProperty` を使用する。\n\n```java\n// 第1引数: n:error タグの name 属性で指定した名称\nthrow new ApplicationException(ValidationUtil.createMessageForProperty(\n        \"W11AC02.systemAccount.loginId\", \"MSG00001\"));\n```\n\nJSPのエラー表示は通常のバリデーション結果と同様に `<n:error>` タグを使用する:\n\n```jsp\n<n:text name=\"W11AC02.systemAccount.loginId\" size=\"50\" maxlength=\"20\"/>\n<n:error name=\"W11AC02.systemAccount.loginId\"/>\n```"
-  }
+  ]
 }

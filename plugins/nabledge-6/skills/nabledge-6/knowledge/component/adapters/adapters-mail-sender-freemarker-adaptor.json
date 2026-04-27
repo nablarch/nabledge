@@ -1,0 +1,32 @@
+{
+  "id": "adapters-mail-sender-freemarker-adaptor",
+  "title": "E-mail FreeMarkerアダプタ",
+  "content": "**目次**\n\n* モジュール一覧\n* E-mail FreeMarkerアダプタを使用するための設定を行う\n* メールのテンプレートを作成する\n* メール送信要求を登録する\n\n[FreeMarker(外部サイト)](https://freemarker.apache.org/) を使用した定型メール送信処理を行うためのアダプタを提供する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "モジュール一覧",
+      "content": "```xml\n<!-- E-mail FreeMarkerアダプタ -->\n<dependency>\n  <groupId>com.nablarch.integration</groupId>\n  <artifactId>nablarch-mail-sender-freemarker-adaptor</artifactId>\n</dependency>\n```\n\n> **Tip:**\n> FreeMarkerのバージョン2.3.27-incubatingを使用してテストを行っている。\n> バージョンを変更する場合は、プロジェクト側でテストを行い問題ないことを確認すること。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "E-mail FreeMarkerアダプタを使用するための設定を行う",
+      "content": "本アダプタを使用するためには、コンポーネント設定ファイルで FreeMarkerMailProcessor を MailRequester へ設定する。\n\n`FreeMarkerMailProcessor` にはFreeMarkerが提供する `Configuration` を設定する必要がある。\n`Configuration` は以下の理由により ComponentFactory の実装クラスを作成してコンポーネントを設定することを推奨する。\n\n* `Configuration` はデフォルトコンストラクタが非推奨である\n* `Configuration` への設定はコンポーネント設定ファイルよりもJavaコードで行う方がやりやすい\n\n`Configuration` を作成する `ComponentFactory` 実装クラスの例を以下に示す。\n\n```java\npackage com.example;\n\nimport freemarker.template.Configuration;\nimport nablarch.core.repository.di.ComponentFactory;\n\npublic class ConfigurationFactory implements ComponentFactory<Configuration> {\n\n    private String basePackagePath;\n    private String encoding;\n\n    @Override\n    public Configuration createObject() {\n        Configuration cfg = new Configuration(Configuration.getVersion());\n        ClassLoader classLoader = getClass().getClassLoader();\n        cfg.setClassLoaderForTemplateLoading(classLoader, basePackagePath);\n        cfg.setDefaultEncoding(encoding);\n        //必要に応じてConfigurationへその他の設定を行う\n        return cfg;\n    }\n\n    public void setBasePackagePath(String basePackagePath) {\n        this.basePackagePath = basePackagePath;\n    }\n\n    public void setEncoding(String encoding) {\n        this.encoding = encoding;\n    }\n}\n```\n\nこの `ConfigurationFactory` を使用するコンポーネント設定ファイルの設定例を以下に示す。\n\n```xml\n<component name=\"templateEngineMailProcessor\"\n           class=\"nablarch.integration.mail.freemarker.FreeMarkerMailProcessor\" autowireType=\"None\">\n  <property name=\"configuration\">\n    <component class=\"com.example.ConfigurationFactory\">\n      <property name=\"basePackagePath\" value=\"com/example/template/\"/>\n      <property name=\"encoding\" value=\"UTF-8\"/>\n    </component>\n  </property>\n</component>\n\n<!-- メール送信要求API -->\n<component name=\"mailRequester\" class=\"nablarch.common.mail.MailRequester\">\n  <property name=\"templateEngineMailProcessor\" ref=\"templateEngineMailProcessor\"/>\n  <!-- その他の設定は省略 -->\n</component>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "メールのテンプレートを作成する",
+      "content": "FreeMarkerを使用した定型メール処理では件名と本文を1つのテンプレートに記述する。\n\n件名と本文はデリミタと呼ばれる行で分割される。\nデフォルトのデリミタは `---` である（半角のハイフンが3つ）。\n\nテンプレートの例を以下に示す。\n\n```none\n${title}について${option}\n---\n${title}は、申請番号${requestId}で申請されました。\n${approver}は速やかに${title}を承認してください。${option}\n```\n\nより詳しい件名と本文の分割ルールは TemplateEngineProcessedResult#valueOf を参照。\n\nテンプレートファイルを配置する場所は `Configuration` の設定によって異なる。\n例えば、前節で示した設定例だとテンプレートファイルはクラスパスからロードされる。\nまた、 `basePackagePath` に `com/example/template/` と設定されているので、クラスパス上の `com/example/template/` ディレクトリにテンプレートファイルを配置することになる。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "メール送信要求を登録する",
+      "content": "単に定型メールの送信要求を登録すればよい。\n[メール送信要求を登録する](../../component/libraries/libraries-mail.md#mail-request) を参照。",
+      "level": 2
+    }
+  ]
+}

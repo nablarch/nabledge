@@ -1,0 +1,7 @@
+{
+  "id": "http-messaging-application-design",
+  "title": "アプリケーションの責務配置",
+  "content": "HTTPメッセージングを作成する際に実装すべきクラスとその責務について説明する。\n\n**クラスとその責務**\n\n![http_messaging_design.png](assets/http-messaging-application-design/http_messaging_design.png)\n\nアクションクラス(action class)\nアクションクラスは、リクエストメッセージ(RequestMessage)\nを元に業務ロジックを実行し、レスポンスメッセージ(ResponseMessage)\nを作成し返却する。\n\n例えば、リクエストメッセージの取り込み処理であれば、業務ロジックとして以下の処理を行う。\n\n* リクエストメッセージからフォームクラスを作成し、バリデーションを行う。\n* フォームクラスからエンティティクラスを作成して、データベースにデータを追加する。\n* レスポンスメッセージを作成し返却する。\nフォームクラス(form class)\nリクエストメッセージ(RequestMessage)をマッピングするクラス。\n\nバリデーションするためのアノテーションの設定や相関バリデーションのロジックを持つ。\n\nフォームクラスのプロパティは全て String で定義する\nプロパティを String とすべき理由は、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation-form-property) を参照。\nただし、バイナリ項目の場合はバイト配列で定義する。\nエンティティクラス(entity class)\nテーブルと1対1で対応するクラス。カラムに対応するプロパティを持つ。",
+  "no_knowledge_content": false,
+  "sections": []
+}

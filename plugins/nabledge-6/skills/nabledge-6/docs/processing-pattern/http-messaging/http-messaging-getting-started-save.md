@@ -1,13 +1,66 @@
 # 登録機能の作成
 
-**公式ドキュメント**: [1](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/http_messaging/getting_started/save/index.html) [2](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/action/MessagingAction.html) [3](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/RequestMessage.html) [4](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/common/dao/UniversalDao.html) [5](https://nablarch.github.io/docs/LATEST/javadoc/nablarch/fw/messaging/ResponseMessage.html)
+リクエストされた情報(JSON形式)をDBに登録する機能を解説する。
+
+作成する機能の概要
+![overview.png](../../../knowledge/assets/http-messaging-getting-started-save/overview.png)
+動作確認手順
+1. 事前にDBの状態を確認
+
+  H2のコンソールから下記SQLを実行し、レコードが存在しないことを確認する。
+
+  ```sql
+  SELECT * FROM PROJECT WHERE PROJECT_NAME = 'プロジェクト９９９';
+  ```
+2. プロジェクト情報の登録
+
+任意のRESTクライアントを使用して、以下のリクエストを送信する。
+
+URL
+[http://localhost:9080/ProjectSaveAction](http://localhost:9080/ProjectSaveAction)
+HTTPメソッド
+POST
+HTTPヘッダ
+Content-Type: application/json 
+
+X-Message-Id: 1
+リクエストボディ
+```json
+{
+    "projectName": "プロジェクト９９９",
+    "projectType": "development",
+    "projectClass": "ss",
+    "projectManager": "山田",
+    "projectLeader": "田中",
+    "clientId": 10,
+    "projectStartDate": "20160101",
+    "projectEndDate": "20161231",
+    "note": "備考９９９",
+    "sales": 10000,
+    "costOfGoodsSold": 20000,
+    "sga": 30000,
+    "allocationOfCorpExpenses": 40000
+}
+```
+
+1. 動作確認
+
+H2のコンソールから下記SQLを実行し、レコードが1件取得できることを確認する。
+
+```sql
+SELECT * FROM PROJECT WHERE PROJECT_NAME = 'プロジェクト９９９';
+```
 
 ## 登録を行う
 
-## フォーマットファイルの作成
+1. [フォーマットファイルの作成](../../processing-pattern/http-messaging/http-messaging-getting-started-save.md#getting-started-http-messaging-format)
+2. [フォームの作成](../../processing-pattern/http-messaging/http-messaging-getting-started-save.md#getting-started-http-messaging-form)
+3. [業務アクションの作成](../../processing-pattern/http-messaging/http-messaging-getting-started-save.md#getting-started-http-messaging-action)
 
-HTTPメッセージングのリクエストは [data_format](../../component/libraries/libraries-data_format.md) で解析する。フォーマットファイル名は「リクエストID + `_RECEIVE`」形式にする。
+フォーマットファイルの作成
+HTTPメッセージングでは、リクエストされたHTTPメッセージを [汎用データフォーマット](../../component/libraries/libraries-data-format.md#data-format) を使用して解析する。
 
+ProjectSaveAction_RECEIVE.fmt
 ```bash
 file-type:        "JSON"
 text-encoding:    "UTF-8"
@@ -28,110 +81,105 @@ text-encoding:    "UTF-8"
 13 allocationOfCorpExpenses[0..1]    X9
 14 userId[0..1]                      X9
 ```
+この実装のポイント
+* フォーマットファイルの名称は、「リクエストID + "_RECEIVE"」という形式にする。
+* フォーマットファイルの記述方法は [フォーマット定義ファイルの記述ルール](../../component/libraries/libraries-format-definition.md#data-format-definition) を参照。
 
-## フォームの作成
+フォームの作成
+リクエストボディの内容をバインドするフォームを作成する。
 
-[bean_validation](../../component/libraries/libraries-bean_validation.md) アノテーションをフィールドに設定する。
-
+ProjectForm.java
 ```java
 public class ProjectForm {
+
+    // 一部項目のみ抜粋
+
+    /** プロジェクト名 */
     @Required
     @Domain("projectName")
     private String projectName;
-    public String getProjectName() { return projectName; }
-    public void setProjectName(String projectName) { this.projectName = projectName; }
+
+    /**
+     * プロジェクト名を取得する。
+     *
+     * @return プロジェクト名
+     */
+    public String getProjectName() {
+        return projectName;
+    }
+
+    /**
+     * プロジェクト名を設定する。
+     *
+     * @param projectName 設定するプロジェクト名
+     *
+     */
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
 }
 ```
+この実装のポイント
+* [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を用いてバリデーションを行うため、バリデーション用のアノテーションを設定する。
 
-## 業務アクションの作成
+業務アクションの作成
+プロジェクトをDBに登録する業務アクションを作成する。
 
-`MessagingAction` を継承し、`MessagingAction#onReceive` に受信時処理を実装する。
-
-リクエストボディの値は [data_format](../../component/libraries/libraries-data_format.md) で解析済みの状態で `RequestMessage` が保持しており、`getParamMap` メソッドで取得する。
-
-[bean_validation](../../component/libraries/libraries-bean_validation.md) でバリデーション後、`UniversalDao` でDBに登録する。処理結果のレスポンスコードを `ResponseMessage` に設定して返却する。
-
+ProjectSaveAction.java
 ```java
 public class ProjectSaveAction extends MessagingAction {
+
+    /**
+     * 電文を受信した際に実行される業務処理。
+     * <p>
+     * プロジェクト情報をバリデーションし、DBに登録する。
+     * このメソッドは、一つのプロジェクトを登録するための処理である。
+     * (汎用フォーマットによる形式チェックにより単独プロジェクトであることが保証される)
+     * </p>
+     * 登録が完了した場合は、レスポンスコードを記載した応答電文を設定する。
+     * 例外が発生した場合は、{@link ProjectSaveAction#onError(Throwable, RequestMessage, ExecutionContext)}
+     * にて応答電文を設定する。
+     *
+     * @param requestMessage   受信したメッセージ
+     * @param executionContext 実行コンテキスト
+     * @return 応答電文
+     */
     @Override
     protected ResponseMessage onReceive(RequestMessage requestMessage,
                                         ExecutionContext executionContext) {
-        ProjectForm form = BeanUtil.createAndCopy(ProjectForm.class, requestMessage.getParamMap());
+
+        // 入力値をフォームにバインドする
+        ProjectForm form = BeanUtil.createAndCopy(ProjectForm.class,
+                requestMessage.getParamMap());
+
+        // バリデーションエラーがある場合は業務例外を送出
         ValidatorUtil.validate(form);
+
         UniversalDao.insert(BeanUtil.createAndCopy(Project.class, form));
+
+        // 応答電文のフォーマッタを作成する
         requestMessage.setFormatterOfReply(createFormatter());
+
+        // 応答電文に記載するステータスコードを設定する
         Map<String, String> map = new HashMap<>();
         map.put("statusCode", String.valueOf(HttpResponse.Status.CREATED.getStatusCode()));
+
+        // 応答データ返却
         return requestMessage.reply()
                .setStatusCodeHeader(String.valueOf(HttpResponse.Status.CREATED.getStatusCode()))
                .addRecord("data", map);
     }
 }
 ```
+この実装のポイント
+* MessagingAction を継承し、業務メソッドを作成する。
+* MessagingAction#onReceive
+  に、リクエスト受信時に実行する処理を実装する。
+* リクエストボディの値は、 [汎用データフォーマット](../../component/libraries/libraries-data-format.md#data-format) を使用して解析された状態で引数の RequestMessage オブジェクト
+  が保持している。 getParamMap メソッドを使用してリクエストボディの値を取得する。
+* [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を使用してリクエスト値のバリデーションを行う。
+* UniversalDao を用いてプロジェクトをDBに登録する。
+* 処理結果を表すレスポンスコードを ResponseMessage に設定して返却する。
 
-> **補足**: 業務例外が送出された場合は、[http_messaging_error_handler](../../component/handlers/handlers-http_messaging_error_handler.md) の処理によってレスポンスコード「400」が設定される。
-
-<details>
-<summary>keywords</summary>
-
-MessagingAction, RequestMessage, ResponseMessage, UniversalDao, ProjectForm, ProjectSaveAction, Project, BeanUtil, ValidatorUtil, ExecutionContext, HttpResponse, @Required, @Domain, HTTPメッセージング登録処理, フォーマットファイル作成, bean_validation, データベース登録, レスポンスコード設定
-
-</details>
-
-## 動作確認手順
-
-## 動作確認手順
-
-### 1. 事前にDBの状態を確認
-
-H2のコンソールから下記SQLを実行し、レコードが存在しないことを確認する。
-
-```sql
-SELECT * FROM PROJECT WHERE PROJECT_NAME = 'プロジェクト９９９';
-```
-
-### 2. プロジェクト情報の登録
-
-任意のRESTクライアントを使用して、以下のリクエストを送信する。
-
-| 項目 | 値 |
-|------|----|
-| URL | `http://localhost:9080/ProjectSaveAction` |
-| HTTPメソッド | POST |
-| Content-Type | `application/json` |
-| X-Message-Id | `1` |
-
-リクエストボディ（JSON形式）:
-
-```json
-{
-    "projectName": "プロジェクト９９９",
-    "projectType": "development",
-    "projectClass": "ss",
-    "projectManager": "山田",
-    "projectLeader": "田中",
-    "clientId": 10,
-    "projectStartDate": "20160101",
-    "projectEndDate": "20161231",
-    "note": "備考９９９",
-    "sales": 10000,
-    "costOfGoodsSold": 20000,
-    "sga": 30000,
-    "allocationOfCorpExpenses": 40000
-}
-```
-
-### 3. 動作確認
-
-H2のコンソールから下記SQLを実行し、レコードが1件取得できることを確認する。
-
-```sql
-SELECT * FROM PROJECT WHERE PROJECT_NAME = 'プロジェクト９９９';
-```
-
-<details>
-<summary>keywords</summary>
-
-X-Message-Id, Content-Type, POST, ProjectSaveAction, HTTPメッセージング動作確認, リクエストヘッダ, リクエストボディ
-
-</details>
+> **Tip:**
+> 業務例外が送出された場合は、 [HTTPメッセージングエラー制御ハンドラ](../../component/handlers/handlers-http-messaging-error-handler.md#http-messaging-error-handler) の処理によってレスポンスコード「400」が設定される。

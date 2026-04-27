@@ -1,108 +1,129 @@
 # アーキテクチャ概要
 
-**公式ドキュメント**: [アーキテクチャ概要](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/web_service/rest/architecture.html)
+**目次**
+
+* RESTfulウェブサービスの構成
+* RESTfulウェブサービスの処理の流れ
+* RESTfulウェブサービスで使用するハンドラ
+
+  * 標準ハンドラ構成
+
+Nablarchでは、JAX-RSのリソースクラスを作るのと同じように、ウェブアプリケーションの業務アクションを使用して
+RESTfulウェブサービスを作成する機能（JAX-RSサポート）を提供する。
+
+JAX-RSサポートは、Nablarchのウェブアプリケーションをベースとする。
+そのため、JAX-RSで使用できる@Contextアノテーションを使用したServletリソースのインジェクションやCDIなどは使用できない。
+以下に、JAX-RSサポートで使用できるアノテーションを示す。
+
+* Produces(レスポンスのメディアタイプの指定)
+* Consumes(リクエストのメディアタイプの指定)
+* Valid(リクエストに対するBeanValidationの実行)
+
+JSR339とJAX-RSサポートとの機能比較は、 [JAX-RSサポート/JSR339/HTTPメッセージングの機能比較](../../processing-pattern/restful-web-service/restful-web-service-functional-comparison.md#restful-web-service-functional-comparison) を参照。
+
+> **Important:**
+> JAX-RSサポートでは、クライアントサイドの機能は提供しない。
+> JAX-RSクライアントを使用する必要がある場合は、JAX-RS実装(JerseyやRESTEasyなど)を使用すること。
 
 ## RESTfulウェブサービスの構成
 
-JAX-RSサポートはNablarchのウェブアプリケーションをベースとしてRESTfulウェブサービスを構築する機能。JAX-RSのリソースクラスを作るのと同じようにウェブアプリケーションの業務アクションを使用して作成できる。
-
-**使用不可**: `@Context`アノテーションによるServletリソースのインジェクション、CDI。
-
-**使用可能なアノテーション**:
-- `@Produces`（レスポンスのメディアタイプの指定）
-- `@Consumes`（リクエストのメディアタイプの指定）
-- `@Valid`（リクエストに対するBeanValidationの実行）
-
-> **重要**: JAX-RSサポートではクライアントサイドの機能は提供しない。JAX-RSクライアントが必要な場合はJAX-RS実装（Jersey、RESTEasyなど）を使用すること。
-
-RESTfulウェブサービスの構成はNablarchウェブアプリケーションと同じ構成（[web_application-structure](../web-application/web-application-architecture.md) 参照）。
-
-<details>
-<summary>keywords</summary>
-
-JAX-RSサポート, @Produces, @Consumes, @Valid, RESTfulウェブサービス構成, クライアントサイド非対応, WebFrontController, CDI使用不可
-
-</details>
+Nablarchウェブアプリケーションと同じ構成となる。
+詳細は、 [ウェブアプリケーションの構成](../../processing-pattern/web-application/web-application-architecture.md#web-application-structure) を参照。
 
 ## RESTfulウェブサービスの処理の流れ
 
-1. [web_front_controller](../web-application/web-application-web_front_controller.md)（`javax.servlet.Filter`実装クラス）がリクエストを受信
-2. [web_front_controller](../web-application/web-application-web_front_controller.md) がハンドラキューに処理を委譲
-3. `DispatchHandler`がURIからアクションクラスを特定しハンドラキュー末尾に追加
-4. アクションクラスがフォームクラス・エンティティクラスを使用して業務ロジックを実行（[rest-application_design](restful-web-service-application_design.md) 参照）
-5. アクションクラスがDTOまたは`HttpResponse`を作成して返却
-6. `JaxRsResponseHandler`が`HttpResponse`をクライアントへのレスポンスに変換して応答。アクションの処理結果がフォームクラスの場合は`BodyConvertHandler`が`HttpResponse`に変換し、ボディ形式はアクションクラスに設定されたメディアタイプ
+RESTfulウェブサービスがリクエストを処理し、レスポンスを返却するまでの処理の流れを以下に示す。
 
-<details>
-<summary>keywords</summary>
+![rest-design.png](../../../knowledge/assets/restful-web-service-architecture/rest-design.png)
 
-RESTfulウェブサービス処理フロー, DispatchHandler, JaxRsResponseHandler, BodyConvertHandler, HttpResponse, ハンドラキュー, アクションクラス
-
-</details>
+1. [Webフロントコントローラ](../../processing-pattern/web-application/web-application-web-front-controller.md#web-front-controller) ( javax.servlet.Filter の実装クラス)がrequestを受信する。
+2. [Webフロントコントローラ](../../processing-pattern/web-application/web-application-web-front-controller.md#web-front-controller) は、requestに対する処理をハンドラキュー(handler queue)に委譲する。
+3. ハンドラキューに設定されたディスパッチハンドラ(DispatchHandler) が、URIを元に処理すべきアクションクラス(action class)を特定しハンドラキューの末尾に追加する。
+4. アクションクラス(action class)は、フォームクラス(form class)やエンティティクラス(entity class)を使用して業務ロジック(business logic) を実行する。 
+  
+  各クラスの詳細は、 [RESTFulウェブサービスの責務配置](../../processing-pattern/restful-web-service/restful-web-service-application-design.md#rest-application-design) を参照。
+5. action classは、処理結果を示すDTOや HttpResponse を作成し返却する。
+6. ハンドラキュー内のHTTPレスポンスハンドラ(JaxRsResponseHandler)が、 HttpResponse をクライアントに返却するレスポンスに変換し、クライアントへ応答を返す。 
+  
+  なお、アクションクラス(action class)の処理結果がフォームクラス(form class)の場合には、 BodyConvertHandler により HttpResponse に変換される。 
+  
+  変換される HttpResponse のボディの形式は、 アクションクラス(action class)に設定されたメディアタイプとなる。
 
 ## RESTfulウェブサービスで使用するハンドラ
 
-**リクエスト/レスポンス変換ハンドラ**:
-- [jaxrs_response_handler](../../component/handlers/handlers-jaxrs_response_handler.md)
-- [body_convert_handler](../../component/handlers/handlers-body_convert_handler.md)
+Nablarchでは、RESTfulウェブサービスを構築するために必要なハンドラを標準で幾つか提供している。
+プロジェクトの要件に従い、ハンドラキューを構築すること。(要件によっては、プロジェクトカスタムなハンドラを作成することになる)
 
-**データベース関連ハンドラ**:
-- [database_connection_management_handler](../../component/handlers/handlers-database_connection_management_handler.md)
-- [transaction_management_handler](../../component/handlers/handlers-transaction_management_handler.md)
+各ハンドラの詳細は、リンク先を参照すること。
 
-**リクエスト検証ハンドラ**:
-- [jaxrs_bean_validation_handler](../../component/handlers/handlers-jaxrs_bean_validation_handler.md)
-- [csrf_token_verification_handler](../../component/handlers/handlers-csrf_token_verification_handler.md)
+リクエストやレスポンスの変換を行うハンドラ
+* [JAX-RSレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler)
+* [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler)
+データベースに関連するハンドラ
+* [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler)
+* [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler)
+リクエストの検証を行うハンドラ
+* [JAX-RS BeanValidationハンドラ](../../component/handlers/handlers-jaxrs-bean-validation-handler.md#jaxrs-bean-validation-handler)
+* [CSRFトークン検証ハンドラ](../../component/handlers/handlers-csrf-token-verification-handler.md#csrf-token-verification-handler)
+エラー処理に関するハンドラ
+* [グローバルエラーハンドラ](../../component/handlers/handlers-global-error-handler.md#global-error-handler)
+その他のハンドラ
+* [リクエストURIとアクションを紐付けるハンドラ](../../component/adapters/adapters-router-adaptor.md#router-adaptor)
+* [ヘルスチェックエンドポイントハンドラ](../../component/handlers/handlers-health-check-endpoint-handler.md#health-check-endpoint-handler)
 
-**エラー処理ハンドラ**:
-- [global_error_handler](../../component/handlers/handlers-global_error_handler.md)
+### 標準ハンドラ構成
 
-**その他**:
-- [router_adaptor](../../component/adapters/adapters-router_adaptor.md)（リクエストURIとアクションを紐付け）
-- [health_check_endpoint_handler](../../component/handlers/handlers-health_check_endpoint_handler.md)
+NablarchでRESTfulウェブサービスを構築する際の、必要最小限のハンドラキューを以下に示す。
+これをベースに、プロジェクト要件に従ってNablarchの標準ハンドラやプロジェクトで作成したカスタムハンドラを追加する。
 
-## 最小ハンドラ構成
+最小ハンドラ構成
 
 | No. | ハンドラ | 往路処理 | 復路処理 | 例外処理 |
 |---|---|---|---|---|
-| 1 | [global_error_handler](../../component/handlers/handlers-global_error_handler.md) | — | — | 実行時例外またはエラーのログ出力 |
-| 2 | [jaxrs_response_handler](../../component/handlers/handlers-jaxrs_response_handler.md) | — | レスポンス書き込み | 例外対応レスポンス生成・書き込み・ログ出力 |
-| 3 | [database_connection_management_handler](../../component/handlers/handlers-database_connection_management_handler.md) | DB接続取得 | DB接続解放 | — |
-| 4 | [transaction_management_handler](../../component/handlers/handlers-transaction_management_handler.md) | トランザクション開始 | コミット | ロールバック |
-| 5 | [router_adaptor](../../component/adapters/adapters-router_adaptor.md) | リクエストパスからアクション（メソッド）を決定 | — | — |
-| 6 | [body_convert_handler](../../component/handlers/handlers-body_convert_handler.md) | request bodyをフォームクラスに変換 | アクション処理結果のフォームをresponse bodyに変換 | — |
-| 7 | [jaxrs_bean_validation_handler](../../component/handlers/handlers-jaxrs_bean_validation_handler.md) | No.6で変換したフォームクラスにバリデーション実行 | — | — |
+| 1 | [グローバルエラーハンドラ](../../component/handlers/handlers-global-error-handler.md#global-error-handler) |  |  | 実行時例外、またはエラーの場合、ログ出力を行う。 |
+| 2 | [JAX-RSレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler) |  | レスポンスの書き込み処理を行う。 | 例外(エラー)に対応したレスポンスの生成と書き込み処理とログ出力処理を行う。 |
+| 3 | [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) | DB接続を取得する。 | DB接続を解放する。 |  |
+| 4 | [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) | トランザクションを開始する。 | トランザクションをコミットする。 | トランザクションをロールバックする。 |
+| 5 | [リクエストURIとアクションを紐付けるハンドラ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) | リクエストパスをもとに呼び出すアクション(メソッド)を決定する。 |  |  |
+| 6 | [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) | request bodyをアクションで受け付けるフォームクラスに変換する。 | アクションの処理結果のフォームの内容をresponse bodyに変換する。 |  |
+| 7 | [JAX-RS BeanValidationハンドラ](../../component/handlers/handlers-jaxrs-bean-validation-handler.md#jaxrs-bean-validation-handler) | No6で変換したフォームクラスに対してバリデーションを実行する。 |  |  |
 
-> **補足**: [router_adaptor](../../component/adapters/adapters-router_adaptor.md) より後ろに設定するハンドラは、ハンドラキューに直接設定するのではなく [router_adaptor](../../component/adapters/adapters-router_adaptor.md) に対して設定する。[jaxrs_adaptor](../../component/adapters/adapters-jaxrs_adaptor.md) を使用した場合、自動的に [body_convert_handler](../../component/handlers/handlers-body_convert_handler.md) と [jaxrs_bean_validation_handler](../../component/handlers/handlers-jaxrs_bean_validation_handler.md) がハンドラキューに追加される。
+> **Tip:**
+> [リクエストURIとアクションを紐付けるハンドラ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) より後ろに設定するハンドラは、
+> ハンドラキューに直接設定するのではなく [リクエストURIとアクションを紐付けるハンドラ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) に対して設定する。
 
-[body_convert_handler](../../component/handlers/handlers-body_convert_handler.md) と [jaxrs_bean_validation_handler](../../component/handlers/handlers-jaxrs_bean_validation_handler.md) 以外のハンドラを追加する場合やサポートするメディアタイプを増やす場合の設定例:
+> [JAX-RSアダプタ](../../component/adapters/adapters-jaxrs-adaptor.md#jaxrs-adaptor) を使用した場合、自動的に [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) と [JAX-RS BeanValidationハンドラ](../../component/handlers/handlers-jaxrs-bean-validation-handler.md#jaxrs-bean-validation-handler) がハンドラキューに追加される。
 
-```xml
-<component name="webFrontController" class="nablarch.fw.web.servlet.WebFrontController">
-  <property name="handlerQueue">
-    <list>
-      <component name="packageMapping" class="nablarch.integration.router.RoutesMapping">
-        <property name="methodBinderFactory">
-          <component class="nablarch.fw.jaxrs.JaxRsMethodBinderFactory">
-            <property name="handlerList">
-              <list>
-                <component class="nablarch.fw.jaxrs.BodyConvertHandler">
-                  <!-- サポートするメディアタイプのコンバータを設定する -->
-                </component>
-                <component class="nablarch.fw.jaxrs.JaxRsBeanValidationHandler" />
-              </list>
-            </property>
-          </component>
-        </property>
-      </component>
-    </list>
-  </property>
-</component>
-```
+> [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) と [JAX-RS BeanValidationハンドラ](../../component/handlers/handlers-jaxrs-bean-validation-handler.md#jaxrs-bean-validation-handler) 以外のハンドラを設定したい場合や、サポートするメディアタイプを増やしたい場合は、
+> 以下の設定例や [JAX-RSアダプタ](../../component/adapters/adapters-jaxrs-adaptor.md#jaxrs-adaptor) の実装を参考にハンドラキューを構築すること。
 
-<details>
-<summary>keywords</summary>
-
-標準ハンドラ構成, 最小ハンドラ構成, JaxRsResponseHandler, BodyConvertHandler, JaxRsBeanValidationHandler, JaxRsMethodBinderFactory, global_error_handler, router_adaptor, database_connection_management_handler, transaction_management_handler, jaxrs_adaptor, csrf_token_verification_handler, health_check_endpoint_handler, RoutesMapping
-
-</details>
+> ```xml
+> <component name="webFrontController" class="nablarch.fw.web.servlet.WebFrontController">
+>   <property name="handlerQueue">
+>     <list>
+>       <!-- 前段のハンドラは省略 -->
+> 
+>       <!-- リクエストURIとアクションを紐付けるハンドラの設定 -->
+>       <component name="packageMapping" class="nablarch.integration.router.RoutesMapping">
+>         <!-- ハンドラ以外の設定値は省略 -->
+>         <property name="methodBinderFactory">
+>           <component class="nablarch.fw.jaxrs.JaxRsMethodBinderFactory">
+>             <property name="handlerList">
+>               <list>
+>                 <!--
+>                 リクエストURIとアクションを紐付けるハンドラ以降のハンドラキューの設定
+>                 ※各クラスの設定値は省略
+>                 -->
+>                 <component class="nablarch.fw.jaxrs.BodyConvertHandler">
+>                   <!-- サポートするメディアタイプのコンバータを設定する -->
+>                 </component>
+>                 <component class="nablarch.fw.jaxrs.JaxRsBeanValidationHandler" />
+>               </list>
+>             </property>
+>           </component>
+>         </property>
+>       </component>
+>     </list>
+>   </property>
+> </component>
+> ```

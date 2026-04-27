@@ -1,0 +1,20 @@
+{
+  "id": "web-application-03-datasetup",
+  "title": "マスタデータのセットアップ",
+  "content": "> **Note:**\n> マスタデータとは以下のようなデータを意味する。\n\n> * >   「コードテーブル」や「メッセージテーブル」のようなプロジェクトで共通的に使用できるようなデータ\n> * >   認可チェック機能に必要なデータ\n> * >   採番機能に必要なデータ\n\n> 上記データのほとんどは、プロジェクトの共通データとして提供されているため、プログラマが個別に追加する必要はない。\n> しかし「認可チェック機能に必要なデータ」については、実装時に追加する運用のほうが容易な場合があるため、プログラマが修正する\n> 運用のプロジェクトもある。\n> 開発時にマスタデータの編集が必要であるか否かは、プロジェクトのアーキテクトに確認すること。\n\n> **Warning:**\n> 実際に開発を進める上ではマスタデータについて、以下の点に注意すること。\n\n> * >   開発時はマスタデータがDBに登録されていることを前提に作成する。つまり、単体テストで改めて定義しないこと\n> * >   マスタデータが更新されたらすぐに取り込むこと",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "マスタデータのセットアップを行うAntターゲット",
+      "content": "| Antビルドファイル | 実行するターゲット |\n|---|---|\n| tool/db/db_setup-build.xml | DB初回セットアップ（2回目以降は「DB再セットアップ」） |",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "Eclipseからマスタデータセットアップツールを実行する。",
+      "content": "1. Antビューを表示する。\n\n  ![open_ant_view.png](assets/web-application-03-datasetup/open_ant_view.png)\n2. Antビューの「ビルドファイルの追加」を選択する。\n\n  ![add_ant_build_file.png](assets/web-application-03-datasetup/add_ant_build_file.png)\n3. 追加するビルドファイルに、上記のAntビルドファイルを選択する。\n\n  ![select_ant_build_file.png](assets/web-application-03-datasetup/select_ant_build_file.png)\n4. マスタデータセットアップのターゲットを実行する。\n\n  ![execute_ant_master_data_setup.png](assets/web-application-03-datasetup/execute_ant_master_data_setup.png)\n\n以降は、Antビューに登録された「DB再セットアップ」ターゲットを実行すれば、\nデータベースにマスタデータが反映される。\n\n詳細は [マスタデータ投入ツール](../../development-tools/toolbox/toolbox-01-MasterDataSetupTool.md#master-data-setup-tool) を参照。",
+      "level": 2
+    }
+  ]
+}

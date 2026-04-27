@@ -1,0 +1,8 @@
+{
+  "id": "releases-nablarch6u1-releasenote-件数取得SQLの拡張ポイント追加",
+  "title": "■件数取得SQLの拡張ポイント追加",
+  "content": "【変更点】\nページング処理で使用する件数取得SQLを変更するための拡張ポイントを追加しました。\nこれにより、性能劣化への対応等で件数取得SQLを変更したい場合に、自動生成されるSQLから任意のSQLに差し替えることが可能になりました。\nこの対応を行うため、以下の変更を実施しています。\n●DialectインタフェースにconvertCountSql(String, Object, StatementFactory)メソッドを追加\n（参考）https://nablarch.github.io/docs/6u1/doc/application_framework/application_framework/libraries/database/database.html#database-dialect\n●DefaultDialectクラスに、上記メソッドの実装を追加\n【変更による影響有無の確認方法】\nプロジェクトで独自にダイアレクトを作成しているか、確認してください。\n独自のダイアレクトを作成していない場合は、影響ありません。\n独自のダイアレクトを作成している場合でも、解説書に記載の通りDefaultDialectを継承して実装していれば、影響ありません。\n（参考）https://nablarch.github.io/docs/6u1/doc/application_framework/application_framework/libraries/database/database.html#database-add-dialect\n一方、DeafultDialectを継承せずにDialectインタフェースを直接実装して独自のダイアレクトを作成している場合は、\nDialectインタフェースに追加したメソッドの実装が存在しないため、コンパイルエラーが発生します。\n【影響があった場合の対応方法】\nプロジェクトで独自に作成したダイアレクトで、以下の通りconvertCountSql(String, Object, StatementFactory)メソッドを実装してください。\n@Override\npublic String convertCountSql(String sqlId, Object condition, StatementFactory statementFactory) {\nreturn convertCountSql(statementFactory.getVariableConditionSqlBySqlId(sqlId, condition));\n}\nこれによりコンパイルエラーが解消され、件数取得SQLはバージョンアップ前と同じになります。\n件数取得SQLを差し替えたい場合は、解説書を参考に上記メソッドの実装を変更してください。",
+  "no_knowledge_content": false,
+  "sections": [],
+  "sheet_type": "P2"
+}

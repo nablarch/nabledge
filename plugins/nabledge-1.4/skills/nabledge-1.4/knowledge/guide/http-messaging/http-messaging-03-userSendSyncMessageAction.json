@@ -1,0 +1,62 @@
+{
+  "id": "http-messaging-03-userSendSyncMessageAction",
+  "title": "HTTP同期応答メッセージ送信処理",
+  "content": "[ユーザ情報登録サービス](../../guide/http-messaging/http-messaging-01-userSendSyncMessageSpec.md) を例に、HTTP同期応答メッセージ送信処理の実装方法を説明する。\n\n業務Actionの実装内容は、MOMによるメッセージング処理と同様の実装にて、HTTPメッセージングを実現できる。\n\n![userSendSyncMessage.png](assets/http-messaging-03-userSendSyncMessageAction/userSendSyncMessage.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "アプリケーションプログラマが実装する成果物",
+      "content": "アプリケーションプログラマが作成する成果物は以下のとおりである。\n\n* 要求電文および応答電文のフォーマット定義ファイル\n* 要求電文および応答電文に対応したFormクラス\n* HTTP同期応答メッセージ送信処理を行うActionクラス\n* 接続先の通信規約に沿った共通的なエラー処理を行うSyncMessagingEventHookクラス",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "メッセージングプロバイダ定義ファイル",
+      "content": "送信先の設定は、下記設定例のようにメッセージングプロバイダ定義により設定される。\n\n```bash\n#===============================================================================\n# MessageSenderの個別設定\n#===============================================================================\n\n# RM11AC0202\nmessageSender.RM11AC0202.httpMethod=POST\nmessageSender.RM11AC0202.messageSenderClient=defaultMessageSenderClient\nmessageSender.RM11AC0202.uri=http://localhost:8888/msgaction/ss11AC/RM11AC0102\nmessageSender.RM11AC0202.httpMessageIdGeneratorComponentName=defaultHttpMessageIdGenerator\nmessageSender.RM11AC0202.syncMessagingEventHookNames=defaultSyncMessagingEventHook\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "フォーマット定義ファイル",
+      "content": "フォーマット定義ファイルの配置場所と拡張子は、下記設定例のように、FilePathSettingクラスのコンポーネント定義により設定される。\n通常、この設定値はアーキテクトが設定するものでありアプリケーションプログラマが設定する必要はない。\n\n```xml\n<component name=\"filePathSetting\"\n         class=\"nablarch.core.util.FilePathSetting\" autowireType=\"None\">\n   <property name=\"basePathSettings\">\n     <map>\n       <!-- 実際のサンプルでは、以下のvalue属性の部分はプレースホルダになっているが、\n                                  ここでは説明を分かりやすくするため、直接パスをvalue属性に記載する。-->\n       <entry key=\"format\" value=\"classpath:web/format\" />\n     </map>\n   </property>\n   <property name=\"fileExtensions\">\n     <map>\n       <!-- 拡張子を設定する -->\n       <entry key=\"format\" value=\"fmt\" />\n     </map>\n   </property>\n</property>\n```\n\nフォーマット定義ファイルの名前は以下の命名規約に従うこと。\n\n* 要求電文: リクエストID + “_SEND”\n* 応答電文: リクエストID + “_RECEIVE”\n\n参考として、サンプルで使用している要求電文と応答電文のフォーマット定義ファイルを以下に示す。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "要求電文のフォーマット定義ファイル",
+      "content": "ファイルパス： web/format/RM11AC0202_SEND.fmt\n\n```bash\n#-------------------------------------------------------------------------------\n# ユーザ情報登録電文の業務データ部レイアウト定義\n#-------------------------------------------------------------------------------\nfile-type:        \"XML\"   # XMLファイル\ntext-encoding:    \"UTF-8\" # 文字列型フィールドの文字エンコーディング\n\n[request]                                           #リクエスト\n1                    dataKbn                  X     #データ区分\n2                    loginId                  X     #ログインID\n3                    kanjiName                XN    #漢字氏名\n4                    kanaName                 N     #カナ氏名\n5                    mailAddress              X     #メールアドレス\n6                    extensionNumberBuilding  X     #内線番号(ビル番号)\n7                    extensionNumberPersonal  X     #内線番号(個人番号)\n8                    mobilePhoneNumber[0..3]  OB    #携帯電話番号\n9                    _nbctlhdr[0..1]          OB    #フレームワーク制御項目(自動追加)\n[mobilePhoneNumber]                                 #携帯電話番号\n1                    areaCode[0..1]           X     #携帯電話番号(市外)\n2                    cityCode[0..1]           X     #携帯電話番号(市内)\n3                    sbscrCode[0..1]          X     #携帯電話番号(加入)\n[_nbctlhdr]                                         #フレームワーク制御項目(自動追加)\n1                    userId[0..1]             X     #ユーザID\n2                    resendFlag[0..1]         X9  0 #再送要求フラグ\n```",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "応答電文のフォーマット定義ファイル",
+      "content": "ファイルパス： web/format/RM11AC0202_RECEIVE.fmt\n\n```bash\n#-------------------------------------------------------------------------------\n# ユーザ情報登録応答電文の業務データ部フォーマット定義\n#-------------------------------------------------------------------------------\nfile-type:        \"XML\"   # XMLファイル\ntext-encoding:    \"UTF-8\" # 文字列型フィールドの文字エンコーディング\n\n[response]                                     #レスポンス\n1                failureCode[0..1]     X       #障害事由コード\n2                userInfoId[0..1]      X       #問い合わせID\n3                dataKbn               X       #データ区分\n4                option[1..5]          OB      #オプション項目\n5                _nbctlhdr[0..1]       OB      #フレームワーク制御項目(自動追加)\n[option]                                       #オプション項目\n1                contactAddress[0..1]  X       #連絡先アドレス\n[_nbctlhdr]                                    #フレームワーク制御項目(自動追加)\n1                statusCode            X9      #ステータスコード\n```",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "Formクラスの作成",
+      "content": "自動生成されたFormBaseクラスを継承し、データレイアウトに対応したFormクラスを作成する。\nFormクラスには、精査処理や子階層オブジェクトに対応するプロパティの追加を行う。\n\n> **Note:**\n> データ形式が階層型の場合、子階層オブジェクトに対応するプロパティはFormBaseに出力されない。\n> Formクラスでプロパティを定義すること。",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "Formの実装方法",
+      "content": "開発者は、自動生成したFormBaseクラスを継承してFormクラスを作成する。\n\n* 子階層のオブジェクトを持たないForm\n\n```java\npublic class RM11AC0202OptionForm extends RM11AC0202OptionFormBase {\n\n    // 精査処理、コンストラクタを追加\n\n    /**\n     * デフォルトコンストラクタ\n     */\n    public RM11AC0202OptionForm() {\n    }\n\n    /**\n     * Mapを引数にとるコンストラクタ。\n     * @param params 項目名をキーとし、項目値を値とするMap。\n     */\n    public RM11AC0202OptionForm(Map<String, Object> params) {\n        super(params);\n    }\n\n    /**\n     * メッセージ受信によるユーザ登録時に実施するバリデーション\n     *\n     * @param context バリデーションの実行に必要なコンテキスト\n     */\n    @ValidateFor(\"sendHttpUser\")\n    public static void validateForSend(\n            ValidationContext<RM11AC0202OptionForm> context) {\n        ValidationUtil.validate(context, new String[] {\"contactAddress\"});\n    }\n}\n```\n\n* 子階層のオブジェクトを持つForm\n\n```java\npublic class RM11AC0202ResponseForm extends RM11AC0202ResponseFormBase {\n\n    /**\n     * シリアルバージョンID\n     */\n    private static final long serialVersionUID = 1L;\n\n    // 子階層オブジェクトに対応するプロパティを追加。合わせてアクセッサなども追加。\n    /**\n     * オプション項目\n     */\n    private RM11AC0202OptionForm[] option;\n\n    /**\n     * オプション項目のサイズ\n     */\n    private Integer optionSize;\n\n    /**\n     * 検査対象フィールド\n     */\n    private static final String[] TARGET_FIELDS = new String[] { \"dataKbn\",\n        \"userInfoId\", \"failureCode\", \"option\", \"optionSize\" };\n\n    /**\n     * コンストラクタ\n     *\n     * @param data データ\n     */\n    public RM11AC0202ResponseForm(Map<String, Object> data) {\n        super(data);\n        option = (RM11AC0202OptionForm[]) data.get(\"option\");\n    }\n\n    // アクセッサおよび精査処理の追加は画面と同様なので省略\n}\n```",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "HTTP同期応答メッセージ送信処理を行うActionクラス",
+      "content": "サンプルでは、HTTP同期応答メッセージ送信時に以下の処理を行う。\n\n① リクエストを精査しFormへ変換する。\n② Formに要求電文のデータを設定する。\n③ MessageSenderでメッセージを送信する。\n④ 応答電文のSyncMessageオブジェクトからデータを取得する。\n\n```java\n/**\n * ユーザ情報登録確認画面の「Httpメッセージ送信」イベントの処理を行う。\n *\n * @param req リクエストコンテキスト\n * @param ctx HTTPリクエストの処理に関連するサーバ側の情報\n * @return HTTPレスポンス\n */\n@OnError(type = ApplicationException.class, path = \"forward://RW11AC0201\")\n@OnDoubleSubmission(path = \"forward://RW11AC0201\")\npublic HttpResponse doRW11AC0206(HttpRequest req, ExecutionContext ctx) {\n\n    // ①画面入力チェック、入力値の取得\n    W11AC02Form input = validateForHttpSendUser(req);\n\n    // ②要求電文の作成\n    RM11AC0202RequestForm requestForm = getRequestForm(input);\n\n    // ③要求電文の送信\n    SyncMessage responseMessage\n        = MessageSender.sendSync(new SyncMessage(\n            \"RM11AC0202\").addDataRecord(requestForm));\n\n    // レスポンスのMap取得\n    Map<String, Object> resp = responseMessage.getDataRecord();\n    // ④レスポンスの精査、Map→Form変換\n    W11AC02ResponseForm respForm = W11AC02ResponseForm.validate(resp,\n            \"sendHttpUser\");\n    // 引き継ぎ項目を格納\n    ctx.setRequestScopedVar(\"11AC_W11AC03\", respForm);\n\n    return new HttpResponse(\"/ss11AC/W11AC0203.jsp\");\n}\n```",
+      "level": 2
+    },
+    {
+      "id": "s9",
+      "title": "メッセージ送信前後処理を行うクラス",
+      "content": "サンプルでは、対向システムへ送信するデータは、アクション側で事前に精査が可能であり、\n精査を通過したデータについては原則として処理が正常終了するものとしている。\n\nしたがって、対向システム側でエラーが発生した場合は一律システムエラーとして扱うものとしている。\n\n【送信前】\n\n* 処理なし。\n\n【送信後】\n\n* ステータスコード200以外の場合はシステムエラーを返却する。\n\n【送信中にエラー発生】\n\n* ハンドリングを行わずシステムエラー扱いとする。\n\n```java\n/**\n * メッセージ送信前に呼ばれる処理。\n *\n * @param settings メッセージ送信設定\n * @param requestMessage 送信対象メッセージ\n */\n@Override\npublic void beforeSend(MessageSenderSettings settings, SyncMessage requestMessage) {\n    //何もしない\n    return;\n}\n\n/**\n * メッセージ送信後、レスポンスを受け取った後に呼ばれる処理。<br>\n * <p>\n * ステータスコードをチェックして、正常終了であるか、業務エラーであるかを判定します。\n * </p>\n * @param settings メッセージ送信設定\n * @param requestMessage リクエストメッセージ\n * @param responseMessage レスポンスメッセージ\n */\n@Override\npublic void afterSend(MessageSenderSettings settings, SyncMessage requestMessage,\n        SyncMessage responseMessage) {\n    String statusCode = (String) responseMessage.getHeaderRecord().get(HttpMessagingClient.SYNCMESSAGE_STATUS_CODE);\n    if (!\"200\".equals(statusCode)) {\n        // ステータスコード200以外の場合はシステムエラーとして扱う。\n        throw new HttpMessagingException();\n    }\n}\n\n/**\n * メッセージ送信中のエラー発生時に呼ばれる処理。<br>\n * <p>\n * ステータスコードをチェックして、業務エラーであるか、システム例外であるかを判定します。\n * </p>\n *\n * @param e 発生した例外\n * @param hasNext 次に呼び出される{@link SyncMessagingEventHook}が存在する場合にtrue\n * @param settings メッセージ送信設定\n * @param requestMessage リクエストメッセージ\n * @param responseMessage レスポンスメッセージとして使用するオブジェクト。本オブジェクトは最終的に MessageSender#sendSync(SyncMessage)の戻り値として返却される。\n * @return trueの場合は処理継続。次の{@link SyncMessagingEventHook#onError(RuntimeException, MessageSenderSettings, SyncMessage)}を呼ぶ。<br />\n * 次がない場合は、MessageSender#sendSync(SyncMessage)の戻り値として、引数responseMessageの値を返す。<br />\n * falseの場合は、本メソッド終了後に引数eをthrowする\n */\n@Override\npublic boolean onError(RuntimeException e,\n        boolean hasNext, MessageSenderSettings settings, SyncMessage requestMessage, SyncMessage responseMessage) {\n\n    //接続タイムアウト等、システム例外扱いとするためハンドリングを行わない。\n    return false;\n\n}\n```",
+      "level": 2
+    }
+  ]
+}

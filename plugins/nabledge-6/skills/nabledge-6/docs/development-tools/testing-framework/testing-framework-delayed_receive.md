@@ -1,3 +1,0 @@
-# 取引単体テストの実施方法（応答不要メッセージ受信処理）
-
-**公式ドキュメント**: [取引単体テストの実施方法（応答不要メッセージ受信処理）](https://nablarch.github.io/docs/LATEST/doc/development_tools/testing_framework/guide/development_guide/05_UnitTestGuide/03_DealUnitTest/delayed_receive.html)

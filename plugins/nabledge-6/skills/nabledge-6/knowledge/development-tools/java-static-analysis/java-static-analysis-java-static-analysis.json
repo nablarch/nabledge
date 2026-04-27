@@ -1,0 +1,38 @@
+{
+  "id": "java-static-analysis-java-static-analysis",
+  "title": "効率的なJava静的チェック",
+  "content": "**目次**\n\n* Inspectionを行う\n* フォーマットを統一する\n* 許可していないAPIが使用されていないかチェックする\n\n  * nablarch-intellij-pluginを使用する\n  * 使用不許可APIチェックツールを使用する\n\nコードの品質と保守性を高めるために次の３つを実践する。\n\n* [Inspectionを行う](../../development-tools/java-static-analysis/java-static-analysis-java-static-analysis.md#code-analysis)\n* [フォーマットを統一する](../../development-tools/java-static-analysis/java-static-analysis-java-static-analysis.md#code-format)\n* [許可していないAPIが使用されていないかチェックする](../../development-tools/java-static-analysis/java-static-analysis-java-static-analysis.md#api-analysis)\n\n上記を行うために、NablarchではJetBrains社製のIDEである [IntelliJ IDEA(外部サイト)](https://www.jetbrains.com/idea/) の使用を推奨している。\n本ページでは、IntelliJ IDEAを用いた効率的なJava静的チェックの方法を説明する。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "Inspectionを行う",
+      "content": "IntelliJ IDEAには静的検査を行う [Inspection機能(外部サイト)](https://www.jetbrains.com/help/idea/code-inspection.html) があり、Javaコーディングの慣例に沿っているか、潜在的なバグが含まれていないかなどをチェックし、リアルタイムに警告してくれる。\n\nInspectionはデフォルトで、一般的に注意すべき点について警告する設定となっている。\n\nプロジェクトで規約を策定している場合は、プロジェクトに適した設定に変更することで、Inspectionをより有効に活用することができる。\n変更した設定はエクスポートおよびインポートすることで、プロジェクトの開発者間で共有することができる。\nエクスポートおよびインポートの方法については [プロファイルの構成(外部サイト)](https://www.jetbrains.com/help/idea/customizing-profiles.html) を参照。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "フォーマットを統一する",
+      "content": "IntelliJ IDEAのコードフォーマッター機能を使用することで、プロジェクトでコードスタイルを統一することができる。\n使用方法については [JavaスタイルガイドのJavaコードフォーマッター解説](https://github.com/Fintan-contents/coding-standards/blob/main/java/code-formatter.md) を参照。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "許可していないAPIが使用されていないかチェックする",
+      "content": "このチェックにはIntelliJ IDEAのプラグインとIntelliJ IDEAに依存しないSpotBugsプラグインの2種類のツールを提供している。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "nablarch-intellij-pluginを使用する",
+      "content": "[nablarch-intellij-plugin](https://github.com/nablarch/nablarch-intellij-plugin) はNablarch開発を支援するためのIntelliJ IDEA用のプラグインであり、下記の機能を有している。\n\n* Nablarch非公開APIが使用されている場合に警告を出す\n* ブラックリストに登録したJava APIが使用されている場合に警告を出す",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "使用不許可APIチェックツールを使用する",
+      "content": "使用不許可APIチェックツールはSpotBugsのプラグインとして作成されたツールである。\n詳細な仕様と実行方法は [Javaスタイルガイドの使用不許可APIチェックツール解説](https://github.com/Fintan-contents/coding-standards/blob/main/java/staticanalysis/unpublished-api/README.md) を参照。\n\nなお、ブランクプロジェクトには [Mavenで実行するための設定](https://github.com/Fintan-contents/coding-standards/blob/main/java/staticanalysis/spotbugs/docs/Maven-settings.md) をあらかじめ設定してあるため、すぐにチェックを実施することが可能である。",
+      "level": 3
+    }
+  ]
+}

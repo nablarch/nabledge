@@ -1,0 +1,26 @@
+{
+  "id": "ui-framework-event-listen",
+  "title": "ページ内イベント定義",
+  "content": "[ページ内イベント定義](../../component/ui-framework/ui-framework-event-listen.md) は画面内で発生する特定のイベントを監視することで、\nあらかじめ登録しておいたJavaScript処理をイベント発生時に実行するウィジェットである。\n\n本ウィジェットに登録可能なJavaScript処理を **イベントアクション** とよび、\n以下のような処理を宣言的に実装することができる。\n\n* ダイアログ表示\n* 入力項目の活性・非活性制御\n* Ajaxリクエスト送信とその結果表示\n* 入力値の差し戻し\n* チェックボックス、ラジオボタンの一括ON/OFF\n\n> **Warning:**\n> 本ウィジェットの実装は、他のウィジェットの実装に比べると抽象度が低く\n> 汎用的なものとなっているため、これらのタグを各業務画面JAP内で直接使用すると\n> 記述が複雑化しやすい。\n\n> 例えば 「Ajax入力補完機能付きの入力部品」のような形で共通化できる\n> ものについては、プロジェクトのカスタムウィジェットとして提供し、\n> 業務画面JSPにイベント系のウィジェットを直接記述しないような形にすることが望ましい。\n\n> やむなくイベント系のウィジェットを業務画面JSP内に直接記述する際には\n> その使用是非について、プロジェクトのアーキテクトに確認すること。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "コードサンプル",
+      "content": "**プルダウンで特定の項目を選択した場合に確認のダイアログを表示する例**\n\n```jsp\n<event:listen event=\"select.amount change\">\n  <event:confirm\n    message=\"この商品の注文をキャンセルしますがよろしいですか？\"\n    condition=\":is-blank\">\n  </event:confirm>\n</event:listen>\n```",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "仕様",
+      "content": "**イベントの監視と捕捉**\n本ウィジェットは、親要素内で発生するイベントを監視する。\n監視するイベントは **event属性** に以下のいずれかの書式で指定する。\n\n1. **[イベント名]**\n2. **[セレクタ式]** + (半角スペース) + **[イベント名]**\n\n次のソースコードは前者の書式を使用した例である。\n親要素であるフォーム要素 **(form#usrForm)** 内の入力要素の変更を監視し、\n変更があった場合にダイアログを表示させる。\n\n```jsp\n<form id=\"usrForm\">\n  <event:listen event=\"change\">\n    <event:alert\n      message=\"変更を反映するには「確定ボタン」を押してください。\"\n      revert=\"false\">\n    </event:alert>\n\n    ... (中略) ...\n\n  </event:listen>\n</form>\n```\n\n上記のイベント定義に相当するJavaScriptの実装はおおまかには以下のようになる。\n\n```javascript\n$(function()  {\n  $('#usrForm').on('change', function() {\n    //\n    // ダイアログ表示処理の実装コード\n    //\n  });\n});\n```\n\n一方、後者の書式では、イベントの種別とともにイベントの発生元の限定するセレクタ式を指定する。\n次のソースはこれを利用した例である。\n\nこの例では、親要素であるフォーム内のクリックイベントを監視する。\nクリックイベントの発生元がサブミットボタンであった場合にダイアログを表示させる。\n\n```jsp\n<form id=\"usrForm\">\n  <event:listen event=\"input[type='submit'] click\">\n    <event:confirm\n      message=\"設定を変更します。よろしいですか。\">\n    </event:confirm>\n\n    ... (中略) ...\n\n  </event:listen>\n</form>\n```\n\nなお、このイベント定義に相当するJavaScriptの実装は\nおおまかにいうと以下のようなものになる。\n\n```javascript\n$(function()  {\n  $('#usrForm').on('click', \"input[type='submit']\", function() {\n    //\n    // ダイアログ表示処理の実装コード\n    //\n  });\n});\n```\n**イベントの捕捉とアクションの実行**\nイベントのバブリングおよびデフォルトアクションの実行は通常のJavaScriptのイベントモデルに従う。\nすなわち、イベントの捕捉はイベントの発生元要素からその親要素に対して順次行われる。\n\n**event要素** に合致するイベントを捕捉すると、ウィジェットの子要素となるイベントアクションを順次実行する。\nすべてのアクションの実行が完了すると親要素に対するイベントバブリングを再開する。\n\nただし、一部のイベントアクション ( [確認ダイアログ表示イベントアクション](../../component/ui-framework/ui-framework-event-confirm.md) など) では後続イベントアクションの実行中止や、\nイベントバブリングやデフォルトアクションの停止を行わせることが可能である。\n\n> **Attention:**\n> サブミットイベントを監視する場合は、**click** イベントを監視すること。\n> **Nablarchカスタムサブミットイベント** を監視すると、イベント停止時に他の機能が動作しなくなる可能性があるため、サポートしていない。\n**コンテキストの指定**\nすでに述べたように、このウィジェットはデフォルトで親要素内のイベントを監視対象とするが、\n**context属性** を指定することにより、画面内の任意の要素内のイベントを監視することができる。\n\nこれは、画面内の他のインクルードJSP上の要素を監視する場合などに使用する。\n以下はcontext属性の使用例である。\nこの例では、画面内のすべてのform要素内のサブミットボタン上のイベントを監視対象としている。\n\n```jsp\n<event:listen\n  event=\"input[type='submit'] click\"\n  context=\"form\">\n  <event:confirm\n    message=\"設定を変更します。よろしいですか。\">\n  </event:confirm>\n\n  ... (中略) ...\n\n</event:listen>\n```\n\n> **Warning:**\n> context属性は、 **event属性** 内に記述するセレクタ式の代替として使用できるが、\n> 後者の方が性能的に優れているので、そのような用途では使用しないこと。\n\n> 例えば、以下の2つのコードは、ほぼ同じ挙動となる。\n\n> ```jsp\n> <event:listen\n>   event=\"#usrForm input[type='submit'] click\"\n>   context=\"\">\n>   <event:confirm\n>     message=\"設定を変更します。よろしいですか。\">\n>   </event:confirm>\n> \n>   ... (中略) ...\n> \n> </event:listen>\n> ```\n\n> ```jsp\n> <event:listen\n>   event=\"click\"\n>   context=\"#usrForm input[type='submit']\">\n>   <event:confirm\n>     message=\"設定を変更します。よろしいですか。\">\n>   </event:confirm>\n> \n>   ... (中略) ...\n> \n> </event:listen>\n> ```\n\n> しかし、このソースコードと等価なJavaScriptは以下のようなものとなり、\n> 画面内のすべてのサブミットボタンにイベントを登録することなる。\n> このため、監視対象のノードに比例して\n> メモリ使用量および画面ロード時の処理時間が増加する。\n\n> ```javascript\n> $(function()  {\n>   $(\"#usrForm input[type='submit']\").on('click', function() {\n>     //\n>     // ダイアログ表示処理の実装コード\n>     //\n>   });\n> });\n> ```\n\n**属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]\n\n| 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |\n|---|---|---|---|---|---|\n| event | 監視対象イベントの定義式 | 文字列 | ◎ | ◎ |  |\n| context | イベントの発生を監視する要素 を指定するセレクタ式。 | 文字列 | ○ | ○ | デフォルトは、このタグの親要素内 のイベントを監視する。 |\n| title | 監視するイベントの簡単な説明 | 文字列 | × | × | 設計書表示用 |\n| operation | 監視イベントが発生する画面操作　 の説明。 | 文字列 | × | × | 設計書表示用 |\n| comment | このイベントに対する補足説明。 | 文字列 | × | × | 設計書表示用 |",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "内部構造・改修時の留意点",
+      "content": "**部品一覧**\n\n| パス | 内容 |\n|---|---|\n| /WEB-INF/tags/widget/event/listen.tag | このウィジェットの実体となるタグファイル |\n| /js/nablarch/ui/event/Listener.js | イベント監視機能を実装するJS部品。 |",
+      "level": 2
+    }
+  ]
+}

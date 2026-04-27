@@ -1,32 +1,25 @@
 # 入力値のチェック
 
-**公式ドキュメント**: [入力値のチェック](https://nablarch.github.io/docs/LATEST/doc/application_framework/application_framework/libraries/validation.html)
-
-## 入力値のチェック概要と推奨機能
-
 クライアントから送信されるユーザ入力値や、システム間連携により外部システムから送信される値が妥当かを検証するための機能を提供する。
 
 入力値のチェックでは以下のことを行う。
 
-- 入力値が妥当な形式かどうか(例えば、桁数や文字種などのチェック)
-- システムの状態に適合しているかどうか(例えば、アカウントの重複登録チェック)
+* 入力値が妥当な形式かどうか(例えば、桁数や文字種などのチェック)
+* システムの状態に適合しているかどうか(例えば、アカウントの重複登録チェック)
 
-Nablarchでは2種類のバリデーション機能を提供している。
+※入力値のチェックでエラーとなった場合に表示するメッセージの定義方法は、 [メッセージ管理](../../component/libraries/libraries-message.md) を参照。
 
-- **Jakarta Bean Validation (Bean Validation)**: Jakarta EEに準拠したバリデーション機能 ([validation/bean_validation](libraries-bean_validation.md))
-- **Nablarch Validation**: Nablarch独自のバリデーション機能 ([validation/nablarch_validation](libraries-nablarch_validation.md))
+Nablarchでは、以下の2種類のバリデーション機能を提供している。
 
-**推奨**: Jakarta EEに準拠した機能（Bean Validation）を使用すること。理由:
-1. Jakarta Bean ValidationはJakarta EEで仕様が定められており情報が豊富
-2. 開発者がNablarch独自のバリデーションの使い方などを覚える必要がない
+Jakarta EEのJakarta Bean Validationに準拠したバリデーション機能 (Bean Validation) <validation/bean_validation>
+Nablarch独自のバリデーション機能 (Nablarch Validation) <validation/nablarch_validation>
 
-> **補足**: [bean_validation](libraries-bean_validation.md) と [nablarch_validation](libraries-nablarch_validation.md) で提供している機能の違いは、 :ref:`validation-functional_comparison` を参照。
+どちらの機能を使用しても入力値のチェックは行えるが、以下の理由によりJakarta EEに準拠した機能を使用することを推奨する。
 
-バリデーションエラー時に表示するメッセージの定義方法は、 [message](libraries-message.md) を参照。
+* Jakarta Bean ValidationはJakarta EEで仕様が定められており情報が豊富である。
+* 開発者がNablarch独自のバリデーションの使い方などを覚える必要がない。
 
-<details>
-<summary>keywords</summary>
+> **Tip:**
+> [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) と [Nablarch Validation](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation) で提供している機能の違いは、 [Bean ValidationとNablarch Validationの機能比較](../../component/libraries/libraries-validation-functional-comparison.md#validation-functional-comparison) を参照。
 
-バリデーション, Bean Validation, Nablarch Validation, Jakarta Bean Validation, 入力値チェック, 推奨バリデーション
-
-</details>
+validation/functional_comparison

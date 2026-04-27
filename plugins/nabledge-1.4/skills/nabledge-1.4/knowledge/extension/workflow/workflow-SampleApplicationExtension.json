@@ -1,24 +1,7 @@
 {
   "id": "workflow-SampleApplicationExtension",
-  "title": "ゲートウェイの進行先ノード判定ロジックを変更する方法",
-  "official_doc_urls": [],
-  "index": [
-    {
-      "id": "s1",
-      "title": "進行先ノードの判定制御ロジックの実装",
-      "hints": [
-        "FlowProceedCondition",
-        "SequenceFlow",
-        "LoanApplicationEntity",
-        "isMatch",
-        "CM111004Component",
-        "ゲートウェイ進行先判定",
-        "XORゲートウェイ条件分岐",
-        "フロー進行条件カスタマイズ"
-      ]
-    }
-  ],
-  "sections": {
-    "s1": "`FlowProceedCondition` インタフェースを実装することで、進行先ノードの判定制御にPJ固有ロジックを組み込める。\n\n**仕様（ローン申請サンプル）**:\n- パラメータから `LoanApplicationEntity` を取得（キー: `loanApplication`）し、年収・ローン申請額を元に進行先を決定する\n- ローン申請額 ≤ 年収の半分 → 「調査」タスクへ進行\n- ローン申請額 > 年収の半分 → 「却下」タスクへ進行\n\n**実装方法**: `isMatch` メソッドで、評価対象の `SequenceFlow`（引数 `sequenceFlow`）の進行先が「調査」タスクの場合に `true` を返却。それ以外は `false`。同一XORゲートウェイから流出するすべてのシーケンスフローに同一コンポーネントが設定されるため、進行先タスクIDによって返却値を切り替える必要がある。\n\n```java\n@Override\npublic boolean isMatch(String instanceId, Map<String, ?> param, SequenceFlow sequenceFlow) {\n    LoanApplicationEntity loanApplication = (LoanApplicationEntity) param.get(\"loanApplication\");\n\n    int annualSalary = loanApplication.getAnnualSalary().intValue();\n    int loanAmount = loanApplication.getLoanAmount().intValue();\n\n    if ((loanAmount * 2) <= annualSalary) {\n        // 審査OKの場合、調査タスクが遷移先の場合に進行先とする。\n        return sequenceFlow.getTargetFlowNodeId().equals(SURVEY_TASK_ID);\n    } else {\n        // 審査NGの場合、調査タスク以外(ワークフロー定義上、却下のみ)が遷移先の場合に進行先とする。\n        return !sequenceFlow.getTargetFlowNodeId().equals(SURVEY_TASK_ID);\n    }\n}\n```"
-  }
+  "title": "ゲートウェイの進行先ノード判定ロジックを変更する方法 — 進行先ノードの判定制御ロジックの実装",
+  "content": "`FlowProceedCondition` インタフェースを実装することで、進行先ノードの判定制御としてPJ固有のロジックを用いることが出来る。\n\n**実装例(CM111004Component.java)**\n\n以下は、`FlowProceedCondition` を実装したコンポーネントの一部であり、ローン申請の内部自動審査後の条件分岐\n（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#loan-appliance-definition) の④に対応）のための\n業務ロジックを実装している。\n\nこのコンポーネントは、内部自動審査後のXORゲートウェイから流出するすべてのシーケンスフローのフロー進行条件として\n設定されているため、評価対象のシーケンスフローがどのタスクに進行するシーケンスフローかに応じて返却する値を変える必要がある。\n\n> **仕様:**\n> パラメータから `LoanApplicationEntity` を取得(キー:`loanApplication`)し、\n> 年収及びローン申請額を元に進行先を決定する。\n\n> ローン申請額が年収の半分以下の場合は「調査」タスクに進行し、半分より大きい場合は「却下」タスクに進行する。\n\n> **実装方法:**\n> ローン申請額が年収の半分以下で、評価対象の `SequenceFlow` （引数として渡されている `sequenceFlow` ）の\n> 進行先が「調査」タスクの場合に `true` を返却する。\n\n> それ以外の場合には `false` を返却する。\n\n```java\n@Override\npublic boolean isMatch(String instanceId, Map<String, ?> param, SequenceFlow sequenceFlow) {\n    LoanApplicationEntity loanApplication = (LoanApplicationEntity) param.get(\"loanApplication\");\n\n    int annualSalary = loanApplication.getAnnualSalary().intValue();\n    int loanAmount = loanApplication.getLoanAmount().intValue();\n\n    if ((loanAmount * 2) <= annualSalary) {\n        // 審査OKの場合、調査タスクが遷移先の場合に進行先とする。\n        return sequenceFlow.getTargetFlowNodeId().equals(SURVEY_TASK_ID);\n    } else {\n        // 審査NGの場合、調査タスク以外(ワークフロー定義上、却下のみ)が遷移先の場合に進行先とする。\n        return !sequenceFlow.getTargetFlowNodeId().equals(SURVEY_TASK_ID);\n    }\n}\n```",
+  "no_knowledge_content": false,
+  "sections": []
 }

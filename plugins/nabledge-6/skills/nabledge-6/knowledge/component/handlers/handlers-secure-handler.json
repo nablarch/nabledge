@@ -1,0 +1,62 @@
+{
+  "id": "handlers-secure-handler",
+  "title": "セキュアハンドラ",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* デフォルトで適用されるヘッダの値を変更したい\n* デフォルト以外のレスポンスヘッダを設定する\n* Content Security Policy(CSP)に対応する\n\n  * 固定のContent-Security-Policyヘッダを設定する\n  * nonceを生成してContent-Security-Policyヘッダに設定する\n  * report-only モードで動作させる\n\n本ハンドラでは、Webアプリケーションのセキュリティに関する処理やヘッダ設定を行う。\n\nデフォルトでは、レスポンスオブジェクト(HttpResponse)に対して以下のレスポンスヘッダを設定する。\n\n* X-Frame-Options: SAMEORIGIN\n* X-XSS-Protection: 1; mode=block\n* X-Content-Type-Options: nosniff\n* Referrer-Policy: strict-origin-when-cross-origin\n* Cache-Control: no-store\n\n本ハンドラでは、以下の処理を行う。\n\n* Content-Security-Policyのnonceの生成\n* セキュリティ関連のレスポンスヘッダの設定処理\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-secure-handler/flow.png)",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "ハンドラクラス名",
+      "content": "* nablarch.fw.web.handler.SecureHandler",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "制約",
+      "content": "[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) よりも後ろに設定すること\n本ハンドラで設定したレスポンスヘッダを、 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) がServlet APIのレスポンスオブジェクトに設定するため。",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "デフォルトで適用されるヘッダの値を変更したい",
+      "content": "要件により、デフォルトで適用されるセキュリティ関連のヘッダの値を変更したい場合がある。\n\n例えば、フレーム内の表示を全て許可しない場合には、 `X-Frame-Options` ヘッダの値を `DENY` に変更する必要がある。\nこのような場合は、コンポーネント設定ファイルに明示的に設定することで対応する。\n\n以下に例を示す。\n\n```xml\n<component class=\"nablarch.fw.web.handler.SecureHandler\">\n  <property name=\"secureResponseHeaderList\">\n    <list>\n      <!-- X-Frame-Optionsの値を明示的に指定 -->\n      <component class=\"nablarch.fw.web.handler.secure.FrameOptionsHeader\">\n        <property name=\"option\" value=\"DENY\" />\n      </component>\n\n      <!-- 上記以外のヘッダはデフォルトのまま -->\n      <component class=\"nablarch.fw.web.handler.secure.XssProtectionHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.ContentTypeOptionsHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.ReferrerPolicyHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.CacheControlHeader\" />\n    </list>\n  </property>\n</component>\n```\n\n> **Tip:**\n> 値を変更するためのプロパティの詳細は、以下のクラスを参照。\n\n> * >   FrameOptionsHeader\n> * >   ContentTypeOptionsHeader\n> * >   XssProtectionHeader\n> * >   ReferrerPolicyHeader\n> * >   CacheControlHeader",
+      "level": 2
+    },
+    {
+      "id": "s5",
+      "title": "デフォルト以外のレスポンスヘッダを設定する",
+      "content": "デフォルト以外のセキュリティ関連のレスポンスヘッダを設定する手順を以下に示す。\n\n1. SecureResponseHeader インタフェースの実装クラスで、\n  レスポンスヘッダに設定するフィールド名と値を指定する。\n\n> **Tip:**\n> ロジックを含まない単純なレスポンスヘッダを作成する場合は、\n> SecureResponseHeaderSupport\n> を継承して作成すればよい。\n\n1. 本ハンドラ(SecureHandler)に、`No1` で作成したクラスを設定する。\n\n> **Important:**\n> SecureResponseHeader 実装クラスを設定する際は、\n> デフォルトで適用されていたコンポーネントも設定すること。\n\n> 以下に設定ファイルの例を示す。\n\n> ```xml\n> <component class=\"nablarch.fw.web.handler.SecureHandler\">\n>   <property name=\"secureResponseHeaderList\">\n>     <list>\n>       <component class=\"nablarch.fw.web.handler.secure.FrameOptionsHeader\" />\n>       <component class=\"nablarch.fw.web.handler.secure.XssProtectionHeader\" />\n>       <component class=\"nablarch.fw.web.handler.secure.ContentTypeOptionsHeader\" />\n>       <component class=\"nablarch.fw.web.handler.secure.ReferrerPolicyHeader\" />\n>       <component class=\"nablarch.fw.web.handler.secure.CacheControlHeader\" />\n> \n>       <!-- 追加で作成したコンポーネント -->\n>       <component class=\"nablarch.fw.web.handler.secure.SampleSecurityHeader\" />\n>     </list>\n>   </property>\n> </component>\n> ```",
+      "level": 2
+    },
+    {
+      "id": "s6",
+      "title": "Content Security Policy(CSP)に対応する",
+      "content": "本ハンドラの設定と `ContentSecurityPolicyHeader` 、そして [Jakarta Server PagesカスタムタグのCSP対応](../../component/libraries/libraries-tag.md#tag-content-security-policy) を組み合わせることでCSPに関する機能を有効にできる。\n\n> **Tip:**\n> Content Security Policy(CSP)は、クロスサイトスクリプティングなどのコンテンツへのインジェクションに関する攻撃を検知し影響を\n> 軽減するために追加できる仕組みのことである。CSPそのものについては、 [Content Security Policy Level 3(外部サイト、英語)](https://www.w3.org/TR/CSP3/) や\n> [Content Security Policy Level 2(外部サイト、英語)](https://www.w3.org/TR/CSP2/) を参照すること。\n\n[Jakarta Server Pagesカスタムタグ](../../component/libraries/libraries-tag.md#tag) を使用している場合は一部のカスタムタグでJavaScriptを出力するため、本ハンドラの機能でnonceを生成しレスポンスヘッダやscript要素などに埋め込むことで対応する。\n\nContent-Security-Policyヘッダの出力には、 `ContentSecurityPolicyHeader` を使用することで本ハンドラで生成したnonceを\n埋め込むことができる。",
+      "level": 2
+    },
+    {
+      "id": "s7",
+      "title": "固定のContent-Security-Policyヘッダを設定する",
+      "content": "固定のContent-Security-Policyヘッダを設定する手順を以下に示す。\n\n1. 本ハンドラ(SecureHandler)に、 `ContentSecurityPolicyHeader` を設定する。\n2. `ContentSecurityPolicyHeader` に `policy` を設定する。\n\n以下に例を示す。\n\n```xml\n<component class=\"nablarch.fw.web.handler.SecureHandler\">\n  <property name=\"secureResponseHeaderList\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.secure.FrameOptionsHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.XssProtectionHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.ContentTypeOptionsHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.ReferrerPolicyHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.CacheControlHeader\" />\n\n      <!-- Content-Security-Policyを付与するコンポーネント -->\n      <component class=\"nablarch.fw.web.handler.secure.ContentSecurityPolicyHeader\">\n        <!-- ポリシーを設定する -->\n        <property name=\"policy\" value=\"default-src 'self'\" />\n      </component>\n    </list>\n  </property>\n</component>\n```\n\nこの場合、 `Content-Security-Policy: default-src 'self'` といったレスポンスヘッダが書き出される。",
+      "level": 3
+    },
+    {
+      "id": "s8",
+      "title": "nonceを生成してContent-Security-Policyヘッダに設定する",
+      "content": "nonceを生成してContent-Security-Policyヘッダに設定する手順を以下に示す。\n\n1. 本ハンドラ(SecureHandler)の `generateCspNonce` プロパティを `true` に設定する。\n2. 本ハンドラに、`ContentSecurityPolicyHeader` を設定する。\n3. `ContentSecurityPolicyHeader` に `policy` を設定し、プレースホルダー `$cspNonceSource$` を含める。\n\n以下に例を示す。\n\n```xml\n<component class=\"nablarch.fw.web.handler.SecureHandler\">\n  <!-- nonceを生成するように設定する -->\n  <property name=\"generateCspNonce\" value=\"true\" />\n  <property name=\"secureResponseHeaderList\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.secure.FrameOptionsHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.XssProtectionHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.ContentTypeOptionsHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.ReferrerPolicyHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.CacheControlHeader\" />\n\n      <!-- Content-Security-Policyを付与するコンポーネント -->\n      <component class=\"nablarch.fw.web.handler.secure.ContentSecurityPolicyHeader\">\n        <!-- nonceを含んだポリシーを設定する -->\n        <property name=\"policy\" value=\"default-src 'self' '$cspNonceSource$'\" />\n      </component>\n    </list>\n  </property>\n</component>\n```\n\nこの場合プレースホルダー `$cspNonceSource$` は `nonce-[本ハンドラで生成されたnonce]` に置換され、たとえば `Content-Security-Policy: default-src 'self' 'nonce-DhcnhD3khTMePgXwdayK9BsMqXjhguVV'` のようなレスポンスヘッダとして書き出される。\n\n本ハンドラではnonceをリクエストの都度生成する。\n生成したnonceはリクエストスコープに格納され、 [Jakarta Server Pagesカスタムタグ](../../component/libraries/libraries-tag.md#tag) の動作を以下のように変更する。\n\n* script要素を生成するカスタムタグの場合、生成したnonceを自動でnonce属性に設定する。\n* onclick属性にサブミット用の関数呼び出しを設定するカスタムタグは、その内容をscript要素に出力するように変更する。\n\nまた任意の要素にnonceを設定したい場合に使えるカスタムタグも有効になる。\n\n詳しくは [Jakarta Server PagesカスタムタグのCSP対応](../../component/libraries/libraries-tag.md#tag-content-security-policy) を参照すること。",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "report-only モードで動作させる",
+      "content": "report-only モードで動作させる場合は `reportOnly` を `true` に設定する。\n\n以下に例を示す。\n\n```xml\n<component class=\"nablarch.fw.web.handler.SecureHandler\">\n  <property name=\"secureResponseHeaderList\">\n    <list>\n      <component class=\"nablarch.fw.web.handler.secure.FrameOptionsHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.XssProtectionHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.ContentTypeOptionsHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.ReferrerPolicyHeader\" />\n      <component class=\"nablarch.fw.web.handler.secure.CacheControlHeader\" />\n\n      <component class=\"nablarch.fw.web.handler.secure.ContentSecurityPolicyHeader\">\n        <property name=\"policy\" value=\"default-src 'self'; report-uri http://example.com/report\" />\n        <!-- report-onlyモードで動作させる -->\n        <property name=\"reportOnly\" value=\"true\" />\n      </component>\n    </list>\n  </property>\n</component>\n```\n\nこの場合、 `Content-Security-Policy-Report-Only: default-src 'src'; report-uri http://example.com/report` といったレスポンスヘッダが書き出される。",
+      "level": 3
+    }
+  ]
+}

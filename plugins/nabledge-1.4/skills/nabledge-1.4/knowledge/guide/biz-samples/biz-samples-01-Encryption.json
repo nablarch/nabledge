@@ -1,0 +1,110 @@
+{
+  "id": "biz-samples-01-Encryption",
+  "title": "データの暗号化",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "データの暗号化／復号に必要な機能を提供する。",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "content": "* **暗号機能の隠蔽**\n  本機能を使用することで、利用者は暗号方式を意識することなくデータの暗号化/復号を行える。\n* **暗号化機能の変更性の向上**\n  本機能を使用することで、「テスト時に暗号化を行わず平文で出力する」といった変更を、呼び出し元を変更することなく実現できる。\n* **基本的な暗号機能の提供**\n  [実装済み](../../guide/biz-samples/biz-samples-01-Encryption.md#implementated) に記述されている暗号方式であれば、カスタマイズすることなく利用できる。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "要求",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "実装済み",
+      "content": "* AES128ビット方式の暗号化/復号機能",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "未実装",
+      "content": "* DES方式の暗号化/復号機能\n* RSA方式の暗号化/復号機能\n* DUKPT方式の暗号化/復号および鍵管理機能\n* 基本的な鍵管理機能\n* 暗号鍵、メタ情報管理機能",
+      "level": 3
+    },
+    {
+      "id": "s6",
+      "title": "未検討",
+      "content": "* iOS Keychainによる鍵管理機能",
+      "level": 3
+    },
+    {
+      "id": "s7",
+      "title": "構造",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s8",
+      "title": "クラス図",
+      "content": "![encryption_classDiagram.jpg](assets/biz-samples-01-Encryption/encryption_classDiagram.jpg)",
+      "level": 3
+    },
+    {
+      "id": "s9",
+      "title": "各クラスの責務",
+      "content": "",
+      "level": 4
+    },
+    {
+      "id": "s10",
+      "title": "インタフェース定義",
+      "content": "| インタフェース名 | 概要 |\n|---|---|\n| NMEncryption | 暗号化/復号を行うためのインタフェース。 暗号方式ごとに本インタフェースの実装クラスを作成する。本インタフェースを実装したクラス及 びインスタンスを暗号クラスと呼ぶ。 |\n| NMKeyManager | 鍵管理を行うインタフェース。 鍵管理方式ごとに本インタフェースの実装クラスを作成する。本インタフェースを実装したクラス及 びインスタンスを鍵管理クラスと呼ぶ。 |",
+      "level": 5
+    },
+    {
+      "id": "s11",
+      "title": "クラス定義",
+      "content": "| クラス名 | 概要 |\n|---|---|\n| NMEncryptionCreator | 設定書ファイルを元に、暗号クラスのインスタンスを生成するクラス。設定書ファイルの記載方法 については [プロパティリストの作成](../../guide/biz-samples/biz-samples-01-Encryption.md#encryptionpropertylist) に、本クラスの使用方法については [API使用例](../../guide/biz-samples/biz-samples-01-Encryption.md#houtouseencryption) に記載する。 |\n| MNAesEncryption | AES128ビット暗号化/復号を実装したクラス。本実装クラスの設定方法については [暗号クラス](../../guide/biz-samples/biz-samples-01-Encryption.md#propertyaboutaesenc) に記載する。 |\n| NMPlainTextEncryption | 暗号化を行わない、空実装クラス。 |",
+      "level": 5
+    },
+    {
+      "id": "s12",
+      "title": "使用方法",
+      "content": "本機能の使用方法について記載する。 ユーザは暗号化/復号を行うために、以下の2つのステップを実施する必要がある。\n\n1. プロパティリストの作成\n2. APIの呼び出し\n\n以下に各ステップの詳細を記載する。",
+      "level": 2
+    },
+    {
+      "id": "s13",
+      "title": "プロパティリストの作成",
+      "content": "本機能では暗号方式ごとにプロパティリスト形式で設定書(暗号化設定ファイル)を作成する必要がある。\n設定書では以下の事柄についての設定を行う。\n\n* 暗号クラスの指定(Encryption.class)\n* 暗号クラスの初期値パラメータの指定(Encryption.initializeList)\n\n設定例を以下に示す。\n\n![encryption_example_propertyList.png](assets/biz-samples-01-Encryption/encryption_example_propertyList.png)\n\nプロパティの説明を下記に示す。\n\n| key | type | 説明 |\n|---|---|---|\n| Encryption | Dictionary | 暗号クラスの設定 |\n| Encryption.class | String | 使用する暗号クラス名 |\n| Encryption.initializeList | Dictionary | 使用する暗号クラスの初期値パラメータ群 |",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "初期値パラメータ",
+      "content": "初期値パラメータはクラスによって異なる。それぞれのクラスの初期値パラメータについて記載する。",
+      "level": 4
+    },
+    {
+      "id": "s15",
+      "title": "暗号クラス",
+      "content": "a) NMAesEncryption\n\n初期値パラメータ一覧\n\n| key | type | 説明 |\n|---|---|---|\n| keyManager | Dictionary | 鍵管理クラスの設定 |\n| keyManager.class | String | 使用する鍵管理クラス名 |\n| keyManager.initializeList | Dictionary | 鍵管理クラスの初期値パラメータ。 詳細は使用する鍵管理クラスの初期値パラメータを参照すること。 |\n| mode | String | 使用する動作モード。\"CBC\"または\"ECB\"のどちらかを指定可能。 |\n| padding | String | 使用するパディング種類。\"PKCS7\"または\"NOTHING\"のどちらかを指定可能。 |\n\n設定例\n\n![encryption_example_aesPropertyList.png](assets/biz-samples-01-Encryption/encryption_example_aesPropertyList.png)\n\nb) NMPlainTextEncryption\n\n特に無し",
+      "level": 5
+    },
+    {
+      "id": "s16",
+      "title": "鍵管理クラス",
+      "content": "フレームワークで提供する実装クラスなし",
+      "level": 5
+    },
+    {
+      "id": "s17",
+      "title": "API使用例",
+      "content": "a) 暗号化実装例\n\n```objective-c\nNSData *plainData = [@\"暗号化対象文字列\" dataUsingEncoding:NSUTF8StringEncoding];\n\n// 暗号化に使用する鍵の名称および、暗号化に使用する初期化ベクトルの取得処理は別途実装が必要である。\n// 初期化ベクトルを使用しない暗号方式の場合はnilを指定できる。\nNSData *initializeVector = [self initializeVector];\nNSString *keyName = [self keyName];\nNSError *error = nil;\n\nid<NMEncryption> encryptor = [NMEncryptionCreator createEncryptionForName:@\"設定書ファイル名\"];\nNSData *encryptData = [self.encryption encryptForKeyName:keyName\n                                                    data:plainData\n                                           initialVector:initializeVector\n                                                   error:&error];\n```\n\nb) 復号実装例\n\n```objective-c\nNSData *encryptData = [@\"gwycQJ0T0qTA\\/W+cQBSrzNF6PxZ+vxFQIQBKAFQmzC2\" dataUsingEncoding:NSUTF8StringEncoding];\n\n// 復号に使用する鍵の名称および、復号に使用する初期化ベクトルの取得処理は別途実装が必要である。\n// 初期化ベクトルを使用しない暗号方式の場合はnilを指定できる。\nNSData *initializeVector = [self initializeVector];\nNSString *keyName = [self keyName];\nNSError *error = nil;\n\nid<NMEncryption> encryptor = [NMEncryptionCreator createEncryptionForName:@\"設定書ファイル名\"];\nNSData *decryptData = [self.encryption decryptForKeyName:keyName\n                                                    data:encryptData\n                                           initialVector:initializeVector\n                                                   error:&error];\n```",
+      "level": 3
+    }
+  ]
+}

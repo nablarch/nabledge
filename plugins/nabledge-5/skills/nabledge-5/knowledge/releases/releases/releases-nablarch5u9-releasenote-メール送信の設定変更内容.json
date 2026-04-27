@@ -1,0 +1,8 @@
+{
+  "id": "releases-nablarch5u9-releasenote-メール送信の設定変更内容",
+  "title": "メール送信の設定変更内容",
+  "content": "●送信要求のステータス更新のフローの変更\n送信ステータスの更新失敗(データベースエラーやネットワーク障害など)の際の二重送信防止のため、処理フローを以下のとおり変更しました。\n●変更前  ●変更後\n送信ステータスの更新失敗(DB更新失敗)が発生した場合、  送信ステータスの更新失敗(DB更新失敗)が発生した場合、\nメールが二重送信されていた。  パッチを適用する必要がある。\n変更後、送信ステータスの更新失敗(DB更新失敗)が発生した場合は、障害ログに以下のログが出力され、メール送信バッチは異常終了する。\nFailed to update unsent status. Need to apply a patch to change the status to failure. mailRequestId=[<リクエストID>]\nこのログを検出した場合は、該当送信要求の送信ステータスを「送信失敗」にする必要がある。\n●コンポーネント定義ファイルの変更\n変更後の送信ステータスの更新は別トランザクションで実行されるため、以下の設定が必須となる。\nステータス更新用のトランザクションの設定\n\"statusUpdateTransaction\"という名前のトランザクションを管理するコンポーネントを定義する必要がある。\n設定例）\n<!-- ステータス更新用のトランザクション -->\n<component name=\"statusUpdateTransaction\" class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">\n<property name=\"dbTransactionName\" value=\"statusUpdateTransaction\" />\n<property name=\"connectionFactory\" ref=\"connectionFactory\" />\n<property name=\"transactionFactory\" ref=\"jdbcTransactionFactory\" />\n</component>",
+  "no_knowledge_content": false,
+  "sections": [],
+  "sheet_type": "P2"
+}

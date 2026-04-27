@@ -1,97 +1,61 @@
 # Example
 
-**公式ドキュメント**: [Example](https://nablarch.github.io/docs/LATEST/doc/examples/index.html)
+Exampleは、Nablarchアプリケーションフレームワークの機能の使用方法を示した実装例であり、 [実行制御基盤](../../about/about-nablarch/about-nablarch-big-picture.md#runtime-platform) 毎に作成している。
+本章では、Exampleに必要な環境構築手順と、アプリケーションの実行手順を解説する。
 
-## 環境構築手順
+> **Tip:**
+> Exampleを改修して本格的なアプリケーションを作成することは想定していない。
 
-> **補足**: Exampleを改修して本格的なアプリケーションを作成することは想定していない。本格的なアプリケーションを作成する場合は [blank_project](../../setup/blank-project/blank-project-blank_project.md) から作成すること。
+> 本格的なアプリケーションを作成する場合は [ブランクプロジェクト](../../setup/blank-project/blank-project-blank-project.md#blank-project) から作成すること。
 
-ExampleはApache Mavenを使用してビルド・実行する。インストールと設定は :ref:`maven` を参照。
+## Exampleの実行方法
 
-<details>
-<summary>keywords</summary>
+### 環境構築手順
 
-Apache Maven, ビルド環境構築, Exampleセットアップ, Maven設定, blank_project
+Exampleは、Apache Mavenを使用してアプリケーションをビルド、実行する。以下のページを参考に、ApacheMavenのPCへのインストール及び必要な設定を行うこと。
 
-</details>
+[Apache Mavenについて](../../setup/blank-project/blank-project-maven.md#maven)
 
-## 実行手順
+### 実行手順
 
 Exampleの実行手順は、各ExampleのGitHubリポジトリトップにあるREADMEを参照すること。
 
-<details>
-<summary>keywords</summary>
+### Java 11 以上で動かす場合
 
-Exampleアプリケーション実行, GitHubリポジトリ, README
+ExampleはJava 8での実行を前提としている。
+Java 11以上で動かす場合は、依存ライブラリの修正が必要となる。
+詳細は、以下のブランクプロジェクトの説明を参照のこと。
 
-</details>
+* [Java11で使用する場合のセットアップ方法](../../setup/blank-project/blank-project-setup-Java11.md#setup-blank-project-for-java11)
+* [Java17で使用する場合のセットアップ方法](../../setup/blank-project/blank-project-setup-Java17.md#setup-blank-project-for-java17)
+* [Java21で使用する場合のセットアップ方法](../../setup/blank-project/blank-project-setup-Java21.md#setup-blank-project-for-java21)
 
-## Java 11 以上で動かす場合
+## Exampleの一覧
 
-ExampleはJava 8での実行を前提としている。Java 11以上で動かす場合は依存ライブラリの修正が必要。
+実行制御基盤毎のExampleを以下に示す。実装の解説も用意しているので、必要に応じて、以下一覧の「解説」リンクより参照すること。
 
-詳細は以下を参照:
-- :ref:`setup_blank_project_for_Java11`
-- :ref:`setup_blank_project_for_Java17`
-- :ref:`setup_blank_project_for_Java21`
+### ウェブアプリケーション
 
-<details>
-<summary>keywords</summary>
+* [ウェブアプリケーション (JSP)](https://github.com/nablarch/nablarch-example-web) ([解説](../../processing-pattern/web-application/web-application-getting-started.md#getting-started))
+* [ウェブアプリケーション (Thymeleaf)](https://github.com/nablarch/nablarch-example-thymeleaf-web) ([解説](../../component/adapters/adapters-web-thymeleaf-adaptor.md#web-thymeleaf-adaptor))
 
-Java 11, Java 17, Java 21, 依存ライブラリ修正, Javaバージョン対応
+### ウェブサービス
 
-</details>
+* [RESTfulウェブサービス](https://github.com/nablarch/nablarch-example-rest) ([解説](../../processing-pattern/restful-web-service/restful-web-service-getting-started.md#rest-getting-started))
+* [HTTPメッセージング (受信)](https://github.com/nablarch/nablarch-example-http-messaging) ([解説](../../processing-pattern/http-messaging/http-messaging-getting-started.md#http-messaging-getting-started))
+* [HTTPメッセージング (送信)](https://github.com/nablarch/nablarch-example-http-messaging-send) ([解説](../../component/libraries/libraries-http-system-messaging.md#http-system-messaging-message-send))
 
-## ウェブアプリケーション
+### バッチアプリケーション
 
-- [ウェブアプリケーション (JSP)](https://github.com/nablarch/nablarch-example-web) (:ref:`解説 <getting_started>`)
-- [ウェブアプリケーション (Thymeleaf)](https://github.com/nablarch/nablarch-example-thymeleaf-web) ([解説](../../component/adapters/adapters-web_thymeleaf_adaptor.md))
+* [JSR352に準拠したバッチアプリケーション](https://github.com/nablarch/nablarch-example-batch-ee) ([解説](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started.md#jbatch-getting-started))
+* [Nablarchバッチアプリケーション](https://github.com/nablarch/nablarch-example-batch) ([解説](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started.md#nablarch-batch-getting-started))
 
-<details>
-<summary>keywords</summary>
+### メッセージング
 
-JSP, Thymeleaf, ウェブアプリケーションExample, nablarch-example-web, nablarch-example-thymeleaf-web
+* MOMによるメッセージング ([解説](../../processing-pattern/mom-messaging/mom-messaging-getting-started.md#mom-messaging-getting-started))
 
-</details>
-
-## ウェブサービス
-
-- [RESTfulウェブサービス](https://github.com/nablarch/nablarch-example-rest) (:ref:`解説 <rest_getting_started>`)
-- [HTTPメッセージング (受信)](https://github.com/nablarch/nablarch-example-http-messaging) (:ref:`解説 <http-messaging_getting_started>`)
-- [HTTPメッセージング (送信)](https://github.com/nablarch/nablarch-example-http-messaging-send) ([解説](../../component/libraries/libraries-http_system_messaging.md))
-
-<details>
-<summary>keywords</summary>
-
-RESTful, HTTPメッセージング, ウェブサービスExample, nablarch-example-rest, nablarch-example-http-messaging
-
-</details>
-
-## バッチアプリケーション
-
-- [JSR352に準拠したバッチアプリケーション](https://github.com/nablarch/nablarch-example-batch-ee) (:ref:`解説 <jBatch_getting_started>`)
-- [Nablarchバッチアプリケーション](https://github.com/nablarch/nablarch-example-batch) (:ref:`解説 <nablarch_Batch_getting_started>`)
-
-<details>
-<summary>keywords</summary>
-
-JSR352, バッチアプリケーション, nablarch-example-batch-ee, nablarch-example-batch
-
-</details>
-
-## メッセージング
-
-MOMによるメッセージング (:ref:`解説 <mom_messaging_getting_started>`):
-- [応答不要メッセージ送信](https://github.com/nablarch/nablarch-example-mom-delayed-send)
-- [同期応答メッセージ送信](https://github.com/nablarch/nablarch-example-mom-sync-send-batch)
-- [応答不要メッセージ受信](https://github.com/nablarch/nablarch-example-mom-delayed-receive)
-- [同期応答メッセージ受信](https://github.com/nablarch/nablarch-example-mom-sync-receive)
-
-[テーブルをキューとして使ったメッセージング](https://github.com/nablarch/nablarch-example-db-queue) (:ref:`解説 <db_messaging_getting_started>`)
-
-<details>
-<summary>keywords</summary>
-
-MOM, メッセージング, 応答不要メッセージ, 同期応答メッセージ, テーブルキュー, nablarch-example-db-queue
-
-</details>
+  * [応答不要メッセージ送信](https://github.com/nablarch/nablarch-example-mom-delayed-send)
+  * [同期応答メッセージ送信](https://github.com/nablarch/nablarch-example-mom-sync-send-batch)
+  * [応答不要メッセージ受信](https://github.com/nablarch/nablarch-example-mom-delayed-receive)
+  * [同期応答メッセージ受信](https://github.com/nablarch/nablarch-example-mom-sync-receive)
+* [テーブルをキューとして使ったメッセージング](https://github.com/nablarch/nablarch-example-db-queue) ([解説](../../processing-pattern/db-messaging/db-messaging-getting-started.md#db-messaging-getting-started))

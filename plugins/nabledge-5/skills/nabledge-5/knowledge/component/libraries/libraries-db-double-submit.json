@@ -1,0 +1,26 @@
+{
+  "id": "libraries-db-double-submit",
+  "title": "データベースを使用した二重サブミット防止",
+  "content": "**目次**\n\n* 機能概要\n* モジュール一覧\n* 使用方法\n\n[二重サブミット防止](../../component/libraries/libraries-tag.md#tag-double-submission) では、サーバ側のトークンはHTTPセッションに保存される。\nこのため、アプリケーションサーバをスケールアウトする際には、スティッキーセッションやセッションレプリケーション等を\n使用する必要がある。\n\nサーバ側のトークンをデータベースに保管する実装を使用することで、特にアプリケーションサーバの設定をしなくても、\n複数のアプリケーションサーバ間でトークンを共有できる。\n\n> **Tip:**\n> ブラウザが閉じられた場合などにテーブル上にトークンが残ってしまうことがある。\n> そのため、期限切れのトークンは定期的に削除する必要がある。\n\n> **Important:**\n> HTTPセッションを使用した [二重サブミット防止](../../component/libraries/libraries-tag.md#tag-double-submission) はCSRF対策に使用できたが、\n> 本機能はユーザを識別せずにトークンをDBに格納しているためCSRF対策に使用できない。\n> 本機能を使用する場合は、CSRF対策に [CSRFトークン検証ハンドラ](../../component/handlers/handlers-csrf-token-verification-handler.md#csrf-token-verification-handler) を使用すること。",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "機能概要",
+      "content": "サーバ側のトークンをデータベースに保管できる",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "モジュール一覧",
+      "content": "```xml\n<dependency>\n  <groupId>com.nablarch.framework</groupId>\n  <artifactId>nablarch-fw-web-doublesubmit-jdbc</artifactId>\n</dependency>\n```",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "使用方法",
+      "content": "データベース上にトークンを保存するためのテーブルが必要となる。\n\n作成するテーブルの定義を以下に示す。\n\nDOUBLE_SUBMISSION テーブル\n| カラム名 | データ型 |\n|---|---|\n| TOKEN(PK) | java.lang.String |\n| CREATED_AT | java.sql.Timestamp |\n\nテーブル名およびカラム名は変更可能である。\n変更する場合は、 DbTokenManager.dbTokenSchema に\nDbTokenSchema のコンポーネントを定義する。\n\n2種類のコンポーネント定義を追加する。\n\n`tokenManager` という名前でコンポーネント定義を追加する。\nこれにより、トークンがデータベースで管理されるようになる。\n`tokenManager` は [初期化](../../component/libraries/libraries-repository.md#repository-initialize-object) が必要。\n\n```xml\n<component name=\"tokenManager\" class=\"nablarch.common.web.token.DbTokenManager\">\n  <property name=\"dbManager\">\n    <component class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">\n      <property name=\"dbTransactionName\" value=\"tokenTransaction\"/>\n    </component>\n  </property>\n  <!-- 上記のテーブル定義からテーブル名、カラム名を変更する場合のみ以下設定が必要 -->\n  <property name=\"dbTokenSchema\">\n    <component class=\"nablarch.common.web.token.DbTokenSchema\">\n      <property name=\"tableName\" value=\"DB_TOKEN\"/>\n      <property name=\"tokenName\" value=\"VALUE_COL\"/>\n      <property name=\"createdAtName\" value=\"CREATED_AT_COL\"/>\n    </component>\n  </property>\n</component>\n\n<!-- 初期化が必要なため、以下を設定 -->\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <component-ref name=\"tokenManager\"/>\n    </list>\n  </property>\n</component>\n```\n\n`tokenGenerator` という名前でコンポーネント定義を追加する。\nこれによりトークンにUUIDが使用され、推測および衝突の可能性を考慮しなくてよくなる。\n\n```xml\n<component name=\"tokenGenerator\"\n           class=\"nablarch.common.web.token.UUIDV4TokenGenerator\" />\n```\n\n> **Important:**\n> [テスティングフレームワークのトークン発行](../../development-tools/testing-framework/testing-framework-02-RequestUnitTest.md#how-to-set-token-in-request-unit-test) はトークンのDB保存に対応していない。\n> そのため、自動テスト実行時には HttpSessionTokenManager に差し替えてテストする必要がある。\n\n> ```xml\n> <!-- トークンをHTTPセッションに保存する -->\n> <component name=\"tokenManager\" class=\"nablarch.common.web.token.HttpSessionTokenManager\"/>\n> ```",
+      "level": 2
+    }
+  ]
+}
