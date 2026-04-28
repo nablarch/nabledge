@@ -1,5 +1,3 @@
-
-
 ![Nablarch.jpg](../../../knowledge/assets/about-nablarch-top/Nablarch.jpg)
 
 ## Nablarch 1.3.7版

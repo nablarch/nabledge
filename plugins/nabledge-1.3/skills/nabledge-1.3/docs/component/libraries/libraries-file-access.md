@@ -1,9 +1,3 @@
-
-
-![handler_structure_bg.png](../../../knowledge/assets/libraries-file-access/handler_structure_bg.png)
-
-![handler_bg.png](../../../knowledge/assets/libraries-file-access/handler_bg.png)
-
 ## ファイルアクセス機能
 
 本稿では、業務アプリケーションからシステム内のファイルシステムにアクセスする際に使用する
@@ -29,6 +23,7 @@
 各論理パスに対する物理パスの定義は、 [FilePathSetting](../../javadoc/nablarch/core/util/FilePathSetting.html) クラスに設定し、それを キー名 **filePathSetting** で、 [リポジトリ](../02_FunctionDemandSpecifications/01_Core/02_Repository.html) に登録しておく必要がある。
 
 **既定論理パス名**
+
 以下に、本フレームワーク内の各機能において、デフォルトの参照先として設定されている論理パス名を示す。
 
 | 論理パス名 | 内容 |
@@ -36,7 +31,9 @@
 | **output** | 業務処理の結果として生成されるファイルを出力するディレクトリ。 |
 | **input** | 業務処理の入力となるファイルを格納したディレクトリ。 |
 | **format** | ファイル、電文等の [フォーマット定義ファイル](../../component/libraries/libraries-record-format.md) を格納したディレクトリ。 |
+
 **拡張子の設定**
+
 各論理パスには、そこに格納されるファイルの拡張子を定義することができる。
 この場合、ファイル名には拡張子を除いた文字列を指定する。
 

@@ -223,6 +223,7 @@ String shortMaleDisplayName = CodeUtil.getOptionalName("0001", "1", "NAME_WITH_V
 ## コード値の取得
 
 コードが取り得る全てのコード値は、CodeUtilの下記メソッドで取得できる。
+
 * getValues(String codeId)
 * getValues(String codeId, Locale locale)
 

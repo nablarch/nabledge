@@ -1,5 +1,3 @@
-
-
 ![Nablarch.jpg](../../../knowledge/assets/about-nablarch-support-service/Nablarch.jpg)
 
 ## Nablarchのサポートサービス

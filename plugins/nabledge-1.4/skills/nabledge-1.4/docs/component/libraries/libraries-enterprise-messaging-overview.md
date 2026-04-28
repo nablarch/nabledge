@@ -1,9 +1,3 @@
-
-
-![handler_structure_bg.png](../../../knowledge/assets/libraries-enterprise-messaging-overview/handler_structure_bg.png)
-
-![handler_bg.png](../../../knowledge/assets/libraries-enterprise-messaging-overview/handler_bg.png)
-
 ## システム間メッセージング機能
 
 ### 概要

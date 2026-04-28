@@ -800,8 +800,11 @@ public class W11AC01Action extends DbAccessSupport {
 下記のとおり、listSearchResultパッケージを業務アプリケーションに配置する。
 
 コピー元
+
 *META-INF/tags/* **listSearchResult**
+
 コピー先
+
 業務アプリケーションの /WEB-INF/tags ディレクトリ
 
 ### タグファイル内のプレフィックスの修正
@@ -811,6 +814,7 @@ public class W11AC01Action extends DbAccessSupport {
 /WEB-INF/tags/listSearchResult に配置している前提で、修正前後の内容を示す。
 
 修正前
+
 プレフィックスの定義:
 
 ```
@@ -822,7 +826,9 @@ public class W11AC01Action extends DbAccessSupport {
 ```
 nbs
 ```
+
 週生後
+
 プレフィックスの定義:
 
 ```

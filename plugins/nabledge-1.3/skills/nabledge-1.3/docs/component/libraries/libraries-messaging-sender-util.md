@@ -1,9 +1,3 @@
-
-
-![handler_structure_bg.png](../../../knowledge/assets/libraries-messaging-sender-util/handler_structure_bg.png)
-
-![handler_bg.png](../../../knowledge/assets/libraries-messaging-sender-util/handler_bg.png)
-
 ## 同期応答メッセージ送信ユーティリティ
 
 対外システムに対するメッセージの同期送信を行うユーティリティクラス。
@@ -33,6 +27,7 @@
   送信メッセージおよび、応答されたメッセージの内容を格納するオブジェクト。
 
 **コードサンプル**
+
 以下はこれらのクラス機能を使用して実際にメッセージ送信処理を行う例である。
 
 ```java
@@ -62,6 +57,7 @@ try {
 本機能を利用するには、以下の2つの設定ファイルを用意する必要がある。
 
 **電文フォーマット定義ファイル**
+
 送受信電文内のメッセージボディ領域のフォーマット定義を記述したファイル。
 "format"論理パス配下にある以下のファイル名で作成する。
 
@@ -70,7 +66,9 @@ try {
 
 フォーマット定義ファイルを配置する論理パス名は、設定により変更することができる。(後述)
 フォーマット定義の記述方法については、 [汎用データフォーマット機能](../../component/libraries/libraries-record-format.md) を参照すること。
+
 **送信設定ファイル**
+
 送受信キューの論理名や再送要求の有無といった、送信処理の各種設定を記述したファイル。
 [リポジトリ](../../component/libraries/libraries-02-Repository.md) のプロパティファイルとして作成する。
 
@@ -101,8 +99,11 @@ messageSender.RM11AD0101.timeout=3000
 
 #(後略)
 ```
+
 **送信設定一覧**
+
 **共通設定**
+
 | 項目名 | 内容 |
 |---|---|
 | messageSender.DEFAULT.messagingProviderName | [メッセージングプロバイダ](../../component/libraries/libraries-enterprise-messaging.md#messaging-provider) をリポジトリから取得する際に 使用するコンポーネント名 |
@@ -112,7 +113,9 @@ messageSender.RM11AD0101.timeout=3000
 | messageSender.DEFAULT.formatDir | フォーマット定義ファイルの格納ディレクトリ(論理名)。デフォルトは"format" |
 | messageSender.DEFAULT.headerFormatName | ヘッダフォーマット名 |
 | messageSender.DEFAULT.messageConvertorName | [SyncMessageConvertor](../../javadoc/nablarch/fw/messaging/SyncMessageConvertor.html) をリポジトリから取得する際に使用するコンポーネント名 |
+
 **リクエストID毎設定**
+
 | 項目名 | 内容 |
 |---|---|
 | messageSender.**リクエストID.messagingProviderName | MessagingProviderをリポジトリから取得する際に使用するコンポーネント名。 デフォルト設定を指定しない場合は必須 |

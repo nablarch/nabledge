@@ -31,8 +31,11 @@
   ```
 
 **クラス名**
+
 nablarch.fw.messaging.reader.FwHeaderReader
+
 **読み込むデータの型**
+
 nablarch.fw.messaging.RequestMessage
 
 **設定項目一覧**

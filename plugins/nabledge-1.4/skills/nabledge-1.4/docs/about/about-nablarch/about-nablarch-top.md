@@ -1,5 +1,3 @@
-
-
 about_nablarch/concept
 about_nablarch/development_policy
 about_nablarch/contents

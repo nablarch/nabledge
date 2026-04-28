@@ -1,5 +1,3 @@
-
-
 ![Nablarch.jpg](../../../knowledge/assets/about-nablarch-contents-type/Nablarch.jpg)
 
 ## Nablarchのコンテンツ種類

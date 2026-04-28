@@ -13,49 +13,49 @@
     {
       "id": "s2",
       "title": "シーケンスフロー",
-      "content": "**記法**\n![sequence-flow.png](assets/workflow-WorkflowProcessElement/sequence-flow.png)\n\nフローノード間の進行方向と、そのフローに沿ってワークフローが進行するための条件（フロー進行条件）を定義する要素。\n\n[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) では並行処理となるようなワークフローの分岐・合流をサポートしないため、 [XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) からは\n複数のシーケンスフローが流出することができるが、それ以外の要素からは、複数のシーケンスフローが流出することはできない。\n\n[XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) 以外の要素からは複数のシーケンスフローが流出することはできないため、\nそれらの要素から流出するシーケンスフローについては、フロー進行条件を定義する必要はなく、また、定義しても\n無視される。\n\n[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) であらかじめ提供しているフロー進行条件については、 [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) を参照。",
+      "content": "**記法**\n\n![sequence-flow.png](assets/workflow-WorkflowProcessElement/sequence-flow.png)\n\nフローノード間の進行方向と、そのフローに沿ってワークフローが進行するための条件（フロー進行条件）を定義する要素。\n\n[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) では並行処理となるようなワークフローの分岐・合流をサポートしないため、 [XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) からは\n複数のシーケンスフローが流出することができるが、それ以外の要素からは、複数のシーケンスフローが流出することはできない。\n\n[XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) 以外の要素からは複数のシーケンスフローが流出することはできないため、\nそれらの要素から流出するシーケンスフローについては、フロー進行条件を定義する必要はなく、また、定義しても\n無視される。\n\n[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) であらかじめ提供しているフロー進行条件については、 [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) を参照。",
       "level": 2
     },
     {
       "id": "s3",
       "title": "タスク",
-      "content": "**記法**\n![task.png](assets/workflow-WorkflowProcessElement/task.png)\n\nワークフロープロセスで、ユーザが画面などから実行する処理や、バッチなどにより自動的に実行される処理などの\n存在を定義するフローノード。\n\n実際にタスクを行うユーザとして単一の [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-task-assignee) をアサインすることができる。\n\n> **Note:**\n> BPMNでは、「ユーザタスク」と呼ばれている要素であるが、ユーザだけでなくグループとしても担当の割り当てができること、\n> その他の種類のタスクをサポートしないことから、単に「タスク」としている。",
+      "content": "**記法**\n\n![task.png](assets/workflow-WorkflowProcessElement/task.png)\n\nワークフロープロセスで、ユーザが画面などから実行する処理や、バッチなどにより自動的に実行される処理などの\n存在を定義するフローノード。\n\n実際にタスクを行うユーザとして単一の [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-task-assignee) をアサインすることができる。\n\n> **Note:**\n> BPMNでは、「ユーザタスク」と呼ばれている要素であるが、ユーザだけでなくグループとしても担当の割り当てができること、\n> その他の種類のタスクをサポートしないことから、単に「タスク」としている。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "マルチインスタンス・タスク",
-      "content": "**記法**\n![mi-task.png](assets/workflow-WorkflowProcessElement/mi-task.png)\n\n複数の [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-task-assignee) を設定することのできるタスク。それらの実行ユーザが順番に処理するか、\n並行して処理するかを指定することができる。\n\nマルチインスタンス・タスクでは、そのタスクが実際に処理されるまでに、実行ユーザの数を動的に決定することができる。\n\nマルチインスタンス・タスクには、タスクが完了して次のフローノードに進行する条件（完了条件）を定義する必要がある。\nこれは自由に定義することができ、「合議」や「AND承認」「OR承認」は、完了条件を適切に設定することで実現できる。\n\n[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) であらかじめ提供しているマルチインスタンス・タスクの完了条件については、 [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#completioncondition) を参照。\n\n> **Note:**\n> BPMNでは、「マルチインスタンスアクティビティ」と呼ばれている要素であるが、\n> タスク以外のアクティビティをサポートしないことから、「マルチインスタンス・タスク」としている。",
+      "content": "**記法**\n\n![mi-task.png](assets/workflow-WorkflowProcessElement/mi-task.png)\n\n複数の [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-task-assignee) を設定することのできるタスク。それらの実行ユーザが順番に処理するか、\n並行して処理するかを指定することができる。\n\nマルチインスタンス・タスクでは、そのタスクが実際に処理されるまでに、実行ユーザの数を動的に決定することができる。\n\nマルチインスタンス・タスクには、タスクが完了して次のフローノードに進行する条件（完了条件）を定義する必要がある。\nこれは自由に定義することができ、「合議」や「AND承認」「OR承認」は、完了条件を適切に設定することで実現できる。\n\n[ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) であらかじめ提供しているマルチインスタンス・タスクの完了条件については、 [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#completioncondition) を参照。\n\n> **Note:**\n> BPMNでは、「マルチインスタンスアクティビティ」と呼ばれている要素であるが、\n> タスク以外のアクティビティをサポートしないことから、「マルチインスタンス・タスク」としている。",
       "level": 3
     },
     {
       "id": "s5",
       "title": "XORゲートウェイ",
-      "content": "**記法**\n![xor-gateway.png](assets/workflow-WorkflowProcessElement/xor-gateway.png)\n\nワークフローでの条件分岐をあらわすフローノード。\n\nこの要素からワークフローが進行する場合、流出する各シーケンスフローのフロー進行条件が評価されて、\n進行可能と判定されたシーケンスフローに従ってワークフローを進行させる。\n\n条件に合致するシーケンスフローが複数存在した場合、いずれかのシーケンスフローに従ってワークフローが進行するが、\nどのシーケンスフローに従うかは不定となる。XORゲートウェイから流出するシーケンスフローのフロー進行条件は、\n必ず排他的になるように設定すること。\n\nフロー進行条件についての詳細は、 [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) を参照。",
+      "content": "**記法**\n\n![xor-gateway.png](assets/workflow-WorkflowProcessElement/xor-gateway.png)\n\nワークフローでの条件分岐をあらわすフローノード。\n\nこの要素からワークフローが進行する場合、流出する各シーケンスフローのフロー進行条件が評価されて、\n進行可能と判定されたシーケンスフローに従ってワークフローを進行させる。\n\n条件に合致するシーケンスフローが複数存在した場合、いずれかのシーケンスフローに従ってワークフローが進行するが、\nどのシーケンスフローに従うかは不定となる。XORゲートウェイから流出するシーケンスフローのフロー進行条件は、\n必ず排他的になるように設定すること。\n\nフロー進行条件についての詳細は、 [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) を参照。",
       "level": 2
     },
     {
       "id": "s6",
       "title": "開始イベント",
-      "content": "**記法**\n![start-event.png](assets/workflow-WorkflowProcessElement/start-event.png)\n\nワークフローの開始を定義するフローノード。\n\nワークフロー定義には必ず一つの開始イベントが存在している必要がある。開始を定義するフローノードなので、\nこのフローノードにシーケンスフローが流入することはできない。",
+      "content": "**記法**\n\n![start-event.png](assets/workflow-WorkflowProcessElement/start-event.png)\n\nワークフローの開始を定義するフローノード。\n\nワークフロー定義には必ず一つの開始イベントが存在している必要がある。開始を定義するフローノードなので、\nこのフローノードにシーケンスフローが流入することはできない。",
       "level": 2
     },
     {
       "id": "s7",
       "title": "停止イベント",
-      "content": "**記法**\n![terminate-event.png](assets/workflow-WorkflowProcessElement/terminate-event.png)\n\nワークフローの完了を定義するフローノード。\n\nワークフローがこのフローノードに到達したとき、ワークフローは完了する。完了を定義するフローノードなので、\nこのフローノードからシーケンスフローが流出することはできない。",
+      "content": "**記法**\n\n![terminate-event.png](assets/workflow-WorkflowProcessElement/terminate-event.png)\n\nワークフローの完了を定義するフローノード。\n\nワークフローがこのフローノードに到達したとき、ワークフローは完了する。完了を定義するフローノードなので、\nこのフローノードからシーケンスフローが流出することはできない。",
       "level": 2
     },
     {
       "id": "s8",
       "title": "境界イベント",
-      "content": "**記法**\n![boundary-event.png](assets/workflow-WorkflowProcessElement/boundary-event.png)\n\nタスクと関連付けて定義され、タスクを中断して別のフローノードに強制的に移動させるようなワークフローを定義するためのフローノード。\n\n申請フローにおける、「 [申請者による引戻](../../extension/workflow/workflow-WorkflowProcessSample.md#workflow-pullback) 」などを実現するために利用することができる。\n\n関連付けられたタスクが処理可能（ [アクティブフローノード](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-active-flow-node) ）となっているときに境界イベントが発生すると、\nそのタスクを中断し、境界イベントから流出するシーケンスフローに従ってワークフローが進行する。\n\n各境界イベントには、そのイベントを発生させる「境界イベントトリガー」を定義しておき、\nアプリケーションは境界イベントトリガーを使用して、各境界イベントを発生させる。\n\n異なるタスクに対して、同じ境界イベントトリガーを持つ境界イベントを定義することもできる。\n\n> **Note:**\n> 「境界イベント」は、BPMNでは「中断メッセージ境界イベント」と呼ばれている要素であるが、\n> 「メッセージ」という単語を含むと紛らわしくなることと、 [ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) では他の境界イベントをサポートしないことから、\n> 単に「境界イベント」としている。\n\n> また、上記で「境界イベントトリガー」と呼んでいるものは、BPMNでは「メッセージ」として定義されている。\n> しかし、Nablarchでは既に「メッセージ」が複数の異なる意味で使用されているため、本機能では、\n> 「メッセージ」という単語を使用せず、「境界イベントトリガー」としている。",
+      "content": "**記法**\n\n![boundary-event.png](assets/workflow-WorkflowProcessElement/boundary-event.png)\n\nタスクと関連付けて定義され、タスクを中断して別のフローノードに強制的に移動させるようなワークフローを定義するためのフローノード。\n\n申請フローにおける、「 [申請者による引戻](../../extension/workflow/workflow-WorkflowProcessSample.md#workflow-pullback) 」などを実現するために利用することができる。\n\n関連付けられたタスクが処理可能（ [アクティブフローノード](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-active-flow-node) ）となっているときに境界イベントが発生すると、\nそのタスクを中断し、境界イベントから流出するシーケンスフローに従ってワークフローが進行する。\n\n各境界イベントには、そのイベントを発生させる「境界イベントトリガー」を定義しておき、\nアプリケーションは境界イベントトリガーを使用して、各境界イベントを発生させる。\n\n異なるタスクに対して、同じ境界イベントトリガーを持つ境界イベントを定義することもできる。\n\n> **Note:**\n> 「境界イベント」は、BPMNでは「中断メッセージ境界イベント」と呼ばれている要素であるが、\n> 「メッセージ」という単語を含むと紛らわしくなることと、 [ワークフローライブラリ](../../extension/workflow/workflow-workflow-doc-index.md) では他の境界イベントをサポートしないことから、\n> 単に「境界イベント」としている。\n\n> また、上記で「境界イベントトリガー」と呼んでいるものは、BPMNでは「メッセージ」として定義されている。\n> しかし、Nablarchでは既に「メッセージ」が複数の異なる意味で使用されているため、本機能では、\n> 「メッセージ」という単語を使用せず、「境界イベントトリガー」としている。",
       "level": 2
     },
     {
       "id": "s9",
       "title": "レーン",
-      "content": "**記法**\n![lane.png](assets/workflow-WorkflowProcessElement/lane.png)\n\nワークフロー上に担当ユーザとして現れるユーザの分類を表すために利用する。ワークフローの進行に利用されることはないが、\nレーンに対して担当ユーザ/担当グループを割り当てることができる。",
+      "content": "**記法**\n\n![lane.png](assets/workflow-WorkflowProcessElement/lane.png)\n\nワークフロー上に担当ユーザとして現れるユーザの分類を表すために利用する。ワークフローの進行に利用されることはないが、\nレーンに対して担当ユーザ/担当グループを割り当てることができる。",
       "level": 2
     }
   ]

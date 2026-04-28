@@ -76,6 +76,7 @@ Excelファイルを使用することで、外部インターフェース設計
 １つのテストケースで、同一グループIDかつ同一リクエストIDを持った電文が複数件送信される場合は、その件数分要求電文および応答電文のデータ行を記載すること。noの列の順番（連番）は送信される順番に一致する。
 
 テストケースの書き方についての詳細は、以下を参照すること。
+
 * [画面オンライン処理のテストケース一覧](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-testcases)
 * [バッチ処理のテストケース一覧](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#batch-test-testcases)
 

@@ -1139,10 +1139,15 @@ SqlResultSet rs = select.retrieve(form);
 > 上記実装で、実際に実行されるSQL文
 
 > アプリケーションで定義したSQL文
+
 > SELECT USER_ID,       USER_NAME  FROM USER_MTR WHERE USER_NAME LIKE :userName% ORDER BY USER_ID
+
 > データベースに対して実行されるSQL文(バインド変数名が置き換えられ、escape句が自動で付加される。
+
 > SELECT USER_ID,       USER_NAME  FROM USER_MTR WHERE USER_NAME LIKE ? ESCAPE '\' ORDER BY USER_ID
+
 > バインド変数にセットされる値
+
 > 1(:userName)     =   [ユーザ%]
 
 > **Warning:**

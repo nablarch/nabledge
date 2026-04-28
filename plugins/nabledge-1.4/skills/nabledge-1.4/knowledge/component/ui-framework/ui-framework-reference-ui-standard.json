@@ -19,7 +19,7 @@
     {
       "id": "s3",
       "title": "どうしてもIE6/7はサポートできないのか?",
-      "content": "現状のUI標準およびUI開発基盤ではIE6/7をサポートしていない。\nだが、プロジェクトの要件としてどうしても必要であれば、\nこれらのブラウザをサポートすることは技術的には可能である。\n\nただし、IE6/7をサポートする場合、対応コストの増大に加えて、以下の制約が発生する。\n\n**1. アイコンが表示できない**\nIE6では Web Font をサポートしていないので、アイコンを表示することができない。\n**2. マウスオーバ時の背景色反転ができない。**\nUI標準ではボタンやメニュー上にマウスが移動した場合に背景表示色を\n反転させるとしているが、IE6ではリンク要素以外での :hover 擬似セレクタをサポートしていないため、\nそのような効果は発生しない。\n\nなお、IE8の制約(ボタンの角丸表現、陰影表現ができない)はIE6/7にも当てはまる。\n実際にIE6のサポートが必要な場合は、ADCのNablarch担当窓口まで問い合わせを行うこと。",
+      "content": "現状のUI標準およびUI開発基盤ではIE6/7をサポートしていない。\nだが、プロジェクトの要件としてどうしても必要であれば、\nこれらのブラウザをサポートすることは技術的には可能である。\n\nただし、IE6/7をサポートする場合、対応コストの増大に加えて、以下の制約が発生する。\n\n**1. アイコンが表示できない**\n\nIE6では Web Font をサポートしていないので、アイコンを表示することができない。\n\n**2. マウスオーバ時の背景色反転ができない。**\n\nUI標準ではボタンやメニュー上にマウスが移動した場合に背景表示色を\n反転させるとしているが、IE6ではリンク要素以外での :hover 擬似セレクタをサポートしていないため、\nそのような効果は発生しない。\n\nなお、IE8の制約(ボタンの角丸表現、陰影表現ができない)はIE6/7にも当てはまる。\n実際にIE6のサポートが必要な場合は、ADCのNablarch担当窓口まで問い合わせを行うこと。",
       "level": 3
     },
     {
@@ -49,7 +49,7 @@
     {
       "id": "s8",
       "title": "画面の配色を変更したい",
-      "content": "画面の全体的な配色は **nablarch-css-color-default** プラグイン内のスタイル定義により\n一括変更することができる。\n\nデフォルトの配色は以下のような設定になっている。\n\n```css\n// Nablarchブランドカラーを基調とした配色設定\n@baseColor  : rgb(255, 255, 255); // 白\n@mainColor1 : rgb(235, 92,  21);  // オレンジ\n@mainColor2 : rgb(76,  42,  26);  // こげ茶\n@subColor   : rgb(170, 10,  10);  // 赤\n```\n\n各パラメータの役割は以下のとおり。\n\n**@baseColor**\n背景色\n**@mainColor1**\n前景色1 : メニューや見出し、入力部品などの主要要素の配色として使用\n**@mainColor2**\n前景色2 : 主に文字色として使用\n**@subColor**\n差し色 : 上記の3色以外で特にアクセントが必要な場合に使用\n\n> **Note:**\n> **[配色のポイント]**\n\n> **@mainColor2** が基本文字色になるので\n> **@mainColor1** の **@baseColor** に対するコントラストよりも、\n> **@mainColor2** の **@baseColor** に対するコントラストのほうが強くなるように設定するとよい。\n\n以下は配色の調整例である。\n左上のロゴは画像なので、別途差し替えが必要である。\n\n```css\n@baseColor  : rgb(255, 255, 255);              // 白\n@mainColor1 : darken(rgb(173, 210,  16), 15%); // 薄い緑\n@mainColor2 : darken(rgb(82,  108,   8), 20%); // 濃い緑\n@subColor   : rgb(348, 99, 8);                 // オレンジ\n```\n\n![ui_standard_color_scheme_sample.png](assets/ui-framework-reference-ui-standard/ui_standard_color_scheme_sample.png)",
+      "content": "画面の全体的な配色は **nablarch-css-color-default** プラグイン内のスタイル定義により\n一括変更することができる。\n\nデフォルトの配色は以下のような設定になっている。\n\n```css\n// Nablarchブランドカラーを基調とした配色設定\n@baseColor  : rgb(255, 255, 255); // 白\n@mainColor1 : rgb(235, 92,  21);  // オレンジ\n@mainColor2 : rgb(76,  42,  26);  // こげ茶\n@subColor   : rgb(170, 10,  10);  // 赤\n```\n\n各パラメータの役割は以下のとおり。\n\n**@baseColor**\n\n背景色\n\n**@mainColor1**\n\n前景色1 : メニューや見出し、入力部品などの主要要素の配色として使用\n\n**@mainColor2**\n\n前景色2 : 主に文字色として使用\n\n**@subColor**\n\n差し色 : 上記の3色以外で特にアクセントが必要な場合に使用\n\n> **Note:**\n> **[配色のポイント]**\n\n> **@mainColor2** が基本文字色になるので\n> **@mainColor1** の **@baseColor** に対するコントラストよりも、\n> **@mainColor2** の **@baseColor** に対するコントラストのほうが強くなるように設定するとよい。\n\n以下は配色の調整例である。\n左上のロゴは画像なので、別途差し替えが必要である。\n\n```css\n@baseColor  : rgb(255, 255, 255);              // 白\n@mainColor1 : darken(rgb(173, 210,  16), 15%); // 薄い緑\n@mainColor2 : darken(rgb(82,  108,   8), 20%); // 濃い緑\n@subColor   : rgb(348, 99, 8);                 // オレンジ\n```\n\n![ui_standard_color_scheme_sample.png](assets/ui-framework-reference-ui-standard/ui_standard_color_scheme_sample.png)",
       "level": 3
     },
     {
@@ -79,7 +79,7 @@
     {
       "id": "s13",
       "title": "共通エラー・メッセージ表示領域の表示を調整したい",
-      "content": "**共通エラーメッセージの表示スタイル**\n**nablarch-css-common** プラグインの **ui_public/css/common/nablarch.less** を修正する。\n**共通エラーメッセージの表示内容**\n**nablarch-template-page** プラグインの **ui_public/include/app_error.jsp** を修正する。\n**共通エラーメッセージの表示位置**\n**nablarch-template-page** プラグインの **ui_public/WEB-INF/tags/template/page_template.tag** を修正する。\n(上記インクルードファイルの読み込み位置を修正する。)",
+      "content": "**共通エラーメッセージの表示スタイル**\n\n**nablarch-css-common** プラグインの **ui_public/css/common/nablarch.less** を修正する。\n\n**共通エラーメッセージの表示内容**\n\n**nablarch-template-page** プラグインの **ui_public/include/app_error.jsp** を修正する。\n\n**共通エラーメッセージの表示位置**\n\n**nablarch-template-page** プラグインの **ui_public/WEB-INF/tags/template/page_template.tag** を修正する。\n(上記インクルードファイルの読み込み位置を修正する。)",
       "level": 3
     },
     {

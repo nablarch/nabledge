@@ -10,9 +10,11 @@ about
 ## 目次
 
 **はじめに**
+
 1. [Nablarch Mobile Library について](../../guide/biz-samples/biz-samples-about.md)
 
 **I: iOS ライブラリ**
+
 1. [iOS ライブラリについて](../../guide/biz-samples/biz-samples-00-Introduction.md)
 2. [モバイルアプリとNablarchサーバ間の通信](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md)
 3. [データの暗号化](../../guide/biz-samples/biz-samples-01-Encryption.md)

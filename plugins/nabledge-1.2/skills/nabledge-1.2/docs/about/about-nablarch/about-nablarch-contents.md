@@ -1,5 +1,3 @@
-
-
 ![Nablarch.jpg](../../../knowledge/assets/about-nablarch-contents/Nablarch.jpg)
 
 ## Nablarch の製品構成

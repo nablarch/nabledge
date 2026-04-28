@@ -1,9 +1,3 @@
-
-
-![handler_structure_bg.png](../../../knowledge/assets/libraries-validation-basic-validators/handler_structure_bg.png)
-
-![handler_bg.png](../../../knowledge/assets/libraries-validation-basic-validators/handler_bg.png)
-
 ## 基本バリデータ・コンバータ
 
 ### 基本バリデータ・コンバータ一覧

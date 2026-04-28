@@ -13,8 +13,11 @@
 受信電文読み込み時にエラーが発生した場合は、エラー応答電文オブジェクトを実行時例外として送出する。
 
 **クラス名**
+
 nablarch.fw.messaging.reader.MessageReader
+
 **読み込むデータの型**
+
 nablarch.fw.messaging.ReceivedMessage
 
 **設定項目一覧**

@@ -39,11 +39,14 @@ api/link.rst
 3. [共通方針](../../about/about-nablarch/about-nablarch-basic-policy.md)
 
 **I: NAF実行制御基盤**
+
 1. [NAF基本アーキテクチャ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md)
 2. [画面オンライン実行制御基盤](../../processing-pattern/web-application/web-application-web-gui.md)
 3. [バッチ実行制御基盤](../../processing-pattern/nablarch-batch/nablarch-batch-architectural-pattern-batch.md)
 4. [メッセージング実行制御基盤](../../processing-pattern/mom-messaging/mom-messaging-messaging.md)
+
 **II: NAF基盤ライブラリ**
+
 1. [ログ出力](../../component/libraries/libraries-01-Log.md)
 2. [リポジトリ](../../component/libraries/libraries-02-Repository.md)
 3. [同一スレッド内でのデータ共有(スレッドコンテキスト)](../../component/libraries/libraries-thread-context.md)
@@ -56,7 +59,9 @@ api/link.rst
 10. [静的データのキャッシュ](../../component/libraries/libraries-05-StaticDataCache.md)
 11. [入力値のバリデーション](../../component/libraries/libraries-core-library-validation.md)
 12. [メッセージ管理](../../component/libraries/libraries-07-Message.md)
+
 **III: NAF共通コンポーネント**
+
 1. [採番機能](../../component/libraries/libraries-06-IdGenerator.md)
 2. [排他制御機能](../../component/libraries/libraries-08-ExclusiveControl.md)
 3. [コード管理](../../component/libraries/libraries-02-CodeManager.md)
@@ -66,7 +71,9 @@ api/link.rst
 7. [JSPカスタムタグライブラリ](../../component/libraries/libraries-07-WebView.md)
 8. [ファイルアップロード業務処理用ユーティリティ](../../component/libraries/libraries-file-upload-utility.md)
 9. [ユーティリティ](../../component/libraries/libraries-99-Utility.md)
+
 **IV: リファレンス**
+
 1. [ハンドラリファレンス](../../component/handlers/handlers-handler.md)
 2. [データリーダリファレンス](../../component/readers/readers-reader.md)
 3. [APIドキュメント(Javadoc)](../javadoc/index.html)

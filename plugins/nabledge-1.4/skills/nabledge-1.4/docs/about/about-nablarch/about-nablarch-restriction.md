@@ -1,5 +1,3 @@
-
-
 ![Nablarch.jpg](../../../knowledge/assets/about-nablarch-restriction/Nablarch.jpg)
 
 ## Nablarchの知的財産権と利用制限

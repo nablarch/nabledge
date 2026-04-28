@@ -1,9 +1,3 @@
-
-
-![handler_structure_bg.png](../../../knowledge/assets/libraries-messaging-sender-util/handler_structure_bg.png)
-
-![handler_bg.png](../../../knowledge/assets/libraries-messaging-sender-util/handler_bg.png)
-
 ## 同期応答メッセージ送信ユーティリティ
 
 対外システムに対するメッセージの同期送信を行うユーティリティクラスである。
@@ -32,6 +26,7 @@
   送信メッセージおよび、応答されたメッセージの内容を格納するオブジェクト。
 
 **コードサンプル**
+
 以下はこれらのクラス機能を使用して実際にメッセージ送信処理を行う例である。
 
 ```java
@@ -61,6 +56,7 @@ try {
 本機能を利用するには、以下の2つの設定ファイルを用意する必要がある。
 
 **電文フォーマット定義ファイル**
+
 送受信電文内のメッセージボディ領域のフォーマット定義を記述したファイル。
 "format"論理パス配下にある以下のファイル名で作成する。
 
@@ -69,7 +65,9 @@ try {
 
 フォーマット定義ファイルを配置する論理パス名は、設定により変更することができる。(後述)
 フォーマット定義の記述方法については、 [汎用データフォーマット機能](../../component/libraries/libraries-record-format.md) を参照すること。
+
 **送信設定ファイル**
+
 送受信キューの論理名や再送要求の有無といった、送信処理の各種設定を記述したファイル。
 [リポジトリ](../../component/libraries/libraries-02-Repository.md) のプロパティファイルとして作成する。
 
@@ -104,16 +102,23 @@ messageSender.RM11AD0101.timeout=3000
 #### 送信定義ファイルの設定項目
 
 **送信設定一覧(キューメッセージング、HTTPメッセージング共通)**
+
 **共通設定**
+
 | 項目名 | 内容 |
 |---|---|
 | messageSender.DEFAULT.syncMessagingEventHookNames | MessageSender拡張用クラスをリポジトリから取得する際に使用するコンポーネント名 (複数指定可。セパレータは「,」) |
+
 **リクエストID毎設定**
+
 | 項目名 | 内容 |
 |---|---|
 | messageSender.リクエストID.syncMessagingEventHookNames | MessageSender拡張用クラスをリポジトリから取得する際に使用するコンポーネント名 (複数指定可。セパレータは「,」) |
+
 **送信設定一覧（キューメッセージング向け）**
+
 **共通設定**
+
 | 項目名 | 内容 |
 |---|---|
 | messageSender.DEFAULT.messagingProviderName | [メッセージングプロバイダ](../../component/libraries/libraries-enterprise-messaging-mom.md#messaging-provider) をリポジトリから取得する際に 使用するコンポーネント名 |
@@ -123,7 +128,9 @@ messageSender.RM11AD0101.timeout=3000
 | messageSender.DEFAULT.formatDir | フォーマット定義ファイルの格納ディレクトリ(論理名)。デフォルトは"format" |
 | messageSender.DEFAULT.headerFormatName | ヘッダフォーマット名 |
 | messageSender.DEFAULT.messageConvertorName | [SyncMessageConvertor](../../javadoc/nablarch/fw/messaging/SyncMessageConvertor.html) をリポジトリから取得する際に使用するコンポーネント名 |
+
 **リクエストID毎設定**
+
 | 項目名 | 内容 |
 |---|---|
 | messageSender.リクエストID.messagingProviderName | MessagingProviderをリポジトリから取得する際に使用するコンポーネント名。 デフォルト設定を指定しない場合は必須 |
@@ -138,8 +145,11 @@ messageSender.RM11AD0101.timeout=3000
 > **Note:**
 > MOMメッセージングについては、 [フレームワーク制御ヘッダ](../../component/libraries/libraries-enterprise-messaging-mom.md#fw-header) の利用を前提とし、
 > 再送電文フラグを利用した再送/タイムアウト制御等の機能を実装している。
+
 **送信設定一覧（HTTPメッセージング向け）**
+
 **共通設定**
+
 | 項目名 | 内容 |
 |---|---|
 | messageSender.DEFAULT.httpMessagingUserId | フレームワーク制御ヘッダーに設定するユーザID(任意項目) |
@@ -150,7 +160,9 @@ messageSender.RM11AD0101.timeout=3000
 | messageSender.DEFAULT.httpProxyHost | HttpProxy用のホスト名 |
 | messageSender.DEFAULT.httpProxyPort | HttpProxy用のポート番号 |
 | messageSender.DEFAULT.httpMessageIdGeneratorComponentName | HTTPヘッダに付与するメッセージID(キー名：X-Message-Id)の採番コンポーネント(任意項目)。  設定されている場合は、フレームワークがコンポーネントを呼び出して、メッセージIDを採番し、HTTPヘッダに設定する。未設定の場合は、メッセージIDは付与されない。 |
+
 **リクエストID毎設定**
+
 | 項目名 | 内容 |
 |---|---|
 | messageSender.リクエストID.messageSenderClient | MessageSenderClient通信クライアント(論理名)。HTTP通信時は必須。 |

@@ -1,5 +1,3 @@
-
-
 01_JspGenerator/01_JspGenerator
 01_JspGenerator/02_SetUpJspGeneratorTool
 02_EntityGenerator/01_EntityGenerator

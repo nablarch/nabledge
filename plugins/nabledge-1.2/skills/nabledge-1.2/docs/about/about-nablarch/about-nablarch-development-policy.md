@@ -1,5 +1,3 @@
-
-
 ![Nablarch.jpg](../../../knowledge/assets/about-nablarch-development-policy/Nablarch.jpg)
 
 ## Nablarchの目指す姿

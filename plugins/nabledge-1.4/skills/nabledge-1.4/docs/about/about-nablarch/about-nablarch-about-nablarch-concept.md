@@ -1,5 +1,3 @@
-
-
 ![Nablarch.jpg](../../../knowledge/assets/about-nablarch-about-nablarch-concept/Nablarch.jpg)
 
 ## Nablarchのコンセプト

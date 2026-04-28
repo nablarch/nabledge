@@ -79,12 +79,15 @@
 #### クラス定義
 
 a) nablarch.common.idgenerator.IdGeneratorの実装クラス
+
 | クラス名 | 概要 |
 |---|---|
 | テーブルを使用した採番クラス |  |
 | nablarch.common.idgenerator.TableIdGenerator | テーブル(採番用テーブル)を使用して、抜け番を発生させずに採番を行うクラス。  本クラスは、アプリケーションと同一のトランザクションを使用して採番処理を行う。 これにより業務処理と同じタイミングで採番された値が確定されるため、抜け番の発生を防止する事ができる。 また、業務処理の確定順に採番を行うことができる。  > **Warning:** > 業務トランザクションと同一のトランザクションが使用されるため、業務処理のトランザクションが確定するまで、 > 採番用テーブルのロックが保持された状態となる。 > ロックが保持されている状態で、他の処理が同一のIDを採番しようとすると、ロック解放待ちとなるため性能劣化の原因になる。  > このため、業務的に抜け番が許容されるIDの場合には、抜け番の可能性がある採番(FastTableIdGeneratorやSequenceIdGeneratorSupport) > を使用することを強く推奨する。  > 特にDB2やSQLServerを使用した場合は、ロックエスカレーション(ロックの範囲がレコードではなく、ページやテーブルへと拡大すること)が発生し、 > ロック待機がより広範囲に広がり、性能劣化がより顕著となる可能性があるため注意が必要である。 |
 | nablarch.common.idgenerator.FastTableIdGenerator | テーブル(採番用テーブル)を使用して、高速に採番を行うクラス。  本クラスは、アプリケーションとは異なるトランザクションを使用して採番処理を行い、即時にコミット処理を行う。 このため、ロック待機時間を最小限に抑えることができ、高速に採番処理を行うことができる。  本クラスは、テーブルを使用した採番部分はTableIdGeneratorに委譲して行い、トランザクション制御のみを実装している。 |
+
 b) nablarch.common.idgenerator.IdFormatterの実装クラス
+
 | クラス名 | 概要 |
 |---|---|
 | nablarch.common.idgenerator.formatter.LpadFormatter | 採番されたIDの桁数を揃えるフォーマッタークラス。  指定された桁数になるまで、指定された文字を先頭に付加する。 |
@@ -199,12 +202,16 @@ public class SampleGenerator {
 ##### 設定内容詳細
 
 a) 連番を採番するクラスの設定
+
 a)-1. componentの設定
+
 | 属性値 | 設定内容 |
 |---|---|
 | name(必須) | 任意の値を設定する。 各プロジェクトで作成する採番クラスが、SystemRepositoryから IdGeneratorを取得する際に使用する値となる。 |
 | class(必須) | nablarch.common.idgenerator.TableIdGenerator |
+
 a)-2. nablarch.common.idgenerator.TableIdGeneratorの設定
+
 | property名 | 設定内容 |
 |---|---|
 | tableName(必須) | 採番テーブルのテーブル物理名設定する。 |
@@ -213,13 +220,18 @@ a)-2. nablarch.common.idgenerator.TableIdGeneratorの設定
 | dbTransactionName | データベースコネクション名を設定する。 ビジネスロジックで無名のデータベース接続を使用する場合は、設定不要。  > **Warning:** > 無名のデータベース接続以外を使用する場合(本設定値を記述する場合)は、 > 必ずアプリケーションで使用するデータベース接続と同一のデータベースコネクション名を設定すること。 |
 
 ※採番テーブルのレイアウトは、 [採番テーブルの構造](../../component/libraries/libraries-06-IdGenerator.md#id-table-label) を参照。
+
 b) 高速に採番を行うクラスの設定
+
 b)-1. componentの設定
+
 | 属性値 | 設定内容 |
 |---|---|
 | name(必須) | 任意の値を設定する。 各プロジェクトで作成する採番クラスが、SystemRepositoryから IdGeneratorを取得する際に使用する値となる。 |
 | class(必須) | nablarch.common.idgenerator.FastTableIdGenerator |
+
 b)-2. nablarch.common.idgenerator.FastTableIdGeneratorの設定
+
 | property名 | 設定内容 |
 |---|---|
 | tableName(必須) | 採番テーブルのテーブル物理名設定する。 |

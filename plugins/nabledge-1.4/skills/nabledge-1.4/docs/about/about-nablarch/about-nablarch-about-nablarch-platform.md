@@ -1,5 +1,3 @@
-
-
 ![Nablarch.jpg](../../../knowledge/assets/about-nablarch-about-nablarch-platform/Nablarch.jpg)
 
 ## Nablarchフレームワークの稼動環境

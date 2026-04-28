@@ -112,6 +112,7 @@ public class SampleCheckValidator implements Validator {
 ```
 
 バリデータの実装ポイントは下記の通りである。
+
 1. デフォルトのエラーメッセージをプロパティに持つ。
 
 バリデーション結果のデフォルトのエラーメッセージは、バリデータのプロパティとして持つ。

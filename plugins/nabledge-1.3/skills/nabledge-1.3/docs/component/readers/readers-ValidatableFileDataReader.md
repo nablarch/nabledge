@@ -1,9 +1,3 @@
-
-
-![handler_structure_bg.png](../../../knowledge/assets/readers-ValidatableFileDataReader/handler_structure_bg.png)
-
-![handler_bg.png](../../../knowledge/assets/readers-ValidatableFileDataReader/handler_bg.png)
-
 ## 事前精査機能付きファイルデータリーダ
 
 [ファイルデータリーダ](../../component/readers/readers-FileDataReader.md) に対して、事前にファイルを全件読み込んで精査を行う機能を追加するデータリーダ。
@@ -18,8 +12,11 @@
 事前精査処理を必要とするバッチ処理の実装例については、 [事前精査処理の実装例](../../component/readers/readers-ValidatableFileDataReader.md#filevalidatoraction-implements) を参照すること。
 
 **クラス名**
+
 nablarch.fw.reader.ValidatableFileDataReader
+
 **読み込むデータの型**
+
 nablarch.core.dataformat.DataRecord
 
 **設定項目一覧**

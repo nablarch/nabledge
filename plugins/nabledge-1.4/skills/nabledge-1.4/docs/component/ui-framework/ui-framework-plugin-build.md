@@ -352,6 +352,7 @@ lessファイルは以下の形式で定義する。
 インポート対象ファイル名はファイルの配置フォルダからの相対パスで指定する。
 
 以下に定義例を示す。
+
 ```css
 @import "../../node_modules/nablarch-widget-field-base/ui_public/css/field/base";
 @import "../../node_modules/nablarch-widget-field-base/ui_public/css/field/base-wide";

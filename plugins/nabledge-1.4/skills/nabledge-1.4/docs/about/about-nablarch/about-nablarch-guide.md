@@ -1,5 +1,3 @@
-
-
 aboutThis
 01_NablarchOutline/01_NablarchOutline
 02_UnitTestOutline/01_UnitTestOutline

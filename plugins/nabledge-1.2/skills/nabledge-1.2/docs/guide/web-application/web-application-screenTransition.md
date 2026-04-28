@@ -1,5 +1,3 @@
-
-
 ## ボタン又はリンクによるサブミット
 
 ボタン又はリンクを使用して、フォームからサブミットを行う方法を示す。
@@ -27,7 +25,9 @@ uri属性の指定は [URIの指定方法](../../guide/web-application/web-appli
 次の遷移（遷移前後が共に同じActionクラス）を行う実装例を示す。
 
 W11AC02Action.doRW11AC0201
+
 →W11AC0201.jsp
+
 →W11AC02Action.doRW11AC0202
 
 * Actionクラスの実装例

@@ -1,5 +1,3 @@
-
-
 ![Nablarch.jpg](../../../knowledge/assets/about-nablarch-top-nablarch/Nablarch.jpg)
 
 ## Nablarch フォルダのコンテンツについて

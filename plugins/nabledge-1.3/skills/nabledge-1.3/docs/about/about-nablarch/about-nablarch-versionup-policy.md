@@ -1,5 +1,3 @@
-
-
 ![Nablarch.jpg](../../../knowledge/assets/about-nablarch-versionup-policy/Nablarch.jpg)
 
 ## Nablarch のバージョンアップ方針

@@ -13,10 +13,13 @@ HTTPレスポンスオブジェクト（ `HttpResponse` クラス）が提供す
 使用するHTTPレスポンスオブジェクトのメソッドを以下に記す。
 
 1. コンテンツタイプ、文字コードの設定
+
   `HttpResponse#setContentType(String)`
 2. ダウンロードファイル名、およびインライン表示有無の設定
+
   `HttpResponse#setContentDisposition(String)`
 3. レスポンスボディに対するデータの書き込み
+
   a) バイト配列(byte[])の場合 ： `HttpResponse#write(byte[])`
   b) 文字シーケンス(CharSequence)の場合 ： `HttpResponse#write(CharSequence)`
   c) 入力ストリーム(java.io.InputStream)の場合 ： `HttpResponse#setBodyStream(InputStream)`

@@ -1,5 +1,3 @@
-
-
 ## 命名ルール
 
 フレームワークでは、CSSのクラス名やJavaScriptの関数名など、フレームワークが規定する名前については、
@@ -133,8 +131,11 @@ HTMLエスケープを行わず、変数内のHTMLタグを直接出力したい
   デフォルトで使用可能なタグ、属性は以下の通り。
 
   **使用可能タグ**
+
   b big blockquote br caption center dd del dl dt em font h1 h2 h3 hr i ins li ol p small strong sub sup table td th tr u ul
+
   **使用可能属性**
+
   color size border colspan rowspan bgcolor
 
   > **Warning:**

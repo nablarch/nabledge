@@ -7,8 +7,11 @@
 [汎用データフォーマット機能](../../component/libraries/libraries-record-format.md) の項を参照すること。
 
 **クラス名**
+
 nablarch.fw.reader.FileDataReader
+
 **読み込むデータの型**
+
 nablarch.core.dataformat.DataRecord
 
 **設定項目一覧**

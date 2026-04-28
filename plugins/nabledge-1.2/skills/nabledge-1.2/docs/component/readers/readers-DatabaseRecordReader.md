@@ -3,8 +3,11 @@
 このデータリーダでは、初回読み込み時にデータベースに対してクエリを発行し、その結果セットの中から1レコードずつ読み込んで返す。
 
 **クラス名**
+
 nablarch.fw.reader.DatabaseRecordReader
+
 **読み込むデータの型**
+
 nablarch.core.db.statement.SqlRow
 
 **設定項目一覧**
@@ -15,6 +18,7 @@ nablarch.core.db.statement.SqlRow
 | 引数付きSQLステートメント | statement | ParameterizedSqlPStatement, Object |  |
 
 **使用例**
+
 引数付きプリペアステートメントを使用する場合。
 
 ```java

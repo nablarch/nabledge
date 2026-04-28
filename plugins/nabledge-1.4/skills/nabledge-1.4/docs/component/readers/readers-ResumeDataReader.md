@@ -1,9 +1,3 @@
-
-
-![handler_structure_bg.png](../../../knowledge/assets/readers-ResumeDataReader/handler_structure_bg.png)
-
-![handler_bg.png](../../../knowledge/assets/readers-ResumeDataReader/handler_bg.png)
-
 ## レジュームデータリーダ
 
 ファイルを読み込むデータリーダにレジューム機能を追加するデータリーダ。
@@ -14,8 +8,11 @@
 レジューム機能を追加したいデータリーダを本データリーダでラップすることにより、レジュームが有効となる。
 
 **クラス名**
+
 nablarch.fw.reader.ResumeDataReader
+
 **読み込むデータの型**
+
 ラップするデータリーダが読み込むデータの型
 
 **使用例**
