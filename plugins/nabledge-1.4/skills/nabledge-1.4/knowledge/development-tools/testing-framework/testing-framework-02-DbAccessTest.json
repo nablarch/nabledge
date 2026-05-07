@@ -19,7 +19,7 @@
     {
       "id": "s3",
       "title": "主なクラス, リソース",
-      "content": "| 名称 | 役割 | 作成単位 |\n|---|---|---|\n| テストクラス | テストロジックを実装する。 DbAccessTestSupportを継承すること。 | テスト対象クラスにつき１つ作成 |\n| テストデータ（Excelファイル ） | テーブルに格納する準備データや期待する結果 など、テストデータを記載する。 | テストクラスにつき１つ作成 |\n| テスト対象クラス | テストされるクラス。 | － |\n| DbAccessTestSupport | 準備データ投入などデータベースを使用するテスト に必要な機能を提供する。また、テスト実行前後に データベーストランザクションの開始・終了処理を 行う（ [デフォルト以外のトランザクションを使用したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#using-transactions) ）。 | － |",
+      "content": "| 名称 | 役割 | 作成単位 |\n|---|---|---|\n| テストクラス | テストロジックを実装する。 DbAccessTestSupportを継承すること。 | テスト対象クラスにつき１つ作成 |\n| テストデータ（Excelファイル ） | テーブルに格納する準備データや期待する結果 など、テストデータを記載する。 | テストクラスにつき１つ作成 |\n| テスト対象クラス | テストされるクラス。 | － |\n| DbAccessTestSupport | 準備データ投入などデータベースを使用するテスト に必要な機能を提供する。また、テスト実行前後に データベーストランザクションの開始・終了処理を 行う（ [デフォルト以外のトランザクションを使用したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#デフォルト以外のトランザクションを使用したい) ）。 | － |",
       "level": 4
     },
     {
@@ -103,19 +103,19 @@
     {
       "id": "s17",
       "title": "データベーステストデータの省略記述方法",
-      "content": "データベースの準備データおよび期待値を記述する際、\nテストに関係の無いカラムについては記述を省略できる。\n省略したカラムには、自動テストフレームワークにより [デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#default-values-when-column-omitted) が設定される。\nこの機能を利用することにより、テストデータの可読性が向上する。\nまた、テーブル定義が変更された場合でも、関係無いカラムであればテストデータ修正作業は発生しなくなる為、\n保守性が向上する。\n\nこの機能は特に更新系テストケースに有効である。多くのカラムのうち１カラムだけが更新される場合、\n不要なカラムを記述する必要がなくなる。\n\n> **Warning:**\n> データベース **検索結果** の期待値を記述する際は、\n> 検索対象カラム全てを記述しなければならない\n> （レコードの主キーだけを確認する、というような確認方法は不可）。\n\n> また、 **登録系** テストの場合も、新規に登録されたレコードの全カラムを確認する必要があるので、\n> 本機能を用いてカラムを省略することはできない。",
+      "content": "データベースの準備データおよび期待値を記述する際、\nテストに関係の無いカラムについては記述を省略できる。\n省略したカラムには、自動テストフレームワークにより [デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#デフォルト値) が設定される。\nこの機能を利用することにより、テストデータの可読性が向上する。\nまた、テーブル定義が変更された場合でも、関係無いカラムであればテストデータ修正作業は発生しなくなる為、\n保守性が向上する。\n\nこの機能は特に更新系テストケースに有効である。多くのカラムのうち１カラムだけが更新される場合、\n不要なカラムを記述する必要がなくなる。\n\n> **Warning:**\n> データベース **検索結果** の期待値を記述する際は、\n> 検索対象カラム全てを記述しなければならない\n> （レコードの主キーだけを確認する、というような確認方法は不可）。\n\n> また、 **登録系** テストの場合も、新規に登録されたレコードの全カラムを確認する必要があるので、\n> 本機能を用いてカラムを省略することはできない。",
       "level": 2
     },
     {
       "id": "s18",
       "title": "DBに準備データのカラムを省略する場合",
-      "content": "データベース準備データを記述する際にカラムを省略すると、省略されたカラムには\n [デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#default-values-when-column-omitted) が設定されているものとして扱われる。\n\nただし、 **主キーカラムを省略することはできない** 。",
+      "content": "データベース準備データを記述する際にカラムを省略すると、省略されたカラムには\n [デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#デフォルト値) が設定されているものとして扱われる。\n\nただし、 **主キーカラムを省略することはできない** 。",
       "level": 3
     },
     {
       "id": "s19",
       "title": "DB期待値のカラムを省略する場合",
-      "content": "DB期待値から単純に無関係なカラムを省略すると、省略されたカラムは比較対象外となる。\n更新系テストの場合には、「無関係なカラムが更新されていないことを確認する」という観点も必要である。\nこの場合、データタイプに EXPECTED_TABLE ではなく、 EXPECTED_COMPLETE_TABLE を使用する。\n EXPECTED_TABLE を使用した場合、省略されたカラムは比較対象外となるが、\nEXPECTED_COMPLETE_TABLE を使用した場合は、省略されたカラムには\n[デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#default-values-when-column-omitted) が格納されているものとして\n比較が行われる。",
+      "content": "DB期待値から単純に無関係なカラムを省略すると、省略されたカラムは比較対象外となる。\n更新系テストの場合には、「無関係なカラムが更新されていないことを確認する」という観点も必要である。\nこの場合、データタイプに EXPECTED_TABLE ではなく、 EXPECTED_COMPLETE_TABLE を使用する。\n EXPECTED_TABLE を使用した場合、省略されたカラムは比較対象外となるが、\nEXPECTED_COMPLETE_TABLE を使用した場合は、省略されたカラムには\n[デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#デフォルト値) が格納されているものとして\n比較が行われる。",
       "level": 3
     },
     {
@@ -193,7 +193,7 @@
     {
       "id": "s32",
       "title": "クラス単体テストにおける登録・更新系テストの注意点",
-      "content": "* 自動設定項目を利用してデータベースに登録・更新する際は、ThreadContextにリクエストIDとユーザIDが設定されている必要がある。テスト対象クラス起動前にこれらの値をThreadContextに設定しておくこと。\n  ThreadContextの設定方法については、次の項を参照。（  [ThreadContextにユーザID、リクエストIDなどを設定したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#using-threadcontext)  ）\n* デフォルト以外のトランザクションを使用する場合は、本フレームワークにトランザクション制御を行わせる必要がある。トランザクション制御の設定方法については、次の項を参照。（  [デフォルト以外のトランザクションを使用したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#using-transactions)  ）",
+      "content": "* 自動設定項目を利用してデータベースに登録・更新する際は、ThreadContextにリクエストIDとユーザIDが設定されている必要がある。テスト対象クラス起動前にこれらの値をThreadContextに設定しておくこと。\n  ThreadContextの設定方法については、次の項を参照。（  [ThreadContextにユーザID、リクエストIDなどを設定したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#threadcontextにユーザidリクエストidなどを設定したい)  ）\n* デフォルト以外のトランザクションを使用する場合は、本フレームワークにトランザクション制御を行わせる必要がある。トランザクション制御の設定方法については、次の項を参照。（  [デフォルト以外のトランザクションを使用したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#デフォルト以外のトランザクションを使用したい)  ）",
       "level": 3
     }
   ]

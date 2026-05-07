@@ -27,7 +27,7 @@
 | ハンドラ | 内容 |
 |---|---|
 | [共通起動ランチャ](../../component/handlers/handlers-Main.md) | 送信対象電文のリクエストIDを起動時の引数 **-messageRequestId** に指定する。 |
-| [メッセージングコンテキスト管理ハンドラ](../../component/handlers/handlers-MessagingContextHandler.md) | 本ハンドラでは、スレッドローカル上の [メッセージングコンテキスト](../../component/libraries/libraries-enterprise-messaging-mom.md#messaging-api) を用いて送信処理を行う。 |
+| [メッセージングコンテキスト管理ハンドラ](../../component/handlers/handlers-MessagingContextHandler.md) | 本ハンドラでは、スレッドローカル上の [メッセージングコンテキスト](../../component/libraries/libraries-enterprise-messaging-mom.md#メッセージング基盤api) を用いて送信処理を行う。 |
 | [トランザクション制御ハンドラ](../../component/handlers/handlers-TransactionManagementHandler.md) | トランザクションコミット完了後、およびロールバック時のコールバック内で、 送信ステータスの更新処理を行う。 |
 | [データリードハンドラ](../../component/handlers/handlers-DataReadHandler.md) | 本ハンドラが作成したデータリーダ ( [データベースレコードリーダ](../../component/readers/readers-DatabaseRecordReader.md) )  を 使用して処理対象レコードの読込みを行う。 |
 

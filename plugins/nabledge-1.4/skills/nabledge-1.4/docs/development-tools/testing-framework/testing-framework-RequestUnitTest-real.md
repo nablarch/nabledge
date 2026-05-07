@@ -7,7 +7,7 @@
 
 > **Note:**
 > リクエスト単体テストそのものの概要については、
-> [メッセージング処理におけるリクエスト単体テスト](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#real-sync-request-test-outline)
+> [メッセージング処理におけるリクエスト単体テスト](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#メッセージング処理におけるリクエスト単体テスト)
 > を参照。
 
 ### 全体像
@@ -137,4 +137,4 @@ Excelから読み込んだテストデータを編集するためのインタフ
 を参照。
 
 > **Note:**
-> パディングおよびバイナリデータの扱いは、 [固定長ファイル](../../development-tools/testing-framework/testing-framework-RequestUnitTest-batch.md#about-fixed-length-file) と同様である。
+> パディングおよびバイナリデータの扱いは、 [固定長ファイル](../../development-tools/testing-framework/testing-framework-RequestUnitTest-batch.md#固定長ファイル) と同様である。

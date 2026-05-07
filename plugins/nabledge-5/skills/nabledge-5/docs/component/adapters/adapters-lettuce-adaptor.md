@@ -6,8 +6,8 @@
 
 Nablarchが提供する下記の機能で [Redis(外部サイト、英語)](https://redis.io/) を使用できるようにするアダプタを提供する。
 
-* [セッションストア](../../component/libraries/libraries-session-store.md#session-store)
-* [ヘルスチェックエンドポイントハンドラ](../../component/handlers/handlers-health-check-endpoint-handler.md#health-check-endpoint-handler)
+* [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア)
+* [ヘルスチェックエンドポイントハンドラ](../../component/handlers/handlers-health-check-endpoint-handler.md#ヘルスチェックエンドポイントハンドラ)
 
 本アダプタでは、Redisのクライアントライブラリとして [Lettuce(外部サイト、英語)](https://redis.github.io/lettuce/) を使用している。
 

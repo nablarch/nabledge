@@ -47,8 +47,8 @@ ${attach:ファイルパス}
 
 ## 固定長ファイル、CSVファイルの場合
 
-[固定長ファイル](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#how-to-setup-fixed-length-file)や
-[CSVファイル](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#how-to-setup-csv-file) をアップロードする場合、
+[固定長ファイル](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#固定長ファイルの準備)や
+[CSVファイル](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#可変長ファイルcsvファイルの準備) をアップロードする場合、
 そのファイル内容をテストデータシートに記載する。
 テスト実行時に、自動テストフレームワークがこのデータを元にファイルを作成する。
 

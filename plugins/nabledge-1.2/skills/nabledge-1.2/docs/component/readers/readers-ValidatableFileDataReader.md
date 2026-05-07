@@ -9,7 +9,7 @@
 なお、事前精査ロジックは本データリーダが提供するインタフェース 「 **ファイルバリデータアクション** 」に実装する。
 ファイルバリデータアクションを使用することで、事前精査ロジックを業務処理ロジックから完全に分離することができる。
 
-事前精査処理を必要とするバッチ処理の実装例については、 [事前精査処理の実装例](../../component/readers/readers-ValidatableFileDataReader.md#filevalidatoraction-implements) を参照すること。
+事前精査処理を必要とするバッチ処理の実装例については、 [事前精査処理の実装例](../../component/readers/readers-ValidatableFileDataReader.md#事前精査処理の実装例) を参照すること。
 
 **クラス名**
 
@@ -48,7 +48,7 @@ DataReader<DataRecord> reader = new ValidatableFileDataReader()
 
 なお、 [FileBatchAction](../../javadoc/nablarch/fw/action/FileBatchAction.html) を継承したバッチ業務アクションを作成する場合は、 **getValidatorAction()メソッド**
 をオーバーライドし、ファイルバリデータアクションを返却するだけで事前精査を実現できる。
-詳細は [事前精査処理の実装例](../../component/readers/readers-ValidatableFileDataReader.md#filevalidatoraction-implements) を参照すること。
+詳細は [事前精査処理の実装例](../../component/readers/readers-ValidatableFileDataReader.md#事前精査処理の実装例) を参照すること。
 
 **事前精査時に読み込んだデータのキャッシュ**
 

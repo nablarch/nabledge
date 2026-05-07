@@ -74,12 +74,12 @@ HTMLタグとNablarchタグの対応を下記に示す。
 
 **使用禁止とするHTMLタグの属性**
 
-使用禁止とするHTMLタグの属性は、 [HTMLチェックツール](../../development-tools/toolbox/toolbox-03-HtmlCheckTool.md#html-check-tool) と同じ形式でCSVファイルに定義する。
-記述形式の詳細については、 [HTMLチェックツール](../../development-tools/toolbox/toolbox-03-HtmlCheckTool.md#html-check-tool) を参照。
+使用禁止とするHTMLタグの属性は、 [HTMLチェックツール](../../development-tools/toolbox/toolbox-03-HtmlCheckTool.md#htmlチェックツール) と同じ形式でCSVファイルに定義する。
+記述形式の詳細については、 [HTMLチェックツール](../../development-tools/toolbox/toolbox-03-HtmlCheckTool.md#htmlチェックツール) を参照。
 通常、使用禁止とするHTMLタグの内容を合わせるために、本ツールと [HTMLチェックツール](../../../../app_dev_guide/guide/development_guide/08_TestTools/03_HtmlCheckTool/index.html) で同じCSVファイルを使用する。
 
 デフォルトの定義を下記に示す。
-CSVファイルは、 [HTMLチェックツール](../../development-tools/toolbox/toolbox-03-HtmlCheckTool.md#html-check-tool) と併用することを想定しているため、
+CSVファイルは、 [HTMLチェックツール](../../development-tools/toolbox/toolbox-03-HtmlCheckTool.md#htmlチェックツール) と併用することを想定しているため、
 使用禁止タグ(appletなど)を含めることが可能となっている。
 
 ```bash
@@ -187,10 +187,10 @@ JSPファイルの先頭に下記のディレクティブを出力する。
 ## 使用方法
 
 ツールを使用する際は、 Eclipse の設定が必要になる。
-設定方法は [JSP自動生成ツール インストールガイド](../../development-tools/toolbox/toolbox-02-SetUpJspGeneratorTool.md#setupjspgeneratortool) を参照。
+設定方法は [JSP自動生成ツール インストールガイド](../../development-tools/toolbox/toolbox-02-SetUpJspGeneratorTool.md#jsp自動生成ツール-インストールガイド) を参照。
 
 一度上記設定を行った後は、 Eclipse上からツールを実行できる。
-実行方法は、 [HTMLファイルからの起動方法](../../development-tools/toolbox/toolbox-02-SetUpJspGeneratorTool.md#setupjspgeneratortool-howtoexecutefromeclipse) を参照。
+実行方法は、 [HTMLファイルからの起動方法](../../development-tools/toolbox/toolbox-02-SetUpJspGeneratorTool.md#htmlファイルからの起動方法) を参照。
 
 HTMLファイルと同じ場所にJSPファイルが生成される。
 HTMLファイルが含まれるディレクトリをリフレッシュすることでEclipse上で参照できる。

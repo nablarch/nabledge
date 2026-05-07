@@ -2,7 +2,7 @@
 
 ## ハンドラで共通の振る舞いを定義する
 
-エラー発生時の遷移先は、基本的にアクションのメソッドに対して [OnErrorインターセプタ](../../component/handlers/handlers-on-error.md#on-error-interceptor) や [OnErrorsインターセプタ](../../component/handlers/handlers-on-errors.md#on-errors-interceptor) を設定して指定する。
+エラー発生時の遷移先は、基本的にアクションのメソッドに対して [OnErrorインターセプタ](../../component/handlers/handlers-on-error.md#onerrorインターセプタ) や [OnErrorsインターセプタ](../../component/handlers/handlers-on-errors.md#onerrorsインターセプタ) を設定して指定する。
 
 しかし、システム全体で遷移先の画面を統一したい場合に、個別のアクションメソッドに対してアノテーションを指定するやり方では、
 漏れが発生したり遷移先のページの指定ミスが発生する可能性がある。
@@ -40,7 +40,7 @@ public class ExampleErrorForwardHandler implements Handler<Object, Object> {
 ## 1つの例外クラスに対して複数の遷移先がある場合の実装方法
 
 業務例外( ApplicationException )が発生した箇所によって、エラー時の遷移先画面を切り替えたい場合がる。
-しかし、 [OnErrorインターセプタ](../../component/handlers/handlers-on-error.md#on-error-interceptor) では、例外クラスに対して1つの遷移先しか指定できないため、
+しかし、 [OnErrorインターセプタ](../../component/handlers/handlers-on-error.md#onerrorインターセプタ) では、例外クラスに対して1つの遷移先しか指定できないため、
 ApplicationException に対して複数の遷移先の画面を指定できない。
 
 このような場合は、アクションのメソッド内で `try-catch` を用いて、例外を捕捉しエラー時の遷移先画面を設定する必要がある。

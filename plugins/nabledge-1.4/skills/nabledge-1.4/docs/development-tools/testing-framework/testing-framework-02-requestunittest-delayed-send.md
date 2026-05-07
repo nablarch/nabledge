@@ -38,8 +38,8 @@ public class RM11AC0301RequestTest extends BatchRequestTestSupport {
 
 テスト対象の成果物 のテストを行うために必要なデータシートの記述方法を説明する。
 
-データシートの記述方法は、 [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#message-sendsyncmessage-test) を参照すること。
-本項では、 [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#message-sendsyncmessage-test) と記述方法が異なる箇所の解説を行う。
+データシートの記述方法は、 [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#リクエスト単体テストの実施方法同期応答メッセージ送信処理) を参照すること。
+本項では、 [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#リクエスト単体テストの実施方法同期応答メッセージ送信処理) と記述方法が異なる箇所の解説を行う。
 
 ### 正常系ケースの準備
 

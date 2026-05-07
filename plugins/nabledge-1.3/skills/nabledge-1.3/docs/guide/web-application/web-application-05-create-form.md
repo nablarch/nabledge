@@ -10,7 +10,7 @@
   * Formクラスに精査処理を実装
   * Formクラスの単体テストを実行
 
-Formクラスの精査処理実装は [Entityの精査処理実装フロー](../../guide/web-application/web-application-04-create-entity.md#03-04-entity-impl-flow) と同じフローで行う。
+Formクラスの精査処理実装は [Entityの精査処理実装フロー](../../guide/web-application/web-application-04-create-entity.md#entityクラス精査処理の実装) と同じフローで行う。
 
 ## Formクラスのプロパティの実装
 
@@ -78,7 +78,7 @@ public class W11AC02Form {
 1. Form単体テストデータの作成
   Formクラスに登録機能の精査処理を実装するために、精査処理の単体テストデータを作成する。
 
-  [Entity単体テストのテストデータ](../../guide/web-application/web-application-04-create-entity.md#03-04-create-entity-test-data) と同じ観点で作成すればよい。
+  [Entity単体テストのテストデータ](../../guide/web-application/web-application-04-create-entity.md#entityクラスに実装する精査処理の単体テストを作成) と同じ観点で作成すればよい。
 
   今回の場合は、 `user` プロパティに対して、「漢字氏名」と「カナ氏名」の精査が行われていることのみ確認できればよい。
 
@@ -86,7 +86,7 @@ public class W11AC02Form {
   |---|---|---|
   | test/java/nablarch/sample/ss11AC | W11AC02FormTest.xlsx | testValidateForRegister |
 
-  以下に、テストデータの例を示しておく。（詳細は、 [Form/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTest.md#entityunittest) 参照）
+  以下に、テストデータの例を示しておく。（詳細は、 [Form/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTest.md#formentityのクラス単体テスト) 参照）
 
   ![form_test_validation_01.png](../../../knowledge/assets/web-application-05-create-form/form_test_validation_01.png)
 2. Form単体テストコードの作成

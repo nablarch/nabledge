@@ -30,7 +30,7 @@ DataReader
 
 フォームクラスのプロパティは全て String で定義する
 
-プロパティを String とすべき理由は、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation-form-property) を参照。
+プロパティを String とすべき理由は、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#バリデーションルールの設定方法) を参照。
 ただし、バイナリ項目の場合はバイト配列で定義する。
 
 > **Tip:**

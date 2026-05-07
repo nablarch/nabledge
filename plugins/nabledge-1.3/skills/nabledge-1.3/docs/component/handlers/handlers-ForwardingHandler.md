@@ -14,12 +14,12 @@
 これは、 **内部フォーワード** と呼ばれる処理で、遷移先の画面が単純な画面表示では無く、
 業務アクションでの処理を伴う場合などに用いられる。
 
-なお、内部フォーワード後は [リクエストオブジェクト](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#request-processing) 中のリクエストパスの値は
+なお、内部フォーワード後は [リクエストオブジェクト](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#リクエストの識別と業務処理の実行) 中のリクエストパスの値は
 フォーワード先のパスに書き換えられる。
 一方、スレッドコンテキスト中のリクエストIDの値はフォーワード後も同じ値である。
 
 フォーワード先のリクエストパスに対するリクエストIDは、同じスレッドコンテキスト中の
-[内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#internal-request-id) から参照できる。
+[内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#特殊なリクエスト処理) から参照できる。
 
 **関連するハンドラ**
 
@@ -80,7 +80,7 @@ forward:///app/user/registerForm.html  # 絶対パス指定
 以下の処理を行う。
 
 1. フォーワード先リクエストパスを **HttpRequest** オブジェクトのリクエストパスに設定する。
-2. フォーワード先リクエストパスから取得したリクエストIDをスレッドコンテキスト上の [内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#internal-request-id)
+2. フォーワード先リクエストパスから取得したリクエストIDをスレッドコンテキスト上の [内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#特殊なリクエスト処理)
   に設定する。
 3. 実行コンテキスト上のハンドラキューの内容を **1.** で作成したコピーに差し替えたうえで、
   後続のハンドラに対して再度処理を委譲し、その処理結果となるHTTPレスポンスオブジェクトを取得する。

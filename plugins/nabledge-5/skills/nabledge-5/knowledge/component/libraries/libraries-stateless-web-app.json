@@ -13,43 +13,43 @@
     {
       "id": "s2",
       "title": "HTTPセッションに依存している機能",
-      "content": "以下の機能は、デフォルトではHTTPセッションに依存している。\n\n* [セッションストア](../../component/libraries/libraries-session-store.md#session-store)\n* [2重サブミット防止](../../component/libraries/libraries-tag.md#tag-double-submission)\n* [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler)\n* [HTTPリライトハンドラ](../../component/handlers/handlers-http-rewrite-handler.md#http-rewrite-handler)\n* [hidden暗号化](../../component/libraries/libraries-tag.md#tag-hidden-encryption)",
+      "content": "以下の機能は、デフォルトではHTTPセッションに依存している。\n\n* [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア)\n* [2重サブミット防止](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ)\n* [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ)\n* [HTTPリライトハンドラ](../../component/handlers/handlers-http-rewrite-handler.md#httpリライトハンドラ)\n* [hidden暗号化](../../component/libraries/libraries-tag.md#クライアントに保持するデータを暗号化するhidden暗号化)",
       "level": 2
     },
     {
       "id": "s3",
       "title": "HTTPセッション非依存機能の導入方法",
-      "content": "[HTTPセッションに依存している機能](../../component/libraries/libraries-stateless-web-app.md#http-session-dependence) の各機能について以下の通り設定することでHTTPセッションへの依存をなくすことができる。",
+      "content": "[HTTPセッションに依存している機能](../../component/libraries/libraries-stateless-web-app.md#httpセッションに依存している機能) の各機能について以下の通り設定することでHTTPセッションへの依存をなくすことができる。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "セッションストア",
-      "content": "* [有効期間をデータベースに保存する](../../component/handlers/handlers-SessionStoreHandler.md#db-managed-expiration)",
+      "content": "* [有効期間をデータベースに保存する](../../component/handlers/handlers-SessionStoreHandler.md#有効期間をデータベースに保存する)",
       "level": 3
     },
     {
       "id": "s5",
       "title": "2重サブミット防止",
-      "content": "* [データベースを使用した二重サブミット防止](../../component/libraries/libraries-db-double-submit.md#db-double-submit)",
+      "content": "* [データベースを使用した二重サブミット防止](../../component/libraries/libraries-db-double-submit.md#データベースを使用した二重サブミット防止)",
       "level": 3
     },
     {
       "id": "s6",
       "title": "スレッドコンテキスト変数管理ハンドラ",
-      "content": "[スレッドコンテキストの初期化](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler-initialization) に以下の部品を使用しない。\n\n* LanguageAttributeInHttpSession\n* TimeZoneAttributeInHttpSession\n* UserIdAttribute\n\nそれぞれ、HTTPセッションを使用しない実装として以下の部品で代替できる。\n\n* LanguageAttributeInHttpCookie\n* TimeZoneAttributeInHttpCookie\n* UserIdAttributeInSessionStore",
+      "content": "[スレッドコンテキストの初期化](../../component/handlers/handlers-thread-context-handler.md#リクエスト毎にスレッドコンテキストの初期化を行う) に以下の部品を使用しない。\n\n* LanguageAttributeInHttpSession\n* TimeZoneAttributeInHttpSession\n* UserIdAttribute\n\nそれぞれ、HTTPセッションを使用しない実装として以下の部品で代替できる。\n\n* LanguageAttributeInHttpCookie\n* TimeZoneAttributeInHttpCookie\n* UserIdAttributeInSessionStore",
       "level": 3
     },
     {
       "id": "s7",
       "title": "HTTPリライトハンドラ",
-      "content": "[HTTPリライトハンドラ](../../component/handlers/handlers-http-rewrite-handler.md#http-rewrite-handler) を使用しない。\n使用する場合にはセッションスコープにアクセスしないよう設定する。",
+      "content": "[HTTPリライトハンドラ](../../component/handlers/handlers-http-rewrite-handler.md#httpリライトハンドラ) を使用しない。\n使用する場合にはセッションスコープにアクセスしないよう設定する。",
       "level": 3
     },
     {
       "id": "s8",
       "title": "hidden暗号化",
-      "content": "Nablarchでは [hidden暗号化](../../component/libraries/libraries-tag.md#tag-hidden-encryption) の機能を提供している。\nこの機能はHTTPセッションに依存しているため、使用しないよう [useHiddenEncryption](../../component/libraries/libraries-tag.md#tag-use-hidden-encryption) に `false` を設定する。",
+      "content": "Nablarchでは [hidden暗号化](../../component/libraries/libraries-tag.md#クライアントに保持するデータを暗号化するhidden暗号化) の機能を提供している。\nこの機能はHTTPセッションに依存しているため、使用しないよう [useHiddenEncryption](../../component/libraries/libraries-tag.md#クライアントに保持するデータを暗号化するhidden暗号化) に `false` を設定する。",
       "level": 3
     },
     {

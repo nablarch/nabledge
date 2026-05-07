@@ -17,7 +17,7 @@
 スレッドコンテキスト自体の解説については、 [同一スレッド内でのデータ共有(スレッドコンテキスト)](../../component/libraries/libraries-thread-context.md) を参照すること。
 
 > **Note:**
-> 本ハンドラで設定したスレッドローカル上の値は、 [スレッドコンテキスト変数削除ハンドラ](../../component/handlers/handlers-ThreadContextClearHandler.md#threadcontextclearhandler) を使用して、復路処理で削除を行うこと。
+> 本ハンドラで設定したスレッドローカル上の値は、 [スレッドコンテキスト変数削除ハンドラ](../../component/handlers/handlers-ThreadContextClearHandler.md#スレッドコンテキスト変数削除ハンドラ) を使用して、復路処理で削除を行うこと。
 > 往路処理にて本ハンドラより手前のハンドラでスレッドコンテキストにアクセスした場合、 値を取得することはできないため本ハンドラより手前ではスレッドコンテキストにアクセスしないよう注意すること。
 
 -----

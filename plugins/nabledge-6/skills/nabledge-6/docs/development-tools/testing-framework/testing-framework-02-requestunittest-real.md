@@ -30,11 +30,11 @@ public class RM21AA001ActionRequestTest extends MessagingRequestTestSupport {
 テストデータを記載したExcelファイルは、クラス単体テストと同様に
 テストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。
 
-テストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#how-to-write-excel) 」を参照。
+テストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#excelによるテストデータ記述) 」を参照。
 
 ### テストクラスで共通のデータベース初期値
 
-ウェブアプリケーションの場合と同様である。「 [テストクラスで共通のデータベース初期値](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#request-test-setup-db) 」を参照。
+ウェブアプリケーションの場合と同様である。「 [テストクラスで共通のデータベース初期値](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#テストクラスで共通のデータベース初期値) 」を参照。
 
 ### テストショット一覧
 
@@ -47,12 +47,12 @@ LIST_MAPのデータタイプで１テストメソッド分のテストショッ
 | no | テストケース番号を1からの連番で記載する。 | 必須 |
 | description | そのテストケースの説明を記載する。 | 必須 |
 | expectedStatusCode | 期待するステータスコード | 必須 |
-| setUpTable | 各テストケース実行前にデータベースに登録する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。データの投入は自動テストフレーム ワークにより行われる。 |  |
-| expectedTable | データベースの内容を比較する場合、期待するテーブルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。 |  |
+| setUpTable | 各テストケース実行前にデータベースに登録する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する [1] 。データの投入は自動テストフレーム ワークにより行われる。 |  |
+| expectedTable | データベースの内容を比較する場合、期待するテーブルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する [1] 。 |  |
 | expectedLog | 期待するログメッセージのIDを記載する。そのログメッセージが実際に出力されたかどうか、 自動テストフレームワークにて検証される。 |  |
-| diConfig | 常駐プロセスを実行する際のコンポーネント設定ファイルへのパスを記載する        。 ( [コマンドライン引数](../../component/handlers/handlers-main.md#main-run-application) を参照) [2] | 必須 |
-| requestPath | 常駐プロセスを実行する際のリクエストパスを記載する。 ( [コマンドライン引数](../../component/handlers/handlers-main.md#main-run-application) を参照) [2] | 必須 |
-| userId | 常駐プロセス実行ユーザIDを記載する。 ( [コマンドライン引数](../../component/handlers/handlers-main.md#main-run-application) を参照) [2] | 必須 |
+| diConfig | 常駐プロセスを実行する際のコンポーネント設定ファイルへのパスを記載する        。 ( [コマンドライン引数](../../component/handlers/handlers-main.md#アプリケーションを起動する) を参照) [2] | 必須 |
+| requestPath | 常駐プロセスを実行する際のリクエストパスを記載する。 ( [コマンドライン引数](../../component/handlers/handlers-main.md#アプリケーションを起動する) を参照) [2] | 必須 |
+| userId | 常駐プロセス実行ユーザIDを記載する。 ( [コマンドライン引数](../../component/handlers/handlers-main.md#アプリケーションを起動する) を参照) [2] | 必須 |
 
 デフォルトのグループIDを使用したい（グループIDを使わない）場合は、 default と記載する。
 デフォルトのグループIDと個別のグループは併用可能である。
@@ -67,7 +67,7 @@ LIST_MAPのデータタイプで１テストメソッド分のテストショッ
 
 #### データベースの準備
 
-[オンライン](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#request-test-testcases) と同様に、グループIDで対応付けを行う。
+[オンライン](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#テストケース一覧) と同様に、グループIDで対応付けを行う。
 
 ![msg_shot_to_db.png](../../../knowledge/assets/testing-framework-02-requestunittest-real/msg_shot_to_db.png)
 

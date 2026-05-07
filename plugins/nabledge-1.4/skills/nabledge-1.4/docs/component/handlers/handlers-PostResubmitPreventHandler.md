@@ -20,7 +20,7 @@
 このハンドラは、POSTで受け付けたリクエストに対して、リダイレクトを使用し再度リクエストを受け付けなおす処理を行う。
 結果、ブラウザからのPOSTデータ再送信を防止するように動作するため、POST再送信防止ハンドラと呼ぶ。
 
-JSPに [noCacheタグ](../../component/libraries/libraries-07-TagReference.md#webview-nocachetag) を指定していても、ブラウザの戻るボタンを押下し前画面に戻った場合、いわゆるF12開発者ツールなどで、
+JSPに [noCacheタグ](../../component/libraries/libraries-07-TagReference.md#nocacheタグ) を指定していても、ブラウザの戻るボタンを押下し前画面に戻った場合、いわゆるF12開発者ツールなどで、
 前画面で入力した内容を盗み見ることが可能である。これは、真正なユーザが操作している端末を、操作直後に悪意ある者に操作された場合に、
 セキュリティ上の脅威となりうる。
 
@@ -29,7 +29,7 @@ JSPに [noCacheタグ](../../component/libraries/libraries-07-TagReference.md#we
 リダイレクトを使用し再度リクエストを受け付けなおし、あわせてブラウザから送信される情報を管理することで、ブラウザの戻るボタン押下時でも、
 入力内容を盗み見ることができないように制御する。なお、multipartリクエストには対応していない。
 
-また、本ハンドラを有効にする場合、保護する情報を入力する [formタグ](../../component/libraries/libraries-07-TagReference.md#webview-formtag) のpreventPostResubmit属性をtrueに設定すること
+また、本ハンドラを有効にする場合、保護する情報を入力する [formタグ](../../component/libraries/libraries-07-TagReference.md#formタグ) のpreventPostResubmit属性をtrueに設定すること
 (preventPostResubmit属性をtrueにしたリクエストを「POST再送信防止が指示されたリクエスト」と呼ぶ)。
 
 POST再送信防止が指示されたリクエストで、リダイレクト後のGETリクエストが複数送信された場合、2回目以降のリクエストは設定されたパスに遷移する。

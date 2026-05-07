@@ -9,7 +9,7 @@ UI開発基盤の導入時に以下の手順を実施すればよく、各担当
 > **Note:**
 > 本節は、Nablarchのチュートリアルプロジェクトを例としてUI開発基盤の導入手順を記載している。
 > チュートリアルプロジェクトでは、 [CSSフレームワーク](../../component/ui-framework/ui-framework-css-framework.md) を使用しているが、
-> [マルチレイアウト用CSSフレームワーク](../../component/ui-framework/ui-framework-multicol-css-framework.md) を使用する場合には、 [マルチレイアウトモードの適用方法](../../component/ui-framework/ui-framework-multicol-css-framework.md#apply-multicol-layout)
+> [マルチレイアウト用CSSフレームワーク](../../component/ui-framework/ui-framework-multicol-css-framework.md) を使用する場合には、 [マルチレイアウトモードの適用方法](../../component/ui-framework/ui-framework-multicol-css-framework.md#マルチレイアウトモードの適用方法)
 > を参考に導入用の設定を行うこと。
 
 ## 0. 事前準備
@@ -179,10 +179,10 @@ tutorial_project/ui_plugins/package.json を任意のテキストエディタで
 各プラグインの内容については [UIプラグイン](../../component/ui-framework/ui-framework-plugins.md) の項を参照すること。
 
 削除したプラグインがlessファイルを含んでいる場合、プロジェクトではそのlessファイルも
-使用できなくなるため、 [lessインポート定義ファイル](../../component/ui-framework/ui-framework-plugin-build.md#lessimport-less) から、当該プラグインのlessファイルの
+使用できなくなるため、 [lessインポート定義ファイル](../../component/ui-framework/ui-framework-plugin-build.md#lessインポート定義ファイル) から、当該プラグインのlessファイルの
 import定義を削除する必要がある。
 
-[lessインポート定義ファイル](../../component/ui-framework/ui-framework-plugin-build.md#lessimport-less) には、以下のようにプロジェクトが各表示モードで使用するlessファイルの
+[lessインポート定義ファイル](../../component/ui-framework/ui-framework-plugin-build.md#lessインポート定義ファイル) には、以下のようにプロジェクトが各表示モードで使用するlessファイルの
 import定義が列挙されている。
 
 ```css
@@ -197,7 +197,7 @@ import定義が列挙されている。
 @import "../../node_modules/tutorial-template-error/ui_public/css/template/errorpage";
 ```
 
-上記で削除したプラグインに対応するlessファイルは、それぞれの [lessインポート定義ファイル](../../component/ui-framework/ui-framework-plugin-build.md#lessimport-less) から削除する必要がある。
+上記で削除したプラグインに対応するlessファイルは、それぞれの [lessインポート定義ファイル](../../component/ui-framework/ui-framework-plugin-build.md#lessインポート定義ファイル) から削除する必要がある。
 チュートリアルプロジェクトの場合は、以下の6ファイルから削除する。
 
 * tutorial_project/ui_plugins/css/ui_local/compact.less

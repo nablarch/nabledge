@@ -130,7 +130,7 @@
 
 ここまでで作成した業務画面テンプレート表示を行うJSPに、UI部品（ウィジェット）を配置して業務画面JSPを作成していく。
 
-具体的なウィジェットの利用方法や、ウィジェットと画面項目の対応については、 [業務画面JSPの例](../../component/ui-framework/ui-framework-create-with-widget.md#example) を参照のこと。
+具体的なウィジェットの利用方法や、ウィジェットと画面項目の対応については、 [業務画面JSPの例](../../component/ui-framework/ui-framework-create-with-widget.md#業務画面jspの例) を参照のこと。
 
 > **Warning:**
 > ウィジェットは以下のようなタグ形式で記述するが、自己終了エレメントとして記述するとブラウザでのレイアウト確認が行えなくなるため注意すること。
@@ -239,10 +239,10 @@ fieldウィジェットを利用して表示する入力項目は、入力画面
 
 ## 業務画面JSPの例
 
-* [入力画面](../../component/ui-framework/ui-framework-create-with-widget.md#input)
-* [確認画面](../../component/ui-framework/ui-framework-create-with-widget.md#confirm)
-* [検索・一覧画面](../../component/ui-framework/ui-framework-create-with-widget.md#list-search)
-* [詳細画面](../../component/ui-framework/ui-framework-create-with-widget.md#detail)
+* [入力画面](../../component/ui-framework/ui-framework-create-with-widget.md#業務画面jspの例)
+* [確認画面](../../component/ui-framework/ui-framework-create-with-widget.md#業務画面jspの例)
+* [検索・一覧画面](../../component/ui-framework/ui-framework-create-with-widget.md#業務画面jspの例)
+* [詳細画面](../../component/ui-framework/ui-framework-create-with-widget.md#業務画面jspの例)
 
 -----
 

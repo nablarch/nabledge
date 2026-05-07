@@ -19,19 +19,19 @@
     {
       "id": "s3",
       "title": "テストデータの書き方",
-      "content": "テストデータを記載したExcelファイルは、クラス単体テストと同様に\nテストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。\n\nテストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#how-to-write-excel) 」を参照。",
+      "content": "テストデータを記載したExcelファイルは、クラス単体テストと同様に\nテストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。\n\nテストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#excelによるテストデータ記述) 」を参照。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "テストクラスで共通のデータベース初期値",
-      "content": "画面オンラインの場合と同様である。「 [テストクラスで共通のデータベース初期値](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-setup-db) 」を参照。",
+      "content": "画面オンラインの場合と同様である。「 [テストクラスで共通のデータベース初期値](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#テストクラスで共通のデータベース初期値) 」を参照。",
       "level": 3
     },
     {
       "id": "s5",
       "title": "テストショット一覧",
-      "content": "LIST_MAPのデータタイプで１テストメソッド分のテストショット表を記載する。IDは、 **testShots** とする。\n\n１ケース毎に以下の要素を持たせる。\n\n| カラム名 | 説明 | 必須 |\n|---|---|---|\n| no | テストケース番号を1からの連番で記載する。 | 必須 |\n| description | そのテストケースの説明を記載する。 | 必須 |\n| expectedStatusCode | 期待するステータスコード | 必須 |\n| setUpTable | 各テストケース実行前にデータベースに登録する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。データの投入は自動テストフレーム ワークにより行われる。 |  |\n| expectedTable | データベースの内容を比較する場合、期待するテーブルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。 |  |\n| expectedLog | 期待するログメッセージのIDを記載する。そのログメッセージが実際に出力されたかどうか、 自動テストフレームワークにて検証される。 |  |\n| diConfig | 常駐プロセスを実行する際のコンポーネント設定ファイルへのパスを記載する。( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照)  [2] | 必須 |\n| requestPath | 常駐プロセスを実行する際のリクエストパスを記載する。( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照)  [2] | 必須 |\n| userId | 常駐プロセス実行ユーザIDを記載する。( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照)  [2] | 必須 |\n\nデフォルトのグループIDを使用したい（グループIDを使わない）場合は、 default と記載する。\nデフォルトのグループIDと個別のグループを併用することも可能である。\n両方のデータが混在した場合、デフォルトのグループIDのデータとグループID指定のデータ両方が有効になる。\n\nここで言う「常駐プロセス」とは、メッセージ送受信を行うプロセスのことである。",
+      "content": "LIST_MAPのデータタイプで１テストメソッド分のテストショット表を記載する。IDは、 **testShots** とする。\n\n１ケース毎に以下の要素を持たせる。\n\n| カラム名 | 説明 | 必須 |\n|---|---|---|\n| no | テストケース番号を1からの連番で記載する。 | 必須 |\n| description | そのテストケースの説明を記載する。 | 必須 |\n| expectedStatusCode | 期待するステータスコード | 必須 |\n| setUpTable | 各テストケース実行前にデータベースに登録する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する [1] 。データの投入は自動テストフレーム ワークにより行われる。 |  |\n| expectedTable | データベースの内容を比較する場合、期待するテーブルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する [1] 。 |  |\n| expectedLog | 期待するログメッセージのIDを記載する。そのログメッセージが実際に出力されたかどうか、 自動テストフレームワークにて検証される。 |  |\n| diConfig | 常駐プロセスを実行する際のコンポーネント設定ファイルへのパスを記載する。( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#コマンドライン引数) を参照)  [2] | 必須 |\n| requestPath | 常駐プロセスを実行する際のリクエストパスを記載する。( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#コマンドライン引数) を参照)  [2] | 必須 |\n| userId | 常駐プロセス実行ユーザIDを記載する。( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#コマンドライン引数) を参照)  [2] | 必須 |\n\nデフォルトのグループIDを使用したい（グループIDを使わない）場合は、 default と記載する。\nデフォルトのグループIDと個別のグループを併用することも可能である。\n両方のデータが混在した場合、デフォルトのグループIDのデータとグループID指定のデータ両方が有効になる。\n\nここで言う「常駐プロセス」とは、メッセージ送受信を行うプロセスのことである。",
       "level": 3
     },
     {
@@ -43,7 +43,7 @@
     {
       "id": "s7",
       "title": "データベースの準備",
-      "content": "[オンライン](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-testcases) と同様に、グループIDで対応付けを行う。\n\n![msg_shot_to_db.png](assets/testing-framework-02-requestunittest-real/msg_shot_to_db.png)\n\nテストショット一覧 にて、setUpTableの欄がない場合、または空欄の場合、データベース準備は行われない。",
+      "content": "[オンライン](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#テストケース一覧) と同様に、グループIDで対応付けを行う。\n\n![msg_shot_to_db.png](assets/testing-framework-02-requestunittest-real/msg_shot_to_db.png)\n\nテストショット一覧 にて、setUpTableの欄がない場合、または空欄の場合、データベース準備は行われない。",
       "level": 4
     },
     {

@@ -1,7 +1,7 @@
 {
   "id": "adapters-jsr310-adaptor",
   "title": "JSR310(Date and Time API)アダプタ",
-  "content": "**目次**\n\n* モジュール一覧\n* 使用方法\n\nJSR310(Date and Time API)で追加された日時関連を使用可能にするためのアダプタを提供する。\nこのアダプタを使用することで、 [BeanUtil](../../component/libraries/libraries-bean-util.md#bean-util) でJSR310(Date and Time API)を使用できる。\n\n> **Important:**\n> 本アダプタで提供される機能はNablarch 6u2よりフレームワーク本体に取り込まれているため、本アダプタを使用せずとも [BeanUtil](../../component/libraries/libraries-bean-util.md#bean-util) でJSR310(Date and Time API)を使用できる。\n> 本アダプタは後方互換を維持するために残している。\n\n> **Important:**\n> 本アダプタで対応している型は以下の通り。\n> これら以外の型を扱いたい場合は、プロジェクト側でConverterの追加などを行う必要がある。\n\n> * >   LocalDate\n> * >   LocalDateTime",
+  "content": "**目次**\n\n* モジュール一覧\n* 使用方法\n\nJSR310(Date and Time API)で追加された日時関連を使用可能にするためのアダプタを提供する。\nこのアダプタを使用することで、 [BeanUtil](../../component/libraries/libraries-bean-util.md#beanutil) でJSR310(Date and Time API)を使用できる。\n\n> **Important:**\n> 本アダプタで提供される機能はNablarch 6u2よりフレームワーク本体に取り込まれているため、本アダプタを使用せずとも [BeanUtil](../../component/libraries/libraries-bean-util.md#beanutil) でJSR310(Date and Time API)を使用できる。\n> 本アダプタは後方互換を維持するために残している。\n\n> **Important:**\n> 本アダプタで対応している型は以下の通り。\n> これら以外の型を扱いたい場合は、プロジェクト側でConverterの追加などを行う必要がある。\n\n> * >   LocalDate\n> * >   LocalDateTime",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -13,7 +13,7 @@
     {
       "id": "s2",
       "title": "使用方法",
-      "content": "変換可能な型や変換ルールなどの詳細は、 converter一覧 を参照。\n\n設定\n\n[システムリポジトリ](../../component/libraries/libraries-repository.md#repository) のコンポーネント設定ファイルに以下を追加することで、本機能が有効になる。\n\n```xml\n<import file=\"JSR310.xml\" />\n```\n\n> **Tip:**\n> 文字列から変換する際のフォーマットを変更したい場合は、以下の作業が必要となる。\n\n> フォーマットなどの定義を持つクラスを作成する\n\n> DateTimeConfiguration の実装クラスを追加し、\n> 日付や日時のフォーマットを定義する。\n> 基本実装の BasicDateTimeConfiguration を参考にすると良い\n\n> 追加したクラスをコンポーネント設定ファイルに定義する\n\n> コンポーネント名を `dateTimeConfiguration` として、コンポーネントを定義する。\n\n> 例を以下に示す。\n\n> ```xml\n> <component name=\"dateTimeConfiguration\" class=\"sample.SampleDateTimeConfiguration\" />\n> ```",
+      "content": "変換可能な型や変換ルールなどの詳細は、 converter一覧 を参照。\n\n設定\n\n[システムリポジトリ](../../component/libraries/libraries-repository.md#システムリポジトリ) のコンポーネント設定ファイルに以下を追加することで、本機能が有効になる。\n\n```xml\n<import file=\"JSR310.xml\" />\n```\n\n> **Tip:**\n> 文字列から変換する際のフォーマットを変更したい場合は、以下の作業が必要となる。\n\n> フォーマットなどの定義を持つクラスを作成する\n\n> DateTimeConfiguration の実装クラスを追加し、\n> 日付や日時のフォーマットを定義する。\n> 基本実装の BasicDateTimeConfiguration を参考にすると良い\n\n> 追加したクラスをコンポーネント設定ファイルに定義する\n\n> コンポーネント名を `dateTimeConfiguration` として、コンポーネントを定義する。\n\n> 例を以下に示す。\n\n> ```xml\n> <component name=\"dateTimeConfiguration\" class=\"sample.SampleDateTimeConfiguration\" />\n> ```",
       "level": 2
     }
   ]

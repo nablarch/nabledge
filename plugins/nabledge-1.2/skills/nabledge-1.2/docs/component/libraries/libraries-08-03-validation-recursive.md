@@ -2,7 +2,7 @@
 
 ## 複数の Form に対するバリデーション
 
-[バリデーションの実行と入力値の変換](../../component/libraries/libraries-08-02-validation-usage.md#validation-and-convert) の例では、1画面で1つの Form のみをバリデーションの対象としていた。
+[バリデーションの実行と入力値の変換](../../component/libraries/libraries-08-02-validation-usage.md#バリデーションの実行と入力値の変換) の例では、1画面で1つの Form のみをバリデーションの対象としていた。
 しかし実際のアプリケーションでは、1画面で入力した値を複数のテーブルに登録しなければならないことがほとんどである。
 このようなケースの画面をバリデーションする場合、2つ以上の Entity をバリデーションで使用することになる。
 
@@ -14,7 +14,7 @@
 2. 親Formの子Formを設定するセッタに、 @ValidationTarget アノテーションを設定する。
 3. 親Form、子Formに共通の名称 [1] で validateFor メソッドを作成する。
 
-例えば [Entity の使用](../../component/libraries/libraries-08-02-validation-usage.md#entity-usage) で示した USER テーブルと、ユーザが持つ住所を保持する
+例えば [Entity の使用](../../component/libraries/libraries-08-02-validation-usage.md#entity-の使用) で示した USER テーブルと、ユーザが持つ住所を保持する
 ADDRESS テーブルにまとめてデータを登録する画面の場合、下記のような Form を作成する。
 
 ```java
@@ -140,10 +140,10 @@ public class UserEntity {
 
 実際のアプリケーションでは、複数の住所を1つの画面で入力するなど、同一の Entity を複数まとめて入力する場面がしばしば発生する。
 
-このような場合、 [複数の Form に対するバリデーション](../../component/libraries/libraries-08-03-validation-recursive.md#multi-form-validation) で記載した方法と同様に Form に Form の配列を保持する実装を行うことで容易に実装を行える。
+このような場合、 [複数の Form に対するバリデーション](../../component/libraries/libraries-08-03-validation-recursive.md#複数の-form-に対するバリデーション) で記載した方法と同様に Form に Form の配列を保持する実装を行うことで容易に実装を行える。
 
 以下にカスタムタグを使用して、任意の数の Entity をバリデーションする実装例を示す。
-カスタムタグの詳細は [JSPカスタムタグライブラリの使用方法](../../component/libraries/libraries-07-CustomTag.md#custom-tag)  を参照のこと。
+カスタムタグの詳細は [JSPカスタムタグライブラリの使用方法](../../component/libraries/libraries-07-CustomTag.md#jspカスタムタグライブラリの使用方法)  を参照のこと。
 
 ### Form の実装
 
@@ -251,7 +251,7 @@ if (!validationResult.isValid()) {
 
 ## 可変配列長の Form 配列を入力する際の実装例
 
-上記 [Form の配列を入力する際のバリデーション](../../component/libraries/libraries-08-03-validation-recursive.md#form-array-validation) の例は、Entityの配列長が固定である場合の実装例である。
+上記 [Form の配列を入力する際のバリデーション](../../component/libraries/libraries-08-03-validation-recursive.md#form-の配列を入力する際のバリデーション) の例は、Entityの配列長が固定である場合の実装例である。
 
 一般的なアプリケーションでは、この項目長が可変であることが珍しくない。
 このような場合、ValidationTarget アノテーションの size の代わりに sizeKey を使用し、可変長項目をリクエストパラメータに加えることで、
@@ -260,7 +260,7 @@ if (!validationResult.isValid()) {
 JSPファイルでは、 sizeKey 属性で指定したキーで配列長が、リクエストパラメータとして送信されるよう設定する。
 このパラメータは、フレームワークがEntityの配列を処理するために使用する。
 
-以下に [Form の配列を入力する際のバリデーション](../../component/libraries/libraries-08-03-validation-recursive.md#form-array-validation) 例を可変長配列にした場合の実装例を示す。
+以下に [Form の配列を入力する際のバリデーション](../../component/libraries/libraries-08-03-validation-recursive.md#form-の配列を入力する際のバリデーション) 例を可変長配列にした場合の実装例を示す。
 
 ### Form の実装
 

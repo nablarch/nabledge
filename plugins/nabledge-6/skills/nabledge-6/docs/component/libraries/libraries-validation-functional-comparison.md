@@ -6,17 +6,17 @@
 
 | 機能 | Bean   Validation | Nablarch   Validation | Jakarta   Bean Validation |
 |---|---|---|---|
-| バリデーション対象の項目を指定できる | ○ [1] | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-execute) | ○ |
-| 階層構造を持つJava Beansオブジェクトに   対してバリデーションできる | ○ [2] | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-nest-bean) | ○ |
+| バリデーション対象の項目を指定できる | ○ [1] | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#バリデーションを実行する) | ○ |
+| 階層構造を持つJava Beansオブジェクトに   対してバリデーションできる | ○ [2] | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#一括登録のようなbeanの配列を入力とする機能でバリデーションを行う) | ○ |
 | メソッドの引数、戻り値に対してバリデーションできる | × [3] | × [3] | ○ |
-| 相関バリデーションができる | ○   [解説書へ](../../component/libraries/libraries-bean-validation.md#bean-validation-correlation-validation) | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-correlation-validation) | ○ |
-| バリデーションの実行順序を指定できる | × [4] | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-execute) | ○ |
-| 特定の項目の値を条件に   バリデーション項目を切り替えることが出来る | ○ [5] | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-conditional) | ○ |
-| エラーメッセージに埋め込みパラメータを使用できる | ○ [6]   [解説書へ](../../component/libraries/libraries-message.md#message) | ○   [解説書へ](../../component/libraries/libraries-message.md#message) | ○ |
-| ドメインバリデーションができる | ○   [解説書へ](../../component/libraries/libraries-bean-validation.md#bean-validation-domain-validation) | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-domain-validation) | × |
-| 値の型変換ができる | × [7] | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-definition-validator-convertor) | × |
-| 値の正規化ができる | × [8] | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-definition-validator-convertor) | × |
-| エラーメッセージに項目名を埋め込むことができる | ○   [解説書へ](../../component/libraries/libraries-bean-validation.md#bean-validation-property-name) | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-property-name) | × |
+| 相関バリデーションができる | ○   [解説書へ](../../component/libraries/libraries-bean-validation.md#相関バリデーションを行う) | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#相関バリデーションを行う) | ○ |
+| バリデーションの実行順序を指定できる | × [4] | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#バリデーションを実行する) | ○ |
+| 特定の項目の値を条件に   バリデーション項目を切り替えることが出来る | ○ [5] | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#ラジオボタンやリストボックスの選択値に応じてバリデーション項目を変更する) | ○ |
+| エラーメッセージに埋め込みパラメータを使用できる | ○ [6]   [解説書へ](../../component/libraries/libraries-message.md#メッセージ管理) | ○   [解説書へ](../../component/libraries/libraries-message.md#メッセージ管理) | ○ |
+| ドメインバリデーションができる | ○   [解説書へ](../../component/libraries/libraries-bean-validation.md#ドメインバリデーションを使う) | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#ドメインバリデーションを使う) | × |
+| 値の型変換ができる | × [7] | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#使用するバリデータとコンバータを設定する) | × |
+| 値の正規化ができる | × [8] | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#使用するバリデータとコンバータを設定する) | × |
+| エラーメッセージに項目名を埋め込むことができる | ○   [解説書へ](../../component/libraries/libraries-bean-validation.md#バリデーションエラー時のメッセージに項目名を含めたい) | ○   [解説書へ](../../component/libraries/libraries-nablarch-validation.md#バリデーションエラー時のメッセージに項目名を埋め込みたい) | × |
 
 Formの全ての項目に対してバリデーションを行うことで、不正な入力値の受付を防ぐことが出来る。 
 
@@ -37,7 +37,7 @@ Nablarchでは外部からデータを受け付けたタイミングで必ずバ
 
 Bean Validationでは、EL式を使用してパラメータを埋め込むこともできる。
 
-Bean Validationでは、プロパティの型は全てStringとして定義する([Stringで定義する理由](../../component/libraries/libraries-bean-validation.md#bean-validation-form-property))ため型変換は行わない。
+Bean Validationでは、プロパティの型は全てStringとして定義する([Stringで定義する理由](../../component/libraries/libraries-bean-validation.md#バリデーションルールの設定方法))ため型変換は行わない。
 型変換が必要な場合には、バリデーション実施後に BeanUtil を使って型変換する。
 
-正規化は、Bean Validationの機能ではなくハンドラとして提供している。正規化が必要な場合には、 [ノーマライズハンドラ](../../component/handlers/handlers-normalize-handler.md#normalize-handler) を使用して行う。
+正規化は、Bean Validationの機能ではなくハンドラとして提供している。正規化が必要な場合には、 [ノーマライズハンドラ](../../component/handlers/handlers-normalize-handler.md#ノーマライズハンドラ) を使用して行う。

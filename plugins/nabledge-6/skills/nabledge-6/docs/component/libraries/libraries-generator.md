@@ -16,14 +16,14 @@
 
 データベースのサロゲートキー(代理キー)の値を採番するための機能を提供する。
 
-この機能は、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) でサロゲートキーを採番(単純な連番を採番)する際に使用する。
+この機能は、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) でサロゲートキーを採番(単純な連番を採番)する際に使用する。
 
-なお、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) 以外でも使用できるが、
+なお、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) 以外でも使用できるが、
 以下の理由によりアプリケーション側で対応することを推奨する。
 
 理由
 
-サロゲートキーの採番処理は、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) が行うためアプリケーション側で直接採番機能を使用する必要が無い。
+サロゲートキーの採番処理は、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) が行うためアプリケーション側で直接採番機能を使用する必要が無い。
 それ以外の用途で値を採番する場合には、採番ルールが複雑であったり、採番した値を編集することが想定される。
 このような場合は、単純な連番を採番する本機能を使用できないため、アプリケーション側で設計、実装する必要がある。
 (本機能でも実現可能だが、設計及び実装(設定)が必要となるため、本機能を使うメリットは無い)
@@ -43,7 +43,7 @@
 なお、シーケンスを使って次の値を取得するためのSQL文は、
 データベースアクセス機能のダイアレクトを使用して構築する。
 
-ダイアレクト機能については、 [ダイアレクト](../../component/libraries/libraries-database.md#database-dialect) を参照。
+ダイアレクト機能については、 [ダイアレクト](../../component/libraries/libraries-database.md#データベースの方言を意識することなく使用できる) を参照。
 
 ### テーブルを使った値の採番が出来る
 
@@ -83,7 +83,7 @@
 
 ### ユニバーサルDAO用に採番を設定する
 
-[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) で本機能を使用するためには、 BasicDaoContextFactory に対する設定が必要となる。
+[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) で本機能を使用するためには、 BasicDaoContextFactory に対する設定が必要となる。
 
 この例では、シーケンス採番とテーブル採番の両方を設定しているが、使用しない採番の設定はしなくてよい。
 テーブル採番は推奨しないため、サロゲートキーの採番でシーケンス採番を使用する場合に sequenceIdGenerator を設定すれば良い。

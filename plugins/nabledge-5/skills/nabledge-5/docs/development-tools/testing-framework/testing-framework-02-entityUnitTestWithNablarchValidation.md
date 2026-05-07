@@ -5,7 +5,7 @@
 
 > **Tip:**
 > Form、Entityの責務については、各処理方式の責務配置を参照すること。
-> 例： [ウェブアプリケーションの責務配置](../../processing-pattern/web-application/web-application-application-design.md#application-design) 、 [Nablarchバッチアプリケーションの責務配置](../../processing-pattern/nablarch-batch/nablarch-batch-application-design.md#nablarch-batch-application-design)
+> 例： [ウェブアプリケーションの責務配置](../../processing-pattern/web-application/web-application-application-design.md#アプリケーションの責務配置) 、 [Nablarchバッチアプリケーションの責務配置](../../processing-pattern/nablarch-batch/nablarch-batch-application-design.md#アプリケーションの責務配置)
 
 ## Form/Entity単体テストの書き方
 
@@ -19,9 +19,9 @@
 
 テストデータを記載したExcelファイルそのものの作成方法を説明する。テストデータを記載したExcelファイルは、テストソースコードと同じディレクトリに同じ名前で格納する(拡張子のみ異なる)。
 なお、後述する
- [精査のテストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-validationcase) 、
- [コンストラクタのテストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-constructorcase) 、
- [setter、getterに対するテストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-settergettercase)
+ [精査のテストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#文字種と文字列長の単項目精査テストケース) 、
+ [コンストラクタのテストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#コンストラクタに対するテストケース) 、
+ [setter、getterに対するテストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#settergetterに対するテストケース)
 のそれぞれが、1シートずつ使用する前提である。
 
 テストデータの記述方法詳細については、 [自動テストフレームワーク](../../development-tools/testing-framework/testing-framework-01-Abstract.md) 、 [データベースを使用するクラスのテスト](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md) を参照。
@@ -126,10 +126,10 @@ public class SystemAccountEntityTest extends EntityTestSupport {
 | 全角記号その他 | 全角記号その他を許容するか |
 | 外字 | 外字を許容するか |
 
-messageIdWhenEmptyInputを省略した場合は、 [自動テストフレームワーク設定値](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-entitytestconfiguration) で設定したemptyInputMessageId
+messageIdWhenEmptyInputを省略した場合は、 [自動テストフレームワーク設定値](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#自動テストフレームワーク設定値) で設定したemptyInputMessageId
 の値が使用される。
 
-messageIdWhenInvalidLengthを省略した場合は、 [自動テストフレームワーク設定値](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-entitytestconfiguration) で
+messageIdWhenInvalidLengthを省略した場合は、 [自動テストフレームワーク設定値](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#自動テストフレームワーク設定値) で
 設定したデフォルト値が使用される。省略時にどのデフォルト値が使用されるかは、max欄及びmin欄の記載によって決まり、以下の通り。
 
 | min欄の記載 | maxとminの比較 | 省略時に使用されるデフォルト値 |
@@ -236,7 +236,7 @@ public class SystemAccountEntityTest extends EntityTestSupport {
 
 ひとつのキーに対して複数のパラメータを指定する場合は、input2, input3 というようにカラムを増やす。
 
- [セルへの特殊な記述方法](../../development-tools/testing-framework/testing-framework-01-Abstract.md#special-notation-in-cell) の記法を使用することで、効率的に入力値を作成できる。
+ [セルへの特殊な記述方法](../../development-tools/testing-framework/testing-framework-01-Abstract.md#セルへの特殊な記述方法) の記法を使用することで、効率的に入力値を作成できる。
 
 具体例を以下に示す。
 
@@ -305,7 +305,7 @@ public class SystemAccountEntityTest extends EntityTestSupport {
   * IDは"params"固定とする。
   * 上記のテストケース表に対応する、入力パラメータ [8] を1行ずつ記載する。
 
- [セルへの特殊な記述方法](../../development-tools/testing-framework/testing-framework-01-Abstract.md#special-notation-in-cell) の記法を使用することで、効率的に入力値を作成できる。
+ [セルへの特殊な記述方法](../../development-tools/testing-framework/testing-framework-01-Abstract.md#セルへの特殊な記述方法) の記法を使用することで、効率的に入力値を作成できる。
 
 具体例を以下に示す。
 
@@ -373,7 +373,7 @@ public class SystemAccountEntityTest extends EntityTestSupport {
 
 ##### 項目間精査など
 
-項目間精査など、バリデーションメソッドの [精査対象確認](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-validationmethodspecifynormal)
+項目間精査など、バリデーションメソッドの [精査対象確認](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#精査対象確認)
 で行った精査対象指定以外の動作確認を行うケースを作成する。
 
 下図では、"newPasswordとconfirmPasswordが等しいこと"というバリデーションメソッドに対する正常系のケースを作成している。
@@ -408,7 +408,7 @@ public class SystemAccountEntityTest extends EntityTestSupport {
 
 ### コンストラクタに対するテストケース
 
-Nablarch Validationで入力値チェックを実施しているEntityには、 [バリデーションを実行する](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-execute) に記載の通り
+Nablarch Validationで入力値チェックを実施しているEntityには、 [バリデーションを実行する](../../component/libraries/libraries-nablarch-validation.md#バリデーションを実行する) に記載の通り
 `Map<String, Object>` を引数にとるコンストラクタが実装されており、このコンストラクタに対するテストを作成する必要がある。
 
 コンストラクタに対するテストでは、引数に指定した値が、正しくプロパティに設定されているかを確認するケースを作成する。
@@ -419,7 +419,7 @@ Nablarch Validationで入力値チェックを実施しているEntityには、 
 テストでは、コンストラクタにこれらの値の組み合わせを与えたとき、各プロパティに指定した値が設定されているか(getterを呼び出して、想定通りの値が取得できるか)確認している。
 
 実際のテストコードでは、コンストラクタへの値の設定及び値の確認は、自動テストフレームワークで提供されるメソッド内で行われる。
-詳細は、 [テストコード](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#test-constructor-java-label) を参照すること。
+詳細は、 [テストコード](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#excelへの定義) を参照すること。
 
 > **Tip:**
 > Entityは自動生成されるため、アプリケーションで使用されないコンストラクタが生成される可能性がある。
@@ -511,11 +511,11 @@ public class SystemAccountEntityTest extends EntityTestSupport {
 
 ### setter、getterに対するテストケース
 
-[setter、getterに対するテストケース](../../development-tools/testing-framework/testing-framework-01-entityUnitTestWithBeanValidation.md#entityunittest-settergettercase-beanvalidation) を参照。
+[setter、getterに対するテストケース](../../development-tools/testing-framework/testing-framework-01-entityUnitTestWithBeanValidation.md#settergetterに対するテストケース) を参照。
 
 ### 自動テストフレームワーク設定値
 
-[文字種と文字列長の単項目精査テストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest-validationcase) を実施する際に必要な初期値設定について説明する。
+[文字種と文字列長の単項目精査テストケース](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#文字種と文字列長の単項目精査テストケース) を実施する際に必要な初期値設定について説明する。
 
 #### 設定項目一覧
 

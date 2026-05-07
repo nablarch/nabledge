@@ -14,9 +14,9 @@
 
 本ハンドラでは、以下の処理を行う。
 
-* [例外の種類に応じたログ出力](../../component/handlers/handlers-HttpErrorHandler.md#httperrorhandler-errorhandling)
-* [例外の種類に応じたエラー用HttpResponseの生成と返却](../../component/handlers/handlers-HttpErrorHandler.md#httperrorhandler-errorhandling)
-* [デフォルトページの設定](../../component/handlers/handlers-HttpErrorHandler.md#httperrorhandler-defaultpage)
+* [例外の種類に応じたログ出力](../../component/handlers/handlers-HttpErrorHandler.md#例外の種類に応じた処理とレスポンスの生成)
+* [例外の種類に応じたエラー用HttpResponseの生成と返却](../../component/handlers/handlers-HttpErrorHandler.md#例外の種類に応じた処理とレスポンスの生成)
+* [デフォルトページの設定](../../component/handlers/handlers-HttpErrorHandler.md#デフォルトページの設定)
 
 処理の流れは以下のとおり。
 
@@ -37,15 +37,15 @@
 
 ## 制約
 
-[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置すること
+[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#httpレスポンスハンドラ) より後ろに配置すること
 
 本ハンドラで生成した HttpResponse をHTTPレスポンスハンドラが処理するため、
-本ハンドラは [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置する必要がある。
+本ハンドラは [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#httpレスポンスハンドラ) より後ろに配置する必要がある。
 
-[HTTPアクセスログハンドラ](../../component/handlers/handlers-http-access-log-handler.md#http-access-log-handler) より後ろに配置すること
+[HTTPアクセスログハンドラ](../../component/handlers/handlers-http-access-log-handler.md#httpアクセスログハンドラ) より後ろに配置すること
 
 本ハンドラで生成したエラー用 HttpResponse を元にログ出力を行うため、
-[HTTPアクセスログハンドラ](../../component/handlers/handlers-http-access-log-handler.md#http-access-log-handler) より後ろに配置する必要がある。
+[HTTPアクセスログハンドラ](../../component/handlers/handlers-http-access-log-handler.md#httpアクセスログハンドラ) より後ろに配置する必要がある。
 
 ## 例外の種類に応じた処理とレスポンスの生成
 

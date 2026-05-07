@@ -1,7 +1,7 @@
 {
   "id": "blank-project-CustomizeDB",
   "title": "使用するRDBMSの変更手順",
-  "content": "**目次**\n\n* 前提\n* [Mavenリポジトリへのファイル登録](../../setup/blank-project/blank-project-maven.md#maven)\n\n  * JDBCドライバの登録\n* ファイル修正\n\n  * propertiesファイルの修正\n  * pom.xmlファイルの修正\n  * (本番環境でJNDIからコネクションを取得するプロジェクトの場合)コンポーネント設定ファイル (src/main/resources/)\n  * (本番環境でローカルにコネクションプールを作成するプロジェクトの場合)data-source.xml  (src/main/resources/)\n  * unit-test.xml  (src/test/resources)\n* Nablarchが使用するテーブル作成とデータの投入\n\n  * テーブル作成\n  * データの投入\n* 動作確認\n\nNablarchのアーキタイプを使用して作成したプロジェクトは、 **初期状態ではH2 Database Engine** (以下H2)を使用するように設定されている。\n\n別のRDBMSを使用するように設定変更する手順を記述する。",
+  "content": "**目次**\n\n* 前提\n* [Mavenリポジトリへのファイル登録](../../setup/blank-project/blank-project-maven.md#apache-mavenについて)\n\n  * JDBCドライバの登録\n* ファイル修正\n\n  * propertiesファイルの修正\n  * pom.xmlファイルの修正\n  * (本番環境でJNDIからコネクションを取得するプロジェクトの場合)コンポーネント設定ファイル (src/main/resources/)\n  * (本番環境でローカルにコネクションプールを作成するプロジェクトの場合)data-source.xml  (src/main/resources/)\n  * unit-test.xml  (src/test/resources)\n* Nablarchが使用するテーブル作成とデータの投入\n\n  * テーブル作成\n  * データの投入\n* 動作確認\n\nNablarchのアーキタイプを使用して作成したプロジェクトは、 **初期状態ではH2 Database Engine** (以下H2)を使用するように設定されている。\n\n別のRDBMSを使用するように設定変更する手順を記述する。",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -61,7 +61,7 @@
     {
       "id": "s10",
       "title": "propertiesファイルの修正",
-      "content": "env.properties内の以下の箇所を修正する。\n\n| プロパティ名 | 説明 | 使用するプロジェクト/モジュール |\n|---|---|---|\n| nablarch.connectionFactory.   jndiResourceName | JNDIでDataSourceを取得する際のリソース名 | * 各アーキタイプから生成したプロジェクト       (JNDIからコネクションを取得する環境のpropertiesファイル(後述)に設定) |\n| nablarch.db.jdbcDriver | JDBCドライバのクラス名 | * 各アーキタイプから生成したプロジェクト       (ローカルにコネクションプールを作成する環境のpropertiesファイル(後述)に設定) |\n| nablarch.db.url | データベースの接続URL | * 各アーキタイプから生成したプロジェクト       (ローカルにコネクションプールを作成する環境のpropertiesファイル(後述)に設定) |\n| nablarch.db.user | データベースアクセスユーザ名 | * 各アーキタイプから生成したプロジェクト       (ローカルにコネクションプールを作成する環境のpropertiesファイル(後述)に設定) |\n| nablarch.db.password | データベースアクセスユーザのパスワード | * 各アーキタイプから生成したプロジェクト       (ローカルにコネクションプールを作成する環境のpropertiesファイル(後述)に設定) |\n| nablarch.db.schema | 接続するスキーマ名 | * Nablarchのテスティングフレームワーク |\n\nアーキタイプからプロジェクトを生成した直後は、「JNDIからコネクションを取得する環境のpropertiesファイル」に以下が該当する。\n\n| プロジェクト種別 | JNDIからコネクションを取得する環境のpropertiesファイル |\n|---|---|\n| * ウェブ * RESTfulウェブサービス | * 本番環境用properties(src/env/prod/resources/env.properties) |\n| * JSR352に準拠したバッチ * Nablarchバッチ * コンテナ版ウェブ * コンテナ版RESTfulウェブサービス * コンテナ版Nablarchバッチ | なし |\n\nアーキタイプからプロジェクトを生成した直後は、「ローカルにコネクションプールを作成する環境のpropertiesファイル」に以下が該当する。\n\n| プロジェクト種別 | ローカルにコネクションプールを作成する環境のpropertiesファイル |\n|---|---|\n| * ウェブ * RESTfulウェブサービス | * 単体試験環境(打鍵テスト)用properties(src/env/dev/resources/env.properties) |\n| * JSR352に準拠したバッチ * Nablarchバッチ | * 単体試験環境(打鍵テスト)用properties(src/env/dev/resources/env.properties) * 本番環境用properties(src/env/prod/resources/env.properties) |\n| * コンテナ版ウェブ * コンテナ版RESTfulウェブサービス * コンテナ版Nablarchバッチ | * src/main/resources/env.properties [※解説](../../setup/blank-project/blank-project-CustomizeDB.md#container-production-config) |\n\n以下に、ローカルにコネクションプールを作成する環境のpropertiesファイル設定例を示す。",
+      "content": "env.properties内の以下の箇所を修正する。\n\n| プロパティ名 | 説明 | 使用するプロジェクト/モジュール |\n|---|---|---|\n| nablarch.connectionFactory.   jndiResourceName | JNDIでDataSourceを取得する際のリソース名 | * 各アーキタイプから生成したプロジェクト       (JNDIからコネクションを取得する環境のpropertiesファイル(後述)に設定) |\n| nablarch.db.jdbcDriver | JDBCドライバのクラス名 | * 各アーキタイプから生成したプロジェクト       (ローカルにコネクションプールを作成する環境のpropertiesファイル(後述)に設定) |\n| nablarch.db.url | データベースの接続URL | * 各アーキタイプから生成したプロジェクト       (ローカルにコネクションプールを作成する環境のpropertiesファイル(後述)に設定) |\n| nablarch.db.user | データベースアクセスユーザ名 | * 各アーキタイプから生成したプロジェクト       (ローカルにコネクションプールを作成する環境のpropertiesファイル(後述)に設定) |\n| nablarch.db.password | データベースアクセスユーザのパスワード | * 各アーキタイプから生成したプロジェクト       (ローカルにコネクションプールを作成する環境のpropertiesファイル(後述)に設定) |\n| nablarch.db.schema | 接続するスキーマ名 | * Nablarchのテスティングフレームワーク |\n\nアーキタイプからプロジェクトを生成した直後は、「JNDIからコネクションを取得する環境のpropertiesファイル」に以下が該当する。\n\n| プロジェクト種別 | JNDIからコネクションを取得する環境のpropertiesファイル |\n|---|---|\n| * ウェブ * RESTfulウェブサービス | * 本番環境用properties(src/env/prod/resources/env.properties) |\n| * JSR352に準拠したバッチ * Nablarchバッチ * コンテナ版ウェブ * コンテナ版RESTfulウェブサービス * コンテナ版Nablarchバッチ | なし |\n\nアーキタイプからプロジェクトを生成した直後は、「ローカルにコネクションプールを作成する環境のpropertiesファイル」に以下が該当する。\n\n| プロジェクト種別 | ローカルにコネクションプールを作成する環境のpropertiesファイル |\n|---|---|\n| * ウェブ * RESTfulウェブサービス | * 単体試験環境(打鍵テスト)用properties(src/env/dev/resources/env.properties) |\n| * JSR352に準拠したバッチ * Nablarchバッチ | * 単体試験環境(打鍵テスト)用properties(src/env/dev/resources/env.properties) * 本番環境用properties(src/env/prod/resources/env.properties) |\n| * コンテナ版ウェブ * コンテナ版RESTfulウェブサービス * コンテナ版Nablarchバッチ | * src/main/resources/env.properties [※解説](../../setup/blank-project/blank-project-CustomizeDB.md#コンテナの本番環境設定) |\n\n以下に、ローカルにコネクションプールを作成する環境のpropertiesファイル設定例を示す。",
       "level": 3
     },
     {
@@ -97,7 +97,7 @@
     {
       "id": "s16",
       "title": "コンテナの本番環境設定",
-      "content": "コンテナ用のプロジェクトでは、プロファイルによる環境設定の切り替えは行わない。\n代わりに、アプリケーションを動かす環境のOS環境変数を使って、 `env.properties` に宣言した設定値を上書きする。\n\nしたがって、OS環境変数を設定していない環境では `src/main/resources/env.properties` に書かれた設定がそのまま使用される。\n本番等のコンテナ環境で動かすときは、OS環境変数を使って `nablarch.db.url` などの環境依存値を適切に上書きしなければならない。\n\nOS環境変数で設定を上書きする方法については、 [OS環境変数を使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#repository-overwrite-environment-configuration-by-os-env-var) を参照。\n\nまた、プロファイルではなくOS環境変数で設定を切り替えるようにしている理由については、 [The Twelve-Factor App の III. 設定](https://12factor.net/ja/config) (外部サイト)を参照。",
+      "content": "コンテナ用のプロジェクトでは、プロファイルによる環境設定の切り替えは行わない。\n代わりに、アプリケーションを動かす環境のOS環境変数を使って、 `env.properties` に宣言した設定値を上書きする。\n\nしたがって、OS環境変数を設定していない環境では `src/main/resources/env.properties` に書かれた設定がそのまま使用される。\n本番等のコンテナ環境で動かすときは、OS環境変数を使って `nablarch.db.url` などの環境依存値を適切に上書きしなければならない。\n\nOS環境変数で設定を上書きする方法については、 [OS環境変数を使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#os環境変数を使って環境依存値を上書きする) を参照。\n\nまた、プロファイルではなくOS環境変数で設定を切り替えるようにしている理由については、 [The Twelve-Factor App の III. 設定](https://12factor.net/ja/config) (外部サイト)を参照。",
       "level": 4
     },
     {
@@ -145,7 +145,7 @@
     {
       "id": "s24",
       "title": "(本番環境でローカルにコネクションプールを作成するプロジェクトの場合)dependencies要素内",
-      "content": "dependencies要素内で、JDBCドライバの依存関係が記述されている箇所を修正する。\n\nデフォルトで記述されているdependency要素の例を示す。\n\n```xml\n<dependencies>\n  <!-- TODO: プロジェクトで使用するDB製品にあわせたJDBCドライバに修正してください。 -->\n  <!-- 中略 -->\n  <dependency>\n    <groupId>com.h2database</groupId>\n    <artifactId>h2</artifactId>\n    <version>2.1.214</version>\n    <scope>runtime</scope>\n  </dependency>\n  <!-- 中略 -->\n</dependencies>\n```\n\ndependency要素内の各要素については、[(本番環境でJNDIからコネクションを取得するプロジェクトの場合)profiles要素内](../../setup/blank-project/blank-project-CustomizeDB.md#customizedbprofiles) と同じように記述する。",
+      "content": "dependencies要素内で、JDBCドライバの依存関係が記述されている箇所を修正する。\n\nデフォルトで記述されているdependency要素の例を示す。\n\n```xml\n<dependencies>\n  <!-- TODO: プロジェクトで使用するDB製品にあわせたJDBCドライバに修正してください。 -->\n  <!-- 中略 -->\n  <dependency>\n    <groupId>com.h2database</groupId>\n    <artifactId>h2</artifactId>\n    <version>2.1.214</version>\n    <scope>runtime</scope>\n  </dependency>\n  <!-- 中略 -->\n</dependencies>\n```\n\ndependency要素内の各要素については、[(本番環境でJNDIからコネクションを取得するプロジェクトの場合)profiles要素内](../../setup/blank-project/blank-project-CustomizeDB.md#本番環境でjndiからコネクションを取得するプロジェクトの場合profiles要素内) と同じように記述する。",
       "level": 4
     },
     {
@@ -157,7 +157,7 @@
     {
       "id": "s26",
       "title": "(本番環境でローカルにコネクションプールを作成するプロジェクトの場合)data-source.xml  (src/main/resources/)",
-      "content": "本番環境でローカルにコネクションプールを作成するプロジェクトの場合、data-source.xmlにプロジェクトが使用するデータベースのDialectクラスが記述されている。\n\nこのDialectクラスを、使用するデータベースに対応したDialectクラスに修正する。\n\n使用するDialectクラスは、[(本番環境でJNDIからコネクションを取得するプロジェクトの場合)コンポーネント設定ファイル (src/main/resources/)](../../setup/blank-project/blank-project-CustomizeDB.md#customizedbwebcomponentconfiguration) と同一である。",
+      "content": "本番環境でローカルにコネクションプールを作成するプロジェクトの場合、data-source.xmlにプロジェクトが使用するデータベースのDialectクラスが記述されている。\n\nこのDialectクラスを、使用するデータベースに対応したDialectクラスに修正する。\n\n使用するDialectクラスは、[(本番環境でJNDIからコネクションを取得するプロジェクトの場合)コンポーネント設定ファイル (src/main/resources/)](../../setup/blank-project/blank-project-CustomizeDB.md#本番環境でjndiからコネクションを取得するプロジェクトの場合コンポーネント設定ファイル-srcmainresources) と同一である。",
       "level": 3
     },
     {
@@ -187,7 +187,7 @@
     {
       "id": "s31",
       "title": "動作確認",
-      "content": "以下の手順を参照し、動作確認を行う。\n\n* [ウェブの疎通確認](../../setup/blank-project/blank-project-setup-Web.md#firststepwebstartuptest)\n* [RESTfulウェブサービスの疎通確認](../../setup/blank-project/blank-project-setup-WebService.md#firststepwebservicestartuptest)\n* [JSR352に準拠したバッチの疎通確認](../../setup/blank-project/blank-project-setup-Jbatch.md#firststepbatcheestartuptest)\n* [Nablarchバッチの疎通確認](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepbatchstartuptest)\n* [コンテナ用ウェブの疎通確認](../../setup/blank-project/blank-project-setup-ContainerWeb.md#firststepcontainerwebstartuptest)\n* [コンテナ用RESTfulウェブサービスの疎通確認](../../setup/blank-project/blank-project-setup-ContainerWebService.md#firststepcontainerwebservicestartuptest)\n* [コンテナ用Nablarchバッチの疎通確認](../../setup/blank-project/blank-project-setup-ContainerBatch.md#firststepcontainerbatchstartuptest)",
+      "content": "以下の手順を参照し、動作確認を行う。\n\n* [ウェブの疎通確認](../../setup/blank-project/blank-project-setup-Web.md#疎通確認)\n* [RESTfulウェブサービスの疎通確認](../../setup/blank-project/blank-project-setup-WebService.md#疎通確認)\n* [JSR352に準拠したバッチの疎通確認](../../setup/blank-project/blank-project-setup-Jbatch.md#疎通確認)\n* [Nablarchバッチの疎通確認](../../setup/blank-project/blank-project-setup-NablarchBatch.md#疎通確認都度起動バッチ)\n* [コンテナ用ウェブの疎通確認](../../setup/blank-project/blank-project-setup-ContainerWeb.md#疎通確認)\n* [コンテナ用RESTfulウェブサービスの疎通確認](../../setup/blank-project/blank-project-setup-ContainerWebService.md#疎通確認)\n* [コンテナ用Nablarchバッチの疎通確認](../../setup/blank-project/blank-project-setup-ContainerBatch.md#疎通確認)",
       "level": 2
     }
   ]

@@ -82,7 +82,7 @@ public class MenuAction {
 全カスタムタグに関係する仕様について説明する。
 
 また、カスタムタグを使用する場合は、Webフロントコントローラのハンドラの設定が必須となる。
-ハンドラの設定方法については、 [NablarchTagHandlerの設定](../../component/libraries/libraries-07-HowToSettingCustomTag.md#webview-nablarchtaghandler) を参照。
+ハンドラの設定方法については、 [NablarchTagHandlerの設定](../../component/libraries/libraries-07-HowToSettingCustomTag.md#nablarchtaghandlerの設定) を参照。
 
 ./07_BasicRules
 
@@ -90,7 +90,7 @@ public class MenuAction {
 
 各カスタムタグの仕様について説明する。
 
-カスタムタグの一覧については、 [タグリファレンス](../../component/libraries/libraries-07-TagReference.md#webview-tagreference) を参照。
+カスタムタグの一覧については、 [タグリファレンス](../../component/libraries/libraries-07-TagReference.md#タグリファレンス) を参照。
 
 ### 入力に関するカスタムタグ
 
@@ -103,7 +103,7 @@ public class MenuAction {
 * 値を変数に設定する。
 
 各機能の詳細については下記を参照。
-値をフォーマットして出力する機能については、 [値のフォーマット出力](../../component/libraries/libraries-07-DisplayTag.md#web-view-format) を参照。
+値をフォーマットして出力する機能については、 [値のフォーマット出力](../../component/libraries/libraries-07-DisplayTag.md#値のフォーマット出力) を参照。
 
 ./07_FormTag
 
@@ -112,7 +112,7 @@ public class MenuAction {
 ./07_FormTagList
 
 > **Note:**
-> コードの入力に関するカスタムタグについては、 [コード値の表示](../../component/libraries/libraries-07-DisplayTag.md#code-tag) を参照。
+> コードの入力に関するカスタムタグについては、 [コード値の表示](../../component/libraries/libraries-07-DisplayTag.md#コード値の表示) を参照。
 
 ### 表示に関するカスタムタグ
 

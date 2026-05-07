@@ -28,7 +28,7 @@ MASTER_DATA.xls
 
 /Nablarch_sample/tool/db/data 配下
 
-マスタデータセットアップツールの使用方法： [マスタデータ投入ツール](../../development-tools/toolbox/toolbox-01-MasterDataSetupTool.md#master-data-setup-tool)
+マスタデータセットアップツールの使用方法： [マスタデータ投入ツール](../../development-tools/toolbox/toolbox-01-MasterDataSetupTool.md#マスタデータ投入ツール)
 
 ※追加する機能の認可チェックに必要なデータは、 MASTER_DATA.xls 内でセルを緑色にしている。
 

@@ -16,7 +16,7 @@
 
 * 一定間隔(データの監視間隔)毎に後続ハンドラの呼び出し。
 * 後続ハンドラで例外発生時に、このハンドラの継続有無などを判断する。
-  詳細は、 [後続ハンドラで発生した例外の扱い](../../component/handlers/handlers-process-resident-handler.md#process-resident-handler-exception) を参照。
+  詳細は、 [後続ハンドラで発生した例外の扱い](../../component/handlers/handlers-process-resident-handler.md#後続ハンドラで発生した例外の扱い) を参照。
 
 処理の流れは以下のとおり。
 
@@ -40,7 +40,7 @@
 本ハンドラは、リトライハンドラよりも後ろに設定すること
 
 本ハンドラで実行時例外を捕捉した場合、リトライ可能例外( RetryableException )でラップしてから再送出し、
-プロセスの継続制御を [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) に委譲する。
+プロセスの継続制御を [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#リトライハンドラ) に委譲する。
 このため、このハンドラはリトライハンドラより後に設定する必要がある。
 
 ## データの監視間隔を設定する
@@ -63,7 +63,7 @@
 ## プロセス常駐化ハンドラの終了方法
 
 このハンドラはプロセスの正常終了を示す例外が送出された場合に、後続のハンドラの呼び出しを止め処理を終了する。
-デフォルトでは、 [プロセス停止制御ハンドラ](../../component/handlers/handlers-process-stop-handler.md#process-stop-handler) が送出する処理停止を示す例外( ProcessStop (サブクラス含む))が送出された場合に、このハンドラは処理を終了する。
+デフォルトでは、 [プロセス停止制御ハンドラ](../../component/handlers/handlers-process-stop-handler.md#プロセス停止制御ハンドラ) が送出する処理停止を示す例外( ProcessStop (サブクラス含む))が送出された場合に、このハンドラは処理を終了する。
 
 プロセスの正常終了を示す例外を変更したい場合には、 normalEndExceptions プロパティに例外クラスのリストを設定する。
 なお、例外リストを設定する場合にはデフォルトの設定が上書きされるため、 ProcessStop の設定を忘れずに行う必要がある。
@@ -115,7 +115,7 @@
 
 後続のハンドラから戻された結果オブジェクトを、本ハンドラの戻り値として処理を終了する。
 
-プロセスを正常終了させる例外については、 [プロセス常駐化ハンドラの終了方法](../../component/handlers/handlers-process-resident-handler.md#process-resident-handler-normal-end) を参照。
+プロセスを正常終了させる例外については、 [プロセス常駐化ハンドラの終了方法](../../component/handlers/handlers-process-resident-handler.md#プロセス常駐化ハンドラの終了方法) を参照。
 
 上記以外の例外
 

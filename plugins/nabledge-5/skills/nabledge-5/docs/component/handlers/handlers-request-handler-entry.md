@@ -12,8 +12,8 @@
 本ハンドラを使用することで、「ウェブアプリケーションで特定のURLのみハンドラの処理を行う」といった機能を、
 ハンドラを修正することなく実現できる。
 
-本ハンドラの主な用途は、 [リソースマッピングハンドラ](../../component/handlers/handlers-resource-mapping.md#resource-mapping) を使用した、「静的コンテンツのダウンロードを一括処理する」機能の実現である。
-その他にも、 [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) や [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) と同時に使用することで
+本ハンドラの主な用途は、 [リソースマッピングハンドラ](../../component/handlers/handlers-resource-mapping.md#リソースマッピングハンドラ) を使用した、「静的コンテンツのダウンロードを一括処理する」機能の実現である。
+その他にも、 [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) や [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#トランザクション制御ハンドラ) と同時に使用することで
 「特定のURLのみ使用するデータベース接続を変える」といった用途にも使用できる。
 
 本ハンドラでは、以下の処理を行う。
@@ -46,7 +46,7 @@
 本ハンドラを使用する際は、処理対象とするリクエストパスを指定する `requestPattern` プロパティと、
 委譲先のハンドラを指定する `handler` プロパティを設定する。
 
-[リソースマッピングハンドラ](../../component/handlers/handlers-resource-mapping.md#resource-mapping) を使用して、JPEGファイルの静的コンテンツをダウンロードする設定例を以下に示す。
+[リソースマッピングハンドラ](../../component/handlers/handlers-resource-mapping.md#リソースマッピングハンドラ) を使用して、JPEGファイルの静的コンテンツをダウンロードする設定例を以下に示す。
 
 ```xml
 <!-- 画像ファイルの静的リソースダウンロードを行うハンドラ -->
@@ -84,7 +84,7 @@
 
 ## リクエストパターン指定のバリエーション
 
-[本ハンドラの使用例](../../component/handlers/handlers-request-handler-entry.md#request-handler-entry-usage) の設定例からわかるとおり、本ハンドラに指定する `requestPattern` プロパティ
+[本ハンドラの使用例](../../component/handlers/handlers-request-handler-entry.md#本ハンドラの使用例) の設定例からわかるとおり、本ハンドラに指定する `requestPattern` プロパティ
 には、 `//*.jpg` のようなGlob式に似た書式での設定が行える。
 
 ワイルドカードの設定例を以下に示す。

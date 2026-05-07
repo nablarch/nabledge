@@ -2,7 +2,7 @@
 
 本章では、顧客情報をデータベースへ登録する処理について解説する。
 
-[前へ](../../processing-pattern/web-application/web-application-client-create3.md#client-create-3)
+[前へ](../../processing-pattern/web-application/web-application-client-create3.md#登録内容確認画面から登録画面へ戻る)
 
 登録処理の実装
 
@@ -25,10 +25,10 @@ public HttpResponse create(HttpRequest request, ExecutionContext context) {
 
 この実装のポイント
 
-* [セッションストア](../../component/libraries/libraries-session-store.md#session-store) から顧客エンティティを取り出して、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) を使用してデータベースに登録する。
-* [セッションストア](../../component/libraries/libraries-session-store.md#session-store) から顧客情報を削除する。
+* [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア) から顧客エンティティを取り出して、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) を使用してデータベースに登録する。
+* [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア) から顧客情報を削除する。
 * レスポンスオブジェクトの遷移先として、登録完了画面の表示処理へのリダイレクトを指定する(完了画面でのブラウザの更新ボタン押下による顧客情報の多重登録を防ぐため)。
-  リダイレクトに指定するステータスコードについては、 [ステータスコード](../../processing-pattern/web-application/web-application-feature-details.md#web-feature-details-status-code) を参照。
+  リダイレクトに指定するステータスコードについては、 [ステータスコード](../../processing-pattern/web-application/web-application-feature-details.md#ステータスコード) を参照。
 
 二重サブミットを防止する
 
@@ -48,11 +48,11 @@ public HttpResponse create(HttpRequest request, ExecutionContext context) {
 この実装のポイント
 
 * OnDoubleSubmission を付与して、
-  業務アクションメソッドが二重に実行された場合にエラーページへ遷移させる。詳細は [二重サブミットを防ぐ](../../component/libraries/libraries-tag.md#tag-double-submission) を参照。
+  業務アクションメソッドが二重に実行された場合にエラーページへ遷移させる。詳細は [二重サブミットを防ぐ](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ) を参照。
 
 > **Tip:**
 > Exampleアプリケーションでは、二重サブミット時のデフォルトの遷移先画面を設定している。
-> デフォルトの遷移先の指定方法は、 [二重サブミットを防ぐ](../../component/libraries/libraries-tag.md#tag-double-submission) を参照。
+> デフォルトの遷移先の指定方法は、 [二重サブミットを防ぐ](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ) を参照。
 
 /src/main/webapp/WEB-INF/view/client/create.jsp
 
@@ -71,7 +71,7 @@ public HttpResponse create(HttpRequest request, ExecutionContext context) {
 
 この実装のポイント
 
-* [buttonタグ](../../component/libraries/libraries-tag-reference.md#tag-button-tag) の allowDoubleSubmission 属性にfalseを指定することで、二重サブミットを制御するJavaScriptが追加される。
+* [buttonタグ](../../component/libraries/libraries-tag-reference.md#buttonタグ) の allowDoubleSubmission 属性にfalseを指定することで、二重サブミットを制御するJavaScriptが追加される。
 * ブラウザのJavaScriptが無効になっている場合等を考慮して、サーバサイドでも二重サブミットを制御する。
 
 登録完了画面の表示処理を実装する

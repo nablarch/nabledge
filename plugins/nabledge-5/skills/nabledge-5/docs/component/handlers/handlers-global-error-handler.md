@@ -35,7 +35,7 @@
 
 もし、このハンドラより手前のハンドラで例外が発生した場合は、ウェブアプリケーションサーバやJVMにより例外処理が行われる。
 
-例外を捕捉した際にスレッドコンテキストの情報をログに出力したい場合は、 [スレッドコンテキスト変数削除ハンドラ](../../component/handlers/handlers-thread-context-clear-handler.md#thread-context-clear-handler) より後に配置すること。
+例外を捕捉した際にスレッドコンテキストの情報をログに出力したい場合は、 [スレッドコンテキスト変数削除ハンドラ](../../component/handlers/handlers-thread-context-clear-handler.md#スレッドコンテキスト変数削除ハンドラ) より後に配置すること。
 
 ## 例外及びエラーに応じた処理内容
 

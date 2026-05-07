@@ -20,8 +20,8 @@
 |---|---|
 | pom.xml | 起動に必要な設定と、jspanalysis.excludePatternsを設定する。 |
 | tools/nablarch-tools.xml | Antタスクの定義ファイル [1] 。通常編集することはない。 |
-| tools/static-analysis/jspanalysis/config.txt | Jakarta Server Pages静的解析ツール設定ファイル。記述方法は、 [Jakarta Server Pages静的解析ツール設定ファイルの記述方法](../../development-tools/toolbox/toolbox-01-JspStaticAnalysis.md#01-customjspanalysis) を参照。 |
-| tools/static-analysis/jspanalysis/transform-to-html.xsl | 解析結果のXMLをHTMLに変換する際の定義ファイル。  記述方法は、 [出力結果確認方法](../../development-tools/toolbox/toolbox-01-JspStaticAnalysis.md#01-outputjspanalysis) の「JSP解析(XMLレポート出力)」を参照。 |
+| tools/static-analysis/jspanalysis/config.txt | Jakarta Server Pages静的解析ツール設定ファイル。記述方法は、 [Jakarta Server Pages静的解析ツール設定ファイルの記述方法](../../development-tools/toolbox/toolbox-01-JspStaticAnalysis.md#jakarta-server-pages静的解析ツール設定ファイルの記述方法) を参照。 |
+| tools/static-analysis/jspanalysis/transform-to-html.xsl | 解析結果のXMLをHTMLに変換する際の定義ファイル。  記述方法は、 [出力結果確認方法](../../development-tools/toolbox/toolbox-01-JspStaticAnalysis.md#出力結果確認方法) の「JSP解析(XMLレポート出力)」を参照。 |
 | nablarch-archetype-parentのpom.xml | jspanalysis.excludePatterns以外を設定する。 |
 
 内部でAntを使用しているため存在する。利用者はMaven経由で実行するため通常意識することはない。

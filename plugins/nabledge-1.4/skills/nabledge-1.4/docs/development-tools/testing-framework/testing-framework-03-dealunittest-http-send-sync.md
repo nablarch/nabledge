@@ -2,11 +2,11 @@
 
 HTTP同期応答メッセージ送信処理を伴う画面オンライン処理で、取引単体テストを行う場合は、Nablarchが提供するモックアップクラスを使用する。
 
-取引単体テスト実施方法は、 [同期応答メッセージ送信処理を伴う取引単体テストの実施方法](../../development-tools/testing-framework/testing-framework-03-dealunittest-send-sync.md#dealunittest-send-sync) を参照すること。
+取引単体テスト実施方法は、 [同期応答メッセージ送信処理を伴う取引単体テストの実施方法](../../development-tools/testing-framework/testing-framework-03-dealunittest-send-sync.md#同期応答メッセージ送信処理を伴う取引単体テストの実施方法) を参照すること。
 
 ただし、「送信キュー」「受信キュー」を「通信先」と読み替えること。
 
-本項では、 [同期応答メッセージ送信処理を伴う取引単体テストの実施方法](../../development-tools/testing-framework/testing-framework-03-dealunittest-send-sync.md#dealunittest-send-sync) と異なる箇所の解説を行う。
+本項では、 [同期応答メッセージ送信処理を伴う取引単体テストの実施方法](../../development-tools/testing-framework/testing-framework-03-dealunittest-send-sync.md#同期応答メッセージ送信処理を伴う取引単体テストの実施方法) と異なる箇所の解説を行う。
 
 ## モックアップクラスを使用した取引単体テストの実施方法
 
@@ -25,7 +25,7 @@ Excelファイルに定義した応答電文のフォーマットおよびデー
 
 #### 電文のフォーマットおよびデータの記載方法
 
-同期応答メッセージ送信処理の [電文のフォーマットおよびデータの記載方法](../../development-tools/testing-framework/testing-framework-03-dealunittest-send-sync.md#send-sync-test-data-format) と同じ。
+同期応答メッセージ送信処理の [電文のフォーマットおよびデータの記載方法](../../development-tools/testing-framework/testing-framework-03-dealunittest-send-sync.md#電文のフォーマットおよびデータの記載方法) と同じ。
 
 ただし、HTTP通信は要求、応答電文ともにヘッダが存在しないため、本文のみ定義する。
 

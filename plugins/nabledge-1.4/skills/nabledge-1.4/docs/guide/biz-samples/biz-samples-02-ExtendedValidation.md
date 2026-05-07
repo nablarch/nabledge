@@ -163,7 +163,7 @@
 
   > **Warning:**
 > 全ての引数がnullまたは空文字列の場合、trueを返却する。
-  > 市外局番、市内局番、加入者番号の３項目が全て未入力のケースを許容しない場合は、本精査処理の呼び出し元で必須精査を行うこと。（下記の [実装例](../../guide/biz-samples/biz-samples-02-ExtendedValidation.md#telnum-fields-code) を参照。）
+  > 市外局番、市内局番、加入者番号の３項目が全て未入力のケースを許容しない場合は、本精査処理の呼び出し元で必須精査を行うこと。（下記の [実装例](../../guide/biz-samples/biz-samples-02-ExtendedValidation.md#実装例) を参照。）
 
 #### 実装例
 

@@ -23,8 +23,8 @@ Nablarchはフレームワークの構造上、自動計測エージェントが
 > そのため今後 AWS Distro for OpenTelemetry がリリースされ、Nablarchでの動作確認がとれた場合は、本章は AWS Distro for OpenTelemetry を使用した手順に差し替える可能性がある。
 
 以下にコンテナ用アーキタイプを使用した場合の例を示す。
-[受信HTTPリクエスト](../../setup/cloud-native/cloud-native-aws-distributed-tracing.md#xray-configuration-incoming-request) の設定だけでサービス間の関連はトレースできる。
-[送信HTTP呼び出し](../../setup/cloud-native/cloud-native-aws-distributed-tracing.md#xray-configuration-outgoing-http-calls) と [SQLクエリ](../../setup/cloud-native/cloud-native-aws-distributed-tracing.md#xray-configuration-sql-queries) はアプリケーションの要件に応じて設定する必要がある。
+[受信HTTPリクエスト](../../setup/cloud-native/cloud-native-aws-distributed-tracing.md#受信httpリクエスト) の設定だけでサービス間の関連はトレースできる。
+[送信HTTP呼び出し](../../setup/cloud-native/cloud-native-aws-distributed-tracing.md#送信http呼び出し) と [SQLクエリ](../../setup/cloud-native/cloud-native-aws-distributed-tracing.md#sqlクエリ) はアプリケーションの要件に応じて設定する必要がある。
 
 ## 依存関係の追加
 

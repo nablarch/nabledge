@@ -21,7 +21,7 @@
 
 ファイルの入出力などを行う機能では、論理名を指定するだけでそのディレクトリ配下のファイルに対する入出力が実現出来る。
 
-詳細は、 [ディレクトリと拡張子を設定する](../../component/libraries/libraries-file-path-management.md#file-path-management-definition) を参照
+詳細は、 [ディレクトリと拡張子を設定する](../../component/libraries/libraries-file-path-management.md#ディレクトリと拡張子を設定する) を参照
 
 ## モジュール一覧
 

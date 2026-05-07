@@ -1,7 +1,7 @@
 {
   "id": "handlers-process-stop-handler",
   "title": "プロセス停止制御ハンドラ",
-  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* プロセス停止制御を行うための設定\n\n本ハンドラは、以下のようなループ制御を行なうハンドラの後続に配置することで、\nループを中断してプロセス停止要求を示す例外を送出する機能を提供する。\n\n* [プロセス常駐化ハンドラ](../../component/handlers/handlers-process-resident-handler.md#process-resident-handler)\n* [トランザクションループ制御ハンドラ](../../component/handlers/handlers-loop-handler.md#loop-handler)\n* [リクエストスレッド内ループ制御ハンドラ](../../component/handlers/handlers-request-thread-loop-handler.md#request-thread-loop-handler)\n\n本ハンドラでは以下の処理を行う。\n\n* プロセス停止可否のチェック(プロセス停止フラグが\"1\"であればプロセス停止対象と判定)\n* プロセス停止処理\n\n> **Tip:**\n> 都度起動バッチでは、大量データに対する処理が終わらない場合などに、強制的に処理を停止するために本ハンドラを使用する。\n\n> **Important:**\n> 本ハンドラでは、プロセス停止フラグの初期化は行わない。\n> 再度同じプロセスを実行する際には、予めプロセス停止フラグを初期化すること。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-process-stop-handler/flow.png)",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* プロセス停止制御を行うための設定\n\n本ハンドラは、以下のようなループ制御を行なうハンドラの後続に配置することで、\nループを中断してプロセス停止要求を示す例外を送出する機能を提供する。\n\n* [プロセス常駐化ハンドラ](../../component/handlers/handlers-process-resident-handler.md#プロセス常駐化ハンドラ)\n* [トランザクションループ制御ハンドラ](../../component/handlers/handlers-loop-handler.md#トランザクションループ制御ハンドラ)\n* [リクエストスレッド内ループ制御ハンドラ](../../component/handlers/handlers-request-thread-loop-handler.md#リクエストスレッド内ループ制御ハンドラ)\n\n本ハンドラでは以下の処理を行う。\n\n* プロセス停止可否のチェック(プロセス停止フラグが\"1\"であればプロセス停止対象と判定)\n* プロセス停止処理\n\n> **Tip:**\n> 都度起動バッチでは、大量データに対する処理が終わらない場合などに、強制的に処理を停止するために本ハンドラを使用する。\n\n> **Important:**\n> 本ハンドラでは、プロセス停止フラグの初期化は行わない。\n> 再度同じプロセスを実行する際には、予めプロセス停止フラグを初期化すること。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-process-stop-handler/flow.png)",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -19,7 +19,7 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに設定すること\n\n本ハンドラは、スレッドコンテキスト上のリクエストIDをもとに停止処理を行うため、\n[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに本ハンドラを設定する必要がある。",
+      "content": "[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ) より後ろに設定すること\n\n本ハンドラは、スレッドコンテキスト上のリクエストIDをもとに停止処理を行うため、\n[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ) より後ろに本ハンドラを設定する必要がある。",
       "level": 2
     },
     {

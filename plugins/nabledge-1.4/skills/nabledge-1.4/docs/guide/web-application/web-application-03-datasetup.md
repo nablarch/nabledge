@@ -42,4 +42,4 @@
 以降は、Antビューに登録された「DB再セットアップ」ターゲットを実行すれば、
 データベースにマスタデータが反映される。
 
-詳細は [マスタデータ投入ツール](../../development-tools/toolbox/toolbox-01-MasterDataSetupTool.md#master-data-setup-tool) を参照。
+詳細は [マスタデータ投入ツール](../../development-tools/toolbox/toolbox-01-MasterDataSetupTool.md#マスタデータ投入ツール) を参照。

@@ -9,7 +9,7 @@
 このような人手によるミスを解消するため、リクエスト単体テストで生成されたHTMLを使用して、
 次画面へのリクエストパラメータを作成できるツールを提供する。
 
-リクエストパラメータのテストデータ記述方法については、 [リクエスト単体テストの実施方法](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md) （特に「  [リクエストパラメータ](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#request-test-req-params) 」の項 ）を参照
+リクエストパラメータのテストデータ記述方法については、 [リクエスト単体テストの実施方法](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md) （特に「  [リクエストパラメータ](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#リクエストパラメータ) 」の項 ）を参照
 
 ## 特徴
 
@@ -26,7 +26,7 @@
 ### 前提条件
 
 * 開発環境構築ガイドに従って開発環境を構築済みであること。
-* [リクエスト単体データ作成ツール インストールガイド](../../development-tools/testing-framework/testing-framework-02-SetUpHttpDumpTool.md) の [前提事項](../../development-tools/testing-framework/testing-framework-02-SetUpHttpDumpTool.md#http-dump-tool-prerequisite) 参照
+* [リクエスト単体データ作成ツール インストールガイド](../../development-tools/testing-framework/testing-framework-02-SetUpHttpDumpTool.md) の [前提事項](../../development-tools/testing-framework/testing-framework-02-SetUpHttpDumpTool.md#前提事項) 参照
 
 ### 入力となるHTML生成
 
@@ -40,7 +40,7 @@
 ### ツール起動
 
 Eclipse上からHTMLファイルを右クリックし、ツールを起動する。
-（ [HTMLファイルからの起動方法](../../development-tools/testing-framework/testing-framework-02-SetUpHttpDumpTool.md#howtoexecutefromeclipse) を参照）
+（ [HTMLファイルからの起動方法](../../development-tools/testing-framework/testing-framework-02-SetUpHttpDumpTool.md#htmlファイルからの起動方法) を参照）
 
 > **Tip:**
 > Windows上で本ツールを起動するとコマンドプロンプトが現れるが、これはツール内部で使用される内蔵サーバのプロセスである。本ツールを使用する間はこのコマンドプロンプトは実行したままにしておくとよい。ツール起動時に、既にサーバが起動されている場合はサーバ起動がスキップされるので、２回目以降のツール起動が速くなる。誤ってこのコマンドプロンプトを落としてしまっても、次回のツール起動時に自動的に起動されるので問題はない。

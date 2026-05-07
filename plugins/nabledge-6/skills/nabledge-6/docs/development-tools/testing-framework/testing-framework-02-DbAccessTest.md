@@ -17,7 +17,7 @@
 | テストクラス | テストロジックを実装する。 DbAccessTestSupportを継承すること。 | テスト対象クラスにつき１つ作成 |
 | テストデータ（Excelファイル ） | テーブルに格納する準備データや期待する結果 など、テストデータを記載する。 | テストクラスにつき１つ作成 |
 | テスト対象クラス | テストされるクラス。 | － |
-| DbAccessTestSupport | 準備データ投入などデータベースを使用するテスト に必要な機能を提供する。また、テスト実行前後に データベーストランザクションの開始・終了処理を 行う（ [デフォルト以外のトランザクションを使用したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#using-transactions) ）。 | － |
+| DbAccessTestSupport | 準備データ投入などデータベースを使用するテスト に必要な機能を提供する。また、テスト実行前後に データベーストランザクションの開始・終了処理を 行う（ [デフォルト以外のトランザクションを使用したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#デフォルト以外のトランザクションを使用したい) ）。 | － |
 
 ## 基本的なテスト方法
 
@@ -186,7 +186,7 @@ EXPECTED_TABLE=EMPLOYEE
 
 データベースの準備データおよび期待値を記述する際、
 テストに関係の無いカラムについては記述を省略できる。
-省略したカラムには、自動テストフレームワークにより [デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#default-values-when-column-omitted) が設定される。
+省略したカラムには、自動テストフレームワークにより [デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#デフォルト値) が設定される。
 この機能を使用することにより、テストデータの可読性が向上する。
 また、テーブル定義が変更された場合でも、関係無いカラムであればテストデータ修正作業は発生しなくなる為、
 保守性が向上する。
@@ -205,7 +205,7 @@ EXPECTED_TABLE=EMPLOYEE
 ### DBに準備データのカラムを省略する場合
 
 データベース準備データを記述する際にカラムを省略すると、省略されたカラムには
- [デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#default-values-when-column-omitted) が設定されているものとして扱われる。
+ [デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#デフォルト値) が設定されているものとして扱われる。
 
 ただし、 **主キーカラムは省略できない** 。
 
@@ -216,7 +216,7 @@ DB期待値から単純に無関係なカラムを省略すると、省略され
 この場合、データタイプに EXPECTED_TABLE ではなく、 EXPECTED_COMPLETE_TABLE を使用する。
  EXPECTED_TABLE を使用した場合、省略されたカラムは比較対象外となるが、
 EXPECTED_COMPLETE_TABLE を使用した場合は、省略されたカラムには
-[デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#default-values-when-column-omitted) が格納されているものとして
+[デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#デフォルト値) が格納されているものとして
 比較が行われる。
 
 ### 具体例
@@ -380,13 +380,13 @@ nablarch.test.core.db.BasicDefaultValuesクラスを使用し、
 ### クラス単体テストにおける登録・更新系テストの注意点
 
 * 自動設定項目を利用してデータベースに登録・更新する際は、ThreadContextにリクエストIDとユーザIDが設定されている必要がある。テスト対象クラス起動前にこれらの値をThreadContextに設定しておくこと。
-  ThreadContextの設定方法については、次の項を参照。（  [ThreadContextにユーザID、リクエストIDなどを設定したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#using-threadcontext)  ）
-* デフォルト以外のトランザクションを使用する場合は、本フレームワークにトランザクション制御を行わせる必要がある。トランザクション制御の設定方法については、次の項を参照。（  [デフォルト以外のトランザクションを使用したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#using-transactions)  ）
+  ThreadContextの設定方法については、次の項を参照。（  [ThreadContextにユーザID、リクエストIDなどを設定したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#threadcontextにユーザidリクエストidなどを設定したい)  ）
+* デフォルト以外のトランザクションを使用する場合は、本フレームワークにトランザクション制御を行わせる必要がある。トランザクション制御の設定方法については、次の項を参照。（  [デフォルト以外のトランザクションを使用したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#デフォルト以外のトランザクションを使用したい)  ）
 
 ### 外部キーが設定されたテーブルにデータをセットアップしたい
 
-[マスタデータ復旧機能](../../development-tools/testing-framework/testing-framework-04-MasterDataRestore.md#master-data-backup) と同じ機能を用いて、テーブルの親子関係を判断しデータを削除及び登録する。
-詳細は [外部キーが設定されたテーブルを使用する場合について](../../development-tools/testing-framework/testing-framework-04-MasterDataRestore.md#masterdatarestore-fk-key) を参照。
+[マスタデータ復旧機能](../../development-tools/testing-framework/testing-framework-04-MasterDataRestore.md#マスタデータ復旧機能) と同じ機能を用いて、テーブルの親子関係を判断しデータを削除及び登録する。
+詳細は [外部キーが設定されたテーブルを使用する場合について](../../development-tools/testing-framework/testing-framework-04-MasterDataRestore.md#外部キーが設定されたテーブルを使用する場合について) を参照。
 
 ### Excelファイルに記述できるカラムのデータ型に関する注意点
 

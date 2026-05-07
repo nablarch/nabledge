@@ -24,15 +24,15 @@ Exampleアプリケーションを元に削除機能を解説する。
 
 削除機能の基本的な実装方法を、以下の順に説明する。
 
-1. [更新画面上に削除ボタンを作成](../../processing-pattern/web-application/web-application-getting-started-project-delete.md#project-delete-update)
-2. [削除を行う業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-delete.md#project-delete-delete-action)
-3. [削除完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-delete.md#project-delete-complete)
+1. [更新画面上に削除ボタンを作成](../../processing-pattern/web-application/web-application-getting-started-project-delete.md#削除を行う)
+2. [削除を行う業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-delete.md#削除を行う)
+3. [削除完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-delete.md#削除を行う)
 
 更新画面上に削除ボタンを作成
 
 更新画面上に、削除ボタンを作成する。
-更新画面の作成に関する説明は、 [更新画面を表示する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-edit-action) 及び
-[更新画面のJSPの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-update-jsp) を参照。
+更新画面の作成に関する説明は、 [更新画面を表示する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#更新内容の入力と確認) 及び
+[更新画面のJSPの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#更新内容の入力と確認) を参照。
 
 削除を行う業務アクションメソッドの作成
 
@@ -58,14 +58,14 @@ public HttpResponse delete(HttpRequest request, ExecutionContext context) {
   を実行することで、SQLを作成しなくとも実行できる。
 
 > **Tip:**
-> [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) は、主キーを条件とする削除機能のみを提供する。主キー以外を条件として削除する場合は、別途SQLを作成して実行する必要がある。
-> SQLの実行方法については、 [SQLIDを指定してSQLを実行する](../../component/libraries/libraries-database.md#database-execute-sqlid) を参照。
+> [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) は、主キーを条件とする削除機能のみを提供する。主キー以外を条件として削除する場合は、別途SQLを作成して実行する必要がある。
+> SQLの実行方法については、 [SQLIDを指定してSQLを実行する](../../component/libraries/libraries-database.md#sqlidを指定してsqlを実行する) を参照。
 
 削除完了画面の作成
 
 削除完了画面を表示する。
-完了画面の作成に関する説明は、 [完了画面を表示する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-complete-action) 及び
-[更新完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-success-jsp) を参照。
+完了画面の作成に関する説明は、 [完了画面を表示する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#データベースの更新) 及び
+[更新完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#データベースの更新) を参照。
 
 削除機能の解説は以上。
 

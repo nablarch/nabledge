@@ -119,7 +119,7 @@ a) 帳票管理パッケージ
 |---|---|
 | ReportManager | 業務機能からの要求を受付、システムリポジトリ経由でReportCreatorに処理を委譲するクラス。 |
 | ReportContext | 帳票出力に関する情報を保持するクラス。出力情報のほかに、利用する「帳票ID」や「ReportCreatorのキー」を持つクラス。 |
-| ReportParam | テンプレート名と帳票テンプレートにバインドする情報を保持するクラス。(バインドの方式については [実装例](../../extension/report/report-report.md#report-template) を参照。) |
+| ReportParam | テンプレート名と帳票テンプレートにバインドする情報を保持するクラス。(バインドの方式については [実装例](../../extension/report/report-report.md#実装例) を参照。) |
 | ReportException | 帳票機能でチェック例外が発生した場合に送出される実行時例外クラス。 |
 
 　b) データソースパッケージ

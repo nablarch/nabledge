@@ -12,7 +12,7 @@
 * ディスパッチ対象クラスを遅延実行する
 
 本ハンドラは、アプリケーションの機能ごとに行う処理を記載するアクションに処理を委譲する。
-本ハンドラは、主に [メッセージング](../../processing-pattern/db-messaging/db-messaging-messaging.md#messaging) の機能で、任意のアクションにディスパッチする目的で使用する。
+本ハンドラは、主に [メッセージング](../../processing-pattern/db-messaging/db-messaging-messaging.md#メッセージング編) の機能で、任意のアクションにディスパッチする目的で使用する。
 
 本ハンドラでは、 Request#getRequestPath() で取得した
 リクエストパスを元に、ディスパッチ先のアクションを選択する。
@@ -32,7 +32,7 @@
 
 > **Important:**
 > 通常、 Request#getRequestPath() で取得されるリクエストパスは、
-> [共通起動ランチャ](../../component/handlers/handlers-main.md#main) に記載の通り、コマンドラインで起動する際に `-requestPath` オプションで指定する。
+> [共通起動ランチャ](../../component/handlers/handlers-main.md#共通起動ランチャ) に記載の通り、コマンドラインで起動する際に `-requestPath` オプションで指定する。
 
 本ハンドラでは、以下の処理を行う。
 
@@ -78,7 +78,7 @@
 本ハンドラを使ってディスパッチする場合、ディスパッチ先のクラスは、リクエストパスの指定によって複数振り分けることができる。
 この際は、リクエストパスでクラス名を指定する箇所で、ベースパッケージからの相対パッケージ名を指定する。
 
-たとえば上記 [ベースパッケージ、ベースパスの設定](../../component/handlers/handlers-request-path-java-package-mapping.md#request-path-java-package-mapping-path-setting) を設定した際に、 `nablarch.application.xxx.ExampleBatchAction`
+たとえば上記 [ベースパッケージ、ベースパスの設定](../../component/handlers/handlers-request-path-java-package-mapping.md#ベースパッケージベースパスの設定) を設定した際に、 `nablarch.application.xxx.ExampleBatchAction`
 クラスにディスパッチする場合、リクエストパスには `/app/action/xxx/ExampleBatchAction` を指定すればよい。
 
 ## クラス名のプレフィクス、サフィックスの設定
@@ -101,7 +101,7 @@
 
 ## 複雑なパッケージへのディスパッチ
 
-[複数パッケージのクラスにディスパッチする](../../component/handlers/handlers-request-path-java-package-mapping.md#request-path-java-package-mapping-multi-package-dispatch) で示した方法では、
+[複数パッケージのクラスにディスパッチする](../../component/handlers/handlers-request-path-java-package-mapping.md#複数パッケージのクラスにディスパッチする) で示した方法では、
 「アクションを配置するパッケージを同じパッケージ配下のサブパッケージにまとめないといけない」制約がある。
 本ハンドラでは、このようなディスパッチでは問題がある場合に、 アクションを配置するパッケージをリクエストパスごとに別々に設定する方法を提供している。
 

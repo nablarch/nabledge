@@ -14,8 +14,8 @@
 | プロジェクト種別 | Mavenプロジェクト |
 | プロジェクト構成 | 単一プロジェクト構成 |
 | 使用DB | H2 Databaes Engine(アプリケーションに組み込み) |
-| 組み込まれているアダプタ | ルーティングアダプタ(詳細は、 [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) を参照) |
-| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * Nablarchのウェブアプリケーション用の基本的な設定 * 疎通確認用ウェブアプリケーション * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#about-maven-parent-module) を参照することによって取り込んでいる)。 |
+| 組み込まれているアダプタ | ルーティングアダプタ(詳細は、 [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#ルーティングアダプタ) を参照) |
+| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * Nablarchのウェブアプリケーション用の基本的な設定 * 疎通確認用ウェブアプリケーション * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#nablarch-archetype-parent親プロジェクト) を参照することによって取り込んでいる)。 |
 
 他のプロジェクトとの関係、及びディレクトリ構成は、 [Mavenアーキタイプの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md) を参照。
 
@@ -149,13 +149,13 @@ mvn jetty:run
 
 原因は分からないが疎通確認に失敗する場合、どこかで手順を誤っている可能性がある。
 
-原因が分からない場合は、[ブランクプロジェクト作成](../../setup/blank-project/blank-project-setup-Web.md#firststepgeneratewebblankproject) からやり直してみること。
+原因が分からない場合は、[ブランクプロジェクト作成](../../setup/blank-project/blank-project-setup-Web.md#ブランクプロジェクト作成) からやり直してみること。
 
 ## データベースに関する設定を行う
 
-ブランクプロジェクトは、初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は、[使用するRDBMSの変更手順](../../setup/blank-project/blank-project-CustomizeDB.md#customize-db) を参照して設定すること。
+ブランクプロジェクトは、初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は、[使用するRDBMSの変更手順](../../setup/blank-project/blank-project-CustomizeDB.md#使用するrdbmsの変更手順) を参照して設定すること。
 
-またER図からのDDL生成や実行、Entityクラスの自動生成を行うにはgsp-dba-maven-pluginの初期設定および実行を行う。詳細は [gsp-dba-maven-plugin(DBA作業支援ツール)の初期設定方法](../../setup/blank-project/blank-project-addin-gsp.md#gsp-maven-plugin) を参照。
+またER図からのDDL生成や実行、Entityクラスの自動生成を行うにはgsp-dba-maven-pluginの初期設定および実行を行う。詳細は [gsp-dba-maven-plugin(DBA作業支援ツール)の初期設定方法](../../setup/blank-project/blank-project-addin-gsp.md#gsp-dba-maven-plugindba作業支援ツールの初期設定方法) を参照。
 
 ## 補足（web.xml）
 

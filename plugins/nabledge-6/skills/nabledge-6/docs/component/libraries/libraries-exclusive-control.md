@@ -21,11 +21,11 @@
 
 > **Important:**
 > この機能は、以下の理由により **非推奨** である。
-> 排他制御には、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) を使用すること。
+> 排他制御には、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) を使用すること。
 
-> * >   [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) の排他制御は、本機能より簡単に使用できる。
+> * >   [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) の排他制御は、本機能より簡単に使用できる。
 
->   [楽観的ロックを行う](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-optimistic-lock) 、 [悲観的ロックを行う](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-pessimistic-lock) を参照。
+>   [楽観的ロックを行う](../../component/libraries/libraries-universal-dao.md#楽観的ロックを行う) 、 [悲観的ロックを行う](../../component/libraries/libraries-universal-dao.md#悲観的ロックを行う) を参照。
 > * >   主キーを非文字列型で定義した場合、データベースによってはこの機能を使用することができない。
 
 >   この機能は、主キーの値を全て文字列型( java.lang.String )で保持している。
@@ -42,9 +42,9 @@
 
 この機能では以下のことが実現できる。
 
-* [楽観的ロックを行う](../../component/libraries/libraries-exclusive-control.md#exclusive-control-optimistic-lock)
-* [一括更新で楽観的ロックを行う](../../component/libraries/libraries-exclusive-control.md#exclusive-control-optimistic-lock-bulk)
-* [悲観的ロックを行う](../../component/libraries/libraries-exclusive-control.md#exclusive-control-pessimistic-lock)
+* [楽観的ロックを行う](../../component/libraries/libraries-exclusive-control.md#楽観的ロックを行う)
+* [一括更新で楽観的ロックを行う](../../component/libraries/libraries-exclusive-control.md#一括更新で楽観的ロックを行う)
+* [悲観的ロックを行う](../../component/libraries/libraries-exclusive-control.md#悲観的ロックを行う)
 
 この機能が提供する楽観的ロック/悲観的ロックは、同じ排他制御用テーブルを使用して実現するため、
 楽観的ロックと悲観的ロックを並行で使用しても、同一データが同時に更新されるのを防ぐことができる。
@@ -351,7 +351,7 @@ public class UsersExclusiveControl extends ExclusiveControlContext {
 > **Tip:**
 > 複合主キーに対応したカスタムタグと
 > CompositeKey を使うと、
-> 複合主キーをもっと簡単に扱える。詳細は、 [複合キーのラジオボタンやチェックボックスを作る](../../component/libraries/libraries-tag.md#tag-composite-key) を参照。
+> 複合主キーをもっと簡単に扱える。詳細は、 [複合キーのラジオボタンやチェックボックスを作る](../../component/libraries/libraries-tag.md#複合キーのラジオボタンやチェックボックスを作る) を参照。
 
 ```java
 // (排他制御:チェック)

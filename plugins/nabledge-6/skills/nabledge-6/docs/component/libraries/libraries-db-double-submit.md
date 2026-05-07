@@ -6,7 +6,7 @@
 * モジュール一覧
 * 使用方法
 
-[二重サブミット防止](../../component/libraries/libraries-tag.md#tag-double-submission) では、サーバ側のトークンはHTTPセッションに保存される。
+[二重サブミット防止](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ) では、サーバ側のトークンはHTTPセッションに保存される。
 このため、アプリケーションサーバをスケールアウトする際には、スティッキーセッションやセッションレプリケーション等を
 使用する必要がある。
 
@@ -18,9 +18,9 @@
 > そのため、期限切れのトークンは定期的に削除する必要がある。
 
 > **Important:**
-> HTTPセッションを使用した [二重サブミット防止](../../component/libraries/libraries-tag.md#tag-double-submission) はCSRF対策に使用できたが、
+> HTTPセッションを使用した [二重サブミット防止](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ) はCSRF対策に使用できたが、
 > 本機能はユーザを識別せずにトークンをDBに格納しているためCSRF対策に使用できない。
-> 本機能を使用する場合は、CSRF対策に [CSRFトークン検証ハンドラ](../../component/handlers/handlers-csrf-token-verification-handler.md#csrf-token-verification-handler) を使用すること。
+> 本機能を使用する場合は、CSRF対策に [CSRFトークン検証ハンドラ](../../component/handlers/handlers-csrf-token-verification-handler.md#csrfトークン検証ハンドラ) を使用すること。
 
 ## 機能概要
 
@@ -56,7 +56,7 @@ DbTokenSchema のコンポーネントを定義する。
 
 `tokenManager` という名前でコンポーネント定義を追加する。
 これにより、トークンがデータベースで管理されるようになる。
-`tokenManager` は [初期化](../../component/libraries/libraries-repository.md#repository-initialize-object) が必要。
+`tokenManager` は [初期化](../../component/libraries/libraries-repository.md#オブジェクトの初期化処理を行う) が必要。
 
 ```xml
 <component name="tokenManager" class="nablarch.common.web.token.DbTokenManager">
@@ -94,7 +94,7 @@ DbTokenSchema のコンポーネントを定義する。
 ```
 
 > **Important:**
-> [テスティングフレームワークのトークン発行](../../development-tools/testing-framework/testing-framework-02-RequestUnitTest.md#how-to-set-token-in-request-unit-test) はトークンのDB保存に対応していない。
+> [テスティングフレームワークのトークン発行](../../development-tools/testing-framework/testing-framework-02-RequestUnitTest.md#トークン発行) はトークンのDB保存に対応していない。
 > そのため、自動テスト実行時には HttpSessionTokenManager に差し替えてテストする必要がある。
 
 > ```xml

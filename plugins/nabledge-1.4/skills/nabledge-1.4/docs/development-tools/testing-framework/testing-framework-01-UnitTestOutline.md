@@ -7,9 +7,9 @@ Nablarch Testing Frameworkでは、テストに必要となる開発プロセス
 
 Nablarch Testing Frameworkでは、単体テストとして以下の３つのテスト方法を提供する。
 
-* [クラス単体テスト概要](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#class-unit-test)
-* [リクエスト単体テスト概要](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#request-unit-test)
-* [取引単体テスト概要](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#deal-unit-test)
+* [クラス単体テスト概要](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#クラス単体テスト概要)
+* [リクエスト単体テスト概要](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#リクエスト単体テスト概要)
+* [取引単体テスト概要](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#取引単体テスト概要)
 
 それぞれのテストについて、概要を説明する。
 
@@ -112,7 +112,7 @@ HTMLファイルとして取得することができる。このHTMLファイル
 
 > **Note:**
 > リクエスト単体テストでは、HTTPリクエスト送信を擬似しているだけであり、実際にブラウザ上からサブミットしている訳ではない。
-> このため、以下の確認項目はリクエスト単体テストの対象外となる。（後述の  [取引単体テスト](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#deal-unit-test) で実施）。
+> このため、以下の確認項目はリクエスト単体テストの対象外となる。（後述の  [取引単体テスト](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#取引単体テスト概要) で実施）。
 
 > * >   formタグのaction属性が正しいか
 > * >   anchorタグのリンク先が正しいか

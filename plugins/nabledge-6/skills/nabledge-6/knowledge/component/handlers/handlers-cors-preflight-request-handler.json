@@ -1,7 +1,7 @@
 {
   "id": "handlers-cors-preflight-request-handler",
   "title": "CORSプリフライトリクエストハンドラ",
-  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* CORSを実現する\n\n本ハンドラは、 [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restful-web-service) でCORS(Cross-Origin Resource Sharing)を実現するために使用する。\n\nCORSを実現するには、実際のリクエストの前に送信されるプリフライトリクエストと実際のリクエストに対する処理が必要となる。\nプリフライトリクエストは本ハンドラで処理し、実際のリクエストに対する処理は [クライアントに返すレスポンスに共通処理を追加する](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler-response-finisher) で説明している\nResponseFinisherを実装した CorsResponseFinisher で処理する。\n\n本ハンドラでは、以下の処理を行う。\n\n* リクエストがプリフライトリクエストの場合はプリフライトリクエストに対するレスポンスを返す。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-cors-preflight-request-handler/flow.png)",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* CORSを実現する\n\n本ハンドラは、 [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restfulウェブサービス編) でCORS(Cross-Origin Resource Sharing)を実現するために使用する。\n\nCORSを実現するには、実際のリクエストの前に送信されるプリフライトリクエストと実際のリクエストに対する処理が必要となる。\nプリフライトリクエストは本ハンドラで処理し、実際のリクエストに対する処理は [クライアントに返すレスポンスに共通処理を追加する](../../component/handlers/handlers-jaxrs-response-handler.md#クライアントに返すレスポンスに共通処理を追加する) で説明している\nResponseFinisherを実装した CorsResponseFinisher で処理する。\n\n本ハンドラでは、以下の処理を行う。\n\n* リクエストがプリフライトリクエストの場合はプリフライトリクエストに対するレスポンスを返す。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-cors-preflight-request-handler/flow.png)",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -19,7 +19,7 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "[Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler) より後ろに配置すること\n\n本ハンドラで生成した HttpResponse を [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler) が処理するため、\n本ハンドラは [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler) より後ろに配置する必要がある。",
+      "content": "[Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jakarta-restful-web-servicesレスポンスハンドラ) より後ろに配置すること\n\n本ハンドラで生成した HttpResponse を [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jakarta-restful-web-servicesレスポンスハンドラ) が処理するため、\n本ハンドラは [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jakarta-restful-web-servicesレスポンスハンドラ) より後ろに配置する必要がある。",
       "level": 2
     },
     {

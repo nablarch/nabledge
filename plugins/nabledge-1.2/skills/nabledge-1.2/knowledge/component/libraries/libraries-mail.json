@@ -103,7 +103,7 @@
     {
       "id": "s17",
       "title": "メール送信要求",
-      "content": "業務アプリケーションがメール送信要求APIを呼び出すと、本フレームワークは、業務アプリケーションから引き渡された内容を、\nメール送信要求としてメール送信要求テーブルとその関連テーブル(後述、 [テーブル定義](../../component/libraries/libraries-mail.md#mailtables) 参照)に格納する。\nその際、最大宛先数と添付ファイルサイズの精査を行う。\n\n本フレームワークのメール送信要求APIは、下記2パターンのメール送信をサポートしている。\n\n| No | パターン | 説明 |\n|---|---|---|\n| 1 | 定型メール送信 | 予めデータベースに登録されたテンプレートを元にメールを作成・送信する。 テンプレートの可変部分にはプレースホルダを用意しておくと、 本フレームワークがメール送信要求をテーブルに格納する際に、 各プレースホルダを業務アプリケーションから指定された文字列に 置き換える。 |\n| 2 | 非定型メール送信 | 任意の件名・本文でメールを作成・送信する。 |",
+      "content": "業務アプリケーションがメール送信要求APIを呼び出すと、本フレームワークは、業務アプリケーションから引き渡された内容を、\nメール送信要求としてメール送信要求テーブルとその関連テーブル(後述、 [テーブル定義](../../component/libraries/libraries-mail.md#テーブル定義) 参照)に格納する。\nその際、最大宛先数と添付ファイルサイズの精査を行う。\n\n本フレームワークのメール送信要求APIは、下記2パターンのメール送信をサポートしている。\n\n| No | パターン | 説明 |\n|---|---|---|\n| 1 | 定型メール送信 | 予めデータベースに登録されたテンプレートを元にメールを作成・送信する。 テンプレートの可変部分にはプレースホルダを用意しておくと、 本フレームワークがメール送信要求をテーブルに格納する際に、 各プレースホルダを業務アプリケーションから指定された文字列に 置き換える。 |\n| 2 | 非定型メール送信 | 任意の件名・本文でメールを作成・送信する。 |",
       "level": 3
     },
     {
@@ -115,7 +115,7 @@
     {
       "id": "s19",
       "title": "逐次メール送信バッチ",
-      "content": "本フレームワークは [常駐バッチ実行制御基盤](../../processing-pattern/nablarch-batch/nablarch-batch-batch-resident.md) に準拠した逐次メール送信バッチ（バッチアクションクラス:nablarch.common.mail.MailSender）を提供し、\nアーキテクトによる設定(後述、 [逐次メール送信バッチ用設定項目](../../component/libraries/libraries-mail.md#mailbatchconfig) 参照)のみで使用できる。\nこのバッチは、メール送信要求テーブルを監視し、メール送信要求があれば逐次メールを送信する。\n\nなお、バッチ起動時の引数として「mailSendPatternId」を指定した場合には、指定されたメール送信パターンIDと一致する送信要求データが監視対象となる。",
+      "content": "本フレームワークは [常駐バッチ実行制御基盤](../../processing-pattern/nablarch-batch/nablarch-batch-batch-resident.md) に準拠した逐次メール送信バッチ（バッチアクションクラス:nablarch.common.mail.MailSender）を提供し、\nアーキテクトによる設定(後述、 [逐次メール送信バッチ用設定項目](../../component/libraries/libraries-mail.md#逐次メール送信バッチ用設定項目) 参照)のみで使用できる。\nこのバッチは、メール送信要求テーブルを監視し、メール送信要求があれば逐次メールを送信する。\n\nなお、バッチ起動時の引数として「mailSendPatternId」を指定した場合には、指定されたメール送信パターンIDと一致する送信要求データが監視対象となる。",
       "level": 2
     },
     {
@@ -157,7 +157,7 @@
     {
       "id": "s26",
       "title": "メール送信要求ID採番",
-      "content": "メール送信要求IDを採番するためのコンポーネントを設定する。\n\nメール送信要求IDの採番には、IdGeneratorを使用する( [採番機能](../../component/libraries/libraries-06-IdGenerator.md#id-generator-top) 参照)。\n使用するIdGeneratorコンポーネントは、他の採番用のものと併用してもよい。\nIdGeneratorは、メール送信APIのプロパティとして設定する（後述、 [メール送信要求APIのコンポーネント定義](../../component/libraries/libraries-mail.md#mailapicomponentconfig) 参照 ）。",
+      "content": "メール送信要求IDを採番するためのコンポーネントを設定する。\n\nメール送信要求IDの採番には、IdGeneratorを使用する( [採番機能](../../component/libraries/libraries-06-IdGenerator.md#採番機能) 参照)。\n使用するIdGeneratorコンポーネントは、他の採番用のものと併用してもよい。\nIdGeneratorは、メール送信APIのプロパティとして設定する（後述、 [メール送信要求APIのコンポーネント定義](../../component/libraries/libraries-mail.md#メール送信要求api用設定項目) 参照 ）。",
       "level": 4
     },
     {
@@ -169,7 +169,7 @@
     {
       "id": "s28",
       "title": "処理対象のメール送信パターンID",
-      "content": "処理対象のメール送信パターンIDは、コマンドライン引数として指定する。\n\nメール送信パターンIDは、 nablarch.common.mail.MailRequestTableの設定 にメール送信パターンIDのカラム名を設定した場合は、設定が必須となる。\n\nコマンドライン引数には、以下の情報を設定すること。\n\n```\nパラメータ名 -> mailSendPatternId\nパラメータ値 -> 処理対象のメール送信パターンID\n```\n\nコマンドライン引数の指定方法は、 [コマンドライン起動引数の扱い](../../component/handlers/handlers-Main.md#parsing-commandline) を参照",
+      "content": "処理対象のメール送信パターンIDは、コマンドライン引数として指定する。\n\nメール送信パターンIDは、 nablarch.common.mail.MailRequestTableの設定 にメール送信パターンIDのカラム名を設定した場合は、設定が必須となる。\n\nコマンドライン引数には、以下の情報を設定すること。\n\n```\nパラメータ名 -> mailSendPatternId\nパラメータ値 -> 処理対象のメール送信パターンID\n```\n\nコマンドライン引数の指定方法は、 [コマンドライン起動引数の扱い](../../component/handlers/handlers-Main.md#コマンドライン起動引数の扱い) を参照",
       "level": 4
     },
     {

@@ -63,7 +63,7 @@ nablarch-widget-field-calendar    # プラグイントップ
 
 > **Important:**
 > UIプラグインが提供するJSPは、原則 `WEB-INF` 配下に配置する。
-> ただし、 `ui_test` 配下にテスト用に作成したJSPは、 [サーバ稼働確認](../../development-tools/testing-framework/testing-framework-initial-setup.md#ui-test-server) にて、ブラウザから直接JSPにアクセスする。
+> ただし、 `ui_test` 配下にテスト用に作成したJSPは、 [サーバ稼働確認](../../development-tools/testing-framework/testing-framework-initial-setup.md#6-ui開発基盤テスト用プロジェクトの動作確認) にて、ブラウザから直接JSPにアクセスする。
 > このため、 `WEB-INF` 配下ではなく `ui_test` 配下にディレクトリを作成して配置する必要がある。
 
 ## UIプラグインのバージョンについて

@@ -37,7 +37,7 @@
 
 | 名称 | 内容 | タイプ | サーバ | ローカル | 備考 |
 |---|---|---|---|---|---|
-| gridSize | 幅(グリッド数) | 数値 | ○ | ○ | [マルチレイアウト用CSSフレームワーク](../../component/ui-framework/ui-framework-multicol-css-framework.md#multicol-mode) で使用する |
+| gridSize | 幅(グリッド数) | 数値 | ○ | ○ | [マルチレイアウト用CSSフレームワーク](../../component/ui-framework/ui-framework-multicol-css-framework.md#マルチレイアウト用cssフレームワーク) で使用する |
 
 ## 内部構造・改修時の留意点
 

@@ -28,7 +28,7 @@
 
 [ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-messaging-simulator)
 
-本サンプルは、Nablarchアプリケーションフレームワークの [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#mom-system-messaging) 、 [HTTPメッセージング](../../component/libraries/libraries-http-system-messaging.md#http-system-messaging) を使用する
+本サンプルは、Nablarchアプリケーションフレームワークの [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#momメッセージング) 、 [HTTPメッセージング](../../component/libraries/libraries-http-system-messaging.md#httpメッセージング) を使用する
 アプリケーションのテストにて、対向先システムをシミュレートするサンプル実装を提供する。
 
 テスト環境構築後の疎通テストやアプリケーションの結合テスト等で、アプリケーションの接続先として、

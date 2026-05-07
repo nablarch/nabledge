@@ -10,12 +10,12 @@
 なお、一般にコードという名称には「商品コード」や「企業コード」といった、コード値に紐付く値が動的に変化する数多くのデータのキー値も含まれる。
 しかし本機能では、これらのコードは対象としない。これらのコードはアプリケーションでマスタ用のテーブルを作成し、対処する。
 また、本機能を使用する場合、コードの名称を持つテーブルとコード値を持つテーブルにRDBMSの参照整合性制約を設定できない。
-このような制約のチェックには [コード値の有効性をチェックするバリデーション](../../component/libraries/libraries-02-CodeManager.md#code-manager-validation) を使用すること。
+このような制約のチェックには [コード値の有効性をチェックするバリデーション](../../component/libraries/libraries-02-CodeManager.md#コード値の有効性をチェックするバリデーション) を使用すること。
 
 本機能は、あくまで先に示した性別区分や年代区分など、コードに含まれるコード値とコード名称の関係が静的なコードのみに使用すること。
 
 本機能は、リポジトリに登録して使用する。
-このため、本機能に必要な初期化処理は [リポジトリ](../../component/libraries/libraries-02-Repository.md#repository) が実行する。
+このため、本機能に必要な初期化処理は [リポジトリ](../../component/libraries/libraries-02-Repository.md#リポジトリ) が実行する。
 
 アプリケーションプログラマは、本機能を画面表示に使用するコード名称の取得と、コード値の取得に使用する。
 
@@ -32,10 +32,10 @@
 
 ### 高速なコードへのアクセス
 
-本機能では、コード値とコード名称を [静的データのキャッシュ](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache) の機能を使用してキャッシュする。
+本機能では、コード値とコード名称を [静的データのキャッシュ](../../component/libraries/libraries-05-StaticDataCache.md#静的データのキャッシュ) の機能を使用してキャッシュする。
 このため、データベース上に保持しているコード値のデータを何度もロードすることがなく、アプリケーションの動作を高速化できる。
 
-また、 [静的データのキャッシュ](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache) の機能を使用しているため、
+また、 [静的データのキャッシュ](../../component/libraries/libraries-05-StaticDataCache.md#静的データのキャッシュ) の機能を使用しているため、
 キャッシュにデータをロードするタイミングを設定変更のみで変更できる。
 この機能により、下記例のようにアプリケーションの特性に合わせてキャッシュにデータをロードするタイミングを選択できる。
 
@@ -47,12 +47,12 @@
 | バッチアプリケーション | オンデマンドロードを使用 ※処理過程で全てのコードを使用しないため |
 
 > **Note:**
-> [概要](../../component/libraries/libraries-02-CodeManager.md#code-manager-abstract) で述べた通り、本機能は「コード値とコード名称の関係が静的なコード」を前提として設計、実装している。
+> [概要](../../component/libraries/libraries-02-CodeManager.md#概要) で述べた通り、本機能は「コード値とコード名称の関係が静的なコード」を前提として設計、実装している。
 
 > この前提では、コード値の意味が変更された際には、アプリケーションにもなんらかの修正が必要となると想定されるため、
 > 本機能ではアプリケーションを再起動せずにコードのキャッシュをリロードすることが想定されていない。
 
-> しかし、 [静的データのキャッシュ](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache) にはキャッシュをリロードする機能が実装されており、実際にはキャッシュのリロードが可能である。
+> しかし、 [静的データのキャッシュ](../../component/libraries/libraries-05-StaticDataCache.md#静的データのキャッシュ) にはキャッシュをリロードする機能が実装されており、実際にはキャッシュのリロードが可能である。
 > このリロードの使用は、プロジェクトの責任で行うこと。
 
 ## 要求
@@ -142,7 +142,7 @@
 
 例えば、性別の区分(性別区分)を表すコードID "0001" のコードと、バッチの処理状態を表すコードID "0002" のコードを考える。
 
-これら2つのコードを [テーブル定義の例](../../component/libraries/libraries-02-CodeManager.md#codemanager-tabledefinitionexample) で示したテーブルで保持する場合、下記のようにデータを作成する。
+これら2つのコードを [テーブル定義の例](../../component/libraries/libraries-02-CodeManager.md#テーブル定義の例) で示したテーブルで保持する場合、下記のようにデータを作成する。
 
 CODE_PATTERN テーブルのデータ例
 
@@ -184,7 +184,7 @@ CODE_NAME テーブルのデータ例
 
 コード名称は、CodeUtilのgetNameメソッドで取得できる。
 
-例えば [コード値とコード名称のデータ](../../component/libraries/libraries-02-CodeManager.md#codemanager-tabledataexample) で設定した性別区分に対応するコード名称を取得する場合、下記のように実装する。
+例えば [コード値とコード名称のデータ](../../component/libraries/libraries-02-CodeManager.md#コード値とコード名称のデータ) で設定した性別区分に対応するコード名称を取得する場合、下記のように実装する。
 
 ```java
 // 性別区分(コードID:0001)、コード値 "1"に対応する文字列を取得する。
@@ -233,7 +233,7 @@ String shortMaleDisplayName = CodeUtil.getOptionalName("0001", "1", "NAME_WITH_V
 この機能を使用することで、例えば国名を選択する場面で、日本語では「アメリカ」「カナダ」「日本」とアイウエオ順で表示し、
 英語では「Canada」「Japan」「United States」のようにアルファベット順に表示するという表示の変更ができる。
 
-例えば [コード値とコード名称のデータ](../../component/libraries/libraries-02-CodeManager.md#codemanager-tabledataexample) で設定した性別区分とバッチの処理状態を意味するコード値を取得する場合、下記のように実装する。
+例えば [コード値とコード名称のデータ](../../component/libraries/libraries-02-CodeManager.md#コード値とコード名称のデータ) で設定した性別区分とバッチの処理状態を意味するコード値を取得する場合、下記のように実装する。
 
 ```java
 // 性別区分(コードID:0001) に対応するコード値を全て取得する。
@@ -250,7 +250,7 @@ List<String> executionStateCodeValues = CodeUtil.getValues("0002");
 画面やバッチ処理におけるファイルからの入力では、コード値として有効であるかチェックする必要がある。
 このようなチェックは CodeUtil の contains メソッドで行える。
 
-例えば [コード値とコード名称のデータ](../../component/libraries/libraries-02-CodeManager.md#codemanager-tabledataexample) で設定した性別区分として有効であるかチェックする場合、下記のようにコードが有効であるかチェックできる。
+例えば [コード値とコード名称のデータ](../../component/libraries/libraries-02-CodeManager.md#コード値とコード名称のデータ) で設定した性別区分として有効であるかチェックする場合、下記のようにコードが有効であるかチェックできる。
 
 ```java
 // 性別区分(コードID:0001) のコード値として有効であるかどうかチェックする
@@ -264,7 +264,7 @@ CodeUtil.contains("0001", "3");
 
 ## コード値のパターン
 
-[コード値とコード名称のデータ](../../component/libraries/libraries-02-CodeManager.md#codemanager-tabledataexample) のデータの例で示した、コードID 0001 の性別区分のうち、コード値 "9" 
+[コード値とコード名称のデータ](../../component/libraries/libraries-02-CodeManager.md#コード値とコード名称のデータ) のデータの例で示した、コードID 0001 の性別区分のうち、コード値 "9" 
 (不明)は外部システムから入力したデータに性別区分がなかった場合に使用する特殊なコード値を表わしている。
 このコード値は、画面から入力してほしくない。
 
@@ -412,7 +412,7 @@ CodeUtil.contains("0001", "3", "PATTERN1");
 ## コード値の有効性をチェックするバリデーション
 
 性別区分等、データベース上に永続化するコード値は、通常の文字列による画面入力値と同様にバリデーションを行う必要がある。
-本機能では [バリデーションの機能](../../component/libraries/libraries-core-library-validation.md#validation) を使用して、コード値が有効であるか(つまり contains メソッドの戻り値が true であるか)をチェックする機能を持つ。
+本機能では [バリデーションの機能](../../component/libraries/libraries-core-library-validation.md#入力値のバリデーション) を使用して、コード値が有効であるか(つまり contains メソッドの戻り値が true であるか)をチェックする機能を持つ。
 
 ### エンティティの実装
 
@@ -435,7 +435,7 @@ public class Customer {
 }
 ```
 
-上記実装を行った上で、 [バリデーションの実行と入力値の変換](../../component/libraries/libraries-08-02-validation-usage.md#validation-and-convert) で記述した方法で ValidationUtil クラスの validateAndConvertRequest メソッドを呼び出すことで、 gender に "1",
+上記実装を行った上で、 [バリデーションの実行と入力値の変換](../../component/libraries/libraries-08-02-validation-usage.md#バリデーションの実行と入力値の変換) で記述した方法で ValidationUtil クラスの validateAndConvertRequest メソッドを呼び出すことで、 gender に "1",
 "2"以外の文字を設定した際のバリデーション結果はエラーになる。
 
 なお、上記例はパターンに含まれるかまでをチェックするバリデーションであるため、 @CodeValue アノテーションの pattern 属性を指定しているが、 pattern 属性の指定を省略することで、
@@ -445,7 +445,7 @@ public class Customer {
 
 @CodeValue アノテーションで指定されたコード値のチェックは、 CodeValueValidator クラス が行う。
 
-CodeValueValidator クラス は、 [バリデーションの設定](../../component/libraries/libraries-08-01-validation-architecture.md#validation-config) で記述した他のバリデータと同様に ValidationManager クラスの validators プロパティに追加することで使用できる。
+CodeValueValidator クラス は、 [バリデーションの設定](../../component/libraries/libraries-08-01-validation-architecture.md#設定例) で記述した他のバリデータと同様に ValidationManager クラスの validators プロパティに追加することで使用できる。
 設定例を以下に示す。
 
 ```xml

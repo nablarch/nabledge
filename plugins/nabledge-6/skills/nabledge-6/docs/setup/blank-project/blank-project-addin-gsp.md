@@ -119,7 +119,7 @@ pom.xmlのpropertiesタグ内の以下の箇所を修正する。
 
 gsp-dba-maven-pluginに対する依存関係を、H2のJDBCドライバから使用するRDBMSにあわせたものに修正する。
 
-POMの設定例は、 [pom.xmlファイルの修正](../../setup/blank-project/blank-project-CustomizeDB.md#customizedb-pom-dependencies) を参照。
+POMの設定例は、 [pom.xmlファイルの修正](../../setup/blank-project/blank-project-CustomizeDB.md#pomxmlファイルの修正) を参照。
 例えば、PostgreSQLを使用する場合は以下のように設定する。
 
 ```xml

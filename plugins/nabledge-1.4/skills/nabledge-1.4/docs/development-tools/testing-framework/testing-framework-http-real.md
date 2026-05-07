@@ -1,8 +1,8 @@
 # リクエスト単体テストの実施方法（HTTP同期応答メッセージ受信処理）
 
-リクエスト単体テストの実施方法は、 [リクエスト単体テストの実施方法(同期応答メッセージ受信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-real.md#real-request-test) を参照すること。
+リクエスト単体テストの実施方法は、 [リクエスト単体テストの実施方法(同期応答メッセージ受信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-real.md#リクエスト単体テストの実施方法同期応答メッセージ受信処理) を参照すること。
 
-本項では、 [リクエスト単体テストの実施方法(同期応答メッセージ受信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-real.md#real-request-test) と記述方法が異なる箇所の解説を行う。
+本項では、 [リクエスト単体テストの実施方法(同期応答メッセージ受信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-real.md#リクエスト単体テストの実施方法同期応答メッセージ受信処理) と記述方法が異なる箇所の解説を行う。
 
 ## テストデータの書き方
 

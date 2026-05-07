@@ -74,7 +74,7 @@
 アプリケーションで用意している環境設定ファイル（`env.properties` など）がある場合、 `redisstore-lettuce.config` はそれよりも前に読み込むようにする。
 こうすることで、必要に応じてデフォルトのプレースホルダの値をアプリケーションの環境設定ファイルで上書きできるようになる。
 
-さらに、 [OS環境変数を使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#repository-overwrite-environment-configuration-by-os-env-var) で説明している方法を用いることで、実行環境ごとに接続先のRedisを切り替えることができるようになる。
+さらに、 [OS環境変数を使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#os環境変数を使って環境依存値を上書きする) で説明している方法を用いることで、実行環境ごとに接続先のRedisを切り替えることができるようになる。
 
 > **Tip:**
 > デフォルトでは、 `localhost` の `6379` ポートで起動している単一のRedisインスタンスに接続するように設定されている。
@@ -82,7 +82,7 @@
 `redisstore-lettuce.xml` には、Redisストアを使用するために必要となるコンポーネントが定義されている。
 
 `redisstore-lettuce.xml` を使用すると、 `nablarch/webui/session-store.xml` は不要になる。
-[ウェブのアーキタイプ](../../setup/blank-project/blank-project-setup-Web.md#firststepgeneratewebblankproject) でプロジェクトを生成している場合、デフォルトで `session-store.xml` を使用するように設定されているので、 `session-store.xml` のインポートを削除し、代わりに `redisstore-lettuce.xml` をインポートするように修正する。
+[ウェブのアーキタイプ](../../setup/blank-project/blank-project-setup-Web.md#ブランクプロジェクト作成) でプロジェクトを生成している場合、デフォルトで `session-store.xml` を使用するように設定されているので、 `session-store.xml` のインポートを削除し、代わりに `redisstore-lettuce.xml` をインポートするように修正する。
 
 ```xml
 <!-- 初期化が必要なコンポーネント -->
@@ -101,7 +101,7 @@
 
 `LettuceRedisClientProvider` のコンポーネントは `redisstore-lettuce.xml` に `lettuceRedisClientProvider` という名前で定義されているので、名前参照を使って設定できるようになっている。
 
-この設定の説明については、 [クライアントクラスの初期化](../../component/adapters/adapters-redisstore-lettuce-adaptor.md#redisstore-initialize-client) を参照。
+この設定の説明については、 [クライアントクラスの初期化](../../component/adapters/adapters-redisstore-lettuce-adaptor.md#クライアントクラスの初期化) を参照。
 
 ```xml
 <!-- 廃棄が必要なコンポーネント -->
@@ -118,7 +118,7 @@
 
 さらに、 LettuceRedisClientProvider のコンポーネントを BasicApplicationDisposer の `disposableList` に追加する。
 
-この設定の説明については、 [オブジェクトの廃棄処理を行う](../../component/libraries/libraries-repository.md#repository-dispose-object) を参照。
+この設定の説明については、 [オブジェクトの廃棄処理を行う](../../component/libraries/libraries-repository.md#オブジェクトの廃棄処理を行う) を参照。
 
 #### 環境設定値を修正する
 
@@ -132,13 +132,13 @@ nablarch.sessionManager.defaultStoreName=redis
 プロジェクトの環境設定ファイルで、 `nablarch.sessionManager.defaultStoreName` という設定項目を定義し、値に `redis` と設定する。
 
 > **Tip:**
-> [ウェブのアーキタイプ](../../setup/blank-project/blank-project-setup-Web.md#firststepgeneratewebblankproject) でプロジェクトを生成している場合は、 `src/main/resources/common.properties` に `nablarch.sessionManager.defaultStoreName` が宣言されている。
+> [ウェブのアーキタイプ](../../setup/blank-project/blank-project-setup-Web.md#ブランクプロジェクト作成) でプロジェクトを生成している場合は、 `src/main/resources/common.properties` に `nablarch.sessionManager.defaultStoreName` が宣言されている。
 
 以上で、 `localhost` の `6379` ポートで起動しているRedisをセッションストアとして使用できるようになる。
 
 ## Redis の構成に合わせて設定する
 
-[最小構成で動かす](../../component/adapters/adapters-redisstore-lettuce-adaptor.md#redisstore-minimum-settings) では、ローカルで起動する単一のRedisインスタンスに接続する例を示した。
+[最小構成で動かす](../../component/adapters/adapters-redisstore-lettuce-adaptor.md#最小構成で動かす) では、ローカルで起動する単一のRedisインスタンスに接続する例を示した。
 
 しかし、実際に本番などでRedisを使用する場合は次のような構成のRedisに接続できる必要がある。
 
@@ -302,7 +302,7 @@ LettuceでClusterのトポロジ更新を監視できるようにするには、
 
 ## 使用するクライアントクラスの決定の仕組み
 
-[使用するクライアントクラスを設定する](../../component/adapters/adapters-redisstore-lettuce-adaptor.md#redisstore-redis-client-config-how-select-client) で、使用するクライアントクラスは環境設定値 `nablarch.lettuce.clientType` で設定できることを説明した。
+[使用するクライアントクラスを設定する](../../component/adapters/adapters-redisstore-lettuce-adaptor.md#使用するクライアントクラスを設定する) で、使用するクライアントクラスは環境設定値 `nablarch.lettuce.clientType` で設定できることを説明した。
 ここでは、具体的にどのようにしてクライアントクラスが決定されているのか、仕組みを説明する。
 
 ３つのクライアントクラスのコンポーネントのうち、実際にどのコンポーネントを使用するかは LettuceRedisClientProvider によって決定される。
@@ -340,7 +340,7 @@ LettuceでClusterのトポロジ更新を監視できるようにするには、
 各クライアントクラスは Initializable を実装しており、 `initialize()` メソッドを実行することでRedisへの接続が確立される。
 したがって、使用するクライアントクラスのコンポーネントは、 BasicApplicationInitializer の `initializeList` プロパティに設定しなければならない。
 
-実際の `initializeList` への設定は、以下のように [使用するクライアントクラスの決定の仕組み](../../component/adapters/adapters-redisstore-lettuce-adaptor.md#redisstore-mechanism-to-decide-client) で説明した `LettuceRedisClientProvider` のコンポーネントを使用する。
+実際の `initializeList` への設定は、以下のように [使用するクライアントクラスの決定の仕組み](../../component/adapters/adapters-redisstore-lettuce-adaptor.md#使用するクライアントクラスの決定の仕組み) で説明した `LettuceRedisClientProvider` のコンポーネントを使用する。
 
 ```xml
 <!-- 初期化が必要なコンポーネント -->

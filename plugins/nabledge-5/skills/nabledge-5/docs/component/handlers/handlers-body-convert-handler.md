@@ -17,9 +17,9 @@ Consumes 及び Produces アノテーションで指定する。
 本ハンドラでは、以下の処理を行う。
 
 * リクエストボディをリソース(アクション)クラスで受け付けるFormに変換する。
-  詳細は、[リクエストボディをFormに変換する](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler-convert-request) を参照。
+  詳細は、[リクエストボディをFormに変換する](../../component/handlers/handlers-body-convert-handler.md#リクエストボディをformに変換する) を参照。
 * リソース(アクション)クラスの処理結果をレスポンスボディに変換する。
-  詳細は、[リソース(アクション)の処理結果をレスポンスボディに変換する](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler-convert-response) を参照。
+  詳細は、[リソース(アクション)の処理結果をレスポンスボディに変換する](../../component/handlers/handlers-body-convert-handler.md#リソースアクションの処理結果をレスポンスボディに変換する) を参照。
 
 処理の流れは以下のとおり。
 
@@ -40,11 +40,11 @@ Consumes 及び Produces アノテーションで指定する。
 
 ## 制約
 
-本ハンドラは [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) よりも後ろに設定すること
+本ハンドラは [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#ルーティングアダプタ) よりも後ろに設定すること
 
 このハンドラは、リソース(アクション)クラスのメソッドに設定された、アノテーションの情報を元に
 リクエスト及びレスポンスの変換処理を行う。
-このため、ディスパッチ先を特定する [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) よりも後ろに設定する必要がある。
+このため、ディスパッチ先を特定する [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#ルーティングアダプタ) よりも後ろに設定する必要がある。
 
 ## 変換処理を行うコンバータを設定する
 

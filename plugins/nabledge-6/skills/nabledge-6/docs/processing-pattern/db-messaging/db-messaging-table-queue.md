@@ -104,9 +104,9 @@ public class ProjectCreationServiceAction extends BatchAction<SqlRow> {
 
 ## テーブルを監視するためのリーダを生成する
 
-[アクションクラスを作成する](../../processing-pattern/db-messaging/db-messaging-table-queue.md#db-queue-example-create-action) で作成したアクションクラスに、テーブルを監視するリーダを生成するメソッドを作成する。
+[アクションクラスを作成する](../../processing-pattern/db-messaging/db-messaging-table-queue.md#アクションクラスを作成する) で作成したアクションクラスに、テーブルを監視するリーダを生成するメソッドを作成する。
 
-[データベースキューで使用するリーダ](../../processing-pattern/db-messaging/db-messaging-architecture.md#db-messaging-architecture-reader) に記載がある通り、
+[データベースキューで使用するリーダ](../../processing-pattern/db-messaging/db-messaging-architecture.md#使用するデータリーダ) に記載がある通り、
 DatabaseTableQueueReader をリーダとして生成する。
 
 実装例
@@ -177,17 +177,17 @@ where
   * 未処理データを検索するための SqlPStatement
   * 未処理データの悲観ロックを行う
     DatabaseRecordListener の実装クラス。
-    詳細は、[マルチプロセス化](../../processing-pattern/db-messaging/db-messaging-multiple-process.md#db-messaging-multiple-process) を参照。
+    詳細は、[マルチプロセス化](../../processing-pattern/db-messaging/db-messaging-multiple-process.md#マルチプロセス化) を参照。
 * SQLファイルでは、以下のSQLを定義する。
 
   * 他のプロセスの処理対象となることを防ぐため、未処理データを悲観ロックするSQL
   * 自身のプロセスの処理対象となる未処理データを取得するため、
     `STATUS` カラムの値が `0` 、かつ `PROCESS_ID` カラムの値が自身のプロセスIDであるレコードを取得するSQL
-* SQLファイルへのSQLの記述ルールは、 [SQLをファイルで管理する](../../component/libraries/libraries-database.md#database-use-sql-file) を参照。
+* SQLファイルへのSQLの記述ルールは、 [SQLをファイルで管理する](../../component/libraries/libraries-database.md#sqlをファイルで管理する) を参照。
 
 ## 未処理データを元に業務処理を実行する
 
-[アクションクラスを作成する](../../processing-pattern/db-messaging/db-messaging-table-queue.md#db-queue-example-create-action) で作成したアクションクラスに、業務処理を実装するメソッドを作成する。
+[アクションクラスを作成する](../../processing-pattern/db-messaging/db-messaging-table-queue.md#アクションクラスを作成する) で作成したアクションクラスに、業務処理を実装するメソッドを作成する。
 
 実装例
 
@@ -222,7 +222,7 @@ public Result handle(final SqlRow inputData, final ExecutionContext context) {
 
 ## 処理済みデータのステータスを更新する
 
-[アクションクラスを作成する](../../processing-pattern/db-messaging/db-messaging-table-queue.md#db-queue-example-create-action) で作成したアクションクラスに、ステータスを更新するメソッドを作成する。
+[アクションクラスを作成する](../../processing-pattern/db-messaging/db-messaging-table-queue.md#アクションクラスを作成する) で作成したアクションクラスに、ステータスを更新するメソッドを作成する。
 
 実装例
 
@@ -281,4 +281,4 @@ where
 * 正常に処理できなかったレコードの更新処理は、 transactionFailure に実装する。
   (処理中に例外やエラーが送出されたレコードの場合、このメソッドがNablarchによりコールバックされる)
 * SQLでは、指定のレコードのステータスを更新する。
-* SQLファイルへのSQLの記述ルールは、 [SQLをファイルで管理する](../../component/libraries/libraries-database.md#database-use-sql-file) を参照。
+* SQLファイルへのSQLの記述ルールは、 [SQLをファイルで管理する](../../component/libraries/libraries-database.md#sqlをファイルで管理する) を参照。

@@ -15,7 +15,7 @@
 |---|---|
 | プロジェクト種別 | Mavenプロジェクト |
 | プロジェクト構成 | 単一プロジェクト構成 |
-| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * Nablarchバッチアプリケーション用の基本的な設定 * 疎通確認用の都度起動バッチアプリケーション * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#about-maven-parent-module) を参照することによって取り込んでいる)。 |
+| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * Nablarchバッチアプリケーション用の基本的な設定 * 疎通確認用の都度起動バッチアプリケーション * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#nablarch-archetype-parent親プロジェクト) を参照することによって取り込んでいる)。 |
 
 他のプロジェクトとの関係、及びディレクトリ構成は、 [Mavenアーキタイプの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md) を参照。
 
@@ -74,21 +74,21 @@ mvn archetype:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArti
 
 ## 疎通確認
 
-疎通確認の仕組みや手順は通常のNablarchバッチ（DB接続無し）プロジェクトと同じなので、 [Nablarchバッチ（DB接続無し）プロジェクトの初期セットアップ手順](../../setup/blank-project/blank-project-setup-NablarchBatch-Dbless.md#firststepdblessbatchstartuptest) を参照。
+疎通確認の仕組みや手順は通常のNablarchバッチ（DB接続無し）プロジェクトと同じなので、 [Nablarchバッチ（DB接続無し）プロジェクトの初期セットアップ手順](../../setup/blank-project/blank-project-setup-NablarchBatch-Dbless.md#疎通確認都度起動バッチ) を参照。
 
 > **Note:**
 > アーティファクトID が `myapp-container-batch-dbless` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。
 
 ## コンテナイメージを作成する
 
-コンテナイメージの作成手順は通常のコンテナ用Nablarchバッチプロジェクトと同じなので、 [コンテナ用Nablarchバッチプロジェクトのコンテナイメージ作成手順](../../setup/blank-project/blank-project-setup-ContainerBatch.md#firststepbuildcontainerbatchdockerimage) を参照。
+コンテナイメージの作成手順は通常のコンテナ用Nablarchバッチプロジェクトと同じなので、 [コンテナ用Nablarchバッチプロジェクトのコンテナイメージ作成手順](../../setup/blank-project/blank-project-setup-ContainerBatch.md#コンテナイメージを作成する) を参照。
 
 > **Note:**
 > アーティファクトID が `myapp-container-batch-dbless` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。
 
 ## コンテナイメージを実行する
 
-コンテナイメージの実行手順は通常のコンテナ用Nablarchバッチプロジェクトと同じなので、 [コンテナ用Nablarchバッチプロジェクトのコンテナイメージ実行手順](../../setup/blank-project/blank-project-setup-ContainerBatch.md#firststepruncontainerbatchdockerimage) を参照。
+コンテナイメージの実行手順は通常のコンテナ用Nablarchバッチプロジェクトと同じなので、 [コンテナ用Nablarchバッチプロジェクトのコンテナイメージ実行手順](../../setup/blank-project/blank-project-setup-ContainerBatch.md#コンテナイメージを実行する) を参照。
 
 > **Note:**
 > アーティファクトID が `myapp-container-batch-dbless` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。

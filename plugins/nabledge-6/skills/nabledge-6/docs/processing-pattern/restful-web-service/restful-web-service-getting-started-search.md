@@ -66,7 +66,7 @@ public class ProjectSearchForm implements Serializable {
 
 この実装のポイント
 
-* プロパティは全てString型で宣言する。詳細は [バリデーションルールの設定方法](../../component/libraries/libraries-bean-validation.md#bean-validation-form-property) を参照。
+* プロパティは全てString型で宣言する。詳細は [バリデーションルールの設定方法](../../component/libraries/libraries-bean-validation.md#バリデーションルールの設定方法) を参照。
 
 検索条件を保持するBeanの作成
 
@@ -88,7 +88,7 @@ public class ProjectSearchDto implements Serializable {
 
 この実装のポイント
 
-* Beanのプロパティは、[対応する条件カラムの定義(型)と互換性のある型とする](../../component/libraries/libraries-universal-dao.md#universal-dao-search-with-condition) こと。
+* Beanのプロパティは、[対応する条件カラムの定義(型)と互換性のある型とする](../../component/libraries/libraries-universal-dao.md#条件を指定して検索する) こと。
 
 検索に使用するSQLの作成
 
@@ -109,9 +109,9 @@ WHERE
 
 この実装のポイント
 
-* SQLインジェクションを防ぐため、SQLは外部ファイルに記述する。詳細は [SQLをファイルで管理する](../../component/libraries/libraries-database.md#database-use-sql-file) を参照。
-* Beanのプロパティ名を使って、SQLに値をバインドする。詳細は [Beanオブジェクトを入力としてSQLを実行する](../../component/libraries/libraries-database.md#database-input-bean) を参照。
-* 検索条件として指定された項目のみを条件に含める場合には、 [$if 構文を使用してSQL文を構築](../../component/libraries/libraries-database.md#database-use-variable-condition) する。
+* SQLインジェクションを防ぐため、SQLは外部ファイルに記述する。詳細は [SQLをファイルで管理する](../../component/libraries/libraries-database.md#sqlをファイルで管理する) を参照。
+* Beanのプロパティ名を使って、SQLに値をバインドする。詳細は [Beanオブジェクトを入力としてSQLを実行する](../../component/libraries/libraries-database.md#beanオブジェクトを入力としてsqlを実行する) を参照。
+* 検索条件として指定された項目のみを条件に含める場合には、 [$if 構文を使用してSQL文を構築](../../component/libraries/libraries-database.md#可変条件を持つsqlを実行する) する。
 
 業務アクションメソッドの実装
 
@@ -144,14 +144,14 @@ public List<Project> find(JaxRsHttpRequest req) {
 * ValidatorUtil#validate
   を使用してフォームのバリデーションを行う。
 * フォームの値を BeanUtil を使用して検索条件Beanにコピーする。
-* [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) を使用して取得したプロジェクト情報のリストを戻り値として返却する。
-* 戻り値のオブジェクトは [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) によってJSON形式に変換されるため、
+* [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) を使用して取得したプロジェクト情報のリストを戻り値として返却する。
+* 戻り値のオブジェクトは [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#リクエストボディ変換ハンドラ) によってJSON形式に変換されるため、
   業務アクションメソッド内で変換処理を実装する必要はない。
 
 URLとのマッピングを定義
 
-[ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) を使用して、業務アクションとURLのマッピングを行う。
-マッピングには [Jakarta RESTful Web ServicesのPathアノテーション](../../component/adapters/adapters-router-adaptor.md#router-adaptor-path-annotation) を使用する。
+[ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#ルーティングアダプタ) を使用して、業務アクションとURLのマッピングを行う。
+マッピングには [Jakarta RESTful Web ServicesのPathアノテーション](../../component/adapters/adapters-router-adaptor.md#jakarta-restful-web-servicesのpathアノテーションでマッピングする) を使用する。
 
 ProjectAction.java
 

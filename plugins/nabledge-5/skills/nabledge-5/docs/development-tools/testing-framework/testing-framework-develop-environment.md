@@ -12,7 +12,7 @@ Nablarchでは、標準の開発環境として、 [Eclipse](https://www.eclipse
 
 ![eclipse_completion.png](../../../knowledge/assets/testing-framework-develop-environment/eclipse_completion.png)
 
-また、 [UI部品の実装サンプルで提供しているEclipse補完テンプレート](../../development-tools/testing-framework/testing-framework-template-list.md#eclipse-template) を導入することで、テンプレートを使用した補完も行えるようになる。
+また、 [UI部品の実装サンプルで提供しているEclipse補完テンプレート](../../development-tools/testing-framework/testing-framework-template-list.md#ui部品の実装サンプルで提供しているeclipse補完テンプレート) を導入することで、テンプレートを使用した補完も行えるようになる。
 
 ## 統合開発環境のドキュメント参照機能を使用する
 

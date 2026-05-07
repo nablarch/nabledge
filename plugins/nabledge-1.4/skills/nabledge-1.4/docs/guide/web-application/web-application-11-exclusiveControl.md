@@ -21,7 +21,7 @@
 | [ExclusiveCtrlSystemAccountContext.java](../../../knowledge/assets/web-application-11-exclusiveControl/ExclusiveCtrlSystemAccountContext.java) | - | 排他制御用の補助クラス。排他制御の実行に必要な情報を保持する。 |
 | [W11AC03Action.java](../../../knowledge/assets/web-application-11-exclusiveControl/W11AC03Action.java) | Action | 作成した上記の排他制御補助クラスを使用し、更新処理時に排他制御を行う。 |
 
-ステレオタイプについては [業務コンポーネントの責務配置](../../about/about-nablarch/about-nablarch-01-NablarchOutline.md#stereotype) を参照。
+ステレオタイプについては [業務コンポーネントの責務配置](../../about/about-nablarch/about-nablarch-01-NablarchOutline.md#業務コンポーネントの責務配置) を参照。
 
 ## 作成手順
 
@@ -98,7 +98,7 @@ public class ExclusiveCtrlSystemAccountContext extends ExclusiveControlContext {
 }
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
 
 ### Actionの作成
 
@@ -151,7 +151,7 @@ public HttpResponse doRW11AC0301(HttpRequest req, ExecutionContext ctx) {
 }
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
 
 * バージョン番号のチェック
 
@@ -185,7 +185,7 @@ public HttpResponse doRW11AC0301(HttpRequest req, ExecutionContext ctx) {
 }
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
 
 * バージョン番号のチェックおよび更新
 
@@ -221,7 +221,7 @@ public HttpResponse doRW11AC0301(HttpRequest req, ExecutionContext ctx) {
 }
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
 
 ## 次に読むもの
 

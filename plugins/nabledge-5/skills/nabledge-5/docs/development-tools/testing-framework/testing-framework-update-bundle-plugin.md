@@ -31,7 +31,7 @@ PJの既存機能に対する影響を極小化できる。
 ### 1. プラグインのセットアップ
 
 nablarch_plugins_bundle/bin/setup.bat を実行する。
-詳細は、 UI開発基盤の導入の [プラグインのセットアップ](../../development-tools/testing-framework/testing-framework-initial-setup.md#initial-setup-plugin-setup) を参照すること。
+詳細は、 UI開発基盤の導入の [プラグインのセットアップ](../../development-tools/testing-framework/testing-framework-initial-setup.md#1-プラグインのセットアップ) を参照すること。
 
 ### 2. 現在のプラグインのバージョンの確認
 

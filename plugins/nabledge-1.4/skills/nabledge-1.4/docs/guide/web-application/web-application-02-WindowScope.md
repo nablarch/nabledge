@@ -20,7 +20,7 @@
 > **Note:**
 > ウィンドウスコープに格納された変数は、カスタムタグを使用することで自動的にhiddenタグに変換されるので、
 > **アプリケーションプログラマがJSPにhiddenタグを書く必要はない。**
-> （具体的な実装方法は、 [詳細情報](../../guide/web-application/web-application-02-WindowScope.md#window-scope-guide-links) のリンク先を参照。）
+> （具体的な実装方法は、 [詳細情報](../../guide/web-application/web-application-02-WindowScope.md#詳細情報) のリンク先を参照。）
 
 ## セッションスコープとの使い分け
 
@@ -43,4 +43,4 @@
   画面オンライン処理用業務アクションハンドラ - [変数スコープの利用](../../../fw/reference/handler/HttpMethodBinding.html#web-scope)
 * カスタムタグを使用したウィンドウスコープの使用方法について
 
-  カスタムタグ実装例集 - [ウィンドウスコープの使用法](../../guide/web-application/web-application-basic.md#howto-window-scope)
+  カスタムタグ実装例集 - [ウィンドウスコープの使用法](../../guide/web-application/web-application-basic.md#ウィンドウスコープの使用法)

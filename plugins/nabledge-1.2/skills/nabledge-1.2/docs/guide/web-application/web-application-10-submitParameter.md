@@ -21,7 +21,7 @@
 | [W11AC03Action.java](../../../knowledge/assets/web-application-10-submitParameter/W11AC03Action.java) | Action | 一覧から送られてきたパラメータを元に検索を行う。検索結果をリクエストに格納、更新画面への遷移を行う。 |
 | [W11AC0101.jsp](../../../knowledge/assets/web-application-10-submitParameter/W11AC0101.jsp) [W11AC0301.jsp](../../../knowledge/assets/web-application-10-submitParameter/W11AC0301.jsp) | View | W11AC0101.jspは検索結果の一覧表示および個別の情報のサブミットを行う。 W11AC0301.jspは更新画面に検索結果を初期値として表示する。 |
 
-ステレオタイプについては [業務コンポーネントの責務配置](../../about/about-nablarch/about-nablarch-01-NablarchOutline.md#stereotype) を参照。
+ステレオタイプについては [業務コンポーネントの責務配置](../../about/about-nablarch/about-nablarch-01-NablarchOutline.md#業務コンポーネントの責務配置) を参照。
 
 ## 作成手順
 
@@ -54,7 +54,7 @@ n:submitタグの内容として、<n:param>タグを記述する。
 
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
 
 ### 更新画面初期表示までの実装
 
@@ -142,7 +142,7 @@ public class W11AC03Action extends DbAccessSupport {
 ～後略～
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
 
 * W11AC0301.jsp
 
@@ -150,7 +150,7 @@ public class W11AC03Action extends DbAccessSupport {
 
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
 
 ## 次に読むもの
 

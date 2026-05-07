@@ -10,12 +10,12 @@
   * バリデーション内容
   * Java11で使用する場合の設定
 
-本ツールは、BPMN2.0に準拠したワークフロー定義ファイル(xmlファイル)を読み込み、 [ワークフロー関連テーブル](../../extension/workflow/workflow-doc.md#workflow-table-definition) に投入用のCSVファイルを出力するMavenプラグインである。
-CSVファイルの出力時には、ワークフロー定義ファイルの内容が、 [ワークフローライブラリ](../../extension/workflow/workflow-doc.md#workflow) で利用できるかのバリデーションも行う。
+本ツールは、BPMN2.0に準拠したワークフロー定義ファイル(xmlファイル)を読み込み、 [ワークフロー関連テーブル](../../extension/workflow/workflow-doc.md#ワークフローステートマシンの定義及び進行に必要なテーブルの作成と設定) に投入用のCSVファイルを出力するMavenプラグインである。
+CSVファイルの出力時には、ワークフロー定義ファイルの内容が、 [ワークフローライブラリ](../../extension/workflow/workflow-doc.md#ワークフローライブラリ) で利用できるかのバリデーションも行う。
 
 ## モジュール一覧
 
-プラグインに対する設定値の詳細は、 [プラグインに対する設定](../../extension/workflow/workflow-tool.md#workflow-tool-plugin-configuration) を参照。
+プラグインに対する設定値の詳細は、 [プラグインに対する設定](../../extension/workflow/workflow-tool.md#プラグインに対する設定) を参照。
 
 ```xml
 <plugin>
@@ -99,7 +99,7 @@ configurationFilePath
 
 ### バリデーション内容
 
-本ツールでは、 [ワークフローライブラリ](../../extension/workflow/workflow-doc.md#workflow) が想定している要素のみを使用しているかや、各要素がシーケンスフローでつながっているかなどの簡易的なバリデーションを行う。
+本ツールでは、 [ワークフローライブラリ](../../extension/workflow/workflow-doc.md#ワークフローライブラリ) が想定している要素のみを使用しているかや、各要素がシーケンスフローでつながっているかなどの簡易的なバリデーションを行う。
 
 バリデーション内容は以下の通り
 

@@ -15,11 +15,11 @@
 
 本ハンドラでは、以下の処理を行う。
 
-* [サブスレッド起動前のコールバック処理](../../component/handlers/handlers-multi-thread-execution-handler.md#multi-thread-execution-handler-callback)
-* [サブスレッドの起動](../../component/handlers/handlers-multi-thread-execution-handler.md#multi-thread-execution-handler-thread-count)
+* [サブスレッド起動前のコールバック処理](../../component/handlers/handlers-multi-thread-execution-handler.md#スレッド起動前後で任意の処理を実行したい)
+* [サブスレッドの起動](../../component/handlers/handlers-multi-thread-execution-handler.md#スレッド数を指定する)
 * サブスレッドでの後続ハンドラの実行
-* [サブスレッドで例外及びエラー発生時のコールバック処理](../../component/handlers/handlers-multi-thread-execution-handler.md#multi-thread-execution-handler-callback)
-* [サブスレッドでの処理終了後のコールバック処理](../../component/handlers/handlers-multi-thread-execution-handler.md#multi-thread-execution-handler-callback)
+* [サブスレッドで例外及びエラー発生時のコールバック処理](../../component/handlers/handlers-multi-thread-execution-handler.md#スレッド起動前後で任意の処理を実行したい)
+* [サブスレッドでの処理終了後のコールバック処理](../../component/handlers/handlers-multi-thread-execution-handler.md#スレッド起動前後で任意の処理を実行したい)
 
 処理の流れは以下のとおり。
 
@@ -79,14 +79,14 @@
 
 > **Important:**
 > コールバック処理で行ったデータベース処理は、親スレッド側のハンドラキューに設定されたデータベース接続とトランザクションが使用される。
-> このため、これらの処理で行った更新処理は本ハンドラ終了後に、親スレッド側に設定された [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) で確定(コミット)される。
+> このため、これらの処理で行った更新処理は本ハンドラ終了後に、親スレッド側に設定された [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#トランザクション制御ハンドラ) で確定(コミット)される。
 
 > もし、コールバック処理内で行った処理を即確定する必要がある場合には、親スレッド側に設定されたデータベース接続ではなく、個別のトランザクションを使用して処理を行うこと。
 
 > 詳細は、以下を参照。
 
-> * >   [ユニバーサルDAOで個別トランザクションを使用する](../../component/libraries/libraries-universal-dao.md#universal-dao-transaction)
-> * >   [データベースアクセス機能で個別トランザクションを使用する](../../component/libraries/libraries-database.md#database-new-transaction)
+> * >   [ユニバーサルDAOで個別トランザクションを使用する](../../component/libraries/libraries-universal-dao.md#現在のトランザクションとは異なるトランザクションで実行する)
+> * >   [データベースアクセス機能で個別トランザクションを使用する](../../component/libraries/libraries-database.md#現在のトランザクションとは異なるトランザクションでsqlを実行する)
 
 以下にコールバック処理の実装例を示す。
 
@@ -124,8 +124,8 @@ public class SampleHandler implements Handler<Object, Result>, ExecutionHandlerC
 
 ## データベース接続に関する設定について
 
-親スレッド側の処理でデータベース接続が必要となる場合には、本ハンドラ以前に [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) の設定が必要になる。
-サブスレッド側でデータベースに対するアクセスが必要な場合には、本ハンドラ以降のサブスレッドで実行されるハンドラ構成に [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) の設定が必要となる。
+親スレッド側の処理でデータベース接続が必要となる場合には、本ハンドラ以前に [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) の設定が必要になる。
+サブスレッド側でデータベースに対するアクセスが必要な場合には、本ハンドラ以降のサブスレッドで実行されるハンドラ構成に [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) の設定が必要となる。
 (親スレッド、サブスレッドともに、データベース接続とセットでトランザクションを制御するハンドラも必要となる)
 
 このため、親スレッド及びサブスレッドの両方でデータベースアクセスを行うハンドラ構成の場合、最低でも2つのデータベース接続が使用される。
@@ -137,7 +137,7 @@ public class SampleHandler implements Handler<Object, Result>, ExecutionHandlerC
 ThreadPoolExecutor#shutdownNow()
 を呼び出して、例外が発生していない他の処理中のサブスレッドを実行中のデータ処理完了後に安全に終了させる。
 
-サブスレッド側に [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) 及び [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) を設定して
+サブスレッド側に [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) 及び [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#トランザクション制御ハンドラ) を設定して
 サブスレッド毎にトランザクション管理する場合に、サブスレッドで例外が発生した場合の親スレッド及びサブスレッドの動作を以下に示す。
 
 ![exception_flow.png](../../../knowledge/assets/handlers-multi-thread-execution-handler/exception_flow.png)

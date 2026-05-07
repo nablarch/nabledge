@@ -29,12 +29,12 @@
 | クラス名 | 概要 |
 |---|---|
 | nablarch.common.handler.threadcontext.ThreadContextHandler | スレッドコンテキストを初期化するハンドラ。 |
-| nablarch.common.handler.threadcontext.RequestIdAttribute | [リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#request-processing) をスレッドコンテキストに設定するThreadContextAttribute。 |
-| nablarch.common.handler.threadcontext.InternalRequestIdAttribute | [内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#internal-request-id) をリクエストIDと同じ値に初期設定する。 |
+| nablarch.common.handler.threadcontext.RequestIdAttribute | [リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#リクエストの識別と業務処理の実行) をスレッドコンテキストに設定するThreadContextAttribute。 |
+| nablarch.common.handler.threadcontext.InternalRequestIdAttribute | [内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#特殊なリクエスト処理) をリクエストIDと同じ値に初期設定する。 |
 | nablarch.common.handler.threadcontext.UserIdAttribute | ログインしているユーザのユーザIDをスレッドコンテキストに設定するThreadContextAttribute。 ログインしていない場合には未認証ユーザを表すユーザIDを設定する。 |
 | nablarch.common.handler.threadcontext.LanguageAttribute | 言語をスレッドコンテキストに設定するThreadContextAttribute。 |
 | nablarch.common.handler.threadcontext.TimeZoneAttribute | タイムゾーンをスレッドコンテキストに設定するThreadContextAttribute。 |
-| nablarch.common.handler.threadcontext.ExecutionIdAttribute | 実行時IDをスレッドコンテキストに設定するThreadContextAttribute。 実行時IDについては、 [実行時ID](../../component/libraries/libraries-01-Log.md#execution-id) を参照。 |
+| nablarch.common.handler.threadcontext.ExecutionIdAttribute | 実行時IDをスレッドコンテキストに設定するThreadContextAttribute。 実行時IDについては、 [実行時ID](../../component/libraries/libraries-01-Log.md#実行時id) を参照。 |
 
 **LanguageAttributeのサブクラスとユーティリティ**
 
@@ -65,33 +65,33 @@ ThreadContextHandlerは、リクエスト毎にスレッドコンテキストの
 フレームワーク内で使用する下記の属性を設定する
 ThreadContextAttributeインタフェース実装クラスを提供している。
 
-* [リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#request-processing)
-* [内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#internal-request-id)
+* [リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#リクエストの識別と業務処理の実行)
+* [内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#特殊なリクエスト処理)
 * ユーザID
 * 言語
 * タイムゾーン
-* [実行時ID](../../component/libraries/libraries-01-Log.md#execution-id)
+* [実行時ID](../../component/libraries/libraries-01-Log.md#実行時id)
 
 実行制御基盤によっては、ThreadContextHandlerによって初期化された上記属性を更新する場合がある。
 上記属性のうち、初期化以降に更新される属性について、その状況を下記に示す。
 
 | 属性 | ThreadContextHandler以外の箇所で更新される状況 |
 |---|---|
-| [リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#request-processing) | [メッセージング実行制御基盤](../../processing-pattern/mom-messaging/mom-messaging-messaging.md) のみ、 [要求電文(FWヘッダ)リーダ](../../component/readers/readers-FwHeaderReader.md) によって更新される。 |
-| [内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#internal-request-id) | [画面オンライン実行制御基盤](../../processing-pattern/web-application/web-application-web-gui.md) では、内部フォーワード時に [内部フォーワードハンドラ](../../component/handlers/handlers-ForwardingHandler.md) によって更新される。 [メッセージング実行制御基盤](../../processing-pattern/mom-messaging/mom-messaging-messaging.md) では、 [要求電文(FWヘッダ)リーダ](../../component/readers/readers-FwHeaderReader.md) によって更新される。 |
+| [リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#リクエストの識別と業務処理の実行) | [メッセージング実行制御基盤](../../processing-pattern/mom-messaging/mom-messaging-messaging.md) のみ、 [要求電文(FWヘッダ)リーダ](../../component/readers/readers-FwHeaderReader.md) によって更新される。 |
+| [内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#特殊なリクエスト処理) | [画面オンライン実行制御基盤](../../processing-pattern/web-application/web-application-web-gui.md) では、内部フォーワード時に [内部フォーワードハンドラ](../../component/handlers/handlers-ForwardingHandler.md) によって更新される。 [メッセージング実行制御基盤](../../processing-pattern/mom-messaging/mom-messaging-messaging.md) では、 [要求電文(FWヘッダ)リーダ](../../component/readers/readers-FwHeaderReader.md) によって更新される。 |
 | ユーザID | [メッセージング実行制御基盤](../../processing-pattern/mom-messaging/mom-messaging-messaging.md) のみ、 [要求電文(FWヘッダ)リーダ](../../component/readers/readers-FwHeaderReader.md) によって更新される。 |
 
 ThreadContextAttributeインタフェース実装クラスについて、以下に記述する。
 
 ## RequestIdAttribute
 
-RequestIdAttributeクラスは、スレッドコンテキストに設定する [リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#request-processing) を取得する責務を持つ。
+RequestIdAttributeクラスは、スレッドコンテキストに設定する [リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#リクエストの識別と業務処理の実行) を取得する責務を持つ。
 本クラスは、URLの最後に現れる"/"から"."の間の文字列をリクエストIDと判断する。
 
 ## InternalRequestIdAttribute
 
-InternalRequestIdAttributeクラスは、スレッドコンテキスト変数 [内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#internal-request-id) を
-[リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#request-processing) と同じ値に初期化する責務を持つ。
+InternalRequestIdAttributeクラスは、スレッドコンテキスト変数 [内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#特殊なリクエスト処理) を
+[リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#リクエストの識別と業務処理の実行) と同じ値に初期化する責務を持つ。
 
 ## UserIdAttribute
 
@@ -154,7 +154,7 @@ TimeZoneAttributeおよびサブクラスの選択基準を下記に示す。
 ## ExecutionIdAttribute
 
 ExecutionIdAttributeクラスは、スレッドコンテキストに設定する実行時IDを取得する責務を持つ。
-実行時IDについては、 [実行時ID](../../component/libraries/libraries-01-Log.md#execution-id) を参照。
+実行時IDについては、 [実行時ID](../../component/libraries/libraries-01-Log.md#実行時id) を参照。
 
 ## 設定例
 

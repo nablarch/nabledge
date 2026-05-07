@@ -29,7 +29,7 @@ protected void initialize(CommandLine command, ExecutionContext context) {
 }
 ```
 
-writeLogメソッドについては、 [ログ出力](../../guide/nablarch-batch/nablarch-batch-03-dbInputBatch.md#log-output-in-batch-action) を参照。
+writeLogメソッドについては、 [ログ出力](../../guide/nablarch-batch/nablarch-batch-03-dbInputBatch.md#ログ出力) を参照。
 
 ## リーダ作成
 
@@ -66,7 +66,7 @@ public DataReader<SqlRow> createReader(ExecutionContext ctx) {
 }
 ```
 
-writeLogメソッドについては、 [ログ出力](../../guide/nablarch-batch/nablarch-batch-03-dbInputBatch.md#log-output-in-batch-action) を参照。
+writeLogメソッドについては、 [ログ出力](../../guide/nablarch-batch/nablarch-batch-03-dbInputBatch.md#ログ出力) を参照。
 
 ## １件ごとの処理
 

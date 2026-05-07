@@ -28,7 +28,7 @@
 
 ## 制約
 
-[共通起動ランチャ](../../component/handlers/handlers-main.md#main) の直後に設定すること
+[共通起動ランチャ](../../component/handlers/handlers-main.md#共通起動ランチャ) の直後に設定すること
 
 本ハンドラが処理結果のステータスコードをプロセスの終了コードに変換するため。
 

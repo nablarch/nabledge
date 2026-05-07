@@ -16,10 +16,10 @@
 
 本機能を使用する際は初期化処理の呼び出しが必要となる。
 この初期化処理は、フレームワークの他の機能が行う。
-Web アプリケーションでは、 [Nablarchサーブレットコンテキスト初期化リスナ](../../component/handlers/handlers-NablarchServletContextListener.md#nablarchservletcontextlistener) により初期化が行われる。
+Web アプリケーションでは、 [Nablarchサーブレットコンテキスト初期化リスナ](../../component/handlers/handlers-NablarchServletContextListener.md#nablarchサーブレットコンテキスト初期化リスナ) により初期化が行われる。
 
 アプリケーションプログラマは、本機能を環境設定の取得に使用する。
-環境設定の取得方法は、 [環境設定の取得](../../component/libraries/libraries-02-01-Repository-config.md#repository-get-config) に記述する。
+環境設定の取得方法は、 [環境設定の取得](../../component/libraries/libraries-02-01-Repository-config.md#環境設定の取得) に記述する。
 
 ## 特徴
 
@@ -51,7 +51,7 @@ DIコンテナは、コンポーネントに必要なプロパティを設定す
 また、コンポーネントの依存関係によって、初期化処理に順序の制約が発生することを考慮し、
 初期化機能はコンポーネントの初期化順序を指定できるよう考慮している。
 
-初期化機能の詳細は、 [初期化処理の使用手順](../../component/libraries/libraries-02-02-Repository-initialize.md#repository-initialize) に記述する。
+初期化機能の詳細は、 [初期化処理の使用手順](../../component/libraries/libraries-02-02-Repository-initialize.md#初期化処理の使用手順) に記述する。
 
 ## 要求
 
@@ -114,7 +114,7 @@ DIコンテナは、コンポーネントに必要なプロパティを設定す
 
 ## コンポーネント初期化機能
 
-[DIコンテナに登録したコンポーネントの初期化機能](../../component/libraries/libraries-02-Repository.md#initialize-label) で述べた通り、DIコンテナは、コンポーネントに必要な初期化処理を行うコンポーネント初期化機能を提供する。
+[DIコンテナに登録したコンポーネントの初期化機能](../../component/libraries/libraries-02-Repository.md#diコンテナに登録したコンポーネントの初期化機能) で述べた通り、DIコンテナは、コンポーネントに必要な初期化処理を行うコンポーネント初期化機能を提供する。
 
 コンポーネント初期化機能の詳細について下記に記述する。
 

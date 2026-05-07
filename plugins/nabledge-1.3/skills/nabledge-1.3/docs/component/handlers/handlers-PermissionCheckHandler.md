@@ -26,7 +26,7 @@
 | ハンドラ | 内容 |
 |---|---|
 | [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-ThreadContextHandler.md) | 本ハンドラではスレッドコンテキスト上に設定されたリクエストID/ユーザIDをもとに 認可判定を行なうため、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-ThreadContextHandler.md) を本ハンドラの上位に配置する必要がある。 |
-| [内部フォーワードハンドラ](../../component/handlers/handlers-ForwardingHandler.md) | [画面オンライン実行制御基盤](../../processing-pattern/web-application/web-application-web-gui.md) において、内部フォーワードを行った際の認可判定を フォーワード先のリクエストID ([内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#internal-request-id)) で行う場合、 本ハンドラは [内部フォーワードハンドラ](../../component/handlers/handlers-ForwardingHandler.md) より下位に配置する必要がある。 |
+| [内部フォーワードハンドラ](../../component/handlers/handlers-ForwardingHandler.md) | [画面オンライン実行制御基盤](../../processing-pattern/web-application/web-application-web-gui.md) において、内部フォーワードを行った際の認可判定を フォーワード先のリクエストID ([内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#特殊なリクエスト処理)) で行う場合、 本ハンドラは [内部フォーワードハンドラ](../../component/handlers/handlers-ForwardingHandler.md) より下位に配置する必要がある。 |
 | [データリードハンドラ](../../component/handlers/handlers-DataReadHandler.md) | [メッセージング実行制御基盤](../../processing-pattern/mom-messaging/mom-messaging-messaging.md) では、 [要求電文(FWヘッダ)リーダ](../../component/readers/readers-FwHeaderReader.md) が受信電文中のフレームワークヘッダ部を解析する際に、 **requestId** および **userId** ヘッダの値をスレッドコンテキストに設定する。 |
 
 ### ハンドラ処理フロー
@@ -35,8 +35,8 @@
 
 **1. (リクエストIDの取得)**
 
-スレッドコンテキストから [リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#request-processing) もしくは
-[内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#internal-request-id) を取得する。
+スレッドコンテキストから [リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#リクエストの識別と業務処理の実行) もしくは
+[内部リクエストID](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#特殊なリクエスト処理) を取得する。
 
 **1a. (認可処理のスキップ)**
 

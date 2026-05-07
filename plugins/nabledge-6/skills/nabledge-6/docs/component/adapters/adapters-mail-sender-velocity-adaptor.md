@@ -103,4 +103,4 @@ $approverは速やかに$titleを承認してください。$option
 ## メール送信要求を登録する
 
 単に定型メールの送信要求を登録すればよい。
-[メール送信要求を登録する](../../component/libraries/libraries-mail.md#mail-request) を参照。
+[メール送信要求を登録する](../../component/libraries/libraries-mail.md#メール送信要求を登録する) を参照。

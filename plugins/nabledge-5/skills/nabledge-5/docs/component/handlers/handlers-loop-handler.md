@@ -46,7 +46,7 @@
 
 ## 制約
 
-[データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) より後ろに設定すること
+[データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) より後ろに設定すること
 
 データベースに対するトランザクションを制御する場合には、トランザクション管理対象のデータベース接続がスレッド上に存在している必要がある。
 
@@ -59,7 +59,7 @@
 デフォルトでは、 `transaction` が使用されるが、任意の名前を使用する場合は、 transactionName プロパティに設定すること。
 
 > **Tip:**
-> [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) で設定したデータベースに対してトランザクションを制御する場合は、
+> [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) で設定したデータベースに対してトランザクションを制御する場合は、
 > DbConnectionManagementHandler#connectionName に設定した値と同じ値を
 > transactionName プロパティに設定すること。
 

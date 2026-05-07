@@ -5,10 +5,10 @@
 ユーザに通知するメッセージを取り扱う機能を提供する。
 
 本機能は、リポジトリに登録して使用する。
-このため、本機能に必要な初期化処理は [リポジトリ](../../component/libraries/libraries-02-Repository.md#repository) が実行する。
+このため、本機能に必要な初期化処理は [リポジトリ](../../component/libraries/libraries-02-Repository.md#リポジトリ) が実行する。
 
 アプリケーションプログラマは、本機能を画面表示に使用するメッセージの取得に使用する。
-メッセージの取得方法については、 [メッセージの取得](../../component/libraries/libraries-07-Message.md#message-get-message) 以降に記述する。
+メッセージの取得方法については、 [メッセージの取得](../../component/libraries/libraries-07-Message.md#メッセージの取得) 以降に記述する。
 
 ## 特徴
 
@@ -122,7 +122,7 @@ Message クラスの formatMessage メソッドを引数なしで呼び出した
 ThreadContext に保持する値は、Webフレームワークあるいは Batch フレームワークで初期化、クリアされる。
 このため、通常はアプリケーション実装時に値を設定することを意識する必要はない。
 
-ThreadContext の詳細は [同一スレッド内でのデータ共有(スレッドコンテキスト)](../../component/libraries/libraries-thread-context.md#thread-context-label) を参照のこと。
+ThreadContext の詳細は [同一スレッド内でのデータ共有(スレッドコンテキスト)](../../component/libraries/libraries-thread-context.md#同一スレッド内でのデータ共有スレッドコンテキスト) を参照のこと。
 
 ただし、画面上に日本語と英語両方のメッセージを同時に出力したい場合は、formatMessageメソッドの引数に取得したい言語を指定することで、
 指定した言語に合わせたメッセージを取得することもできる。

@@ -11,7 +11,7 @@
 * **暗号化機能の変更性の向上**
   本機能を使用することで、「テスト時に暗号化を行わず平文で出力する」といった変更を、呼び出し元を変更することなく実現できる。
 * **基本的な暗号機能の提供**
-  [実装済み](../../guide/biz-samples/biz-samples-01-Encryption.md#implementated) に記述されている暗号方式であれば、カスタマイズすることなく利用できる。
+  [実装済み](../../guide/biz-samples/biz-samples-01-Encryption.md#実装済み) に記述されている暗号方式であれば、カスタマイズすることなく利用できる。
 
 ## 要求
 
@@ -50,8 +50,8 @@
 
 | クラス名 | 概要 |
 |---|---|
-| NMEncryptionCreator | 設定書ファイルを元に、暗号クラスのインスタンスを生成するクラス。設定書ファイルの記載方法 については [プロパティリストの作成](../../guide/biz-samples/biz-samples-01-Encryption.md#encryptionpropertylist) に、本クラスの使用方法については [API使用例](../../guide/biz-samples/biz-samples-01-Encryption.md#houtouseencryption) に記載する。 |
-| MNAesEncryption | AES128ビット暗号化/復号を実装したクラス。本実装クラスの設定方法については [暗号クラス](../../guide/biz-samples/biz-samples-01-Encryption.md#propertyaboutaesenc) に記載する。 |
+| NMEncryptionCreator | 設定書ファイルを元に、暗号クラスのインスタンスを生成するクラス。設定書ファイルの記載方法 については [プロパティリストの作成](../../guide/biz-samples/biz-samples-01-Encryption.md#プロパティリストの作成) に、本クラスの使用方法については [API使用例](../../guide/biz-samples/biz-samples-01-Encryption.md#api使用例) に記載する。 |
+| MNAesEncryption | AES128ビット暗号化/復号を実装したクラス。本実装クラスの設定方法については [暗号クラス](../../guide/biz-samples/biz-samples-01-Encryption.md#暗号クラス) に記載する。 |
 | NMPlainTextEncryption | 暗号化を行わない、空実装クラス。 |
 
 ## 使用方法

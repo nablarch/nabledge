@@ -68,7 +68,7 @@ public class W11AC02ActionRequestTest extends BasicHttpRequestTestTemplate {
 
 ### リクエスト単体テストデータシートの作成
 
-ここでは、以下を検証するためのテストデータを作成する。（ [リクエスト単体テストデータシートの書き方](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-testcases) ）
+ここでは、以下を検証するためのテストデータを作成する。（ [リクエスト単体テストデータシートの書き方](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#テストケース一覧) ）
 
 * 登録画面の初期表示に必要なパラメータがリクエストに格納されていること。
 * 表示するJSPが、登録画面のものであること。
@@ -163,7 +163,7 @@ public class W11AC02Action extends DbAccessSupport {
 
 ボタン項目・リンク項目のuri属性に値が設定されていないことが原因でテストが失敗しているので、uri属性を指定する。
 
-/[リクエスト単体テストクラスの作成](../../guide/web-application/web-application-06-initial-view.md#03-06-action-request-test) で説明したベースURI/`リクエストID`
+/[リクエスト単体テストクラスの作成](../../guide/web-application/web-application-06-initial-view.md#リクエスト単体テストクラスの作成) で説明したベースURI/`リクエストID`
 
 ＜修正前＞
 
@@ -207,7 +207,7 @@ HTMLの出力先フォルダ：tmp/html_dump/W11AC02ActionRequestTest 配下
 
 ### JSP静的チェックツールの実行
 
-[JSP静的解析ツール](../../development-tools/java-static-analysis/java-static-analysis-01-JspStaticAnalysis.md#jsp-static-analysis-tool) を実行し、該当ファイルに静的チェックエラーがないことを確認する。
+[JSP静的解析ツール](../../development-tools/java-static-analysis/java-static-analysis-01-JspStaticAnalysis.md#jsp静的解析ツール) を実行し、該当ファイルに静的チェックエラーがないことを確認する。
 
 JSP静的解析ツールは、マスターデータセットアップツールと同様の方法でEclipseの
 Antビューに追加して実行する。

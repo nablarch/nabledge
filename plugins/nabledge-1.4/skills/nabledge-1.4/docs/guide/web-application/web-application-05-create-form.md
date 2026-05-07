@@ -68,15 +68,15 @@ public class W11AC02Form extends W11AC02FormBase {
   |---|---|---|
   | test/java/nablarch/sample/ss11AC | W11AC02FormTest.xlsx | testValidateForRegister |
 
-  以下に、テストデータの例を示しておく。（詳細は、 [Form/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTest.md#entityunittest) 参照）
+  以下に、テストデータの例を示しておく。（詳細は、 [Form/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTest.md#formentityのクラス単体テスト) 参照）
 
   ![form_test_validation_01.png](../../../knowledge/assets/web-application-05-create-form/form_test_validation_01.png)
 
   前画面や別取引からの引継ぎ項目が存在し、Formクラスにプロパティを実装する場合には、
   それらのプロパティに対して単項目精査が正しく実装されていることをテストする必要がある。
 
-  そのような場合の実装方法については [入力内容の精査](../../guide/web-application/web-application-04-validation.md#how-to-validate) や [精査処理の実装例集](../../guide/web-application/web-application-Validation.md#validation-example) を、
-  テスト方法については [Form/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTest.md#entityunittest) を参照すること。
+  そのような場合の実装方法については [入力内容の精査](../../guide/web-application/web-application-04-validation.md#入力内容の精査) や [精査処理の実装例集](../../guide/web-application/web-application-Validation.md#精査処理の実装例集) を、
+  テスト方法については [Form/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTest.md#formentityのクラス単体テスト) を参照すること。
 2. Form単体テストコードの作成
 
   実装するFormクラスの単体テストコードとして登録機能用のテストメソッド(`testValidateForRegister`)を追加する。

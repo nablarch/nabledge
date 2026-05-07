@@ -40,7 +40,7 @@ Chunkステップの場合の実装すべきクラスとその責務について
 
 > **Tip:**
 > アイテムリーダで読み込んだデータが外部から取得したデータの場合は、業務ロジックの実行前に入力値のチェックを行うこと。
-> 入力値のチェックについては、 [入力値のチェック](../../component/libraries/libraries-validation.md#validation) を参照。
+> 入力値のチェックについては、 [入力値のチェック](../../component/libraries/libraries-validation.md#入力値のチェック) を参照。
 
 アイテムライタ(ItemWriter class)
 
@@ -54,7 +54,7 @@ Chunkステップの場合の実装すべきクラスとその責務について
 アイテムリーダが読み込んだデータを保持するクラス。また出力対象がデータベース以外の場合に、出力するデータを保持するクラス。
 
 外部から受け付けたファイルなどの信用出来ない値を保持するフォームの場合には、プロパティの型は全てStringとすること。
-理由は、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation-form-property) 参照。
+理由は、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#バリデーションルールの設定方法) 参照。
 ただし、バイナリ項目の場合はバイト配列で定義する。
 
 エンティティ(entity class)

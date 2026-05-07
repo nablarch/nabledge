@@ -59,7 +59,7 @@ Excelファイルを使用することで、外部インターフェース設計
 テストデータを記載したExcelファイルは、クラス単体テストと同様に
 テストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。
 
-テストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#how-to-write-excel) 」を参照。
+テストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#excelによるテストデータ記述) 」を参照。
 
 #### 要求電文の期待値および、返却する応答電文（レスポンスメッセージ）の準備
 
@@ -76,8 +76,8 @@ Excelファイルを使用することで、外部インターフェース設計
 
 テストケースの書き方についての詳細は、以下を参照すること。
 
-* [画面オンライン処理のテストケース一覧](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-testcases)
-* [バッチ処理のテストケース一覧](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#batch-test-testcases)
+* [画面オンライン処理のテストケース一覧](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#テストケース一覧)
+* [バッチ処理のテストケース一覧](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#テストケース一覧)
 
 以下に、実際にExcelで書かれたテストデータを示す。（グループIDの関連も示す）
 

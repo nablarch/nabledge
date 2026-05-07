@@ -11,7 +11,7 @@
 
 なお、許容するscaleの範囲は設定で変更可能となっている。
 設定はシステムリポジトリ機能の環境設定ファイルに指定する。
-設定方法は、 [環境設定ファイルからの読み込み](../../component/libraries/libraries-02-01-Repository-config.md#repository-config-load) を参照。
+設定方法は、 [環境設定ファイルからの読み込み](../../component/libraries/libraries-02-01-Repository-config.md#環境設定ファイルからの読み込み) を参照。
 
 例えば、許容する範囲を `-10` から `10` としたい場合には、下のように設定を追加する。
 

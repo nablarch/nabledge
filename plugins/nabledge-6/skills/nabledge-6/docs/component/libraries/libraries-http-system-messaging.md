@@ -4,7 +4,7 @@
 
 * 機能概要
 
-  * [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#mom-system-messaging) と同じ作り方ができる
+  * [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#momメッセージング) と同じ作り方ができる
 * モジュール一覧
 * 使用方法
 
@@ -19,36 +19,36 @@
 
 HTTPを使ったメッセージの送受信を行う機能を提供する。
 
-HTTPメッセージングでは、 [送受信電文のデータモデル](../../component/libraries/libraries-http-system-messaging.md#http-system-messaging-data-model) に示したデータモデルを前提としている。
-また、メッセージのフォーマットには、 [汎用データフォーマット](../../component/libraries/libraries-data-format.md#data-format) を使用する。
+HTTPメッセージングでは、 [送受信電文のデータモデル](../../component/libraries/libraries-http-system-messaging.md#送受信電文のデータモデル) に示したデータモデルを前提としている。
+また、メッセージのフォーマットには、 [汎用データフォーマット](../../component/libraries/libraries-data-format.md#汎用データフォーマット) を使用する。
 
 > **Important:**
-> [送受信電文のデータモデル](../../component/libraries/libraries-http-system-messaging.md#http-system-messaging-data-model) の中で、
-> [フレームワーク制御ヘッダ](../../component/libraries/libraries-mom-system-messaging.md#mom-system-messaging-fw-header) については、
-> Nablarchで独自に規定している項目となり、 [メッセージボディ](../../component/libraries/libraries-http-system-messaging.md#http-system-messaging-message-body) に含めることを想定している。
+> [送受信電文のデータモデル](../../component/libraries/libraries-http-system-messaging.md#送受信電文のデータモデル) の中で、
+> [フレームワーク制御ヘッダ](../../component/libraries/libraries-mom-system-messaging.md#送受信電文のデータモデル) については、
+> Nablarchで独自に規定している項目となり、 [メッセージボディ](../../component/libraries/libraries-http-system-messaging.md#送受信電文のデータモデル) に含めることを想定している。
 
 > プロジェクト側で電文フォーマットを設計できる場合は問題ないが、外部システムにより既に電文フォーマットが規定されている場合は、この想定が適合しない場合がある。
 
 > このため、本機能ではなく以下の機能を使用することを推奨する。
 
-> * >   サーバサイド(メッセージ受信)については、 [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restful-web-service) の使用を推奨する。
+> * >   サーバサイド(メッセージ受信)については、 [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restfulウェブサービス編) の使用を推奨する。
 > * >   クライアントサイド(メッセージ送信)については、Jakarta RESTful Web Servicesにて提供されるClient機能の使用を推奨する。
 
-> なお、本機能をやむを得ない事情にて使用しなければならない場合は、 [フレームワーク制御ヘッダの読み書きを変更する](../../component/libraries/libraries-http-system-messaging.md#http-system-messaging-change-fw-header) を参照し、プロジェクトで実装を追加して対応すること。
+> なお、本機能をやむを得ない事情にて使用しなければならない場合は、 [フレームワーク制御ヘッダの読み書きを変更する](../../component/libraries/libraries-http-system-messaging.md#フレームワーク制御ヘッダの読み書きを変更する) を参照し、プロジェクトで実装を追加して対応すること。
 
 HTTPメッセージングは送受信の種類により、想定している実行制御基盤が異なる。
 
 | 送受信の種類 | 実行制御基盤 |
 |---|---|
-| [HTTPメッセージ受信](../../component/libraries/libraries-http-system-messaging.md#http-system-messaging-message-receive) | [HTTPメッセージング](../../processing-pattern/http-messaging/http-messaging-http-messaging.md#http-messaging) |
-| [HTTPメッセージ送信](../../component/libraries/libraries-http-system-messaging.md#http-system-messaging-message-send) | 実行制御基盤に依存しない |
+| [HTTPメッセージ受信](../../component/libraries/libraries-http-system-messaging.md#メッセージを受信するhttpメッセージ受信) | [HTTPメッセージング](../../processing-pattern/http-messaging/http-messaging-http-messaging.md#httpメッセージング編) |
+| [HTTPメッセージ送信](../../component/libraries/libraries-http-system-messaging.md#メッセージを送信するhttpメッセージ送信) | 実行制御基盤に依存しない |
 
 ## 機能概要
 
-### [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#mom-system-messaging) と同じ作り方ができる
+### [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#momメッセージング) と同じ作り方ができる
 
-HTTPメッセージングでは、メッセージの送受信の実装を [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#mom-system-messaging) と同じ以下のAPIで行う。
-そのため、 [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#mom-system-messaging) の経験があれば、少ない学習時間で実装できる。
+HTTPメッセージングでは、メッセージの送受信の実装を [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#momメッセージング) と同じ以下のAPIで行う。
+そのため、 [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#momメッセージング) の経験があれば、少ない学習時間で実装できる。
 
 * MessagingAction
 * MessageSender
@@ -187,7 +187,7 @@ FwHeaderDefinition インタフェースを実装したクラスが行う。
 
 そのため、 StandardFwHeaderDefinition を参考に、
 プロジェクトで FwHeaderDefinition インタフェースを実装したクラスを作成し、
-[HTTPメッセージングリクエスト変換ハンドラ](../../component/handlers/handlers-http-messaging-request-parsing-handler.md#http-messaging-request-parsing-handler) と [HTTPメッセージングレスポンス変換ハンドラ](../../component/handlers/handlers-http-messaging-response-building-handler.md#http-messaging-response-building-handler) に設定すればよい。
+[HTTPメッセージングリクエスト変換ハンドラ](../../component/handlers/handlers-http-messaging-request-parsing-handler.md#httpメッセージングリクエスト変換ハンドラ) と [HTTPメッセージングレスポンス変換ハンドラ](../../component/handlers/handlers-http-messaging-response-building-handler.md#httpメッセージングレスポンス変換ハンドラ) に設定すればよい。
 
 > **Tip:**
 > フレームワーク制御ヘッダを使用するか否かは任意に選択できる。
@@ -195,7 +195,7 @@ FwHeaderDefinition インタフェースを実装したクラスが行う。
 
 ### HTTPメッセージ送信のHTTPクライアント処理を変更する
 
-HTTPメッセージ送信では、 [HTTPメッセージングを使うための設定](../../component/libraries/libraries-http-system-messaging.md#http-system-messaging-settings) で説明した通り、
+HTTPメッセージ送信では、 [HTTPメッセージングを使うための設定](../../component/libraries/libraries-http-system-messaging.md#httpメッセージングを使うための設定) で説明した通り、
 HttpMessagingClient を使用している。
 
 HttpMessagingClient
@@ -205,7 +205,7 @@ HttpMessagingClient
 もし、HttpMessagingClient
 のデフォルト動作がプロジェクトの要件に合わない場合は、
 HttpMessagingClient
-を継承したクラスを作成し、 [HTTPメッセージングを使うための設定](../../component/libraries/libraries-http-system-messaging.md#http-system-messaging-settings) に示した方法でコンポーネント定義に追加することでカスタマイズを行うこと。
+を継承したクラスを作成し、 [HTTPメッセージングを使うための設定](../../component/libraries/libraries-http-system-messaging.md#httpメッセージングを使うための設定) に示した方法でコンポーネント定義に追加することでカスタマイズを行うこと。
 
 ## 送受信電文のデータモデル
 
@@ -245,7 +245,7 @@ HTTPリクエストのデータ領域をメッセージボディと呼ぶ。
 フレームワーク機能は、原則としてプロトコルヘッダ領域のみを使用する。
 それ以外のデータ領域については、未解析の単なるバイナリデータとして扱うものとする。
 
-メッセージボディの解析は、 [汎用データフォーマット](../../component/libraries/libraries-data-format.md#data-format) によって行う。
+メッセージボディの解析は、 [汎用データフォーマット](../../component/libraries/libraries-data-format.md#汎用データフォーマット) によって行う。
 これにより、電文の内容をフィールド名をキーとするMap形式で読み書き可能である。
 
 フレームワーク制御ヘッダ
@@ -261,10 +261,10 @@ HTTPリクエストのデータ領域をメッセージボディと呼ぶ。
 
 このヘッダを使用する主要なハンドラ：
 
-[リクエストディスパッチハンドラ](../../component/handlers/handlers-request-path-java-package-mapping.md#request-path-java-package-mapping)
-[再送電文制御ハンドラ](../../component/handlers/handlers-message-resend-handler.md#message-resend-handler)
-[認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#permission-check-handler)
-[サービス提供可否チェックハンドラ](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md#serviceavailabilitycheckhandler)
+[リクエストディスパッチハンドラ](../../component/handlers/handlers-request-path-java-package-mapping.md#リクエストディスパッチハンドラ)
+[再送電文制御ハンドラ](../../component/handlers/handlers-message-resend-handler.md#再送電文制御ハンドラ)
+[認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#認可チェックハンドラ)
+[サービス提供可否チェックハンドラ](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md#サービス提供可否チェックハンドラ)
 
 ユーザID
 
@@ -272,7 +272,7 @@ HTTPリクエストのデータ領域をメッセージボディと呼ぶ。
 
 このヘッダを使用する主要なハンドラ：
 
-[認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#permission-check-handler)
+[認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#認可チェックハンドラ)
 
 再送要求フラグ
 
@@ -280,7 +280,7 @@ HTTPリクエストのデータ領域をメッセージボディと呼ぶ。
 
 このヘッダを使用する主要なハンドラ：
 
-[再送電文制御ハンドラ](../../component/handlers/handlers-message-resend-handler.md#message-resend-handler)
+[再送電文制御ハンドラ](../../component/handlers/handlers-message-resend-handler.md#再送電文制御ハンドラ)
 
 ステータスコード
 
@@ -288,7 +288,7 @@ HTTPリクエストのデータ領域をメッセージボディと呼ぶ。
 
 このヘッダを使用する主要なハンドラ：
 
-[電文応答制御ハンドラ](../../component/handlers/handlers-message-reply-handler.md#message-reply-handler)
+[電文応答制御ハンドラ](../../component/handlers/handlers-message-reply-handler.md#電文応答制御ハンドラ)
 
 フレームワーク制御ヘッダは、デフォルトの設定では、
 メッセージボディの最初のデータレコード中に、それぞれ以下のフィールド名で定義されている必要がある。

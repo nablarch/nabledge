@@ -3,7 +3,7 @@
 取引単体テストでは、テスト対象のアプリケーションをアプリケーションサーバにデプロイし、
 手動でアプリケーションを操作しテストを行う。
 
-同期応答メッセージ送信処理を伴う場合は、モックアップクラスを使用して行う。詳細は [同期応答メッセージ送信処理を伴う取引単体テストの実施方法](../../development-tools/testing-framework/testing-framework-03-dealunittest-send-sync.md#dealunittest-send-sync)を参照。
+同期応答メッセージ送信処理を伴う場合は、モックアップクラスを使用して行う。詳細は [同期応答メッセージ送信処理を伴う取引単体テストの実施方法](../../development-tools/testing-framework/testing-framework-03-dealunittest-send-sync.md#同期応答メッセージ送信処理を伴う取引単体テストの実施方法)を参照。
 
 テストケース毎に以下の手順でテストを実施する。
 

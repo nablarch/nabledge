@@ -145,7 +145,7 @@ public HttpResponse create(final HttpRequest request, final ExecutionContext con
 
 > **Tip:**
 > Doma 2.44.0よりDaoアノテーションのconfig属性が非推奨になったため、Doma 2.44.0以前に案内していた内容から実装方法を変更している。
-> 詳しくは、 [Doma 2.44.0までの実装方法から移行する](../../component/adapters/adapters-doma-adaptor.md#migration-doma2440) を参照すること。
+> 詳しくは、 [Doma 2.44.0までの実装方法から移行する](../../component/adapters/adapters-doma-adaptor.md#doma-2440までの実装方法から移行する) を参照すること。
 
 ## 別トランザクションで実行する
 
@@ -190,7 +190,7 @@ Jakarta Batchに準拠したバッチアプリケーションでもDomaを使用
 ```
 
 > **Important:**
-> [Chunkステップ](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-batch-type-chunk) のItemWriterでデータベースに対してバッチ更新(バッチinsertやバッチupdateなど)する場合、バッチサイズの指定を明示的に行う必要がある。
+> [Chunkステップ](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#バッチの種類) のItemWriterでデータベースに対してバッチ更新(バッチinsertやバッチupdateなど)する場合、バッチサイズの指定を明示的に行う必要がある。
 > ※Chunkステップのitem-countのサイズがバッチサイズとなるわけではないので注意すること
 
 > これを行わなかった場合、Domaのデフォルト値が適用されるため、バッチ更新を使用してもパフォーマンスが向上しない可能性がある。
@@ -272,7 +272,7 @@ public class ProjectReader extends AbstractItemReader {
 
 > **Tip:**
 > Doma 2.44.0よりDaoアノテーションのconfig属性が非推奨になったため、Doma 2.44.0以前に案内していた内容から実装方法を変更している。
-> 詳しくは、 [Doma 2.44.0までの実装方法から移行する](../../component/adapters/adapters-doma-adaptor.md#migration-doma2440) を参照すること。
+> 詳しくは、 [Doma 2.44.0までの実装方法から移行する](../../component/adapters/adapters-doma-adaptor.md#doma-2440までの実装方法から移行する) を参照すること。
 
 ## 複数のデータベースにアクセスする
 
@@ -342,12 +342,12 @@ public HttpResponse create(final HttpRequest request, final ExecutionContext con
 
 > **Tip:**
 > Doma 2.44.0より作成するConfigへのSingletonConfigアノテーションの付与およびDaoアノテーションのconfig属性が非推奨になったため、Doma 2.44.0以前に案内していた内容から実装方法を変更している。
-> 詳しくは、 [Doma 2.44.0までの実装方法から移行する](../../component/adapters/adapters-doma-adaptor.md#migration-doma2440) を参照すること。
+> 詳しくは、 [Doma 2.44.0までの実装方法から移行する](../../component/adapters/adapters-doma-adaptor.md#doma-2440までの実装方法から移行する) を参照すること。
 
 ## DomaとNablarchのデータベースアクセスを併用する
 
-データベースアクセスにDomaを採用した場合でも、 [Nablarch提供のデータベースアクセス](../../component/libraries/libraries-database-management.md#database-management) を使用したい場合がある。
-例えば、 [メール送信ライブラリ](../../component/libraries/libraries-mail.md#mail) を使用する場合が該当する。([メール送信要求](../../component/libraries/libraries-mail.md#mail-request) で [データベースアクセス(JDBCラッパー)](../../component/libraries/libraries-database.md#database) を使用している。)
+データベースアクセスにDomaを採用した場合でも、 [Nablarch提供のデータベースアクセス](../../component/libraries/libraries-database-management.md#データベースアクセス) を使用したい場合がある。
+例えば、 [メール送信ライブラリ](../../component/libraries/libraries-mail.md#メール送信) を使用する場合が該当する。([メール送信要求](../../component/libraries/libraries-mail.md#メール送信要求を登録する) で [データベースアクセス(JDBCラッパー)](../../component/libraries/libraries-database.md#データベースアクセスjdbcラッパー) を使用している。)
 
 この問題を解決するため、Nablarchのデータベースアクセス処理が、Domaと同じトランザクション(データベース接続)を使用できる機能を提供している。
 

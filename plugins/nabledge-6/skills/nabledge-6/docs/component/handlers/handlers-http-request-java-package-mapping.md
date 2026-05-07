@@ -25,14 +25,14 @@ URL形式
 | methodName | アクションクラスのメソッド名は、HTTPのメソッド + メソッド名として実装する。  httpのメソッドが `post` の場合で、URLのmethodNameが `register` の場合には、 アクションクラスのメソッド名は、 `postRegister` とする。  なお、 `get` と `post` の場合には、 `do` を使用できる。 上記の例の場合、 `doRegister` となる。 |
 
 > **Tip:**
-> URLとアクションとのマッピングの指定方法については、 [ディスパッチの設定](../../component/handlers/handlers-http-request-java-package-mapping.md#java-package-mapping-entry-dispatch-settings) を参照。
+> URLとアクションとのマッピングの指定方法については、 [ディスパッチの設定](../../component/handlers/handlers-http-request-java-package-mapping.md#ディスパッチの設定) を参照。
 
 > **Important:**
 > HTTPリクエストディスパッチハンドラでは、クラス名を元にURLが決まるため、柔軟なURLを使用できない。
 > 例えば、  `/user/index` のようなURLを使用したい場合、クラス名を `user` とする必要がある。
 > これは、Javaの一般的なクラス名の規約に違反しており、推奨されない。
 
-> このため、このハンドラを使うよりも、URLとアクションクラスとのマッピングを柔軟に設定できる [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) を使用することを推奨する。
+> このため、このハンドラを使うよりも、URLとアクションクラスとのマッピングを柔軟に設定できる [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#ルーティングアダプタ) を使用することを推奨する。
 
 本ハンドラでは、以下の処理を行う。
 
@@ -84,7 +84,7 @@ jp.co.tis.nablarch.example.UserAction
 ## アクションが複数のパッケージに配置される場合の設定
 
 アクションは、複数のパッケージにまたがって配置できる。
-この場合、前述の [ディスパッチの設定](../../component/handlers/handlers-http-request-java-package-mapping.md#java-package-mapping-entry-dispatch-settings) に記載のベースパッケージを全Actionが置かれるパッケージに
+この場合、前述の [ディスパッチの設定](../../component/handlers/handlers-http-request-java-package-mapping.md#ディスパッチの設定) に記載のベースパッケージを全Actionが置かれるパッケージに
 設定し、URIのクラス名にベースパッケージから対応づける Action までのパスを記載する。
 
 以下にクラスの配置とURLの対応付けの例を示す。

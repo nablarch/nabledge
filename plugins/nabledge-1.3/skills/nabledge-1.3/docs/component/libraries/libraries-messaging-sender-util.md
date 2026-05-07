@@ -2,7 +2,7 @@
 
 対外システムに対するメッセージの同期送信を行うユーティリティクラス。
 
-本ユーティリティは [フレームワーク制御ヘッダ](../../component/libraries/libraries-enterprise-messaging.md#fw-header) の利用を前提とし、
+本ユーティリティは [フレームワーク制御ヘッダ](../../component/libraries/libraries-enterprise-messaging.md#基本概念) の利用を前提とし、
 再送電文フラグを利用した再送/タイムアウト制御等の機能を実装している。
 
 > **Note:**
@@ -48,7 +48,7 @@ try {
 ```
 
 > **Note:**
-> このクラスは、カレントスレッドに紐づけられている [メッセージングコンテキスト](../../component/libraries/libraries-enterprise-messaging.md#messaging-api) を
+> このクラスは、カレントスレッドに紐づけられている [メッセージングコンテキスト](../../component/libraries/libraries-enterprise-messaging.md#メッセージング基盤api) を
 > 利用してメッセージ送信を行うため、 [メッセージングコンテキスト管理ハンドラ](../../component/handlers/handlers-MessagingContextHandler.md) を
 > ハンドラキュー上に配置しておく必要がある。
 
@@ -106,7 +106,7 @@ messageSender.RM11AD0101.timeout=3000
 
 | 項目名 | 内容 |
 |---|---|
-| messageSender.DEFAULT.messagingProviderName | [メッセージングプロバイダ](../../component/libraries/libraries-enterprise-messaging.md#messaging-provider) をリポジトリから取得する際に 使用するコンポーネント名 |
+| messageSender.DEFAULT.messagingProviderName | [メッセージングプロバイダ](../../component/libraries/libraries-enterprise-messaging.md#メッセージングプロバイダ) をリポジトリから取得する際に 使用するコンポーネント名 |
 | messageSender.DEFAULT.destination | 送信キュー名(論理名) |
 | messageSender.DEFAULT.replyTo | 応答受信キュー名(論理名) |
 | messageSender.DEFAULT.retryCount | タイムアウト発生時の再送回数。再送しない場合は0以下を指定。デフォルトは-1 |

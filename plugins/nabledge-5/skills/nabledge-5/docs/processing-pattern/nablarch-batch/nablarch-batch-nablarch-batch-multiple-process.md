@@ -1,6 +1,6 @@
 # 常駐バッチアプリケーションのマルチプロセス化
 
-基本的には [データベースをキューとしたメッセージングのマルチプロセス化](../../processing-pattern/db-messaging/db-messaging-multiple-process.md#db-messaging-multiple-process)
+基本的には [データベースをキューとしたメッセージングのマルチプロセス化](../../processing-pattern/db-messaging/db-messaging-multiple-process.md#マルチプロセス化)
 と同様となるため、そちらを参照すること。
 
 ただし、Actionの実装についてはデータベースをキューとしたメッセージングとは異なるため、

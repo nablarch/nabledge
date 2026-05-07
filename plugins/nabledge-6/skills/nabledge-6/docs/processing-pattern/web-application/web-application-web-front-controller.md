@@ -59,7 +59,7 @@ web.xml への設定例を以下に示す。
 
 ポイント
 
-* システムリポジトリを初期化するため、 [Nablarchサーブレットコンテキスト初期化リスナー](../../processing-pattern/web-application/web-application-nablarch-servlet-context-listener.md#nablarch-servlet-context-listener) をリスナーとして設定すること。
+* システムリポジトリを初期化するため、 [Nablarchサーブレットコンテキスト初期化リスナー](../../processing-pattern/web-application/web-application-nablarch-servlet-context-listener.md#nablarchサーブレットコンテキスト初期化リスナー) をリスナーとして設定すること。
 
 ```xml
 <context-param>

@@ -33,9 +33,9 @@
 【仕様】
 
 * 要求電文のレイアウトはヘッダレコードとデータレコードがそれぞれ1個の構造をもつ。
-* 要求電文のヘッダレコード、データレコードのレイアウト仕様については [要求電文仕様](../../guide/http-messaging/http-messaging-01-userSendSyncMessageSpec.md#user-send-sync-request-format)を参照。
+* 要求電文のヘッダレコード、データレコードのレイアウト仕様については [要求電文仕様](../../guide/http-messaging/http-messaging-01-userSendSyncMessageSpec.md#要求電文仕様)を参照。
 * 応答電文のレイアウトはヘッダレコードとデータレコードがそれぞれ1個の構造をもつ。
-* 応答電文のヘッダレコード、データレコードのレイアウト仕様については  [応答電文仕様](../../guide/http-messaging/http-messaging-01-userSendSyncMessageSpec.md#user-send-sync-response-format)を参照。
+* 応答電文のヘッダレコード、データレコードのレイアウト仕様については  [応答電文仕様](../../guide/http-messaging/http-messaging-01-userSendSyncMessageSpec.md#応答電文仕様)を参照。
 * 応答電文の処理結果コードが200の場合は、完了画面を表示する。
 * 応答電文の処理結果コードが200以外の場合は、障害コード=NW11AC0201のシステムエラーを送出し、
   エラー画面に遷移する。(この処理はアーキテクトにより提供されるため、業務Actionは意識しなくてよい)

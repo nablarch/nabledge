@@ -48,7 +48,7 @@ public class SampleTest {
 > **Note:**
 > @Beforeや@Afterなどのアノテーションも使用できる。これらのアノテーションを用いて、
 > テストメソッド前後にリソースの取得解放などの共通処理を行いたい場合は、
-> 次の項を参照（ [テスト実行前後に共通処理を行いたい。](../../development-tools/testing-framework/testing-framework-03-Tips.md#using-junit-annotation) ）。
+> 次の項を参照（ [テスト実行前後に共通処理を行いたい。](../../development-tools/testing-framework/testing-framework-03-Tips.md#テスト実行前後に共通処理を行いたい) ）。
 
 ## Excelによるテストデータ記述
 
@@ -110,7 +110,7 @@ Excelシートの記述方法関する規約について説明を行う。
 |---|---|---|
 | SETUP_TABLE | テスト実行前にデータベースに登録するデータ | 登録対象のテーブル名 |
 | EXPECTED_TABLE | テスト実行後の期待するデータベースのデータ 省略したカラムは、比較対象外となる。 | 確認対象のテーブル名 |
-| EXPECTED_COMPLETE_TABLE | テスト実行後の期待するデータベースのデータ 省略したカラムには [デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#default-values-when-column-omitted) が設定されているものとして扱われる。 | 確認対象のテーブル名 |
+| EXPECTED_COMPLETE_TABLE | テスト実行後の期待するデータベースのデータ 省略したカラムには [デフォルト値](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md#デフォルト値) が設定されているものとして扱われる。 | 確認対象のテーブル名 |
 | LIST_MAP | List<Map<String,String>>形式のデータ | シート内で一意になるID 期待値のID(任意の文字列) |
 | SETUP_FIXED | 事前準備用の固定長ファイル | 準備ファイルの配置場所 |
 | EXPECTED_FIXED | 期待値を示す固定長ファイル | 比較対象ファイルの配置場所 |
@@ -247,7 +247,7 @@ LIST_MAP=EXAMPLE_MARKER_COLUMN
 | abc" | abc"として扱われる。(前後がダブルクォートではないため、そのまま扱われる。) |
 
 この記法を使用することで、空行を表すことができる。
-『 [テストデータに空行を記述したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#how-to-express-empty-line) 』の項を参照。
+『 [テストデータに空行を記述したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#テストデータに空行を記述したい) 』の項を参照。
 
 コンポーネント設定ファイルにて設定されたSystemTimeProvider実装クラスから取得したTimestampの文字列形式に変換される。
 具体的には、 2011-04-11 01:23:45.0 というような値に変換される。
@@ -296,7 +296,7 @@ Excelセル内の改行（Alt+Enter）は *LF* として扱われる。これは
 * テスト実行速度が上がる。
 
 > **Note:**
-> マスタデータの投入には、 [マスタデータ投入ツール](../../development-tools/toolbox/toolbox-01-MasterDataSetupTool.md#master-data-setup-tool) を使用する。
+> マスタデータの投入には、 [マスタデータ投入ツール](../../development-tools/toolbox/toolbox-01-MasterDataSetupTool.md#マスタデータ投入ツール) を使用する。
 > また、 [マスタデータ復旧機能](../../development-tools/testing-framework/testing-framework-04-MasterDataRestore.md) により、テスト内で発生したマスタデータの変更をテスト終了時に自動的に元の状態に戻すことができる。これにより、マスタデータに変更が必要なテストケースであっても、他のテストケースに影響無く実行できる。
 
 ### テストデータは全てExcelシートに記述する

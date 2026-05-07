@@ -19,13 +19,13 @@
     {
       "id": "s3",
       "title": "許可するタグの指定方法",
-      "content": "本ツールは、 **JSPで使用を許可する構文とタグ** を設定ファイルに定義することで、設定ファイルに定義されていない構文とタグが使用されている箇所を指摘する。\nチェック結果は、HTMLまたはXML形式で出力する。\n\n本ツールで指定可能な構文とタグを下記に示す。\n\n* XMLコメント\n* HTMLコメント [1]\n* EL式\n* 宣言\n* 式\n* スクリプトレット\n* ディレクティブ\n* アクションタグ\n* カスタムタグ\n\n本ツールではHTMLタグ等の上記以外の構文とタグは指定できない。\n\n本ツールでは、下記の場所をチェック対象外とする。下記以外の場所は常にチェックする。\n\n* 使用を許可したタグの属性\n\n下記に例として、EL式を禁止した場合のチェック結果を示す。\n\n* 使用を許可したタグの属性にEL式を指定した場合は、指摘しない。\n\n  ```\n  <jsp:include page=\"${ Expression }\" />\n  ```\n* 使用を許可したタグのボディにEL式を指定した場合は、指摘する。\n\n  ```\n  <jsp:text>\n     ${ Expression }\n  </jsp:text>\n  ```\n* HTMLタグの属性にEL式を指定した場合は、指摘する。\n\n  ```\n  <td height=\"${ Expression }\"> </td>\n  ```\n* HTMLタグのボディにEL式を指定した場合は、指摘する。\n\n  ```\n  <td> ${ Expression } </td>\n  ```\n* JavaScript中にEL式を指定した場合は、指摘する。\n\n  ```\n  function samplefunc() {\n      var id = ${user.id}\n  }\n  ```\n\n設定ファイルの記述方法は [JSP静的解析ツール設定ファイルの記述方法](../../development-tools/java-static-analysis/java-static-analysis-01-JspStaticAnalysis.md#01-customjspanalysis) を参照のこと。\n\nHTMLコメントを使用不可とした場合でも、以下のコメントについてはエラーとして検出しない。\n\n* 条件付きコメント(IEによって解釈される条件付きのコメント)\n* 業務画面作成支援ツールをロードするためのコメント\n\nこれらのコメントは、ブラウザによるCSSの切り替えや業務画面作成支援ツールを使用した際に\n使用必須のコメントとなるため、エラーとして検出することは不適切であるため。",
+      "content": "本ツールは、 **JSPで使用を許可する構文とタグ** を設定ファイルに定義することで、設定ファイルに定義されていない構文とタグが使用されている箇所を指摘する。\nチェック結果は、HTMLまたはXML形式で出力する。\n\n本ツールで指定可能な構文とタグを下記に示す。\n\n* XMLコメント\n* HTMLコメント [1]\n* EL式\n* 宣言\n* 式\n* スクリプトレット\n* ディレクティブ\n* アクションタグ\n* カスタムタグ\n\n本ツールではHTMLタグ等の上記以外の構文とタグは指定できない。\n\n本ツールでは、下記の場所をチェック対象外とする。下記以外の場所は常にチェックする。\n\n* 使用を許可したタグの属性\n\n下記に例として、EL式を禁止した場合のチェック結果を示す。\n\n* 使用を許可したタグの属性にEL式を指定した場合は、指摘しない。\n\n  ```\n  <jsp:include page=\"${ Expression }\" />\n  ```\n* 使用を許可したタグのボディにEL式を指定した場合は、指摘する。\n\n  ```\n  <jsp:text>\n     ${ Expression }\n  </jsp:text>\n  ```\n* HTMLタグの属性にEL式を指定した場合は、指摘する。\n\n  ```\n  <td height=\"${ Expression }\"> </td>\n  ```\n* HTMLタグのボディにEL式を指定した場合は、指摘する。\n\n  ```\n  <td> ${ Expression } </td>\n  ```\n* JavaScript中にEL式を指定した場合は、指摘する。\n\n  ```\n  function samplefunc() {\n      var id = ${user.id}\n  }\n  ```\n\n設定ファイルの記述方法は [JSP静的解析ツール設定ファイルの記述方法](../../development-tools/java-static-analysis/java-static-analysis-01-JspStaticAnalysis.md#jsp静的解析ツール設定ファイルの記述方法) を参照のこと。\n\nHTMLコメントを使用不可とした場合でも、以下のコメントについてはエラーとして検出しない。\n\n* 条件付きコメント(IEによって解釈される条件付きのコメント)\n* 業務画面作成支援ツールをロードするためのコメント\n\nこれらのコメントは、ブラウザによるCSSの切り替えや業務画面作成支援ツールを使用した際に\n使用必須のコメントとなるため、エラーとして検出することは不適切であるため。",
       "level": 3
     },
     {
       "id": "s4",
       "title": "チェック対象ファイルの指定方法",
-      "content": "チェック対象のファイル（ディレクトリ）は、本ツールへの起動引数として指定する。\nディレクトリを指定した場合は、対象のファイル(デフォルトでは拡張子がjspのファイルで、設定により拡張子は追加可能)を再帰的にチェックする。\n\nUI開発基盤の開発プロジェクトでは、チェック対象のファイル（本番環境にデプロイされるファイル）と、\nチェック対象外のファイル（テスト用のファイルなどで本番環境にはデプロイされないファイル）が、\nチェック対象ディレクトリに混在するケースがある。\nこのような場合には、除外ファイル設定を使用することで、不要なファイルへのチェックを無効にできる。\n\nチェック対象のファイル（ディレクトリ）、チェック対象外ファイル（ディレクトリ）の設定方法は、 [Antビルドファイル用設定ファイルの書き換え](../../development-tools/java-static-analysis/java-static-analysis-02-JspStaticAnalysisInstall.md#01-customjspanalysisprop) を参照",
+      "content": "チェック対象のファイル（ディレクトリ）は、本ツールへの起動引数として指定する。\nディレクトリを指定した場合は、対象のファイル(デフォルトでは拡張子がjspのファイルで、設定により拡張子は追加可能)を再帰的にチェックする。\n\nUI開発基盤の開発プロジェクトでは、チェック対象のファイル（本番環境にデプロイされるファイル）と、\nチェック対象外のファイル（テスト用のファイルなどで本番環境にはデプロイされないファイル）が、\nチェック対象ディレクトリに混在するケースがある。\nこのような場合には、除外ファイル設定を使用することで、不要なファイルへのチェックを無効にできる。\n\nチェック対象のファイル（ディレクトリ）、チェック対象外ファイル（ディレクトリ）の設定方法は、 [Antビルドファイル用設定ファイルの書き換え](../../development-tools/java-static-analysis/java-static-analysis-02-JspStaticAnalysisInstall.md#antビルドファイル用設定ファイルの書き換え) を参照",
       "level": 3
     },
     {
@@ -61,13 +61,13 @@
     {
       "id": "s10",
       "title": "Antビルドファイル用設定ファイルの修正",
-      "content": "Antビルドファイル用設定ファイルを、実行環境にあわせて修正すること。\n\n詳細は、 [Antビルドファイル用設定ファイルの書き換え](../../development-tools/java-static-analysis/java-static-analysis-02-JspStaticAnalysisInstall.md#01-customjspanalysisprop) を参照",
+      "content": "Antビルドファイル用設定ファイルを、実行環境にあわせて修正すること。\n\n詳細は、 [Antビルドファイル用設定ファイルの書き換え](../../development-tools/java-static-analysis/java-static-analysis-02-JspStaticAnalysisInstall.md#antビルドファイル用設定ファイルの書き換え) を参照",
       "level": 3
     },
     {
       "id": "s11",
       "title": "実行方法",
-      "content": "AntビルドファイルをEclipseのAntビューに追加し、実行したいターゲットを実行する。\nAntビューの設定に関しては、 [Eclipseとの連携設定](../../development-tools/java-static-analysis/java-static-analysis-02-JspStaticAnalysisInstall.md#how-to-setup-ant-view-in-eclipse-jsp-analysis) を参照のこと。\n\n![startJspAnalysis.png](assets/java-static-analysis-01-JspStaticAnalysis/startJspAnalysis.png)",
+      "content": "AntビルドファイルをEclipseのAntビューに追加し、実行したいターゲットを実行する。\nAntビューの設定に関しては、 [Eclipseとの連携設定](../../development-tools/java-static-analysis/java-static-analysis-02-JspStaticAnalysisInstall.md#eclipseとの連携設定) を参照のこと。\n\n![startJspAnalysis.png](assets/java-static-analysis-01-JspStaticAnalysis/startJspAnalysis.png)",
       "level": 3
     },
     {

@@ -5,7 +5,7 @@
 アプリケーションで使用するID(例えば取引明細ID等)を採番するための汎用的な機能を提供する。
 
 本機能は、リポジトリに登録して使用する。
-このため、本機能に必要な初期化処理は [リポジトリ](../../component/libraries/libraries-02-Repository.md#repository) が実行する。
+このため、本機能に必要な初期化処理は [リポジトリ](../../component/libraries/libraries-02-Repository.md#リポジトリ) が実行する。
 
 また、本機能は各プロジェクトでアーキテクトが作成する採番機能において使用されることを想定しており、単体で使用することはない。
 このため、アプリケーションプログラマは、本機能を直接使用することはない。
@@ -219,7 +219,7 @@ a)-2. nablarch.common.idgenerator.TableIdGeneratorの設定
 | noColumnName(必須) | 採番テーブルのNOカラムの物理名を設定する。 |
 | dbTransactionName | データベースコネクション名を設定する。 ビジネスロジックで無名のデータベース接続を使用する場合は、設定不要。  > **Warning:** > 無名のデータベース接続以外を使用する場合(本設定値を記述する場合)は、 > 必ずアプリケーションで使用するデータベース接続と同一のデータベースコネクション名を設定すること。 |
 
-※採番テーブルのレイアウトは、 [採番テーブルの構造](../../component/libraries/libraries-06-IdGenerator.md#id-table-label) を参照。
+※採番テーブルのレイアウトは、 [採番テーブルの構造](../../component/libraries/libraries-06-IdGenerator.md#採番テーブルの構造) を参照。
 
 b) 高速に採番を行うクラスの設定
 

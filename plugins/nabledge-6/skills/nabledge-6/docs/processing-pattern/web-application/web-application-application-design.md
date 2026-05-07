@@ -35,11 +35,11 @@
 
 フォームクラスのプロパティは全て String で定義する
 
-プロパティを String とすべき理由は、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation-form-property) を参照。
+プロパティを String とすべき理由は、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#バリデーションルールの設定方法) を参照。
 
 フォームクラスのオブジェクトをセッションに保存しない
 
-セッションに保存すべきでない理由は、 [セッションストア](../../component/libraries/libraries-session-store.md#session-store-form) を参照。
+セッションに保存すべきでない理由は、 [セッションストア](../../component/libraries/libraries-session-store.md#hiddenstoreのparameternameプロパティの値を設定) を参照。
 
 エンティティクラス(entity class)
 

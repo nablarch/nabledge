@@ -19,25 +19,25 @@
     {
       "id": "s3",
       "title": "テストデータの書き方",
-      "content": "テストデータを記載したExcelファイルは、クラス単体テストと同様に\nテストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。\n\nテストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#how-to-write-excel) 」を参照。",
+      "content": "テストデータを記載したExcelファイルは、クラス単体テストと同様に\nテストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。\n\nテストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#excelによるテストデータ記述) 」を参照。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "テストクラスで共通のデータベース初期値",
-      "content": "画面オンラインの場合と同様である。「 [テストクラスで共通のデータベース初期値](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-setup-db) 」を参照。",
+      "content": "画面オンラインの場合と同様である。「 [テストクラスで共通のデータベース初期値](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#テストクラスで共通のデータベース初期値) 」を参照。",
       "level": 3
     },
     {
       "id": "s5",
       "title": "テストケース一覧",
-      "content": "LIST_MAPのデータタイプで１テストメソッド分のケース表を記載する。IDは、 **testShots** とする。\n\n１ケース毎に以下の要素を持たせる。\n\n| カラム名 | 説明 | 必須 |\n|---|---|---|\n| no | テストケース番号を1からの連番で記載する。 | 必須 |\n| description | そのテストケースの説明を記載する。 | 必須 |\n| expectedStatusCode | 期待するステータスコード | 必須 |\n| setUpTable | 各テストケース実行前にデータベースに登録する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。データの投入は自動テストフレーム ワークにより行われる。 |  |\n| setUpFile | 各テストケース実行前に入力用ファイルを作成する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。ファイルの作成は自動テストフレーム ワークにより行われる。 |  |\n| expectedFile | 出力ファイルの内容を比較する場合、期待するファイルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。 |  |\n| expectedTable | データベースの内容を比較する場合、期待するテーブルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。 |  |\n| expectedLog | 期待するログメッセージを記載したLIST_MAPデータのIDを記載する。 そのログメッセージが実際に出力されたかどうか、自動テストフレームワークにて検証される。 (『 ログの結果検証 』を参照) |  |\n| diConfig | バッチを実行する際のコンポーネント設定ファイルへのパスを記載する。 ( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照) | 必須 |\n| requestPath | バッチを実行する際のリクエストパスを記載する。 ( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照) | 必須 |\n| userId | バッチ実行ユーザIDを記載する。 ( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照) | 必須 |\n| expectedMessage | メッセージ同期送信を行う場合、期待する要求電文の [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する。メッセージの作成は自動テストフレームワークにより行われる。 |  |\n| responseMessage | メッセージ同期送信を行う場合、返却する応答電文の [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する。メッセージの作成は自動テストフレームワークにより行われる。 |  |\n\nデフォルトのグループIDを使用したい（グループIDを使わない）場合は、 default と記載する。\nデフォルトのグループIDと個別のグループを併用することも可能である。\n両方のデータが混在した場合、デフォルトのグループIDのデータとグループID指定のデータ両方が有効になる。",
+      "content": "LIST_MAPのデータタイプで１テストメソッド分のケース表を記載する。IDは、 **testShots** とする。\n\n１ケース毎に以下の要素を持たせる。\n\n| カラム名 | 説明 | 必須 |\n|---|---|---|\n| no | テストケース番号を1からの連番で記載する。 | 必須 |\n| description | そのテストケースの説明を記載する。 | 必須 |\n| expectedStatusCode | 期待するステータスコード | 必須 |\n| setUpTable | 各テストケース実行前にデータベースに登録する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する [1] 。データの投入は自動テストフレーム ワークにより行われる。 |  |\n| setUpFile | 各テストケース実行前に入力用ファイルを作成する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する [1] 。ファイルの作成は自動テストフレーム ワークにより行われる。 |  |\n| expectedFile | 出力ファイルの内容を比較する場合、期待するファイルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する [1] 。 |  |\n| expectedTable | データベースの内容を比較する場合、期待するテーブルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する [1] 。 |  |\n| expectedLog | 期待するログメッセージを記載したLIST_MAPデータのIDを記載する。 そのログメッセージが実際に出力されたかどうか、自動テストフレームワークにて検証される。 (『 ログの結果検証 』を参照) |  |\n| diConfig | バッチを実行する際のコンポーネント設定ファイルへのパスを記載する。 ( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#コマンドライン引数) を参照) | 必須 |\n| requestPath | バッチを実行する際のリクエストパスを記載する。 ( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#コマンドライン引数) を参照) | 必須 |\n| userId | バッチ実行ユーザIDを記載する。 ( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#コマンドライン引数) を参照) | 必須 |\n| expectedMessage | メッセージ同期送信を行う場合、期待する要求電文の [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する。メッセージの作成は自動テストフレームワークにより行われる。 |  |\n| responseMessage | メッセージ同期送信を行う場合、返却する応答電文の [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する。メッセージの作成は自動テストフレームワークにより行われる。 |  |\n\nデフォルトのグループIDを使用したい（グループIDを使わない）場合は、 default と記載する。\nデフォルトのグループIDと個別のグループを併用することも可能である。\n両方のデータが混在した場合、デフォルトのグループIDのデータとグループID指定のデータ両方が有効になる。",
       "level": 3
     },
     {
       "id": "s6",
       "title": "コマンドライン引数",
-      "content": "テストデータで、 [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を指定する方法を説明する。\n\nバッチ起動時の引数を指定するには、\n`args[n]` （ **添字nは0以上の整数** ）という形式でカラムを追加する。\n\n| no | case | ... | args[0] | args[1] | args[2] |\n|---|---|---|---|---|---|\n| 1 | xxxのケース | ... | 第1引数 | 第2引数 | 第3引数 |\n\n> **Warning:**\n> 添字nは連続した整数でなければならない。\n\nテストケース一覧に上記以外のカラムを追加すると、そのカラムは\nコマンドラインオプションとみなされる。\n\n例えば、テストケース一覧に以下のようなカラムがあるとすると、\n\n| no | case | ... | paramA | paramB |\n|---|---|---|---|---|\n| 1 | xxxのケース | ... | valueA | valueB |\n\n```bash\n-paramA=valueA -paramB=valueB\n```\n\nというコマンドラインオプションを指定したことになる。",
+      "content": "テストデータで、 [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#コマンドライン引数) を指定する方法を説明する。\n\nバッチ起動時の引数を指定するには、\n`args[n]` （ **添字nは0以上の整数** ）という形式でカラムを追加する。\n\n| no | case | ... | args[0] | args[1] | args[2] |\n|---|---|---|---|---|---|\n| 1 | xxxのケース | ... | 第1引数 | 第2引数 | 第3引数 |\n\n> **Warning:**\n> 添字nは連続した整数でなければならない。\n\nテストケース一覧に上記以外のカラムを追加すると、そのカラムは\nコマンドラインオプションとみなされる。\n\n例えば、テストケース一覧に以下のようなカラムがあるとすると、\n\n| no | case | ... | paramA | paramB |\n|---|---|---|---|---|\n| 1 | xxxのケース | ... | valueA | valueB |\n\n```bash\n-paramA=valueA -paramB=valueB\n```\n\nというコマンドラインオプションを指定したことになる。",
       "level": 4
     },
     {
@@ -49,7 +49,7 @@
     {
       "id": "s8",
       "title": "データベースの準備",
-      "content": "[オンライン](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-testcases) と同様に、グループIDで対応付けを行う。",
+      "content": "[オンライン](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#テストケース一覧) と同様に、グループIDで対応付けを行う。",
       "level": 4
     },
     {
@@ -73,7 +73,7 @@
     {
       "id": "s12",
       "title": "期待するデータベースの状態",
-      "content": "[オンライン](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-expected-tables) と同様に、期待するデータベースの状態をテストケース一覧とリンクさせる。",
+      "content": "[オンライン](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#期待するデータベースの状態) と同様に、期待するデータベースの状態をテストケース一覧とリンクさせる。",
       "level": 4
     },
     {

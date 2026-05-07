@@ -14,7 +14,7 @@
 具体的には、同一の電文を繰り返し受信した際に、その電文に対する処理が終わっているかどうか(応答電文が作成されているかどうか)を判断する。
 もし、既に処理が終わっていた場合(応答電文が作成されていた場合)には、業務処理を再度行うのではなく作成済みの応答電文を自動的に送信する。
 
-同一電文かの判定方法は [同一電文(再送電文)の判定方法](../../component/handlers/handlers-message-resend-handler.md#message-resend-handler-resent-message) を参照。
+同一電文かの判定方法は [同一電文(再送電文)の判定方法](../../component/handlers/handlers-message-resend-handler.md#同一電文再送電文の判定方法) を参照。
 
 > **Tip:**
 > 本ハンドラを適用するメリットは以下のとおり。
@@ -47,15 +47,15 @@
 
 ## 制約
 
-[電文応答制御ハンドラ](../../component/handlers/handlers-message-reply-handler.md#message-reply-handler) よりも後ろに設定すること
+[電文応答制御ハンドラ](../../component/handlers/handlers-message-reply-handler.md#電文応答制御ハンドラ) よりも後ろに設定すること
 
 本ハンドラで作成した応答電文を送信する必要がある。
-このため、電文を送信するための [電文応答制御ハンドラ](../../component/handlers/handlers-message-reply-handler.md#message-reply-handler) よりも後ろに本ハンドラを設定する必要がある。
+このため、電文を送信するための [電文応答制御ハンドラ](../../component/handlers/handlers-message-reply-handler.md#電文応答制御ハンドラ) よりも後ろに本ハンドラを設定する必要がある。
 
-[トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) よりも後ろに設定すること
+[トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#トランザクション制御ハンドラ) よりも後ろに設定すること
 
 本ハンドラでは、応答電文をデータベースに保存する。
-このため、データベースへのトランザクション制御を実現する [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) よりも後ろに本ハンドラを設定する必要がある。
+このため、データベースへのトランザクション制御を実現する [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#トランザクション制御ハンドラ) よりも後ろに本ハンドラを設定する必要がある。
 
 ## 応答電文の保存先について
 
@@ -68,7 +68,7 @@
 | カラム名 | 制約等 | 格納する値 |
 |---|---|---|
 | リクエストID | 主キー   文字列型 | 要求電文のリクエストID |
-| メッセージID | 主キー   文字列型 | 要求電文のメッセージID  再送電文の場合には、メッセージIDではなく相関メッセージIDを使用する。  詳細は、 [同一電文(再送電文)の判定方法](../../component/handlers/handlers-message-resend-handler.md#message-resend-handler-resent-message) を参照 |
+| メッセージID | 主キー   文字列型 | 要求電文のメッセージID  再送電文の場合には、メッセージIDではなく相関メッセージIDを使用する。  詳細は、 [同一電文(再送電文)の判定方法](../../component/handlers/handlers-message-resend-handler.md#同一電文再送電文の判定方法) を参照 |
 | 宛先キューの論理名 | 文字列型 | 応答電文を送信するための宛先キューの論理名   (InterSystemMessage#getDestination()) |
 | 処理結果コード | 文字列型 | 応答電文の処理結果コード   (ResponseMessage#getStatusCode()) |
 | 応答電文 | バイナリ型 | 応答電文の内容   (ResponseMessage#getBodyBytes()) |
@@ -84,7 +84,7 @@ sentMessageTableSchemaプロパティ を参照。
 * フレームワーク制御ヘッダの再送要求フラグに値が設定されている
 * 受信した要求電文のリクエストIDとメッセージIDに紐づくデータが、応答電文を保存したテーブルに存在している
 
-フレームワーク制御ヘッダの詳細は、 [フレームワーク制御ヘッダ](../../component/libraries/libraries-mom-system-messaging.md#mom-system-messaging-fw-header) を参照。
+フレームワーク制御ヘッダの詳細は、 [フレームワーク制御ヘッダ](../../component/libraries/libraries-mom-system-messaging.md#送受信電文のデータモデル) を参照。
 
 > **Important:**
 > 相手先システムが要求電文を再送する際には、以下の制約を満たす必要がある。
@@ -98,7 +98,7 @@ sentMessageTableSchemaプロパティ を参照。
 応答電文内のフレームワーク制御ヘッダの定義を変更する場合には、プロジェクトで拡張したフレームワーク制御ヘッダの定義を設定する必要がある。
 設定しない場合は、デフォルトの StandardFwHeaderDefinition が使用される。
 
-フレームワーク制御ヘッダの詳細は、 [フレームワーク制御ヘッダ](../../component/libraries/libraries-mom-system-messaging.md#mom-system-messaging-fw-header) を参照。
+フレームワーク制御ヘッダの詳細は、 [フレームワーク制御ヘッダ](../../component/libraries/libraries-mom-system-messaging.md#送受信電文のデータモデル) を参照。
 
 以下に設定例を示す。
 

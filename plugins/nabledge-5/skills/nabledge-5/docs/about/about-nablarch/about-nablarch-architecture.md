@@ -6,12 +6,12 @@
 * ハンドラキュー(handler queue)
 
   * インターセプタ(interceptor)
-* [ライブラリ(library)](../../component/libraries/libraries-libraries.md#library)
+* [ライブラリ(library)](../../component/libraries/libraries-libraries.md#nablarchが提供するライブラリ)
 
 Nablarchアプリケーションフレームワークのアーキテクチャについて解説する。
 
 > **Warning:**
-> 本項で解説するアーキテクチャは、 [JSR352に準拠したバッチアプリケーション](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.md#jsr352-batch) には該当しない（詳細については、 [JSR352に準拠したバッチアプリケーション](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.md#jsr352-batch) の [アーキテクチャ概要](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-architecture) を参照）。
+> 本項で解説するアーキテクチャは、 [JSR352に準拠したバッチアプリケーション](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.md#jsr352に準拠したバッチアプリケーション) には該当しない（詳細については、 [JSR352に準拠したバッチアプリケーション](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.md#jsr352に準拠したバッチアプリケーション) の [アーキテクチャ概要](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#アーキテクチャ概要) を参照）。
 
 ## Nablarchアプリケーションフレームワークの主な構成要素
 
@@ -38,7 +38,7 @@ Nablarchアプリケーションフレームワークの主な構成要素を以
 
 > 業務ロジックを実装するクラスの親クラスで共通処理を実装するようなケースを多く見かけるが、
 > 個別のハンドラとして実装することを推奨する。
-> (個別のハンドラの前後に処理を追加したい場合には [インターセプタ(interceptor)](../../about/about-nablarch/about-nablarch-architecture.md#nablarch-architecture-interceptor) を使用することを推奨する。)
+> (個別のハンドラの前後に処理を追加したい場合には [インターセプタ(interceptor)](../../about/about-nablarch/about-nablarch-architecture.md#インターセプタinterceptor) を使用することを推奨する。)
 
 > 個別のハンドラで実装した場合
 
@@ -86,4 +86,4 @@ Nablarchは受け取ったリクエストに対し、ハンドラキュー上に
 
 ライブラリとは、データベースアクセスやファイルアクセス、ログ出力などのようにハンドラから呼び出されるコンポーネント群のことを指す。
 
-Nablarchアプリケーションフレームワークが提供するライブラリは、 [Nablarchが提供するライブラリ](../../component/libraries/libraries-libraries.md#library) を参照。
+Nablarchアプリケーションフレームワークが提供するライブラリは、 [Nablarchが提供するライブラリ](../../component/libraries/libraries-libraries.md#nablarchが提供するライブラリ) を参照。

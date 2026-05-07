@@ -90,6 +90,6 @@ Nablarch UI開発基盤の主な特徴は以下のとおりである。
 これは、開発工程全体にわたって劇的なコスト削減につながる。
 
 > **Important:**
-> Nablarch UI開発基盤が現バージョンで表示互換性を担保しているのは、 [テスト実施環境](../../development-tools/testing-framework/testing-framework-testing.md#ui-testing-environment) に記載されているブラウザのみである。
+> Nablarch UI開発基盤が現バージョンで表示互換性を担保しているのは、 [テスト実施環境](../../development-tools/testing-framework/testing-framework-testing.md#テスト実施環境) に記載されているブラウザのみである。
 
-> Nablarch UI開発基盤の解説書に、 [テスト実施環境](../../development-tools/testing-framework/testing-framework-testing.md#ui-testing-environment) に記載されていないブラウザやバージョンに対する言及があった場合、無視すること。
+> Nablarch UI開発基盤の解説書に、 [テスト実施環境](../../development-tools/testing-framework/testing-framework-testing.md#テスト実施環境) に記載されていないブラウザやバージョンに対する言及があった場合、無視すること。

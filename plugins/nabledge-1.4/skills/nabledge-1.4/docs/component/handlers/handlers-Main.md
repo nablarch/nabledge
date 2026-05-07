@@ -44,7 +44,7 @@
 **1. (起動引数の解析)**
 
 main関数に渡された起動引数をパースし、その結果をコマンドラインオブジェクト([CommandLine](../../javadoc/nablarch/fw/launcher/CommandLine.html))に設定する。
-起動引数の扱いについては、 [後述](../../component/handlers/handlers-Main.md#parsing-commandline) する。
+起動引数の扱いについては、 [後述](../../component/handlers/handlers-Main.md#コマンドライン起動引数の扱い) する。
 
 **2. (リポジトリの初期化)**
 

@@ -9,7 +9,7 @@
 することで、アクセスを高速化する機構を提供する。
 
 本機能は、リポジトリに登録して使用する。
-このため、本機能に必要な初期化処理は [リポジトリ](../../component/libraries/libraries-02-Repository.md#repository) が実行する。
+このため、本機能に必要な初期化処理は [リポジトリ](../../component/libraries/libraries-02-Repository.md#リポジトリ) が実行する。
 
 また、本機能は他の機能の一部として使用されることを想定しており、単体で使用することはない。
 このため、アプリケーションプログラマは、本機能を直接使用することはない。
@@ -76,7 +76,7 @@
 StaticDataCache インタフェースのメソッドを使用して静的データを取得する。
 
 この際、StaticDataCache インタフェースを実装したフィールドには、本機能が提供している StaticDataCache インタフェースの実装クラスを
-リポジトリの [リポジトリに保持するインスタンスの生成(DIコンテナ)](../../component/libraries/libraries-02-01-Repository-config.md#di-container) の機能で設定する。
+リポジトリの [リポジトリに保持するインスタンスの生成(DIコンテナ)](../../component/libraries/libraries-02-01-Repository-config.md#リポジトリに保持するインスタンスの生成diコンテナ) の機能で設定する。
 
 以下に静的データを取得する実装方法について記述する。
 
@@ -134,7 +134,7 @@ public class StaticDataUseExample {
 
 インデックスを StaticDataCache インタフェースに定義された getValues メソッドを使用する。
 
-[IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache-get-example) で示した ExampleData クラスを "name" というインデックスを使用して静的データを取得する実装例を以下に示す。
+[IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#idを指定した静的データの取得) で示した ExampleData クラスを "name" というインデックスを使用して静的データを取得する実装例を以下に示す。
 
 ```java
 public class StaticDataUseExample {
@@ -187,7 +187,7 @@ public class StaticDataUseExample {
 
 ![05_StaticDataCache_LoadOnStartupSequence.jpg](../../../knowledge/assets/libraries-05-StaticDataCache/05_StaticDataCache_LoadOnStartupSequence.jpg)
 
-いずれの方法でも、 [IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache-get-example) で示した通り、
+いずれの方法でも、 [IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#idを指定した静的データの取得) で示した通り、
 キャッシュを使用する実装にはデータがどのようにロードされているか意識する必要がない。
 
 それぞれのロードの使用方法について、以下に記述する。
@@ -203,10 +203,10 @@ public class StaticDataUseExample {
 
 StaticDataLoader インタフェースには、IDを使用するキャッシュへのアクセスと、インデックスを使用したキャッシュへのアクセスに必要なメソッドが定義されている。
 
-[IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache-get-example) で示した、IDを指定してデータを取得する機能のみをオンデマンドロードで使用する場合、
+[IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#idを指定した静的データの取得) で示した、IDを指定してデータを取得する機能のみをオンデマンドロードで使用する場合、
 StaticDataLoaderインタフェースに定義されたgetValueメソッドのみを実装すればよい。
 
-以下に [IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache-get-example) で例に出した ExampleData をロードするクラスと、 StaticDataCache を使用するための設定ファイルの例を示す。
+以下に [IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#idを指定した静的データの取得) で例に出した ExampleData をロードするクラスと、 StaticDataCache を使用するための設定ファイルの例を示す。
 
 #### ExampleDataをロードするクラス
 
@@ -338,7 +338,7 @@ getIndexNames の4つのメソッドを実装する必要がある。
 | getIndexNames | 作成するインデックス名を全て取得する。 フレームワークは、このメソッドの戻り値から作成するインデックスを決定する。 |
 | generateIndexKey | インデックスのキーとなる値を生成する。 ここで生成されるキーは、 getId がオブジェクトのキャッシュに使用されるのに対して、 インデックス上のどのキーにオブジェクトが属するかを示すために使われる。 このため、別々のデータ |
 
-以下に [IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache-get-example) で例に出した ExampleData を一括ロードする実装例を示す。
+以下に [IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#idを指定した静的データの取得) で例に出した ExampleData を一括ロードする実装例を示す。
 
 #### ExampleDataをロードするクラス
 
@@ -417,8 +417,8 @@ public class ExampleDataLoader implements StaticDataLoader<ExampleData> {
 </component>
 ```
 
-また BasicStaticDataCache クラスは初期化が必要なため、  [初期化処理の使用手順](../../component/libraries/libraries-02-02-Repository-initialize.md#repository-initialize)  に記述した Initializable インタフェースを実装している。
-[初期化処理の使用手順](../../component/libraries/libraries-02-02-Repository-initialize.md#repository-initialize) を参考にして、下記のように exampleDataCache が初期化されるよう設定すること。
+また BasicStaticDataCache クラスは初期化が必要なため、  [初期化処理の使用手順](../../component/libraries/libraries-02-02-Repository-initialize.md#初期化処理の使用手順)  に記述した Initializable インタフェースを実装している。
+[初期化処理の使用手順](../../component/libraries/libraries-02-02-Repository-initialize.md#初期化処理の使用手順) を参考にして、下記のように exampleDataCache が初期化されるよう設定すること。
 
 ```xml
 <component name="initializer" class="nablarch.core.repository.initialization.BasicApplicationInitializer">

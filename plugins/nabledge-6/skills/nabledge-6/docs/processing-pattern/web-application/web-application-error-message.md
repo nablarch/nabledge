@@ -1,16 +1,16 @@
 # バリデーションエラーのメッセージを画面表示する
 
-サーバサイドで行ったバリデーションのエラーメッセージは、 [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler) でリクエストスコープに格納される。
+サーバサイドで行ったバリデーションのエラーメッセージは、 [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#httpエラー制御ハンドラ) でリクエストスコープに格納される。
 テンプレートエンジンでは、リクエストスコープに格納された ErrorMessages にアクセスすることでエラーメッセージを表示できる。
-リクエストスコープの変数名は、[エラーメッセージのリクエストスコープへの設定](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler-error-messages) を参照。
+リクエストスコープの変数名は、[エラーメッセージのリクエストスコープへの設定](../../component/handlers/handlers-HttpErrorHandler.md#例外の種類に応じた処理とレスポンスの生成) を参照。
 
 > **Tip:**
-> JSPを使用した場合、 [カスタムタグを使用したエラー表示](../../component/libraries/libraries-tag.md#tag-write-error) を使用することでエラーメッセージの表示ができるが、
+> JSPを使用した場合、 [カスタムタグを使用したエラー表示](../../component/libraries/libraries-tag.md#エラー表示を行う) を使用することでエラーメッセージの表示ができるが、
 > カスタムタグが出力するDOM構造の制約によりCSSフレームワークとの相性が悪い問題がある。
 
 > リクエストスコープ上のオブジェクトを使用した場合、DOM構造の制約がなくなるためJSPでも直接リクエストスコープ上のオブジェクトにアクセスしエラーメッセージを表示しても良い。
 
-以下に [Thymeleaf](../../component/adapters/adapters-web-thymeleaf-adaptor.md#web-thymeleaf-adaptor) を使った場合の実装例を示す。
+以下に [Thymeleaf](../../component/adapters/adapters-web-thymeleaf-adaptor.md#ウェブアプリケーション-thymeleafアダプタ) を使った場合の実装例を示す。
 
 特定のプロパティに対応したメッセージを表示したい
 

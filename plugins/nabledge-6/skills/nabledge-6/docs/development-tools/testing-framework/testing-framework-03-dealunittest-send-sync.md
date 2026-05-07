@@ -38,7 +38,7 @@
 
 ExcelファイルはリクエストID [2] ごとに用意する。また、ファイルの名前はリクエストIDと一致させる。
 たとえば、リクエストIDが「RM21AA0101」ならば、ファイルの名前は「RM21AA0101.xlsx」となる。
-ファイルの配置ディレクトリは、設定ファイルに定義する。詳細は [Excelファイルの配置場所の設定](../../development-tools/testing-framework/testing-framework-03-dealunittest-send-sync.md#send-sync-test-data-path)を参照。
+ファイルの配置ディレクトリは、設定ファイルに定義する。詳細は [Excelファイルの配置場所の設定](../../development-tools/testing-framework/testing-framework-03-dealunittest-send-sync.md#excelファイルの配置場所の設定)を参照。
 
 ここで扱うリクエストIDとは、メッセージを送信する相手先システムの機能を一意に識別するために定義するIDのことを指すものであり、
 ウェブアプリケーションやバッチ処理で使用するリクエストIDとは意味が異なる点に注意すること。
@@ -192,7 +192,7 @@ loggers.MESSAGING_MAP.writerNames=stdout,appFile
 ### フレームワークで使用するクラスの設定
 
 これらの設定は取引単体テストでのみ必要な設定である。そのため、テスト用のプロファイルにこれらを設定する。
-環境ごとにコンポーネントを切り替える方法については [環境ごとにコンポーネントを切り替える方法(モックに切り替える方法)](../../about/about-nablarch/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration.md#how-to-change-componet-define) 参照。
+環境ごとにコンポーネントを切り替える方法については [環境ごとにコンポーネントを切り替える方法(モックに切り替える方法)](../../about/about-nablarch/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration.md#環境ごとにコンポーネントを切り替える方法モックに切り替える方法) 参照。
 
 通常、これらの設定はアーキテクトが行うものでありアプリケーションプログラマが設定する必要はない。
 

@@ -6,7 +6,7 @@
 
 > **Note:**
 > リクエスト単体テストそのものの概要については、
-> [バッチ処理におけるリクエスト単体テスト](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#batch-request-unit-test-outline)
+> [バッチ処理におけるリクエスト単体テスト](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#バッチ処理におけるリクエスト単体テスト)
 > を参照。
 
 ### 全体像
@@ -96,7 +96,7 @@
 ### 固定長ファイル
 
 基本的な記述方法は、
-[リクエスト単体テストの実施方法(バッチ)](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#batch-request-test)
+[リクエスト単体テストの実施方法(バッチ)](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#リクエスト単体テストの実施方法バッチ)
 を参照。
 
 #### パディング
@@ -121,7 +121,7 @@
 ### 可変長ファイル
 
 基本的な記述方法は、
-[リクエスト単体テストの実施方法(バッチ)](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#batch-request-test)
+[リクエスト単体テストの実施方法(バッチ)](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#リクエスト単体テストの実施方法バッチ)
 を参照。
 
 ## 各種設定値

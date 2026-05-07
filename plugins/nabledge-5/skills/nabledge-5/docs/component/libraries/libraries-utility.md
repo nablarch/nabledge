@@ -8,6 +8,6 @@
 | FileUtil | nablarch-core | ファイルの取り扱いに関する機能を提供する |
 | ObjectUtil | nablarch-core | オブジェクトの取り扱いに関する機能を提供する |
 | StringUtil | nablarch-core | 文字列に関する機能を提供する |
-| BeanUtil | nablarch-core-beans | Java Beansクラスに関する機能を提供する。詳細は、 [BeanUtil](../../component/libraries/libraries-bean-util.md#bean-util) を参照。 |
+| BeanUtil | nablarch-core-beans | Java Beansクラスに関する機能を提供する。詳細は、 [BeanUtil](../../component/libraries/libraries-bean-util.md#beanutil) を参照。 |
 | Base64Util | nablarch-core | Base64エンコーディングに関する機能を提供する |
 | BinaryUtil | nablarch-fw-web-extension | バイナリに関する機能を提供する |

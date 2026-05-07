@@ -42,7 +42,7 @@ UIを直接確認してもらう場合などに用いる。
 ```
 
 > **Tip:**
-> チェックアウトしたワークスペースの使用方法については [JSP/HTML作成ガイド](../../development-tools/testing-framework/testing-framework-ui-dev-guide.md#ui-dev-howto-make-jsp) を参照すること。
+> チェックアウトしたワークスペースの使用方法については [JSP/HTML作成ガイド](../../development-tools/testing-framework/testing-framework-ui-dev-guide.md#jsphtml作成ガイド) を参照すること。
 
 ## 開発担当者向けワークスペースの展開
 

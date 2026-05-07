@@ -32,7 +32,7 @@
 
 > **Important:**
 > この機能を使用すると、コードの名称を持つテーブルとコード値を持つテーブルにRDBMSの参照整合性制約を設定できない。
-> このような制約のチェックには [入力値が有効なコード値かチェックする](../../component/libraries/libraries-code.md#code-validation) を使用すること。
+> このような制約のチェックには [入力値が有効なコード値かチェックする](../../component/libraries/libraries-code.md#入力値が有効なコード値かチェックする) を使用すること。
 
 > **Tip:**
 > 静的なコード情報については、以下の理由によりenumで表現したほうが良い。
@@ -43,7 +43,7 @@
 > しかし、Nablarchはenumの値とデータベースの値との相互変換の機能を持っておらず、enumの値をデータベースに登録できない。
 
 > Domaを使用することで、enumの値をデータベース登録できる。
-> Domaを使用する際は、 [Domaアダプタ](../../component/adapters/adapters-doma-adaptor.md#doma-adaptor) を参照して設定すること。
+> Domaを使用する際は、 [Domaアダプタ](../../component/adapters/adapters-doma-adaptor.md#domaアダプタ) を参照して設定すること。
 
 ## 機能概要
 
@@ -51,14 +51,14 @@
 
 この機能は、言語ごとに名称を管理することが出来る。
 
-詳細は、 [名称の多言語化対応](../../component/libraries/libraries-code.md#code-use-multilingualization) を参照。
+詳細は、 [名称の多言語化対応](../../component/libraries/libraries-code.md#名称の多言語化対応) を参照。
 
 ### コード情報はテーブルで管理する
 
 この機能は、値及び名称の情報をデータベース上で管理する。
 このため、事前にデータベースにテーブルを作成し、静的なコード情報をテーブル上に登録しておくこと。
 
-詳細は、 [コード管理機能を使用する為の初期設定](../../component/libraries/libraries-code.md#code-setup-table) を参照。
+詳細は、 [コード管理機能を使用する為の初期設定](../../component/libraries/libraries-code.md#コード管理機能を使用する為の初期設定) を参照。
 
 ## モジュール一覧
 
@@ -102,7 +102,7 @@
 
 有効な値を切り替えたい場合に使用する。不要な場合は省略可能。
 
-詳細は [機能毎に使用するコード情報を切り替える](../../component/libraries/libraries-code.md#code-use-pattern) を参照。
+詳細は [機能毎に使用するコード情報を切り替える](../../component/libraries/libraries-code.md#機能毎に使用するコード情報を切り替える) を参照。
 
 言語
 
@@ -114,7 +114,7 @@
 
 IDに紐づく一覧情報を取得すると、このカラムに設定された値の昇順で結果が返される。
 
-詳細は [画面などで表示する名称のソート順を定義する](../../component/libraries/libraries-code.md#code-use-sort-order) を参照。
+詳細は [画面などで表示する名称のソート順を定義する](../../component/libraries/libraries-code.md#画面などで表示する名称のソート順を定義する) を参照。
 
 名称
 
@@ -129,7 +129,7 @@ VALUEに対応した略称を設定する。
 名称と略称だけでは、表示する文言の値を管理しきれない場合に使用する。
 カラム名やカラム数は必要数定義することが出来る。
 
-詳細は、 [名称、略称以外の名称を定義する](../../component/libraries/libraries-code.md#code-option-name) を参照。
+詳細は、 [名称、略称以外の名称を定義する](../../component/libraries/libraries-code.md#名称略称以外の名称を定義する) を参照。
 
 設定ファイル例
 
@@ -138,7 +138,7 @@ VALUEに対応した略称を設定する。
 ポイント
 
 * BasicCodeManager のコンポーネント名は、 **codeManager** とすること。
-* BasicStaticDataCache の loadOnStartup に対する設定値は、 [データのキャッシュタイミングを制御する](../../component/libraries/libraries-static-data-cache.md#static-data-cache-cache-timing) を参照すること。
+* BasicStaticDataCache の loadOnStartup に対する設定値は、 [データのキャッシュタイミングを制御する](../../component/libraries/libraries-static-data-cache.md#データのキャッシュタイミングを制御する) を参照すること。
 * BasicCodeLoader および BasicStaticDataCache は、初期化が必要なので初期化対象のリストに設定すること。
 
 ```xml
@@ -194,7 +194,7 @@ VALUEに対応した略称を設定する。
 コードパターンテーブルに表示パターンを持つパターン列を定義する。
 
 パターン列は、 CodePatternSchema.patternColumnNames に設定することで使用可能となる。
-設定ファイルへの設定方法は、 [コード管理機能を使用する為の初期設定](../../component/libraries/libraries-code.md#code-setup-table) を参照。
+設定ファイルへの設定方法は、 [コード管理機能を使用する為の初期設定](../../component/libraries/libraries-code.md#コード管理機能を使用する為の初期設定) を参照。
 
 この例では、 `PATTERN1` と `PATTERN2` の2つのパターンを定義し、
 `PATTERN2` ではOTHERを非表示としている。
@@ -220,7 +220,7 @@ VALUEに対応した略称を設定する。
 コード情報は、 CodeUtil を使用して取得する。
 
 パターンを使用する場合、どのパターンを使用するかは文字列で指定する。
-この値は、 [コード管理機能を使用する為の初期設定](../../component/libraries/libraries-code.md#code-setup-table) で設定ファイルに設定したカラム名と厳密に一致させる必要がある。
+この値は、 [コード管理機能を使用する為の初期設定](../../component/libraries/libraries-code.md#コード管理機能を使用する為の初期設定) で設定ファイルに設定したカラム名と厳密に一致させる必要がある。
 
 ```java
 // PATTER1のリストを取得する。
@@ -238,7 +238,7 @@ List<String> pattern2 = CodeUtil.getValues("GENDER", "PATTERN2");
 
 カスタムタグライブラリの詳細な使用方法は、以下を参照。
 
-* [コード値を表示する](../../component/libraries/libraries-tag.md#tag-code-input-output)
+* [コード値を表示する](../../component/libraries/libraries-tag.md#コード値を表示する)
 
 PATTERN2を指定する場合は、以下のように pattern 属性に指定する。
 
@@ -285,7 +285,7 @@ CodeUtil.getShortName("GENDER", "MALE", Locale.ENGLISH) // -> M
 
 > **Important:**
 > JSP用に提供されているカスタムタグライブラリでは、言語指定による値の取得はできないので注意すること。
-> カスタムタグライブラリが使用する言語情報の詳細は、 [コード値を表示する](../../component/libraries/libraries-tag.md#tag-code-input-output) を参照。
+> カスタムタグライブラリが使用する言語情報の詳細は、 [コード値を表示する](../../component/libraries/libraries-tag.md#コード値を表示する) を参照。
 
 ### 画面などで表示する名称のソート順を定義する
 
@@ -327,7 +327,7 @@ CodeUtil.getShortName("GENDER", "MALE", Locale.ENGLISH) // -> M
 コード名称テーブルに、オプションの名称を持つカラムを定義する。
 
 パターン列は、 CodePatternSchema.patternColumnNames に設定することで使用可能となる。
-設定ファイルへの設定方法は、 [コード管理機能を使用する為の初期設定](../../component/libraries/libraries-code.md#code-setup-table) を参照。
+設定ファイルへの設定方法は、 [コード管理機能を使用する為の初期設定](../../component/libraries/libraries-code.md#コード管理機能を使用する為の初期設定) を参照。
 
 この例では、オプション名称のカラムとして、 `FORM_NAME` と `KANA_NAME` の2つを定義している。
 
@@ -342,7 +342,7 @@ CodeUtil.getShortName("GENDER", "MALE", Locale.ENGLISH) // -> M
 オプション名称は、  CodeUtil を使用して取得する。
 
 オプション名称を取得する場合、どのオプション名称を取得するかを文字列で指定する。
-この値は、 [コード管理機能を使用する為の初期設定](../../component/libraries/libraries-code.md#code-setup-table) で設定ファイルに設定したカラム名と厳密に一致させる必要がある。
+この値は、 [コード管理機能を使用する為の初期設定](../../component/libraries/libraries-code.md#コード管理機能を使用する為の初期設定) で設定ファイルに設定したカラム名と厳密に一致させる必要がある。
 
 ```java
 CodeUtil.getOptionalName("GENDER", "MALE", "KANA_NAME") // -> おとこ
@@ -395,7 +395,7 @@ public void setGender(String gender) {
 }
 ```
 
-入力画面などで、 [パターン](../../component/libraries/libraries-code.md#code-use-pattern) を使用して、選択できる値を制限した場合、
+入力画面などで、 [パターン](../../component/libraries/libraries-code.md#機能毎に使用するコード情報を切り替える) を使用して、選択できる値を制限した場合、
 バリデーション時にもそのパターン内で有効な値かをチェックする必要がある。
 
 バリデーション用のアノテーションの pattern 属性にパターン名を指定することで、
@@ -409,7 +409,7 @@ private String gender;
 ```
 
 > **Tip:**
-> [ドメインバリデーション](../../component/libraries/libraries-bean-validation.md#bean-validation-domain-validation) を使用した場合、1つのドメインに対して1つのパターンしか指定できない。
+> [ドメインバリデーション](../../component/libraries/libraries-bean-validation.md#ドメインバリデーションを使う) を使用した場合、1つのドメインに対して1つのパターンしか指定できない。
 > このため、複数のパターンに対応するためには、パターンに対応したドメインを定義する必要がある。
 
 > ただし、全てのパターンに対応したドメインを定義する必要はなく、バリデーションで必要なドメインのみ定義すればよい。

@@ -1,7 +1,7 @@
 {
   "id": "web-application-freemarker",
   "title": "FreeMarkerを使用した画面開発",
-  "content": "[FreeMarker(外部サイト、英語)](https://freemarker.apache.org/) を使用した画面開発について解説する。\n\nFreeMarkerの導入手順は以下の通り。なお、詳細な手順については、 [FreeMarkerのドキュメント](https://freemarker.apache.org/docs/pgui_misc_servlet.html) を参照。\n\n1. [FreeMarkerを依存ライブラリに追加する](../../processing-pattern/web-application/web-application-freemarker.md#freemarker-pom)\n2. [FreeMarkerServletの設定を行う](../../processing-pattern/web-application/web-application-freemarker.md#freemarker-servlet)\n3. [テンプレートファイル(ftlファイル)を作成しActionを実装する](../../processing-pattern/web-application/web-application-freemarker.md#freemarker-create-ftl)\n4. [2重サブミットを防止する(必要な場合のみ)](../../processing-pattern/web-application/web-application-freemarker.md#freemarker-use-token)",
+  "content": "[FreeMarker(外部サイト、英語)](https://freemarker.apache.org/) を使用した画面開発について解説する。\n\nFreeMarkerの導入手順は以下の通り。なお、詳細な手順については、 [FreeMarkerのドキュメント](https://freemarker.apache.org/docs/pgui_misc_servlet.html) を参照。\n\n1. [FreeMarkerを依存ライブラリに追加する](../../processing-pattern/web-application/web-application-freemarker.md#freemarkerを依存ライブラリに追加する)\n2. [FreeMarkerServletの設定を行う](../../processing-pattern/web-application/web-application-freemarker.md#freemarkerservletの設定を行う)\n3. [テンプレートファイル(ftlファイル)を作成しActionを実装する](../../processing-pattern/web-application/web-application-freemarker.md#テンプレートファイルftlファイルを作成しactionを実装する)\n4. [2重サブミットを防止する(必要な場合のみ)](../../processing-pattern/web-application/web-application-freemarker.md#2重サブミットを防止する)",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -19,13 +19,13 @@
     {
       "id": "s3",
       "title": "テンプレートファイル(ftlファイル)を作成しActionを実装する",
-      "content": "テンプレートファイル(ftlファイル)を作成し配置する。(テンプレートの作成方法は、FreeMarkerのドキュメントを参照)\nActionクラスでは、レスポンスとしてテンプレートファイルへのパスを返却する。\n\n例えば、 `webapp/WEB-INF/template/index.ftl` を使用してhtmlをクライアントに返したい場合は、Actionクラスは以下のようにレスポンスを返却する。\n(webappはWARのルートとなるディレクトリ)\n\n```java\nreturn new HttpResponse(\"/WEB-INF/template/index.ftl\");\n```\n\n> **Tip:**\n> FreeMarkerによって生成されたhtmlがクライアントに返却される仕組みは以下の通り。\n\n> 1. >   [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) が `/WEB-INF/template/index.ftl` に対してServlet forwardを行う。\n> 2. >   拡張子の `ftl` に反応し `FreeMarkerServlet` が実行され、テンプレートとリクエストスコープ等のデータを元にhtmlを生成する。\n> 3. >   生成したhtmlをクライアントに返す。",
+      "content": "テンプレートファイル(ftlファイル)を作成し配置する。(テンプレートの作成方法は、FreeMarkerのドキュメントを参照)\nActionクラスでは、レスポンスとしてテンプレートファイルへのパスを返却する。\n\n例えば、 `webapp/WEB-INF/template/index.ftl` を使用してhtmlをクライアントに返したい場合は、Actionクラスは以下のようにレスポンスを返却する。\n(webappはWARのルートとなるディレクトリ)\n\n```java\nreturn new HttpResponse(\"/WEB-INF/template/index.ftl\");\n```\n\n> **Tip:**\n> FreeMarkerによって生成されたhtmlがクライアントに返却される仕組みは以下の通り。\n\n> 1. >   [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#httpレスポンスハンドラ) が `/WEB-INF/template/index.ftl` に対してServlet forwardを行う。\n> 2. >   拡張子の `ftl` に反応し `FreeMarkerServlet` が実行され、テンプレートとリクエストスコープ等のデータを元にhtmlを生成する。\n> 3. >   生成したhtmlをクライアントに返す。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "2重サブミットを防止する",
-      "content": "2重サブミットを防止したい場合は、 [UseTokenインターセプタ](../../component/handlers/handlers-use-token.md#use-token-interceptor) を参照しAction及びテンプレートファイル(ftlファイル)を作成すること。",
+      "content": "2重サブミットを防止したい場合は、 [UseTokenインターセプタ](../../component/handlers/handlers-use-token.md#usetokenインターセプタ) を参照しAction及びテンプレートファイル(ftlファイル)を作成すること。",
       "level": 2
     }
   ]

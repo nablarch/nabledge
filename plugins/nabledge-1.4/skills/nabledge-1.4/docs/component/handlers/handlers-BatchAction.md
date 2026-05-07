@@ -43,8 +43,8 @@
 
 | メソッド名 | 内容 |
 |---|---|
-| createReader() | (必須実装) フレームワークがバッチの処理対象レコードの読込みに使用する [データリーダ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#data-reader) を作成する際に コールバックされるので、 バッチ処理で使用するデータリーダを生成してリターンする。 |
-| handle() | (必須実装) バッチの処理対象レコード1件ごとに呼び出される。 [データリーダ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#data-reader) によって読み込まれた1件分のレコードが渡されるので、それをもとに 業務処理を実行する。  正常に終了した場合は、ハンドラの処理が正常終了したことを表す マーカーオブジェクト([Result.Success](../../javadoc/nablarch/fw/Result.Success.html))をリターンすればよい。 |
+| createReader() | (必須実装) フレームワークがバッチの処理対象レコードの読込みに使用する [データリーダ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#データリーダ) を作成する際に コールバックされるので、 バッチ処理で使用するデータリーダを生成してリターンする。 |
+| handle() | (必須実装) バッチの処理対象レコード1件ごとに呼び出される。 [データリーダ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#データリーダ) によって読み込まれた1件分のレコードが渡されるので、それをもとに 業務処理を実行する。  正常に終了した場合は、ハンドラの処理が正常終了したことを表す マーカーオブジェクト([Result.Success](../../javadoc/nablarch/fw/Result.Success.html))をリターンすればよい。 |
 | transactionSuccess() | (任意実装) 業務トランザクションのコミットが完了した後でコールバックされる。 デフォルトでは何もしない。 |
 | transactionFailure() | (任意実装) 業務トランザクションのロールバック後にコールバックされる。 デフォルトでは何もしない。 |
 | initialize() | (任意実装) バッチ処理の開始前に一度だけ呼ばれる。 デフォルトでは何もしない。 |
@@ -103,7 +103,7 @@ try {
 **2. (データリーダ生成)**
 
 続いて、 [マルチスレッド実行制御ハンドラ](../../component/handlers/handlers-MultiThreadExecutionHandler.md) での処理開始時に、 **createReader()** を実行する。
-リターンした [データリーダ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#data-reader) は、実行コンテキストに設定され、以降の処理で使用する。
+リターンした [データリーダ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#データリーダ) は、実行コンテキストに設定され、以降の処理で使用する。
 
 **[往路処理]**
 

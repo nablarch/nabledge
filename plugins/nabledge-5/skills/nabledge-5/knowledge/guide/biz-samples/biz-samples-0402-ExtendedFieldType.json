@@ -1,7 +1,7 @@
 {
   "id": "biz-samples-0402-ExtendedFieldType",
   "title": "データフォーマッタ機能におけるフィールドタイプの拡張",
-  "content": "本サンプルで提供するフォーマッタ機能の仕様を解説する。\n\nフォーマッタ機能の概要、基本となる汎用データフォーマット機能に関する詳細は、[汎用データフォーマット](../../component/libraries/libraries-data-format.md#data-format) を参照すること。",
+  "content": "本サンプルで提供するフォーマッタ機能の仕様を解説する。\n\nフォーマッタ機能の概要、基本となる汎用データフォーマット機能に関する詳細は、[汎用データフォーマット](../../component/libraries/libraries-data-format.md#汎用データフォーマット) を参照すること。",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -25,7 +25,7 @@
     {
       "id": "s4",
       "title": "フィールドタイプの使用方法",
-      "content": "追加したフィールドタイプの使用方法は [フィールドタイプを追加する](../../component/libraries/libraries-data-format.md#data-format-field-type-add) を参照。\nFixed(固定長)フォーマットのファクトリクラスの実装例を以下に示す。\n\n```java\npublic class CustomFixedLengthConvertorFactory extends FixedLengthConvertorFactory {\n    @Override\n    protected Map<String, Class<?>> getDefaultConvertorTable() {\n        final Map<String, Class<?>> defaultConvertorTable = new CaseInsensitiveMap<Class<?>>(\n                new ConcurrentHashMap<String, Class<?>>(super.getDefaultConvertorTable()));\n        // EBCDIC(CP930)用のデータタイプ ESN, EN を追加する\n        defaultConvertorTable.put(\"ESN\", EbcdicDoubleByteCharacterString.class);\n        defaultConvertorTable.put(\"EN\", EbcdicNoShiftCodeDoubleByteCharacterString.class);\n        return Collections.unmodifiableMap(defaultConvertorTable);\n    }\n}\n```",
+      "content": "追加したフィールドタイプの使用方法は [フィールドタイプを追加する](../../component/libraries/libraries-data-format.md#フィールドタイプを追加する) を参照。\nFixed(固定長)フォーマットのファクトリクラスの実装例を以下に示す。\n\n```java\npublic class CustomFixedLengthConvertorFactory extends FixedLengthConvertorFactory {\n    @Override\n    protected Map<String, Class<?>> getDefaultConvertorTable() {\n        final Map<String, Class<?>> defaultConvertorTable = new CaseInsensitiveMap<Class<?>>(\n                new ConcurrentHashMap<String, Class<?>>(super.getDefaultConvertorTable()));\n        // EBCDIC(CP930)用のデータタイプ ESN, EN を追加する\n        defaultConvertorTable.put(\"ESN\", EbcdicDoubleByteCharacterString.class);\n        defaultConvertorTable.put(\"EN\", EbcdicNoShiftCodeDoubleByteCharacterString.class);\n        return Collections.unmodifiableMap(defaultConvertorTable);\n    }\n}\n```",
       "level": 3
     },
     {

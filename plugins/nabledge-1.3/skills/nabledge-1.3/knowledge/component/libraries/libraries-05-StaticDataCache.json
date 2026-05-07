@@ -7,7 +7,7 @@
     {
       "id": "s1",
       "title": "概要",
-      "content": "頻繁にアクセスする静的データをRDBMSやXMLファイル等の媒体に永続化している場合、媒体へのアクセス速度がアプリケーションの\nパフォーマンスを大きく劣化させることがある。\n\n本機能はこのようなデータアクセスによるパフォーマンスの劣化を抑えるために、静的データをよりアクセス速度が早い媒体にキャッシュ\nすることで、アクセスを高速化する機構を提供する。\n\n本機能は、リポジトリに登録して使用する。\nこのため、本機能に必要な初期化処理は [リポジトリ](../../component/libraries/libraries-02-Repository.md#repository) が実行する。\n\nまた、本機能は他の機能の一部として使用されることを想定しており、単体で使用することはない。\nこのため、アプリケーションプログラマは、本機能を直接使用することはない。",
+      "content": "頻繁にアクセスする静的データをRDBMSやXMLファイル等の媒体に永続化している場合、媒体へのアクセス速度がアプリケーションの\nパフォーマンスを大きく劣化させることがある。\n\n本機能はこのようなデータアクセスによるパフォーマンスの劣化を抑えるために、静的データをよりアクセス速度が早い媒体にキャッシュ\nすることで、アクセスを高速化する機構を提供する。\n\n本機能は、リポジトリに登録して使用する。\nこのため、本機能に必要な初期化処理は [リポジトリ](../../component/libraries/libraries-02-Repository.md#リポジトリ) が実行する。\n\nまた、本機能は他の機能の一部として使用されることを想定しており、単体で使用することはない。\nこのため、アプリケーションプログラマは、本機能を直接使用することはない。",
       "level": 2
     },
     {
@@ -73,7 +73,7 @@
     {
       "id": "s12",
       "title": "キャッシュした静的データの取得",
-      "content": "概要で述べた通り、静的データキャッシュは、静的データキャッシュを使用する必要のあるクラスの一部として使用することを想定している。\n\nキャッシュする必要のあるクラスは、データのキャッシュを行う StaticDataCache インタフェースをフィールドに持ち、\nStaticDataCache インタフェースのメソッドを使用して静的データを取得する。\n\nこの際、StaticDataCache インタフェースを実装したフィールドには、本機能が提供している StaticDataCache インタフェースの実装クラスを\nリポジトリの [リポジトリに保持するインスタンスの生成(DIコンテナ)](../../component/libraries/libraries-02-01-Repository-config.md#di-container) の機能で設定する。\n\n以下に静的データを取得する実装方法について記述する。",
+      "content": "概要で述べた通り、静的データキャッシュは、静的データキャッシュを使用する必要のあるクラスの一部として使用することを想定している。\n\nキャッシュする必要のあるクラスは、データのキャッシュを行う StaticDataCache インタフェースをフィールドに持ち、\nStaticDataCache インタフェースのメソッドを使用して静的データを取得する。\n\nこの際、StaticDataCache インタフェースを実装したフィールドには、本機能が提供している StaticDataCache インタフェースの実装クラスを\nリポジトリの [リポジトリに保持するインスタンスの生成(DIコンテナ)](../../component/libraries/libraries-02-01-Repository-config.md#リポジトリに保持するインスタンスの生成diコンテナ) の機能で設定する。\n\n以下に静的データを取得する実装方法について記述する。",
       "level": 2
     },
     {
@@ -97,7 +97,7 @@
     {
       "id": "s16",
       "title": "インデックスを使用した静的データの取得",
-      "content": "本機能は、ID以外のキーを指定して静的データを取得できるインデックス機能を持つ。\nインデックス機能では、IDのように1つのキーに1つの静的データを紐付けるだけでなく、\n1つのキーに複数の静的データを紐付けられる。\n\nインデックスを StaticDataCache インタフェースに定義された getValues メソッドを使用する。\n\n[IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache-get-example) で示した ExampleData クラスを \"name\" というインデックスを使用して静的データを取得する実装例を以下に示す。\n\n```java\npublic class StaticDataUseExample {\n    // DIによりStaticDataを設定\n    private StaticDataCache<ExampleData> cache;\n\n    public void setCache(StaticDataCache<ExampleData> cache) {\n        this.cache = cache;\n    }\n\n    public void getByName(String name) {\n        // キャッシュからデータを取得する\n        // 利用者は、キャッシュにデータがあるかを意識する必要はない\n        List<ExampleData> objs = cache.getValues(\"name\", name);\n        for (ExampleData obj : objs) {\n            System.out.println(\"id = \" + obj.getId());\n            System.out.println(\"name = \" + obj.getName());\n        }\n    }\n}\n```",
+      "content": "本機能は、ID以外のキーを指定して静的データを取得できるインデックス機能を持つ。\nインデックス機能では、IDのように1つのキーに1つの静的データを紐付けるだけでなく、\n1つのキーに複数の静的データを紐付けられる。\n\nインデックスを StaticDataCache インタフェースに定義された getValues メソッドを使用する。\n\n[IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#idを指定した静的データの取得) で示した ExampleData クラスを \"name\" というインデックスを使用して静的データを取得する実装例を以下に示す。\n\n```java\npublic class StaticDataUseExample {\n    // DIによりStaticDataを設定\n    private StaticDataCache<ExampleData> cache;\n\n    public void setCache(StaticDataCache<ExampleData> cache) {\n        this.cache = cache;\n    }\n\n    public void getByName(String name) {\n        // キャッシュからデータを取得する\n        // 利用者は、キャッシュにデータがあるかを意識する必要はない\n        List<ExampleData> objs = cache.getValues(\"name\", name);\n        for (ExampleData obj : objs) {\n            System.out.println(\"id = \" + obj.getId());\n            System.out.println(\"name = \" + obj.getName());\n        }\n    }\n}\n```",
       "level": 3
     },
     {
@@ -115,7 +115,7 @@
     {
       "id": "s19",
       "title": "一括ロード",
-      "content": "一括ロードは、起動してしまえば全てのデータがキャッシュに存在するため、\nオンデマンドロードがキャッシュにデータが存在しなかった際(キャッシュミスヒット時)に若干処理が遅くなる問題を回避できる。\nこのため、使用するデータがキャッシュに保持するデータのほぼ全てとなる場面で有利なロード方法となる。\nこのような場面には、Webアプリケーションで使用するメッセージなどが想定される。\n\n一括ロード時の処理順序は下記シーケンス図のようになる。\n\n![05_StaticDataCache_LoadOnStartupSequence.jpg](assets/libraries-05-StaticDataCache/05_StaticDataCache_LoadOnStartupSequence.jpg)\n\nいずれの方法でも、 [IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache-get-example) で示した通り、\nキャッシュを使用する実装にはデータがどのようにロードされているか意識する必要がない。\n\nそれぞれのロードの使用方法について、以下に記述する。",
+      "content": "一括ロードは、起動してしまえば全てのデータがキャッシュに存在するため、\nオンデマンドロードがキャッシュにデータが存在しなかった際(キャッシュミスヒット時)に若干処理が遅くなる問題を回避できる。\nこのため、使用するデータがキャッシュに保持するデータのほぼ全てとなる場面で有利なロード方法となる。\nこのような場面には、Webアプリケーションで使用するメッセージなどが想定される。\n\n一括ロード時の処理順序は下記シーケンス図のようになる。\n\n![05_StaticDataCache_LoadOnStartupSequence.jpg](assets/libraries-05-StaticDataCache/05_StaticDataCache_LoadOnStartupSequence.jpg)\n\nいずれの方法でも、 [IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#idを指定した静的データの取得) で示した通り、\nキャッシュを使用する実装にはデータがどのようにロードされているか意識する必要がない。\n\nそれぞれのロードの使用方法について、以下に記述する。",
       "level": 3
     },
     {
@@ -127,7 +127,7 @@
     {
       "id": "s21",
       "title": "IDを指定してデータを取得する際に必要なデータロードの実装方法",
-      "content": "データをロードする処理は、 StaticDataLoader インタフェースを実装したクラスに実装する。\n\nStaticDataLoader インタフェースには、IDを使用するキャッシュへのアクセスと、インデックスを使用したキャッシュへのアクセスに必要なメソッドが定義されている。\n\n[IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache-get-example) で示した、IDを指定してデータを取得する機能のみをオンデマンドロードで使用する場合、\nStaticDataLoaderインタフェースに定義されたgetValueメソッドのみを実装すればよい。\n\n以下に [IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache-get-example) で例に出した ExampleData をロードするクラスと、 StaticDataCache を使用するための設定ファイルの例を示す。",
+      "content": "データをロードする処理は、 StaticDataLoader インタフェースを実装したクラスに実装する。\n\nStaticDataLoader インタフェースには、IDを使用するキャッシュへのアクセスと、インデックスを使用したキャッシュへのアクセスに必要なメソッドが定義されている。\n\n[IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#idを指定した静的データの取得) で示した、IDを指定してデータを取得する機能のみをオンデマンドロードで使用する場合、\nStaticDataLoaderインタフェースに定義されたgetValueメソッドのみを実装すればよい。\n\n以下に [IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#idを指定した静的データの取得) で例に出した ExampleData をロードするクラスと、 StaticDataCache を使用するための設定ファイルの例を示す。",
       "level": 3
     },
     {
@@ -157,7 +157,7 @@
     {
       "id": "s26",
       "title": "データロードの実装方法",
-      "content": "一括ロードを使用する際は、 StaticDataLoader インタフェースに定義されたメソッドのうち、 loadAll, getId, generateIndexKey,\ngetIndexNames の4つのメソッドを実装する必要がある。\nこれらメソッドの用途は下記表の通り。\n\n| メソッド名 | 用途 |\n|---|---|\n| loadAll | キャッシュするデータを取得する。 フレームワークはこのメソッドで返される全てのデータをキャッシュの初期データとして保持する。 |\n| getId | データからデータのIDを取得する。 フレームワークは、このメソッドで返されるオブジェクトを java.util.Map のキーとしてデータを保持する。 このため、このメソッドの戻り値は、キャッシュ上で一意にオブジェクトでなくてはならない。 例えばデータベース上の複合キーでユニークとなるデータをキャッシュする場合、 equals メソッドと hashCode メソッドを適切に実装した、複合キーを表わすクラスを作成し、 このクラスのインスタンスをこのメソッドの戻り値とする。 |\n| getIndexNames | 作成するインデックス名を全て取得する。 フレームワークは、このメソッドの戻り値から作成するインデックスを決定する。 |\n| generateIndexKey | インデックスのキーとなる値を生成する。 ここで生成されるキーは、 getId がオブジェクトのキャッシュに使用されるのに対して、 インデックス上のどのキーにオブジェクトが属するかを示すために使われる。 このため、別々のデータ |\n\n以下に [IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#static-data-cache-get-example) で例に出した ExampleData を一括ロードする実装例を示す。",
+      "content": "一括ロードを使用する際は、 StaticDataLoader インタフェースに定義されたメソッドのうち、 loadAll, getId, generateIndexKey,\ngetIndexNames の4つのメソッドを実装する必要がある。\nこれらメソッドの用途は下記表の通り。\n\n| メソッド名 | 用途 |\n|---|---|\n| loadAll | キャッシュするデータを取得する。 フレームワークはこのメソッドで返される全てのデータをキャッシュの初期データとして保持する。 |\n| getId | データからデータのIDを取得する。 フレームワークは、このメソッドで返されるオブジェクトを java.util.Map のキーとしてデータを保持する。 このため、このメソッドの戻り値は、キャッシュ上で一意にオブジェクトでなくてはならない。 例えばデータベース上の複合キーでユニークとなるデータをキャッシュする場合、 equals メソッドと hashCode メソッドを適切に実装した、複合キーを表わすクラスを作成し、 このクラスのインスタンスをこのメソッドの戻り値とする。 |\n| getIndexNames | 作成するインデックス名を全て取得する。 フレームワークは、このメソッドの戻り値から作成するインデックスを決定する。 |\n| generateIndexKey | インデックスのキーとなる値を生成する。 ここで生成されるキーは、 getId がオブジェクトのキャッシュに使用されるのに対して、 インデックス上のどのキーにオブジェクトが属するかを示すために使われる。 このため、別々のデータ |\n\n以下に [IDを指定した静的データの取得](../../component/libraries/libraries-05-StaticDataCache.md#idを指定した静的データの取得) で例に出した ExampleData を一括ロードする実装例を示す。",
       "level": 3
     },
     {
@@ -169,7 +169,7 @@
     {
       "id": "s28",
       "title": "設定例",
-      "content": "一括ロードを行う場合、 BasicStaticDataCache の loadOnStartup プロパティに true を設定する必要がある。\nその他の設定方法はオンデマンドロード時と同様となる。\n\n以下に設定例を示す。\n\n```xml\n<!-- cashLoader の定義 -->\n<component name=\"exampleDataCache\" class=\"nablarch.core.cache.BasicStaticDataCache\">\n        <property name=\"loader\">\n                <component class=\"nablarch.core.cache.example.ExampleDataLoader\" />\n        </property>\n<!-- 初期ロードを行う -->\n        <property name=\"loadOnStartup\" value=\"true\"/>\n</component>\n\n<!-- cache を使用するコンポーネントの定義 -->\n<component name=\"staticDataUseExample\" class=\"nablarch.core.cache.example.StaticDataUseExample\">\n        <property name=\"cache\" ref=\"exampleDataCache\" />\n</component>\n```\n\nまた BasicStaticDataCache クラスは初期化が必要なため、  [初期化処理の使用手順](../../component/libraries/libraries-02-02-Repository-initialize.md#repository-initialize)  に記述した Initializable インタフェースを実装している。\n[初期化処理の使用手順](../../component/libraries/libraries-02-02-Repository-initialize.md#repository-initialize) を参考にして、下記のように exampleDataCache が初期化されるよう設定すること。\n\n```xml\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n    <property name=\"initializeList\">\n        <list>\n            <!-- 他のコンポーネントは省略 -->\n            <component-ref name=\"exampleDataCache\"/>\n        </list>\n    </property>\n</component>\n```",
+      "content": "一括ロードを行う場合、 BasicStaticDataCache の loadOnStartup プロパティに true を設定する必要がある。\nその他の設定方法はオンデマンドロード時と同様となる。\n\n以下に設定例を示す。\n\n```xml\n<!-- cashLoader の定義 -->\n<component name=\"exampleDataCache\" class=\"nablarch.core.cache.BasicStaticDataCache\">\n        <property name=\"loader\">\n                <component class=\"nablarch.core.cache.example.ExampleDataLoader\" />\n        </property>\n<!-- 初期ロードを行う -->\n        <property name=\"loadOnStartup\" value=\"true\"/>\n</component>\n\n<!-- cache を使用するコンポーネントの定義 -->\n<component name=\"staticDataUseExample\" class=\"nablarch.core.cache.example.StaticDataUseExample\">\n        <property name=\"cache\" ref=\"exampleDataCache\" />\n</component>\n```\n\nまた BasicStaticDataCache クラスは初期化が必要なため、  [初期化処理の使用手順](../../component/libraries/libraries-02-02-Repository-initialize.md#初期化処理の使用手順)  に記述した Initializable インタフェースを実装している。\n[初期化処理の使用手順](../../component/libraries/libraries-02-02-Repository-initialize.md#初期化処理の使用手順) を参考にして、下記のように exampleDataCache が初期化されるよう設定すること。\n\n```xml\n<component name=\"initializer\" class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n    <property name=\"initializeList\">\n        <list>\n            <!-- 他のコンポーネントは省略 -->\n            <component-ref name=\"exampleDataCache\"/>\n        </list>\n    </property>\n</component>\n```",
       "level": 3
     },
     {

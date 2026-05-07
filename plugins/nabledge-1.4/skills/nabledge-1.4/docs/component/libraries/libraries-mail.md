@@ -144,7 +144,7 @@
 ### メール送信要求
 
 業務アプリケーションがメール送信要求APIを呼び出すと、本フレームワークは、業務アプリケーションから引き渡された内容を、
-メール送信要求としてメール送信要求テーブルとその関連テーブル(後述、 [テーブル定義](../../component/libraries/libraries-mail.md#mailtables) 参照)に格納する。
+メール送信要求としてメール送信要求テーブルとその関連テーブル(後述、 [テーブル定義](../../component/libraries/libraries-mail.md#テーブル定義) 参照)に格納する。
 その際、最大宛先数と添付ファイルサイズの精査を行う。
 
 本フレームワークのメール送信要求APIは、下記2パターンのメール送信をサポートしている。
@@ -203,7 +203,7 @@ String requestId = requester.requestToSend(ctx);
 ## 逐次メール送信バッチ
 
 本フレームワークは [常駐バッチ実行制御基盤](../../processing-pattern/nablarch-batch/nablarch-batch-batch-resident.md) に準拠した逐次メール送信バッチ（バッチアクションクラス:nablarch.common.mail.MailSender）を提供し、
-アーキテクトによる設定(後述、 [逐次メール送信バッチ用設定項目](../../component/libraries/libraries-mail.md#mailbatchconfig) 参照)のみで使用できる。
+アーキテクトによる設定(後述、 [逐次メール送信バッチ用設定項目](../../component/libraries/libraries-mail.md#逐次メール送信バッチ用設定項目) 参照)のみで使用できる。
 このバッチは、メール送信要求テーブルを監視し、メール送信要求があれば逐次メールを送信する。
 
 なお、バッチ起動時の引数として「mailSendPatternId」を指定した場合には、指定されたメール送信パターンIDと一致する送信要求データが監視対象となる。
@@ -365,9 +365,9 @@ nablarch.common.mail.MailRequestConfigクラスのプロパティとして設定
 
 メール送信要求IDを採番するためのコンポーネントを設定する。
 
-メール送信要求IDの採番には、IdGeneratorを使用する( [採番機能](../../component/libraries/libraries-06-IdGenerator.md#id-generator-top) 参照)。
+メール送信要求IDの採番には、IdGeneratorを使用する( [採番機能](../../component/libraries/libraries-06-IdGenerator.md#採番機能) 参照)。
 使用するIdGeneratorコンポーネントは、他の採番用のものと併用してもよい。
-IdGeneratorは、メール送信APIのプロパティとして設定する（後述、 [メール送信要求APIのコンポーネント定義](../../component/libraries/libraries-mail.md#mailapicomponentconfig) 参照 ）。
+IdGeneratorは、メール送信APIのプロパティとして設定する（後述、 [メール送信要求APIのコンポーネント定義](../../component/libraries/libraries-mail.md#メール送信要求api用設定項目) 参照 ）。
 
 ### 逐次メール送信バッチ用設定項目
 
@@ -384,7 +384,7 @@ IdGeneratorは、メール送信APIのプロパティとして設定する（後
 パラメータ値 -> 処理対象のメール送信パターンID
 ```
 
-コマンドライン引数の指定方法は、 [コマンドライン起動引数の扱い](../../component/handlers/handlers-Main.md#parsing-commandline) を参照
+コマンドライン引数の指定方法は、 [コマンドライン起動引数の扱い](../../component/handlers/handlers-Main.md#コマンドライン起動引数の扱い) を参照
 
 #### メールセッション
 

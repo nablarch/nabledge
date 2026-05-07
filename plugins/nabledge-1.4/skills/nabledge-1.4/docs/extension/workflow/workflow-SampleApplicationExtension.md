@@ -5,7 +5,7 @@
 **実装例(CM111004Component.java)**
 
 以下は、`FlowProceedCondition` を実装したコンポーネントの一部であり、ローン申請の内部自動審査後の条件分岐
-（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#loan-appliance-definition) の④に対応）のための
+（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#ワークフロー定義) の④に対応）のための
 業務ロジックを実装している。
 
 このコンポーネントは、内部自動審査後のXORゲートウェイから流出するすべてのシーケンスフローのフロー進行条件として

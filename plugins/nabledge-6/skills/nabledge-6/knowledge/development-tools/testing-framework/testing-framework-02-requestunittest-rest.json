@@ -7,19 +7,19 @@
     {
       "id": "s1",
       "title": "前提条件",
-      "content": "RESTfulウェブサービス実行基盤向けのテストでは、他の実行基盤向けテスティングフレームワークに加え\n依存するモジュールを追加する必要がある。\n詳細は [自動テストフレームワークの使用方法](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-testing-fw) 参照。",
+      "content": "RESTfulウェブサービス実行基盤向けのテストでは、他の実行基盤向けテスティングフレームワークに加え\n依存するモジュールを追加する必要がある。\n詳細は [自動テストフレームワークの使用方法](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#リクエスト単体テストrestfulウェブサービス) 参照。",
       "level": 2
     },
     {
       "id": "s2",
       "title": "テストクラスの書き方",
-      "content": "* [フレームワークで用意されたテストクラスのスーパークラスを継承する。](../../development-tools/testing-framework/testing-framework-02-requestunittest-rest.md#rest-test-extends-superclass)\n* JUnit4のアノテーションを使用する (テストメソッドに @Test アノテーションを付与する)\n* [事前準備補助機能](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-test-helper) を使ってリクエストを生成する\n* [リクエストを送信](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-test-execute) する\n* [結果を確認](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-test-assert) する\n\n```java\nimport nablarch.fw.web.HttpResponse;\nimport nablarch.fw.web.RestMockHttpRequest;\nimport nablarch.test.core.http.RestTestSupport;\nimport org.json.JSONException;\nimport org.junit.Test;\nimport org.skyscreamer.jsonassert.JSONAssert;\nimport org.skyscreamer.jsonassert.JSONCompareMode;\n\nimport static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;\nimport static org.hamcrest.Matchers.hasSize;\nimport static org.junit.Assert.assertThat;\n\npublic class SampleTest extends RestTestSupport { //RestTestSupportを継承する\n    @Test  //アノテーションを付与する\n    public void プロジェクト一覧が取得できること() throws JSONException {\n        String message = \"プロジェクト一覧取得\";\n\n        RestMockHttpRequest request = get(\"/projects\");               //リクエストを生成する\n        HttpResponse response = sendRequest(request);                 //リクエストを送信する\n        assertStatusCode(message, HttpResponse.Status.OK, response);  //結果を確認する\n\n        assertThat(response.getBodyString(), hasJsonPath(\"$\", hasSize(10)));    //json-path-assertを使ったレスポンスボディの検証\n\n        JSONAssert.assertEquals(message, readTextResource(\"プロジェクト一覧が取得できること.json\")\n                , response.getBodyString(), JSONCompareMode.LENIENT);                  //JSONAssertを使ったレスポンスボディの検証\n    }\n}\n```",
+      "content": "* [フレームワークで用意されたテストクラスのスーパークラスを継承する。](../../development-tools/testing-framework/testing-framework-02-requestunittest-rest.md#フレームワークで用意されたテストクラスのスーパークラスを継承する)\n* JUnit4のアノテーションを使用する (テストメソッドに @Test アノテーションを付与する)\n* [事前準備補助機能](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#事前準備補助機能) を使ってリクエストを生成する\n* [リクエストを送信](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#実行) する\n* [結果を確認](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#結果確認) する\n\n```java\nimport nablarch.fw.web.HttpResponse;\nimport nablarch.fw.web.RestMockHttpRequest;\nimport nablarch.test.core.http.RestTestSupport;\nimport org.json.JSONException;\nimport org.junit.Test;\nimport org.skyscreamer.jsonassert.JSONAssert;\nimport org.skyscreamer.jsonassert.JSONCompareMode;\n\nimport static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;\nimport static org.hamcrest.Matchers.hasSize;\nimport static org.junit.Assert.assertThat;\n\npublic class SampleTest extends RestTestSupport { //RestTestSupportを継承する\n    @Test  //アノテーションを付与する\n    public void プロジェクト一覧が取得できること() throws JSONException {\n        String message = \"プロジェクト一覧取得\";\n\n        RestMockHttpRequest request = get(\"/projects\");               //リクエストを生成する\n        HttpResponse response = sendRequest(request);                 //リクエストを送信する\n        assertStatusCode(message, HttpResponse.Status.OK, response);  //結果を確認する\n\n        assertThat(response.getBodyString(), hasJsonPath(\"$\", hasSize(10)));    //json-path-assertを使ったレスポンスボディの検証\n\n        JSONAssert.assertEquals(message, readTextResource(\"プロジェクト一覧が取得できること.json\")\n                , response.getBodyString(), JSONCompareMode.LENIENT);                  //JSONAssertを使ったレスポンスボディの検証\n    }\n}\n```",
       "level": 2
     },
     {
       "id": "s3",
       "title": "フレームワークで用意されたテストクラスのスーパークラスを継承する",
-      "content": "テストクラスのスーパークラスとして `nablarch.test.core.http.RestTestSupport` クラスを継承する。\nテストデータの投入とデータベースのアサートが不要な場合は `nablarch.test.core.http.SimpleRestTestSupport` クラスを継承する。\nその場合は以下の [テストデータの書き方](../../development-tools/testing-framework/testing-framework-02-requestunittest-rest.md#rest-test-data) は読み飛ばして良い。\n\nそれぞれのスーパークラスの詳細は [自動テストフレームワークの使用方法](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-test-superclasses) 参照。",
+      "content": "テストクラスのスーパークラスとして `nablarch.test.core.http.RestTestSupport` クラスを継承する。\nテストデータの投入とデータベースのアサートが不要な場合は `nablarch.test.core.http.SimpleRestTestSupport` クラスを継承する。\nその場合は以下の [テストデータの書き方](../../development-tools/testing-framework/testing-framework-02-requestunittest-rest.md#テストデータの書き方) は読み飛ばして良い。\n\nそれぞれのスーパークラスの詳細は [自動テストフレームワークの使用方法](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#simpleresttestsupport) 参照。",
       "level": 3
     },
     {
@@ -31,31 +31,31 @@
     {
       "id": "s5",
       "title": "事前準備補助機能を使ってリクエストを生成する",
-      "content": "スーパークラスに用意された [事前準備補助機能](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-test-helper) を使ってリクエストを生成する。",
+      "content": "スーパークラスに用意された [事前準備補助機能](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#事前準備補助機能) を使ってリクエストを生成する。",
       "level": 3
     },
     {
       "id": "s6",
       "title": "リクエストを送信する",
-      "content": "スーパークラスに用意された [リクエスト送信メソッド](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-test-execute) を呼び出すことでリクエストを送信する。",
+      "content": "スーパークラスに用意された [リクエスト送信メソッド](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#実行) を呼び出すことでリクエストを送信する。",
       "level": 3
     },
     {
       "id": "s7",
       "title": "結果を確認する",
-      "content": "ステータスコードは、スーパークラスに用意された [メソッド](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#rest-test-assert) を呼び出すことで検証する。\nレスポンスボディについては任意のライブラリを使用してアプリケーションに合わせて検証する。",
+      "content": "ステータスコードは、スーパークラスに用意された [メソッド](../../development-tools/testing-framework/testing-framework-RequestUnitTest-rest.md#結果確認) を呼び出すことで検証する。\nレスポンスボディについては任意のライブラリを使用してアプリケーションに合わせて検証する。",
       "level": 3
     },
     {
       "id": "s8",
       "title": "テストデータの書き方",
-      "content": "[Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#how-to-write-excel) に記載された方法で、テストデータを記述できる。\nただし、RESTfulウェブサービス実行基盤向けのテストで自動的に読み込まれるデータは以下のみとなる。\n\n* テストクラスで共通のデータベース初期値\n* テストメソッド毎のデータベース初期値\n\n> **Important:**\n> RESTfulウェブサービス実行基盤以外のテストの場合テストクラス一つにつきExcelファイルが必ず一つ必要であったが、\n> RESTfulウェブサービス実行基盤向けのテストではExcelファイルが存在しない場合でも、エラーとはならず単にデータベースへの\n> データ投入がスキップされるだけとなっている。\n\n> **Important:**\n> 上記以外のテストデータをExcelファイルに記載可能だが、記載した場合は\n> [Excelファイルから、入力パラメータや戻り値に対する期待値などを取得したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#how-to-get-data-from-excel) に記載の方法で、テストクラスに値を取得する処理を記述する必要がある。\n> テストクラスの記述量を減らすためにスーパークラス `RestTestSupport` では以下のメソッドを\n> 提供する。\n\n> ```java\n> List<Map<String, String>> getListMap(String sheetName, String id)\n> List<Map<String, String[]>> getListParamMap(String sheetName, String id)\n> Map<String, String[]> getParamMap(String sheetName, String id)\n> ```",
+      "content": "[Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#excelによるテストデータ記述) に記載された方法で、テストデータを記述できる。\nただし、RESTfulウェブサービス実行基盤向けのテストで自動的に読み込まれるデータは以下のみとなる。\n\n* テストクラスで共通のデータベース初期値\n* テストメソッド毎のデータベース初期値\n\n> **Important:**\n> RESTfulウェブサービス実行基盤以外のテストの場合テストクラス一つにつきExcelファイルが必ず一つ必要であったが、\n> RESTfulウェブサービス実行基盤向けのテストではExcelファイルが存在しない場合でも、エラーとはならず単にデータベースへの\n> データ投入がスキップされるだけとなっている。\n\n> **Important:**\n> 上記以外のテストデータをExcelファイルに記載可能だが、記載した場合は\n> [Excelファイルから、入力パラメータや戻り値に対する期待値などを取得したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#excelファイルから入力パラメータや戻り値に対する期待値などを取得したい) に記載の方法で、テストクラスに値を取得する処理を記述する必要がある。\n> テストクラスの記述量を減らすためにスーパークラス `RestTestSupport` では以下のメソッドを\n> 提供する。\n\n> ```java\n> List<Map<String, String>> getListMap(String sheetName, String id)\n> List<Map<String, String[]>> getListParamMap(String sheetName, String id)\n> Map<String, String[]> getParamMap(String sheetName, String id)\n> ```",
       "level": 2
     },
     {
       "id": "s9",
       "title": "テストクラスで共通のデータベース初期値",
-      "content": "[テストクラスで共通のデータベース初期値](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#request-test-setup-db) 参照。",
+      "content": "[テストクラスで共通のデータベース初期値](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#テストクラスで共通のデータベース初期値) 参照。",
       "level": 3
     },
     {

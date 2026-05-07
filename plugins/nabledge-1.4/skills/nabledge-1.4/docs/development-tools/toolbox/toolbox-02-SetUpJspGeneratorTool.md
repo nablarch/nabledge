@@ -1,6 +1,6 @@
 # JSP自動生成ツール インストールガイド
 
-[JSP自動生成ツール](../../development-tools/toolbox/toolbox-01-JspGenerator.md#jsp-generator) のインストール方法について説明する。
+[JSP自動生成ツール](../../development-tools/toolbox/toolbox-01-JspGenerator.md#jsp自動生成ツール) のインストール方法について説明する。
 
 ## 前提事項
 
@@ -63,5 +63,5 @@ jspGenで開くことでツールを起動できる。
 
 ### 作成したファイルの表示
 
-[HTMLファイルからの起動方法](../../development-tools/toolbox/toolbox-02-SetUpJspGeneratorTool.md#setupjspgeneratortool-howtoexecutefromeclipse) の実行により、HTMLファイルと同一ディレクトリにJSPファイルが生成される。
+[HTMLファイルからの起動方法](../../development-tools/toolbox/toolbox-02-SetUpJspGeneratorTool.md#htmlファイルからの起動方法) の実行により、HTMLファイルと同一ディレクトリにJSPファイルが生成される。
 HTMLファイルと同一ディレクトリを右クリックしフレッシュ(Refresh)を選択することでJSPファイルが生成される。

@@ -37,7 +37,7 @@
     {
       "id": "s6",
       "title": "移行手順の詳細",
-      "content": "ここでは、Nablarch 5のプロジェクトをNablarch 6へ移行する際に必要となる手順について、それぞれ詳細な内容を説明する。\n\nプロジェクトによっては不要な手順が含まれる可能性があるが、その場合は適宜取捨選択して読み進めること（例えば、 [waitt-maven-pluginをjetty-ee10-maven-pluginに変更する](../../about/migration/migration-migration.md#waitt-to-jetty) や [nablarch-testing-jetty6をnablarch-testing-jetty12に変更する](../../about/migration/migration-migration.md#update-ntf-jetty) はウェブプロジェクト固有の手順なので、バッチプロジェクトでは読み飛ばして問題ない）。",
+      "content": "ここでは、Nablarch 5のプロジェクトをNablarch 6へ移行する際に必要となる手順について、それぞれ詳細な内容を説明する。\n\nプロジェクトによっては不要な手順が含まれる可能性があるが、その場合は適宜取捨選択して読み進めること（例えば、 [waitt-maven-pluginをjetty-ee10-maven-pluginに変更する](../../about/migration/migration-migration.md#waitt-maven-pluginをjetty-ee10-maven-pluginに変更する) や [nablarch-testing-jetty6をnablarch-testing-jetty12に変更する](../../about/migration/migration-migration.md#nablarch-testing-jetty6をnablarch-testing-jetty12に変更する) はウェブプロジェクト固有の手順なので、バッチプロジェクトでは読み飛ばして問題ない）。",
       "level": 2
     },
     {
@@ -55,7 +55,7 @@
     {
       "id": "s9",
       "title": "Java EEの依存関係をJakarta EEに変更する",
-      "content": "Java EEのAPIの依存関係(`dependency`)を、Jakarta EEのものに変更する必要がある。\n例えば代表的なものとしては、Java Servletなどが挙げられる。\n\nただ、Java EEのAPIの `dependency` は、jarの提供元やバージョンによってバラバラになっており統一されていない。\nこのため、 `groupId` などから機械的に判断はできない。\nどの `dependency` がJava EEのAPIなのかは、 `groupId` や `artifactId` 、jarの中に含まれるクラスなどから判断しなければならない。\n\n参考までに、Nablarchが提供しているアーキタイプやExampleでの変更内容を以下に記載する。\nなお、ExampleではJakarta EEが提供しているBOMを読み込むことで、個別にバージョンを指定しないようにしている。\nバージョンを調べる手間や指定のミスが減り管理も楽になるため、BOMを読み込むことを推奨する。\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    ...\n    <dependency>\n      <groupId>jakarta.platform</groupId>\n      <artifactId>jakarta.jakartaee-bom</artifactId>\n      <version>10.0.0</version>\n      <type>pom</type>\n      <scope>import</scope>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n```\n\nまた、ここで記載されていない依存関係を変更するための参考として、本ページ末尾の付録に [Java EEとJakarta EEの仕様の対応表](../../about/migration/migration-migration.md#java-ee-jakarta-ee-comparation) を記載する。\nJakarta EEでの `dependency` が何になるかは各仕様のページに記載されているので、そちらも参考にすること。\n（例えば [Jakarta Servlet 6.0 の仕様のページ (外部サイト、英語)](https://jakarta.ee/specifications/servlet/6.0/#details) には、「Maven coordinates」のところに `jakarta.servlet:jakarta.servlet-api:jar:6.0.0` と記載されている）",
+      "content": "Java EEのAPIの依存関係(`dependency`)を、Jakarta EEのものに変更する必要がある。\n例えば代表的なものとしては、Java Servletなどが挙げられる。\n\nただ、Java EEのAPIの `dependency` は、jarの提供元やバージョンによってバラバラになっており統一されていない。\nこのため、 `groupId` などから機械的に判断はできない。\nどの `dependency` がJava EEのAPIなのかは、 `groupId` や `artifactId` 、jarの中に含まれるクラスなどから判断しなければならない。\n\n参考までに、Nablarchが提供しているアーキタイプやExampleでの変更内容を以下に記載する。\nなお、ExampleではJakarta EEが提供しているBOMを読み込むことで、個別にバージョンを指定しないようにしている。\nバージョンを調べる手間や指定のミスが減り管理も楽になるため、BOMを読み込むことを推奨する。\n\n```xml\n<dependencyManagement>\n  <dependencies>\n    ...\n    <dependency>\n      <groupId>jakarta.platform</groupId>\n      <artifactId>jakarta.jakartaee-bom</artifactId>\n      <version>10.0.0</version>\n      <type>pom</type>\n      <scope>import</scope>\n    </dependency>\n  </dependencies>\n</dependencyManagement>\n```\n\nまた、ここで記載されていない依存関係を変更するための参考として、本ページ末尾の付録に [Java EEとJakarta EEの仕様の対応表](../../about/migration/migration-migration.md#java-eeとjakarta-eeの仕様の対応表) を記載する。\nJakarta EEでの `dependency` が何になるかは各仕様のページに記載されているので、そちらも参考にすること。\n（例えば [Jakarta Servlet 6.0 の仕様のページ (外部サイト、英語)](https://jakarta.ee/specifications/servlet/6.0/#details) には、「Maven coordinates」のところに `jakarta.servlet:jakarta.servlet-api:jar:6.0.0` と記載されている）",
       "level": 4
     },
     {
@@ -127,13 +127,13 @@
     {
       "id": "s21",
       "title": "Domaアダプタを更新する",
-      "content": "Domaアダプタをアプリケーションに組み込んでいる場合は、依存関係の設定が必要となる。\n詳細については [依存関係の設定](../../component/adapters/adapters-doma-adaptor.md#doma-dependency) を参照のこと。\n\nまた、新しいバージョンで推奨する実装方法についても案内しているため、必要に応じて対応する。\n詳細については [Doma 2.44.0までの実装方法から移行する](../../component/adapters/adapters-doma-adaptor.md#migration-doma2440) を参照のこと。",
+      "content": "Domaアダプタをアプリケーションに組み込んでいる場合は、依存関係の設定が必要となる。\n詳細については [依存関係の設定](../../component/adapters/adapters-doma-adaptor.md#依存関係の設定) を参照のこと。\n\nまた、新しいバージョンで推奨する実装方法についても案内しているため、必要に応じて対応する。\n詳細については [Doma 2.44.0までの実装方法から移行する](../../component/adapters/adapters-doma-adaptor.md#doma-2440までの実装方法から移行する) を参照のこと。",
       "level": 4
     },
     {
       "id": "s22",
       "title": "Micrometerアダプタを更新する",
-      "content": "Micrometerアダプタをアプリケーションに組み込んで監視サービスと連携している場合は、依存関係に追加しているMicrometerモジュールのバージョン更新が必要となる。\n詳細については [監視サービスと連携する](../../component/adapters/adapters-micrometer-adaptor.md#micrometer-collaboration) を参照のこと。",
+      "content": "Micrometerアダプタをアプリケーションに組み込んで監視サービスと連携している場合は、依存関係に追加しているMicrometerモジュールのバージョン更新が必要となる。\n詳細については [監視サービスと連携する](../../component/adapters/adapters-micrometer-adaptor.md#監視サービスと連携する) を参照のこと。",
       "level": 4
     },
     {
@@ -157,7 +157,7 @@
     {
       "id": "s26",
       "title": "javax名前空間をjakarta名前空間に変更する",
-      "content": "Jakarta EE 9で入った名前空間の変更の対応を、アプリケーションのコードにも実施する。\n名前空間の変更対応の大まかな流れを以下に記載する。\n\n1. `javax` 名前空間で `import` している部分等がコンパイルエラーになるため、 `jakarta` 名前空間に変更する\n2. コンパイルエラーにならない場所を対応するため、プロジェクト全体を `javax` でGrep検索する\n3. 検索で見つかった箇所に関して、Java EEの名前空間かどうか判定する\n4. Java EEの名前空間である場合は、 `javax` を `jakarta` に置換する\n\n以下で、詳細について説明する。\n\n`javax` の記述は、多くの場合はJavaソースコード上の `import` 文に現れる。\nここまでの修正でJava EEの依存関係がなくなりJakarta EEの依存関係に置き換わっているため、 `javax` 名前空間で `import` している部分はコンパイルエラーが発生するようになっている。\nそのため、まずはコンパイルエラーが発生している箇所を確認し、 `jakarta` 名前空間に変更する。\n\nしかし、 `javax` が現れるのは `import` 文だけとは限らず、コンパイルエラーにならない場所にも存在する可能性がある。\nたとえば、Java Servletでフォワード元のリクエストURIを取得するためのキー `javax.servlet.forward.request_uri` は文字列で指定するため、コンパイルエラーにはならない（このキーは、Jakarta Servletでは `jakarta.servlet.forward.request_uri` に変える必要がある）。\n他にも、JSPや設定ファイルの中に記述されている場合も、コンパイルエラーにはならないが修正対象となる。\n\nしたがって `javax` 名前空間の有無を調査するには、プロジェクト全体に対してGrep検索を行わなければならない。\n\n次に、 `javax` で検索にヒットした箇所について、それが本当にJava EEの名前空間であるかどうかを判定する。\n例えば、nablarch-example-webを `javax` で検索すると、以下のような記述がヒットする。\n\n```java\nimport javax.validation.ConstraintValidator;\n```\n\nこれは、Bean Validationのクラスを `import` している箇所なので、Java EEの名前空間と判断できる。\n\n一方で、以下のような記述もヒットする。\n\n```java\nimport javax.crypto.SecretKeyFactory;\n```\n\nこれは標準ライブラリに含まれる暗号処理に関するクラスを `import` している箇所になるので、Java EEの名前空間ではない。\n\nこのように、 `javax` でヒットしたからといって、それらが全てJava EEの名前空間とは一概には判断できない。\n本ページ付録の [Java EEとJakarta EEの仕様の対応表](../../about/migration/migration-migration.md#java-ee-jakarta-ee-comparation) に各仕様の名前空間を記載しているので、これを参考にヒットした `javax` がJava EEのものか判断すること。\n\nJava EEの名前空間であると判断できた場合は、 `javax` の部分を `jakarta` に置換する。\n以下は、前述の `import` を `jakarta` に置換した場合の例になる。\n\n```java\nimport jakarta.validation.ConstraintValidator;\n```",
+      "content": "Jakarta EE 9で入った名前空間の変更の対応を、アプリケーションのコードにも実施する。\n名前空間の変更対応の大まかな流れを以下に記載する。\n\n1. `javax` 名前空間で `import` している部分等がコンパイルエラーになるため、 `jakarta` 名前空間に変更する\n2. コンパイルエラーにならない場所を対応するため、プロジェクト全体を `javax` でGrep検索する\n3. 検索で見つかった箇所に関して、Java EEの名前空間かどうか判定する\n4. Java EEの名前空間である場合は、 `javax` を `jakarta` に置換する\n\n以下で、詳細について説明する。\n\n`javax` の記述は、多くの場合はJavaソースコード上の `import` 文に現れる。\nここまでの修正でJava EEの依存関係がなくなりJakarta EEの依存関係に置き換わっているため、 `javax` 名前空間で `import` している部分はコンパイルエラーが発生するようになっている。\nそのため、まずはコンパイルエラーが発生している箇所を確認し、 `jakarta` 名前空間に変更する。\n\nしかし、 `javax` が現れるのは `import` 文だけとは限らず、コンパイルエラーにならない場所にも存在する可能性がある。\nたとえば、Java Servletでフォワード元のリクエストURIを取得するためのキー `javax.servlet.forward.request_uri` は文字列で指定するため、コンパイルエラーにはならない（このキーは、Jakarta Servletでは `jakarta.servlet.forward.request_uri` に変える必要がある）。\n他にも、JSPや設定ファイルの中に記述されている場合も、コンパイルエラーにはならないが修正対象となる。\n\nしたがって `javax` 名前空間の有無を調査するには、プロジェクト全体に対してGrep検索を行わなければならない。\n\n次に、 `javax` で検索にヒットした箇所について、それが本当にJava EEの名前空間であるかどうかを判定する。\n例えば、nablarch-example-webを `javax` で検索すると、以下のような記述がヒットする。\n\n```java\nimport javax.validation.ConstraintValidator;\n```\n\nこれは、Bean Validationのクラスを `import` している箇所なので、Java EEの名前空間と判断できる。\n\n一方で、以下のような記述もヒットする。\n\n```java\nimport javax.crypto.SecretKeyFactory;\n```\n\nこれは標準ライブラリに含まれる暗号処理に関するクラスを `import` している箇所になるので、Java EEの名前空間ではない。\n\nこのように、 `javax` でヒットしたからといって、それらが全てJava EEの名前空間とは一概には判断できない。\n本ページ付録の [Java EEとJakarta EEの仕様の対応表](../../about/migration/migration-migration.md#java-eeとjakarta-eeの仕様の対応表) に各仕様の名前空間を記載しているので、これを参考にヒットした `javax` がJava EEのものか判断すること。\n\nJava EEの名前空間であると判断できた場合は、 `javax` の部分を `jakarta` に置換する。\n以下は、前述の `import` を `jakarta` に置換した場合の例になる。\n\n```java\nimport jakarta.validation.ConstraintValidator;\n```",
       "level": 4
     },
     {

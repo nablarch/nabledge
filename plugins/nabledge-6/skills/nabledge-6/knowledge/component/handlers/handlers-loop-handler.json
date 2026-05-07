@@ -19,13 +19,13 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "[データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) より後ろに設定すること\n\nデータベースに対するトランザクションを制御する場合には、トランザクション管理対象のデータベース接続がスレッド上に存在している必要がある。",
+      "content": "[データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) より後ろに設定すること\n\nデータベースに対するトランザクションを制御する場合には、トランザクション管理対象のデータベース接続がスレッド上に存在している必要がある。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "トランザクション制御対象を設定する",
-      "content": "このハンドラは、 transactionFactory\nプロパティに設定されたファクトリクラス( TransactionFactory の実装クラス)を使用してトランザクションの制御対象を取得しスレッド上で管理する。\n\nスレッド上で管理する際には、トランザクションを識別するための名前を設定する。\nデフォルトでは、 `transaction` が使用されるが、任意の名前を使用する場合は、 transactionName プロパティに設定すること。\n\n> **Tip:**\n> [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) で設定したデータベースに対してトランザクションを制御する場合は、\n> DbConnectionManagementHandler#connectionName に設定した値と同じ値を\n> transactionName プロパティに設定すること。\n\n> なお、 DbConnectionManagementHandler#connectionName に値を設定していない場合は、\n> transactionName への設定は省略して良い。\n\n以下の設定ファイル例を参考にし、このハンドラを設定すること。\n\n```xml\n<!-- トランザクション制御ハンドラ -->\n<component class=\"nablarch.fw.handler.LoopHandler\">\n  <property name=\"transactionFactory\" ref=\"databaseTransactionFactory\" />\n  <property name=\"transactionName\" value=\"name\" />\n</component>\n\n<!-- データベースに対するトランザクション制御を行う場合には、JdbcTransactionFactoryを設定する -->\n<component name=\"databaseTransactionFactory\"\n    class=\"nablarch.core.db.transaction.JdbcTransactionFactory\">\n  <!-- プロパティの設定は省略 -->\n</component>\n```",
+      "content": "このハンドラは、 transactionFactory\nプロパティに設定されたファクトリクラス( TransactionFactory の実装クラス)を使用してトランザクションの制御対象を取得しスレッド上で管理する。\n\nスレッド上で管理する際には、トランザクションを識別するための名前を設定する。\nデフォルトでは、 `transaction` が使用されるが、任意の名前を使用する場合は、 transactionName プロパティに設定すること。\n\n> **Tip:**\n> [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) で設定したデータベースに対してトランザクションを制御する場合は、\n> DbConnectionManagementHandler#connectionName に設定した値と同じ値を\n> transactionName プロパティに設定すること。\n\n> なお、 DbConnectionManagementHandler#connectionName に値を設定していない場合は、\n> transactionName への設定は省略して良い。\n\n以下の設定ファイル例を参考にし、このハンドラを設定すること。\n\n```xml\n<!-- トランザクション制御ハンドラ -->\n<component class=\"nablarch.fw.handler.LoopHandler\">\n  <property name=\"transactionFactory\" ref=\"databaseTransactionFactory\" />\n  <property name=\"transactionName\" value=\"name\" />\n</component>\n\n<!-- データベースに対するトランザクション制御を行う場合には、JdbcTransactionFactoryを設定する -->\n<component name=\"databaseTransactionFactory\"\n    class=\"nablarch.core.db.transaction.JdbcTransactionFactory\">\n  <!-- プロパティの設定は省略 -->\n</component>\n```",
       "level": 2
     },
     {

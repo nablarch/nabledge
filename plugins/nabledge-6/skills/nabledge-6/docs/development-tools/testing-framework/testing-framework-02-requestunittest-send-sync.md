@@ -59,7 +59,7 @@ Excelファイルを使用することで、外部インターフェース設計
 テストデータを記載したExcelファイルは、クラス単体テストと同様に
 テストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。
 
-テストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#how-to-write-excel) 」を参照。
+テストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#excelによるテストデータ記述) 」を参照。
 
 #### 要求電文の期待値および、返却する応答電文（レスポンスメッセージ）の準備
 
@@ -77,8 +77,8 @@ Excelファイルを使用することで、外部インターフェース設計
 
 テストケースの書き方についての詳細は、以下を参照すること。
 
-* [ウェブアプリケーションのテストケース一覧](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#request-test-testcases)
-* [バッチ処理のテストケース一覧](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#batch-test-testcases)
+* [ウェブアプリケーションのテストケース一覧](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#テストケース一覧)
+* [バッチ処理のテストケース一覧](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#テストケース一覧)
 
 以下に、実際にExcelで書かれたテストデータを示す。（グループIDの関連も示す）
 
@@ -172,7 +172,7 @@ Excelファイルを使用することで、外部インターフェース設計
 
 複数回電文を送信する場合のテストは、テスティングフレームワークの以下の仕様に注意をして記述すること。
 
-* 同一データタイプ(以下の例では `RESPONSE_HEADER_MESSAGES` と `RESPONSE_BODY_MESSAGES` )は、それぞれ、まとめて記述する。詳細は、  [一つのシートに複数テストケースのデータを記載したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) 及び、  [複数のデータタイプ使用時はデータタイプごとにまとめてデータを記述する](../../development-tools/testing-framework/testing-framework-01-Abstract.md#auto-test-framework-multi-datatype) を参照。
+* 同一データタイプ(以下の例では `RESPONSE_HEADER_MESSAGES` と `RESPONSE_BODY_MESSAGES` )は、それぞれ、まとめて記述する。詳細は、  [一つのシートに複数テストケースのデータを記載したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) 及び、  [複数のデータタイプ使用時はデータタイプごとにまとめてデータを記述する](../../development-tools/testing-framework/testing-framework-01-Abstract.md#複数のデータタイプ使用時はデータタイプごとにまとめてデータを記述する) を参照。
 * 同一リクエストIDの電文については、noの値を変えてまとめて記述する。
 
 以下に、複数回メッセージを送信する場合の要求電文の本文の期待値の記載例を示す。

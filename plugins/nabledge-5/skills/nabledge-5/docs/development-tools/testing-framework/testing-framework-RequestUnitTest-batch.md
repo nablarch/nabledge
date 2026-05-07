@@ -91,7 +91,7 @@
 ### 固定長ファイル
 
 基本的な記述方法は、
-[リクエスト単体テストの実施方法(バッチ)](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#batch-request-test)
+[リクエスト単体テストの実施方法(バッチ)](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#リクエスト単体テストの実施方法バッチ)
 を参照。
 
 #### パディング
@@ -116,7 +116,7 @@
 ### 可変長ファイル
 
 基本的な記述方法は、
-[リクエスト単体テストの実施方法(バッチ)](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#batch-request-test)
+[リクエスト単体テストの実施方法(バッチ)](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#リクエスト単体テストの実施方法バッチ)
 を参照。
 
 ## 各種設定値

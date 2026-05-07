@@ -56,7 +56,7 @@ a) nablarch.core.transaction.TransactionFactoryの実装クラス
 
 | クラス名 | 概要 |
 |---|---|
-| nablarch.core.db.transaction.JdbcTransactionFactory | JdbcTransactionを生成するクラス。 トランザクションタイムアウトの設定は本クラスに行う。  設定内容の詳細は、 [トランザクションタイムアウトを使用するための設定](../../component/libraries/libraries-04-TransactionTimeout.md#transactiontimeoutsettings) を参照。 |
+| nablarch.core.db.transaction.JdbcTransactionFactory | JdbcTransactionを生成するクラス。 トランザクションタイムアウトの設定は本クラスに行う。  設定内容の詳細は、 [トランザクションタイムアウトを使用するための設定](../../component/libraries/libraries-04-TransactionTimeout.md#トランザクションタイムアウトを使用するための設定) を参照。 |
 
 b) nablarch.core.transaction.Transactionの実装クラス
 
@@ -68,7 +68,7 @@ c) その他のクラス
 
 | クラス名 | 概要 |
 |---|---|
-| nablarch.core.transaction.TransactionContext | ThreadLocal(スレッド内)にTransactionを保持するクラス。  保持するTransactionには、任意の名前(トランザクション名)を付加することができる。 トランザクション名の詳細は、 [データベースコネクション名とトランザクション名](../../component/libraries/libraries-04-Connection.md#db-connection-name-label) を参照すること。  > **Warning:** > ThreadLocalでTransactionが管理されるため、アプリケーションのスレッドと同一のスレッドでTransactionを設定する必要がある。  > マルチスレッド環境では、各スレッドに対してTransactionを設定する必要があるため、注意が必要である。 |
+| nablarch.core.transaction.TransactionContext | ThreadLocal(スレッド内)にTransactionを保持するクラス。  保持するTransactionには、任意の名前(トランザクション名)を付加することができる。 トランザクション名の詳細は、 [データベースコネクション名とトランザクション名](../../component/libraries/libraries-04-Connection.md#nablarchcoredbconnectionパッケージ) を参照すること。  > **Warning:** > ThreadLocalでTransactionが管理されるため、アプリケーションのスレッドと同一のスレッドでTransactionを設定する必要がある。  > マルチスレッド環境では、各スレッドに対してTransactionを設定する必要があるため、注意が必要である。 |
 
 ## 使用例
 

@@ -9,7 +9,7 @@
 * バックアップ用スキーマにテーブルが作成済みであること [1]
 
 バックアップ用スキーマおよびそのテーブルの作成については、
-『 [マスタデータ復旧機能](../../development-tools/testing-framework/testing-framework-04-MasterDataRestore.md) 』の [環境構築](../../development-tools/testing-framework/testing-framework-04-MasterDataRestore.md#master-data-backup-settings) を参照。
+『 [マスタデータ復旧機能](../../development-tools/testing-framework/testing-framework-04-MasterDataRestore.md) 』の [環境構築](../../development-tools/testing-framework/testing-framework-04-MasterDataRestore.md#環境構築) を参照。
 
 ## 提供方法
 

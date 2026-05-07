@@ -44,7 +44,7 @@ RequestMessage
 
 フォームクラスのプロパティは全て String で定義する
 
-プロパティを String とすべき理由は、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation-form-property) を参照。
+プロパティを String とすべき理由は、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#バリデーションルールの設定方法) を参照。
 ただし、バイナリ項目の場合はバイト配列で定義する。
 
 エンティティクラス(entity class)
@@ -53,7 +53,7 @@ RequestMessage
 
 > **Important:**
 > メッセージングでは、システムで共通のデータリーダを使うことを想定しているため、
-> [Nablarchバッチアプリケーションの責務配置](../../processing-pattern/nablarch-batch/nablarch-batch-application-design.md#nablarch-batch-application-design) と異なり、
+> [Nablarchバッチアプリケーションの責務配置](../../processing-pattern/nablarch-batch/nablarch-batch-application-design.md#アプリケーションの責務配置) と異なり、
 > アクションがデータリーダを生成する責務を持っていない。
 
 > メッセージングで使用するデータリーダは、コンポーネント定義に `dataReader` という名前で追加する。

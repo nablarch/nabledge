@@ -1,7 +1,7 @@
 {
   "id": "handlers-http-messaging-error-handler",
   "title": "HTTPメッセージングエラー制御ハンドラ",
-  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* 例外の種類に応じたログ出力とレスポンス生成\n\n  * nablarch.fw.Result.Errorのログ出力について\n* レスポンスボディが空の場合のデフォルトレスポンスの設定\n\n本ハンドラでは後続のハンドラで発生した例外及びエラーを補足し、例外(エラー)に応じたログ出力とレスポンスの生成を行う。\nまた、後続のハンドラでレスポンスボディが設定されていない場合には、HTTPステータスコードに対応したデフォルトのボディをレスポンスに設定する。\n\n本ハンドラでは、以下の処理を行う。\n\n* 例外(エラー)に応じたログ出力とレスポンスの生成を行う。\n  詳細は、 [例外の種類に応じたログ出力とレスポンス生成](../../component/handlers/handlers-http-messaging-error-handler.md#http-messaging-error-handler-error-response-and-log) を参照。\n* デフォルトのレスポンスボディを設定する。\n  詳細は、 [レスポンスボディが空の場合のデフォルトレスポンスの設定](../../component/handlers/handlers-http-messaging-error-handler.md#http-messaging-error-handler-default-page) を参照。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-http-messaging-error-handler/flow.png)",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* 例外の種類に応じたログ出力とレスポンス生成\n\n  * nablarch.fw.Result.Errorのログ出力について\n* レスポンスボディが空の場合のデフォルトレスポンスの設定\n\n本ハンドラでは後続のハンドラで発生した例外及びエラーを補足し、例外(エラー)に応じたログ出力とレスポンスの生成を行う。\nまた、後続のハンドラでレスポンスボディが設定されていない場合には、HTTPステータスコードに対応したデフォルトのボディをレスポンスに設定する。\n\n本ハンドラでは、以下の処理を行う。\n\n* 例外(エラー)に応じたログ出力とレスポンスの生成を行う。\n  詳細は、 [例外の種類に応じたログ出力とレスポンス生成](../../component/handlers/handlers-http-messaging-error-handler.md#例外の種類に応じたログ出力とレスポンス生成) を参照。\n* デフォルトのレスポンスボディを設定する。\n  詳細は、 [レスポンスボディが空の場合のデフォルトレスポンスの設定](../../component/handlers/handlers-http-messaging-error-handler.md#レスポンスボディが空の場合のデフォルトレスポンスの設定) を参照。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-http-messaging-error-handler/flow.png)",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -19,13 +19,13 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置すること\n\n本ハンドラで生成した HttpResponse を [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) が処理する。\nこのため、本ハンドラを [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに設定する必要がある。",
+      "content": "[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#httpレスポンスハンドラ) より後ろに配置すること\n\n本ハンドラで生成した HttpResponse を [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#httpレスポンスハンドラ) が処理する。\nこのため、本ハンドラを [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#httpレスポンスハンドラ) より後ろに設定する必要がある。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "例外の種類に応じたログ出力とレスポンス生成",
-      "content": "nablarch.fw.NoMoreHandlerException\n\nINFO\n\n404\n\nリクエストを処理すべきハンドラが存在しなかったことを意味するため、証跡ログとして記録する。\nまた、処理すべき *action class* が存在しなかったことを意味するため、HTTPステータスコードが *404*  のレスポンスを生成する。\n\nnablarch.fw.web.HttpErrorResponse\n\nログ出力なし\n\nHttpErrorResponse#getResponse()\n\n後続のハンドラで業務例外(バリデーションなどを行った結果の例外)が発生したことを意味するので、ログ出力は行わない。\n\nnablarch.fw.Result.Error\n\n設定による\n\nError#getStatusCode()\n\n[nablarch.fw.Result.Errorのログ出力について](../../component/handlers/handlers-http-messaging-error-handler.md#http-messaging-error-handler-write-failure-log-pattern) を参照\n\nnablarch.core.message.ApplicationException と nablarch.fw.messaging.MessagingException\n\n-\n\n400\n\nクライアントからのリクエストが不正であることを示す例外のため、HTTPステータスコードが *400* のレスポンスを生成する。\n\n上記以外の例外及びエラー\n\nFATAL\n\n500\n\n上記に該当しない例外及びエラーの場合には、障害扱いとしてログ出力を行う。\nまた、予期しない例外やエラーであるため、レスポンスは **500** としている。",
+      "content": "nablarch.fw.NoMoreHandlerException\n\nINFO\n\n404\n\nリクエストを処理すべきハンドラが存在しなかったことを意味するため、証跡ログとして記録する。\nまた、処理すべき *action class* が存在しなかったことを意味するため、HTTPステータスコードが *404*  のレスポンスを生成する。\n\nnablarch.fw.web.HttpErrorResponse\n\nログ出力なし\n\nHttpErrorResponse#getResponse()\n\n後続のハンドラで業務例外(バリデーションなどを行った結果の例外)が発生したことを意味するので、ログ出力は行わない。\n\nnablarch.fw.Result.Error\n\n設定による\n\nError#getStatusCode()\n\n[nablarch.fw.Result.Errorのログ出力について](../../component/handlers/handlers-http-messaging-error-handler.md#nablarchfwresulterrorのログ出力について) を参照\n\nnablarch.core.message.ApplicationException と nablarch.fw.messaging.MessagingException\n\n-\n\n400\n\nクライアントからのリクエストが不正であることを示す例外のため、HTTPステータスコードが *400* のレスポンスを生成する。\n\n上記以外の例外及びエラー\n\nFATAL\n\n500\n\n上記に該当しない例外及びエラーの場合には、障害扱いとしてログ出力を行う。\nまた、予期しない例外やエラーであるため、レスポンスは **500** としている。",
       "level": 2
     },
     {
@@ -37,7 +37,7 @@
     {
       "id": "s6",
       "title": "レスポンスボディが空の場合のデフォルトレスポンスの設定",
-      "content": "詳細は、 [HTTPエラー制御ハンドラのデフォルトページの設定](../../component/handlers/handlers-HttpErrorHandler.md#httperrorhandler-defaultpage) を参照。",
+      "content": "詳細は、 [HTTPエラー制御ハンドラのデフォルトページの設定](../../component/handlers/handlers-HttpErrorHandler.md#デフォルトページの設定) を参照。",
       "level": 2
     }
   ]

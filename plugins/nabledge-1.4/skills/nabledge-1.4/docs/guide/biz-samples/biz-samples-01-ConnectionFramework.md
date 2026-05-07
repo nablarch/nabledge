@@ -9,7 +9,7 @@
 * **通信機能の隠蔽**
   本機能を使用することで、利用者は通信方式を意識することなくサーバとの通信を行える。
 * **基本的な通信機能の提供**
-  [HTTP/HTTPS通信](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#abouthttpconn) に記述されている通りの通信機能であれば、カスタマイズすることなく利用できる。
+  [HTTP/HTTPS通信](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#httphttps通信) に記述されている通りの通信機能であれば、カスタマイズすることなく利用できる。
 * **汎用的な電文の利用**
   送受信する電文形式を自由に変更できる。
 
@@ -53,20 +53,20 @@ a) 通信処理
 
 | クラス名 | 概要 |
 |---|---|
-| NMMessageSender | 通信機能を提供するクラス。使用方法につていは [通信処理APIの呼び出し](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#houtouse) に記載する。 |
-| NMHttpRequester | HTTP/HTTPS通信機能を実装したクラス。実装機能の詳細については [HTTP/HTTPS通信](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#abouthttpconn) に、 本実装クラスの設定方法については [センダ](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#propertyaboutsender) に記載する。 |
+| NMMessageSender | 通信機能を提供するクラス。使用方法につていは [通信処理APIの呼び出し](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#通信処理apiの呼び出し) に記載する。 |
+| NMHttpRequester | HTTP/HTTPS通信機能を実装したクラス。実装機能の詳細については [HTTP/HTTPS通信](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#httphttps通信) に、 本実装クラスの設定方法については [センダ](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#センダ) に記載する。 |
 
 b) 通信データ
 
 | クラス名 | 概要 |
 |---|---|
-| NMMessage | 通信のペイロード。本機能が想定するデータ形式のモデルは [データモデル](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#aboutmessage) に記載する。 |
+| NMMessage | 通信のペイロード。本機能が想定するデータ形式のモデルは [データモデル](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#データモデル) に記載する。 |
 
 c) データ変換
 
 | クラス名 | 概要 |
 |---|---|
-| NMJsonBodyConvertor | JSON形式でNMMessageおよびNSData間の変換機能を提供するクラス。 実装機能の詳細については [JSONコンバータ](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#aboutjsoncon) に記載する。 |
+| NMJsonBodyConvertor | JSON形式でNMMessageおよびNSData間の変換機能を提供するクラス。 実装機能の詳細については [JSONコンバータ](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#jsonコンバータ) に記載する。 |
 
 d) その他
 
@@ -82,7 +82,7 @@ d) その他
 ![connection_sequence.jpg](../../../knowledge/assets/biz-samples-01-ConnectionFramework/connection_sequence.jpg)
 
 フックを複数使用する場合、送信前処理は設定した順番に、送信後処理は設定した順番とは逆に呼び出される
-(フックの設定方法については [プロパティリストの作成](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#connectionfwpropertylist) のb) SenderHookを参照)。
+(フックの設定方法については [プロパティリストの作成](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#プロパティリストの作成) のb) SenderHookを参照)。
 例えば、以下の処理を行うフックを順に設定した場合
 
 1. 通信ヘッダの設定/取得

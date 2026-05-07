@@ -64,8 +64,8 @@ HTTPアクセスログの出力項目を下記に示す。
 | リクエストパラメータ | リクエストパラメータのダンプ。  リクエストパラメータに含まれる個人情報や機密情報は、マスクして出力する。 (マスク用の設定が必要となる。) |
 | クライアント端末IPアドレス | リクエストを送信したクライアントのIPアドレス。 |
 | クライアント端末ホスト | リクエストを送信したクライアントのホスト名。 |
-| ステータスコード(内部) | 内部で保持するレスポンスのステータスコード。  [ステータスコードの変換](../../component/handlers/handlers-HttpResponseHandler.md#http-response-handler-response-code-conversion) で示した HTTPレスポンスハンドラによるステータスコードの変換を行う前のステータスコード を出力する。  レスポンスとして返されるステータスコードの詳細は、 [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler) を参照。  > **Note:** > [HTTPレスポンスハンドラ](../../component/handlers/handlers-HttpResponseHandler.md#http-response-handler) のフォーワード処理でコンテンツパスに > "servlet://" が指定された場合、 > フォワード先のサーブレットで200以外のステータスコードを返却した際も、 > アクセスログには 200 が出力される。  > これは、 JavaEE 5 の仕様上フォワードした先のサーブレットの処理結果を取得 > できない制約により発生したアクセスログの仕様である。 |
-| ステータスコード(クライアント) | クライアントに実際に返されるステータスコード。  [ステータスコードの変換](../../component/handlers/handlers-HttpResponseHandler.md#http-response-handler-response-code-conversion) で示した HTTPレスポンスハンドラによるステータスコードの変換を行った後のステータスコードを出力する。  > **Warning:** > "ステータスコード(クライアント)" の値は、 HTTPアクセスログハンドラの処理の後に > JSP のエラーなどシステムエラーが発生場合、実際の内部コードと異なることがある。 > この場合、システムエラーとして別途障害監視ログが出力されるため、障害監視ログが > 発生した際にはこの値が正しくない可能性があることを考慮してログを検証すること。 |
+| ステータスコード(内部) | 内部で保持するレスポンスのステータスコード。  [ステータスコードの変換](../../component/handlers/handlers-HttpResponseHandler.md#ステータスコードの変換) で示した HTTPレスポンスハンドラによるステータスコードの変換を行う前のステータスコード を出力する。  レスポンスとして返されるステータスコードの詳細は、 [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#httpエラー制御ハンドラ) を参照。  > **Note:** > [HTTPレスポンスハンドラ](../../component/handlers/handlers-HttpResponseHandler.md#httpレスポンスハンドラ) のフォーワード処理でコンテンツパスに > "servlet://" が指定された場合、 > フォワード先のサーブレットで200以外のステータスコードを返却した際も、 > アクセスログには 200 が出力される。  > これは、 JavaEE 5 の仕様上フォワードした先のサーブレットの処理結果を取得 > できない制約により発生したアクセスログの仕様である。 |
+| ステータスコード(クライアント) | クライアントに実際に返されるステータスコード。  [ステータスコードの変換](../../component/handlers/handlers-HttpResponseHandler.md#ステータスコードの変換) で示した HTTPレスポンスハンドラによるステータスコードの変換を行った後のステータスコードを出力する。  > **Warning:** > "ステータスコード(クライアント)" の値は、 HTTPアクセスログハンドラの処理の後に > JSP のエラーなどシステムエラーが発生場合、実際の内部コードと異なることがある。 > この場合、システムエラーとして別途障害監視ログが出力されるため、障害監視ログが > 発生した際にはこの値が正しくない可能性があることを考慮してログを検証すること。 |
 | コンテンツパス | レスポンスのコンテンツパス。 |
 | 開始日時 | 処理の開始日時。 |
 | 終了日時 | 処理の終了日時。 |
@@ -75,10 +75,10 @@ HTTPアクセスログの出力項目を下記に示す。
 | 付加情報 | アプリケーションで追加する付加情報。 |
 
 HTTPアクセスログの個別項目は、リクエストID、ユーザID、URLから空きメモリ量(開始時)までとなる。
-残りの項目は、 [BasicLogFormatter](../../component/libraries/libraries-01-Log.md#log-basiclogformatter) の設定で指定する共通項目となる。
-共通項目と個別項目を組み合わせたフォーマットについては、 [各種ログの共通項目のフォーマット](../../component/libraries/libraries-01-Log.md#applog-format) を参照。
+残りの項目は、 [BasicLogFormatter](../../component/libraries/libraries-01-Log.md#basiclogformatter) の設定で指定する共通項目となる。
+共通項目と個別項目を組み合わせたフォーマットについては、 [各種ログの共通項目のフォーマット](../../component/libraries/libraries-01-Log.md#各種ログの共通項目のフォーマット) を参照。
 
-リクエストIDとユーザIDは、 [BasicLogFormatter](../../component/libraries/libraries-01-Log.md#log-basiclogformatter) が出力を提供する共通項目と重複するが、
+リクエストIDとユーザIDは、 [BasicLogFormatter](../../component/libraries/libraries-01-Log.md#basiclogformatter) が出力を提供する共通項目と重複するが、
 HTTPアクセスログのフォーマットの自由度を高めるために個別項目として指定できるようにしている。
 
 ## HTTPアクセスログの出力方法
@@ -90,7 +90,7 @@ HTTPアクセスログの出力に使用するクラスを下記に示す。
 | クラス名 | 概要 |
 |---|---|
 | nablarch.common.web.handler.HttpAccessLogHandler | HTTPアクセスログを出力するハンドラ。 リクエスト処理開始時と終了時のログを出力する。 |
-| nablarch.common.web.handler.NablarchTagHandler | Nablarchのカスタムタグ機能に必要なリクエスト処理を行うハンドラ。 [hiddenタグの暗号化](../../component/libraries/libraries-07-FormTag.md#webview-hiddenencryption) 機能に対応する改竄チェックと復号を行う。 hiddenパラメータ復号後のログを出力する。 |
+| nablarch.common.web.handler.NablarchTagHandler | Nablarchのカスタムタグ機能に必要なリクエスト処理を行うハンドラ。 [hiddenタグの暗号化](../../component/libraries/libraries-07-FormTag.md#hiddenタグの暗号化) 機能に対応する改竄チェックと復号を行う。 hiddenパラメータ復号後のログを出力する。 |
 | nablarch.fw.web.handler.HttpRequestJavaPackageMapping | URI中の部分文字列をJavaパッケージへマッピングすることで動的に委譲先を決定するディスパッチャ。 ディスパッチ先クラス決定後のログを出力する。 |
 | nablarch.fw.web.handler.HttpAccessLogUtil | HTTPアクセスログを出力するクラス。 |
 | nablarch.fw.web.handler.HttpAccessLogFormatter | HTTPアクセスログの個別項目をフォーマットするクラス。 |
@@ -102,7 +102,7 @@ HTTPアクセスログ出力時の処理シーケンスを下記に示す。
 
 上記処理シーケンスの通り、HTTPアクセスログを出力するには、下記の順番にハンドラを指定する必要がある。
 説明のために省略しているが、NablarchTagHandlerとHttpRequestJavaPackageMappingの間には、データベース接続管理、トランザクション管理、
-認可チェックなど、 [汎用のハンドラ](../../component/handlers/handlers-handler.md#commonhandlers) で記載したハンドラが入る。
+認可チェックなど、 [汎用のハンドラ](../../component/handlers/handlers-handler.md#汎用のハンドラ) で記載したハンドラが入る。
 
 ```bash
 ThreadContextHandler
@@ -138,7 +138,7 @@ HttpAccessLogHandlerはプロパティを持たないため、HttpAccessLogHandl
 
 HttpAccessLogUtilは、プロパティファイル(app-log.properties)を読み込み、
 HttpAccessLogFormatterオブジェクトを生成して、個別項目のフォーマット処理を委譲する。
-プロパティファイルのパス指定や実行時の設定値の変更方法は、 [各種ログの設定](../../component/libraries/libraries-01-Log.md#applog-config) を参照。
+プロパティファイルのパス指定や実行時の設定値の変更方法は、 [各種ログの設定](../../component/libraries/libraries-01-Log.md#各種ログの設定) を参照。
 HTTPアクセスログの設定例を下記に示す。
 
 app-log.propertiesの設定例
@@ -202,7 +202,7 @@ httpAccessLogFormatter.endOutputEnabled=true
 | HTTPヘッダのUser-Agent | $clientUserAgent$ |
 | リクエストパラメータ | $parameters$ |
 
-リクエストパラメータは、 [hiddenタグの暗号化](../../component/libraries/libraries-07-FormTag.md#webview-hiddenencryption) 機能の復号前の状態となる。
+リクエストパラメータは、 [hiddenタグの暗号化](../../component/libraries/libraries-07-FormTag.md#hiddenタグの暗号化) 機能の復号前の状態となる。
 
 デフォルトのフォーマット
 
@@ -220,8 +220,8 @@ httpAccessLogFormatter.endOutputEnabled=true
 
 プレースホルダ一覧
 
-[リクエスト処理開始時のプレースホルダ一覧](../../component/libraries/libraries-04-HttpAccessLog.md#httpaccesslog-beginformat) と同じ。
-ただし、リクエストパラメータは、 [hiddenタグの暗号化](../../component/libraries/libraries-07-FormTag.md#webview-hiddenencryption) 機能の復号後の状態となる。
+[リクエスト処理開始時のプレースホルダ一覧](../../component/libraries/libraries-04-HttpAccessLog.md#リクエスト処理開始時のログ出力に使用するフォーマット) と同じ。
+ただし、リクエストパラメータは、 [hiddenタグの暗号化](../../component/libraries/libraries-07-FormTag.md#hiddenタグの暗号化) 機能の復号後の状態となる。
 
 デフォルトのフォーマット
 
@@ -234,8 +234,8 @@ httpAccessLogFormatter.endOutputEnabled=true
 
 プレースホルダ一覧
 
-[リクエスト処理開始時のプレースホルダ一覧](../../component/libraries/libraries-04-HttpAccessLog.md#httpaccesslog-beginformat) に加えて、下記のプレースホルダを指定できる。
-リクエストパラメータは、 [hiddenタグの暗号化](../../component/libraries/libraries-07-FormTag.md#webview-hiddenencryption) 機能の復号後の状態となる。
+[リクエスト処理開始時のプレースホルダ一覧](../../component/libraries/libraries-04-HttpAccessLog.md#リクエスト処理開始時のログ出力に使用するフォーマット) に加えて、下記のプレースホルダを指定できる。
+リクエストパラメータは、 [hiddenタグの暗号化](../../component/libraries/libraries-07-FormTag.md#hiddenタグの暗号化) 機能の復号後の状態となる。
 
 | 項目名 | プレースホルダ |
 |---|---|
@@ -251,8 +251,8 @@ httpAccessLogFormatter.endOutputEnabled=true
 
 プレースホルダ一覧
 
-[リクエスト処理開始時のプレースホルダ一覧](../../component/libraries/libraries-04-HttpAccessLog.md#httpaccesslog-beginformat) に加えて、下記のプレースホルダを指定できる。
-リクエストパラメータは、 [hiddenタグの暗号化](../../component/libraries/libraries-07-FormTag.md#webview-hiddenencryption) 機能の復号後の状態となる。
+[リクエスト処理開始時のプレースホルダ一覧](../../component/libraries/libraries-04-HttpAccessLog.md#リクエスト処理開始時のログ出力に使用するフォーマット) に加えて、下記のプレースホルダを指定できる。
+リクエストパラメータは、 [hiddenタグの暗号化](../../component/libraries/libraries-07-FormTag.md#hiddenタグの暗号化) 機能の復号後の状態となる。
 
 | 項目名 | プレースホルダ |
 |---|---|

@@ -36,7 +36,7 @@ sample.value2=true
 ```
 
 > **Note:**
-> 環境設定ファイルの記述ルールの詳細については、 [環境設定ファイル記述ルール](../../component/libraries/libraries-02-01-Repository-config.md#repository-config-loader-setting) を参照。
+> 環境設定ファイルの記述ルールの詳細については、 [環境設定ファイル記述ルール](../../component/libraries/libraries-02-01-Repository-config.md#環境設定ファイル記述ルール) を参照。
 
 ### 環境設定ファイルの読み込み (通常フレームワークの責務)
 
@@ -166,7 +166,7 @@ DIコンテナはコンポーネント設定ファイルを元にしてコンポ
 </component-configuration>
 ```
 
-コンポーネント設定ファイルの要素、属性については [コンポーネント設定ファイル 要素 リファレンス](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements) に詳細を記述する。
+コンポーネント設定ファイルの要素、属性については [コンポーネント設定ファイル 要素 リファレンス](../../component/libraries/libraries-02-01-Repository-config.md#コンポーネント設定ファイル-要素-リファレンス) に詳細を記述する。
 
 なお、eclipse等のIDEでは、 [component-configuration.xsd ファイル](../../../knowledge/assets/libraries-02-01-Repository-config/component-configuration.xsd)
 をコンポーネント設定ファイルと同一ディレクトリに配置し、 component-configuration 要素の xsi:schemaLocation
@@ -350,7 +350,7 @@ for (Integer val : primitiveValueHolder.getIntegerArrayValue()) {
 これらのプロパティに値を設定できるよう、コンポーネント設定ファイルでは List および Map をコンポーネントとして登録できる要素を提供している。
 
 List をコンポーネントとして登録するには、 list 要素、 Map をコンポーネントとして登録するには、 map 要素を使用する。
-設定の記述方法は [list 要素](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-list) および  [map 要素](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-map) を参照。
+設定の記述方法は [list 要素](../../component/libraries/libraries-02-01-Repository-config.md#list-要素) および  [map 要素](../../component/libraries/libraries-02-01-Repository-config.md#map-要素) を参照。
 
 以下にそれぞれの要素の使用方法について記述する。
 
@@ -594,7 +594,7 @@ System.out.println(helloImport2.getValue());
 1. 読み込む環境設定ファイルを作成する。
 2. コンポーネント設定ファイルの property 要素の value 属性に指定する文字列に "${hello.message}" のように環境設定ファイルに記述したキーを${}で囲う文字列を設定する。
 
-以下に [リポジトリに保持するインスタンスの生成(DIコンテナ)](../../component/libraries/libraries-02-01-Repository-config.md#di-container) で示した HelloMessageProvider に設定するメッセージを外部ファイルに持たせる場合の設定例を示す。
+以下に [リポジトリに保持するインスタンスの生成(DIコンテナ)](../../component/libraries/libraries-02-01-Repository-config.md#リポジトリに保持するインスタンスの生成diコンテナ) で示した HelloMessageProvider に設定するメッセージを外部ファイルに持たせる場合の設定例を示す。
 
 ### 読み込む環境設定ファイル(hello.config)
 
@@ -638,10 +638,10 @@ helloComponent.printHello();
 
 この設定方法は、コンポーネント設定ファイルの下記に示す箇所で使用できる。
 
-* property 要素の value 属性 ([参照](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-property))
-* entry 要素の key 属性 ([参照](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-entry))
-* entry 要素の value 属性 ([参照](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-entry))
-* value 要素の内容 ([参照](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-value))
+* property 要素の value 属性 ([参照](../../component/libraries/libraries-02-01-Repository-config.md#property-要素))
+* entry 要素の key 属性 ([参照](../../component/libraries/libraries-02-01-Repository-config.md#entry-要素))
+* entry 要素の value 属性 ([参照](../../component/libraries/libraries-02-01-Repository-config.md#entry-要素))
+* value 要素の内容 ([参照](../../component/libraries/libraries-02-01-Repository-config.md#value-要素))
 
 entry 要素および list 要素での使用例を下記に示す。
 
@@ -683,18 +683,18 @@ dir 属性に "./environment_config" と設定する。
 例えば、個別のファイル名を指定して読み込む際、ファイル名を直接指定する設定方法を用いると、設定ファイルの増減やファイル名の変更が発生した際に都度 import タグや config-file タグを書き直す必要が出てきてしまう。
 このように読み込むファイルが頻繁に変更される場合、上記例のようにディレクトリ指定で読み込む機能を使用することで、個別のファイルの読み込み設定を変更する手間が抑制できる。
 
-また、 [設定値の上書きの対象](../../component/libraries/libraries-02-04-Repository-override.md#reporitoy-config-override)  に記述した方法で、本番用とテスト用で異なる設定を特定のディレクトリに配置して、本番環境とテスト環境の差異を吸収するといった使い方もできる。
+また、 [設定値の上書きの対象](../../component/libraries/libraries-02-04-Repository-override.md#設定値の上書きの対象)  に記述した方法で、本番用とテスト用で異なる設定を特定のディレクトリに配置して、本番環境とテスト環境の差異を吸収するといった使い方もできる。
 
-なお、別々の設定ファイルに記述された同名の設定は  [import 要素および config-file 要素による外部ファイル読み込み時の優先順位](../../component/libraries/libraries-02-04-Repository-override.md#repository-import-override-priority)
-および [dir 属性を使用した読み込み時の優先順位](../../component/libraries/libraries-02-04-Repository-override.md#repository-import-dir-override-priority)  に記述した優先順位で評価される。
+なお、別々の設定ファイルに記述された同名の設定は  [import 要素および config-file 要素による外部ファイル読み込み時の優先順位](../../component/libraries/libraries-02-04-Repository-override.md#import-要素および-config-file-要素による外部ファイル読み込み時の優先順位)
+および [dir 属性を使用した読み込み時の優先順位](../../component/libraries/libraries-02-04-Repository-override.md#dir-属性を使用した読み込み時の優先順位)  に記述した優先順位で評価される。
 
 ## 自動インジェクション
 
-DIコンテナは、 [リポジトリに保持するインスタンスの生成(DIコンテナ)](../../component/libraries/libraries-02-01-Repository-config.md#di-container) で記述したref属性の設定によるインジェクションの他に、クラスの型を判定して
+DIコンテナは、 [リポジトリに保持するインスタンスの生成(DIコンテナ)](../../component/libraries/libraries-02-01-Repository-config.md#リポジトリに保持するインスタンスの生成diコンテナ) で記述したref属性の設定によるインジェクションの他に、クラスの型を判定して
 自動的にインジェクションを実行する、自動インジェクションの機能を持つ。
 この機能により、システムで1つしか必要としないコンポーネントについては property 要素によるインジェクションの設定が不要となる。
 
-[リポジトリに保持するインスタンスの生成(DIコンテナ)](../../component/libraries/libraries-02-01-Repository-config.md#di-container) で示したサンプルの HelloMessageProvider をインタフェースと実装を下記のように分離した例を使用して、設定例を説明する。
+[リポジトリに保持するインスタンスの生成(DIコンテナ)](../../component/libraries/libraries-02-01-Repository-config.md#リポジトリに保持するインスタンスの生成diコンテナ) で示したサンプルの HelloMessageProvider をインタフェースと実装を下記のように分離した例を使用して、設定例を説明する。
 
 ### Helloメッセージを取得するインタフェース
 
@@ -784,7 +784,7 @@ helloComponent.printHello();
 
 ネストしたコンポーネントのコンポーネント名は、親となるコンポーネントの名称とコンポーネント定義の名称を"."で繋いだ名称となる。
 
-以下に [自動インジェクション](../../component/libraries/libraries-02-01-Repository-config.md#--autowire) で示した例の設定を、ネストした形式で記述するコンポーネント設定ファイルの例を示す。
+以下に [自動インジェクション](../../component/libraries/libraries-02-01-Repository-config.md#自動インジェクション) で示した例の設定を、ネストした形式で記述するコンポーネント設定ファイルの例を示す。
 
 ### コンポーネント設定ファイル
 
@@ -891,11 +891,11 @@ key =   value1,\    # comment
 
 | 要素名 | 出現回数 | 説明 |
 |---|---|---|
-| [import](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-import) | 0..* | 他のコンポーネント設定ファイルの読み込みを指定する。 |
-| [config-file](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-config-file) | 0..* | 環境設定ファイルの読み込みを指定する。 |
-| [component](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-component) | 0..* | Java Beans 形式のクラスをコンポーネントとして定義する。 |
-| [list](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-list) | 0..* | List をコンポートとして定義する。 List のエントリには、他のコンポーネントや文字列を含めることができる。 |
-| [map](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-map) | 0..* | Map をコンポーネントとして定義する。 Map のエントリのキーと値には、他のコンポーネントや文字列を含めることができる。 |
+| [import](../../component/libraries/libraries-02-01-Repository-config.md#import-要素) | 0..* | 他のコンポーネント設定ファイルの読み込みを指定する。 |
+| [config-file](../../component/libraries/libraries-02-01-Repository-config.md#config-file-要素) | 0..* | 環境設定ファイルの読み込みを指定する。 |
+| [component](../../component/libraries/libraries-02-01-Repository-config.md#component-要素) | 0..* | Java Beans 形式のクラスをコンポーネントとして定義する。 |
+| [list](../../component/libraries/libraries-02-01-Repository-config.md#list-要素) | 0..* | List をコンポートとして定義する。 List のエントリには、他のコンポーネントや文字列を含めることができる。 |
+| [map](../../component/libraries/libraries-02-01-Repository-config.md#map-要素) | 0..* | Map をコンポーネントとして定義する。 Map のエントリのキーと値には、他のコンポーネントや文字列を含めることができる。 |
 
 この要素は属性を持たない。
 
@@ -934,7 +934,7 @@ key =   value1,\    # comment
 
 | 要素名 | 出現回数 | 説明 |
 |---|---|---|
-| [property](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-property) | 0..* | コンポーネントのプロパティに設定する値を指定する。 |
+| [property](../../component/libraries/libraries-02-01-Repository-config.md#property-要素) | 0..* | コンポーネントのプロパティに設定する値を指定する。 |
 
 この要素が持つ属性を下記表に示す。
 
@@ -952,9 +952,9 @@ key =   value1,\    # comment
 
 | 要素名 | 出現回数 | 説明 |
 |---|---|---|
-| [component](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-component) | 0..1 | プロパティに設定するコンポーネントを指定する。 |
-| [list](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-list) | 0..1 | プロパティに設定する List を指定する。 |
-| [map](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-map) | 0..1 | プロパティに設定する Map を指定する。 |
+| [component](../../component/libraries/libraries-02-01-Repository-config.md#component-要素) | 0..1 | プロパティに設定するコンポーネントを指定する。 |
+| [list](../../component/libraries/libraries-02-01-Repository-config.md#list-要素) | 0..1 | プロパティに設定する List を指定する。 |
+| [map](../../component/libraries/libraries-02-01-Repository-config.md#map-要素) | 0..1 | プロパティに設定する Map を指定する。 |
 
 この要素が持つ属性を下記表に示す。
 
@@ -972,9 +972,9 @@ List をコンポーネントとして定義する。
 
 | 要素名 | 出現回数 | 説明 |
 |---|---|---|
-| [component](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-component) | 0..* | List の要素とするコンポーネントを直接記述する。 |
-| [component-ref](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-component-ref) | 0..* | List の要素とする、この要素の外で定義したコンポーネントを指定する。 |
-| [value](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-value) | 0..* | List の要素とする文字列を指定する。 |
+| [component](../../component/libraries/libraries-02-01-Repository-config.md#component-要素) | 0..* | List の要素とするコンポーネントを直接記述する。 |
+| [component-ref](../../component/libraries/libraries-02-01-Repository-config.md#component-ref-要素) | 0..* | List の要素とする、この要素の外で定義したコンポーネントを指定する。 |
+| [value](../../component/libraries/libraries-02-01-Repository-config.md#value-要素) | 0..* | List の要素とする文字列を指定する。 |
 
 この要素が持つ属性を下記表に示す。
 
@@ -1000,7 +1000,7 @@ List の要素となる文字列を指定する。
 この要素に指定した内容が、そのまま List の要素となる。
 
 文字列には、環境設定ファイルに記述した値の埋め込み機能が使用できる。
-埋め込みの方法は [環境設定ファイルに記述した値をコンポーネント設定ファイルで使用する](../../component/libraries/libraries-02-01-Repository-config.md#repository-use-env-value-at-component-setting) を参照。
+埋め込みの方法は [環境設定ファイルに記述した値をコンポーネント設定ファイルで使用する](../../component/libraries/libraries-02-01-Repository-config.md#環境設定ファイルに記述した値をコンポーネント設定ファイルで使用する) を参照。
 
 この要素は属性を持たない。
 
@@ -1012,7 +1012,7 @@ Map をコンポーネントとして定義する。
 
 | 要素名 | 出現回数 | 説明 |
 |---|---|---|
-| [entry](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-entry) | 0..* | Map に含まれる Entry を定義する。 |
+| [entry](../../component/libraries/libraries-02-01-Repository-config.md#entry-要素) | 0..* | Map に含まれる Entry を定義する。 |
 
 この要素が持つ属性を下記表に示す。
 
@@ -1030,26 +1030,26 @@ Map の Entry を定義する。
 
 | 要素名 | 出現回数 | 説明 |
 |---|---|---|
-| [key-component](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-key-component) | 0..1 | Entry のキーとなるコンポーネントを直接記述する。 |
-| [value-component](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-value-component) | 0..1 | Entry の値となるコンポーネントを直接記述する。 |
+| [key-component](../../component/libraries/libraries-02-01-Repository-config.md#key-component-要素) | 0..1 | Entry のキーとなるコンポーネントを直接記述する。 |
+| [value-component](../../component/libraries/libraries-02-01-Repository-config.md#value-component-要素) | 0..1 | Entry の値となるコンポーネントを直接記述する。 |
 
 この要素が持つ属性を下記表に示す。
 
 | 属性名 | 説明 |
 |---|---|
-| key | Entry のキーとなる文字列を直接記述する。 文字列には、環境設定ファイルに記述した値の埋め込み機能が使用できる。 埋め込みの方法は [環境設定ファイルに記述した値をコンポーネント設定ファイルで使用する](../../component/libraries/libraries-02-01-Repository-config.md#repository-use-env-value-at-component-setting) を参照。 |
+| key | Entry のキーとなる文字列を直接記述する。 文字列には、環境設定ファイルに記述した値の埋め込み機能が使用できる。 埋め込みの方法は [環境設定ファイルに記述した値をコンポーネント設定ファイルで使用する](../../component/libraries/libraries-02-01-Repository-config.md#環境設定ファイルに記述した値をコンポーネント設定ファイルで使用する) を参照。 |
 | key-name | 要素の外で定義したコンポーネントのコンポーネント名を設定し、 そのコンポーネントを Entry のキーとして指定する。 |
-| value | Entry の値となる文字列を直接記述する。 文字列には、環境設定ファイルに記述した値の埋め込み機能が使用できる。 埋め込みの方法は [環境設定ファイルに記述した値をコンポーネント設定ファイルで使用する](../../component/libraries/libraries-02-01-Repository-config.md#repository-use-env-value-at-component-setting) を参照。 |
+| value | Entry の値となる文字列を直接記述する。 文字列には、環境設定ファイルに記述した値の埋め込み機能が使用できる。 埋め込みの方法は [環境設定ファイルに記述した値をコンポーネント設定ファイルで使用する](../../component/libraries/libraries-02-01-Repository-config.md#環境設定ファイルに記述した値をコンポーネント設定ファイルで使用する) を参照。 |
 | value-name | 要素の外で定義したコンポーネントのコンポーネント名を設定し、 そのコンポーネントを Entry の値として指定する。 |
 
 ### key-component 要素
 
 Map の Entry のキーとなるコンポーネントを定義する。
 
-この要素は、 [component](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-component) と同じ子要素、属性を持つ。
+この要素は、 [component](../../component/libraries/libraries-02-01-Repository-config.md#component-要素) と同じ子要素、属性を持つ。
 
 ### value-component 要素
 
 Map の Entry の値となるコンポーネントを定義する。
 
-この要素は、 [component](../../component/libraries/libraries-02-01-Repository-config.md#repository-elements-component) と同じ子要素、属性を持つ。
+この要素は、 [component](../../component/libraries/libraries-02-01-Repository-config.md#component-要素) と同じ子要素、属性を持つ。

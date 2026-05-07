@@ -39,8 +39,8 @@ INFO progress finish job. job name: [test-job]
 進捗を示すログは、ログカテゴリ名を `progress` として出力する。
 このカテゴリ名を使用して、進捗ログ用のファイルにログを出力することが出来る。
 
-[ログ出力](../../component/libraries/libraries-log.md#log) を使用した場合の `log.properties` の設定例を以下に示す。
-[logアダプタ](../../component/adapters/adapters-log-adaptor.md#log-adaptor) を使用している場合には、アダプタに対応したログライブラリのマニュアルなどを参照して設定すること。
+[ログ出力](../../component/libraries/libraries-log.md#ログ出力) を使用した場合の `log.properties` の設定例を以下に示す。
+[logアダプタ](../../component/adapters/adapters-log-adaptor.md#logアダプタ) を使用している場合には、アダプタに対応したログライブラリのマニュアルなどを参照して設定すること。
 
 ```properties
 # progress log file
@@ -200,9 +200,9 @@ public class ProgressReader extends AbstractItemReader {
 ```
 
 > **Important:**
-> [ItemReader](../../processing-pattern/jakarta-batch/jakarta-batch-progress-log.md#jsr352-progress-reader) で処理対象件数を設定せずに、
-> [進捗ログ出力リスナー](../../processing-pattern/jakarta-batch/jakarta-batch-progress-log.md#jsr352-progress-listener) を設定した場合には、設定不備として例外を送出し処理を異常終了させる。
-> このため、進捗ログを必要としない場合には、 [進捗ログ出力リスナー](../../processing-pattern/jakarta-batch/jakarta-batch-progress-log.md#jsr352-progress-listener) の設定を必ず削除すること。
+> [ItemReader](../../processing-pattern/jakarta-batch/jakarta-batch-progress-log.md#chunkステップで進捗ログを出力する) で処理対象件数を設定せずに、
+> [進捗ログ出力リスナー](../../processing-pattern/jakarta-batch/jakarta-batch-progress-log.md#chunkステップで進捗ログを出力する) を設定した場合には、設定不備として例外を送出し処理を異常終了させる。
+> このため、進捗ログを必要としない場合には、 [進捗ログ出力リスナー](../../processing-pattern/jakarta-batch/jakarta-batch-progress-log.md#chunkステップで進捗ログを出力する) の設定を必ず削除すること。
 
 > **Important:**
 > chunkステップでRetrying Exceptionsを設定した場合は、リスナーによる進捗ログの出力が正しく機能しなくなる。

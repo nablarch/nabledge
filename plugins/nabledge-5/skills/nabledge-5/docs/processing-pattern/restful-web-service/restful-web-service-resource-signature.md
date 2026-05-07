@@ -10,7 +10,7 @@
 |---|---|
 | 引数無し | パラメータやリクエストボディを必要としない場合には、引数無しとしてメソッドを定義できる。  例  ```java public HttpResponse sample() {   // 省略 } ``` |
 | フォーム(Java Beans) | リクエストボディから変換したフォームを元に処理を行う場合には、引数としてフォームを定義する。  例  ```java public HttpResponse sample(SampleForm form) {   // 省略 } ``` |
-| JaxRsHttpRequest [1] | [パスパラメータ](../../processing-pattern/restful-web-service/restful-web-service-resource-signature.md#rest-feature-details-path-param) や [クエリパラメータ](../../processing-pattern/restful-web-service/restful-web-service-resource-signature.md#rest-feature-details-query-param) を使う場合やHTTPヘッダの値などを取得したい場合には、引数として JaxRsHttpRequest を定義する。  例  ```java public HttpResponse sample(JaxRsHttpRequest request) {   // 省略 } ``` |
+| JaxRsHttpRequest [1] | [パスパラメータ](../../processing-pattern/restful-web-service/restful-web-service-resource-signature.md#パスパラメータを扱う) や [クエリパラメータ](../../processing-pattern/restful-web-service/restful-web-service-resource-signature.md#クエリーパラメータを扱う) を使う場合やHTTPヘッダの値などを取得したい場合には、引数として JaxRsHttpRequest を定義する。  例  ```java public HttpResponse sample(JaxRsHttpRequest request) {   // 省略 } ``` |
 | ExecutionContext | ExecutionContext が提供するスコープ変数にアクセスしたい場合は、 引数として ExecutionContext を定義する。  例  ```java public HttpResponse sample(ExecutionContext context) {   // 省略 } ``` |
 | 組み合わせ | 用途に応じて上記の型を組み合わせることが出来る。  例えば、HTTPヘッダ情報とリクエストボディから変換されたFormを必要とするメソッドでは、以下の定義となる。  ```java public HttpResponse sample(SampleForm form, JaxRsHttpRequest request) {   // 省略 } ``` |
 
@@ -21,7 +21,7 @@
 | 戻り値の型 | 説明 |
 |---|---|
 | void | レスポンスのボディが空であることを示す `204: NoContent` をクライアントに返却する。 |
-| フォーム(Java Beans) | メソッドから戻されたフォームを [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) で、レスポンスボディに出力する内容に変換しクライアントに返却する。 |
+| フォーム(Java Beans) | メソッドから戻されたフォームを [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#リクエストボディ変換ハンドラ) で、レスポンスボディに出力する内容に変換しクライアントに返却する。 |
 | HttpResponse | メソッドから戻された HttpResponse の情報を、クライアントに返却する。 |
 
 ## パスパラメータを扱う
@@ -37,7 +37,7 @@ URLの例
 URLとアクションとのマッピング時にパスパラメータ部に任意の名前を設定する。
 この例では、 `id` という名前を設定し、数値のみを許容する設定としている。
 
-詳細は、 [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) を参照。
+詳細は、 [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#ルーティングアダプタ) を参照。
 
 ```xml
 <routes>
@@ -123,7 +123,7 @@ public UserSearchForm {
 
 > **Important:**
 > アプリケーション全体で共通となるレスポンスヘッダを指定したい場合はハンドラで設定すること。
-> セキュリティ関連のレスポンスヘッダを指定したい場合は [セキュアハンドラ](../../component/handlers/handlers-secure-handler.md#secure-handler) を使用すればよい。
+> セキュリティ関連のレスポンスヘッダを指定したい場合は [セキュアハンドラ](../../component/handlers/handlers-secure-handler.md#セキュアハンドラ) を使用すればよい。
 
 リソースクラスのメソッドで HttpResponse を作成する場合は、
 HttpResponseにレスポンスヘッダを指定すればよい。

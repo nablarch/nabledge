@@ -63,13 +63,13 @@ SELECT * FROM PROJECT WHERE PROJECT_NAME = 'プロジェクト９９９';
 
 ## 登録を行う
 
-1. [フォーマットファイルの作成](../../processing-pattern/http-messaging/http-messaging-getting-started-save.md#getting-started-http-messaging-format)
-2. [フォームの作成](../../processing-pattern/http-messaging/http-messaging-getting-started-save.md#getting-started-http-messaging-form)
-3. [業務アクションの作成](../../processing-pattern/http-messaging/http-messaging-getting-started-save.md#getting-started-http-messaging-action)
+1. [フォーマットファイルの作成](../../processing-pattern/http-messaging/http-messaging-getting-started-save.md#登録を行う)
+2. [フォームの作成](../../processing-pattern/http-messaging/http-messaging-getting-started-save.md#登録を行う)
+3. [業務アクションの作成](../../processing-pattern/http-messaging/http-messaging-getting-started-save.md#登録を行う)
 
 フォーマットファイルの作成
 
-HTTPメッセージングでは、リクエストされたHTTPメッセージを [汎用データフォーマット](../../component/libraries/libraries-data-format.md#data-format) を使用して解析する。
+HTTPメッセージングでは、リクエストされたHTTPメッセージを [汎用データフォーマット](../../component/libraries/libraries-data-format.md#汎用データフォーマット) を使用して解析する。
 
 ProjectSaveAction_RECEIVE.fmt
 
@@ -97,7 +97,7 @@ text-encoding:    "UTF-8"
 この実装のポイント
 
 * フォーマットファイルの名称は、「リクエストID + "_RECEIVE"」という形式にする。
-* フォーマットファイルの記述方法は [フォーマット定義ファイルの記述ルール](../../component/libraries/libraries-format-definition.md#data-format-definition) を参照。
+* フォーマットファイルの記述方法は [フォーマット定義ファイルの記述ルール](../../component/libraries/libraries-format-definition.md#フォーマット定義ファイルの記述ルール) を参照。
 
 フォームの作成
 
@@ -197,11 +197,11 @@ public class ProjectSaveAction extends MessagingAction {
 * MessagingAction を継承し、業務メソッドを作成する。
 * MessagingAction#onReceive
   に、リクエスト受信時に実行する処理を実装する。
-* リクエストボディの値は、 [汎用データフォーマット](../../component/libraries/libraries-data-format.md#data-format) を使用して解析された状態で引数の RequestMessage オブジェクト
+* リクエストボディの値は、 [汎用データフォーマット](../../component/libraries/libraries-data-format.md#汎用データフォーマット) を使用して解析された状態で引数の RequestMessage オブジェクト
   が保持している。 getParamMap メソッドを使用してリクエストボディの値を取得する。
 * [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を使用してリクエスト値のバリデーションを行う。
 * UniversalDao を用いてプロジェクトをDBに登録する。
 * 処理結果を表すレスポンスコードを ResponseMessage に設定して返却する。
 
 > **Tip:**
-> 業務例外が送出された場合は、 [HTTPメッセージングエラー制御ハンドラ](../../component/handlers/handlers-http-messaging-error-handler.md#http-messaging-error-handler) の処理によってレスポンスコード「400」が設定される。
+> 業務例外が送出された場合は、 [HTTPメッセージングエラー制御ハンドラ](../../component/handlers/handlers-http-messaging-error-handler.md#httpメッセージングエラー制御ハンドラ) の処理によってレスポンスコード「400」が設定される。

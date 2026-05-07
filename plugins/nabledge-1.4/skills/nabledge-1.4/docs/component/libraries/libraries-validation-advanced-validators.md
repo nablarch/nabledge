@@ -1,11 +1,11 @@
 # 拡張バリデータ・コンバータ
 
 本フレームワークが提供する基本となるバリデータ・コンバータの他に提供する利便的に拡張されたバリデータおよび拡張されたコンバータに関して記述する。
-バリデーション機能の概要、基本となるバリデーションに関する詳細は、 [バリデーションとFormの生成](../../component/libraries/libraries-08-Validation.md#validation-and-form) を参照。
+バリデーション機能の概要、基本となるバリデーションに関する詳細は、 [バリデーションとFormの生成](../../component/libraries/libraries-08-Validation.md#バリデーションとformの生成) を参照。
 
 拡張バリデータ・コンバータの精査仕様は変更できない。
-バリデータについて下記に示す精査仕様とは異なる精査を行う場合は、バリデータの場合は [バリデータの追加・変更](../../component/libraries/libraries-08-05-custom-validator.md#add-validation-method) 、
-コンバータの場合は [StringConvertor](../../component/libraries/libraries-validation-basic-validators.md#stringconvertor-setting) のextendedStringConvertors欄をそれぞれ参照して
+バリデータについて下記に示す精査仕様とは異なる精査を行う場合は、バリデータの場合は [バリデータの追加・変更](../../component/libraries/libraries-08-05-custom-validator.md#バリデータの追加変更) 、
+コンバータの場合は [StringConvertor](../../component/libraries/libraries-validation-basic-validators.md#nablarchcorevalidationconvertorstringconvertor) のextendedStringConvertors欄をそれぞれ参照して
 個別にバリデータまたはコンバータを追加すること。
 
 ## 年月日コンバータ
@@ -22,7 +22,7 @@
 | nablarch.common.date.YYYYMMDDConvertor | @YYYYMMDD |
 
 YYYYMMDDConvertorを使用するには、StringConvertorの拡張コンバータとして、StringConvertorのextendedStringConvertors属性に設定する必要がある。
-設定方法は、  [StringConvertor](../../component/libraries/libraries-validation-basic-validators.md#stringconvertor-setting) を参照。
+設定方法は、  [StringConvertor](../../component/libraries/libraries-validation-basic-validators.md#nablarchcorevalidationconvertorstringconvertor) を参照。
 
 コンバータに設定可能な設定値は下記のとおりである。
 
@@ -38,16 +38,16 @@ YYYYMMDDConvertorを使用するには、StringConvertorの拡張コンバータ
 | messageId | 日付の精査に失敗した際のメッセージID  例 : "{0}は有効な日付ではありません。"  messageId属性の指定がない場合はYYYYMMDDConvertorに設定されたメッセージIDが使用される。 |
 
 > **Note:**
-> カスタムタグの [textタグ](../../component/libraries/libraries-07-TagReference.md#webview-texttag) で年月日のフォーマットが指定された場合は、
+> カスタムタグの [textタグ](../../component/libraries/libraries-07-TagReference.md#textタグ) で年月日のフォーマットが指定された場合は、
 > YYYYMMDDアノテーションのallowFormat属性でなく、
 > textタグで指定されたフォーマットが精査に使用される。
-> textタグのフォーマット指定については、 [値のフォーマット出力](../../component/libraries/libraries-07-DisplayTag.md#web-view-format) を参照。
+> textタグのフォーマット指定については、 [値のフォーマット出力](../../component/libraries/libraries-07-DisplayTag.md#値のフォーマット出力) を参照。
 
 ### 精査仕様
 
 精査仕様は下記のとおりである。
 
-* 必須精査は行わない。（ [nablarch.core.validation.validator.RequiredValidator](../../component/libraries/libraries-validation-basic-validators.md#validate-requiredvalidator-setting) を用いて精査すること。）
+* 必須精査は行わない。（ [nablarch.core.validation.validator.RequiredValidator](../../component/libraries/libraries-validation-basic-validators.md#nablarchcorevalidationvalidatorrequiredvalidator) を用いて精査すること。）
 * 指定されたフォーマットまたは指定されたフォーマットから年月日の区切り文字を取り除いたフォーマットで解析できること。
 
   | フォーマット | 入力値 | バリデーション結果 |

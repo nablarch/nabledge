@@ -7,10 +7,10 @@
 
 Jakarta Batchに準拠したバッチアプリケーションでは、以下の方針に従った障害監視、ログ出力方針を推奨している。
 
-* [障害監視](../../processing-pattern/jakarta-batch/jakarta-batch-operation-policy.md#jsr352-failure-monitoring) はバッチの終了ステータスで行う。
+* [障害監視](../../processing-pattern/jakarta-batch/jakarta-batch-operation-policy.md#障害監視) はバッチの終了ステータスで行う。
 * 取り込みファイルが存在しない等の予期できる障害発生時のリカバリ用に、運用担当者向けログを出力する。
 * アプリケーションの不具合等の予期できない障害発生時の調査用に、全てのログを出力する。
-  例外発生時のログ出力に関しては、 [例外(エラー含む)発生時の処理の流れ](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-batch-error-flow) を参照。
+  例外発生時のログ出力に関しては、 [例外(エラー含む)発生時の処理の流れ](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#例外エラー含む発生時の処理の流れ) を参照。
 * バッチ処理の遅延時に終了時刻を予測するため、進捗ログを出力する。
 
 これらの方針に従うことで以下のメリットが得られる。つまり、障害発生時や顧客の問い合わせ対応に対して運用担当者のみで対応できることが増え、開発者の運用負荷の軽減が期待できる。

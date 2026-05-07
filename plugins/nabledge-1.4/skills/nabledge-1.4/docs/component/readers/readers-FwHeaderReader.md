@@ -1,6 +1,6 @@
 # 要求電文(FWヘッダ)リーダ
 
-受信電文の [フレームワーク制御ヘッダ](../../component/libraries/libraries-enterprise-messaging-mom.md#message-model) の解析を行い、後続のハンドラの動作に必要となる情報を取得するデータリーダ。
+受信電文の [フレームワーク制御ヘッダ](../../component/libraries/libraries-enterprise-messaging-mom.md#データモデル) の解析を行い、後続のハンドラの動作に必要となる情報を取得するデータリーダ。
 具体的には、以下の処理を行なう。
 
 1. フレームワーク制御ヘッダの解析

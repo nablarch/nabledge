@@ -53,11 +53,11 @@ $mvn exec:java -Dexec.mainClass=nablarch.fw.batch.ee.Main ^
 
 住所情報を削除するバッチの実装方法を説明する。
 
-処理フローについては、 [Batchletステップのバッチの処理フロー](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-batch-flow-batchlet) を参照。
-責務配置については [Batchletステップの責務配置](../../processing-pattern/jakarta-batch/jakarta-batch-application-design.md#jsr352-batchlet-design) を参照。
+処理フローについては、 [Batchletステップのバッチの処理フロー](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#batchlet) を参照。
+責務配置については [Batchletステップの責務配置](../../processing-pattern/jakarta-batch/jakarta-batch-application-design.md#batchletステップの場合) を参照。
 
-1. [Batchletの作成](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-batchlet.md#getting-started-batchlet-create)
-2. [JOB設定ファイルの作成](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-batchlet.md#getting-started-batchlet-job)
+1. [Batchletの作成](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-batchlet.md#対象テーブルのデータを削除する)
+2. [JOB設定ファイルの作成](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-batchlet.md#対象テーブルのデータを削除する)
 
 Batchletの作成
 
@@ -73,7 +73,7 @@ Batchletクラスに以下のインタフェースを実装してバッチ処理
 
 > **Tip:**
 > バッチ処理は、上記のインタフェースの実装に加えて、トランザクション制御などの共通的な処理を提供するリスナーによって構成する。
-> リスナーの詳細は [バッチアプリケーションで使用するリスナー](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-listener) 及び [リスナーの指定方法](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-listener-definition) を参照。
+> リスナーの詳細は [バッチアプリケーションで使用するリスナー](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#バッチアプリケーションで使用するリスナー) 及び [リスナーの指定方法](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#リスナーの指定方法) を参照。
 
 TruncateTableBatchlet.java
 
@@ -109,7 +109,7 @@ public class TruncateTableBatchlet extends AbstractBatchlet {
   これにより、ジョブ定義に指定するBatchletクラス名をCDIの管理名で記述出来るようになる。 
   
   (CDI管理Beanとしなかった場合は、完全修飾名(FQCN)で記述する)
-* [データベースアクセス](../../component/libraries/libraries-database.md#database) を使用してTRUNCATE文を実行する。
+* [データベースアクセス](../../component/libraries/libraries-database.md#データベースアクセスjdbcラッパー) を使用してTRUNCATE文を実行する。
 
 ジョブ定義ファイルの作成
 

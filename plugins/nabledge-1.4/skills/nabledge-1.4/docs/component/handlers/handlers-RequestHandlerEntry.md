@@ -2,7 +2,7 @@
 
 **クラス名:** `nablarch.fw.RequestHandlerEntry`
 
-このハンドラは、対象のハンドラをラップし、そのハンドラを特定の [リクエストパス](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#request-path) に対してのみ実行することができる。
+このハンドラは、対象のハンドラをラップし、そのハンドラを特定の [リクエストパス](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#リクエストに対する業務処理のディスパッチ) に対してのみ実行することができる。
 
 **リクエストパスのパターン指定**
 

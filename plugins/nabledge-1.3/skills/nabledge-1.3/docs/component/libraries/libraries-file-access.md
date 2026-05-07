@@ -109,7 +109,7 @@ FileRecordWriterHolder.write(results, outputFileBasePathName, outputFileName);
 
 #### ファイルデータリーダ
 
-本フレームワークでは、アプリケーションに対するデータ入力は全て [データリーダ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#data-reader)
+本フレームワークでは、アプリケーションに対するデータ入力は全て [データリーダ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#データリーダ)
 インターフェースによって抽象化されている。
 ファイルの読込みについても、専用のデータリーダ [ファイルデータリーダ](../../component/readers/readers-FileDataReader.md) が用意されているので
 それを使用すること。

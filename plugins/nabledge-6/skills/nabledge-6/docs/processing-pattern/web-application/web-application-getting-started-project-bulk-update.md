@@ -28,14 +28,14 @@ Exampleアプリケーションを元に一括更新機能を解説する。
 
 一括更新機能の作成方法を解説する。
 
-1. [フォームの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#project-bulk-update-create-form)
-2. [画面に更新対象を受け渡すBeanの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#project-bulk-update-create-bean)
-3. [一括更新画面を表示する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#project-bulk-update-action-list)
-4. [一括更新画面JSPの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#project-bulk-update-update-jsp)
-5. [更新内容を確認する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#project-bulk-update-confirm-action)
-6. [確認画面JSPの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#project-bulk-update-confirm-jsp)
-7. [データベースを一括更新する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#project-bulk-update-bulk-update)
-8. [完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#project-bulk-update-complete-jsp)
+1. [フォームの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#一括更新機能の作成)
+2. [画面に更新対象を受け渡すBeanの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#一括更新機能の作成)
+3. [一括更新画面を表示する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#一括更新機能の作成)
+4. [一括更新画面JSPの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#一括更新機能の作成)
+5. [更新内容を確認する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#一括更新機能の作成)
+6. [確認画面JSPの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#一括更新機能の作成)
+7. [データベースを一括更新する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#一括更新機能の作成)
+8. [完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#一括更新機能の作成)
 
 フォームの作成
 
@@ -43,14 +43,14 @@ Exampleアプリケーションを元に一括更新機能を解説する。
 
 検索フォームの作成
 
-検索フォームの実装は、 [検索機能の作成：フォームの作成](../../processing-pattern/web-application/web-application-getting-started-project-search.md#project-search-create-form) と同様であるためそちらを参照。
+検索フォームの実装は、 [検索機能の作成：フォームの作成](../../processing-pattern/web-application/web-application-getting-started-project-search.md#検索する) と同様であるためそちらを参照。
 
 更新フォームの作成
 
 複数のプロジェクトの更新情報を一括で送信するため、フォームを2種類作成する。
 
-1. [プロジェクト１つ分の更新情報を受け付けるフォーム](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#project-bulk-update-create-single-pj-form)
-2. [プロジェクト１つ分のフォームのリストをプロパティとして持つ親フォーム](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#project-bulk-update-create-multi-pj-form)
+1. [プロジェクト１つ分の更新情報を受け付けるフォーム](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#一括更新機能の作成)
+2. [プロジェクト１つ分のフォームのリストをプロパティとして持つ親フォーム](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#一括更新機能の作成)
 
 ![project_bulk_update-form.png](../../../knowledge/assets/web-application-getting-started-project-bulk-update/project_bulk_update-form.png)
 
@@ -103,7 +103,7 @@ public class ProjectBulkForm implements Serializable {
 
 業務アクションで取得した更新対象リストを画面へ受け渡すBeanの作成
 
-業務アクションで取得した更新対象リストを画面へ受け渡すBeanを作成する。このBeanは一括更新画面と確認画面で持ちまわすため、 [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に登録する。
+業務アクションで取得した更新対象リストを画面へ受け渡すBeanを作成する。このBeanは一括更新画面と確認画面で持ちまわすため、 [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア) に登録する。
 
 ProjectListDto.java
 
@@ -119,8 +119,8 @@ public class ProjectListDto implements Serializable {
 
 この実装のポイント
 
-* 配列やコレクション型を [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に登録する場合は、シリアライズ可能なBeanのプロパティとして定義し、
-  そのBeanを [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に登録すること。詳細は [セッションストア使用上の制約](../../component/libraries/libraries-session-store.md#session-store-constraint) を参照。
+* 配列やコレクション型を [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア) に登録する場合は、シリアライズ可能なBeanのプロパティとして定義し、
+  そのBeanを [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア) に登録すること。詳細は [セッションストア使用上の制約](../../component/libraries/libraries-session-store.md#制約) を参照。
 
 一括更新画面を表示する業務アクションメソッドの作成
 
@@ -155,9 +155,9 @@ public HttpResponse list(HttpRequest request, ExecutionContext context) {
 
 この実装のポイント
 
-* 検索メソッドの実装方法に関しては [検索機能の作成：業務アクションの実装](../../processing-pattern/web-application/web-application-getting-started-project-search.md#project-search-create-action) と同様であるためそちらを参照。
+* 検索メソッドの実装方法に関しては [検索機能の作成：業務アクションの実装](../../processing-pattern/web-application/web-application-getting-started-project-search.md#検索する) と同様であるためそちらを参照。
 * 確認画面から一括更新画面へ戻った際に、同条件でページングや再検索ができるように
-  検索条件を [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に登録して持ちまわす。
+  検索条件を [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア) に登録して持ちまわす。
 
 一括更新画面JSPの作成
 
@@ -227,11 +227,11 @@ public HttpResponse list(HttpRequest request, ExecutionContext context) {
 
 この実装のポイント
 
-* 検索結果を表示するJSPの作成方法は [検索機能の作成：検索結果表示部分の作成](../../processing-pattern/web-application/web-application-getting-started-project-search.md#project-search-create-result-jsp) と同様であるため、そちらを参照。
-* 確認画面から一括更新画面に戻った際に、同条件での再検索やページングが行えるように、 [セッションストア](../../component/libraries/libraries-session-store.md#session-store) から取得した検索条件を元に検索条件パラメータを構成する。
-  JSPでは、 [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に登録したオブジェクトは、リクエストスコープに登録したオブジェクトと同様に扱うことができる。
+* 検索結果を表示するJSPの作成方法は [検索機能の作成：検索結果表示部分の作成](../../processing-pattern/web-application/web-application-getting-started-project-search.md#検索する) と同様であるため、そちらを参照。
+* 確認画面から一括更新画面に戻った際に、同条件での再検索やページングが行えるように、 [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア) から取得した検索条件を元に検索条件パラメータを構成する。
+  JSPでは、 [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア) に登録したオブジェクトは、リクエストスコープに登録したオブジェクトと同様に扱うことができる。
 * 配列型、もしくは List 型プロパティの要素は、 プロパティ名[index] 形式でアクセスできる。
-  詳細は [入力/出力データへのアクセスルール](../../component/libraries/libraries-tag.md#tag-access-rule) 参照。
+  詳細は [入力/出力データへのアクセスルール](../../component/libraries/libraries-tag.md#入力出力データへのアクセスルール) 参照。
 
 更新内容を確認する業務アクションメソッドの作成
 
@@ -264,7 +264,7 @@ public HttpResponse confirmOfUpdate(HttpRequest request, ExecutionContext contex
 
 この実装のポイント
 
-* 更新する情報は [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に保持する。
+* 更新する情報は [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア) に保持する。
 
 確認画面JSPの作成
 
@@ -324,22 +324,22 @@ public HttpResponse update(HttpRequest request, ExecutionContext context) {
 
 この実装のポイント
 
-* 基本的な実装方法は  [更新機能の作成：データベースを更新する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-decide-action) と同様である。
+* 基本的な実装方法は  [更新機能の作成：データベースを更新する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#データベースの更新) と同様である。
 * UniversalDao#update を更新件数分実行する。
   排他制御エラーが発生した場合は全件の更新がロールバックされる。
 
   > **Tip:**
 > Exampleアプリケーションでは独自のエラー制御ハンドラを追加しているため、排他制御エラーにより OptimisticLockException が発生した場合、
-  > 排他制御エラー画面へ遷移する。ハンドラによるエラー制御の作成方法は、 [ハンドラで例外クラスに対応したエラーページに遷移させる](../../processing-pattern/web-application/web-application-forward-error-page.md#forward-error-page-handler) を参照。
+  > 排他制御エラー画面へ遷移する。ハンドラによるエラー制御の作成方法は、 [ハンドラで例外クラスに対応したエラーページに遷移させる](../../processing-pattern/web-application/web-application-forward-error-page.md#ハンドラで共通の振る舞いを定義する) を参照。
 * UniversalDao には、エンティティのリストを引数に取る
   UniversalDao#batchUpdate メソッドも用意されているが、
-  このメソッドは [バッチ実行](../../component/libraries/libraries-universal-dao.md#universal-dao-batch-execute) での使用を想定したものであり、排他制御を行わない。
+  このメソッドは [バッチ実行](../../component/libraries/libraries-universal-dao.md#バッチ実行一括登録更新削除を行う) での使用を想定したものであり、排他制御を行わない。
   排他制御が必要である場合は、 UniversalDao#update
   を使用すること。
 
 完了画面の表示
 
-完了画面の実装方法は [更新機能の作成：更新完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-success-jsp) と同様であるためそちらを参照。
+完了画面の実装方法は [更新機能の作成：更新完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#データベースの更新) と同様であるためそちらを参照。
 
 一括更新機能の解説は以上。
 

@@ -1,6 +1,6 @@
 # 業務コンポーネントの責務配置
 
-[業務アクションハンドラの実装](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#implementing-action-handler) で述べるように、本フレームワークにおける業務機能は、
+[業務アクションハンドラの実装](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#業務アクションハンドラの実装) で述べるように、本フレームワークにおける業務機能は、
 業務アクションハンドラ、フォーム/エンティティ、業務共通コンポーネントと呼ばれるクラスにそれぞれ実装される。
 しかしながら、業務処理の複雑な責務をこれらのクラスに対してどのように配置するかについては様々な考え方があり、特定の方法に絞ることはできない。
 以下では、典型的なプロジェクトで採用することができる責務配置の1例を示す。

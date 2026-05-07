@@ -20,6 +20,6 @@ Nablarch独自のバリデーション機能 (Nablarch Validation) <validation/n
 * 開発者がNablarch独自のバリデーションの使い方などを覚える必要がない。
 
 > **Tip:**
-> [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) と [Nablarch Validation](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation) で提供している機能の違いは、 [Bean ValidationとNablarch Validationの機能比較](../../component/libraries/libraries-validation-functional-comparison.md#validation-functional-comparison) を参照。
+> [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) と [Nablarch Validation](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation) で提供している機能の違いは、 [Bean ValidationとNablarch Validationの機能比較](../../component/libraries/libraries-validation-functional-comparison.md#bean-validationとnablarch-validationの機能比較) を参照。
 
 validation/functional_comparison

@@ -197,7 +197,7 @@ xxx_project-css-color-default/  # 新規追加プラグイン
 
 ### 4. ビルドと修正確認
 
-以降の手順については、 [UI開発基盤の導入](../../component/ui-framework/ui-framework-initial-setup.md) の [4. UI部品のビルドと配置](../../component/ui-framework/ui-framework-initial-setup.md#executing-ui-build) と同じなので、
+以降の手順については、 [UI開発基盤の導入](../../component/ui-framework/ui-framework-initial-setup.md) の [4. UI部品のビルドと配置](../../component/ui-framework/ui-framework-initial-setup.md#4-ui部品のビルドと配置) と同じなので、
 そちらを参照すること。
 
 ### 5. リポジトリへの反映

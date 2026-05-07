@@ -24,10 +24,10 @@
 
 | 番号 | 処理内容 | 実装方法 |
 |---|---|---|
-| ① | ワークフローを開始する。 | [ワークフローの開始](../../extension/workflow/workflow-SampleApplicationImplementation.md#start-workflow) |
-| ② | 確認タスクを承認タスクへ進行させる。 | [ワークフローの進行](../../extension/workflow/workflow-SampleApplicationImplementation.md#complete-task) |
-| ③ | 確認タスクを再申請タスクへ進行させる。 | [境界イベントの実行](../../extension/workflow/workflow-SampleApplicationImplementation.md#trigger-event) |
-| ④ | 内部自動審査タスクの進行先ノードを判定する。 | [進行先ノードの判定制御ロジックの実装](../../extension/workflow/workflow-SampleApplicationExtension.md#customize-flow-proceed-condition) |
+| ① | ワークフローを開始する。 | [ワークフローの開始](../../extension/workflow/workflow-SampleApplicationImplementation.md#ワークフローの開始) |
+| ② | 確認タスクを承認タスクへ進行させる。 | [ワークフローの進行](../../extension/workflow/workflow-SampleApplicationImplementation.md#ワークフローの進行) |
+| ③ | 確認タスクを再申請タスクへ進行させる。 | [境界イベントの実行](../../extension/workflow/workflow-SampleApplicationImplementation.md#境界イベントの実行) |
+| ④ | 内部自動審査タスクの進行先ノードを判定する。 | [進行先ノードの判定制御ロジックの実装](../../extension/workflow/workflow-SampleApplicationExtension.md#進行先ノードの判定制御ロジックの実装) |
 
 ## 画面遷移
 

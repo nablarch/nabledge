@@ -16,8 +16,8 @@
 | プロジェクト種別 | Mavenプロジェクト |
 | プロジェクト構成 | 単一プロジェクト構成 |
 | 使用DB | H2 Databaes Engine(アプリケーションに組み込み) |
-| 組み込まれているアダプタ | ルーティングアダプタ(詳細は、 [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) を参照) |
-| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * Nablarchのウェブアプリケーション用の基本的な設定 * 疎通確認用ウェブアプリケーション * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#about-maven-parent-module) を参照することによって取り込んでいる)。 |
+| 組み込まれているアダプタ | ルーティングアダプタ(詳細は、 [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#ルーティングアダプタ) を参照) |
+| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * Nablarchのウェブアプリケーション用の基本的な設定 * 疎通確認用ウェブアプリケーション * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#nablarch-archetype-parent親プロジェクト) を参照することによって取り込んでいる)。 |
 
 他のプロジェクトとの関係、及びディレクトリ構成は、 [Mavenアーキタイプの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md) を参照。
 
@@ -67,7 +67,7 @@ mvn archetype:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArti
 
 ## 疎通確認
 
-疎通確認の仕組みや手順は通常のウェブプロジェクトと同じなので、 [ウェブプロジェクトの初期セットアップ手順](../../setup/blank-project/blank-project-setup-Web.md#firststepwebstartuptest) を参照。
+疎通確認の仕組みや手順は通常のウェブプロジェクトと同じなので、 [ウェブプロジェクトの初期セットアップ手順](../../setup/blank-project/blank-project-setup-Web.md#疎通確認) を参照。
 
 > **Note:**
 > アーティファクトID が `myapp-container-web` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。
@@ -159,7 +159,7 @@ docker run -d -p 8080:8080 -v %CD%\h2:/usr/local/tomcat/h2 --name myapp-containe
 > SAMPLE.h2.dbを使用しない場合は、ボリュームの指定(`-v`)は不要になる。
 
 > **Tip:**
-> Dockerの実行は、Docker Desktopを使用していることを [前提](../../setup/blank-project/blank-project-beforeFirstStep.md#firststeppreamble) としている。
+> Dockerの実行は、Docker Desktopを使用していることを [前提](../../setup/blank-project/blank-project-beforeFirstStep.md#初期セットアップの前提) としている。
 > Docker Toolboxを使用している場合は、上記例のボリューム指定ではエラーになる。
 
 > Docker Toolboxを使用している場合、DockerはVirtualBox上のVMで動いている。
@@ -182,9 +182,9 @@ docker rm myapp-container-web
 
 ## データベースに関する設定を行う
 
-ブランクプロジェクトは、初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は、[使用するRDBMSの変更手順](../../setup/blank-project/blank-project-CustomizeDB.md#customize-db) を参照して設定すること。
+ブランクプロジェクトは、初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は、[使用するRDBMSの変更手順](../../setup/blank-project/blank-project-CustomizeDB.md#使用するrdbmsの変更手順) を参照して設定すること。
 
-またER図からのDDL生成や実行、Entityクラスの自動生成を行うにはgsp-dba-maven-pluginの初期設定および実行を行う。詳細は [gsp-dba-maven-plugin(DBA作業支援ツール)の初期設定方法](../../setup/blank-project/blank-project-addin-gsp.md#gsp-maven-plugin) を参照。
+またER図からのDDL生成や実行、Entityクラスの自動生成を行うにはgsp-dba-maven-pluginの初期設定および実行を行う。詳細は [gsp-dba-maven-plugin(DBA作業支援ツール)の初期設定方法](../../setup/blank-project/blank-project-addin-gsp.md#gsp-dba-maven-plugindba作業支援ツールの初期設定方法) を参照。
 
 ## 補足
 

@@ -77,7 +77,7 @@
   * **画面表示パターン定義ウィジェット** (`/WEB-INF/tags/widget/spec`)
 
     画面状態を設計情報として記述するためのUI部品が提供されている。
-    詳細については [画面表示パターン定義ウィジェット](../../development-tools/testing-framework/testing-framework-spec-condition.md#spec-condition-widget) を参照。
+    詳細については [画面表示パターン定義ウィジェット](../../development-tools/testing-framework/testing-framework-spec-condition.md#画面表示パターン定義ウィジェット) を参照。
 
     ```jsp
     <%@ taglib prefix="spec" tagdir="/WEB-INF/tags/widget/spec" %>
@@ -138,7 +138,7 @@
 
 ここまでで作成した業務画面テンプレートを表示するJSPに、UI部品（ウィジェット）を配置して業務画面JSPを作成していく。
 
-具体的なウィジェットの使用方法や、ウィジェットと画面項目の対応については、 [業務画面JSPの例](../../development-tools/testing-framework/testing-framework-create-with-widget.md#example) を参照のこと。
+具体的なウィジェットの使用方法や、ウィジェットと画面項目の対応については、 [業務画面JSPの例](../../development-tools/testing-framework/testing-framework-create-with-widget.md#業務画面jspの例) を参照のこと。
 
 > **Important:**
 > ウィジェットは以下のようなタグ形式で記述するが、自己終了エレメントとして記述するとブラウザでのレイアウト確認が行えなくなるため注意すること。
@@ -251,10 +251,10 @@ fieldウィジェットを使用して表示する入力項目は、入力画面
 
 ## 業務画面JSPの例
 
-* [入力画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#input)
-* [確認画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#confirm)
-* [検索・一覧画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#list-search)
-* [詳細画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#detail)
+* [入力画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#業務画面jspの例)
+* [確認画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#業務画面jspの例)
+* [検索・一覧画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#業務画面jspの例)
+* [詳細画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#業務画面jspの例)
 
 -----
 

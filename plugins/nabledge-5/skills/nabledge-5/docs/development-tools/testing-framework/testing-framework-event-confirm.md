@@ -37,7 +37,7 @@
 | message | ダイアログに表示する文言 | 文字列 | ◎ | ◎ |  |
 | condition | ダイアログを表示させる条件 を表すセレクタ式 | 文字列 | ○ | ○ | 省略した場合は必ず表示される |
 | target | condition属性で指定した 条件判定の対象となる要素を 表すセレクタ式 | 文字列 | ○ | ○ | 省略した場合はイベントが 発生した要素 |
-| stop | ダイアログキャンセル時に イベントのプロパゲーション およびデフォルトアクションを 抑制するかどうか。 | 真偽値 | ○ | ○ | デフォルトは'true'  > **Tip:** > 本属性はローカルでの動作に制約がある。  >  > 詳細は、 > [event:confirmタグの制約事項](../../development-tools/testing-framework/testing-framework-inbrowser-jsp-rendering.md#localrendering-limitation-eventconfirmtag) > を参照。 |
+| stop | ダイアログキャンセル時に イベントのプロパゲーション およびデフォルトアクションを 抑制するかどうか。 | 真偽値 | ○ | ○ | デフォルトは'true'  > **Tip:** > 本属性はローカルでの動作に制約がある。  >  > 詳細は、 > [event:confirmタグの制約事項](../../development-tools/testing-framework/testing-framework-inbrowser-jsp-rendering.md#業務画面jspを記述する際の制約事項) > を参照。 |
 | revert | ダイアログキャンセル時に 各入力値の状態をイベント発生前 の状態に戻すかどうか。 | 真偽値 | ○ | ○ | changeイベント発生時のみ 意味をもつ。 デフォルトは'true' |
 
 ## 内部構造・改修時の留意点

@@ -29,4 +29,4 @@
 
 > **Note:**
 > 都度実行バッチと常駐バッチの違いについては、
-> [バッチ処理におけるリクエスト単体テスト](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#batch-request-unit-test-outline) も参照されたい。
+> [バッチ処理におけるリクエスト単体テスト](../../development-tools/testing-framework/testing-framework-01-UnitTestOutline.md#バッチ処理におけるリクエスト単体テスト) も参照されたい。

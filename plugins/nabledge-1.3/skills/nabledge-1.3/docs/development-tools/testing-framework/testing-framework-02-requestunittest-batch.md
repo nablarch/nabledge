@@ -42,11 +42,11 @@ public class RM21AA001ActionRequestTest extends BatchRequestTestSupport {
 テストデータを記載したExcelファイルは、クラス単体テストと同様に
 テストソースコードと同じディレクトリに同じ名前で格納する（拡張子のみ異なる）。
 
-テストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#how-to-write-excel) 」を参照。
+テストデータの記述方法詳細については、「 [Excelによるテストデータ記述](../../development-tools/testing-framework/testing-framework-01-Abstract.md#excelによるテストデータ記述) 」を参照。
 
 ### テストクラスで共通のデータベース初期値
 
-画面オンラインの場合と同様である。「 [テストクラスで共通のデータベース初期値](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-setup-db) 」を参照。
+画面オンラインの場合と同様である。「 [テストクラスで共通のデータベース初期値](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#テストクラスで共通のデータベース初期値) 」を参照。
 
 ### テストケース一覧
 
@@ -59,16 +59,16 @@ LIST_MAPのデータタイプで１テストメソッド分のケース表を記
 | no | テストケース番号を1からの連番で記載する。 | 必須 |
 | description | そのテストケースの説明を記載する。 | 必須 |
 | expectedStatusCode | 期待するステータスコード | 必須 |
-| setUpTable | 各テストケース実行前にデータベースに登録する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。データの投入は自動テストフレーム ワークにより行われる。 |  |
-| setUpFile | 各テストケース実行前に入力用ファイルを作成する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。ファイルの作成は自動テストフレーム ワークにより行われる。 |  |
-| expectedFile | 出力ファイルの内容を比較する場合、期待するファイルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。 |  |
-| expectedTable | データベースの内容を比較する場合、期待するテーブルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する [1] 。 |  |
+| setUpTable | 各テストケース実行前にデータベースに登録する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する [1] 。データの投入は自動テストフレーム ワークにより行われる。 |  |
+| setUpFile | 各テストケース実行前に入力用ファイルを作成する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する [1] 。ファイルの作成は自動テストフレーム ワークにより行われる。 |  |
+| expectedFile | 出力ファイルの内容を比較する場合、期待するファイルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する [1] 。 |  |
+| expectedTable | データベースの内容を比較する場合、期待するテーブルの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する [1] 。 |  |
 | expectedLog | 期待するログメッセージを記載したLIST_MAPデータのIDを記載する。 そのログメッセージが実際に出力されたかどうか、自動テストフレームワークにて検証される。 (『 ログの結果検証 』を参照) |  |
-| diConfig | バッチを実行する際のコンポーネント設定ファイルへのパスを記載する。 ( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照) | 必須 |
-| requestPath | バッチを実行する際のリクエストパスを記載する。 ( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照) | 必須 |
-| userId | バッチ実行ユーザIDを記載する。 ( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照) | 必須 |
-| expectedMessage | メッセージ同期送信を行う場合、期待する要求電文の [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する。メッセージの作成は自動テストフレームワークにより行われる。 |  |
-| responseMessage | メッセージ同期送信を行う場合、返却する応答電文の [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) を記載する。メッセージの作成は自動テストフレームワークにより行われる。 |  |
+| diConfig | バッチを実行する際のコンポーネント設定ファイルへのパスを記載する。 ( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#コマンドライン引数) を参照) | 必須 |
+| requestPath | バッチを実行する際のリクエストパスを記載する。 ( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#コマンドライン引数) を参照) | 必須 |
+| userId | バッチ実行ユーザIDを記載する。 ( [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#コマンドライン引数) を参照) | 必須 |
+| expectedMessage | メッセージ同期送信を行う場合、期待する要求電文の [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する。メッセージの作成は自動テストフレームワークにより行われる。 |  |
+| responseMessage | メッセージ同期送信を行う場合、返却する応答電文の [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する。メッセージの作成は自動テストフレームワークにより行われる。 |  |
 
 デフォルトのグループIDを使用したい（グループIDを使わない）場合は、 default と記載する。
 デフォルトのグループIDと個別のグループを併用することも可能である。
@@ -76,7 +76,7 @@ LIST_MAPのデータタイプで１テストメソッド分のケース表を記
 
 #### コマンドライン引数
 
-テストデータで、 [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を指定する方法を説明する。
+テストデータで、 [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#コマンドライン引数) を指定する方法を説明する。
 
 バッチ起動時の引数を指定するには、
 `args[n]` （ **添字nは0以上の整数** ）という形式でカラムを追加する。
@@ -110,7 +110,7 @@ LIST_MAPのデータタイプで１テストメソッド分のケース表を記
 
 #### データベースの準備
 
-[オンライン](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-testcases) と同様に、グループIDで対応付けを行う。
+[オンライン](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#テストケース一覧) と同様に、グループIDで対応付けを行う。
 
 #### 固定長ファイルの準備
 
@@ -283,7 +283,7 @@ SETUP_FIXED[グループID]=ファイルパス
 
 #### 期待するデータベースの状態
 
-[オンライン](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-expected-tables) と同様に、期待するデータベースの状態をテストケース一覧とリンクさせる。
+[オンライン](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#期待するデータベースの状態) と同様に、期待するデータベースの状態をテストケース一覧とリンクさせる。
 
 #### 期待する固定長ファイル
 

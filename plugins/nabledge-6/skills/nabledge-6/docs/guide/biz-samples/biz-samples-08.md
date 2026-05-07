@@ -6,7 +6,7 @@ HTMLメールを送信する機能の実装サンプルを提供する。
 
 [ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-html-mail)
 
-本機能は、[メール送信機能](../../component/libraries/libraries-mail.md#mail) を使用してHTMLメールを送信するサンプルである。
+本機能は、[メール送信機能](../../component/libraries/libraries-mail.md#メール送信) を使用してHTMLメールを送信するサンプルである。
 なお、本機能はサンプル実装のため、導入プロジェクトで使用する際には、ソースコード(プロダクション、テストコード共に）をプロジェクトに取り込み、使用すること。
 
 > **Important:**
@@ -196,7 +196,7 @@ public HttpResponse doSendMail(HttpRequest req, ExecutionContext ctx) {
 
 ### 電子署名の併用
 
-電子署名を使用する場合は、[電子署名の拡張サンプル](../../guide/biz-samples/biz-samples-09.md#bouncycastle-mail-sample) とHTMLメールサンプルを併用する。
+電子署名を使用する場合は、[電子署名の拡張サンプル](../../guide/biz-samples/biz-samples-09.md#bouncycastleを使用した電子署名つきメールの送信サンプルの使用方法) とHTMLメールサンプルを併用する。
 
 * メール送信要求の登録処理は本サンプルを使用する。
 * メール送信バッチについては、本サンプルが提供するHtmlMailContentCreatorクラスを使用して、HTMLメールのコンテンツを作成できるように電子署名の拡張サンプル(SMIMESignedMailSender)を拡張し、使用する。

@@ -15,7 +15,7 @@
 
 1. リクエスト単体テストコードの追加
 
-  登録画面初期表示の実装- [Actionクラスの作成](../../guide/web-application/web-application-06-initial-view.md#register-view-action) で作成した以下のテストクラスに対して登録確認画面表示リクエストのテスト実行メソッドを追加する。
+  登録画面初期表示の実装- [Actionクラスの作成](../../guide/web-application/web-application-06-initial-view.md#actionクラスの実装) で作成した以下のテストクラスに対して登録確認画面表示リクエストのテスト実行メソッドを追加する。
 
   | ソース格納フォルダ | テストクラス名 | メソッド名 |
   |---|---|---|
@@ -33,7 +33,7 @@
   ```
 2. リクエスト単体テストデータシートの作成
 
-  登録画面初期表示の実装- [Actionクラスの作成](../../guide/web-application/web-application-06-initial-view.md#register-view-action) で作成したリクエスト単体テストデータシート(Excelファイル)に確認画面表示リクエスト用のシートを追加する。（ [リクエスト単体テストデータシートの書き方](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-testcases) ）
+  登録画面初期表示の実装- [Actionクラスの作成](../../guide/web-application/web-application-06-initial-view.md#actionクラスの実装) で作成したリクエスト単体テストデータシート(Excelファイル)に確認画面表示リクエスト用のシートを追加する。（ [リクエスト単体テストデータシートの書き方](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#テストケース一覧) ）
 
   | ブック名 | シート名 |
   |---|---|
@@ -45,7 +45,7 @@
   リクエスト単体テストを実施し、テストが失敗することを確認する。（Actionクラスにメソッドを追加していない為）
 4. Actionクラスの修正
 
-  登録画面初期表示の実装- [Actionクラスの作成](../../guide/web-application/web-application-06-initial-view.md#register-view-action) で作成したActionクラスに確認画面表示のメソッドを追加する。
+  登録画面初期表示の実装- [Actionクラスの作成](../../guide/web-application/web-application-06-initial-view.md#actionクラスの実装) で作成したActionクラスに確認画面表示のメソッドを追加する。
 
   | Actionクラス名 | メソッド名 |
   |---|---|
@@ -83,7 +83,7 @@
     （例のとおりに作成した場合、それぞれ50文字のランダムな文字列が表示される。）
 6. JSP静的チェックツールの実行
 
-  [JSP静的解析ツール](../../development-tools/java-static-analysis/java-static-analysis-01-JspStaticAnalysis.md#jsp-static-analysis-tool) を実行し、該当ファイルに静的チェックエラーがないことを確認する。
+  [JSP静的解析ツール](../../development-tools/java-static-analysis/java-static-analysis-01-JspStaticAnalysis.md#jsp静的解析ツール) を実行し、該当ファイルに静的チェックエラーがないことを確認する。
 
 ## 精査処理呼び出し実装
 
@@ -94,7 +94,7 @@
   Actionクラスに精査処理を実装するために、リクエスト単体テストに精査確認用データを追加する。
 
   リクエスト単体テストでは、Formクラスの適切な精査処理が呼び出されることを確認すればよいので、
-  そのために必要なデータを準備すればよい。（ [リクエスト単体テストデータシートの書き方](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#request-test-testcases) ）
+  そのために必要なデータを準備すればよい。（ [リクエスト単体テストデータシートの書き方](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md#テストケース一覧) ）
 
   ![action_test_confirm_validate.png](../../../knowledge/assets/web-application-07-confirm-view/action_test_confirm_validate.png)
 2. リクエスト単体テストの実行
@@ -102,8 +102,8 @@
   リクエスト単体テストを実施し、テストが失敗することを確認する。（Actionクラスに精査処理を実装していないため。）
 3. 精査処理の呼び出し実装
 
-  登録確認画面の実装- [Actionクラスの実装](../../guide/web-application/web-application-07-confirm-view.md#register-confirm-action) で作成したActionクラスに対して、
-  [Formクラスの実装](../../guide/web-application/web-application-05-create-form.md#process-register-validate-form) で作成した精査処理の呼び出し、精査エラー時の遷移先指定を実装する。
+  登録確認画面の実装- [Actionクラスの実装](../../guide/web-application/web-application-07-confirm-view.md#actionクラスの実装) で作成したActionクラスに対して、
+  [Formクラスの実装](../../guide/web-application/web-application-05-create-form.md#formクラスの実装) で作成した精査処理の呼び出し、精査エラー時の遷移先指定を実装する。
 
   ```java
   /**

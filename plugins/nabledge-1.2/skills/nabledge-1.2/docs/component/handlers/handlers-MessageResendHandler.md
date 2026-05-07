@@ -10,7 +10,7 @@
 再送要求電文や、取消電文といった補償電文を送信することがある。
 
 本ハンドラではこのうち、再送要求に対する制御をフレームワークレベルで実装している。
-初回電文/再送要求電文の判定は [フレームワーク制御ヘッダ](../../component/libraries/libraries-enterprise-messaging.md#fw-header) 上の **再送要求フラグ** の値を用いて行う。
+初回電文/再送要求電文の判定は [フレームワーク制御ヘッダ](../../component/libraries/libraries-enterprise-messaging.md#基本概念) 上の **再送要求フラグ** の値を用いて行う。
 
 -----
 

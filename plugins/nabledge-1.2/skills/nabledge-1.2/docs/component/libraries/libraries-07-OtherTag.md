@@ -2,7 +2,7 @@
 
 画面タイトルなど、ページ内の複数箇所に同じ内容が記載される値は、
 JSP上の変数に格納したものを参照することでメンテナンス性を高めることができる。 
-本機能では変数に値を設定することができる [setタグ](../../component/libraries/libraries-07-TagReference.md#webview-settag) を提供する。
+本機能では変数に値を設定することができる [setタグ](../../component/libraries/libraries-07-TagReference.md#setタグ) を提供する。
 
 setタグでは、変数名を指定するvar属性と、直接値を指定する場合はvalue属性、
 リクエストスコープなどスコープ上のオブジェクトを参照する場合はname属性を指定する。

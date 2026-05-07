@@ -1,12 +1,12 @@
 # logアダプタ
 
-Nablarchの提供する [ログ出力機能](../../component/libraries/libraries-log.md#log) のログ出力処理を以下のログフレームワークに委譲するアダプタ。
+Nablarchの提供する [ログ出力機能](../../component/libraries/libraries-log.md#ログ出力) のログ出力処理を以下のログフレームワークに委譲するアダプタ。
 
 * [slf4j(外部サイト、英語)](https://www.slf4j.org/)
 * [JBoss Logging(外部サイト、英語)](https://github.com/jboss-logging)
 
 顧客からの要求や使用する製品などにあわせてロガーを統一したい場合に、アダプタを使用する。
-アダプタを使用した場合、 Nablarchの [ログ出力機能](../../component/libraries/libraries-log.md#log) を使用したログ出力処理は全て選択したロギングフレームワークに委譲される。
+アダプタを使用した場合、 Nablarchの [ログ出力機能](../../component/libraries/libraries-log.md#ログ出力) を使用したログ出力処理は全て選択したロギングフレームワークに委譲される。
 
 > **Important:**
 > Nablarch5u15まで提供されていたlog4jアダプタは、EOLを迎えた [log4j1.2(外部サイト、英語)](https://logging.apache.org/log4j/1.x/) を使用しており
@@ -51,7 +51,7 @@ Nablarchの提供する [ログ出力機能](../../component/libraries/libraries
 
 ## ロギングフレームワークを使用するための設定を行う
 
-[ログ出力機能](../../component/libraries/libraries-log.md#log) の設定ファイル( **log.properties** )にファクトリを設定する。
+[ログ出力機能](../../component/libraries/libraries-log.md#ログ出力) の設定ファイル( **log.properties** )にファクトリを設定する。
 この設定によりログ出力処理が、ロギングフレームワークに委譲される。
 
 ### slf4j

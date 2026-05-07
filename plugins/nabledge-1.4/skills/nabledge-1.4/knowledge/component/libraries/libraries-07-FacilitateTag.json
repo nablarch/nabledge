@@ -1,13 +1,13 @@
 {
   "id": "libraries-07-FacilitateTag",
   "title": "入力画面と確認画面の共通化をサポートするカスタムタグ",
-  "content": "入力画面と確認画面が1対1に対応する画面であれば、入力画面と確認画面を共通化することで、確認画面のJSPを作成する工数を削減することができる。\nマスタメンテナンス画面など、複雑な操作が要求されない画面を大量に、短期間で作成する場合は、この機能が活躍する。\n\n実装の共通化は、入力画面のJSPにおいて行い、確認画面のJSPは入力画面のJSPにフォワードだけを行う。\nアクションは、入力画面と確認画面でそれぞれ別々のJSPにフォワードしておき、\n仕様変更に伴い入力画面と確認画面を別々に作成する必要が発生した場合にもアクションへの影響を抑える。\n\n確認画面のJSPは、 [confirmationPageタグ](../../component/libraries/libraries-07-TagReference.md#webview-confirmationpagetag) を使用してフォワードを行う。\n確認画面の実装例を示す。\n入力画面と確認画面のJSPは同じ場所に配置することが多いので、実装例のように相対パスで指定できる。\n\n```jsp\n<%-- USER003.jspは入力画面のJSPとする。 --%>\n<n:confirmationPage path=\"./USER003.jsp\" />\n```\n\n入力項目のカスタムタグでは、入力項目と入力項目に対応する確認画面用の出力機能を提供しているので、\n入力画面と確認画面で表示を切り替える機能を提供する。",
+  "content": "入力画面と確認画面が1対1に対応する画面であれば、入力画面と確認画面を共通化することで、確認画面のJSPを作成する工数を削減することができる。\nマスタメンテナンス画面など、複雑な操作が要求されない画面を大量に、短期間で作成する場合は、この機能が活躍する。\n\n実装の共通化は、入力画面のJSPにおいて行い、確認画面のJSPは入力画面のJSPにフォワードだけを行う。\nアクションは、入力画面と確認画面でそれぞれ別々のJSPにフォワードしておき、\n仕様変更に伴い入力画面と確認画面を別々に作成する必要が発生した場合にもアクションへの影響を抑える。\n\n確認画面のJSPは、 [confirmationPageタグ](../../component/libraries/libraries-07-TagReference.md#confirmationpageタグ) を使用してフォワードを行う。\n確認画面の実装例を示す。\n入力画面と確認画面のJSPは同じ場所に配置することが多いので、実装例のように相対パスで指定できる。\n\n```jsp\n<%-- USER003.jspは入力画面のJSPとする。 --%>\n<n:confirmationPage path=\"./USER003.jsp\" />\n```\n\n入力項目のカスタムタグでは、入力項目と入力項目に対応する確認画面用の出力機能を提供しているので、\n入力画面と確認画面で表示を切り替える機能を提供する。",
   "no_knowledge_content": false,
   "sections": [
     {
       "id": "s1",
       "title": "入力画面と確認画面の表示切り替え",
-      "content": "入力画面と確認画面の表示切り替えには、入力画面と確認画面のそれぞれにおいてのみボディを評価する下記タグを使用する。\n\n| カスタムタグ | 出力するHTMLタグ |\n|---|---|\n| [forInputPageタグ](../../component/libraries/libraries-07-TagReference.md#webview-forinputpagetag) | 入力画面のみボディを評価する。 |\n| [forConfirmationPageタグ](../../component/libraries/libraries-07-TagReference.md#webview-forconfirmationpagetag) | 確認画面のみボディを評価する。 |",
+      "content": "入力画面と確認画面の表示切り替えには、入力画面と確認画面のそれぞれにおいてのみボディを評価する下記タグを使用する。\n\n| カスタムタグ | 出力するHTMLタグ |\n|---|---|\n| [forInputPageタグ](../../component/libraries/libraries-07-TagReference.md#forinputpageタグ) | 入力画面のみボディを評価する。 |\n| [forConfirmationPageタグ](../../component/libraries/libraries-07-TagReference.md#forconfirmationpageタグ) | 確認画面のみボディを評価する。 |",
       "level": 2
     },
     {
@@ -31,7 +31,7 @@
     {
       "id": "s5",
       "title": "確認画面での入力項目の表示",
-      "content": "ユーザがどの画面にいても素早く目的の画面にアクセスできるように、全画面の共通ヘッダに検索フォームを配置したい場合がある。\nしかし、 [confirmationPageタグ](../../component/libraries/libraries-07-TagReference.md#webview-confirmationpagetag) を使用した画面では、確認画面の場合にすべての入力項目のカスタムタグが確認用の出力を行うため、\n共通ヘッダの検索フォームも確認用として出力される。\nこのため、確認画面へ入力項目を表示するために、本機能は [ignoreConfirmationタグ](../../component/libraries/libraries-07-TagReference.md#webview-ignoreconfirmationtag) を提供する。\n\nignoreConfirmationタグのボディに配置された入力項目のカスタムタグは、常に入力項目として出力される。\nignoreConfirmationタグを使用することで、画面内の一部分を常に入力項目として表示することができる。\n\nignoreConfirmationタグを使用した検索フォームの実装例を下記に示す。\n\n```jsp\n<%-- ignoreConfirmationタグで囲まれた範囲のみ、常に入力項目として表示される。 --%>\n<n:ignoreConfirmation>\n<n:form>\n  <n:text name=\"searchWords\" />\n  <n:submit type=\"button\" uri=\"./CUSTOM00207\" name=\"CUSTOM00207_submit\" value=\"検索\" />\n</n:form>\n</n:ignoreConfirmation>\n```",
+      "content": "ユーザがどの画面にいても素早く目的の画面にアクセスできるように、全画面の共通ヘッダに検索フォームを配置したい場合がある。\nしかし、 [confirmationPageタグ](../../component/libraries/libraries-07-TagReference.md#confirmationpageタグ) を使用した画面では、確認画面の場合にすべての入力項目のカスタムタグが確認用の出力を行うため、\n共通ヘッダの検索フォームも確認用として出力される。\nこのため、確認画面へ入力項目を表示するために、本機能は [ignoreConfirmationタグ](../../component/libraries/libraries-07-TagReference.md#ignoreconfirmationタグ) を提供する。\n\nignoreConfirmationタグのボディに配置された入力項目のカスタムタグは、常に入力項目として出力される。\nignoreConfirmationタグを使用することで、画面内の一部分を常に入力項目として表示することができる。\n\nignoreConfirmationタグを使用した検索フォームの実装例を下記に示す。\n\n```jsp\n<%-- ignoreConfirmationタグで囲まれた範囲のみ、常に入力項目として表示される。 --%>\n<n:ignoreConfirmation>\n<n:form>\n  <n:text name=\"searchWords\" />\n  <n:submit type=\"button\" uri=\"./CUSTOM00207\" name=\"CUSTOM00207_submit\" value=\"検索\" />\n</n:form>\n</n:ignoreConfirmation>\n```",
       "level": 2
     }
   ]

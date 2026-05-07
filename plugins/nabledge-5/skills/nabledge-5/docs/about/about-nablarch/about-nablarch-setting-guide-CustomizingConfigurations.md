@@ -33,10 +33,10 @@ Nablarchの設定は、デフォルトコンフィグレーション内の設定
 
 PJ成果物の設定ファイルのカスタマイズ方法には、以下のパターンが存在する。
 
-* [環境設定値の書き換え](../../about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md#how-to-customize-config-files)
-* [環境設定値の上書き](../../about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md#how-to-customize-overwite-config-files)
-* [コンポーネント定義の上書き](../../about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md#how-to-customize-overwite-componet-file)
-* [ハンドラ構成のカスタマイズ](../../about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md#how-to-customize-handler-queue)
+* [環境設定値の書き換え](../../about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md#環境設定値の書き換え)
+* [環境設定値の上書き](../../about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md#環境設定値の上書き)
+* [コンポーネント定義の上書き](../../about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md#コンポーネント定義の上書き)
+* [ハンドラ構成のカスタマイズ](../../about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md#ハンドラ構成のカスタマイズ)
 
 詳細は以降に記載する。
 

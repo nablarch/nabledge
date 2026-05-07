@@ -17,41 +17,41 @@
 
 feature_details/run_batch_application
 
-* [JSR352バッチアプリケーションの起動方法](../../processing-pattern/jakarta-batch/jakarta-batch-run-batch-application.md#jsr352-run-batch-application)
+* [JSR352バッチアプリケーションの起動方法](../../processing-pattern/jakarta-batch/jakarta-batch-run-batch-application.md#バッチアプリケーションを起動する)
 
 ## システムリポジトリの初期化
 
-* [JSR352バッチアプリケーションでシステムリポジトリの初期化](../../processing-pattern/jakarta-batch/jakarta-batch-run-batch-application.md#jsr352-run-batch-init-repository)
+* [JSR352バッチアプリケーションでシステムリポジトリの初期化](../../processing-pattern/jakarta-batch/jakarta-batch-run-batch-application.md#システムリポジトリを初期化する)
 
 ## バッチジョブに適用するリスナーの定義方法
 
-* [リスナーの定義方法](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-listener-definition)
+* [リスナーの定義方法](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#リスナーの指定方法)
 
 ## 入力値のチェック
 
-* [入力値のチェック](../../component/libraries/libraries-validation.md#validation)
+* [入力値のチェック](../../component/libraries/libraries-validation.md#入力値のチェック)
 
 ## データベースアクセス
 
 feature_details/database_reader
 
-* [データベースアクセス](../../component/libraries/libraries-database-management.md#database-management)
+* [データベースアクセス](../../component/libraries/libraries-database-management.md#データベースアクセス)
 * [データベースを入力とするChunkステップ](../../processing-pattern/jakarta-batch/jakarta-batch-database-reader.md)
 
 ## ファイル入出力
 
-* [ファイル入出力](../../component/libraries/libraries-data-converter.md#data-converter)
+* [ファイル入出力](../../component/libraries/libraries-data-converter.md#様々なフォーマットのデータへのアクセス)
 
 ## 排他制御
 
 feature_details/pessimistic_lock
 
 排他制御は、以下の2種類の方法を提供しているが、
-[UniversalDaoを推奨する理由](../../component/libraries/libraries-exclusive-control.md#exclusive-control-deprecated) に記載がある通り、
-[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) の使用を推奨する。
+[UniversalDaoを推奨する理由](../../component/libraries/libraries-exclusive-control.md#排他制御) に記載がある通り、
+[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) の使用を推奨する。
 
-* [排他制御](../../component/libraries/libraries-exclusive-control.md#exclusive-control)
-* [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao)
+* [排他制御](../../component/libraries/libraries-exclusive-control.md#排他制御)
+* [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao)
 
   * [悲観的ロック](../../processing-pattern/jakarta-batch/jakarta-batch-pessimistic-lock.md)
 
@@ -61,7 +61,7 @@ feature_details/pessimistic_lock
 
 ## MOMメッセージ送信
 
-* [同期応答メッセージ送信](../../component/libraries/libraries-mom-system-messaging.md#mom-system-messaging-sync-message-send)
+* [同期応答メッセージ送信](../../component/libraries/libraries-mom-system-messaging.md#同期応答でメッセージを送信する同期応答メッセージ送信)
 
 ## 運用設計
 

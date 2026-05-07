@@ -24,8 +24,8 @@
 | required | 必須項目かどうか | 真偽値 | ○ | ○ | デフォルト値は 'false' |
 | hint | 入力内容や留意点などの 補助テキスト | 文字列 | ○ | ○ |  |
 | fieldClass | 入力フィールドのDIVに付与する cssClass | 文字列 | ○ | ○ |  |
-| titleSize | タイトル部の幅(グリッド数) | 数値 | ○ | ○ | [マルチレイアウト用CSSフレームワーク](../../component/ui-framework/ui-framework-multicol-css-framework.md#multicol-mode) で使用する |
-| inputSize | 入力部の幅(グリッド数) | 数値 | ○ | ○ | [マルチレイアウト用CSSフレームワーク](../../component/ui-framework/ui-framework-multicol-css-framework.md#multicol-mode) で使用する |
+| titleSize | タイトル部の幅(グリッド数) | 数値 | ○ | ○ | [マルチレイアウト用CSSフレームワーク](../../component/ui-framework/ui-framework-multicol-css-framework.md#マルチレイアウト用cssフレームワーク) で使用する |
+| inputSize | 入力部の幅(グリッド数) | 数値 | ○ | ○ | [マルチレイアウト用CSSフレームワーク](../../component/ui-framework/ui-framework-multicol-css-framework.md#マルチレイアウト用cssフレームワーク) で使用する |
 
 ## 内部構造・改修時の留意点
 

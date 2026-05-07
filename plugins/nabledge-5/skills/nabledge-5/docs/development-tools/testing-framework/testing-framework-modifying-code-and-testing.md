@@ -169,7 +169,7 @@ UIの変更に関する以下の事実を強く認識させるという点にあ
   > 上記エントリの下側に記述したプラグインが優先される。(後勝ち)
   > プロジェクト側で作成したプラグインは基本的に最優先扱いとなるはずなので、
   > この例のようにエントリの一番最後に追加する。
-* [lessインポート定義ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#lessimport-less) に、追加したプラグインのlessファイルを追加する。
+* [lessインポート定義ファイル](../../development-tools/testing-framework/testing-framework-plugin-build.md#lessインポート定義ファイル) に、追加したプラグインのlessファイルを追加する。
   コピー元のプラグインを読み込むと不要なスタイルが設定されてしまうため、コピー元のimport定義は必ず削除する。
 
 **手順5: 追加したプラグインの内容を修正**
@@ -199,7 +199,7 @@ xxx_project-css-color-default/  # 新規追加プラグイン
 
 ### 4. ビルドと修正確認
 
-以降の手順については、 [UI開発基盤の導入](../../development-tools/testing-framework/testing-framework-initial-setup.md) の [4. UI部品のビルドと配置](../../development-tools/testing-framework/testing-framework-initial-setup.md#executing-ui-build) と同じなので、
+以降の手順については、 [UI開発基盤の導入](../../development-tools/testing-framework/testing-framework-initial-setup.md) の [4. UI部品のビルドと配置](../../development-tools/testing-framework/testing-framework-initial-setup.md#4-ui部品のビルドと配置) と同じなので、
 そちらを参照すること。
 
 ### 5. リポジトリへの反映

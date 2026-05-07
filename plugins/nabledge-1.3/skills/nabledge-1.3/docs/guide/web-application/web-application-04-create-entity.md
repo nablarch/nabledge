@@ -22,7 +22,7 @@ Entityクラスに以下のフローで精査処理を実装する。
   |---|---|---|
   | test/java/nablarch/sample/ss11/entity/ | UsersEntityTest.xlsx | testValidateForRegister |
 
-  以下に、テストデータの例を示しておく。（詳細は、 [Form/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTest.md#entityunittest) 参照）
+  以下に、テストデータの例を示しておく。（詳細は、 [Form/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTest.md#formentityのクラス単体テスト) 参照）
 
   ![entity_test.png](../../../knowledge/assets/web-application-04-create-entity/entity_test.png)
 

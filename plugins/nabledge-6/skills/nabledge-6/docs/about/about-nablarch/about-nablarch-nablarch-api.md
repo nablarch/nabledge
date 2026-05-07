@@ -14,4 +14,4 @@
 > 例えば、 DaoContext はクラスに `@Published(tag="architect")` が記載されているためアーキテクト向けの公開APIであることが分かる。
 > 一方で、 BasicDaoContextのfindAllメソッド はクラスにもメソッドにも `@Published` が記載されていないことから非公開APIであることが分かる。
 
-> なお、公開APIに関する仕様の詳細は [後方互換性ポリシー](../../about/about-nablarch/about-nablarch-versionup-policy.md#versionup-policy-backward-compatibility-policy) および [使用不許可APIチェックツールのREADME (外部サイト)](https://github.com/Fintan-contents/coding-standards/blob/main/java/staticanalysis/unpublished-api/README.md) を参照すること。
+> なお、公開APIに関する仕様の詳細は [後方互換性ポリシー](../../about/about-nablarch/about-nablarch-versionup-policy.md#後方互換性ポリシー) および [使用不許可APIチェックツールのREADME (外部サイト)](https://github.com/Fintan-contents/coding-standards/blob/main/java/staticanalysis/unpublished-api/README.md) を参照すること。

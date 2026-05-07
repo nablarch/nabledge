@@ -23,10 +23,10 @@
 ワークフローを利用する個々の案件や申請と紐付けて生成され、ワークフロー定義に存在するタスクやその進行状態、
 各タスクの担当ユーザなどを管理する。
 
-タスクを終了するときに、対応するアクションなどから [ワークフローの進行](../../extension/workflow/workflow-WorkflowApplicationApi.md#workflow-complete-task) などを呼び出すことで、
-ワークフローインスタンスの [アクティブフローノード](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-active-flow-node) が更新されて、ワークフローが進行する。
+タスクを終了するときに、対応するアクションなどから [ワークフローの進行](../../extension/workflow/workflow-WorkflowApplicationApi.md#ワークフローの進行) などを呼び出すことで、
+ワークフローインスタンスの [アクティブフローノード](../../extension/workflow/workflow-WorkflowInstanceElement.md#アクティブフローノード) が更新されて、ワークフローが進行する。
 
-ワークフローが進行した後は、 [ワークフロー定義](../../extension/workflow/workflow-workflow-doc-index.md#workflow-definition) に従って進行先が判断され、次のタスク（もしくは停止イベント）まで
+ワークフローが進行した後は、 [ワークフロー定義](../../extension/workflow/workflow-workflow-doc-index.md#ワークフロー定義) に従って進行先が判断され、次のタスク（もしくは停止イベント）まで
 進行して、再度ワークフローが進行するのを待つことになる。
 
 09/WorkflowInstanceElement

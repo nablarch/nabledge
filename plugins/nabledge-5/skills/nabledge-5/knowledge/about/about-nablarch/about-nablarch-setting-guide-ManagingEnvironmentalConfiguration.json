@@ -31,7 +31,7 @@
     {
       "id": "s5",
       "title": "アプリケーション設定ファイル切り替えの前提",
-      "content": "アプリケーション設定ファイルは、処理方式と環境の組み合わせで最小限必要になるものを用意する。\n\n以下に、アーキタイプから生成した直後のプロジェクトのアプリケーション設定ファイルに関連するディレクトリ構造を示す。\n\n```text\nweb/batch\n|\n\\---src\n    +---env\n    |   +---dev                    … 開発環境\n    |   |   |\n    |   |   \\---env.properties     … 開発環境用の環境設定ファイル(properties)\n    |   |\n    |   \\---prod                   … 本番環境\n    |       |\n    |       \\---env.properties     … 本番環境用の環境設定ファイル(properties)\n    |\n    +---main\n    |   +---java\n    |   |\n    |   +---resources              … 環境毎に差異が存在しないリソース\n    |       |\n    |       \\---common.properties  … 環境非依存の環境設定ファイル(properties)\n    |\n    \\---test\n        +---java\n        |\n        \\---resources          … ユニットテスト環境\n```\n\n> **Tip:**\n> * >   環境非依存の環境設定ファイル(properties)は、全ての環境で使用する。\n> * >   環境が不足している場合は、後述の [定義されている環境を増やす方法](../../about/about-nablarch/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration.md#how-to-add-profile) を参照して環境を追加する。\n> * >   実行基盤のプロジェクト(ウェブアプリケーション、バッチアプリケーション等)から参照される共通プロジェクトを使用している場合、共通プロジェクト単体の環境毎のアプリケーション設定ファイルは不要である。",
+      "content": "アプリケーション設定ファイルは、処理方式と環境の組み合わせで最小限必要になるものを用意する。\n\n以下に、アーキタイプから生成した直後のプロジェクトのアプリケーション設定ファイルに関連するディレクトリ構造を示す。\n\n```text\nweb/batch\n|\n\\---src\n    +---env\n    |   +---dev                    … 開発環境\n    |   |   |\n    |   |   \\---env.properties     … 開発環境用の環境設定ファイル(properties)\n    |   |\n    |   \\---prod                   … 本番環境\n    |       |\n    |       \\---env.properties     … 本番環境用の環境設定ファイル(properties)\n    |\n    +---main\n    |   +---java\n    |   |\n    |   +---resources              … 環境毎に差異が存在しないリソース\n    |       |\n    |       \\---common.properties  … 環境非依存の環境設定ファイル(properties)\n    |\n    \\---test\n        +---java\n        |\n        \\---resources          … ユニットテスト環境\n```\n\n> **Tip:**\n> * >   環境非依存の環境設定ファイル(properties)は、全ての環境で使用する。\n> * >   環境が不足している場合は、後述の [定義されている環境を増やす方法](../../about/about-nablarch/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration.md#定義されている環境を増やす方法) を参照して環境を追加する。\n> * >   実行基盤のプロジェクト(ウェブアプリケーション、バッチアプリケーション等)から参照される共通プロジェクトを使用している場合、共通プロジェクト単体の環境毎のアプリケーション設定ファイルは不要である。",
       "level": 3
     },
     {
@@ -43,7 +43,7 @@
     {
       "id": "s7",
       "title": "ローカルでのAPサーバ起動時及び、成果物生成時(war,jar生成時)",
-      "content": "アプリケーション設定ファイルの切り替えは、\nApache Maven(以下Maven)のプロファイル [1] 機能により\n切り替えを行う。\n\nプロファイルは、アーキタイプから生成したプロジェクトに初期状態で定義されている。定義されているプロファイルについては、 [プロファイル一覧](../../setup/blank-project/blank-project-MavenModuleStructures.md#mavenmodulestructuresprofileslist) を参照。\n\n以下に、プロファイルに本番環境を指定してMavenでビルドした際の動作を示す。\n\n**【ビルドのコマンド例】**\n\n```bat\nmvn -P prod package -DskipTests=true\n```\n\n> **Tip:**\n> 上記コマンドで使用しているオプションは以下の通り。\n\n> * >   -P … プロファイル指定\n> * >   -DskipTests=true  … ユニットテストのスキップを指定\n\n**【Mavenの動作(アプリケーション設定切り替えの部分のみ)】**\n\n![switch_application_settings.png](assets/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration/switch_application_settings.png)\n\n> **Important:**\n> src/main/resourcesと、各環境毎のディレクトリでファイル名が重複した場合は、各環境毎のディレクトリのファイルが優先される。\n\n> **Tip:**\n> 上図には、「コンポーネント設定ファイル(xml)」と「環境設定値の定義ファイル(propertiesファイル)」しか記載していないが、resources以下のファイルは全てコピーされる。\n\n> **Tip:**\n> どの環境向けに作成したアーティファクトであるかを確認できるよう、\n> META-INF/MANIFEST.MF に対象環境のエントリ（ `Target-Environment` ）を追記する設定をしている。\n\n> **【本番環境を指定してビルドした場合のMANIFEST.MFの例】**\n\n> ```none\n> Manifest-Version: 1.0\n> Built-By: tie301686\n> Build-Jdk: 1.7.0_60\n> Created-By: Apache Maven 3.2.3\n> Target-Environment:本番環境\n> Archiver-Version: Plexus Archiver\n> ```",
+      "content": "アプリケーション設定ファイルの切り替えは、\nApache Maven(以下Maven)のプロファイル [1] 機能により\n切り替えを行う。\n\nプロファイルは、アーキタイプから生成したプロジェクトに初期状態で定義されている。定義されているプロファイルについては、 [プロファイル一覧](../../setup/blank-project/blank-project-MavenModuleStructures.md#プロファイル一覧) を参照。\n\n以下に、プロファイルに本番環境を指定してMavenでビルドした際の動作を示す。\n\n**【ビルドのコマンド例】**\n\n```bat\nmvn -P prod package -DskipTests=true\n```\n\n> **Tip:**\n> 上記コマンドで使用しているオプションは以下の通り。\n\n> * >   -P … プロファイル指定\n> * >   -DskipTests=true  … ユニットテストのスキップを指定\n\n**【Mavenの動作(アプリケーション設定切り替えの部分のみ)】**\n\n![switch_application_settings.png](assets/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration/switch_application_settings.png)\n\n> **Important:**\n> src/main/resourcesと、各環境毎のディレクトリでファイル名が重複した場合は、各環境毎のディレクトリのファイルが優先される。\n\n> **Tip:**\n> 上図には、「コンポーネント設定ファイル(xml)」と「環境設定値の定義ファイル(propertiesファイル)」しか記載していないが、resources以下のファイルは全てコピーされる。\n\n> **Tip:**\n> どの環境向けに作成したアーティファクトであるかを確認できるよう、\n> META-INF/MANIFEST.MF に対象環境のエントリ（ `Target-Environment` ）を追記する設定をしている。\n\n> **【本番環境を指定してビルドした場合のMANIFEST.MFの例】**\n\n> ```none\n> Manifest-Version: 1.0\n> Built-By: tie301686\n> Build-Jdk: 1.7.0_60\n> Created-By: Apache Maven 3.2.3\n> Target-Environment:本番環境\n> Archiver-Version: Plexus Archiver\n> ```",
       "level": 4
     },
     {
@@ -85,7 +85,7 @@
     {
       "id": "s14",
       "title": "ディレクトリの追加",
-      "content": "プロファイルの定義で指定したディレクトリを追加する。\n\n[プロファイルの定義](../../about/about-nablarch/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration.md#addprofile) の例の場合は、「src/env/ita/resources/」を作成する。",
+      "content": "プロファイルの定義で指定したディレクトリを追加する。\n\n[プロファイルの定義](../../about/about-nablarch/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration.md#プロファイルの定義) の例の場合は、「src/env/ita/resources/」を作成する。",
       "level": 3
     },
     {

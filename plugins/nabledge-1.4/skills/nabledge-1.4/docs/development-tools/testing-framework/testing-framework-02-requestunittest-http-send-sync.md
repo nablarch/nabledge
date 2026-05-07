@@ -1,10 +1,10 @@
 # リクエスト単体テストの実施方法(HTTP同期応答メッセージ送信処理)
 
-リクエスト単体テスト実施方法は、 [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#message-sendsyncmessage-test) を参照すること。
+リクエスト単体テスト実施方法は、 [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#リクエスト単体テストの実施方法同期応答メッセージ送信処理) を参照すること。
 
 ただし、「送信キュー」「受信キュー」を「通信先」と読み替えること。
 
-本項では、 [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#message-sendsyncmessage-test) と異なる箇所の解説を行う。
+本項では、 [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#リクエスト単体テストの実施方法同期応答メッセージ送信処理) と異なる箇所の解説を行う。
 
 ## テストデータの書き方
 
@@ -15,7 +15,7 @@
 -----
 
 モックアップを使用する場合、testShotsに"expectedMessageByClient"および"responseMessageByClient"にグループIDを設定する。
-グループIDの関連については [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#message-sendsyncmessage-test) における"expectedMessage"および"responseMessage"の場合と同様であるため割愛する。
+グループIDの関連については [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#リクエスト単体テストの実施方法同期応答メッセージ送信処理) における"expectedMessage"および"responseMessage"の場合と同様であるため割愛する。
 
 ![http_send_sync_shot.png](../../../knowledge/assets/testing-framework-02-requestunittest-http-send-sync/http_send_sync_shot.png)
 
@@ -36,7 +36,7 @@
 
 テストデータのディレクティブ行に設定されたfile-typeの値により、要求電文のアサート方法が変化する。
 
-設定方法やアサート内容についての詳細は [リクエスト単体テストの実施方法(同期応答メッセージ受信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-real.md#real-request-test) のレスポンスメッセージの項を参照すること。
+設定方法やアサート内容についての詳細は [リクエスト単体テストの実施方法(同期応答メッセージ受信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-real.md#リクエスト単体テストの実施方法同期応答メッセージ受信処理) のレスポンスメッセージの項を参照すること。
 
 ## フレームワークで使用するクラスの設定
 

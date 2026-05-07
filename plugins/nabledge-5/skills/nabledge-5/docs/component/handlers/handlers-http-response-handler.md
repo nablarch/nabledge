@@ -85,7 +85,7 @@ CustomResponseWriter
 の実装クラスを設定することで、任意のレスポンス出力処理 [3] を実行できる。
 
 具体例として、JSPではなくテンプレートエンジンを使用してレスポンスを出力するというケースが挙げられる。
-Nablarchが提供している実装としては、[ウェブアプリケーション Thymeleafアダプタ](../../component/adapters/adapters-web-thymeleaf-adaptor.md#web-thymeleaf-adaptor) がある。
+Nablarchが提供している実装としては、[ウェブアプリケーション Thymeleafアダプタ](../../component/adapters/adapters-web-thymeleaf-adaptor.md#ウェブアプリケーション-thymeleafアダプタ) がある。
 
 ## HTTPステータスコードの変更
 

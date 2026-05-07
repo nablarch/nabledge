@@ -36,7 +36,7 @@
 
 ExcelファイルはリクエストID [1] ごとに用意する。また、ファイルの名前はリクエストIDと一致させる。
 たとえば、リクエストIDが「RM21AA0101」ならば、ファイルの名前は「RM21AA0101.xls」となる。
-ファイルの配置ディレクトリは、設定ファイルに定義する。詳細は [Excelファイルの配置場所の設定](../../development-tools/testing-framework/testing-framework-03-dealunittest-send-sync.md#send-sync-test-data-path)を参照。
+ファイルの配置ディレクトリは、設定ファイルに定義する。詳細は [Excelファイルの配置場所の設定](../../development-tools/testing-framework/testing-framework-03-dealunittest-send-sync.md#excelファイルの配置場所の設定)を参照。
 
 ここで扱うリクエストIDとは、メッセージを送信する相手先システムの機能を一意に識別するために定義するIDのことを指すものであり、
 画面オンライン処理やバッチ処理で使用するリクエストIDとは意味が異なる点に注意すること。

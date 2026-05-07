@@ -1,6 +1,6 @@
 # サンプルアプリケーションの概要
 
-メール送信処理のサンプルは、 [画面オンライン処理のサンプルアプリケーション](../../guide/web-application/web-application-01-sampleApplicationExplanation.md#sampleapplicationexplanation) に含まれている。
+メール送信処理のサンプルは、 [画面オンライン処理のサンプルアプリケーション](../../guide/web-application/web-application-01-sampleApplicationExplanation.md#サンプルアプリケーションの概要) に含まれている。
 ユーザ情報登録機能にて、登録ユーザーのメールアドレス宛に、以下の定型メールを送信している。
 
 | 件名 | 本文 |

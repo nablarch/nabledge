@@ -1,7 +1,7 @@
 {
   "id": "web-application-05-create-form",
   "title": "Formクラスの実装",
-  "content": "ユーザ登録画面に対応するFormクラスを以下のステップで実装する。\n\n* Formクラスのプロパティの実装\n* Formクラスの精査処理実装\n\n  * Formクラスに実装する精査処理の単体テストを作成\n  * Formクラスの単体テストを実行\n  * Formクラスに精査処理を実装\n  * Formクラスの単体テストを実行\n\nFormクラスの精査処理実装は [Entityの精査処理実装フロー](../../guide/web-application/web-application-04-create-entity.md#03-04-entity-impl-flow) と同じフローで行う。",
+  "content": "ユーザ登録画面に対応するFormクラスを以下のステップで実装する。\n\n* Formクラスのプロパティの実装\n* Formクラスの精査処理実装\n\n  * Formクラスに実装する精査処理の単体テストを作成\n  * Formクラスの単体テストを実行\n  * Formクラスに精査処理を実装\n  * Formクラスの単体テストを実行\n\nFormクラスの精査処理実装は [Entityの精査処理実装フロー](../../guide/web-application/web-application-04-create-entity.md#entityクラス精査処理の実装) と同じフローで行う。",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -19,7 +19,7 @@
     {
       "id": "s3",
       "title": "Formクラスに実装する精査処理の単体テストを作成",
-      "content": "1. Form単体テストデータの作成\n  Formクラスに登録機能の精査処理を実装するために、精査処理の単体テストデータを作成する。\n\n  [Entity単体テストのテストデータ](../../guide/web-application/web-application-04-create-entity.md#03-04-create-entity-test-data) と同じ観点で作成すればよい。\n\n  今回の場合は、 `user` プロパティに対して、「漢字氏名」と「カナ氏名」の精査が行われていることのみ確認できればよい。\n\n  | データシート格納フォルダ | データシートファイル名 | シート名 |\n  |---|---|---|\n  | test/java/nablarch/sample/ss11AC | W11AC02FormTest.xlsx | testValidateForRegister |\n\n  以下に、テストデータの例を示しておく。（詳細は、 [Form/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTest.md#entityunittest) 参照）\n\n  ![form_test_validation_01.png](assets/web-application-05-create-form/form_test_validation_01.png)\n2. Form単体テストコードの作成\n\n  | テストクラス格納フォルダ | テストクラス名 | テストメソッド名 |\n  |---|---|---|\n  | test/java/nablarch/sample/ss11AC | W11AC02FormTest | testValidateForRegister |\n\n  ```java\n  /**\n   * {@link W11AC02Form}のテスト。\n   *\n   * @author Nablarch Taro\n   * @since 1.0\n   */\n  public class W11AC02FormTest extends EntityTestSupport {\n  \n      /**\n       * {@link W11AC02Form#validateForRegister(nablarch.core.validation.ValidationContext)} のテスト。\n       */\n      @Test\n      public void testValidateForRegister() {\n          testValidateAndConvert(W11AC02Form.class, \"testValidateForRegister\", \"register\");\n      }\n  }\n  ```",
+      "content": "1. Form単体テストデータの作成\n  Formクラスに登録機能の精査処理を実装するために、精査処理の単体テストデータを作成する。\n\n  [Entity単体テストのテストデータ](../../guide/web-application/web-application-04-create-entity.md#entityクラスに実装する精査処理の単体テストを作成) と同じ観点で作成すればよい。\n\n  今回の場合は、 `user` プロパティに対して、「漢字氏名」と「カナ氏名」の精査が行われていることのみ確認できればよい。\n\n  | データシート格納フォルダ | データシートファイル名 | シート名 |\n  |---|---|---|\n  | test/java/nablarch/sample/ss11AC | W11AC02FormTest.xlsx | testValidateForRegister |\n\n  以下に、テストデータの例を示しておく。（詳細は、 [Form/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTest.md#formentityのクラス単体テスト) 参照）\n\n  ![form_test_validation_01.png](assets/web-application-05-create-form/form_test_validation_01.png)\n2. Form単体テストコードの作成\n\n  | テストクラス格納フォルダ | テストクラス名 | テストメソッド名 |\n  |---|---|---|\n  | test/java/nablarch/sample/ss11AC | W11AC02FormTest | testValidateForRegister |\n\n  ```java\n  /**\n   * {@link W11AC02Form}のテスト。\n   *\n   * @author Nablarch Taro\n   * @since 1.0\n   */\n  public class W11AC02FormTest extends EntityTestSupport {\n  \n      /**\n       * {@link W11AC02Form#validateForRegister(nablarch.core.validation.ValidationContext)} のテスト。\n       */\n      @Test\n      public void testValidateForRegister() {\n          testValidateAndConvert(W11AC02Form.class, \"testValidateForRegister\", \"register\");\n      }\n  }\n  ```",
       "level": 3
     },
     {

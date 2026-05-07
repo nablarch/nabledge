@@ -207,7 +207,7 @@ import-example2.xml に設定した "imported2" が設定される。
 
 import 要素、config-file 要素の dir 属性を使用した読み込み [1] を使用した場合は、インポートするファイル名を java の文字列としてソートした順序で読み込まれる。
 
-[ディレクトリに配置された設定ファイルの読み込み](../../component/libraries/libraries-02-01-Repository-config.md#directory-config) を参照
+[ディレクトリに配置された設定ファイルの読み込み](../../component/libraries/libraries-02-01-Repository-config.md#ディレクトリに配置された設定ファイルの読み込み) を参照
 
 例えば、 /opt/config/ ディレクトリ以下に下記のファイルが存在していた場合を考える。
 

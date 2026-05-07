@@ -143,7 +143,7 @@ IDトークンを検証するための処理はコンポーネントとして作
 | aws.cognito.userPool.id | ユーザープールID |
 | aws.cognito.userPool.clientId | ユーザープールに登録したアプリケーションのクライアントID |
 
-環境依存値の設定方法については [システムプロパティを使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#repository-overwrite-environment-configuration) や [OS環境変数を使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#repository-overwrite-environment-configuration-by-os-env-var) を参照。
+環境依存値の設定方法については [システムプロパティを使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#システムプロパティを使って環境依存値を上書きする) や [OS環境変数を使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#os環境変数を使って環境依存値を上書きする) を参照。
 
 > **Tip:**
 > サービスへのアクセスに必要な情報には、秘匿すべき情報が含まれている場合がある。
@@ -321,7 +321,7 @@ public class CognitoRSAKeyProvider implements RSAKeyProvider, Initializable {
 public class LoginAction {
 ```
 
-JAX-RSのPathアノテーションによるマッピングについては  [JAX-RSのPathアノテーションでマッピングする](../../component/adapters/adapters-router-adaptor.md#router-adaptor-path-annotation) を参照。
+JAX-RSのPathアノテーションによるマッピングについては  [JAX-RSのPathアノテーションでマッピングする](../../component/adapters/adapters-router-adaptor.md#jax-rsのpathアノテーションでマッピングする) を参照。
 
 ### 認証および成功時のログイン状態設定
 
@@ -330,7 +330,7 @@ JAX-RSのPathアノテーションによるマッピングについては  [JAX-
 
 > **Tip:**
 > 本サンプルでは、CSRF(クロスサイトリクエストフォージェリ)への対策のため、CSRFトークン検証ハンドラの使用を想定している。
-> CSRF対策の詳細については [CSRFトークン検証ハンドラ](../../component/handlers/handlers-csrf-token-verification-handler.md#csrf-token-verification-handler) を参照。
+> CSRF対策の詳細については [CSRFトークン検証ハンドラ](../../component/handlers/handlers-csrf-token-verification-handler.md#csrfトークン検証ハンドラ) を参照。
 
 ```java
 /**

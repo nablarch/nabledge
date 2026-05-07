@@ -2,7 +2,7 @@
 
 ## Nablarch のバージョンアップ方針
 
-Nablarchが提供するコンテンツ(詳細は [Nablarch の製品構成](../../about/about-nablarch/about-nablarch-contents.md#nablarch-contents) をご参照ください)に対するバージョンアップ方針について説明します。
+Nablarchが提供するコンテンツ(詳細は [Nablarch の製品構成](../../about/about-nablarch/about-nablarch-contents.md#nablarch-の製品構成) をご参照ください)に対するバージョンアップ方針について説明します。
 
 ### 更新内容
 
@@ -16,7 +16,7 @@ Nablarchが提供するコンテンツに対して実施されるバージョン
 | 機能追加 |  |  | NAFやNTFに対する機能追加、Nablarch標準の追加、 Nablarch Toolbox へのツール追加などです。 | 半期に一度程度の頻度でリリースを予定してい ます。 |
 | アーキテクチャデザインの変更(API変更を伴う) |  |  | Nablarchの全面改訂です。APIが変更される場合もあります。 | 特にサイクルはありません。 技術革新等、大きな外部環境の変化に追随する場 合、ソフトウェアやサービスの新規追加に伴って アーキテクチャデザインを見直す場合等 が想定されます。 |
 
-各バージョンアップ時にお客様に行っていただく作業は、 [バージョンアップ時に必要なお客様のアプリケーションへの適用作業](../../about/about-nablarch/about-nablarch-versionup-policy.md#about-version-up) をご参照ください。
+各バージョンアップ時にお客様に行っていただく作業は、 [バージョンアップ時に必要なお客様のアプリケーションへの適用作業](../../about/about-nablarch/about-nablarch-versionup-policy.md#バージョンアップ時に必要なお客様のアプリケーションへの適用作業) をご参照ください。
 
 ### 後方互換性ポリシー
 
@@ -24,8 +24,8 @@ Nablarchの後方互換性ポリシーについて説明します。
 
 #### 後方互換性を維持する範囲
 
-Nablarchライブラリとして提供するコンテンツ(NAF、NTF)に対して、 [後方互換性の例外](../../about/about-nablarch/about-nablarch-versionup-policy.md#backward-compatibility-is-not-maintained) に該当する場合を除き、
- [後方互換性維持の内容](../../about/about-nablarch/about-nablarch-versionup-policy.md#backward-compatibility-contents) に記載の内容で、後方互換性を維持いたします。
+Nablarchライブラリとして提供するコンテンツ(NAF、NTF)に対して、 [後方互換性の例外](../../about/about-nablarch/about-nablarch-versionup-policy.md#後方互換性の例外) に該当する場合を除き、
+ [後方互換性維持の内容](../../about/about-nablarch/about-nablarch-versionup-policy.md#後方互換性維持の内容) に記載の内容で、後方互換性を維持いたします。
 
 なお、Nablarchライブラリ以外のコンテンツに対する後方互換性の維持は考慮されません。
 
@@ -73,7 +73,7 @@ Nablarchでは、非公開APIの使用を検知するツールを提供してい
 Nablarchは、基幹システムのアプリケーション開発・実行基盤として安心してご利用いただくために、EOSL [2] の期間は設けません。
 ご利用中のお客様がいるバージョンに対しては、基本サービスを提供いたします。
 
-基本サービスの内容については、 [基本サービスの内容](../../about/about-nablarch/about-nablarch-support-service.md#basic-support-service) をご覧ください。
+基本サービスの内容については、 [基本サービスの内容](../../about/about-nablarch/about-nablarch-support-service.md#基本サービスの内容) をご覧ください。
 
 EOSL：End Of Service Lifeの略で、製品に対するサポートやサービスの提供を終了することです。
 
@@ -82,7 +82,7 @@ EOSL：End Of Service Lifeの略で、製品に対するサポートやサービ
 > * >   不具合対応などのバージョンアップはお客様がご利用中のマイナーバージョンの最新のリビジョンに対してのみ実施されます。
 > * >   マイナーバージョンアップでは、既にご利用中のお客様がいなくなったバージョンはお選びいただけません。
 
-> バージョン番号、リビジョンについては、 [バージョン番号体系](../../about/about-nablarch/about-nablarch-versionup-policy.md#version-number) をご参照ください。
+> バージョン番号、リビジョンについては、 [バージョン番号体系](../../about/about-nablarch/about-nablarch-versionup-policy.md#バージョン番号体系) をご参照ください。
 
 ### バージョン番号体系
 
@@ -95,12 +95,12 @@ Nablarchのバージョン番号は、メジャー番号、マイナー番号、
 
 #### コンテンツとバージョン番号の関係
 
-Nablarchのコンテンツにはさまざまな物が含まれます(詳細は [Nablarch の製品構成](../../about/about-nablarch/about-nablarch-contents.md#nablarch-contents) をご参照ください)。これら一式に対して1つ
+Nablarchのコンテンツにはさまざまな物が含まれます(詳細は [Nablarch の製品構成](../../about/about-nablarch/about-nablarch-contents.md#nablarch-の製品構成) をご参照ください)。これら一式に対して1つ
 のバージョン番号が割り振られます。
 
 #### バージョン番号と更新内容の対応
 
-バージョン番号の各部分は、 [更新内容](../../about/about-nablarch/about-nablarch-versionup-policy.md#versionup-variety) と以下のような対応を持っています。また、各部分がインクリメントする
+バージョン番号の各部分は、 [更新内容](../../about/about-nablarch/about-nablarch-versionup-policy.md#更新内容) と以下のような対応を持っています。また、各部分がインクリメントする
 バージョンアップのことを、バージョンアップの名称欄に記載した名称で呼びます。各番号の詳細は、下表の後の記述をご参照ください。
 
 | 番号 | 対応する対応内容 | バージョンアップの名称 | リリース頻度 |
@@ -133,8 +133,8 @@ Nablarchのコンテンツにはさまざまな物が含まれます(詳細は [
 
 ### バージョンアップ時に必要なお客様のアプリケーションへの適用作業
 
-Nablarchは、不具合修正や機能追加を実施する場合にバージョンアップを行います(詳細は [更新内容](../../about/about-nablarch/about-nablarch-versionup-policy.md#versionup-variety) をご参照ください)。
-バージョンアップには、リビジョンアップ、マイナーバージョンアップ、メジャーバージョンアップの3種類があり(詳細は [バージョン番号体系](../../about/about-nablarch/about-nablarch-versionup-policy.md#version-number) をご参照ください)、
+Nablarchは、不具合修正や機能追加を実施する場合にバージョンアップを行います(詳細は [更新内容](../../about/about-nablarch/about-nablarch-versionup-policy.md#更新内容) をご参照ください)。
+バージョンアップには、リビジョンアップ、マイナーバージョンアップ、メジャーバージョンアップの3種類があり(詳細は [バージョン番号体系](../../about/about-nablarch/about-nablarch-versionup-policy.md#バージョン番号体系) をご参照ください)、
 お客様に実施していただく作業に以下のような違いがあります。
 
 #### リビジョンアップ時に必要な作業
@@ -161,4 +161,4 @@ Nablarchは、不具合修正や機能追加を実施する場合にバージョ
 > 後方互換性は保障されないため、お客様のアプリケーションに修正が必要です(システム再構築と同等となる場合もあります)。
 
 リビジョンアップとマイナーバージョンアップの場合も、例外的に不具合対応のため、やむを得ず後方互換性が保てない場合があります。この場合、テストコード、テストデータ、
-お客様のアプリケーションの修正が必要になります(詳細は [後方互換性の例外](../../about/about-nablarch/about-nablarch-versionup-policy.md#backward-compatibility-is-not-maintained) をご参照ください)。
+お客様のアプリケーションの修正が必要になります(詳細は [後方互換性の例外](../../about/about-nablarch/about-nablarch-versionup-policy.md#後方互換性の例外) をご参照ください)。

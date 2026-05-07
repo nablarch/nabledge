@@ -99,7 +99,7 @@ sqlLogFormatter.endExecuteBatchFormat=$methodName$\
 
 ### SQLログの設定
 
-SQLログの設定は、 [各種ログの設定](../../component/libraries/libraries-log.md#log-app-log-setting) で説明したプロパティファイルに行う。
+SQLログの設定は、 [各種ログの設定](../../component/libraries/libraries-log.md#各種ログの設定) で説明したプロパティファイルに行う。
 
 記述ルール
 
@@ -344,12 +344,12 @@ sqlLogFormatter.endExecuteBatchFormat=$methodName$\n\texe:$executeTime$ms count:
 
 ### JSON形式の構造化ログとして出力する
 
-[JSON形式の構造化ログとして出力する](../../component/libraries/libraries-log.md#log-json-log-setting) 設定によりログをJSON形式で出力できるが、
+[JSON形式の構造化ログとして出力する](../../component/libraries/libraries-log.md#json形式の構造化ログとして出力する) 設定によりログをJSON形式で出力できるが、
 SqlLogFormatter では
 SQLログの各項目はmessageの値に文字列として出力される。
 SQLログの各項目もJSONの値として出力するには、
 SqlJsonLogFormatter を使用する。
-設定は、 [各種ログの設定](../../component/libraries/libraries-log.md#log-app-log-setting) で説明したプロパティファイルに行う。
+設定は、 [各種ログの設定](../../component/libraries/libraries-log.md#各種ログの設定) で説明したプロパティファイルに行う。
 
 記述ルール
 
@@ -522,7 +522,7 @@ sqlLogFormatter.structuredMessagePrefix
 フォーマット後のメッセージ文字列が JSON 形式に整形されていることを識別できるようにするために、メッセージの先頭に付与するマーカー文字列。
 メッセージの先頭にあるマーカー文字列が JsonLogFormatter に設定しているマーカー文字列と一致する場合、 JsonLogFormatter はメッセージを JSON データとして処理する。
 デフォルトは `"$JSON$"` となる。
-変更する場合は、LogWriterの `structuredMessagePrefix` プロパティを使用して JsonLogFormatter にも同じ値を設定すること（LogWriterのプロパティについては [ログ出力の設定](../../component/libraries/libraries-log.md#log-basic-setting) を参照）。
+変更する場合は、LogWriterの `structuredMessagePrefix` プロパティを使用して JsonLogFormatter にも同じ値を設定すること（LogWriterのプロパティについては [ログ出力の設定](../../component/libraries/libraries-log.md#ログ出力の設定) を参照）。
 
 記述例
 

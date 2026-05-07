@@ -31,12 +31,12 @@
 
 ### テストデータとテストクラスの作成
 
-[事前準備データの作成処理](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-setup) 、 [処理終了後のデータベースの状況を確認しなければならないもの](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-db) 、 [メッセージIDを確認しなければならないもの](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-messageid) のそれぞれについて、テストデータとテストクラスの作成方法を説明する。
+[事前準備データの作成処理](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#事前準備データの作成処理) 、 [処理終了後のデータベースの状況を確認しなければならないもの](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#処理終了後のデータベースの状況を確認しなければならないもの) 、 [メッセージIDを確認しなければならないもの](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#メッセージidを確認しなければならないもの) のそれぞれについて、テストデータとテストクラスの作成方法を説明する。
 まず最初に、テストデータ(Excelファイル)そのもののと、テストクラスの作成方法(継承すべきクラスなど)を説明する。次に、各パターンごとのデータとテストメソッド作成方法を説明する。
 
 #### テストデータの作成
 
-テストデータを記載したExcelファイルは、 [Nablarch Validationに対応したForm/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#entityunittest) と同様にテストソースコードと同じディレクトリに同じ名前で格納する(拡張子のみ異なる)。
+テストデータを記載したExcelファイルは、 [Nablarch Validationに対応したForm/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md#nablarch-validationに対応したformentityのクラス単体テスト) と同様にテストソースコードと同じディレクトリに同じ名前で格納する(拡張子のみ異なる)。
 なお、全てのテストデータは同じExcelのシートに記載する前提である。
 
 テストデータの記述方法詳細については、 [自動テストフレームワーク](../../development-tools/testing-framework/testing-framework-01-Abstract.md) 、 [データベースを使用するクラスのテスト](../../development-tools/testing-framework/testing-framework-02-DbAccessTest.md) を参照。
@@ -213,7 +213,7 @@ public void testRegisterUser1() {
 > **Tip:**
 > 上記のソースコードでは、getListMapメソッドを用いてExcelシートからデータを読み込んでいる。
 > getListMapメソッドの詳細については、 [目的別API使用方法](../../development-tools/testing-framework/testing-framework-03-Tips.md) の
-> 『 [Excelファイルから、入力パラメータや戻り値に対する期待値などを取得したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#how-to-get-data-from-excel) 』 を参照。
+> 『 [Excelファイルから、入力パラメータや戻り値に対する期待値などを取得したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#excelファイルから入力パラメータや戻り値に対する期待値などを取得したい) 』 を参照。
 
 クラス単体テストでは、テストクラスからデータベースアクセスを行うクラスを直接起動する為、
 フレームワークによるトランザクション制御は行われない。
@@ -225,9 +225,9 @@ public void testRegisterUser1() {
 
 ##### テストデータ(想定結果)の作成
 
-想定結果をテストケースごとに用意する。アプリケーションで設定する項目だけでなく、自動設定項目( [SQL実行時に共通的な値を自動的に設定したい](../../component/libraries/libraries-database.md#database-common-bean) 参照)も想定結果を用意する。検証には"assertTableEquals"メソッドを用いる。
+想定結果をテストケースごとに用意する。アプリケーションで設定する項目だけでなく、自動設定項目( [SQL実行時に共通的な値を自動的に設定したい](../../component/libraries/libraries-database.md#sql実行時に共通的な値を自動的に設定したい) 参照)も想定結果を用意する。検証には"assertTableEquals"メソッドを用いる。
 
-サンプルアプリケーションでは、グループID( [一つのシートに複数テストケースのデータを記載したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#tips-groupid) 参照)を定義したデータ(expected)を用意し、これをassertTableEqualsの
+サンプルアプリケーションでは、グループID( [一つのシートに複数テストケースのデータを記載したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) 参照)を定義したデータ(expected)を用意し、これをassertTableEqualsの
 引数に渡すことで、複数の想定結果に対応している。
 
 ![componentUnitTest_expectedDataNormal.png](../../../knowledge/assets/testing-framework-02-componentUnitTest/componentUnitTest_expectedDataNormal.png)
@@ -262,17 +262,17 @@ case1を例にとると、想定結果は次のようになる。
 
 | テーブル名 | 想定 |
 |---|---|
-| SYSTEM_ACCOUNT | [事前準備データの作成処理](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-setup) で示したレコード+1レコード追加。計4レコード。 |
-| USERS | 1レコード追加。( [事前準備データの作成処理](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-setup) で0件に初期化し、テスト対象処理で1レコード追加) |
-| UGROUP_SYSTEM_ACCOUNT | 1レコード追加。( [事前準備データの作成処理](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-setup) で0件に初期化し、テスト対象処理で1レコード追加) |
+| SYSTEM_ACCOUNT | [事前準備データの作成処理](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#事前準備データの作成処理) で示したレコード+1レコード追加。計4レコード。 |
+| USERS | 1レコード追加。( [事前準備データの作成処理](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#事前準備データの作成処理) で0件に初期化し、テスト対象処理で1レコード追加) |
+| UGROUP_SYSTEM_ACCOUNT | 1レコード追加。( [事前準備データの作成処理](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#事前準備データの作成処理) で0件に初期化し、テスト対象処理で1レコード追加) |
 | SYSTEM_ACCOUNT_AUTHORITY | 変化なし(新規追加なし)。 |
 
 #### メッセージIDを確認しなければならないもの
 
 ##### テストデータ(入力値と想定値)の作成
 
-[前項のテストデータ(入力値)の作成](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-inputdata-normal) と同様にテストデータ(入力値)を作成する。こちらでは、
- [前項](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#componentunittest-inputdata-normal) で指定したIDの末尾に"Err"を付加することで、同じExcelシート内に正常系と異常系のデータを混載している。また、
+[前項のテストデータ(入力値)の作成](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#テストデータ入力値の作成) と同様にテストデータ(入力値)を作成する。こちらでは、
+ [前項](../../development-tools/testing-framework/testing-framework-02-componentUnitTest.md#テストデータ入力値の作成) で指定したIDの末尾に"Err"を付加することで、同じExcelシート内に正常系と異常系のデータを混載している。また、
 想定値はメッセージIDである。
 
 ここで確認すべき内容は、ユニークキー制約違反による例外の発生である。テストコードでは、目的の例外をキャッチし、メッセージIDを比較することで検証する。

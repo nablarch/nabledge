@@ -1,7 +1,7 @@
 {
   "id": "handlers-transaction-management-handler",
   "title": "トランザクション制御ハンドラ",
-  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* トランザクション制御対象を設定する\n* 特定の例外の場合にトランザクションをコミットさせる\n* トランザクション終了時に任意の処理を実行したい\n* アプリケーションで複数のトランザクションを使用する\n\nデータベースやメッセージキューなどのトランザクションに対応したリソースを使用し、後続処理における透過的トランザクションを実現するハンドラ。\n\nトランザクション機能の詳細は、 [トランザクション管理](../../component/libraries/libraries-transaction.md#transaction) を参照。\n\n本ハンドラでは、以下の処理を行う。\n\n* トランザクションの開始\n* トランザクションの終了(コミットやロールバック)\n* トランザクションの終了時のコールバック\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-transaction-management-handler/flow.png)",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* トランザクション制御対象を設定する\n* 特定の例外の場合にトランザクションをコミットさせる\n* トランザクション終了時に任意の処理を実行したい\n* アプリケーションで複数のトランザクションを使用する\n\nデータベースやメッセージキューなどのトランザクションに対応したリソースを使用し、後続処理における透過的トランザクションを実現するハンドラ。\n\nトランザクション機能の詳細は、 [トランザクション管理](../../component/libraries/libraries-transaction.md#トランザクション管理) を参照。\n\n本ハンドラでは、以下の処理を行う。\n\n* トランザクションの開始\n* トランザクションの終了(コミットやロールバック)\n* トランザクションの終了時のコールバック\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-transaction-management-handler/flow.png)",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -19,13 +19,13 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "[データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) より後ろに配置すること\n\nデータベースに対するトランザクションを制御する場合には、トランザクション管理対象のデータベース接続がスレッド上に存在している必要がある。\nこのため、本ハンドラは [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) より後ろに配置する必要がある。",
+      "content": "[データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) より後ろに配置すること\n\nデータベースに対するトランザクションを制御する場合には、トランザクション管理対象のデータベース接続がスレッド上に存在している必要がある。\nこのため、本ハンドラは [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) より後ろに配置する必要がある。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "トランザクション制御対象を設定する",
-      "content": "このハンドラは、 transactionFactory\nプロパティに設定されたファクトリクラス( TransactionFactory 実装クラス)を使用してトランザクションの制御対象を取得しスレッド上で管理する。\n\nスレッド上で管理する際には、トランザクションを識別するための名前を設定する。\nデフォルトでは、 `transaction` が使用されるが、任意の名前を使用する場合は、 transactionName プロパティに設定すること。\n[複数のトランザクションを使用する場合](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler-multi-transaction) は、  transactionName  プロパティへの値の設定が必須となる。\n\n> **Tip:**\n> [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) で設定したデータベースに対するトランザクションを制御する場合は、\n> DbConnectionManagementHandler#connectionName に設定した値と同じ値を\n> transactionName プロパティに設定すること。\n\n> なお、 DbConnectionManagementHandler#connectionName に値を設定していない場合は、\n> transactionName への設定は省略して良い。\n\n以下の設定ファイル例を参考にし、このハンドラを設定すること。\n\n```xml\n<!-- トランザクション制御ハンドラ -->\n<component class=\"nablarch.common.handler.TransactionManagementHandler\">\n  <property name=\"transactionFactory\" ref=\"databaseTransactionFactory\" />\n  <property name=\"transactionName\" value=\"name\" />\n</component>\n\n<!-- データベースに対するトランザクション制御を行う場合には、JdbcTransactionFactoryを設定する -->\n<component name=\"databaseTransactionFactory\"\n    class=\"nablarch.core.db.transaction.JdbcTransactionFactory\">\n  <!-- プロパティの設定は省略 -->\n</component>\n```",
+      "content": "このハンドラは、 transactionFactory\nプロパティに設定されたファクトリクラス( TransactionFactory 実装クラス)を使用してトランザクションの制御対象を取得しスレッド上で管理する。\n\nスレッド上で管理する際には、トランザクションを識別するための名前を設定する。\nデフォルトでは、 `transaction` が使用されるが、任意の名前を使用する場合は、 transactionName プロパティに設定すること。\n[複数のトランザクションを使用する場合](../../component/handlers/handlers-transaction-management-handler.md#アプリケーションで複数のトランザクションを使用する) は、  transactionName  プロパティへの値の設定が必須となる。\n\n> **Tip:**\n> [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) で設定したデータベースに対するトランザクションを制御する場合は、\n> DbConnectionManagementHandler#connectionName に設定した値と同じ値を\n> transactionName プロパティに設定すること。\n\n> なお、 DbConnectionManagementHandler#connectionName に値を設定していない場合は、\n> transactionName への設定は省略して良い。\n\n以下の設定ファイル例を参考にし、このハンドラを設定すること。\n\n```xml\n<!-- トランザクション制御ハンドラ -->\n<component class=\"nablarch.common.handler.TransactionManagementHandler\">\n  <property name=\"transactionFactory\" ref=\"databaseTransactionFactory\" />\n  <property name=\"transactionName\" value=\"name\" />\n</component>\n\n<!-- データベースに対するトランザクション制御を行う場合には、JdbcTransactionFactoryを設定する -->\n<component name=\"databaseTransactionFactory\"\n    class=\"nablarch.core.db.transaction.JdbcTransactionFactory\">\n  <!-- プロパティの設定は省略 -->\n</component>\n```",
       "level": 2
     },
     {

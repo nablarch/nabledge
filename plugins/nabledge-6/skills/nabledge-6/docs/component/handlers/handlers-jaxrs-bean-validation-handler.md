@@ -14,7 +14,7 @@
 
 > 変更されたのは名称のみで、機能的な差は無い。
 
-> その他、Nablarch6で名称が変更された機能については [Nablarch5と6で名称が変更になった機能について](../../about/about-nablarch/about-nablarch-jakarta-ee.md#renamed-features-in-nablarch-6) を参照のこと。
+> その他、Nablarch6で名称が変更された機能については [Nablarch5と6で名称が変更になった機能について](../../about/about-nablarch/about-nablarch-jakarta-ee.md#nablarch5と6で名称が変更になった機能について) を参照のこと。
 
 本ハンドラは、リソース(アクション)クラスが受け取るForm(Bean)に対して、[Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を実行する。
 バリデーションでバリデーションエラーが発生した場合には、後続のハンドラに処理は委譲せずに、
@@ -49,9 +49,9 @@ ApplicationException を送出して処理を終了する。
 
 ## 制約
 
-[リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) よりも後ろに設定すること
+[リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#リクエストボディ変換ハンドラ) よりも後ろに設定すること
 
-このハンドラは、 [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) がリクエストボディから変換したForm(Bean)に対してバリデーションを行うため。
+このハンドラは、 [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#リクエストボディ変換ハンドラ) がリクエストボディから変換したForm(Bean)に対してバリデーションを行うため。
 
 ## リソース(アクション)で受け取るForm(Bean)に対してバリデーションを実行する
 

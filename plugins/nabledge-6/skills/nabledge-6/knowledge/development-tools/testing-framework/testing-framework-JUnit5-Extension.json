@@ -7,7 +7,7 @@
     {
       "id": "s1",
       "title": "概要",
-      "content": "ここでは、JUnit 5で書かれたテストの中で自動テストフレームワークを使用するための拡張機能について説明する。\n本拡張機能を使用することで、パラメータ化テストなどのJUnit 5が提供する便利な機能と自動テストフレームワークを組み合わせて使用できるようになる。\n\n> **Tip:**\n> 本拡張機能を導入しても、JUnit 4で書かれた既存の自動テストフレームワークのテストを修正する必要はない。\n> JUnit 4で書かれたテストは、JUnit Vintageを使うことで引き続きJUnit 5上で実行できる（JUnit Vintageを使って自動テストフレームワークを動作させる方法については [JUnit 5で自動テストフレームワークを動かす](../../development-tools/testing-framework/testing-framework-01-Abstract.md#run-ntf-on-junit5-with-vintage-engine) を参照）。\n> したがって、既存のテストはJUnit 4のコードのままにしておき、新規テストだけJUnit 5を使ったコードにできる。",
+      "content": "ここでは、JUnit 5で書かれたテストの中で自動テストフレームワークを使用するための拡張機能について説明する。\n本拡張機能を使用することで、パラメータ化テストなどのJUnit 5が提供する便利な機能と自動テストフレームワークを組み合わせて使用できるようになる。\n\n> **Tip:**\n> 本拡張機能を導入しても、JUnit 4で書かれた既存の自動テストフレームワークのテストを修正する必要はない。\n> JUnit 4で書かれたテストは、JUnit Vintageを使うことで引き続きJUnit 5上で実行できる（JUnit Vintageを使って自動テストフレームワークを動作させる方法については [JUnit 5で自動テストフレームワークを動かす](../../development-tools/testing-framework/testing-framework-01-Abstract.md#junit-5で自動テストフレームワークを動かす) を参照）。\n> したがって、既存のテストはJUnit 4のコードのままにしておき、新規テストだけJUnit 5を使ったコードにできる。",
       "level": 2
     },
     {
@@ -37,7 +37,7 @@
     {
       "id": "s6",
       "title": "BasicHttpRequestTest の使い方の補足",
-      "content": "BasicHttpRequestTestTemplate 以外は、 [基本的な使い方](../../development-tools/testing-framework/testing-framework-JUnit5-Extension.md#ntf-junit5-extension-standard-usages) で説明した方法で使用できる。\n\nBasicHttpRequestTestTemplate のみ、合成アノテーションである BasicHttpRequestTest を使用するときにパラメータを指定する必要があるので、その点について補足する。\n\n```java\n// 1. BasicHttpRequestTest の baseUri を指定する\n@BasicHttpRequestTest(baseUri = \"/test/\")\nclass YourTestClass {\n    // 2. BasicHttpRequestTestTemplate のインジェクション方法は、他と変わらない\n    BasicHttpRequestTestTemplate support;\n\n    @Test\n    void test() {\n        support.execute();\n    }\n}\n```\n\nBasicHttpRequestTest アノテーションには `baseUri` を指定する必要がある。\nこの値は、 AbstractHttpRequestTestTemplate の `getBaseUri()` メソッドが返却する値に対応する。",
+      "content": "BasicHttpRequestTestTemplate 以外は、 [基本的な使い方](../../development-tools/testing-framework/testing-framework-JUnit5-Extension.md#基本的な使い方) で説明した方法で使用できる。\n\nBasicHttpRequestTestTemplate のみ、合成アノテーションである BasicHttpRequestTest を使用するときにパラメータを指定する必要があるので、その点について補足する。\n\n```java\n// 1. BasicHttpRequestTest の baseUri を指定する\n@BasicHttpRequestTest(baseUri = \"/test/\")\nclass YourTestClass {\n    // 2. BasicHttpRequestTestTemplate のインジェクション方法は、他と変わらない\n    BasicHttpRequestTestTemplate support;\n\n    @Test\n    void test() {\n        support.execute();\n    }\n}\n```\n\nBasicHttpRequestTest アノテーションには `baseUri` を指定する必要がある。\nこの値は、 AbstractHttpRequestTestTemplate の `getBaseUri()` メソッドが返却する値に対応する。",
       "level": 3
     },
     {

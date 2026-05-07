@@ -13,9 +13,9 @@
 
 開始対象のワークフローのID
 
-[ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) や [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#completioncondition) で使用するパラメータ
-（必要な場合のみ。 [開始イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-event-start) から最初のタスクに遷移するまでに
-[XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) が存在する場合などに指定する。）
+[ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#ゲートウェイの進行先ノードの判定制御) や [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#マルチインスタンスタスクの終了判定) で使用するパラメータ
+（必要な場合のみ。 [開始イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#開始イベント) から最初のタスクに遷移するまでに
+[XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#xorゲートウェイ) が存在する場合などに指定する。）
 
 * ワークフローインスタンス(WorkflowInstance)
 
@@ -102,15 +102,15 @@ WorkflowInstance workflow = WorkflowManager.findInstance(instanceId);
 ワークフローの進行を行う際には、担当ユーザとして割り当てられているタスクの場合には `completeUserTask` を、
 担当グループとして割り当てられているタスクの場合には `completeGroupTask` を呼び出すこと。
 
-進行後に [XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) が存在する場合や、[マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task) の場合などに、
-分岐や完了の業務ロジックを柔軟に設計できるように、 [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) や [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#completioncondition) の実装クラスに
+進行後に [XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#xorゲートウェイ) が存在する場合や、[マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#マルチインスタンスタスク) の場合などに、
+分岐や完了の業務ロジックを柔軟に設計できるように、 [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#ゲートウェイの進行先ノードの判定制御) や [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#マルチインスタンスタスクの終了判定) の実装クラスに
 パラメータを渡すことができる。
 
 **メソッド詳細**
 
 ワークフローの進行処理を行う。
 
-[ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) や [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#completioncondition) で使用するパラメータ（必要な場合のみ）
+[ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#ゲートウェイの進行先ノードの判定制御) や [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#マルチインスタンスタスクの終了判定) で使用するパラメータ（必要な場合のみ）
 
 処理対象ユーザまたはグループを識別するIDを指定する。
 
@@ -139,12 +139,12 @@ workflow.completeGroupTask(parameter, groupId);
 
 ### 境界イベントによるワークフローの進行
 
-[境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-boundary-event) を発生させて、タスクを中断してワークフローを進行させるためには、
+[境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#境界イベント) を発生させて、タスクを中断してワークフローを進行させるためには、
 `please.change.me.workflow.WorkflowInstance` の `triggerEvent` メソッドを使用する。
 
-ワークフローの進行 と同様、分岐の業務ロジックを柔軟に設計できるように、 [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) の
+ワークフローの進行 と同様、分岐の業務ロジックを柔軟に設計できるように、 [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#ゲートウェイの進行先ノードの判定制御) の
 実装クラスにパラメータを渡すことができる。なお、 ワークフローの進行 とは異なり、
-`triggerEvent` によってタスクが中断された場合、 [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#completioncondition) は行われない。
+`triggerEvent` によってタスクが中断された場合、 [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#マルチインスタンスタスクの終了判定) は行われない。
 
 **メソッド詳細**
 
@@ -152,7 +152,7 @@ workflow.completeGroupTask(parameter, groupId);
 
 境界イベントトリガーID
 
-[ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) で使用するパラメータ（必要な場合のみ）
+[ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#ゲートウェイの進行先ノードの判定制御) で使用するパラメータ（必要な場合のみ）
 
 **実装例**
 
@@ -167,7 +167,7 @@ workflow.triggerEvent(CANCEL_TRIGGER);
 ### ユーザ/グループの割り当て
 
 タスクに対するユーザ/グループの割り当ては、 `please.change.me.workflow.WorkflowInstance` の
-[ユーザ割り当てメソッド](../../extension/workflow/workflow-WorkflowApplicationApi.md#assignuser) および グループ割り当てメソッド を使用して行う。
+[ユーザ割り当てメソッド](../../extension/workflow/workflow-WorkflowApplicationApi.md#ユーザグループの割り当て) および グループ割り当てメソッド を使用して行う。
 
 タスクに対してユーザ/グループの割り当てを実行した場合、今までそのタスクに割り当てられていたユーザ及びグループの情報は削除され、
 今回指定したユーザ/グループのみが割り当てられた状態となる。
@@ -183,7 +183,7 @@ workflow.triggerEvent(CANCEL_TRIGGER);
 指定したタスクに対して、指定したユーザ/グループを割り当てる。
 
 非マルチインスタンスのタスクに対して、複数のユーザ/グループを指定した場合はエラーとなる。
-**順次** [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task) の場合、
+**順次** [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#マルチインスタンスタスク) の場合、
 本メソッドに指定したユーザの順に、ユーザ/グループがタスクを実行する必要がある。
 
 ユーザ/グループを割り当てる対象のタスクID
@@ -198,7 +198,7 @@ workflow.triggerEvent(CANCEL_TRIGGER);
 
 指定したレーンに属する全てのタスクに対して、指定したユーザ/グループ一覧を割り当てる。
 
-ユーザ/グループのリストの指定方法の詳細は、 [タスクへのユーザ/グループ一覧の割り当て](../../extension/workflow/workflow-WorkflowApplicationApi.md#assignusers) を参照。
+ユーザ/グループのリストの指定方法の詳細は、 [タスクへのユーザ/グループ一覧の割り当て](../../extension/workflow/workflow-WorkflowApplicationApi.md#ユーザグループの割り当て) を参照。
 
 ユーザ/グループを割り当てる対象のレーンID
 
@@ -302,7 +302,7 @@ if (workflow.hasActiveUserTask("0000000001")) {
 
 ワークフローの進行 後に、ワークフローが完了したか否かを問い合わせることができる。
 
-ワークフローが完了状態となると、本機能で管理している [データ](../../extension/workflow/workflow-WorkflowArchitecture.md#instancetable) は削除される。
+ワークフローが完了状態となると、本機能で管理している [データ](../../extension/workflow/workflow-WorkflowArchitecture.md#ワークフローの進行状態を管理するテーブル) は削除される。
 このため、ワークフローが完了したかの問い合わせは、 ワークフローの進行  と同一トランザクション内のみに限られる。
 (他トランザクションからは、完了状態のワークフローインスタンスを取得することはできない。)
 
@@ -358,9 +358,9 @@ if (version == 1) {
 
 ## ゲートウェイの進行先ノードの判定制御
 
-[XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) を使用した場合、次のフローノード(タスクやイベントなど)のフロー定義が複数存在する。
+[XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#xorゲートウェイ) を使用した場合、次のフローノード(タスクやイベントなど)のフロー定義が複数存在する。
 
-本機能では、 ワークフローの進行 で指定されたパラメータと、 [シーケンスフロー](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-sequence-flows) に対して設定された
+本機能では、 ワークフローの進行 で指定されたパラメータと、 [シーケンスフロー](../../extension/workflow/workflow-WorkflowProcessElement.md#シーケンスフロー) に対して設定された
 フロー進行条件( `please.change.me.workflow.condition.FlowProceedCondition` の実装クラス ) を使用して、
 遷移先のフローノードを判断する。
 
@@ -371,7 +371,7 @@ if (version == 1) {
 
 本インタフェースには、シーケンスフローへ進行可能かを判断するための `isMatch` メソッドが定義されている。
 
-ワークフローライブラリでは、 ワークフローの進行 の際に [XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) での分岐が存在すると、
+ワークフローライブラリでは、 ワークフローの進行 の際に [XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#xorゲートウェイ) での分岐が存在すると、
 そのXORゲートウェイから流出するシーケンスフローそれぞれに対して、設定されているフロー進行条件の `isMatch` を評価し、
 `true` を返却したシーケンスフローに従ってワークフローを進行させる。
 
@@ -462,7 +462,7 @@ workflow.completeUserTask(parameter);
 
 ## マルチインスタンス・タスクの終了判定
 
-[マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task) （複数のユーザやグループが割り当て可能なタスク)の場合、タスクを終了させるための条件が必要となる。
+[マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#マルチインスタンスタスク) （複数のユーザやグループが割り当て可能なタスク)の場合、タスクを終了させるための条件が必要となる。
 例えば、複数ユーザが割り当てられているタスクで2人がタスクの実行(承認行為などのこと)を行えば、タスクを終了する等の定義が必要となる。
 
 終了判定は、タスクに対して設定された終了条件( `please.change.me.workflow.condition.CompletionCondition` の実装クラス)を用いて行う。

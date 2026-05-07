@@ -16,11 +16,11 @@
 | プロジェクト種別 | Mavenプロジェクト |
 | プロジェクト構成 | 単一プロジェクト構成 |
 | 使用DB | H2 Databaes Engine(アプリケーションに組み込み) |
-| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * Nablarchバッチアプリケーション用の基本的な設定 * 疎通確認用の都度起動バッチアプリケーション * 疎通確認用のテーブルをキューとして使ったメッセージング * メール送信バッチの設定  [1] * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#about-maven-parent-module) を参照することによって取り込んでいる)。 |
+| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * Nablarchバッチアプリケーション用の基本的な設定 * 疎通確認用の都度起動バッチアプリケーション * 疎通確認用のテーブルをキューとして使ったメッセージング * メール送信バッチの設定  [1] * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#nablarch-archetype-parent親プロジェクト) を参照することによって取り込んでいる)。 |
 
-メール送信バッチは、[常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#nablarch-batch-resident-batch)  として動作し、SMTPサーバに対してメールを送信するものである。
+メール送信バッチは、[常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#アーキテクチャ概要)  として動作し、SMTPサーバに対してメールを送信するものである。
 コンポーネント設定ファイルのサンプルは `src/main/resources/mail-sender-boot.xml` に存在する。
-メール送信バッチは初期環境構築時には必要ないが、必要になったタイミングで [メール送信](../../component/libraries/libraries-mail.md#mail) の解説を読んだ上で使用する。
+メール送信バッチは初期環境構築時には必要ないが、必要になったタイミングで [メール送信](../../component/libraries/libraries-mail.md#メール送信) の解説を読んだ上で使用する。
 
 他のプロジェクトとの関係、及びディレクトリ構成は、 [Mavenアーキタイプの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md) を参照。
 
@@ -79,7 +79,7 @@ mvn archetype:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArti
 
 ## 疎通確認
 
-疎通確認の仕組みや手順は通常のNablarchバッチプロジェクトと同じなので、 [Nablarchバッチプロジェクトの初期セットアップ手順](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepbatchstartuptest) を参照。
+疎通確認の仕組みや手順は通常のNablarchバッチプロジェクトと同じなので、 [Nablarchバッチプロジェクトの初期セットアップ手順](../../setup/blank-project/blank-project-setup-NablarchBatch.md#疎通確認都度起動バッチ) を参照。
 
 > **Note:**
 > アーティファクトID が `myapp-container-batch` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。
@@ -165,8 +165,8 @@ cd myapp-container-batch
 docker run --rm -v %CD%\\h2:/h2 -v %CD%\\src\\main\\format:/var/nablarch/format -v %CD%\\work\\output:/var/nablarch/output --name myapp-container-batch myapp-container-batch:latest -diConfig classpath:batch-boot.xml -requestPath SampleBatch -userId batch_user
 ```
 
-動作は [疎通確認(都度起動バッチ)](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepbatchstartuptest) と同じである。
-起動に成功すると、[都度起動バッチアプリケーションの起動](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepbatchexecondemandbatch) と同様なログがコンソールに出力される。
+動作は [疎通確認(都度起動バッチ)](../../setup/blank-project/blank-project-setup-NablarchBatch.md#疎通確認都度起動バッチ) と同じである。
+起動に成功すると、[都度起動バッチアプリケーションの起動](../../setup/blank-project/blank-project-setup-NablarchBatch.md#都度起動バッチアプリケーションの起動) と同様なログがコンソールに出力される。
 
 ### テーブルをキューとして使ったメッセージング
 
@@ -175,8 +175,8 @@ cd myapp-container-batch
 docker run -it --rm -v %CD%\\h2:/h2 --name myapp-container-batch myapp-container-batch:latest -diConfig classpath:resident-batch-boot.xml -requestPath SampleResiBatch -userId batch_user
 ```
 
-動作は [疎通確認(テーブルをキューとして使ったメッセージング)](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepbatchstartuptestdbmessagingbatch) と同じである。
-起動に成功すると、[アプリケーションの起動](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepbatchexecdbmessagingbatch) と同様なログがコンソールに出力される。
+動作は [疎通確認(テーブルをキューとして使ったメッセージング)](../../setup/blank-project/blank-project-setup-NablarchBatch.md#疎通確認テーブルをキューとして使ったメッセージング) と同じである。
+起動に成功すると、[アプリケーションの起動](../../setup/blank-project/blank-project-setup-NablarchBatch.md#アプリケーションの起動) と同様なログがコンソールに出力される。
 待機状態となるので、確認後はctrl+c等で強制終了させる。
 
 ## 補足
@@ -187,8 +187,8 @@ docker run -it --rm -v %CD%\\h2:/h2 --name myapp-container-batch myapp-container
   また、 `-rmオプション` により、コンテナ終了時に、コンテナを自動削除するようにしている。
 * 上記コマンドは、データベースとしてブランクプロジェクトにあらかじめ組み込んでいるSAMPLE.h2.dbを使用する場合の例となっている。
   SAMPLE.h2.dbを使用しない場合は、`%CD%\\h2:/h2` のボリュームの指定(`-v`)は不要になる。
-* [都度起動バッチ](../../setup/blank-project/blank-project-setup-ContainerBatch.md#firststepcontainerbatchstartupinnerbatchondemand) では上記に加えてブランクプロジェクトの `./work/format` , `./work/output` のディレクトリをコンテナにマウントしている。
-* [テーブルをキューとして使ったメッセージング](../../setup/blank-project/blank-project-setup-ContainerBatch.md#firststepcontainerbatchstartupinnerbatchdbmessaging) においてもdockerコマンドの `-itオプション` は省略できるが、ホスト側からのctrl+cでバッチを強制終了できなくなる。
+* [都度起動バッチ](../../setup/blank-project/blank-project-setup-ContainerBatch.md#都度起動バッチ) では上記に加えてブランクプロジェクトの `./work/format` , `./work/output` のディレクトリをコンテナにマウントしている。
+* [テーブルをキューとして使ったメッセージング](../../setup/blank-project/blank-project-setup-ContainerBatch.md#テーブルをキューとして使ったメッセージング) においてもdockerコマンドの `-itオプション` は省略できるが、ホスト側からのctrl+cでバッチを強制終了できなくなる。
   その場合は、以下のコマンドにてコンテナを終了させればよい。
 
   ```text
@@ -197,7 +197,7 @@ docker run -it --rm -v %CD%\\h2:/h2 --name myapp-container-batch myapp-container
 
 Docker環境について
 
-Dockerの実行は、Docker Desktopを使用していることを [前提](../../setup/blank-project/blank-project-beforeFirstStep.md#firststeppreamble) としている。
+Dockerの実行は、Docker Desktopを使用していることを [前提](../../setup/blank-project/blank-project-beforeFirstStep.md#初期セットアップの前提) としている。
 Docker Toolboxを使用している場合は、上記例のボリューム指定ではエラーになる。
 
 Docker Toolboxを使用している場合、DockerはVirtualBox上のVMで動いている。

@@ -13,21 +13,21 @@
 | package:: `please.change.me.workflow`  interface:: `WorkflowInstance` | [ワークフローインスタンス](../../extension/workflow/workflow-WorkflowInstanceElement.md) をあらわすインタフェース。  業務アプリケーションは、本インタフェースを通じてワークフローの進行や担当者（グループ）の割り当て等を行う。 |
 | package:: `please.change.me.workflow`  interface:: `WorkflowInstanceFactory` | WorkflowInstance を生成するインタフェース。 |
 | package:: `please.change.me.workflow.definition.loader`  interface:: `WorkflowDefinitionLoader` | ワークフロー定義 を読み込むインタフェース。 |
-| package:: `please.change.me.workflow.condition`  interface:: `CompletionCondition` | [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) の終了条件を定義するインタフェース。  本インタフェースの詳細及び本サンプルで提供する実装クラスの一覧は、 [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#completioncondition) を参照。 |
-| package:: `please.change.me.workflow.condition`  interface:: `FlowProceedCondition` | [シーケンスフロー](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-sequence-flows) のフロー進行条件を定義する インタフェース。  本インタフェースの詳細及び本サンプルで提供する実装クラスの一覧は、 [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) を参照。 |
+| package:: `please.change.me.workflow.condition`  interface:: `CompletionCondition` | [タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#タスク) の終了条件を定義するインタフェース。  本インタフェースの詳細及び本サンプルで提供する実装クラスの一覧は、 [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#マルチインスタンスタスクの終了判定) を参照。 |
+| package:: `please.change.me.workflow.condition`  interface:: `FlowProceedCondition` | [シーケンスフロー](../../extension/workflow/workflow-WorkflowProcessElement.md#シーケンスフロー) のフロー進行条件を定義する インタフェース。  本インタフェースの詳細及び本サンプルで提供する実装クラスの一覧は、 [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#ゲートウェイの進行先ノードの判定制御) を参照。 |
 
 ### クラス定義
 
 | クラス名 | 概要 |
 |---|---|
-| package:: `please.change.me.workflow`  class:: `WorkflowManager` | ワークフローインスタンスの開始や検索を行うクラス。  WorkflowInstanceFactory を使用して WorkflowInstance を生成する。 WorkflowInstanceFactory の実装クラスは、 [コンポーネント定義](../../extension/workflow/workflow-WorkflowArchitecture.md#workflowcomponentdefinition) に定義されているクラスを使用する。 |
+| package:: `please.change.me.workflow`  class:: `WorkflowManager` | ワークフローインスタンスの開始や検索を行うクラス。  WorkflowInstanceFactory を使用して WorkflowInstance を生成する。 WorkflowInstanceFactory の実装クラスは、 [コンポーネント定義](../../extension/workflow/workflow-WorkflowArchitecture.md#コンポーネント定義) に定義されているクラスを使用する。 |
 | package:: `please.change.me.workflow`  class:: `BasicWorkflowInstance` | WorkflowInstance の基本実装クラス。 |
-| package:: `please.change.me.workflow`  class:: `CompletedWorkflowInstance` | 完了状態のワークフローインスタンスをあらわす、 WorkflowInstance の実装クラス。  [開始済みワークフローの検索](../../extension/workflow/workflow-WorkflowApplicationApi.md#workflow-api-find) で、対象インスタンスが見つからず、完了状態のワークフローインスタンスが必要な場合に利用される。 |
+| package:: `please.change.me.workflow`  class:: `CompletedWorkflowInstance` | 完了状態のワークフローインスタンスをあらわす、 WorkflowInstance の実装クラス。  [開始済みワークフローの検索](../../extension/workflow/workflow-WorkflowApplicationApi.md#開始済みワークフローの検索) で、対象インスタンスが見つからず、完了状態のワークフローインスタンスが必要な場合に利用される。 |
 | package:: `please.change.me.workflow`  class:: `BasicWorkflowInstanceFactory` | WorkflowInstanceFactory の実装クラスで、 BasicWorkflowInstance を生成する。 |
-| package:: `please.change.me.workflow`  class:: `WorkflowConfig` | ワークフローのコンポーネント設定情報を保持するクラス。  コンポーネント定義の詳細は、 [コンポーネント定義](../../extension/workflow/workflow-WorkflowArchitecture.md#workflowcomponentdefinition) を参照。 |
+| package:: `please.change.me.workflow`  class:: `WorkflowConfig` | ワークフローのコンポーネント設定情報を保持するクラス。  コンポーネント定義の詳細は、 [コンポーネント定義](../../extension/workflow/workflow-WorkflowArchitecture.md#コンポーネント定義) を参照。 |
 | package:: `please.change.me.workflow.util`  class:: `WorkflowUtil` | ワークフロー機能で使用するユーティリティメソッドを提供するクラス。 |
-| package:: `please.change.me.workflow.definition.loader`  class:: `DatabaseWorkflowDefinitionLoader` | WorkflowDefinitionLoader の実装クラスで、 [データベース](../../extension/workflow/workflow-WorkflowArchitecture.md#definitiontable) から ワークフロー定義 を読み込むクラス。  テーブル定義(テーブル名やカラム名)は、 WorkflowDefinitionSchema から取得する。 |
-| package:: `please.change.me.workflow.definition.loader`  class:: `WorkflowDefinitionSchema` | [ワークフローの定義情報を保持するテーブル](../../extension/workflow/workflow-WorkflowArchitecture.md#definitiontable) の テーブル名やカラム名情報を保持するクラス。 |
+| package:: `please.change.me.workflow.definition.loader`  class:: `DatabaseWorkflowDefinitionLoader` | WorkflowDefinitionLoader の実装クラスで、 [データベース](../../extension/workflow/workflow-WorkflowArchitecture.md#ワークフローの定義情報を格納するテーブル) から ワークフロー定義 を読み込むクラス。  テーブル定義(テーブル名やカラム名)は、 WorkflowDefinitionSchema から取得する。 |
+| package:: `please.change.me.workflow.definition.loader`  class:: `WorkflowDefinitionSchema` | [ワークフローの定義情報を保持するテーブル](../../extension/workflow/workflow-WorkflowArchitecture.md#ワークフローの定義情報を格納するテーブル) の テーブル名やカラム名情報を保持するクラス。 |
 | package:: `please.change.me.workflow.definition`  class:: `WorkflowDefinitionHolder` | ワークフロー定義ローダー から読み込んだ ワークフロー定義 を保持するクラス。  本クラスで保持しているワークフロー定義は、以下の方法で取得できる。  * ワークフローIDに対応する適用期間内の最新（バージョン番号が最も大きい）のワークフロー定義 * ワークフローIDとバージョン番号に対応するワークフロー定義 |
 | package:: `please.change.me.workflow.definition`  class:: `WorkflowDefinition` | ワークフロー定義を保持するクラス。  以下の定義情報を保持する。  * レーン定義情報 * タスク定義情報 * イベント定義情報 * ゲートウェイ定義情報 * 境界イベント定義情報 * シーケンスフロー定義情報 |
 | package:: `please.change.me.workflow.definition`  class:: `Lane` | レーン定義情報を保持する。 |
@@ -37,8 +37,8 @@
 | package:: `please.change.me.workflow.definition`  class:: `Gateway` | フローノード定義 のサブクラスでゲートウェイ定義情報を保持する。 |
 | package:: `please.change.me.workflow.definition`  class:: `BoundaryEvent` | フローノード定義 のサブクラスで境界イベント定義情報を保持する。 |
 | package:: `please.change.me.workflow.definition`  class:: `SequenceFlow` | シーケンスフロー定義を保持するクラス。 |
-| package:: `please.change.me.workflow.dao`  class::`WorkflowInstanceDao` | [ワークフローの進行状態を管理するテーブル](../../extension/workflow/workflow-WorkflowArchitecture.md#instancetable) にアクセスするデータベースアクセスクラス。  テーブル定義(テーブル名やカラム名)は、 workflowInstanceSchema から取得する。  本クラスは、各テーブルのデータベースアクセスクラス（以下のクラス）に対して処理を移譲する。  * InstanceDao(ワークフローインスタンステーブル) * InstanceFlowNodeDao(インスタンスフローノードテーブル) * TaskAssignedUserDao(タスク担当ユーザテーブル) * TaskAssignedGroupDao(タスク担当グループテーブル) * ActiveFlowNodeDao(アクティブフローノードテーブル) * ActiveUserTaskDao(アクティブユーザタスクテーブル) * ActiveGroupTaskDao(アクティブグループタスクテーブル)  データの取得処理を提供するデータベースアクセスクラスでは、取得結果をテーブルに対応するエンティティクラスで返却する。 エンティティクラスは以下のとおり。  * WorkflowInstanceEntity(ワークフローインスタンスエンティティ) * TaskAssignedUserEntity(タスク担当ユーザエンティティ) * TaskAssignedGroupEntity(タスク担当グループエンティティ) * ActiveFlowNodeEntity(アクティブフローノードエンティティ) * ActiveUserTaskEntity(アクティブユーザタスクエンティティ) * ActiveGroupTaskEntity(アクティブグループタスクエンティティ) |
-| package:: `please.change.me.workflow.dao`  class:: `WorkflowInstanceSchema` | [ワークフローの進行状態を管理するテーブル](../../extension/workflow/workflow-WorkflowArchitecture.md#instancetable) のテーブル名やカラム名を保持するクラス。 |
+| package:: `please.change.me.workflow.dao`  class::`WorkflowInstanceDao` | [ワークフローの進行状態を管理するテーブル](../../extension/workflow/workflow-WorkflowArchitecture.md#ワークフローの進行状態を管理するテーブル) にアクセスするデータベースアクセスクラス。  テーブル定義(テーブル名やカラム名)は、 workflowInstanceSchema から取得する。  本クラスは、各テーブルのデータベースアクセスクラス（以下のクラス）に対して処理を移譲する。  * InstanceDao(ワークフローインスタンステーブル) * InstanceFlowNodeDao(インスタンスフローノードテーブル) * TaskAssignedUserDao(タスク担当ユーザテーブル) * TaskAssignedGroupDao(タスク担当グループテーブル) * ActiveFlowNodeDao(アクティブフローノードテーブル) * ActiveUserTaskDao(アクティブユーザタスクテーブル) * ActiveGroupTaskDao(アクティブグループタスクテーブル)  データの取得処理を提供するデータベースアクセスクラスでは、取得結果をテーブルに対応するエンティティクラスで返却する。 エンティティクラスは以下のとおり。  * WorkflowInstanceEntity(ワークフローインスタンスエンティティ) * TaskAssignedUserEntity(タスク担当ユーザエンティティ) * TaskAssignedGroupEntity(タスク担当グループエンティティ) * ActiveFlowNodeEntity(アクティブフローノードエンティティ) * ActiveUserTaskEntity(アクティブユーザタスクエンティティ) * ActiveGroupTaskEntity(アクティブグループタスクエンティティ) |
+| package:: `please.change.me.workflow.dao`  class:: `WorkflowInstanceSchema` | [ワークフローの進行状態を管理するテーブル](../../extension/workflow/workflow-WorkflowArchitecture.md#ワークフローの進行状態を管理するテーブル) のテーブル名やカラム名を保持するクラス。 |
 
 ## テーブル定義
 
@@ -66,7 +66,7 @@
 
 **レーンテーブルの定義**
 
-ワークフローの [レーン](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-lane) を管理するテーブル。
+ワークフローの [レーン](../../extension/workflow/workflow-WorkflowProcessElement.md#レーン) を管理するテーブル。
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
@@ -77,7 +77,7 @@
 
 **フローノードテーブルの定義**
 
-[フローノード](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-flow-node) の定義を管理するテーブル。
+[フローノード](../../extension/workflow/workflow-WorkflowProcessElement.md#フローノード) の定義を管理するテーブル。
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
@@ -88,41 +88,41 @@
 
 **タスクテーブルの定義**
 
-[タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task) の定義を管理するテーブル。
+[タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#タスク) の定義を管理するテーブル。
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
 | ワークフローID | java.lang.String | PK |
 | バージョン | java.lang.Integer (int) | PK |
 | フローノードID | java.lang.String | PK |
-| マルチインスタンス種別 | java.lang.String | 以下の値が格納される。  * NONE([タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-task)) * SEQUENTIAL(順次 [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task)) * PARALLEL(並行 [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task)) |
-| 完了条件 | java.lang.String | `please.change.me.workflow.condition.CompletionCondition` の実装クラスをFQCNで登録する。  `CompletionCondition` の詳細は [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#completioncondition) を参照 |
+| マルチインスタンス種別 | java.lang.String | 以下の値が格納される。  * NONE([タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#タスク)) * SEQUENTIAL(順次 [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#マルチインスタンスタスク)) * PARALLEL(並行 [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#マルチインスタンスタスク)) |
+| 完了条件 | java.lang.String | `please.change.me.workflow.condition.CompletionCondition` の実装クラスをFQCNで登録する。  `CompletionCondition` の詳細は [マルチインスタンス・タスクの終了判定](../../extension/workflow/workflow-WorkflowApplicationApi.md#マルチインスタンスタスクの終了判定) を参照 |
 
 **イベントテーブルの定義**
 
-イベント([開始イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-event-start) 、 [停止イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-event-terminate))の定義を管理するテーブル。
+イベント([開始イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#開始イベント) 、 [停止イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#停止イベント))の定義を管理するテーブル。
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
 | ワークフローID | java.lang.String | PK |
 | バージョン | java.lang.Integer (int) | PK |
 | フローノードID | java.lang.String | PK |
-| イベント種別 | java.lant.String | 以下の値が格納される。  * START([開始イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-event-start)) * TERMINATE([停止イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-event-terminate)) |
+| イベント種別 | java.lant.String | 以下の値が格納される。  * START([開始イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#開始イベント)) * TERMINATE([停止イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#停止イベント)) |
 
 **ゲートウェイテーブル定義**
 
-[XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor) の定義を管理するテーブル。
+[XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#xorゲートウェイ) の定義を管理するテーブル。
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
 | ワークフローID | java.lang.String | PK |
 | バージョン | java.lang.Integer (int) | PK |
 | フローノードID | java.lang.String | PK |
-| ゲートウェイ種別 | java.lant.String | 以下の値が格納される。  * EXCLUSIVE([XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-gateway-xor)) |
+| ゲートウェイ種別 | java.lant.String | 以下の値が格納される。  * EXCLUSIVE([XORゲートウェイ](../../extension/workflow/workflow-WorkflowProcessElement.md#xorゲートウェイ)) |
 
 **境界イベントテーブル定義**
 
-[境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-boundary-event) の定義を管理するテーブル。
+[境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#境界イベント) の定義を管理するテーブル。
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
@@ -134,7 +134,7 @@
 
 **境界イベントトリガーテーブル定義**
 
-境界イベントトリガーの定義を管理するテーブル。境界イベントトリガーについては、 [境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-boundary-event) を参照。
+境界イベントトリガーの定義を管理するテーブル。境界イベントトリガーについては、 [境界イベント](../../extension/workflow/workflow-WorkflowProcessElement.md#境界イベント) を参照。
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
@@ -145,7 +145,7 @@
 
 **シーケンスフローテーブル定義**
 
-[シーケンスフロー](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-sequence-flows) の定義を管理するテーブル。
+[シーケンスフロー](../../extension/workflow/workflow-WorkflowProcessElement.md#シーケンスフロー) の定義を管理するテーブル。
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
@@ -154,7 +154,7 @@
 | シーケンスフローID | java.lang.String | PK |
 | 接続元フローノードID | java.lang.String |  |
 | 接続先フローノードID | java.lang.String |  |
-| フロー進行条件 | java.lang.String | `please.change.me.workflow.condition.FlowProceedCondition` の実装クラス名をFQCNで登録する。  `FlowProceedCondition` の詳細は [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#flowproceedcondition) を参照 |
+| フロー進行条件 | java.lang.String | `please.change.me.workflow.condition.FlowProceedCondition` の実装クラス名をFQCNで登録する。  `FlowProceedCondition` の詳細は [ゲートウェイの進行先ノードの判定制御](../../extension/workflow/workflow-WorkflowApplicationApi.md#ゲートウェイの進行先ノードの判定制御) を参照 |
 | シーケンスフロー名 | java.lang.String |  |
 
 #### テーブル定義の例
@@ -194,34 +194,34 @@
 
 タスクに割り当てられた担当ユーザを管理するテーブル。 [1]
 
-タスクへの担当ユーザの割り当てについては [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-task-assignee) を参照。
+タスクへの担当ユーザの割り当てについては [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#タスク担当ユーザタスク担当グループ) を参照。
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
 | インスタンスID | java.lang.String | PK |
 | フローノードID | java.lang.String | PK |
 | 担当ユーザID | java.lang.String | PK |
-| 実行順 | java.lang.Integer (int) | **順次** [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task) の場合に ユーザの処理実行順を管理するために使用する。  非マルチインスタンスタスクや並行 [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task) の場合には、 本属性値は使用しない。 |
+| 実行順 | java.lang.Integer (int) | **順次** [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#マルチインスタンスタスク) の場合に ユーザの処理実行順を管理するために使用する。  非マルチインスタンスタスクや並行 [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#マルチインスタンスタスク) の場合には、 本属性値は使用しない。 |
 
 **タスク担当グループテーブル**
 
 タスクに割り当てられた担当グループを管理するテーブル。 [1]
 
-タスクへの担当グループの割り当てについては [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-task-assignee) を参照。
+タスクへの担当グループの割り当てについては [タスク担当ユーザ/タスク担当グループ](../../extension/workflow/workflow-WorkflowInstanceElement.md#タスク担当ユーザタスク担当グループ) を参照。
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
 | インスタンスID | java.lang.String | PK |
 | フローノードID | java.lang.String | PK |
 | 担当グループID | java.lang.String | PK |
-| 実行順 | java.lang.Integer (int) | **順次** [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task) の場合に ユーザの処理実行順を管理するために使用する。  非マルチインスタンスタスクや並行 [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#workflow-element-multi-instance-task) の場合には、 本属性値は使用しない。 |
+| 実行順 | java.lang.Integer (int) | **順次** [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#マルチインスタンスタスク) の場合に ユーザの処理実行順を管理するために使用する。  非マルチインスタンスタスクや並行 [マルチインスタンス・タスク](../../extension/workflow/workflow-WorkflowProcessElement.md#マルチインスタンスタスク) の場合には、 本属性値は使用しない。 |
 
 同一フローノードに対しては、ユーザかグループの一方のみの割り当てとなる。
 このため、同一フローノードに対して、ユーザとグループの両方のデータが存在することはない。
 
 **アクティブフローノードテーブル**
 
-[アクティブフローノード](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-active-flow-node) の情報を保持するテーブル
+[アクティブフローノード](../../extension/workflow/workflow-WorkflowInstanceElement.md#アクティブフローノード) の情報を保持するテーブル
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
@@ -232,27 +232,27 @@
 
 ユーザが実行可能なタスクを管理するテーブル。
 
-ユーザが実行可能なタスク（アクティブユーザタスク）については、 [アクティブユーザタスク/アクティブグループタスク](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-active-task) を参照。
+ユーザが実行可能なタスク（アクティブユーザタスク）については、 [アクティブユーザタスク/アクティブグループタスク](../../extension/workflow/workflow-WorkflowInstanceElement.md#アクティブユーザタスクアクティブグループタスク) を参照。
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
 | インスタンスID | java.lang.String | PK |
 | フローノードID | java.lang.String | PK |
 | 担当ユーザID | java.lang.String | PK |
-| 実行順 | java.lang.Integer (int) | [タスク担当ユーザテーブル](../../extension/workflow/workflow-WorkflowArchitecture.md#assign-user) を参照 |
+| 実行順 | java.lang.Integer (int) | [タスク担当ユーザテーブル](../../extension/workflow/workflow-WorkflowArchitecture.md#ワークフローの進行状態を管理するテーブル) を参照 |
 
 **アクティブグループタスクテーブル**
 
 グループが実行可能なタスクを管理するテーブル。
 
-グループが実行可能なタスク（アクティブグループタスク）については、 [アクティブユーザタスク/アクティブグループタスク](../../extension/workflow/workflow-WorkflowInstanceElement.md#workflow-active-task) を参照。
+グループが実行可能なタスク（アクティブグループタスク）については、 [アクティブユーザタスク/アクティブグループタスク](../../extension/workflow/workflow-WorkflowInstanceElement.md#アクティブユーザタスクアクティブグループタスク) を参照。
 
 | 定義 | Javaの型 | 制約など |
 |---|---|---|
 | インスタンスID | java.lang.String | PK |
 | フローノードID | java.lang.String | PK |
 | 担当グループID | java.lang.String | PK |
-| 実行順 | java.lang.Integer (int) | [タスク担当グループテーブル](../../extension/workflow/workflow-WorkflowArchitecture.md#assign-group) を参照 |
+| 実行順 | java.lang.Integer (int) | [タスク担当グループテーブル](../../extension/workflow/workflow-WorkflowArchitecture.md#ワークフローの進行状態を管理するテーブル) を参照 |
 
 #### テーブル定義の例
 

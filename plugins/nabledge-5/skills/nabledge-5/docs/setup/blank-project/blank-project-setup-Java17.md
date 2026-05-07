@@ -14,7 +14,7 @@ Java 11で、JAXBなど一部のモジュールが標準ライブラリから削
 削除されたモジュールは明示的に依存関係に追加する必要がある。
 このため、作成したブランクプロジェクトのPOMに以下のモジュールを追加する。
 
-なお、 [Java 11 の依存モジュールの追加](../../setup/blank-project/blank-project-setup-Java11.md#setup-blank-project-for-java11-add-dependencies) とは、以下2点の違いがある。
+なお、 [Java 11 の依存モジュールの追加](../../setup/blank-project/blank-project-setup-Java11.md#依存モジュールの追加) とは、以下2点の違いがある。
 
 * `jaxb-impl` のバージョンに `2.3.5` を指定する
 

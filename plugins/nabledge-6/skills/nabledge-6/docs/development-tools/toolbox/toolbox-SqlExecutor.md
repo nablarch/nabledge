@@ -80,7 +80,7 @@ PJにおいて設計者がSQLを設計する際などに使用する。
 * DATETIMEリテラルを条件とした検索ができない。
 
 > **Tip:**
-> Nablarchでは2-way SQLとしてSQLを記述できる [Doma(外部サイト、英語)](https://doma.readthedocs.io/en/stable/) 用の [アダプタ](../../component/adapters/adapters-doma-adaptor.md#doma-adaptor) を提供している。
+> Nablarchでは2-way SQLとしてSQLを記述できる [Doma(外部サイト、英語)](https://doma.readthedocs.io/en/stable/) 用の [アダプタ](../../component/adapters/adapters-doma-adaptor.md#domaアダプタ) を提供している。
 
 > Domaを使用した場合、本ツールのような複雑なツールのセットアップを行わなくても、本番環境用に定義したSQLを簡単にテスト実行出来る。
 > (動的な条件を構築するような場合でも、SQLを書き換えることなく実行できる)
@@ -96,7 +96,7 @@ PJにおいて設計者がSQLを設計する際などに使用する。
 * FirefoxまたはChromeがインストール済みであること。
 * Nablarchの開発環境が設定済みであること。
 * Maven Central RepositoryにJDBCドライバが存在しないRDBMSを使用する場合は、Project Local RepositoryまたはLocal RepositoryにJDBCドライバを登録済みであること。
-  登録方法は、[Mavenリポジトリへのファイル登録](../../setup/blank-project/blank-project-CustomizeDB.md#customizedbaddfilemavenrepo) を参照。
+  登録方法は、[Mavenリポジトリへのファイル登録](../../setup/blank-project/blank-project-CustomizeDB.md#mavenリポジトリへのファイル登録) を参照。
 
 ### ソースコード取得
 
@@ -305,7 +305,7 @@ target直下に作成されたsql-executor-distribution.zipを配布すること
 ツールを使用するための前提条件を以下に示す。
 
 * PJで使用されるバージョンのJavaがインストール済みであること。
-* [DB設定変更](../../development-tools/toolbox/toolbox-SqlExecutor.md#db-settings) で設定したDBに接続可能であること。
+* [DB設定変更](../../development-tools/toolbox/toolbox-SqlExecutor.md#db設定変更) で設定したDBに接続可能であること。
 * FirefoxまたはChromeがインストール済みであること。
 
 ### 配布されたファイルの起動

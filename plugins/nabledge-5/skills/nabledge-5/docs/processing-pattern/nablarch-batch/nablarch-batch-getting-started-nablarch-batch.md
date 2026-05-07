@@ -36,11 +36,11 @@ $mvn exec:java -Dexec.mainClass=nablarch.fw.launcher.Main ^
 ## ファイルをDBに登録する
 
 ファイルをDBに登録するバッチの作成方法について、
-[入力データソースからのデータ読み込み](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started-nablarch-batch.md#getting-started-nablarch-batch-read)
-と [業務ロジックの実行](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started-nablarch-batch.md#getting-started-nablarch-batch-business-action) に分けて解説する。
+[入力データソースからのデータ読み込み](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started-nablarch-batch.md#入力データソースからデータを読み込む)
+と [業務ロジックの実行](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started-nablarch-batch.md#業務ロジックを実行する) に分けて解説する。
 
-処理フローについては、 [Nablarchバッチの処理フロー](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#nablarch-batch-process-flow) を参照。
-責務配置については [Nablarchバッチの責務配置](../../processing-pattern/nablarch-batch/nablarch-batch-application-design.md#nablarch-batch-application-design) を参照。
+処理フローについては、 [Nablarchバッチの処理フロー](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#nablarchバッチアプリケーションの処理の流れ) を参照。
+責務配置については [Nablarchバッチの責務配置](../../processing-pattern/nablarch-batch/nablarch-batch-application-design.md#アプリケーションの責務配置) を参照。
 
 住所ファイル登録バッチのハンドラ構成については import-zip-code-file.xml を参照。
 
@@ -48,12 +48,12 @@ $mvn exec:java -Dexec.mainClass=nablarch.fw.launcher.Main ^
 
 入力データソースからデータを読み込む処理について解説する。
 
-1. [入力ファイルを受け付けるフォームの作成](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started-nablarch-batch.md#getting-started-nablarch-batch-form)
-2. [データリーダの作成](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started-nablarch-batch.md#getting-started-nablarch-batch-data-reader)
+1. [入力ファイルを受け付けるフォームの作成](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started-nablarch-batch.md#入力データソースからデータを読み込む)
+2. [データリーダの作成](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started-nablarch-batch.md#入力データソースからデータを読み込む)
 
 入力ファイルを受け付けるフォームを作成
 
-[データバインド](../../component/libraries/libraries-data-bind.md#data-bind) を用いてCSV(住所ファイル)をバインドするフォームを作成する。
+[データバインド](../../component/libraries/libraries-data-bind.md#データバインド) を用いてCSV(住所ファイル)をバインドするフォームを作成する。
 
 ZipCodeForm.java
 
@@ -102,7 +102,7 @@ public class ZipCodeForm {
 
 この実装のポイント
 
-* [データバインド](../../component/libraries/libraries-data-bind.md#data-bind) を用いてフォームにCSVをバインドするため、Csv
+* [データバインド](../../component/libraries/libraries-data-bind.md#データバインド) を用いてフォームにCSVをバインドするため、Csv
   及び CsvFormat を付与する。
 * [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を実施するために、バリデーション用のアノテーションを付与する。
 * 行数プロパティを定義し、ゲッタに LineNumber を付与することで、
@@ -204,7 +204,7 @@ public class ZipCodeFileReader implements DataReader<ZipCodeForm> {
 
 業務ロジックを実行する部分について解説する。
 
-1. [業務アクションの作成](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started-nablarch-batch.md#getting-started-nablarch-batch-action)
+1. [業務アクションの作成](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started-nablarch-batch.md#業務ロジックを実行する)
 
 業務アクションの作成
 

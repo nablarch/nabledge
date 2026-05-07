@@ -8,7 +8,7 @@
 
 ### 概要
 
-[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-ThreadContextHandler.md#threadcontexthandler) で設定したスレッドローカル上の変数を削除するハンドラである。
+[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-ThreadContextHandler.md#スレッドコンテキスト変数管理ハンドラ) で設定したスレッドローカル上の変数を削除するハンドラである。
 
 > **Note:**
 > 本ハンドラは極力手前側に配置すること。
@@ -35,13 +35,13 @@
 
 **2. (正常終了)**
 
-[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-ThreadContextHandler.md#threadcontexthandler) で設定したスレッドローカル上の変数を削除する。
+[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-ThreadContextHandler.md#スレッドコンテキスト変数管理ハンドラ) で設定したスレッドローカル上の変数を削除する。
 
 **[例外処理]**
 
 **1. (エラー終了)**
 
-後続ハンドラの処理中にエラーが発生した場合も、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-ThreadContextHandler.md#threadcontexthandler) で設定したスレッドローカル上の変数を削除する。
+後続ハンドラの処理中にエラーが発生した場合も、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-ThreadContextHandler.md#スレッドコンテキスト変数管理ハンドラ) で設定したスレッドローカル上の変数を削除する。
 
 ### 設定項目・拡張ポイント
 

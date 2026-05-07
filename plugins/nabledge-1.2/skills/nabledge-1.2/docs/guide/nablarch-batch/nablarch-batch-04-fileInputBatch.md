@@ -82,7 +82,7 @@ protected void initialize(CommandLine command, ExecutionContext context) {
 ```
 
 コマンドライン引数は、initilizeメソッドの引数で渡されるCommandLineから取得する。
-詳細は、 [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#about-commandline-argument) を参照。
+詳細は、 [コマンドライン引数](../../guide/nablarch-batch/nablarch-batch-02-basic.md#コマンドライン引数) を参照。
 
 初期化処理の実装は必須ではないが、以下のような場合には、
 initializeメソッドをオーバーライドすること。
@@ -384,7 +384,7 @@ public void onFileEnd(ExecutionContext ctx) {
 }
 ```
 
-writeLogメソッドについては「 [データベースを入力とするバッチ](../../guide/nablarch-batch/nablarch-batch-03-dbInputBatch.md) 」の [ログ出力](../../guide/nablarch-batch/nablarch-batch-03-dbInputBatch.md#log-output-in-batch-action) の項を参照。
+writeLogメソッドについては「 [データベースを入力とするバッチ](../../guide/nablarch-batch/nablarch-batch-03-dbInputBatch.md) 」の [ログ出力](../../guide/nablarch-batch/nablarch-batch-03-dbInputBatch.md#ログ出力) の項を参照。
 
 ## １件ごとの処理
 

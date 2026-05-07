@@ -11,9 +11,9 @@
 
 コードの品質と保守性を高めるために次の３つを実践する。
 
-* [Inspectionを行う](../../development-tools/java-static-analysis/java-static-analysis-java-static-analysis.md#code-analysis)
-* [フォーマットを統一する](../../development-tools/java-static-analysis/java-static-analysis-java-static-analysis.md#code-format)
-* [許可していないAPIが使用されていないかチェックする](../../development-tools/java-static-analysis/java-static-analysis-java-static-analysis.md#api-analysis)
+* [Inspectionを行う](../../development-tools/java-static-analysis/java-static-analysis-java-static-analysis.md#inspectionを行う)
+* [フォーマットを統一する](../../development-tools/java-static-analysis/java-static-analysis-java-static-analysis.md#フォーマットを統一する)
+* [許可していないAPIが使用されていないかチェックする](../../development-tools/java-static-analysis/java-static-analysis-java-static-analysis.md#許可していないapiが使用されていないかチェックする)
 
 上記を行うために、NablarchではJetBrains社製のIDEである [IntelliJ IDEA(外部サイト)](https://www.jetbrains.com/idea/) の使用を推奨している。
 本ページでは、IntelliJ IDEAを用いた効率的なJava静的チェックの方法を説明する。

@@ -76,7 +76,7 @@
 削除処理は子テーブルから、挿入処理は親テーブルから順に行うよう制御している。
 
 しかし、テーブル数が膨大なプロジェクトの場合、JDBCの機能を元に親子関係を構築する処理が原因で、slow test問題が発生する場合がある。
-この問題を回避するために、JDBC機能を使用するのではなく、記述順 ([設定例](../../development-tools/testing-framework/testing-framework-04-MasterDataRestore.md#masterdatarestore-configuration) を参照)を元にテーブルの削除及び挿入処理を行う機能を提供している。
+この問題を回避するために、JDBC機能を使用するのではなく、記述順 ([設定例](../../development-tools/testing-framework/testing-framework-04-MasterDataRestore.md#設定例) を参照)を元にテーブルの削除及び挿入処理を行う機能を提供している。
 
 記述順を元にマスタデータを復旧させたい場合には、環境設定ファイルに以下を追加する。
 

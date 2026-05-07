@@ -2,7 +2,7 @@
 
 本サンプルで提供するフォーマッタ機能の仕様を解説する。
 
-フォーマッタ機能の概要、基本となる汎用データフォーマット機能に関する詳細は、[汎用データフォーマット](../../component/libraries/libraries-data-format.md#data-format) を参照すること。
+フォーマッタ機能の概要、基本となる汎用データフォーマット機能に関する詳細は、[汎用データフォーマット](../../component/libraries/libraries-data-format.md#汎用データフォーマット) を参照すること。
 
 ## 概要
 
@@ -45,7 +45,7 @@ JDKで使用されるCP930はダブルバイト文字に対して必ずシフト
 
 ### フィールドタイプの使用方法
 
-追加したフィールドタイプの使用方法は [フィールドタイプを追加する](../../component/libraries/libraries-data-format.md#data-format-field-type-add) を参照。
+追加したフィールドタイプの使用方法は [フィールドタイプを追加する](../../component/libraries/libraries-data-format.md#フィールドタイプを追加する) を参照。
 Fixed(固定長)フォーマットのファクトリクラスの実装例を以下に示す。
 
 ```java

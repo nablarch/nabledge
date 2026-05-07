@@ -7,7 +7,7 @@
 
 > **Note:**
 > リクエスト単体テストそのものの概要については、
-> [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#message-sendsyncmessage-test)
+> [リクエスト単体テストの実施方法(同期応答メッセージ送信処理)](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#リクエスト単体テストの実施方法同期応答メッセージ送信処理)
 > を参照。
 
 ### 全体像
@@ -82,8 +82,8 @@ Action実行後に、MockMessagingContextを用いて、要求電文のアサー
 ### 同期応答メッセージ送信処理
 
 基本的な記述方法は、
- [テストデータの書き方](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#send-sync-request-write-test-data)
+ [テストデータの書き方](../../development-tools/testing-framework/testing-framework-02-requestunittest-send-sync.md#テストデータの書き方)
 を参照。
 
 > **Note:**
-> パディングおよびバイナリデータの扱いは、 [固定長ファイル](../../development-tools/testing-framework/testing-framework-RequestUnitTest-batch.md#about-fixed-length-file) と同様である。
+> パディングおよびバイナリデータの扱いは、 [固定長ファイル](../../development-tools/testing-framework/testing-framework-RequestUnitTest-batch.md#固定長ファイル) と同様である。

@@ -109,7 +109,7 @@
     {
       "id": "s18",
       "title": "プロジェクトの構成",
-      "content": "[pj-batchプロジェクトの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md#firststepbatchprojectstructure) からDB関連のディレクトリ及びファイルを除いただけであるため省略。",
+      "content": "[pj-batchプロジェクトの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md#プロジェクトの構成) からDB関連のディレクトリ及びファイルを除いただけであるため省略。",
       "level": 4
     },
     {
@@ -169,19 +169,19 @@
     {
       "id": "s28",
       "title": "プロジェクトの構成",
-      "content": "[pj-container-batchプロジェクトの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md#firststepcontainerbatchprojectstructure) からDB関連のディレクトリ及びファイルを除いただけであるため省略。",
+      "content": "[pj-container-batchプロジェクトの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md#プロジェクトの構成) からDB関連のディレクトリ及びファイルを除いただけであるため省略。",
       "level": 4
     },
     {
       "id": "s29",
       "title": "各プロジェクト共通の設定",
-      "content": "各Mavenプロジェクトそれぞれで下記のように設定している。\n\n* プロファイルの定義\n* ビルドフェーズで実行するゴールの追加\n* コンパイルに関する設定。以下のような設定が存在する。\n\n  * 使用するJavaのバージョン\n  * ファイルエンコーディング\n  * JDBCドライバ\n* [アーキタイプから生成したプロジェクトに組み込まれているツール](../../setup/blank-project/blank-project-firststep-complement.md#firststepbuiltintools) に記載されているツールの設定。以下のような設定が存在する。\n\n  * [gsp-dba-maven-plugin(外部サイト)](https://github.com/coastland/gsp-dba-maven-plugin/tree/4.x.x-main) で使用するデータベース接続設定（JDBC接続URLやデータベーススキーマなど）\n  * カバレッジ設定\n\n以下に個々の詳細を示す。",
+      "content": "各Mavenプロジェクトそれぞれで下記のように設定している。\n\n* プロファイルの定義\n* ビルドフェーズで実行するゴールの追加\n* コンパイルに関する設定。以下のような設定が存在する。\n\n  * 使用するJavaのバージョン\n  * ファイルエンコーディング\n  * JDBCドライバ\n* [アーキタイプから生成したプロジェクトに組み込まれているツール](../../setup/blank-project/blank-project-firststep-complement.md#アーキタイプから生成したプロジェクトに組み込まれているツール) に記載されているツールの設定。以下のような設定が存在する。\n\n  * [gsp-dba-maven-plugin(外部サイト)](https://github.com/coastland/gsp-dba-maven-plugin/tree/4.x.x-main) で使用するデータベース接続設定（JDBC接続URLやデータベーススキーマなど）\n  * カバレッジ設定\n\n以下に個々の詳細を示す。",
       "level": 3
     },
     {
       "id": "s30",
       "title": "プロファイル一覧",
-      "content": "定義されているプロファイルの詳細については、各プロジェクトの `pom.xml` を参照。\n\n以下に定義されているプロファイルを示す。\n\n| プロファイル名 | 概要 |\n|---|---|\n| dev | 開発環境用及び、ユニットテスト実行用のプロファイル。src/env/dev/resourcesディレクトリのリソースを使用する。 |\n| prod | 本番環境用のプロファイル。src/env/prod/resourcesディレクトリのリソースを使用する。 |\n\n> **Tip:**\n> `pom.xml` 中のdevプロファイルにactiveByDefault要素が記述されており、デフォルトでdevプロファイルが使用されるようになっている。\n\n> **Note:**\n> コンテナ用のプロジェクトでは、環境ごとの違いはプロファイルではなくOS環境変数を使って切り替える。\n> したがって、コンテナ用のプロジェクトにはプロファイルが定義されていない。\n> 詳しくは [コンテナの本番環境設定](../../setup/blank-project/blank-project-CustomizeDB.md#container-production-config) を参照。",
+      "content": "定義されているプロファイルの詳細については、各プロジェクトの `pom.xml` を参照。\n\n以下に定義されているプロファイルを示す。\n\n| プロファイル名 | 概要 |\n|---|---|\n| dev | 開発環境用及び、ユニットテスト実行用のプロファイル。src/env/dev/resourcesディレクトリのリソースを使用する。 |\n| prod | 本番環境用のプロファイル。src/env/prod/resourcesディレクトリのリソースを使用する。 |\n\n> **Tip:**\n> `pom.xml` 中のdevプロファイルにactiveByDefault要素が記述されており、デフォルトでdevプロファイルが使用されるようになっている。\n\n> **Note:**\n> コンテナ用のプロジェクトでは、環境ごとの違いはプロファイルではなくOS環境変数を使って切り替える。\n> したがって、コンテナ用のプロジェクトにはプロファイルが定義されていない。\n> 詳しくは [コンテナの本番環境設定](../../setup/blank-project/blank-project-CustomizeDB.md#コンテナの本番環境設定) を参照。",
       "level": 4
     },
     {
@@ -193,19 +193,19 @@
     {
       "id": "s32",
       "title": "ビルドフェーズに追加されているゴール一覧",
-      "content": "Mavenのデフォルトのビルドフェーズ定義に加えて、以下のゴールが実行されるように設定されている。\n\n設定の詳細については、各プロジェクトの `pom.xml` 及び、 [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#about-maven-parent-module) の `pom.xml` を参照のこと。\n\n| ビルドフェーズ | ゴール | 概要 |\n|---|---|---|\n| initialize | jacoco:prepare-agent | JaCoCoの実行時エージェントを準備する。 |\n| pre-integration-test | jacoco:prepare-agent-integration | 結合試験用にJaCoCoの実行時エージェントを準備する。 |\n\n> **Tip:**\n> gsp-dba-maven-pluginの実行はMavenのビルドフェーズに紐づかないため、エンティティの自動生成など、gsp-dba-maven-pluginで実装されているゴールを実行したい場合は、ゴールを手動で実行すること。",
+      "content": "Mavenのデフォルトのビルドフェーズ定義に加えて、以下のゴールが実行されるように設定されている。\n\n設定の詳細については、各プロジェクトの `pom.xml` 及び、 [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#nablarch-archetype-parent親プロジェクト) の `pom.xml` を参照のこと。\n\n| ビルドフェーズ | ゴール | 概要 |\n|---|---|---|\n| initialize | jacoco:prepare-agent | JaCoCoの実行時エージェントを準備する。 |\n| pre-integration-test | jacoco:prepare-agent-integration | 結合試験用にJaCoCoの実行時エージェントを準備する。 |\n\n> **Tip:**\n> gsp-dba-maven-pluginの実行はMavenのビルドフェーズに紐づかないため、エンティティの自動生成など、gsp-dba-maven-pluginで実装されているゴールを実行したい場合は、ゴールを手動で実行すること。",
       "level": 4
     },
     {
       "id": "s33",
       "title": "コンパイルに関する設定",
-      "content": "設定内容については、各プロジェクトの `pom.xml` 及び、 [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#about-maven-parent-module) の `pom.xml` を参照。",
+      "content": "設定内容については、各プロジェクトの `pom.xml` 及び、 [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#nablarch-archetype-parent親プロジェクト) の `pom.xml` を参照。",
       "level": 4
     },
     {
       "id": "s34",
       "title": "ツールの設定",
-      "content": "ツールの設定は、`pom.xml` (各プロジェクト及び、 [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#about-maven-parent-module) )に記載されている。\n親プロジェクトに記載されているツールについては、 [アーキタイプから生成したプロジェクトに組み込まれているツール](../../setup/blank-project/blank-project-firststep-complement.md#firststepbuiltintools) を参照。",
+      "content": "ツールの設定は、`pom.xml` (各プロジェクト及び、 [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#nablarch-archetype-parent親プロジェクト) )に記載されている。\n親プロジェクトに記載されているツールについては、 [アーキタイプから生成したプロジェクトに組み込まれているツール](../../setup/blank-project/blank-project-firststep-complement.md#アーキタイプから生成したプロジェクトに組み込まれているツール) を参照。",
       "level": 4
     },
     {
@@ -235,7 +235,7 @@
     {
       "id": "s39",
       "title": "推奨するプロジェクト構成の方針",
-      "content": "以下に推奨するプロジェクト構成の方針を示す。\n\n* 作成するアプリケーションが１つの場合(ウェブのみ、バッチのみ等)は、それぞれ単体のプロジェクトで構成する。\n* 社内用と社外用で２つのウェブアプリケーションを作成するようなケースでは、無理に１つのMavenプロジェクトにまとめず、個別にMavenプロジェクトを作ること。\n* 複数のアプリケーションが存在し、共通化したいライブラリが存在する場合は、共通ライブラリを配置するMavenプロジェクトを作る。\n* 実行制御基盤を追加した際は、実行制御基盤毎にMavenプロジェクトを作る。例えば、メッセージング実行制御基盤を使用したアプリケーションを追加する場合は、新しくMavenプロジェクトを作る。\n* 必要以上にプロジェクトは分割しない。詳細は、 [プロジェクトを過度に分割した場合の問題点](../../setup/blank-project/blank-project-MavenModuleStructures.md#mavenmodulestructuresproblemsofexcessivelydivided) を参照。\n\n> **Tip:**\n> プロジェクトを分割する際には、リソースの重複が無い様に注意すること。\n\n> 例えば、[gsp-dba-maven-plugin(外部サイト)](https://github.com/coastland/gsp-dba-maven-plugin/tree/4.x.x-main) で使用するedmファイルを複数のMavenプロジェクトに混在させると、重複したEntityクラスが複数のMavenプロジェクトに存在することになる。",
+      "content": "以下に推奨するプロジェクト構成の方針を示す。\n\n* 作成するアプリケーションが１つの場合(ウェブのみ、バッチのみ等)は、それぞれ単体のプロジェクトで構成する。\n* 社内用と社外用で２つのウェブアプリケーションを作成するようなケースでは、無理に１つのMavenプロジェクトにまとめず、個別にMavenプロジェクトを作ること。\n* 複数のアプリケーションが存在し、共通化したいライブラリが存在する場合は、共通ライブラリを配置するMavenプロジェクトを作る。\n* 実行制御基盤を追加した際は、実行制御基盤毎にMavenプロジェクトを作る。例えば、メッセージング実行制御基盤を使用したアプリケーションを追加する場合は、新しくMavenプロジェクトを作る。\n* 必要以上にプロジェクトは分割しない。詳細は、 [プロジェクトを過度に分割した場合の問題点](../../setup/blank-project/blank-project-MavenModuleStructures.md#プロジェクトを過度に分割した場合の問題点) を参照。\n\n> **Tip:**\n> プロジェクトを分割する際には、リソースの重複が無い様に注意すること。\n\n> 例えば、[gsp-dba-maven-plugin(外部サイト)](https://github.com/coastland/gsp-dba-maven-plugin/tree/4.x.x-main) で使用するedmファイルを複数のMavenプロジェクトに混在させると、重複したEntityクラスが複数のMavenプロジェクトに存在することになる。",
       "level": 3
     },
     {

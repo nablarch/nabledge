@@ -8,7 +8,7 @@
   * メッセージングログの設定
   * JSON形式の構造化ログとして出力する
 
-メッセージングログは、 [システム間メッセージング](../../component/libraries/libraries-system-messaging.md#system-messaging) の中でメッセージ送受信時に出力する。
+メッセージングログは、 [システム間メッセージング](../../component/libraries/libraries-system-messaging.md#システム間メッセージング) の中でメッセージ送受信時に出力する。
 アプリケーションでは、ログ出力を設定することにより出力する。
 
 ## メッセージングログの出力方針
@@ -93,7 +93,7 @@ messagingLogFormatter.httpReceivedMessageFormat=@@@@ HTTP RECEIVED MESSAGE @@@@\
 
 ### メッセージングログの設定
 
-メッセージングログの設定は、 [各種ログの設定](../../component/libraries/libraries-log.md#log-app-log-setting) で説明したプロパティファイルに行う。
+メッセージングログの設定は、 [各種ログの設定](../../component/libraries/libraries-log.md#各種ログの設定) で説明したプロパティファイルに行う。
 
 記述ルール
 
@@ -280,12 +280,12 @@ messagingLogFormatter.httpReceivedMessageFormat=@@@@ HTTP RECEIVED MESSAGE @@@@\
 
 ### JSON形式の構造化ログとして出力する
 
-[JSON形式の構造化ログとして出力する](../../component/libraries/libraries-log.md#log-json-log-setting) 設定によりログをJSON形式で出力できるが、
+[JSON形式の構造化ログとして出力する](../../component/libraries/libraries-log.md#json形式の構造化ログとして出力する) 設定によりログをJSON形式で出力できるが、
 MessagingLogFormatter では
 メッセージングログの各項目はmessageの値に文字列として出力される。
 メッセージングログの各項目もJSONの値として出力するには、
 MessagingJsonLogFormatter を使用する。
-設定は、 [各種ログの設定](../../component/libraries/libraries-log.md#log-app-log-setting) で説明したプロパティファイルに行う。
+設定は、 [各種ログの設定](../../component/libraries/libraries-log.md#各種ログの設定) で説明したプロパティファイルに行う。
 
 記述ルール
 
@@ -438,7 +438,7 @@ messagingLogFormatter.structuredMessagePrefix
 フォーマット後のメッセージ文字列が JSON 形式に整形されていることを識別できるようにするために、メッセージの先頭に付与するマーカー文字列。
 メッセージの先頭にあるマーカー文字列が JsonLogFormatter に設定しているマーカー文字列と一致する場合、 JsonLogFormatter はメッセージを JSON データとして処理する。
 デフォルトは `"$JSON$"` となる。
-変更する場合は、LogWriterの `structuredMessagePrefix` プロパティを使用して JsonLogFormatter にも同じ値を設定すること（LogWriterのプロパティについては [ログ出力の設定](../../component/libraries/libraries-log.md#log-basic-setting) を参照）。
+変更する場合は、LogWriterの `structuredMessagePrefix` プロパティを使用して JsonLogFormatter にも同じ値を設定すること（LogWriterのプロパティについては [ログ出力の設定](../../component/libraries/libraries-log.md#ログ出力の設定) を参照）。
 
 * **messageBody:** 電文をISO-8859-1固定でエンコードした結果を出力する。
 * **messageBodyHex:** messageBodyの内容をヘキサダンプして出力する。

@@ -2,7 +2,7 @@
 
 本サンプルで提供するフォーマッタ機能の仕様を解説する。
 
-フォーマッタ機能の概要、基本となる汎用データフォーマット機能に関する詳細は、[汎用データフォーマット](../../component/libraries/libraries-data-format.md#data-format) を参照すること。
+フォーマッタ機能の概要、基本となる汎用データフォーマット機能に関する詳細は、[汎用データフォーマット](../../component/libraries/libraries-data-format.md#汎用データフォーマット) を参照すること。
 
 ## 概要
 

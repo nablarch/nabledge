@@ -9,7 +9,7 @@
 
 ## 事前準備
 
-後の [疎通確認](../../setup/blank-project/blank-project-setup-ContainerWebService.md#firststepcontainerwebservicestartuptest) で使用するため、以下のいずれかをインストールする。
+後の [疎通確認](../../setup/blank-project/blank-project-setup-ContainerWebService.md#疎通確認) で使用するため、以下のいずれかをインストールする。
 
 * Firefox
 * Chrome
@@ -23,8 +23,8 @@
 | プロジェクト種別 | Mavenプロジェクト |
 | プロジェクト構成 | 単一プロジェクト構成 |
 | 使用DB | H2 Databaes Engine(アプリケーションに組み込み) |
-| 組み込まれているアダプタ | * Jersey用アダプタ(詳細は、 [Jakarta RESTful Web Servicesアダプタ](../../component/adapters/adapters-jaxrs-adaptor.md#jaxrs-adaptor) を参照) * ルーティングアダプタ(詳細は、 [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) を参照) |
-| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * NablarchのRESTfulウェブサービス用の基本的な設定 * 疎通確認用RESTfulウェブサービス * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#about-maven-parent-module) を参照することによって取り込んでいる)。 |
+| 組み込まれているアダプタ | * Jersey用アダプタ(詳細は、 [Jakarta RESTful Web Servicesアダプタ](../../component/adapters/adapters-jaxrs-adaptor.md#jakarta-restful-web-servicesアダプタ) を参照) * ルーティングアダプタ(詳細は、 [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#ルーティングアダプタ) を参照) |
+| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * NablarchのRESTfulウェブサービス用の基本的な設定 * 疎通確認用RESTfulウェブサービス * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#nablarch-archetype-parent親プロジェクト) を参照することによって取り込んでいる)。 |
 
 他のプロジェクトとの関係、及びディレクトリ構成は、 [Mavenアーキタイプの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md) を参照。
 
@@ -74,21 +74,21 @@ mvn archetype:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArti
 
 ## 疎通確認
 
-疎通確認の仕組みや手順は通常のRESTfulウェブサービスプロジェクトと同じなので、 [RESTfulウェブサービスプロジェクトの初期セットアップ](../../setup/blank-project/blank-project-setup-WebService.md#firststepwebservicestartuptest) を参照。
+疎通確認の仕組みや手順は通常のRESTfulウェブサービスプロジェクトと同じなので、 [RESTfulウェブサービスプロジェクトの初期セットアップ](../../setup/blank-project/blank-project-setup-WebService.md#疎通確認) を参照。
 
 > **Note:**
 > アーティファクトID が `myapp-container-jaxrs` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。
 
 ## コンテナイメージを作成する
 
-コンテナイメージの作成方法はコンテナ用のウェブプロジェクトと同じなので、 [コンテナ用ウェブプロジェクトの初期セットアップ](../../setup/blank-project/blank-project-setup-ContainerWeb.md#firststepbuildcontainerwebdockerimage) を参照。
+コンテナイメージの作成方法はコンテナ用のウェブプロジェクトと同じなので、 [コンテナ用ウェブプロジェクトの初期セットアップ](../../setup/blank-project/blank-project-setup-ContainerWeb.md#コンテナイメージを作成する) を参照。
 
 > **Note:**
 > アーティファクトID が `myapp-container-jaxrs` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。
 
 ## コンテナイメージを実行する
 
-コンテナイメージの実行方法はコンテナ用のウェブプロジェクトと同じなので、 [コンテナ用ウェブプロジェクトの初期セットアップ](../../setup/blank-project/blank-project-setup-ContainerWeb.md#firststepruncontainerwebdockerimage) を参照。
+コンテナイメージの実行方法はコンテナ用のウェブプロジェクトと同じなので、 [コンテナ用ウェブプロジェクトの初期セットアップ](../../setup/blank-project/blank-project-setup-ContainerWeb.md#コンテナイメージを実行する) を参照。
 
 > **Note:**
 > アーティファクトID が `myapp-container-jaxrs` になっている点は、適宜読み替えてディレクトリやコマンドを指定すること。
@@ -101,9 +101,9 @@ mvn archetype:generate -DarchetypeGroupId=com.nablarch.archetype -DarchetypeArti
 
 ## データベースに関する設定を行う
 
-ブランクプロジェクトは、初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は、[使用するRDBMSの変更手順](../../setup/blank-project/blank-project-CustomizeDB.md#customize-db) を参照して設定すること。
+ブランクプロジェクトは、初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は、[使用するRDBMSの変更手順](../../setup/blank-project/blank-project-CustomizeDB.md#使用するrdbmsの変更手順) を参照して設定すること。
 
-またER図からのDDL生成や実行、Entityクラスの自動生成を行うにはgsp-dba-maven-pluginの初期設定および実行を行う。詳細は [gsp-dba-maven-plugin(DBA作業支援ツール)の初期設定方法](../../setup/blank-project/blank-project-addin-gsp.md#gsp-maven-plugin) を参照。
+またER図からのDDL生成や実行、Entityクラスの自動生成を行うにはgsp-dba-maven-pluginの初期設定および実行を行う。詳細は [gsp-dba-maven-plugin(DBA作業支援ツール)の初期設定方法](../../setup/blank-project/blank-project-addin-gsp.md#gsp-dba-maven-plugindba作業支援ツールの初期設定方法) を参照。
 
 ## 補足
 

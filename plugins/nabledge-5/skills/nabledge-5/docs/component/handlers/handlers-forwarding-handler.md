@@ -12,7 +12,7 @@
 このハンドラは、後続ハンドラからのレスポンス中のコンテンツが、内部フォーワードを示している場合に、指定されたリクエストパスで後続ハンドラを再実行する。
 
 内部フォーワードは、遷移先の画面が単純な画面表示ではなく、チェックボックスやドロップダウンリストなどの選択肢をサーバサイドで取得する場合に使用する。
-例えば、入力チェックでエラーとなった際に単純に入力画面を再表示するだけでなく、入力項目の選択肢をサーバサイドで取得する場合が該当する。詳細は、 [エラー時の遷移先画面に表示するデータを取得する](../../component/handlers/handlers-on-error.md#on-error-forward) を参照。
+例えば、入力チェックでエラーとなった際に単純に入力画面を再表示するだけでなく、入力項目の選択肢をサーバサイドで取得する場合が該当する。詳細は、 [エラー時の遷移先画面に表示するデータを取得する](../../component/handlers/handlers-on-error.md#エラー時の遷移先画面に表示するデータを取得する) を参照。
 
 本ハンドラでは、以下の処理を行う。
 
@@ -37,10 +37,10 @@
 
 ## 制約
 
-[セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler) より後ろに配置すること
+[セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#セッション変数保存ハンドラ) より後ろに配置すること
 
-[セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler) より後ろに配置すべき理由は、
-[改竄エラー時の遷移先を設定する](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler-error-forward-path) を参照
+[セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#セッション変数保存ハンドラ) より後ろに配置すべき理由は、
+[改竄エラー時の遷移先を設定する](../../component/handlers/handlers-SessionStoreHandler.md#改竄エラー時の遷移先を設定する) を参照
 
 ## 内部フォーワードを示すレスポンスを返却する
 

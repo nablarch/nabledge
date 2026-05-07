@@ -20,7 +20,7 @@
 |---|---|---|
 | [W11AC0201.jsp](../../../knowledge/assets/web-application-05-screenTransition/W11AC0201.jsp) [W11AC0202.jsp](../../../knowledge/assets/web-application-05-screenTransition/W11AC0202.jsp) | View | ユーザ情報登録画面に入力した内容及び、登録画面に戻るボタンと、登録処理を行うボタンを表示する。W11AC0202.jsp内でW11AC0201.jspを取り込んでいる。 |
 
-ステレオタイプについては [業務コンポーネントの責務配置](../../about/about-nablarch/about-nablarch-01-NablarchOutline.md#stereotype) を参照。
+ステレオタイプについては [業務コンポーネントの責務配置](../../about/about-nablarch/about-nablarch-01-NablarchOutline.md#業務コンポーネントの責務配置) を参照。
 
 ## 作成手順
 
@@ -51,7 +51,7 @@ uri属性には、サブミットするパスを指定する。
 
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
 
 > **Note:**
 > デフォルトで、button:cancelは「キャンセル」、button:confirmは「確定」をラベルに出力する。
@@ -63,7 +63,7 @@ uri属性には、サブミットするパスを指定する。
 そうすれば、単純に戻り先の画面へ遷移させれば、入力内容が復元される。
 
 * 入力項目(テキストエリア、ラジオボタンなど)を作成する際は、アプリケーションフレームワーク提供のカスタムタグを使用する。
-* n:formタグのwindowScopePrefixes属性に入力項目のカスタムタグのname属性に指定したプレフィックス [(参照)](../../guide/web-application/web-application-04-validation.md#04-jspnameattribute) を指定する。
+* n:formタグのwindowScopePrefixes属性に入力項目のカスタムタグのname属性に指定したプレフィックス [(参照)](../../guide/web-application/web-application-04-validation.md#viewjspの作成) を指定する。
 
 ## 次に読むもの
 

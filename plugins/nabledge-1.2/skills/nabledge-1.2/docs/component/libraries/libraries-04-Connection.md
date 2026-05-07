@@ -2,7 +2,7 @@
 
 本章では、データベース接続部分についての解説を行う。
 
-本機能で提供する接続方式については、 [概要](../../component/libraries/libraries-04-DbAccessSpec.md#db-summary-label) を参照すること。
+本機能で提供する接続方式については、 [概要](../../component/libraries/libraries-04-DbAccessSpec.md#概要) を参照すること。
 
 ## クラス図
 
@@ -15,9 +15,9 @@
 | インタフェース名 | 概要 |
 |---|---|
 | nablarch.core.db.connectionパッケージ |  |
-| ConnectionFactory | データベース接続を生成するインターフェース。  データベース接続方式を追加する場合や、 [実装クラス](../../component/libraries/libraries-04-Connection.md#db-connectionfactory-sub-label) で生成されるBasicDbConnectionを入れ替える場合には、 本インタフェースの実装クラスを追加する必要がある。 |
+| ConnectionFactory | データベース接続を生成するインターフェース。  データベース接続方式を追加する場合や、 [実装クラス](../../component/libraries/libraries-04-Connection.md#クラス定義) で生成されるBasicDbConnectionを入れ替える場合には、 本インタフェースの実装クラスを追加する必要がある。 |
 | AppDbConnection | データベース接続を保持したインタフェース。  アプリケーションでは、本インタフェースを使用して、SQL文実行用オブジェクトを取得する。 |
-| TransactionManagerConnection | トランザクション制御を行うインタフェース(AppDbConnectionのサブインタフェース)。  本機能の特徴である [リソース解放機能](../../component/libraries/libraries-04-DbAccessSpec.md#db-feature-2-label) は、本インタフェースの実装クラスで提供される。 |
+| TransactionManagerConnection | トランザクション制御を行うインタフェース(AppDbConnectionのサブインタフェース)。  本機能の特徴である [リソース解放機能](../../component/libraries/libraries-04-DbAccessSpec.md#頻繁に使用するデータベースリソースの自動解放機能) は、本インタフェースの実装クラスで提供される。 |
 
 #### クラス定義
 
@@ -27,8 +27,8 @@ a) nablarch.core.db.connection.ConnectionFactoryの実装クラス
 |---|---|
 | nablarch.core.db.connectionパッケージ |  |
 | ConnectionFactorySupport | ConnectionFactoryインタフェースを実装したクラスをサポートするクラス。  本クラスの実装は、サブクラスで必要となる共通設定を保持するのみである。 |
-| BasicDbConnectionFactoryForJndi | JNDI経由でWebアプリケーションサーバ等からデータベース接続(java.sql.Connection)を取得し、 BasicDbConnectionを生成するクラス。  JNDI経由でデータベース接続を取得するための情報は、 [リポジトリ](../../component/libraries/libraries-02-Repository.md) を使用して本クラスに設定をする必要がある。 設定ファイルの記述方法は、 [設定ファイル例(JNDIを使用してデータベース接続を行う場合)](../../component/libraries/libraries-04-Connection.md#database-connection-config-from-jndi-label) を参照すること。 |
-| BasicDbConnectionFactoryForDataSource | javax.sql.DataSourceからデータベース接続(java.sql.Connection)を取得し、 BasicDbConnectionを生成するクラス。  javax.sql.DataSourceは、 [リポジトリ](../../component/libraries/libraries-02-Repository.md) を使用して本クラスに設定をする必要がある。 設定ファイルの記述方法は、 [設定ファイル例(DataSourceを使用してデータベース接続を行う場合)](../../component/libraries/libraries-04-Connection.md#db-connection-config-label) を参照すること。 |
+| BasicDbConnectionFactoryForJndi | JNDI経由でWebアプリケーションサーバ等からデータベース接続(java.sql.Connection)を取得し、 BasicDbConnectionを生成するクラス。  JNDI経由でデータベース接続を取得するための情報は、 [リポジトリ](../../component/libraries/libraries-02-Repository.md) を使用して本クラスに設定をする必要がある。 設定ファイルの記述方法は、 [設定ファイル例(JNDIを使用してデータベース接続を行う場合)](../../component/libraries/libraries-04-Connection.md#設定ファイル例jndiを使用してデータベース接続を行う場合) を参照すること。 |
+| BasicDbConnectionFactoryForDataSource | javax.sql.DataSourceからデータベース接続(java.sql.Connection)を取得し、 BasicDbConnectionを生成するクラス。  javax.sql.DataSourceは、 [リポジトリ](../../component/libraries/libraries-02-Repository.md) を使用して本クラスに設定をする必要がある。 設定ファイルの記述方法は、 [設定ファイル例(DataSourceを使用してデータベース接続を行う場合)](../../component/libraries/libraries-04-Connection.md#設定ファイル例datasourceを使用してデータベース接続を行う場合) を参照すること。 |
 
 b) nablarch.core.db.connection.TransactionManagerConnectionの実装クラス
 
@@ -90,7 +90,7 @@ SqlResultSet resultSet = new SimpleDbTransactionExecutor<SqlResultSet>(
 ## 設定ファイル例(DataSourceを使用してデータベース接続を行う場合)
 
 本設定ファイルは、 DataSourceからデータベース接続を取得する場合の 設定例となっている。
-JNDI経由でデータベース接続を取得する場合 は、 [設定ファイル例(JNDIを使用してデータベース接続を行う場合)](../../component/libraries/libraries-04-Connection.md#database-connection-config-from-jndi-label) を参照すること。
+JNDI経由でデータベース接続を取得する場合 は、 [設定ファイル例(JNDIを使用してデータベース接続を行う場合)](../../component/libraries/libraries-04-Connection.md#設定ファイル例jndiを使用してデータベース接続を行う場合) を参照すること。
 
 ```xml
 <!-- SimpleDbTransactionManagerの設定 -->
@@ -160,7 +160,7 @@ b) nablarch.core.db.connection.BasicDbConnectionFactoryForDataSourceの設定
 |---|---|
 | statementReuse(必須) | Statementをキャッシュするか否かの設定を、trueまたはfalseで設定する。  trueを設定すると、BasicDbConnectionのインスタンス単位でStatementオブジェクトがキャッシュされる。  > **Note:** > キャッシュを有効にした場合は、同一のSQLを複数回実行した場合、 > 2回目以降はキャッシュされたStatementオブジェクトが使用される。 > このため、複数回同一のSQL文を実行した場合はオブジェクトの生成コストを削減でき性能改善が期待できる。 > 特に1処理で同一のSQL文を多数実行する可能性のあるバッチ処理(バッチ処理では、大量データを繰り返し実行するので、 > 同一のSQL文を複数回実行する。)では効果が期待できる。  > 逆に、画面処理では1処理で同一のSQL文を繰り返し実行する事が少く、 > キャッシュが有効に使用されない可能性が高いため、本機能を使用するメリットはあまりない。 |
 | dataSource(必須) | javax.sql.DataSourceを実装したクラスを設定する。  本サンプルでは、「oracle.jdbc.pool.OracleDataSource」を設定し、OracleDataSourceのproperyに必要な情報を設定している。  > **Note:** > 本propertyに設定する値は、各データベースベンダーのJDBC関連ドキュメントを参照し設定すること。 |
-| statementFactory(必須) | nablarch.core.statement.StatementFactoryを実装したクラスを設定する。  本サンプルでは、「nablarch.core.db.statement.BasicStatementFactory」を設定している。  > **Note:** > statementFactoryの設定は、後述の [SQL文実行部品の構造とその使用方法](../../component/libraries/libraries-04-Statement.md#db-sqlstatement-label) を参照 |
+| statementFactory(必須) | nablarch.core.statement.StatementFactoryを実装したクラスを設定する。  本サンプルでは、「nablarch.core.db.statement.BasicStatementFactory」を設定している。  > **Note:** > statementFactoryの設定は、後述の [SQL文実行部品の構造とその使用方法](../../component/libraries/libraries-04-Statement.md#sql文実行部品の構造とその使用方法) を参照 |
 
 c) nablarch.core.db.transaction.JdbcTransactionFactoryへの設定
 
@@ -172,7 +172,7 @@ c) nablarch.core.db.transaction.JdbcTransactionFactoryへの設定
 ## 設定ファイル例(JNDIを使用してデータベース接続を行う場合)
 
 本設定例は、JNDI経由でデータベース接続を取得する際に必要となる箇所のみを記載している。
-JNDIに関連のない設定については、 [設定ファイル例(DataSourceを使用してデータベース接続を行う場合)](../../component/libraries/libraries-04-Connection.md#db-connection-config-label) を参照し、必要な設定を行うこと。
+JNDIに関連のない設定については、 [設定ファイル例(DataSourceを使用してデータベース接続を行う場合)](../../component/libraries/libraries-04-Connection.md#設定ファイル例datasourceを使用してデータベース接続を行う場合) を参照し、必要な設定を行うこと。
 
 ```xml
 <component class="nablarch.core.db.connection.BasicDbConnectionFactoryForJndi">
@@ -209,7 +209,7 @@ JNDIに関連のない設定については、 [設定ファイル例(DataSource
 
 | property名 | 設定内容 |
 |---|---|
-| statementReuse(必須) | [BasicDbConnectionFactoryForDataSourceへの設定](../../component/libraries/libraries-04-Connection.md#db-datasourceconnectionfactory-label) の同一項目を参照すること。 |
-| statementFactory(必須) | [BasicDbConnectionFactoryForDataSourceへの設定](../../component/libraries/libraries-04-Connection.md#db-datasourceconnectionfactory-label) の同一項目を参照すること。 |
+| statementReuse(必須) | [BasicDbConnectionFactoryForDataSourceへの設定](../../component/libraries/libraries-04-Connection.md#設定内容詳細) の同一項目を参照すること。 |
+| statementFactory(必須) | [BasicDbConnectionFactoryForDataSourceへの設定](../../component/libraries/libraries-04-Connection.md#設定内容詳細) の同一項目を参照すること。 |
 | jndiProperties | JNDI経由でDataSourceを取得するための、環境設定を行う。 Webサーバ上で稼働する場合や、クラスパス配下に「jndi.properties」を配置している場合には、本設定値は省略して良い。  > **Note:** > 設定に関する詳細は、Webサーバのベンダーマニュアルなどを参照すること。  > 本設定例は、WebLogicサーバ上にDataSourceが登録されていることを想定した設定例となっている。 |
 | jndiResourceName(必須) | JNDIリソース名を設定する。  > **Note:** > 設定に関する詳細は、Webサーバのベンダーマニュアルなどを参照すること。  > 例えば、WebLogicサーバの場合は、管理コンソールからDataSourceを登録する際に「JNDI Name」に入力した値を設定する。 |

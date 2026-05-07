@@ -12,7 +12,7 @@ Nablarch上のアプリケーションで二重サブミット防止機能は、
 
 二重サブミット防止機能のテスト用に、テストショットのLIST_MAPに指定するisValidTokenカラムがある。このカラムを「false」に設定して、エラーが発生すれば二重サブミット防止機能が動いていることを確認できる。
 
-テストデータの記述方法詳細については「 [テストケース一覧](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#request-test-testcases)」を参照。
+テストデータの記述方法詳細については「 [テストケース一覧](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#テストケース一覧)」を参照。
 
 ## 取引単体テストでの二重サブミット防止機能のテスト実施方法
 

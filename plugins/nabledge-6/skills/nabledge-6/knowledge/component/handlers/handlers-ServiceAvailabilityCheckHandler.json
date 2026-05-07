@@ -1,7 +1,7 @@
 {
   "id": "handlers-ServiceAvailabilityCheckHandler",
   "title": "サービス提供可否チェックハンドラ",
-  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* リクエストに対するサービス提供可否チェック\n\n本ハンドラでは、 [リクエストに対するサービス提供可否チェック](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md#serviceavailabilitycheckhandler-request-checking) を行う。\n\nサービス提供可否チェックは、ライブラリの [サービス提供可否チェック](../../component/libraries/libraries-service-availability.md#service-availability) を使用して行う。\nそのため、本ハンドラを使用するには、\nServiceAvailability を実装したクラスを本ハンドラに設定する必要がある。\n\n本ハンドラでは、以下の処理を行う。\n\n* サービス提供可否チェック\n\n処理の流れは以下のとおり。\n\n![ServiceAvailabilityCheckHandler_flow.png](assets/handlers-ServiceAvailabilityCheckHandler/ServiceAvailabilityCheckHandler_flow.png)",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* リクエストに対するサービス提供可否チェック\n\n本ハンドラでは、 [リクエストに対するサービス提供可否チェック](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md#リクエストに対するサービス提供可否チェック) を行う。\n\nサービス提供可否チェックは、ライブラリの [サービス提供可否チェック](../../component/libraries/libraries-service-availability.md#サービス提供可否チェック) を使用して行う。\nそのため、本ハンドラを使用するには、\nServiceAvailability を実装したクラスを本ハンドラに設定する必要がある。\n\n本ハンドラでは、以下の処理を行う。\n\n* サービス提供可否チェック\n\n処理の流れは以下のとおり。\n\n![ServiceAvailabilityCheckHandler_flow.png](assets/handlers-ServiceAvailabilityCheckHandler/ServiceAvailabilityCheckHandler_flow.png)",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -19,13 +19,13 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに配置すること\n\n本ハンドラではスレッドコンテキスト上に設定されたリクエストIDをもとにサービス提供可否チェックを行うため、\n[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに本ハンドラを配置する必要がある。\n\n[内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler) より後ろに配置すること\n\n内部フォーワードが行われた際に、フォーワード先のリクエストID（ [内部リクエストID](../../component/handlers/handlers-forwarding-handler.md#internal-request-id) ）をもとに\nサービス提供可否チェックを行いたい場合は、 [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler) より後ろに本ハンドラを配置する必要がある。\n合わせて、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) の `attributes` に InternalRequestIdAttribute を追加すること。",
+      "content": "[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ) より後ろに配置すること\n\n本ハンドラではスレッドコンテキスト上に設定されたリクエストIDをもとにサービス提供可否チェックを行うため、\n[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ) より後ろに本ハンドラを配置する必要がある。\n\n[内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#内部フォーワードハンドラ) より後ろに配置すること\n\n内部フォーワードが行われた際に、フォーワード先のリクエストID（ [内部リクエストID](../../component/handlers/handlers-forwarding-handler.md#内部リクエストidについて) ）をもとに\nサービス提供可否チェックを行いたい場合は、 [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#内部フォーワードハンドラ) より後ろに本ハンドラを配置する必要がある。\n合わせて、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ) の `attributes` に InternalRequestIdAttribute を追加すること。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "リクエストに対するサービス提供可否チェック",
-      "content": "ThreadContext からリクエストIDを取得し、サービス提供可否をチェックする。\nチェックの詳細は、 [サービス提供可否チェック](../../component/libraries/libraries-service-availability.md#service-availability) を参照。\n\nOK(サービス提供可)の場合\n\n後続ハンドラを呼び出す。\n\nNG(サービス提供不可)の場合\n\nServiceUnavailable (503) を送出する。\n\nチェック対象のリクエストIDをフォーワード先のリクエストIDに変更したい場合は、\nServiceAvailabilityCheckHandler.setUsesInternalRequestId\nでtrueを指定する。デフォルトはfalseである。",
+      "content": "ThreadContext からリクエストIDを取得し、サービス提供可否をチェックする。\nチェックの詳細は、 [サービス提供可否チェック](../../component/libraries/libraries-service-availability.md#サービス提供可否チェック) を参照。\n\nOK(サービス提供可)の場合\n\n後続ハンドラを呼び出す。\n\nNG(サービス提供不可)の場合\n\nServiceUnavailable (503) を送出する。\n\nチェック対象のリクエストIDをフォーワード先のリクエストIDに変更したい場合は、\nServiceAvailabilityCheckHandler.setUsesInternalRequestId\nでtrueを指定する。デフォルトはfalseである。",
       "level": 2
     }
   ]

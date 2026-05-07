@@ -46,7 +46,7 @@ $ java nablarch.fw.batch.ee.Main jobName --option1 value1 --option2 value2
 
 ## システムリポジトリを初期化する
 
-[システムリポジトリ](../../component/libraries/libraries-repository.md#repository) は、ジョブリスナーに `nablarchJobListenerExecutor` を設定することで初期化できる。
+[システムリポジトリ](../../component/libraries/libraries-repository.md#システムリポジトリ) は、ジョブリスナーに `nablarchJobListenerExecutor` を設定することで初期化できる。
 
 システムリポジトリのルートxmlファイルのファイル名は、 `batch-boot.xml` としクラスパス直下に配置する。
 ファイル名や、配置場所を変更したい場合には、 `nablarchJobListenerExecutor` のパラメータで変更する。

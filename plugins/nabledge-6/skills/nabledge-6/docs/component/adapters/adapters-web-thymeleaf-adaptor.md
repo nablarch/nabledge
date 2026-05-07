@@ -60,10 +60,10 @@ HttpResponseHandler へ設定する。
 > **Tip:**
 > `ITemplateResolver` インタフェースの実装クラスに、
 > `org.thymeleaf.templateresolver.ServletContextTemplateResolver` が存在するが、
-> 以下の理由により、[システムリポジトリ](../../component/libraries/libraries-repository.md#repository) にコンポーネントとして登録できない。
+> 以下の理由により、[システムリポジトリ](../../component/libraries/libraries-repository.md#システムリポジトリ) にコンポーネントとして登録できない。
 
 > * >   コンストラクタ引数に `jakarta.servlet.ServletContext` が必須である(デフォルトコンストラクタを持たない)。
-> * >   システムリポジトリ構築時には `jakarta.servlet.ServletContext` にアクセスできず、[ファクトリ](../../component/libraries/libraries-repository.md#repository-factory-injection) によるオブジェクト生成もできない。
+> * >   システムリポジトリ構築時には `jakarta.servlet.ServletContext` にアクセスできず、[ファクトリ](../../component/libraries/libraries-repository.md#ファクトリクラスで生成したオブジェクトをインジェクションする) によるオブジェクト生成もできない。
 
 > このため、 `ServletContextTemplateResolver` ではなく、 `ClassLoaderTemplateResolver` 等の別の実装クラスを使用すること。
 

@@ -1,13 +1,13 @@
 {
   "id": "workflow-tool",
   "title": "ワークフロー定義データ生成ツール",
-  "content": "**目次**\n\n* モジュール一覧\n* 使用方法\n\n  * プラグインに対する設定\n  * プラグインを実行する\n  * バリデーション内容\n  * Java11で使用する場合の設定\n\n本ツールは、BPMN2.0に準拠したワークフロー定義ファイル(xmlファイル)を読み込み、 [ワークフロー関連テーブル](../../extension/workflow/workflow-doc.md#workflow-table-definition) に投入用のCSVファイルを出力するMavenプラグインである。\nCSVファイルの出力時には、ワークフロー定義ファイルの内容が、 [ワークフローライブラリ](../../extension/workflow/workflow-doc.md#workflow) で利用できるかのバリデーションも行う。",
+  "content": "**目次**\n\n* モジュール一覧\n* 使用方法\n\n  * プラグインに対する設定\n  * プラグインを実行する\n  * バリデーション内容\n  * Java11で使用する場合の設定\n\n本ツールは、BPMN2.0に準拠したワークフロー定義ファイル(xmlファイル)を読み込み、 [ワークフロー関連テーブル](../../extension/workflow/workflow-doc.md#ワークフローステートマシンの定義及び進行に必要なテーブルの作成と設定) に投入用のCSVファイルを出力するMavenプラグインである。\nCSVファイルの出力時には、ワークフロー定義ファイルの内容が、 [ワークフローライブラリ](../../extension/workflow/workflow-doc.md#ワークフローライブラリ) で利用できるかのバリデーションも行う。",
   "no_knowledge_content": false,
   "sections": [
     {
       "id": "s1",
       "title": "モジュール一覧",
-      "content": "プラグインに対する設定値の詳細は、 [プラグインに対する設定](../../extension/workflow/workflow-tool.md#workflow-tool-plugin-configuration) を参照。\n\n```xml\n<plugin>\n  <groupId>com.nablarch.workflow</groupId>\n  <artifactId>nablarch-workflow-tool</artifactId>\n</plugin>\n```",
+      "content": "プラグインに対する設定値の詳細は、 [プラグインに対する設定](../../extension/workflow/workflow-tool.md#プラグインに対する設定) を参照。\n\n```xml\n<plugin>\n  <groupId>com.nablarch.workflow</groupId>\n  <artifactId>nablarch-workflow-tool</artifactId>\n</plugin>\n```",
       "level": 2
     },
     {
@@ -31,7 +31,7 @@
     {
       "id": "s5",
       "title": "バリデーション内容",
-      "content": "本ツールでは、 [ワークフローライブラリ](../../extension/workflow/workflow-doc.md#workflow) が想定している要素のみを使用しているかや、各要素がシーケンスフローでつながっているかなどの簡易的なバリデーションを行う。\n\nバリデーション内容は以下の通り\n\n* 想定している要素のみを使用しているか\n\n  * プール\n  * レーン\n  * ユーザタスク(ワークフローの場合)\n  * タスク(ステートマシンの場合)\n  * XORゲートウェイ\n  * 開始イベント\n  * 停止イベント\n  * 中断メッセージ境界イベント\n  * シーケンスフロー\n* 遷移可能な要素となっているか\n* 開始イベントから始まり停止イベントで終了できるか\n\nバリデーションエラーがある場合は、エラー内容を標準エラー出力に出力する。\n\nエラーの出力例\n\n```text\n[ERROR] sm1_ステートマシン_ver1_20170101.bpmn\n[ERROR]     境界イベントに遷移先が設定されていません。 id:manual_sinsa_message, name:null\n[ERROR] wf1_ワークフロー_ver1_20170101.bpmn\n[ERROR]     ゲートウェイから伸びるシーケンスフローの場合、フロー進行条件は必須です。[条件]を設定してください。 id = [SequenceFlow_06] name = [確認OK]\n[ERROR]     サポート対象外の要素です。 id = [T001] name = [確認]\n```",
+      "content": "本ツールでは、 [ワークフローライブラリ](../../extension/workflow/workflow-doc.md#ワークフローライブラリ) が想定している要素のみを使用しているかや、各要素がシーケンスフローでつながっているかなどの簡易的なバリデーションを行う。\n\nバリデーション内容は以下の通り\n\n* 想定している要素のみを使用しているか\n\n  * プール\n  * レーン\n  * ユーザタスク(ワークフローの場合)\n  * タスク(ステートマシンの場合)\n  * XORゲートウェイ\n  * 開始イベント\n  * 停止イベント\n  * 中断メッセージ境界イベント\n  * シーケンスフロー\n* 遷移可能な要素となっているか\n* 開始イベントから始まり停止イベントで終了できるか\n\nバリデーションエラーがある場合は、エラー内容を標準エラー出力に出力する。\n\nエラーの出力例\n\n```text\n[ERROR] sm1_ステートマシン_ver1_20170101.bpmn\n[ERROR]     境界イベントに遷移先が設定されていません。 id:manual_sinsa_message, name:null\n[ERROR] wf1_ワークフロー_ver1_20170101.bpmn\n[ERROR]     ゲートウェイから伸びるシーケンスフローの場合、フロー進行条件は必須です。[条件]を設定してください。 id = [SequenceFlow_06] name = [確認OK]\n[ERROR]     サポート対象外の要素です。 id = [T001] name = [確認]\n```",
       "level": 3
     },
     {

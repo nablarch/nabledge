@@ -11,19 +11,19 @@
 
 ## 依存モジュールの追加
 
-上記の手順はJava17を使用する場合と同じなので、[Java17で使用する場合のセットアップ方法](../../setup/blank-project/blank-project-setup-Java17.md#setup-blank-project-for-java17-add-dependencies) を参照する。
+上記の手順はJava17を使用する場合と同じなので、[Java17で使用する場合のセットアップ方法](../../setup/blank-project/blank-project-setup-Java17.md#依存モジュールの追加) を参照する。
 
 ## gsp-dba-maven-pluginがJava21で動くように設定する
 
-上記の手順はJava17を使用する場合と同じなので、[Java17で使用する場合のセットアップ方法](../../setup/blank-project/blank-project-setup-Java17.md#setup-blank-project-for-java17-gsp-dba-maven-plugin) を参照する。
+上記の手順はJava17を使用する場合と同じなので、[Java17で使用する場合のセットアップ方法](../../setup/blank-project/blank-project-setup-Java17.md#gsp-dba-maven-pluginがjava17で動くように設定する) を参照する。
 
 ## 自動テストで使用するJettyのモジュール変更(ウェブプロジェクト または RESTfulウェブサービスプロジェクトの場合のみ)
 
-上記の手順はJava17を使用する場合と同じなので、[Java17で使用する場合のセットアップ方法](../../setup/blank-project/blank-project-setup-Java17.md#setup-java17-jetty9) を参照する。
+上記の手順はJava17を使用する場合と同じなので、[Java17で使用する場合のセットアップ方法](../../setup/blank-project/blank-project-setup-Java17.md#自動テストで使用するjettyのモジュール変更ウェブプロジェクト-または-restfulウェブサービスプロジェクトの場合のみ) を参照する。
 
 ## --add-opensオプションの追加（JSR352に準拠したバッチプロジェクトの場合のみ）
 
-上記の手順はJava17を使用する場合と同じなので、[Java17で使用する場合のセットアップ方法](../../setup/blank-project/blank-project-setup-Java17.md#setup-blank-project-for-java17-add-jvmoption) を参照する。
+上記の手順はJava17を使用する場合と同じなので、[Java17で使用する場合のセットアップ方法](../../setup/blank-project/blank-project-setup-Java17.md#--add-opensオプションの追加jsr352に準拠したバッチプロジェクトの場合のみ) を参照する。
 
 ## 標準エンコーディングの変更（標準エンコーディングをJava17以前と同じく実行環境依存にしたい場合）
 

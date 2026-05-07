@@ -298,7 +298,7 @@ public interface Handler<TData, TResult> {
 > ただし、業務アクションハンドラを実装する場合は、Handlerインターフェース直接実装するのでは無く、
 > 典型的な処理がテンプレート化されたクラスが提供されているので、それらを利用して実装する。
 
-> * >   [業務アクションハンドラ](../../component/handlers/handlers-handler.md#action-handler-template)
+> * >   [業務アクションハンドラ](../../component/handlers/handlers-handler.md#業務アクションハンドラ)
 
 `handle()` メソッドの第一引数には、リクエストの内容を保持したオブジェクトが渡される。
 リクエスト型はハンドラごとに型変数として宣言され、そのハンドラがリクエストをどのように扱うかを表す。
@@ -307,7 +307,7 @@ public interface Handler<TData, TResult> {
 | 型変数 | ハンドラの処理内容 | ハンドラの例 |
 |---|---|---|
 | Object | データベーストランザクション制御などの リクエストの内容に(直接には)関係しない処理を行う。 | [トランザクション制御ハンドラ](../../component/handlers/handlers-TransactionManagementHandler.md) [開閉局制御ハンドラ](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md) |
-| [Request](../../javadoc/nablarch/fw/Request.html) | 業務アクションハンドラのディスパッチなど リクエストの内容に沿った共通処理を行う。 (詳細は [リクエストの識別と業務処理の実行](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#request-processing) を参照) | [リクエストディスパッチハンドラ](../../component/handlers/handlers-RequestPathJavaPackageMapping.md) [リクエストハンドラエントリ](../../component/handlers/handlers-RequestHandlerEntry.md) |
+| [Request](../../javadoc/nablarch/fw/Request.html) | 業務アクションハンドラのディスパッチなど リクエストの内容に沿った共通処理を行う。 (詳細は [リクエストの識別と業務処理の実行](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#リクエストの識別と業務処理の実行) を参照) | [リクエストディスパッチハンドラ](../../component/handlers/handlers-RequestPathJavaPackageMapping.md) [リクエストハンドラエントリ](../../component/handlers/handlers-RequestHandlerEntry.md) |
 | [HttpRequest](../../javadoc/nablarch/fw/web/HttpRequest.html) | HTTPアクセスログの記録など HTTPリクエストに直接依存した処理を行う。 | [HTTPレスポンスハンドラ](../../component/handlers/handlers-HttpResponseHandler.md) [HTTPアクセスログハンドラ](../../component/handlers/handlers-HttpAccessLogHandler.md) |
 
 この型引数は、各ハンドラの適用範囲も表す。
@@ -318,10 +318,10 @@ public interface Handler<TData, TResult> {
 第二引数には、 **実行コンテキスト** と呼ばれる、アプリケーション実行中にサーバ側で使用する以下の制御情報を格納したオブジェクトが渡される。
 (各項目の詳細についてはリンク先の解説を参照)
 
-* [ハンドラキュー](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#handlerqueue)
-* [リクエストスコープ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#scope)
-* [セッションスコープ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#scope)
-* [データリーダ/データリーダファクトリ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#data-reader)
+* [ハンドラキュー](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#nafのアプリケーション動作モデル)
+* [リクエストスコープ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#変数スコープ)
+* [セッションスコープ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#変数スコープ)
+* [データリーダ/データリーダファクトリ](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#データリーダ)
 
 `handle()` メソッドはその戻り値として、ハンドラの処理結果を表すオブジェクトを返す。
 処理結果オブジェクトの型もリクエストと同様、処理方式ごとに異なるため、ハンドラごとに型変数として
@@ -591,7 +591,7 @@ public interface Result {
 
 1. **処理結果オブジェクトを作成してリターンする。**
 
-[リクエスト](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#request-processing) に対する処理が正常終了し、処理結果が確定した場合、
+[リクエスト](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#リクエストの識別と業務処理の実行) に対する処理が正常終了し、処理結果が確定した場合、
 その内容を表す以下のオブジェクトを作成してリターンする。
 実行中のトランザクションは、 [トランザクション制御ハンドラ](../../component/handlers/handlers-TransactionManagementHandler.md) によりコミットされる。
 
@@ -603,7 +603,7 @@ public interface Result {
 
 1. **処理結果オブジェクトを実行時例外として送出する。**
 
-[リクエスト](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#request-processing) に対する処理が異常終了することが確定した場合、下記の例外を作成して送出する。
+[リクエスト](../../about/about-nablarch/about-nablarch-architectural-pattern-concept.md#リクエストの識別と業務処理の実行) に対する処理が異常終了することが確定した場合、下記の例外を作成して送出する。
 実行中のトランザクションは、 [トランザクション制御ハンドラ](../../component/handlers/handlers-TransactionManagementHandler.md) によりロールバックされる。
 
 | 実行制御基盤 | 異常終了時に送出する型 | 内容 |

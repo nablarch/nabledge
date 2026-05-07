@@ -78,7 +78,7 @@ MailRequester requester = MailUtil.getMailRequester();
 String requestId = requester.requestToSend(ctx);
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#sourcecode) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
 
 ## 送信要求データオブジェクトへの設定項目
 

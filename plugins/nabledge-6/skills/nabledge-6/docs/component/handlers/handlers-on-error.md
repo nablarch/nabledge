@@ -10,18 +10,18 @@
 
 業務アクションでの例外発生時に、指定したレスポンスを返却するインターセプタ。
 
-[InjectForm インターセプタ](../../component/handlers/handlers-InjectForm.md#inject-form-interceptor) を使用して入力値チェックを行う場合も、
-[InjectForm インターセプタ](../../component/handlers/handlers-InjectForm.md#inject-form-interceptor) よりも前にこのインターセプタが実行されるように設定することで、
+[InjectForm インターセプタ](../../component/handlers/handlers-InjectForm.md#injectform-インターセプタ) を使用して入力値チェックを行う場合も、
+[InjectForm インターセプタ](../../component/handlers/handlers-InjectForm.md#injectform-インターセプタ) よりも前にこのインターセプタが実行されるように設定することで、
 バリデーションエラーに対するレスポンスを指定できる。
 
 このインターセプタは、業務アクションのメソッドに対して、 OnError を設定することで有効となる。
 
 > **Tip:**
-> 複数の例外に対するレスポンスを指定したい場合は、 [OnErrorsインターセプタ](../../component/handlers/handlers-on-errors.md#on-errors-interceptor) を使用すること。
+> 複数の例外に対するレスポンスを指定したい場合は、 [OnErrorsインターセプタ](../../component/handlers/handlers-on-errors.md#onerrorsインターセプタ) を使用すること。
 
 > **Important:**
 > 単一の例外に対して複数のレスポンスは指定できない。
-> 例外に対して複数のレスポンスを指定したい場合は、 [複数のレスポンスを指定する](../../component/handlers/handlers-on-error.md#on-error-multiple) を参照。
+> 例外に対して複数のレスポンスを指定したい場合は、 [複数のレスポンスを指定する](../../component/handlers/handlers-on-error.md#複数のレスポンスを指定する) を参照。
 
 ## インターセプタクラス名
 
@@ -62,7 +62,7 @@ public HttpResponse handle(HttpRequest request, ExecutionContext context) {
 この場合は、表示データを取得する業務アクションのメソッドに対して内部フォーワードを行い、
 初期表示用のデータをデータベースなどから取得し、リクエストスコープに設定する。
 
-詳細は [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler)  を参照。
+詳細は [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#内部フォーワードハンドラ)  を参照。
 
 バリデーションエラー発生時に初期表示用のメソッドにフォワードする場合の実装例を以下に示す。
 

@@ -12,7 +12,7 @@
 
 データベースやメッセージキューなどのトランザクションに対応したリソースを使用し、後続処理における透過的トランザクションを実現するハンドラ。
 
-トランザクション機能の詳細は、 [トランザクション管理](../../component/libraries/libraries-transaction.md#transaction) を参照。
+トランザクション機能の詳細は、 [トランザクション管理](../../component/libraries/libraries-transaction.md#トランザクション管理) を参照。
 
 本ハンドラでは、以下の処理を行う。
 
@@ -51,10 +51,10 @@
 
 ## 制約
 
-[データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) より後ろに配置すること
+[データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) より後ろに配置すること
 
 データベースに対するトランザクションを制御する場合には、トランザクション管理対象のデータベース接続がスレッド上に存在している必要がある。
-このため、本ハンドラは [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) より後ろに配置する必要がある。
+このため、本ハンドラは [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) より後ろに配置する必要がある。
 
 ## トランザクション制御対象を設定する
 
@@ -63,10 +63,10 @@
 
 スレッド上で管理する際には、トランザクションを識別するための名前を設定する。
 デフォルトでは、 `transaction` が使用されるが、任意の名前を使用する場合は、 transactionName プロパティに設定すること。
-[複数のトランザクションを使用する場合](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler-multi-transaction) は、  transactionName  プロパティへの値の設定が必須となる。
+[複数のトランザクションを使用する場合](../../component/handlers/handlers-transaction-management-handler.md#アプリケーションで複数のトランザクションを使用する) は、  transactionName  プロパティへの値の設定が必須となる。
 
 > **Tip:**
-> [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) で設定したデータベースに対するトランザクションを制御する場合は、
+> [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) で設定したデータベースに対するトランザクションを制御する場合は、
 > DbConnectionManagementHandler#connectionName に設定した値と同じ値を
 > transactionName プロパティに設定すること。
 

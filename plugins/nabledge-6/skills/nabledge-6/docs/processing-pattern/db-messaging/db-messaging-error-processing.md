@@ -25,7 +25,7 @@ protected void transactionFailure(SqlRow inputData, ExecutionContext context) {
 
 > **Important:**
 > プロセスを異常終了させると、テーブルキューの監視処理が終了するため、テーブルに未処理のデータが滞留することになり、データの取り込み遅延などが発生する。
-> このため、安易にプロセスを異常終了させるのではなく、 [エラーとなったデータを除外](../../processing-pattern/db-messaging/db-messaging-error-processing.md#db-messaging-exclude-error-data) して処理を継続させることを推奨する。
+> このため、安易にプロセスを異常終了させるのではなく、 [エラーとなったデータを除外](../../processing-pattern/db-messaging/db-messaging-error-processing.md#エラーとなったデータを除外し処理を継続する) して処理を継続させることを推奨する。
 
 以下に実装例を示す。
 

@@ -16,7 +16,7 @@
   * 使用方法
 
 Java Beansに関する以下機能を提供する。また、Java16より標準化されたレコードをJava Beansと同様に取り扱うことができる。
-詳細は [BeanUtilでレコードを使用する](../../component/libraries/libraries-bean-util.md#bean-util-use-record) を参照。
+詳細は [BeanUtilでレコードを使用する](../../component/libraries/libraries-bean-util.md#beanutilでレコードを使用する) を参照。
 
 * プロパティに対する値の設定と取得
 * 他のJava Beansへの値の移送
@@ -156,12 +156,12 @@ Converter 実装クラスをそれぞれ参照すること。
 
 > **Important:**
 > デフォルトで提供する型変換ルールでは、精度の小さい型へ変換した場合(例えばLongからIntegerへの変換)で、変換先の精度を超えるような値を指定しても正常に処理を終了する。
-> このため、BeanUtilを使用してコピーする際には、コピーする値がシステムで許容されているかどうかを [入力値のチェック](../../component/libraries/libraries-validation.md#validation) によって事前に検証しておく必要がある。
+> このため、BeanUtilを使用してコピーする際には、コピーする値がシステムで許容されているかどうかを [入力値のチェック](../../component/libraries/libraries-validation.md#入力値のチェック) によって事前に検証しておく必要がある。
 > 検証しなかった場合、不正な値がシステムに取り込まれ障害の原因となる可能性がある。
 
 > **Important:**
 > 型変換ルールはアプリケーション共通の設定となる。
-> 特定の処理のみ異なる型変換ルールを適用したい場合は、 [BeanUtil呼び出し時に許容するフォーマットを設定する](../../component/libraries/libraries-bean-util.md#bean-util-format-logical) を参照し、
+> 特定の処理のみ異なる型変換ルールを適用したい場合は、 [BeanUtil呼び出し時に許容するフォーマットを設定する](../../component/libraries/libraries-bean-util.md#beanutil呼び出し時に許容するフォーマットを設定する) を参照し、
 > 特定のプロパティや型に対して Converter 実装を適用し対応すること。
 
 ## 型変換ルールを追加する
@@ -230,9 +230,9 @@ public class SampleConversionManager implements ConversionManager {
 
 許容するフォーマットは、以下の3種類の指定方法がある。優先順位は上に記載したものが高くなる。
 
-* [BeanUtil呼び出し時に設定](../../component/libraries/libraries-bean-util.md#bean-util-format-logical)
-* [プロパティ単位にアノテーションで設定](../../component/libraries/libraries-bean-util.md#bean-util-format-property-setting)
-* [デフォルト設定(システム共通設定)](../../component/libraries/libraries-bean-util.md#bean-util-format-default-setting)
+* [BeanUtil呼び出し時に設定](../../component/libraries/libraries-bean-util.md#beanutil呼び出し時に許容するフォーマットを設定する)
+* [プロパティ単位にアノテーションで設定](../../component/libraries/libraries-bean-util.md#コピー対象のプロパティに対して許容するフォーマットを設定する)
+* [デフォルト設定(システム共通設定)](../../component/libraries/libraries-bean-util.md#デフォルトシステム共通の許容するフォーマットを設定する)
 
 ### デフォルト(システム共通)の許容するフォーマットを設定する
 
@@ -273,12 +273,12 @@ public class SampleConversionManager implements ConversionManager {
 > `yyyy/MM/dd` と `yyyy/MM/dd HH:mm:ss` の用に日付と日時のフォーマットを指定した場合、
 > 日時形式の値も yyyy/MM/dd パース出来てしまうため時間情報が欠落してしまうケースがある。
 
-> このため、デフォルト指定では日付のフォーマットのみを指定し、日時形式の項目については [プロパティ単位にアノテーションで設定](../../component/libraries/libraries-bean-util.md#bean-util-format-property-setting)
+> このため、デフォルト指定では日付のフォーマットのみを指定し、日時形式の項目については [プロパティ単位にアノテーションで設定](../../component/libraries/libraries-bean-util.md#コピー対象のプロパティに対して許容するフォーマットを設定する)
 > を使用してデフォルト設定をオーバライドするなどの対応が必要となる。
 
 ### コピー対象のプロパティに対して許容するフォーマットを設定する
 
-特定機能だけ [デフォルト設定](../../component/libraries/libraries-bean-util.md#bean-util-format-default-setting) を適用せずに異なるフォーマットを指定したい場合がある。
+特定機能だけ [デフォルト設定](../../component/libraries/libraries-bean-util.md#デフォルトシステム共通の許容するフォーマットを設定する) を適用せずに異なるフォーマットを指定したい場合がある。
 この場合は、コピー対象のBean(コピー元またはコピー先)の該当プロパティに対応したフィールドに対してアノテーションを指定し許容するフォーマットを上書きする。
 
 アノテーションは、コピー元とコピー先のどちらに指定しても動作するが、基本的に許容するフォーマットはString型のプロパティに対応するフィールドに指定するのが好ましい。
@@ -313,8 +313,8 @@ public class Bean {
 
 ### BeanUtil呼び出し時に許容するフォーマットを設定する
 
-特定機能だけ [デフォルト設定](../../component/libraries/libraries-bean-util.md#bean-util-format-default-setting) を適用せずに異なるフォーマットを指定したいが、
-OSSなどを用いてBeanを自動生成している場合に [プロパティ単位にアノテーションで設定](../../component/libraries/libraries-bean-util.md#bean-util-format-property-setting) が使用できない場合がある。
+特定機能だけ [デフォルト設定](../../component/libraries/libraries-bean-util.md#デフォルトシステム共通の許容するフォーマットを設定する) を適用せずに異なるフォーマットを指定したいが、
+OSSなどを用いてBeanを自動生成している場合に [プロパティ単位にアノテーションで設定](../../component/libraries/libraries-bean-util.md#コピー対象のプロパティに対して許容するフォーマットを設定する) が使用できない場合がある。
 また、特定プロパティのみ異なる型変換ルールを適用したい場合がある。
 
 このような場合は、 BeanUtil 呼び出し時に、許容するフォーマットや型変換ルールを設定し対応する。
@@ -351,7 +351,7 @@ BeanUtil.copy といったメソッドの引数に、変更対象のオブジェ
 
 ### 使用方法
 
-[Java Beansに対する操作](../../component/libraries/libraries-bean-util.md#bean-util-use-java-beans) に準ずる。
+[Java Beansに対する操作](../../component/libraries/libraries-bean-util.md#使用方法) に準ずる。
 
 > **Important:**
 > BeanUtilはList型の型パラメータを含むレコードに対応していない。レコードは継承することができないため、

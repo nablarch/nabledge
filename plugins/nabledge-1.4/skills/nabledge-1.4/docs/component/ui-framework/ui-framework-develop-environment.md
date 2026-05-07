@@ -12,7 +12,7 @@ Nablarchでは、標準の開発環境として、 [Eclipse](http://www.eclipse.
 
 ![eclipse_completion.png](../../../knowledge/assets/ui-framework-develop-environment/eclipse_completion.png)
 
-また、 [UI部品の実装サンプルで提供しているEclipse補完テンプレート](../../component/ui-framework/ui-framework-template-list.md#eclipse-template) を導入することで、テンプレートを利用した補完も行えるようになる。
+また、 [UI部品の実装サンプルで提供しているEclipse補完テンプレート](../../component/ui-framework/ui-framework-template-list.md#ui部品の実装サンプルで提供しているeclipse補完テンプレート) を導入することで、テンプレートを利用した補完も行えるようになる。
 
 以下のように、利用したいを入力して補完候補から選択すると、登録されているテンプレートが展開される。
 展開されたテンプレートの入力項目間は `TAB` キーで遷移できる。

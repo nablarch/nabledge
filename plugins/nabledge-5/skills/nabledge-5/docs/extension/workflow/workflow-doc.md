@@ -38,21 +38,21 @@
 
 ### ワークフローが実現できる
 
-* [状態を遷移できる。](../../extension/workflow/workflow-doc.md#workflow-complete-task)
-* [条件に応じて遷移先のタスクを切り替えることができる。](../../extension/workflow/workflow-doc.md#workflow-flow-condition)
-* [差し戻しができる。](../../extension/workflow/workflow-doc.md#workflow-return)
-* [再申請ができる。](../../extension/workflow/workflow-doc.md#workflow-reapplication)
-* [取り消しができる。](../../extension/workflow/workflow-doc.md#workflow-cancel)
-* [却下ができる。](../../extension/workflow/workflow-doc.md#workflow-reject)
-* [引き戻しができる。](../../extension/workflow/workflow-doc.md#workflow-pullback)
-* [ワークフロー定義をバージョン毎に定義できる。](../../extension/workflow/workflow-doc.md#workflow-version)
+* [状態を遷移できる。](../../extension/workflow/workflow-doc.md#ワークフローの状態を遷移タスクを完了させる)
+* [条件に応じて遷移先のタスクを切り替えることができる。](../../extension/workflow/workflow-doc.md#アプリケーションでの処理結果に応じて遷移先のタスクを変更する)
+* [差し戻しができる。](../../extension/workflow/workflow-doc.md#ワークフローの状態を元の状態に戻す差し戻し)
+* [再申請ができる。](../../extension/workflow/workflow-doc.md#ワークフローの申請を再度行う再申請)
+* [取り消しができる。](../../extension/workflow/workflow-doc.md#ワークフロー申請の取り消しを行う)
+* [却下ができる。](../../extension/workflow/workflow-doc.md#ワークフロー申請を却下する)
+* [引き戻しができる。](../../extension/workflow/workflow-doc.md#ワークフロー申請の引き戻しを行う)
+* [ワークフロー定義をバージョン毎に定義できる。](../../extension/workflow/workflow-doc.md#ワークフローステートマシンの定義を変更する)
 
 ### ステートマシンが実現できる
 
-* [状態を遷移できる。](../../extension/workflow/workflow-doc.md#workflow-statemachine-trigger)
-* [条件に応じて遷移先のタスクを切り替えることができる。](../../extension/workflow/workflow-doc.md#workflow-flow-condition)
-* [サブプロセスを定義できる。](../../extension/workflow/workflow-doc.md#workflow-subprocess)
-* [ステートマシン定義をバージョン毎に定義できる。](../../extension/workflow/workflow-doc.md#workflow-version)
+* [状態を遷移できる。](../../extension/workflow/workflow-doc.md#ステートマシンの状態を遷移させる)
+* [条件に応じて遷移先のタスクを切り替えることができる。](../../extension/workflow/workflow-doc.md#アプリケーションでの処理結果に応じて遷移先のタスクを変更する)
+* [サブプロセスを定義できる。](../../extension/workflow/workflow-doc.md#ステートマシンでサブプロセスを定義する)
+* [ステートマシン定義をバージョン毎に定義できる。](../../extension/workflow/workflow-doc.md#ワークフローステートマシンの定義を変更する)
 
 ## モジュール一覧
 
@@ -121,8 +121,8 @@ XORゲートウェイを管理するテーブル
 
 コンポーネント設定ファイル
 
-[テーブルの構造](../../extension/workflow/workflow-doc.md#workflow-table-definition) で定義したテーブルのテーブル名やカラム名をコンポーネント定義する必要がある。
-[テーブルの構造](../../extension/workflow/workflow-doc.md#workflow-table-definition) からダウンロードできるedmファイルに対応したコンポーネント設定ファイルを
+[テーブルの構造](../../extension/workflow/workflow-doc.md#ワークフローステートマシンの定義及び進行に必要なテーブルの作成と設定) で定義したテーブルのテーブル名やカラム名をコンポーネント定義する必要がある。
+[テーブルの構造](../../extension/workflow/workflow-doc.md#ワークフローステートマシンの定義及び進行に必要なテーブルの作成と設定) からダウンロードできるedmファイルに対応したコンポーネント設定ファイルを
 以下からダウンロードし必要に応じてテーブル名などを変更し利用するとよい。
 
 * [コンポーネント設定ファイル](../../../knowledge/assets/workflow-doc/workflow-schema.xml)
@@ -183,11 +183,11 @@ XORゲートウェイを管理するテーブル
 
 ### ワークフローやステートマシンを定義する
 
-ワークフローやステートマシンの定義は、 [テーブル定義](../../extension/workflow/workflow-doc.md#workflow-table-definition) で説明したように、テーブルを用いて管理する。
+ワークフローやステートマシンの定義は、 [テーブル定義](../../extension/workflow/workflow-doc.md#ワークフローステートマシンの定義及び進行に必要なテーブルの作成と設定) で説明したように、テーブルを用いて管理する。
 しかし、テーブルに直接ワークフローやステートマシンの定義を投入すること誤りなどが発生しやすく現実的ではない。
 
 このため、ワークフローやステートマシンの定義は、BPMNモデリングツールを用いて行い、その内容をテーブルに投入する手順を推奨する。
-なお、 [ワークフロー定義データ生成ツール](../../extension/workflow/workflow-tool.md#workflow-tool) を使うことでBPMNモデルからテーブルへ投入するデータを作成できる。
+なお、 [ワークフロー定義データ生成ツール](../../extension/workflow/workflow-tool.md#ワークフロー定義データ生成ツール) を使うことでBPMNモデルからテーブルへ投入するデータを作成できる。
 
 > **Tip:**
 > BPMNのモデリングは、以下の製品などで行える。
@@ -248,13 +248,13 @@ instance.assignGroup("task", "group");
 割り当てられたユーザ（グループ）は、順次処理をさせるか並行して処理をさせるかを選ぶことができる。
 また、完了条件を適切に使用することでOR承認やAND承認といったことも実現できる。
 
-[ワークフローのタスクに担当者やグループを割り当てる](../../extension/workflow/workflow-doc.md#workflow-assign) と同じように、ユーザやグループの割り当ては、タスクが開始される前であれば、任意のタイミングで行える。
+[ワークフローのタスクに担当者やグループを割り当てる](../../extension/workflow/workflow-doc.md#ワークフローのタスクに担当者やグループを割り当てる) と同じように、ユーザやグループの割り当ては、タスクが開始される前であれば、任意のタイミングで行える。
 
 ワークフロー定義
 
 ユーザタスクをマルチインスタンス(①)として設定する。
 Completion Condition(②)には、完了条件を設定する。この例では、複数ユーザのうち1人が処理をしたらタスクが完了するOR承認となる。
-完了条件の定義方法などの詳細は [マルチインスタンスの完了条件の判定方法](../../extension/workflow/workflow-doc.md#workflow-multi-completion) を参照。
+完了条件の定義方法などの詳細は [マルチインスタンスの完了条件の判定方法](../../extension/workflow/workflow-doc.md#マルチインスタンスの完了条件の判定方法) を参照。
 
 ![multi.png](../../../knowledge/assets/workflow-doc/multi.png)
 
@@ -283,9 +283,9 @@ WorkflowInstance#completeUserTask や
 WorkflowInstance#completeGroupTask
 を使用してタスクを完了し、次のタスクに状態を遷移させることができる。
 対象の WorkflowInstance は、
-[ワークフロー開始時](../../extension/workflow/workflow-doc.md#workflow-start) にアプリケーション側で保持したインスタンスIDを使用して事前に取得する必要がある。
+[ワークフロー開始時](../../extension/workflow/workflow-doc.md#ワークフローステートマシンを開始する) にアプリケーション側で保持したインスタンスIDを使用して事前に取得する必要がある。
 
-タスク完了後のワークフローの状態の取得方法は、 [ワークフロー（ステートマシン）の現在の状態を取得する](../../extension/workflow/workflow-doc.md#workflow-status) を参照。
+タスク完了後のワークフローの状態の取得方法は、 [ワークフロー（ステートマシン）の現在の状態を取得する](../../extension/workflow/workflow-doc.md#ワークフローステートマシンの現在の状態を取得する) を参照。
 
 実装例
 
@@ -318,13 +318,13 @@ instance.completeGroupTask("group");
 アプリケーションでの処理結果（タスクの結果）を元に遷移先のタスクを切り替えたい場合がある。
 このような場合は、XORゲートウェイを使用して進行条件及び遷移先のフローノードを定義する。
 
-タスク完了後の状態(アクティブになったタスクやワークフローが終了したかどうか)を判定したい場合は、 [ワークフロー（ステートマシン）の現在の状態を取得する](../../extension/workflow/workflow-doc.md#workflow-status) を参照。
+タスク完了後の状態(アクティブになったタスクやワークフローが終了したかどうか)を判定したい場合は、 [ワークフロー（ステートマシン）の現在の状態を取得する](../../extension/workflow/workflow-doc.md#ワークフローステートマシンの現在の状態を取得する) を参照。
 
 XORゲートウェイの定義
 
 下記定義の用に、XORゲートウェイ(①)を用いて複数の遷移先を定義する。
 XORゲートウェイから伸びるシーケンスフローには、このシーケンスフローで遷移するための条件(②)を定義する。
-進行条件の定義方法などは、 [XORゲートウェイの進行先ノードの判定方法](../../extension/workflow/workflow-doc.md#workflow-xor-flow) を参照。
+進行条件の定義方法などは、 [XORゲートウェイの進行先ノードの判定方法](../../extension/workflow/workflow-doc.md#xorゲートウェイの進行先ノードの判定方法) を参照。
 
 ![flow-condition.png](../../../knowledge/assets/workflow-doc/flow-condition.png)
 
@@ -355,7 +355,7 @@ if (workflow.isActive("task1")) {
 ### ワークフローの状態を元の状態に戻す（差し戻し）
 
 確認結果がNGだった場合などに、申請者に差し戻し処理を行いたい場合がある。
-このような場合は、 [遷移先の条件分岐](../../extension/workflow/workflow-doc.md#workflow-flow-condition) を用いて差し戻しを実現する。
+このような場合は、 [遷移先の条件分岐](../../extension/workflow/workflow-doc.md#アプリケーションでの処理結果に応じて遷移先のタスクを変更する) を用いて差し戻しを実現する。
 
 ワークフロー定義
 
@@ -365,10 +365,10 @@ if (workflow.isActive("task1")) {
 
 ### ワークフローの申請を再度行う（再申請）
 
-[差し戻し](../../extension/workflow/workflow-doc.md#workflow-return) や [引き戻し](../../extension/workflow/workflow-doc.md#workflow-pullback) 後に再度申請するようなフローを定義したい場合がある。
+[差し戻し](../../extension/workflow/workflow-doc.md#ワークフローの状態を元の状態に戻す差し戻し) や [引き戻し](../../extension/workflow/workflow-doc.md#ワークフロー申請の引き戻しを行う) 後に再度申請するようなフローを定義したい場合がある。
 このような場合は、再申請用のタスクを定義することで対応できる。
 
-なお、再申請のタスクについては、 [通常のタスクの完了](../../extension/workflow/workflow-doc.md#workflow-complete-task) により次のタスクに遷移させれば良い。
+なお、再申請のタスクについては、 [通常のタスクの完了](../../extension/workflow/workflow-doc.md#ワークフローの状態を遷移タスクを完了させる) により次のタスクに遷移させれば良い。
 
 ワークフロー定義
 
@@ -404,7 +404,7 @@ instance.triggerEvent("cancel");
 ### ワークフロー申請を却下する
 
 確認者や承認者などが申請を却下したい場合がある。
-このような場合は、 [差し戻し](../../extension/workflow/workflow-doc.md#workflow-return) と同じようにXORゲートウェイを定義し、却下の場合の遷移先を停止イベントとする。
+このような場合は、 [差し戻し](../../extension/workflow/workflow-doc.md#ワークフローの状態を元の状態に戻す差し戻し) と同じようにXORゲートウェイを定義し、却下の場合の遷移先を停止イベントとする。
 
 ワークフロー定義
 
@@ -416,13 +416,13 @@ instance.triggerEvent("cancel");
 
 既に進行中の承認処理の途中で、申請者が申請内容の修正などを行うために自身のタスクにフローを強制的に戻す場合などに使用する。
 
-[取り消し](../../extension/workflow/workflow-doc.md#workflow-cancel) と同じように、引き戻し可能なタスクに対して境界イベントを設定する。
+[取り消し](../../extension/workflow/workflow-doc.md#ワークフロー申請の取り消しを行う) と同じように、引き戻し可能なタスクに対して境界イベントを設定する。
 境界イベントの遷移先には、申請者が処理可能なタスク（例えば再申請タスク）などを指定する。
 
 ワークフロー定義
 
 下記の定義のように、境界イベントを設定し遷移先を申請者のタスクとする。
-詳細な定義方法や実装例は、 [取り消し](../../extension/workflow/workflow-doc.md#workflow-cancel) を参照。
+詳細な定義方法や実装例は、 [取り消し](../../extension/workflow/workflow-doc.md#ワークフロー申請の取り消しを行う) を参照。
 
 ![pullback.png](../../../knowledge/assets/workflow-doc/pullback.png)
 
@@ -435,9 +435,9 @@ WorkflowInstance#triggerEvent
 ワークフロー開始時 にアプリケーション側で保持したインスタンスIDを使用して事前に取得する必要がある。
 
 なお、 WorkflowInstance#triggerEvent
-にパラメータを指定することで、 [アプリケーションでの処理結果に応じて遷移先のタスクを変更する](../../extension/workflow/workflow-doc.md#workflow-flow-condition) を実現できる。
+にパラメータを指定することで、 [アプリケーションでの処理結果に応じて遷移先のタスクを変更する](../../extension/workflow/workflow-doc.md#アプリケーションでの処理結果に応じて遷移先のタスクを変更する) を実現できる。
 
-タスク完了後のワークフローの状態の取得方法は、 [ワークフロー（ステートマシン）の現在の状態を取得する](../../extension/workflow/workflow-doc.md#workflow-status) を参照。
+タスク完了後のワークフローの状態の取得方法は、 [ワークフロー（ステートマシン）の現在の状態を取得する](../../extension/workflow/workflow-doc.md#ワークフローステートマシンの現在の状態を取得する) を参照。
 
 ステートマシン定義
 
@@ -460,7 +460,7 @@ workflowInstance.triggerEvent("return");
 
 ステートマシンでは、サブプロセスを使用することで、状態遷移の流れの見通しを良くできる。
 サブプロセスは、BPMNのモデリングツールでの定義でのみ使用し、本ライブラリがステートマシンの進行時にサブプロセスを意識することはない。
-このため、アプリケーションの実装時もサブプロセスを意識する必要はなく、 状態遷移は [ステートマシンの状態を遷移させる](../../extension/workflow/workflow-doc.md#workflow-statemachine-trigger) を使用して行えば良い。
+このため、アプリケーションの実装時もサブプロセスを意識する必要はなく、 状態遷移は [ステートマシンの状態を遷移させる](../../extension/workflow/workflow-doc.md#ステートマシンの状態を遷移させる) を使用して行えば良い。
 
 サブプロセスの定義例
 
@@ -474,7 +474,7 @@ workflowInstance.triggerEvent("return");
 ### ワークフロー（ステートマシン）の現在の状態を取得する
 
 ワークフロー（ステートマシン）の状態遷移後の状態を取得できる。
-これにより、 [分岐](../../extension/workflow/workflow-doc.md#workflow-flow-condition) を使用した場合に、どのタスクがアクティブとなったかやワークフロー（ステートマシン）が完了したかを判断できるようになる。
+これにより、 [分岐](../../extension/workflow/workflow-doc.md#アプリケーションでの処理結果に応じて遷移先のタスクを変更する) を使用した場合に、どのタスクがアクティブとなったかやワークフロー（ステートマシン）が完了したかを判断できるようになる。
 
 ワークフロー（ステートマシン）の状態は、
 WorkflowInstance#isActive や
@@ -512,7 +512,7 @@ if (instance.isCompleted()) {
 この機能を使用することで、進行中のフローに影響をあたえることなく、ある日時点から新しいバージョンのフローを進行できるようになる。
 
 バージョンは、ワークフロー（ステートマシン）開始時点で有効なものが自動的に適用される。
-ワークフロー定義テーブルの適用日が [システム日付](../../component/libraries/libraries-date.md#date-system-time-settings) 以前で最もバージョンの大きいものが自動的に適用される。
+ワークフロー定義テーブルの適用日が [システム日付](../../component/libraries/libraries-date.md#システム日時の管理機能を使うための設定) 以前で最もバージョンの大きいものが自動的に適用される。
 
 > **Tip:**
 > ワークフロー（ステートマシン）の定義の変更によっては、アプリケーションのロジックに影響をあたえるものがある。

@@ -23,7 +23,7 @@
 > 本機能は、アプリケーションの要件が合致する場合に限り、使用すること。
 
 > 本機能は、データベースを使用して認可チェックに使用する権限データを管理し、
-> リクエスト単位で権限を設定する( [グループ単位とユーザ単位を併用した権限設定ができる](../../component/libraries/libraries-authorization-permission-check.md#permission-check-authority-model) に示した概念モデルを参照)。
+> リクエスト単位で権限を設定する( [グループ単位とユーザ単位を併用した権限設定ができる](../../component/libraries/libraries-authorization-permission-check.md#グループ単位とユーザ単位を併用した権限設定ができる) に示した概念モデルを参照)。
 > 例えば、ウェブの登録機能といった場合、初期表示/確認/戻る/登録といった複数リクエストで構成されるのが一般的である。
 
 > そのため、本機能は、細かく権限を設定できる反面、非常に細かいデータ設計が必要となり、
@@ -36,14 +36,14 @@
 
 ### リクエスト単位で認可チェックを行うことができる
 
-[認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#permission-check-handler) をハンドラキューに設定することで、
+[認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#認可チェックハンドラ) をハンドラキューに設定することで、
 リクエスト単位で認可チェックを行うことができる。
 
 詳細は以下を参照。
 
-* [認可チェックを使うための設定](../../component/libraries/libraries-authorization-permission-check.md#permission-check-settings)
-* [サーバサイドで認可チェックを行う](../../component/libraries/libraries-authorization-permission-check.md#permission-check-server-side-check)
-* [権限に応じて画面表示を制御する](../../component/libraries/libraries-authorization-permission-check.md#permission-check-view-control)
+* [認可チェックを使うための設定](../../component/libraries/libraries-authorization-permission-check.md#認可チェックを使うための設定)
+* [サーバサイドで認可チェックを行う](../../component/libraries/libraries-authorization-permission-check.md#サーバサイドで認可チェックを行う)
+* [権限に応じて画面表示を制御する](../../component/libraries/libraries-authorization-permission-check.md#権限に応じて画面表示を制御する)
 
 ### グループ単位とユーザ単位を併用した権限設定ができる
 
@@ -150,7 +150,7 @@ yyyyMMdd形式で、指定しない場合は”99991231”
 * BasicPermissionFactory
   の設定をコンポーネント定義に追加する。
 * BasicPermissionFactory は、
-  [認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#permission-check-handler) に設定して使うので、コンポーネント名は任意の名前を指定する。
+  [認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#認可チェックハンドラ) に設定して使うので、コンポーネント名は任意の名前を指定する。
 
 ```xml
 <component name="permissionFactory" class="nablarch.common.permission.BasicPermissionFactory">
@@ -230,7 +230,7 @@ BasicPermissionFactory は、
 ### サーバサイドで認可チェックを行う
 
 認可チェックは、 Permission を使用する。
-[認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#permission-check-handler) により、スレッドコンテキストに
+[認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#認可チェックハンドラ) により、スレッドコンテキストに
 Permission が設定されているので、
 PermissionUtil.getPermission
 を使って取得する。
@@ -245,7 +245,7 @@ if (permission.permit("/action/user/unlock")) {
 ### 権限に応じて画面表示を制御する
 
 権限の有無でボタンやリンクの非表示(非活性)を制御したい場合は、カスタムタグを使用する。
-[認可チェック/サービス提供可否に応じてボタン/リンクの表示/非表示を切り替える](../../component/libraries/libraries-tag.md#tag-submit-display-control) を参照。
+[認可チェック/サービス提供可否に応じてボタン/リンクの表示/非表示を切り替える](../../component/libraries/libraries-tag.md#認可チェックサービス提供可否に応じてボタンリンクの表示非表示を切り替える) を参照。
 
 ### 権限データにアクセスする
 
@@ -253,7 +253,7 @@ if (permission.permit("/action/user/unlock")) {
 権限データにアクセスしたい場合がある。
 しかし、本機能では、認可チェックを行う機能しか提供していない。
 
-そのため、権限データにアクセスしたい場合は、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) を使用し、
+そのため、権限データにアクセスしたい場合は、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) を使用し、
 SQLを作成することで対応する。
 
 ## 拡張例

@@ -26,7 +26,7 @@
 でリクエストスレッドを作成した後、その完了を待機する。
 
 **リクエストスレッド** では、メインスレッド側で作成したデータリーダを使用し、受信キュー上の要求電文を待機する。
-要求電文を受信したスレッドでは、まず、要求電文中の [フレームワーク制御ヘッダ](../../component/libraries/libraries-enterprise-messaging-mom.md#fw-header) 中の
+要求電文を受信したスレッドでは、まず、要求電文中の [フレームワーク制御ヘッダ](../../component/libraries/libraries-enterprise-messaging-mom.md#データモデル) 中の
 **リクエストIDヘッダー** を読込み、その値に対応した業務処理を実装する
 [業務アクションハンドラ](../../component/handlers/handlers-MessagingAction.md) を生成する。
 

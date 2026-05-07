@@ -50,11 +50,11 @@ create.jspに登録画面の内容を追加する。
 
 この実装のポイント
 
-* [Jakarta Server Pagesカスタムタグ](../../component/libraries/libraries-tag.md#tag) を使用し、テキスト入力フォーム、プルダウンを作成する。
-  [入力フォームを作る](../../component/libraries/libraries-tag.md#tag-input-form) を参照。
-* [selectタグ](../../component/libraries/libraries-tag-reference.md#tag-select-tag) の listName 属性に、
+* [Jakarta Server Pagesカスタムタグ](../../component/libraries/libraries-tag.md#jakarta-server-pagesカスタムタグ) を使用し、テキスト入力フォーム、プルダウンを作成する。
+  [入力フォームを作る](../../component/libraries/libraries-tag.md#入力フォームを作る) を参照。
+* [selectタグ](../../component/libraries/libraries-tag-reference.md#selectタグ) の listName 属性に、
   後述の初期表示メソッドでリクエストスコープに登録する業種リストの名称を指定し、プルダウンに表示する。
-  [選択項目(プルダウン/ラジオボタン/チェックボックス)を表示する](../../component/libraries/libraries-tag.md#tag-selection) を参照。
+  [選択項目(プルダウン/ラジオボタン/チェックボックス)を表示する](../../component/libraries/libraries-tag.md#選択項目プルダウンラジオボタンチェックボックスを表示する) を参照。
 
 業務アクションに初期表示メソッドを作成する
 
@@ -84,7 +84,7 @@ public HttpResponse input(HttpRequest request, ExecutionContext context) {
 
 この実装のポイント
 
-* 登録画面に業種のプルダウンを表示するために、[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) を使用してデータベースから業種情報を全件取得する。
+* 登録画面に業種のプルダウンを表示するために、[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) を使用してデータベースから業種情報を全件取得する。
 * JSPへ値を受け渡すために、取得した業種リストをリクエストスコープに登録する。
 
 URLと業務アクションのマッピングを行う
@@ -122,7 +122,7 @@ routes.xml
 
 この実装のポイント
 
-* [Jakarta Server Pagesカスタムタグ](../../component/libraries/libraries-tag.md#tag) の [aタグ](../../component/libraries/libraries-tag-reference.md#tag-a-tag) を使用してリンクを作成する。
+* [Jakarta Server Pagesカスタムタグ](../../component/libraries/libraries-tag.md#jakarta-server-pagesカスタムタグ) の [aタグ](../../component/libraries/libraries-tag-reference.md#aタグ) を使用してリンクを作成する。
 
 動作確認を行う
 
@@ -140,4 +140,4 @@ routes.xml
 
 ![initial_display_select.png](../../../knowledge/assets/web-application-client-create1/initial_display_select.png)
 
-[次へ](../../processing-pattern/web-application/web-application-client-create2.md#client-create-2)
+[次へ](../../processing-pattern/web-application/web-application-client-create2.md#登録内容の確認)

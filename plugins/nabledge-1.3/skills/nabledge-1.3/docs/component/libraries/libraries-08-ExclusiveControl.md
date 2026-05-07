@@ -211,7 +211,7 @@ public class UsersExclusiveControl extends ExclusiveControlContext {
 ## 悲観的ロック
 
 悲観的ロックは、ExclusiveControlUtilのupdateVersionメソッドを呼び出すことで実現する。
-[クラス定義](../../component/libraries/libraries-08-ExclusiveControl.md#exclusivecontrol-classes) で説明したUsersExclusiveControlクラスを使用した実装例を示す。
+[クラス定義](../../component/libraries/libraries-08-ExclusiveControl.md#クラス定義) で説明したUsersExclusiveControlクラスを使用した実装例を示す。
 
 ```java
 // 更新対象データの取得前に下記メソッドを呼び出し、排他制御用テーブルの対象データをロックする。
@@ -255,7 +255,7 @@ ExclusiveControlUtil.updateVersion(new UsersExclusiveControl("U00001"));
 
 ### 使用例
 
-ここでは、 [クラス定義](../../component/libraries/libraries-08-ExclusiveControl.md#exclusivecontrol-classes) で説明したUsersExclusiveControlクラスを使用した実装例を示す。
+ここでは、 [クラス定義](../../component/libraries/libraries-08-ExclusiveControl.md#クラス定義) で説明したUsersExclusiveControlクラスを使用した実装例を示す。
 
 #### アクションの実装例
 
@@ -494,7 +494,7 @@ public class UsersExclusiveControl extends ExclusiveControlContext {
 
 > **Note:**
 > 主キーが組み合わせキーとなるエンティティに対する一括更新処理を作成するために、本フレームワークでは、
-> [compositeKeyCheckboxタグ](../../component/libraries/libraries-07-TagReference.md#webview-compositekeycheckboxtag) と [compositeKeyRadioButtonタグ](../../component/libraries/libraries-07-TagReference.md#webview-compositekeyradiobuttontag) 、nablarch.common.web.compositekey.CompositeKeyクラスを提供している。
+> [compositeKeyCheckboxタグ](../../component/libraries/libraries-07-TagReference.md#compositekeycheckboxタグ) と [compositeKeyRadioButtonタグ](../../component/libraries/libraries-07-TagReference.md#compositekeyradiobuttonタグ) 、nablarch.common.web.compositekey.CompositeKeyクラスを提供している。
 
 この場合Actionでは、以下のように **HttpExclusiveControlUtil.checkVersion()** 、
  **HttpExclusiveControlUtil.updateVersionWithCheck()** を選択されたレコード毎に繰り返し呼び出す。

@@ -7,11 +7,11 @@
 * RESTEasy環境下でRESTfulウェブサービスを使用する
 * 各環境下で使用するボディコンバータを変更（追加）したい
 
-[RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restful-web-service) で使用するための以下のアダプタを提供する。
+[RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restfulウェブサービス編) で使用するための以下のアダプタを提供する。
 
 * JSONを [Jackson(外部サイト、英語)](https://github.com/FasterXML/jackson) を使って変換するアダプタ
-* [Jersey(外部サイト、英語)](https://eclipse-ee4j.github.io/jersey/)  で [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restful-web-service) を使用するためのアダプタ
-* [RESTEasy(外部サイト、英語)](https://resteasy.dev/) で [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restful-web-service) を使用するためのアダプタ
+* [Jersey(外部サイト、英語)](https://eclipse-ee4j.github.io/jersey/)  で [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restfulウェブサービス編) を使用するためのアダプタ
+* [RESTEasy(外部サイト、英語)](https://resteasy.dev/) で [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restfulウェブサービス編) を使用するためのアダプタ
 
 ## モジュール一覧
 
@@ -59,12 +59,12 @@ JaxRsMethodBinderFactory#handlerList
 に対して、Jersey用のハンドラを構築するファクトリクラス(JerseyJaxRsHandlerListFactory)
 をファクトリインジェクションする。これにより、Jersey用の以下のハンドラ構成が自動的に設定される。
 
-* [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) の設定(以下のコンバータが設定される)
+* [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#リクエストボディ変換ハンドラ) の設定(以下のコンバータが設定される)
 
   * JSONのコンバータには Jackson2BodyConverter が設定される。
   * XMLのコンバータには JaxbBodyConverter が設定される。
   * application/x-www-form-urlencodedのコンバータには FormUrlEncodedConverter が設定される。
-* [JAX-RS BeanValidationハンドラ](../../component/handlers/handlers-jaxrs-bean-validation-handler.md#jaxrs-bean-validation-handler)
+* [JAX-RS BeanValidationハンドラ](../../component/handlers/handlers-jaxrs-bean-validation-handler.md#jax-rs-beanvalidationハンドラ)
 
 ```xml
 <component name="packageMapping" class="nablarch.integration.router.RoutesMapping">
@@ -96,12 +96,12 @@ JaxRsMethodBinderFactory#handlerList
 に対して、RESTEasy用のハンドラを構築するファクトリクラス(ResteasyJaxRsHandlerListFactory)
 をファクトリインジェクションする。これにより、RESTEasy用の以下のハンドラ構成が自動的に設定される。
 
-* [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) の設定(以下のコンバータが設定される)
+* [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#リクエストボディ変換ハンドラ) の設定(以下のコンバータが設定される)
 
   * JSONのコンバータには Jackson2BodyConverter が設定される。
   * XMLのコンバータには JaxbBodyConverter が設定される。
   * application/x-www-form-urlencodedのコンバータには FormUrlEncodedConverter が設定される。
-* [JAX-RS BeanValidationハンドラ](../../component/handlers/handlers-jaxrs-bean-validation-handler.md#jaxrs-bean-validation-handler)
+* [JAX-RS BeanValidationハンドラ](../../component/handlers/handlers-jaxrs-bean-validation-handler.md#jax-rs-beanvalidationハンドラ)
 
 ```xml
 <component name="packageMapping" class="nablarch.integration.router.RoutesMapping">

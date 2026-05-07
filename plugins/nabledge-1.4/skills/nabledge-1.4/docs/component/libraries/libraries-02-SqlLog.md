@@ -35,8 +35,8 @@ loggers.SQL.writerNames=<出力先のログライタ>
 SQLログの個別項目を下記に示す。
 SQLログは、SQL文を発行する方法に応じて出力項目が異なる。
 
-ここでは、 [BasicLogFormatter](../../component/libraries/libraries-01-Log.md#log-basiclogformatter) の設定で指定できる共通項目については省略する。
-共通項目と個別項目を組み合わせたフォーマットについては、 [各種ログの共通項目のフォーマット](../../component/libraries/libraries-01-Log.md#applog-format) を参照。
+ここでは、 [BasicLogFormatter](../../component/libraries/libraries-01-Log.md#basiclogformatter) の設定で指定できる共通項目については省略する。
+共通項目と個別項目を組み合わせたフォーマットについては、 [各種ログの共通項目のフォーマット](../../component/libraries/libraries-01-Log.md#各種ログの共通項目のフォーマット) を参照。
 
 ### SqlPStatement#retrieveメソッドの検索開始時
 
@@ -206,7 +206,7 @@ loggers.SQL.writerNames=appFile
 
 SqlLogUtilは、プロパティファイル(app-log.properties)を読み込み、
 SqlLogFormatterオブジェクトを生成して、個別項目のフォーマット処理を委譲する。
-プロパティファイルのパス指定や実行時の変更方法は、 [各種ログの設定](../../component/libraries/libraries-01-Log.md#applog-config) を参照。
+プロパティファイルのパス指定や実行時の変更方法は、 [各種ログの設定](../../component/libraries/libraries-01-Log.md#各種ログの設定) を参照。
 
 SQLログの設定例を下記に示す。
 

@@ -18,7 +18,7 @@
 **実装例(CM111001Component.java)**
 
 以下は、ワークフローサンプルアプリケーションのワークフロー開始処理
-（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#trans-expence-appliance-definition) の①に対応）のコードである。
+（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#ワークフロー定義) の①に対応）のコードである。
 
 ```java
 /**
@@ -72,7 +72,7 @@ public String applyTransExpense(TransExpeApplicationEntity entity, String confir
 **実装例(CM111001Component.java)**
 
 以下は、交通費申請の確認タスクを承認タスクへ進行させる処理
-（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#trans-expence-appliance-definition) の②に対応）のコードである。
+（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#ワークフロー定義) の②に対応）のコードである。
 
 確認タスク後のXORゲートウェイから承認タスクに進行させる必要があるので、 `completeUserTask` にパラメータを
 渡す必要がある。XORゲートウェイから承認タスクに進行するシーケンスフローのフロー進行条件には、
@@ -124,7 +124,7 @@ public void executeConfirmation(TransExpeApplicationEntity applicationEntity, Tr
 **実装例(CM111001Component.java)**
 
 以下は、ワークフローサンプルアプリケーションの境界イベント
-（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#trans-expence-appliance-definition) の③に対応）を実行するコードである。
+（[ワークフロー定義](../../extension/workflow/workflow-SampleApplicationDesign.md#ワークフロー定義) の③に対応）を実行するコードである。
 
 ```java
 /**

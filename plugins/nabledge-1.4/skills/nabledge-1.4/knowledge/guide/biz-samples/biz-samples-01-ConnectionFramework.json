@@ -13,7 +13,7 @@
     {
       "id": "s2",
       "title": "特徴",
-      "content": "* **通信機能の隠蔽**\n  本機能を使用することで、利用者は通信方式を意識することなくサーバとの通信を行える。\n* **基本的な通信機能の提供**\n  [HTTP/HTTPS通信](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#abouthttpconn) に記述されている通りの通信機能であれば、カスタマイズすることなく利用できる。\n* **汎用的な電文の利用**\n  送受信する電文形式を自由に変更できる。",
+      "content": "* **通信機能の隠蔽**\n  本機能を使用することで、利用者は通信方式を意識することなくサーバとの通信を行える。\n* **基本的な通信機能の提供**\n  [HTTP/HTTPS通信](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#httphttps通信) に記述されている通りの通信機能であれば、カスタマイズすることなく利用できる。\n* **汎用的な電文の利用**\n  送受信する電文形式を自由に変更できる。",
       "level": 2
     },
     {
@@ -67,13 +67,13 @@
     {
       "id": "s11",
       "title": "クラス定義",
-      "content": "a) 通信処理\n\n| クラス名 | 概要 |\n|---|---|\n| NMMessageSender | 通信機能を提供するクラス。使用方法につていは [通信処理APIの呼び出し](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#houtouse) に記載する。 |\n| NMHttpRequester | HTTP/HTTPS通信機能を実装したクラス。実装機能の詳細については [HTTP/HTTPS通信](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#abouthttpconn) に、 本実装クラスの設定方法については [センダ](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#propertyaboutsender) に記載する。 |\n\nb) 通信データ\n\n| クラス名 | 概要 |\n|---|---|\n| NMMessage | 通信のペイロード。本機能が想定するデータ形式のモデルは [データモデル](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#aboutmessage) に記載する。 |\n\nc) データ変換\n\n| クラス名 | 概要 |\n|---|---|\n| NMJsonBodyConvertor | JSON形式でNMMessageおよびNSData間の変換機能を提供するクラス。 実装機能の詳細については [JSONコンバータ](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#aboutjsoncon) に記載する。 |\n\nd) その他\n\n| クラス名 | 概要 |\n|---|---|\n| NMConnectionUtil | 通信機能に関するユーティリティをまとめたクラス。各ユーティリティの詳細については [NMConnectionUtil](../../guide/biz-samples/biz-samples-01-Utility.md#nmconnectionutil) に記載する。 |\n| NMMockUtil | 通信モックに関するユーティリティをまとめたクラス。各ユーティリティの詳細については [NMMockUtil](../../guide/biz-samples/biz-samples-01-Utility.md#nmmockutil) に記載する。 |",
+      "content": "a) 通信処理\n\n| クラス名 | 概要 |\n|---|---|\n| NMMessageSender | 通信機能を提供するクラス。使用方法につていは [通信処理APIの呼び出し](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#通信処理apiの呼び出し) に記載する。 |\n| NMHttpRequester | HTTP/HTTPS通信機能を実装したクラス。実装機能の詳細については [HTTP/HTTPS通信](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#httphttps通信) に、 本実装クラスの設定方法については [センダ](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#センダ) に記載する。 |\n\nb) 通信データ\n\n| クラス名 | 概要 |\n|---|---|\n| NMMessage | 通信のペイロード。本機能が想定するデータ形式のモデルは [データモデル](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#データモデル) に記載する。 |\n\nc) データ変換\n\n| クラス名 | 概要 |\n|---|---|\n| NMJsonBodyConvertor | JSON形式でNMMessageおよびNSData間の変換機能を提供するクラス。 実装機能の詳細については [JSONコンバータ](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#jsonコンバータ) に記載する。 |\n\nd) その他\n\n| クラス名 | 概要 |\n|---|---|\n| NMConnectionUtil | 通信機能に関するユーティリティをまとめたクラス。各ユーティリティの詳細については [NMConnectionUtil](../../guide/biz-samples/biz-samples-01-Utility.md#nmconnectionutil) に記載する。 |\n| NMMockUtil | 通信モックに関するユーティリティをまとめたクラス。各ユーティリティの詳細については [NMMockUtil](../../guide/biz-samples/biz-samples-01-Utility.md#nmmockutil) に記載する。 |",
       "level": 5
     },
     {
       "id": "s12",
       "title": "シーケンス図",
-      "content": "通信時のシーケンスを以下に示す。\n\n![connection_sequence.jpg](assets/biz-samples-01-ConnectionFramework/connection_sequence.jpg)\n\nフックを複数使用する場合、送信前処理は設定した順番に、送信後処理は設定した順番とは逆に呼び出される\n(フックの設定方法については [プロパティリストの作成](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#connectionfwpropertylist) のb) SenderHookを参照)。\n例えば、以下の処理を行うフックを順に設定した場合\n\n1. 通信ヘッダの設定/取得\n  (この通信ヘッダとは通信プロトコルヘッダとは別に、システムの通信インタフェースごとに決められたものを指す。)\n2. 暗号化対象データ/復号データのフォーマット/パース\n3. 通信データの一部暗号化/復号\n\nこの場合、送信前には1、2、3の順にフックの前処理が呼び出される。つまり、\nヘッダの設定、暗号化対象データのフォーマット、データの暗号化の順に処理が行われる。\n一方、送信後には3、2、1の順にフックの後処理が呼び出される。つまり\nデータの復号、復号データのパース、ヘッダの取得の順に処理が行われる。\nまた、フックを複数使用できることにより、処理の追加および削除が容易である。\n例えば、テスト実行時にはデータの暗号化は行いたくない、といった場合には3のフックだけを\n取り外せばよい。",
+      "content": "通信時のシーケンスを以下に示す。\n\n![connection_sequence.jpg](assets/biz-samples-01-ConnectionFramework/connection_sequence.jpg)\n\nフックを複数使用する場合、送信前処理は設定した順番に、送信後処理は設定した順番とは逆に呼び出される\n(フックの設定方法については [プロパティリストの作成](../../guide/biz-samples/biz-samples-01-ConnectionFramework.md#プロパティリストの作成) のb) SenderHookを参照)。\n例えば、以下の処理を行うフックを順に設定した場合\n\n1. 通信ヘッダの設定/取得\n  (この通信ヘッダとは通信プロトコルヘッダとは別に、システムの通信インタフェースごとに決められたものを指す。)\n2. 暗号化対象データ/復号データのフォーマット/パース\n3. 通信データの一部暗号化/復号\n\nこの場合、送信前には1、2、3の順にフックの前処理が呼び出される。つまり、\nヘッダの設定、暗号化対象データのフォーマット、データの暗号化の順に処理が行われる。\n一方、送信後には3、2、1の順にフックの後処理が呼び出される。つまり\nデータの復号、復号データのパース、ヘッダの取得の順に処理が行われる。\nまた、フックを複数使用できることにより、処理の追加および削除が容易である。\n例えば、テスト実行時にはデータの暗号化は行いたくない、といった場合には3のフックだけを\n取り外せばよい。",
       "level": 3
     },
     {

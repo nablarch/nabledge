@@ -1,12 +1,12 @@
 # 応答不要メッセージ受信処理
 
-[ユーザ登録情報電文受信処理](../../guide/mom-messaging/mom-messaging-01-userRegisterMessageReceiveSpec.md#userregistermessagereceivespec) を例に、応答不要メッセージ受信処理の実装方法を説明する。
+[ユーザ登録情報電文受信処理](../../guide/mom-messaging/mom-messaging-01-userRegisterMessageReceiveSpec.md#ユーザ登録情報電文受信処理の仕様) を例に、応答不要メッセージ受信処理の実装方法を説明する。
 
 ![userRegisterMessageReceive.png](../../../knowledge/assets/mom-messaging-03-mqDelayedReceive/userRegisterMessageReceive.png)
 
 ## アプリケーション開発者が実装する成果物
 
-[応答不要型メッセージ受信処理のアプリケーション構造](../../guide/mom-messaging/mom-messaging-04-explanation-delayed-receive-02-basic.md#messagedelayedreceivedesign) からわかるように、電文を受信するアクションはNablarchの一部として提供される。
+[応答不要型メッセージ受信処理のアプリケーション構造](../../guide/mom-messaging/mom-messaging-04-explanation-delayed-receive-02-basic.md#応答不要型メッセージ受信処理のアプリケーション構造) からわかるように、電文を受信するアクションはNablarchの一部として提供される。
 このため、アプリケーション開発者は電文を受信テーブルに登録するために必要となる下記成果物のみを作成すれ良い。
 
 * 電文のレイアウトを定義したフォーマット定義ファイル
@@ -95,7 +95,7 @@ file-type:        "Fixed" # 固定長
 
 Formクラスは、一時テーブルに電文を登録する際に使用する。
 これは、Nablarchフレームワークのデータベース機能で提供されるオブジェクトのフィールド値をデータベースへ保存する機能を使用するために必要となるクラスである。
-データベース機能の詳細は、  [オブジェクトのフィールドの値の登録機能(オブジェクト(Form)編)](../../guide/web-application/web-application-01-DbAccessSpec-Example.md#db-object-save-samole) を参照すること。
+データベース機能の詳細は、  [オブジェクトのフィールドの値の登録機能(オブジェクト(Form)編)](../../guide/web-application/web-application-01-DbAccessSpec-Example.md#オブジェクトのフィールドの値の登録機能オブジェクトform編) を参照すること。
 
 **Formクラスは、下記ルールに準拠すること**
 
@@ -167,7 +167,7 @@ public class RM11AC0201Form {
 
 ## SQLファイル
 
-[一時テーブル](../../guide/mom-messaging/mom-messaging-03-mqDelayedReceive.md#message-save-table) に受信電文を保存するためのSQL文を記述したSQLファイルを用意する。
+[一時テーブル](../../guide/mom-messaging/mom-messaging-03-mqDelayedReceive.md#一時テーブルの定義) に受信電文を保存するためのSQL文を記述したSQLファイルを用意する。
 
 **SQLファイルは、下記ルールに準拠すること**
 

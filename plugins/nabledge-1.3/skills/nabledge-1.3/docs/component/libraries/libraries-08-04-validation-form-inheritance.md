@@ -148,10 +148,10 @@ public class ChildEntity extends ParentEntity {
 
 ## 国際化したプロパティの表示名称の取得方法
 
-[バリデーションの実行と入力値の変換](../../component/libraries/libraries-08-02-validation-usage.md#validation-and-convert) の記述のように、プロパティの表示名称は基本的に @PropertyName アノテーションで指定する。
+[バリデーションの実行と入力値の変換](../../component/libraries/libraries-08-02-validation-usage.md#バリデーションの実行と入力値の変換) の記述のように、プロパティの表示名称は基本的に @PropertyName アノテーションで指定する。
 しかしこの表示名称の取得方法では、国際化したメッセージが取得できない。
 
-このため、国際化したアプリケーションを構築する際は、  [メッセージ管理](../../component/libraries/libraries-07-Message.md#message-management) が提供するメッセージとして表示名称を対応する言語ごとに登録する。
+このため、国際化したアプリケーションを構築する際は、  [メッセージ管理](../../component/libraries/libraries-07-Message.md#メッセージ管理) が提供するメッセージとして表示名称を対応する言語ごとに登録する。
 登録した表示名称とプロパティは、下記いずれかの方法で対応付ける。
 
 1. プロパティにつけた @PropertyName アノテーションの messageId 属性に指定した文字列をメッセージIDとして対応付ける。
@@ -164,7 +164,7 @@ public class ChildEntity extends ParentEntity {
 メッセージ機能から取得プロパティの表示名称を取得する際に、 @PropertyName アノテーションの value 属性ではなく、 messageId 属性を使用する。
 この属性に指定したメッセージIDを使用して取得した文字列リソースをプロパティの表示名称として使用する。
 
-この方法を使用する際、 [バリデーションの実行と入力値の変換](../../component/libraries/libraries-08-02-validation-usage.md#validation-and-convert) の例で示した Form は下記のように変わる。
+この方法を使用する際、 [バリデーションの実行と入力値の変換](../../component/libraries/libraries-08-02-validation-usage.md#バリデーションの実行と入力値の変換) の例で示した Form は下記のように変わる。
 
 ```java
 public class User {
@@ -205,7 +205,7 @@ public class User {
 }
 ```
 
-このように @PropertyName の messageId 属性を設定し、messageId 属性と対応するメッセージを  [メッセージ管理](../../component/libraries/libraries-07-Message.md#message-management) が提供する
+このように @PropertyName の messageId 属性を設定し、messageId 属性と対応するメッセージを  [メッセージ管理](../../component/libraries/libraries-07-Message.md#メッセージ管理) が提供する
 メッセージとして登録することで、「氏名は必ず入力してください。」と「You must input name.」のように、メッセージの国際化が実現できる。
 
 例えば @Required 入力チェックエラーメッセージのメッセージIDが MSG00001 である場合、上記ソースコード例の Form の必須入力チェックの

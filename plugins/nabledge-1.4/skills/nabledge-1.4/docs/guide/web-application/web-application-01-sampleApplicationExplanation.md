@@ -29,9 +29,9 @@
 
 | 機能 | 処理 |
 |---|---|
-| ユーザ情報照会機能 | * [画面初期表示(初期表示に必要な情報をデータベースから取得し、画面を表示する)](../../guide/web-application/web-application-02-basic.md#basic) * [一覧検索](../../guide/web-application/web-application-03-listSearch.md#listsearch) |
-| ユーザ情報登録機能 | * [入力内容の精査](../../guide/web-application/web-application-04-validation.md#how-to-validate) * [画面遷移](../../guide/web-application/web-application-05-screenTransition.md#screentransition) * [入力画面と確認画面の共通化](../../guide/web-application/web-application-06-sharingInputAndConfirmationJsp.md#sharinginputandconfirmationjsp) * [データベースへの挿入、二重サブミットの防止](../../guide/web-application/web-application-07-insert.md#insert) |
-| ユーザ情報更新機能 | * [一覧表示から個別の情報を扱う画面への遷移](../../guide/web-application/web-application-10-submitParameter.md#submitparameter) * [排他制御](../../guide/web-application/web-application-11-exclusiveControl.md#exclusivecontrol) |
+| ユーザ情報照会機能 | * [画面初期表示(初期表示に必要な情報をデータベースから取得し、画面を表示する)](../../guide/web-application/web-application-02-basic.md#画面初期表示) * [一覧検索](../../guide/web-application/web-application-03-listSearch.md#一覧検索) |
+| ユーザ情報登録機能 | * [入力内容の精査](../../guide/web-application/web-application-04-validation.md#入力内容の精査) * [画面遷移](../../guide/web-application/web-application-05-screenTransition.md#画面遷移処理) * [入力画面と確認画面の共通化](../../guide/web-application/web-application-06-sharingInputAndConfirmationJsp.md#入力画面と確認画面の共通化) * [データベースへの挿入、二重サブミットの防止](../../guide/web-application/web-application-07-insert.md#登録処理) |
+| ユーザ情報更新機能 | * [一覧表示から個別の情報を扱う画面への遷移](../../guide/web-application/web-application-10-submitParameter.md#一覧表示から個別の情報を扱う画面への遷移) * [排他制御](../../guide/web-application/web-application-11-exclusiveControl.md#排他制御) |
 
 ## 主な仕様
 

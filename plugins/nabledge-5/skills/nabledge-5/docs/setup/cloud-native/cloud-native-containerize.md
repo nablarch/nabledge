@@ -32,7 +32,7 @@
 
 ## Nablarchウェブアプリケーションに必要な修正
 
-[標準のウェブアプリケーションのブランクプロジェクト](../../setup/blank-project/blank-project-setup-Web.md#firststepgeneratewebblankproject) を使ってNablarchウェブアプリケーションを構築した場合、以下の点が [The Twelve-Factor App](https://12factor.net/ja/) (外部サイト)に反した状態になっている。
+[標準のウェブアプリケーションのブランクプロジェクト](../../setup/blank-project/blank-project-setup-Web.md#ブランクプロジェクト作成) を使ってNablarchウェブアプリケーションを構築した場合、以下の点が [The Twelve-Factor App](https://12factor.net/ja/) (外部サイト)に反した状態になっている。
 
 ステートレス
 
@@ -41,7 +41,7 @@
 
 標準のブランクプロジェクトでは、HTTPセッションを使った状態管理が有効となっているため、この方針に反している。
 
-Nablarchウェブアプリケーションをステートレスにするための設定については、 [Webアプリケーションをステートレスにする](../../component/libraries/libraries-stateless-web-app.md#stateless-web-app) を参照。
+Nablarchウェブアプリケーションをステートレスにするための設定については、 [Webアプリケーションをステートレスにする](../../component/libraries/libraries-stateless-web-app.md#webアプリケーションをステートレスにする) を参照。
 
 ログ出力
 
@@ -49,7 +49,7 @@ Nablarchウェブアプリケーションをステートレスにするための
 
 標準のブランクプロジェクトでは、ロガーの出力先にファイルが指定されているため、この方針に反している。
 
-Nablarchのログ出力設定については、 [ログ出力の設定](../../component/libraries/libraries-log.md#log-basic-setting) を参照。
+Nablarchのログ出力設定については、 [ログ出力の設定](../../component/libraries/libraries-log.md#ログ出力の設定) を参照。
 
 環境変数を使った設定
 
@@ -57,13 +57,13 @@ Nablarchのログ出力設定については、 [ログ出力の設定](../../co
 
 標準のブランクプロジェクトでは、開発環境と本番環境の設定の違いをMavenのプロファイルを使って切り替えているため、この方針に反している。
 
-環境変数を使って環境依存値を上書きする方法については、 [OS環境変数を使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#repository-overwrite-environment-configuration-by-os-env-var) を参照。
+環境変数を使って環境依存値を上書きする方法については、 [OS環境変数を使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#os環境変数を使って環境依存値を上書きする) を参照。
 
 ## Nablarchバッチアプリケーションに必要な修正
 
 [The Twelve-Factor App](https://12factor.net/ja/) (外部サイト)はSaaSアプリケーションを開発するための方法論であるが、その要素の多くは、クラウド環境に適したバッチアプリケーションを開発するときにおいても適用できる。
 
-[標準のバッチアプリケーションのブランクプロジェクト](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepgeneratebatchblankproject) を使ってNablarchバッチアプリケーションを構築した場合に修正が必要な点は、以下の通りである。
+[標準のバッチアプリケーションのブランクプロジェクト](../../setup/blank-project/blank-project-setup-NablarchBatch.md#ブランクプロジェクト作成) を使ってNablarchバッチアプリケーションを構築した場合に修正が必要な点は、以下の通りである。
 
 ログ出力
 
@@ -77,7 +77,7 @@ Nablarchのログ出力設定については、 [ログ出力の設定](../../co
 
 Nablarchでは、Dockerコンテナ上で動かすことを前提としたウェブアプリケーションとバッチアプリケーションのアーキタイプを用意している。
 
-このアーキタイプを使って生成されるブランクプロジェクトには、 [Nablarchウェブアプリケーションに必要な修正](../../setup/cloud-native/cloud-native-containerize.md#modify-nablarch-app-for-cloud-native) や [Nablarchバッチアプリケーションに必要な修正](../../setup/cloud-native/cloud-native-containerize.md#modify-nablarch-batch-for-cloud-native) で説明した修正があらかじめ適用されている。
+このアーキタイプを使って生成されるブランクプロジェクトには、 [Nablarchウェブアプリケーションに必要な修正](../../setup/cloud-native/cloud-native-containerize.md#nablarchウェブアプリケーションに必要な修正) や [Nablarchバッチアプリケーションに必要な修正](../../setup/cloud-native/cloud-native-containerize.md#nablarchバッチアプリケーションに必要な修正) で説明した修正があらかじめ適用されている。
 また、 [Jib](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin) (外部サイト、英語)というDockerコンテナを簡単に生成するためのMavenプラグインが組み込まれているため、開発者はすぐにDockerコンテナ用のNablarchアプリケーションの開発を始めることができる。
 
 > **Tip:**
@@ -97,7 +97,7 @@ Nablarchでは、Dockerコンテナ上で動かすことを前提としたウェ
 
 Dockerコンテナ用のアーキタイプの説明については以下を参照。
 
-* [前提条件](../../setup/blank-project/blank-project-beforeFirstStep.md#firststeppreamble)
-* [プロジェクトの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md#container-web-project-summary)
-* [環境ごとの設定の切り替えについて](../../setup/blank-project/blank-project-CustomizeDB.md#container-production-config)
-* [初期セットアップ手順](../../setup/blank-project/blank-project-FirstStepContainer.md#first-step-container)
+* [前提条件](../../setup/blank-project/blank-project-beforeFirstStep.md#初期セットアップの前提)
+* [プロジェクトの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md#pj-container-webプロジェクト)
+* [環境ごとの設定の切り替えについて](../../setup/blank-project/blank-project-CustomizeDB.md#コンテナの本番環境設定)
+* [初期セットアップ手順](../../setup/blank-project/blank-project-FirstStepContainer.md#初期セットアップ手順コンテナ)

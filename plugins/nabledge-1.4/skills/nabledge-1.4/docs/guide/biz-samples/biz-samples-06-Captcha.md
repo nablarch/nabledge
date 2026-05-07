@@ -142,7 +142,7 @@ CAPTCHA機能の使用方法について解説する。
 CaptchaUtilの使用方法について解説する。
 
 CaptchaUtilでは、以下のユーティリティメソッドを実装している。なお、リポジトリからコンポーネントを取得する際の
-コンポーネント名は、後述の [CaptchaGenerateActionの設定方法](../../guide/biz-samples/biz-samples-06-Captcha.md#captchagenerateaction-settings-label) で登録しているそれぞれのコンポーネント名と
+コンポーネント名は、後述の [CaptchaGenerateActionの設定方法](../../guide/biz-samples/biz-samples-06-Captcha.md#captchagenerateactionの設定方法) で登録しているそれぞれのコンポーネント名と
 あわせる必要があるため、上記の設定例と異なるコンポーネント名で登録している場合にはソースコードを修正すること。
 
 | メソッド |  |

@@ -1,7 +1,7 @@
 {
   "id": "handlers-permission-check-handler",
   "title": "認可チェックハンドラ",
-  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* リクエストに対する認可チェック\n* 権限がない場合に表示するエラーページを指定する\n* 特定のリクエストを認可チェックから除外する\n\n本ハンドラでは、 [リクエストに対する認可チェック](../../component/handlers/handlers-permission-check-handler.md#permission-check-handler-request-checking) を行う。\n\n認可チェックは、ライブラリの [ハンドラによる認可チェック](../../component/libraries/libraries-authorization-permission-check.md#permission-check) を使用して行う。\nそのため、本ハンドラを使用するには、\nPermissionFactory を実装したクラスを本ハンドラに設定する必要がある。\n\n本ハンドラでは、以下の処理を行う。\n\n* 認可チェック\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-permission-check-handler/flow.png)",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* リクエストに対する認可チェック\n* 権限がない場合に表示するエラーページを指定する\n* 特定のリクエストを認可チェックから除外する\n\n本ハンドラでは、 [リクエストに対する認可チェック](../../component/handlers/handlers-permission-check-handler.md#リクエストに対する認可チェック) を行う。\n\n認可チェックは、ライブラリの [ハンドラによる認可チェック](../../component/libraries/libraries-authorization-permission-check.md#ハンドラによる認可チェック) を使用して行う。\nそのため、本ハンドラを使用するには、\nPermissionFactory を実装したクラスを本ハンドラに設定する必要がある。\n\n本ハンドラでは、以下の処理を行う。\n\n* 認可チェック\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-permission-check-handler/flow.png)",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -19,19 +19,19 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに配置すること\n\n本ハンドラではスレッドコンテキスト上に設定されたリクエストIDとユーザIDをもとに認可チェックを行うため、\n[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに本ハンドラを配置する必要がある。\n\n[内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler) より後ろに配置すること\n\n内部フォーワードが行われた際に、フォーワード先のリクエストID（ [内部リクエストID](../../component/handlers/handlers-forwarding-handler.md#internal-request-id) ）をもとに\n認可チェックを行いたい場合は、 [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler) より後ろに本ハンドラを配置する必要がある。\n合わせて、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) の `attributes` に InternalRequestIdAttribute を追加すること。\n\n[HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler) より後ろに配置すること\n\n認可チェックエラーの場合に表示するエラーページを指定するため、\n[HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler) より後ろに本ハンドラを配置する必要がある。",
+      "content": "[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ) より後ろに配置すること\n\n本ハンドラではスレッドコンテキスト上に設定されたリクエストIDとユーザIDをもとに認可チェックを行うため、\n[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ) より後ろに本ハンドラを配置する必要がある。\n\n[内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#内部フォーワードハンドラ) より後ろに配置すること\n\n内部フォーワードが行われた際に、フォーワード先のリクエストID（ [内部リクエストID](../../component/handlers/handlers-forwarding-handler.md#内部リクエストidについて) ）をもとに\n認可チェックを行いたい場合は、 [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#内部フォーワードハンドラ) より後ろに本ハンドラを配置する必要がある。\n合わせて、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ) の `attributes` に InternalRequestIdAttribute を追加すること。\n\n[HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#httpエラー制御ハンドラ) より後ろに配置すること\n\n認可チェックエラーの場合に表示するエラーページを指定するため、\n[HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#httpエラー制御ハンドラ) より後ろに本ハンドラを配置する必要がある。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "リクエストに対する認可チェック",
-      "content": "ログイン中のユーザが、現在のリクエスト(リクエストID)に対して権限を持っているかをチェックする。\nチェックの詳細は、 [ハンドラによる認可チェック](../../component/libraries/libraries-authorization-permission-check.md#permission-check) を参照。\n\n権限がある場合\n\n[業務ロジック](../../component/libraries/libraries-authorization-permission-check.md#permission-check-server-side-check) や\n[画面表示の制御](../../component/libraries/libraries-authorization-permission-check.md#permission-check-view-control) で参照できるように、\n認可チェックに使用した Permission をスレッドローカルに設定する。\nそして、後続ハンドラを呼び出す。\n\n権限がない場合\n\nForbidden(403) を送出する。\n\nチェック対象のリクエストIDをフォーワード先のリクエストIDに変更したい場合は、\nPermissionCheckHandler.setUsesInternalRequestId\nでtrueを指定する。デフォルトはfalseである。",
+      "content": "ログイン中のユーザが、現在のリクエスト(リクエストID)に対して権限を持っているかをチェックする。\nチェックの詳細は、 [ハンドラによる認可チェック](../../component/libraries/libraries-authorization-permission-check.md#ハンドラによる認可チェック) を参照。\n\n権限がある場合\n\n[業務ロジック](../../component/libraries/libraries-authorization-permission-check.md#サーバサイドで認可チェックを行う) や\n[画面表示の制御](../../component/libraries/libraries-authorization-permission-check.md#権限に応じて画面表示を制御する) で参照できるように、\n認可チェックに使用した Permission をスレッドローカルに設定する。\nそして、後続ハンドラを呼び出す。\n\n権限がない場合\n\nForbidden(403) を送出する。\n\nチェック対象のリクエストIDをフォーワード先のリクエストIDに変更したい場合は、\nPermissionCheckHandler.setUsesInternalRequestId\nでtrueを指定する。デフォルトはfalseである。",
       "level": 2
     },
     {
       "id": "s5",
       "title": "権限がない場合に表示するエラーページを指定する",
-      "content": "権限がない場合に表示するエラーページは、HTTPエラー制御ハンドラで指定する。\n指定方法は、 [デフォルトページの設定](../../component/handlers/handlers-HttpErrorHandler.md#httperrorhandler-defaultpage) を参照。",
+      "content": "権限がない場合に表示するエラーページは、HTTPエラー制御ハンドラで指定する。\n指定方法は、 [デフォルトページの設定](../../component/handlers/handlers-HttpErrorHandler.md#デフォルトページの設定) を参照。",
       "level": 2
     },
     {

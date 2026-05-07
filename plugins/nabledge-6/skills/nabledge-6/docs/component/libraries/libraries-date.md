@@ -30,8 +30,8 @@
 アプリケーションで使用するシステム日時(OS日時)と業務日付の取得方法を切り替えることができる。
 この切り替えは、テストなどで一時的にシステム日時(OS日時)や業務日付を切り替えたい場合に使用できる。
 
-* [システム日時を切り替える](../../component/libraries/libraries-date.md#date-system-time-change)
-* [業務日付を切り替える](../../component/libraries/libraries-date.md#date-business-date-change)
+* [システム日時を切り替える](../../component/libraries/libraries-date.md#システム日時を切り替える)
+* [業務日付を切り替える](../../component/libraries/libraries-date.md#業務日付を切り替える)
 
 ## モジュール一覧
 
@@ -117,7 +117,7 @@ BasicBusinessDateProvider の設定をコンポーネント定義に追加する
 > ウェブアプリケーションのように、全ての機能が１プロセス内で実行される場合は、
 > 単純にデータベースで管理されている日付を変更すればよい。
 
-業務日付の上書きは、 [システムプロパティを使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#repository-overwrite-environment-configuration) を使用して行う。
+業務日付の上書きは、 [システムプロパティを使って環境依存値を上書きする](../../component/libraries/libraries-repository.md#システムプロパティを使って環境依存値を上書きする) を使用して行う。
 システムプロパティとして、以下の形式で指定する。
 
 システムプロパティの形式
@@ -151,11 +151,11 @@ provider.setDate(segment, date);
 ユニットテストの実行時など、システム日時を切り替えたい場合は、以下の手順で行う。
 
 1. SystemTimeProvider を実装したクラスを作成する。
-2. [システム日時の管理機能を使うための設定](../../component/libraries/libraries-date.md#date-system-time-settings) に従い設定する。
+2. [システム日時の管理機能を使うための設定](../../component/libraries/libraries-date.md#システム日時の管理機能を使うための設定) に従い設定する。
 
 ### 業務日付を切り替える
 
 ユニットテストの実行時など、業務日付を切り替えたい場合は、以下の手順で行う。
 
 1. BusinessDateProvider を実装したクラスを作成する。
-2. [業務日付管理機能を使うための設定](../../component/libraries/libraries-date.md#date-business-date-settings) に従い設定する。
+2. [業務日付管理機能を使うための設定](../../component/libraries/libraries-date.md#業務日付管理機能を使うための設定) に従い設定する。

@@ -109,7 +109,7 @@ public Result handle(String inputData, ExecutionContext ctx) {
 ```
 
 > **Tip:**
-> アプリケーション起動時に必ず指定する必要があるオプションは、 [アプリケーションを起動する](../../component/handlers/handlers-main.md#main-run-application) を参照
+> アプリケーション起動時に必ず指定する必要があるオプションは、 [アプリケーションを起動する](../../component/handlers/handlers-main.md#アプリケーションを起動する) を参照
 
 ## 例外及びエラーに応じた処理内容
 

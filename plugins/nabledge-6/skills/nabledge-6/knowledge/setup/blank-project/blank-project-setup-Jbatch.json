@@ -7,7 +7,7 @@
     {
       "id": "s1",
       "title": "生成するプロジェクトの概要",
-      "content": "本手順で生成するプロジェクトの概要は以下の通りである。\n\n| 項目 | 説明 |\n|---|---|\n| プロジェクト種別 | Mavenプロジェクト |\n| プロジェクト構成 | 単一プロジェクト構成 |\n| 使用DB | H2 Database Engine(アプリケーションに組み込み) |\n| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * Jakarta Batchに準拠したバッチアプリケーション用の基本的な設定 * batchlet方式による疎通確認用バッチアプリケーション * chunk方式による疎通確認用バッチアプリケーション * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#about-maven-parent-module) を参照することによって取り込んでいる)。 |\n\n他のプロジェクトとの関係、及びディレクトリ構成は、 [Mavenアーキタイプの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md) を参照。",
+      "content": "本手順で生成するプロジェクトの概要は以下の通りである。\n\n| 項目 | 説明 |\n|---|---|\n| プロジェクト種別 | Mavenプロジェクト |\n| プロジェクト構成 | 単一プロジェクト構成 |\n| 使用DB | H2 Database Engine(アプリケーションに組み込み) |\n| 生成するプロジェクトに含まれるもの | 生成されたプロジェクトには以下が含まれる。  * Jakarta Batchに準拠したバッチアプリケーション用の基本的な設定 * batchlet方式による疎通確認用バッチアプリケーション * chunk方式による疎通確認用バッチアプリケーション * Mavenと連動して動作するツールの初期設定( [nablarch-archetype-parent(親プロジェクト)](../../setup/blank-project/blank-project-MavenModuleStructures.md#nablarch-archetype-parent親プロジェクト) を参照することによって取り込んでいる)。 |\n\n他のプロジェクトとの関係、及びディレクトリ構成は、 [Mavenアーキタイプの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md) を参照。",
       "level": 2
     },
     {
@@ -61,19 +61,19 @@
     {
       "id": "s10",
       "title": "batchlet方式のバッチアプリケーションの起動",
-      "content": "batchlet方式のバッチアプリケーションでは、SAMPLE_USERテーブルのデータを削除する処理が実装されている。\n\n以下のコマンドを実行する。\n\n```bash\nmvn exec:java -Dexec.mainClass=nablarch.fw.batch.ee.Main -Dexec.args=\"'sample-batchlet'\"\n```\n\n実行に成功すると、以下のようなログが `./progress.log` に出力される。\n\n```text\n2020-04-28 10:35:27.002 -INFO- progress [null] boot_proc = [] proc_sys = [batch-ee] req_id = [null] usr_id = [null] start job. job name: [sample-batchlet]\n2020-04-28 10:35:27.011 -INFO- progress [null] boot_proc = [] proc_sys = [batch-ee] req_id = [null] usr_id = [null] start step. job name: [sample-batchlet] step name: [step1]\n2020-04-28 10:35:27.247 -INFO- progress [null] boot_proc = [] proc_sys = [batch-ee] req_id = [null] usr_id = [null] finish step. job name: [sample-batchlet] step name: [step1] step status: [SUCCESS]\n2020-04-28 10:35:27.255 -INFO- progress [null] boot_proc = [] proc_sys = [batch-ee] req_id = [null] usr_id = [null] finish job. job name: [sample-batchlet]\n```\n\n> **Tip:**\n> このbatchletはSAMPLE_USERテーブルのデータの全件削除を行っている。削除したデータを復元したい場合は、 [プロジェクトの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md#firststepbatcheeprojectstructure) を参考に「SAMPLE.mv.db.org」を「SAMPLE.mv.db」にコピーすること。",
+      "content": "batchlet方式のバッチアプリケーションでは、SAMPLE_USERテーブルのデータを削除する処理が実装されている。\n\n以下のコマンドを実行する。\n\n```bash\nmvn exec:java -Dexec.mainClass=nablarch.fw.batch.ee.Main -Dexec.args=\"'sample-batchlet'\"\n```\n\n実行に成功すると、以下のようなログが `./progress.log` に出力される。\n\n```text\n2020-04-28 10:35:27.002 -INFO- progress [null] boot_proc = [] proc_sys = [batch-ee] req_id = [null] usr_id = [null] start job. job name: [sample-batchlet]\n2020-04-28 10:35:27.011 -INFO- progress [null] boot_proc = [] proc_sys = [batch-ee] req_id = [null] usr_id = [null] start step. job name: [sample-batchlet] step name: [step1]\n2020-04-28 10:35:27.247 -INFO- progress [null] boot_proc = [] proc_sys = [batch-ee] req_id = [null] usr_id = [null] finish step. job name: [sample-batchlet] step name: [step1] step status: [SUCCESS]\n2020-04-28 10:35:27.255 -INFO- progress [null] boot_proc = [] proc_sys = [batch-ee] req_id = [null] usr_id = [null] finish job. job name: [sample-batchlet]\n```\n\n> **Tip:**\n> このbatchletはSAMPLE_USERテーブルのデータの全件削除を行っている。削除したデータを復元したい場合は、 [プロジェクトの構成](../../setup/blank-project/blank-project-MavenModuleStructures.md#プロジェクトの構成) を参考に「SAMPLE.mv.db.org」を「SAMPLE.mv.db」にコピーすること。",
       "level": 4
     },
     {
       "id": "s11",
       "title": "疎通確認になぜか失敗する場合",
-      "content": "原因は分からないが疎通確認に失敗する場合、どこかで手順を誤っている可能性がある。\n\n原因が分からない場合は、[ブランクプロジェクト作成](../../setup/blank-project/blank-project-setup-Jbatch.md#firststepgeneratebatcheeblankproject) からやり直してみること。",
+      "content": "原因は分からないが疎通確認に失敗する場合、どこかで手順を誤っている可能性がある。\n\n原因が分からない場合は、[ブランクプロジェクト作成](../../setup/blank-project/blank-project-setup-Jbatch.md#ブランクプロジェクト作成) からやり直してみること。",
       "level": 4
     },
     {
       "id": "s12",
       "title": "データベースに関する設定を行う",
-      "content": "ブランクプロジェクトは、初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は、[使用するRDBMSの変更手順](../../setup/blank-project/blank-project-CustomizeDB.md#customize-db) を参照して設定すること。\n\nまたER図からのDDL生成や実行、Entityクラスの自動生成を行うにはgsp-dba-maven-pluginの初期設定および実行を行う。詳細は [gsp-dba-maven-plugin(DBA作業支援ツール)の初期設定方法](../../setup/blank-project/blank-project-addin-gsp.md#gsp-maven-plugin) を参照。",
+      "content": "ブランクプロジェクトは、初期状態ではH2 Database Engineを使用するように設定されている。使用するRDBMSを変更する場合は、[使用するRDBMSの変更手順](../../setup/blank-project/blank-project-CustomizeDB.md#使用するrdbmsの変更手順) を参照して設定すること。\n\nまたER図からのDDL生成や実行、Entityクラスの自動生成を行うにはgsp-dba-maven-pluginの初期設定および実行を行う。詳細は [gsp-dba-maven-plugin(DBA作業支援ツール)の初期設定方法](../../setup/blank-project/blank-project-addin-gsp.md#gsp-dba-maven-plugindba作業支援ツールの初期設定方法) を参照。",
       "level": 3
     },
     {
