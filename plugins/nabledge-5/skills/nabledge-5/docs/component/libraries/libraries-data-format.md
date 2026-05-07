@@ -156,7 +156,7 @@ type    = "02"
 4 data    X
 ```
 
-data_format/format_definition
+* [フォーマット定義ファイルの記述ルール](../../component/libraries/libraries-format-definition.md)
 
 ### ファイルにデータを出力する
 

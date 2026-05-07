@@ -44,7 +44,7 @@
 
 ## 排他制御
 
-feature_details/nablarch_batch_pessimistic_lock
+* [Nablarchバッチアプリケーションの悲観的ロック](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch-pessimistic-lock.md)
 
 排他制御は、以下の2種類の方法を提供しているが、
 [UniversalDaoを推奨する理由](../../component/libraries/libraries-exclusive-control.md#排他制御) に記載がある通り、
@@ -57,8 +57,8 @@ feature_details/nablarch_batch_pessimistic_lock
 
 ## バッチ処理の実行制御
 
-feature_details/nablarch_batch_error_process
-feature_details/nablarch_batch_retention_state
+* [Nablarchバッチアプリケーションのエラー処理](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch-error-process.md)
+* [バッチアプリケーションで実行中の状態を保持する](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch-retention-state.md)
 
 * [バッチ処理のプロセス終了コード](../../component/handlers/handlers-status-code-convert-handler.md#ステータスコードプロセス終了コード変換)
 * [バッチ処理のエラー処理](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch-error-process.md#nablarchバッチアプリケーションのエラー処理)
@@ -75,12 +75,12 @@ feature_details/nablarch_batch_retention_state
 
 ## バッチ実行中の状態の保持
 
-feature_details/nablarch_batch_retention_state
+* [バッチアプリケーションで実行中の状態を保持する](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch-retention-state.md)
 
 * [バッチアプリケーションで実行中の状態を保持する](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch-retention-state.md#バッチアプリケーションで実行中の状態を保持する)
 
 ## 常駐バッチのマルチプロセス化
 
-feature_details/nablarch_batch_multiple_process
+* [常駐バッチアプリケーションのマルチプロセス化](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch-multiple-process.md)
 
 * [常駐バッチアプリケーションのマルチプロセス化](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch-multiple-process.md#常駐バッチアプリケーションのマルチプロセス化)

@@ -6,6 +6,6 @@
 * [画面オンライン処理の実装例集](../../guide/web-application/web-application-CustomTag.md#画面オンライン処理の実装例集)
 * [その他実装例集](../../guide/web-application/web-application-Other.md#その他実装例集)
 
-DB/01_DbAccessSpec_Example
-CustomTag/index
-Other/index
+* [データベースアクセス実装例集](../../guide/web-application/web-application-01-DbAccessSpec-Example.md)
+* [画面オンライン処理の実装例集](../../guide/web-application/web-application-CustomTag.md)
+* [その他実装例集](../../guide/web-application/web-application-Other.md)

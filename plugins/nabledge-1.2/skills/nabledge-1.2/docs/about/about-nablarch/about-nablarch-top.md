@@ -6,11 +6,11 @@
 
 Nablarch(ナブラーク)は、TISの豊富な基幹システム構築経験から得られたナレッジを集約したJavaアプリケーション開発/実行基盤です。
 
-about_nablarch/concept
-about_nablarch/development_policy
-about_nablarch/contents
-about_nablarch/support_service
-about_nablarch/versionup_policy
+* [Nablarchのコンセプト](../../about/about-nablarch/about-nablarch-concept.md)
+* [Nablarchの目指す姿](../../about/about-nablarch/about-nablarch-development-policy.md)
+* [Nablarch の製品構成](../../about/about-nablarch/about-nablarch-contents.md)
+* [Nablarchのサポートサービスについて](../../about/about-nablarch/about-nablarch-support-service.md)
+* [Nablarch のバージョンアップ方針](../../about/about-nablarch/about-nablarch-versionup-policy.md)
 
 ### Nablarchのコンテンツ
 
@@ -18,7 +18,7 @@ Nablarchのコンテンツは nablarchフォルダに格納されています。
 
 * [Nablarchのコンテンツ](./nablarch/index.html)
 
-nablarch/index
+* [Nablarch フォルダのコンテンツについて](../../about/about-nablarch/about-nablarch-top-nablarch.md)
 
 また、Nablarchを使用したアプリケーション開発に関する質問については、FAQを参照してください。
 

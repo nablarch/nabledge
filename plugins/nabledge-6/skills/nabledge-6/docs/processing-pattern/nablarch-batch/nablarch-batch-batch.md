@@ -4,8 +4,8 @@
 
 Nablarchのバッチアプリケーションでは、以下2種類のバッチアプリケーションのフレームワークを提供している。
 
-jsr352/index
-nablarch_batch/index
+* [Jakarta Batchに準拠したバッチアプリケーション](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.md)
+* [Nablarchバッチアプリケーション](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch.md)
 
 どちらのフレームワークを使用してもバッチアプリケーションを構築できるが、
 以下の理由により [Nablarchバッチアプリケーション](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch.md) を使用してバッチアプリケーションを作成することを推奨する。
@@ -20,4 +20,4 @@ Jakarta Batchは2020年時点で情報が少なく有識者もアサインしに
 > **Tip:**
 > [Jakarta Batchに準拠したバッチアプリケーション](../../processing-pattern/jakarta-batch/jakarta-batch-jsr352.md#jakarta-batchに準拠したバッチアプリケーション) と [Nablarchバッチアプリケーション](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch.md#nablarchバッチアプリケーション) で提供している機能の違いは、 [Jakarta Batchに準拠したバッチアプリケーションとNablarchバッチアプリケーションとの機能比較](../../processing-pattern/nablarch-batch/nablarch-batch-functional-comparison.md#jakarta-batchに準拠したバッチアプリケーションとnablarchバッチアプリケーションとの機能比較) を参照。
 
-functional_comparison
+* [Jakarta Batchに準拠したバッチアプリケーションとNablarchバッチアプリケーションとの機能比較](../../processing-pattern/nablarch-batch/nablarch-batch-functional-comparison.md)

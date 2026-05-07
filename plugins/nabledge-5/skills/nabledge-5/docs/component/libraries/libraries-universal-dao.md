@@ -252,7 +252,7 @@ Pagination pagination = users.getPagination();
 
 ### サロゲートキーを採番する
 
-generator
+* [サロゲートキーの採番](../../component/libraries/libraries-generator.md)
 
 サロゲートキーを採番する場合は、以下のアノテーションを使用する。
 

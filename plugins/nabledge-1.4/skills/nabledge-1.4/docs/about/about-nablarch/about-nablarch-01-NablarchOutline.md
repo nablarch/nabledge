@@ -194,13 +194,13 @@ DB、データファイル、メッセージキューを通じた入出力を行
 > ここでは、バッチ、オンラインといった処理の形態に依存しない、共通的な概念についてのみ述べた。
 > より具体的なアプリケーションの実装方法については、以下の各ドキュメントを参照すること。
 
-> ../04_Explanation/index
-> ../04_Explanation_batch/index
-> ../04_Explanation_messaging/index
-> ../04_Explanation_messaging/04_Explanation_real/index
-> ../04_Explanation_messaging/04_Explanation_delayed_receive/index
-> ../04_Explanation_messaging/04_Explanation_http_real/index
-> ../04_Explanation_messaging/04_Explanation_delayed_send/index
-> ../04_Explanation_messaging/04_Explanation_send_sync/index
-> ../04_Explanation_messaging/04_Explanation_http_send_sync/index
-> ../04_Explanation_other/04_Explanation_mail/index
+* [業務アプリケーションの実装方法 (画面オンライン処理編)](../../guide/web-application/web-application-04-Explanation.md)
+* [業務アプリケーションの実装方法 (バッチ処理編)](../../guide/nablarch-batch/nablarch-batch-04-Explanation-batch.md)
+* [業務アプリケーションの実装方法 (メッセージング処理編)](../../guide/mom-messaging/mom-messaging-04-Explanation-messaging.md)
+* [業務アプリケーションの実装方法 (同期応答メッセージ受信処理編)](../../guide/mom-messaging/mom-messaging-04-Explanation-real.md)
+* [業務アプリケーションの実装方法 (応答不要メッセージ受信処理編)](../../guide/mom-messaging/mom-messaging-04-Explanation-delayed-receive.md)
+* [業務アプリケーションの実装方法 (HTTP同期応答メッセージ受信処理編)](../../guide/http-messaging/http-messaging-04-Explanation-http-real.md)
+* [業務アプリケーションの実装方法 (応答不要メッセージ送信処理編)](../../guide/mom-messaging/mom-messaging-04-Explanation-delayed-send.md)
+* [業務アプリケーションの実装方法 (同期応答メッセージ送信処理編)](../../guide/mom-messaging/mom-messaging-04-Explanation-send-sync.md)
+* [業務アプリケーションの実装方法 (HTTP同期応答メッセージ送信処理編)](../../guide/http-messaging/http-messaging-04-Explanation-http-send-sync.md)
+* [業務アプリケーションの実装方法 (メール送信処理編)](../../guide/libraries/libraries-04-Explanation-mail.md)

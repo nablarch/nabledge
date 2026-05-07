@@ -1,0 +1,5 @@
+# バリデーションに関するFAQ
+
+* [数値型項目の場合の桁数精査の方法を教えて下さい](../../component/libraries/libraries-1.md)
+* [精査エラーのメッセージを、任意の項目に対応させて画面表示させる方法を教えてください](../../component/libraries/libraries-2.md)
+* [カンマ編集された値を数値型として精査することは出来ますか?](../../component/libraries/libraries-3.md)

@@ -304,7 +304,7 @@ Date now = provider.getDate();
 ```
 
 > **Note:**
-> テーブル採番用の設定値の詳細は、 [Nablarch採番機能](../../component/libraries/libraries-06-IdGenerator.md#採番機能) を参照すること。
+> テーブル採番用の設定値の詳細は、 Nablarch採番機能 を参照すること。
 
 ### Excelファイル記述例
 

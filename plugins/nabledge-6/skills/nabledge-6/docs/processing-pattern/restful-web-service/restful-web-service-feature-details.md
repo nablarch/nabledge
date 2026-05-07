@@ -47,7 +47,7 @@
 
 ## URIとリソース(アクション)クラスのマッピング
 
-feature_details/resource_signature
+* [リソース(アクション)クラスの実装に関して](../../processing-pattern/restful-web-service/restful-web-service-resource-signature.md)
 
 * [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#ルーティングアダプタ)
 * [リソースクラスのメソッドのシグネチャ](../../processing-pattern/restful-web-service/restful-web-service-resource-signature.md#リソースクラスのメソッドのシグネチャ)

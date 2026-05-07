@@ -1,8 +1,8 @@
 # アプリケーション開発時に使える便利なツール
 
-JspStaticAnalysis/index.rst
-SqlExecutor/SqlExecutor
-JspVerifier/JspVerifier
+* [JSP静的解析ツール](../../development-tools/toolbox/toolbox-JspStaticAnalysis.md)
+* [Nablarch SQL Executor](../../development-tools/toolbox/toolbox-SqlExecutor.md)
+* [業務画面JSP検証ツール](../../development-tools/toolbox/toolbox-JspVerifier.md)
 
 本書では、アプリケーション開発時に使える便利なツールを紹介する。
 

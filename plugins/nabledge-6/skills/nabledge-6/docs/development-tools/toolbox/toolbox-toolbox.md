@@ -1,8 +1,8 @@
 # アプリケーション開発時に使える便利なツール
 
-JspStaticAnalysis/index.rst
-SqlExecutor/SqlExecutor
-NablarchOpenApiGenerator/NablarchOpenApiGenerator
+* [Jakarta Server Pages静的解析ツール](../../development-tools/toolbox/toolbox-JspStaticAnalysis.md)
+* [Nablarch SQL Executor](../../development-tools/toolbox/toolbox-SqlExecutor.md)
+* [Nablarch OpenAPI Generator](../../development-tools/toolbox/toolbox-NablarchOpenApiGenerator.md)
 
 本書では、アプリケーション開発時に使える便利なツールを紹介する。
 

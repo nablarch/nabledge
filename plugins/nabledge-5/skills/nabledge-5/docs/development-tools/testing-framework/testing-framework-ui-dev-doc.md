@@ -1,6 +1,7 @@
 # Nablarch UI開発基盤 解説書
 
-*/*
+* `Bullet list ends without a blank line; unexpected unindent.`
+* `/`
 
 > **Important:**
 > UI開発基盤を使用する際には、以下の知識が必要となる。

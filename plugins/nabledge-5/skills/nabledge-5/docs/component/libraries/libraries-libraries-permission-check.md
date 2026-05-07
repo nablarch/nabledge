@@ -4,8 +4,8 @@
 
 Nablarchでは、以下の2種類の認可チェック機能を提供している。
 
-authorization/permission_check
-authorization/role_check
+* [ハンドラによる認可チェック](../../component/libraries/libraries-authorization-permission-check.md)
+* [アノテーションによる認可チェック](../../component/libraries/libraries-role-check.md)
 
 > **Tip:**
 > **両機能の使い分け**

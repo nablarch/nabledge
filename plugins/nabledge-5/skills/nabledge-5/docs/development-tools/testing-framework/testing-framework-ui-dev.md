@@ -15,8 +15,8 @@
 > * >   JSPに設計工程のみで必要な情報を埋め込むことになるため、開発工程での可読性が著しく低下する。
 > * >   開発時に分岐などのロジックが埋め込まれた場合、設計工程と開発工程で全く同じJSPは使用不可能である。
 
-doc/index
-guide/index
-guide/widget_usage/widget_list
+* [Nablarch UI開発基盤 解説書](../../development-tools/testing-framework/testing-framework-ui-dev-doc.md)
+* [JSP/HTML作成ガイド](../../development-tools/testing-framework/testing-framework-ui-dev-guide.md)
+* [UI部品の実装サンプルで提供しているウィジェットの一覧](../../development-tools/testing-framework/testing-framework-widget-list.md)
 
 [ソースコード](https://github.com/nablarch/nablarch-plugins-bundle)

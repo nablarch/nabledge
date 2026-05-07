@@ -11,7 +11,7 @@
 | SQLログ | 深刻なパフォーマンス劣化の要因となりやすいSQL文の実行について、パフォーマンスチューニングに使用するために、 SQL文の実行時間とSQL文を出力する。 |
 | 開発ログ | アプリケーションプログラマが開発時に必要な情報を出力する。 |
 
-HTTPアクセスログとSQLログの出力内容については、 [HTTPアクセスログの出力](../../component/libraries/libraries-04-HttpAccessLog.md#httpアクセスログの出力) 、 [SQLログの出力](../../component/libraries/libraries-02-SqlLog.md#sqlログの出力) を参照。
+HTTPアクセスログとSQLログの出力内容については、 HttpAccessLog 、 SqlLog を参照。
 
 ## 開発時のログ出力の設定方法
 

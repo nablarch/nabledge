@@ -5,13 +5,13 @@
 > **Tip:**
 > 実際にアプリケーションに組み込む際には、プロジェクトの要件に合わせて適宜カスタマイズを実施し、十分なテストを実施すること。
 
-01/index
-03/index
-04/index
-05/index
-08/index
-09/index
-10/index
-11/index
-12/index
-13/index
+* [データベースを用いたパスワード認証機能サンプル](../../guide/biz-samples/biz-samples-01.md)
+* [検索結果の一覧表示](../../guide/biz-samples/biz-samples-03.md)
+* [フォーマッタ機能の拡張](../../guide/biz-samples/biz-samples-04.md)
+* [データベースを用いたファイル管理機能サンプル](../../guide/biz-samples/biz-samples-05.md)
+* [HTMLメール送信機能サンプル](../../guide/biz-samples/biz-samples-08.md)
+* [bouncycastleを使用した電子署名つきメールの送信サンプルの使用方法](../../guide/biz-samples/biz-samples-09.md)
+* [ログ集計サンプルの使用方法](../../guide/biz-samples/biz-samples-10.md)
+* [メッセージング基盤テストシミュレータサンプル](../../guide/biz-samples/biz-samples-11.md)
+* [OIDCのIDトークンを用いた認証サンプル](../../guide/biz-samples/biz-samples-12.md)
+* [Logbookを用いたリクエスト/レスポンスログ出力サンプル](../../guide/biz-samples/biz-samples-13.md)

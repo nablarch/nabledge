@@ -1,4 +1,4 @@
 # Form/Entityの単体テスト
 
-01_entityUnitTestWithBeanValidation
-02_entityUnitTestWithNablarchValidation
+* [Bean Validationに対応したForm/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-01-entityUnitTestWithBeanValidation.md)
+* [Nablarch Validationに対応したForm/Entityのクラス単体テスト](../../development-tools/testing-framework/testing-framework-02-entityUnitTestWithNablarchValidation.md)

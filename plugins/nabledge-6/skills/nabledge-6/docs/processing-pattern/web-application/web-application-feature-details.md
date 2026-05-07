@@ -26,15 +26,15 @@
 
 ## Nablarchの初期化
 
-feature_details/nablarch_servlet_context_listener
-feature_details/web_front_controller
+* [Nablarchサーブレットコンテキスト初期化リスナー](../../processing-pattern/web-application/web-application-nablarch-servlet-context-listener.md)
+* [Webフロントコントローラ](../../processing-pattern/web-application/web-application-web-front-controller.md)
 
 Nablarchの初期化を行うためには、 [システムリポジトリのロードの為の設定](../../processing-pattern/web-application/web-application-nablarch-servlet-context-listener.md#nablarchサーブレットコンテキスト初期化リスナー)
 及び [ハンドラキューの設定(構築)](../../processing-pattern/web-application/web-application-web-front-controller.md#webフロントコントローラ) が必要となる。
 
 ## 入力値のチェック
 
-feature_details/error_message
+* [バリデーションエラーのメッセージを画面表示する](../../processing-pattern/web-application/web-application-error-message.md)
 
 * [入力値のチェック](../../component/libraries/libraries-validation.md#入力値のチェック)
 * [エラーメッセージの画面表示](../../processing-pattern/web-application/web-application-error-message.md)
@@ -97,8 +97,8 @@ feature_details/error_message
 
 ## 画面の作成
 
-feature_details/jsp_session
-feature_details/view/other
+* [JSPで自動的にHTTPセッションを作成しないようにする方法](../../processing-pattern/web-application/web-application-jsp-session.md)
+* [その他のテンプレートエンジンを使用した画面開発](../../processing-pattern/web-application/web-application-other.md)
 
 * JSPを使用する場合
 
@@ -143,7 +143,7 @@ feature_details/view/other
 
 ## エラー時の画面遷移とステータスコード
 
-feature_details/forward_error_page
+* [エラー時の遷移先の指定方法](../../processing-pattern/web-application/web-application-forward-error-page.md)
 
 * [ステータスコードに対応したデフォルトの遷移先ページを設定する](../../component/handlers/handlers-HttpErrorHandler.md#デフォルトページの設定)
 * [ハンドラで例外クラスに対応したエラーページに遷移させる](../../processing-pattern/web-application/web-application-forward-error-page.md#ハンドラで共通の振る舞いを定義する)

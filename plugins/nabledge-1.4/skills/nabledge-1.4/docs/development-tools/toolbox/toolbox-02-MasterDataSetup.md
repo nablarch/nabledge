@@ -1,4 +1,4 @@
 # マスタデータ投入ツール
 
-01_MasterDataSetupTool
-02_ConfigMasterDataSetupTool
+* [マスタデータ投入ツール](../../development-tools/toolbox/toolbox-01-MasterDataSetupTool.md)
+* [マスタデータ投入ツール インストールガイド](../../development-tools/toolbox/toolbox-02-ConfigMasterDataSetupTool.md)

@@ -15,7 +15,7 @@
 
 ## バッチアプリケーションの起動方法
 
-feature_details/run_batch_application
+* [JSR352バッチアプリケーションの起動](../../processing-pattern/jakarta-batch/jakarta-batch-run-batch-application.md)
 
 * [JSR352バッチアプリケーションの起動方法](../../processing-pattern/jakarta-batch/jakarta-batch-run-batch-application.md#バッチアプリケーションを起動する)
 
@@ -33,7 +33,7 @@ feature_details/run_batch_application
 
 ## データベースアクセス
 
-feature_details/database_reader
+* [データベースを入力とするChunkステップ](../../processing-pattern/jakarta-batch/jakarta-batch-database-reader.md)
 
 * [データベースアクセス](../../component/libraries/libraries-database-management.md#データベースアクセス)
 * [データベースを入力とするChunkステップ](../../processing-pattern/jakarta-batch/jakarta-batch-database-reader.md)
@@ -44,7 +44,7 @@ feature_details/database_reader
 
 ## 排他制御
 
-feature_details/pessimistic_lock
+* [JSR352に準拠したバッチアプリケーションの悲観的ロック](../../processing-pattern/jakarta-batch/jakarta-batch-pessimistic-lock.md)
 
 排他制御は、以下の2種類の方法を提供しているが、
 [UniversalDaoを推奨する理由](../../component/libraries/libraries-exclusive-control.md#排他制御) に記載がある通り、
@@ -65,9 +65,9 @@ feature_details/pessimistic_lock
 
 ## 運用設計
 
-feature_details/operation_policy
-feature_details/progress_log
-feature_details/operator_notice_log
+* [運用方針](../../processing-pattern/jakarta-batch/jakarta-batch-operation-policy.md)
+* [進捗状況のログ出力](../../processing-pattern/jakarta-batch/jakarta-batch-progress-log.md)
+* [運用担当者向けのログ出力](../../processing-pattern/jakarta-batch/jakarta-batch-operator-notice-log.md)
 
 * [運用方針](../../processing-pattern/jakarta-batch/jakarta-batch-operation-policy.md)
 * [進捗状況のログ出力](../../processing-pattern/jakarta-batch/jakarta-batch-progress-log.md)

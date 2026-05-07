@@ -5,6 +5,6 @@
 
 各機能の詳細については、以下のドキュメントを参照すること。
 
-01_Authentication
-02_ExtendedValidation
-03_ListSearchResult.rst
+* [データベースを用いたパスワード認証機能サンプル](../../guide/biz-samples/biz-samples-01-Authentication.md)
+* [バリデーション機能の拡張](../../guide/biz-samples/biz-samples-02-ExtendedValidation.md)
+* [検索結果の一覧表示](../../guide/biz-samples/biz-samples-03-ListSearchResult.md)

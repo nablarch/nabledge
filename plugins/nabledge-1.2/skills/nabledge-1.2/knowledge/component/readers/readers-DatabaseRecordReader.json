@@ -1,7 +1,0 @@
-{
-  "id": "readers-DatabaseRecordReader",
-  "title": "データベースレコードリーダ",
-  "content": "このデータリーダでは、初回読み込み時にデータベースに対してクエリを発行し、その結果セットの中から1レコードずつ読み込んで返す。\n\n**クラス名**\n\nnablarch.fw.reader.DatabaseRecordReader\n\n**読み込むデータの型**\n\nnablarch.core.db.statement.SqlRow\n\n**設定項目一覧**\n\n| 設定項目 | プロパティ名 | データ型 | 備考 |\n|---|---|---|---|\n| SQLステートメント | statement | SqlPStatement | 排他利用。いずれか必須 |\n| 引数付きSQLステートメント | statement | ParameterizedSqlPStatement, Object |  |\n\n**使用例**\n\n引数付きプリペアステートメントを使用する場合。\n\n```java\n// 引数オブジェクト\nMap<String, Object> condition = new HashMap() {{\n    put(\"param1\", \"value1\");\n    put(\"param2\", \"value2\");\n}};\n\n// プリペアードステートメントを取得(SQLIDを指定)\nParameterizedSqlPStatement statement = getParameterizedSqlStatement(\"GET_DELETE_USER_LIST\");\n\n// データリーダを作成\nDatabaseRecordReader reader = new DatabaseRecordReader()\n                                 .setStatement(statement, condition);\n```",
-  "no_knowledge_content": false,
-  "sections": []
-}

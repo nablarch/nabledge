@@ -4,5 +4,5 @@
 
 Nablarchでは、以下2種類のメッセージングのフレームワークを提供している。
 
-mom/index
-db/index
+* [MOMによるメッセージング](../../processing-pattern/mom-messaging/mom-messaging-mom.md)
+* [テーブルをキューとして使ったメッセージング](../../processing-pattern/db-messaging/db-messaging-db.md)

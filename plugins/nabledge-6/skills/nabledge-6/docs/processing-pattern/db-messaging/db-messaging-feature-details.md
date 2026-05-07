@@ -43,7 +43,7 @@
 
 ## 実行制御
 
-feature_details/error_processing
+* [データベースをキューとしたメッセージングのエラー処理](../../processing-pattern/db-messaging/db-messaging-error-processing.md)
 
 * [プロセス終了コード](../../component/handlers/handlers-status-code-convert-handler.md#ステータスコードプロセス終了コード変換)
 * [エラー発生データを除外して処理を継続する](../../processing-pattern/db-messaging/db-messaging-error-processing.md#エラーとなったデータを除外し処理を継続する)
@@ -52,6 +52,6 @@ feature_details/error_processing
 
 ## マルチプロセス化
 
-feature_details/multiple_process
+* [マルチプロセス化](../../processing-pattern/db-messaging/db-messaging-multiple-process.md)
 
 * [マルチプロセス化](../../processing-pattern/db-messaging/db-messaging-multiple-process.md#マルチプロセス化)

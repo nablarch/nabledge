@@ -2,4 +2,4 @@
 
 その他の処理の実装方法について解説を行う。
 
-04_Explanation_mail/index
+* [業務アプリケーションの実装方法 (メール送信処理編)](../../guide/libraries/libraries-04-Explanation-mail.md)

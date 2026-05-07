@@ -48,7 +48,7 @@ PJで変更する頻度が高い環境設定値については、アーキタイ
 
 設定項目名の命名ルールについては、 [環境設定値の項目名ルール](../../about/about-nablarch/about-nablarch-config-key-naming.md) を参照。
 
-config_key_naming
+* [環境設定値の項目名ルール](../../about/about-nablarch/about-nablarch-config-key-naming.md)
 
 #### TODOコメントの埋め込まれている設定項目を修正する
 
@@ -151,6 +151,6 @@ PJでハンドラ構成を変更する場合、このファイルを編集する
 * [使用可能文字の追加手順](../../about/about-nablarch/about-nablarch-CustomizeAvailableCharacters.md)
 * [Nablarchフレームワークが使用するテーブル名の変更手順](../../about/about-nablarch/about-nablarch-CustomizeSystemTableName.md)
 
-CustomizeMessageIDAndMessage
-CustomizeAvailableCharacters
-CustomizeSystemTableName
+* [メッセージID及びメッセージ内容の変更手順](../../about/about-nablarch/about-nablarch-CustomizeMessageIDAndMessage.md)
+* [使用可能文字の追加手順](../../about/about-nablarch/about-nablarch-CustomizeAvailableCharacters.md)
+* [Nablarchフレームワークが使用するテーブル名の変更手順](../../about/about-nablarch/about-nablarch-CustomizeSystemTableName.md)

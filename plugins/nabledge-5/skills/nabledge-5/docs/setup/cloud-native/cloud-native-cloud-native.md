@@ -1,4 +1,4 @@
 # Nablarchクラウドネイティブ対応
 
-containerize/index
-distributed_tracing/index
+* [Dockerコンテナ化](../../setup/cloud-native/cloud-native-containerize.md)
+* [分散トレーシング](../../setup/cloud-native/cloud-native-distributed-tracing.md)

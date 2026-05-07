@@ -61,7 +61,7 @@
   * HTMLエスケープと改行、半角スペース変換
 * [タグリファレンス](../../component/libraries/libraries-tag-reference.md#タグリファレンス)
 
-tag/tag_reference
+* [タグリファレンス](../../component/libraries/libraries-tag-reference.md)
 
 > **Tip:**
 > 本機能は、Nablarch5までは「JSPカスタムタグ」という名称だった。

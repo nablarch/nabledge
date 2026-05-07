@@ -61,7 +61,7 @@
   * HTMLエスケープと改行、半角スペース変換
 * [タグリファレンス](../../component/libraries/libraries-tag-reference.md#タグリファレンス)
 
-tag/tag_reference
+* [タグリファレンス](../../component/libraries/libraries-tag-reference.md)
 
 この機能では、ウェブアプリケーションの画面作成を支援するカスタムタグを提供する。
 

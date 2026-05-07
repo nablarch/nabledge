@@ -4,7 +4,7 @@
 
 ## 基本的な説明
 
-./basic/
+* `./basic/`
 
 * [taglibディレクティブの指定方法](../../guide/web-application/web-application-basic.md#taglibディレクティブの指定方法)
 * [URIの指定方法](../../guide/web-application/web-application-basic.md#uriの指定方法)
@@ -14,7 +14,7 @@
 
 ## 画面の入出力に関する実装例
 
-./inputAndOutput/
+* `./inputAndOutput/`
 
 * [フォーム内の入力要素を出力するカスタムタグ](../../guide/web-application/web-application-inputAndOutput.md#フォーム内の入力要素を出力するカスタムタグ)
 * [コード値の表示方法](../../guide/web-application/web-application-inputAndOutput.md#コード値の表示方法)
@@ -28,7 +28,7 @@
 
 ## 画面遷移に関する実装例
 
-./screenTransition/
+* `./screenTransition/`
 
 * [ボタン又はリンクによるサブミット](../../guide/web-application/web-application-screenTransition.md#ボタン又はリンクによるサブミット)
 * [Enterキー押下時にデフォルトで動作するサブミットボタンを設定する方法](../../guide/web-application/web-application-screenTransition.md#enterキー押下時にデフォルトで動作するサブミットボタンを設定する方法)
@@ -40,7 +40,7 @@
 
 ## よくある業務処理の実装例
 
-./function/
+* `./function/`
 
 * [ファイルダウンロードの実現方法](../../guide/web-application/web-application-function.md#ファイルダウンロードの実現方法)
 * [ファイルアップロードの実現方法](../../guide/web-application/web-application-function.md#ファイルアップロードの実現方法)

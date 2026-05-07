@@ -1,7 +1,7 @@
 # Jakarta Server Pages静的解析ツール
 
-01_JspStaticAnalysis
-02_JspStaticAnalysisInstall
+* [Jakarta Server Pages静的解析ツール](../../development-tools/toolbox/toolbox-01-JspStaticAnalysis.md)
+* [Jakarta Server Pages静的解析ツール 設定変更ガイド](../../development-tools/toolbox/toolbox-02-JspStaticAnalysisInstall.md)
 
 > **Tip:**
 > 本ツールは、Nablarch5までは「JSP静的解析ツール」という名称だった。

@@ -4,8 +4,8 @@
 
 Nablarchでは、以下2種類のRESTfulウェブサービス用のフレームワークを提供している。
 
-rest/index
-http_messaging/index
+* [RESTfulウェブサービス編](../../processing-pattern/restful-web-service/restful-web-service-rest.md)
+* [HTTPメッセージング編](../../processing-pattern/http-messaging/http-messaging-http-messaging.md)
 
 これらのどちらのフレームワークを使用してもウェブサービスを構築できるが、
 以下の理由により [RESTfulウェブサービス編](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restfulウェブサービス編) を使用してウェブサービスを作成することを推奨する。
@@ -33,4 +33,4 @@ http_messaging/index
 > **Tip:**
 > [RESTfulウェブサービス編](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restfulウェブサービス編) と [HTTPメッセージング編](../../processing-pattern/http-messaging/http-messaging-http-messaging.md#httpメッセージング編) で提供している機能の違いは、[JAX-RSサポート/JSR339/HTTPメッセージングの機能比較](../../processing-pattern/restful-web-service/restful-web-service-functional-comparison.md#jax-rsサポートjsr339httpメッセージングの機能比較) を参照。
 
-functional_comparison
+* [JAX-RSサポート/JSR339/HTTPメッセージングの機能比較](../../processing-pattern/restful-web-service/restful-web-service-functional-comparison.md)

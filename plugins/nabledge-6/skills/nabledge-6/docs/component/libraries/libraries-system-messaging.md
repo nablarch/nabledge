@@ -4,5 +4,5 @@
 
 Nablarchでは、以下の2種類のメッセージング機能を提供している。
 
-MOMを使用してメッセージの送受信を行う機能 <system_messaging/mom_system_messaging>
-HTTPを使用してメッセージの送受信を行う機能 <system_messaging/http_system_messaging>
+* `MOMを使用してメッセージの送受信を行う機能 <system_messaging/mom_system_messaging>`
+* `HTTPを使用してメッセージの送受信を行う機能 <system_messaging/http_system_messaging>`

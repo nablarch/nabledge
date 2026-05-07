@@ -268,7 +268,7 @@ dataKbn = "2"        # dataKbnが"2"の場合データレコード
 
 マルチフォーマットの定義サンプルは、以下のリンク先を参照。
 
-multi_format_example
+* [Fixed(固定長)のマルチフォーマット定義のサンプル集](../../component/libraries/libraries-multi-format-example.md)
 
 > **Tip:**
 > JSON及びXMLデータ形式には、レコードの概念が存在しないため、

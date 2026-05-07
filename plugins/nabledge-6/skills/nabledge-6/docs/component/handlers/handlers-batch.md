@@ -1,5 +1,5 @@
 # バッチアプリケーション専用ハンドラ
 
-process_resident_handler
-loop_handler
-dbless_loop_handler
+* [プロセス常駐化ハンドラ](../../component/handlers/handlers-process-resident-handler.md)
+* [トランザクションループ制御ハンドラ](../../component/handlers/handlers-loop-handler.md)
+* [ループ制御ハンドラ](../../component/handlers/handlers-dbless-loop-handler.md)

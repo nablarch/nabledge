@@ -28,4 +28,4 @@ Javaの静的解析に使用するツールを説明する。
 
 Nablarchが定める使用許可API以外のAPI使用を検知する方法として、NablarchはFindbugsのカスタムルールを提供する。このツールの仕様および使用方法は下記を参照のこと。
 
-./UnpublishedApi
+* [使用不許可APIチェックツール](../../development-tools/java-static-analysis/java-static-analysis-UnpublishedApi.md)

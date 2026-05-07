@@ -5,5 +5,5 @@
 > **Tip:**
 > Nablarchの設定の基本的な考え方は、 [Nablarchアプリケーションフレームワーク設定ガイド](../../about/about-nablarch/about-nablarch-setting-guide.md) を参照。
 
-CustomizeDB
-addin_gsp
+* [使用するRDBMSの変更手順](../../setup/blank-project/blank-project-CustomizeDB.md)
+* [gsp-dba-maven-plugin(DBA作業支援ツール)の初期設定方法](../../setup/blank-project/blank-project-addin-gsp.md)

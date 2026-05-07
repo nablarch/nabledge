@@ -1,4 +1,4 @@
 # JSP静的解析ツール
 
-01_JspStaticAnalysis
-02_JspStaticAnalysisInstall
+* [JSP静的解析ツール](../../development-tools/java-static-analysis/java-static-analysis-01-JspStaticAnalysis.md)
+* [JSP静的解析ツール インストールガイド](../../development-tools/java-static-analysis/java-static-analysis-02-JspStaticAnalysisInstall.md)

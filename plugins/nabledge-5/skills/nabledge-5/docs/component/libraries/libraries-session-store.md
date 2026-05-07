@@ -217,9 +217,9 @@ HIDDENストアを使用する場合、以下の様に入力・確認画面のJS
 
 入力～確認～完了画面間でのセッションストアの実装例を以下に示す。
 
-session_store/create_example
+* [登録機能での実装例](../../component/libraries/libraries-create-example.md)
 
-session_store/update_example
+* [更新機能での実装例](../../component/libraries/libraries-update-example.md)
 
 > **Tip:**
 > セッションストアには、Formではなく、業務ロジックを実行するためのオブジェクト(Entity)を格納すること。

@@ -2,7 +2,7 @@
 
 本サンプルは、データベースに保存されたアカウント情報(ユーザID、パスワード)を使用して認証処理を行う実装サンプルである。
 
-0101_PBKDF2PasswordEncryptor
+* [PBKDF2を用いたパスワード暗号化機能サンプル](../../guide/biz-samples/biz-samples-0101-PBKDF2PasswordEncryptor.md)
 
 [ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-password-authentication)
 

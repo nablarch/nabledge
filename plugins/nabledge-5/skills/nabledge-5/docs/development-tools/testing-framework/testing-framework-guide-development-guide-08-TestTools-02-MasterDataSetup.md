@@ -9,5 +9,5 @@
 > 本ツールは、マルチスレッド機能には対応していない。
 > マルチスレッド機能のテストは、テスティングフレームワークを使用しないテスト(結合テストなど)で行うこと。
 
-./01_MasterDataSetupTool
-./02_ConfigMasterDataSetupTool
+* [マスタデータ投入ツール](../../development-tools/testing-framework/testing-framework-01-MasterDataSetupTool.md)
+* [マスタデータ投入ツール インストールガイド](../../development-tools/testing-framework/testing-framework-02-ConfigMasterDataSetupTool.md)

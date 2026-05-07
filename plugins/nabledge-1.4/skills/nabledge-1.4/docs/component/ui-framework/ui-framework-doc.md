@@ -1,6 +1,7 @@
 # Nablarch UI開発基盤 解説書
 
-*/*
+* `Bullet list ends without a blank line; unexpected unindent.`
+* `/`
 
 **目次**
 

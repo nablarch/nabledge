@@ -16,7 +16,7 @@
 
 上記の表記で利用している各要素についての説明と、ワークフローライブラリで利用できる要素についての説明は、下記を参照。
 
-09/WorkflowProcessElement
+* [ワークフロー定義](../../extension/workflow/workflow-WorkflowProcessElement.md)
 
 ### ワークフローインスタンス
 
@@ -29,7 +29,7 @@
 ワークフローが進行した後は、 [ワークフロー定義](../../extension/workflow/workflow-workflow-doc-index.md#ワークフロー定義) に従って進行先が判断され、次のタスク（もしくは停止イベント）まで
 進行して、再度ワークフローが進行するのを待つことになる。
 
-09/WorkflowInstanceElement
+* [ワークフローインスタンス](../../extension/workflow/workflow-WorkflowInstanceElement.md)
 
 ## 要求
 
@@ -37,7 +37,7 @@
 
 * ワークフロー定義として、以下の処理概念に相当するフローを定義し、進行状況を制御することができる。
 
-  09/WorkflowProcessSample
+* [ワークフロー定義例](../../extension/workflow/workflow-WorkflowProcessSample.md)
 * ワークフロー内の各タスクに対して、対象のタスクが現在処理可能かどうかに関わらず、担当ユーザを割り当てることができる。
 * ワークフロー内の各タスクに対して、担当ユーザを特定せず、グループ内の任意のユーザが実行できることを表す意味で、
   担当グループを設定することができる。
@@ -78,7 +78,7 @@
 
 ワークフローライブラリの全体構造については、以下を参照。
 
-09/WorkflowArchitecture
+* [ワークフローライブラリの全体構造](../../extension/workflow/workflow-WorkflowArchitecture.md)
 
 > **Note:**
 > テーブル定義に対応する Object Browser ER のEDMファイルを、以下からダウンロードすることができる。
@@ -89,4 +89,4 @@
 
 ワークフローライブラリで提供するAPIおよびその実装例については、以下を参照。
 
-09/WorkflowApplicationApi
+* [ワークフローAPI](../../extension/workflow/workflow-WorkflowApplicationApi.md)

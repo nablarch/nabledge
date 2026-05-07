@@ -33,5 +33,5 @@ Nablarchが提供する下記の機能で [Redis(外部サイト、英語)](http
 
 各機能に対応したアダプタの説明は下記を参照。
 
-lettuce_adaptor/redisstore_lettuce_adaptor
-lettuce_adaptor/redishealthchecker_lettuce_adaptor
+* [Redisストア(Lettuce)アダプタ](../../component/adapters/adapters-redisstore-lettuce-adaptor.md)
+* [Redisヘルスチェッカ(Lettuce)アダプタ](../../component/adapters/adapters-redishealthchecker-lettuce-adaptor.md)

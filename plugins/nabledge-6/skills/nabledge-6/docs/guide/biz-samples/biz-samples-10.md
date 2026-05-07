@@ -6,6 +6,6 @@
 
 ## 提供サンプル一覧
 
-contents/OnlineAccessLogStatistics
+* [オンラインアクセスログ集計機能](../../guide/biz-samples/biz-samples-OnlineAccessLogStatistics.md)
 
 [ソースコード](https://github.com/nablarch/nablarch-biz-sample-all/tree/main/nablarch-statistics-report)

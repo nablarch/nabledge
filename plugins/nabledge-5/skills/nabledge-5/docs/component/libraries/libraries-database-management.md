@@ -4,8 +4,8 @@
 
 Nablarchでは、以下の2種類のデータベースアクセス機能を提供している。
 
-database/database
-database/universal_dao
+* [データベースアクセス(JDBCラッパー)](../../component/libraries/libraries-database.md)
+* [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md)
 
 上記のどちらの機能を使用した場合でも、SQLを実行できるが、
 以下の理由により [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) を使用することを推奨する。
@@ -21,4 +21,4 @@ database/universal_dao
 > **Tip:**
 > [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) とJSR317(JPA2.0)との機能比較は、 [ユニバーサルDAOとJSR317(JPA2.0)との機能比較](../../component/libraries/libraries-database-functional-comparison.md#ユニバーサルdaoとjsr317jpa20との機能比較) を参照。
 
-database/functional_comparison
+* [ユニバーサルDAOとJSR317(JPA2.0)との機能比較](../../component/libraries/libraries-database-functional-comparison.md)

@@ -30,12 +30,12 @@ Nablarchのサンプルアプリケーションへ更新機能を追加する際
 
 簡易な更新機能を実際に作成する手順を例に Nablarch を使用した画面オンライン処理の開発手順を説明する。
 
-01_spec
-02_flow
-03_datasetup
-04_create_entity
-05_create_form
-06_initial_view
-07_confirm_view
-08_complete
-09_confirm_operation
+* [説明に使用する機能について](../../guide/web-application/web-application-01-spec.md)
+* [開発フロー](../../guide/web-application/web-application-02-flow.md)
+* [マスタデータのセットアップ](../../guide/web-application/web-application-03-datasetup.md)
+* [Entityクラス（精査処理）の実装](../../guide/web-application/web-application-04-create-entity.md)
+* [Formクラスの実装](../../guide/web-application/web-application-05-create-form.md)
+* [更新画面初期表示の実装](../../guide/web-application/web-application-06-initial-view.md)
+* [確認画面の実装](../../guide/web-application/web-application-07-confirm-view.md)
+* [完了画面の実装](../../guide/web-application/web-application-08-complete.md)
+* [動作確認をする為のサンプルアプリケーションの修正](../../guide/web-application/web-application-09-confirm-operation.md)
