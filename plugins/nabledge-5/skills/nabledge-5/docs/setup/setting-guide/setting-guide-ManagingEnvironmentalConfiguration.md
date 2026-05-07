@@ -41,7 +41,7 @@ Nablarchでは、アプリケーション設定を２つの観点で整理する
 
 以下に、切り口毎に設定の差異を図式化したものを示す。
 
-![method_and_staging.png](../../../knowledge/assets/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration/method_and_staging.png)
+![method_and_staging.png](../../../knowledge/assets/setting-guide-ManagingEnvironmentalConfiguration/method_and_staging.png)
 
 ## アプリケーション設定ファイル切り替えの前提と仕組み
 
@@ -79,7 +79,7 @@ web/batch
 
 > **Tip:**
 > * >   環境非依存の環境設定ファイル(properties)は、全ての環境で使用する。
-> * >   環境が不足している場合は、後述の [定義されている環境を増やす方法](../../about/about-nablarch/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration.md#定義されている環境を増やす方法) を参照して環境を追加する。
+> * >   環境が不足している場合は、後述の [定義されている環境を増やす方法](../../setup/setting-guide/setting-guide-ManagingEnvironmentalConfiguration.md#定義されている環境を増やす方法) を参照して環境を追加する。
 > * >   実行基盤のプロジェクト(ウェブアプリケーション、バッチアプリケーション等)から参照される共通プロジェクトを使用している場合、共通プロジェクト単体の環境毎のアプリケーション設定ファイルは不要である。
 
 ### アプリケーション設定切り替えの仕組み
@@ -108,7 +108,7 @@ mvn -P prod package -DskipTests=true
 
 **【Mavenの動作(アプリケーション設定切り替えの部分のみ)】**
 
-![switch_application_settings.png](../../../knowledge/assets/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration/switch_application_settings.png)
+![switch_application_settings.png](../../../knowledge/assets/setting-guide-ManagingEnvironmentalConfiguration/switch_application_settings.png)
 
 > **Important:**
 > src/main/resourcesと、各環境毎のディレクトリでファイル名が重複した場合は、各環境毎のディレクトリのファイルが優先される。
@@ -209,7 +209,7 @@ mvn test
 
 プロファイルの定義で指定したディレクトリを追加する。
 
-[プロファイルの定義](../../about/about-nablarch/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration.md#プロファイルの定義) の例の場合は、「src/env/ita/resources/」を作成する。
+[プロファイルの定義](../../setup/setting-guide/setting-guide-ManagingEnvironmentalConfiguration.md#プロファイルの定義) の例の場合は、「src/env/ita/resources/」を作成する。
 
 ### アプリケーション設定ファイルの作成及び修正
 

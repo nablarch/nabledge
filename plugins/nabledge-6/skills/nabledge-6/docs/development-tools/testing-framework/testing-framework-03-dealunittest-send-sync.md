@@ -192,7 +192,7 @@ loggers.MESSAGING_MAP.writerNames=stdout,appFile
 ### フレームワークで使用するクラスの設定
 
 これらの設定は取引単体テストでのみ必要な設定である。そのため、テスト用のプロファイルにこれらを設定する。
-環境ごとにコンポーネントを切り替える方法については [環境ごとにコンポーネントを切り替える方法(モックに切り替える方法)](../../about/about-nablarch/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration.md#環境ごとにコンポーネントを切り替える方法モックに切り替える方法) 参照。
+環境ごとにコンポーネントを切り替える方法については [環境ごとにコンポーネントを切り替える方法(モックに切り替える方法)](../../setup/setting-guide/setting-guide-ManagingEnvironmentalConfiguration.md#環境ごとにコンポーネントを切り替える方法モックに切り替える方法) 参照。
 
 通常、これらの設定はアーキテクトが行うものでありアプリケーションプログラマが設定する必要はない。
 

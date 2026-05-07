@@ -1289,7 +1289,7 @@ SchemaReplacer
 上記の例では、置き換え後の値を `nablarch.schemaReplacer.schemaName` という環境依存値に設定している。
 この値を環境毎に切り替えることにより、
 SQL文中のスキーマをその環境に応じたものに置き換えることができる
-（切替方法の詳細については [環境ごとに環境設定値を切り替える方法](../../about/about-nablarch/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration.md#環境ごとに環境設定値を切り替える方法) を参照）。
+（切替方法の詳細については [環境ごとに環境設定値を切り替える方法](../../setup/setting-guide/setting-guide-ManagingEnvironmentalConfiguration.md#環境ごとに環境設定値を切り替える方法) を参照）。
 
 > **Tip:**
 > 本機能によるSQL文中のスキーマ置き換えは単純な文字列置換処理であり、

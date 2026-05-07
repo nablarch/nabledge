@@ -20,7 +20,7 @@ Nablarchの設定は、デフォルトコンフィグレーション内の設定
 
 以下に設定ファイルの構成を示す。
 
-![abstract.png](../../../knowledge/assets/about-nablarch-setting-guide-CustomizingConfigurations/abstract.png)
+![abstract.png](../../../knowledge/assets/setting-guide-CustomizingConfigurations/abstract.png)
 
 | モジュール | 説明 |
 |---|---|
@@ -33,10 +33,10 @@ Nablarchの設定は、デフォルトコンフィグレーション内の設定
 
 PJ成果物の設定ファイルのカスタマイズ方法には、以下のパターンが存在する。
 
-* [環境設定値の書き換え](../../about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md#環境設定値の書き換え)
-* [環境設定値の上書き](../../about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md#環境設定値の上書き)
-* [コンポーネント定義の上書き](../../about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md#コンポーネント定義の上書き)
-* [ハンドラ構成のカスタマイズ](../../about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md#ハンドラ構成のカスタマイズ)
+* [環境設定値の書き換え](../../setup/setting-guide/setting-guide-CustomizingConfigurations.md#環境設定値の書き換え)
+* [環境設定値の上書き](../../setup/setting-guide/setting-guide-CustomizingConfigurations.md#環境設定値の上書き)
+* [コンポーネント定義の上書き](../../setup/setting-guide/setting-guide-CustomizingConfigurations.md#コンポーネント定義の上書き)
+* [ハンドラ構成のカスタマイズ](../../setup/setting-guide/setting-guide-CustomizingConfigurations.md#ハンドラ構成のカスタマイズ)
 
 詳細は以降に記載する。
 
@@ -46,9 +46,9 @@ PJ成果物の設定ファイルのカスタマイズ方法には、以下のパ
 
 PJで変更する頻度が高い環境設定値については、アーキタイプで生成したブランクプロジェクトの環境設定ファイルに設定されている。
 
-設定項目名の命名ルールについては、 [環境設定値の項目名ルール](../../about/about-nablarch/about-nablarch-config-key-naming.md) を参照。
+設定項目名の命名ルールについては、 [環境設定値の項目名ルール](../../setup/setting-guide/setting-guide-config-key-naming.md) を参照。
 
-* [環境設定値の項目名ルール](../../about/about-nablarch/about-nablarch-config-key-naming.md)
+* [環境設定値の項目名ルール](../../setup/setting-guide/setting-guide-config-key-naming.md)
 
 #### TODOコメントの埋め込まれている設定項目を修正する
 
@@ -56,13 +56,13 @@ DBの接続設定等、プロジェクト毎にほぼ確実に修正する箇所
 
 #### デフォルト値でPJ要件を満たせない場合は、デフォルト値を変更する
 
-[デフォルト設定一覧](../../../knowledge/assets/about-nablarch-setting-guide-CustomizingConfigurations/デフォルト設定一覧.xlsx) を確認の上、デフォルト値でPJ要件を満たせない箇所については、環境設定ファイル(configファイル)を修正する。
+[デフォルト設定一覧](../../../knowledge/assets/setting-guide-CustomizingConfigurations/デフォルト設定一覧.xlsx) を確認の上、デフォルト値でPJ要件を満たせない箇所については、環境設定ファイル(configファイル)を修正する。
 
 ### 環境設定値の上書き
 
 デフォルトコンフィグレーションの環境設定ファイル(config)で設定されている環境設定値を上書きしたい場合は、同名のプレースホルダーで再定義する。
 
- [デフォルト設定一覧](../../../knowledge/assets/about-nablarch-setting-guide-CustomizingConfigurations/デフォルト設定一覧.xlsx) でデフォルトコンフィグレーションで設定されている内容が確認できる。
+ [デフォルト設定一覧](../../../knowledge/assets/setting-guide-CustomizingConfigurations/デフォルト設定一覧.xlsx) でデフォルトコンフィグレーションで設定されている内容が確認できる。
 
 ### コンポーネント定義の上書き
 
@@ -70,7 +70,7 @@ DBの接続設定等、プロジェクト毎にほぼ確実に修正する箇所
 もしくはコンポーネント自体をプロジェクトでカスタマイズした別のクラスに変更したい場合、
 PJ成果物のコンポーネント設定ファイルにコンポーネント定義ごと再定義する。
 
- [デフォルト設定一覧](../../../knowledge/assets/about-nablarch-setting-guide-CustomizingConfigurations/デフォルト設定一覧.xlsx) でデフォルトコンフィグレーションで、プレースホルダーが使われていない設定を確認できる。
+ [デフォルト設定一覧](../../../knowledge/assets/setting-guide-CustomizingConfigurations/デフォルト設定一覧.xlsx) でデフォルトコンフィグレーションで、プレースホルダーが使われていない設定を確認できる。
 
 デフォルト設定からコンポーネント定義を変更する必要がある場合、以下の手順に従って
 コンポーネントを再定義する。
@@ -147,10 +147,10 @@ PJでハンドラ構成を変更する場合、このファイルを編集する
 
 コンポーネント設定ファイルや環境設定ファイル(propertiesファイル)の設定変更の具体例は以下を参照のこと。
 
-* [メッセージID及びメッセージ内容の変更手順](../../about/about-nablarch/about-nablarch-CustomizeMessageIDAndMessage.md)
-* [使用可能文字の追加手順](../../about/about-nablarch/about-nablarch-CustomizeAvailableCharacters.md)
-* [Nablarchフレームワークが使用するテーブル名の変更手順](../../about/about-nablarch/about-nablarch-CustomizeSystemTableName.md)
+* [メッセージID及びメッセージ内容の変更手順](../../setup/setting-guide/setting-guide-CustomizeMessageIDAndMessage.md)
+* [使用可能文字の追加手順](../../setup/setting-guide/setting-guide-CustomizeAvailableCharacters.md)
+* [Nablarchフレームワークが使用するテーブル名の変更手順](../../setup/setting-guide/setting-guide-CustomizeSystemTableName.md)
 
-* [メッセージID及びメッセージ内容の変更手順](../../about/about-nablarch/about-nablarch-CustomizeMessageIDAndMessage.md)
-* [使用可能文字の追加手順](../../about/about-nablarch/about-nablarch-CustomizeAvailableCharacters.md)
-* [Nablarchフレームワークが使用するテーブル名の変更手順](../../about/about-nablarch/about-nablarch-CustomizeSystemTableName.md)
+* [メッセージID及びメッセージ内容の変更手順](../../setup/setting-guide/setting-guide-CustomizeMessageIDAndMessage.md)
+* [使用可能文字の追加手順](../../setup/setting-guide/setting-guide-CustomizeAvailableCharacters.md)
+* [Nablarchフレームワークが使用するテーブル名の変更手順](../../setup/setting-guide/setting-guide-CustomizeSystemTableName.md)

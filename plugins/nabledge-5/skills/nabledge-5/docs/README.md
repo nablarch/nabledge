@@ -6,15 +6,11 @@
 
 ### about-nablarch
 
-- [使用可能文字の追加手順](about/about-nablarch/about-nablarch-CustomizeAvailableCharacters.md)
-- [メッセージID及びメッセージ内容の変更手順](about/about-nablarch/about-nablarch-CustomizeMessageIDAndMessage.md)
-- [Nablarchフレームワークが使用するテーブル名の変更手順](about/about-nablarch/about-nablarch-CustomizeSystemTableName.md)
 - [Nablarchについて](about/about-nablarch/about-nablarch-about-nablarch.md)
 - [アプリケーションフレームワーク](about/about-nablarch/about-nablarch-application-framework-application-framework-index.md)
 - [アーキテクチャ](about/about-nablarch/about-nablarch-architecture.md)
 - [全体像](about/about-nablarch/about-nablarch-big-picture.md)
 - [Nablarchのコンセプト](about/about-nablarch/about-nablarch-concept.md)
-- [環境設定値の項目名ルール](about/about-nablarch/about-nablarch-config-key-naming.md)
 - [Example](about/about-nablarch/about-nablarch-examples.md)
 - [Nablarch拡張コンポーネント](about/about-nablarch/about-nablarch-extension-components.md)
 - [Nablarchでの開発に役立つコンテンツ](about/about-nablarch/about-nablarch-external-contents.md)
@@ -26,9 +22,6 @@
 - [Nablarchアプリケーションフレームワークとは](about/about-nablarch/about-nablarch-nablarch.md)
 - [稼動環境](about/about-nablarch/about-nablarch-platform.md)
 - [基本方針](about/about-nablarch/about-nablarch-policy.md)
-- [デフォルト設定値からの設定変更方法](about/about-nablarch/about-nablarch-setting-guide-CustomizingConfigurations.md)
-- [処理方式、環境に依存する設定の管理方法](about/about-nablarch/about-nablarch-setting-guide-ManagingEnvironmentalConfiguration.md)
-- [Nablarchアプリケーションフレームワーク設定ガイド](about/about-nablarch/about-nablarch-setting-guide.md)
 - [ご利用にあたって — 情報の外部送信について](about/about-nablarch/about-nablarch-terms-of-use.md)
 - [Nablarch のバージョンアップ方針](about/about-nablarch/about-nablarch-versionup-policy.md)
 ### release-notes
@@ -603,3 +596,12 @@
 ### configuration
 
 - [デフォルト設定一覧](setup/configuration/configuration-configuration.md)
+### setting-guide
+
+- [使用可能文字の追加手順](setup/setting-guide/setting-guide-CustomizeAvailableCharacters.md)
+- [メッセージID及びメッセージ内容の変更手順](setup/setting-guide/setting-guide-CustomizeMessageIDAndMessage.md)
+- [Nablarchフレームワークが使用するテーブル名の変更手順](setup/setting-guide/setting-guide-CustomizeSystemTableName.md)
+- [デフォルト設定値からの設定変更方法](setup/setting-guide/setting-guide-CustomizingConfigurations.md)
+- [処理方式、環境に依存する設定の管理方法](setup/setting-guide/setting-guide-ManagingEnvironmentalConfiguration.md)
+- [環境設定値の項目名ルール](setup/setting-guide/setting-guide-config-key-naming.md)
+- [Nablarchアプリケーションフレームワーク設定ガイド](setup/setting-guide/setting-guide-setting-guide.md)
