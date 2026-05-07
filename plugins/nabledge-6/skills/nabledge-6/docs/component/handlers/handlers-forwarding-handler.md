@@ -38,6 +38,7 @@
 ## 制約
 
 [セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler) より後ろに配置すること
+
 [セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler) より後ろに配置すべき理由は、
 [改竄エラー時の遷移先を設定する](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler-error-forward-path) を参照
 
@@ -70,8 +71,11 @@ public HttpResponse sample(HttpRequest request, ExecutionContext context) {
 内部フォーワードで指定するフォーワード先のパスには、相対パスと絶対パスの指定が出来る。
 
 相対パス
+
 現在のリクエストURIを起点としたパスになる。
+
 絶対パス
+
 サーブレットコンテキスト名を起点としたパスになる。
 
 絶対パスの場合には、指定するパスを `/` から開始する。

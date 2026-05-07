@@ -42,6 +42,7 @@ FilePathSetting にディレクトリ及び拡張子を設定し、
 以下に例を示す。
 
 ポイント
+
 * FilePathSetting のコンポーネント名は `filePathSetting` とすること
 * basePathSettings にディレクトリを設定する
 * fileExtensions に拡張子を設定する

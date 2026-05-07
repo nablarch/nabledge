@@ -43,6 +43,7 @@
 [入力項目ウィジェット共通テンプレート](../../development-tools/testing-framework/testing-framework-field-base.md) が実装する共通仕様についてはここでは記述しない。
 
 **ローカル動作時の挙動**
+
 入力画面では **sample** に指定したラベル分だけラジオボタンとラベルを表示する。
 各ラジオボタンとラベルの組は、listFormatに指定された形式で表示される。
 (デフォルトでは改行区切り)

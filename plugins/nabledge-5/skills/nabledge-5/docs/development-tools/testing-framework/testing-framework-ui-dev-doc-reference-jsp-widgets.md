@@ -1,5 +1,3 @@
-
-
 ## UI部品ウィジェット一覧
 
 **データ表示部品**
@@ -64,11 +62,14 @@
 ## 設計情報記述用ウィジェット一覧
 
 **メタ情報記述用部品**
+
 * [設計書作成者情報ウィジェット](../../development-tools/testing-framework/testing-framework-spec-author.md)
 * [設計書更新者情報ウィジェット](../../development-tools/testing-framework/testing-framework-spec-updated-by.md)
 * [設計書作成日付情報ウィジェット](../../development-tools/testing-framework/testing-framework-spec-created-date.md)
 * [設計書更新日付情報ウィジェット](../../development-tools/testing-framework/testing-framework-spec-updated-date.md)
+
 **画面仕様記述用部品**
+
 * [画面レイアウト定義用ウィジェット](../../development-tools/testing-framework/testing-framework-spec-layout.md)
 * [画面表示パターン定義ウィジェット](../../development-tools/testing-framework/testing-framework-spec-condition.md)
 * [設計情報コメントウィジェット](../../development-tools/testing-framework/testing-framework-spec-desc.md)

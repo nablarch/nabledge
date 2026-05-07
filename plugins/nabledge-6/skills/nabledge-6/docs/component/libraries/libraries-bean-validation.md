@@ -95,6 +95,7 @@ Nablarchで提供しているバリデータは以下のパッケージ内のア
 Bean Validationを使うために必要となる設定を以下に示す。
 
 MessageInterpolatorの設定
+
 Jakarta Bean Validationでバリデーションエラーが発生した際のメッセージを構築するクラス( MessageInterpolator を実装したクラス)を設定する。
 
 設定を省略した場合(デフォルト)は、 [メッセージ管理](../../component/libraries/libraries-message.md#message) を使用する NablarchMessageInterpolator が使用される。
@@ -109,11 +110,17 @@ Jakarta Bean Validationでバリデーションエラーが発生した際のメ
 <compnent name="messageInterpolator"
     class="org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator"/>
 ```
+
 ドメインバリデーション用の設定
+
 [ドメインバリデーションを使う](../../component/libraries/libraries-bean-validation.md#bean-validation-domain-validation) を参照
+
 ウェブアプリケーションでBean Validationを使うための設定
+
 [ウェブアプリケーションのユーザ入力値のチェックを行う](../../component/libraries/libraries-bean-validation.md#bean-validation-web-application) を参照
+
 RESTfulウェブサービスでBean Validationを使うための設定
+
 [RESTfulウェブサービスのユーザ入力値のチェックを行う](../../component/libraries/libraries-bean-validation.md#bean-validation-restful-web-service) を参照
 
 ### バリデーションエラー時のエラーメッセージを定義する
@@ -131,6 +138,7 @@ RESTfulウェブサービスでBean Validationを使うための設定
 以下に例を示す。
 
 Java実装例
+
 ```java
 public class SampleForm {
 
@@ -146,7 +154,9 @@ public class SampleForm {
   // getter、setterは省略
 }
 ```
+
 メッセージ定義例
+
 アノテーションで指定されているメッセージIDをキーにメッセージを定義する。
 アノテーションのmessage属性を指定していない場合は、デフォルト値がメッセージIDとなる。
 
@@ -189,6 +199,7 @@ nablarch.core.validation.ee.SystemChar.message={charsetDef}を入力してくだ
 > このような操作が行われた場合、クライアントサイドバリデーションをすり抜け、サーバサイドに不正な値が送られる可能性がある。
 
 実装例
+
 [Nablarchで提供しているバリデータ](../../component/libraries/libraries-bean-validation.md#bean-validation-validator) を参照し、アノテーションを設定する。
 
 > **Tip:**
@@ -216,6 +227,7 @@ public class SampleForm {
 ドメインバリデーションを使うための設定や実装例を示す。
 
 ドメインごとのバリデーションルールを定義したBeanの作成
+
 ドメインバリデーションを使用するには、まずドメインごとのバリデーションルールを持つBean(ドメインBean)を作成する。
 
 このBeanクラスには、ドメインごとのフィールドを定義し、フィールドに対してアノテーションを設定する。
@@ -243,7 +255,9 @@ public class SampleDomainBean {
 
 }
 ```
+
 ドメインBeanを有効化
+
 ドメインBeanを有効化するには、 DomainManager 実装クラスを作成する。
 getDomainBean では、ドメインBeanのクラスオブジェクトを返す。
 
@@ -266,7 +280,9 @@ SampleDomainBean を使用したドメインバリデーションが有効とな
 <!-- DomainManager実装クラスは、domainManagerという名前で設定すること -->
 <component name="domainManager" class="sample.SampleDomainManager"/>
 ```
+
 各Beanでドメインバリデーションを使う
+
 Beanのバリデーション対象プロパティに @Domain アノテーションを設定することで、ドメインバリデーションが行われる。
 
 この例では、 userName に対して SampleDomainBean の name フィールドに設定したバリデーションが行われる。
@@ -298,6 +314,7 @@ public class SampleForm {
 以下に文字種毎の許容文字セットの定義方法を示す。
 
 コンポーネント定義に許容文字のセットを定義する
+
 許容文字のセットは、以下のクラスの何れかを使って登録する。
 登録する際には、コンポーネント名には文字種を表す任意の名前を設定すること。
 
@@ -338,7 +355,9 @@ public class SampleForm {
   <property name="messageId" value="asciiAndNumberString.message" />
 </component>
 ```
+
 アノテーションで文字種を指定する
+
 文字種バリデーションを行うプロパティには、 @SystemChar アノテーションを設定する。
 このアノテーションの charsetDef 属性には、許容する文字種を表す名前を設定する。
 この名前は、上記のコンポーネント設定ファイルに文字種セットを登録した際のコンポーネント名となる。
@@ -376,12 +395,14 @@ public class SampleForm {
 > ```
 
 サロゲートペアを許容する
+
 このバリデーションでは、デフォルトではサロゲートペアを許容しない。
 （例え LiteralCharsetDef で明示的にサロゲートペアの文字を定義していても許容しない）
 
 サロゲートペアを許容する場合は次のようにコンポーネント設定ファイルに SystemCharConfig を設定する必要がある。
 
 ポイント
+
 * コンポーネント名は `ee.SystemCharConfig` とすること
 
 ```xml
@@ -396,6 +417,7 @@ public class SampleForm {
 複数の項目を使用した相関バリデーションを行うには、Jakarta Bean Validationの @AssertTrue アノテーションを使用する。
 
 実装例
+
 この例では、メールアドレスと確認用メールアドレスが一致していることを検証している。
 検証エラーとなった場合は、 message プロパティに指定したメッセージがエラーメッセージとなる。
 
@@ -438,6 +460,7 @@ public class SampleForm {
 データベースとの相関バリデーションは、以下理由により業務アクション側で実装すること。
 
 理由
+
 Bean Validationを使ってデータベースに対する相関バリデーションを実施した場合、
 バリデーション実施前の安全ではない値を使ってデータベースアクセスを行うことになる。
 (Bean Validation実行中のオブジェクトの値は、安全である保証がない。)
@@ -503,6 +526,7 @@ public class SampleForm {
 以下に幾つかの実装例を示す。
 
 親BeanとネストしたBeanが1対Nの場合
+
 ネストしたBeanをバリデーション対象にし、親のBean初期化時にネストしたBeanのフィールドも初期化する。
 ネストしたBeanの情報が必須(最低1つは選択 or 入力されていること)の場合は、
 Size アノテーションを設定する。
@@ -518,7 +542,9 @@ public SampleForm() {
   sampleNestForms = new ArrayList<>();
 }
 ```
+
 親BeanとネストしたBeanが1対1の場合
+
 BeanをネストさせずにフラットなBeanにできないか検討すること。
 接続先からの要求で対応できない場合には、ネストしたBeanに対するバリデーションが確実に実行されるよう実装すること。
 
@@ -613,6 +639,7 @@ Jakarta Bean Validationの仕様では、項目名をメッセージに含める
 以下に使用方法を示す。
 
 コンポーネント設定ファイル
+
 メッセージに項目名を含めるメッセージコンバータを生成するファクトリクラスを設定する。
 コンポーネント名には、 `constraintViolationConverterFactory` を設定し、
 クラス名には ItemNamedConstraintViolationConverterFactory を設定する。
@@ -621,7 +648,9 @@ Jakarta Bean Validationの仕様では、項目名をメッセージに含める
 <component name="constraintViolationConverterFactory"
     class="nablarch.core.validation.ee.ItemNamedConstraintViolationConverterFactory" />
 ```
+
 バリデーション対象のForm
+
 ```java
 package sample;
 
@@ -634,7 +663,9 @@ public class User {
   private String address;
 }
 ```
+
 項目名の定義
+
 項目名は、メッセージとして定義する。
 項目名のメッセージIDは、バリデーション対象のクラスの完全修飾名 + "." + 項目のプロパティ名とする。
 
@@ -651,7 +682,9 @@ nablarch.core.validation.ee.Required.message=入力してください。
 sample.User.name = ユーザ名
 sample.User.address = 住所
 ```
+
 生成されるメッセージ
+
 生成されるメッセージは、エラーメッセージの先頭に項目名が付加される。
 項目名は `[` 、 `]` で囲まれる。
 
@@ -678,6 +711,7 @@ ValidatorUtil.validate(form);
 バリデーションエラーが発生した場合は、 ApplicationException が送出される。
 
 Webアプリケーションの場合
+
 ウェブアプリケーションで明示的にバリデーションを実行する場合、リクエストパラメータに含まれる入力値をBeanに変換する必要がある。
 
 Beanに変換するためには、バリデーション前のリクエストパラメータを HttpRequest#getParamMap  から取得する必要がある。
@@ -741,6 +775,7 @@ Nablarchでも、Bean Validationでグループ指定可能なAPIを提供して
 以下に使用例を示す。
 
 バリデーション対象のForm
+
 ```java
 public class SampleForm {
 
@@ -756,7 +791,9 @@ public class SampleForm {
     public interface Test1 {}
 }
 ```
+
 バリデーションを実行する処理
+
 ```java
 SampleForm form = new SampleForm();
 

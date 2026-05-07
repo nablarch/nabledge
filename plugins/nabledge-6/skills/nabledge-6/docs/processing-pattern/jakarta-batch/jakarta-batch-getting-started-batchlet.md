@@ -3,6 +3,7 @@
 Exampleアプリケーションを元に、 batchletステップ で対象テーブルのデータを削除するバッチを解説する。
 
 作成する機能の説明
+
 1. 現在のDBの状態の確認
 
   H2のコンソールから下記SQLを実行する。
@@ -59,9 +60,11 @@ $mvn exec:java -Dexec.mainClass=nablarch.fw.batch.ee.Main ^
 2. [JOB設定ファイルの作成](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-batchlet.md#getting-started-batchlet-job)
 
 Batchletの作成
+
 住所情報を削除するバッチのBatchletクラスを作成する。
 
 実装すべきインタフェースとその責務
+
 Batchletクラスに以下のインタフェースを実装してバッチ処理を作成する。オーバーライドしたメソッドは、Batch Runtimeによって適切なタイミングで呼び出される。
 
 | インタフェース | 実装 |
@@ -73,6 +76,7 @@ Batchletクラスに以下のインタフェースを実装してバッチ処理
 > リスナーの詳細は [バッチアプリケーションで使用するリスナー](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-listener) 及び [リスナーの指定方法](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-listener-definition) を参照。
 
 TruncateTableBatchlet.java
+
 ```java
 @Dependent
 @Named
@@ -96,6 +100,7 @@ public class TruncateTableBatchlet extends AbstractBatchlet {
 ```
 
 この実装のポイント
+
 * AbstractBatchlet を継承し、 process メソッドで業務処理を行う。
 
 * Named と Dependent をクラスに付与する。 
@@ -107,9 +112,11 @@ public class TruncateTableBatchlet extends AbstractBatchlet {
 * [データベースアクセス](../../component/libraries/libraries-database.md#database) を使用してTRUNCATE文を実行する。
 
 ジョブ定義ファイルの作成
+
 ジョブの実行設定を定義したファイルを作成する。
 
 zip-code-truncate-table.xml
+
 ```xml
 <job id="zip-code-truncate-table" xmlns="https://jakarta.ee/xml/ns/jakartaee" version="2.0">
   <listeners>
@@ -138,7 +145,9 @@ zip-code-truncate-table.xml
   </step>
 </job>
 ```
+
 この実装のポイント
+
 * ジョブ定義ファイルは、/src/main/resources/META-INF/batch-jobs/ 配下に配置する。
 * job 要素 の id 属性で、ジョブ名称を指定する。
 * 複数ステップで構成されるバッチジョブの場合は、 step 要素を複数定義し、処理を順次実行する。

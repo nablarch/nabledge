@@ -46,6 +46,7 @@ public HttpResponse confirm(HttpRequest req, ExecutionContext ctx) {
 また、入力フォームへ明示的にトークンを埋め込む必要がある。
 
 Thymeleafでの実装例
+
 ```xml
 <form th:action="@{/path/to/action}" method="post">
   <input type="hidden" name="nablarch_token" th:value="${nablarch_request_token}" />

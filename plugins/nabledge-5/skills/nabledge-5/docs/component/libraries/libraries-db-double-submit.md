@@ -42,6 +42,7 @@
 作成するテーブルの定義を以下に示す。
 
 DOUBLE_SUBMISSION テーブル
+
 | カラム名 | データ型 |
 |---|---|
 | TOKEN(PK) | java.lang.String |

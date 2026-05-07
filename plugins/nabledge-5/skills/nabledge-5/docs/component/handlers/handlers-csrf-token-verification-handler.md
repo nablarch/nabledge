@@ -54,9 +54,12 @@ CsrfTokenUtil )を提供しているので、
 ## 制約
 
 [セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler) より後ろに配置すること
+
 CSRFトークンをセッションストアに格納するため、
 本ハンドラは [セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler) より後ろに配置する必要がある。
+
 [JSPカスタムタグ](../../component/libraries/libraries-tag.md#tag) を使用する場合は [Nablarchカスタムタグ制御ハンドラ](../../component/handlers/handlers-nablarch-tag-handler.md#nablarch-tag-handler) より後ろに配置すること
+
 [JSPカスタムタグ](../../component/libraries/libraries-tag.md#tag) を使用する場合は [クライアントに保持するデータを暗号化する(hidden暗号化)](../../component/libraries/libraries-tag.md#tag-hidden-encryption) を使用して画面にCSRFトークンを出力しているため、
 本ハンドラは [Nablarchカスタムタグ制御ハンドラ](../../component/handlers/handlers-nablarch-tag-handler.md#nablarch-tag-handler) より後ろに配置する必要がある。
 
@@ -91,21 +94,30 @@ CSRFトークンをセッションストアに格納するため、
 デフォルトでは以下の処理を行う。
 
 セッションストアからCSRFトークンを取得する
+
 * CSRFトークンをセッションストアに格納する際に使用する名前は `nablarch_csrf-token` となる。
+
 取得できなかった場合はCSRFトークンを生成してセッションストアへ保存する
+
 * CSRFトークンの生成は CsrfTokenGenerator が行う。
   デフォルトではバージョン4のUUIDを使用してCSRFトークンを生成する UUIDv4CsrfTokenGenerator を使用する。
 * CSRFトークンの格納先となるセッションストアはデフォルトのセッションストアとなる。（セッションストアの名前を指定しないでCSRFトークンを格納する）
+
 HTTPリクエストが検証対象か否かを判定する
+
 * 検証対象か否かの判定は VerificationTargetMatcher が行う。
   デフォルトではHTTPメソッドからHTTPリクエストが検証対象か否かを判定する HttpMethodVerificationTargetMatcher を使用する。
 * HttpMethodVerificationTargetMatcher は、HTTPメソッドの `GET` `HEAD` `TRACE` `OPTIONS` をCSRFトークンの検証対象 **外** と判定する（つまりPOSTやPUT等は検査対象となる）。
+
 検証対象の場合はHTTPリクエストからCSRFトークンを取得して検証する
+
 * CSRFトークンをHTTPリクエストに格納する際に使用する名前は以下となる。
 
   HTTPリクエストヘッダ `X-CSRF-TOKEN`
   HTTPリクエストパラメータ `csrf-token`
+
 検証に成功した場合は次のハンドラへ処理を移し、検証に失敗した場合はBadRequest(400)のレスポンスを返す
+
 * 検証失敗時の処理は VerificationFailureHandler が行う。
   デフォルトではBadRequest(400)のレスポンスを生成する BadRequestVerificationFailureHandler を使用する。
 

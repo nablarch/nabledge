@@ -121,10 +121,13 @@ BasicBusinessDateProvider の設定をコンポーネント定義に追加する
 システムプロパティとして、以下の形式で指定する。
 
 システムプロパティの形式
+
 BasicBusinessDateProvider.<区分>=日付
 
 ※日付はyyyyMMdd形式
+
 システムプロパティの例
+
 区分が"batch"の日付を"2016/03/17"に上書きしたい場合
 
 -DBasicBusinessDateProvider.batch=20160317

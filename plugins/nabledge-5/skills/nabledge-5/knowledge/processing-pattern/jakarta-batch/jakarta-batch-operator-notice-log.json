@@ -19,7 +19,7 @@
     {
       "id": "s3",
       "title": "運用担当者向けのログを出力する",
-      "content": "運用担当者向けのログを出力するための実装例を以下に示す。\n\nポイント\n* OperationLogger#write\n  を使用してログを出力する。\n* 運用担当者向けのログ出力とともにバッチ処理を異常終了させたい場合には、例外を送出すること。\n実装例\n```java\n@Named\n@Dependent\npublic class SampleBatchlet extends AbstractBatchlet {\n\n    @Override\n    public String process() throws Exception {\n\n        try {\n            // 省略\n        } catch (FileNotFoundException e) {\n            // 入力ファイルが存在しないことを運用担当者に通知して例外を送出する\n            OperationLogger.write(\n                    LogLevel.ERROR,\n                    \"ファイルが存在しません。正しく受信できているか確認してください。\",\n                    e);\n            throw e;\n        }\n\n        // 省略\n    }\n}\n```\n出力例\n```bash\nERROR operator ファイルが存在しません。正しく受信できているか確認してください。\n```",
+      "content": "運用担当者向けのログを出力するための実装例を以下に示す。\n\nポイント\n\n* OperationLogger#write\n  を使用してログを出力する。\n* 運用担当者向けのログ出力とともにバッチ処理を異常終了させたい場合には、例外を送出すること。\n\n実装例\n\n```java\n@Named\n@Dependent\npublic class SampleBatchlet extends AbstractBatchlet {\n\n    @Override\n    public String process() throws Exception {\n\n        try {\n            // 省略\n        } catch (FileNotFoundException e) {\n            // 入力ファイルが存在しないことを運用担当者に通知して例外を送出する\n            OperationLogger.write(\n                    LogLevel.ERROR,\n                    \"ファイルが存在しません。正しく受信できているか確認してください。\",\n                    e);\n            throw e;\n        }\n\n        // 省略\n    }\n}\n```\n\n出力例\n\n```bash\nERROR operator ファイルが存在しません。正しく受信できているか確認してください。\n```",
       "level": 2
     }
   ]

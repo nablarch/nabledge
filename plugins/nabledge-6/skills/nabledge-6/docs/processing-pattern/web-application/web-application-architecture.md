@@ -18,8 +18,11 @@ Nablarchではウェブアプリケーションを構築する場合、ServletAP
 ![application_structure.png](../../../knowledge/assets/web-application-architecture/application_structure.png)
 
 [Nablarchサーブレットコンテキスト初期化リスナー](../../processing-pattern/web-application/web-application-nablarch-servlet-context-listener.md#nablarch-servlet-context-listener) (NablarchServletContextListener)
+
 システムリポジトリやログの初期化処理を行うサーブレットコンテキストリスナー。
+
 [Webフロントコントローラ](../../processing-pattern/web-application/web-application-web-front-controller.md#web-front-controller) (WebFrontController)
+
 受け取ったリクエストに対する処理をハンドラキューに委譲するサーブレットフィルタ。
 
 ## ウェブアプリケーションの処理の流れ
@@ -45,6 +48,7 @@ Nablarchでは、ウェブアプリケーションを構築するために必要
 各ハンドラの詳細は、リンク先を参照すること。
 
 リクエストやレスポンスの変換を行うハンドラ
+
 * [HTTP文字エンコード制御ハンドラ](../../component/handlers/handlers-http-character-encoding-handler.md#http-character-encoding-handler)
 * [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler)
 * [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler)
@@ -52,18 +56,28 @@ Nablarchでは、ウェブアプリケーションを構築するために必要
 * [セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler)
 * [ノーマライズハンドラ](../../component/handlers/handlers-normalize-handler.md#normalize-handler)
 * [セキュアハンドラ](../../component/handlers/handlers-secure-handler.md#secure-handler)
+
 リクエストのフィルタリングを行うハンドラ
+
 * [サービス提供可否チェック](../../component/libraries/libraries-service-availability.md#service-availability)
 * [認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#permission-check-handler)
+
 データベースに関連するハンドラ
+
 * [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler)
 * [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler)
+
 リクエストの検証を行うハンドラ
+
 * [CSRFトークン検証ハンドラ](../../component/handlers/handlers-csrf-token-verification-handler.md#csrf-token-verification-handler)
+
 エラー処理に関するハンドラ
+
 * [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler)
 * [グローバルエラーハンドラ](../../component/handlers/handlers-global-error-handler.md#global-error-handler)
+
 その他
+
 * [HTTPリクエストディスパッチハンドラ](../../component/handlers/handlers-http-request-java-package-mapping.md#http-request-java-package-mapping)
 * [Nablarchカスタムタグ制御ハンドラ](../../component/handlers/handlers-nablarch-tag-handler.md#nablarch-tag-handler)
 * [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler)

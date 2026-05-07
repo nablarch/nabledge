@@ -48,6 +48,7 @@
 ## 制約
 
 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) または [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler) より後ろに配置すること
+
 本ハンドラで生成した HttpResponse を
 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) または [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler) が処理するため、
 本ハンドラは [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) または [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler) より後ろに配置する必要がある。
@@ -190,9 +191,12 @@ public class CustomHealthChecker extends HealthChecker {
 デフォルトのレスポンスは以下となる。
 
 ステータスコード
+
 * ヘルスチェックの成功：200
 * ヘルスチェックの失敗：503
+
 レスポンスボディ
+
 * Content-Type：application/json
 * フォーマット
 
@@ -216,7 +220,9 @@ public class CustomHealthChecker extends HealthChecker {
   * 実際は改行がなく1行となるが上記は見やすさのために整形している。
   * ヘルスチェック全体の結果はtargetsのヘルスチェック結果が1つでも失敗の場合に失敗となる。
   * targetsは指定された HealthChecker の数だけ含まれる。
+
 ヘルスチェック結果のラベル
+
 * ヘルスチェックの成功：UP
 * ヘルスチェックの失敗：DOWN
 

@@ -3,9 +3,12 @@
 Exampleアプリケーションを元に、更新機能を解説する。
 
 作成する機能の説明
+
 本機能は、PUTリクエスト時にリクエストボディにJSON形式のプロジェクト情報を設定することで、
 データベース上のプロジェクトIDが一致するプロジェクト情報を更新する。
+
 動作確認手順
+
 1. 事前にDBの状態を確認
 
   H2のコンソールから下記SQLを実行し、更新対象レコードを確認する。
@@ -18,12 +21,19 @@ Exampleアプリケーションを元に、更新機能を解説する。
 任意のRESTクライアントを使用して、以下のリクエストを送信する。
 
 URL
+
 [http://localhost:9080/projects](http://localhost:9080/projects)
+
 HTTPメソッド
+
 PUT
+
 Content-Type
+
 application/json
+
 リクエストボディ
+
 ```json
 {
     "projectId": 1,
@@ -55,9 +65,11 @@ SELECT * FROM PROJECT WHERE PROJECT_ID = 1;
 ## プロジェクト情報を更新する
 
 フォームの作成
+
 クライアントから送信された値を受け付けるフォームを作成する。
 
 ProjectUpdateForm.java
+
 ```java
 public class ProjectUpdateForm implements Serializable {
 
@@ -83,11 +95,15 @@ public class ProjectUpdateForm implements Serializable {
 ```
 
 この実装のポイント
+
 * プロパティは全てString型で宣言する。詳細は [バリデーションルールの設定方法](../../component/libraries/libraries-bean-validation.md#bean-validation-form-property) を参照。
+
 業務アクションメソッドの実装
+
 データベース上のプロジェクト情報を更新する処理を実装する。
 
 ProjectAction.java
+
 ```java
 @Consumes(MediaType.APPLICATION_JSON)
 @Valid
@@ -101,6 +117,7 @@ public HttpResponse update(ProjectUpdateForm form) {
 ```
 
 この実装のポイント
+
 * リクエストボディをJSON形式で受け付けるため、 Consumes アノテーションに
   `MediaType.APPLICATION_JSON` を指定する。
 * Valid アノテーションを使用して、リクエストのバリデーションを行う。
@@ -114,11 +131,14 @@ public HttpResponse update(ProjectUpdateForm form) {
 > NoDataException が発生した場合は `404` 、
 > OptimisticLockException が発生した場合は `409`
 > のレスポンスを生成してクライアントに返却している。
+
 URLとのマッピングを定義
+
 [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) を使用して、業務アクションとURLのマッピングを行う。
 マッピングには [JAX-RSのPathアノテーション](../../component/adapters/adapters-router-adaptor.md#router-adaptor-path-annotation) を使用する。
 
 ProjectAction.java
+
 ```java
 @Path("/projects")
 public class ProjectAction {
@@ -133,5 +153,7 @@ public class ProjectAction {
       return new HttpResponse(HttpResponse.Status.OK.getStatusCode());
   }
 ```
+
 この実装のポイント
+
 * `@Path` アノテーションと `@PUT` アノテーションを使用して、PUTリクエスト時にマッピングする業務アクションメソッドを定義する。

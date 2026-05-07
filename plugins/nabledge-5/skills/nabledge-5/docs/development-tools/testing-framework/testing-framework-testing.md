@@ -4,6 +4,7 @@
 
 > **Tip:**
 > **プロジェクト側のカスタマイズに伴うテストの実施について**
+
 > 各プロジェクトにおいて、既存の部品を修正もしくは新規に追加した場合は、
 > その内容にもよるが、基本的に下記に示すものと同等の観点でテストを実施する必要がある。
 
@@ -27,10 +28,13 @@
 以下の事由によりホワイトボックス的なテストケースの抽出は行っていない。
 
 [JavaScript UI部品](../../development-tools/testing-framework/testing-framework-js-framework.md) , [業務画面JSPローカル表示機能](../../development-tools/testing-framework/testing-framework-inbrowser-jsp-rendering.md)
+
 現状ではJavaScriptで実装された部分のカバレッジを集計する方法が確立しておらず
 効率的なテストケース抽出および、テスト網羅性の評価が実施できないため、今回のリリースでは実施を見送っている。
 今後、テスト基盤を整備し実施する予定である。
+
 [UI部品ウィジェット](../../development-tools/testing-framework/testing-framework-jsp-widgets.md)
+
 各ウィジェットの実体はJSPタグファイルであるため、そもそも複雑なロジックは記述できない。
 ブラックボックステストで十分な網羅性が得られると判断できるため。
 

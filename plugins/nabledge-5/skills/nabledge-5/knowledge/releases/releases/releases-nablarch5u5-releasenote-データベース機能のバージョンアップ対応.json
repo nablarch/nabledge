@@ -4,5 +4,320 @@
   "content": "データベース機能のバージョンアップ対応\nバージョンアップの際には、以下の手順に従い取り込んでください。\n■SqlConvertorの実装クラスの変更\nSqlConvertorインタフェースのconvertメソッドの引数が変更されています。\nプロジェクトで、このインタフェースの実装クラスを作成している場合には、実装クラスの修正が必要となります。\n修正方法は、nablarchで提供している実装クラスを参照してください。\nnablarchで提供しているSqlConvertorインタフェースの実装クラスは、「nablarch.core.db.statement.sqlconvertor」パッケージ配下にあります。\nまた、本インタフェースの実装クラスをサポートする抽象クラスの「SqlConvertorSupport」のインタフェースも変更されています。\nこれについても、nablarchが提供している実装クラスを参照し、修正を行ってください。\n■FieldAnnotationHandlerSupport実装クラスの変更\ngetFieldListメソッドの引数及び戻り値が変更されています。\nプロジェクトで、このクラスの実装クラスを作成している場合、実装クラスの修正が必要となります。\n修正方法は、nablarchで提供している実装クラスを参照してください。\nnablarchで提供しているFieldAnnotationHandlerSupportの実装クラスは、「nablarch.core.db.statement.autoproperty」パッケージ配下にあります。\n■コンポーネント設定ファイルの修正\nFieldAndAnnotationLoaderが非推奨に変更になっています。FieldAndAnnotationLoaderのコンポーネント設定をコンポーネント設定ファイル(xml)から削除してください。\nまた、削除したコンポーネント名を使用している箇所も全て削除してください。削除しないと、コンポーネント未定義により実行時エラーとなります。\n以下のクラスからfieldAnnotationCacheプロパティが削除されています。\nコンポーネント設定ファイルからも、fieldAnnotationCacheの設定を削除してください。\nnablarch.core.db.statement.autoproperty.CurrentDateTimeAnnotationHandler\nnablarch.core.db.statement.autoproperty.RequestIdAnnotationHandler\nnablarch.core.db.statement.autoproperty.UserIdAnnotationHandler\nnablarch.core.db.statement.BasicStatementFactoryクラスからobjectFieldCacheプロパティが削除されています。\nコンポーネント設定ファイルから、objectFieldCacheプロパティの設定を削除してください。\n※今回のリリースでは、廃止したプロパティはそのまま残しています。このため、コンポーネント設定ファイルは修正しなくても動作します。\nただし、default-configurationのバージョンを5u5リリースバージョンに変更した場合、コンポーネント設定ファイルに対する修正が必要となります。\n修正内容は、コンポーネント名が「statementValueObjectCache」のオブジェクトを全て削除します。\n■データベース機能に指定しているオブジェクトの修正\n今回の対応により、データベース機能ではバインド変数にオブジェクトの値を設定する際にフィールドではなくプロパティ（getter）を参照するようになります。\nこのため、getterの存在しないオブジェクトを指定している場合、オブジェクトを使用した検索や登録機能が動作しなくなります。\nフィールドのみのオブジェクトを指定している場合には、getterを追加する修正が必要となります。",
   "no_knowledge_content": false,
   "sections": [],
-  "sheet_type": "P2"
+  "sheet_type": "P2",
+  "p2_headings": [
+    {
+      "text": "データベース機能のバージョンアップ対応",
+      "level": 2
+    },
+    {
+      "text": "バージョンアップの際には、以下の手順に従い取り込んでください。",
+      "level": 3
+    },
+    {
+      "text": "■SqlConvertorの実装クラスの変更",
+      "level": 3
+    },
+    {
+      "text": "SqlConvertorインタフェースのconvertメソッドの引数が変更されています。",
+      "level": 4
+    },
+    {
+      "text": "プロジェクトで、このインタフェースの実装クラスを作成している場合には、実装クラスの修正が必要となります。",
+      "level": 4
+    },
+    {
+      "text": "修正方法は、nablarchで提供している実装クラスを参照してください。",
+      "level": 4
+    },
+    {
+      "text": "nablarchで提供しているSqlConvertorインタフェースの実装クラスは、「nablarch.core.db.statement.sqlconvertor」パッケージ配下にあります。",
+      "level": 4
+    },
+    {
+      "text": "また、本インタフェースの実装クラスをサポートする抽象クラスの「SqlConvertorSupport」のインタフェースも変更されています。",
+      "level": 4
+    },
+    {
+      "text": "これについても、nablarchが提供している実装クラスを参照し、修正を行ってください。",
+      "level": 4
+    },
+    {
+      "text": "■FieldAnnotationHandlerSupport実装クラスの変更",
+      "level": 3
+    },
+    {
+      "text": "getFieldListメソッドの引数及び戻り値が変更されています。",
+      "level": 4
+    },
+    {
+      "text": "プロジェクトで、このクラスの実装クラスを作成している場合、実装クラスの修正が必要となります。",
+      "level": 4
+    },
+    {
+      "text": "修正方法は、nablarchで提供している実装クラスを参照してください。",
+      "level": 4
+    },
+    {
+      "text": "nablarchで提供しているFieldAnnotationHandlerSupportの実装クラスは、「nablarch.core.db.statement.autoproperty」パッケージ配下にあります。",
+      "level": 4
+    },
+    {
+      "text": "■コンポーネント設定ファイルの修正",
+      "level": 3
+    },
+    {
+      "text": "FieldAndAnnotationLoaderが非推奨に変更になっています。FieldAndAnnotationLoaderのコンポーネント設定をコンポーネント設定ファイル(xml)から削除してください。",
+      "level": 4
+    },
+    {
+      "text": "また、削除したコンポーネント名を使用している箇所も全て削除してください。削除しないと、コンポーネント未定義により実行時エラーとなります。",
+      "level": 4
+    },
+    {
+      "text": "以下のクラスからfieldAnnotationCacheプロパティが削除されています。",
+      "level": 4
+    },
+    {
+      "text": "コンポーネント設定ファイルからも、fieldAnnotationCacheの設定を削除してください。",
+      "level": 4
+    },
+    {
+      "text": "nablarch.core.db.statement.autoproperty.CurrentDateTimeAnnotationHandler",
+      "level": 4
+    },
+    {
+      "text": "nablarch.core.db.statement.autoproperty.RequestIdAnnotationHandler",
+      "level": 4
+    },
+    {
+      "text": "nablarch.core.db.statement.autoproperty.UserIdAnnotationHandler",
+      "level": 4
+    },
+    {
+      "text": "nablarch.core.db.statement.BasicStatementFactoryクラスからobjectFieldCacheプロパティが削除されています。",
+      "level": 4
+    },
+    {
+      "text": "コンポーネント設定ファイルから、objectFieldCacheプロパティの設定を削除してください。",
+      "level": 4
+    },
+    {
+      "text": "※今回のリリースでは、廃止したプロパティはそのまま残しています。このため、コンポーネント設定ファイルは修正しなくても動作します。",
+      "level": 4
+    },
+    {
+      "text": "ただし、default-configurationのバージョンを5u5リリースバージョンに変更した場合、コンポーネント設定ファイルに対する修正が必要となります。",
+      "level": 4
+    },
+    {
+      "text": "修正内容は、コンポーネント名が「statementValueObjectCache」のオブジェクトを全て削除します。",
+      "level": 4
+    },
+    {
+      "text": "■データベース機能に指定しているオブジェクトの修正",
+      "level": 3
+    },
+    {
+      "text": "今回の対応により、データベース機能ではバインド変数にオブジェクトの値を設定する際にフィールドではなくプロパティ（getter）を参照するようになります。",
+      "level": 4
+    },
+    {
+      "text": "このため、getterの存在しないオブジェクトを指定している場合、オブジェクトを使用した検索や登録機能が動作しなくなります。",
+      "level": 4
+    },
+    {
+      "text": "フィールドのみのオブジェクトを指定している場合には、getterを追加する修正が必要となります。",
+      "level": 4
+    }
+  ],
+  "p2_raw_lines": [
+    [
+      [
+        0,
+        "データベース機能のバージョンアップ対応"
+      ]
+    ],
+    [
+      [
+        1,
+        "バージョンアップの際には、以下の手順に従い取り込んでください。"
+      ]
+    ],
+    [
+      [
+        1,
+        "■SqlConvertorの実装クラスの変更"
+      ]
+    ],
+    [
+      [
+        2,
+        "SqlConvertorインタフェースのconvertメソッドの引数が変更されています。"
+      ]
+    ],
+    [
+      [
+        2,
+        "プロジェクトで、このインタフェースの実装クラスを作成している場合には、実装クラスの修正が必要となります。"
+      ]
+    ],
+    [
+      [
+        2,
+        "修正方法は、nablarchで提供している実装クラスを参照してください。"
+      ]
+    ],
+    [
+      [
+        2,
+        "nablarchで提供しているSqlConvertorインタフェースの実装クラスは、「nablarch.core.db.statement.sqlconvertor」パッケージ配下にあります。"
+      ]
+    ],
+    [
+      [
+        2,
+        "また、本インタフェースの実装クラスをサポートする抽象クラスの「SqlConvertorSupport」のインタフェースも変更されています。"
+      ]
+    ],
+    [
+      [
+        2,
+        "これについても、nablarchが提供している実装クラスを参照し、修正を行ってください。"
+      ]
+    ],
+    [
+      [
+        1,
+        "■FieldAnnotationHandlerSupport実装クラスの変更"
+      ]
+    ],
+    [
+      [
+        2,
+        "getFieldListメソッドの引数及び戻り値が変更されています。"
+      ]
+    ],
+    [
+      [
+        2,
+        "プロジェクトで、このクラスの実装クラスを作成している場合、実装クラスの修正が必要となります。"
+      ]
+    ],
+    [
+      [
+        2,
+        "修正方法は、nablarchで提供している実装クラスを参照してください。"
+      ]
+    ],
+    [
+      [
+        2,
+        "nablarchで提供しているFieldAnnotationHandlerSupportの実装クラスは、「nablarch.core.db.statement.autoproperty」パッケージ配下にあります。"
+      ]
+    ],
+    [
+      [
+        1,
+        "■コンポーネント設定ファイルの修正"
+      ]
+    ],
+    [
+      [
+        2,
+        "FieldAndAnnotationLoaderが非推奨に変更になっています。FieldAndAnnotationLoaderのコンポーネント設定をコンポーネント設定ファイル(xml)から削除してください。"
+      ]
+    ],
+    [
+      [
+        2,
+        "また、削除したコンポーネント名を使用している箇所も全て削除してください。削除しないと、コンポーネント未定義により実行時エラーとなります。"
+      ]
+    ],
+    [
+      [
+        2,
+        "以下のクラスからfieldAnnotationCacheプロパティが削除されています。"
+      ]
+    ],
+    [
+      [
+        2,
+        "コンポーネント設定ファイルからも、fieldAnnotationCacheの設定を削除してください。"
+      ]
+    ],
+    [
+      [
+        2,
+        "nablarch.core.db.statement.autoproperty.CurrentDateTimeAnnotationHandler"
+      ]
+    ],
+    [
+      [
+        2,
+        "nablarch.core.db.statement.autoproperty.RequestIdAnnotationHandler"
+      ]
+    ],
+    [
+      [
+        2,
+        "nablarch.core.db.statement.autoproperty.UserIdAnnotationHandler"
+      ]
+    ],
+    [
+      [
+        2,
+        "nablarch.core.db.statement.BasicStatementFactoryクラスからobjectFieldCacheプロパティが削除されています。"
+      ]
+    ],
+    [
+      [
+        2,
+        "コンポーネント設定ファイルから、objectFieldCacheプロパティの設定を削除してください。"
+      ]
+    ],
+    [
+      [
+        2,
+        "※今回のリリースでは、廃止したプロパティはそのまま残しています。このため、コンポーネント設定ファイルは修正しなくても動作します。"
+      ]
+    ],
+    [
+      [
+        2,
+        "ただし、default-configurationのバージョンを5u5リリースバージョンに変更した場合、コンポーネント設定ファイルに対する修正が必要となります。"
+      ]
+    ],
+    [
+      [
+        2,
+        "修正内容は、コンポーネント名が「statementValueObjectCache」のオブジェクトを全て削除します。"
+      ]
+    ],
+    [
+      [
+        1,
+        "■データベース機能に指定しているオブジェクトの修正"
+      ]
+    ],
+    [
+      [
+        2,
+        "今回の対応により、データベース機能ではバインド変数にオブジェクトの値を設定する際にフィールドではなくプロパティ（getter）を参照するようになります。"
+      ]
+    ],
+    [
+      [
+        2,
+        "このため、getterの存在しないオブジェクトを指定している場合、オブジェクトを使用した検索や登録機能が動作しなくなります。"
+      ]
+    ],
+    [
+      [
+        2,
+        "フィールドのみのオブジェクトを指定している場合には、getterを追加する修正が必要となります。"
+      ]
+    ]
+  ],
+  "p2_base_col": 0
 }

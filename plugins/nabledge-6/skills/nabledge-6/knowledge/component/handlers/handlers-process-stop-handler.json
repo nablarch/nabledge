@@ -19,13 +19,13 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに設定すること\n本ハンドラは、スレッドコンテキスト上のリクエストIDをもとに停止処理を行うため、\n[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに本ハンドラを設定する必要がある。",
+      "content": "[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに設定すること\n\n本ハンドラは、スレッドコンテキスト上のリクエストIDをもとに停止処理を行うため、\n[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに本ハンドラを設定する必要がある。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "プロセス停止制御を行うための設定",
-      "content": "プロセス停止制御を行うためには、プロセス停止可否のチェックで使用するテーブル定義情報などを本ハンドラに設定する必要がある。\n設定項目の詳細は、 BasicProcessStopHandler を参照。\n\n以下に設定例を示す。\n\nポイント\n* 都度起動バッチで使用する場合、本ハンドラはサブスレッド側に設定する。\n* 常駐バッチで使用する場合、本ハンドラはメインスレッド側に設定する。\n* 初期化が必要なので初期化対象のリストに設定する。\n\n```xml\n<component name=\"processStopHandler\" class=\"nablarch.fw.handler.BasicProcessStopHandler\">\n  <!-- データベースへアクセスするためのトランザクション設定 -->\n  <property name=\"dbTransactionManager\" ref=\"simpleDbTransactionManager\" />\n\n  <!-- チェックで使用するテーブルの定義情報 -->\n  <property name=\"tableName\" value=\"BATCH_REQUEST\" />\n  <property name=\"requestIdColumnName\" value=\"REQUEST_ID\" />\n  <property name=\"processHaltColumnName\" value=\"PROCESS_HALT_FLG\" />\n\n  <!-- プロセス停止フラグのチェック間隔(任意) -->\n  <property name=\"checkInterval\" value=\"1\" />\n\n  <!-- プロセス停止時の終了コード(任意) -->\n  <property name=\"exitCode\" value=\"50\" />\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <!-- 他のコンポーネントは省略 -->\n      <component-ref name=\"processStopHandler\" />\n    </list>\n  </property>\n</component>\n```",
+      "content": "プロセス停止制御を行うためには、プロセス停止可否のチェックで使用するテーブル定義情報などを本ハンドラに設定する必要がある。\n設定項目の詳細は、 BasicProcessStopHandler を参照。\n\n以下に設定例を示す。\n\nポイント\n\n* 都度起動バッチで使用する場合、本ハンドラはサブスレッド側に設定する。\n* 常駐バッチで使用する場合、本ハンドラはメインスレッド側に設定する。\n* 初期化が必要なので初期化対象のリストに設定する。\n\n```xml\n<component name=\"processStopHandler\" class=\"nablarch.fw.handler.BasicProcessStopHandler\">\n  <!-- データベースへアクセスするためのトランザクション設定 -->\n  <property name=\"dbTransactionManager\" ref=\"simpleDbTransactionManager\" />\n\n  <!-- チェックで使用するテーブルの定義情報 -->\n  <property name=\"tableName\" value=\"BATCH_REQUEST\" />\n  <property name=\"requestIdColumnName\" value=\"REQUEST_ID\" />\n  <property name=\"processHaltColumnName\" value=\"PROCESS_HALT_FLG\" />\n\n  <!-- プロセス停止フラグのチェック間隔(任意) -->\n  <property name=\"checkInterval\" value=\"1\" />\n\n  <!-- プロセス停止時の終了コード(任意) -->\n  <property name=\"exitCode\" value=\"50\" />\n</component>\n\n<component name=\"initializer\"\n    class=\"nablarch.core.repository.initialization.BasicApplicationInitializer\">\n  <property name=\"initializeList\">\n    <list>\n      <!-- 他のコンポーネントは省略 -->\n      <component-ref name=\"processStopHandler\" />\n    </list>\n  </property>\n</component>\n```",
       "level": 2
     }
   ]

@@ -19,13 +19,13 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置すること\n本ハンドラで生成した HttpResponse を [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) が処理する。\nこのため、本ハンドラを [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに設定する必要がある。",
+      "content": "[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置すること\n\n本ハンドラで生成した HttpResponse を [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) が処理する。\nこのため、本ハンドラを [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに設定する必要がある。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "例外の種類に応じたログ出力とレスポンス生成",
-      "content": "nablarch.fw.NoMoreHandlerException\nINFO\n\n404\n\nリクエストを処理すべきハンドラが存在しなかったことを意味するため、証跡ログとして記録する。\nまた、処理すべき *action class* が存在しなかったことを意味するため、HTTPステータスコードが *404*  のレスポンスを生成する。\nnablarch.fw.web.HttpErrorResponse\nログ出力なし\n\nHttpErrorResponse#getResponse()\n\n後続のハンドラで業務例外(バリデーションなどを行った結果の例外)が発生したことを意味するので、ログ出力は行わない。\nnablarch.fw.Result.Error\n設定による\n\nError#getStatusCode()\n\n[nablarch.fw.Result.Errorのログ出力について](../../component/handlers/handlers-http-messaging-error-handler.md#http-messaging-error-handler-write-failure-log-pattern) を参照\nnablarch.core.message.ApplicationException と nablarch.fw.messaging.MessagingException\n-\n\n400\n\nクライアントからのリクエストが不正であることを示す例外のため、HTTPステータスコードが *400* のレスポンスを生成する。\n上記以外の例外及びエラー\nFATAL\n\n500\n\n上記に該当しない例外及びエラーの場合には、障害扱いとしてログ出力を行う。\nまた、予期しない例外やエラーであるため、レスポンスは **500** としている。",
+      "content": "nablarch.fw.NoMoreHandlerException\n\nINFO\n\n404\n\nリクエストを処理すべきハンドラが存在しなかったことを意味するため、証跡ログとして記録する。\nまた、処理すべき *action class* が存在しなかったことを意味するため、HTTPステータスコードが *404*  のレスポンスを生成する。\n\nnablarch.fw.web.HttpErrorResponse\n\nログ出力なし\n\nHttpErrorResponse#getResponse()\n\n後続のハンドラで業務例外(バリデーションなどを行った結果の例外)が発生したことを意味するので、ログ出力は行わない。\n\nnablarch.fw.Result.Error\n\n設定による\n\nError#getStatusCode()\n\n[nablarch.fw.Result.Errorのログ出力について](../../component/handlers/handlers-http-messaging-error-handler.md#http-messaging-error-handler-write-failure-log-pattern) を参照\n\nnablarch.core.message.ApplicationException と nablarch.fw.messaging.MessagingException\n\n-\n\n400\n\nクライアントからのリクエストが不正であることを示す例外のため、HTTPステータスコードが *400* のレスポンスを生成する。\n\n上記以外の例外及びエラー\n\nFATAL\n\n500\n\n上記に該当しない例外及びエラーの場合には、障害扱いとしてログ出力を行う。\nまた、予期しない例外やエラーであるため、レスポンスは **500** としている。",
       "level": 2
     },
     {

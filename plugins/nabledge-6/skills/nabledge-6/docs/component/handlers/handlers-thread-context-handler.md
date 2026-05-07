@@ -66,24 +66,32 @@ ThreadContextAttributeインタフェース
 デフォルトで以下のクラスを提供している。
 
 リクエストID、内部リクエストID
+
 * RequestIdAttribute
 * InternalRequestIdAttribute  [1]
 
 [認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#permission-check-handler) や [サービス提供可否チェックハンドラ](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md#serviceavailabilitycheckhandler) のような、内部リクエストIDに対する処理を実施するハンドラを使用する場合に設定する。
 
 ユーザID
+
 * UserIdAttribute
 * UserIdAttributeInSessionStore
+
 言語
+
 * LanguageAttribute
 * HttpLanguageAttribute
 * LanguageAttributeInHttpCookie
 * LanguageAttributeInHttpSession
+
 タイムゾーン
+
 * TimeZoneAttribute
 * TimeZoneAttributeInHttpCookie
 * TimeZoneAttributeInHttpSession
+
 実行時ID
+
 * ExecutionIdAttribute
 
 これらのクラスは、コンポーネント設定ファイルに定義を追加して使用する。
@@ -207,6 +215,7 @@ LanguageAttributeInHttpUtil
 ここでは、クッキーに言語を保持し、リンクにより言語を選択させる画面の実装例を示す。
 
 設定例
+
 ```xml
 <!-- LanguageAttributeInHttpUtilを使用するため、
      コンポーネント名を"languageAttribute"にする。-->
@@ -216,7 +225,9 @@ LanguageAttributeInHttpUtil
   <property name="supportedLanguages" value="ja,en" />
 </component>
 ```
+
 JSPの実装例
+
 ```jsp
 <%-- n:submitLinkタグを使用しリンクを出力し
   n:paramタグを使用しリンク毎に別々の言語を送信する --%>
@@ -234,7 +245,9 @@ JSPの実装例
   <n:param paramName="user.language" value="ja" />
 </n:submitLink>
 ```
+
 ハンドラの実装例
+
 ```java
 // ユーザが選択した言語の保持を行うハンドラ。
 // 複数画面でユーザに言語を選択させる場合を想定しハンドラとして実装する。
@@ -276,6 +289,7 @@ TimeZoneAttributeInHttpUtil
 ここでは、クッキーにタイムゾーンを保持し、リンクによりタイムゾーンを選択させる画面の実装例を示す。
 
 設定例
+
 ```xml
 <!-- TimeZoneAttributeInHttpUtilを使用するため、
      コンポーネント名を"timeZoneAttribute"にする。-->
@@ -285,7 +299,9 @@ TimeZoneAttributeInHttpUtil
   <property name="supportedTimeZones" value="Asia/Tokyo,America/New_York" />
 </component>
 ```
+
 JSPの実装例
+
 ```jsp
 <%-- n:submitLinkタグを使用しリンクを出力し
   n:paramタグを使用しリンク毎に別々のタイムゾーンを送信する --%>
@@ -303,7 +319,9 @@ JSPの実装例
   <n:param paramName="user.timeZone" value="Asia/Tokyo" />
 </n:submitLink>
 ```
+
 ハンドラの実装例
+
 ```java
 // ユーザが選択したタイムゾーンの保持を行うハンドラ。
 // 複数画面でユーザにタイムゾーンを選択させる場合を想定しハンドラとして実装する。

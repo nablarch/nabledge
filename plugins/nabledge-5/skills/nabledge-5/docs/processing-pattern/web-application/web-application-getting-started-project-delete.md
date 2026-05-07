@@ -3,6 +3,7 @@
 Exampleアプリケーションを元に削除機能を解説する。
 
 作成する機能の説明
+
 1. プロジェクト一覧のプロジェクトIDを押下する。
 
 ![project_delete_list.png](../../../knowledge/assets/web-application-getting-started-project-delete/project_delete_list.png)
@@ -28,14 +29,17 @@ Exampleアプリケーションを元に削除機能を解説する。
 3. [削除完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-delete.md#project-delete-complete)
 
 更新画面上に削除ボタンを作成
+
 更新画面上に、削除ボタンを作成する。
 更新画面の作成に関する説明は、 [更新画面を表示する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-edit-action) 及び
 [更新画面のJSPの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-update-jsp) を参照。
 
 削除を行う業務アクションメソッドの作成
+
 データベースから対象プロジェクトを削除する業務アクションメソッドを作成する。
 
 ProjectAction.java
+
 ```java
 @OnDoubleSubmission
 public HttpResponse delete(HttpRequest request, ExecutionContext context) {
@@ -47,7 +51,9 @@ public HttpResponse delete(HttpRequest request, ExecutionContext context) {
     return new HttpResponse(303, "redirect://completeOfDelete");
 }
 ```
+
 この実装のポイント
+
 * 主キーを条件とした削除は、主キーが設定されたエンティティを引数に UniversalDao#delete
   を実行することで、SQLを作成しなくとも実行できる。
 
@@ -56,6 +62,7 @@ public HttpResponse delete(HttpRequest request, ExecutionContext context) {
 > SQLの実行方法については、 [SQLIDを指定してSQLを実行する](../../component/libraries/libraries-database.md#database-execute-sqlid) を参照。
 
 削除完了画面の作成
+
 削除完了画面を表示する。
 完了画面の作成に関する説明は、 [完了画面を表示する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-complete-action) 及び
 [更新完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-success-jsp) を参照。

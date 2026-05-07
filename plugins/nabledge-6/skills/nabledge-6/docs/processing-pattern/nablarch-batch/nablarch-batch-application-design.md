@@ -7,6 +7,7 @@ Nablarchバッチアプリケーションを作成する際に実装すべきク
 ![batch_design.png](../../../knowledge/assets/nablarch-batch-application-design/batch_design.png)
 
 アクションクラス(action class)
+
 アクションクラスは、2つのことを行う。
 
 * 入力データの読み込みに使う DataReader を生成する。
@@ -18,7 +19,9 @@ Nablarchバッチアプリケーションを作成する際に実装すべきク
 * データレコードからフォームクラスを作成して、バリデーションを行う。
 * フォームクラスからエンティティクラスを作成して、データベースにデータを追加する。
 * 処理結果として Success を返す。
+
 フォームクラス(form class)
+
 DataReader
 が読み込んだデータレコードをマッピングするクラス。
 
@@ -26,6 +29,7 @@ DataReader
 外部からの入力データによっては、階層構造(formがformを持つ)となる場合もある。
 
 フォームクラスのプロパティは全て String で定義する
+
 プロパティを String とすべき理由は、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation-form-property) を参照。
 ただし、バイナリ項目の場合はバイト配列で定義する。
 
@@ -34,5 +38,7 @@ DataReader
 > バリデーションを行いフォームクラスを作成する。
 > データベースなど、入力データが安全な場合は、フォームクラスを使用せず、
 > データレコードからエンティティクラスを作成して業務ロジックを実行すればよい。
+
 エンティティクラス(entity class)
+
 テーブルと1対1で対応するクラス。カラムに対応するプロパティを持つ。

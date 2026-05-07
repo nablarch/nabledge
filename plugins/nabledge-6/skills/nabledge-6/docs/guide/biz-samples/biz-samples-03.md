@@ -321,8 +321,11 @@ public class ProjectSearchForm {
 下記の通り、listSearchResultパッケージを業務アプリケーションに配置する。
 
 コピー元
+
 *META-INF/tags/* **listSearchResult**
+
 コピー先
+
 業務アプリケーションの /WEB-INF/tags ディレクトリ
 
 ## タグリファレンス

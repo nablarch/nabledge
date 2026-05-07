@@ -3,8 +3,11 @@
 Exampleアプリケーションを元に、既存データから計算を行い新たにデータを導出する [Chunkステップ](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#jsr352-batch-type-chunk) 方式のバッチを解説する。
 
 作成する機能の概要
+
 ![overview.png](../../../knowledge/assets/jakarta-batch-getting-started-chunk/overview.png)
+
 動作確認手順
+
 1. 登録対象テーブル(賞与テーブル)のデータを削除
 
   H2のコンソールから下記SQLを実行し、賞与テーブルのデータを削除する。
@@ -53,10 +56,12 @@ SELECT * FROM BONUS;
 2. [ItemReaderの作成](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-chunk.md#getting-started-chunk-reader)
 
 フォームの作成
+
 Chunkステップでは、 ItemReader と
 ItemProcessor とのデータ連携にフォームを使用する。
 
 EmployeeForm.java
+
 ```java
 public class EmployeeForm {
 
@@ -86,6 +91,7 @@ public class EmployeeForm {
 ```
 
 ItemReaderの作成
+
 AbstractItemReader を継承し、データの読み込みを行う。
 
 | インタフェース名 | 責務 |
@@ -93,6 +99,7 @@ AbstractItemReader を継承し、データの読み込みを行う。
 | ItemReader | データの読み込みを行う。  空実装を提供する AbstractItemReader を継承する。  * ItemReader#open * ItemReader#readItem * ItemReader#close |
 
 EmployeeSearchReader.java
+
 ```java
 @Dependent
 @Named
@@ -125,7 +132,9 @@ public class EmployeeSearchReader extends AbstractItemReader {
     }
 }
 ```
+
 EmployeeForm.sql
+
 ```java
 SELECT_EMPLOYEE=
 SELECT
@@ -139,7 +148,9 @@ FROM
     EMPLOYEE
 INNER JOIN GRADE ON EMPLOYEE.GRADE_CODE = GRADE.GRADE_CODE
 ```
+
 この実装のポイント
+
 * Named と Dependent をクラスに付与する。
   詳細は、 [BatchletのNamedとDependentの説明](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-batchlet.md#getting-started-batchlet-cdi) を参照。
 * open メソッドで処理対象のデータを読み込む。
@@ -154,6 +165,7 @@ INNER JOIN GRADE ON EMPLOYEE.GRADE_CODE = GRADE.GRADE_CODE
 賞与の計算等の業務ロジックを実装する。
 
 ItemProcessorの作成
+
 ItemProcessor を実装し、
 業務ロジックを行う(永続化処理は ItemWriter の責務であるため実施しない)。
 
@@ -162,6 +174,7 @@ ItemProcessor を実装し、
 | ItemProcessor | 一行分のデータに対する業務処理を行う。  * ItemProcessor#processItem |
 
 BonusCalculateProcessor.java
+
 ```java
 @Dependent
 @Named
@@ -193,7 +206,9 @@ public class BonusCalculateProcessor implements ItemProcessor {
     }
 }
 ```
+
 この実装のポイント
+
 * processItem メソッドで一定数( [JOB設定ファイルを作成する](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-chunk.md#getting-started-chunk-job) にて設定方法を解説)のエンティティを返却した時点で、
   後続する ItemWriter の writeItems メソッドが実行される。
 
@@ -202,6 +217,7 @@ public class BonusCalculateProcessor implements ItemProcessor {
 DB更新等の、永続化処理を実装する。
 
 ItemWriterの作成
+
 ItemWriter を実装し、データの永続化を行う。
 
 | インタフェース名 | 責務 |
@@ -209,6 +225,7 @@ ItemWriter を実装し、データの永続化を行う。
 | ItemWriter | データを永続化する。  * ItemWriter#writeItems |
 
 BonusWriter.java
+
 ```java
 @Dependent
 @Named
@@ -220,7 +237,9 @@ public class BonusWriter extends AbstractItemWriter {
     }
 }
 ```
+
 この実装のポイント
+
 * UniversalDao#batchInsert を使用してエンティティのリストを一括登録する。
 * writeItems メソッド実行後にトランザクションがコミットされ、新たなトランザクションが開始される。
 * writeItems メソッド実行後、バッチ処理が readItem メソッド実行から繰り返される。
@@ -230,6 +249,7 @@ public class BonusWriter extends AbstractItemWriter {
 JOBの実行設定を記載したファイルを作成する。
 
 bonus-calculate.xml
+
 ```xml
 <job id="bonus-calculate" xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="1.0">
   <listeners>
@@ -250,7 +270,9 @@ bonus-calculate.xml
   </step>
 </job>
 ```
+
 この実装のポイント
+
 * ジョブ定義ファイルは /src/main/resources/META-INF/batch-jobs/ 配下に配置する。
 * job 要素 の id 属性で、ジョブ名称を指定する。
 * chunk 要素の item-count 属性で writeItems 一回当たりで処理する件数を設定する。

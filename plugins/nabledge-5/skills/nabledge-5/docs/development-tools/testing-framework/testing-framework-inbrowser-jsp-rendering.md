@@ -199,12 +199,21 @@ eventタグを使用した場合やJavaScriptでnablarch/ui/event.jsで定義さ
 | タグライブラリスタブ | △ | × | /js/jsp/taglib/nablarch.js   /js/jsp/taglib/jstl.js   /js/jsp/taglib/jsp.js   /js/jsp/taglib/html.js   /js/jsp/taglib/field.js   /js/jsp/taglib/button.js   /js/jsp/taglib/link.js   /js/jsp/taglib/template.js   /js/jsp/taglib/table.js   /js/jsp/taglib/column.js   /js/jsp/taglib/tab.js   /js/jsp/taglib/event.js | 各タグファイル・タグライブラリのスタブ動作を実装する スクリプト群。 **/js/jsp.js** から呼ばれる。 タグライブラリの名前空間毎に別スクリプトとなっている。 |
 
 **「サーバ」:**
+
 実働環境にデプロイして使用するかどうか
+
 **「ローカル」:**
+
 ローカル動作時に使用するかどうか
+
 **○ :**
+
 使用する
+
 **△ :**
+
 直接は使用しないがミニファイしたファイルの一部として使用する。
+
 **× :**
+
 使用しない

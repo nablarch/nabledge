@@ -46,8 +46,11 @@ Nablarchの [Jakarta Server Pagesカスタムタグ](../../component/libraries/l
 ## 制約
 
 [マルチパートリクエストハンドラ](../../component/handlers/handlers-multipart-handler.md#multipart-handler) より後ろに設定すること
+
 本ハンドラは、 [Jakarta Server Pagesカスタムタグ](../../component/libraries/libraries-tag.md#tag) に必要なリクエスト処理でリクエストパラメータにアクセスするため。
+
 [hidden暗号化](../../component/libraries/libraries-tag.md#tag-hidden-encryption) 使用時は、[スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに設定すること
+
 hidden暗号化対象のリクエストか否かを判定するために、スレッドコンテキストからリクエストIDを取得するため。
 
 ## 復号に失敗(改竄エラー、セッション無効化エラー)した場合のエラーページを設定する

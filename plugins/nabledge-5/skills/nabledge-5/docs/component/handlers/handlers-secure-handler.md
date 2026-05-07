@@ -48,6 +48,7 @@
 ## 制約
 
 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) よりも後ろに設定すること
+
 本ハンドラで設定したレスポンスヘッダを、 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) がServlet APIのレスポンスオブジェクトに設定するため。
 
 ## デフォルトで適用されるヘッダの値を変更したい

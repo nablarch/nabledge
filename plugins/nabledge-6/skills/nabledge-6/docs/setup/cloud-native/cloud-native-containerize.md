@@ -35,19 +35,24 @@
 [標準のウェブアプリケーションのブランクプロジェクト](../../setup/blank-project/blank-project-setup-Web.md#firststepgeneratewebblankproject) を使ってNablarchウェブアプリケーションを構築した場合、以下の点が [The Twelve-Factor App](https://12factor.net/ja/) (外部サイト)に反した状態になっている。
 
 ステートレス
+
 [VI. プロセス](https://12factor.net/ja/processes) (外部サイト)では、アプリケーションはステートレスでなければならないとされている。
 つまり、個々のアプリケーションは状態を保持してはいけない、ということになる。
 
 標準のブランクプロジェクトでは、HTTPセッションを使った状態管理が有効となっているため、この方針に反している。
 
 Nablarchウェブアプリケーションをステートレスにするための設定については、 [Webアプリケーションをステートレスにする](../../component/libraries/libraries-stateless-web-app.md#stateless-web-app) を参照。
+
 ログ出力
+
 [XI. ログ](https://12factor.net/ja/logs) (外部サイト)では、アプリケーションのログはすべて標準出力に書き出し、ファイルには出力すべきでないとされている。
 
 標準のブランクプロジェクトでは、ロガーの出力先にファイルが指定されているため、この方針に反している。
 
 Nablarchのログ出力設定については、 [ログ出力の設定](../../component/libraries/libraries-log.md#log-basic-setting) を参照。
+
 環境変数を使った設定
+
 [III. 設定](https://12factor.net/ja/config) (外部サイト)では、環境ごとによって切り替える設定（連携する他サービスとの接続設定など）は、アプリケーション内部に持たずに環境変数から設定すべきとしている。
 
 標準のブランクプロジェクトでは、開発環境と本番環境の設定の違いをMavenのプロファイルを使って切り替えているため、この方針に反している。
@@ -61,8 +66,11 @@ Nablarchのログ出力設定については、 [ログ出力の設定](../../co
 [標準のバッチアプリケーションのブランクプロジェクト](../../setup/blank-project/blank-project-setup-NablarchBatch.md#firststepgeneratebatchblankproject) を使ってNablarchバッチアプリケーションを構築した場合に修正が必要な点は、以下の通りである。
 
 ログ出力
+
 (Nablarchウェブアプリケーションのものと同じなので記述省略)
+
 環境変数を使った設定
+
 (Nablarchウェブアプリケーションのものと同じなので記述省略)
 
 ## コンテナ用のアーキタイプ

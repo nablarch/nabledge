@@ -11,6 +11,7 @@ nablarch_batch/index
 以下の理由により [Nablarchバッチアプリケーション](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch.md) を使用してバッチアプリケーションを作成することを推奨する。
 
 理由
+
 Jakarta Batchは2020年時点で情報が少なく有識者もアサインしにくいため、[Nablarchバッチアプリケーション](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch.md) を使用してバッチアプリケーションを作成することを推奨する。
 
 > **Tip:**

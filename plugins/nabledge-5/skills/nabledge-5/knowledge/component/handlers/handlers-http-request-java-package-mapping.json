@@ -1,7 +1,7 @@
 {
   "id": "handlers-http-request-java-package-mapping",
   "title": "HTTPリクエストディスパッチハンドラ",
-  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* ディスパッチの設定\n* アクションが複数のパッケージに配置される場合の設定\n\n本ハンドラは、アプリケーションの機能ごとに行う処理を記載するアクションに処理を委譲する。\n委譲先のクラス、メソッドは、アクセスしたURLによって決定される。\n本クラスを使用したディスパッチでは、URL形式は下記の通りであることを想定している。\n\nURL形式\n/<baseUri>/<className>/<methodName>\n\n上記形式の<>で囲まれた部分はそれぞれ下記を意味する。\n\n| ラベル | 意味 |\n|---|---|\n| baseUri | コンテキストルートからの相対パス |\n| className | クラス名 |\n| methodName | アクションクラスのメソッド名は、HTTPのメソッド + メソッド名として実装する。  httpのメソッドが `post` の場合で、URLのmethodNameが `register` の場合には、 アクションクラスのメソッド名は、 `postRegister` とする。  なお、 `get` と `post` の場合には、 `do` を使用できる。 上記の例の場合、 `doRegister` となる。 |\n\n> **Tip:**\n> URLとアクションとのマッピングの指定方法については、 [ディスパッチの設定](../../component/handlers/handlers-http-request-java-package-mapping.md#java-package-mapping-entry-dispatch-settings) を参照。\n\n> **Important:**\n> HTTPリクエストディスパッチハンドラでは、クラス名を元にURLが決まるため、柔軟なURLを使用できない。\n> 例えば、  `/user/index` のようなURLを使用したい場合、クラス名を `user` とする必要がある。\n> これは、Javaの一般的なクラス名の規約に違反しており、推奨されない。\n\n> このため、このハンドラを使うよりも、URLとアクションクラスとのマッピングを柔軟に設定できる [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) を使用することを推奨する。\n\n本ハンドラでは、以下の処理を行う。\n\n* URIを解析し、対応するアクションのメソッドを呼び出す。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-http-request-java-package-mapping/flow.png)",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* ディスパッチの設定\n* アクションが複数のパッケージに配置される場合の設定\n\n本ハンドラは、アプリケーションの機能ごとに行う処理を記載するアクションに処理を委譲する。\n委譲先のクラス、メソッドは、アクセスしたURLによって決定される。\n本クラスを使用したディスパッチでは、URL形式は下記の通りであることを想定している。\n\nURL形式\n\n/<baseUri>/<className>/<methodName>\n\n上記形式の<>で囲まれた部分はそれぞれ下記を意味する。\n\n| ラベル | 意味 |\n|---|---|\n| baseUri | コンテキストルートからの相対パス |\n| className | クラス名 |\n| methodName | アクションクラスのメソッド名は、HTTPのメソッド + メソッド名として実装する。  httpのメソッドが `post` の場合で、URLのmethodNameが `register` の場合には、 アクションクラスのメソッド名は、 `postRegister` とする。  なお、 `get` と `post` の場合には、 `do` を使用できる。 上記の例の場合、 `doRegister` となる。 |\n\n> **Tip:**\n> URLとアクションとのマッピングの指定方法については、 [ディスパッチの設定](../../component/handlers/handlers-http-request-java-package-mapping.md#java-package-mapping-entry-dispatch-settings) を参照。\n\n> **Important:**\n> HTTPリクエストディスパッチハンドラでは、クラス名を元にURLが決まるため、柔軟なURLを使用できない。\n> 例えば、  `/user/index` のようなURLを使用したい場合、クラス名を `user` とする必要がある。\n> これは、Javaの一般的なクラス名の規約に違反しており、推奨されない。\n\n> このため、このハンドラを使うよりも、URLとアクションクラスとのマッピングを柔軟に設定できる [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#router-adaptor) を使用することを推奨する。\n\n本ハンドラでは、以下の処理を行う。\n\n* URIを解析し、対応するアクションのメソッドを呼び出す。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-http-request-java-package-mapping/flow.png)",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -19,7 +19,7 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "ハンドラキューの最後に置くこと\n本ハンドラは、後続のハンドラを呼び出さない。\nこのため、本ハンドラの配置はハンドラキューの最後に置くこと。",
+      "content": "ハンドラキューの最後に置くこと\n\n本ハンドラは、後続のハンドラを呼び出さない。\nこのため、本ハンドラの配置はハンドラキューの最後に置くこと。",
       "level": 2
     },
     {

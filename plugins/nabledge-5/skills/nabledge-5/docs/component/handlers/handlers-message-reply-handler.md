@@ -34,15 +34,21 @@
 ## 制約
 
 [メッセージングコンテキスト管理ハンドラ](../../component/handlers/handlers-messaging-context-handler.md#messaging-context-handler) よりも後ろに設定すること
+
 本ハンドラは、応答電文を送信(メッセージキューへのプット)する。
 このため、MQへの接続を確立する [メッセージングコンテキスト管理ハンドラ](../../component/handlers/handlers-messaging-context-handler.md#messaging-context-handler) より後ろに本ハンドラを設定する必要がある。
+
 [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) との位置関係について
+
 [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) との位置関係は、2相コミットを使用するか否かで変わる。
 
 2相コミットを使用する場合
+
 データベースのトランザクションとメッセージキュー(JMS)のトランザクションを、トランザクションマネージャで纏めてコミットする。
 このため、トランザクション制御前に応答電文を送信する必要があり、 [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) より後ろに本ハンドラを設定する必要がある。
+
 2相コミットを使用しない場合
+
 本ハンドラが応答を送信する前に業務処理の結果を確定させる必要がある。
 このため、 [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler) は、本ハンドラより後ろに設定する必要がある。
 

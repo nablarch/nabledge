@@ -25,6 +25,7 @@
 記載したデータは、List-Map形式（List<Map<String, String>>の形式）で取得できる。
 
 この形式でデータを取得する場合は、データタイプLIST_MAPを使用する。
+
 LIST_MAP=<シート内で一意になるID（任意の文字列）>
 
 データの2行目はMapのKeyと解釈される。
@@ -256,7 +257,7 @@ FixedSystemTimeProviderを指定し、そのプロパティに任意の日時を
 
 | property名 | 設定内容 |
 |---|---|
-| fixedDate | 指定したい日時を以下のフォーマットいずれかに合致する文字列で指定する。 * yyyyMMddHHmmss (12桁) * yyyyMMddHHmmssSSS (15桁) |
+| fixedDate | 指定したい日時を以下のフォーマットいずれかに合致する文字列で指定する。  * yyyyMMddHHmmss (12桁) * yyyyMMddHHmmssSSS (15桁) |
 
 ```java
 // システム日時を取得
@@ -443,6 +444,7 @@ public class TestSub extends TestSuper {
 この機構を利用することにより、個別のテストにて、テスト実行前に明示的にトランザクションを開始する必要がなくなる。また、トランザクション終了処理漏れもなくなる。
 
 この機能を利用する手順は以下の通り。
+
 * テストクラスにてDbAccessTestSupportを継承する（これにより、スーパークラスの@Before、@Afterメソッドが自動的に呼び出される）。
 
 ## 本フレームワークのクラスを継承せずに使用したい

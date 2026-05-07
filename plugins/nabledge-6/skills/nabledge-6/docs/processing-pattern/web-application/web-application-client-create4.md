@@ -5,9 +5,11 @@
 [前へ](../../processing-pattern/web-application/web-application-client-create3.md#client-create-3)
 
 登録処理の実装
+
 ClientAction に顧客情報の登録処理を行うメソッドを追加する。
 
 ClientAction.java
+
 ```java
 public HttpResponse create(HttpRequest request, ExecutionContext context) {
 
@@ -20,15 +22,20 @@ public HttpResponse create(HttpRequest request, ExecutionContext context) {
     return new HttpResponse(303, "redirect://complete");
 }
 ```
+
 この実装のポイント
+
 * [セッションストア](../../component/libraries/libraries-session-store.md#session-store) から顧客エンティティを取り出して、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) を使用してデータベースに登録する。
 * [セッションストア](../../component/libraries/libraries-session-store.md#session-store) から顧客情報を削除する。
 * レスポンスオブジェクトの遷移先として、登録完了画面の表示処理へのリダイレクトを指定する(完了画面でのブラウザの更新ボタン押下による顧客情報の多重登録を防ぐため)。
   リダイレクトに指定するステータスコードについては、 [ステータスコード](../../processing-pattern/web-application/web-application-feature-details.md#web-feature-details-status-code) を参照。
+
 二重サブミットを防止する
+
 ボタンをダブルクリックした場合等でリクエストが二重に送信されないように、業務アクションとJSPの二か所に制御を追加する。
 
 ClientAction.java
+
 ```java
 @OnDoubleSubmission
 public HttpResponse create(HttpRequest request, ExecutionContext context) {
@@ -37,7 +44,9 @@ public HttpResponse create(HttpRequest request, ExecutionContext context) {
 
 }
 ```
+
 この実装のポイント
+
 * OnDoubleSubmission を付与して、
   業務アクションメソッドが二重に実行された場合にエラーページへ遷移させる。詳細は [二重サブミットを防ぐ](../../component/libraries/libraries-tag.md#tag-double-submission) を参照。
 
@@ -46,6 +55,7 @@ public HttpResponse create(HttpRequest request, ExecutionContext context) {
 > デフォルトの遷移先の指定方法は、 [二重サブミットを防ぐ](../../component/libraries/libraries-tag.md#tag-double-submission) を参照。
 
 /src/main/webapp/WEB-INF/view/client/create.jsp
+
 ```jsp
 <!-- 修正しない部分は省略 -->
 <!-- 入力へ戻る、確定ボタンは確認画面でのみ表示 -->
@@ -58,25 +68,34 @@ public HttpResponse create(HttpRequest request, ExecutionContext context) {
                 cssClass="btn btn-lg btn-success">確定</n:button>
   </n:forConfirmationPage>
 ```
+
 この実装のポイント
+
 * [buttonタグ](../../component/libraries/libraries-tag-reference.md#tag-button-tag) の allowDoubleSubmission 属性にfalseを指定することで、二重サブミットを制御するJavaScriptが追加される。
 * ブラウザのJavaScriptが無効になっている場合等を考慮して、サーバサイドでも二重サブミットを制御する。
+
 登録完了画面の表示処理を実装する
+
 登録完了画面の表示処理を実装する。
 
 業務アクションメソッドを実装する
+
 登録完了画面の表示処理を実装する。
 
 ClientAction.java
+
 ```java
 public HttpResponse complete(HttpRequest request, ExecutionContext context) {
     return new HttpResponse("/WEB-INF/view/client/complete.jsp");
 }
 ```
+
 登録完了画面のJSPを作成する
+
 登録完了画面のJSPを新規作成する。
 
 /src/main/webapp/WEB-INF/view/client/complete.jsp
+
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
@@ -104,7 +123,9 @@ public HttpResponse complete(HttpRequest request, ExecutionContext context) {
     </body>
 </html>
 ```
+
 動作確認を行う
+
 以下の手順で、登録処理が正しく実装されていることを確認する。
 
 1. 顧客登録画面を表示する。

@@ -297,6 +297,7 @@ import定義が列挙されている。
 (コマンドの詳細については [プラグインビルドコマンド仕様](../../development-tools/testing-framework/testing-framework-plugin-build.md) を参照)
 
 **1. PROJECT_ROOTの設定**
+
 nablarch_plugins_bundle/bin/install.bat を任意のテキストエディタで開き、
 コメントアウトされているプロジェクトルートを以下のように設定する。
 
@@ -310,6 +311,7 @@ set PROJECT_ROOT=../../web_project # (設定)
 ```
 
 **2. インストールコマンドの実行**
+
 nablarch_plugins_bundle/bin/install.bat を実行する。
 
 > **Tip:**
@@ -375,6 +377,7 @@ web_project/ui_plugins/node_modules 配下にインストールされる。
 (設定ファイルとコマンドの詳細については [プラグインビルドコマンド仕様](../../development-tools/testing-framework/testing-framework-plugin-build.md) を参照)
 
 **1. デプロイ対象プロジェクトの設定**
+
 web_project/ui_plugins/pjconf.json を任意のテキストエディタで開き、
 デプロイ対象プロジェクト(pathSettings/webProjectPath)を以下のように設定する。
 
@@ -391,6 +394,7 @@ web_project/ui_plugins/pjconf.json を任意のテキストエディタで開き
 ```
 
 **2. UIビルドコマンドの実行**
+
 web_project/ui_plugins/bin/ui_build.bat を実行する。
 
 これにより web_project 配下の以下のディレクトリに各プラグインから抽出された
@@ -450,12 +454,15 @@ web_project/ui_test/サーバ動作確認.bat
 > 必ず実施すること。
 
 **1. UI開発基盤インストール作業ファイルの削除**
+
 下記のディレクトリおよびその配下のファイルについては、
 インストール作業完了後は不要となるので、コミット前に削除しておく。
 
 * **nablarch_plugins_bundle/**
 * **web_project/ui_plugins/.npm/**
+
 **2. コミット**
+
 上述の削除により、プロジェクトのファイル構成は以下の図のようになる。
 これをプロジェクトのリポジトリにコミットする。
 

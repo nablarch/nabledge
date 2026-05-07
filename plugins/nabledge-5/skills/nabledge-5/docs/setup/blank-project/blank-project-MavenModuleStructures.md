@@ -390,6 +390,7 @@ myapp-container-web
 ```
 
 src/main/jib について
+
 `src/main/jib` に配置したディレクトリやファイルは、そのままコンテナ上に配置される。
 たとえば、 `src/main/jib/var/foo.txt` というファイルを配置した状態でコンテナイメージをビルドすると、コンテナ上の `/var/foo.txt` にファイルが配置される。
 詳細は [Jibのドキュメントを参照](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin#adding-arbitrary-files-to-the-image) (外部サイト、英語)。

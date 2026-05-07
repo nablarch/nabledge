@@ -38,22 +38,28 @@
 ## 制約
 
 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置すること
+
 本ハンドラで生成した HttpResponse をHTTPレスポンスハンドラが処理するため、
 本ハンドラは [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置する必要がある。
+
 [HTTPアクセスログハンドラ](../../component/handlers/handlers-http-access-log-handler.md#http-access-log-handler) より後ろに配置すること
+
 本ハンドラで生成したエラー用 HttpResponse を元にログ出力を行うため、
 [HTTPアクセスログハンドラ](../../component/handlers/handlers-http-access-log-handler.md#http-access-log-handler) より後ろに配置する必要がある。
 
 ## 例外の種類に応じた処理とレスポンスの生成
 
 nablarch.fw.NoMoreHandlerException
+
 INFO
 
 404
 
 リクエストを処理すべきハンドラが存在しなかったことを意味するため、証跡ログとして記録する。
 また、処理すべき *action class* が存在しなかったことを意味するため、レスポンスは *404*  としている。
+
 nablarch.fw.web.HttpErrorResponse
+
 ログ出力なし
 
 HttpErrorResponse#getResponse()
@@ -68,32 +74,41 @@ Viewでエラーメッセージを扱えるよう以下の処理を行う。
   リクエストスコープに設定する際のキー名は、デフォルトでは `errors` となる。キー名は、コンポーネント設定ファイルで変更できる。
 
   設定例
+
   ```xml
   <component name="webConfig" class="nablarch.common.web.WebConfig">
     <!-- キーをmessagesに変更 -->
     <property name="errorMessageRequestAttributeName" value="messages" />
   </component>
   ```
+
 nablarch.fw.Result.Error
+
 設定による
 
 Error#getStatusCode()
 
 nablarch.fw.Result.Errorのログ出力について を参照
+
 java.lang.StackOverflowError
+
 FATAL
 
 500
 
 データや実装バグに起因する可能性があるため、障害として通知する。
 また予期しないエラーであるため、レスポンスは **500** としている。
+
 java.lang.ThreadDeath と java.lang.VirtualMachineError ( java.lang.StackOverflowError 以外)
+
 -
 
 -
 
 本ハンドラでは何もせず上位のハンドラに処理を任せる。(エラーを再送出する)
+
 上記以外の例外及びエラー
+
 FATAL
 
 500

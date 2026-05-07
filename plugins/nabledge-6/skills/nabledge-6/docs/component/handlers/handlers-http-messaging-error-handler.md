@@ -40,37 +40,47 @@
 ## 制約
 
 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置すること
+
 本ハンドラで生成した HttpResponse を [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) が処理する。
 このため、本ハンドラを [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに設定する必要がある。
 
 ## 例外の種類に応じたログ出力とレスポンス生成
 
 nablarch.fw.NoMoreHandlerException
+
 INFO
 
 404
 
 リクエストを処理すべきハンドラが存在しなかったことを意味するため、証跡ログとして記録する。
 また、処理すべき *action class* が存在しなかったことを意味するため、HTTPステータスコードが *404*  のレスポンスを生成する。
+
 nablarch.fw.web.HttpErrorResponse
+
 ログ出力なし
 
 HttpErrorResponse#getResponse()
 
 後続のハンドラで業務例外(バリデーションなどを行った結果の例外)が発生したことを意味するので、ログ出力は行わない。
+
 nablarch.fw.Result.Error
+
 設定による
 
 Error#getStatusCode()
 
 [nablarch.fw.Result.Errorのログ出力について](../../component/handlers/handlers-http-messaging-error-handler.md#http-messaging-error-handler-write-failure-log-pattern) を参照
+
 nablarch.core.message.ApplicationException と nablarch.fw.messaging.MessagingException
+
 -
 
 400
 
 クライアントからのリクエストが不正であることを示す例外のため、HTTPステータスコードが *400* のレスポンスを生成する。
+
 上記以外の例外及びエラー
+
 FATAL
 
 500

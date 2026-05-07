@@ -45,10 +45,13 @@ loggers.OPERATOR.writerNames=operationLog
 運用担当者向けのログを出力するための実装例を以下に示す。
 
 ポイント
+
 * OperationLogger#write
   を使用してログを出力する。
 * 運用担当者向けのログ出力とともにバッチ処理を異常終了させたい場合には、例外を送出すること。
+
 実装例
+
 ```java
 @Named
 @Dependent
@@ -72,7 +75,9 @@ public class SampleBatchlet extends AbstractBatchlet {
     }
 }
 ```
+
 出力例
+
 ```bash
 ERROR operator ファイルが存在しません。正しく受信できているか確認してください。
 ```

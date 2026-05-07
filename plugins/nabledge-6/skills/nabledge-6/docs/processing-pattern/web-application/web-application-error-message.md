@@ -13,6 +13,7 @@
 以下に [Thymeleaf](../../component/adapters/adapters-web-thymeleaf-adaptor.md#web-thymeleaf-adaptor) を使った場合の実装例を示す。
 
 特定のプロパティに対応したメッセージを表示したい
+
 ErrorMessages#hasError や
 ErrorMessages#getMessage
 を使用することでプロパティ(入力項目のname属性の値)に対応したエラー有無やメッセージの表示ができる。
@@ -24,7 +25,9 @@ ErrorMessages#getMessage
 <span class="error" th:if="${errors.hasError('form.userName')}"
     th:text="${errors.getMessage('form.userName')}">入力してください。</span>
 ```
+
 グローバルメッセージ(プロパティに紐付かないメッセージ)を表示したい
+
 ErrorMessages#getGlobalMessages() を使用して
 グローバルメッセージが表示できる。
 
@@ -33,7 +36,9 @@ ErrorMessages#getGlobalMessages() を使用して
   <li th:each="message : ${errors.globalMessages}" th:text="${message}"></li>
 </ul>
 ```
+
 全てのメッセージを表示したい
+
 ErrorMessages#getAllMessages() を使用して
 全てのメッセージが表示できる。
 

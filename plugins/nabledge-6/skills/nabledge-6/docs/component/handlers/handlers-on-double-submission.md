@@ -53,6 +53,7 @@ BasicDoubleSubmissionHandler
 では、アノテーションの属性が指定されなかった場合に、自身のプロパティに設定されたリソースパス、メッセージID、ステータスコードを使用する。
 
 設定例
+
 ```xml
 <component name="doubleSubmissionHandler"
            class="nablarch.common.web.token.BasicDoubleSubmissionHandler">

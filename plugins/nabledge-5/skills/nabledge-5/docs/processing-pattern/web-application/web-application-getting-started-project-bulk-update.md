@@ -3,6 +3,7 @@
 Exampleアプリケーションを元に一括更新機能を解説する。
 
 作成する機能の説明
+
 1. メニューの一括更新リンクを押下し、一括更新画面へ遷移する。
 
 ![project_bulk_update-menu.png](../../../knowledge/assets/web-application-getting-started-project-bulk-update/project_bulk_update-menu.png)
@@ -37,11 +38,15 @@ Exampleアプリケーションを元に一括更新機能を解説する。
 8. [完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#project-bulk-update-complete-jsp)
 
 フォームの作成
+
 検索条件を受け付けるフォームと、更新内容を受け付けるフォームをそれぞれ作成する。
 
 検索フォームの作成
+
 検索フォームの実装は、 [検索機能の作成：フォームの作成](../../processing-pattern/web-application/web-application-getting-started-project-search.md#project-search-create-form) と同様であるためそちらを参照。
+
 更新フォームの作成
+
 複数のプロジェクトの更新情報を一括で送信するため、フォームを2種類作成する。
 
 1. [プロジェクト１つ分の更新情報を受け付けるフォーム](../../processing-pattern/web-application/web-application-getting-started-project-bulk-update.md#project-bulk-update-create-single-pj-form)
@@ -50,9 +55,11 @@ Exampleアプリケーションを元に一括更新機能を解説する。
 ![project_bulk_update-form.png](../../../knowledge/assets/web-application-getting-started-project-bulk-update/project_bulk_update-form.png)
 
 プロジェクト１つ分の更新情報を受け付けるフォーム
+
 プロジェクト１つ分の更新値を受け付けるフォームを作成する。
 
 InnerProjectForm.java
+
 ```java
 public class InnerProjectForm implements Serializable {
 
@@ -68,14 +75,17 @@ public class InnerProjectForm implements Serializable {
 ```
 
 この実装のポイント
+
 * 入れ子となったフォームに対しても  [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を実行するため、
   @Required や @Domain
   などのバリデーション用のアノテーションを付与する。
 
 プロジェクト１つ分のフォームのリストをプロパティとして持つ親フォーム
+
 複数プロジェクトの更新情報を一括で受け付けるために、プロジェクト１つ分の更新情報を受け付けるフォームのリストを定義した親フォームを作成する。
 
 ProjectBulkForm.java
+
 ```java
 public class ProjectBulkForm implements Serializable {
 
@@ -86,13 +96,17 @@ public class ProjectBulkForm implements Serializable {
     // ゲッタ及びセッタは省略
 }
 ```
+
 この実装のポイント
+
 * @Valid を付与することで、入れ子としたフォームも [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) の対象に含めることができる。
 
 業務アクションで取得した更新対象リストを画面へ受け渡すBeanの作成
+
 業務アクションで取得した更新対象リストを画面へ受け渡すBeanを作成する。このBeanは一括更新画面と確認画面で持ちまわすため、 [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に登録する。
 
 ProjectListDto.java
+
 ```java
 public class ProjectListDto implements Serializable {
 
@@ -102,14 +116,18 @@ public class ProjectListDto implements Serializable {
     // ゲッタ及びセッタは省略
 }
 ```
+
 この実装のポイント
+
 * 配列やコレクション型を [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に登録する場合は、シリアライズ可能なBeanのプロパティとして定義し、
   そのBeanを [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に登録すること。詳細は [セッションストア使用上の制約](../../component/libraries/libraries-session-store.md#session-store-constraint) を参照。
 
 一括更新画面を表示する業務アクションメソッドの作成
+
 データベースから対象プロジェクトを取得し、一括更新画面に表示する業務アクションメソッドを作成する。
 
 ProjectBulkAction.java
+
 ```java
 @InjectForm(form = ProjectSearchForm.class, prefix = "searchForm",  name = "searchForm")
 @OnError(type = ApplicationException.class, path = "forward://initialize")
@@ -134,15 +152,19 @@ public HttpResponse list(HttpRequest request, ExecutionContext context) {
     return new HttpResponse("/WEB-INF/view/projectBulk/update.jsp");
 }
 ```
+
 この実装のポイント
+
 * 検索メソッドの実装方法に関しては [検索機能の作成：業務アクションの実装](../../processing-pattern/web-application/web-application-getting-started-project-search.md#project-search-create-action) と同様であるためそちらを参照。
 * 確認画面から一括更新画面へ戻った際に、同条件でページングや再検索ができるように
   検索条件を [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に登録して持ちまわす。
 
 一括更新画面JSPの作成
+
 検索結果の表示と複数のプロジェクトの情報を編集する、一括更新画面のJSPを作成する。
 
 /src/main/webapp/WEB-INF/projectBulk/update.jsp
+
 ```jsp
 <!-- 顧客検索結果の表示部分 -->
 <n:form>
@@ -202,7 +224,9 @@ public HttpResponse list(HttpRequest request, ExecutionContext context) {
     </div>
 </n:form>
 ```
+
 この実装のポイント
+
 * 検索結果を表示するJSPの作成方法は [検索機能の作成：検索結果表示部分の作成](../../processing-pattern/web-application/web-application-getting-started-project-search.md#project-search-create-result-jsp) と同様であるため、そちらを参照。
 * 確認画面から一括更新画面に戻った際に、同条件での再検索やページングが行えるように、 [セッションストア](../../component/libraries/libraries-session-store.md#session-store) から取得した検索条件を元に検索条件パラメータを構成する。
   JSPでは、 [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に登録したオブジェクトは、リクエストスコープに登録したオブジェクトと同様に扱うことができる。
@@ -210,9 +234,11 @@ public HttpResponse list(HttpRequest request, ExecutionContext context) {
   詳細は [入力/出力データへのアクセスルール](../../component/libraries/libraries-tag.md#tag-access-rule) 参照。
 
 更新内容を確認する業務アクションメソッドの作成
+
 更新内容を確認する業務アクションメソッドを作成する。
 
 ProjectBulkAction.java
+
 ```java
 @InjectForm(form = ProjectBulkForm.class, prefix = "bulkForm", name = "bulkForm")
 @OnError(type = ApplicationException.class, path = "/WEB-INF/view/projectBulk/update.jsp")
@@ -235,13 +261,17 @@ public HttpResponse confirmOfUpdate(HttpRequest request, ExecutionContext contex
     return new HttpResponse("/WEB-INF/view/projectBulk/confirmOfUpdate.jsp");
 }
 ```
+
 この実装のポイント
+
 * 更新する情報は [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に保持する。
 
 確認画面JSPの作成
+
 変更後のプロジェクト情報を表示する画面のJSPを作成する。
 
 /src/main/webapp/WEB-INF/projectBulk/confirmOfUpdate.jsp
+
 ```jsp
 <section>
     <div class="title-nav">
@@ -276,9 +306,11 @@ public HttpResponse confirmOfUpdate(HttpRequest request, ExecutionContext contex
 ```
 
 データベースを一括更新する業務アクションメソッドの作成
+
 対象プロジェクトを一括で更新する。
 
 ProjectBulkAction.java
+
 ```java
 @OnDoubleSubmission
 public HttpResponse update(HttpRequest request, ExecutionContext context) {
@@ -289,7 +321,9 @@ public HttpResponse update(HttpRequest request, ExecutionContext context) {
   return new HttpResponse(303, "redirect://completeOfUpdate");
 }
 ```
+
 この実装のポイント
+
 * 基本的な実装方法は  [更新機能の作成：データベースを更新する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-decide-action) と同様である。
 * UniversalDao#update を更新件数分実行する。
   排他制御エラーが発生した場合は全件の更新がロールバックされる。
@@ -304,6 +338,7 @@ public HttpResponse update(HttpRequest request, ExecutionContext context) {
   を使用すること。
 
 完了画面の表示
+
 完了画面の実装方法は [更新機能の作成：更新完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-success-jsp) と同様であるためそちらを参照。
 
 一括更新機能の解説は以上。

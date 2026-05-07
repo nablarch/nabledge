@@ -41,21 +41,30 @@ Nablarchでは、データベースをキューとして扱うメッセージン
 各ハンドラの詳細は、リンク先を参照すること。
 
 リクエストやレスポンスの変換を行うハンドラ
+
 * [ステータスコード→プロセス終了コード変換ハンドラ](../../component/handlers/handlers-status-code-convert-handler.md#status-code-convert-handler)
 * [データリードハンドラ](../../component/handlers/handlers-data-read-handler.md#data-read-handler)
+
 実行制御を行うハンドラ
+
 * [プロセス多重起動防止ハンドラ](../../component/handlers/handlers-duplicate-process-check-handler.md#duplicate-process-check-handler)
 * [リクエストディスパッチハンドラ](../../component/handlers/handlers-request-path-java-package-mapping.md#request-path-java-package-mapping)
 * [マルチスレッド実行制御ハンドラ](../../component/handlers/handlers-multi-thread-execution-handler.md#multi-thread-execution-handler)
 * [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler)
 * [プロセス停止制御ハンドラ](../../component/handlers/handlers-process-stop-handler.md#process-stop-handler)
 * [リクエストスレッド内ループ制御ハンドラ](../../component/handlers/handlers-request-thread-loop-handler.md#request-thread-loop-handler)
+
 データベースに関連するハンドラ
+
 * [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler)
 * [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#transaction-management-handler)
+
 エラー処理に関するハンドラ
+
 * [グローバルエラーハンドラ](../../component/handlers/handlers-global-error-handler.md#global-error-handler)
+
 その他
+
 * [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler)
 * [スレッドコンテキスト変数削除ハンドラ](../../component/handlers/handlers-thread-context-clear-handler.md#thread-context-clear-handler)
 * [サービス提供可否チェックハンドラ](../../component/handlers/handlers-ServiceAvailabilityCheckHandler.md#serviceavailabilitycheckhandler)

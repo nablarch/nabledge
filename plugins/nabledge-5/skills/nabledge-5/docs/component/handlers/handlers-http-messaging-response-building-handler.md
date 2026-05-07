@@ -35,6 +35,7 @@
 ## 制約
 
 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) よりも後ろに設定すること
+
 このハンドラで生成した HTTPレスポンスオブジェクト を
 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) がクライアントに返却するため。
 

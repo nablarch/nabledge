@@ -3,13 +3,17 @@
 本章では、登録画面の初期表示について解説する。
 
 登録画面のJSPを作成する
+
 ひな形となるJSPを /src/main/webapp/WEB-INF/view/client 配下に配置する。
 
 [create.jsp](../../../knowledge/assets/web-application-client-create1/create.jsp)
+
 画面に初期表示する部分を実装する
+
 create.jspに登録画面の内容を追加する。
 
 /src/main/webapp/WEB-INF/view/client/create.jsp
+
 ```jsp
 <n:form>
     <div class="row m-3">
@@ -43,19 +47,24 @@ create.jspに登録画面の内容を追加する。
     </div>
 </n:form>
 ```
+
 この実装のポイント
+
 * [Jakarta Server Pagesカスタムタグ](../../component/libraries/libraries-tag.md#tag) を使用し、テキスト入力フォーム、プルダウンを作成する。
   [入力フォームを作る](../../component/libraries/libraries-tag.md#tag-input-form) を参照。
 * [selectタグ](../../component/libraries/libraries-tag-reference.md#tag-select-tag) の listName 属性に、
   後述の初期表示メソッドでリクエストスコープに登録する業種リストの名称を指定し、プルダウンに表示する。
   [選択項目(プルダウン/ラジオボタン/チェックボックス)を表示する](../../component/libraries/libraries-tag.md#tag-selection) を参照。
+
 業務アクションに初期表示メソッドを作成する
+
 ClientAction に、以下の処理を行う業務アクションメソッドを追加する
 
 * プルダウンに表示するデータを取得しリクエストスコープに登録する。
 * 初期表示画面のJSPへフォーワードする。
 
 ClientAction.java
+
 ```java
 public HttpResponse input(HttpRequest request, ExecutionContext context) {
     EntityList<Industry> industries = UniversalDao.findAll(Industry.class);
@@ -74,13 +83,17 @@ public HttpResponse input(HttpRequest request, ExecutionContext context) {
 遷移先を設定したレスポンスオブジェクト
 
 この実装のポイント
+
 * 登録画面に業種のプルダウンを表示するために、[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) を使用してデータベースから業種情報を全件取得する。
 * JSPへ値を受け渡すために、取得した業種リストをリクエストスコープに登録する。
+
 URLと業務アクションのマッピングを行う
+
 マッピング処理はOSSライブラリである [http_request_router(外部サイト)](https://github.com/kawasima/http-request-router) を使用して行う。
 指定したURLと初期表示処理をマッピングするための設定を追加する。
 
 routes.xml
+
 ```xml
 <routes>
   <!-- 上から評価されるので、他のマッピングより前に設定する -->
@@ -91,10 +104,13 @@ routes.xml
 
 > **Tip:**
 > routes.xmlの指定方法は、[ライブラリのREADMEドキュメント(外部サイト)](https://github.com/kawasima/http-request-router/blob/master/README.ja.md) を参照。
+
 登録画面へのリンクを作成する
+
 ヘッダメニューに顧客登録画面へのリンクを作成する。
 
 /src/main/webapp/WEB-INF/view/common/menu.jsp
+
 ```jsp
 <ul class="navbar-nav me-auto">
   <!-- その他のリンクは省略 -->
@@ -103,9 +119,13 @@ routes.xml
   </li>
 </ul>
 ```
+
 この実装のポイント
+
 * [Jakarta Server Pagesカスタムタグ](../../component/libraries/libraries-tag.md#tag) の [aタグ](../../component/libraries/libraries-tag-reference.md#tag-a-tag) を使用してリンクを作成する。
+
 動作確認を行う
+
 以下の手順で動作確認を行う。
 
 1. アプリケーションにログインし、ヘッダメニューに「顧客登録」リンクが作成されていることを確認する。

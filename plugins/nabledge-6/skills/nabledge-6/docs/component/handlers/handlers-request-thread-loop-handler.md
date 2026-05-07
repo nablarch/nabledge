@@ -49,6 +49,7 @@
 ## 制約
 
 [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) より後ろに配置すること
+
 このハンドラでは、処理が継続可能な例外の場合に リトライ可能例外(Retryable) を送出する。
 このため、リトライ可能例外を処理する [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) よりも後ろにこのハンドラを設定する必要がある。
 
@@ -86,28 +87,49 @@
 このハンドラで行う後続ハンドラで発生した例外(エラー)に応じた処理内容について解説する。
 
 サービス閉塞中例外(ServiceUnavailable)
+
 一定時間待機後に、再度後続ハンドラに処理を委譲する。
 待機時間の設定方法は、 [サービス閉塞中の待機時間を設定する](../../component/handlers/handlers-request-thread-loop-handler.md#request-thread-loop-handler-interval) を参照。
+
 プロセス停止要求を示す例外(ProcessStop)
+
 プロセス停止要求を示す例外であるため、本ハンドラの処理を終了する。
+
 プロセスの異常終了を示す例外(ProcessAbnormalEnd)
+
 プロセスの異常終了を示す例外のため、捕捉した例外を再送出する。
+
 処理を継続することができなかったことを示すサービスエラー(ServiceError)
+
 補足した例外クラスにログ出力処理を委譲し、 リトライ可能例外(Retryable) を送出する。
+
 ハンドラの処理が異常終了したことを示す例外(Result.Error)
+
 `FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。
+
 実行時例外(RuntimeException)
+
 `FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。
+
 スレッドの停止を示す例外(ThreadDeath)
+
 `INFO` レベルのログを出力し、補足した例外(ThreadDeath)を再送出する。
+
 スタックオーバーフローエラー(StackOverflowError)
+
 `FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。
+
 ヒープ不足のエラー(OutOfMemoryError)
+
 標準エラー出力にヒープ不足が発生したことを示すメッセージを出力し、 `FATAL` レベルのログ出力を行う。
 (ログ出力時に再度ヒープ不足が発生する可能性があるため、標準エラー出力にメッセージ出力後にログを出力する。)
 
 ヒープ不足の原因不足となったオブジェクトへの参照が切れ、処理継続可能な場合があるため リトライ可能例外(Retryable) を送出する。
+
 JVMの異常を示すエラー(VirtualMachineError)
+
 発生した例外を再送出する
+
 上記以外のエラー
+
 `FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。

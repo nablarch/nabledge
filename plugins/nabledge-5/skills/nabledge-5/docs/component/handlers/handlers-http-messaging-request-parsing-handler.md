@@ -39,9 +39,12 @@ RequestMessage
 ## 制約
 
 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置すること
+
 変換処理に失敗した場合は、ステータスコードを指定したレスポンスをクライアントに返すため、
 本ハンドラは [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置する必要がある。
+
 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに配置すること
+
 スレッドコンテキスト上に設定されたリクエストIDをもとに、
 要求電文と応答電文の変換に使う
 DataRecordFormatter を取得するため、
@@ -60,12 +63,16 @@ DataRecordFormatter を取得するため、
 | リクエストボディ | フレームワーク制御ヘッダとデータレコード | 詳細は、 [リクエストボディの変換](../../component/handlers/handlers-http-messaging-request-parsing-handler.md#http-messaging-request-parsing-handler-convert-body) を参照。 |
 
 リクエストボディの変換
+
 リクエストボディの変換は、 [汎用データフォーマット](../../component/libraries/libraries-data-format.md#data-format) により行う。
 以下のルールでフォーマット定義ファイルを準備しておく必要がある。
 
 受信時のフォーマット定義ファイルの論理名
+
 <リクエストID> + "_RECEIVE"
+
 送信時のフォーマット定義ファイルの論理名
+
 <リクエストID> + "_SEND"
 
 デフォルトでは読み込んだデータを構造化データとして取り扱うが、
@@ -77,6 +84,7 @@ StructuredFwHeaderDefinition
 設定例を以下に示す。
 
 ポイント
+
 * キー情報は、
   StructuredFwHeaderDefinition#fwHeaderKeys
   プロパティに指定する。
@@ -108,25 +116,32 @@ StructuredFwHeaderDefinition
 <component name="fwHeaderDefinition"
            class="nablarch.fw.messaging.StandardFwHeaderDefinition" />
 ```
+
 変換時の例外処理
+
 変換時に捕捉する例外と処理内容を以下に示す。
 以下に示していない例外については捕捉しない。
 
 nablarch.fw.results.RequestEntityTooLarge
+
 INFO
 
 413
 
 リクエストボディのサイズ上限を超過したため、証跡ログとして記録する。
 そして、サイズ超過を表すため、HTTPステータスコードが *413*  のレスポンスを生成する。
+
 nablarch.fw.messaging.MessagingException
+
 INFO
 
 400
 
 リクエストボディが不正なため、証跡ログとして記録する。
 そして、クライアントエラーを表すため、HTTPステータスコードが *400*  のレスポンスを生成する。
+
 nablarch.core.dataformat.InvalidDataFormatException
+
 INFO
 
 400

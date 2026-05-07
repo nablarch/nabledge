@@ -43,10 +43,15 @@
 実行環境に以下のソフトウェアがインストールされている前提とする。
 
 全プロジェクトで共通
+
 * Maven 3.9.9以上
+
 ウェブ、RESTfulウェブサービス、Jakarta Batchに準拠したバッチ、Nablarchバッチ
+
 * JDK17以上
+
 コンテナ用ウェブ、コンテナ用RESTfulウェブサービス、コンテナ用Nablarchバッチ
+
 * JDK17以上
 * Docker Desktop 2.2.0.0 以上
 

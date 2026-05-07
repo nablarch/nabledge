@@ -3,8 +3,11 @@
 リクエストされた情報(JSON形式)をDBに登録する機能を解説する。
 
 作成する機能の概要
+
 ![overview.png](../../../knowledge/assets/http-messaging-getting-started-save/overview.png)
+
 動作確認手順
+
 1. 事前にDBの状態を確認
 
   H2のコンソールから下記SQLを実行し、レコードが存在しないことを確認する。
@@ -17,14 +20,21 @@
 任意のRESTクライアントを使用して、以下のリクエストを送信する。
 
 URL
+
 [http://localhost:9080/ProjectSaveAction](http://localhost:9080/ProjectSaveAction)
+
 HTTPメソッド
+
 POST
+
 HTTPヘッダ
+
 Content-Type: application/json 
 
 X-Message-Id: 1
+
 リクエストボディ
+
 ```json
 {
     "projectName": "プロジェクト９９９",
@@ -58,9 +68,11 @@ SELECT * FROM PROJECT WHERE PROJECT_NAME = 'プロジェクト９９９';
 3. [業務アクションの作成](../../processing-pattern/http-messaging/http-messaging-getting-started-save.md#getting-started-http-messaging-action)
 
 フォーマットファイルの作成
+
 HTTPメッセージングでは、リクエストされたHTTPメッセージを [汎用データフォーマット](../../component/libraries/libraries-data-format.md#data-format) を使用して解析する。
 
 ProjectSaveAction_RECEIVE.fmt
+
 ```bash
 file-type:        "JSON"
 text-encoding:    "UTF-8"
@@ -81,14 +93,18 @@ text-encoding:    "UTF-8"
 13 allocationOfCorpExpenses[0..1]    X9
 14 userId[0..1]                      X9
 ```
+
 この実装のポイント
+
 * フォーマットファイルの名称は、「リクエストID + "_RECEIVE"」という形式にする。
 * フォーマットファイルの記述方法は [フォーマット定義ファイルの記述ルール](../../component/libraries/libraries-format-definition.md#data-format-definition) を参照。
 
 フォームの作成
+
 リクエストボディの内容をバインドするフォームを作成する。
 
 ProjectForm.java
+
 ```java
 public class ProjectForm {
 
@@ -119,13 +135,17 @@ public class ProjectForm {
     }
 }
 ```
+
 この実装のポイント
+
 * [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を用いてバリデーションを行うため、バリデーション用のアノテーションを設定する。
 
 業務アクションの作成
+
 プロジェクトをDBに登録する業務アクションを作成する。
 
 ProjectSaveAction.java
+
 ```java
 public class ProjectSaveAction extends MessagingAction {
 
@@ -171,7 +191,9 @@ public class ProjectSaveAction extends MessagingAction {
     }
 }
 ```
+
 この実装のポイント
+
 * MessagingAction を継承し、業務メソッドを作成する。
 * MessagingAction#onReceive
   に、リクエスト受信時に実行する処理を実装する。

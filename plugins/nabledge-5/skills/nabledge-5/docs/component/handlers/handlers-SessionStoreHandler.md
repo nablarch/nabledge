@@ -54,12 +54,17 @@
 ## 制約
 
 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置すること
+
 サーブレットフォワード時、フォワード先でセッションストアの値にアクセスできるようにするため、
 本ハンドラは [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後ろに配置する必要がある。
+
 [マルチパートリクエストハンドラ](../../component/handlers/handlers-multipart-handler.md#multipart-handler) より後ろに配置すること
+
 HIDDENストア使用時にリクエストパラメータにアクセスできるようにするため、
 本ハンドラは [マルチパートリクエストハンドラ](../../component/handlers/handlers-multipart-handler.md#multipart-handler) より後ろに配置する必要がある。
+
 [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler) より前に配置すること
+
 [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler) を本ハンドラよりも前に設定した場合、セッションストアの読み込み、保存が複数回実行されるが、
 HIDDENストアはリクエストパラメータからセッション変数を読み込み、リクエストスコープにセッション変数を保存するため、
 内部フォーワード時にHIDDENストアを使用した場合、最新のセッション変数を取得できない問題がある。
@@ -99,8 +104,11 @@ SessionManager に設定するプロパティの詳細は [セッションスト
 セッションストアからセッション変数を読み込む際、セッションストアが改竄されていないかをチェックする。
 
 HIDDENストアの改竄を検知した場合
+
 ステータスコード400の HttpErrorResponse を送出する。
+
 それ以外のストアの改竄を検知した場合
+
 セッションストアの復号処理時に発生した例外をそのまま送出する。
 
 ## 改竄エラー時の遷移先を設定する
@@ -111,6 +119,7 @@ HIDDENストアの改竄を検知した場合
 web.xml に対する設定が必要となる。
 
 理由
+
 [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler) は、 [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler) よりも手前に設定する必要がある。
 これは、 [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler)  の [デフォルトページの設定](../../component/handlers/handlers-HttpErrorHandler.md#httperrorhandler-defaultpage) に対して指定した
 内部フォワードのパスを正しく扱うために必要な設定順となる。

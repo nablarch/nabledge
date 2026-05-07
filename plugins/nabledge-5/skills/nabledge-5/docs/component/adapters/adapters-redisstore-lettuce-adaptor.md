@@ -152,11 +152,16 @@ nablarch.sessionManager.defaultStoreName=redis
 本アダプタでは、接続先のRedisの構成ごとに専用のクライアントクラス（LettuceRedisClient を実装したクラス）を用意している。
 
 LettuceSimpleRedisClient
+
 単一のRedisインスタンスに直接接続する場合に使用するクラス。
+
 LettuceMasterReplicaRedisClient
+
 Master-Replica構成のRedisインスタンスに接続する場合に使用するクラス。
 Sentinelを介して接続する場合も、このクラスを使用する。
+
 LettuceClusterRedisClient
+
 Cluster構成のRedisインスタンスに接続する場合に使用するクラス。
 
 アプリケーションで使用するRedisの構成に合わせて、これらの中から使用するクライアントクラスを設定する必要がある。

@@ -100,6 +100,7 @@ Nablarchが提供しているバリデータ及びコンバータについては
 > バリデータやコンバータの設定がない場合、バリデーション機能は使用できないので必ず設定すること。
 
 設定例
+
 * ValidationManager を **validationManager** という名前でコンポーネント定義する。
 * ValidationManager#convertors に使用するコンバータを列挙する。
 * ValidationManager#validators に使用するバリデータを列挙する。
@@ -134,6 +135,7 @@ Nablarchが提供しているバリデータ及びコンバータについては
 > 後述する [ドメインバリデーション](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-domain-validation) を使うことを推奨する。
 
 実装例
+
 [Nablarchで提供しているバリデータとコンバータ](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-validator-convertor) を参照しアノテーションを設定する。
 
 この例では、 userName は入力が必須で、全角文字の最大10文字が許容される。
@@ -168,6 +170,7 @@ public class SampleForm {
 ドメインバリデーションを使うための設定や実装例を示す。
 
 ドメインごとのバリデーションルールを定義したEnumの作成
+
 ドメインバリデーションを使用するには、まずドメインごとのバリデーションルールを持つEnum(ドメインEnum)を作成する。
 このEnumは、必ず DomainDefinition インタフェースを実装すること。
 
@@ -197,7 +200,9 @@ public enum SampleDomain implements DomainDefinition {
     }
 }
 ```
+
 ドメインを表すアノテーションの作成
+
 ドメインを表すアノテーションを作成する。
 value 属性には、上記で作成したドメインEnumを指定できるようにする。
 
@@ -210,7 +215,9 @@ public @interface Domain {
     SampleDomain value();
 }
 ```
+
 バリデーション対象のBeanにドメインを設定
+
 上記で作成したドメインを表すアノテーションを設定することで、ドメインバリデーションが行われる。
 
 この例では、 userName に対して SampleDomain.NAME に設定したバリデーションが実行される。
@@ -222,7 +229,9 @@ public void setUserName(String userName) {
     this.userName = userName;
 }
 ```
+
 ドメインバリデーションを有効にするための設定
+
 ドメインバリデーションを有効にするためには、以下の設定が必要となる。
 
 * DomainValidationHelper の設定
@@ -233,6 +242,7 @@ public void setUserName(String userName) {
 以下に例を示す。
 
 DomainValidationHelper の設定
+
 * domainAnnotationプロパティ
   にドメインを表すアノテーションの完全修飾名(FQCN)を設定する。
 
@@ -244,7 +254,9 @@ DomainValidationHelper の設定
 
 </component>
 ```
+
 DomainValidator の設定
+
 * domainValidationHelperプロパティ
   に、上記で設定した DomainValidationHelper を設定する。
 * validatorsプロパティ
@@ -266,7 +278,9 @@ DomainValidator の設定
   <property name="domainValidationHelper" ref="domainValidationHelper" />
 </component>
 ```
+
 ValidationManager の設定
+
 * domainValidationHelperプロパティ
   に、上記で設定した DomainValidationHelper を設定する。
 * validatorsプロパティ
@@ -283,7 +297,9 @@ ValidationManager の設定
   <property name="domainValidationHelper" ref="domainValidationHelper" />
 </component>
 ```
+
 初期化コンポーネントの設定
+
 上記で設定した、 DomainValidator と
 ValidationManager を初期化対象のリストに設定する。
 
@@ -299,7 +315,9 @@ ValidationManager を初期化対象のリストに設定する。
   </property>
 </component>
 ```
+
 ドメインバリデーションに複数のバリデーションルールを設定した場合の挙動
+
 ドメインバリデーションにて１つの入力項目に複数のエラーが存在する場合、精査を１つ目のエラーで打ち切る。
 
 ```java
@@ -356,6 +374,7 @@ public class ChildForm extends ParentForm {
 バリデーションは、 ValidationUtil で提供されるメソッドを呼び出すことで実行できる。
 
 実装例
+
 まず、入力値からBeanオブジェクトを生成するため、バリデーション対象のBeanにMapを引数に取るコンストラクタを実装する。
 
 次にバリデーション対象のBeanにバリデーションを行うためのstaticメソッドを実装する。
@@ -428,6 +447,7 @@ SampleForm form = validationContext.createObject();
 特定の画面だけパターンを変えてバリデーションしたい場合に、個別にバリデーションを実行する。
 
 実装例
+
 明示的なバリデーションの実行は、Beanクラスの  @ValidateFor アノテーションが設定されたメソッドから行う。
 なお、明示的バリデーションの実行時に指定できるアノテーションは、 DirectCallableValidator を実装しているものに限定される。
 (コンバータは指定できない。)
@@ -468,6 +488,7 @@ public class SampleForm {
 [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) とは完全修飾名が異なる(アノテーション名は同一)ので注意すること。
 
 サロゲートペアを許容する
+
 このバリデーションでは、デフォルトではサロゲートペアを許容しない。
 （例え LiteralCharsetDef で明示的にサロゲートペアの文字を定義していても許容しない）
 
@@ -488,6 +509,7 @@ public class SampleForm {
 このメソッドでまずは項目ごとのバリデーションを実施し、エラーが発生しなかった場合に複数項目を使用したバリデーションを実行する。
 
 実装例
+
 この例では、mailAddressとconfirmMailAddressを使用した相関バリデーションを行っている。
 
 相関バリデーションでエラーとなった場合は、ユーザに通知すべきメッセージを示すメッセージIDを明示的に ValidationContext に追加する。
@@ -604,6 +626,7 @@ public class SampleForm {
 メッセージに項目名を埋め込むには、 @PropertyName アノテーションを使用して、バリデーション対象の項目の項目名を指定する。
 
 実装例
+
 メッセージには、項目名を埋め込むためのパターン文字を使用する。
 項目名は、必ず先頭に指定されるので項目名を埋め込む箇所には、 **{0}** と指定する。
 
@@ -630,7 +653,9 @@ public class SampleForm {
     }
 }
 ```
+
 生成されるメッセージ
+
 上記実装で、 username プロパティで必須エラーが発生すると、生成されるメッセージは **「名前を入力してください。」** となる。
 
 ### 数値型への型変換
@@ -641,6 +666,7 @@ public class SampleForm {
 なお、数値型へ変換するためのコンバータが [使用するバリデータとコンバータを設定する](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-definition-validator-convertor) の手順に従い設定されていることが前提となる。
 
 実装例
+
 この例では、setterに指定しているが、ドメインバリデーションを使用したドメインEnumへの指定を推奨する。
 
 ```java
@@ -678,6 +704,7 @@ public class SampleForm {
 以下に手順を示す。
 
 アノテーションの作成
+
 アノテーションは以下の条件を満たすこと。
 
 * @Validation アノテーションを設定すること。
@@ -691,7 +718,9 @@ public class SampleForm {
 public @interface Sample {
 }
 ```
+
 バリデータの作成
+
 バリデータは、 Validator インタフェースを実装し、バリデーションロジックを実装する。
 
 ```java
@@ -706,7 +735,9 @@ public class SampleValidator implements Validator {
   }
 }
 ```
+
 設定ファイルにバリデータの登録
+
 [使用するバリデータとコンバータを設定する](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-definition-validator-convertor) を参照。
 
 ### プロジェクト固有のコンバータを追加したい
@@ -719,6 +750,7 @@ public class SampleValidator implements Validator {
 以下に手順を示す。
 
 コンバータの作成
+
 コンバータは、 Convertor インタフェースを実装し、型変換ロジックなどを実装する。
 
 ```java
@@ -757,7 +789,9 @@ public class SampleConvertor implements Convertor {
     }
 }
 ```
+
 設定ファイルにコンバータの登録
+
 [使用するバリデータとコンバータを設定する](../../component/libraries/libraries-nablarch-validation.md#nablarch-validation-definition-validator-convertor) を参照。
 
 ### バリデーション対象のBeanオブジェクトの生成方法を変更したい

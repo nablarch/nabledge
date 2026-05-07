@@ -34,11 +34,16 @@
 ## 制約
 
 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに配置すること
+
 このハンドラから呼ばれるログ出力の処理内では、通常 ThreadContext に保持する内容が必要となる。
 このため、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに配置する必要がある。
+
 [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler) より前に配置すること
+
 また、完了時のログ出力にはエラーコードが必要となるため、 [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#http-error-handler) より前に配置する必要がある。
+
 セッションストアIDを出力する場合は [セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#session-store-handler) より後ろに配置すること
+
 詳細は [セッションストアIDについて](../../component/libraries/libraries-jaxrs-access-log.md#jaxrs-access-log-session-store-id) を参照。
 
 ## アクセスログ出力内容の切り替え

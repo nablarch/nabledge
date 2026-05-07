@@ -10,9 +10,12 @@
 ウェブアプリケーションの起動時、終了時に以下の処理を行う。
 
 起動時
+
 * [システムリポジトリ](../../component/libraries/libraries-repository.md#repository) の初期化処理
 * [ログ出力](../../component/libraries/libraries-log.md#log) の初期化処理
+
 終了時
+
 * [ログ出力](../../component/libraries/libraries-log.md#log) の終了処理
 
 ## モジュール一覧
@@ -46,6 +49,7 @@
 web.xml への設定例を以下に示す。
 
 ポイント
+
 * コンポーネント設定ファイルのパスのパラメータ名は **di.config** とすること。
 
 ```xml

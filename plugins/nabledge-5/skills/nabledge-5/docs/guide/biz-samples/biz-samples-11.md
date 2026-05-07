@@ -37,8 +37,11 @@
 シミュレータの動作イメージを以下に示す。
 
 シミュレータがメッセージ受信する場合
+
 ![behavior_illustration01.png](../../../knowledge/assets/biz-samples-11/behavior_illustration01.png)
+
 シミュレータがメッセージ送信する場合
+
 ![behavior_illustration02.png](../../../knowledge/assets/biz-samples-11/behavior_illustration02.png)
 
 > **Important:**
@@ -110,12 +113,15 @@ Nablarchアプリケーションフレームワークのマルチスレッド実
 そのため、シミュレータを使用するには、以下の手順に従ってビルドを実行し、実行モジュールを作成する必要がある。
 
 シミュレータの取得
+
 以下のコマンドを実行してシミュレータのソースコードを取得する。
 
 ```bash
 git clone https://github.com/nablarch/nablarch-messaging-simulator.git
 ```
+
 実行モジュールの作成
+
 以下のコマンドを実行し、 `target/build` 配下に実行モジュールを作成する。
 
 ```bat

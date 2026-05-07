@@ -42,6 +42,7 @@ ApplicationException を送出して処理を終了する。
 ## 制約
 
 [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) よりも後ろに設定すること
+
 このハンドラは、 [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#body-convert-handler) がリクエストボディから変換したForm(Bean)に対してバリデーションを行うため。
 
 ## リソース(アクション)で受け取るForm(Bean)に対してバリデーションを実行する

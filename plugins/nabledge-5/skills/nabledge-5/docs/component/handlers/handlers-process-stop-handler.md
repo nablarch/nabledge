@@ -51,6 +51,7 @@
 ## 制約
 
 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに設定すること
+
 本ハンドラは、スレッドコンテキスト上のリクエストIDをもとに停止処理を行うため、
 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#thread-context-handler) より後ろに本ハンドラを設定する必要がある。
 
@@ -62,6 +63,7 @@
 以下に設定例を示す。
 
 ポイント
+
 * 都度起動バッチで使用する場合、本ハンドラはサブスレッド側に設定する。
 * 常駐バッチで使用する場合、本ハンドラはメインスレッド側に設定する。
 

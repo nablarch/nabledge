@@ -3,8 +3,11 @@
 Exampleアプリケーションを元に、ファイルをDBに登録するバッチを解説する。
 
 作成する機能の概要
+
 ![overview.png](../../../knowledge/assets/nablarch-batch-getting-started-nablarch-batch/overview.png)
+
 住所ファイル登録バッチ実行手順
+
 1. 登録対象テーブルのデータを削除する
 
   H2のコンソールから下記SQLを実行し、データ登録対象テーブルのデータを削除する。
@@ -49,9 +52,11 @@ $mvn exec:java -Dexec.mainClass=nablarch.fw.launcher.Main ^
 2. [データリーダの作成](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started-nablarch-batch.md#getting-started-nablarch-batch-data-reader)
 
 入力ファイルを受け付けるフォームを作成
+
 [データバインド](../../component/libraries/libraries-data-bind.md#data-bind) を用いてCSV(住所ファイル)をバインドするフォームを作成する。
 
 ZipCodeForm.java
+
 ```java
 @Csv(properties = {/** プロパティ定義は省略 **/}, type = CsvType.CUSTOM)
 @CsvFormat(charset = "UTF-8", fieldSeparator = ',',
@@ -94,7 +99,9 @@ public class ZipCodeForm {
 
 }
 ```
+
 この実装のポイント
+
 * [データバインド](../../component/libraries/libraries-data-bind.md#data-bind) を用いてフォームにCSVをバインドするため、Csv
   及び CsvFormat を付与する。
 * [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を実施するために、バリデーション用のアノテーションを付与する。
@@ -102,9 +109,11 @@ public class ZipCodeForm {
   対象データが何行目のデータであるかを自動的に設定できる。
 
 データリーダの作成
+
 ファイルを読み込んで一行ずつ業務アクションメソッドへ引き渡す、 DataReader の実装クラスを作成する。
 
 ZipCodeFileReader.java
+
 ```java
 public class ZipCodeFileReader implements DataReader<ZipCodeForm> {
 
@@ -178,7 +187,9 @@ public class ZipCodeFileReader implements DataReader<ZipCodeForm> {
     }
 }
 ```
+
 この実装のポイント
+
 * read メソッドに一行分のデータを返却する処理を実装する。read メソッドで読み込んだデータが業務アクションハンドラへ引き渡される。
 * hasNext メソッドに次行の有無を判定する処理を実装する。このメソッドが false を返却するとファイルの読み込み処理は終了となる。
 * close メソッドにファイルの読み込み終了後のストリームのclose処理を実装する。
@@ -196,9 +207,11 @@ public class ZipCodeFileReader implements DataReader<ZipCodeForm> {
 1. [業務アクションの作成](../../processing-pattern/nablarch-batch/nablarch-batch-getting-started-nablarch-batch.md#getting-started-nablarch-batch-action)
 
 業務アクションの作成
+
 BatchAction を継承し、業務アクションクラスを作成する。
 
 ImportZipCodeFileAction.java
+
 ```java
 public class ImportZipCodeFileAction extends BatchAction<ZipCodeForm> {
 
@@ -236,7 +249,9 @@ public class ImportZipCodeFileAction extends BatchAction<ZipCodeForm> {
     }
 }
 ```
+
 この実装のポイント
+
 * handle メソッドに、データリーダから渡された一行分のデータに対する処理を実装する。
 * UniversalDao#insert を使用して住所エンティティをデータベースに登録する。
 * createReader メソッドでは使用するデータリーダクラスのインスタンスを返却する。

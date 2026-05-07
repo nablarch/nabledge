@@ -44,6 +44,7 @@ OnError アノテーションを、
 以下の例では、業務アクションのメソッド内で業務エラー( ApplicationException )が発生した場合の遷移先を指定している。
 
 ポイント
+
 * type属性には、RuntimeException 及びそのサブクラスを指定できる。
 * type属性に指定した例外のサブクラスも処理の対象となる。
 
@@ -66,6 +67,7 @@ public HttpResponse handle(HttpRequest request, ExecutionContext context) {
 バリデーションエラー発生時に初期表示用のメソッドにフォワードする場合の実装例を以下に示す。
 
 ポイント
+
 * path属性に、内部フォワード用のパスを設定する。
 
 ```java

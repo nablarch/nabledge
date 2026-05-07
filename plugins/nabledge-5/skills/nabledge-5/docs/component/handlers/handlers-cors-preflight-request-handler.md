@@ -37,6 +37,7 @@ ResponseFinisherを実装した CorsResponseFinisher で処理する。
 ## 制約
 
 [JAX-RSレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler) より後ろに配置すること
+
 本ハンドラで生成した HttpResponse を [JAX-RSレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler) が処理するため、
 本ハンドラは [JAX-RSレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jaxrs-response-handler) より後ろに配置する必要がある。
 
@@ -94,6 +95,7 @@ CORSの処理は Cors インタフェースが行う。
 BasicCors はデフォルトで以下の処理を行う。
 
 プリフライトリクエスト(CorsPreflightRequestHandlerが呼び出す処理)
+
 * リクエストが以下の条件を全て満たす場合にプリフライトリクエストと判定する。
 
   * HTTPメソッド：OPTIONS
@@ -102,6 +104,7 @@ BasicCors はデフォルトで以下の処理を行う。
 * リクエストがプリフライトリクエストの場合は以下のレスポンスを返す。
 
 実際のリクエスト(CorsResponseFinisherが呼び出す処理)
+
 * 以下のレスポンスヘッダを設定する。
 
   * Access-Control-Allow-Originヘッダ：リクエストのOriginヘッダ

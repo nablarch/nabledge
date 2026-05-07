@@ -82,6 +82,7 @@ Java Beansクラスから取得する情報は以下のとおり。
 Java Beansクラスの実装例を以下に示す。
 
 ポイント
+
 * Java Beansクラスは、 WorkItem を継承すること。
 
 ```java
@@ -106,6 +107,7 @@ public class Sample extends WorkItem {
 pom.xmlへの設定例を以下に示す。
 
 ポイント
+
 * `classes` にはコントロールファイル生成対象のJava Beansクラス名をFQCNで指定する。
 * `outputPath` にはコントロールファイルの出力先ディレクトリを指定する。
   未指定の場合は、`target/etl/ctrl-file` に出力される。

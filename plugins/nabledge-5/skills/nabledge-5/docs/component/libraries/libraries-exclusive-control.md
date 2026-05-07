@@ -24,8 +24,10 @@
 > 排他制御には、 [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) を使用すること。
 
 > * >   [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#universal-dao) の排他制御は、本機能より簡単に使用できる。
+
 >   [楽観的ロックを行う](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-optimistic-lock) 、 [悲観的ロックを行う](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-pessimistic-lock) を参照。
 > * >   主キーを非文字列型で定義した場合、データベースによってはこの機能を使用することができない。
+
 >   この機能は、主キーの値を全て文字列型( java.lang.String )で保持している。
 >   主キーのカラム定義が非文字列型(charやvarchar以外)の場合に、
 >   データベースによっては型の不一致でSQL文の実行時例外が発生する。
@@ -97,6 +99,7 @@
 排他制御を使うためには、 **設定** と **排他制御に必要な情報を保持するクラスの作成** を行う。
 
 設定
+
 BasicExclusiveControlManager の設定をコンポーネント定義に追加する。
 
 ```xml
@@ -107,7 +110,9 @@ BasicExclusiveControlManager の設定をコンポーネント定義に追加す
     <property name="optimisticLockErrorMessageId" value="CUST0001" />
 </component>
 ```
+
 排他制御に必要な情報を保持するクラスの作成
+
 ExclusiveControlContext を継承して作成する。
 このクラスは、排他制御用テーブルごとに作成し、排他制御を行うAPI呼び出しで使用する。
 
@@ -158,6 +163,7 @@ public class UsersExclusiveControl extends ExclusiveControlContext {
 入力→確認→完了がある更新機能を例に、楽観的ロックの実装例を示す。
 
 入力画面の初期表示
+
 ```java
 public HttpResponse index(HttpRequest request, ExecutionContext context) {
 
@@ -177,7 +183,9 @@ public HttpResponse index(HttpRequest request, ExecutionContext context) {
     return new HttpResponse("/input.jsp");
 }
 ```
+
 入力画面の確認ボタン（入力→確認）
+
 ```java
 @OnErrors({
     @OnError(type = ApplicationException.class, path = "/input.jsp"),
@@ -203,7 +211,9 @@ public HttpResponse confirm(HttpRequest request, ExecutionContext context) {
 > **Important:**
 > バージョン番号のチェック( HttpExclusiveControlUtil.checkVersions )を行わなければ、
 > 画面間でバージョン番号が引き継がれない。
+
 確認画面の更新ボタン（確認→完了）
+
 ```java
 @OnErrors({
     @OnError(type = ApplicationException.class, path = "/input.jsp"),
@@ -238,6 +248,7 @@ public HttpResponse update(HttpRequest request, ExecutionContext context) {
 二通りの実装方法がある。
 
 複合主キーでない場合
+
 ユーザの一括削除を行う画面を例に、複合主キーでない場合の実装例を示す。
 バージョン番号の取得部分は、 HttpExclusiveControlUtil#prepareVersions を呼び出すだけなので、
 実装例を省略する。
@@ -272,7 +283,9 @@ HttpExclusiveControlUtil.checkVersions(request, context, "user.deactivate");
 // チェックと更新の対象とする。
 HttpExclusiveControlUtil.updateVersionsWithCheck(request, "user.deactivate");
 ```
+
 複合主キーの場合
+
 ユーザの一括削除を行う画面を例に、複合主キーの場合の実装例を示す。
 バージョン番号の取得部分は、 HttpExclusiveControlUtil#prepareVersions を呼び出すだけなので、
 実装例を省略する。

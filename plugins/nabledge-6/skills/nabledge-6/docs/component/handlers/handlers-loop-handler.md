@@ -47,6 +47,7 @@
 ## 制約
 
 [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#database-connection-management-handler) より後ろに設定すること
+
 データベースに対するトランザクションを制御する場合には、トランザクション管理対象のデータベース接続がスレッド上に存在している必要がある。
 
 ## トランザクション制御対象を設定する
@@ -115,6 +116,7 @@
 以下に例を示す。
 
 コールバック処理を行うハンドラの作成
+
 以下実装例のように、  TransactionEventCallback を実装したハンドラを作成する。
 
 transactionNormalEnd にトランザクションコミット時のコールバック処理を実装し、
@@ -141,7 +143,9 @@ public static class SampleHandler
   }
 }
 ```
+
 ハンドラキューを構築する
+
 以下のように、このハンドラの後続ハンドラにコールバック処理を実装したハンドラを設定する。
 
 ```xml

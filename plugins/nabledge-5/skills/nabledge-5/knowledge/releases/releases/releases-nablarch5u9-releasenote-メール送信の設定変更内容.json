@@ -4,5 +4,200 @@
   "content": "●送信要求のステータス更新のフローの変更\n送信ステータスの更新失敗(データベースエラーやネットワーク障害など)の際の二重送信防止のため、処理フローを以下のとおり変更しました。\n●変更前  ●変更後\n送信ステータスの更新失敗(DB更新失敗)が発生した場合、  送信ステータスの更新失敗(DB更新失敗)が発生した場合、\nメールが二重送信されていた。  パッチを適用する必要がある。\n変更後、送信ステータスの更新失敗(DB更新失敗)が発生した場合は、障害ログに以下のログが出力され、メール送信バッチは異常終了する。\nFailed to update unsent status. Need to apply a patch to change the status to failure. mailRequestId=[<リクエストID>]\nこのログを検出した場合は、該当送信要求の送信ステータスを「送信失敗」にする必要がある。\n●コンポーネント定義ファイルの変更\n変更後の送信ステータスの更新は別トランザクションで実行されるため、以下の設定が必須となる。\nステータス更新用のトランザクションの設定\n\"statusUpdateTransaction\"という名前のトランザクションを管理するコンポーネントを定義する必要がある。\n設定例）\n<!-- ステータス更新用のトランザクション -->\n<component name=\"statusUpdateTransaction\" class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">\n<property name=\"dbTransactionName\" value=\"statusUpdateTransaction\" />\n<property name=\"connectionFactory\" ref=\"connectionFactory\" />\n<property name=\"transactionFactory\" ref=\"jdbcTransactionFactory\" />\n</component>",
   "no_knowledge_content": false,
   "sections": [],
-  "sheet_type": "P2"
+  "sheet_type": "P2",
+  "p2_headings": [
+    {
+      "text": "●送信要求のステータス更新のフローの変更",
+      "level": 3
+    },
+    {
+      "text": "送信ステータスの更新失敗(データベースエラーやネットワーク障害など)の際の二重送信防止のため、処理フローを以下のとおり変更しました。",
+      "level": 3
+    },
+    {
+      "text": "変更後、送信ステータスの更新失敗(DB更新失敗)が発生した場合は、障害ログに以下のログが出力され、メール送信バッチは異常終了する。",
+      "level": 3
+    },
+    {
+      "text": "Failed to update unsent status. Need to apply a patch to change the status to failure. mailRequestId=[<リクエストID>]",
+      "level": 3
+    },
+    {
+      "text": "このログを検出した場合は、該当送信要求の送信ステータスを「送信失敗」にする必要がある。",
+      "level": 3
+    },
+    {
+      "text": "●コンポーネント定義ファイルの変更",
+      "level": 3
+    },
+    {
+      "text": "変更後の送信ステータスの更新は別トランザクションで実行されるため、以下の設定が必須となる。",
+      "level": 3
+    },
+    {
+      "text": "ステータス更新用のトランザクションの設定",
+      "level": 3
+    },
+    {
+      "text": "\"statusUpdateTransaction\"という名前のトランザクションを管理するコンポーネントを定義する必要がある。",
+      "level": 4
+    },
+    {
+      "text": "設定例）",
+      "level": 3
+    },
+    {
+      "text": "<!-- ステータス更新用のトランザクション -->",
+      "level": 4
+    },
+    {
+      "text": "<component name=\"statusUpdateTransaction\" class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">",
+      "level": 4
+    },
+    {
+      "text": "<property name=\"dbTransactionName\" value=\"statusUpdateTransaction\" />",
+      "level": 4
+    },
+    {
+      "text": "<property name=\"connectionFactory\" ref=\"connectionFactory\" />",
+      "level": 4
+    },
+    {
+      "text": "<property name=\"transactionFactory\" ref=\"jdbcTransactionFactory\" />",
+      "level": 4
+    },
+    {
+      "text": "</component>",
+      "level": 4
+    }
+  ],
+  "p2_raw_lines": [
+    [
+      [
+        1,
+        "●送信要求のステータス更新のフローの変更"
+      ]
+    ],
+    [
+      [
+        1,
+        "送信ステータスの更新失敗(データベースエラーやネットワーク障害など)の際の二重送信防止のため、処理フローを以下のとおり変更しました。"
+      ]
+    ],
+    [
+      [
+        1,
+        "●変更前"
+      ],
+      [
+        7,
+        "●変更後"
+      ]
+    ],
+    [
+      [
+        1,
+        "送信ステータスの更新失敗(DB更新失敗)が発生した場合、"
+      ],
+      [
+        7,
+        "送信ステータスの更新失敗(DB更新失敗)が発生した場合、"
+      ]
+    ],
+    [
+      [
+        1,
+        "メールが二重送信されていた。"
+      ],
+      [
+        7,
+        "パッチを適用する必要がある。"
+      ]
+    ],
+    [
+      [
+        1,
+        "変更後、送信ステータスの更新失敗(DB更新失敗)が発生した場合は、障害ログに以下のログが出力され、メール送信バッチは異常終了する。"
+      ]
+    ],
+    [
+      [
+        1,
+        "Failed to update unsent status. Need to apply a patch to change the status to failure. mailRequestId=[<リクエストID>]"
+      ]
+    ],
+    [
+      [
+        1,
+        "このログを検出した場合は、該当送信要求の送信ステータスを「送信失敗」にする必要がある。"
+      ]
+    ],
+    [
+      [
+        1,
+        "●コンポーネント定義ファイルの変更"
+      ]
+    ],
+    [
+      [
+        1,
+        "変更後の送信ステータスの更新は別トランザクションで実行されるため、以下の設定が必須となる。"
+      ]
+    ],
+    [
+      [
+        1,
+        "ステータス更新用のトランザクションの設定"
+      ]
+    ],
+    [
+      [
+        2,
+        "\"statusUpdateTransaction\"という名前のトランザクションを管理するコンポーネントを定義する必要がある。"
+      ]
+    ],
+    [
+      [
+        1,
+        "設定例）"
+      ]
+    ],
+    [
+      [
+        2,
+        "<!-- ステータス更新用のトランザクション -->"
+      ]
+    ],
+    [
+      [
+        2,
+        "<component name=\"statusUpdateTransaction\" class=\"nablarch.core.db.transaction.SimpleDbTransactionManager\">"
+      ]
+    ],
+    [
+      [
+        2,
+        "<property name=\"dbTransactionName\" value=\"statusUpdateTransaction\" />"
+      ]
+    ],
+    [
+      [
+        2,
+        "<property name=\"connectionFactory\" ref=\"connectionFactory\" />"
+      ]
+    ],
+    [
+      [
+        2,
+        "<property name=\"transactionFactory\" ref=\"jdbcTransactionFactory\" />"
+      ]
+    ],
+    [
+      [
+        2,
+        "</component>"
+      ]
+    ]
+  ],
+  "p2_base_col": 0
 }

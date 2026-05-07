@@ -19,7 +19,7 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "本ハンドラは、リトライハンドラよりも後ろに設定すること\n本ハンドラで実行時例外を捕捉した場合、リトライ可能例外( RetryableException )でラップしてから再送出し、\nプロセスの継続制御を [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) に委譲する。\nこのため、このハンドラはリトライハンドラより後に設定する必要がある。",
+      "content": "本ハンドラは、リトライハンドラよりも後ろに設定すること\n\n本ハンドラで実行時例外を捕捉した場合、リトライ可能例外( RetryableException )でラップしてから再送出し、\nプロセスの継続制御を [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) に委譲する。\nこのため、このハンドラはリトライハンドラより後に設定する必要がある。",
       "level": 2
     },
     {
@@ -37,7 +37,7 @@
     {
       "id": "s6",
       "title": "後続ハンドラで発生した例外の扱い",
-      "content": "このハンドラでは、後続のハンドラで発生した例外の種類に応じて、処理を継続するか、終了するかが切り替わる。\n\n以下に例外毎の処理内容を示す。\n\nサービス閉塞中例外( ServiceUnavailable )\nサービス閉塞中例外の場合には、データ監視間隔に設定された時間分待機後に、再度後続ハンドラを実行する。\nリトライ可能例外\nリトライ可能例外( RetryUtil#isRetryable() が真を返す場合)の場合は、\n何もせずに捕捉した例外を再送出する。\nプロセスを異常終了する例外\nプロセスを異常終了させることを示す例外の場合は、なにもせずに捕捉した例外を再送出する。\n\nプロセスを異常終了させる例外は、 abnormalEndExceptions\nプロパティに設定する。\nデフォルトでは、 ProcessAbnormalEnd (サブクラス含む)が、異常終了対象クラスとなる。\nプロセスを正常終了させる例外\n後続のハンドラから戻された結果オブジェクトを、本ハンドラの戻り値として処理を終了する。\n\nプロセスを正常終了させる例外については、 [プロセス常駐化ハンドラの終了方法](../../component/handlers/handlers-process-resident-handler.md#process-resident-handler-normal-end) を参照。\n上記以外の例外\n例外情報をログに記録し、リトライ可能例外 ( RetryableException )でラップし再送出する。",
+      "content": "このハンドラでは、後続のハンドラで発生した例外の種類に応じて、処理を継続するか、終了するかが切り替わる。\n\n以下に例外毎の処理内容を示す。\n\nサービス閉塞中例外( ServiceUnavailable )\n\nサービス閉塞中例外の場合には、データ監視間隔に設定された時間分待機後に、再度後続ハンドラを実行する。\n\nリトライ可能例外\n\nリトライ可能例外( RetryUtil#isRetryable() が真を返す場合)の場合は、\n何もせずに捕捉した例外を再送出する。\n\nプロセスを異常終了する例外\n\nプロセスを異常終了させることを示す例外の場合は、なにもせずに捕捉した例外を再送出する。\n\nプロセスを異常終了させる例外は、 abnormalEndExceptions\nプロパティに設定する。\nデフォルトでは、 ProcessAbnormalEnd (サブクラス含む)が、異常終了対象クラスとなる。\n\nプロセスを正常終了させる例外\n\n後続のハンドラから戻された結果オブジェクトを、本ハンドラの戻り値として処理を終了する。\n\nプロセスを正常終了させる例外については、 [プロセス常駐化ハンドラの終了方法](../../component/handlers/handlers-process-resident-handler.md#process-resident-handler-normal-end) を参照。\n\n上記以外の例外\n\n例外情報をログに記録し、リトライ可能例外 ( RetryableException )でラップし再送出する。",
       "level": 2
     }
   ]

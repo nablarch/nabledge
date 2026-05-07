@@ -7,16 +7,20 @@
 ![application_design.png](../../../knowledge/assets/web-application-application-design/application_design.png)
 
 アクションクラス(action class)
+
 アクションクラスはリクエストを元に業務ロジックを実行し、レスポンスを生成して返却する。
 
 例えば、フォームクラスからエンティティクラスを作成し、その内容をデータベースに永続化するなどの処理を行う。
+
 フォームクラス(form class)
+
 画面からの入力値(http request)をマッピングするクラス。
 
 リクエストをバリデーションするためのアノテーションの設定や相関バリデーションのロジックを持つ。
 外部からのリクエストによっては、階層構造(formがformを持つ)となる場合もある。
 
 フォームクラスは、htmlのform単位に作成する
+
 フォームクラスは画面とのインタフェースを定義するものであり、インタフェース(htmlのform)が異なる場合は別のフォームクラスとして作成する。
 例えば、似たような入力項目を持つことが多い登録画面や更新画面の場合であっても、
 インタフェース(htmlのform)が異なるため別のフォームクラスとする必要がある。
@@ -28,9 +32,15 @@
 
 なお、相関バリデーションのロジックは複数のフォームクラスで共通となることがある。
 この場合は、相関バリデーションのロジックを別クラスに抽出しロジックを共通化すると良い。
+
 フォームクラスのプロパティは全て String で定義する
+
 プロパティを String とすべき理由は、 [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation-form-property) を参照。
+
 フォームクラスのオブジェクトをセッションに保存しない
+
 セッションに保存すべきでない理由は、 [セッションストア](../../component/libraries/libraries-session-store.md#session-store-form) を参照。
+
 エンティティクラス(entity class)
+
 テーブルと1対1で対応するクラス。カラムに対応するプロパティを持つ。

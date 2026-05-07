@@ -33,42 +33,49 @@
     <%@taglib prefix="t" tagdir="/WEB-INF/tags/template" %>
     ```
   * **fieldウィジェット** (`/WEB-INF/tags/widget/field`)
+
     「入力項目」や「表示項目」を表示するUI部品が提供されている。
 
     ```jsp
     <%@taglib prefix="field" tagdir="/WEB-INF/tags/widget/field" %>
     ```
   * **buttonウィジェット** (`/WEB-INF/tags/widget/button`)
+
     「ボタン」を表示するためのUI部品が提供されている。
 
     ```jsp
     <%@taglib prefix="button" tagdir="/WEB-INF/tags/widget/button" %>
     ```
   * **tableウィジェット** (`/WEB-INF/tags/widget/table`)
+
     検索結果などを表形式で表示するためのUI部品が提供されている。
 
     ```jsp
     <%@taglib prefix="table" tagdir="/WEB-INF/tags/widget/table" %>
     ```
   * **columnウィジェット** (`/WEB-INF/tags/widget/column`)
+
     表の列を表示するためのUI部品が提供されている。
 
     ```jsp
     <%@taglib prefix="column" tagdir="/WEB-INF/tags/widget/column" %>
     ```
   * **tabウィジェット** (`/WEB-INF/tags/widget/tab`)
+
     タブ形式でリンクやコンテンツを表示するためのUI部品が提供されている。
 
     ```jsp
     <%@taglib prefix="tab" tagdir="/WEB-INF/tags/widget/tab" %>
     ```
   * **linkウィジェット** (`/WEB-INF/tags/widget/link`)
+
     リンクを表示するためのUI部品が提供されている。
 
     ```jsp
     <%@taglib prefix="link" tagdir="/WEB-INF/tags/widget/link" %>
     ```
   * **画面表示パターン定義ウィジェット** (`/WEB-INF/tags/widget/spec`)
+
     画面状態を設計情報として記述するためのUI部品が提供されている。
     詳細については [画面表示パターン定義ウィジェット](../../development-tools/testing-framework/testing-framework-spec-condition.md#spec-condition-widget) を参照。
 
@@ -155,6 +162,7 @@
 ウィジェットに定義されている属性のうち、注意の必要なものについて以下に記載する。
 
 **name属性**
+
 name属性については、基本的にはPG・UT工程で定義するものであるため、空として定義しておけばよい。
 
 ただし、ローカル表示でname属性の指定が必要なウィジェットが一部存在する。
@@ -162,7 +170,9 @@ name属性については、基本的にはPG・UT工程で定義するもので
 
 ※設計時にname属性の物理名を設定することが難しい場合には、その項目の項目論理名を指定すれば良い。
 この場合、PG担当者がname属性の値を実装開始時に物理名へと変換する必要がある。
+
 **sample属性**
+
 sample属性に値を設定することで、JSPをブラウザで表示した際にダミーの値を画面上に表示できる。
 
 プルダウンやチェックボックス、ラジオボタン、テーブルなどに複数のダミーの値を表示する場合、
@@ -172,14 +182,18 @@ sample属性に「|」区切りで記載できる。
 
 また、sample属性が指定されていない場合に画面に出力されるコード名称は"codeId"属性および"pattern"属性、"optionColumnName"属性に指定された値を元に、
 「js/devtool/resource/コード値定義.js」から該当する名称が取得される。
+
 **key属性**
+
 **key属性** は **<column:label>** などのタグにおいて、表示するレコードセットのキー名を指定する属性である。
 この属性は基本的にはPG・UT工程で決定するものなので、設計段階では指定不要である。
 
 ただし、その場合、 **sample属性** が未指定もしくは空文字を指定すると、
 別の項目のsample属性値が表示される問題がある。
 そのようなケースでは適当な文字列を **key属性** に指定するか **sample属性** にスペース文字を指定すること。
+
 **domain属性**
+
 画面項目定義を出力するために、項目のドメイン物理名を記載する。また、下記のウィジェットでは、ドメイン毎に表示レイアウトを制御するために、HTMLのclass属性にドメイン物理名を出力する。
 
 * field:label
@@ -187,9 +201,13 @@ sample属性に「|」区切りで記載できる。
 * column:link
 
 提供している状態では、テーブル内で「Number」というdomain属性が指定されている項目については右寄せで表示されるようになっている。
+
 **dataFrom属性**
+
 画面項目定義を出力するために、項目に表示するデータの取得元を「表示情報取得元」.「表示項目名」 の形式で記載する。
+
 **hint属性**
+
 ここで指定した文言が、項目に対する備考として表示される。
 
 また、ウィジェットの属性として必須となっている項目があったとしても、画面設計段階で決定できない場合には空として定義しておけばよい。

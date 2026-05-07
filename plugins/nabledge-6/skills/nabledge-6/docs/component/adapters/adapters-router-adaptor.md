@@ -47,6 +47,7 @@
 設定例を以下に示す。
 
 ポイント
+
 * コンポーネント名は **packageMapping** とする。
 * basePackage属性には、アクションクラスが格納されているパッケージを設定する。
   (アクションクラスが複数のパッケージに格納されている場合は、共通となる親パッケージを設定する。)
@@ -107,12 +108,15 @@ router.controllerDetector=nablarch.integration.router.NablarchControllerDetector
 ルート定義ファイルへの設定とマッピングの例を以下に示す。
 
 ルート定義ファイル
+
 ```xml
 <routes>
   <match path="/action/:controller/:action" />
 </routes>
 ```
+
 業務アクションとマッピングするURLの例
+
 | 業務アクション | URL |
 |---|---|
 | PersonAction#index | /action/person/index |

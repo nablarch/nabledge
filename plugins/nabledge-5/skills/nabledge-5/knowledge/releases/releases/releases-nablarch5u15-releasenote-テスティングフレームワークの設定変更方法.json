@@ -4,5 +4,262 @@
   "content": "ここでは、テスティングフレームワークの設定変更方法について説明します。\n◆概要\nテスティングフレームワークはWebアプリケーションのリクエスト単体テストを実現するために内部でJettyを使用しています。\nJettyはJavaのバージョンにより、提供されるモジュールが異なり、かつ後方互換性もありません。\n参考：https://www.eclipse.org/jetty/documentation/current/what-jetty-version.html\nそのため、Java11対応に伴い、テスティングフレームワークが使用しているJettyをJavaのバージョンによって切り替える必要があり、\nテスティングフレームワークのJetty依存部分を以下の2つのモジュールに分割しました。\n・com.nablarch.framework:nablarch-testing-jetty6\n・com.nablarch.framework:nablarch-testing-jetty9\n上記のモジュールのうち、使用するJettyのバージョンに応じて選択する必要があります。\nまた、テスト用のコンポーネント設定ファイルに、モジュールに応じたコンポーネントを登録しておく必要があります。\n◆モジュールの選択方法\nJava6～8を使用しており、Nablarchのバージョンを上げたいが既存のテスト資産には極力影響を与えたくない場合\n⇒nablarch-testing-jetty6を選択してください。フレームワーク、依存ライブラリの差異を最小限に抑えられます。\nNablarchのバージョンを上げて、Javaのバージョンも11に上げたい場合\n⇒nablarch-testing-jetty9を選択してください。\n（Java11ではJetty6は動作しないため自動的にJetty9を選択することになります）\nJava8または11を使用しており、Servlet API 3.0以降の機能をリクエスト単体テストで使用したい場合\n⇒nablarch-testing-jetty9を選択してください。\n◆対応方法\n現状のJetty6をそのまま使用し続ける場合の手順を記載します。\npom.xmlの変更\n以下の依存ライブラリを追加します。\n変更後の実装例を示します。\n使用するJavaのバージョンにより、生成するクラスが変わります。\nコンポーネント定義ファイル(src/test/resources/unit-test.xml)への設定追加\nJetty9を使用する場合は、解説書の以下の手順を参照してださい。\nhttps://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Java11.html#jetty-restful",
   "no_knowledge_content": false,
   "sections": [],
-  "sheet_type": "P2"
+  "sheet_type": "P2",
+  "p2_headings": [
+    {
+      "text": "ここでは、テスティングフレームワークの設定変更方法について説明します。",
+      "level": 3
+    },
+    {
+      "text": "◆概要",
+      "level": 3
+    },
+    {
+      "text": "テスティングフレームワークはWebアプリケーションのリクエスト単体テストを実現するために内部でJettyを使用しています。",
+      "level": 4
+    },
+    {
+      "text": "JettyはJavaのバージョンにより、提供されるモジュールが異なり、かつ後方互換性もありません。",
+      "level": 4
+    },
+    {
+      "text": "そのため、Java11対応に伴い、テスティングフレームワークが使用しているJettyをJavaのバージョンによって切り替える必要があり、",
+      "level": 4
+    },
+    {
+      "text": "テスティングフレームワークのJetty依存部分を以下の2つのモジュールに分割しました。",
+      "level": 4
+    },
+    {
+      "text": "上記のモジュールのうち、使用するJettyのバージョンに応じて選択する必要があります。",
+      "level": 4
+    },
+    {
+      "text": "また、テスト用のコンポーネント設定ファイルに、モジュールに応じたコンポーネントを登録しておく必要があります。",
+      "level": 4
+    },
+    {
+      "text": "◆モジュールの選択方法",
+      "level": 3
+    },
+    {
+      "text": "Java6～8を使用しており、Nablarchのバージョンを上げたいが既存のテスト資産には極力影響を与えたくない場合",
+      "level": 4
+    },
+    {
+      "text": "Nablarchのバージョンを上げて、Javaのバージョンも11に上げたい場合",
+      "level": 4
+    },
+    {
+      "text": "Java8または11を使用しており、Servlet API 3.0以降の機能をリクエスト単体テストで使用したい場合",
+      "level": 4
+    },
+    {
+      "text": "◆対応方法",
+      "level": 3
+    },
+    {
+      "text": "現状のJetty6をそのまま使用し続ける場合の手順を記載します。",
+      "level": 4
+    },
+    {
+      "text": "pom.xmlの変更",
+      "level": 4
+    },
+    {
+      "text": "以下の依存ライブラリを追加します。",
+      "level": 4
+    },
+    {
+      "text": "変更後の実装例を示します。",
+      "level": 4
+    },
+    {
+      "text": "使用するJavaのバージョンにより、生成するクラスが変わります。",
+      "level": 4
+    },
+    {
+      "text": "コンポーネント定義ファイル(src/test/resources/unit-test.xml)への設定追加",
+      "level": 4
+    },
+    {
+      "text": "Jetty9を使用する場合は、解説書の以下の手順を参照してださい。",
+      "level": 4
+    },
+    {
+      "text": "https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Java11.html#jetty-restful",
+      "level": 4
+    }
+  ],
+  "p2_raw_lines": [
+    [
+      [
+        1,
+        "ここでは、テスティングフレームワークの設定変更方法について説明します。"
+      ]
+    ],
+    [
+      [
+        1,
+        "◆概要"
+      ]
+    ],
+    [
+      [
+        2,
+        "テスティングフレームワークはWebアプリケーションのリクエスト単体テストを実現するために内部でJettyを使用しています。"
+      ]
+    ],
+    [
+      [
+        2,
+        "JettyはJavaのバージョンにより、提供されるモジュールが異なり、かつ後方互換性もありません。"
+      ]
+    ],
+    [
+      [
+        3,
+        "参考：https://www.eclipse.org/jetty/documentation/current/what-jetty-version.html"
+      ]
+    ],
+    [
+      [
+        2,
+        "そのため、Java11対応に伴い、テスティングフレームワークが使用しているJettyをJavaのバージョンによって切り替える必要があり、"
+      ]
+    ],
+    [
+      [
+        2,
+        "テスティングフレームワークのJetty依存部分を以下の2つのモジュールに分割しました。"
+      ]
+    ],
+    [
+      [
+        3,
+        "・com.nablarch.framework:nablarch-testing-jetty6"
+      ]
+    ],
+    [
+      [
+        3,
+        "・com.nablarch.framework:nablarch-testing-jetty9"
+      ]
+    ],
+    [
+      [
+        2,
+        "上記のモジュールのうち、使用するJettyのバージョンに応じて選択する必要があります。"
+      ]
+    ],
+    [
+      [
+        2,
+        "また、テスト用のコンポーネント設定ファイルに、モジュールに応じたコンポーネントを登録しておく必要があります。"
+      ]
+    ],
+    [
+      [
+        1,
+        "◆モジュールの選択方法"
+      ]
+    ],
+    [
+      [
+        2,
+        "Java6～8を使用しており、Nablarchのバージョンを上げたいが既存のテスト資産には極力影響を与えたくない場合"
+      ]
+    ],
+    [
+      [
+        3,
+        "⇒nablarch-testing-jetty6を選択してください。フレームワーク、依存ライブラリの差異を最小限に抑えられます。"
+      ]
+    ],
+    [
+      [
+        2,
+        "Nablarchのバージョンを上げて、Javaのバージョンも11に上げたい場合"
+      ]
+    ],
+    [
+      [
+        3,
+        "⇒nablarch-testing-jetty9を選択してください。"
+      ]
+    ],
+    [
+      [
+        3,
+        "（Java11ではJetty6は動作しないため自動的にJetty9を選択することになります）"
+      ]
+    ],
+    [
+      [
+        2,
+        "Java8または11を使用しており、Servlet API 3.0以降の機能をリクエスト単体テストで使用したい場合"
+      ]
+    ],
+    [
+      [
+        3,
+        "⇒nablarch-testing-jetty9を選択してください。"
+      ]
+    ],
+    [
+      [
+        1,
+        "◆対応方法"
+      ]
+    ],
+    [
+      [
+        2,
+        "現状のJetty6をそのまま使用し続ける場合の手順を記載します。"
+      ]
+    ],
+    [
+      [
+        2,
+        "pom.xmlの変更"
+      ]
+    ],
+    [
+      [
+        2,
+        "以下の依存ライブラリを追加します。"
+      ]
+    ],
+    [
+      [
+        2,
+        "変更後の実装例を示します。"
+      ]
+    ],
+    [
+      [
+        2,
+        "使用するJavaのバージョンにより、生成するクラスが変わります。"
+      ]
+    ],
+    [
+      [
+        2,
+        "コンポーネント定義ファイル(src/test/resources/unit-test.xml)への設定追加"
+      ]
+    ],
+    [
+      [
+        2,
+        "Jetty9を使用する場合は、解説書の以下の手順を参照してださい。"
+      ]
+    ],
+    [
+      [
+        2,
+        "https://nablarch.github.io/docs/5u15/doc/application_framework/application_framework/blank_project/setup_blankProject/setup_Java11.html#jetty-restful"
+      ]
+    ]
+  ],
+  "p2_base_col": 0
 }

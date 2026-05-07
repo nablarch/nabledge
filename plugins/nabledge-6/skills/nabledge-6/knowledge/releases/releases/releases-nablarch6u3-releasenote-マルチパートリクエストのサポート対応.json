@@ -4,5 +4,300 @@
   "content": "【本手順の適用対象となるシステム】\n本手順は、以下の条件をすべて満たすシステムを対象としています。\n・Nablarch 6u2以前からのバージョンアップであること\n・Jakarta RESTful Web ServicesアダプタのJerseyJaxRsHandlerListFactoryまたはResteasyJaxRsHandlerListFactoryを使用していること\n※RESTfulウェブサービスのブランクプロジェクトは、デフォルトでJerseyJaxRsHandlerListFactoryを使用するように構成されています\n・Nablarchの標準機能を使用して、RESTfulウェブサービスでマルチパートリクエストを扱いたい\n【変更内容の概要】\nNablarch 6u3では、RESTfulウェブサービスでマルチパートリクエストを扱えるようにするためにマルチパート用のBodyConverterを追加しています。\nそれに伴いJakarta RESTful Web ServicesアダプタのJerseyJaxRsHandlerListFactoryおよびResteasyJaxRsHandlerListFactoryに\n該当のBodyConverterを追加していますが、マルチパートをリクエストを扱うためにはさらに以下の対応を行う必要があります。\n・コンポーネント定義ファイルへのファイルパス設定、ファイルアップロード機能設定の追加\n・ハンドラキューへのマルチパートリクエストハンドラの追加\n・ファイルアップロード用の一時ディレクトリやアップロードサイズの上限などのプロパティの設定\nこれらの変更を行うことにより、RESTfulウェブサービスでマルチパートリクエストが扱えるようになり、ファイルアップロードが可能になります。\n【変更手順】\n【コンポーネント定義ファイルへのファイルパス設定、ファイルアップロード機能設定の追加】\nsrc/main/resources/rest-component-configuration.xml に以下の設定を追加します。\n<!-- ファイルパス設置 -->\n<import file=\"nablarch/webui/filepath-for-webui.xml\" />\n<!-- ファイルアップロード機能設定 -->\n<import file=\"nablarch/webui/multipart.xml\" />\n【ハンドラキューへのマルチパートリクエストハンドラの追加】\nsrc/main/resources/rest-component-configuration.xml のハンドラキュー(webFrontController)に以下の定義を追加してください。\n<component-ref name=\"multipartHandler\"/>\n追加位置は、セッション変数保存ハンドラおよびCSRFトークン検証ハンドラの制約事項を確認して決定してください。\nhttps://nablarch.github.io/docs/6u3/doc/application_framework/application_framework/handlers/web/SessionStoreHandler.html#session-store-handler-constraint\nhttps://nablarch.github.io/docs/6u3/doc/application_framework/application_framework/handlers/web/csrf_token_verification_handler.html#id4\nまた、環境ごとにハンドラキューを上書きしている場合は、そちらのハンドラキュー定義にも反映してください。\n【ファイルアップロード用の一時ディレクトリやアップロードサイズの上限などのプロパティの設定】\nファイルパス設定を追加したことにより、以下のプロパティを定義する必要があります。\nsrc/main/resources/common.properties\nnablarch.uploadSettings.contentLengthLimit\nsrc/env/[環境別]/resources/env.properties\nnablarch.filePathSetting.basePathSettings.format\nnablarch.filePathSetting.basePathSettings.output\nnablarch.uploadSettings.autoCleaning\nnablarch.filePathSetting.basePathSettings.uploadFileTmpDir\n設定内容は、マルチパートリクエストハンドラを確認してください。\nhttps://nablarch.github.io/docs/6u3/doc/application_framework/application_framework/handlers/web/multipart_handler.html\n「nablarch.filePathSetting.basePathSettings.format」は汎用データフォーマットのフォーマット定義ファイル用のパス設定ですが、\n汎用データフォーマットを使用しないのであればダミー値でかまいません。",
   "no_knowledge_content": false,
   "sections": [],
-  "sheet_type": "P2"
+  "sheet_type": "P2",
+  "p2_headings": [
+    {
+      "text": "【本手順の適用対象となるシステム】",
+      "level": 3
+    },
+    {
+      "text": "本手順は、以下の条件をすべて満たすシステムを対象としています。",
+      "level": 4
+    },
+    {
+      "text": "【変更内容の概要】",
+      "level": 3
+    },
+    {
+      "text": "Nablarch 6u3では、RESTfulウェブサービスでマルチパートリクエストを扱えるようにするためにマルチパート用のBodyConverterを追加しています。",
+      "level": 4
+    },
+    {
+      "text": "それに伴いJakarta RESTful Web ServicesアダプタのJerseyJaxRsHandlerListFactoryおよびResteasyJaxRsHandlerListFactoryに",
+      "level": 4
+    },
+    {
+      "text": "該当のBodyConverterを追加していますが、マルチパートをリクエストを扱うためにはさらに以下の対応を行う必要があります。",
+      "level": 4
+    },
+    {
+      "text": "これらの変更を行うことにより、RESTfulウェブサービスでマルチパートリクエストが扱えるようになり、ファイルアップロードが可能になります。",
+      "level": 4
+    },
+    {
+      "text": "【変更手順】",
+      "level": 3
+    },
+    {
+      "text": "【コンポーネント定義ファイルへのファイルパス設定、ファイルアップロード機能設定の追加】",
+      "level": 4
+    },
+    {
+      "text": "【ハンドラキューへのマルチパートリクエストハンドラの追加】",
+      "level": 4
+    },
+    {
+      "text": "【ファイルアップロード用の一時ディレクトリやアップロードサイズの上限などのプロパティの設定】",
+      "level": 4
+    }
+  ],
+  "p2_raw_lines": [
+    [
+      [
+        1,
+        "【本手順の適用対象となるシステム】"
+      ]
+    ],
+    [
+      [
+        2,
+        "本手順は、以下の条件をすべて満たすシステムを対象としています。"
+      ]
+    ],
+    [
+      [
+        3,
+        "・Nablarch 6u2以前からのバージョンアップであること"
+      ]
+    ],
+    [
+      [
+        3,
+        "・Jakarta RESTful Web ServicesアダプタのJerseyJaxRsHandlerListFactoryまたはResteasyJaxRsHandlerListFactoryを使用していること"
+      ]
+    ],
+    [
+      [
+        3,
+        "※RESTfulウェブサービスのブランクプロジェクトは、デフォルトでJerseyJaxRsHandlerListFactoryを使用するように構成されています"
+      ]
+    ],
+    [
+      [
+        3,
+        "・Nablarchの標準機能を使用して、RESTfulウェブサービスでマルチパートリクエストを扱いたい"
+      ]
+    ],
+    [
+      [
+        1,
+        "【変更内容の概要】"
+      ]
+    ],
+    [
+      [
+        2,
+        "Nablarch 6u3では、RESTfulウェブサービスでマルチパートリクエストを扱えるようにするためにマルチパート用のBodyConverterを追加しています。"
+      ]
+    ],
+    [
+      [
+        2,
+        "それに伴いJakarta RESTful Web ServicesアダプタのJerseyJaxRsHandlerListFactoryおよびResteasyJaxRsHandlerListFactoryに"
+      ]
+    ],
+    [
+      [
+        2,
+        "該当のBodyConverterを追加していますが、マルチパートをリクエストを扱うためにはさらに以下の対応を行う必要があります。"
+      ]
+    ],
+    [
+      [
+        3,
+        "・コンポーネント定義ファイルへのファイルパス設定、ファイルアップロード機能設定の追加"
+      ]
+    ],
+    [
+      [
+        3,
+        "・ハンドラキューへのマルチパートリクエストハンドラの追加"
+      ]
+    ],
+    [
+      [
+        3,
+        "・ファイルアップロード用の一時ディレクトリやアップロードサイズの上限などのプロパティの設定"
+      ]
+    ],
+    [
+      [
+        2,
+        "これらの変更を行うことにより、RESTfulウェブサービスでマルチパートリクエストが扱えるようになり、ファイルアップロードが可能になります。"
+      ]
+    ],
+    [
+      [
+        1,
+        "【変更手順】"
+      ]
+    ],
+    [
+      [
+        2,
+        "【コンポーネント定義ファイルへのファイルパス設定、ファイルアップロード機能設定の追加】"
+      ]
+    ],
+    [
+      [
+        3,
+        "src/main/resources/rest-component-configuration.xml に以下の設定を追加します。"
+      ]
+    ],
+    [
+      [
+        4,
+        "<!-- ファイルパス設置 -->"
+      ]
+    ],
+    [
+      [
+        4,
+        "<import file=\"nablarch/webui/filepath-for-webui.xml\" />"
+      ]
+    ],
+    [
+      [
+        4,
+        "<!-- ファイルアップロード機能設定 -->"
+      ]
+    ],
+    [
+      [
+        4,
+        "<import file=\"nablarch/webui/multipart.xml\" />"
+      ]
+    ],
+    [
+      [
+        2,
+        "【ハンドラキューへのマルチパートリクエストハンドラの追加】"
+      ]
+    ],
+    [
+      [
+        3,
+        "src/main/resources/rest-component-configuration.xml のハンドラキュー(webFrontController)に以下の定義を追加してください。"
+      ]
+    ],
+    [
+      [
+        4,
+        "<component-ref name=\"multipartHandler\"/>"
+      ]
+    ],
+    [
+      [
+        3,
+        "追加位置は、セッション変数保存ハンドラおよびCSRFトークン検証ハンドラの制約事項を確認して決定してください。"
+      ]
+    ],
+    [
+      [
+        4,
+        "https://nablarch.github.io/docs/6u3/doc/application_framework/application_framework/handlers/web/SessionStoreHandler.html#session-store-handler-constraint"
+      ]
+    ],
+    [
+      [
+        4,
+        "https://nablarch.github.io/docs/6u3/doc/application_framework/application_framework/handlers/web/csrf_token_verification_handler.html#id4"
+      ]
+    ],
+    [
+      [
+        3,
+        "また、環境ごとにハンドラキューを上書きしている場合は、そちらのハンドラキュー定義にも反映してください。"
+      ]
+    ],
+    [
+      [
+        2,
+        "【ファイルアップロード用の一時ディレクトリやアップロードサイズの上限などのプロパティの設定】"
+      ]
+    ],
+    [
+      [
+        3,
+        "ファイルパス設定を追加したことにより、以下のプロパティを定義する必要があります。"
+      ]
+    ],
+    [
+      [
+        4,
+        "src/main/resources/common.properties"
+      ]
+    ],
+    [
+      [
+        5,
+        "nablarch.uploadSettings.contentLengthLimit"
+      ]
+    ],
+    [
+      [
+        4,
+        "src/env/[環境別]/resources/env.properties"
+      ]
+    ],
+    [
+      [
+        5,
+        "nablarch.filePathSetting.basePathSettings.format"
+      ]
+    ],
+    [
+      [
+        5,
+        "nablarch.filePathSetting.basePathSettings.output"
+      ]
+    ],
+    [
+      [
+        5,
+        "nablarch.uploadSettings.autoCleaning"
+      ]
+    ],
+    [
+      [
+        5,
+        "nablarch.filePathSetting.basePathSettings.uploadFileTmpDir"
+      ]
+    ],
+    [
+      [
+        4,
+        "設定内容は、マルチパートリクエストハンドラを確認してください。"
+      ]
+    ],
+    [
+      [
+        5,
+        "https://nablarch.github.io/docs/6u3/doc/application_framework/application_framework/handlers/web/multipart_handler.html"
+      ]
+    ],
+    [
+      [
+        4,
+        "「nablarch.filePathSetting.basePathSettings.format」は汎用データフォーマットのフォーマット定義ファイル用のパス設定ですが、"
+      ]
+    ],
+    [
+      [
+        4,
+        "汎用データフォーマットを使用しないのであればダミー値でかまいません。"
+      ]
+    ]
+  ],
+  "p2_base_col": 0
 }

@@ -34,6 +34,7 @@
 [入力項目ウィジェット共通テンプレート](../../development-tools/testing-framework/testing-framework-field-base.md) が実装する共通仕様についてはここでは記述しない。
 
 **ローカル動作時の挙動**
+
 入力画面では **sample** に指定した文字列を初期表示するテキストエリアを表示する。
 
 確認画面では、 **sample** に指定した文字列をラベル表示する。

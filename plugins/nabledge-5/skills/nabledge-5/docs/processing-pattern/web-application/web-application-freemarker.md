@@ -28,6 +28,7 @@ Mavenを使用している場合は、POMに以下を追加する。
 `web.xml` に `FreeMarkerServlet` を登録し、 `*.ftl` に反応するようにする。
 
 web.xmlの例
+
 ```xml
 <servlet>
   <servlet-name>freemarker</servlet-name>

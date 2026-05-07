@@ -19,7 +19,7 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "本ハンドラは、どのハンドラよりも前に設定すること。\nこのハンドラより前にハンドラを設定した場合、以下の問題が発生する可能性がある。\n\n* レスポンスに対する規定の文字エンコーディングが設定されない\n* リクエストパラメータにアクセスすることで規定の文字エンコーディングの設定が有効とならずサーバサイドで文字化けの原因となる\n\nこのため、本ハンドラはどのハンドラよりも前に配置すること。",
+      "content": "本ハンドラは、どのハンドラよりも前に設定すること。\n\nこのハンドラより前にハンドラを設定した場合、以下の問題が発生する可能性がある。\n\n* レスポンスに対する規定の文字エンコーディングが設定されない\n* リクエストパラメータにアクセスすることで規定の文字エンコーディングの設定が有効とならずサーバサイドで文字化けの原因となる\n\nこのため、本ハンドラはどのハンドラよりも前に配置すること。",
       "level": 2
     },
     {
@@ -37,7 +37,7 @@
     {
       "id": "s6",
       "title": "一律ではなくリクエストごとに文字エンコーディングを変更したい",
-      "content": "リクエスト毎に文字エンコーディングを変更する場合には、本ハンドラを継承して対応すること。\n\n例えば、外部サイトからのリクエストを処理するシステムで、外部サイト毎にエンコーディングが異なる場合には、この対応が必要となる。\n\n以下に例を示す。\n\nポイント\n* リクエストのエンコーディングを変更する場合は、 resolveRequestEncoding をオーバライドする。\n* レスポンスのエンコーディングを変更する場合は、 resolveResponseEncoding をオーバライドする。\n\n```java\npublic class CustomHttpCharacterEncodingHandler extends\n        HttpCharacterEncodingHandler {\n\n  @Override\n  protected Charset resolveRequestEncoding(HttpServletRequest req) {\n    return resolveCharacterEncoding(req);\n  }\n\n  @Override\n  protected Charset resolveResponseEncoding(HttpServletRequest req) {\n    return resolveCharacterEncoding(req);\n  }\n\n  /**\n   * 文字エンコードを解決する。<br />\n   *\n   * URIに{@code /shop1}が含まれている場合は、{@code Windows-31J}として扱う。\n   *\n   * @param req リクエスト\n   * @return 文字エンコード\n   */\n  private Charset resolveCharacterEncoding(HttpServletRequest req) {\n    if (req.getRequestURI().contains(\"/shop1\")) {\n      return Charset.forName(\"Windows-31J\");\n    }\n    return getDefaultEncoding();\n  }\n}\n```",
+      "content": "リクエスト毎に文字エンコーディングを変更する場合には、本ハンドラを継承して対応すること。\n\n例えば、外部サイトからのリクエストを処理するシステムで、外部サイト毎にエンコーディングが異なる場合には、この対応が必要となる。\n\n以下に例を示す。\n\nポイント\n\n* リクエストのエンコーディングを変更する場合は、 resolveRequestEncoding をオーバライドする。\n* レスポンスのエンコーディングを変更する場合は、 resolveResponseEncoding をオーバライドする。\n\n```java\npublic class CustomHttpCharacterEncodingHandler extends\n        HttpCharacterEncodingHandler {\n\n  @Override\n  protected Charset resolveRequestEncoding(HttpServletRequest req) {\n    return resolveCharacterEncoding(req);\n  }\n\n  @Override\n  protected Charset resolveResponseEncoding(HttpServletRequest req) {\n    return resolveCharacterEncoding(req);\n  }\n\n  /**\n   * 文字エンコードを解決する。<br />\n   *\n   * URIに{@code /shop1}が含まれている場合は、{@code Windows-31J}として扱う。\n   *\n   * @param req リクエスト\n   * @return 文字エンコード\n   */\n  private Charset resolveCharacterEncoding(HttpServletRequest req) {\n    if (req.getRequestURI().contains(\"/shop1\")) {\n      return Charset.forName(\"Windows-31J\");\n    }\n    return getDefaultEncoding();\n  }\n}\n```",
       "level": 2
     }
   ]

@@ -11,6 +11,7 @@ http_messaging/index
 以下の理由により [RESTfulウェブサービス編](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restful-web-service) を使用してウェブサービスを作成することを推奨する。
 
 理由
+
 [RESTfulウェブサービス編](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restful-web-service) では、 [Jakarta RESTful Web Services(外部サイト、英語)](https://jakarta.ee/specifications/restful-ws/) で規定されている一部のアノテーションを使用して容易にウェブサービスを構築できる。
 
 一方、 [HTTPメッセージング編](../../processing-pattern/http-messaging/http-messaging-http-messaging.md#http-messaging) はボディ部やHTTPヘッダ、例外制御に以下の制約があり柔軟な設計及び実装ができない。

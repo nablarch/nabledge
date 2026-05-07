@@ -44,6 +44,7 @@ InjectForm アノテーションを、業務アクションのリクエストを
 以下に実装例を示す。
 
 入力画面のhtml例
+
 ```html
 <!-- バリデーション対象外-->
 <input name="flag" type="hidden" />
@@ -52,7 +53,9 @@ InjectForm アノテーションを、業務アクションのリクエストを
 <input name="form.userId" type="text" />
 <input name="form.password" type="password" />
 ```
+
 業務アクションの例
+
 この例では、画面から送信された `form` から始まるリクエストパラメータに対してバリデーションが実行される。
 バリデーションでエラーが発生しなかった場合は、リクエストスコープに InjectForm#form で指定したクラスのオブジェクトが格納される。
 

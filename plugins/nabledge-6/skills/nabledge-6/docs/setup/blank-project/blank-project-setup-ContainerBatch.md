@@ -179,6 +179,7 @@ docker run -it --rm -v %CD%\\h2:/h2 --name myapp-container-batch myapp-container
 ## 補足
 
 コンテナイメージの実行コマンドについて
+
 * 上記コマンドを実行すると、コンテナが起動し、バッチ処理実行後、コンテナは自動的に終了する。
   また、 `-rmオプション` により、コンテナ終了時に、コンテナを自動削除するようにしている。
 * 上記コマンドは、データベースとしてブランクプロジェクトにあらかじめ組み込んでいるSAMPLE.h2.dbを使用する場合の例となっている。
@@ -190,7 +191,9 @@ docker run -it --rm -v %CD%\\h2:/h2 --name myapp-container-batch myapp-container
   ```text
   docker stop myapp-container-batch
   ```
+
 Docker環境について
+
 Dockerの実行は、Docker Desktopを使用していることを [前提](../../setup/blank-project/blank-project-beforeFirstStep.md#firststeppreamble) としている。
 Docker Toolboxを使用している場合は、上記例のボリューム指定ではエラーになる。
 
@@ -199,5 +202,7 @@ Docker Toolboxを使用している場合、DockerはVirtualBox上のVMで動い
 
 Windowsの場合、デフォルトでは `C:\Users` がVM上の `/c/users` にマウントされている。
 したがって、Docker Toolboxを使用している場合は、ボリュームの指定を `-v /c/users/path/to/project/h2:/usr/local/tomcat/h2` のようにしなければならない。
+
 H2、ツールについて
+
 H2のデータの確認方法や、ブランクプロジェクトに組み込まれているツールに関しては、 [初期セットアップ手順　補足事項](../../setup/blank-project/blank-project-firststep-complement.md) を参照すること。

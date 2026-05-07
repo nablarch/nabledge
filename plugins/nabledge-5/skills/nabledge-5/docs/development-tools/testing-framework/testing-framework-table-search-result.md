@@ -58,6 +58,7 @@
 ## 仕様
 
 **ローカル動作時の挙動**
+
 ([一覧テーブルウィジェット](../../development-tools/testing-framework/testing-framework-table-plain.md) と同じ)
 
 **属性値一覧**  [**◎** 必須属性 **○** 任意属性 **×** 無効(指定しても効果なし)]

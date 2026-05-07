@@ -7,7 +7,7 @@
     {
       "id": "s1",
       "title": "Excelファイルから、入力パラメータや戻り値に対する期待値などを取得したい",
-      "content": "テスト対象クラスのメソッドを呼び出す際の引数や、メソッドの戻り値をExcelファイルに記載しておくことができる。\n記載したデータは、List-Map形式（List<Map<String, String>>の形式）で取得できる。\n\nこの形式でデータを取得する場合は、データタイプLIST_MAPを使用する。\nLIST_MAP=<シート内で一意になるID（任意の文字列）>\n\nデータの2行目はMapのKeyと解釈される。\nデータの3行目以降はMapのValueと解釈される。\n\n以下のメソッドにより、Map形式またはList-Map形式で、Excelファイルよりデータを取得できる。\n第1引数にはシート名、第2引数にはIDを指定する。\n\n* `TestSupport#getListMap(String sheetName, String id)`\n* `DbAccessTestSupport#getListMap(String sheetName, String id)`",
+      "content": "テスト対象クラスのメソッドを呼び出す際の引数や、メソッドの戻り値をExcelファイルに記載しておくことができる。\n記載したデータは、List-Map形式（List<Map<String, String>>の形式）で取得できる。\n\nこの形式でデータを取得する場合は、データタイプLIST_MAPを使用する。\n\nLIST_MAP=<シート内で一意になるID（任意の文字列）>\n\nデータの2行目はMapのKeyと解釈される。\nデータの3行目以降はMapのValueと解釈される。\n\n以下のメソッドにより、Map形式またはList-Map形式で、Excelファイルよりデータを取得できる。\n第1引数にはシート名、第2引数にはIDを指定する。\n\n* `TestSupport#getListMap(String sheetName, String id)`\n* `DbAccessTestSupport#getListMap(String sheetName, String id)`",
       "level": 2
     },
     {
@@ -73,7 +73,7 @@
     {
       "id": "s12",
       "title": "設定ファイル例",
-      "content": "コンポーネント設定ファイルにて、SystemTimeProviderインタフェースの実装クラスを指定する箇所に\nFixedSystemTimeProviderを指定し、そのプロパティに任意の日時を設定する。\n例えば、システム日時を2010年9月14日12時34分56秒とする場合は以下のように設定する。\n\n```xml\n<component name=\"systemTimeProvider\"\n    class=\"nablarch.test.FixedSystemTimeProvider\">\n  <property name=\"fixedDate\" value=\"20100913123456\" />\n</component>\n```\n\n| property名 | 設定内容 |\n|---|---|\n| fixedDate | 指定したい日時を以下のフォーマットいずれかに合致する文字列で指定する。 * yyyyMMddHHmmss (12桁) * yyyyMMddHHmmssSSS (15桁) |\n\n```java\n// システム日時を取得\nSystemTimeProvider provider = (SystemTimeProvider) SystemRepository.getObject(\"systemTimeProvider\");\nDate now = provider.getDate();\n```",
+      "content": "コンポーネント設定ファイルにて、SystemTimeProviderインタフェースの実装クラスを指定する箇所に\nFixedSystemTimeProviderを指定し、そのプロパティに任意の日時を設定する。\n例えば、システム日時を2010年9月14日12時34分56秒とする場合は以下のように設定する。\n\n```xml\n<component name=\"systemTimeProvider\"\n    class=\"nablarch.test.FixedSystemTimeProvider\">\n  <property name=\"fixedDate\" value=\"20100913123456\" />\n</component>\n```\n\n| property名 | 設定内容 |\n|---|---|\n| fixedDate | 指定したい日時を以下のフォーマットいずれかに合致する文字列で指定する。  * yyyyMMddHHmmss (12桁) * yyyyMMddHHmmssSSS (15桁) |\n\n```java\n// システム日時を取得\nSystemTimeProvider provider = (SystemTimeProvider) SystemRepository.getObject(\"systemTimeProvider\");\nDate now = provider.getDate();\n```",
       "level": 3
     },
     {
@@ -145,7 +145,7 @@
     {
       "id": "s24",
       "title": "デフォルト以外のトランザクションを使用したい",
-      "content": "データベースアクセスクラスの単体テストを行う場合、テストクラスからデータベースアクセスクラスを起動する。\n通常、データベースアクセスクラスではトランザクションを制御しないので、テストクラス側でトランザクションを制御する必要がある。\n\nトランザクション制御は定型処理であるため、テスティングフレームワークにてトランザクションを制御する機構を用意している。プロパティファイルにトランザクション名を記載しておけば、テスティングフレームワークは、テストメソッド実行前にトランザクション開始、テストメソッド終了後にトランザクションを終了する。\nこの機構を利用することにより、個別のテストにて、テスト実行前に明示的にトランザクションを開始する必要がなくなる。また、トランザクション終了処理漏れもなくなる。\n\nこの機能を利用する手順は以下の通り。\n* テストクラスにてDbAccessTestSupportを継承する（これにより、スーパークラスの@Before、@Afterメソッドが自動的に呼び出される）。",
+      "content": "データベースアクセスクラスの単体テストを行う場合、テストクラスからデータベースアクセスクラスを起動する。\n通常、データベースアクセスクラスではトランザクションを制御しないので、テストクラス側でトランザクションを制御する必要がある。\n\nトランザクション制御は定型処理であるため、テスティングフレームワークにてトランザクションを制御する機構を用意している。プロパティファイルにトランザクション名を記載しておけば、テスティングフレームワークは、テストメソッド実行前にトランザクション開始、テストメソッド終了後にトランザクションを終了する。\nこの機構を利用することにより、個別のテストにて、テスト実行前に明示的にトランザクションを開始する必要がなくなる。また、トランザクション終了処理漏れもなくなる。\n\nこの機能を利用する手順は以下の通り。\n\n* テストクラスにてDbAccessTestSupportを継承する（これにより、スーパークラスの@Before、@Afterメソッドが自動的に呼び出される）。",
       "level": 2
     },
     {

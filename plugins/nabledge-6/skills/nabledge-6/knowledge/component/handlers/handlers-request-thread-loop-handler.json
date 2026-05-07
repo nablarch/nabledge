@@ -19,7 +19,7 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "[リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) より後ろに配置すること\nこのハンドラでは、処理が継続可能な例外の場合に リトライ可能例外(Retryable) を送出する。\nこのため、リトライ可能例外を処理する [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) よりも後ろにこのハンドラを設定する必要がある。",
+      "content": "[リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) より後ろに配置すること\n\nこのハンドラでは、処理が継続可能な例外の場合に リトライ可能例外(Retryable) を送出する。\nこのため、リトライ可能例外を処理する [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#retry-handler) よりも後ろにこのハンドラを設定する必要がある。",
       "level": 2
     },
     {
@@ -37,7 +37,7 @@
     {
       "id": "s6",
       "title": "後続ハンドラで発生した例外(エラー)に応じた処理内容",
-      "content": "このハンドラで行う後続ハンドラで発生した例外(エラー)に応じた処理内容について解説する。\n\nサービス閉塞中例外(ServiceUnavailable)\n一定時間待機後に、再度後続ハンドラに処理を委譲する。\n待機時間の設定方法は、 [サービス閉塞中の待機時間を設定する](../../component/handlers/handlers-request-thread-loop-handler.md#request-thread-loop-handler-interval) を参照。\nプロセス停止要求を示す例外(ProcessStop)\nプロセス停止要求を示す例外であるため、本ハンドラの処理を終了する。\nプロセスの異常終了を示す例外(ProcessAbnormalEnd)\nプロセスの異常終了を示す例外のため、捕捉した例外を再送出する。\n処理を継続することができなかったことを示すサービスエラー(ServiceError)\n補足した例外クラスにログ出力処理を委譲し、 リトライ可能例外(Retryable) を送出する。\nハンドラの処理が異常終了したことを示す例外(Result.Error)\n`FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。\n実行時例外(RuntimeException)\n`FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。\nスレッドの停止を示す例外(ThreadDeath)\n`INFO` レベルのログを出力し、補足した例外(ThreadDeath)を再送出する。\nスタックオーバーフローエラー(StackOverflowError)\n`FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。\nヒープ不足のエラー(OutOfMemoryError)\n標準エラー出力にヒープ不足が発生したことを示すメッセージを出力し、 `FATAL` レベルのログ出力を行う。\n(ログ出力時に再度ヒープ不足が発生する可能性があるため、標準エラー出力にメッセージ出力後にログを出力する。)\n\nヒープ不足の原因不足となったオブジェクトへの参照が切れ、処理継続可能な場合があるため リトライ可能例外(Retryable) を送出する。\nJVMの異常を示すエラー(VirtualMachineError)\n発生した例外を再送出する\n上記以外のエラー\n`FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。",
+      "content": "このハンドラで行う後続ハンドラで発生した例外(エラー)に応じた処理内容について解説する。\n\nサービス閉塞中例外(ServiceUnavailable)\n\n一定時間待機後に、再度後続ハンドラに処理を委譲する。\n待機時間の設定方法は、 [サービス閉塞中の待機時間を設定する](../../component/handlers/handlers-request-thread-loop-handler.md#request-thread-loop-handler-interval) を参照。\n\nプロセス停止要求を示す例外(ProcessStop)\n\nプロセス停止要求を示す例外であるため、本ハンドラの処理を終了する。\n\nプロセスの異常終了を示す例外(ProcessAbnormalEnd)\n\nプロセスの異常終了を示す例外のため、捕捉した例外を再送出する。\n\n処理を継続することができなかったことを示すサービスエラー(ServiceError)\n\n補足した例外クラスにログ出力処理を委譲し、 リトライ可能例外(Retryable) を送出する。\n\nハンドラの処理が異常終了したことを示す例外(Result.Error)\n\n`FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。\n\n実行時例外(RuntimeException)\n\n`FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。\n\nスレッドの停止を示す例外(ThreadDeath)\n\n`INFO` レベルのログを出力し、補足した例外(ThreadDeath)を再送出する。\n\nスタックオーバーフローエラー(StackOverflowError)\n\n`FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。\n\nヒープ不足のエラー(OutOfMemoryError)\n\n標準エラー出力にヒープ不足が発生したことを示すメッセージを出力し、 `FATAL` レベルのログ出力を行う。\n(ログ出力時に再度ヒープ不足が発生する可能性があるため、標準エラー出力にメッセージ出力後にログを出力する。)\n\nヒープ不足の原因不足となったオブジェクトへの参照が切れ、処理継続可能な場合があるため リトライ可能例外(Retryable) を送出する。\n\nJVMの異常を示すエラー(VirtualMachineError)\n\n発生した例外を再送出する\n\n上記以外のエラー\n\n`FATAL` レベルのログを出力し、 リトライ可能例外(Retryable) を送出する。",
       "level": 2
     }
   ]

@@ -67,6 +67,7 @@ Batchletステップで進捗状況をログに出力するための実装例を
 Batchletで、ループを伴う処理を行う必要がある場合には、下の実装例を元に進捗ログを出力すると良い。
 
 ポイント
+
 * processメソッドの先頭で、処理対象件数(データベースへのcount結果やファイルのレコード数等)を取得し、 inputCount に設定する。
 
   > **Important:**
@@ -74,7 +75,9 @@ Batchletで、ループを伴う処理を行う必要がある場合には、下
   > inputCount を呼び出し後にデータベースから対象データを抽出するなどの重い処理を行った場合、
   > TPSが実際と異なる(実際より小さい値)結果となるので注意すること。
 * 処理を行うループ処理内で、一定間隔ごとに進捗ログを出力する outputProgressInfo を呼び出す。
+
 実装例
+
 ```java
 @Named
 @Dependent
@@ -124,7 +127,9 @@ public class ProgressBatchlet extends AbstractBatchlet {
 Chunkステップで進捗状況をログに出力するための実装例を以下に示す。
 
 ItemReader
+
 ポイント
+
 * コンストラクタインジェクションを使用して、進捗ログを出力するインタフェース( ProgressManager )をインジェクションする。
 * openメソッドにて、処理対象件数(データベースへのcount結果やファイルのレコード数等)を取得し、 inputCount に設定する。
 
@@ -132,7 +137,9 @@ ItemReader
 > TPSの算出の起点となる時間は、 inputCount が呼び出されたタイミングとなる。
   > inputCount を呼び出し後にデータベースから対象データを抽出するなどの重い処理を行った場合、
   > TPSが実際と異なる(実際より小さい値)結果となるので注意すること。
+
 実装例
+
 ```java
 @Named
 @Dependent
@@ -164,9 +171,13 @@ public class ProgressReader extends AbstractItemReader {
 ```
 
 ジョブ定義ファイル
+
 ポイント
+
 * step配下のリスナーのリストに進捗ログを出力するリスナー(名前は、 `progressLogListener` 固定)を設定する。
+
 実装例
+
 ```xml
 <job id="batchlet-progress-test" xmlns="https://jakarta.ee/xml/ns/jakartaee" version="2.0">
   <listeners>

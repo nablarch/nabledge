@@ -475,6 +475,7 @@ public void testUsers00303Normal() {
 
 > **Tip:**
 > テストデータの取得方法については、以下のリンク先を参照。
+
 > * >   「 [Excelファイルから、入力パラメータや戻り値に対する期待値などを取得したい](../../development-tools/testing-framework/testing-framework-03-Tips.md#how-to-get-data-from-excel) 」
 
 ### ダウンロードファイルのテスト

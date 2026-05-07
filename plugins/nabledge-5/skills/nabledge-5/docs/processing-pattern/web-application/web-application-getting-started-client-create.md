@@ -4,6 +4,7 @@ Nablarchを使用したウェブアプリケーションでの登録機能の開
 Exampleアプリケーションへ顧客情報の登録機能の実装を実際に行いながら解説する。
 
 作成する機能の説明
+
 1. ヘッダメニューの「顧客登録」リンクを押下する。
 
 ![header_menu.png](../../../knowledge/assets/web-application-getting-started-client-create/header_menu.png)

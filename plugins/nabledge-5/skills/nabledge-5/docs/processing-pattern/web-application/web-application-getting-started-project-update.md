@@ -3,6 +3,7 @@
 Exampleアプリケーションを元に更新機能を解説する。
 
 作成する機能の説明
+
 1. プロジェクト一覧のプロジェクトIDを押下する。
 
 ![project_update_detail_link.png](../../../knowledge/assets/web-application-getting-started-project-update/project_update_detail_link.png)
@@ -34,13 +35,16 @@ Exampleアプリケーションを元に更新機能を解説する。
 5. [更新確認画面のJSPの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-confirm-jsp)
 
 フォームの作成
+
 詳細画面から更新画面へ遷移する際のパラメータを受け付けるフォームと、更新画面編集欄への入力値を受け付けるフォームを作成する。
 
 詳細画面から更新画面へ遷移する際にパラメータを受け付けるフォーム
+
 詳細画面から更新画面へ遷移する際にパスパラメータ(「show/:projectId」の「:projectId」部分)として渡される、
 対象のプロジェクトIDを受け付けるフォームを作成する。
 
 ProjectTargetForm.java
+
 ```java
 public class ProjectTargetForm implements Serializable {
 
@@ -51,10 +55,13 @@ public class ProjectTargetForm implements Serializable {
 
     // ゲッタ及びセッタは省略
 ```
+
 更新画面から入力された値を受け付けるフォーム
+
 更新画面から入力された、編集後の値を受け付けるフォームを作成する。
 
 ProjectUpdateForm.java
+
 ```java
 public class ProjectUpdateForm implements Serializable {
 
@@ -84,14 +91,18 @@ public class ProjectUpdateForm implements Serializable {
     }
 }
 ```
+
 この実装のポイント
+
 * 入力項目がプロジェクト登録画面と重複しているが、
   責務配置上 [フォームはHTMLのフォーム単位で作成すべきである](../../processing-pattern/web-application/web-application-application-design.md#application-design-form-html) ため、プロジェクト更新画面専用のフォームを作成する。
 
 更新画面を表示する業務アクションメソッドの作成
+
 データベースから現在の情報を取得し、更新画面を表示する業務アクションメソッドを作成する。
 
 ProjectAction.java
+
 ```java
 @InjectForm(form = ProjectTargetForm.class)
 public HttpResponse edit(HttpRequest request, ExecutionContext context) {
@@ -114,7 +125,9 @@ public HttpResponse edit(HttpRequest request, ExecutionContext context) {
     return new HttpResponse("/WEB-INF/view/project/update.jsp");
 }
 ```
+
 この実装のポイント
+
 * 編集フォームに初期表示する値を取得するために、
   UniversalDao#findBySqlFile
   を使用して一意キー検索を行う。
@@ -128,13 +141,16 @@ public HttpResponse edit(HttpRequest request, ExecutionContext context) {
   編集開始時点のエンティティを [セッションストア](../../component/libraries/libraries-session-store.md#session-store) に登録する。
 
 更新画面のJSPの作成
+
 画面の作成については、登録編の [登録画面初期表示の作成](../../processing-pattern/web-application/web-application-client-create1.md#client-create-1) にて説明済みであるため省略する。
 
 更新内容の確認を行う業務アクションメソッドの作成
+
 更新内容をバリデーションし、確認画面を表示する業務アクションメソッドを作成する。
 [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) に加えて、業務アクションメソッド内に、データベース検索を伴うバリデーションを実装する。
 
 ProjectAction.java
+
 ```java
 @InjectForm(form = ProjectUpdateForm.class, prefix = "form")
 @OnError(type = ApplicationException.class,
@@ -170,15 +186,20 @@ public HttpResponse confirmOfUpdate(HttpRequest request, ExecutionContext contex
     return new HttpResponse("/WEB-INF/view/project/confirmOfUpdate.jsp");
 }
 ```
+
 この実装のポイント
+
 * データベース検索が必要なバリデーションは業務アクションメソッドに記述する。
   データの存在確認をする場合、 UniversalDao#exists
   を使用する。詳細は、 [データベース検索が必要なバリデーション](../../component/libraries/libraries-bean-validation.md#bean-validation-database-validation) を参照。
 * 責務配置上 [フォームを直接セッションストアに格納すべきではない](../../component/libraries/libraries-session-store.md#session-store-form) ため、Beanへ詰め替える。
+
 SQLの作成
+
 顧客の存在確認に使用するために、顧客IDから顧客情報を取得するSQLを作成する。
 
 client.sql
+
 ```sql
 FIND_BY_CLIENT_ID =
 SELECT
@@ -192,12 +213,15 @@ WHERE
 ```
 
 この実装のポイント
+
 * 存在確認用のSQLはSELECT文として作成する。
 
 更新確認画面のJSPの作成
+
 更新画面を使い回して、更新確認画面を作成する。
 
 /src/main/webapp/WEB-INF/view/project/update.jsp
+
 ```jsp
 <n:form useToken="true">
   <!-- 登録内容の確認部分 -->
@@ -217,7 +241,9 @@ WHERE
     </div>
 </n:form>
 ```
+
 この実装のポイント
+
 * 更新画面を確認画面として使い回す方法は、 [登録機能の確認画面作成](../../processing-pattern/web-application/web-application-client-create2.md#client-create-forconfirmationpage) にて説明済みであるため省略する。
 * 二重サブミットを防ぐJavaScriptを追加するために、 [submitタグ](../../component/libraries/libraries-tag-reference.md#tag-submit-tag) の allowDoubleSubmission 属性にfalseを指定する。
   詳細は [二重サブミットを防ぐ](../../component/libraries/libraries-tag.md#tag-double-submission) を参照。
@@ -230,13 +256,16 @@ WHERE
 2. [更新完了画面の作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#project-update-create-success-jsp)
 
 業務アクションメソッドの作成
+
 データベースを更新し、変更を確定する業務アクションメソッドを作成する。
 [楽観的ロック](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-version) を行うためのエンティティ定義も合わせて解説する。
 
 データベース更新を行う業務アクションメソッドの作成
+
 データベースを更新し、完了画面表示メソッドへリダイレクトする業務アクションメソッドを作成する。
 
 ProjectAction.java
+
 ```java
 @OnDoubleSubmission
 public HttpResponse update(HttpRequest request, ExecutionContext context) {
@@ -248,6 +277,7 @@ public HttpResponse update(HttpRequest request, ExecutionContext context) {
 ```
 
 この実装のポイント
+
 * エンティティに更新したい値を設定し、 UniversalDao#update を使用してデータベースを更新する。
   更新処理では楽観的ロックが実行される。
 * 二重サブミットを防止するために、 @OnDoubleSubmission を付与する。
@@ -255,10 +285,13 @@ public HttpResponse update(HttpRequest request, ExecutionContext context) {
 
   * リソースパスの書式については ResourceLocator を参照。
   * リダイレクトに指定するステータスコードについては、 [ステータスコード](../../processing-pattern/web-application/web-application-feature-details.md#web-feature-details-status-code) を参照。
+
 楽観的ロックの対象となるエンティティの作成
+
 [楽観的ロック](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-version) を有効化したエンティティを作成する。
 
 Project.java
+
 ```java
 // その他のプロパティは省略
 
@@ -285,14 +318,18 @@ public void setVersion(Long version) {
     this.version = version;
 }
 ```
+
 この実装のポイント
+
 * [楽観的ロック](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-version) を行うために、エンティティに version プロパティを作成し
   ゲッタに [@Version](../../component/libraries/libraries-universal-dao.md#universal-dao-jpa-version) を付与する。
 
 完了画面を表示する業務アクションメソッドの作成
+
 更新メソッドのリダイレクト先となる、完了画面を表示する業務アクションメソッドを作成する。
 
 ProjectAction.java
+
 ```java
 public HttpResponse completeOfUpdate(HttpRequest request, ExecutionContext context) {
     return new HttpResponse("/WEB-INF/view/project/completeOfUpdate.jsp");
@@ -300,9 +337,11 @@ public HttpResponse completeOfUpdate(HttpRequest request, ExecutionContext conte
 ```
 
 更新完了画面の作成
+
 更新完了画面を作成する。
 
 /src/main/webapp/WEB-INF/view/project/completeOfUpdate.jsp
+
 ```jsp
 <n:form>
     <div class="title-nav">

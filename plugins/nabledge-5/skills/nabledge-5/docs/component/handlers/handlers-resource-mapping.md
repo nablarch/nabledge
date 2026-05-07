@@ -51,9 +51,12 @@
 ## 制約
 
 [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler) よりも後に配置すること
+
 本ハンドラは、 [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler) の機能により提供される `forward://` スキームを使用できる。
 このため、本ハンドラは [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#forwarding-handler) より後に配置する必要がある。
+
 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) よりも後に配置すること
+
 本ハンドラは、 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) の機能により提供される `servlet://` 、 `file://` 、 `classpath://` スキームを使用できる。
 また、エラーが発生した際は 404(Not Found)の応答を返す。
 これらの応答を処理するため、本ハンドラは [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#http-response-handler) より後に配置する必要がある。
