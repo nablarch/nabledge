@@ -1,0 +1,272 @@
+{
+  "id": "libraries-04-QueryCache",
+  "title": "SQLクエリ結果のキャッシュ",
+  "content": "",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "概要",
+      "content": "SQLクエリ結果のキャッシュを行う。\nSQL IDとパラメータが等価である参照系クエリに対して、キャッシュした結果を返却できる（DBアクセスが発生しない）。\n\n本機能は、以下のようなクエリに対して使用することを想定している。\n\n* トレンドを把握するためのクエリであり、結果が厳密に最新の値でなくても構わないクエリ（例：売れ筋ランキング）。\n* データ更新のタイミングが予め分かっており、その期間中は毎回結果が同じになるクエリ（例：データが夜間バッチで更新される）。\n\nこのようなクエリに対して本機能を使用することで、DBアクセス回数を減らし、\nシステム負荷を軽減することができる。\n\nこのようなキャッシュ機構は、セッションやテンポラリテーブルなどに明示的に値をキャッシュすることでも実現可能であるが、\n本機能を使用することで、そのような個別の作り込みを行わなくても、\nデータベースアクセスに対して透過的にキャッシュ機能を付加することができる。\n\n**【キャッシュヒット時の動作イメージ】**\n\n![DbCache_abstract_seq_cache_hit.png](assets/libraries-04-QueryCache/DbCache_abstract_seq_cache_hit.png)\n\n**【キャッシュミス時の動作イメージ】**\n\n![DbCache_abstract_seq_cache_miss.png](assets/libraries-04-QueryCache/DbCache_abstract_seq_cache_miss.png)\n\n本機能と類似した機能としてRDBMSのクエリキャッシュが挙げられるが、\nRDBMSのクエリキャッシュは、キャッシュアルゴリズムがRDBMS依存であり、\nどのクエリがどのくらいの期間キャッシュに残るかというコントロールが難しい。\n\n本機能では、アプリケーションおよび各クエリの特性を考慮した上で、キャッシュを柔軟に管理することができる。\n\n> **Warning:**\n> 本機能は、参照系のデータベースアクセスを、省略可能な場合に限り省略することにより、\n> システム負荷を軽減することを目的としている。\n> 本機能はデータベースアクセスそのものを高速化するものではない。\n> よって、データベースアクセス高速化の目的で本機能を使用してはならない。\n> （クエリやDBのチューニングで対処すること）\n\n> **Warning:**\n> 本機能では、データベースの更新を監視しておらず、データベースが更新された場合でもキャッシュの値は変更されない。\n> よって、最新のデータが必要なクエリには、絶対に本機能を使用してはならない。\n> 最新の値でなくても構わない場合、更新タイミングが完全にコントロール可能な場合にのみ使用すること。\n> （すなわち、大半のクエリは本機能の対象とはならない）\n\n> **本機能を適用するかどうかの判断はアーキテクトが行い、開発者が個別に判断しないようにすること。**",
+      "level": 2
+    },
+    {
+      "id": "s2",
+      "title": "特徴",
+      "content": "* SQL ID毎にキャッシュ要否を設定できる。\n* SQL ID毎にキャッシュ有効期限を設定できる。\n* アプリケーションプログラマが、キャッシュ機構を意識せずにプログラミングできる。",
+      "level": 2
+    },
+    {
+      "id": "s3",
+      "title": "要求",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s4",
+      "title": "実装済み",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s5",
+      "title": "キャッシュ機能",
+      "content": "* SQLクエリ結果をキャッシュできる。\n* **SQL IDとパラメータが等価である**  [1] 参照系クエリに対して、キャッシュした結果を返却できる（DBアクセスが発生しない）。\n* アプリケーションから、明示的にキャッシュをクリアすることができる。\n* キャッシュ実装クラスを差し替えることができる。\n\n正確には、以下の4要素が全て等価である場合に、同一のクエリと判定する。\n\n* SQL ID\n* パラメータ\n* 検索開始位置\n* 検索最大件数\n\n同一SQL、同一パラメータであっても、開始位置、最大件数が異なる場合、クエリ結果も異なってくる。\nよって、これらの値もクエリを同定するための要素としている。\nただし、開始位置、最大件数については省略可能である。省略時はそれぞれ1（開始位置先頭から）, 0（無制限）が使用される。\n（SqlPStatement#retrieve()と同様）",
+      "level": 4
+    },
+    {
+      "id": "s6",
+      "title": "有効期限",
+      "content": "* キャッシュの有効期限を設定できる。\n\n> **Note:**\n> 有効期限がないと、いつまでも古いデータを参照し続ける可能性があるため。\n\n* SQL ID毎にキャッシュ要否、有効期限を設定できる。\n\n> **Note:**\n> これは、SQLによって用途やデータ更新頻度などが異なるためである。\n> 通常、キャッシュ対象とするクエリは限られており、それ以外のクエリではキャッシュ機能は不要である。\n> また、比較的最新に近いデータが必要な場合と、それほど精度が求められない場合とで有効期限を使い分けることができる。",
+      "level": 4
+    },
+    {
+      "id": "s7",
+      "title": "キャッシュ保存先",
+      "content": "* キャッシュ保存先を切り替えることができる。\n\n> **Note:**\n> キャッシュ実装クラスを差し替えることにより実現可能としている。\n> キャッシュ保存先には、JVMヒープ、KVS等を想定。 基本実装 では、JVMヒープを使用する。",
+      "level": 4
+    },
+    {
+      "id": "s8",
+      "title": "その他の要件",
+      "content": "* キャッシュ対象外のSQL実行性能に影響を与えない。\n* アプリケーションプログラマがキャッシュ機構を意識せずプログラミングできる。\n* パフォーマンスチューニングに必要な情報が出力される。\n\n> **Note:**\n> 基本実装では、以下のイベント発生時にログ出力が行われる。\n\n> * >   キャッシュに値取得の要求が来て、キャッシュにヒットした場合\n> * >   キャッシュに値取得の要求が来て、キャッシュにヒットしなかった場合\n> * >   キャッシュ有効期限切れが検知された場合\n> * >   キャッシュに値が設定された場合\n> * >   キャッシュに対して削除要求が発生した場合\n> * >   キャッシュ全クリア要求が発生した場合\n> * >   LRUアルゴリズムにより、古いエントリが削除された場合",
+      "level": 4
+    },
+    {
+      "id": "s9",
+      "title": "基本実装",
+      "content": "* キャッシュ記憶領域をJVMヒープ上に持つ。\n* キャッシュ保存上限件数を指定することができる。LRUアルゴリズムを使用してヒープ逼迫を防止する。\n* キャッシュは同一アプリケーション内で共有される（アプリケーション、サーバを跨る共有はされない）。\n* 有効期限切れの判定は遅延評価で行う（キャッシュ取得時に有効期限切れ判定を行う）。",
+      "level": 4
+    },
+    {
+      "id": "s10",
+      "title": "未実装",
+      "content": "* キャッシュ保存先にKVSを使用するキャッシュ実装。\n* ソフト参照を使用したキャッシュ実装。",
+      "level": 3
+    },
+    {
+      "id": "s11",
+      "title": "未検討",
+      "content": "* キャッシュの有効期限判定をリアルタイムに行う（デーモンスレッド）。\n\n> **Note:**\n> 基本実装でも上限件数が設定できるので、遅延評価でもキャッシュが肥大化することはない。",
+      "level": 3
+    },
+    {
+      "id": "s12",
+      "title": "構成",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s13",
+      "title": "クラス図",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s14",
+      "title": "全体図",
+      "content": "StatementFactory実装クラスを差し替えることにより本機能を実現する。\n\nこのStatementFactory実装クラスは、\nキャッシュ対象SQLの場合のみ、キャッシュ機能付きのSqlPStatementを生成し、\nキャッシュ対象でない場合は基本実装(BasicSqlPStatement)を生成する。\n\n![DbCache_ClassDiagram.png](assets/libraries-04-QueryCache/DbCache_ClassDiagram.png)",
+      "level": 4
+    },
+    {
+      "id": "s15",
+      "title": "インタフェース定義",
+      "content": "| インタフェース名 | 概要 |\n|---|---|\n| nablarch.core.db.cache.ResultSetCache | クエリ結果を保持するキャッシュインタフェース。 |",
+      "level": 5
+    },
+    {
+      "id": "s16",
+      "title": "クラス定義",
+      "content": "| クラス名 | 概要 |\n|---|---|\n| nablarch.core.db.cache.statement.CacheableStatementFactory | キャッシュ可能なSqlPStatementを生成するStatementFactory実装クラス。 |\n| nablarch.core.db.cache.statement.CacheableSqlPStatement | キャッシュ可能なSqlPStatement実装クラス。 |\n| nablarch.core.db.cache.InMemoryResultSetCache | メモリ上にキャッシュを持つResultSetCache実装クラス（ 有効期限付きキャッシュ を参照）。 |\n| nablarch.core.db.cache.ResultSetCacheKey | キャッシュのキーを表すクラス（SQL ID, パラメータ,開始位置,最大件数）。 |",
+      "level": 5
+    },
+    {
+      "id": "s17",
+      "title": "有効期限付きキャッシュ",
+      "content": "![DbCache_ExpirableCache_ClassDiagram.png](assets/libraries-04-QueryCache/DbCache_ExpirableCache_ClassDiagram.png)",
+      "level": 4
+    },
+    {
+      "id": "s18",
+      "title": "インタフェース定義",
+      "content": "| インタフェース名 | 概要 |\n|---|---|\n| nablarch.core.cache.expirable.ExpirableCache | 有効期限付きキャッシュのインタフェース。 |\n| nablarch.core.cache.expirable.ExpirableCacheListener | イベント発生時にコールバックされるリスナーインタフェース |",
+      "level": 5
+    },
+    {
+      "id": "s19",
+      "title": "クラス定義",
+      "content": "| クラス名 | 概要 |\n|---|---|\n| nablarch.core.cache.expirable.InMemoryExpirableCache | キャッシュをメモリ上に保持する有効期限付きキャッシュ実装クラス |\n| nablarch.core.db.cache.InMemoryResultSetCache | メモリ上にキャッシュを持つResultSetCache実装クラス。 各イベント発生時にログ出力を行う。 |\n| nablarch.core.util.map.LRUMap | LRUアルゴリズムを持つ件数上限付きMap実装クラス |",
+      "level": 5
+    },
+    {
+      "id": "s20",
+      "title": "キャッシュしたSqlResultSetの保護",
+      "content": "キャッシュされたSqlResultSetをキャッシュから取り出す際、\n専用のSqlResultSetサブクラスに値のコピーを行う。\n\nまた、以下のオブジェクトは変更可能であるため、\nこれらに対して取得要求が発生した場合、値をコピーして返却する。\n\n* java.util.Date\n* java.sql.Timestamp\n* byte[]\n\nこれは、キャッシュから取得されたSqlResultSetが変更された場合に、\nキャッシュが変更されることを防ぐためである。\n\n![DbCache_SqlResultSetGuard.png](assets/libraries-04-QueryCache/DbCache_SqlResultSetGuard.png)",
+      "level": 4
+    },
+    {
+      "id": "s21",
+      "title": "クラス定義",
+      "content": "| クラス名 | 概要 |\n|---|---|\n| nablarch.core.db.cache.statement.MutableGuardingSqlResultSet | 変更可能なプロパティが書き換えられることを防止するSqlResultSetサブクラス |\n| nablarch.core.db.cache.statement.MutableGuardingSqlResultSet.MutableGuardingSqlRow | 変更可能なプロパティが書き換えられることを防止するSqlRowサブクラス |",
+      "level": 5
+    },
+    {
+      "id": "s22",
+      "title": "シーケンス図",
+      "content": "",
+      "level": 3
+    },
+    {
+      "id": "s23",
+      "title": "SqlPStatementの生成",
+      "content": "",
+      "level": 4
+    },
+    {
+      "id": "s24",
+      "title": "キャッシュ対象のSQL IDが指定された場合",
+      "content": "![DbCache_cache_target_sql.png](assets/libraries-04-QueryCache/DbCache_cache_target_sql.png)",
+      "level": 5
+    },
+    {
+      "id": "s25",
+      "title": "キャッシュ対象でないSQL IDが指定された場合",
+      "content": "![DbCache_not_cache_target_sql.png](assets/libraries-04-QueryCache/DbCache_not_cache_target_sql.png)",
+      "level": 5
+    },
+    {
+      "id": "s26",
+      "title": "キャッシュへのアクセス",
+      "content": "",
+      "level": 4
+    },
+    {
+      "id": "s27",
+      "title": "キャッシュにヒットしない場合",
+      "content": "* 指定されたSQLの検索結果をキャッシュから取得する。\n* キャッシュから取得できないので、DBアクセスを行う。\n* 有効期限を算出し、検索結果をキャッシュに格納する。\n\n![DbCache_cache_miss.png](assets/libraries-04-QueryCache/DbCache_cache_miss.png)",
+      "level": 5
+    },
+    {
+      "id": "s28",
+      "title": "キャッシュにヒットする場合",
+      "content": "* 指定されたSQLの検索結果をキャッシュから取得する。\n* キャッシュから取得できたので、そのまま検索結果を返却する。\n\n![DbCache_cache_hit.png](assets/libraries-04-QueryCache/DbCache_cache_hit.png)",
+      "level": 5
+    },
+    {
+      "id": "s29",
+      "title": "キャッシュにヒットするが有効期限切れの場合",
+      "content": "* 指定されたSQLの検索結果をキャッシュから取得する。\n* キャッシュに存在するが有効期限切れのため、キャッシュから削除する。\n* キャッシュから取得できないので、DBアクセスを行う。\n* 有効期限を算出し、検索結果をキャッシュに格納する。\n\n![DbCache_cache_expired.png](assets/libraries-04-QueryCache/DbCache_cache_expired.png)",
+      "level": 5
+    },
+    {
+      "id": "s30",
+      "title": "キャッシュ機能を有効にする設定方法",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s31",
+      "title": "クエリ結果キャッシュ実装クラスの登録",
+      "content": "クエリ結果キャッシュ実装クラスをコンポーネント定義ファイルに登録する。\n\n```xml\n<!-- クエリ結果キャッシュ -->\n<!-- キャッシュクラス -->\n<component name=\"resultSetCache\" class=\"nablarch.core.db.cache.InMemoryResultSetCache\">\n  <!-- キャッシュ上限件数 -->\n  <property name=\"cacheSize\" value=\"100\"/>\n  <property name=\"systemTimeProvider\" ref=\"systemTimeProvider\"/>\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s32",
+      "title": "StatementFactory実装クラスの差し替え",
+      "content": "ConnectionFactorySupportサブクラスのプロパティ `statementFactory` に、\n本機能が提供するCacheableStatementFactoryを設定する。\n\n```xml\n<!-- データベース接続用設定 -->\n<component name=\"connectionFactory\"\n           class=\"nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource\">\n  <property name=\"dataSource\" ref=\"dataSource\" />\n  <!-- StatementFactory実装クラスを差し替え -->\n  <property name=\"statementFactory\" ref=\"cacheableStatementFactory\" />\n  <!-- 中略 -->\n</component>\n\n<!-- キャッシュ可能なステートメントを生成するStatementFactory実装クラス -->\n<component name=\"cacheableStatementFactory\"\n           class=\"nablarch.core.db.cache.CacheableStatementFactory\">\n\n  <!-- 中略（BasicStatementFactoryと同じ) -->\n\n  <!-- 有効期限設定 -->\n  <property name=\"expirationSetting\" ref=\"expirationSetting\"/>\n  <!-- キャッシュ実装 -->\n  <property name=\"resultSetCache\" ref=\"resultSetCache\"/>\n</component>\n```",
+      "level": 3
+    },
+    {
+      "id": "s33",
+      "title": "SQL ID毎のキャッシュ設定",
+      "content": "基本実装クラスでは、SQL ID毎に有効期限を設定する。\n\n```xml\n<!-- キャッシュ有効期限設定 -->\n<component class=\"nablarch.core.cache.expirable.BasicExpirationSetting\"\n           name=\"expirationSetting\">\n  <property name=\"expiration\">\n    <map>\n      <entry key=\"please.change.me.tutorial.ss11AA.W11AA01Action#SELECT\" value=\"100ms\"/>  <!-- 100ミリ秒 -->\n      <entry key=\"please.change.me.tutorial.ss11AA.W11AA02Action#SELECT\" value=\"30sec\"/>  <!-- 30秒 -->\n      <entry key=\"please.change.me.tutorial.ss11AA.W11AA03Action#SELECT\" value=\"10min\"/>  <!-- 10分 -->\n      <entry key=\"please.change.me.tutorial.ss11AA.W11AA04Action#SELECT\" value=\"1h\"/>     <!-- 1時間 -->\n    </map>\n  </property>\n</component>\n```\n\n> **Note:**\n> 基本実装では以下の単位が使用できる。\n\n> | > 単位表記 | > 意味 |\n> |---|---|\n> | > ms | > ミリ秒 |\n> | > sec | > 秒 |\n> | > min | > 分 |\n> | > h | > 時 |\n\n> **Note:**\n> キャッシュ有効期限の設定をサブシステム毎に分割する場合、\n> コンポーネント定義を以下のように分割する。\n\n> ```xml\n> <!-- キャッシュ有効期限設定 -->\n> <component class=\"nablarch.core.cache.expirable.BasicExpirationSetting\"\n>            name=\"expirationSetting\">\n>   <property name=\"expirationList\">\n>     <list>\n>       <component-ref name=\"expireSettingSS11AA\"/>\n>       <component-ref name=\"expireSettingSS11BB\"/>\n>       </map>\n>     </list>\n>   </property>\n> </component>\n> ```\n\n> ```xml\n> <!-- サブシステムSS11AAの設定(別ファイル) -->\n> <map name=\"expireSettingSS11AA\">\n>   <entry key=\"please.change.me.tutorial.ss11AA.W11AA01Action#SELECT\"\n>          value=\"100ms\"/>\n> </map>\n> ```\n\n> ```xml\n> <!-- サブシステムSS11BBの設定(別ファイル) -->\n> <map name=\"expireSettingSS11BB\">\n>   <entry key=\"please.change.me.tutorial.ss11BB.W11BB01Action#SELECT\"\n>          value=\"1h\"/>\n> </map>\n> ```",
+      "level": 3
+    },
+    {
+      "id": "s34",
+      "title": "キャッシュを明示的にクリアする方法",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s35",
+      "title": "特定のエントリを削除する方法",
+      "content": "システムリポジトリからキャッシュインスタンスを取得し、キーを指定して削除を依頼する。\n\n```java\n// リポジトリからキャッシュのインスタンスを取得する。\nResultSetCache cache = SystemRepository.get(\"resultSetCache\");\n\n// キャッシュキーを組み立てる。\nResultSetCacheKey key\n        = new ResultSetCacheKeyBuilder(\"please.change.me.tutorial.ss11AA.W11AA01Action#SELECT\") // SqlId\n                       .addParam(\"name\", \"yamada\")\n                       .addParam(\"address\", \"tokyo\")\n                       .build();\n\n// キャッシュから該当するエントリを削除する。\ncache.remove(key);\n```",
+      "level": 3
+    },
+    {
+      "id": "s36",
+      "title": "全エントリをクリアする方法",
+      "content": "システムリポジトリからキャッシュインスタンスを取得し、全エントリを削除するメソッドを起動する。\n\n```java\n@org.junit.After\npublic void clearResultSetCache() {\n\n    // リポジトリからキャッシュのインスタンスを取得する。\n    ResultSetCache cache = SystemRepository.get(\"resultSetCache\");\n\n    // キャッシュクリア\n    cache.clear();\n}\n```\n\n> **Note:**\n> 全エントリ削除機能は、クラス単体テストの前後に使用することを想定している。\n> （あるテストでキャッシュされた値が、別のテストで使用されないようにするため）",
+      "level": 3
+    },
+    {
+      "id": "s37",
+      "title": "ログ出力",
+      "content": "本基本実装クラス（InMemoryResultSetCache）は、各種イベント発生時に以下のロガーによりログ出力を行う。\n\n* ロガー名: RS_CACHE\n* ログレベル: DEBUG",
+      "level": 2
+    },
+    {
+      "id": "s38",
+      "title": "イベントとログ出力フォーマット",
+      "content": "以下に、イベントとイベント発生時のログ出力フォーマットの対応を示す。\n\n| イベント | ログ出力フォーマット |\n|---|---|\n| キャッシュに値取得の要求が来て、キャッシュにヒットした場合 | cache hit: key=[ <SQL ID> ], current=[ <システム日時> ] |\n| キャッシュに値取得の要求が来て、キャッシュにヒットしなかった場合 | cache not hit: key=[ <SQL ID> ] |\n| キャッシュ有効期限切れが検知された場合 | cache entry expired: key=[ <SQL ID> ], expire=[ <有効期限> ], current=[ <システム日時> ] |\n| キャッシュに値が設定された場合 | cache entry added: key=[ <SQL ID> ], expire=[ <有効期限> ] |\n| キャッシュに対して削除要求が発生した場合 | cache entry removed: key=[ <SQL ID> ] |\n| キャッシュ全クリア要求が発生した | cache cleared. |\n| LRUアルゴリズムにより、古いエントリが削除された場合 | the eldest entry removed: key=[ <SQL ID> ] |",
+      "level": 3
+    },
+    {
+      "id": "s39",
+      "title": "キャッシュ機能のチューニングについて",
+      "content": "本機能を使用する際のチューニング方法について記載する。",
+      "level": 2
+    },
+    {
+      "id": "s40",
+      "title": "キャッシュ上限件数とヒープサイズ",
+      "content": "本基本実装クラス（InMemoryResultSetCache）は、メモリ（JVMヒープ）上にキャッシュを保持する。\n設定したキャッシュ上限件数を格納できるだけの十分なヒープサイズを確保し、\n問題がないことを、性能試験等で確認すること。\nヒープサイズが不足した場合はOutOfMemoryErrorが発生するので、ヒープサイズおよび上限件数の見直しを行う。",
+      "level": 3
+    },
+    {
+      "id": "s41",
+      "title": "ログによる分析",
+      "content": "基本実装では、 `nablarch.core.db.cache.InMemoryResultSetCache` クラスからのログ出力から\n各種イベントの情報を入手できる（ ログ出力 を参照） 。\n\n性能試験等で、キャッシュが有効に機能しているかを判定すること。\nキャッシュミスが多い場合は、以下の様な対処を行う。\n\n* キャッシュ上限件数を増やす\n* 許容できる範囲内でキャッシュ有効期限を伸ばす",
+      "level": 3
+    },
+    {
+      "id": "s42",
+      "title": "制約事項",
+      "content": "",
+      "level": 2
+    },
+    {
+      "id": "s43",
+      "title": "BLOB、CLOB型はキャッシュできない",
+      "content": "SELECTにより、BLOB型、CLOB型のカラムを取得した場合、\n実際にDBに格納されたデータが取得されているのではなく、\nLOBロケータが取得されている。\n実際の値を取得する場合は、このLOBロケータ経由で値を取得する。\n\nこのLOBロケータの有効期間は、RDBMS毎の実装に依存している。\n通常、java.sql.ResultSetやjava.sql.Connectionがクローズされた時点で\nアクセスできなくなる。\n\nこのため、ResultSetやConnectionよりも生存期間が長いキャッシュには\nBLOB、CLOB型を含めることができない。\n\n> **Warning:**\n> 上記理由により、BLOB型、CLOB型を含むクエリを本機能の対象としてはならない。",
+      "level": 3
+    },
+    {
+      "id": "s44",
+      "title": "APサーバを冗長化する場合の注意点",
+      "content": "基本実装クラスでは、JVMヒープ上にキャッシュを保持する。\nよって、サーバを跨ってキャッシュを共有することはできない。\n\nAPサーバを冗長化した環境で基本実装クラスを使用した場合、各APサーバが別のキャッシュを持つことになる。\nクエリを発行するタイミングによってキャッシュされた値がAPサーバ毎に異なる可能性がある。\n\nロードバランサをラウンドロビンで使用した場合、\nリクエスト毎にAPサーバが変わる可能性があるので、\nそれにともなってキャッシュの値も、前回リクエスト時の値と\n変わることがありうる。\n\n> **Note:**\n> 現状、この問題を回避する手段は提供されていない。",
+      "level": 3
+    }
+  ]
+}

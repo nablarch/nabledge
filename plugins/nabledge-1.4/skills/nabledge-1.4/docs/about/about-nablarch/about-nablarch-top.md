@@ -1,10 +1,10 @@
-* [Nablarchのコンセプト](../../about/about-nablarch/about-nablarch-concept.md)
+* [Nablarchのコンセプト](../../about/about-nablarch/about-nablarch-about-nablarch-concept.md)
 * [Nablarchの目指す姿](../../about/about-nablarch/about-nablarch-development-policy.md)
 * [Nablarchの製品構成](../../about/about-nablarch/about-nablarch-contents.md)
 * [Nablarchのサポートサービス](../../about/about-nablarch/about-nablarch-support-service.md)
 * [Nablarchの知的財産権と利用制限](../../about/about-nablarch/about-nablarch-restriction.md)
 * [Nablarch のバージョンアップ方針](../../about/about-nablarch/about-nablarch-versionup-policy.md)
-* [Nablarchフレームワークの稼動環境](../../about/about-nablarch/about-nablarch-platform.md)
+* [Nablarchフレームワークの稼動環境](../../about/about-nablarch/about-nablarch-about-nablarch-platform.md)
 
 * [Nablarchのコンテンツ](../../about/about-nablarch/about-nablarch-top-nablarch.md)
 

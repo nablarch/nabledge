@@ -8,7 +8,7 @@ Nablarch開発時に発生するよくある質問を纏めたものである。
 ## FAQ一覧
 
 * [画面オンライン開発に関するFAQ](../../processing-pattern/web-application/web-application-web.md)
-* [バッチに関するFAQ](../../processing-pattern/nablarch-batch/nablarch-batch-batch.md)
-* [バリデーションに関するFAQ](../../component/libraries/libraries-validation.md)
+* [バッチに関するFAQ](../../processing-pattern/nablarch-batch/nablarch-batch-batch-index.md)
+* [バリデーションに関するFAQ](../../component/libraries/libraries-validation-index.md)
 * [テストに関するFAQ](../../development-tools/testing-framework/testing-framework-test.md)
 * [Nablarchの全般的なFAQ](../../about/about-nablarch/about-nablarch-all.md)
