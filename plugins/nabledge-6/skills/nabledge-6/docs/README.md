@@ -368,7 +368,7 @@
 - [■Nablarch 6u1 リリースノート](releases/releases/releases-nablarch6u1-releasenote-6u1.md)
 - [■バージョンアップ手順](releases/releases/releases-nablarch6u1-releasenote-バージョンアップ手順.md)
 - [■件数取得SQLの拡張ポイント追加](releases/releases/releases-nablarch6u1-releasenote-件数取得SQLの拡張ポイント追加.md)
-- [■Nablarch 6u2 リリースノート](releases/releases/releases-nablarch6u2-releasenote-6u2 (6u1からの変更点).md)
+- [■Nablarch 6u2 リリースノート](releases/releases/releases-nablarch6u2-releasenote-6u2%20(6u1からの変更点).md)
 - [■Nablarch 6u2 リリースノート](releases/releases/releases-nablarch6u2-releasenote-6u2（5u25からの変更点）.md)
 - [■バージョンアップ手順](releases/releases/releases-nablarch6u2-releasenote-バージョンアップ手順.md)
 - [■モジュールバージョン一覧](releases/releases/releases-nablarch6u2-releasenote-モジュールバージョン一覧.md)
