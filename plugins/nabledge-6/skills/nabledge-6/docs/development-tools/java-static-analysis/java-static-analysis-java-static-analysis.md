@@ -6,7 +6,7 @@
 * フォーマットを統一する
 * 許可していないAPIが使用されていないかチェックする
 
-  * [nablarch-intellij-pluginを使用する](../../development-tools/java-static-analysis/java-static-analysis-java-static-analysis.md#nablarch-intellij-pluginを使用する)
+  * nablarch-intellij-pluginを使用する
   * 使用不許可APIチェックツールを使用する
 
 コードの品質と保守性を高めるために次の３つを実践する。
