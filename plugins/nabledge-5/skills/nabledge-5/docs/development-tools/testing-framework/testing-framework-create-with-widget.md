@@ -251,31 +251,31 @@ fieldウィジェットを使用して表示する入力項目は、入力画面
 
 ## 業務画面JSPの例
 
-* [入力画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#業務画面jspの例)
-* [確認画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#業務画面jspの例)
-* [検索・一覧画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#業務画面jspの例)
-* [詳細画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#業務画面jspの例)
+* [入力画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#入力画面)
+* [確認画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#確認画面)
+* [検索・一覧画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#一覧検索画面)
+* [詳細画面](../../development-tools/testing-framework/testing-framework-create-with-widget.md#詳細画面)
 
 -----
 
-**入力画面**： [W11AC0201.jsp](../../../knowledge/assets/testing-framework-create-with-widget/W11AC0201.jsp)
+### 入力画面
 
 ![view_input.png](../../../knowledge/assets/testing-framework-create-with-widget/view_input.png)
 
 -----
 
-**確認画面**： [W11AC0202.jsp](../../../knowledge/assets/testing-framework-create-with-widget/W11AC0202.jsp)
+### 確認画面
 
 ![view_confirm.png](../../../knowledge/assets/testing-framework-create-with-widget/view_confirm.png)
 
 -----
 
-**一覧・検索画面**： [W11AC0101.jsp](../../../knowledge/assets/testing-framework-create-with-widget/W11AC0101.jsp)
+### 一覧・検索画面
 
 ![view_search.png](../../../knowledge/assets/testing-framework-create-with-widget/view_search.png)
 
 -----
 
-**詳細画面**： [W11AC0102.jsp](../../../knowledge/assets/testing-framework-create-with-widget/W11AC0102.jsp)
+### 詳細画面
 
 ![view_detail.png](../../../knowledge/assets/testing-framework-create-with-widget/view_detail.png)

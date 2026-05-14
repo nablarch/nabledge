@@ -6,7 +6,7 @@
 * モジュール一覧
 * UseTokenを使用する
 
-[二重サブミット(同一リクエストの二重送信)防止](../../component/libraries/libraries-tag.md#デフォルトは-true-) のためのトークンを発行するインターセプタ。
+[二重サブミット(同一リクエストの二重送信)防止](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ) のためのトークンを発行するインターセプタ。
 
 このインターセプタが使用されることを想定しているのは、主にJSP以外のテンプレートエンジンを採用している場合である。
 
@@ -54,4 +54,4 @@ Thymeleafでの実装例
 
 この例のようにname属性は"nablarch_token"と設定して、value属性はリクエストスコープから"nablarch_request_token"というキーで取得した値を設定する必要がある。
 このname属性とリクエストスコープから値を取得するキーは変更できる。
-詳しくは [サーバ側の二重サブミット防止](../../component/libraries/libraries-tag.md#デフォルトは-true-) を参照すること。
+詳しくは [サーバ側の二重サブミット防止](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ) を参照すること。

@@ -68,8 +68,8 @@ FormatterUtil.format("dateTime", input, "yyyy年MM月dd日");
 
 | フォーマッタ名 | フォーマットするデータの型 | デフォルトのフォーマットパターン | 備考 |
 |---|---|---|---|
-| dateTime | Date | yyyy/MM/dd |  |
-| dateTime | String | yyyy/MM/dd | フォーマット対象の日付文字列のパターンが必要(デフォルトは `yyyyMMdd` ) |
+| [dateTime](../../component/libraries/libraries-format.md#フォーマッタを使用する) | Date | yyyy/MM/dd |  |
+| [dateTime](../../component/libraries/libraries-format.md#フォーマッタを使用する) | String | yyyy/MM/dd | フォーマット対象の日付文字列のパターンが必要(デフォルトは `yyyyMMdd` ) |
 | [number](../../component/libraries/libraries-format.md#フォーマッタを使用する) | Number | #,###.### |  |
 | [number](../../component/libraries/libraries-format.md#フォーマッタを使用する) | String | #,###.### |  |
 

@@ -40,7 +40,7 @@
 ### DbAccessSupportクラス
 
 DbAccessSupportクラスは、データベースアクセス機能が提供するデータベースアクセス処理を簡易的に実装するためのサポートクラスである。
-DbAccessSupportの詳細については、 [DbAccessSupportクラス](../../component/libraries/libraries-04-Statement.md#nablarchcoredbstatementパッケージ) を参照。
+DbAccessSupportの詳細については、 [DbAccessSupportクラス](../../component/libraries/libraries-04-Statement.md#f-サポートクラス業務アプリケーションを簡易的に実装するためのサポートクラス) を参照。
 
 DbAccessSupportは、一覧検索用の検索を実行するsearchメソッドを提供する。
 searchメソッドは、SQL_IDとListSearchInfoを受け取り、下記の処理を行う。
@@ -413,7 +413,7 @@ ListSearchInfoから取得する。
 検索結果の一覧表示では、列見出しを選択することで選択された列データによる並び替えを行いたい場合がある。
 検索結果の並び替えは、並び替え用の列見出しを出力する [listSearchSortSubmitタグ](../../component/libraries/libraries-07-TagReference.md#listsearchsortsubmitタグ) と、
 データベースアクセス機能が提供する可変ORDER BY構文(ORDER BY句を動的に変更する構文)を使用した検索処理により実現する。
-可変ORDER BY構文の詳細については、 VariableOrderBySyntaxConvertorクラス を参照。
+可変ORDER BY構文の詳細については、 [VariableOrderBySyntaxConvertorクラス](../../component/libraries/libraries-04-ObjectSave.md#c-nablarchcoredbstatementsqlconvertorの実装クラス) を参照。
 
 ユーザ検索に並び替えを適用した場合の画面イメージを下記に示す。
 ユーザ検索では、ログインIDとメールアドレスによる並び替えを提供している。

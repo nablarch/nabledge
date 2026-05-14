@@ -39,7 +39,7 @@
 
 フォームクラスのオブジェクトをセッションに保存しない
 
-セッションに保存すべきでない理由は、 [セッションストア](../../component/libraries/libraries-session-store.md#hiddenstoreのparameternameプロパティの値を設定) を参照。
+セッションに保存すべきでない理由は、 [セッションストア](../../component/libraries/libraries-session-store.md#入力確認完了画面間で入力情報を保持する) を参照。
 
 エンティティクラス(entity class)
 

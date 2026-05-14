@@ -84,7 +84,7 @@ public void testValidateForSimpleUpdate() {
 // ～後略～
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 c) クラス単体テスト実施
 
@@ -133,7 +133,7 @@ public static void validateForSimpleUpdate(ValidationContext<UsersEntity> contex
 }
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 e) クラス単体テスト実施
 

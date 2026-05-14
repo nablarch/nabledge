@@ -192,7 +192,7 @@ public HttpResponse confirmOfUpdate(HttpRequest request, ExecutionContext contex
 * データベース検索が必要なバリデーションは業務アクションメソッドに記述する。
   データの存在確認をする場合、 UniversalDao#exists
   を使用する。詳細は、 [データベース検索が必要なバリデーション](../../component/libraries/libraries-bean-validation.md#データベースとの相関バリデーションを行う) を参照。
-* 責務配置上 [フォームを直接セッションストアに格納すべきではない](../../component/libraries/libraries-session-store.md#hiddenstoreのparameternameプロパティの値を設定) ため、Beanへ詰め替える。
+* 責務配置上 [フォームを直接セッションストアに格納すべきではない](../../component/libraries/libraries-session-store.md#入力確認完了画面間で入力情報を保持する) ため、Beanへ詰め替える。
 
 SQLの作成
 

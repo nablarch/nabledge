@@ -77,7 +77,7 @@ LIST_MAPのデータタイプで１テストメソッド分のケース表を記
 | context | そのテストケースでリクエストを送る際のユーザ情報を記載する。 詳細は、 [ユーザ情報](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#ユーザ情報) を参照。 | 必須 |
 | cookie | そのテストケースで必要となるCookie情報を記載する。 詳細は、 [Cookie情報](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#cookie情報) を参照。 |  |
 | queryParams | そのテストケースで必要となるクエリパラメータ情報を記載する。 詳細は、 [クエリパラメータ情報](../../development-tools/testing-framework/testing-framework-guide-development-guide-05-UnitTestGuide-02-RequestUnitTest.md#クエリパラメータ情報) を参照。 |  |
-| isValidToken | トークンを設定する場合にはtrueを設定する。トークンの詳細については、  [サーバ側の二重サブミット防止](../../component/libraries/libraries-tag.md#デフォルトは-true-) を参照。 |  |
+| isValidToken | トークンを設定する場合にはtrueを設定する。トークンの詳細については、  [サーバ側の二重サブミット防止](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ) を参照。 |  |
 | setUpTable | 各テストケース実行前にデータベースに登録する場合は、同じシート内に記載したデータの [グループID](../../development-tools/testing-framework/testing-framework-03-Tips.md#一つのシートに複数テストケースのデータを記載したい) を記載する。データの投入は自動テストフレームワークに より行われる。 |  |
 | expectedStatusCode | 期待するHTTPステータスコードを記載する。 | 必須 |
 | expectedMessageId | メッセージが出力されること期待する場合は、その **メッセージID** を記載する。 複数のメッセージが出力される場合はカンマ区切りで列挙する。メッセージを 期待しない場合は空欄とする。空欄にしたが、実際にはメッセージが出力され た場合は、テスト失敗となる。 |  |

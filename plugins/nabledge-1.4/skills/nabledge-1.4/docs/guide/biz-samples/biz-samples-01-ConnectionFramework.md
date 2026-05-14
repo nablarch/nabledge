@@ -143,14 +143,14 @@ d) その他
 | Sender | Dictionary | センダの設定。 |
 | SenderHook | Array | 通信前後の処理を行う複数のフックの設定。 |
 
-a) Sender
+#### a) Sender
 
 | 項目名 | データ型 | 概要 |
 |---|---|---|
 | class | String | 使用するセンダ名。 |
 | initializeList | Dictionary | 使用するセンダの初期化時に使用するパラメータ。 詳細は使用するクラスの初期化パラメータを参照すること。 |
 
-b) SenderHook
+#### b) SenderHook
 
 | 項目名 | データ型 | 概要 |
 |---|---|---|

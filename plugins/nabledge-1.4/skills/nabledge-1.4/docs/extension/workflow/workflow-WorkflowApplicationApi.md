@@ -167,12 +167,12 @@ workflow.triggerEvent(CANCEL_TRIGGER);
 ### ユーザ/グループの割り当て
 
 タスクに対するユーザ/グループの割り当ては、 `please.change.me.workflow.WorkflowInstance` の
-[ユーザ割り当てメソッド](../../extension/workflow/workflow-WorkflowApplicationApi.md#ユーザグループの割り当て) および グループ割り当てメソッド を使用して行う。
+[ユーザ割り当てメソッド](../../extension/workflow/workflow-WorkflowApplicationApi.md#メソッド詳細) および グループ割り当てメソッド を使用して行う。
 
 タスクに対してユーザ/グループの割り当てを実行した場合、今までそのタスクに割り当てられていたユーザ及びグループの情報は削除され、
 今回指定したユーザ/グループのみが割り当てられた状態となる。
 
-**メソッド詳細**
+#### メソッド詳細
 
 指定したタスクに対して、指定したユーザ/グループを割り当てる。
 
@@ -364,7 +364,7 @@ if (version == 1) {
 フロー進行条件( `please.change.me.workflow.condition.FlowProceedCondition` の実装クラス ) を使用して、
 遷移先のフローノードを判断する。
 
-フロー進行条件は、ワークフロー定義ローダー がワークフロー定義を読み込む際に、
+フロー進行条件は、[ワークフロー定義ローダー](../../extension/workflow/workflow-WorkflowArchitecture.md#インタフェース定義) がワークフロー定義を読み込む際に、
 インスタンス化され、ワークフローライブラリから利用される。
 
 ### FlowProceedConditionインタフェース

@@ -579,7 +579,7 @@ nablarch.common.authentication.AuthenticationFailedException
 
 前段処理における実行時情報の設定には、 [オブジェクトのフィールドの値のデータベースへの登録機能(オブジェクトのフィールド値を使用した検索機能)](../../component/libraries/libraries-04-ObjectSave.md#オブジェクトのフィールドの値のデータベースへの登録機能オブジェクトのフィールド値を使用した検索機能) を使用する。
 スレッドコンテキストに設定されたリクエストID、実行時ID、ユーザIDをオブジェクトに設定するアノテーションを提供している。
-アノテーションの詳細については、 [AutoPropertyHandlerの実装クラス](../../component/libraries/libraries-04-ObjectSave.md#nablarchcoredbstatementsqlconvertorパッケージ) を参照。
+アノテーションの詳細については、 [AutoPropertyHandlerの実装クラス](../../component/libraries/libraries-04-ObjectSave.md#d-nablarchcoredbstatementautopropertyhandlerの実装クラス) を参照。
 
 ここでは、データベースを使用したデータ連携における派生元実行時情報の出力例を示す。
 前段処理において下記のカラム名で実行時情報が設定されていることとする。

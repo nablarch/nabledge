@@ -89,7 +89,7 @@ public class UserComponentTest extends DbAccessTestSupport {
 // ～後略～
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 #### 事前準備データの作成処理
 
@@ -142,7 +142,7 @@ public void testRegisterUser1() {
 // ～後略～
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 #### 処理終了後のデータベースの状況を確認しなければならないもの
 
@@ -222,7 +222,7 @@ public void testRegisterUser1() {
 // ～後略～
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 > **Note:**
 > 上記のソースコードでは、getListMapメソッドを用いてExcelシートからデータを読み込んでいる。
@@ -272,7 +272,7 @@ public void testRegisterUser1() {
 // ～後略～
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 case1を例にとると、想定結果は次のようになる。
 
@@ -326,4 +326,4 @@ public void testRegisterUser2() {
 // ～後略～
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)

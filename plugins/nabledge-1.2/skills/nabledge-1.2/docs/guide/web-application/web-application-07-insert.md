@@ -119,7 +119,7 @@ private String updatedUserId;
 private Timestamp updatedDate;
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 ### ビジネスロジック(Component)の作成
 
@@ -306,7 +306,7 @@ class CM311AC1Component extends DbAccessSupport {
 }
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 ### Actionの作成
 
@@ -347,7 +347,7 @@ public HttpResponse doRW11AC0204(HttpRequest req, ExecutionContext ctx) {
 }
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 ### JSPの作成
 
@@ -360,7 +360,7 @@ public HttpResponse doRW11AC0204(HttpRequest req, ExecutionContext ctx) {
 
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 ## 次に読むもの
 

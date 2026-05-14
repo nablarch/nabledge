@@ -22,7 +22,7 @@
 - [Nablarchアプリケーションフレームワークとは](about/about-nablarch/about-nablarch-nablarch.md)
 - [稼動環境](about/about-nablarch/about-nablarch-platform.md)
 - [基本方針](about/about-nablarch/about-nablarch-policy.md)
-- [ご利用にあたって — 情報の外部送信について](about/about-nablarch/about-nablarch-terms-of-use.md)
+- [ご利用にあたって](about/about-nablarch/about-nablarch-terms-of-use.md)
 - [Nablarch のバージョンアップ方針](about/about-nablarch/about-nablarch-versionup-policy.md)
 ### migration
 

@@ -66,7 +66,7 @@ JSPを共通化する機能を提供する。
 
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 #### 確認画面の作成方法
 
@@ -80,7 +80,7 @@ JSPを共通化する機能を提供する。
 
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 > **Note:**
 > 本ソースコードをそのままファイルに保管しようとすると、文字コードに関するエラーが出る。

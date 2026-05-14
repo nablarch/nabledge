@@ -6,6 +6,6 @@
 * [入出力ファイルの各項目の項目IDは、対応するテーブルのカラム名と一致させたほうが良いのでしょうか？](../../processing-pattern/nablarch-batch/nablarch-batch-4.md)
 * [バッチアプリケーションを自動テスト以外の方法で起動する方法を教えてください](../../processing-pattern/nablarch-batch/nablarch-batch-5.md)
 * [データベースをインプットとするバッチ処理でも、画面処理と同じようにFormは必要ですか？](../../processing-pattern/nablarch-batch/nablarch-batch-6.md)
-* [バッチ処理を実行すると\ **DuplicateProcess**\ が発生し、処理が異常終了してしまいます。対処方法を教えてください](../../processing-pattern/nablarch-batch/nablarch-batch-7.md)
+* [バッチ処理を実行するとDuplicateProcessが発生し、処理が異常終了してしまいます。対処方法を教えてください](../../processing-pattern/nablarch-batch/nablarch-batch-7.md)
 * [バッチ処理を実行するとProcessStop(kill process.)が発生し、処理が異常終了してしまいます。対処方法を教えてください](../../processing-pattern/nablarch-batch/nablarch-batch-8.md)
 * [入力データが存在しないバッチ処理はどのように作成するのでしょうか？](../../processing-pattern/nablarch-batch/nablarch-batch-9.md)

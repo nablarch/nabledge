@@ -86,4 +86,4 @@ Action実行後に、MockMessagingContextを用いて、要求電文のアサー
 を参照。
 
 > **Note:**
-> パディングおよびバイナリデータの扱いは、 [固定長ファイル](../../development-tools/testing-framework/testing-framework-RequestUnitTest-batch.md#固定長ファイル) と同様である。
+> パディングおよびバイナリデータの扱いは、 [テストデータ](../../development-tools/testing-framework/testing-framework-RequestUnitTest-batch.md#テストデータ) と同様である。

@@ -253,7 +253,7 @@ statement.executeUpdateByObject(user);
 ```
 
 > **Note:**
-> 上記例のデータベースアクセス実装部分の詳細は、 [DbAccessSupportクラス](../../component/libraries/libraries-04-Statement.md#nablarchcoredbstatementパッケージ) を参照のこと。
+> 上記例のデータベースアクセス実装部分の詳細は、 [DbAccessSupportクラス](../../component/libraries/libraries-04-Statement.md#f-サポートクラス業務アプリケーションを簡易的に実装するためのサポートクラス) を参照のこと。
 
 このような利点があるため、RDBMSを使用したアプリケーションの実装時はできる限り
 Form の特殊形態である Entity を使用して実装するよう考慮すべきである。

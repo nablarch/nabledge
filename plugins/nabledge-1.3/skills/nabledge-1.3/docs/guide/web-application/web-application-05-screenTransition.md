@@ -51,7 +51,7 @@ uri属性には、サブミットするパスを指定する。
 
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 > **Note:**
 > デフォルトで、button:cancelは「キャンセル」、button:confirmは「確定」をラベルに出力する。

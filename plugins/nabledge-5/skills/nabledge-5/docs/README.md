@@ -22,7 +22,7 @@
 - [Nablarchアプリケーションフレームワークとは](about/about-nablarch/about-nablarch-nablarch.md)
 - [稼動環境](about/about-nablarch/about-nablarch-platform.md)
 - [基本方針](about/about-nablarch/about-nablarch-policy.md)
-- [ご利用にあたって — 情報の外部送信について](about/about-nablarch/about-nablarch-terms-of-use.md)
+- [ご利用にあたって](about/about-nablarch/about-nablarch-terms-of-use.md)
 - [Nablarch のバージョンアップ方針](about/about-nablarch/about-nablarch-versionup-policy.md)
 ### release-notes
 
@@ -225,7 +225,7 @@
 - [ラベル表示用カラムウィジェット](development-tools/testing-framework/testing-framework-column-label.md)
 - [リンク表示用カラムウィジェット](development-tools/testing-framework/testing-framework-column-link.md)
 - [テーブル行選択用ラジオボタンカラムウィジェット](development-tools/testing-framework/testing-framework-column-radio.md)
-- [UI開発基盤設定ファイル — タグ定義](development-tools/testing-framework/testing-framework-configuration-files.md)
+- [UI開発基盤設定ファイル](development-tools/testing-framework/testing-framework-configuration-files.md)
 - [業務画面JSPから画面項目定義を作成する](development-tools/testing-framework/testing-framework-create-screen-item-list.md)
 - [業務画面テンプレートとUI部品を使用して業務画面JSPを作成する](development-tools/testing-framework/testing-framework-create-with-widget.md)
 - [CSSフレームワーク](development-tools/testing-framework/testing-framework-css-framework.md)
@@ -315,7 +315,7 @@
 - [Nablarch UI開発基盤 解説書](development-tools/testing-framework/testing-framework-ui-dev-doc.md)
 - [JSP/HTML作成ガイド](development-tools/testing-framework/testing-framework-ui-dev-guide.md)
 - [フロントエンド上級者向けのUI開発基盤](development-tools/testing-framework/testing-framework-ui-dev.md)
-- [UI開発ワークフロー — UI開発ワークフロー](development-tools/testing-framework/testing-framework-ui-development-workflow.md)
+- [UI開発ワークフロー](development-tools/testing-framework/testing-framework-ui-development-workflow.md)
 - [Nablarch 標準プラグインの更新](development-tools/testing-framework/testing-framework-update-bundle-plugin.md)
 - [UI部品の実装サンプルで提供しているウィジェットの一覧](development-tools/testing-framework/testing-framework-widget-list.md)
 ### toolbox

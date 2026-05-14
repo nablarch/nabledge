@@ -62,7 +62,7 @@ public class SystemAccountEntityTest extends EntityTestSupport {
 // ～後略～
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 テストメソッドの記述方法は本項以降に記載されているコード例を参照。
 
@@ -395,7 +395,7 @@ public class SystemAccountEntityTest extends EntityTestSupport {
 // ～後略～
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 ### コンストラクタに対するテストケース
 
@@ -450,7 +450,7 @@ public class SystemAccountEntityTest extends EntityTestSupport {
 }
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 > **Note:**
 > testConstructorAndGetterでテスト可能なプロパティの型(クラス)には制限がある。
@@ -546,7 +546,7 @@ public class SystemAccountEntityTest extends EntityTestSupport {
     // 【説明】～後略～
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 > **Note:**
 > testGetterAndSetterでテスト可能なプロパティの型(クラス)には制限がある。

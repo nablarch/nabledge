@@ -91,65 +91,77 @@
     {
       "id": "s15",
       "title": "プロパティリストの作成",
-      "content": "本機能を利用する際、通信機能に関する設定を記述したプロパティリストファイル(通信設定ファイル)を作成する必要がある。\n通信設定ファイルでは以下の事柄について設定を行う。\n\n* センダの指定(Sender.class)\n* センダの初期値パラメータの指定(Sener.initializeLIst)\n* 複数のフックの指定(SenderHook[].class)\n* 各フックの初期値パラメータの指定(SenderHook[].initializeLIst)\n* フックの呼び出し順の指定\n\n設定例を以下に示す。\n\n![propertyList.png](assets/biz-samples-01-ConnectionFramework/propertyList.png)\n\nプロパティの説明を下記に示す。\n\n| 項目名 | データ型 | 概要 |\n|---|---|---|\n| Sender | Dictionary | センダの設定。 |\n| SenderHook | Array | 通信前後の処理を行う複数のフックの設定。 |\n\na) Sender\n\n| 項目名 | データ型 | 概要 |\n|---|---|---|\n| class | String | 使用するセンダ名。 |\n| initializeList | Dictionary | 使用するセンダの初期化時に使用するパラメータ。 詳細は使用するクラスの初期化パラメータを参照すること。 |\n\nb) SenderHook\n\n| 項目名 | データ型 | 概要 |\n|---|---|---|\n| SenderHook[] | Dictionary | 各フックの設定。 |\n| SenderHook[].class | String | 使用するフック名。 |\n| SenderHook[].initializeList | Dictionary | 使用するフックの初期化時に使用するパラメータ。 詳細は使用するクラスの初期化パラメータを参照すること。 |\n\nフック処理は送信前処理であれば通信設定ファイルの配列順に、受信後処理であれば通信設定ファイルの配列逆順に実行される。\n従って、上記の設定例では以下の順番で通信前処理が実行される。\n\n1. HookAboutKeyManagerクラスで実装された送信前処理\n2. SenderHookクラスで実装された送信前処理\n3. HookAboutEncryptionクラスで実装された送信前処理\n\nまた、受信後処理は以下の順番で実行される。\n\n1. HookAboutEncryptionクラスで実装された受信後処理\n2. SenderHookクラスで実装された受信後処理\n3. HookAboutKeyManagerクラスで実装された受信後処理",
+      "content": "本機能を利用する際、通信機能に関する設定を記述したプロパティリストファイル(通信設定ファイル)を作成する必要がある。\n通信設定ファイルでは以下の事柄について設定を行う。\n\n* センダの指定(Sender.class)\n* センダの初期値パラメータの指定(Sener.initializeLIst)\n* 複数のフックの指定(SenderHook[].class)\n* 各フックの初期値パラメータの指定(SenderHook[].initializeLIst)\n* フックの呼び出し順の指定\n\n設定例を以下に示す。\n\n![propertyList.png](assets/biz-samples-01-ConnectionFramework/propertyList.png)\n\nプロパティの説明を下記に示す。\n\n| 項目名 | データ型 | 概要 |\n|---|---|---|\n| Sender | Dictionary | センダの設定。 |\n| SenderHook | Array | 通信前後の処理を行う複数のフックの設定。 |",
       "level": 3
     },
     {
       "id": "s16",
+      "title": "a) Sender",
+      "content": "| 項目名 | データ型 | 概要 |\n|---|---|---|\n| class | String | 使用するセンダ名。 |\n| initializeList | Dictionary | 使用するセンダの初期化時に使用するパラメータ。 詳細は使用するクラスの初期化パラメータを参照すること。 |",
+      "level": 4
+    },
+    {
+      "id": "s17",
+      "title": "b) SenderHook",
+      "content": "| 項目名 | データ型 | 概要 |\n|---|---|---|\n| SenderHook[] | Dictionary | 各フックの設定。 |\n| SenderHook[].class | String | 使用するフック名。 |\n| SenderHook[].initializeList | Dictionary | 使用するフックの初期化時に使用するパラメータ。 詳細は使用するクラスの初期化パラメータを参照すること。 |\n\nフック処理は送信前処理であれば通信設定ファイルの配列順に、受信後処理であれば通信設定ファイルの配列逆順に実行される。\n従って、上記の設定例では以下の順番で通信前処理が実行される。\n\n1. HookAboutKeyManagerクラスで実装された送信前処理\n2. SenderHookクラスで実装された送信前処理\n3. HookAboutEncryptionクラスで実装された送信前処理\n\nまた、受信後処理は以下の順番で実行される。\n\n1. HookAboutEncryptionクラスで実装された受信後処理\n2. SenderHookクラスで実装された受信後処理\n3. HookAboutKeyManagerクラスで実装された受信後処理",
+      "level": 4
+    },
+    {
+      "id": "s18",
       "title": "初期値パラメータ",
       "content": "初期値パラメータはクラスによって異なる。それぞれのクラスの初期値パラメータについて記載する。",
       "level": 4
     },
     {
-      "id": "s17",
+      "id": "s19",
       "title": "センダ",
       "content": "a) NMHttpRequester\n\n初期値パラメータ一覧\n\n| 項目名 | データ型 | 概要 |\n|---|---|---|\n| URL | String | 宛先URL |\n| timeInterval | Number | 待機タイムアウト時間 |\n| dumpMessageEnabled | Boolean | JSON形式でのメッセージダンプ要否 |\n| bodyConvertor | Dictionary | コンバータの設定 |\n| bodyConvertor.class | String | 使用するコンバータ名 |\n| bodyConvertor.initializeList | Dictionary | 使用するコンバータの初期化パラメータ。 詳細は使用するクラスの初期化パラメータを参照すること。 |\n\n設定例\n\n![propertyList_httpRequester.png](assets/biz-samples-01-ConnectionFramework/propertyList_httpRequester.png)",
       "level": 5
     },
     {
-      "id": "s18",
+      "id": "s20",
       "title": "フック",
       "content": "フレームワークで提供する実装クラスなし",
       "level": 5
     },
     {
-      "id": "s19",
+      "id": "s21",
       "title": "コンバータ",
       "content": "a) NMJsonBodyConvertor\n\n特に無し",
       "level": 5
     },
     {
-      "id": "s20",
+      "id": "s22",
       "title": "メッセージの作成",
       "content": "以下にメッセージを作成する実装例を示す。\n\n```objective-c\nNSDictionary *dict = @{\n                       @\"string\" : @\"dummyString\",\n                       @\"number_integer\" : @10,\n                       @\"number_double\" : @1.0,\n                       @\"number_bool\" : @YES,\n                       @\"array\" : @[],\n                       @\"object\" : @{},\n                       @\"null\" : [NSNull null] };\nNMMessage *sendMessage = [[NMMessage alloc] initWithDictionary:dict];\n\n// NSDataは文字列にエンコードしてから格納する\nNSString *str= [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];\n[sendMessage setValue:str forKey:@\"data\"];\n```",
       "level": 3
     },
     {
-      "id": "s21",
+      "id": "s23",
       "title": "通信処理APIの呼び出し",
       "content": "以下に通信処理APIを呼び出す実装例を示す。\n\n```objective-c\n/**\n * 通信機能使用サンプル\n */\n- (NMMessage *)sample {\n    NMMessage *sendMessage = [self createSendMessage];\n    NMMessageSender *sender = [[NMMessageSender alloc] init];\n\n    NSError *error = nil;\n    // 第一引数に設定された物と同名の通信設定ファイルが読み込まれる\n    // この例だとdestination.plistというプロパティリストが読み込まれる\n    NMMessage *response = [sender send:@\"destination\" sendMessage:sendMessage error:&error];\n\n    return response;\n}\n```",
       "level": 3
     },
     {
-      "id": "s22",
+      "id": "s24",
       "title": "実装クラス",
       "content": "Nablarch Mobileで提供する、各インタフェースの実装クラスについて解説する。",
       "level": 2
     },
     {
-      "id": "s23",
+      "id": "s25",
       "title": "HTTP/HTTPS通信",
       "content": "NMHttpRequesterはHTTP/HTTPS通信を実装したセンダである。\n実装したHTTP/HTTPS通信の仕様を以下に示す。\n\n* **リクエストパス**\n  URL：通信設定ファイルに設定された値に従う\n  　　　　設定されたURLのプロトコルがhttpの場合はHTTP通信を、httpsの場合はHTTPS通信を行う\n  メソッド：POST\n* **ヘッダ**\n  特に設定なし\n* **ボディ**\n  送信時：コンバータによりバイナリデータに変換したメッセージオブジェクト\n  受信時：ダウンロードデータおよびHTTPステータス(ダウンロードデータがない場合はHTTPステータスだけを返す)\n* **その他**\n  キャッシュ：使用しない\n  メッセージのダンプ：通信設定ファイルに設定された値によってはJSON形式のダンプを行う\n  タイムアウト時間：通信設定ファイルに設定された値に従う",
       "level": 3
     },
     {
-      "id": "s24",
+      "id": "s26",
       "title": "JSONコンバータ",
       "content": "NMJsonConvertorはJSONによるNMMessageオブジェクトからのエンコードおよびNMMessageオブジェクトへのデコードを実装したコンバータである。\n\n以下にJSONとObjective-Cのデータ型の変換仕様を示す。\n\n| JSON | Objective-C |\n|---|---|\n| 数値 | NSNumber(数値、浮動小数点) |\n| 文字列 | NSString |\n| 真偽値 | NSNumber(真偽値) |\n| 配列 | NSArray |\n| オブジェクト | NSDictionary |\n| null | NSNull |\n\nNMMessageからバイナリデータに変換する際、上記以外のデータ型オブジェクトが格納されていると\n変換できない。\n例えばバイト配列をNMMessageに格納したい場合は、Base64でフォーマットして文字列へ変換してから\n格納するなどして対応すること。\nまたNMMessageに使用できるキーの型もNSStringに限られる。",
       "level": 3
     },
     {
-      "id": "s25",
+      "id": "s27",
       "title": "ユーティリティ",
       "content": "[ユーティリティ](../../guide/biz-samples/biz-samples-01-Utility.md) 参照。",
       "level": 2

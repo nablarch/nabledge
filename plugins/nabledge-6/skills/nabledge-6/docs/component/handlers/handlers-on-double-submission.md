@@ -8,10 +8,10 @@
 * OnDoubleSubmissionのデフォルト値を指定する
 * OnDoubleSubmissionの振る舞いを変更する
 
-[二重サブミット(同一リクエストの二重送信)のチェック](../../component/libraries/libraries-tag.md#デフォルトは-true-) を行うインターセプタ。
+[二重サブミット(同一リクエストの二重送信)のチェック](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ) を行うインターセプタ。
 
 このインターセプタを使用するためには、
-[jspでのformタグによるトークン設定](../../component/libraries/libraries-tag.md#デフォルトは-true-)
+[jspでのformタグによるトークン設定](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ)
 または
 [UseTokenインターセプタによるトークン設定](../../component/handlers/handlers-use-token.md#usetokenインターセプタ)
 が必要である。
@@ -71,7 +71,7 @@ BasicDoubleSubmissionHandler
 > と BasicDoubleSubmissionHandler の
 > どちらもpathの指定がない場合は、二重サブミットと判定した場合に遷移先が不明なため、システムエラーとなる。
 
-> このため、 [トークンを使用した二重サブミットの防止](../../component/libraries/libraries-tag.md#デフォルトは-true-)
+> このため、 [トークンを使用した二重サブミットの防止](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ)
 > を使用するアプリケーションでは、必ずどちらかのpathを指定すること。
 
 ## OnDoubleSubmissionの振る舞いを変更する

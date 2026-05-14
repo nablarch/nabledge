@@ -98,7 +98,7 @@ public class ExclusiveCtrlSystemAccountContext extends ExclusiveControlContext {
 }
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 ### Actionの作成
 
@@ -151,7 +151,7 @@ public HttpResponse doRW11AC0301(HttpRequest req, ExecutionContext ctx) {
 }
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 * バージョン番号のチェック
 
@@ -185,7 +185,7 @@ public HttpResponse doRW11AC0301(HttpRequest req, ExecutionContext ctx) {
 }
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 * バージョン番号のチェックおよび更新
 
@@ -221,7 +221,7 @@ public HttpResponse doRW11AC0301(HttpRequest req, ExecutionContext ctx) {
 }
 ```
 
-( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#注意事項) 参照)
+( [記載しているサンプルプログラムソースコードの注意事項](../../about/about-nablarch/about-nablarch-aboutThis.md#記載しているサンプルプログラムソースコードの注意事項) 参照)
 
 ## 次に読むもの
 

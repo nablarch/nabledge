@@ -123,7 +123,7 @@
 - [メッセージ管理](component/libraries/libraries-07-Message.md)
 - [変数に値を設定するsetタグ](component/libraries/libraries-07-OtherTag.md)
 - [libraries-07-SubmitTag](component/libraries/libraries-07-SubmitTag.md)
-- [タグリファレンス — カスタムタグ一覧](component/libraries/libraries-07-TagReference.md)
+- [タグリファレンス](component/libraries/libraries-07-TagReference.md)
 - [JSPカスタムタグライブラリ](component/libraries/libraries-07-WebView.md)
 - [バリデーション機能の構造](component/libraries/libraries-08-01-validation-architecture.md)
 - [バリデーション機能の基本的な使用方法](component/libraries/libraries-08-02-validation-usage.md)
@@ -228,8 +228,8 @@
 - [業務アプリケーションの実装方法 (その他の処理)](guide/libraries/libraries-04-Explanation-other.md)
 ### mom-messaging
 
-- [ユーザ削除情報電文送信処理の仕様 — 機能概要](guide/mom-messaging/mom-messaging-01-userDeleteInfoMessageSendSpec.md)
-- [ユーザ登録情報電文受信処理の仕様 — 機能概要](guide/mom-messaging/mom-messaging-01-userRegisterMessageReceiveSpec.md)
+- [ユーザ削除情報電文送信処理の仕様](guide/mom-messaging/mom-messaging-01-userDeleteInfoMessageSendSpec.md)
+- [ユーザ登録情報電文受信処理の仕様](guide/mom-messaging/mom-messaging-01-userRegisterMessageReceiveSpec.md)
 - [ユーザ情報登録サービスの仕様](guide/mom-messaging/mom-messaging-01-userResisterMessageSpec.md)
 - [ユーザ情報登録サービスの仕様](guide/mom-messaging/mom-messaging-01-userSendSyncMessageSpec.md)
 - [応答不要メッセージ受信処理](guide/mom-messaging/mom-messaging-03-mqDelayedReceive.md)
@@ -281,7 +281,7 @@
 - [フレームワークAPIの使用例集](guide/web-application/web-application-09-examples.md)
 - [一覧表示から個別の情報を扱う画面への遷移](guide/web-application/web-application-10-submitParameter.md)
 - [排他制御](guide/web-application/web-application-11-exclusiveControl.md)
-- [携帯端末(フィーチャーフォン)向け画面を実装する際の留意点 — 本項で説明する内容](guide/web-application/web-application-12-keitai.md)
+- [携帯端末(フィーチャーフォン)向け画面を実装する際の留意点](guide/web-application/web-application-12-keitai.md)
 - [画面オンライン処理の実装例集](guide/web-application/web-application-CustomTag.md)
 - [web-application-DB](guide/web-application/web-application-DB.md)
 - [web-application-Log](guide/web-application/web-application-Log.md)

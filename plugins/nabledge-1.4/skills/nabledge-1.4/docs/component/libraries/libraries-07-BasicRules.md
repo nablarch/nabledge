@@ -121,7 +121,7 @@ HTMLエスケープ処理では、下記の文字変換を行う。
 
 ### HTMLエスケープせずに値を出力する方法
 
-業務アクションなどで設定された値をページ上に出力する場合は、 Webview_WriteTag を使用するが、
+業務アクションなどで設定された値をページ上に出力する場合は、 [writeタグ](../../component/libraries/libraries-07-TagReference.md#writeタグ) を使用するが、
 HTMLエスケープを行わず、変数内のHTMLタグを直接出力したい場合は、以下のタグを使用する。
 
 * [prettyPrintタグ](../../component/libraries/libraries-07-TagReference.md#prettyprintタグ)

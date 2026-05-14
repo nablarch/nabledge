@@ -401,7 +401,7 @@ context.addResultMessage("mobilePhoneNumber", "MSG00004");
 | カスタムタグ | 出力するHTMLタグ |
 |---|---|
 | [codeSelectタグ](../../component/libraries/libraries-07-TagReference.md#codeselectタグ) | selectタグ |
-| WebView_CodeRadiobuttonsTag | 複数のinputタグ(type=radio) |
+| [codeRadioButtonsタグ](../../component/libraries/libraries-07-TagReference.md#coderadiobuttonsタグ) | 複数のinputタグ(type=radio) |
 | [codeCheckboxesタグ](../../component/libraries/libraries-07-TagReference.md#codecheckboxesタグ) | 複数のinputタグ(type=checkbox) |
 | [codeCheckboxタグ](../../component/libraries/libraries-07-TagReference.md#codecheckboxタグ) | 単一のinputタグ(type=checkbox) |
 | [codeタグ](../../component/libraries/libraries-07-TagReference.md#codeタグ) | 指定されたファーマットに対応するタグ。 |

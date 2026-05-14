@@ -1,6 +1,6 @@
 # 対象テーブルのデータを削除するバッチの作成(Batchletステップ)
 
-Exampleアプリケーションを元に、 batchletステップ で対象テーブルのデータを削除するバッチを解説する。
+Exampleアプリケーションを元に、 [batchletステップ](../../processing-pattern/jakarta-batch/jakarta-batch-architecture.md#バッチの種類) で対象テーブルのデータを削除するバッチを解説する。
 
 作成する機能の説明
 
