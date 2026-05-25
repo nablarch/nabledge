@@ -95,11 +95,6 @@ if ! command -v jq &> /dev/null; then
     echo "Install jq to enable automatic official docs extraction." >&2
 fi
 
-# Calculate output path internally
-OUTPUT_DIR=".nabledge/$(date '+%Y%m%d')"
-OUTPUT_FILE="code-analysis-${TARGET_NAME}.md"
-OUTPUT_PATH="$OUTPUT_DIR/$OUTPUT_FILE"
-
 # Find project root
 if git rev-parse --show-toplevel &>/dev/null; then
     PROJECT_ROOT="$(git rev-parse --show-toplevel)"
@@ -107,8 +102,13 @@ else
     PROJECT_ROOT="$(pwd)"
 fi
 
+# Calculate output path internally
+OUTPUT_DIR="$PROJECT_ROOT/.nabledge/$(date '+%Y%m%d')"
+OUTPUT_FILE="code-analysis-${TARGET_NAME}.md"
+OUTPUT_PATH="$OUTPUT_DIR/$OUTPUT_FILE"
+
 # Template file location
-TEMPLATE_FILE="$PROJECT_ROOT/.claude/skills/nabledge-6/assets/code-analysis-template.md"
+TEMPLATE_FILE="$PROJECT_ROOT/.claude/skills/nabledge-6/workflows/code-analysis/template.md"
 
 # Validate template file exists and is readable
 if [[ ! -f "$TEMPLATE_FILE" ]]; then
@@ -169,7 +169,7 @@ for file in "${FILES[@]}"; do
     file=$(basename "$file")
 
     # Search for files (returns all matches)
-    matches=$(search_files "$file" "." "source")
+    matches=$(search_files "$file" "$PROJECT_ROOT" "source")
 
     # If file not found, skip (warning already printed)
     if [[ -z "$matches" ]]; then
@@ -181,8 +181,8 @@ for file in "${FILES[@]}"; do
 
     # Process each match
     while IFS= read -r resolved_path; do
-        # Remove leading ./ from path
-        resolved_path=$(echo "$resolved_path" | sed 's|^\./||')
+        # Remove PROJECT_ROOT prefix and leading ./
+        resolved_path=$(echo "$resolved_path" | sed "s|^${PROJECT_ROOT}/||" | sed 's|^\./||')
 
         filename=$(basename "$resolved_path")
         relative_path="${RELATIVE_PREFIX}${resolved_path}"
@@ -216,7 +216,7 @@ for file in "${FILES[@]}"; do
     file="${file%.json}"
 
     # Search for files (returns all matches)
-    matches=$(search_files "$file" ".claude/skills/nabledge-6/knowledge" "knowledge")
+    matches=$(search_files "$file" "$PROJECT_ROOT/.claude/skills/nabledge-6/knowledge" "knowledge")
 
     # If file not found, skip (warning already printed)
     if [[ -z "$matches" ]]; then
@@ -228,8 +228,8 @@ for file in "${FILES[@]}"; do
 
     # Process each match
     while IFS= read -r resolved_path; do
-        # Remove leading ./ from path
-        resolved_path=$(echo "$resolved_path" | sed 's|^\./||')
+        # Remove PROJECT_ROOT prefix and leading ./
+        resolved_path=$(echo "$resolved_path" | sed "s|^${PROJECT_ROOT}/||" | sed 's|^\./||')
 
         # Convert knowledge JSON paths to docs MD paths
         # Example: .claude/skills/nabledge-6/knowledge/features/X.json
@@ -270,7 +270,7 @@ for file in "${FILES[@]}"; do
     file="${file%.json}"
 
     # Find the JSON file
-    json_path=$(find ".claude/skills/nabledge-6/knowledge" -type f -name "${file}.json" 2>/dev/null | head -1)
+    json_path=$(find "$PROJECT_ROOT/.claude/skills/nabledge-6/knowledge" -type f -name "${file}.json" 2>/dev/null | head -1)
 
     if [[ -n "$json_path" ]]; then
         # Extract official_doc_urls using jq (if jq is available)
@@ -317,7 +317,8 @@ TARGET_DESC_ESC=$(escape_sed "$TARGET_DESC")
 MODULES_ESC=$(escape_sed "$MODULES")
 GENERATION_DATE_ESC=$(escape_sed "$GENERATION_DATE")
 GENERATION_TIME_ESC=$(escape_sed "$GENERATION_TIME")
-OUTPUT_PATH_ESC=$(escape_sed "$OUTPUT_PATH")
+RELATIVE_OUTPUT_PATH=".nabledge/$(date '+%Y%m%d')/code-analysis-${TARGET_NAME}.md"
+OUTPUT_PATH_ESC=$(escape_sed "$RELATIVE_OUTPUT_PATH")
 SOURCE_FILES_LINKS_ESC=$(escape_sed "$SOURCE_FILES_LINKS")
 KNOWLEDGE_BASE_LINKS_ESC=$(escape_sed "$KNOWLEDGE_BASE_LINKS")
 OFFICIAL_DOCS_LINKS_ESC=$(escape_sed "$OFFICIAL_DOCS_LINKS")

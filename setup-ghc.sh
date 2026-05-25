@@ -186,6 +186,8 @@ for v in "${VERSIONS[@]}"; do
     echo "Setting up GitHub Copilot prompts for nabledge-${v}..."
     if [ -f "$TEMP_DIR/$REPO_NAME/$plugin_dir/.github/prompts/n${v}.prompt.md" ]; then
         mkdir -p "$PROJECT_ROOT/.github/prompts"
+        # Remove old prompt files for this version before copying — catches filename changes across versions
+        rm -f "$PROJECT_ROOT/.github/prompts/n${v}"*.prompt.md
         cp "$TEMP_DIR/$REPO_NAME/$plugin_dir/.github/prompts/n${v}.prompt.md" "$PROJECT_ROOT/.github/prompts/n${v}.prompt.md"
         echo "GitHub Copilot prompts installed: $PROJECT_ROOT/.github/prompts/n${v}.prompt.md"
     else

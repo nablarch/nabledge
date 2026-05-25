@@ -6,6 +6,7 @@
 #
 # Output format:
 #   === relative-file-path : section-id ===
+#   # {page title} > {section title}
 #   [section content]
 #   === END ===
 
@@ -28,6 +29,17 @@ for pair in "$@"; do
   esac
 
   echo "=== $file : $section ==="
-  jq -r --arg sec "$section" 'first(.sections[]? | select(.id == $sec) | .content) // "SECTION_NOT_FOUND"' "$KNOWLEDGE_DIR/$file" 2>/dev/null || echo "FILE_NOT_FOUND"
+  jq -r --arg sec "$section" '
+    (if . == null then error("FILE_NOT_FOUND") else . end) |
+    . as $root |
+    if (.sections | length) == 0 then
+      "# " + $root.title + "\n" + ($root.content // "")
+    else
+      ([.sections[]? | select(.id == $sec)][0]) as $s |
+      if $s == null then "SECTION_NOT_FOUND"
+      else "# " + $root.title + " > " + $s.title + "\n" + $s.content
+      end
+    end
+  ' "$KNOWLEDGE_DIR/$file" 2>/dev/null || echo "FILE_NOT_FOUND"
   echo "=== END ==="
 done
