@@ -116,7 +116,8 @@ add_skill_permissions() {
 
     echo "Adding script auto-approval for nabledge-${v}..."
 
-    # Create settings.json if it doesn't exist
+    # Create .vscode/ and settings.json if they don't exist
+    mkdir -p "$PROJECT_ROOT/.vscode"
     if [ ! -f "$settings_file" ]; then
         echo '{}' > "$settings_file"
     fi
