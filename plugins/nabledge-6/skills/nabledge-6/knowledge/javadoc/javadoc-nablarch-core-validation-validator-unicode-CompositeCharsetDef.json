@@ -1,0 +1,38 @@
+{
+  "title": "class CompositeCharsetDef",
+  "content": "**パッケージ:** nablarch.core.validation.validator.unicode\n\n**継承階層:**\n```\njava.lang.Object\n  └─ CharsetDefSupport\n      └─ nablarch.core.validation.validator.unicode.CompositeCharsetDef\n```\n\n---\n\n```java\npublic class CompositeCharsetDef\nextends CharsetDefSupport\n```\n\n複数の{@link CharsetDef}の組み合わせによる許容文字集合定義クラス。<br/>\n本クラスでは、他の許容文字集合定義の組み合わせにより文字集合を定義できる。\n<pre>\n{@literal\n<!-- ２つの許容文字集合定義を組み合わせ -->\n<component name=\"composite\" class=\"nablarch.core.validation.validator.unicode.CompositeCharsetDef\">\\\n  <property name=\"charsetDefList\">\n    <list>\n      <component-ref name=\"asciiWithoutControlCode\"/>\n      <component-ref name=\"zenkakuKatakanaCharset\"/>\n    </list>\n  </property>\n</component>\n<!-- ASCII -->\n<component name=\"asciiWithoutControlCode\" class=\"nablarch.core.validation.validator.unicode.RangedCharsetDef\">\n  <property name=\"startCodePoint\" value=\"U+0020\" />\n  <property name=\"endCodePoint\" value=\"U+007E\" />\n</component>\n<!-- 全角カタカナ -->\n<component name=\"zenkakuKatakanaCharset\"\n  class=\"nablarch.core.validation.validator.unicode.CompositeCharsetDef\">\n  <property name=\"charsetDefList\">\n    <list>\n      <component-ref name=\"zenkakuKatakanaCharsDef\" />\n      <component-ref name=\"zenkakuSpaceDef\" />\n    </list>\n  </property>\n</component>\n}\n</pre>\n\n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "definitions",
+      "level": 3,
+      "content": "```java\nprivate List<? extends CharsetDef> definitions\n```\n\n許容文字集合定義のリスト\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "contains",
+      "level": 3,
+      "content": "```java\npublic boolean contains(int codePoint)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "setCharsetDefList",
+      "level": 3,
+      "content": "```java\npublic void setCharsetDefList(List<? extends CharsetDef> definitions)\n```\n\n許容文字集合定義のリストを設定する。\n\n**パラメータ:**\n- `definitions` - 許容文字集合定義のリスト\n\n---",
+      "id": "s5"
+    }
+  ],
+  "id": "javadoc-nablarch-core-validation-validator-unicode-CompositeCharsetDef"
+}

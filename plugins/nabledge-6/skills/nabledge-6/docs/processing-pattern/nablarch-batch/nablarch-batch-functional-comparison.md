@@ -10,7 +10,7 @@
 | 機能 | Jakarta Batchに準拠 [1] | Nablarchバッチ |
 |---|---|---|
 | 起動時に任意のパラメータを設定できる | ◎ | ○   [解説書へ](../../component/handlers/handlers-main.md#アプリケーション起動に任意のオプションを設定する) |
-| 同一バッチアプリケーションの同時実行を防止できる | ○   Javadocへ | ○   [解説書へ](../../component/handlers/handlers-duplicate-process-check-handler.md#プロセス多重起動防止ハンドラ) |
+| 同一バッチアプリケーションの同時実行を防止できる | ○   [Javadocへ](../../javadoc/javadoc-nablarch-fw-batch-ee-listener-job-DuplicateJobRunningCheckListener.md) | ○   [解説書へ](../../component/handlers/handlers-duplicate-process-check-handler.md#プロセス多重起動防止ハンドラ) |
 | 実行中のバッチアプリケーションを   外部から安全に停止できる | ◎ | ○   [解説書へ](../../component/handlers/handlers-process-stop-handler.md#プロセス停止制御ハンドラ) |
 | 1回の実行で処理する最大の件数を指定できる | ×   [2] | ○   [解説書へ](../../component/handlers/handlers-data-read-handler.md#最大処理件数の設定) |
 | 一定件数単位のコミットができる | ◎ | ○   [解説書へ](../../component/handlers/handlers-loop-handler.md#コミット間隔を指定する) |
@@ -26,7 +26,7 @@
 
 ItemReader の実装クラスに、1回の実行で読み込む最大件数を指定できるプロパティを持たせるなどで対応可能。
 
-ResumeDataReader (レジューム機能付き読み込み) を使用することで障害発生ポイントからの再実行が可能。
+[ResumeDataReader (レジューム機能付き読み込み)](../../javadoc/javadoc-nablarch-fw-reader-ResumeDataReader.md) を使用することで障害発生ポイントからの再実行が可能。
 ただし、この機能はファイルを入力としている場合にのみ使用できる。それ以外のデータを入力とする場合には、アプリケーション側で設計及び実装が必要となる。
 
 特定例外を無視して処理を継続したい場合は、ハンドラを追加して対応すること。

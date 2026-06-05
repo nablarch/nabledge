@@ -11,7 +11,7 @@
 * サブスレッドでの例外発生時の振る舞い
 
 本ハンドラは、サブスレッドを作成し、ハンドラキュー上の後続ハンドラの処理を各サブスレッド上で並行実行する。
-このハンドラでの処理結果は、各サブスレッドでの実行結果を集約したオブジェクト(MultiStatus)となる。
+このハンドラでの処理結果は、各サブスレッドでの実行結果を集約したオブジェクト([MultiStatus](../../javadoc/javadoc-nablarch-fw-Result.md))となる。
 
 本ハンドラでは、以下の処理を行う。
 
@@ -27,7 +27,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.handler.MultiThreadExecutionHandler
+* [nablarch.fw.handler.MultiThreadExecutionHandler](../../javadoc/javadoc-nablarch-fw-handler-MultiThreadExecutionHandler.md)
 
 ## モジュール一覧
 
@@ -71,8 +71,8 @@
 * サブスレッドで例外発生後の全スレッド終了後
 * 全サブスレッド終了後(サブスレッドで例外が発生した場合でも実行される)
 
-コールバックされる処理は、このハンドラより後続に設定されたハンドラの中で、 ExecutionHandlerCallback を実装しているものとなる。
-もし、複数のハンドラが  ExecutionHandlerCallback を実装している場合は、より手前に設定されているハンドラから順次コールバック処理を実行する。
+コールバックされる処理は、このハンドラより後続に設定されたハンドラの中で、 [ExecutionHandlerCallback](../../javadoc/javadoc-nablarch-fw-handler-ExecutionHandlerCallback.md) を実装しているものとなる。
+もし、複数のハンドラが  [ExecutionHandlerCallback](../../javadoc/javadoc-nablarch-fw-handler-ExecutionHandlerCallback.md) を実装している場合は、より手前に設定されているハンドラから順次コールバック処理を実行する。
 
 > **Important:**
 > 複数のハンドラがコールバック処理を実装していた場合で、コールバック処理中にエラーや例外が発生した場合は、 残りのハンドラに対するコールバック処理は実行しないため注意すること。

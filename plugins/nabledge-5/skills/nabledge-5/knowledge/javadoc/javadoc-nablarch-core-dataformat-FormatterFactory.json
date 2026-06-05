@@ -1,0 +1,158 @@
+{
+  "title": "class FormatterFactory",
+  "content": "**パッケージ:** nablarch.core.dataformat\n\n---\n\n```java\npublic class FormatterFactory\n```\n\nデータレコードフォーマッタ（{@link DataRecordFormatter}）を生成するファクトリクラス。\n<p>\nフォーマット定義ファイルのパースを行い、ディレクティブで指定されたファイルタイプに対応するデータレコードフォーマッタを生成して返却する。<br/>\n具体的には、ファイルタイプが \"Variable\" の場合に{@link VariableLengthDataRecordFormatter}を、\nファイルタイプが \"Fixed\" の場合に{@link FixedLengthDataRecordFormatter}を生成する。\n</p>\n<p>\nフォーマット定義情報保持クラスは、本クラスの内部でキャッシュし、同一のフォーマット定義ファイルが何度もパースされないように制御する。\nデフォルトではフォーマット定義ファイルのパース結果はキャッシュされる。\n</p>\n<p>\nまた、リポジトリに「formatterFactory」のキーで本クラスのインスタンスを格納することで、設定を変更することができる。<br/><br/>\n以下に、設定可能な項目の一覧を示す。\n<table border=\"1\">\n<tr bgcolor=\"#cccccc\">\n<th>プロパティ名</th>\n<th>型</th>\n<th>概要</th>\n</tr>\n<tr>\n<td>allowedRecordSeparatorList</td>\n<td>{@code List<String>}</td>\n<td>レコード終端文字列として許容する文字列のリスト</td>\n</tr>\n<tr>\n<td>defaultReplacementType</td>\n<td>{@code Map<String, String>}</td>\n<td>フィールドタイプ名に対応するデフォルトの寄せ字変換タイプ名のMap</td>\n</tr>\n<tr>\n<td>encoding</td>\n<td>String</td>\n<td>フォーマット定義ファイルのエンコーディング</td>\n</tr>\n<tr>\n<td>cacheLayoutFileDefinition</td>\n<td>boolean</td>\n<td>フォーマット定義ファイルのパース結果のキャッシュ要否</td>\n</tr>\n</table>\n<br/>\nまた、以下にフォーマット定義ファイルの定義例を示す。\n<pre>\n{@code\n<component name=\"formatterFactory\"\n    class=\"nablarch.core.dataformat.FormatterFactory\">\n  <property name=\"cacheLayoutFileDefinition\" value=\"false\" />\n  <property name=\"defaultReplacementType\">\n    <map>\n      <entry key=\"X\" value=\"type_hankaku\" />\n      <entry key=\"N\" value=\"type_zenkaku\" />\n    </map>\n  </property>\n</component>\n}\n</pre>\n</p>\n\n**関連項目:** DataRecordFormatter  \n**関連項目:** LayoutDefinition  \n**作成者:** Masato Inoue  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "layoutDefinitionCache",
+      "level": 3,
+      "content": "```java\nprivate Map<String,LayoutDefinition> layoutDefinitionCache\n```\n\nフォーマット定義ファイルのパース結果クラスのキャッシュ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "cacheLayoutFileDefinition",
+      "level": 3,
+      "content": "```java\nprivate boolean cacheLayoutFileDefinition\n```\n\nフォーマット定義ファイルのパース結果のキャッシュ要否\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "REPOSITORY_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String REPOSITORY_KEY\n```\n\nファクトリクラスのコンポーネント設定ファイル上の名前\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "FILE_TYPE_VARIABLE",
+      "level": 3,
+      "content": "```java\nprivate static final String FILE_TYPE_VARIABLE\n```\n\n可変長ファイルタイプの名前\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "FILE_TYPE_FIXED",
+      "level": 3,
+      "content": "```java\nprivate static final Object FILE_TYPE_FIXED\n```\n\n可変長ファイルタイプの名前\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "FILE_TYPE_JSON",
+      "level": 3,
+      "content": "```java\nprivate static final Object FILE_TYPE_JSON\n```\n\nJSONファイルタイプの名前\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "FILE_TYPE_XML",
+      "level": 3,
+      "content": "```java\nprivate static final Object FILE_TYPE_XML\n```\n\nXMLファイルタイプの名前\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "allowedRecordSeparatorList",
+      "level": 3,
+      "content": "```java\nprivate List<String> allowedRecordSeparatorList\n```\n\n許容するレコード終端文字列のリスト\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "defaultReplacementType",
+      "level": 3,
+      "content": "```java\nprivate Map<String,String> defaultReplacementType\n```\n\nデータタイプ名に対応するデフォルトの寄せ字変換タイプ名のMap\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "encoding",
+      "level": 3,
+      "content": "```java\nprivate String encoding\n```\n\nフォーマット定義ファイルのファイルエンコーディング\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "defaultSetting",
+      "level": 3,
+      "content": "```java\nprivate static FormatterFactory defaultSetting\n```\n\nデフォルトのファクトリクラスのインスタンス。\nリポジトリからインスタンスを取得できなかった場合に、デフォルトでこのインスタンスが使用される。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s13"
+    },
+    {
+      "title": "getInstance",
+      "level": 3,
+      "content": "```java\npublic static FormatterFactory getInstance()\n```\n\nFormatterFactoryクラスのインスタンスをリポジトリより取得する。\nリポジトリより取得できなかった場合は、デフォルトで本クラスのインスタンスを返却する。\n\n**戻り値:**\nこのクラスのインスタンス\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setCacheLayoutFileDefinition",
+      "level": 3,
+      "content": "```java\npublic synchronized FormatterFactory setCacheLayoutFileDefinition(boolean cacheLayoutFileDefinition)\n```\n\nフォーマット定義ファイルのパース結果のキャッシュ要否を設定する。\n\n**パラメータ:**\n- `cacheLayoutFileDefinition` - フォーマット定義ファイルのパース結果のキャッシュ要否\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "createFormatter",
+      "level": 3,
+      "content": "```java\npublic synchronized DataRecordFormatter createFormatter(File layoutFile)\n```\n\nデータレコードフォーマッタのインスタンスを生成する。\nフォーマット定義ファイルのパース結果をキャッシュする設定の場合は、フォーマット定義ファイルのパースは２度行わない。\n\n**パラメータ:**\n- `layoutFile` - フォーマット定義ファイル\n\n**戻り値:**\nデータレコードフォーマッタのインスタンス\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "createFormatter",
+      "level": 3,
+      "content": "```java\npublic synchronized DataRecordFormatter createFormatter(LayoutDefinition definition)\n```\n\nフォーマット定義情報保持クラスをもとに、データレコードフォーマッタのインスタンスを生成する。\n\n**パラメータ:**\n- `definition` - フォーマット定義情報保持クラス\n\n**戻り値:**\nデータレコードフォーマッタのインスタンス\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getDefinitionFromCache",
+      "level": 3,
+      "content": "```java\nprotected LayoutDefinition getDefinitionFromCache(File layoutFile)\n```\n\nキャッシュからフォーマット定義情報保持クラスを取得する。\nフォーマット定義情報保持クラスをキャッシュから取得できない場合は、生成する。\n\n**パラメータ:**\n- `layoutFile` - フォーマット定義ファイル\n\n**戻り値:**\nフォーマット定義情報保持クラス\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "createFormatter",
+      "level": 3,
+      "content": "```java\nprotected DataRecordFormatter createFormatter(String fileType, String formatFilePath)\n```\n\nデータレコードフォーマッタを生成する。\n\nファイルタイプにより下記のとおりフォーマッタの生成を行い、\nこれら以外のファイルタイプの場合は例外をスローする。\n<table border=\"1\">\n<tr bgcolor=\"#cccccc\">\n<th>ファイルタイプ</th>\n<th>フォーマッタクラス</th>\n</tr>\n<tr>\n<td>Variable</td>\n<td>VariableLengthDataRecordFormatter</td>\n</tr>\n<tr>\n<td>Fixed</td>\n<td>FixedLengthDataRecordFormatter</td>\n</tr>\n<tr>\n<td>JSON</td>\n<td>JsonDataRecordFormatter</td>\n</tr>\n<tr>\n<td>XML</td>\n<td>XmlDataRecordFormatter</td>\n</tr>\n</table>\n\n**パラメータ:**\n- `fileType` - ファイルタイプ\n- `formatFilePath` - フォーマット定義ファイルのパス（例外発生時に使用する）\n\n**戻り値:**\nフォーマッタ\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "setFormatterProperty",
+      "level": 3,
+      "content": "```java\nprotected void setFormatterProperty(DataRecordFormatter formatter)\n```\n\nデータレコードフォーマッタにプロパティを設定する。\n<p>\n具体的には、データレコードフォーマッタの型がDataRecordFormatterSupportの場合に、\n本クラスに設定された以下のプロパティを、データレコードフォーマッタのプロパティに設定する。\n<ul>\n<li>データタイプ名に対応するデフォルトの寄せ字変換タイプ名のMap</li>\n<li>許容するレコード終端文字列のリスト</li>\n</ul>\n</p>\n\n**パラメータ:**\n- `formatter` - データレコードフォーマッタ\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "createDefinition",
+      "level": 3,
+      "content": "```java\nprotected LayoutDefinition createDefinition(File layoutFile)\n```\n\nフォーマット定義ファイルを読み込み、フォーマット定義情報保持クラスを生成する。\n\n**パラメータ:**\n- `layoutFile` - フォーマット定義ファイル\n\n**戻り値:**\nフォーマット定義情報保持クラス\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "createLayoutFileParser",
+      "level": 3,
+      "content": "```java\nprotected LayoutFileParser createLayoutFileParser(String layoutFilePath)\n```\n\nフォーマット定義ファイルのパーサを生成する。\n\n**パラメータ:**\n- `layoutFilePath` - フォーマット定義ファイルのパス\n\n**戻り値:**\nフォーマット定義ファイルのパーサ\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "setAllowedRecordSeparatorList",
+      "level": 3,
+      "content": "```java\npublic FormatterFactory setAllowedRecordSeparatorList(List<String> allowedRecordSeparatorList)\n```\n\n許容するレコード終端文字列のリストを設定する。\n\n**パラメータ:**\n- `allowedRecordSeparatorList` - 許容されるレコード終端文字列のリスト\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "setDefaultReplacementType",
+      "level": 3,
+      "content": "```java\npublic FormatterFactory setDefaultReplacementType(Map<String,String> defaultReplacementType)\n```\n\nデータタイプ名に対応するデフォルトの寄せ字変換タイプ名のMapを設定する。\n\n**パラメータ:**\n- `defaultReplacementType` - データタイプ名に対応するデフォルトの寄せ字変換タイプ名のMap\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "setEncoding",
+      "level": 3,
+      "content": "```java\npublic FormatterFactory setEncoding(String encoding)\n```\n\nフォーマット定義ファイルのファイルエンコーディングを設定する。\n\n**パラメータ:**\n- `encoding` - フォーマット定義ファイルのファイルエンコーディング\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s25"
+    }
+  ],
+  "id": "javadoc-nablarch-core-dataformat-FormatterFactory"
+}

@@ -1,0 +1,104 @@
+{
+  "title": "class HttpErrorResponse",
+  "content": "**パッケージ:** nablarch.fw.web\n\n**継承階層:**\n```\njava.lang.Object\n  └─ RuntimeException\n      └─ nablarch.fw.web.HttpErrorResponse\n```\n\n---\n\n```java\npublic class HttpErrorResponse\nextends RuntimeException\n```\n\nエラーレスポンスを行う際に送出する例外。<br>\nエラー時遷移先画面のパス・ステータスコードなど、HttpResponseと同等の情報を指定することができる。\nリクエストプロセッサがこのクラスを捕捉した場合、保持しているHttpResponseオブジェクトの内容にしたがって\nレスポンス処理が行われる。\n注意: 透過的トランザクションハンドラ:nablarch.common.handler.TransactionManagementHandlerを適用している場合、\nユーザエラーをHttpResponseオブジェクトで返却してしまうとロールバックされない。\nHttpErrorResponseを送出することで、ユーザエラーを返しつつ、\nトランザクションをロールバックすることが可能となる。\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n**関連項目:** HttpResponse  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "response",
+      "level": 3,
+      "content": "```java\nprivate HttpResponse response\n```\n\nレスポンス情報\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "HttpErrorResponse",
+      "level": 3,
+      "content": "```java\npublic HttpErrorResponse()\n```\n\nデフォルトコンストラクタ。\n<pre>\nステータスコードは400(Bad Request)を使用する。\nこのコンストラクタの処理は、以下のコードと同等である。\n    new HttpErrorResponse(400);\n</pre>\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "HttpErrorResponse",
+      "level": 3,
+      "content": "```java\npublic HttpErrorResponse(Throwable e)\n```\n\n元例外を指定するコンストラクタ。\n<pre>\nステータスコードは400(Bad Request)を使用する。\nこのコンストラクタの処理は、以下のコードと同等である。\n    new HttpErrorResponse(400, e);\n</pre>\n\n**パラメータ:**\n- `e` - Throwable\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "HttpErrorResponse",
+      "level": 3,
+      "content": "```java\npublic HttpErrorResponse(String contentPath)\n```\n\nコンテンツのパスを指定するコンストラクタ。\n<pre>\nステータスコードは400(Bad Request)を使用する。\nこのコンストラクタの処理は、以下のコードと同等である。\n    new HttpErrorResponse(400, \"/error.jsp\");\n</pre>\n\n**パラメータ:**\n- `contentPath` - レスポンスボディに出力するコンテンツのパス\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "HttpErrorResponse",
+      "level": 3,
+      "content": "```java\npublic HttpErrorResponse(String contentPath, Throwable e)\n```\n\nコンテンツのパスと元例外を指定するコンストラクタ。\n<pre>\nステータスコードは400(Bad Request)を使用する。\nこのコンストラクタの処理は、以下のコードと同等である。\n    new HttpErrorResponse(400, \"/error.jsp\", e);\n</pre>\n\n**パラメータ:**\n- `contentPath` - レスポンスボディに出力するコンテンツのパス\n- `e` - Throwable\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "HttpErrorResponse",
+      "level": 3,
+      "content": "```java\npublic HttpErrorResponse(int statusCode)\n```\n\n指定されたステータスコードでエラーレスポンスを返す例外を生成する。\n\n**パラメータ:**\n- `statusCode` - ステータスコード\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "HttpErrorResponse",
+      "level": 3,
+      "content": "```java\npublic HttpErrorResponse(int statusCode, Throwable e)\n```\n\n指定されたステータスコードでエラーレスポンスを返す例外を生成する。\n\n**パラメータ:**\n- `statusCode` - ステータスコード\n- `e` - 元例外\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "HttpErrorResponse",
+      "level": 3,
+      "content": "```java\npublic HttpErrorResponse(int statusCode, String contentPath)\n```\n\n指定されたステータスコード・コンテンツパスでエラーレスポンスを返す例外を生成する。\n\n**パラメータ:**\n- `statusCode` - ステータスコード\n- `contentPath` - レスポンスボディに出力するコンテンツのパス\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "HttpErrorResponse",
+      "level": 3,
+      "content": "```java\npublic HttpErrorResponse(int statusCode, String contentPath, Throwable e)\n```\n\n指定されたステータスコード・コンテンツパスでエラーレスポンスを返す例外を生成する。\n\n**パラメータ:**\n- `statusCode` - ステータスコード\n- `contentPath` - レスポンスボディに出力するコンテンツのパス\n- `e` - 元例外\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "HttpErrorResponse",
+      "level": 3,
+      "content": "```java\npublic HttpErrorResponse(HttpResponse response)\n```\n\n指定された{@link HttpResponse}を持つ{@code HttpErrorResponse}を生成する。\n\n**パラメータ:**\n- `response` - {@link HttpResponse}\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "HttpErrorResponse",
+      "level": 3,
+      "content": "```java\npublic HttpErrorResponse(HttpResponse response, Throwable e)\n```\n\n指定された{@link HttpResponse}と例外を持つ{@code HttpErrorResponse}を生成する。\n\n**パラメータ:**\n- `response` - {@link HttpResponse}\n- `e` - 元例外\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s14"
+    },
+    {
+      "title": "getResponse",
+      "level": 3,
+      "content": "```java\npublic HttpResponse getResponse()\n```\n\nレスポンス情報を取得する。\n\n**戻り値:**\nレスポンス情報。\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setResponse",
+      "level": 3,
+      "content": "```java\npublic HttpErrorResponse setResponse(HttpResponse response)\n```\n\nレスポンス情報を設定する。\n\n**パラメータ:**\n- `response` - レスポンス情報\n\n**戻り値:**\nこのオブジェクト自身\n\n---",
+      "id": "s16"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-HttpErrorResponse"
+}

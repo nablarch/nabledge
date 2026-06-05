@@ -1,0 +1,80 @@
+{
+  "title": "class DispatchHandler",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**実装されたインタフェース:**\n- Handler<TData,TResult>\n\n---\n\n```java\npublic abstract class DispatchHandler\nimplements Handler<TData,TResult>\n```\n\nハンドラキューの委譲チェインとは独立したルールに従って、\nハンドラのディスパッチを行うハンドラ(ディスパッチャ)\n\n**param:** ハンドラに対する入力オブジェクトの型  \n**param:** ハンドラの処理結果オブジェクトの型  \n**param:** 具象ハンドラの型  \n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "delegateFactory",
+      "level": 3,
+      "content": "```java\nprivate DelegateFactory delegateFactory\n```\n\nデリゲートファクトリ\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "immediate",
+      "level": 3,
+      "content": "```java\nprivate boolean immediate\n```\n\nディスパッチされたハンドラの実行タイミング。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "getHandlerClass",
+      "level": 3,
+      "content": "```java\nprotected abstract Class<?> getHandlerClass(TData input, ExecutionContext context)\n                         throws ClassNotFoundException\n```\n\n処理を委譲するハンドラの型を決定する。\n\n**パラメータ:**\n- `input` - 入力データ\n- `context` - 実行コンテキスト\n\n**戻り値:**\n処理を委譲するハンドラ\n\n**例外:**\n- `ClassNotFoundException` - 指定されたクラスが存在しなかった場合。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic TResult handle(TData req, ExecutionContext ctx)\n```\n\n{@inheritDoc}\n\nこのクラスの実装では、 #getHandlerClass() で指定されるクラスのインスタンスを生成し、\nハンドラキューに追加した後、後続のハンドラに処理を委譲する。\n\nハンドラの追加位置は{@link #immediate}の値に従って以下のように変化する。\n<pre>\n  immediate = true : ハンドラキューの先頭に追加。(即時に実行される。)\n  immediate = false: ハンドラキューの末尾に追加。 \n</pre>\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "createHandlerFor",
+      "level": 3,
+      "content": "```java\nprotected Handler<TData,TResult> createHandlerFor(Object delegate, ExecutionContext ctx)\n```\n\n渡されたインスタンスからハンドラインスタンスを作成して返す。\n\n指定されたクラスがHandlerインターフェースを実装している場合は\nそのインスタンスをキャストして返す。 \n対象のクラスがハンドラインターフェースを実装していない場合でも、\nMethodBinderが実行コンテキストに設定されていれば、それを使用して\nHandlerインターフェースのラッパーを作成して返す。\nMethodBinderも存在しない場合はnullを返す。\n\n**パラメータ:**\n- `delegate` - インスタンス\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\nハンドラインスタンス\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "saveHandlerClassAndMethodToRequestScope",
+      "level": 3,
+      "content": "```java\nprivate void saveHandlerClassAndMethodToRequestScope(ExecutionContext context, Object delegate)\n                                             throws NoSuchMethodException\n```\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setImmediate",
+      "level": 3,
+      "content": "```java\npublic TSelf setImmediate(boolean immediate)\n```\n\nディスパッチされたハンドラの実行タイミングを指定する。\n\n**パラメータ:**\n- `immediate` - trueの場合は、ディスパッチされたハンドラをハンドラキューの先端に追加する。\n    falseの場合は、ディスパッチされたハンドラをハンドラキューの最後尾に追加する。\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "writeDispatchingClassLog",
+      "level": 3,
+      "content": "```java\nprotected void writeDispatchingClassLog(TData data, ExecutionContext context, String fqn)\n```\n\nアクセスログにディスパッチ先クラスを出力する。\n\nデフォルトでは何もしない。\n必要に応じてオーバーライドすること。\n\n**パラメータ:**\n- `data` - 入力データオブジェクト\n- `context` - 実行コンテキスト\n- `fqn` - ディスパッチ先クラスの完全修飾クラス名\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setDelegateFactory",
+      "level": 3,
+      "content": "```java\npublic void setDelegateFactory(DelegateFactory delegateFactory)\n```\n\nハンドラファクトリを設定する。\n明示的に設定されない場合、デフォルト実装として{@link DefaultDelegateFactory}を使用する。\n\n**パラメータ:**\n- `delegateFactory` - ハンドラファクトリ\n\n---",
+      "id": "s12"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-DispatchHandler"
+}

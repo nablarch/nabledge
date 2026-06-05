@@ -1,0 +1,62 @@
+{
+  "title": "class ServiceAvailabilityCheckHandler",
+  "content": "**パッケージ:** nablarch.common.availability\n\n**実装されたインタフェース:**\n- Handler<Object,Object>\n- InboundHandleable\n\n---\n\n```java\npublic class ServiceAvailabilityCheckHandler\nimplements Handler<Object,Object>, InboundHandleable\n```\n\nWEBサービス提供可否状態判定処理実施ハンドラ。\n<br>\n{@link nablarch.core.ThreadContext}から取得したリクエストIDがサービス提供可能かどうか判定する。\n\n**作成者:** Masayuki Fujikuma  \n**作成者:** Masato Inoue  \n**関連項目:** nablarch.common.availability.ServiceAvailability  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "serviceAvailability",
+      "level": 3,
+      "content": "```java\nprivate ServiceAvailability serviceAvailability\n```\n\nサービス提供可否状態判定オブジェクト。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "usesInternalRequestId",
+      "level": 3,
+      "content": "```java\nprivate boolean usesInternalRequestId\n```\n\nサービス提供可否判定を行う際に内部リクエストIDを使用するかどうか\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(Object inputData, ExecutionContext context)\n```\n\n{@link nablarch.core.ThreadContext}からリクエストIDを取得し、サービス提供可否を判定する。<br>\n判定結果が可の場合、処理を後続に受け渡し、判定結果が不可の場合、例外を送出する。\n\n**パラメータ:**\n- `inputData` - 入力パラメータ\n- `context` - サービスハンドラチェイン\n\n**戻り値:**\nレスポンスオブジェクト\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "setServiceAvailability",
+      "level": 3,
+      "content": "```java\npublic void setServiceAvailability(ServiceAvailability serviceAvailability)\n```\n\nサービス提供可否状態判定オブジェクトを設定する。\n\n**パラメータ:**\n- `serviceAvailability` - サービス提供可否状態判定オブジェクト\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setUsesInternalRequestId",
+      "level": 3,
+      "content": "```java\npublic ServiceAvailabilityCheckHandler setUsesInternalRequestId(boolean usesInternal)\n```\n\n開閉局状態の判定を内部リクエストIDを用いて行うか否かを設定する。\n\n明示的に設定しなかった場合のデフォルトは true (内部リクエストIDを使用する。)\n\n**パラメータ:**\n- `usesInternal` - 内部リクエストIDを使用して判定を行う場合は true\n                     常に外部から送信されたリクエストIDを使って判定を行う場合は false\n\n**戻り値:**\nこのハンドラインスタンス自体\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "handleInbound",
+      "level": 3,
+      "content": "```java\npublic Result handleInbound(ExecutionContext context)\n```\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-common-availability-ServiceAvailabilityCheckHandler"
+}

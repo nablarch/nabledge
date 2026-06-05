@@ -1,0 +1,86 @@
+{
+  "title": "class BeanValidationStrategy",
+  "content": "**パッケージ:** nablarch.common.web.validator\n\n**実装されたインタフェース:**\n- ValidationStrategy\n\n---\n\n```java\npublic class BeanValidationStrategy\nimplements ValidationStrategy\n```\n\nBeanValidationを使用する場合のリクエスト内容のバリデーション、オブジェクト(Bean)生成ロジック.\n\n<p>\n本実装ではバリデーションエラーが発生した場合に、\nリクエストパラメータから値をコピーしたオブジェクト(Bean)が、\nリクエストスコープに格納する機能を持つ。\nこれは、バリデーションエラーが発生した時でも、JSP等でリクエストパラメータの値を\n参照できるようにするためである。\n本機能を有効化するには{@link #setCopyBeanToRequestScopeOnError(boolean)}に真を設定すること。\n</p>\n\n**作成者:** sumida  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "copyBeanToRequestScopeOnError",
+      "level": 3,
+      "content": "```java\nprivate boolean copyBeanToRequestScopeOnError\n```\n\nバリデーションエラー時にBeanをリクエストスコープにコピーするかどうか\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "formFactory",
+      "level": 3,
+      "content": "```java\nprivate BeanValidationFormFactory formFactory\n```\n\nフォームファクトリ。\n（デフォルトでは単純にリフレクションでインスタンスを生成する）\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "BeanValidationStrategy",
+      "level": 3,
+      "content": "```java\npublic BeanValidationStrategy()\n```\n\n{@code BeanValidationStrategy}を生成する。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "createForm",
+      "level": 3,
+      "content": "```java\nprotected Serializable createForm(HttpRequest request, InjectForm annotation)\n```\n\n{@link InjectForm}のform属性で指定された型のフォームを生成する。\n\n**パラメータ:**\n- `request` - リクエスト\n- `annotation` - InjectFormアノテーション\n\n**戻り値:**\nリクエストパラメータが登録されたフォーム\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "validate",
+      "level": 3,
+      "content": "```java\npublic Serializable validate(HttpRequest request, InjectForm annotation, boolean notUse, ServletExecutionContext context)\n```\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "sortMessages",
+      "level": 3,
+      "content": "```java\nprotected List<Message> sortMessages(List<Message> messages, ServletExecutionContext context, InjectForm injectForm)\n```\n\nメッセージをソートする。\n<p>\nソートされる順序は、{@link ServletRequest#getParameterNames()}の順となる。\n{@link ServletRequest#getParameterNames()}に存在しない項目は、メッセージリストの末尾に移動する。\n\n**パラメータ:**\n- `messages` - ソート対象のメッセージリスト\n- `context` - Servlet実行コンテキスト\n- `injectForm` - {@code InjectForm}アノテーション\n\n**戻り値:**\nソートしたメッセージリスト\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getParameterIndex",
+      "level": 3,
+      "content": "```java\nprivate static int getParameterIndex(List<String> parameterNames, Message message)\n```\n\nメッセージが持つプロパティ名がパラメータ名の何番目の要素か返す。\n\n**パラメータ:**\n- `parameterNames` - パラメータ名のリスト\n- `message` - メッセージ\n\n**戻り値:**\nパラメータ名の何番目か(パラメータ名にない場合はプロパティ名を持たない場合は{@link Integer#MAX_VALUE})\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getMapWithConvertedKey",
+      "level": 3,
+      "content": "```java\nprivate Map<String,String[]> getMapWithConvertedKey(String prefix, Map<String,String[]> reqParamMap)\n```\n\n{@link InjectForm}のprefixに指定した文字列を、キーの先頭から削除したMapオブジェクトを返す.<br>\n\n**パラメータ:**\n- `prefix` - 項目名から削除するプレフィックス\n- `reqParamMap` - リクエストパラメータを格納したMap\n\n**戻り値:**\nキーからprefixが削除されたMap\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setCopyBeanToRequestScopeOnError",
+      "level": 3,
+      "content": "```java\npublic void setCopyBeanToRequestScopeOnError(boolean copyBeanToRequestScopeOnError)\n```\n\nバリデーションエラー時に、Beanをリクエストスコープにコピーするかどうかを\n設定する（デフォルトは「コピーしない」）。\n\n**パラメータ:**\n- `copyBeanToRequestScopeOnError` - コピーする場合は真を指定\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setFormFactory",
+      "level": 3,
+      "content": "```java\npublic void setFormFactory(BeanValidationFormFactory formFactory)\n```\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-common-web-validator-BeanValidationStrategy"
+}

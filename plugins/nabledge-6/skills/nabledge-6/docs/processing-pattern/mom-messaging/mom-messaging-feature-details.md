@@ -51,8 +51,8 @@
 * [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#momメッセージング)
 * 標準提供のデータリーダ
 
-  * FwHeaderReader (電文からフレームワーク制御ヘッダの読み込み)
-  * MessageReader (MQから電文の読み込み)
+  * [FwHeaderReader (電文からフレームワーク制御ヘッダの読み込み)](../../javadoc/javadoc-nablarch-fw-messaging-reader-FwHeaderReader.md)
+  * [MessageReader (MQから電文の読み込み)](../../javadoc/javadoc-nablarch-fw-messaging-reader-MessageReader.md)
 * [再送制御](../../component/handlers/handlers-message-resend-handler.md#再送電文制御ハンドラ)
 
 ## 出力するデータの表示形式のフォーマット

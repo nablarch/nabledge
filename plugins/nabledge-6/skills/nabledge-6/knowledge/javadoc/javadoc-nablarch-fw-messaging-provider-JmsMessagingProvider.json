@@ -1,0 +1,134 @@
+{
+  "title": "class JmsMessagingProvider",
+  "content": "**パッケージ:** nablarch.fw.messaging.provider\n\n**実装されたインタフェース:**\n- MessagingProvider\n\n---\n\n```java\npublic class JmsMessagingProvider\nimplements MessagingProvider\n```\n\nJMSプロバイダを利用したメッセージング機能の実装。\n\n各JMSプロバイダが実装するConnectionFactoryおよびQueueオブジェクトを設定\nすることにより、メッセージング機能が利用可能となる。\n<p/>\n\n<dv><b>Poison電文の退避</b></div>\n<hr/>\n本実装ではPoison電文の退避処理を独自に実装しており、リトライ上限、\n退避キュー名称を指定することができる。\nただし、この機能はJMSXDeliveryCountヘッダに依存しているため、同ヘッダを\nサポートしない一部のMOM製品/バージョンでは利用できない。\nなお、以下のMOMについては最新版における同ヘッダのサポートを確認している。\n<pre>\n- IBM MQ\n- WebLogic MQ\n- ActiveMQ\n</pre>\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nメッセージングログを出力するロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "factory",
+      "level": 3,
+      "content": "```java\nprivate ConnectionFactory factory\n```\n\nJMSプロバイダによるコネクションファクトリ実装\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "queueTable",
+      "level": 3,
+      "content": "```java\nprivate final Map<String,Queue> queueTable\n```\n\nキュー名をキーとするJMS QueueオブジェクトのMap\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "poisonQueueNamePattern",
+      "level": 3,
+      "content": "```java\nprivate String poisonQueueNamePattern\n```\n\n退避キュー論理名のパターン\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "defaultPoisonQueue",
+      "level": 3,
+      "content": "```java\nprivate String defaultPoisonQueue\n```\n\nデフォルト退避キューの論理名\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "redeliveryLimit",
+      "level": 3,
+      "content": "```java\nprivate int redeliveryLimit\n```\n\nMOMによる受信リトライ上限値\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "timeout",
+      "level": 3,
+      "content": "```java\nprivate long timeout\n```\n\n同期送信デフォルトタイムアウト値 (msec)\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "timeToLive",
+      "level": 3,
+      "content": "```java\nprivate long timeToLive\n```\n\n送信電文デフォルト有効期間 (msec)\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "messagingExceptionFactory",
+      "level": 3,
+      "content": "```java\nprivate MessagingExceptionFactory messagingExceptionFactory\n```\n\n{@link MessagingException}ファクトリオブジェクト\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s11"
+    },
+    {
+      "title": "createContext",
+      "level": 3,
+      "content": "```java\npublic MessagingContext createContext()\n```\n\n{@inheritDoc}\n この実装では、コネクションファクトリからJMSコネクションを取得し、\n 新規セッションを作成する。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setDefaultResponseTimeout",
+      "level": 3,
+      "content": "```java\npublic MessagingProvider setDefaultResponseTimeout(long timeout)\n```\n\n{@inheritDoc}\n同期送信処理におけるデフォルトタイムアウト値を設定する。\nデフォルトタイムアウトを明示的に設定しなかった場合のデフォルトタイムアウトは\n5分間となる。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setDefaultTimeToLive",
+      "level": 3,
+      "content": "```java\npublic MessagingProvider setDefaultTimeToLive(long timeToLive)\n```\n\n{@inheritDoc}\n送信電文のデフォルト有効期間を設定する。\nデフォルト値を明示的に設定しなかった場合の有効期間は30秒(30000msec)となる。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setConnectionFactory",
+      "level": 3,
+      "content": "```java\npublic JmsMessagingProvider setConnectionFactory(ConnectionFactory factory)\n```\n\nコネクションファクトリを設定する。\n\nこのクラスではコネクションプール機能を提供していないため、\nコネクションプール機能を内蔵したコネクションファクトリを使用することを\n強く推奨する。\n\n**パラメータ:**\n- `factory` - コネクションファクトリ\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getConnectionFactory",
+      "level": 3,
+      "content": "```java\npublic ConnectionFactory getConnectionFactory()\n```\n\nコネクションファクトリを返す。\n\n**戻り値:**\nコネクションファクトリ\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setDestinations",
+      "level": 3,
+      "content": "```java\npublic JmsMessagingProvider setDestinations(Map<String,Queue> table)\n```\n\nメッセージング機能で使用する宛先の論理名とJMS Destinationオブジェクトとの\nマッピングを設定する。\n（既存の設定があった場合は上書きされる。）\n\n**パラメータ:**\n- `table` - キューの論理名とそれに対応するQueueオブジェクトとのマッピング\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setPoisonQueueNamePattern",
+      "level": 3,
+      "content": "```java\npublic JmsMessagingProvider setPoisonQueueNamePattern(String pattern)\n```\n\n各受信キューに対する退避キューの論理名を決定する際に使用する\nパターン文字列を設定する。\n明示的に指定しなかった場合のデフォルトは、\n<code>(受信キュー名).POISON</code>\nとなる。\n当該のキューが存在しなかった場合はデフォルトの退避キュー名を使用する。\n\n**パラメータ:**\n- `pattern` - 退避キューの論理名を決定する際に使用するパターン文字列\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setDefaultPoisonQueue",
+      "level": 3,
+      "content": "```java\npublic JmsMessagingProvider setDefaultPoisonQueue(String queueName)\n```\n\nデフォルトで使用する受信退避キューの論理名を設定する。\n当該のキューが存在しなかった場合は、MessgingExceptionを送出する。\n明示的に指定しなかった場合は、<code>DEFAULT.POISON</code>を使用する。\n\n**パラメータ:**\n- `queueName` - キュー名称\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "setRedeliveryLimit",
+      "level": 3,
+      "content": "```java\npublic JmsMessagingProvider setRedeliveryLimit(int limit)\n```\n\nMOMによる受信リトライの上限回数を設定する。\n受信メッセージのJMSXDeliveryCountヘッダの値がこの上限値を越えると、\nメッセージを退避キューに転送した上で、MessagingExceptionを送出する。\n\nこの値が0以下の数値であった場合は、退避処理自体が無効化される。\n明示的に指定しない場合のデフォルトは0である。\n\n**パラメータ:**\n- `limit` - 受信リトライの上限回数\n\n**戻り値:**\nこのオブジェクト自体。\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "setMessagingExceptionFactory",
+      "level": 3,
+      "content": "```java\npublic MessagingProvider setMessagingExceptionFactory(MessagingExceptionFactory messagingExceptionFactory)\n```\n\n{@link MessagingException}ファクトリオブジェクトを設定する。\n<p/>\nデフォルトは{@link BasicMessagingExceptionFactory}。\n\n**パラメータ:**\n- `messagingExceptionFactory` - {@link MessagingException}ファクトリオブジェクト\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s21"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-provider-JmsMessagingProvider"
+}

@@ -1,0 +1,98 @@
+{
+  "title": "class DeleteInsertBatchlet",
+  "content": "**パッケージ:** nablarch.etl\n\n**継承階層:**\n```\njava.lang.Object\n  └─ AbstractBatchlet\n      └─ nablarch.etl.DeleteInsertBatchlet\n```\n\n---\n\n```java\npublic class DeleteInsertBatchlet\nextends AbstractBatchlet\n```\n\nテーブル間のデータ転送を行う{@link javax.batch.api.Batchlet}実装クラス。\n<p/>\n移送先テーブルのデータをクリーニング後に、移送元のデータを一括で移送先のテーブルに転送（登録）する。\n\n**作成者:** Hisaaki Shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "jobContext",
+      "level": 3,
+      "content": "```java\nprivate final JobContext jobContext\n```\n\n{@link JobContext}\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "stepContext",
+      "level": 3,
+      "content": "```java\nprivate final StepContext stepContext\n```\n\n{@link StepContext}\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "rangeUpdateHelper",
+      "level": 3,
+      "content": "```java\nprivate final RangeUpdateHelper rangeUpdateHelper\n```\n\n範囲更新のヘルパークラス\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "stepConfig",
+      "level": 3,
+      "content": "```java\nprivate final StepConfig stepConfig\n```\n\nETLの設定\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "progressManager",
+      "level": 3,
+      "content": "```java\nprivate final ProgressManager progressManager\n```\n\n進捗状況を管理するBean\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "DeleteInsertBatchlet",
+      "level": 3,
+      "content": "```java\npublic DeleteInsertBatchlet(JobContext jobContext, StepContext stepContext, RangeUpdateHelper rangeUpdateHelper, StepConfig stepConfig, ProgressManager progressManager)\n```\n\nコンストラクタ。\n\n**パラメータ:**\n- `jobContext` - {@link JobContext}\n- `stepContext` - {@link StepContext}\n- `rangeUpdateHelper` - {@link RangeUpdateHelper}\n- `stepConfig` - ステップ設定\n- `progressManager` - {@link ProgressManager}\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "process",
+      "level": 3,
+      "content": "```java\npublic String process()\n               throws Exception\n```\n\n一括登録処理を行う。\n\n**戻り値:**\n結果(SUCCESS固定)\n\n**例外:**\n- `Exception` - 例外\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "verify",
+      "level": 3,
+      "content": "```java\nprivate void verify(DbToDbStepConfig config)\n```\n\n設定値の検証を行う。\n\n**パラメータ:**\n- `config` - 設定\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "cleaning",
+      "level": 3,
+      "content": "```java\nprivate void cleaning(AppDbConnection connection, DbToDbStepConfig config)\n```\n\nテーブルのクリーニング処理を行う。\n\n**パラメータ:**\n- `connection` - データベース接続\n- `config` - 設定\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "insert",
+      "level": 3,
+      "content": "```java\nprivate void insert(AppDbConnection connection, DbToDbStepConfig config)\n```\n\nテーブルへの登録処理を行う。\n\n**パラメータ:**\n- `connection` - データベース接続\n- `config` - 設定\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "commit",
+      "level": 3,
+      "content": "```java\nprivate static void commit()\n```\n\nコミットを行う。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "loggingCleaning",
+      "level": 3,
+      "content": "```java\nprivate void loggingCleaning(String tableName, int deleteCount)\n```\n\nクリーニングのログを出力する。\n\n**パラメータ:**\n- `tableName` - クリーンしたテーブル名\n- `deleteCount` - 削除した件数\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-etl-DeleteInsertBatchlet"
+}

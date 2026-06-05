@@ -1,0 +1,230 @@
+{
+  "title": "class SimpleRestTestSupport",
+  "content": "**パッケージ:** nablarch.test.core.http\n\n**継承階層:**\n```\njava.lang.Object\n  └─ TestEventDispatcher\n      └─ nablarch.test.core.http.SimpleRestTestSupport\n```\n\n---\n\n```java\npublic class SimpleRestTestSupport\nextends TestEventDispatcher\n```\n\nRESTfulウェブサービス用のテストサポートクラス\n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "REST_TEST_CONFIGURATION_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String REST_TEST_CONFIGURATION_KEY\n```\n\nRestTestConfigurationのリポジトリキー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "HTTP_REQUEST_BUILDER_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String HTTP_REQUEST_BUILDER_KEY\n```\n\nRestMockHttpRequestBuilderのリポジトリキー\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "HTTP_SERVER_FACTORY_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String HTTP_SERVER_FACTORY_KEY\n```\n\nHTTPサーバファクトリのリポジトリキー\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "DEFAULT_PROCESSOR_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_PROCESSOR_KEY\n```\n\nデフォルトプロセッサのリポジトリキー\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "server",
+      "level": 3,
+      "content": "```java\nprivate static HttpServer server\n```\n\n内蔵サーバ\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "handler",
+      "level": 3,
+      "content": "```java\nprivate static HttpRequestTestSupportHandler handler\n```\n\nテスト用ハンドラ\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "initialized",
+      "level": 3,
+      "content": "```java\nprivate static boolean initialized\n```\n\n初期化済みか否か（static）\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "defaultProcessor",
+      "level": 3,
+      "content": "```java\nprivate RequestResponseProcessor defaultProcessor\n```\n\nデフォルトのプロセッサ *\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "NOP_PROCESSOR",
+      "level": 3,
+      "content": "```java\nprivate static final RequestResponseProcessor NOP_PROCESSOR\n```\n\nリクエスト・レスポンスともに何もしないプロセッサ *\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "testDescription",
+      "level": 3,
+      "content": "```java\npublic TestDescription testDescription\n```\n\n実行中のテストクラスとメソッド名を保持する\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s12"
+    },
+    {
+      "title": "setUp",
+      "level": 3,
+      "content": "```java\npublic void setUp()\n```\n\nシステムリポジトリから設定を取得しHTTPサーバを起動する。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setupDefaultProcessor",
+      "level": 3,
+      "content": "```java\nprivate void setupDefaultProcessor()\n```\n\nデフォルト{@link RequestResponseProcessor}を設定する。\nSystemRepositoryに登録されていない場合は何もしない{@link RequestResponseProcessor}を設定する。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getHttpRequestBuilder",
+      "level": 3,
+      "content": "```java\npublic RestMockHttpRequestBuilder getHttpRequestBuilder()\n```\n\nシステムリポジトリから{@link RestMockHttpRequestBuilder}を取得する。\n\n**戻り値:**\n取得した{@link RestMockHttpRequestBuilder}\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "newRequest",
+      "level": 3,
+      "content": "```java\npublic RestMockHttpRequest newRequest(String httpMethod, String uri)\n```\n\n任意のHTTPメソッドで{@link RestMockHttpRequest}を生成する。\n\n**パラメータ:**\n- `httpMethod` - HTTPメソッド\n- `uri` - リクエストURI\n\n**戻り値:**\n生成された{@link RestMockHttpRequest}\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "get",
+      "level": 3,
+      "content": "```java\npublic RestMockHttpRequest get(String uri)\n```\n\nGETのHTTPメソッドで{@link RestMockHttpRequest}を生成する。\n\n**パラメータ:**\n- `uri` - リクエストURI\n\n**戻り値:**\n生成された{@link RestMockHttpRequest}\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "post",
+      "level": 3,
+      "content": "```java\npublic RestMockHttpRequest post(String uri)\n```\n\nPOSTのHTTPメソッドで{@link RestMockHttpRequest}を生成する。\n\n**パラメータ:**\n- `uri` - リクエストURI\n\n**戻り値:**\n生成された{@link RestMockHttpRequest}\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "put",
+      "level": 3,
+      "content": "```java\npublic RestMockHttpRequest put(String uri)\n```\n\nPUTのHTTPメソッドで{@link RestMockHttpRequest}を生成する。\n\n**パラメータ:**\n- `uri` - リクエストURI\n\n**戻り値:**\n生成された{@link RestMockHttpRequest}\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "delete",
+      "level": 3,
+      "content": "```java\npublic RestMockHttpRequest delete(String uri)\n```\n\nDELETEのHTTPメソッドで{@link RestMockHttpRequest}を生成する。\n\n**パラメータ:**\n- `uri` - リクエストURI\n\n**戻り値:**\n生成された{@link RestMockHttpRequest}\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "patch",
+      "level": 3,
+      "content": "```java\npublic RestMockHttpRequest patch(String uri)\n```\n\nPATCHのHTTPメソッドで{@link RestMockHttpRequest}を生成する。\n\n**パラメータ:**\n- `uri` - リクエストURI\n\n**戻り値:**\n生成された{@link RestMockHttpRequest}\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "sendRequest",
+      "level": 3,
+      "content": "```java\npublic HttpResponse sendRequest(HttpRequest request)\n```\n\nテストリクエストを内蔵サーバに渡しレスポンスを返す。\n\n**パラメータ:**\n- `request` - テストリクエスト\n\n**戻り値:**\n内蔵サーバのレスポンス\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "sendRequest",
+      "level": 3,
+      "content": "```java\npublic HttpResponse sendRequest(HttpRequest request, RequestResponseProcessor processor)\n```\n\nテストリクエストを内蔵サーバに渡しレスポンスを返す。\n\n**パラメータ:**\n- `request` - テストリクエスト\n- `processor` - リクエスト・レスポンスに追加処理を実行するプロセッサー\n\n**戻り値:**\n内蔵サーバのレスポンス\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "sendRequestWithContext",
+      "level": 3,
+      "content": "```java\npublic HttpResponse sendRequestWithContext(HttpRequest request, ExecutionContext context)\n```\n\n{@link ExecutionContext}を設定しテストリクエストを内蔵サーバに渡しレスポンスを返す。\n{@link ExecutionContext}の設定は{@link HttpRequestTestSupportHandler}を利用する。\n\n**パラメータ:**\n- `request` - テストリクエスト\n- `context` - 実行コンテキスト\n\n**戻り値:**\n内蔵サーバのレスポンス\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "sendRequestWithContext",
+      "level": 3,
+      "content": "```java\npublic HttpResponse sendRequestWithContext(HttpRequest request, ExecutionContext context, RequestResponseProcessor processor)\n```\n\n{@link ExecutionContext}を設定しテストリクエストを内蔵サーバに渡しレスポンスを返す。\n{@link ExecutionContext}の設定は{@link HttpRequestTestSupportHandler}を利用する。\n\n**パラメータ:**\n- `request` - テストリクエスト\n- `context` - 実行コンテキスト\n- `processor` - リクエスト・レスポンスに追加処理を実行するプロセッサー\n\n**戻り値:**\n内蔵サーバのレスポンス\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "initializeIfNotYet",
+      "level": 3,
+      "content": "```java\nprivate static void initializeIfNotYet(RestTestConfiguration config)\n```\n\n初回の場合、内臓サーバを起動する。\n\n**パラメータ:**\n- `config` - 設定定義\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "resetHttpServer",
+      "level": 3,
+      "content": "```java\npublic static void resetHttpServer()\n```\n\nキャッシュした HttpServer をリセットする。\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "createHttpServer",
+      "level": 3,
+      "content": "```java\nprivate static void createHttpServer(RestTestConfiguration config)\n```\n\nHttpServerを生成する。\n\n**パラメータ:**\n- `config` - 設定定義\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "getWarBasePaths",
+      "level": 3,
+      "content": "```java\nprivate static List<ResourceLocator> getWarBasePaths(RestTestConfiguration config)\n```\n\nWarベースパスを取得する。\n\n**パラメータ:**\n- `config` - 設定定義\n\n**戻り値:**\nWarベースパス\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "createHttpServer",
+      "level": 3,
+      "content": "```java\nprivate static HttpServer createHttpServer()\n```\n\nHttpServerのインスタンスを生成する。\n\n**戻り値:**\nHttpServerのインスタンス\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "assertStatusCode",
+      "level": 3,
+      "content": "```java\npublic void assertStatusCode(String message, HttpResponse.Status expected, HttpResponse response)\n```\n\nステータスコードが想定通りであることを表明する。\n\n**パラメータ:**\n- `message` - アサート失敗時のメッセージ\n- `expected` - 期待するステータス\n- `response` - HTTPレスポンス\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "assertStatusCode",
+      "level": 3,
+      "content": "```java\npublic void assertStatusCode(String message, int expected, HttpResponse response)\n```\n\nステータスコードが想定通りであることを表明する。\n\n**パラメータ:**\n- `message` - アサート失敗時のメッセージ\n- `expected` - 期待するステータスコード値\n- `response` - HTTPレスポンス\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "readTextResource",
+      "level": 3,
+      "content": "```java\nprotected String readTextResource(String fileName)\n```\n\nテストクラスと同じパッケージにあるファイルを読み込み文字列を返す。\n\n**パラメータ:**\n- `fileName` - 読み込むファイル名\n\n**戻り値:**\nファイル内容の文字列\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "readTextResource",
+      "level": 3,
+      "content": "```java\npublic String readTextResource(Class<?> testClass, String fileName)\n```\n\n指定したテストクラスと同じパッケージにあるファイルを読み込み文字列を返す。\n\n**パラメータ:**\n- `testClass` - テストクラス\n- `fileName` - 読み込むファイル名\n\n**戻り値:**\nファイル内容の文字列\n\n---",
+      "id": "s34"
+    },
+    {
+      "title": "getUrl",
+      "level": 3,
+      "content": "```java\nprivate URL getUrl(Class<?> testClass, String fileName)\n```\n\nファイルのURLを取得する。\n\n**パラメータ:**\n- `testClass` - テストクラス\n- `fileName` - 対象のファイル名\n\n**戻り値:**\nファイルのURL\n\n---",
+      "id": "s35"
+    },
+    {
+      "title": "read",
+      "level": 3,
+      "content": "```java\nprotected String read(File file)\n            throws IOException\n```\n\nファイルを読み込みStringを返す。\n\n**パラメータ:**\n- `file` - 読み込むファイル\n\n**戻り値:**\nファイル内容の文字列\n\n**例外:**\n- `IOException` - 読み込み失敗時の例外\n\n---",
+      "id": "s36"
+    },
+    {
+      "title": "createNoComponentMessage",
+      "level": 3,
+      "content": "```java\nprotected static String createNoComponentMessage(String componentKey)\n```\n\nコンポーネントが見つからない場合のエラーメッセージを組み立てる。\n\n**パラメータ:**\n- `componentKey` - コンポーネントのキー\n\n**戻り値:**\nエラーメッセージ\n\n---",
+      "id": "s37"
+    }
+  ],
+  "id": "javadoc-nablarch-test-core-http-SimpleRestTestSupport"
+}

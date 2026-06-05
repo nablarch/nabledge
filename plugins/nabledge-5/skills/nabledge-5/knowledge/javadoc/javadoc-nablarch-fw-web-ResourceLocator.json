@@ -1,0 +1,212 @@
+{
+  "title": "class ResourceLocator",
+  "content": "**パッケージ:** nablarch.fw.web\n\n---\n\n```java\npublic final class ResourceLocator\n```\n\n各種リソースを識別する為の文字列（リソースロケータ）をパースして格納するクラス。\n<p/>\n<pre>\nリソースロケータとは、本フレームワークにおいて、何らかのリソースを指定する際に用いられる汎用的書式である。\n以下のように定義される。\n  (スキーム名)://(ディレクトリパス)/(リソース名)\n\nリソースロケータの使用場面例\n- HTTPレスポンスの内容を格納したリソースを指定するケース\n\n  // 業務Actionから\"jsp/success.jsp\" に対してフォーワード\n  new HttpResponse(\"200\", \"servlet://jsp/success.jsp\");\n\n現時点でサポートされるスキームは以下の5つである。\n\n1. 静的ファイル\n   ファイルシステム上の静的ファイルの内容を出力する。\n   絶対パスもしくは相対パスで指定することが可能である。\n    (書式)\n        file://(コンテンツファイルへのパス)\n    (例)\n        file://./webapps/style/common.css    (相対パス)\n        file:///www/docroot/style/common.css (絶対パス)\n\n2. Javaコンテキストクラスローダ上のリソース\n   コンテキストクラスローダ上のリソースの内容を出力する。\n    (書式)\n        classpath://(Javaリソース名)\n    (例)\n        classpath://nablarch/sample/webapp/common.css\n\n  classpath指定は、ファイルシステム上に存在しているファイルのみ指定できる。\n  このため、jarなどでアーカイブされたファイルについてはclasspathを指定することは出来ない。\n  また、バーチャルファイルシステムを用いてファイルを管理するようなWebアプリケーションサーバの場合、\n  ファイルシステム上に存在しているファイルの場合でも、classpathの指定は出来ない。\n\n  このため、classpathではなく静的ファイル(file://)の使用を推奨する。\n\n3. 内部フォーワード\n   リクエストプロセッサに対して、指定したリクエストURIでの再処理を要求する。\n   HttpRequest・ExecutionContextはそのまま流用される。\n    (書式)\n        forward://(フォーワード名)\n    (例)\n        forward://registerForm.html           (現在のURIからの相対パス)\n        forward:///app/user/registerForm.html (絶対パス)\n\n4. サーブレットフォーワード\n   サーブレットコンテナに対してフォーワードを行う。\n   この場合、レスポンスの出力処理自体がフォーワード先のサーブレットに委譲される。\n    (書式)\n        servlet://(フォーワード名)\n    (例)\n        servlet://jsp/index.jsp   (現在のページからの相対パス)\n        servlet:///jsp/index.jsp  (サーブレットコンテキストを起点とする相対パス)\n\n\n5. リダイレクト\n   この場合は、指定されたパスへのリダイレクションを指示するレスポンスを行う。\n    (書式)\n        redirect://(リダイレクト先パス)\n        http(s)://(リダイレクト先URL)\n        redirect:(リダイレクト先の絶対URL)\n    (例)\n        redirect://login             (現在のページからの相対パス)\n        redirect:///UserAction/login (サーブレットコンテキストを起点とする相対パス)\n        http://www.example.com/login (外部サイトのURL)\n        redirect:myapp://example.com (モバイルアプリのカスタムスキームを持つURL)\n\nこのクラスは不変クラスである。\n</pre>\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOG",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOG\n```\n\nログ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DEFAULT_SCHEME",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_SCHEME\n```\n\nデフォルトスキーム\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "SCHEMES",
+      "level": 3,
+      "content": "```java\npublic static final String SCHEMES\n```\n\n対応するスキーム名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "ALLOWED_SCHEMES",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern ALLOWED_SCHEMES\n```\n\n許可スキームパターン\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "EXTRACT_SCHEME_PATTERN",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern EXTRACT_SCHEME_PATTERN\n```\n\nスキームを抽出するための正規表現\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "EXTRACT_HOSTNAME_PATTERN",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern EXTRACT_HOSTNAME_PATTERN\n```\n\nホスト名を抽出するための正規表現\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "ALLOWED_CHAR",
+      "level": 3,
+      "content": "```java\npublic static final Pattern ALLOWED_CHAR\n```\n\nコンテンツパス中のディレクトリとして許容される文字列。\n<p/>\n<pre>\n\"/\", \"~\" はNG。\n2以上連続する\".\"もNG。\n</pre>\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "contentPath",
+      "level": 3,
+      "content": "```java\nprivate final String contentPath\n```\n\nコンテンツのパス\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "scheme",
+      "level": 3,
+      "content": "```java\nprivate final String scheme\n```\n\nリソースパスのスキーム名\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "path",
+      "level": 3,
+      "content": "```java\nprivate final String path\n```\n\nパス\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "resourceName",
+      "level": 3,
+      "content": "```java\nprivate final String resourceName\n```\n\nリソース名\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "hostname",
+      "level": 3,
+      "content": "```java\nprivate final String hostname\n```\n\nホスト名\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "directory",
+      "level": 3,
+      "content": "```java\nprivate final String directory\n```\n\nディレクトリ\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "redirectWithAbsoluteUri",
+      "level": 3,
+      "content": "```java\nprivate final boolean redirectWithAbsoluteUri\n```\n\n絶対URIを伴うリダイレクトかどうかを表すフラグ\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s16"
+    },
+    {
+      "title": "ResourceLocator",
+      "level": 3,
+      "content": "```java\nprivate ResourceLocator(String path)\n```\n\nリソースの文字列表現からオブジェクトを生成する。\n\n**パラメータ:**\n- `path` - リソースの文字列表現\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s18"
+    },
+    {
+      "title": "valueOf",
+      "level": 3,
+      "content": "```java\npublic static ResourceLocator valueOf(String path)\n```\n\nリソースの文字列表現から{@code ResourceLocator}オブジェクトを生成する。\n<p/>\n{@value SCHEMES}に含まれないスキームを指定した場合、スキームは常に「servlet」となる。\n\n**パラメータ:**\n- `path` - リソースの文字列表現\n\n**戻り値:**\n生成されたオブジェクト\n\n**例外:**\n- `HttpErrorResponse` - リソースパスが無効な書式である場合\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "isRedirectWithAbsoluteUri",
+      "level": 3,
+      "content": "```java\nboolean isRedirectWithAbsoluteUri()\n```\n\n絶対URIを伴うリダイレクトかどうかを表すフラグを返す。\n\nこのメソッドはnablarch-fw-web内部からのみの使用を想定しており、\npackage privateにしている。\n\n**戻り値:**\n絶対URIを伴うリダイレクトかどうかを表すフラグ\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "isHttpScheme",
+      "level": 3,
+      "content": "```java\nprivate boolean isHttpScheme()\n```\n\n自身のスキームがhttp(https)スキームかどうかを返す。\n\n**戻り値:**\nhttp(https)の場合は{@code true}\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "getScheme",
+      "level": 3,
+      "content": "```java\npublic String getScheme()\n```\n\nこのリソースパスのスキーム名を返す。\n\n**戻り値:**\nスキーム名\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "isRelative",
+      "level": 3,
+      "content": "```java\npublic boolean isRelative()\n```\n\n設定されたパスが相対パスかどうか。\n\n**戻り値:**\n相対パス表記であれば{@code true}。\n         コンテキストクラスローダ上のリソースである場合、常に{@code false}\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getResourceName",
+      "level": 3,
+      "content": "```java\npublic String getResourceName()\n```\n\nリソース名を返す。\n\n**戻り値:**\nリソース名\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "getPath",
+      "level": 3,
+      "content": "```java\npublic String getPath()\n```\n\nパス文字列を返す。\n\nパスにクエリーパラメータやフラグメントがある場合、\nこれらを含んだ値をパスとして返す。\n\n**戻り値:**\nパス文字列\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "toString",
+      "level": 3,
+      "content": "```java\npublic String toString()\n```\n\n{@inheritDoc}\nリソースパスの文字列表現そのものを返す。\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "getRealPath",
+      "level": 3,
+      "content": "```java\npublic String getRealPath()\n                   throws UnsupportedOperationException\n```\n\nリソースのファイルシステム上での絶対パスを返す。\n\n**戻り値:**\n絶対パスを返す。絶対パスが取得できない場合{@code null}を返す\n\n**例外:**\n- `UnsupportedOperationException` - 静的ファイルでもクラスローダ上のリソースでもない場合\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "exists",
+      "level": 3,
+      "content": "```java\npublic boolean exists()\n```\n\nこのリソースの実体が存在するかどうか判定する。\n\n**戻り値:**\nこのリソースの実体が存在する場合は{@code true}。\n         内部フォーワード/サーブレットフォーワードの場合は常に{@code true}。\n         リダイレクトである場合は常に{@code false}\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "getReader",
+      "level": 3,
+      "content": "```java\npublic Reader getReader()\n                 throws FileNotFoundException\n```\n\nリソースの内容を読み出すための{@link Reader}を返す。\n\n**戻り値:**\nリソースの内容を読み出すためのReader\n\n**例外:**\n- `FileNotFoundException` - 静的ファイルでもクラスローダ上のリソースでもない場合か、\n                               静的ファイルかクラスローダ上のリソースだが絶対パスを取得できなかった場合\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "getInputStream",
+      "level": 3,
+      "content": "```java\npublic InputStream getInputStream()\n                           throws FileNotFoundException\n```\n\nリソースの内容をストリームで読み出すための{@link InputStream}を返す。\n\n**戻り値:**\nリソースの内容を読み出すためのInputStream\n\n**例外:**\n- `FileNotFoundException` - 静的ファイルでもクラスローダ上のリソースでもない場合か、\n                               静的ファイルかクラスローダ上のリソースだが絶対パスを取得できなかった場合\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "isRedirect",
+      "level": 3,
+      "content": "```java\npublic boolean isRedirect()\n```\n\nレスポンスがリダイレクトかどうか判定する。\n\n**戻り値:**\nレスポンスがリダイレクトであれば{@code true}\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "getHostname",
+      "level": 3,
+      "content": "```java\npublic String getHostname()\n```\n\nパスのホスト部を返す。\n\nポート番号が設定されている場合には、ポート番号を含んだ値を返す。\n\n**戻り値:**\nパスのホスト部\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "getDirectory",
+      "level": 3,
+      "content": "```java\npublic String getDirectory()\n```\n\nパスからディレクトリを表す部分を返す。\n\n**戻り値:**\nパスのディレクトリ部\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "createResponseForMalformedResourcePath",
+      "level": 3,
+      "content": "```java\nprivate static HttpErrorResponse createResponseForMalformedResourcePath(String path)\n```\n\nリソースのパスが不正な場合にスローされる例外を生成する。\n\n**パラメータ:**\n- `path` - パス\n\n**戻り値:**\n生成された例外\n\n---",
+      "id": "s34"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-ResourceLocator"
+}

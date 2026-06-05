@@ -1,0 +1,128 @@
+{
+  "title": "class LettuceSimpleRedisClient",
+  "content": "**パッケージ:** nablarch.integration.redisstore.lettuce\n\n**継承階層:**\n```\njava.lang.Object\n  └─ AbstractLettuceRedisClient\n      └─ nablarch.integration.redisstore.lettuce.LettuceSimpleRedisClient\n```\n\n**実装されたインタフェース:**\n- Initializable\n\n---\n\n```java\npublic class LettuceSimpleRedisClient\nextends AbstractLettuceRedisClient\nimplements Initializable\n```\n\n単一の Redis インスタンスに直接接続するためのシンプルな {@link LettuceRedisClient} 実装クラス。\n<p>\nこのクラスの {@link #getType()} は、識別子 {@code \"simple\"} を返す。\n</p>\n\n**作成者:** Tanaka Tomoyuki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "client",
+      "level": 3,
+      "content": "```java\nprivate RedisClient client\n```\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "connection",
+      "level": 3,
+      "content": "```java\nprivate StatefulRedisConnection<byte[],byte[]> connection\n```\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "commands",
+      "level": 3,
+      "content": "```java\nprivate RedisCommands<byte[],byte[]> commands\n```\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "uri",
+      "level": 3,
+      "content": "```java\nprotected String uri\n```\n\n接続するRedisサーバーのURI。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "LettuceSimpleRedisClient",
+      "level": 3,
+      "content": "```java\npublic LettuceSimpleRedisClient()\n```\n\nコンストラクタ。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "set",
+      "level": 3,
+      "content": "```java\npublic void set(String key, byte[] value)\n```\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "pexpire",
+      "level": 3,
+      "content": "```java\npublic void pexpire(String key, long milliseconds)\n```\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "pexpireat",
+      "level": 3,
+      "content": "```java\npublic void pexpireat(String key, long milliseconds)\n```\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "pttl",
+      "level": 3,
+      "content": "```java\npublic long pttl(String key)\n```\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "get",
+      "level": 3,
+      "content": "```java\npublic byte[] get(String key)\n```\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "del",
+      "level": 3,
+      "content": "```java\npublic void del(String key)\n```\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "exists",
+      "level": 3,
+      "content": "```java\npublic boolean exists(String key)\n```\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setUri",
+      "level": 3,
+      "content": "```java\npublic void setUri(String uri)\n```\n\n接続するRedisサーバーのURIを設定する。\n<p>\nURIの書式については、<a href=\"https://lettuce.io/core/release/reference/#redisuri.uri-syntax\">Lettuceのドキュメント</a>を参照。\n</p>\n\n**パラメータ:**\n- `uri` - 接続するRedisサーバーのURI\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize()\n```\n\n{@inheritDoc}\n<p>\nこのメソッドは、 {@link #createClient()} と {@link #createConnection(RedisClient)} メソッドを使って\n{@link RedisClient} と {@link StatefulRedisConnection} のインスタンスを生成している。<br>\nこれらのインスタンスの設定を任意にカスタマイズしたい場合は、このクラスを継承したサブクラスを作り、\nそれぞれの {@code create} メソッドをオーバーライドすること。\n</p>\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "createClient",
+      "level": 3,
+      "content": "```java\nprotected RedisClient createClient()\n```\n\n{@link RedisClient} のインスタンスを生成する。\n\n**戻り値:**\n生成された {@link RedisClient}\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "createConnection",
+      "level": 3,
+      "content": "```java\nprotected StatefulRedisConnection<byte[],byte[]> createConnection(RedisClient client)\n```\n\n{@link StatefulRedisConnection} のインスタンスを生成する。\n\n**パラメータ:**\n- `client` - {@link #createClient()} で生成された {@link RedisClient} インスタンス\n\n**戻り値:**\n生成された {@link StatefulRedisConnection}\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "dispose",
+      "level": 3,
+      "content": "```java\npublic void dispose()\n```\n\n---",
+      "id": "s20"
+    }
+  ],
+  "id": "javadoc-nablarch-integration-redisstore-lettuce-LettuceSimpleRedisClient"
+}

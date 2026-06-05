@@ -97,8 +97,8 @@ public HttpResponse index(HttpRequest request, ExecutionContext context) {
            class="nablarch.common.authorization.role.session.SessionStoreUserRoleResolver" />
 ```
 
-アノテーションによる認可チェックを使用するためには、まず BasicRoleEvaluator のコンポーネントを定義する。
-また、このとき `userRoleResolver` プロパティには SessionStoreUserRoleResolver を設定する。
+アノテーションによる認可チェックを使用するためには、まず [BasicRoleEvaluator](../../javadoc/javadoc-nablarch-common-authorization-role-BasicRoleEvaluator.md) のコンポーネントを定義する。
+また、このとき `userRoleResolver` プロパティには [SessionStoreUserRoleResolver](../../javadoc/javadoc-nablarch-common-authorization-role-session-SessionStoreUserRoleResolver.md) を設定する。
 
 なお、この設定はデフォルトコンフィグレーションとしても提供している。
 デフォルトコンフィグレーションを使う場合は、以下のようにファイルをインポートすることで同様の設定となる。
@@ -109,8 +109,8 @@ public HttpResponse index(HttpRequest request, ExecutionContext context) {
 
 #### interceptorsOrderに追加する
 
-アノテーションによるチェックは、Nablarchの インターセプタ の仕組みを用いて実現している。
-したがって、既にコンポーネント定義にて `interceptorsOrder` を定義している場合は、 CheckRole を追加する必要がある。
+アノテーションによるチェックは、Nablarchの [インターセプタ](../../javadoc/javadoc-nablarch-fw-Interceptor.md) の仕組みを用いて実現している。
+したがって、既にコンポーネント定義にて `interceptorsOrder` を定義している場合は、 [CheckRole](../../javadoc/javadoc-nablarch-common-authorization-role-CheckRole.md) を追加する必要がある。
 
 ```xml
 <!-- インターセプタの実行順定義 -->
@@ -156,7 +156,7 @@ List<String> userRoles = resolveUserRoles(loginId);
 SessionStoreUserRoleUtil.save(userRoles, executionContext);
 ```
 
-ここでは、ログインIDを元にユーザに割り当てられたロールの一覧を解決し、それを SessionStoreUserRoleUtil の `save` メソッドでセッションストアに保存している。
+ここでは、ログインIDを元にユーザに割り当てられたロールの一覧を解決し、それを [SessionStoreUserRoleUtil](../../javadoc/javadoc-nablarch-common-authorization-role-session-SessionStoreUserRoleUtil.md) の `save` メソッドでセッションストアに保存している。
 
 > **Tip:**
 > `resolveUserRoles` メソッドが行う、ユーザからロールを解決する方法については、フレームワークでは特に規定していない。
@@ -173,10 +173,10 @@ SessionStoreUserRoleUtil.save(userRoles, executionContext);
 public HttpResponse index(HttpRequest request, ExecutionContext context) {
 ```
 
-CheckRole アノテーションをアクションメソッドに設定し `value` にロールを指定することで、アクションメソッドにロールを割り当てることができる。
+[CheckRole](../../javadoc/javadoc-nablarch-common-authorization-role-CheckRole.md) アノテーションをアクションメソッドに設定し `value` にロールを指定することで、アクションメソッドにロールを割り当てることができる。
 上記例では、 `index` メソッドに対して `ADMIN` ロールを割り当てている。
 これにより、 `index` メソッドは `ADMIN` ロールを持つユーザだけが実行できるようになる。
-もし `ADMIN` ロールを持たないユーザがメソッドを実行しようとした場合は、 Forbidden がスローされる。
+もし `ADMIN` ロールを持たないユーザがメソッドを実行しようとした場合は、 [Forbidden](../../javadoc/javadoc-nablarch-fw-results-Forbidden.md) がスローされる。
 
 複数のロールを割り当てたい場合は、配列で指定できる。
 以下に実装例を示す。
@@ -203,13 +203,13 @@ public HttpResponse index(HttpRequest request, ExecutionContext context) {
 
 ### アノテーションに割り当てた CheckRole の設定を一覧で確認する
 
-アクションメソッドに設定した CheckRole アノテーションに誤りがないかチェックするために、アノテーションの設定状況を一覧表示する機能を提供している。
+アクションメソッドに設定した [CheckRole](../../javadoc/javadoc-nablarch-common-authorization-role-CheckRole.md) アノテーションに誤りがないかチェックするために、アノテーションの設定状況を一覧表示する機能を提供している。
 本機能を利用することで、アノテーションの設定に漏れが無いか、設定されている内容に過不足がないかをチェックできるようになる。
 
 本機能は、システム起動時にアノテーションの設定情報を収集して、デバッグレベルでログに出力するという方法で実現している。
 以下で、設定方法について説明する。
 
-まず、 CheckRoleLogger のコンポーネントを以下のように定義する。
+まず、 [CheckRoleLogger](../../javadoc/javadoc-nablarch-common-authorization-role-CheckRoleLogger.md) のコンポーネントを以下のように定義する。
 
 ```xml
 <!-- 初期化が必要なコンポーネント -->
@@ -227,12 +227,12 @@ public HttpResponse index(HttpRequest request, ExecutionContext context) {
 </component>
 ```
 
-CheckRoleLogger は、初期化が必要なコンポーネントとして BasicApplicationInitializer の `initializeList` に設定する。
+[CheckRoleLogger](../../javadoc/javadoc-nablarch-common-authorization-role-CheckRoleLogger.md) は、初期化が必要なコンポーネントとして [BasicApplicationInitializer](../../javadoc/javadoc-nablarch-core-repository-initialization-BasicApplicationInitializer.md) の `initializeList` に設定する。
 またこのとき、 `targetPackage` プロパティにアクションクラスが存在するパッケージを指定する(サブパッケージも対象となる)。
 
 なお、デフォルトでは末尾が `Action` で終わる名前のクラスが処理の対象となる。
 この設定は `targetClassPattern` プロパティに任意の正規表現を指定することで変更できる。
-詳細は CheckRoleLogger のJavadocを参照のこと。
+詳細は [CheckRoleLogger](../../javadoc/javadoc-nablarch-common-authorization-role-CheckRoleLogger.md) のJavadocを参照のこと。
 
 上記設定が完了したら、ログレベルをデバッグレベルにしてシステムを起動する。
 これにより、システム起動時に以下のようなログが出力されるようになる。
@@ -280,7 +280,7 @@ if (CheckRoleUtil.checkRole(Roles.ROLE_ADMIN, executionContext)) {
 }
 ```
 
-プログラムでロールの有無を判定する場合は、 CheckRoleUtil を使用する。
+プログラムでロールの有無を判定する場合は、 [CheckRoleUtil](../../javadoc/javadoc-nablarch-common-authorization-role-CheckRoleUtil.md) を使用する。
 上記例では、 `checkRole` メソッドを使って現在のユーザが `ADMIN` ロールを持っているかどうかを判定している。
 
 複数のロールを指定する場合は、 `checkRoleAllOf` メソッドか `checkRoleAnyOf` メソッドを使用して判定できる。
@@ -321,31 +321,31 @@ SessionUtil.put(executionContext, "userContext", userContext);
 
 ![architecture.png](../../../knowledge/assets/libraries-role-check/architecture.png)
 
-アノテーションを用いたチェック処理の実行は、Nablarchの インターセプタ の仕組みを利用して実現している。
-CheckRole アノテーションは、このインターセプタを実装したものとなっている。
+アノテーションを用いたチェック処理の実行は、Nablarchの [インターセプタ](../../javadoc/javadoc-nablarch-fw-Interceptor.md) の仕組みを利用して実現している。
+[CheckRole](../../javadoc/javadoc-nablarch-common-authorization-role-CheckRole.md) アノテーションは、このインターセプタを実装したものとなっている。
 
-CheckRole と CheckRoleUtil 自体は直接認可チェックは行わず、 RoleEvaluator に処理を委譲する。
-このとき、 RoleEvaluator のインスタンスは SystemRepository から `roleEvaluator` という名前で取得したものを使用する。
-また、チェック処理に渡すユーザIDは、 ThreadContext の `getUserId` メソッドで取得したものを使用する。
+[CheckRole](../../javadoc/javadoc-nablarch-common-authorization-role-CheckRole.md) と [CheckRoleUtil](../../javadoc/javadoc-nablarch-common-authorization-role-CheckRoleUtil.md) 自体は直接認可チェックは行わず、 [RoleEvaluator](../../javadoc/javadoc-nablarch-common-authorization-role-RoleEvaluator.md) に処理を委譲する。
+このとき、 [RoleEvaluator](../../javadoc/javadoc-nablarch-common-authorization-role-RoleEvaluator.md) のインスタンスは [SystemRepository](../../javadoc/javadoc-nablarch-core-repository-SystemRepository.md) から `roleEvaluator` という名前で取得したものを使用する。
+また、チェック処理に渡すユーザIDは、 [ThreadContext](../../javadoc/javadoc-nablarch-core-ThreadContext.md) の `getUserId` メソッドで取得したものを使用する。
 
-RoleEvaluator のデフォルトの実装クラスとして、本認可チェックでは BasicRoleEvaluator というクラスを提供している。
+[RoleEvaluator](../../javadoc/javadoc-nablarch-common-authorization-role-RoleEvaluator.md) のデフォルトの実装クラスとして、本認可チェックでは [BasicRoleEvaluator](../../javadoc/javadoc-nablarch-common-authorization-role-BasicRoleEvaluator.md) というクラスを提供している。
 このクラスは、ユーザに紐づくロールと引数で渡されたロールとを比較し、条件を満たすかどうかを判定するシンプルな作りとなっている。
-なお、ユーザに紐づくロールの解決は UserRoleResolver に委譲している。
+なお、ユーザに紐づくロールの解決は [UserRoleResolver](../../javadoc/javadoc-nablarch-common-authorization-role-UserRoleResolver.md) に委譲している。
 
-UserRoleResolver のデフォルト実装としては、　SessionStoreUserRoleResolver を提供している。
+[UserRoleResolver](../../javadoc/javadoc-nablarch-common-authorization-role-UserRoleResolver.md) のデフォルト実装としては、　[SessionStoreUserRoleResolver](../../javadoc/javadoc-nablarch-common-authorization-role-session-SessionStoreUserRoleResolver.md) を提供している。
 このクラスは、セッションストアに保存された情報でユーザのロールを解決する仕組みとなっている。
 
 ## 拡張方法
 
-前述の仕組みの説明から、 RoleEvaluator または UserRoleResolver の実体を差し替えることで任意の処理に拡張できることがわかる。
+前述の仕組みの説明から、 [RoleEvaluator](../../javadoc/javadoc-nablarch-common-authorization-role-RoleEvaluator.md) または [UserRoleResolver](../../javadoc/javadoc-nablarch-common-authorization-role-UserRoleResolver.md) の実体を差し替えることで任意の処理に拡張できることがわかる。
 
-RoleEvaluator の実体の差し替えは、 RoleEvaluator を実装した独自クラスを作成し、そのクラスを `roleEvaluator` という名前でコンポーネント登録することで実現できる。
+[RoleEvaluator](../../javadoc/javadoc-nablarch-common-authorization-role-RoleEvaluator.md) の実体の差し替えは、 [RoleEvaluator](../../javadoc/javadoc-nablarch-common-authorization-role-RoleEvaluator.md) を実装した独自クラスを作成し、そのクラスを `roleEvaluator` という名前でコンポーネント登録することで実現できる。
 
 ```xml
 <component name="roleEvaluator" class="com.example.CustomRoleEvaluator" />
 ```
 
-RoleEvaluator の実体には BasicRoleEvaluator を使いつつ、 UserRoleResolver の実体だけを差し替えたい場合は、 BasicRoleEvaluator の `userRoleResolver` プロパティに設定するコンポーネントを差し替えればいい。
+[RoleEvaluator](../../javadoc/javadoc-nablarch-common-authorization-role-RoleEvaluator.md) の実体には [BasicRoleEvaluator](../../javadoc/javadoc-nablarch-common-authorization-role-BasicRoleEvaluator.md) を使いつつ、 [UserRoleResolver](../../javadoc/javadoc-nablarch-common-authorization-role-UserRoleResolver.md) の実体だけを差し替えたい場合は、 [BasicRoleEvaluator](../../javadoc/javadoc-nablarch-common-authorization-role-BasicRoleEvaluator.md) の `userRoleResolver` プロパティに設定するコンポーネントを差し替えればいい。
 デフォルトコンフィグレーションを利用している場合は、 `userRoleResolver` という名前のコンポーネントを設定するように定義されているので、同じ名前で独自クラスのコンポーネントを定義することで差し替えができる。
 
 ```xml

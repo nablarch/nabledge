@@ -1,0 +1,32 @@
+{
+  "title": "interface DataReader",
+  "content": "**パッケージ:** nablarch.fw\n\n---\n\n```java\npublic interface DataReader\n```\n\n{@link Handler}が処理する入力データを外部から読み込むインタフェース。\n<p/>\nデータリーダは複数のリクエストスレッドから並行アクセスされ得るので、\n各メソッドはスレッドセーフに実装されなければならない。\n\n**param:** このクラスが読み込んだデータの型  \n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "read",
+      "level": 3,
+      "content": "```java\nTData read(ExecutionContext ctx)\n```\n\n{@link Handler}が処理する入力データを読み込んで返却する。\n<p/>\n入力データがこれ以上存在しない状態、\nすなわち、hasNext()の結果が{@code false}となる場合はnullを返すこと。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n入力データオブジェクト。存在しない場合はnull\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "hasNext",
+      "level": 3,
+      "content": "```java\nboolean hasNext(ExecutionContext ctx)\n```\n\n次に読み込むデータが存在するかどうかを返却する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n次に読み込むデータが存在する場合は{@code true}\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\nvoid close(ExecutionContext ctx)\n```\n\nこのリーダの利用を停止し、内部的に保持している各種リソースを解放する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n---",
+      "id": "s4"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-DataReader"
+}

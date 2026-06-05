@@ -1,0 +1,86 @@
+{
+  "title": "class BasicExpirationSetting",
+  "content": "**パッケージ:** nablarch.core.cache.expirable\n\n**実装されたインタフェース:**\n- ExpirationSetting\n\n---\n\n```java\npublic class BasicExpirationSetting\nimplements ExpirationSetting\n```\n\n{@link ExpirationSetting}の基本実装クラス。\nIDと有効期限の紐付けをMapで保持する。\n\n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "PTN",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern PTN\n```\n\n有効期限のパターン（数字＋アルファベット）\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DEFAULT_TIME_UNIT_MAPPING",
+      "level": 3,
+      "content": "```java\nprivate static final Map<String,TimeUnit> DEFAULT_TIME_UNIT_MAPPING\n```\n\nデフォルトの時間単位\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "systemTimeProvider",
+      "level": 3,
+      "content": "```java\nprivate SystemTimeProvider systemTimeProvider\n```\n\nシステム日時提供クラス\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "expirationSetting",
+      "level": 3,
+      "content": "```java\nprivate final Map<String,TimeoutExpression> expirationSetting\n```\n\nIDと有効期限のマッピング。\n（例: \"ID001\", \"100ms\"）\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "isCacheEnable",
+      "level": 3,
+      "content": "```java\npublic boolean isCacheEnable(String id)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getExpiredDate",
+      "level": 3,
+      "content": "```java\npublic Date getExpiredDate(String id)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setSystemTimeProvider",
+      "level": 3,
+      "content": "```java\npublic void setSystemTimeProvider(SystemTimeProvider systemTimeProvider)\n```\n\nシステム日時提供クラスを設定する（必須）。\n本メソッドはDIコンテナから使用されることを想定している。\n\n**パラメータ:**\n- `systemTimeProvider` - システム日時提供クラス\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setExpirationList",
+      "level": 3,
+      "content": "```java\npublic void setExpirationList(List<Map<String,String>> expirationList)\n```\n\n有効期限設定を設定する（必須）。\n\n\n本メソッドはDIコンテナから使用されることを想定している。\n\n**パラメータ:**\n- `expirationList` - 有効期限設定のリスト\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setExpiration",
+      "level": 3,
+      "content": "```java\npublic void setExpiration(Map<String,String> expiration)\n```\n\n有効期限設定を設定する（必須）。\n\n\n本メソッドはDIコンテナから使用されることを想定している。\n\n**パラメータ:**\n- `expiration` - 有効期限設定のリスト\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getTimeUnitMapping",
+      "level": 3,
+      "content": "```java\nprotected Map<String,TimeUnit> getTimeUnitMapping()\n```\n\n時間単位のマッピングを取得する。\n本メソッドをオーバーライドすることで、\nマッピングを変更することができる。\n\n**戻り値:**\nマッピング\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "evaluate",
+      "level": 3,
+      "content": "```java\nDate evaluate(String timeoutExpression)\n```\n\n有効期限の評価を行う。\n文字列で表された有効期限を評価し、システム日時からの差分として返却する。\n例えば、\"30s\"という文字列表現が与えられた場合、システム日時に30秒付加した\n日時が返却される。\n\n**パラメータ:**\n- `timeoutExpression` - 有効期限の文字列表現\n\n**戻り値:**\n有効期限\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-core-cache-expirable-BasicExpirationSetting"
+}

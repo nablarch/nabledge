@@ -1,0 +1,98 @@
+{
+  "title": "class DefaultDialect",
+  "content": "**パッケージ:** nablarch.core.db.dialect\n\n**実装されたインタフェース:**\n- Dialect\n\n---\n\n```java\npublic class DefaultDialect\nimplements Dialect\n```\n\nデフォルトの{@link Dialect}実装クラス。\n<p/>\n本実装では、全ての方言が無効化される。\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "RESULT_SET_CONVERTOR",
+      "level": 3,
+      "content": "```java\nprivate static final ResultSetConvertor RESULT_SET_CONVERTOR\n```\n\n{@link ResultSet}から値を取得するクラス\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "supportsIdentity",
+      "level": 3,
+      "content": "```java\npublic boolean supportsIdentity()\n```\n\n**戻り値:**\n{@code false}を返す。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "supportsIdentityWithBatchInsert",
+      "level": 3,
+      "content": "```java\npublic boolean supportsIdentityWithBatchInsert()\n```\n\n**戻り値:**\n{@code false}を返す。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "supportsSequence",
+      "level": 3,
+      "content": "```java\npublic boolean supportsSequence()\n```\n\n**戻り値:**\n{@code false}を返す。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "supportsOffset",
+      "level": 3,
+      "content": "```java\npublic boolean supportsOffset()\n```\n\n**戻り値:**\n{@code false}を返す。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "isTransactionTimeoutError",
+      "level": 3,
+      "content": "```java\npublic boolean isTransactionTimeoutError(SQLException sqlException)\n```\n\n**戻り値:**\n{@code false}を返す。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "isDuplicateException",
+      "level": 3,
+      "content": "```java\npublic boolean isDuplicateException(SQLException sqlException)\n```\n\n**戻り値:**\n{@code false}を返す。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getResultSetConvertor",
+      "level": 3,
+      "content": "```java\npublic ResultSetConvertor getResultSetConvertor()\n```\n\n{@inheritDoc}\n<p>\n全てのカラムを{@link ResultSet#getObject(int)}で取得するコンバータを返す。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "buildSequenceGeneratorSql",
+      "level": 3,
+      "content": "```java\npublic String buildSequenceGeneratorSql(String sequenceName)\n                                 throws UnsupportedOperationException\n```\n\n{@inheritDoc}\n<p/>\nシーケンス採番はサポートしない。\n\n**例外:**\n- `UnsupportedOperationException` - 呼び出された場合\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "convertPaginationSql",
+      "level": 3,
+      "content": "```java\npublic String convertPaginationSql(String sql, SelectOption selectOption)\n```\n\nSQL文を変換せずに返す。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "convertCountSql",
+      "level": 3,
+      "content": "```java\npublic String convertCountSql(String sql)\n```\n\n{@inheritDoc}\n<p/>\n以下形式のCOUNT文取得用SQL文に変換する。<br/>\n{@code SELECT COUNT(*) COUNT_ FROM ('引数のSQL') SUB_}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "convertCountSql",
+      "level": 3,
+      "content": "```java\npublic String convertCountSql(String sqlId, Object condition, StatementFactory statementFactory)\n```\n\n{@inheritDoc}\n\nデフォルトでは、{@link this#convertCountSql(String)}を使用して、\n{@link StatementFactory}から取得したSQLをレコード数取得用SQLに変換する。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getPingSql",
+      "level": 3,
+      "content": "```java\npublic String getPingSql()\n```\n\n{@inheritDoc}\n\nデフォルト実装では、本メソッドはサポートしない。\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-core-db-dialect-DefaultDialect"
+}

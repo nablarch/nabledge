@@ -95,7 +95,7 @@ Nablarchのログ出力機能でLogbookのログを出力するため、 **log.p
 * LogbookはTRACEレベルでログ出力を行うため、ログレベルをTRACEに設定する
 * ログの出力先を設定する
 
-本サンプルでは、出力先に StandardOutputLogWriter (標準出力へ出力) を設定する。
+本サンプルでは、出力先に [StandardOutputLogWriter (標準出力へ出力)](../../javadoc/javadoc-nablarch-core-log-basic-StandardOutputLogWriter.md) を設定する。
 
 ```properties
 ...

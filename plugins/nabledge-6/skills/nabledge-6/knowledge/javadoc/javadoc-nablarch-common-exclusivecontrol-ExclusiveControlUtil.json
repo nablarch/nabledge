@@ -1,0 +1,92 @@
+{
+  "title": "class ExclusiveControlUtil",
+  "content": "**パッケージ:** nablarch.common.exclusivecontrol\n\n---\n\n```java\npublic final class ExclusiveControlUtil\n```\n\n排他制御機能のユーティリティクラス。\n<p/>\n排他制御用テーブルの操作は、{@link ExclusiveControlManager}に委譲する。\n本クラスで使用する{@link ExclusiveControlManager}のオブジェクトは\n{@link SystemRepository}から\"exclusiveControlManager\"という名前で取得する。\n\n{@link nablarch.common.dao.UniversalDao UniversalDao}を使用する場合には、\nこのクラスではなく{@link nablarch.common.dao.UniversalDao UniversalDao}を使用して排他制御を行うこと。\n\n**関連項目:** ExclusiveControlManager  \n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "EXCLUSIVE_CONTROL_MANAGER_NAME",
+      "level": 3,
+      "content": "```java\nprivate static final String EXCLUSIVE_CONTROL_MANAGER_NAME\n```\n\nExclusiveControlManagerのコンポーネント名\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "ExclusiveControlUtil",
+      "level": 3,
+      "content": "```java\nprivate ExclusiveControlUtil()\n```\n\n隠蔽コンストラクタ。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "getExclusiveControlManager",
+      "level": 3,
+      "content": "```java\nprivate static ExclusiveControlManager getExclusiveControlManager()\n```\n\nExclusiveControlManagerを取得する。\n\n**戻り値:**\nExclusiveControlManager\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getVersion",
+      "level": 3,
+      "content": "```java\npublic static Version getVersion(ExclusiveControlContext context)\n```\n\nバージョン番号を取得する。(楽観的ロック)\n\n**パラメータ:**\n- `context` - {@link ExclusiveControlContext}\n\n**戻り値:**\nバージョン番号。バージョン番号が存在しない場合は{@code null}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "checkVersions",
+      "level": 3,
+      "content": "```java\npublic static void checkVersions(List<Version> versions)\n                   throws OptimisticLockException\n```\n\nバージョン番号が更新されていないかチェックする。(楽観的ロック)\n\n**パラメータ:**\n- `versions` - バージョン番号\n\n**例外:**\n- `OptimisticLockException` - バージョン番号が更新されていた場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "updateVersionsWithCheck",
+      "level": 3,
+      "content": "```java\npublic static void updateVersionsWithCheck(List<Version> versions)\n                             throws OptimisticLockException\n```\n\nバージョン番号の更新チェックとバージョン番号の更新を行う。(楽観的ロック)\n\n**パラメータ:**\n- `versions` - バージョン番号\n\n**例外:**\n- `OptimisticLockException` - バージョン番号が更新されていた場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "updateVersion",
+      "level": 3,
+      "content": "```java\npublic static void updateVersion(ExclusiveControlContext context)\n```\n\nバージョン番号を更新する。(悲観的ロック)\n\n**パラメータ:**\n- `context` - {@link ExclusiveControlContext}\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "addVersion",
+      "level": 3,
+      "content": "```java\npublic static void addVersion(ExclusiveControlContext context)\n```\n\nバージョン番号を追加する。\n\n**パラメータ:**\n- `context` - {@link ExclusiveControlContext}\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "removeVersion",
+      "level": 3,
+      "content": "```java\npublic static void removeVersion(ExclusiveControlContext context)\n```\n\nバージョン番号を削除する。\n\n**パラメータ:**\n- `context` - {@link ExclusiveControlContext}\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "convertToVariableName",
+      "level": 3,
+      "content": "```java\npublic static String convertToVariableName(Enum<?> columnName)\n```\n\nカラム名を名前付き変数名(先頭コロンを除く)に変換する。\n\n**パラメータ:**\n- `columnName` - カラム名\n\n**戻り値:**\n名前付き変数名(先頭コロンを除く)\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "convertToVariableName",
+      "level": 3,
+      "content": "```java\npublic static String convertToVariableName(String columnName)\n```\n\nカラム名を名前付き変数名(先頭コロンを除く)に変換する。\n\n**パラメータ:**\n- `columnName` - カラム名\n\n**戻り値:**\n名前付き変数名(先頭コロンを除く)\n\n---",
+      "id": "s14"
+    }
+  ],
+  "id": "javadoc-nablarch-common-exclusivecontrol-ExclusiveControlUtil"
+}

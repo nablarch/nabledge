@@ -1,0 +1,98 @@
+{
+  "title": "class JaxRsResponseHandler",
+  "content": "**パッケージ:** nablarch.fw.jaxrs\n\n**実装されたインタフェース:**\n- HttpRequestHandler\n\n---\n\n```java\npublic class JaxRsResponseHandler\nimplements HttpRequestHandler\n```\n\nJAX-RS用のレスポンスを返却するハンドラ。\n<p/>\nこのハンドラでは、後続のハンドラから戻された{@link HttpResponse}の内容を、クライアントへのレスポンスとして書き込む。\n後続のハンドラで例外が発生した場合には、{@link ErrorResponseBuilder}を使用してエラー用のレスポンスを作成し、クライアントへのレスポンスとして書き込む。\n<p/>\n後続のハンドラ及び{@link ErrorResponseBuilder}で{@link HttpResponse}を生成する際には、レスポンスヘッダーも含めて設定する必要がある。\nこのハンドラでは、レスポンスヘッダーを自動的に設定するようなことはしない。\n\n**作成者:** Hisaaki Shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "BUFFER_SIZE",
+      "level": 3,
+      "content": "```java\nprivate static final int BUFFER_SIZE\n```\n\nストリームに出力する際のバッファサイズ。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "errorResponseBuilder",
+      "level": 3,
+      "content": "```java\nprivate ErrorResponseBuilder errorResponseBuilder\n```\n\nエラーレスポンスビルダー\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "errorLogWriter",
+      "level": 3,
+      "content": "```java\nprivate JaxRsErrorLogWriter errorLogWriter\n```\n\nエラー情報を出力するライター\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "responseFinishers",
+      "level": 3,
+      "content": "```java\nprivate List<ResponseFinisher> responseFinishers\n```\n\nレスポンスフィニッシャー\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest request, ExecutionContext context)\n```\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "finishResponse",
+      "level": 3,
+      "content": "```java\nprotected void finishResponse(HttpRequest request, HttpResponse response, ExecutionContext context)\n```\n\nレスポンスを仕上げる。\n\n**パラメータ:**\n- `request` - リクエスト\n- `response` - レスポンス\n- `context` - コンテキスト\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "writeResponse",
+      "level": 3,
+      "content": "```java\nprotected void writeResponse(HttpResponse response, ServletExecutionContext context)\n```\n\nレスポンスを書き込む。\n\n**パラメータ:**\n- `response` - {@link HttpResponse}\n- `context` - {@link ServletExecutionContext}\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "writeHeaders",
+      "level": 3,
+      "content": "```java\nprotected void writeHeaders(HttpResponse response, HttpServletResponse nativeResponse)\n```\n\nレスポンスヘッダーを書き込む。\n<p/>\n{@link HttpResponse}内のヘッダー情報を、{@link HttpServletResponse}に対して書き込む。\n\n**パラメータ:**\n- `response` - {@link HttpResponse}\n- `nativeResponse` - {@link HttpServletResponse}\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "writeBody",
+      "level": 3,
+      "content": "```java\nprotected static void writeBody(InputStream in, HttpServletResponse nativeRes)\n               throws IOException\n```\n\nメッセージボディの内容をクライアントに送信する。\n\n**パラメータ:**\n- `in` - 入力ストリームの内容\n- `nativeRes` - サーブレットレスポンス\n\n**例外:**\n- `IOException` - ソケットI/Oにおけるエラー\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setErrorResponseBuilder",
+      "level": 3,
+      "content": "```java\npublic void setErrorResponseBuilder(ErrorResponseBuilder errorResponseBuilder)\n```\n\nエラーレスポンスビルダーを設定する。\n<p/>\nデフォルト実装である{@link ErrorResponseBuilder}を差し替えたい場合に拡張クラスを設定する。\n\n**パラメータ:**\n- `errorResponseBuilder` - エラーレスポンスビルダー\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setErrorLogWriter",
+      "level": 3,
+      "content": "```java\npublic void setErrorLogWriter(JaxRsErrorLogWriter errorLogWriter)\n```\n\nエラーログライターを設定する。\n<p/>\nデフォルト実装である{@link JaxRsErrorLogWriter}を差し替えたい場合に拡張クラスを設定する。\n\n**パラメータ:**\n- `errorLogWriter` - エラーログライター\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setResponseFinishers",
+      "level": 3,
+      "content": "```java\npublic void setResponseFinishers(List<ResponseFinisher> responseFinishers)\n```\n\nレスポンスフィニッシャーを設定する。\n\n**パラメータ:**\n- `responseFinishers` - レスポンスフィニッシャー\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-jaxrs-JaxRsResponseHandler"
+}

@@ -1,0 +1,110 @@
+{
+  "title": "class DatabaseRecordReader",
+  "content": "**パッケージ:** nablarch.fw.reader\n\n**実装されたインタフェース:**\n- DataReader<SqlRow>\n\n---\n\n```java\npublic class DatabaseRecordReader\nimplements DataReader<SqlRow>\n```\n\nデータベースの参照結果を1レコードづつ読み込むデータリーダ。\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "records",
+      "level": 3,
+      "content": "```java\nprivate Iterator<SqlRow> records\n```\n\n参照結果レコードのイテレータ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "statement",
+      "level": 3,
+      "content": "```java\nprivate SqlPStatement statement\n```\n\nテーブル参照用SQLステートメント\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "parameterizedSqlPStatement",
+      "level": 3,
+      "content": "```java\nprivate ParameterizedSqlPStatement parameterizedSqlPStatement\n```\n\nテーブル参照用SQLステートメント(オブジェクトを条件に指定する場合)\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "condition",
+      "level": 3,
+      "content": "```java\nprivate Object condition\n```\n\n条件\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "listener",
+      "level": 3,
+      "content": "```java\nprivate DatabaseRecordListener listener\n```\n\nデータベースレコードリスナ\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "DatabaseRecordReader",
+      "level": 3,
+      "content": "```java\npublic DatabaseRecordReader()\n```\n\n{@code DatabaseRecordReader}オブジェクトを生成する。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "read",
+      "level": 3,
+      "content": "```java\npublic synchronized SqlRow read(ExecutionContext ctx)\n```\n\n参照結果のレコードを1行づつ返却する。\n<p/>\n初回読み込み時にデータベースからレコードを取得し、キャッシュする。<br/>\nレコードはそのキャッシュから返却する。<br/>\n参照結果に次のレコードが存在しない場合、{@code null}を返す。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\nレコードデータをキャッシュするオブジェクト\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "hasNext",
+      "level": 3,
+      "content": "```java\npublic synchronized boolean hasNext(ExecutionContext ctx)\n```\n\n参照結果から次のレコードが存在するかどうかを返却する。\n<p/>\n初回読み込み時にデータベースからレコードを取得し、キャッシュする。<br/>\n結果はそのキャッシュから返却する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n次に読み込むレコードが存在する場合 {@code true}\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic synchronized void close(ExecutionContext ctx)\n```\n\n内部的にキャッシュしている各種リソースを解放する。\n <p/>\n この実装では、レコードの読み込みに使用したステートメントオブジェクトが\n {@code null}でない場合、解放する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "reopen",
+      "level": 3,
+      "content": "```java\npublic synchronized void reopen(ExecutionContext ctx)\n```\n\nステートメントを再実行し、最新の情報を取得し直す。\n<p/>\n取得した参照結果をキャッシュする。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "readRecords",
+      "level": 3,
+      "content": "```java\nprivate void readRecords()\n```\n\n参照結果のイテレータをキャッシュする。\n\n**例外:**\n- `IllegalStateException` - SQLステートメントが{@code null}の場合\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setStatement",
+      "level": 3,
+      "content": "```java\npublic synchronized DatabaseRecordReader setStatement(SqlPStatement statement)\n```\n\nテーブルを参照するSQLステートメントを設定する。\n\n**パラメータ:**\n- `statement` - SQLステートメント\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setStatement",
+      "level": 3,
+      "content": "```java\npublic DatabaseRecordReader setStatement(ParameterizedSqlPStatement parameterizedSqlPStatement, Object condition)\n```\n\nテーブルを参照するSQLステートメント及び条件を設定する。\n\n**パラメータ:**\n- `parameterizedSqlPStatement` - SQLステートメント\n- `condition` - ステートメントのINパラメータに設定する値を持つオブジェクト\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setListener",
+      "level": 3,
+      "content": "```java\npublic DatabaseRecordReader setListener(DatabaseRecordListener listener)\n```\n\nデータベースレコードリスナを設定する。\n<p/>\nリスナに定義されたコールバック処理は、\n処理対象レコードをキャッシュするためのデータベースアクセス前に実行される。\n<p/>\n本リーダにリスナを設定することで、\n処理対象レコードをデータベースから取得する前に任意の処理を実行することができる。\n\n**パラメータ:**\n- `listener` - データベースレコードリスナ\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s17"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-reader-DatabaseRecordReader"
+}

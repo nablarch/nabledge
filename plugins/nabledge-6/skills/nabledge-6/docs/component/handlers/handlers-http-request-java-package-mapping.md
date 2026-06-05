@@ -44,7 +44,7 @@ URL形式
 
 ## ハンドラクラス名
 
-* nablarch.fw.web.handler.HttpRequestJavaPackageMapping
+* [nablarch.fw.web.handler.HttpRequestJavaPackageMapping](../../javadoc/javadoc-nablarch-fw-web-handler-HttpRequestJavaPackageMapping.md)
 
 ## モジュール一覧
 

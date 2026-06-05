@@ -1,0 +1,86 @@
+{
+  "title": "class XmlDataBuilder",
+  "content": "**パッケージ:** nablarch.core.dataformat\n\n**継承階層:**\n```\njava.lang.Object\n  └─ StructuredDataEditorSupport\n      └─ nablarch.core.dataformat.XmlDataBuilder\n```\n\n**実装されたインタフェース:**\n- StructuredDataBuilder\n\n---\n\n```java\npublic class XmlDataBuilder\nextends StructuredDataEditorSupport\nimplements StructuredDataBuilder\n```\n\nXMLパーサー。<br>\nこの実装ではStAXを使用してXMLデータの構築を行います。\n\n**作成者:** TIS  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "TARGET_XML_VERSION",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_XML_VERSION\n```\n\n作成対象XMLのバージョン\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "contentName",
+      "level": 3,
+      "content": "```java\nprivate String contentName\n```\n\n属性あり要素のコンテンツ名(デフォルトはbody)\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "XmlDataBuilder",
+      "level": 3,
+      "content": "```java\npublic XmlDataBuilder()\n```\n\nコンストラクタ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "setContentName",
+      "level": 3,
+      "content": "```java\npublic void setContentName(String contentName)\n```\n\n属性ありコンテンツの要素名を設定する。\n\n**パラメータ:**\n- `contentName` - 属性ありコンテンツの要素名\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "buildData",
+      "level": 3,
+      "content": "```java\npublic void buildData(Map<String,?> map, LayoutDefinition layoutDef, OutputStream out)\n               throws IOException, InvalidDataFormatException\n```\n\nXML文字列を作成します。\n\n**パラメータ:**\n- `map` - フラットマップ\n- `layoutDef` - フォーマット定義\n- `out` - XML文字列出力先ストリーム\n\n**例外:**\n- `IOException` - 読み込みに伴うIO処理で問題が発生した場合\n- `InvalidDataFormatException` - 読み込んだデータがフォーマット定義に違反している場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "buildXml",
+      "level": 3,
+      "content": "```java\nprivate void buildXml(String currentKeyBase, Map<String,?> map, LayoutDefinition ld, RecordDefinition rd, XMLStreamWriter writer, NestedKeys nestedKeys)\n              throws XMLStreamException, InvalidDataFormatException\n```\n\nXMLを構築します。\n\n**パラメータ:**\n- `currentKeyBase` - キー名ベース\n- `map` - 出力対象マップ\n- `ld` - フォーマット定義\n- `rd` - レコードタイプ定義\n- `writer` - XMLライタ\n- `nestedKeys` - ネストしたキーの集合\n\n**例外:**\n- `XMLStreamException` - XML出力に失敗した場合\n- `InvalidDataFormatException` - 読み込んだデータがフォーマット定義に違反している場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "writeObjectArray",
+      "level": 3,
+      "content": "```java\nprivate void writeObjectArray(XMLStreamWriter writer, LayoutDefinition ld, RecordDefinition nrd, FieldDefinition fd, String currentKeyBase, String mapKey, Map<String,?> map, NestedKeys nestedKeys)\n                      throws XMLStreamException\n```\n\nオブジェクト配列の出力処理です\n\n**パラメータ:**\n- `writer` - XMLライタ\n- `ld` - フォーマット定義\n- `nrd` - レコードタイプ定義\n- `fd` - フィールド定義\n- `currentKeyBase` - キー名ベース\n- `mapKey` - マップキー\n- `map` - 出力対象マップ\n- `nestedKeys` - ネストしたキーの集合\n\n**例外:**\n- `XMLStreamException` - XML出力に失敗した場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "writeStringArray",
+      "level": 3,
+      "content": "```java\nprivate void writeStringArray(XMLStreamWriter writer, FieldDefinition fd, String currentKeyBase, String mapKey, Map<String,?> map)\n                      throws XMLStreamException\n```\n\n文字列配列の出力処理です\n\n**パラメータ:**\n- `writer` - XMLライタ\n- `fd` - フィールド定義\n- `currentKeyBase` - キー名ベース\n- `mapKey` - マップキー\n- `map` - 出力対象マップ\n\n**例外:**\n- `XMLStreamException` - XML出力に失敗した場合\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "writeObject",
+      "level": 3,
+      "content": "```java\nprivate void writeObject(XMLStreamWriter writer, LayoutDefinition ld, RecordDefinition nrd, FieldDefinition fd, String mapKey, Map<String,?> map, String currentKeyBase, NestedKeys nestedKeys)\n                 throws XMLStreamException\n```\n\nオブジェクトの出力処理です\n\n**パラメータ:**\n- `writer` - XMLライタ\n- `ld` - フォーマット定義\n- `nrd` - レコードタイプ定義\n- `fd` - フィールド定義\n- `mapKey` - マップキー\n- `map` - 出力対象マップ\n- `currentKeyBase` - キー名ベース\n- `nestedKeys` - ネストしたキーの集合\n\n**例外:**\n- `XMLStreamException` - XML出力に失敗した場合\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "writeValue",
+      "level": 3,
+      "content": "```java\nprivate void writeValue(XMLStreamWriter writer, FieldDefinition fd, String mapKey, Map<String,?> map, String currentKeyBase)\n                throws XMLStreamException\n```\n\n値の出力処理です\n\n**パラメータ:**\n- `writer` - XMLライタ\n- `fd` - フィールド定義\n- `mapKey` - マップキー\n- `map` - 出力対象マップ\n- `currentKeyBase` - キー名ベース\n\n**例外:**\n- `XMLStreamException` - XML出力に失敗した場合\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-core-dataformat-XmlDataBuilder"
+}

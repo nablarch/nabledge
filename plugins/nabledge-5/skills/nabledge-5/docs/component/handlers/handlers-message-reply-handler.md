@@ -7,7 +7,7 @@
 * 制約
 * フレームワーク制御ヘッダの設定
 
-本ハンドラでは、後続ハンドラの処理結果である ResponseMessage オブジェクトの内容をもとに、
+本ハンドラでは、後続ハンドラの処理結果である [ResponseMessage](../../javadoc/javadoc-nablarch-fw-messaging-ResponseMessage.md) オブジェクトの内容をもとに、
 応答電文を作成し接続先システムに返却(送信)する。
 
 本ハンドラでは、以下の処理を行う。
@@ -20,7 +20,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.messaging.handler.MessageReplyHandler
+* [nablarch.fw.messaging.handler.MessageReplyHandler](../../javadoc/javadoc-nablarch-fw-messaging-handler-MessageReplyHandler.md)
 
 ## モジュール一覧
 
@@ -55,7 +55,7 @@
 ## フレームワーク制御ヘッダの設定
 
 応答電文内のフレームワーク制御ヘッダの定義を変更する場合には、プロジェクトで拡張したフレームワーク制御ヘッダの定義を設定する必要がある。
-設定しない場合は、デフォルトの StandardFwHeaderDefinition が使用される。
+設定しない場合は、デフォルトの [StandardFwHeaderDefinition](../../javadoc/javadoc-nablarch-fw-messaging-StandardFwHeaderDefinition.md) が使用される。
 
 フレームワーク制御ヘッダの詳細は、 [フレームワーク制御ヘッダ](../../component/libraries/libraries-mom-system-messaging.md#送受信電文のデータモデル) を参照。
 

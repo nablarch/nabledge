@@ -1,13 +1,13 @@
 {
   "id": "handlers-main",
   "title": "共通起動ランチャ",
-  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* アプリケーションを起動する\n* アプリケーション起動に任意のオプションを設定する\n* 例外及びエラーに応じた処理内容\n\nスタンドアロンで起動するアプリケーションの起点となるハンドラ。\n\njavaコマンドから直接起動することで、システムリポジトリの初期化を行い、そこに定義されたハンドラキューを実行させることができる。\n\n本ハンドラでは、以下の処理を行う。\n処理の詳細は、カッコ内のJavadocを参照。\n\n* コマンドライン引数のパース( CommandLine )\n* 起動ログの出力( LauncherLogFormatter#getStartLogFormat )\n* システムリポジトリの初期化\n* 実行コンテキストの初期化( Main#setupExecutionContext )\n* アプリケーション設定ログの出力( ApplicationSettingLogFormatter )\n* ハンドラキューの実行\n* 例外及びエラーに応じたログの出力\n* 終了ログの出力( LauncherLogFormatter#getEndLogFormat )\n\n処理の流れは以下のとおり。\n\n![Main_flow.png](assets/handlers-main/Main_flow.png)",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* アプリケーションを起動する\n* アプリケーション起動に任意のオプションを設定する\n* 例外及びエラーに応じた処理内容\n\nスタンドアロンで起動するアプリケーションの起点となるハンドラ。\n\njavaコマンドから直接起動することで、システムリポジトリの初期化を行い、そこに定義されたハンドラキューを実行させることができる。\n\n本ハンドラでは、以下の処理を行う。\n処理の詳細は、カッコ内のJavadocを参照。\n\n* コマンドライン引数のパース( [CommandLine](../../javadoc/javadoc-nablarch-fw-launcher-CommandLine.json) )\n* 起動ログの出力( [LauncherLogFormatter#getStartLogFormat](../../javadoc/javadoc-nablarch-fw-launcher-logging-LauncherLogFormatter.json) )\n* システムリポジトリの初期化\n* 実行コンテキストの初期化( [Main#setupExecutionContext](../../javadoc/javadoc-nablarch-fw-launcher-Main.json) )\n* アプリケーション設定ログの出力( [ApplicationSettingLogFormatter](../../javadoc/javadoc-nablarch-core-log-app-ApplicationSettingLogFormatter.json) )\n* ハンドラキューの実行\n* 例外及びエラーに応じたログの出力\n* 終了ログの出力( [LauncherLogFormatter#getEndLogFormat](../../javadoc/javadoc-nablarch-fw-launcher-logging-LauncherLogFormatter.json) )\n\n処理の流れは以下のとおり。\n\n![Main_flow.png](assets/handlers-main/Main_flow.png)",
   "no_knowledge_content": false,
   "sections": [
     {
       "id": "s1",
       "title": "ハンドラクラス名",
-      "content": "* nablarch.fw.launcher.Main",
+      "content": "* [nablarch.fw.launcher.Main](../../javadoc/javadoc-nablarch-fw-launcher-Main.json)",
       "level": 2
     },
     {
@@ -19,19 +19,19 @@
     {
       "id": "s3",
       "title": "アプリケーションを起動する",
-      "content": "javaコマンドで Mainクラス を指定してアプリケーションを起動する。\n\nフレームワークの動作に必要となる以下の3つのオプションは、必ず指定する必要がある。\n以下のオプションのうちいずれかが欠けていた場合は、即座に異常終了する。(終了コード = 127)\n\n-diConfig\n\nシステムリポジトリの設定ファイルのパスを指定する。\nこのオプションで指定されたパスを使ってシステムリポジトリを初期化する。\n\n-requestPath\n\n実行するアクションとリクエストIDを指定する。\n\n以下の書式で定義される文字列を設定する。\n\n```bash\n実行するアクションのクラス名/リクエストID\n```\n\nこのオプションで指定されたリクエストパスを\nRequest#getRequestPath\nが返すようになる。\n\n-userId\n\nユーザIDを設定する。\nこの値はセッションコンテキスト変数に `user.id` という名前で格納される。\n\n以下に実行例を示す。\n\n```bash\njava nablarch.fw.launcher.Main \\\n  -diConfig file:./batch-config.xml \\\n  -requestPath admin.DataUnloadBatchAction/BC0012 \\\n  -userId testUser\n```",
+      "content": "javaコマンドで [Mainクラス](../../javadoc/javadoc-nablarch-fw-launcher-Main.json) を指定してアプリケーションを起動する。\n\nフレームワークの動作に必要となる以下の3つのオプションは、必ず指定する必要がある。\n以下のオプションのうちいずれかが欠けていた場合は、即座に異常終了する。(終了コード = 127)\n\n-diConfig\n\nシステムリポジトリの設定ファイルのパスを指定する。\nこのオプションで指定されたパスを使ってシステムリポジトリを初期化する。\n\n-requestPath\n\n実行するアクションとリクエストIDを指定する。\n\n以下の書式で定義される文字列を設定する。\n\n```bash\n実行するアクションのクラス名/リクエストID\n```\n\nこのオプションで指定されたリクエストパスを\n[Request#getRequestPath](../../javadoc/javadoc-nablarch-fw-Request.json)\nが返すようになる。\n\n-userId\n\nユーザIDを設定する。\nこの値はセッションコンテキスト変数に `user.id` という名前で格納される。\n\n以下に実行例を示す。\n\n```bash\njava nablarch.fw.launcher.Main \\\n  -diConfig file:./batch-config.xml \\\n  -requestPath admin.DataUnloadBatchAction/BC0012 \\\n  -userId testUser\n```",
       "level": 2
     },
     {
       "id": "s4",
       "title": "アプリケーション起動に任意のオプションを設定する",
-      "content": "Mainクラス 起動時に、任意のオプションパラメータを指定することが出来る。\n\nオプションパラメータは、「オプション名称」と「オプションの値」のペアで設定する。\n\n例えば、オプション名称が `optionName` で 値が `optionValue` の場合は、以下のように指定する。\n\n```bash\njava nablarch.fw.launcher.Main \\\n  -optionName optionValue\n```\n\nアプリケーションでオプションを使用する場合は、 ExecutionContext から取得する。\n\n```java\n @Override\npublic Result handle(String inputData, ExecutionContext ctx) {\n  // getSessionScopedVarにオプション名称を指定して、値を取得する。\n  final String value = ctx.getSessionScopedVar(\"optionName\");\n\n  // 処理\n\n  return new Result.Success();\n}\n```\n\n> **Tip:**\n> アプリケーション起動時に必ず指定する必要があるオプションは、 [アプリケーションを起動する](../../component/handlers/handlers-main.md#アプリケーションを起動する) を参照",
+      "content": "[Mainクラス](../../javadoc/javadoc-nablarch-fw-launcher-Main.json) 起動時に、任意のオプションパラメータを指定することが出来る。\n\nオプションパラメータは、「オプション名称」と「オプションの値」のペアで設定する。\n\n例えば、オプション名称が `optionName` で 値が `optionValue` の場合は、以下のように指定する。\n\n```bash\njava nablarch.fw.launcher.Main \\\n  -optionName optionValue\n```\n\nアプリケーションでオプションを使用する場合は、 [ExecutionContext](../../javadoc/javadoc-nablarch-fw-ExecutionContext.json) から取得する。\n\n```java\n @Override\npublic Result handle(String inputData, ExecutionContext ctx) {\n  // getSessionScopedVarにオプション名称を指定して、値を取得する。\n  final String value = ctx.getSessionScopedVar(\"optionName\");\n\n  // 処理\n\n  return new Result.Success();\n}\n```\n\n> **Tip:**\n> アプリケーション起動時に必ず指定する必要があるオプションは、 [アプリケーションを起動する](../../component/handlers/handlers-main.json#アプリケーションを起動する) を参照",
       "level": 2
     },
     {
       "id": "s5",
       "title": "例外及びエラーに応じた処理内容",
-      "content": "このハンドラでは捕捉した例外及びエラーの内容に応じて、以下の処理と結果を返す。\n\n| 例外クラス | 処理内容 |\n|---|---|\n| Result.Error  (サブクラス含む) | FATALレベルのログ出力を行う。  ログ出力後、ハンドラの処理結果として、以下の値を返す。  ステータスコードが0～127の場合  ステータスコードをそのまま返す。  ステータスコードが0～127以外の場合  127を返す。 |\n| 上記以外の例外クラス | FATALレベルのログ出力を行う。  ログ出力後、ハンドラの処理結果として、127を返す。 |",
+      "content": "このハンドラでは捕捉した例外及びエラーの内容に応じて、以下の処理と結果を返す。\n\n| 例外クラス | 処理内容 |\n|---|---|\n| [Result.Error](../../javadoc/javadoc-nablarch-fw-Result.json)  (サブクラス含む) | FATALレベルのログ出力を行う。  ログ出力後、ハンドラの処理結果として、以下の値を返す。  ステータスコードが0～127の場合  ステータスコードをそのまま返す。  ステータスコードが0～127以外の場合  127を返す。 |\n| 上記以外の例外クラス | FATALレベルのログ出力を行う。  ログ出力後、ハンドラの処理結果として、127を返す。 |",
       "level": 2
     }
   ]

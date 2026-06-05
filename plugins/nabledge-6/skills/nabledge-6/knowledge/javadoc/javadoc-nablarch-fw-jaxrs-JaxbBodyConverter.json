@@ -1,0 +1,68 @@
+{
+  "title": "class JaxbBodyConverter",
+  "content": "**パッケージ:** nablarch.fw.jaxrs\n\n**継承階層:**\n```\njava.lang.Object\n  └─ BodyConverterSupport\n      └─ nablarch.fw.jaxrs.JaxbBodyConverter\n```\n\n---\n\n```java\npublic class JaxbBodyConverter\nextends BodyConverterSupport\n```\n\nJAXBを使用してリクエスト/レスポンスの変換を行う{@link BodyConverter}実装クラス。\n\n**作成者:** Naoki Yamamoto  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "JAXB_CONTEXT_MAP",
+      "level": 3,
+      "content": "```java\nprivate static final Map<Class<?>,JAXBContext> JAXB_CONTEXT_MAP\n```\n\n{@link JAXBContext}のキャッシュ\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "convertRequest",
+      "level": 3,
+      "content": "```java\nprotected Object convertRequest(HttpRequest request, ExecutionContext context)\n```\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "convertResponse",
+      "level": 3,
+      "content": "```java\nprotected HttpResponse convertResponse(Object response, ExecutionContext context)\n```\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "isConvertible",
+      "level": 3,
+      "content": "```java\npublic boolean isConvertible(String mediaType)\n```\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getJAXBContext",
+      "level": 3,
+      "content": "```java\nprivate JAXBContext getJAXBContext(Class<?> beanClass)\n                           throws JAXBException\n```\n\nBeanクラスに対応した{@link JAXBContext}を取得する。\n<p/>\nキャッシュ上に{@link JAXBContext}情報が存在する場合はその情報を返す。\nまだキャッシュされていない場合には、{@link JAXBContext}を生成しキャッシュに格納する。\n\n**パラメータ:**\n- `beanClass` - Beanクラス\n\n**戻り値:**\nBeanクラスに対応した{@link JAXBContext}\n\n**例外:**\n- `JAXBException` - {@link JAXBContext}の生成に失敗した場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "configure",
+      "level": 3,
+      "content": "```java\nprotected void configure(Marshaller marshaller)\n               throws JAXBException\n```\n\n{@link Marshaller}に対するオプション設定を行う。\n<p/>\nこのクラスではデフォルトで以下の設定でXMLの生成を行う。\n設定を変更したい場合はサブクラス側で行う必要がある。\n\n<ul>\n    <li>改行、インデントを使用した形式にフォーマットする。</li>\n    <li>\n        文字コードはリソースメソッドの{@link jakarta.ws.rs.Produces}に設定された文字コードを使用する。<br/>\n        文字コードが設定されていない場合はデフォルトエンコーディングを使用する。\n    </li>\n</ul>\n\n**パラメータ:**\n- `marshaller` - {@link Marshaller}\n\n**例外:**\n- `JAXBException` - オプション設定に失敗した場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "configure",
+      "level": 3,
+      "content": "```java\nprotected void configure(Unmarshaller unmarshaller)\n               throws JAXBException\n```\n\n{@link Unmarshaller}に対するオプション設定を行う。\n<p/>\nこのクラスでは特に何も行わないので、オプション設定はサブクラス側で行う必要がある。\n\n**パラメータ:**\n- `unmarshaller` - {@link Unmarshaller}\n\n**例外:**\n- `JAXBException` - オプション設定に失敗した場合\n\n---",
+      "id": "s10"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-jaxrs-JaxbBodyConverter"
+}

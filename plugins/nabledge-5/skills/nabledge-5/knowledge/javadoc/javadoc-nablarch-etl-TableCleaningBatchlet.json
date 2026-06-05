@@ -1,0 +1,44 @@
+{
+  "title": "class TableCleaningBatchlet",
+  "content": "**パッケージ:** nablarch.etl\n\n**継承階層:**\n```\njava.lang.Object\n  └─ AbstractBatchlet\n      └─ nablarch.etl.TableCleaningBatchlet\n```\n\n---\n\n```java\npublic class TableCleaningBatchlet\nextends AbstractBatchlet\n```\n\nテーブルのデータをクリーニング(truncate)する{@link javax.batch.api.Batchlet}実装クラス。\n<p/>\n{@link TruncateStepConfig}で指定されたEntityクラスに対応するテーブルのデータをクリーニング(truncate)する。\n\n**作成者:** Hisaaki Shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "stepConfig",
+      "level": 3,
+      "content": "```java\nprivate final TruncateStepConfig stepConfig\n```\n\nETLの設定\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "TableCleaningBatchlet",
+      "level": 3,
+      "content": "```java\npublic TableCleaningBatchlet(StepConfig stepConfig)\n```\n\nコンストラクタ。\n\n**パラメータ:**\n- `stepConfig` - ステップの設定\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "process",
+      "level": 3,
+      "content": "```java\npublic String process()\n               throws Exception\n```\n\n{@inheritDoc}\n<p/>\n本処理では、TRUNCATEのSQL文を構築する際にステートメントを発行しているが、\nRDBMS製品によっては、TRUNCATE文の発行はトランザクション内の最初のステートメントである必要があるため、\nTRUNCATEのSQL文の構築後に明示的にトランザクションをロールバックしている。\n<p/>\nそのため、もしステップリスナ等で事前にデータベースへの更新等を行っている場合、\nその処理は取り消されるため注意すること。\n\n---",
+      "id": "s6"
+    }
+  ],
+  "id": "javadoc-nablarch-etl-TableCleaningBatchlet"
+}

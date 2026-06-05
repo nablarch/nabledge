@@ -1,0 +1,212 @@
+{
+  "title": "class RestTestSupport",
+  "content": "**パッケージ:** nablarch.test.core.http\n\n**継承階層:**\n```\njava.lang.Object\n  └─ SimpleRestTestSupport\n      └─ nablarch.test.core.http.RestTestSupport\n```\n\n---\n\n```java\npublic class RestTestSupport\nextends SimpleRestTestSupport\n```\n\nRESTfulウェブサービス用のテストサポートクラス\nDBアクセスを追加した{@link SimpleRestTestSupport}拡張クラス\n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "TEST_DATA_PARSER_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String TEST_DATA_PARSER_KEY\n```\n\nTestDataParserのリポジトリキー\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "RESOURCE_ROOT_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String RESOURCE_ROOT_KEY\n```\n\nベースディレクトリを取得するためのリポジトリキー\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "DEFAULT_RESOURCE_ROOT",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_RESOURCE_ROOT\n```\n\nリソース読み込み時のベースディレクトリ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "PATH_SEPARATOR",
+      "level": 3,
+      "content": "```java\nprivate static final String PATH_SEPARATOR\n```\n\nパスセパレータ\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "SETUP_TABLE_SHEET",
+      "level": 3,
+      "content": "```java\nprivate static final String SETUP_TABLE_SHEET\n```\n\nテストクラス共通データを定義しているシート名\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "dbSupport",
+      "level": 3,
+      "content": "```java\nprivate final DbAccessTestSupport dbSupport\n```\n\nNTFのDBサポート\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "testDataExists",
+      "level": 3,
+      "content": "```java\nprivate boolean testDataExists\n```\n\nテストデータのExcelファイルが存在するか否か\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s10"
+    },
+    {
+      "title": "RestTestSupport",
+      "level": 3,
+      "content": "```java\npublic RestTestSupport()\n```\n\nデフォルトコンストラクタ。\n<p>\nこのコンストラクタでインスタンスを生成し委譲形式で利用した場合、 {@link #setUpDb()} などの\nデータベース機能を利用するメソッドは使用できない。<br>\nデータベース機能を利用する場合は、 {@link #RestTestSupport(Class)} を使用すること。\n</p>\n<p>\nこのクラスを継承してテストクラスを作成した場合は、デフォルトコンストラクタで初期化していても\nデータベース機能を利用できる。\n</p>\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "RestTestSupport",
+      "level": 3,
+      "content": "```java\npublic RestTestSupport(Class<?> testClass)\n```\n\nテストクラスを指定してインスタンスを生成する。\n\n**パラメータ:**\n- `testClass` - テストクラス\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s13"
+    },
+    {
+      "title": "setUpDb",
+      "level": 3,
+      "content": "```java\npublic void setUpDb()\n```\n\nシステムリポジトリから設定を取得しHTTPサーバを起動する。\nテストデータが存在する場合はDBにデータを登録する。\n以下2種類のテストデータが対象となる。\n<ol>\n  <li>テストクラス単位で共通のデータシート:setUpDb</li>\n  <li>テストメソッド単位で固有のデータシート：実行中のメソッド名</li>\n</ol>\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setUpDbIfSheetExists",
+      "level": 3,
+      "content": "```java\nprotected void setUpDbIfSheetExists(String sheetName)\n```\n\nDBセットアップを実行する。\n\n**パラメータ:**\n- `sheetName` - セットアップ対象データの記載されたシート名\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setUpDb",
+      "level": 3,
+      "content": "```java\npublic void setUpDb(String sheetName)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#setUpDb(String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - シート名\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setUpDb",
+      "level": 3,
+      "content": "```java\npublic void setUpDb(String sheetName, String groupId)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#setUpDb(String, String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - シート名\n- `groupId` - グループID\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getListMap",
+      "level": 3,
+      "content": "```java\npublic List<Map<String,String>> getListMap(String sheetName, String id)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#getListMap(String, String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - シート名\n- `id` - ID\n\n**戻り値:**\nList-Map形式のデータ\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "getListParamMap",
+      "level": 3,
+      "content": "```java\npublic List<Map<String,String[]>> getListParamMap(String sheetName, String id)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#getListParamMap(String, String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - シート名\n- `id` - ID\n\n**戻り値:**\nList-Map<String, String[]>形式のデータ\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getParamMap",
+      "level": 3,
+      "content": "```java\npublic Map<String,String[]> getParamMap(String sheetName, String id)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#getParamMap(String, String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - シート名\n- `id` - ID\n\n**戻り値:**\nMap<String, String [ ]>形式のデータ\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "assertTableEquals",
+      "level": 3,
+      "content": "```java\npublic void assertTableEquals(String sheetName)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#assertTableEquals(String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - 期待値を格納したシート名\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "assertTableEquals",
+      "level": 3,
+      "content": "```java\npublic void assertTableEquals(String sheetName, String groupId)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#assertTableEquals(String, String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - 期待値を格納したシート名\n- `groupId` - グループID（オプション）\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "assertTableEquals",
+      "level": 3,
+      "content": "```java\npublic void assertTableEquals(String message, String sheetName, String groupId)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#assertTableEquals(String, String, String)} への委譲メソッド。\n\n**パラメータ:**\n- `message` - 比較失敗時のメッセージ\n- `groupId` - グループID（オプション）\n- `sheetName` - 期待値を格納したシート名\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "assertTableEquals",
+      "level": 3,
+      "content": "```java\npublic void assertTableEquals(String message, String sheetName, String groupId, boolean failIfNoDataFound)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#assertTableEquals(String, String, String, boolean)} への委譲メソッド。\n\n**パラメータ:**\n- `message` - 比較失敗時のメッセージ\n- `sheetName` - 期待値を格納したシート名\n- `groupId` - グループID（オプション）\n- `failIfNoDataFound` - データが存在しない場合に例外とするかどうか\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "isExisting",
+      "level": 3,
+      "content": "```java\nprivate boolean isExisting(String sheetName)\n```\n\nsheetName に合致するリソースが存在するかを判定する。\n\n**パラメータ:**\n- `sheetName` - シート名\n\n**戻り値:**\n存在する場合true\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "getPathOf",
+      "level": 3,
+      "content": "```java\nprivate String getPathOf(String resourceName)\n```\n\nテストデータのパスを取得する。\n最初にリソースが見つかったテストデータのパスを返す。\n\n**パラメータ:**\n- `resourceName` - リソース名\n\n**戻り値:**\nリソースが存在するパス（存在しない場合、null）\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "getSheet",
+      "level": 3,
+      "content": "```java\nprivate Sheet getSheet(String basePath, String sheetName)\n```\n\n引数で渡されたパス配下にある実行中のテストクラスと同名のExcelファイルを読み込み\nシート名が一致するシートを返す。\n\n**パラメータ:**\n- `basePath` - パス\n- `sheetName` - シート名\n\n**戻り値:**\n読み込んだ{@link Sheet}\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "getResourceName",
+      "level": 3,
+      "content": "```java\nprivate String getResourceName(String sheetName)\n```\n\nリソース名を取得する。<br/>\n\n**パラメータ:**\n- `sheetName` - シート名\n\n**戻り値:**\nリソース名\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "getTestDataPaths",
+      "level": 3,
+      "content": "```java\nprivate List<String> getTestDataPaths()\n```\n\nテストデータのパスのリストを取得する。\nリソースルートディレクトリに、クラスのパッケージ階層を付与したものをパスとして返却する。\nこれらのパスがリソースを探索する際の候補となる。\n<p>\n例えば、リソースルートの設定が[\"test/online;test/batch\"]で、テストクラスがfoo.bar.Buzのとき、\n[\"test/online/foo/bar\", \"test/batch/foo/bar\"]が返却される。\n</p>\n\n**戻り値:**\nテストデータのパスのリスト\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "getResourceRootSetting",
+      "level": 3,
+      "content": "```java\nprivate String getResourceRootSetting()\n```\n\nリソースルートの設定をリポジトリより取得する。<br/>\nルートディレクトリが複数設定されている場合、\n{@link #PATH_SEPARATOR}で区切られている。\n明示的に設定がされていない場合はデフォルト設定（{@link #DEFAULT_RESOURCE_ROOT}）を返却する。\n\n**戻り値:**\nリソースルート設定\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "packageToPath",
+      "level": 3,
+      "content": "```java\nprivate String packageToPath(Class<?> clazz)\n```\n\n与えられたクラスのパッケージからパスに変換する。\n\n**パラメータ:**\n- `clazz` - クラス\n\n**戻り値:**\nパッケージから変換されたパス\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "getTestDataParser",
+      "level": 3,
+      "content": "```java\npublic final TestDataParser getTestDataParser()\n```\n\nテストデータパーサを取得する。\n\n**戻り値:**\nテストデータパーサ\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "getBodyString",
+      "level": 3,
+      "content": "```java\npublic String getBodyString(HttpResponse httpResponse)\n```\n\nHTTPレスポンスボディの内容を表す文字列を返す。<br/>\n文字列は{@link HttpResponse#getCharset()}で取得したキャラセットでデコードして取得される。\n\n**戻り値:**\nボディの内容を表す文字列を返す\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "getBodyStream",
+      "level": 3,
+      "content": "```java\npublic InputStream getBodyStream(HttpResponse httpResponse)\n```\n\nHTTPレスポンスボディの内容を保持するストリームを取得する。\n\n**戻り値:**\nHTTPレスポンスボディの内容を保持するストリーム\n\n---",
+      "id": "s34"
+    }
+  ],
+  "id": "javadoc-nablarch-test-core-http-RestTestSupport"
+}

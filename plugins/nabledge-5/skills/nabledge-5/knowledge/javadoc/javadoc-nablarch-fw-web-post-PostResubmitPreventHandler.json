@@ -1,0 +1,98 @@
+{
+  "title": "class PostResubmitPreventHandler",
+  "content": "**パッケージ:** nablarch.fw.web.post\n\n**実装されたインタフェース:**\n- HttpRequestHandler\n\n---\n\n```java\npublic class PostResubmitPreventHandler\nimplements HttpRequestHandler\n```\n\nPOST再送信防止ハンドラ。\n<p/>\n本ハンドラでは、POSTで受け付けたリクエストに対して、\nリダイレクトを使用し、再度リクエストを受け付けることで、\nブラウザの戻るボタンによるPOST再送信を防止する。\n<p/>\nリダイレクト後のGETリクエストが複数送信された場合には、{@link HttpErrorResponse}を送出する。\nHTTPステータスコードには、BadRequestであることを示す{@code 400}を設定し、\n遷移先のパスには{@link #setForwardPathMapping(Map)}で設定されたパスマッピングを元に設定する。<br/>\n※複数送信されたリクエストのリクエストIDが、マッピング設定のキーから始まっている場合その値を遷移先とする。\nリクエストIDが複数のキーから始まっている場合は、最も長いキーに対応する値を遷移先にする。<br/>\n以下にマッピング例を示す。\n<p/>\n{@link #setForwardPathMapping(Map)}に設定された内容が以下表の場合、\nリクエストIDがRW4444の場合は、遷移先のパスは/rw4_error.jspとなる。\nリクエストIDがRW3333の場合は、遷移先のパスは/rw_error.jspとなる。\n<pre>\n----------- -----------------------------\nキー        パス\n----------- -----------------------------\nR           /r_error.jsp\nR1234       /r1234_error.jsp\nRW          /rw_error.jsp\nRW4         /rw4_error.jsp\n----------- -----------------------------\n</pre>\n<p/>\nただし、multipartリクエストには未対応。\n<p/>\n本ハンドラは、{@code NablarchTagHandler}の手前に設定すること。\n\n**作成者:** Kiyohito Itoh  \n**非推奨:** アプリケーションで実装したほうが分かりやすく簡単に実装できるため、POST再送信を防止するには業務アクションにてリダイレクトのレスポンスを返すことで実現すること。  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "POST_RESUBMIT_PREVENT_PARAM",
+      "level": 3,
+      "content": "```java\npublic static final String POST_RESUBMIT_PREVENT_PARAM\n```\n\nPOST再送信防止を指示するパラメータ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "POST_REDIRECT_ID_PARAM",
+      "level": 3,
+      "content": "```java\nprivate static final String POST_REDIRECT_ID_PARAM\n```\n\nPOST後にリダイレクトされたリクエストを識別するパラメータ\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "POST_REQUEST_KEY_PREFIX",
+      "level": 3,
+      "content": "```java\nprivate static final String POST_REQUEST_KEY_PREFIX\n```\n\nPOST時のリクエスト情報をセッションスコープに格納する際に使用するキーのプレフィックス\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "forwardPathMapping",
+      "level": 3,
+      "content": "```java\nprivate Map<String,String> forwardPathMapping\n```\n\nリクエストIDと遷移先のパスマッピング\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest request, ExecutionContext context)\n```\n\n{@inheritDoc}\n<p/>\n処理フローは下記の通り。\n<pre>\n[1]POST再送信防止が指示されたリクエストであるか否かを判定する。\n\n    POST再送信防止が指示されたリクエストである場合：\n        リクエスト情報をセッションスコープに格納し、\n        再度同じURIに対してリダイレクトする。\n\n    POST再送信防止が指示されたリクエストでない場合：\n        [2]に進む。\n\n[2]POST後にリダイレクトされたリクエストであるか否かを判定する。\n\n    POST後にリダイレクトされたリクエストである場合：\n        セッションスコープに格納したリクエスト情報をリクエストに設定後、\n        後続のハンドラを呼び出す。\n\n    POST後にリダイレクトされたリクエストでない場合：\n        後続のハンドラを呼び出す。\n</pre>\n各処理の詳細については、各メソッドのJavadocを参照。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getForwardPath",
+      "level": 3,
+      "content": "```java\nprivate String getForwardPath(String requestId)\n```\n\n遷移先のパスを取得する。\n\n**パラメータ:**\n- `requestId` - リクエストID\n\n**戻り値:**\n遷移先のパス\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "isPostRedirect",
+      "level": 3,
+      "content": "```java\nprotected boolean isPostRedirect(HttpRequest request)\n```\n\nPOST再送信防止が指示されたリクエストであるか否かを判定する。\n<p/>\n下記の条件をすべて満たす場合のみtrueを返す。\n<pre>\n・HTTPメソッドがPOSTであること\n・POST再送信防止を指示するパラメータ({@link #POST_RESUBMIT_PREVENT_PARAM})が存在すること\n</pre>\n\n**パラメータ:**\n- `request` - リクエスト\n\n**戻り値:**\nPOST再送信防止が指示されたリクエストである場合はtrue\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "createPostRequest",
+      "level": 3,
+      "content": "```java\nprotected PostRequest createPostRequest(HttpRequest request)\n```\n\nPOST時のリクエスト情報を生成する。\n<p/>\nリクエスト情報として下記を取得する。\n<pre>\n・リクエストパラメータ\n・マルチパート\n</pre>\n\n**パラメータ:**\n- `request` - リクエスト\n\n**戻り値:**\nPOST時のリクエスト情報\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "generatePostRequestKey",
+      "level": 3,
+      "content": "```java\nprotected String generatePostRequestKey(String executionId)\n```\n\nPOST時のリクエスト情報をセッションスコープに格納する際に使用するキーを生成する。\nキーの形式は下記の通り。\n<pre>\n    nablarch_post_request_<実行時ID>\n</pre>\n\n**パラメータ:**\n- `executionId` - 実行時ID\n\n**戻り値:**\nPOST時のリクエスト情報をセッションスコープに格納する際に使用するキー\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "generateRedirectPath",
+      "level": 3,
+      "content": "```java\nprotected String generateRedirectPath(HttpRequest request)\n```\n\nPOST後のリダイレクトに使用するパスを生成する。\n<p/>\nパスの形式は下記の通り。\n<pre>\n    redirect://<リクエストURI>?nablarch_post_redirect_id=<実行時ID>\n</pre>\n\n**パラメータ:**\n- `request` - リクエスト\n\n**戻り値:**\nPOST後のリダイレクトに使用するパス\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "isRedirectOnPost",
+      "level": 3,
+      "content": "```java\nprotected boolean isRedirectOnPost(HttpRequest request)\n```\n\nPOST後にリダイレクトされたリクエストであるか否かを判定する。\n<p/>\n下記の条件をすべて満たす場合のみtrueを返す。\n<pre>\n・HTTPメソッドがGETであること\n・リダイレクト時に付与したnablarch_post_redirect_idパラメータが存在すること\n</pre>\n\n**パラメータ:**\n- `request` - リクエスト\n\n**戻り値:**\nPOST後にリダイレクトされたリクエストである場合はtrue\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getPostRequest",
+      "level": 3,
+      "content": "```java\nprotected PostRequest getPostRequest(HttpRequest request, ExecutionContext context)\n```\n\nリダイレクト前にセッションスコープに格納したリクエスト情報を取得する。\n<p/>\n取得できない場合はnullを返す。<br/>\n<br/>\nPOST後にリダイレクトされたリクエストを識別するパラメータ、\nおよびPOSTリクエストのリクエスト情報は、\nともに保持しているマップから削除する。\n\n**パラメータ:**\n- `request` - リクエスト\n- `context` - 実行コンテキスト\n\n**戻り値:**\nリダイレクト前にセッションスコープに格納したリクエスト情報。取得できない場合はnull\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setForwardPathMapping",
+      "level": 3,
+      "content": "```java\npublic void setForwardPathMapping(Map<String,String> forwardPathMapping)\n```\n\nリクエストIDと遷移先パスのマッピングを設定する。\n<p/>\nMapのキーにはリクエストIDを識別する値を、値には遷移先のパスを設定する。\n\n**パラメータ:**\n- `forwardPathMapping` - マッピング\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-post-PostResubmitPreventHandler"
+}

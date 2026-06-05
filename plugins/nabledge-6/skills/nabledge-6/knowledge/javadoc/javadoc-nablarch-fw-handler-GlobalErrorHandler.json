@@ -1,0 +1,44 @@
+{
+  "title": "class GlobalErrorHandler",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**実装されたインタフェース:**\n- Handler<Request<?>,Object>\n- ExceptionHandler\n\n---\n\n```java\npublic class GlobalErrorHandler\nimplements Handler<Request<?>,Object>, ExceptionHandler\n```\n\n異例処理用例外ハンドラ。\n<p/>\nこのハンドラは、リクエストコントローラの直後に配置され、\nハンドラキュー上のどのハンドラでも捕捉されなかった例外に対して\n最終的に処理を行う責務を持ったハンドラである。\n<p/>\nほとんどのエラーは各処理方式に準じた例外ハンドラーにより捕捉されるが、\nそれらのハンドラが捕捉しないエラー、もしくは、それらのハンドラ以降の\n処理で発生したエラーが対象となる。\n<p/>\nこのハンドラが例外処理として行うのは以下の2点である。\n1. ログ出力\n2. コントローラに対する例外のリスロー\n(コントローラ自体の処理継続が不可能な致命的エラーの場合。)\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(Request<?> req, ExecutionContext context)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "handleError",
+      "level": 3,
+      "content": "```java\npublic Result handleError(Error e, ExecutionContext context)\n                   throws Error, RuntimeException\n```\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "handleRuntimeException",
+      "level": 3,
+      "content": "```java\npublic Result handleRuntimeException(RuntimeException e, ExecutionContext context)\n                              throws RuntimeException\n```\n\n---",
+      "id": "s6"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-GlobalErrorHandler"
+}

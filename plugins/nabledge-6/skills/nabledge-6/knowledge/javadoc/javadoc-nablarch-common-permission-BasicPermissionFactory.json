@@ -1,0 +1,110 @@
+{
+  "title": "class BasicPermissionFactory",
+  "content": "**パッケージ:** nablarch.common.permission\n\n**実装されたインタフェース:**\n- PermissionFactory\n- Initializable\n\n---\n\n```java\npublic class BasicPermissionFactory\nimplements PermissionFactory, Initializable\n```\n\n認可制御グループをベースにした{@link Permission}を生成するクラス。<br>\n<br>\nこのクラスでは、データベース上にユーザ及びユーザが属するグループ毎に使用できる認可単位を保持したテーブル構造から、\nユーザに紐付く認可情報を取得する。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "dbManager",
+      "level": 3,
+      "content": "```java\nprivate SimpleDbTransactionManager dbManager\n```\n\nデータベースへのトランザクション制御を行う{@link SimpleDbTransactionManager}\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "dbSchema",
+      "level": 3,
+      "content": "```java\nprivate Map<String,String> dbSchema\n```\n\n認可機能で使用するテーブル名／カラム名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "businessDateProvider",
+      "level": 3,
+      "content": "```java\nprivate BusinessDateProvider businessDateProvider\n```\n\n業務日付を提供する{@link BusinessDateProvider}\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "selectRequestIdsSql",
+      "level": 3,
+      "content": "```java\nprivate String selectRequestIdsSql\n```\n\nリクエストIDを取得するSQL\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "setDbManager",
+      "level": 3,
+      "content": "```java\npublic void setDbManager(SimpleDbTransactionManager dbManager)\n```\n\nデータベースへのトランザクション制御を行う{@link SimpleDbTransactionManager}を設定する。\n\n**パラメータ:**\n- `dbManager` - データベースへのトランザクション制御を行う{@link SimpleDbTransactionManager}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setGroupTableSchema",
+      "level": 3,
+      "content": "```java\npublic void setGroupTableSchema(GroupTableSchema schema)\n```\n\nグループテーブルのスキーマ情報を設定する。\n\n**パラメータ:**\n- `schema` - グループテーブルのスキーマ情報\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setSystemAccountTableSchema",
+      "level": 3,
+      "content": "```java\npublic void setSystemAccountTableSchema(SystemAccountTableSchema schema)\n```\n\nシステムアカウントテーブルのスキーマ情報を設定する。\n\n**パラメータ:**\n- `schema` - システムアカウントテーブルのスキーマ情報\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setGroupSystemAccountTableSchema",
+      "level": 3,
+      "content": "```java\npublic void setGroupSystemAccountTableSchema(GroupSystemAccountTableSchema schema)\n```\n\nグループシステムアカウントテーブルのスキーマ情報を設定する。\n\n**パラメータ:**\n- `schema` - グループシステムアカウントテーブルのスキーマ情報\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setPermissionUnitTableSchema",
+      "level": 3,
+      "content": "```java\npublic void setPermissionUnitTableSchema(PermissionUnitTableSchema schema)\n```\n\n認可単位テーブルのスキーマ情報を設定する。\n\n**パラメータ:**\n- `schema` - 認可単位テーブルのスキーマ情報\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setPermissionUnitRequestTableSchema",
+      "level": 3,
+      "content": "```java\npublic void setPermissionUnitRequestTableSchema(PermissionUnitRequestTableSchema schema)\n```\n\n認可単位リクエストテーブルのスキーマ情報を設定する。\n\n**パラメータ:**\n- `schema` - 認可単位リクエストテーブルのスキーマ情報\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setGroupAuthorityTableSchema",
+      "level": 3,
+      "content": "```java\npublic void setGroupAuthorityTableSchema(GroupAuthorityTableSchema schema)\n```\n\nグループ権限テーブルのスキーマ情報を設定する。\n\n**パラメータ:**\n- `schema` - グループ権限テーブルのスキーマ情報\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setSystemAccountAuthorityTableSchema",
+      "level": 3,
+      "content": "```java\npublic void setSystemAccountAuthorityTableSchema(SystemAccountAuthorityTableSchema schema)\n```\n\nシステムアカウント権限テーブルのスキーマ情報を設定する。\n\n**パラメータ:**\n- `schema` - システムアカウント権限テーブルのスキーマ情報\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setBusinessDateProvider",
+      "level": 3,
+      "content": "```java\npublic void setBusinessDateProvider(BusinessDateProvider businessDateProvider)\n```\n\n業務日付を提供するクラスのインスタンスを設定する。\n\n**パラメータ:**\n- `businessDateProvider` - 業務日付を提供するクラスのインスタンス\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getPermission",
+      "level": 3,
+      "content": "```java\npublic Permission getPermission(String userId)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize()\n```\n\nSQL文を初期化する。\n\n---",
+      "id": "s17"
+    }
+  ],
+  "id": "javadoc-nablarch-common-permission-BasicPermissionFactory"
+}

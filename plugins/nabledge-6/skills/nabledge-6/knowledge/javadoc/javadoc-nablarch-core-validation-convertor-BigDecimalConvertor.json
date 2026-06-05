@@ -1,0 +1,32 @@
+{
+  "title": "class BigDecimalConvertor",
+  "content": "**パッケージ:** nablarch.core.validation.convertor\n\n**継承階層:**\n```\njava.lang.Object\n  └─ NumberConvertorSupport\n      └─ nablarch.core.validation.convertor.BigDecimalConvertor\n```\n\n---\n\n```java\npublic class BigDecimalConvertor\nextends NumberConvertorSupport\n```\n\n値をBigDecimalに変換するクラス。<br/>\n\n本クラスで変換するプロパティには、必ずDigitsアノテーションを付与しておく必要がある。\n本クラスでは、Digitsアノテーションの属性を下記の通り使用する。</br>\n<table border=1>\n    <tr bgcolor=\"#cccccc\">\n        <td>Digitsアノテーションの属性名</td><td>説明</td>\n    </tr>\n    <tr>\n        <td>integer</td><td>整数部桁数上限値。指定値に上限はない。</td>\n    </tr>\n    <tr>\n        <td>fraction</td><td>小数部桁数上限値。指定値に上限はない。</td>\n    </tr>\n    <tr>\n        <td>comma</td><td>trueの場合、入力値が3桁区切り文字で編集されていてもよい。（区切り文字は省略可。）\n        　　　　　　　　　　　　　</br>falseの場合、入力値が3桁区切り文字で編集されていてはいけない。</td>\n    </tr>\n    <tr>\n        <td>messageId</td><td>変換失敗時のメッセージID。</td>\n    </tr>\n</table>\n\n<p>\n<b>バリデーション仕様</b>\n<p>\nDigitsアノテーションの設定によって行われるバリデーション仕様の例を以下に示す。</br>\n桁数指定の設定とバリデーション内容：</br>\ninteger=4, fraction=4の場合、「1234.1234」、「-1234.1234」、「+1234.1234」、「.1234」等は有効である。<br/>\nしかし、「12345.」、「.12345」、「12345.123」、「123.12345」、「1234.」等は無効であり、バリデーションエラーとなる。</br>\nカンマ編集可否の設定とバリデーション内容：</br>\ncommaSeparatedがtrueの場合、「1,234.1234」、「1234.1234」は有効である。<br/>\n「12,34.1234」のようにカンマを3桁の区切り文字として使用していない場合は無効でありバリデーションエラーとなる。</br>\ncommaSeparatedがfalseの場合、「1,234.1234」等は無効であり、バリデーションエラーとなる。\n</br>\n<p>\n上記例のように、本クラスのバリデーションでは {@link NumberConvertorSupport} が行う共通バリデーションに加えて、下記仕様のバリデーションを行う。\n<ul>\n    <li>先頭が数字、プラス記号( + )、マイナス記号( - )、ピリオド( . )のいずれかで始まっていること。</li>\n    <li>整数部桁数が、Digitsアノテーションにて指定されたinteger値以下であること。</li>\n    <li>Digitsアノテーションでfractionが指定されている場合、小数部の桁数がfraction値以下であること。</li>\n    <li>DigitsアノテーションのcommaSeparatedがfalseの場合、カンマが使用されていないこと。</li>\n    <li>DigitsアノテーションのcommaSeparatedがtrueの場合、カンマが3桁区切りに付与されている、またはカンマを設定していないこと。</li>\n    <li>末尾がピリオドで終わらないこと。</li>\n</ul>\n\n<p>\n<b>国際化</b>\n<p>\n数値の記述は、フランス語圏等、言語によっては数値を記載する際にカンマとピリオドの解釈を置き換えて使用する言語がある。</br>\nNablarchのカスタムタグで国際化機能を使用した場合、本クラスもカンマとピリオドの解釈を入れ替えて入力値を取り扱う。\n以下に @Digits(integer=6, fraction=2, commaSeparated=true) を設定していた場合の例を示す。</br>\n1) 言語に \"ja\" (日本語) が設定された場合。</br>\n　123,456.11 ⇒ 123456.11 として解釈する</br>\n　123.456,11 ⇒ バリデーションエラーとなる</br>\n2) 言語に \"fr\" (フランス語) が設定された場合。</br>\n　123,456.11 ⇒ バリデーションエラーとなる</br>\n　123.456,11 ⇒ 123456.11 として解釈する</br>\n</p>\n\n**作成者:** Koichi Asano  \n**関連項目:** Digits  \n**関連項目:** NumberConvertorSupport  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "getTargetClass",
+      "level": 3,
+      "content": "```java\npublic Class<?> getTargetClass()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "convertToPropertyType",
+      "level": 3,
+      "content": "```java\nprotected Number convertToPropertyType(String numberString)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "createPattern",
+      "level": 3,
+      "content": "```java\nprotected Pattern createPattern(Digits digits, DecimalFormatSymbols symbols)\n```\n\n---",
+      "id": "s4"
+    }
+  ],
+  "id": "javadoc-nablarch-core-validation-convertor-BigDecimalConvertor"
+}

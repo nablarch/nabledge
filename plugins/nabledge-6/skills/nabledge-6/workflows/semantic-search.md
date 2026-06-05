@@ -78,4 +78,30 @@ Return:
 }
 ```
 
+---
+
+## Step 4: Augment with referenced Javadoc
+
+After Step 3, scan the `content` of every section already in `selected_sections`
+for internal Javadoc links of the form `[text](../javadoc/javadoc-*.json)`.
+
+For each unique Javadoc path found:
+1. Resolve it to `knowledge/javadoc/javadoc-*.json` (the link path is already
+   `.json`; no extension rewriting is needed).
+2. Add it to `selected_sections` with `relevance` inherited from the section
+   that referenced it (a Javadoc referenced from a high section is high; from a
+   partial section is partial). If the same Javadoc is referenced from both,
+   keep the higher relevance.
+
+Limits and guards:
+- Add at most 10 Javadoc files in total across all selected sections (not per
+  section). If more than 10 distinct Javadoc links exist, keep those referenced
+  from high sections first, then partial, in document order.
+- Deduplicate by Javadoc path: never add the same file twice.
+- Only follow links matching `../javadoc/javadoc-*.json`. Ignore external URLs
+  (`http(s)://...`) and non-Javadoc internal links.
+- If a referenced Javadoc file does not exist, skip it silently (do not fail).
+
+---
+
 Results sorted by relevance descending (high → partial).

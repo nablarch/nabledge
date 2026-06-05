@@ -13,7 +13,7 @@
     {
       "id": "s2",
       "title": "概要",
-      "content": "このハンドラでは、往路と復路で、それぞれリクエストとレスポンスに関するHTTPアクセスログを出力する。\n\n出力されるアクセスログの詳細や、出力形式の設定については、 [HTTPアクセスログの出力](../../component/libraries/libraries-04-HttpAccessLog.md) を参照すること。\n\n-----\n\n**ハンドラ処理概要**\n\n| ハンドラ | クラス名 | 入力型 | 結果型 | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|---|---|\n| スレッドコンテキスト変数設定ハンドラ(リクエストスレッド) | nablarch.common.handler.ThreadContextHandler_request | Object | Object | 前のループで設定されたスレッドコンテキスト変数をクリアするためここで再初期化する。 | - | - |\n| HTTPアクセスログハンドラ | nablarch.fw.web.handler.HttpAccessLogHandler | HttpRequest | HttpResponse | HTTPリクエストの内容についてログに出力する。 | 送信するHTTPレスポンスの内容についてログに出力する。 | 送信するHTTPレスポンスの内容についてログに出力する。 |\n| HTTPエラー制御ハンドラ | nablarch.fw.web.handler.HttpErrorHandler | HttpRequest | HttpResponse | - | HTTPレスポンスの内容が設定されていない場合は、ステータスコードに応じたデフォルトページを遷移先に設定する。 | 送出されたエラーに応じた遷移先のHTTPレスポンスオブジェクトを返却する。送出されたエラーはリクエストスコープに設定される。 |\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-ThreadContextHandler.md) | 本ハンドラがログに出力する項目には、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-ThreadContextHandler.md) が設定する項目が含まれるため、 本ハンドラより上位に配置する必要がある。 |\n| [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md) | HTTPエラーレスポンス以外の例外は [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md) によって HTTPレスポンスオブジェクトに変換されるので 本ハンドラの後続に配置する必要がある。 |",
+      "content": "このハンドラでは、往路と復路で、それぞれリクエストとレスポンスに関するHTTPアクセスログを出力する。\n\n出力されるアクセスログの詳細や、出力形式の設定については、 [HTTPアクセスログの出力](../../component/libraries/libraries-04-HttpAccessLog.json) を参照すること。\n\n-----\n\n**ハンドラ処理概要**\n\n| ハンドラ | クラス名 | 入力型 | 結果型 | 往路処理 | 復路処理 | 例外処理 |\n|---|---|---|---|---|---|---|\n| スレッドコンテキスト変数設定ハンドラ(リクエストスレッド) | nablarch.common.handler.ThreadContextHandler_request | Object | Object | 前のループで設定されたスレッドコンテキスト変数をクリアするためここで再初期化する。 | - | - |\n| HTTPアクセスログハンドラ | nablarch.fw.web.handler.HttpAccessLogHandler | HttpRequest | HttpResponse | HTTPリクエストの内容についてログに出力する。 | 送信するHTTPレスポンスの内容についてログに出力する。 | 送信するHTTPレスポンスの内容についてログに出力する。 |\n| HTTPエラー制御ハンドラ | nablarch.fw.web.handler.HttpErrorHandler | HttpRequest | HttpResponse | - | HTTPレスポンスの内容が設定されていない場合は、ステータスコードに応じたデフォルトページを遷移先に設定する。 | 送出されたエラーに応じた遷移先のHTTPレスポンスオブジェクトを返却する。送出されたエラーはリクエストスコープに設定される。 |\n\n**関連するハンドラ**\n\n| ハンドラ | 内容 |\n|---|---|\n| [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-ThreadContextHandler.json) | 本ハンドラがログに出力する項目には、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-ThreadContextHandler.json) が設定する項目が含まれるため、 本ハンドラより上位に配置する必要がある。 |\n| [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.json) | HTTPエラーレスポンス以外の例外は [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.json) によって HTTPレスポンスオブジェクトに変換されるので 本ハンドラの後続に配置する必要がある。 |",
       "level": 3
     },
     {
@@ -25,7 +25,7 @@
     {
       "id": "s4",
       "title": "設定項目・拡張ポイント",
-      "content": "本ハンドラ自体に設定項目は存在しない。\nロガー側の設定については、 [HTTPアクセスログの出力](../../component/libraries/libraries-04-HttpAccessLog.md) を参照すること。\n\n**標準設定**\n\n以下はDI設定の記述例である。\n\n```xml\n<!-- HTTPレスポンスハンドラ -->\n<component name=\"httpAccessLogHandler\"\n           class=\"nablarch.common.web.handler.HttpAccessLogHandler\" />\n```",
+      "content": "本ハンドラ自体に設定項目は存在しない。\nロガー側の設定については、 [HTTPアクセスログの出力](../../component/libraries/libraries-04-HttpAccessLog.json) を参照すること。\n\n**標準設定**\n\n以下はDI設定の記述例である。\n\n```xml\n<!-- HTTPレスポンスハンドラ -->\n<component name=\"httpAccessLogHandler\"\n           class=\"nablarch.common.web.handler.HttpAccessLogHandler\" />\n```",
       "level": 3
     }
   ]

@@ -1,0 +1,86 @@
+{
+  "title": "interface Dialect",
+  "content": "**パッケージ:** nablarch.core.db.dialect\n\n---\n\n```java\npublic interface Dialect\n```\n\nデータベースの実装依存の方言を吸収するためのインタフェース。\n\n**作成者:** hisaaki shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "supportsIdentity",
+      "level": 3,
+      "content": "```java\nboolean supportsIdentity()\n```\n\nIDENTITY(オートインクリメントカラム)が使用できるか否か。\n<p/>\n\n**戻り値:**\n使用可能な場合は、 {@code true}\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "supportsIdentityWithBatchInsert",
+      "level": 3,
+      "content": "```java\nboolean supportsIdentityWithBatchInsert()\n```\n\nbatch insert時にIDENTITY(オートインクリメントカラム)が使用できるか否か。\n\n**戻り値:**\n使用可能な場合は、{@code true}\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "supportsSequence",
+      "level": 3,
+      "content": "```java\nboolean supportsSequence()\n```\n\nSEQUENCEが使用できるか否か。\n<p/>\n\n**戻り値:**\n使用可能な場合は、 {@code true}\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "supportsOffset",
+      "level": 3,
+      "content": "```java\nboolean supportsOffset()\n```\n\nSQL文でのオフセット指定が使用できるか否か\n\n**戻り値:**\n使用可能な場合は、{@code true}\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "isTransactionTimeoutError",
+      "level": 3,
+      "content": "```java\nboolean isTransactionTimeoutError(SQLException sqlException)\n```\n\nSQL例外がトランザクションタイムアウトと判断すべき例外か否か。\n\n**パラメータ:**\n- `sqlException` - SQL例外\n\n**戻り値:**\nトランザクションタイムアウトと判断すべき場合{@code true}\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "isDuplicateException",
+      "level": 3,
+      "content": "```java\nboolean isDuplicateException(SQLException sqlException)\n```\n\nSQL例外が一意制約違反による例外か否か。\n<p/>\n\n**パラメータ:**\n- `sqlException` - SQL例外\n\n**戻り値:**\nSQL例外が一意制約違反の場合{@code true}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getResultSetConvertor",
+      "level": 3,
+      "content": "```java\nResultSetConvertor getResultSetConvertor()\n```\n\n{@link java.sql.ResultSet}から値を取得するための変換クラスを返却する。\n\n**戻り値:**\n変換クラス。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "buildSequenceGeneratorSql",
+      "level": 3,
+      "content": "```java\nString buildSequenceGeneratorSql(String sequenceName)\n```\n\nシーケンスオブジェクトの次の値を取得するSQL文を構築する。\n<p/>\n\n**パラメータ:**\n- `sequenceName` - シーケンス名\n\n**戻り値:**\nシーケンスオブジェクトの次の値を取得するSQL文\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "convertPaginationSql",
+      "level": 3,
+      "content": "```java\nString convertPaginationSql(String sql, SelectOption selectOption)\n```\n\nSQL文をページング用のSQL文に変換する。\n\n**パラメータ:**\n- `sql` - SQL文\n- `selectOption` - 検索時のオプション\n\n**戻り値:**\n変換したSQL文\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "convertCountSql",
+      "level": 3,
+      "content": "```java\nString convertCountSql(String sql)\n```\n\nSQL文をレコード数取得用のSQL文に変換する。\n\n**パラメータ:**\n- `sql` - SQL文\n\n**戻り値:**\n変換したSQL文\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "convertCountSql",
+      "level": 3,
+      "content": "```java\nString convertCountSql(String sqlId, Object condition, StatementFactory statementFactory)\n```\n\nSQLIDからレコード数取得用のSQL文を取得する。\n\n**パラメータ:**\n- `sqlId` - SQLID\n- `condition` - 可変条件に設定される条件をもつオブジェクト\n- `statementFactory` - ステートメントファクトリ\n\n**戻り値:**\nレコード数取得用のSQL文\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getPingSql",
+      "level": 3,
+      "content": "```java\nString getPingSql()\n```\n\nping用のSQL文を返す。\n<p/>\nデータベースへの死活チェックを行うための、ping用SQL文を生成する。\n\n**戻り値:**\nping用のSQL文\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-core-db-dialect-Dialect"
+}

@@ -1,0 +1,26 @@
+{
+  "title": "interface ResultSetConvertor",
+  "content": "**パッケージ:** nablarch.core.db.statement\n\n---\n\n```java\npublic interface ResultSetConvertor\n```\n\n{@link java.sql.ResultSet}から1カラムのデータを取得するインタフェース。<br>\n<br>\n{@link java.sql.ResultSet#getObject(int)} 以外を使用して、値を取得する必要がある場合には、\n本クラスのサブクラスを作成しgetObject(int)以外を使用してデータの取得を行うこと。<br>\n<br>\n主に、getObject(int)を使用した場合にアプリケーションで処理する際に不都合なデータ型が返却される場合に、\n本インタフェースの実装クラスが必要となる。<br>\n<br>\n例えば、getObject(int)ではdoubleが返却されるため、{@link java.sql.ResultSet#getBigDecimal(int)}を使用して、明示的に{@link java.math.BigDecimal}を取得したい場合が該当する。\n\n**作成者:** Hisaaki Sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "convert",
+      "level": 3,
+      "content": "```java\nObject convert(ResultSet rs, ResultSetMetaData rsmd, int columnIndex)\n               throws SQLException\n```\n\n{@link java.sql.ResultSet}から指定されたカラムのデータを取得する。<br>\n\n**パラメータ:**\n- `rs` - ResultSet\n- `rsmd` - ResultSetMetaData\n- `columnIndex` - カラムインデックス\n\n**戻り値:**\nResultSetから取得した対象カラムのデータ\n\n**例外:**\n- `java.sql.SQLException` - SQL例外発生時\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "isConvertible",
+      "level": 3,
+      "content": "```java\nboolean isConvertible(ResultSetMetaData rsmd, int columnIndex)\n                      throws SQLException\n```\n\n指定されたカラムが変換対象のカラムかを返却する。<br>\n指定された、{@link java.sql.ResultSetMetaData}とカラムインデックスから、\n{@link java.sql.ResultSet#getObject(int)}以外でデータを取得するか否かを返却する。<br>\n\n**パラメータ:**\n- `rsmd` - ResultSetMetaData\n- `columnIndex` - カラムインデックス\n\n**戻り値:**\n{@link java.sql.ResultSet#getObject(int)}以外でデータを取得する必要がある場愛には、true\n\n**例外:**\n- `SQLException` - SQL例外発生時\n\n---",
+      "id": "s3"
+    }
+  ],
+  "id": "javadoc-nablarch-core-db-statement-ResultSetConvertor"
+}

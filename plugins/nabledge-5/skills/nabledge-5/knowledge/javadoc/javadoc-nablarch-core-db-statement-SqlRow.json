@@ -1,0 +1,122 @@
+{
+  "title": "class SqlRow",
+  "content": "**パッケージ:** nablarch.core.db.statement\n\n**継承階層:**\n```\njava.lang.Object\n  └─ MultipleKeyCaseMap<Object>\n      └─ nablarch.core.db.statement.SqlRow\n```\n\n---\n\n```java\npublic class SqlRow\nextends MultipleKeyCaseMap<Object>\n```\n\n簡易取得結果1行分のデータを保持するクラス。\n<p/>\n各カラムの内容は、そのデータ型に対応したgetメソッドにより取得できる。\nこの際、カラム名の大文字/小文字の違い、アンダースコアの有無は区別せず、\n同一のカラム名とみなされる。\n<p/>\n例:\n<ul>\n<li>USER_NAMEとuser_nameは同一のカラム名とみなされる。(大文字小文字の区別はしないため)\n<li>USER_NAMEとuserNameは同一のカラム名とみなされる。(アンダースコアの有無は区別しないため)\n</ul>\n\n**作成者:** Hisaaki Sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "colType",
+      "level": 3,
+      "content": "```java\nprivate Map<String,Integer> colType\n```\n\nデータタイプ情報\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "SqlRow",
+      "level": 3,
+      "content": "```java\npublic SqlRow(Map<String,Object> row, Map<String,Integer> colType)\n```\n\n指定されたMapを元にオブジェクトを構築する。\n\n**パラメータ:**\n- `row` - 1行分のデータを持つMap\n- `colType` - カラムタイプ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "SqlRow",
+      "level": 3,
+      "content": "```java\npublic SqlRow(Map<String,Object> row, Map<String,Integer> colType, Map<String,String> ignored)\n```\n\n指定されたMapを元にオブジェクトを構築する。\n\n**パラメータ:**\n- `row` - 1行分のデータを持つMap\n- `colType` - カラムタイプ\n- `ignored` - カラム名の紐付け情報(本引数は使用しない)\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "SqlRow",
+      "level": 3,
+      "content": "```java\nprotected SqlRow(SqlRow orig)\n```\n\nコピー元となる{@code SqlRow}からオブジェクトを構築する。\n\n**パラメータ:**\n- `orig` - コピー元となるインスタンス\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "getString",
+      "level": 3,
+      "content": "```java\npublic final String getString(String colName)\n```\n\n指定されたカラムの情報を文字列で取得する。\n\n**パラメータ:**\n- `colName` - カラム名\n\n**戻り値:**\n指定されたカラム名に対応するString型データ(toString()した結果を返却する)。\n         データベースの検索結果が{@code null}の場合には、{@code null}を返却する\n\n**例外:**\n- `IllegalArgumentException` - 指定されたカラム名が存在しない場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "clobToString",
+      "level": 3,
+      "content": "```java\nprivate String clobToString(Object o)\n```\n\nClob型のオブジェクトをString型に変換\n\n**パラメータ:**\n- `o` - 変換対象\n\n**戻り値:**\n変換結果\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getInteger",
+      "level": 3,
+      "content": "```java\npublic final Integer getInteger(String colName)\n```\n\n指定されたカラムの情報を{@link Integer}として取得する。\n<p/>\nデータベースから取得したデータがInteger型である場合、その値をそのまま返却する。<br/>\nそれ以外の型の場合、そのデータの文字列表現(toString()した結果)を、\n{@link Integer#valueOf(String)}を使用してInteger型に変換し返却する。\n<p/>\nデータベースから取得したデータがどのような文字列表現を返却するかは、\n使用するRDBMSのJDBCドライバに依存する。\n<p/>\n以下に例を示す。\n<pre>\n| 文字列表現 | 結果                  |\n|------------+-----------------------|\n| \"1\"        |                     1 |\n| \"-1\"       |                    -1 |\n|\"2147483648\"| NumberFormatException |\n| \"1.0\"      | NumberFormatException |\n| \"ABC\"      | NumberFormatException |\n</pre>\n\n**パラメータ:**\n- `colName` - カラム名\n\n**戻り値:**\n指定されたカラム名に対応するInteger型データ。\n         データベースの検索結果が{@code null}の場合には、{@code null}を返却する\n\n**例外:**\n- `NumberFormatException` - データベースから取得したデータの文字列表現が、Integer型として解釈できない場合\n- `IllegalArgumentException` - 指定されたカラム名が存在しない場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getLong",
+      "level": 3,
+      "content": "```java\npublic final Long getLong(String colName)\n```\n\n指定されたカラムの情報を{@link Long}として取得する。\n<p/>\nデータベースから取得したデータがLong型である場合、その値をそのまま返却する。<br/>\nそれ以外の型の場合、そのデータの文字列表現(toString()した結果)を、\n{@link Long#valueOf(String)}を使用してLong型に変換し返却する。\n<p/>\nデータベースから取得したデータがどのような文字列表現を返却するかは、\n使用するRDBMSのJDBCドライバに依存する。\n</p>\n以下に例を示す。\n<pre>\n| 文字列表現 | 結果                  |\n|------------+-----------------------|\n| \"1\"        |                     1 |\n| \"-1\"       |                    -1 |\n|\"2147483648\"|            2147483648 |\n| \"1.0\"      | NumberFormatException |\n| \"ABC\"      | NumberFormatException |\n</pre>\n\n**パラメータ:**\n- `colName` - カラム名\n\n**戻り値:**\n指定されたカラム名に対応するLong型データ。\n         データベースの検索結果が{@code null}の場合には、{@code null}を返却する\n\n**例外:**\n- `NumberFormatException` - データベースから取得したデータの文字列表現が、Long型として解釈できない場合\n- `IllegalArgumentException` - 指定されたカラム名が存在しない場合\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getBoolean",
+      "level": 3,
+      "content": "```java\npublic Boolean getBoolean(String colName)\n```\n\n指定されたカラムの情報を{@link Boolean}として取得する。\n<p/>\n以下の値の場合、{@link Boolean#TRUE}を返却し、それ以外は全て{@link Boolean#FALSE}を返却する。\n<ul>\n    <li>booleanの{@code true}の場合</li>\n    <li>{@link String}の場合で\"1\" or \"on\" or \"true\"の場合(大文字、小文字の区別はしない)</li>\n    <li>数値型で0以外の場合</li>\n</ul>\n<p/>\nデータベースから取得したデータのデータタイプが下記に該当しない場合は、{@link IllegalStateException}を送出する。\n<ul>\n<li>{@link Boolean}</li>\n<li>{@link String}</li>\n<li>{@link Number}のサブクラス</li>\n</ul>\n\n**パラメータ:**\n- `colName` - カラム名\n\n**戻り値:**\n{@code true} or {@code false}を返却する。\n         データベースの検索結果が{@code null}の場合には、{@code null}を返却する\n\n**例外:**\n- `IllegalArgumentException` - 指定されたカラム名が存在しない場合\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getBigDecimal",
+      "level": 3,
+      "content": "```java\npublic final BigDecimal getBigDecimal(String colName)\n```\n\n指定されたカラムの情報を{@link BigDecimal}として取得する。\n\n**パラメータ:**\n- `colName` - カラム名\n\n**戻り値:**\n指定されたカラム名に対応するBigDecimal型データ。\n         データベースの検索結果が{@code null}の場合には、{@code null}を返却する\n\n**例外:**\n- `NumberFormatException` - データベースから取得したデータの文字列表現(toString()した結果)が、BigDecimal型として解釈できない場合\n- `IllegalArgumentException` - 指定されたカラム名が存在しない場合\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "toBigDecimal",
+      "level": 3,
+      "content": "```java\nprivate BigDecimal toBigDecimal(Object o)\n```\n\nBigDecimalに変換する。\n\n**パラメータ:**\n- `o` - 変換対象\n\n**戻り値:**\n変換結果\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getDate",
+      "level": 3,
+      "content": "```java\npublic Date getDate(String colName)\n```\n\n指定されたカラムの情報を{@link java.util.Date}として取得する。\n<p/>\nデータベースから取得したデータのデータタイプが下記のデータの場合、java.util.Dateとして取得する\n下記に該当しない場合は、{@link IllegalStateException}を送出する。<br>\n<ul>\n<li>{@link java.util.Date}</li>\n<li>{@link java.sql.Timestamp}</li>\n</ul>\n\n**パラメータ:**\n- `colName` - カラム名\n\n**戻り値:**\n指定されたカラム名に対応するjava.util.Date型データ。\n         データベースの検索結果が{@code null}の場合には、{@code null}を返却する\n\n**例外:**\n- `IllegalArgumentException` - 指定されたカラム名が存在しない場合\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getTimestamp",
+      "level": 3,
+      "content": "```java\npublic Timestamp getTimestamp(String colName)\n```\n\n指定されたカラムの情報を{@link java.sql.Timestamp}として取得する。\n<p/>\nデータベースから取得したデータのデータタイプが下記のデータの場合、{@link java.sql.Timestamp}として取得する。\n下記に該当しない場合は、{@link IllegalStateException}を送出する。<br>\n<ul>\n<li>{@link java.sql.Timestamp}</li>\n</ul>\n\n**パラメータ:**\n- `colName` - カラム名\n\n**戻り値:**\n指定されたカラム名に対応するjava.sql.Timestamp型データ\n\n**例外:**\n- `IllegalArgumentException` - 指定されたカラム名が存在しない場合\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getBytes",
+      "level": 3,
+      "content": "```java\npublic byte[] getBytes(String colName)\n```\n\n指定されたカラムの情報をbyte配列として取得する。\n<p/>\nデータベースから取得したデータのデータタイプが下記のデータの場合、byte配列として取得する。<br>\n下記に該当しない場合は、{@link IllegalStateException}を送出する。\n<ul>\n<li>{@link java.sql.Types#BLOB}</li>\n<li>{@link java.sql.Types#BINARY}</li>\n<li>{@link java.sql.Types#VARBINARY}</li>\n<li>{@link java.sql.Types#LONGVARBINARY}</li>\n</ul>\n\n**パラメータ:**\n- `colName` - カラム名\n\n**戻り値:**\n指定されたカラム名に対応するbyte配列データ。\n         データベースの検索結果が{@code null}の場合には、{@code null}を返却する\n\n**例外:**\n- `IllegalArgumentException` - 指定されたカラム名が存在しない場合\n- `DbAccessException` - データタイプが{@code BLOB}型である場合で、データの読み込みに失敗した場合\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getObject",
+      "level": 3,
+      "content": "```java\nprivate Object getObject(String colName)\n```\n\n指定されたカラムの情報を{@link Object}オブジェクトとして取得する。\n\n**パラメータ:**\n- `colName` - カラム名\n\n**戻り値:**\n指定されたカラム名に対応するデータ。\n\n**例外:**\n- `IllegalArgumentException` - 指定されたカラム名が存在しない場合\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "getColType",
+      "level": 3,
+      "content": "```java\nprotected int getColType(String colName)\n```\n\n指定されたカラム名のカラムタイプ({@link java.sql.Types})を取得する。\n\n**パラメータ:**\n- `colName` - カラム名\n\n**戻り値:**\nカラムタイプ\n\n---",
+      "id": "s19"
+    }
+  ],
+  "id": "javadoc-nablarch-core-db-statement-SqlRow"
+}

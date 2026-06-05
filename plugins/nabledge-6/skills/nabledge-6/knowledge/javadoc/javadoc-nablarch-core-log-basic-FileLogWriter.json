@@ -1,0 +1,110 @@
+{
+  "title": "class FileLogWriter",
+  "content": "**パッケージ:** nablarch.core.log.basic\n\n**継承階層:**\n```\njava.lang.Object\n  └─ LogWriterSupport\n      └─ nablarch.core.log.basic.FileLogWriter\n```\n\n---\n\n```java\npublic class FileLogWriter\nextends LogWriterSupport\n```\n\nファイルにログを書き込むクラス。<br>\n<br>\nFileLogWriterクラスの特徴を下記に示す。<br>\n<ul>\n<li>ログフォーマッタを設定で指定できる。</li>\n<li>設定されたクラスに従いログファイルのローテーションを行うことができる。</li>\n<li>初期処理と終了処理、ログファイルの切り替え時に、書き込み先のログファイルにINFOレベルでメッセージを出力する。</li>\n</ul>\n本クラスでは、ファイルへのログ書き込みに{@link java.io.BufferedOutputStream}を使用する。<br>\n出力バッファのサイズは設定で変更できる。<br>\n書き込み処理では、書き込み後にすぐにフラッシュし、書き込んだ内容をファイルに反映する。<br>\n<br>\nプロパティファイルの記述ルールを下記に示す。<br>\n<dl>\n<dt>filePath</dt>\n<dd>書き込み先のファイルパス。必須。</dd>\n\n<dt>encoding</dt>\n<dd>書き込み時に使用する文字エンコーディング。オプション。<br>\n    指定しなければシステムプロパティ(file.encoding)から取得した文字エンコーディング。</dd>\n\n<dt>outputBufferSize</dt>\n<dd>出力バッファのサイズ。オプション。<br>\n    単位はキロバイト。1000バイトを1キロバイトと換算する。１以上を指定する。指定しなければ8KB。</dd>\n\n<dt>rotatePolicy</dt>\n<dd>ファイルローテーション実行クラスのFQCNを指定する。オプション。<br>\n    {@link RotatePolicy}が実装されたクラスのFQCNを指定する。<br>\n    デフォルトでは{@link FileSizeRotatePolicy}が使用される。<br>\n    利用するローテーション実行クラス毎に、追加でプロパティの設定が必要となる。</dd>\n</dl>\n本クラスでは、初期処理と終了処理、ログファイルの切り替え時に、書き込み先のログファイルにINFOレベルでメッセージを出力する。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "FQCN",
+      "level": 3,
+      "content": "```java\nprivate static final String FQCN\n```\n\nFQCN\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "KB",
+      "level": 3,
+      "content": "```java\npublic static final int KB\n```\n\nキロバイトを算出するための係数\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "filePath",
+      "level": 3,
+      "content": "```java\nprivate String filePath\n```\n\n書き込み先のファイルパス\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "charset",
+      "level": 3,
+      "content": "```java\nprivate Charset charset\n```\n\n書き込み時に使用する文字エンコーディング\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "outputBufferSize",
+      "level": 3,
+      "content": "```java\nprivate int outputBufferSize\n```\n\n出力バッファのサイズ\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "out",
+      "level": 3,
+      "content": "```java\nprivate OutputStream out\n```\n\nファイルに書き込みを行う出力ストリーム\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "rotatePolicy",
+      "level": 3,
+      "content": "```java\nprivate RotatePolicy rotatePolicy\n```\n\nファイルローテーションを行うためのインターフェース\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "onInitialize",
+      "level": 3,
+      "content": "```java\nprotected void onInitialize(ObjectSettings settings)\n```\n\n{@inheritDoc}\n<p/>\nプロパティファイルで指定された設定情報を取得し、ファイルへの書き込みを行う出力ストリームを初期化する。<br>\n初期処理完了後、INFOレベルで設定情報を出力する。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getSettings",
+      "level": 3,
+      "content": "```java\nprotected String getSettings()\n```\n\n設定情報を取得する。<br>\n<br>\n設定情報のフォーマットを下記に示す。<br>\n<br>\nWRITER NAME         = [&lt;{@link LogWriter}の名称&gt;]<br>\nWRITER CLASS        = [&lt;{@link LogWriter}のクラス名&gt;]<br>\nFORMATTER CLASS     = [&lt;{@link LogFormatter}のクラス名&gt;]<br>\nLEVEL               = [&lt;ログの出力制御の基準とする{@link LogLevel}&gt;]\nFILE PATH           = [&lt;書き込み先のファイルパス&gt;]<br>\nENCODING            = [&lt;書き込み時に使用する文字エンコーディング&gt;]<br>\nOUTPUT BUFFER SIZE  = [&lt;出力バッファのサイズ&gt;]<br>\nROTATE POLICY CLASS = [&lt;ファイルローテーション実行クラス&gt;]<br>\n<br>\n追加で{@link RotatePolicy#getSettings()}によって得られた設定情報が出力される。<br>\n\n**戻り値:**\n設定情報\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "onTerminate",
+      "level": 3,
+      "content": "```java\nprotected void onTerminate()\n```\n\n{@inheritDoc}<br>\n<br>\n終了処理の前に、INFOレベルで終了メッセージを出力する。<br>\nファイルへの書き込みを行う出力ストリームをクローズする。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "onWrite",
+      "level": 3,
+      "content": "```java\nprotected void onWrite(String formattedMessage)\n```\n\n{@inheritDoc}<br>\n<br>\n設定情報に基づきログをファイルに書き込む。<br>\n書き込み後にすぐにフラッシュし、書き込んだ内容をファイルに反映する。<br>\n<br>\nIO例外が発生した場合は、IO例外をラップして{@link IllegalStateException}を送出する。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "renameFile",
+      "level": 3,
+      "content": "```java\nprivate void renameFile(String formattedMessage)\n```\n\nローテーションの種類毎にファイルをリネームする。<br>\nファイルをリネームする場合は、併せてファイルへの書き込みを行う出力ストリームを初期化する。\n\n**パラメータ:**\n- `formattedMessage` - メッセージ\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "initializeWriter",
+      "level": 3,
+      "content": "```java\nprivate void initializeWriter(String message)\n```\n\nファイルへの書き込みを行う出力ストリームと書き込み先ファイルの現在のサイズを初期化する。\n\n**パラメータ:**\n- `message` - 初期処理完了後に書き込むメッセージ\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "terminateWriter",
+      "level": 3,
+      "content": "```java\nprivate void terminateWriter(String message)\n```\n\nファイルへの書き込みを行う出力ストリームの終了処理を行う。\n\n**パラメータ:**\n- `message` - 終了処理の直前に書き込むメッセージ\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "write",
+      "level": 3,
+      "content": "```java\nprivate void write(String message)\n           throws IOException\n```\n\nメッセージの書き込みを行いフラッシュする。\n\n**パラメータ:**\n- `message` - メッセージ\n\n**例外:**\n- `IOException` - IO例外\n\n---",
+      "id": "s17"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-basic-FileLogWriter"
+}

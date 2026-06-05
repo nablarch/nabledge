@@ -1,0 +1,122 @@
+{
+  "title": "class RequestPathJavaPackageMapping",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**継承階層:**\n```\njava.lang.Object\n  └─ DispatchHandler<Request<?>,Object,RequestPathJavaPackageMapping>\n      └─ nablarch.fw.handler.RequestPathJavaPackageMapping\n```\n\n---\n\n```java\npublic class RequestPathJavaPackageMapping\nextends DispatchHandler<Request<?>,Object,RequestPathJavaPackageMapping>\n```\n\nリクエストパスをJavaパッケージへマッピングすることで動的に委譲先ハンドラを決定するディスパッチハンドラ。\n<p/>\nマッピング先Javaパッケージは、本ハンドラの basePackage プロパティに設定する。\n<p/>\nリクエストパスを単一のJavaパッケージにマッピングする場合の設定例を以下に示す。\n<table border=\"1\">\n<tr bgcolor=\"#cccccc\">\n<th>本ハンドラの basePackage プロパティ</th>\n<th>リクエストパス</th>\n<th>委譲先のハンドラクラス</th>\n</tr>\n<tr>\n<td rowspan=2>nablarch.sample.apps</td>\n<td>/admin/AdminApp</td>\n<td>nablarch.sample.apps.admin.AdminApp</td>\n</tr>\n<tr>\n<td>/user/UserApp</td>\n<td>nablarch.sample.apps.user.UserApp</td>\n</tr>\n</table>\n<p>\n委譲先のクラスが存在しない、もしくは、クラスが存在してもハンドラインターフェース {@link nablarch.fw.Handler} を実装していない場合は、\n汎用例外 {@link nablarch.fw.Result.NotFound} が送出される。\n</p>\n<p>\n<h3>ベースパスの指定</h3>\nマッピング元となるリクエストパスのプレフィックスのことを「ベースパス」と呼ぶ。ベースパスは basePath プロパティ に設定する。\n</p>\n<p>\nベースパスには、画面オンライン処理におけるコンテキストルートを設定することを想定している。\n（※画面オンライン処理では、実際にはハンドラとして{@link HttpRequestJavaPackageMapping}を使用するが、\n実際にディスパッチ処理を行なっているのは、{@link nablarch.fw.web.handler.HttpRequestJavaPackageMapping}から処理を委譲される本ハンドラである）<br/>\n</p>\n<p>\nマッピング処理を行う際には、リクエストパス中のベースパス部分の文字列を削除した上で、マッピング先Javaパッケージへとマッピングする。<br/>\n以下に、画面オンライン処理でベースパスを指定し、リクエストパスを単一のJavaパッケージにマッピングする場合の設定例を示す。\n<table border=\"1\">\n<tr bgcolor=\"#cccccc\">\n<th>本ハンドラの basePath プロパティ</th>\n<th>本ハンドラの basePackage プロパティ</th>\n<th>リクエストパス</th>\n<th>委譲先のハンドラクラス</th>\n</tr>\n<tr>\n<td rowspan=2>/webapp/sample</td>\n<td>nablarch.sample.apps</td>\n<td>/webapp/sample/admin/AdminApp</td>\n<td>nablarch.sample.apps.admin.AdminApp</td>\n</tr>\n<tr>\n<td>nablarch.sample.apps</td>\n<td>/webapp/sample/user/UserApp</td>\n<td>nablarch.sample.apps.user.UserApp</td>\n</tr>\n</table>\n<br/>\nなお、ベースパスが指定されていて、かつリクエストパスがそのベースパスに合致しない場合は、汎用例外 {@link nablarch.fw.Result.NotFound} が送出される。\n</p>\n</p>\n<p>\n<h3>リクエストパスごとのマッピング先Javaパッケージの切り替え</h3>\noptionalPackageMappingEntries プロパティに設定を行うことで、リクエストパスごとにマッピング先Javaパッケージを切り替えることができる。\n</p>\n<p>\noptionalPackageMappingEntries プロパティには、リクエストパスのパターン（requestPattern プロパティ）とマッピング先Javaパッケージ（basePackage プロパティ）の組み合わせを設定する。<br/>\noptionalPackageMappingEntries プロパティに設定した順番にリクエストパスのパターンとリクエストパスとのマッチングが行われ、\n最初にマッチしたマッピング先Javaパッケージが使用される。 マッチするものが存在しない場合、本ハンドラの basePackage プロパティに設定したマッピング先Javaパッケージが使用される。\n</p>\n<p>\n以下に、リクエストパスごとにマッピング先Javaパッケージを切り替える場合の設定例を示す。</br>\n<table border=\"1\">\n<tr bgcolor=\"#cccccc\">\n<th>optionalPackageMappingEntriesの requestPattern プロパティ</th>\n<th>optionalPackageMappingEntriesの basePackage プロパティ</th>\n<th>リクエストパス</th>\n<th>委譲先のハンドラクラス</th>\n</tr>\n<tr>\n<td>/admin//</td>\n<td>nablarch.app1</td>\n<td>/admin/AdminApp</td>\n<td>nablarch.app1.admin.AdminApp</td>\n</tr>\n<tr>\n<td>/user//</td>\n<td>nablarch.app2</td>\n<td>/user/UserApp</td>\n<td>nablarch.app2.user.UserApp</td>\n</tr>\n</table>\n<p/>\nリクエストパスのパターンのマッチングは、リクエストパス中のすべてのドット(.)をスラッシュ(/)に置換してから行う。\nこの仕様は、Nablarch のバッチ処理で過去に使用していたドット区切りのリクエストパス（例： ss01A001.B01AA001Action/B01AA0010）との互換性を保つために存在している。\n<p/>\nリクエストパスのパターンの記法についての詳細は{@link nablarch.fw.RequestPathMatchingHelper}を参照すること。\n\n**関連項目:** Request#getRequestPath()  \n**関連項目:** nablarch.fw.RequestPathMatchingHelper  \n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "MAPPING_RULE",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern MAPPING_RULE\n```\n\nベースパス <-> Javaパッケージのマッピングを表す正規表現\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "basePath",
+      "level": 3,
+      "content": "```java\nprivate String basePath\n```\n\nマッピング元ベースパス\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "basePackage",
+      "level": 3,
+      "content": "```java\nprivate String basePackage\n```\n\nマッピング先Javaパッケージ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "optionalPackageMappingEntries",
+      "level": 3,
+      "content": "```java\nprivate List<JavaPackageMappingEntry> optionalPackageMappingEntries\n```\n\nRequestHandlerEntryでURIに合致したマッピング先Javaパッケージを上書きする場合に使用する、JavaPackageMappingEntryのリスト\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "classNameSuffix",
+      "level": 3,
+      "content": "```java\nprivate String classNameSuffix\n```\n\n移譲対象クラス名の接尾辞\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "classNamePrefix",
+      "level": 3,
+      "content": "```java\nprivate String classNamePrefix\n```\n\n委譲対象クラス名の接頭辞\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "RequestPathJavaPackageMapping",
+      "level": 3,
+      "content": "```java\npublic RequestPathJavaPackageMapping()\n```\n\nデフォルトコンストラクタ。\n<p/>\nこのメソッドの処理は次のコードと同等である。\n<pre>\n  new RequestPathJavaPackageMapping(\"\", \"\");\n</pre>\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "RequestPathJavaPackageMapping",
+      "level": 3,
+      "content": "```java\npublic RequestPathJavaPackageMapping(String basePath, String basePackage)\n```\n\nリクエストパスが、basePathで始まるリクエストを、basePackageで指定された\nJavaパッケージ配下のリクエストハンドラに委譲するディスパッチャを作成する。\n\n**パラメータ:**\n- `basePath` - マッピング元ベースURI\n- `basePackage` - マッピング先Javaパッケージ\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s12"
+    },
+    {
+      "title": "getHandlerClass",
+      "level": 3,
+      "content": "```java\nprotected Class<?> getHandlerClass(Request<?> req, ExecutionContext ctx)\n                         throws ClassNotFoundException\n```\n\n{@inheritDoc}\nこのクラスの実装では、ベースパスとベースパッケージの設定をもとに算出した完全修飾名に一致するリクエストハンドラに対して処理を委譲する。\n正確な仕様は以下の通り。\n<p/>\n委譲先のクラス(完全修飾名)の決定は以下の規則に従う。\n<pre>\n  1. basePackage の ”.” を ”/” に置換する。\n  2. リクエストパスの先頭から basePath と一致する部分を basePackage\n     に置換する。\n  3. 2.の結果文字列を”/”で分割する。\n     分割後の各トークンの内、英大文字で始まっているものを委譲先の\n     クラス名とし、それ以前の各トークンをパッケージ名とみなす。\n  4. コンテキストクラスパス上に上記のパッケージ及びクラスが実際に\n     存在していれば、そのクラスを委譲対象とする。\n</pre>\n以下の場合、共通例外{@link nablarch.fw.Result.NotFound}を送出する。\n<pre>\n  - ベースパス外からのアクセスであった場合。\n  - 委譲先のクラスが決定できない、決定できても存在しない場合。\n  - 委譲先のクラスがHandlerインターフェースを実装していない場合。\n</pre>\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getBasePackage",
+      "level": 3,
+      "content": "```java\nprotected String getBasePackage(Request<?> req, ExecutionContext ctx)\n```\n\nマッピング先Javaパッケージを取得する。\n<p/>\noptionalPackageMappingEntries プロパティに設定した順番にリクエストパスのパターンとリクエストパスとのマッチングが行われ、 最初にマッチしたJavaパッケージが使用される。 <br/>\nマッチするものが存在しない場合、またはoptionalPackageMappingEntries プロパティ自体が設定されていない場合、本ハンドラのbasePackage プロパティに設定したJavaパッケージが使用される。\n\n**パラメータ:**\n- `req` - 入力データ\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\nマッピング先Javaパッケージ\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setBasePath",
+      "level": 3,
+      "content": "```java\npublic RequestPathJavaPackageMapping setBasePath(String basePath)\n```\n\nマッピング元ベースパスを設定する。\n\n**パラメータ:**\n- `basePath` - マッピング元ベースパス\n\n**戻り値:**\nJavaPackageMapping\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setBasePackage",
+      "level": 3,
+      "content": "```java\npublic RequestPathJavaPackageMapping setBasePackage(String basePackage)\n```\n\nマッピング先Javaパッケージを設定する。\n\n**パラメータ:**\n- `basePackage` - マッピング先Javaパッケージ\n\n**戻り値:**\nJavaPackageMapping\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setOptionalPackageMappingEntries",
+      "level": 3,
+      "content": "```java\npublic RequestPathJavaPackageMapping setOptionalPackageMappingEntries(List<JavaPackageMappingEntry> optionalPackageMappingEntries)\n```\n\nRequestHandlerEntryでリクエストパスに合致したマッピング先Javaパッケージを上書きする場合に使用する、JavaPackageMappingEntryのリストを設定する。\n\n**パラメータ:**\n- `optionalPackageMappingEntries` - JavaPackageMappingEntryのリスト\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setClassNamePrefix",
+      "level": 3,
+      "content": "```java\npublic RequestPathJavaPackageMapping setClassNamePrefix(String prefix)\n```\n\n委譲対象クラス名の接頭辞となる文字列を設定する。\n\n**パラメータ:**\n- `prefix` - 委譲対象クラス名の接頭辞となる文字列\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setClassNameSuffix",
+      "level": 3,
+      "content": "```java\npublic RequestPathJavaPackageMapping setClassNameSuffix(String suffix)\n```\n\n委譲対象クラス名の接尾辞となる文字列を設定する。\n\n**パラメータ:**\n- `suffix` - 委譲対象クラス名の接尾辞となる文字列\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s19"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-RequestPathJavaPackageMapping"
+}

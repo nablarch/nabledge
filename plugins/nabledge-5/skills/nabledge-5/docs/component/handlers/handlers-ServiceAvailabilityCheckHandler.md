@@ -11,7 +11,7 @@
 
 サービス提供可否チェックは、ライブラリの [サービス提供可否チェック](../../component/libraries/libraries-service-availability.md#サービス提供可否チェック) を使用して行う。
 そのため、本ハンドラを使用するには、
-ServiceAvailability を実装したクラスを本ハンドラに設定する必要がある。
+[ServiceAvailability](../../javadoc/javadoc-nablarch-common-availability-ServiceAvailability.md) を実装したクラスを本ハンドラに設定する必要がある。
 
 本ハンドラでは、以下の処理を行う。
 
@@ -23,7 +23,7 @@ ServiceAvailability を実装したクラスを本ハンドラに設定する必
 
 ## ハンドラクラス名
 
-* nablarch.common.availability.ServiceAvailabilityCheckHandler
+* [nablarch.common.availability.ServiceAvailabilityCheckHandler](../../javadoc/javadoc-nablarch-common-availability-ServiceAvailabilityCheckHandler.md)
 
 ## モジュール一覧
 
@@ -45,11 +45,11 @@ ServiceAvailability を実装したクラスを本ハンドラに設定する必
 
 内部フォーワードが行われた際に、フォーワード先のリクエストID（ [内部リクエストID](../../component/handlers/handlers-forwarding-handler.md#内部リクエストidについて) ）をもとに
 サービス提供可否チェックを行いたい場合は、 [内部フォーワードハンドラ](../../component/handlers/handlers-forwarding-handler.md#内部フォーワードハンドラ) より後ろに本ハンドラを配置する必要がある。
-合わせて、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ) の `attributes` に InternalRequestIdAttribute を追加すること。
+合わせて、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ) の `attributes` に [InternalRequestIdAttribute](../../javadoc/javadoc-nablarch-common-handler-threadcontext-InternalRequestIdAttribute.md) を追加すること。
 
 ## リクエストに対するサービス提供可否チェック
 
-ThreadContext からリクエストIDを取得し、サービス提供可否をチェックする。
+[ThreadContext](../../javadoc/javadoc-nablarch-core-ThreadContext.md) からリクエストIDを取得し、サービス提供可否をチェックする。
 チェックの詳細は、 [サービス提供可否チェック](../../component/libraries/libraries-service-availability.md#サービス提供可否チェック) を参照。
 
 OK(サービス提供可)の場合
@@ -58,8 +58,8 @@ OK(サービス提供可)の場合
 
 NG(サービス提供不可)の場合
 
-ServiceUnavailable (503) を送出する。
+[ServiceUnavailable](../../javadoc/javadoc-nablarch-fw-results-ServiceUnavailable.md) (503) を送出する。
 
 チェック対象のリクエストIDをフォーワード先のリクエストIDに変更したい場合は、
-ServiceAvailabilityCheckHandler.setUsesInternalRequestId
+[ServiceAvailabilityCheckHandler.setUsesInternalRequestId](../../javadoc/javadoc-nablarch-common-availability-ServiceAvailabilityCheckHandler.md)
 でtrueを指定する。デフォルトはfalseである。

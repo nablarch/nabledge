@@ -20,7 +20,7 @@ CSRFトークンが画面に自動で出力される。
 [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restfulウェブサービス編) においてCSRF対策を実現できるように、
 本ハンドラはリクエストヘッダまたはリクエストパラメータからCSRFトークンを取得する。
 生成されたCSRFトークンを取得するためのユーティリティクラス(
-CsrfTokenUtil )を提供しているので、
+[CsrfTokenUtil](../../javadoc/javadoc-nablarch-common-web-csrf-CsrfTokenUtil.md) )を提供しているので、
 プロジェクトのアーキテクチャに合わせてクライアントにCSRFトークンを送る仕組みを実装できる。
 
 本ハンドラはCSRFトークンをセッションストアに格納するため、本ハンドラを使用する場合は [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア) の使用が必須となる。
@@ -40,7 +40,7 @@ CsrfTokenUtil )を提供しているので、
 
 ## ハンドラクラス名
 
-* nablarch.fw.web.handler.CsrfTokenVerificationHandler
+* [nablarch.fw.web.handler.CsrfTokenVerificationHandler](../../javadoc/javadoc-nablarch-fw-web-handler-CsrfTokenVerificationHandler.md)
 
 ## モジュール一覧
 
@@ -103,15 +103,15 @@ CSRFトークンをセッションストアに格納するため、
 
 取得できなかった場合はCSRFトークンを生成してセッションストアへ保存する
 
-* CSRFトークンの生成は CsrfTokenGenerator が行う。
-  デフォルトではバージョン4のUUIDを使用してCSRFトークンを生成する UUIDv4CsrfTokenGenerator を使用する。
+* CSRFトークンの生成は [CsrfTokenGenerator](../../javadoc/javadoc-nablarch-fw-web-handler-csrf-CsrfTokenGenerator.md) が行う。
+  デフォルトではバージョン4のUUIDを使用してCSRFトークンを生成する [UUIDv4CsrfTokenGenerator](../../javadoc/javadoc-nablarch-fw-web-handler-csrf-UUIDv4CsrfTokenGenerator.md) を使用する。
 * CSRFトークンの格納先となるセッションストアはデフォルトのセッションストアとなる。（セッションストアの名前を指定しないでCSRFトークンを格納する）
 
 HTTPリクエストが検証対象か否かを判定する
 
-* 検証対象か否かの判定は VerificationTargetMatcher が行う。
-  デフォルトではHTTPメソッドからHTTPリクエストが検証対象か否かを判定する HttpMethodVerificationTargetMatcher を使用する。
-* HttpMethodVerificationTargetMatcher は、HTTPメソッドの `GET` `HEAD` `TRACE` `OPTIONS` をCSRFトークンの検証対象 **外** と判定する（つまりPOSTやPUT等は検査対象となる）。
+* 検証対象か否かの判定は [VerificationTargetMatcher](../../javadoc/javadoc-nablarch-fw-web-handler-csrf-VerificationTargetMatcher.md) が行う。
+  デフォルトではHTTPメソッドからHTTPリクエストが検証対象か否かを判定する [HttpMethodVerificationTargetMatcher](../../javadoc/javadoc-nablarch-fw-web-handler-csrf-HttpMethodVerificationTargetMatcher.md) を使用する。
+* [HttpMethodVerificationTargetMatcher](../../javadoc/javadoc-nablarch-fw-web-handler-csrf-HttpMethodVerificationTargetMatcher.md) は、HTTPメソッドの `GET` `HEAD` `TRACE` `OPTIONS` をCSRFトークンの検証対象 **外** と判定する（つまりPOSTやPUT等は検査対象となる）。
 
 検証対象の場合はHTTPリクエストからCSRFトークンを取得して検証する
 
@@ -122,8 +122,8 @@ HTTPリクエストが検証対象か否かを判定する
 
 検証に成功した場合は次のハンドラへ処理を移し、検証に失敗した場合はBadRequest(400)のレスポンスを返す
 
-* 検証失敗時の処理は VerificationFailureHandler が行う。
-  デフォルトではBadRequest(400)のレスポンスを生成する BadRequestVerificationFailureHandler を使用する。
+* 検証失敗時の処理は [VerificationFailureHandler](../../javadoc/javadoc-nablarch-fw-web-handler-csrf-VerificationFailureHandler.md) が行う。
+  デフォルトではBadRequest(400)のレスポンスを生成する [BadRequestVerificationFailureHandler](../../javadoc/javadoc-nablarch-fw-web-handler-csrf-BadRequestVerificationFailureHandler.md) を使用する。
 
 設定を変えることでデフォルトの動作を変更できる。設定例を以下に示す。
 
@@ -161,7 +161,7 @@ HTTPリクエストが検証対象か否かを判定する
 > CSRF対策はアプリケーションプログラマが実装して作り込む部分ではないため、
 > リクエスト単体テストではCSRF対策を無効化してテストを行えばよい。
 > テスト実行時の設定において本ハンドラを何も処理しないハンドラに差し替えることでCSRF対策を無効化できる。
-> 以下に設定例を示す。以下ではテスティングフレームワークが提供する何も処理しないハンドラである NopHandler を使用している。
+> 以下に設定例を示す。以下ではテスティングフレームワークが提供する何も処理しないハンドラである [NopHandler](../../javadoc/javadoc-nablarch-test-NopHandler.md) を使用している。
 
 > ```xml
 > <!-- テストの設定で本ハンドラのコンポーネント定義を上書く。
@@ -180,7 +180,7 @@ HTTPリクエストが検証対象か否かを判定する
 これを防ぐためにはログイン時にCSRFトークンを再生成しなくてはならない。
 
 CSRFトークンの再生成は、アクション等のリクエスト処理の中で
-CsrfTokenUtil.regenerateCsrfToken
+[CsrfTokenUtil.regenerateCsrfToken](../../javadoc/javadoc-nablarch-common-web-csrf-CsrfTokenUtil.md)
 メソッドを呼び出すと、本ハンドラの戻りの処理でCSRFトークンの再生成が行われる。
 
 ログイン時にセッションストアを破棄して再生成する実装であればこのメソッドを使用する必要はない。

@@ -1,0 +1,62 @@
+{
+  "title": "class ResourcePathRule",
+  "content": "**パッケージ:** nablarch.fw.web.i18n\n\n---\n\n```java\npublic abstract class ResourcePathRule\n```\n\n言語対応リソースパスのルールを表すクラス。\n<p/>\n自身が表すルールに基づき言語対応のリソースパスを提供する。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "servletContextCreator",
+      "level": 3,
+      "content": "```java\nprivate ServletContextCreator servletContextCreator\n```\n\n{@link ServletContextCreator}のインスタンス\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "setServletContextCreator",
+      "level": 3,
+      "content": "```java\npublic void setServletContextCreator(ServletContextCreator servletContextCreator)\n```\n\n{@link ServletContextCreator}を設定する。\n\n**パラメータ:**\n- `servletContextCreator` - サーブレットコンテキスト生成クラス\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "getPathForLanguage",
+      "level": 3,
+      "content": "```java\npublic String getPathForLanguage(String path, HttpServletRequest request)\n```\n\n言語対応のリソースパスを取得する。\n<pre>\n言語は{@link ThreadContext#getLanguage()}から取得する。\n{@link ThreadContext#getLanguage()}から言語を取得できない場合は指定されたリソースパスをそのまま返す。\n\n言語対応のリソースパスが指すファイルが存在する場合は言語対応のリソースパスを返し、\n存在しない場合は指定されたリソースパスをそのまま返す。\n指定されたリソースパスに拡張子を含まない場合は指定されたリソースパスをそのまま返す。\n\n言語対応のリソースパスは{@link #createPathForLanguage(String, String)}メソッドを呼び出し作成する。\n{@link #createPathForLanguage(String, String)}メソッドはサブクラスにより実装される。\n<pre>\n\n**パラメータ:**\n- `path` - オリジナルのリソースパス\n- `request` - リクエスト\n\n**戻り値:**\n言語対応のリソースパス\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "existsResource",
+      "level": 3,
+      "content": "```java\nprotected boolean existsResource(String resourcePath, HttpServletRequest request)\n```\n\n指定されたパスが指すファイルが存在するか否かを判定する。\n\n**パラメータ:**\n- `request` - リクエスト\n- `resourcePath` - リソースパス\n\n**戻り値:**\nファイルが存在する場合はtrue\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getServletContext",
+      "level": 3,
+      "content": "```java\nprivate ServletContext getServletContext(HttpServletRequest request)\n```\n\nサーブレットコンテキストを取得する。\n\n**パラメータ:**\n- `request` - リクエスト\n\n**戻り値:**\nサーブレットコンテキスト\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "convertToPathFromContextRoot",
+      "level": 3,
+      "content": "```java\nprotected String convertToPathFromContextRoot(String path, HttpServletRequest request)\n```\n\nコンテキストルートからのパスに変換する。\n\n**パラメータ:**\n- `path` - パス\n- `request` - リクエスト\n\n**戻り値:**\nコンテキストルートからのパス\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "createPathForLanguage",
+      "level": 3,
+      "content": "```java\nprotected abstract String createPathForLanguage(String pathFromContextRoot, String language)\n```\n\n言語対応のリソースパスを作成する。\n\n**パラメータ:**\n- `pathFromContextRoot` - コンテキストルートからのパス\n- `language` - 言語\n\n**戻り値:**\n言語対応のリソースパス\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-i18n-ResourcePathRule"
+}

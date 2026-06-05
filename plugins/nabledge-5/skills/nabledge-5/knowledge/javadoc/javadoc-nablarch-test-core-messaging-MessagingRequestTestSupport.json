@@ -1,0 +1,92 @@
+{
+  "title": "class MessagingRequestTestSupport",
+  "content": "**パッケージ:** nablarch.test.core.messaging\n\n**継承階層:**\n```\njava.lang.Object\n  └─ StandaloneTestSupportTemplate\n      └─ nablarch.test.core.messaging.MessagingRequestTestSupport\n```\n\n---\n\n```java\npublic class MessagingRequestTestSupport\nextends StandaloneTestSupportTemplate\n```\n\nメッセージ同期応答用のテストサポートクラス。<br/>\n<h3>本クラスを使用する際の注意事項</h3>\n<p>\n本クラスは、入力データをキューにPUTする用途で、main側のコンポーネント定義ファイルを読み込む。\nその際、nablarch.fw.messaging.FwHeaderDefinition実装クラスは、\n{@code \"fwHeaderDefinition\"}という名前で登録されていなければならない。\nこれ以外の名称を使用する場合は、{@link #getFwHeaderDefinitionName()}をオーバライドすることにより\n本クラスが使用するnablarch.fw.messaging.FwHeaderDefinitionコンポーネント名を\n変更することができる。\n\n</p>\n\n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "setUpMessages",
+      "level": 3,
+      "content": "```java\nprotected Putter setUpMessages\n```\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "expectedMessages",
+      "level": 3,
+      "content": "```java\nprotected Comparator expectedMessages\n```\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "MessagingRequestTestSupport",
+      "level": 3,
+      "content": "```java\nprotected MessagingRequestTestSupport()\n```\n\nコンストラクタ。<br/>\nサブクラスから使用されることを想定している。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "MessagingRequestTestSupport",
+      "level": 3,
+      "content": "```java\npublic MessagingRequestTestSupport(Class<?> testClass)\n```\n\nコンストラクタ。\n\n**パラメータ:**\n- `testClass` - テストクラス。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "createTestShotAround",
+      "level": 3,
+      "content": "```java\nprotected TestShotAround createTestShotAround(Class<?> testClass)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "beforeExecute",
+      "level": 3,
+      "content": "```java\nprotected void beforeExecute(String sheetName)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "beforeExecuteTestShot",
+      "level": 3,
+      "content": "```java\nprotected void beforeExecuteTestShot(TestShot shot)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "afterExecuteTestShot",
+      "level": 3,
+      "content": "```java\nprotected void afterExecuteTestShot(TestShot shot)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getMessagingContextFrom",
+      "level": 3,
+      "content": "```java\nprivate MessagingContext getMessagingContextFrom(TestShot testShot)\n```\n\n{@link nablarch.fw.messaging.MessagingContext}を取得する。\n\n**パラメータ:**\n- `testShot` - テストショット\n\n**戻り値:**\n生成したインスタンス\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getHeaderFormatter",
+      "level": 3,
+      "content": "```java\nprivate DataRecordFormatter getHeaderFormatter(TestShot testShot)\n```\n\nFW制御ヘッダのフォーマッタを取得する。<br/>\nデフォルトの{@link StandardFwHeaderDefinition}の動作では、\n{@link FilePathSetting}、{@link FormatterFactory}が{@link nablarch.core.repository.SystemRepository}から\nルックアップされるが、この時点での{@link nablarch.core.repository.SystemRepository}は\nテスト側の設定ファイルで初期化された状態であり、これらのインスタンスは正しく取得できない。\nターゲット側の状態を作り出すために、事前にターゲット側の設定から取得済したインスタンスを明示的に指定して、\nフォーマット定義を取得する。\n\n**パラメータ:**\n- `testShot` - テストショット\n\n**戻り値:**\nフォーマッタ\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getFwHeaderDefinitionName",
+      "level": 3,
+      "content": "```java\nprotected String getFwHeaderDefinitionName()\n```\n\nnablarch.fw.messaging.FwHeaderDefinition実装クラスを\nシステムリポジトリから取得するための名前を取得する。\n本メソッドは、{@code \"fwHeaderDefinition\"}を返却する。\n\n**戻り値:**\n{@code \"fwHeaderDefinition\"}\n\n---",
+      "id": "s14"
+    }
+  ],
+  "id": "javadoc-nablarch-test-core-messaging-MessagingRequestTestSupport"
+}

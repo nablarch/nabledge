@@ -1,0 +1,7 @@
+{
+  "title": "@interface Interceptor",
+  "content": "**パッケージ:** nablarch.fw\n\n---\n\n```java\npublic @interface Interceptor\n```\n\n{@link Handler#handle(Object, ExecutionContext)}メソッドに対するインターセプタに付与する\nメタアノテーション。\n<p/>\nインターセプタを作成するには、このメタアノテーションを付与したアノテーションを作成し、\n{@link Interceptor}の属性には、インターセプト処理を実装するクラスを指定する。\nこの実装クラスは、{@link Interceptor.Impl} を継承して作成する。\n<p/>\n以下は、インターセプタ\"@AroundAdvice\"の実装例である。\n\n<pre>\n{@code @Target}(ElementType.METHOD)\n{@code @Retention}(RetentionPolicy.RUNTIME)\n{@code @Interceptor}(AroundAdvice.Impl.class)\npublic {@code @interface} AroundAdvice {\n    public static class Impl extends Interceptor.Impl<HttpRequest, HttpResponse, AroundAdvice> {\n        public HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n            doBeforeAdvice(req, ctx);\n            HttpResponse res =  getOriginalHandler().handle(req, ctx);\n            doAfterAdvice(req, ctx);\n            return res;\n        }\n        void doBeforeAdvice(HttpRequest req, ExecutionContext ctx) {\n            //......\n        }\n        void doAfterAdvice(HttpRequest req, ExecutionContext ctx) {\n            //......\n       }\n    }\n}\n</pre>\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [],
+  "id": "javadoc-nablarch-fw-Interceptor"
+}

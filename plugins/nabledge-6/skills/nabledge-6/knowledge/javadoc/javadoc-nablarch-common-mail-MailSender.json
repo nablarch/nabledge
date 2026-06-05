@@ -1,0 +1,164 @@
+{
+  "title": "class MailSender",
+  "content": "**パッケージ:** nablarch.common.mail\n\n**継承階層:**\n```\njava.lang.Object\n  └─ BatchAction<SqlRow>\n      └─ nablarch.common.mail.MailSender\n```\n\n---\n\n```java\npublic class MailSender\nextends BatchAction<SqlRow>\n```\n\nメール送信要求管理テーブル上の各レコードごとにメール送信を行うバッチアクション。\n\n**作成者:** Shinsuke Yoshio  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "SYSTEM_REPOSITORY_KEY_MAIL_CONFIG",
+      "level": 3,
+      "content": "```java\nprivate static final String SYSTEM_REPOSITORY_KEY_MAIL_CONFIG\n```\n\nシステムリポジトリ用のキー定数\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "SYSTEM_REPOSITORY_KEY_MAIL_SESSION_CONFIG",
+      "level": 3,
+      "content": "```java\nprivate static final String SYSTEM_REPOSITORY_KEY_MAIL_SESSION_CONFIG\n```\n\nシステムリポジトリ用のキー定数\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "SYSTEM_REPOSITORY_KEY_MAIL_ATTACHED_FILE_TABLE",
+      "level": 3,
+      "content": "```java\nprivate static final String SYSTEM_REPOSITORY_KEY_MAIL_ATTACHED_FILE_TABLE\n```\n\nシステムリポジトリ用のキー定数\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "SYSTEM_REPOSITORY_KEY_MAIL_RECIPIENT_TABLE",
+      "level": 3,
+      "content": "```java\nprivate static final String SYSTEM_REPOSITORY_KEY_MAIL_RECIPIENT_TABLE\n```\n\nシステムリポジトリ用のキー定数\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "SYSTEM_REPOSITORY_KEY_MAIL_REQUEST_TABLE",
+      "level": 3,
+      "content": "```java\nprivate static final String SYSTEM_REPOSITORY_KEY_MAIL_REQUEST_TABLE\n```\n\nシステムリポジトリ用のキー定数\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "processId",
+      "level": 3,
+      "content": "```java\nprivate final String processId\n```\n\nメール送信バッチを識別するプロセスID\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "MailSender",
+      "level": 3,
+      "content": "```java\npublic MailSender()\n```\n\nコンストラクタ。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s11"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Result handle(SqlRow data, ExecutionContext context)\n```\n\nメール送信要求を元にメールを送信する。\n\n**パラメータ:**\n- `data` - 入力データ（メール送信要求のレコード）\n- `context` - 実行コンテキスト\n\n**戻り値:**\n処理結果\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "handleException",
+      "level": 3,
+      "content": "```java\nprotected Result handleException(SqlRow data, ExecutionContext context, MailRequestTable.MailRequest mailRequest, MailConfig mailConfig, Exception e)\n```\n\nメール送信時の例外のハンドル処理を行う。\n<p/>\n本クラスでは、障害ログを出力し、送信ステータスを送信失敗にしてリトライを行う。\n本メソッドでは、すべての例外をリトライ対象として{@link SendMailRetryableException}を送出している。\n独自の処理を実施したい場合は本メソッドをオーバーライドすることで行うことができる。\n\n**パラメータ:**\n- `data` - 入力データ（メール送信要求のレコード）\n- `context` - 実行コンテキスト\n- `mailRequest` - メール送信要求\n- `mailConfig` - メール設定\n- `e` - メール送信時の例外\n\n**戻り値:**\n{@link #handle(SqlRow, ExecutionContext)} が返す処理結果\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "writeSendMailFailedLog",
+      "level": 3,
+      "content": "```java\nprotected void writeSendMailFailedLog(SqlRow data, MailRequestTable.MailRequest mailRequest, MailConfig mailConfig, SendFailedException e)\n```\n\nメール送信失敗時の{@link SendFailedException}例外の障害検知ログに出力する。\n<p/>\nメール送信失敗時に、独自の処理を実施したい場合は本メソッドをオーバーライドすることで行うことができる。\n\n**パラメータ:**\n- `data` - 入力データ（メール送信要求のレコード）\n- `mailRequest` - メール送信要求\n- `mailConfig` - メール設定\n- `e` - メール送信失敗時の{@link SendFailedException}例外\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "createStringFromAddresses",
+      "level": 3,
+      "content": "```java\nprivate static String createStringFromAddresses(Address[] addresses)\n```\n\nメールアドレスの配列を文字列にする。\n\n**パラメータ:**\n- `addresses` - メールアドレスの配列\n\n**戻り値:**\nメールアドレスをカンマで連結した文字列\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "writeCreateMailFailedLog",
+      "level": 3,
+      "content": "```java\nprotected void writeCreateMailFailedLog(SqlRow data, MailRequestTable.MailRequest mailRequest, MailConfig mailConfig, MessagingException e)\n```\n\nメール作成が失敗した場合に、障害検知ログに出力する。\n<p/>\nメール作成が失敗した時に、独自の処理を実施したい場合は本メソッドをオーバーライドすることで行うことができる。\n\n**パラメータ:**\n- `data` - 入力データ（メール送信要求のレコード）\n- `mailRequest` - メール送信要求\n- `mailConfig` - メール設定\n- `e` - {@link MessagingException}\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "createTransactionAbnormalEnd",
+      "level": 3,
+      "content": "```java\nprivate TransactionAbnormalEnd createTransactionAbnormalEnd(MailRequestTable.MailRequest mailRequest, MailConfig mailConfig, MessagingException e)\n```\n\nメール送信時に送信失敗を表す{@link MessagingException}が発生した場合のトランザクションの異常終了例外を生成して返す。\n\n**パラメータ:**\n- `mailRequest` - メール送信要求\n- `mailConfig` - メール設定\n- `e` - メール送信時のMessagingException\n\n**戻り値:**\n業務トランザクションの異常終了例外\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "createMimeMessage",
+      "level": 3,
+      "content": "```java\nprotected MimeMessage createMimeMessage(SqlRow data, String mailRequestId, MailRequestTable.MailRequest mailRequest, Session session, MailRecipientTable mailRecipientTable)\n                              throws MessagingException\n```\n\nメールデータを作成する。\n\n**パラメータ:**\n- `data` - 入力データ（メール送信要求のレコード）\n- `mailRequestId` - メール送信要求ID\n- `mailRequest` - メール送信先情報\n- `session` - メールセッション\n- `mailRecipientTable` - メール送信先管理テーブルのスキーマ\n\n**戻り値:**\nメールデータ\n\n**例外:**\n- `MessagingException` - メールメッセージの生成に失敗した場合\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "addBodyContent",
+      "level": 3,
+      "content": "```java\nprotected void addBodyContent(MimeMessage mimeMessage, MailRequestTable.MailRequest mailRequest, List<? extends MailAttachedFileTable.MailAttachedFile> attachedFiles, ExecutionContext context)\n                    throws MessagingException\n```\n\n指定された{@link MimeMessage}にメールメッセージ本文（添付ファイル含む）を追加する。\n<p/>\nメッセージ本文を暗号化する場合や、電子署名を付加する場合には本メソッドをオーバライドし処理を本文の追加処理を変更すること。\n\n**パラメータ:**\n- `mimeMessage` - {@link MimeMessage}\n- `mailRequest` - メール送信要求管理の情報\n- `attachedFiles` - 添付ファイルの情報\n- `context` - 実行コンテキスト\n\n**例外:**\n- `MessagingException` - メールメッセージの生成に失敗した場合\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "createMailSession",
+      "level": 3,
+      "content": "```java\nprivate Session createMailSession(String returnPath, MailSessionConfig mailSenderConfig)\n```\n\njava.mail.Sessionオブジェクトを取得する。<br />\nメールヘッダのReturn-Pathに設定される mail.smtp.from のみ引数として指定する。<br />\nそれ以外は、設定ファイルから読み込む。\n\n**パラメータ:**\n- `returnPath` - 差し戻し先メールアドレス。\n- `mailSenderConfig` - メール送信用設定値\n\n**戻り値:**\nメールセッション\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "getAddresses",
+      "level": 3,
+      "content": "```java\nprivate InternetAddress[] getAddresses(MailRequestTable.MailRequest mailRequest, String recipientType, MailRecipientTable mailRecipientTable, List<String> errorAddresses)\n```\n\n指定したメール送信要求IDと送信先区分に紐付くメールアドレスの配列を取得する。\n\n**パラメータ:**\n- `mailRequest` - メール送信要求\n- `recipientType` - 宛先区分\n- `mailRecipientTable` - 宛先メールアドレスの配列\n- `errorAddresses` - 生成に失敗したアドレスのリスト\n\n**戻り値:**\nメールアドレスの配列\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "createInternetAddress",
+      "level": 3,
+      "content": "```java\nprivate InternetAddress createInternetAddress(String address, MailRequestTable.MailRequest mailRequest)\n```\n\nメールアドレスを生成する。{@link AddressException}が発生した場合は、ログを出力しnullを返す。\n\n**パラメータ:**\n- `address` - メールアドレスの元となる文字列\n- `mailRequest` - メール送信要求\n\n**戻り値:**\n生成したメールアドレス\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "containsInvalidCharacter",
+      "level": 3,
+      "content": "```java\nprotected void containsInvalidCharacter(String target, String mailRequestId)\n                              throws InvalidCharacterException\n```\n\nメールヘッダ・インジェクションチェック<br />\nチェック対象文字列に\\rもしくは\\nを含んでいるかのチェック。\n<p/>\nチェック内容を変更する場合や、チェック結果の振る舞いを変更する場合には本メソッドをオーバライドし処理をチェック処理を変更すること。\n\n**パラメータ:**\n- `target` - チェック対象文字列\n- `mailRequestId` - メール送信要求ID\n\n**例外:**\n- `InvalidCharacterException` - チェック対象文字列に\\rもしくは\\nを含んでいた場合\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "createReader",
+      "level": 3,
+      "content": "```java\npublic DataReader<SqlRow> createReader(ExecutionContext ctx)\n```\n\n{@inheritDoc} メール送信要求を読み込む{@link DatabaseRecordReader}を生成する。\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "updateToFailed",
+      "level": 3,
+      "content": "```java\nprotected void updateToFailed(SqlRow data, ExecutionContext context)\n```\n\n処理ステータスを異常終了に更新する。\n<p/>\n更新時に例外が発生した場合は、{@link ProcessAbnormalEnd}を送出する。\n\n**パラメータ:**\n- `data` - 送信対象データ\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "updateToSuccess",
+      "level": 3,
+      "content": "```java\nprotected void updateToSuccess(SqlRow data, ExecutionContext context)\n```\n\n処理ステータスを正常終了に更新する。\n\n**パラメータ:**\n- `data` - 送信対象データ\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s26"
+    }
+  ],
+  "id": "javadoc-nablarch-common-mail-MailSender"
+}

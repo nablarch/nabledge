@@ -1,0 +1,62 @@
+{
+  "title": "class DuplicateProcessCheckHandler",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**実装されたインタフェース:**\n- Handler<Object,Object>\n\n---\n\n```java\npublic class DuplicateProcessCheckHandler\nimplements Handler<Object,Object>\n```\n\nプロセスの２重起動をチェックするハンドラ。\n<p/>\n<p/>\nプロセスの２重起動チェックは、{@link DuplicateProcessChecker}にて行う。\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "exitCode",
+      "level": 3,
+      "content": "```java\nprivate int exitCode\n```\n\n終了コード\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "duplicateProcessChecker",
+      "level": 3,
+      "content": "```java\nprivate DuplicateProcessChecker duplicateProcessChecker\n```\n\nプロセス２重起動チェックを行うクラス\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(Object o, ExecutionContext context)\n```\n\n{@inheritDoc}\n<p/>\nプロセス（リクエスト）が２重起動でないことをチェックする。\n２重起動の場合には、例外を送出し処理を終了する。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "inactive",
+      "level": 3,
+      "content": "```java\nprivate void inactive(boolean throwException)\n```\n\nプロセスの非アクティブ化を行う。\n\n非アクティブ化処理中に例外が発生し、かつ呼び出し元で例外が発生していない場合\n{@link RuntimeException}を送出する。\n\n**パラメータ:**\n- `throwException` - 呼び出し元で例外が発生しているか否か\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setExitCode",
+      "level": 3,
+      "content": "```java\npublic void setExitCode(int exitCode)\n```\n\n終了コードを設定する。\n\n**パラメータ:**\n- `exitCode` - 終了コード\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setDuplicateProcessChecker",
+      "level": 3,
+      "content": "```java\npublic void setDuplicateProcessChecker(DuplicateProcessChecker duplicateProcessChecker)\n```\n\nプロセス２重起動チェックを行うクラスを設定する。\n\n**パラメータ:**\n- `duplicateProcessChecker` - プロセス２重起動チェックを行うクラス。\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-DuplicateProcessCheckHandler"
+}

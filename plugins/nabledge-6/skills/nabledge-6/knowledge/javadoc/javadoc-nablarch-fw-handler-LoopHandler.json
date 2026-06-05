@@ -1,0 +1,110 @@
+{
+  "title": "class LoopHandler",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**継承階層:**\n```\njava.lang.Object\n  └─ TransactionEventCallback.Provider<Object>\n      └─ nablarch.fw.handler.LoopHandler\n```\n\n**実装されたインタフェース:**\n- Handler<Object,Result>\n\n---\n\n```java\npublic class LoopHandler\nextends TransactionEventCallback.Provider<Object>\nimplements Handler<Object,Result>\n```\n\nループ制御ハンドラークラス。\n<p/>\n本ハンドラは、アプリケーションが処理すべきデータが存在する間、後続のハンドラに対して繰り返し処理を委譲する。\n処理すべきデータが存在するかは、{@link nablarch.fw.ExecutionContext#hasNextData()}により判断する。\n<p/>\nまた、本ハンドラではトランザクション制御もあわせて行う。\nトランザクションは、指定間隔({@link #setCommitInterval(int)}毎にコミット処理を行う。\n後続ハンドラから例外が送出された場合には、未コミットのトランザクションを全てロールバックし、例外を再送出する。\n<p/>\n本ハンドラの事前ハンドラとして、{@link nablarch.common.handler.DbConnectionManagementHandler}を登録すること。\n\n**作成者:** Hisaaki Sioiri  \n**関連項目:** NoMoreRecord  \n**関連項目:** CommitLogger  \n**関連項目:** TransactionContext  \n**関連項目:** TransactionFactory  \n**関連項目:** TransactionExecutor  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "commitLogger",
+      "level": 3,
+      "content": "```java\nprivate CommitLogger commitLogger\n```\n\nコミットログ出力オブジェクト\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "IS_ABOUT_TO_COMMIT_FLAG_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String IS_ABOUT_TO_COMMIT_FLAG_KEY\n```\n\nコミット実施予告フラグを保持するリクエストスコープ変数名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "transactionFactory",
+      "level": 3,
+      "content": "```java\nprivate TransactionFactory transactionFactory\n```\n\nトランザクションオブジェクトを取得するためのファクトリ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "transactionName",
+      "level": 3,
+      "content": "```java\nprivate String transactionName\n```\n\nトランザクションが使用するコネクションの登録名\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "commitInterval",
+      "level": 3,
+      "content": "```java\nprivate int commitInterval\n```\n\nコミット間隔\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Result handle(Object data, ExecutionContext context)\n```\n\n{@inheritDoc}\nこの実装では、特定の条件を満たすまで、以降のハンドラキューの内容を\n繰り返し処理する。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "commit",
+      "level": 3,
+      "content": "```java\nprivate long commit(Transaction transaction, long count, ExecutionContext context)\n```\n\nトランザクションをコミットする。\n<p/>\n以下の条件に合致する場合にコミット処理を行う。\n<ul>\n<li>未コミット件数が、コミット間隔と一致した場合</li>\n<li>これ以上処理するデータが存在しない場合</li>\n</ul>\n\n**パラメータ:**\n- `transaction` - トランザクションオブジェクト\n- `count` - 処理件数\n- `context` - 実行コンテキスト\n\n**戻り値:**\n未コミットの処理件数\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "errorCallback",
+      "level": 3,
+      "content": "```java\nprivate void errorCallback(Transaction transaction, Throwable e, ExecutionContext context, List<TransactionEventCallback> listeners)\n```\n\nエラー発生時のコールバック処理。\n\n**パラメータ:**\n- `transaction` - トランザクション\n- `e` - 発生したエラー\n- `context` - 実行コンテキスト\n- `listeners` - 後続ハンドラのうち {@link TransactionEventCallback}\n                  を実装しているもの。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getTransactionData",
+      "level": 3,
+      "content": "```java\nprivate static Object getTransactionData(ExecutionContext context)\n```\n\nリクエストスコープからトランザクションデータを取得する。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n**戻り値:**\nトランザクションデータ\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "restoreHandlerQueue",
+      "level": 3,
+      "content": "```java\nprivate ExecutionContext restoreHandlerQueue(ExecutionContext context, List<Handler> snapshot)\n```\n\nハンドラキューの内容を、ループ開始前の状態に戻す。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n- `snapshot` - ハンドラキューのスナップショット\n\n**戻り値:**\n実行コンテキスト(引数と同じインスタンス)\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "shouldStop",
+      "level": 3,
+      "content": "```java\npublic boolean shouldStop(ExecutionContext context)\n```\n\n現在の処理終了後にループを止める場合にtrueを返す。\n<p/>\nデフォルトの実装では、実行コンテキスト上のデータリーダのデータが\n空になるまで繰り返し処理を行う。\n<p/>\nこれと異なる条件でループを停止させたい場合は、本メソッドをオーバライドすること。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n**戻り値:**\nループを止める場合はtrue\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setTransactionFactory",
+      "level": 3,
+      "content": "```java\npublic LoopHandler setTransactionFactory(TransactionFactory transactionFactory)\n```\n\nトランザクションオブジェクトを取得するためのファクトリを設定する。\n\n**パラメータ:**\n- `transactionFactory` - トランザクションオブジェクトを取得するためのファクトリ\n\n**戻り値:**\nこのハンドラ自体\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setTransactionName",
+      "level": 3,
+      "content": "```java\npublic void setTransactionName(String transactionName)\n```\n\nこのハンドラが管理するトランザクションの、スレッドコンテキスト上での登録名を設定する。\n<pre>\nデフォルトでは既定のトランザクション名\n({@link TransactionContext#DEFAULT_TRANSACTION_CONTEXT_KEY})を使用する。\n\n</pre>\n\n**パラメータ:**\n- `transactionName` - データベース接続のスレッドコンテキスト上の登録名\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setCommitInterval",
+      "level": 3,
+      "content": "```java\npublic LoopHandler setCommitInterval(int commitInterval)\n```\n\nコミット間隔を設定する。\n<p/>\nコミット間隔を指定した場合、指定した間隔でコミットが行われる。\nなお、0以下の値を設定した場合や、設定を省略した場合のコミット間隔は1となる。\n\n**パラメータ:**\n- `commitInterval` - コミット間隔\n\n**戻り値:**\nこのハンドラ自体\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "isAboutToCommit",
+      "level": 3,
+      "content": "```java\npublic static final boolean isAboutToCommit(ExecutionContext ctx)\n```\n\n現在のリクエストループの業務アクション実行後にLoopHandlerによるコミットが行われるか否か。\n\n本メソッドは DataReadHandler よりも後ろで呼び出された場合のみ正しい結果が得られる。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n業務アクション実行後にコミットが行われる場合は true\n\n---",
+      "id": "s17"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-LoopHandler"
+}

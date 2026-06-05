@@ -1,0 +1,56 @@
+{
+  "title": "class ThymeleafResponseWriter",
+  "content": "**パッケージ:** nablarch.fw.web.handler.responsewriter.thymeleaf\n\n**実装されたインタフェース:**\n- CustomResponseWriter\n\n---\n\n```java\npublic class ThymeleafResponseWriter\nimplements CustomResponseWriter\n```\n\nThymeleafを使用する{@link CustomResponseWriter}実装クラス。\n<p>\n本実装では、引数で与えられたパスが、処理対象パス判定用の正規表現にマッチした場合、\n処理対象と判定する。\n例えば、{@link #setPathPattern(String)}に\"{@literal /template/.*\\.html}\"を設定した場合、\nパスが\"/template/foo/bar.html\"の時、処理対象と判定される。\npathPatternプロパティにはデフォルト値として\"{@literal .*\\.html}\"が設定されている。\n</p>\n<p>\nThymeleafでは、テンプレートのパスを解決する際、サフィックスを省略できるが、\n本クラスを使用する場合はサフィックスの省略は行わないこと。\n<ul>\n    <li>OK: {@code return new HttpResponse(\"/path/to/template.html\");}</li>\n    <li>NG: {@code return new HttpResponse(\"/path/to/template\");}</li>\n</ul>\nサフィックスを省略した場合、セッションストアからリクエストスコープへの移送が行われなくなる。\n</p>\n\n**作成者:** Tsuyoshi Kawasaki  \n**関連項目:** org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver#setSuffix(java.lang.String)  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "templateEngine",
+      "level": 3,
+      "content": "```java\nprivate TemplateEngine templateEngine\n```\n\nテンプレートエンジン\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "pathPattern",
+      "level": 3,
+      "content": "```java\nprivate Pattern pathPattern\n```\n\n処理対象パス判定に使用する正規表現\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "isResponsibleTo",
+      "level": 3,
+      "content": "```java\npublic boolean isResponsibleTo(String pathToTemplate, ServletExecutionContext context)\n```\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "writeResponse",
+      "level": 3,
+      "content": "```java\npublic void writeResponse(String pathToTemplate, ServletExecutionContext context)\n                   throws IOException\n```\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "setTemplateEngine",
+      "level": 3,
+      "content": "```java\npublic void setTemplateEngine(TemplateEngine templateEngine)\n```\n\n{@link TemplateEngine}を設定する。\n\n**パラメータ:**\n- `templateEngine` - {@link TemplateEngine}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setPathPattern",
+      "level": 3,
+      "content": "```java\npublic void setPathPattern(String pathPattern)\n```\n\n処理対象パス判定に使用する正規表現を設定する。\n\n**パラメータ:**\n- `pathPattern` - 処理対象パス判定用の正規表現\n\n---",
+      "id": "s8"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-responsewriter-thymeleaf-ThymeleafResponseWriter"
+}

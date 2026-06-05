@@ -1,0 +1,74 @@
+{
+  "title": "class HttpRewriteHandler",
+  "content": "**パッケージ:** nablarch.fw.web.handler\n\n**実装されたインタフェース:**\n- Handler<HttpRequest,HttpResponse>\n\n---\n\n```java\npublic class HttpRewriteHandler\nimplements Handler<HttpRequest,HttpResponse>\n```\n\nHTTPリクエスト中のリクエストパス、および、\nHTTPレスポンス中のコンテンツパスに対する書き換え処理を行うハンドラ。\n\nこのハンドラでは、往路処理で{@link HttpRequest}中のリクエストパスの置換を行う。\nもし、リクエストパスの置換が行われた場合は、\n復路処理で{@link HttpResponse}中のコンテンツパスの置換を行う。\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "requestPathRewriteRules",
+      "level": 3,
+      "content": "```java\nprivate final List<HttpRequestRewriteRule> requestPathRewriteRules\n```\n\nリクエストパスリライト定義\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "contentPathRewriteRules",
+      "level": 3,
+      "content": "```java\nprivate final List<ContentPathRewriteRule> contentPathRewriteRules\n```\n\nコンテンツパスリライト定義\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest request, ExecutionContext context)\n```\n\n{@inheritDoc}\nこのハンドラでは、往路処理で{@link HttpRequest}中のリクエストパスの置換を行う。\nもし、リクエストパスの置換が行われた場合は、\n復路処理で{@link HttpResponse}中のコンテンツパスの置換を行う。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "rewriteRequestPath",
+      "level": 3,
+      "content": "```java\nprivate String rewriteRequestPath(HttpRequest request, ExecutionContext context)\n```\n\nこのハンドラに設定された書き換えルールに従って、\nHTTPリクエスト中のリクエストパスの書き換え処理を行う。\n\n**パラメータ:**\n- `request` - HTTPリクエストオブジェクト\n- `context` - 実行コンテキスト\n\n**戻り値:**\nリライト処理が行われた場合はtrue\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "rewriteContentPath",
+      "level": 3,
+      "content": "```java\nprivate String rewriteContentPath(HttpResponse response, ExecutionContext context)\n```\n\nこのハンドラに設定された書き換えルールに従って、\nHTTPレスポンス中のコンテンツパスに対する書き換え処理を行う。\n\n**パラメータ:**\n- `response` - HTTPリクエストオブジェクト\n- `context` - 実行コンテキスト\n\n**戻り値:**\nリライト後コンテンツパス\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setRequestPathRewriteRules",
+      "level": 3,
+      "content": "```java\npublic HttpRewriteHandler setRequestPathRewriteRules(List<HttpRequestRewriteRule> rules)\n```\n\nリクエストパスの置換ルールを設定する。\n\n以前の設定はクリアされる。\n\n**パラメータ:**\n- `rules` - リクエストパスの置換ルール\n\n**戻り値:**\nこのオブジェクト自体。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "addRequestPathRewriteRule",
+      "level": 3,
+      "content": "```java\npublic HttpRewriteHandler addRequestPathRewriteRule(HttpRequestRewriteRule rule)\n```\n\nリクエストパスの置換ルールを設定する。\n\n**パラメータ:**\n- `rule` - リクエストパスの置換ルール\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setContentPathRewriteRules",
+      "level": 3,
+      "content": "```java\npublic HttpRewriteHandler setContentPathRewriteRules(List<ContentPathRewriteRule> rules)\n```\n\nコンテンツパスの置換ルールを設定する。\n\n以前の設定はクリアされる。\n\n**パラメータ:**\n- `rules` - リクエストパスの置換ルール\n\n**戻り値:**\nこのオブジェクト自体。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "addContentPathRewriteRule",
+      "level": 3,
+      "content": "```java\npublic HttpRewriteHandler addContentPathRewriteRule(ContentPathRewriteRule rule)\n```\n\nコンテンツパスの置換ルールを設定する。\n\n**パラメータ:**\n- `rule` - コンテンツパスの置換ルール\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s11"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-HttpRewriteHandler"
+}

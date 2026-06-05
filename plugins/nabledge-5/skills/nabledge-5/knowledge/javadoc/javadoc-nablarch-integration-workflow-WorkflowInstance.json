@@ -1,0 +1,176 @@
+{
+  "title": "interface WorkflowInstance",
+  "content": "**パッケージ:** nablarch.integration.workflow\n\n---\n\n```java\npublic interface WorkflowInstance\n```\n\nワークフローインスタンスをあらわすインタフェース。\n\n**作成者:** Ryo Tanaka  \n**導入バージョン:** 1.4.2  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "completeUserTask",
+      "level": 3,
+      "content": "```java\nvoid completeUserTask()\n                      throws IllegalStateException\n```\n\nアクティブユーザタスクを完了させた後、ワークフロー定義に従ってワークフローを進行させ、ワークフローインスタンスのアクティブフローノードを次のタスク\nもしくは停止イベントに進行させる。\n\n**例外:**\n- `IllegalStateException` - 終了させる対象のアクティブユーザタスクが見つからない場合。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "completeUserTask",
+      "level": 3,
+      "content": "```java\nvoid completeUserTask(String assigned)\n                      throws IllegalStateException\n```\n\nアクティブユーザタスクを完了させた後、ワークフロー定義に従ってワークフローを進行させ、ワークフローインスタンスのアクティブフローノードを次のタスク\nもしくは停止イベントに進行させる。\n\n**パラメータ:**\n- `assigned` - タスクを完了させるユーザ\n\n**例外:**\n- `IllegalStateException` - {@code assigned} に対してアクティブユーザタスクが見つからない場合。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "completeUserTask",
+      "level": 3,
+      "content": "```java\nvoid completeUserTask(Map<String,?> parameter)\n                      throws IllegalStateException\n```\n\nアクティブユーザタスクを完了させた後、ワークフロー定義に従ってワークフローを進行させ、ワークフローインスタンスのアクティブフローノードを次のタスク\nもしくは停止イベントに進行させる。\n\n**パラメータ:**\n- `parameter` - ワークフローを進行させる際に、各フローノードで使用するパラメータ\n\n**例外:**\n- `IllegalStateException` - 終了させる対象のアクティブユーザタスクが見つからない場合。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "completeUserTask",
+      "level": 3,
+      "content": "```java\nvoid completeUserTask(Map<String,?> parameter, String assigned)\n                      throws IllegalStateException\n```\n\nアクティブユーザタスクを完了させた後、ワークフロー定義に従ってワークフローを進行させ、ワークフローインスタンスのアクティブフローノードを次のタスク\nもしくは停止イベントに進行させる。\n\n**パラメータ:**\n- `parameter` - ワークフローを進行させる際に、各フローノードで使用するパラメータ\n- `assigned` - タスクを完了させるユーザ\n\n**例外:**\n- `IllegalStateException` - {@code assigned} に対してアクティブユーザタスクが見つからない場合、またはワークフローが既に完了している場合。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "completeGroupTask",
+      "level": 3,
+      "content": "```java\nvoid completeGroupTask(String assigned)\n                       throws IllegalStateException\n```\n\nアクティブグループタスクを完了させた後、ワークフロー定義に従ってワークフローを進行させ、ワークフローインスタンスのアクティブフローノードを次のタスク\nもしくは停止イベントに進行させる。\n\n**パラメータ:**\n- `assigned` - タスクを完了させるグループ\n\n**例外:**\n- `IllegalStateException` - {@code assigned} に対してアクティブグループタスクが見つからない場合、またはワークフローが既に完了している場合。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "completeGroupTask",
+      "level": 3,
+      "content": "```java\nvoid completeGroupTask(Map<String,?> parameter, String assigned)\n                       throws IllegalStateException\n```\n\nアクティブグループタスクを完了させた後、ワークフロー定義に従ってワークフローを進行させ、ワークフローインスタンスのアクティブフローノードを次のタスク\nもしくは停止イベントに進行させる。\n\n**パラメータ:**\n- `parameter` - ワークフローを進行させる際に、各フローノードで使用するパラメータ\n- `assigned` - タスクを完了させるグループ\n\n**例外:**\n- `IllegalStateException` - {@code assigned} に対してアクティブグループタスクが見つからない場合、またはワークフローが既に完了している場合。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "triggerEvent",
+      "level": 3,
+      "content": "```java\nvoid triggerEvent(String eventTriggerId)\n                  throws IllegalStateException\n```\n\nアクティブフローノードから、境界イベントトリガーIDに対応する境界イベントを取得し、現在のタスクを中断して、境界イベントから取得される進行先フローノードに\nワークフローを進行させる。\n\n**パラメータ:**\n- `eventTriggerId` - 境界イベントトリガーID\n\n**例外:**\n- `IllegalStateException` - アクティブフローノードから、境界イベントトリガーIDに対応する境界イベントを取得できなかった場合。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "triggerEvent",
+      "level": 3,
+      "content": "```java\nvoid triggerEvent(String eventTriggerId, Map<String,?> parameter)\n                  throws IllegalStateException\n```\n\nアクティブフローノードから、境界イベントトリガーIDに対応する境界イベントを取得し、現在のタスクを中断して、境界イベントから取得される進行先フローノードに\nワークフローを進行させる。\n\n**パラメータ:**\n- `eventTriggerId` - 境界イベントトリガーID\n- `parameter` - ワークフローを進行させる際に利用するパラメータ\n\n**例外:**\n- `IllegalStateException` - アクティブフローノードから、境界イベントトリガーIDに対応する境界イベントを取得できなかった場合。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "assignUser",
+      "level": 3,
+      "content": "```java\nvoid assignUser(String taskId, String user)\n                throws IllegalStateException, IllegalArgumentException\n```\n\nタスクに担当ユーザを割り当てる。\n\n**パラメータ:**\n- `taskId` - 担当ユーザを割り当てる対象のタスク\n- `user` - 担当ユーザ\n\n**例外:**\n- `IllegalStateException` - ワークフローがすでに完了している場合\n- `IllegalArgumentException` - 指定されたタスクが存在しない場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "assignUsers",
+      "level": 3,
+      "content": "```java\nvoid assignUsers(String taskId, List<String> users)\n                 throws IllegalStateException, IllegalArgumentException\n```\n\nタスクに担当ユーザを割り当てる。マルチインスタンスでないタスクに対しては、複数ユーザを割り当てることは出来ない。\n<p/>\nマルチインスタンスタスクで、シーケンシャルタイプの場合は、指定された担当ユーザの順序がタスクの実行順となる。\nすでにタスクに担当ユーザや担当グループが割り当てられている場合、それらの情報はクリアされ、今回設定した担当ユーザのみが有効となる。\n\n**パラメータ:**\n- `taskId` - タスクID\n- `users` - 担当ユーザリスト\n\n**例外:**\n- `IllegalStateException` - ワークフローがすでに完了している場合\n- `IllegalArgumentException` - 指定されたタスクが存在しない場合、もしくはマルチインスタンスでないタスクに複数ユーザを割り当てようとした場合。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "assignGroup",
+      "level": 3,
+      "content": "```java\nvoid assignGroup(String taskId, String group)\n                 throws IllegalStateException, IllegalArgumentException\n```\n\nタスクに担当グループを割り当てる。\n<p/>\nすでにタスクに担当ユーザや担当グループが割り当てられている場合、それらの情報はクリアされ、今回設定した担当グループ情報のみが有効となる。\n\n**パラメータ:**\n- `taskId` - タスクのフローノードID\n- `group` - 担当グループ\n\n**例外:**\n- `IllegalStateException` - ワークフローがすでに完了している場合\n- `IllegalArgumentException` - 指定されたタスクが存在しない場合\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "assignGroups",
+      "level": 3,
+      "content": "```java\nvoid assignGroups(String taskId, List<String> groups)\n                  throws IllegalStateException, IllegalArgumentException\n```\n\nタスクに担当グループを割り当てる。マルチインスタンスでないタスクに対しては、複数グループを割り当てることは出来ない。\n<p/>\nマルチインスタンスタスクで、シーケンシャルタイプの場合は、指定された担当グループの順序がタスクの実行順となる。\nすでにタスクに担当ユーザや担当グループが割り当てられている場合、それらの情報はクリアされ、今回設定した担当ユーザのみが有効となる。\n\n**パラメータ:**\n- `taskId` - タスクのフローノードID\n- `groups` - 担当グループ\n\n**例外:**\n- `IllegalStateException` - ワークフローがすでに完了している場合\n- `IllegalArgumentException` - 指定されたタスクが存在しない場合、もしくはマルチインスタンスでないタスクに複数グループを割り当てようとした場合。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "assignUserToLane",
+      "level": 3,
+      "content": "```java\nvoid assignUserToLane(String laneId, String user)\n                      throws IllegalStateException, IllegalArgumentException\n```\n\nレーンIDで指定されたレーンに属するすべてのタスクに、指定された担当ユーザを割り当てる。\n\n**パラメータ:**\n- `laneId` - 担当ユーザを割り当てるタスクが属するレーンのレーンID\n- `user` - 担当ユーザ\n\n**例外:**\n- `IllegalStateException` - ワークフローがすでに完了している場合\n- `IllegalArgumentException` - マルチインスタンスでないタスクに複数ユーザを割り当てようとした場合。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "assignUsersToLane",
+      "level": 3,
+      "content": "```java\nvoid assignUsersToLane(String laneId, List<String> users)\n                       throws IllegalStateException, IllegalArgumentException\n```\n\nレーンIDで指定されたレーンに属するすべてのタスクに、指定された担当ユーザを割り当てる。\n\n**パラメータ:**\n- `laneId` - 担当ユーザを割り当てるタスクが属するレーンのレーンID\n- `users` - 担当ユーザリスト\n\n**例外:**\n- `IllegalStateException` - ワークフローがすでに完了している場合\n- `IllegalArgumentException` - マルチインスタンスでないタスクに複数ユーザを割り当てようとした場合。\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "assignGroupToLane",
+      "level": 3,
+      "content": "```java\nvoid assignGroupToLane(String laneId, String group)\n                       throws IllegalStateException, IllegalArgumentException\n```\n\nレーンIDで指定されたレーンに属するすべてのタスクに、指定された担当グループを割り当てる。\n\n**パラメータ:**\n- `laneId` - 担当グループを割り当てるタスクが属するレーンのレーンID\n- `group` - 担当グループ\n\n**例外:**\n- `IllegalStateException` - ワークフローがすでに完了している場合\n- `IllegalArgumentException` - マルチインスタンスでないタスクに複数グループを割り当てようとした場合。\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "assignGroupsToLane",
+      "level": 3,
+      "content": "```java\nvoid assignGroupsToLane(String laneId, List<String> groups)\n                        throws IllegalStateException, IllegalArgumentException\n```\n\nレーンIDで指定されたレーンに属するすべてのタスクに、指定された担当グループを割り当てる。\n\n**パラメータ:**\n- `laneId` - 担当ユーザを割り当てるタスクが属するレーンのレーンID\n- `groups` - 担当ユーザ\n\n**例外:**\n- `IllegalStateException` - ワークフローがすでに完了している場合\n- `IllegalArgumentException` - マルチインスタンスでないタスクに複数グループを割り当てようとした場合。\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "changeAssignedUser",
+      "level": 3,
+      "content": "```java\nvoid changeAssignedUser(String taskId, String oldUser, String newUser)\n                        throws IllegalArgumentException, IllegalStateException\n```\n\nタスクに現在アサインされている担当ユーザを、別の担当ユーザに振り替える。\n<p/>\n指定されたタスクがアクティブタスクの場合は、アクティブユーザタスクについても振り替えを行う。\n\n**パラメータ:**\n- `taskId` - 担当ユーザを振り替えるタスク\n- `oldUser` - 振替元の担当ユーザ\n- `newUser` - 振替先の担当ユーザ\n\n**例外:**\n- `IllegalArgumentException` - 指定されたタスクがワークフロー定義に存在しない場合\n- `IllegalStateException` - 指定されたタスクに、振替元の担当ユーザがアサインされていない場合\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "changeAssignedGroup",
+      "level": 3,
+      "content": "```java\nvoid changeAssignedGroup(String taskId, String oldGroup, String newGroup)\n                         throws IllegalArgumentException, IllegalStateException\n```\n\nタスクに現在アサインされている担当グループを、別の担当グループに振り替える。\n<p/>\n指定されたタスクがアクティブである場合は、アクティブグループタスクについても振り替えを行う。\n\n**パラメータ:**\n- `taskId` - 担当ユーザを振り替えるタスク\n- `oldGroup` - 振替元の担当グループ\n- `newGroup` - 振替先の担当グループ\n\n**例外:**\n- `IllegalArgumentException` - 指定されたタスクがワークフロー定義に存在しない場合\n- `IllegalStateException` - 指定されたタスクに、振替元の担当グループがアサインされていない場合\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getAssignedUsers",
+      "level": 3,
+      "content": "```java\nList<String> getAssignedUsers(String taskId)\n                              throws IllegalArgumentException\n```\n\nタスクに割り当てられた担当ユーザを取得する。\n<p/>\n担当ユーザは、実行順でソートされて返却される。\n\n**パラメータ:**\n- `taskId` - タスクID\n\n**戻り値:**\n担当ユーザ\n\n**例外:**\n- `IllegalArgumentException` - 指定されたタスクがワークフロー定義に存在しない場合\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "getAssignedGroups",
+      "level": 3,
+      "content": "```java\nList<String> getAssignedGroups(String taskId)\n                               throws IllegalArgumentException\n```\n\nタスクに割り当てられた担当グループを取得する。\n<p/>\n担当グループは、実行順でソートされて返却される。\n\n**パラメータ:**\n- `taskId` - タスクID\n\n**戻り値:**\n担当グループ\n\n**例外:**\n- `IllegalArgumentException` - 指定されたタスクがワークフロー定義に存在しない場合\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "hasActiveUserTask",
+      "level": 3,
+      "content": "```java\nboolean hasActiveUserTask(String user)\n```\n\n指定されたユーザのアクティブユーザタスクが存在するかどうかを確認する。\n\n**パラメータ:**\n- `user` - ユーザ\n\n**戻り値:**\nユーザのアクティブユーザタスクが存在する場合は {@code true}\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "hasActiveGroupTask",
+      "level": 3,
+      "content": "```java\nboolean hasActiveGroupTask(String group)\n```\n\n指定されたグループのアクティブグループタスクが存在するかどうかを確認する。\n\n**パラメータ:**\n- `group` - グループ\n\n**戻り値:**\nグループのアクティブグループタスクが存在する場合は {@code true}\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getInstanceId",
+      "level": 3,
+      "content": "```java\nString getInstanceId()\n```\n\n現在のワークフローインスタンスのインスタンスIDを取得する。\n\n**戻り値:**\nワークフローインスタンスのインスタンスID\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "getWorkflowId",
+      "level": 3,
+      "content": "```java\nString getWorkflowId()\n```\n\nワークフローIDを取得する。\n\n**戻り値:**\nワークフローID\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "getVersion",
+      "level": 3,
+      "content": "```java\nlong getVersion()\n```\n\nバージョン番号を取得する。\n\n**戻り値:**\nバージョン番号\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "isActive",
+      "level": 3,
+      "content": "```java\nboolean isActive(String flowNodeId)\n```\n\n指定されたフローノードIDがアクティブな状態かどうかを判定する。\n\n**パラメータ:**\n- `flowNodeId` - フローノードID\n\n**戻り値:**\nアクティブな場合はtrue\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "isCompleted",
+      "level": 3,
+      "content": "```java\nboolean isCompleted()\n```\n\nワークフローが完了状態かどうかを判定する。\n\n**戻り値:**\nワークフローが完了している場合は {@code true}\n\n---",
+      "id": "s28"
+    }
+  ],
+  "id": "javadoc-nablarch-integration-workflow-WorkflowInstance"
+}

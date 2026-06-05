@@ -11,7 +11,7 @@
 
 CORSを実現するには、実際のリクエストの前に送信されるプリフライトリクエストと実際のリクエストに対する処理が必要となる。
 プリフライトリクエストは本ハンドラで処理し、実際のリクエストに対する処理は [クライアントに返すレスポンスに共通処理を追加する](../../component/handlers/handlers-jaxrs-response-handler.md#クライアントに返すレスポンスに共通処理を追加する) で説明している
-ResponseFinisherを実装した CorsResponseFinisher で処理する。
+ResponseFinisherを実装した [CorsResponseFinisher](../../javadoc/javadoc-nablarch-fw-jaxrs-cors-CorsResponseFinisher.md) で処理する。
 
 本ハンドラでは、以下の処理を行う。
 
@@ -23,7 +23,7 @@ ResponseFinisherを実装した CorsResponseFinisher で処理する。
 
 ## ハンドラクラス名
 
-* nablarch.fw.jaxrs.CorsPreflightRequestHandler
+* [nablarch.fw.jaxrs.CorsPreflightRequestHandler](../../javadoc/javadoc-nablarch-fw-jaxrs-CorsPreflightRequestHandler.md)
 
 ## モジュール一覧
 
@@ -38,15 +38,15 @@ ResponseFinisherを実装した CorsResponseFinisher で処理する。
 
 [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jakarta-restful-web-servicesレスポンスハンドラ) より後ろに配置すること
 
-本ハンドラで生成した HttpResponse を [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jakarta-restful-web-servicesレスポンスハンドラ) が処理するため、
+本ハンドラで生成した [HttpResponse](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.md) を [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jakarta-restful-web-servicesレスポンスハンドラ) が処理するため、
 本ハンドラは [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jakarta-restful-web-servicesレスポンスハンドラ) より後ろに配置する必要がある。
 
 ## CORSを実現する
 
-CORSを実現するには本ハンドラと CorsResponseFinisher を設定する。
+CORSを実現するには本ハンドラと [CorsResponseFinisher](../../javadoc/javadoc-nablarch-fw-jaxrs-cors-CorsResponseFinisher.md) を設定する。
 
-CORSの処理は Cors インタフェースが行う。
-フレームワークはCORSの基本実装として BasicCors クラスを提供している。
+CORSの処理は [Cors](../../javadoc/javadoc-nablarch-fw-jaxrs-cors-Cors.md) インタフェースが行う。
+フレームワークはCORSの基本実装として [BasicCors](../../javadoc/javadoc-nablarch-fw-jaxrs-cors-BasicCors.md) クラスを提供している。
 本ハンドラとCorsResponseFinisherにBasicCorsを指定すればよい。
 
 設定を以下に示す。
@@ -92,7 +92,7 @@ CORSの処理は Cors インタフェースが行う。
 </component>
 ```
 
-BasicCors はデフォルトで以下の処理を行う。
+[BasicCors](../../javadoc/javadoc-nablarch-fw-jaxrs-cors-BasicCors.md) はデフォルトで以下の処理を行う。
 
 プリフライトリクエスト(CorsPreflightRequestHandlerが呼び出す処理)
 
@@ -116,4 +116,4 @@ BasicCors はデフォルトで以下の処理を行う。
   * Access-Control-Allow-Credentialsヘッダ：true
 
 デフォルトの処理のうち、レスポンスヘッダの内容を設定で変更できる。
-設定で変更できる内容は BasicCors のJavadocを参照。
+設定で変更できる内容は [BasicCors](../../javadoc/javadoc-nablarch-fw-jaxrs-cors-BasicCors.md) のJavadocを参照。

@@ -1,0 +1,104 @@
+{
+  "title": "class HandlerQueueManager",
+  "content": "**パッケージ:** nablarch.fw\n\n---\n\n```java\npublic abstract class HandlerQueueManager\n```\n\nハンドラキューとその上の各ハンドラを管理する機能を実装した抽象クラス。\n\n**param:** 具象クラスの型  \n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "methodBinder",
+      "level": 3,
+      "content": "```java\nprivate MethodBinder<?,?> methodBinder\n```\n\nメソッドレベルの処理委譲を行うコンポーネント\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "getHandlerQueue",
+      "level": 3,
+      "content": "```java\npublic abstract List<Handler> getHandlerQueue()\n```\n\n現在のハンドラキューの内容を返す。\n\n**戻り値:**\n現在のハンドラキューの内容\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "setHandlerQueue",
+      "level": 3,
+      "content": "```java\npublic TSelf setHandlerQueue(Collection<? extends Handler> handlers)\n```\n\nハンドラキューの内容を入れ替える。\n\n**パラメータ:**\n- `handlers` - ハンドラキュー\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "addHandlers",
+      "level": 3,
+      "content": "```java\npublic TSelf addHandlers(Collection<? extends Handler> handlers)\n```\n\nハンドラキューにハンドラを登録する。\n\n**パラメータ:**\n- `handlers` - 登録するハンドラ\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "clearHandlers",
+      "level": 3,
+      "content": "```java\npublic TSelf clearHandlers()\n```\n\nハンドラーキューの内容をクリアする。\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "addHandler",
+      "level": 3,
+      "content": "```java\npublic TSelf addHandler(Handler<?,?> handler)\n```\n\nハンドラキューにハンドラを登録する。\n\n**パラメータ:**\n- `handler` - 登録するハンドラ\n\n**戻り値:**\nこのインスタンス自体\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "addHandler",
+      "level": 3,
+      "content": "```java\npublic TSelf addHandler(int pos, Handler<?,?> handler)\n```\n\nハンドラキューにハンドラを登録する。\n\n**パラメータ:**\n- `pos` - ハンドラの挿入位置\n- `handler` - 登録するハンドラ\n\n**戻り値:**\nこのインスタンス自体\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "addHandler",
+      "level": 3,
+      "content": "```java\npublic TSelf addHandler(String requestPattern, Handler<TRequest,?> handler)\n```\n\nハンドラを登録する。\n\n**パラメータ:**\n- `<TRequest>` - 登録するハンドラのリクエストオブジェクトの型\n- `requestPattern` - このハンドラがキューに積まれるリクエストパス(Glob書式)\n- `handler` - 登録するハンドラ\n\n**戻り値:**\nこのインスタンス自体\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getHandlerOf",
+      "level": 3,
+      "content": "```java\npublic T getHandlerOf(Class<T> handlerClass)\n```\n\nハンドラキュー上の各ハンドラのうち、\n指定されたクラスのものを返す。\n<pre>\n指定されたクラスのインスタンスが複数登録されていた場合は、\nもっとも上位ハのンドラを返す。\n該当するハンドラが登録されていなかった場合はnullを返す。\n</pre>\n\n**パラメータ:**\n- `<T>` - ハンドラのクラス\n- `handlerClass` - ハンドラのクラス\n\n**戻り値:**\nハンドラのインスタンス\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "addHandler",
+      "level": 3,
+      "content": "```java\npublic TSelf addHandler(String uriPattern, Object handler)\n```\n\nリクエストハンドラを登録する。\n<pre>\n登録するオブジェクトは暗黙的に{@link nablarch.fw.web.HttpMethodBinding}でラップされる。\nすなわち、このメソッドの処理は以下のソースコードと等価である。\n    addHandler(uriPattern, new HttpMethodBinder(handler));\n</pre>\n\n**パラメータ:**\n- `uriPattern` - リクエストハンドラが実行されるリクエストURIのパターン\n    (null,空文字は不可)\n- `handler` - リクエストハンドラ (null不可)\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "addHandler",
+      "level": 3,
+      "content": "```java\npublic TSelf addHandler(Object handler)\n```\n\nリクエストハンドラを登録する。\n\n**パラメータ:**\n- `handler` - リクエストハンドラ\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "allowsMethodLevelDelegation",
+      "level": 3,
+      "content": "```java\nprivate boolean allowsMethodLevelDelegation()\n```\n\nメソッド単位の処理委譲を行うか否か。\n\n**戻り値:**\nメソッド単位の処理委譲を行う場合は true\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setMethodBinder",
+      "level": 3,
+      "content": "```java\npublic TSelf setMethodBinder(MethodBinder<?,?> binder)\n```\n\nメソッドレベルの処理委譲を行うコンポーネントを指定する。\n\n**パラメータ:**\n- `binder` - 処理委譲を行うコンポーネント\n\n**戻り値:**\nこのインスタンス自体\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getMethodBinder",
+      "level": 3,
+      "content": "```java\npublic MethodBinder<TData,TResult> getMethodBinder()\n```\n\nメソッドレベルの処理委譲を行うコンポーネントを返す。\n\n**パラメータ:**\n- `<TData>` - 入力データの型\n- `<TResult>` - 結果データの型\n\n**戻り値:**\n処理委譲を行うコンポーネント\n\n---",
+      "id": "s16"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-HandlerQueueManager"
+}

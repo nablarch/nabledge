@@ -32,7 +32,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.handler.BasicProcessStopHandler
+* [nablarch.fw.handler.BasicProcessStopHandler](../../javadoc/javadoc-nablarch-fw-handler-BasicProcessStopHandler.md)
 
 ## モジュール一覧
 
@@ -58,7 +58,7 @@
 ## プロセス停止制御を行うための設定
 
 プロセス停止制御を行うためには、プロセス停止可否のチェックで使用するテーブル定義情報などを本ハンドラに設定する必要がある。
-設定項目の詳細は、 BasicProcessStopHandler を参照。
+設定項目の詳細は、 [BasicProcessStopHandler](../../javadoc/javadoc-nablarch-fw-handler-BasicProcessStopHandler.md) を参照。
 
 以下に設定例を示す。
 

@@ -1,0 +1,98 @@
+{
+  "title": "class MessageReader",
+  "content": "**パッケージ:** nablarch.fw.messaging.reader\n\n**実装されたインタフェース:**\n- DataReader<ReceivedMessage>\n\n---\n\n```java\npublic class MessageReader\nimplements DataReader<ReceivedMessage>\n```\n\n指定されたメッセージキューを監視し、受信した電文オブジェクトを返すデータリーダ。\n<p/>\n受信電文読み込み時にエラーが発生した場合は、例外({@link MessageReadError})を送出する。\n\n**作成者:** Iwauo Tajima  \n**関連項目:** DataReader  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "receiveQueueName",
+      "level": 3,
+      "content": "```java\nprivate String receiveQueueName\n```\n\nこのリーダが監視するキューの論理名\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "closed",
+      "level": 3,
+      "content": "```java\nprivate boolean closed\n```\n\nこのリーダが閉じられたかどうか。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "timeout",
+      "level": 3,
+      "content": "```java\nprivate long timeout\n```\n\nキューが空の場合に待機する最大時間。(単位：ミリ秒)\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "formatFileDirName",
+      "level": 3,
+      "content": "```java\nprivate String formatFileDirName\n```\n\nフォーマット定義ファイルが配置されているディレクトリの論理名\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "formatFileName",
+      "level": 3,
+      "content": "```java\nprivate String formatFileName\n```\n\nフォーマット定義ファイルの名前\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "read",
+      "level": 3,
+      "content": "```java\npublic ReceivedMessage read(ExecutionContext ctx)\n```\n\n受信電文を読み込む。\n<p/>\nカレントスレッドに紐づけられた{@link MessagingContext}\nオブジェクトを使用して受信キューから電文を取得し返却する。<br/>\n受信キュー上に電文が1件も無い場合は、新規電文を受信するか、タイムアウト時間まで待機する。<br/>\n(このタイムアウトは各スレッドが開閉局やプロセス停止フラグ等の実行制御系の\nステータスを確認するために必要となる。)<br/>\n既にリーダが閉じられていた場合、またはタイムアウトした場合は{@code null}を返却する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n受信電文オブジェクト\n\n**例外:**\n- `IllegalStateException` - 受信キューの論理名が{@code null}の場合\n- `RuntimeException` - 実行時例外が発生した場合\n- `Error` - エラーが発生した場合\n- `MessageReadError` - 受信電文オブジェクトの設定中に\n                          実行時例外またはエラーが発生した場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "hasNext",
+      "level": 3,
+      "content": "```java\npublic boolean hasNext(ExecutionContext ctx)\n```\n\n次に読み込むデータが存在するかどうかを返却する。\n<p/>\nこの実装では、リーダが開いているかどうかで次のデータを読めるかどうか判定する。\n\n**戻り値:**\n次に読み込むデータが存在する場合は {@code true}\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic void close(ExecutionContext ctx)\n```\n\nこのリーダのクローズフラグを立て新規電文の受信を停止する。\n<p/>\n受信イベント待ちで待機中のスレッドについてはそのまま放置する。<br/>\nそれらのスレッドは、新規電文を受信するかタイムアウトした時点で待機が解除される。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getFormatter",
+      "level": 3,
+      "content": "```java\nprivate DataRecordFormatter getFormatter()\n```\n\nこのスレッドで使用中のフォーマッターを取得する。\n\n**戻り値:**\nフォーマッター\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setReceiveQueueName",
+      "level": 3,
+      "content": "```java\npublic MessageReader setReceiveQueueName(String queueName)\n```\n\nこのリーダが監視する受信キューの論理名を設定する。\n\n**パラメータ:**\n- `queueName` - 受信キューの論理名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setReadTimeout",
+      "level": 3,
+      "content": "```java\npublic MessageReader setReadTimeout(long timeout)\n```\n\n受信キューが空の場合に待機する最大時間を設定する。\n<p/>\n0以下の値を設定した場合はタイムアウトせずに\n新規電文を受信するまで待機し続ける。\n\n**パラメータ:**\n- `timeout` - 受信タイムアウト(単位：ミリ秒)\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setFormatFileName",
+      "level": 3,
+      "content": "```java\npublic MessageReader setFormatFileName(String fileName)\n```\n\n受信電文のフォーマット定義ファイル名を設定する。\n\n**パラメータ:**\n- `fileName` - フォーマット定義ファイル名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setFormatFileDirName",
+      "level": 3,
+      "content": "```java\npublic MessageReader setFormatFileDirName(String dirName)\n```\n\n受信電文のフォーマット定義ファイルが配置されているディレクトリの\n論理名を指定する。\n\n**パラメータ:**\n- `dirName` - フォーマット定義ファイル配置ディレクトリの論理名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-reader-MessageReader"
+}

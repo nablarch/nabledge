@@ -1,13 +1,13 @@
 {
   "id": "handlers-on-double-submission",
   "title": "OnDoubleSubmissionインターセプタ",
-  "content": "**目次**\n\n* インターセプタクラス名\n* モジュール一覧\n* OnDoubleSubmissionを使用する\n* OnDoubleSubmissionのデフォルト値を指定する\n* OnDoubleSubmissionの振る舞いを変更する\n\n[二重サブミット(同一リクエストの二重送信)のチェック](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ) を行うインターセプタ。\n\nこのインターセプタを使用するためには、\n[jspでのformタグによるトークン設定](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ)\nまたは\n[UseTokenインターセプタによるトークン設定](../../component/handlers/handlers-use-token.md#usetokenインターセプタ)\nが必要である。",
+  "content": "**目次**\n\n* インターセプタクラス名\n* モジュール一覧\n* OnDoubleSubmissionを使用する\n* OnDoubleSubmissionのデフォルト値を指定する\n* OnDoubleSubmissionの振る舞いを変更する\n\n[二重サブミット(同一リクエストの二重送信)のチェック](../../component/libraries/libraries-tag.json#二重サブミットを防ぐ) を行うインターセプタ。\n\nこのインターセプタを使用するためには、\n[jspでのformタグによるトークン設定](../../component/libraries/libraries-tag.json#二重サブミットを防ぐ)\nまたは\n[UseTokenインターセプタによるトークン設定](../../component/handlers/handlers-use-token.json#usetokenインターセプタ)\nが必要である。",
   "no_knowledge_content": false,
   "sections": [
     {
       "id": "s1",
       "title": "インターセプタクラス名",
-      "content": "* nablarch.common.web.token.OnDoubleSubmission",
+      "content": "* [nablarch.common.web.token.OnDoubleSubmission](../../javadoc/javadoc-nablarch-common-web-token-OnDoubleSubmission.json)",
       "level": 2
     },
     {
@@ -19,19 +19,19 @@
     {
       "id": "s3",
       "title": "OnDoubleSubmissionを使用する",
-      "content": "OnDoubleSubmission アノテーションを、\nアクションのメソッドに対して設定する。\n\n```java\n// 二重サブミットと判定した場合の遷移先をpath属性に指定する。\n@OnDoubleSubmission(path = \"/WEB-INF/view/error/userError.jsp\")\npublic HttpResponse register(HttpRequest req, ExecutionContext ctx) {\n    // 省略。\n}\n```",
+      "content": "[OnDoubleSubmission](../../javadoc/javadoc-nablarch-common-web-token-OnDoubleSubmission.json) アノテーションを、\nアクションのメソッドに対して設定する。\n\n```java\n// 二重サブミットと判定した場合の遷移先をpath属性に指定する。\n@OnDoubleSubmission(path = \"/WEB-INF/view/error/userError.jsp\")\npublic HttpResponse register(HttpRequest req, ExecutionContext ctx) {\n    // 省略。\n}\n```",
       "level": 2
     },
     {
       "id": "s4",
       "title": "OnDoubleSubmissionのデフォルト値を指定する",
-      "content": "アプリケーション全体で使用する\nOnDoubleSubmission アノテーションのデフォルト値を設定する場合は、\nBasicDoubleSubmissionHandler\nをコンポーネント定義に `doubleSubmissionHandler` という名前で追加する。\n\nBasicDoubleSubmissionHandler\nでは、アノテーションの属性が指定されなかった場合に、自身のプロパティに設定されたリソースパス、メッセージID、ステータスコードを使用する。\n\n設定例\n\n```xml\n<component name=\"doubleSubmissionHandler\"\n           class=\"nablarch.common.web.token.BasicDoubleSubmissionHandler\">\n  <!-- 二重サブミットと判定した場合の遷移先のリソースパス -->\n  <property name=\"path\" value=\"/WEB-INF/view/error/userError.jsp\" />\n  <!-- 二重サブミットと判定した場合の遷移先画面に表示するエラーメッセージに使用するメッセージID -->\n  <property name=\"messageId\" value=\"DOUBLE_SUBMISSION_ERROR\" />\n  <!-- 二重サブミットと判定した場合のレスポンスステータス。デフォルトは400 -->\n  <property name=\"statusCode\" value=\"200\" />\n</component>\n```\n\n> **Important:**\n> OnDoubleSubmission\n> と BasicDoubleSubmissionHandler の\n> どちらもpathの指定がない場合は、二重サブミットと判定した場合に遷移先が不明なため、システムエラーとなる。\n\n> このため、 [トークンを使用した二重サブミットの防止](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ)\n> を使用するアプリケーションでは、必ずどちらかのpathを指定すること。",
+      "content": "アプリケーション全体で使用する\n[OnDoubleSubmission](../../javadoc/javadoc-nablarch-common-web-token-OnDoubleSubmission.json) アノテーションのデフォルト値を設定する場合は、\n[BasicDoubleSubmissionHandler](../../javadoc/javadoc-nablarch-common-web-token-BasicDoubleSubmissionHandler.json)\nをコンポーネント定義に `doubleSubmissionHandler` という名前で追加する。\n\n[BasicDoubleSubmissionHandler](../../javadoc/javadoc-nablarch-common-web-token-BasicDoubleSubmissionHandler.json)\nでは、アノテーションの属性が指定されなかった場合に、自身のプロパティに設定されたリソースパス、メッセージID、ステータスコードを使用する。\n\n設定例\n\n```xml\n<component name=\"doubleSubmissionHandler\"\n           class=\"nablarch.common.web.token.BasicDoubleSubmissionHandler\">\n  <!-- 二重サブミットと判定した場合の遷移先のリソースパス -->\n  <property name=\"path\" value=\"/WEB-INF/view/error/userError.jsp\" />\n  <!-- 二重サブミットと判定した場合の遷移先画面に表示するエラーメッセージに使用するメッセージID -->\n  <property name=\"messageId\" value=\"DOUBLE_SUBMISSION_ERROR\" />\n  <!-- 二重サブミットと判定した場合のレスポンスステータス。デフォルトは400 -->\n  <property name=\"statusCode\" value=\"200\" />\n</component>\n```\n\n> **Important:**\n> [OnDoubleSubmission](../../javadoc/javadoc-nablarch-common-web-token-OnDoubleSubmission.json)\n> と [BasicDoubleSubmissionHandler](../../javadoc/javadoc-nablarch-common-web-token-BasicDoubleSubmissionHandler.json) の\n> どちらもpathの指定がない場合は、二重サブミットと判定した場合に遷移先が不明なため、システムエラーとなる。\n\n> このため、 [トークンを使用した二重サブミットの防止](../../component/libraries/libraries-tag.json#二重サブミットを防ぐ)\n> を使用するアプリケーションでは、必ずどちらかのpathを指定すること。",
       "level": 2
     },
     {
       "id": "s5",
       "title": "OnDoubleSubmissionの振る舞いを変更する",
-      "content": "OnDoubleSubmission アノテーションの振る舞いは、\nDoubleSubmissionHandler\nインタフェースを実装することで変更できる。実装したクラスをコンポーネント定義に `doubleSubmissionHandler` という名前で追加する。",
+      "content": "[OnDoubleSubmission](../../javadoc/javadoc-nablarch-common-web-token-OnDoubleSubmission.json) アノテーションの振る舞いは、\n[DoubleSubmissionHandler](../../javadoc/javadoc-nablarch-common-web-token-DoubleSubmissionHandler.json)\nインタフェースを実装することで変更できる。実装したクラスをコンポーネント定義に `doubleSubmissionHandler` という名前で追加する。",
       "level": 2
     }
   ]

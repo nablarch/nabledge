@@ -910,7 +910,7 @@ path: component/libraries/libraries-http-access-log.json
 ### HTTPメッセージング
 path: component/libraries/libraries-http-system-messaging.json
 - s1: 機能概要
-  - s2: [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#momメッセージング) と同じ作り方ができる
+  - s2: [MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.json#momメッセージング) と同じ作り方ができる
 - s4: 使用方法
   - s5: HTTPメッセージングを使うための設定
   - s6: メッセージを受信する(HTTPメッセージ受信)
@@ -1273,7 +1273,7 @@ path: component/libraries/libraries-tag.json
   - s48: 入力/出力データへのアクセスルール
   - s49: URIの指定方法
   - s50: HTMLエスケープと改行、半角スペース変換
-- s51: [タグリファレンス](../../component/libraries/libraries-tag-reference.md#タグリファレンス)
+- s51: [タグリファレンス](../../component/libraries/libraries-tag-reference.json#タグリファレンス)
 
 ### トランザクション管理
 path: component/libraries/libraries-transaction.json

@@ -1,0 +1,50 @@
+{
+  "title": "class CsrfTokenUtil",
+  "content": "**パッケージ:** nablarch.common.web.csrf\n\n---\n\n```java\npublic final class CsrfTokenUtil\n```\n\nCSRFトークンに関するユーティリティ。\n\n**作成者:** Uragami Taichi  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "CsrfTokenUtil",
+      "level": 3,
+      "content": "```java\nprivate CsrfTokenUtil()\n```\n\n本クラスはインスタンスを生成しない。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "getCsrfToken",
+      "level": 3,
+      "content": "```java\npublic static String getCsrfToken(ExecutionContext context)\n```\n\nCSRFトークンをセッションストアから取得する。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n**戻り値:**\nCSRFトークン。セッションストアに存在しない場合は{@code null}\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "getHeaderName",
+      "level": 3,
+      "content": "```java\npublic static String getHeaderName()\n```\n\nCSRFトークンをHTTPリクエストヘッダーへ設定する際に使用する名前を取得する。\n\n**戻り値:**\nCSRFトークンをHTTPリクエストヘッダーへ設定する際に使用する名前\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "getParameterName",
+      "level": 3,
+      "content": "```java\npublic static String getParameterName()\n```\n\nCSRFトークンをHTTPリクエストパラメーターへ設定する際に使用する名前を取得する。\n\n**戻り値:**\nCSRFトークンをHTTPリクエストパラメーターへ設定する際に使用する名前\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "regenerateCsrfToken",
+      "level": 3,
+      "content": "```java\npublic static void regenerateCsrfToken(ExecutionContext context)\n```\n\nCSRFトークンを再生成する。\n\n<p>\nこのメソッドはセキュリティのために用意されている。\n悪意のある人がCSRFトークンとそれを保持しているセッションのセッションIDをなんらかの方法で利用者に送り込み、\n利用者がこれに気づかずにログインをしたとする。\nこのときCSRFトークンが再生成されていないと、悪意のあるウェブサイトにCSRFトークンを仕込んだ罠ページを用意し、\n利用者にリンクのクリックなどの操作をさせることで利用者の意図しない攻撃リクエストを送信させることができてしまう。\nこれを防ぐためにはログイン時にCSRFトークンを再生成しなくてはならない。\n</p>\n\n<p>\nログイン時にセッションを破棄して再生成する実装であればこのメソッドを利用する必要はない。\nセッションの破棄と共にCSRFトークンも破棄され、その後のページ表示時に新しいCSRFトークンが生成されるためである。\nログイン時にセッションそのものの破棄ではなくセッションIDの再生成を行うにとどめる実装の場合は、\nこのメソッドを利用してCSRFトークンも再生成することを推奨する。\n</p>\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s7"
+    }
+  ],
+  "id": "javadoc-nablarch-common-web-csrf-CsrfTokenUtil"
+}

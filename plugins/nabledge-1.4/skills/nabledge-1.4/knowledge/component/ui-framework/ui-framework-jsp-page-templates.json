@@ -7,7 +7,7 @@
     {
       "id": "s1",
       "title": "概要",
-      "content": "[業務画面テンプレート](../../component/ui-framework/ui-framework-jsp-page-templates.md) は、業務画面の内容のうち、業務機能領域を除く部分を\n**UI標準** に準拠した形で実装する共通機能である。\n\n本機能を使用することで、以下のコード例のように、最小限の\nコード記述により画面を作成することが可能となる。\n\n```jsp\n<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<%@taglib prefix=\"n\" uri=\"http://tis.co.jp/nablarch\" %>\n<%@taglib prefix=\"t\" tagdir=\"/WEB-INF/tags/template\" %>\n<%@page language=\"java\"\n        contentType=\"text/html; charset=UTF-8\"\n        pageEncoding=\"UTF-8\" %>\n\n<t:page_template title=\"新規会員登録\">\n\n  <jsp:attribute name=\"contentHtml\">\n    <n:form>\n    (略)\n    </n:form>\n  </jsp:attribute>\n\n</t:page_template>\n```",
+      "content": "[業務画面テンプレート](../../component/ui-framework/ui-framework-jsp-page-templates.json) は、業務画面の内容のうち、業務機能領域を除く部分を\n**UI標準** に準拠した形で実装する共通機能である。\n\n本機能を使用することで、以下のコード例のように、最小限の\nコード記述により画面を作成することが可能となる。\n\n```jsp\n<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<%@taglib prefix=\"n\" uri=\"http://tis.co.jp/nablarch\" %>\n<%@taglib prefix=\"t\" tagdir=\"/WEB-INF/tags/template\" %>\n<%@page language=\"java\"\n        contentType=\"text/html; charset=UTF-8\"\n        pageEncoding=\"UTF-8\" %>\n\n<t:page_template title=\"新規会員登録\">\n\n  <jsp:attribute name=\"contentHtml\">\n    <n:form>\n    (略)\n    </n:form>\n  </jsp:attribute>\n\n</t:page_template>\n```",
       "level": 2
     },
     {
@@ -19,7 +19,7 @@
     {
       "id": "s3",
       "title": "概要",
-      "content": "[業務画面テンプレート](../../component/ui-framework/ui-framework-jsp-page-templates.md) はJSPタグファイルとそれに付随するインクルードJSPファイルの形式で提供される。\n業務画面JSPから参照するのはタグファイルの方で、インクルードJSPはタグファイルから読み込まれる。\nJSPタグファイルには基本的にページの構造のみを定義し、各共通領域の内容については\nそれぞれ個別のインクルードJSPを用意してそこに記述する。\n\nJSPタグファイルは **(サーブレットコンテキストルート)/WEB-INF/tags/template/** 配下となり、\nインクルードJSPファイルは **(サーブレットコンテキストルート)/include** 配下に配置する。\n\nインクルードJSPのうち、 **HTMLヘッド部定義JSP** と、 **外部スクリプト定義JSP** については、\n外部参照するCSS/JavaScriptの読み込みを制御しており、開発/本番切り替え時に書き換えの対象となるため、\n留意が必要である。\n\n以下の表は、 [業務画面テンプレート](../../component/ui-framework/ui-framework-jsp-page-templates.md) に含まれるファイルの一覧である。",
+      "content": "[業務画面テンプレート](../../component/ui-framework/ui-framework-jsp-page-templates.json) はJSPタグファイルとそれに付随するインクルードJSPファイルの形式で提供される。\n業務画面JSPから参照するのはタグファイルの方で、インクルードJSPはタグファイルから読み込まれる。\nJSPタグファイルには基本的にページの構造のみを定義し、各共通領域の内容については\nそれぞれ個別のインクルードJSPを用意してそこに記述する。\n\nJSPタグファイルは **(サーブレットコンテキストルート)/WEB-INF/tags/template/** 配下となり、\nインクルードJSPファイルは **(サーブレットコンテキストルート)/include** 配下に配置する。\n\nインクルードJSPのうち、 **HTMLヘッド部定義JSP** と、 **外部スクリプト定義JSP** については、\n外部参照するCSS/JavaScriptの読み込みを制御しており、開発/本番切り替え時に書き換えの対象となるため、\n留意が必要である。\n\n以下の表は、 [業務画面テンプレート](../../component/ui-framework/ui-framework-jsp-page-templates.json) に含まれるファイルの一覧である。",
       "level": 3
     },
     {
@@ -55,7 +55,7 @@
     {
       "id": "s9",
       "title": "ローカル動作時の挙動",
-      "content": "ローカル動作時でのJSPページテンプレートタグの評価は、 **js/jsp/taglib/template.js** によって行われる。\nこのスクリプトは、サーバ動作時と同じタグファイルを読み込んでレンダリングを行う。\nJSPページテンプレートタグがインクルードしているJSP類も、同様にサーバ動作時と同じものを読み込んでレンダリングする。\n\nただし、Firefoxブラウザを除き、ローカル環境でのタグファイルの動的読み込み(XHR)が許容されていないため、\nタグファイルおよびインクルードJSPファイルは **js/devtool.js** 内にミニファイした状態で提供する。\nこのため、タグファイルの修正内容をローカル動作で確認するには、ミニファイ操作が必要である。\n詳細は [JavaScriptの自動生成](../../component/ui-framework/ui-framework-plugin-build.md#javascriptの自動生成) を参照すること。",
+      "content": "ローカル動作時でのJSPページテンプレートタグの評価は、 **js/jsp/taglib/template.js** によって行われる。\nこのスクリプトは、サーバ動作時と同じタグファイルを読み込んでレンダリングを行う。\nJSPページテンプレートタグがインクルードしているJSP類も、同様にサーバ動作時と同じものを読み込んでレンダリングする。\n\nただし、Firefoxブラウザを除き、ローカル環境でのタグファイルの動的読み込み(XHR)が許容されていないため、\nタグファイルおよびインクルードJSPファイルは **js/devtool.js** 内にミニファイした状態で提供する。\nこのため、タグファイルの修正内容をローカル動作で確認するには、ミニファイ操作が必要である。\n詳細は [JavaScriptの自動生成](../../component/ui-framework/ui-framework-plugin-build.json#javascriptの自動生成) を参照すること。",
       "level": 2
     }
   ]

@@ -1,0 +1,170 @@
+{
+  "title": "class UniversalDao",
+  "content": "**パッケージ:** nablarch.common.dao\n\n---\n\n```java\npublic final class UniversalDao\n```\n\n汎用的なDAO機能を提供するクラス。\n<p/>\n以下の機能を提供する。\n<p/>\n<ul>\n<li>主キーを条件にしたSELECT・UPDATE・DELETE文と、INSERT文をEntityクラスから自動生成して実行する。</li>\n<li>SQLを実行する</li>\n<li>検索結果をBeanにマッピングする</li>\n<li>ページングのための検索を行う</li>\n<li>検索時に遅延ロードを行う</li>\n</ul>\n<p/>\nEntityはJakarta Persistence 3.1のアノテーションに準拠する。\n<p/>\nサポートしているものは、以下である。\n<p/>\n<ul>\n<li>{@link jakarta.persistence.Entity}</li>\n<li>{@link jakarta.persistence.Table}</li>\n<li>{@link jakarta.persistence.Column}</li>\n<li>{@link jakarta.persistence.Id}</li>\n<li>{@link jakarta.persistence.Version}</li>\n<li>{@link jakarta.persistence.Temporal}</li>\n<li>{@link jakarta.persistence.GeneratedValue}</li>\n<li>{@link jakarta.persistence.SequenceGenerator}</li>\n<li>{@link jakarta.persistence.TableGenerator}</li>\n</ul>\n<p/>\n\n**作成者:** kawasima  \n**作成者:** Hisaaki Shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "DAO_CONTEXT_FACTORY",
+      "level": 3,
+      "content": "```java\nprivate static final String DAO_CONTEXT_FACTORY\n```\n\n{@link DaoContextFactory}を{@link SystemRepository}からルックアップする際の名前\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "EMPTY_PARAM",
+      "level": 3,
+      "content": "```java\nprivate static final Object[] EMPTY_PARAM\n```\n\n空のパラメータを表す定数値\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "UniversalDao",
+      "level": 3,
+      "content": "```java\nprivate UniversalDao()\n```\n\n隠蔽コンストラクタ。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "daoContext",
+      "level": 3,
+      "content": "```java\nprivate static DaoContext daoContext()\n```\n\n{@link DaoContext}を取得する。\n<p>\n{@link #DAO_CONTEXT_FACTORY}で{@link SystemRepository}上に{@link DaoContextFactory}実装が登録されている場合はそのクラスを、\n登録されていない場合には{@link BasicDaoContextFactory}を用いて{@link DaoContext}を生成する。\n\n**戻り値:**\nDaoContext\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "findById",
+      "level": 3,
+      "content": "```java\npublic static T findById(Class<T> entityClass, Object id)\n```\n\n主キーを指定して、1件だけエンティティを取得する。\n\n**パラメータ:**\n- `<T>` - エンティティクラス(戻り値の型)\n- `entityClass` - エンティティクラスオブジェクト\n- `id` - 条件項目(複数のキーを使う場合は、対象テーブルでのキーの定義順に引き渡す)\n\n**戻り値:**\n取得したエンティティ\n\n**例外:**\n- `NoDataException` - 検索条件に該当するレコードが存在しない場合\n- `IllegalArgumentException` - 主キーのカラム数と指定した条件数が一致しない場合\n- `IllegalStateException` - 対象テーブルから主キーの定義順を取得できなかった場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "findByIdOrNull",
+      "level": 3,
+      "content": "```java\npublic static T findByIdOrNull(Class<T> entityClass, Object id)\n```\n\n主キーを指定して、1件だけエンティティを取得する。0件の場合はnullを返す。\n\n**パラメータ:**\n- `<T>` - エンティティクラス(戻り値の型)\n- `entityClass` - エンティティクラスオブジェクト\n- `id` - 条件項目(複数のキーを使う場合は、対象テーブルでのキーの定義順に引き渡す)\n\n**戻り値:**\n取得したエンティティ。0件の場合はnull。\n\n**例外:**\n- `IllegalArgumentException` - 主キーのカラム数と指定した条件数が一致しない場合\n- `IllegalStateException` - 対象テーブルから主キーの定義順を取得できなかった場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "findAll",
+      "level": 3,
+      "content": "```java\npublic static EntityList<T> findAll(Class<T> entityClass)\n```\n\nすべてのエンティティを取得する。\n\n**パラメータ:**\n- `<T>` - エンティティクラス(戻り値の型)\n- `entityClass` - エンティティクラスオブジェクト\n\n**戻り値:**\n取得したエンティティのリスト(該当0件の場合は空リスト)\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "findAllBySqlFile",
+      "level": 3,
+      "content": "```java\npublic static EntityList<T> findAllBySqlFile(Class<T> entityClass, String sqlId, Object params)\n```\n\nSQL_IDをもとにバインド変数を展開した上で検索し、結果Beanのリストに格納して取得する。\n<pre>\n{@code\n// 検索条件を引き渡すためのBeanを設定する\n// SQL「FIND_BY_AUTHOR」にBookエンティティのAUTHORカラムがバインド変数として記述されている場合を想定する\nBook condition = new Book();\ncondition.setAuthor(\"Martin Fowler\");\n\nEntityList<Book> books = UniversalDao.findAllBySqlFile(Book.class, \"FIND_BY_AUTHOR\", condition);\n}</pre>\n<p/>\n結合した表のカラムを含めて射影する場合は、単一の表とマッピングされたEntityでは結果を格納できない。\nそのような場合は、射影したカラムと対応するプロパティを定義したBeanを引き渡す。\n\n**パラメータ:**\n- `<T>` - 検索結果をマッピングするBeanクラス\n- `entityClass` - 検索結果をマッピングするBeanクラスオブジェクト\n- `sqlId` - SQL_ID\n- `params` - バインド変数(SQLファイル内のバインド変数に対応するBeanを作成し引き渡すこともできる)\n\n**戻り値:**\n取得したBeanのリスト(該当0件の場合は空リスト)\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "findAllBySqlFile",
+      "level": 3,
+      "content": "```java\npublic static EntityList<T> findAllBySqlFile(Class<T> entityClass, String sqlId)\n```\n\nSQL_IDをもとに検索し、結果Beanのリストに格納して取得する。\n<p/>\n検索の詳細は{@link #findAllBySqlFile(Class, String, Object)}を参照すること。\n\n**パラメータ:**\n- `<T>` - 検索結果をマッピングするBeanクラス\n- `entityClass` - 検索結果をマッピングするBeanクラスオブジェクト\n- `sqlId` - SQL_ID\n\n**戻り値:**\n取得したBeanのリスト(該当0件の場合は空リスト)\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "findBySqlFile",
+      "level": 3,
+      "content": "```java\npublic static T findBySqlFile(Class<T> entityClass, String sqlId, Object params)\n```\n\nSQL_IDをもとにバインド変数を展開して検索し、結果を格納したBeanを一件取得する。\n<pre>\n{@code\n// 検索条件を引き渡すためのBeanを設定する\n// FIND_BY_IDにBookエンティティのIDカラムがバインド変数として記述されている場合を想定\nBook condition = new Book();\ncondition.setId(1L);\n\nBook book = UniversalDao.findBySqlFile(Book.class, \"FIND_BY_ID\", condition);\n}</pre>\n<p/>\n検索条件に該当するレコードが複数存在する場合、例外の送出は行わず、検索結果の先頭行を取得して返却する。\n確実に一行のレコードを取得する検索条件を設定すること。\n<p/>\n\n**パラメータ:**\n- `<T>` - 検索結果をマッピングするBeanクラス\n- `entityClass` - 検索結果をマッピングするBeanクラスオブジェクト\n- `sqlId` - SQL_ID\n- `params` - バインド変数\n\n**戻り値:**\n1件のBean\n\n**例外:**\n- `NoDataException` - (検索条件に該当するレコードが存在しない場合)\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "findBySqlFileOrNull",
+      "level": 3,
+      "content": "```java\npublic static T findBySqlFileOrNull(Class<T> entityClass, String sqlId, Object params)\n```\n\nSQL_IDをもとにバインド変数を展開して検索し、結果を格納したBeanを一件取得する。0件の場合はnullを返す。\n<p/>\n検索結果が0件の場合に{@link NoDataException}ではなくnull返す以外については、{@link #findBySqlFile(Class, String, Object)}\nと同じである。\n\n**パラメータ:**\n- `<T>` - 検索結果をマッピングするBeanクラス\n- `entityClass` - 検索結果をマッピングするBeanクラスオブジェクト\n- `sqlId` - SQL_ID\n- `params` - バインド変数\n\n**戻り値:**\n1件のBean。0件の場合はnull。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "countBySqlFile",
+      "level": 3,
+      "content": "```java\npublic static long countBySqlFile(Class<T> entityClass, String sqlId)\n```\n\nSQL_IDをもとに検索し、件数を取得する。\n<p/>\n検索の詳細は{@link #countBySqlFile(Class, String, Object)}を参照すること。\n\n**パラメータ:**\n- `entityClass` - エンティティクラス\n- `sqlId` - SQL_ID\n- `<T>` - エンティティクラス\n\n**戻り値:**\n件数\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "countBySqlFile",
+      "level": 3,
+      "content": "```java\npublic static long countBySqlFile(Class<T> entityClass, String sqlId, Object params)\n```\n\nSQL_IDをもとにバインド変数を展開して検索し、件数を取得する。\n<p/>\n検索用のSQLを件数取得用のSQLへと変換して実行されるため、個別に件数取得用のSQLを作成する必要はない。\n\n**パラメータ:**\n- `entityClass` - エンティティクラス\n- `sqlId` - SQL_ID\n- `params` - バインド変数\n- `<T>` - エンティティクラス\n\n**戻り値:**\n件数\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "exists",
+      "level": 3,
+      "content": "```java\npublic static boolean exists(Class<T> entityClass, String sqlId)\n```\n\nSQL_IDをもとに検索し、データが存在するか否かを確認する。\n<p/>\n検索の詳細は{@link #exists(Class, String, Object)}を参照すること。\n<p/>\n\n**パラメータ:**\n- `entityClass` - エンティティクラス\n- `sqlId` - SQL_ID\n- `<T>` - エンティティ型\n\n**戻り値:**\n存在すればtrue\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "exists",
+      "level": 3,
+      "content": "```java\npublic static boolean exists(Class<T> entityClass, String sqlId, Object params)\n```\n\nSQL_IDをもとにバインド変数を展開して検索し、データが存在するか否かを確認する。\n<p/>\n検索用のSQLを変換して使用する。\n<p/>\n\n**パラメータ:**\n- `entityClass` - エンティティクラス\n- `sqlId` - SQL_ID\n- `params` - バインド変数\n- `<T>` - エンティティ型\n\n**戻り値:**\n存在すればtrue\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "update",
+      "level": 3,
+      "content": "```java\npublic static int update(T entity)\n```\n\n与えられたエンティティオブジェクトからアップデート文を生成し実行する。\n<p/>\nエンティティオブジェクトにてnullであるプロパティに対応するカラムは、そのままnullで更新される。\n<p/>\n更新対象のエンティティに{@link jakarta.persistence.Version}が付与されたプロパティが存在する場合には、\n対象レコードは排他制御の対象となり、更新処理実行時に自動で排他制御が実行される。\n<p/>\n排他制御の対象であるエンティティを更新する際は、以下の場合に{@link jakarta.persistence.OptimisticLockException}を送出する。\n<ul>\n<li>バージョン番号の不一致で、更新対象が存在しない場合</li>\n<li>更新条件に合致する更新対象が存在しない場合</li>\n</ul>\n<p/>\n\n**パラメータ:**\n- `<T>` - エンティティクラス\n- `entity` - エンティティオブジェクト\n\n**戻り値:**\n更新件数\n\n**例外:**\n- `jakarta.persistence.OptimisticLockException` - 更新対象が存在しない場合\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "batchUpdate",
+      "level": 3,
+      "content": "```java\npublic static void batchUpdate(List<T> entities)\n```\n\n与えられたエンティティ情報からアップデート文を生成し一括実行する。\n<p/>\nバージョン番号を用いた排他制御処理は行わない。\n排他制御を必要とする場合には、{@link #update(Object)}を使用すること。\nもし、更新時にバージョン番号が不一致のエンティティオブジェクトが存在した場合、\nそのレコードは更新されずに処理が正常に終了する。\n\n**パラメータ:**\n- `entities` - エンティティオブジェクトリスト\n- `<T>` - エンティティクラス\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "insert",
+      "level": 3,
+      "content": "```java\npublic static void insert(T entity)\n```\n\n与えられたエンティティオブジェクトからインサート文を生成し実行する。\n<p/>\nエンティティオブジェクトにてnullであるプロパティに対応するカラムは、そのままnullで登録される。\n<p/>\n{@link jakarta.persistence.GeneratedValue}が付与されているプロパティは採番された値が登録される。\n<p/>\n{@link jakarta.persistence.Version}が付与されたversionカラムに対して明示的に値を設定していたとしても、\n「0」で上書きされてinsertされる。\n\n**パラメータ:**\n- `<T>` - エンティティクラス\n- `entity` - エンティティオブジェクト\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "batchInsert",
+      "level": 3,
+      "content": "```java\npublic static void batchInsert(List<T> entities)\n```\n\n与えられたエンティティリストオブジェクトからインサート文を生成し一括実行する。\n<p/>\nエンティティオブジェクトにてnullであるプロパティに対応するカラムは、そのままnullで登録される。\n<p/>\n{@link jakarta.persistence.GeneratedValue}が付与されているプロパティは採番された値が登録される。\n<p/>\n{@link jakarta.persistence.Version}が付与されたversionカラムに対して明示的に値を設定していたとしても、\n「0」で上書きされてinsertされる。\n\n**パラメータ:**\n- `<T>` - エンティティクラス\n- `entities` - エンティティリスト\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "delete",
+      "level": 3,
+      "content": "```java\npublic static int delete(T entity)\n```\n\n与えられたエンティティオブジェクトからデリート文を生成し実行する。\n<p/>\nエンティティの主キーが削除条件となるため、主キー値以外のフィールドの値の有無は動作に影響しない。\n<p/>\n\n**パラメータ:**\n- `<T>` - エンティティクラス\n- `entity` - エンティティオブジェクト\n\n**戻り値:**\n削除件数\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "batchDelete",
+      "level": 3,
+      "content": "```java\npublic static void batchDelete(List<T> entities)\n```\n\n与えられたエンティティオブジェクトからデリート文を生成し一括実行する。\n<p/>\nエンティティの主キーが削除条件となるため、主キー値以外のフィールドの値の有無は動作に影響しない。\n<p/>\n\n**パラメータ:**\n- `entities` - エンティティリスト\n- `<T>` - エンティティクラス\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "page",
+      "level": 3,
+      "content": "```java\npublic static DaoContext page(long page)\n```\n\nページ数を指定する。\n<pre>\n{@code\n // pageメソッドに「1」が与えられている場合に返却される件数は以下のようになる。\n // perメソッドに「10」を与える→1～10件目を返す\n // perメソッドに「20」を与える→1～20件目を返す\nEntityList<Book> books = UniversalDao.page(1)\n                  .per(20)\n                  .findAllBySqlFile(Book.class, \"FIND_ALL\");\n\n // pageメソッドに「2」が与えられている場合に返却される件数は以下のようになる。\n // perメソッドに「10」を与える→11～20件目を返す\n // perメソッドに「20」を与える→21～40件目を返す\nEntityList<Book> books = UniversalDao.page(2)\n                  .per(20)\n                  .findAllBySqlFile(Book.class, \"FIND_ALL\");\n}</pre>\n<p/>\n表示対象のページ数におけるレコード件数が、perメソッドで与えたページ区切りに満たない場合は、取得可能な件数分を返却する。\n<ul>\n<li>perメソッドに10を与えていて、総件数が5件である場合、pageメソッドに1を与えた場合は1～5件目を返却する。</li>\n<li>perメソッドに10を与えていて、総件数が15件である場合、pageメソッドに2を与えた場合は11～15件目を返却する。</li>\n</ul>\n<p/>\nページ変更の度に検索処理を行うことになるため、ソートを使用して検索結果の出力順を固定すること。\n\n**パラメータ:**\n- `page` - ページ数\n\n**戻り値:**\nDaoContext\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "per",
+      "level": 3,
+      "content": "```java\npublic static DaoContext per(long per)\n```\n\n1ページにつき何件取得するかを指定する。\n<pre>\n{@code\n // perメソッドに「10」が与えられている場合は、返却される件数は以下のようになる。\n // pageメソッドに「1」を与える→1～10件目を返す\n // pageメソッドに「2」を与える→11～20件目を返す\nEntityList<Book> books = UniversalDao.page(1)\n                  .per(10)\n                  .findAllBySqlFile(Book.class, \"FIND_ALL\");\n\n // perメソッドに「20」が与えられている場合は、返却される件数は以下のようになる。\n // pageメソッドに「1」を与える→1～20件目を返す\n // pageメソッドに「2」を与える→21～40件目を返す\nEntityList<Book> books = UniversalDao.page(1)\n                  .per(20)\n                  .findAllBySqlFile(Book.class, \"FIND_ALL\");\n}</pre>\n<p/>\n表示対象のページ数におけるレコード件数が、perメソッドで与えたページ区切りに満たない場合は、取得可能な件数分を返却する。\nperメソッドに10を与えていて、総件数が5件である場合、pageメソッドに1を与えた場合は1～5件目を返却する。\nperメソッドに10を与えていて、総件数が15件である場合、pageメソッドに2を与えた場合は11～15件目を返却する。\n<p/>\n\n**パラメータ:**\n- `per` - 取得する件数\n\n**戻り値:**\nDaoContext\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "defer",
+      "level": 3,
+      "content": "```java\npublic static DaoContext defer()\n```\n\n検索結果の取得を遅延させる。\n<p/>\n大量データを検索する場合でもヒープを圧迫することなく安全に検索結果を扱うことができる。\n<pre>\n{@code\n// サーバサイドカーソルを利用するためclose処理を行う必要がある\ntry (DeferredEntityList<Project> searchList =  (DeferredEntityList<Project>) UniversalDao\n        .defer()\n        .findAllBySqlFile(Project.class, \"SEARCH_PROJECT\",searchCondition)) {\n    for (Project project : searchList) {\n        // projectを利用した処理\n    }\n}\n}</pre>\n<p/>\n\n**戻り値:**\nDaoContext\n\n---",
+      "id": "s27"
+    }
+  ],
+  "id": "javadoc-nablarch-common-dao-UniversalDao"
+}

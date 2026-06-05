@@ -1,0 +1,86 @@
+{
+  "title": "class DbConnectionManagementHandler",
+  "content": "**パッケージ:** nablarch.common.handler\n\n**実装されたインタフェース:**\n- Handler<Object,Object>\n- InboundHandleable\n- OutboundHandleable\n\n---\n\n```java\npublic class DbConnectionManagementHandler\nimplements Handler<Object,Object>, InboundHandleable, OutboundHandleable\n```\n\n後続ハンドラの処理で必要となる、データベース接続オブジェクトを\nスレッドローカル変数上で管理するハンドラ。\n<pre>\nデフォルトの設定では、トランザクションが暗黙的に使用する接続名\n({@link TransactionContext#DEFAULT_TRANSACTION_CONTEXT_KEY})\nに対して接続オブジェクトを登録する。\n接続名を明示的に指定する場合は、属性dbConnectionNameにその値を設定する。<br/>\n&lt;!-- 設定例 --&gt;\n&lt;component class=\"nablarch.common.handler.DbConnectionManagementHandler\"&gt;\n     &lt;!-- DbConnectionFactory --&gt;\n     &lt;property name=\"dbConnectionFactory\" ref=\"dbConnectionFactory\"/&gt;\n     &lt;!-- 追加するデータベース接続オブジェクトの名称 --&gt;\n     &lt;property name=\"dbConnectionName\" value=\"db\"/&gt;\n&lt;/component&gt;\n</pre>\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "connectionFactory",
+      "level": 3,
+      "content": "```java\nprivate ConnectionFactory connectionFactory\n```\n\nデータベース接続オブジェクトを取得するためのファクトリ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "connectionName",
+      "level": 3,
+      "content": "```java\nprivate String connectionName\n```\n\nこのハンドラが生成するコネクションの登録名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nLogger\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "setConnectionFactory",
+      "level": 3,
+      "content": "```java\npublic DbConnectionManagementHandler setConnectionFactory(ConnectionFactory connectionFactory)\n```\n\nデータベース接続オブジェクトを生成するためのファクトリを設定する。\n\n**パラメータ:**\n- `connectionFactory` - データベース接続オブジェクトを生成するためのファクトリ\n\n**戻り値:**\nこのハンドラ自体\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "setConnectionName",
+      "level": 3,
+      "content": "```java\npublic void setConnectionName(String connectionName)\n```\n\nデータベース接続のスレッドコンテキスト上の登録名を設定する。\n<pre>\nデフォルトでは既定のトランザクション名\n({@link TransactionContext#DEFAULT_TRANSACTION_CONTEXT_KEY})を使用する。\n</pre>\n\n**パラメータ:**\n- `connectionName` - データベース接続のスレッドコンテキスト上の登録名\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(Object inputData, ExecutionContext ctx)\n```\n\n{@inheritDoc}\n<pre>\nこのクラスの実装では後続ハンドラに対する処理委譲の前後に、\nデータベース接続オブジェクトの初期化と終了の処理をそれぞれ行う。\n</pre>\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "before",
+      "level": 3,
+      "content": "```java\npublic void before()\n```\n\n往路処理を行う。\n<p/>\n{@link ConnectionFactory}から{@link TransactionManagerConnection}を取得し、\n{@link DbConnectionContext}に設定する。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "after",
+      "level": 3,
+      "content": "```java\npublic void after()\n```\n\n復路処理を行う。\n\n<p>\n{@link DbConnectionContext}からデータベース接続を削除し、リソースの開放処理を行う。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "writeWarnLog",
+      "level": 3,
+      "content": "```java\nprivate static void writeWarnLog(Throwable throwable)\n```\n\nワーニングログの出力を行う。\n<br/>\n\n**パラメータ:**\n- `throwable` - ログに出力する例外\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "handleInbound",
+      "level": 3,
+      "content": "```java\npublic Result handleInbound(ExecutionContext context)\n```\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "handleOutbound",
+      "level": 3,
+      "content": "```java\npublic Result handleOutbound(ExecutionContext context)\n```\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-common-handler-DbConnectionManagementHandler"
+}

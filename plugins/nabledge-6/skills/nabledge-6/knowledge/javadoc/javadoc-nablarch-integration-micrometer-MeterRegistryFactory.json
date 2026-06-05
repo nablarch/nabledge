@@ -1,0 +1,104 @@
+{
+  "title": "class MeterRegistryFactory",
+  "content": "**パッケージ:** nablarch.integration.micrometer\n\n**実装されたインタフェース:**\n- ComponentFactory<T>\n\n---\n\n```java\npublic abstract class MeterRegistryFactory\nimplements ComponentFactory<T>\n```\n\n{@link MeterRegistry}のコンポーネント生成に共通する処理をまとめた抽象クラス。\n\n**param:** サブクラスで生成する具体的な{@link MeterRegistry}の型  \n**作成者:** Tanaka Tomoyuki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "prefix",
+      "level": 3,
+      "content": "```java\nprotected String prefix\n```\n\n設定値のプレフィックス。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "xmlConfigPath",
+      "level": 3,
+      "content": "```java\nprotected String xmlConfigPath\n```\n\n設定ファイルのパス。\n<p>\n未設定の場合に読み込まれるデフォルトのパスについては{@link MicrometerConfiguration}を参照。\n</p>\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "meterBinderListProvider",
+      "level": 3,
+      "content": "```java\nprotected MeterBinderListProvider meterBinderListProvider\n```\n\n生成した{@link MeterRegistry}に適用する{@link io.micrometer.core.instrument.binder.MeterBinder MeterBinder}リストのプロバイダ。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "tags",
+      "level": 3,
+      "content": "```java\nprotected Map<String,String> tags\n```\n\nすべてのメトリクスに共通で設定するタグ。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "applicationDisposer",
+      "level": 3,
+      "content": "```java\nprotected ApplicationDisposer applicationDisposer\n```\n\n廃棄処理を行うインタフェース。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "doCreateObject",
+      "level": 3,
+      "content": "```java\nprotected T doCreateObject()\n```\n\n{@link ComponentFactory#createObject()} の実処理を行うメソッド。\n<p>\nサブクラスは、本メソッドを使って {@code createObject()} を次のように実装する。\n<pre><code>{@literal @}Override\npublic SimpleMeterRegistry createObject() {\n    return doCreateObject();\n}</code></pre>\n</p>\n<p>\nこれは、 {@code createObject()} の戻り値の型が総称型だった場合、\nDIコンテナがコンポーネントの具象型を特定できないことに起因する。<br>\nこの問題は、上述のようにサブクラスで {@code createObject()} の戻り値の型を具象型として宣言することで回避できる。<br>\n一方で、コンポーネントを作成するロジック自体はどの {@link MeterRegistry} でも共通なので、\nコンポーネント作成処理を共通化するために、このメソッドが用意されている。\n</p>\n\n**戻り値:**\n作成された {@link MeterRegistry} オブジェクト\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "createMicrometerConfiguration",
+      "level": 3,
+      "content": "```java\nprivate MicrometerConfiguration createMicrometerConfiguration()\n```\n\n{@link MicrometerConfiguration} を生成する。\n\n**戻り値:**\n生成された {@link MicrometerConfiguration}\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setupCommonTags",
+      "level": 3,
+      "content": "```java\nprivate void setupCommonTags(MeterRegistry meterRegistry)\n```\n\n全てのメトリクスに共通して設定するタグをセットアップする。\n\n**パラメータ:**\n- `meterRegistry` - 設定対象の {@link MeterRegistry}\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "createMeterRegistry",
+      "level": 3,
+      "content": "```java\nprotected abstract T createMeterRegistry(MicrometerConfiguration micrometerConfiguration)\n```\n\n{@link MeterRegistry}のインスタンスを生成する。\n\n**パラメータ:**\n- `micrometerConfiguration` - Micrometerの設定\n\n**戻り値:**\n生成した {@link MeterRegistry}のインスタンス\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setPrefix",
+      "level": 3,
+      "content": "```java\npublic void setPrefix(String prefix)\n```\n\nプレフィックスを設定する。\n\n**パラメータ:**\n- `prefix` - プレフィックス\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setXmlConfigPath",
+      "level": 3,
+      "content": "```java\npublic void setXmlConfigPath(String xmlConfigPath)\n```\n\nXML設定ファイルのパスを設定する。\n\n**パラメータ:**\n- `xmlConfigPath` - XML設定ファイルのパス\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setMeterBinderListProvider",
+      "level": 3,
+      "content": "```java\npublic void setMeterBinderListProvider(MeterBinderListProvider meterBinderListProvider)\n```\n\n{@link MeterBinderListProvider}を設定する。\n\n**パラメータ:**\n- `meterBinderListProvider` - {@link MeterBinderListProvider}\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setTags",
+      "level": 3,
+      "content": "```java\npublic void setTags(Map<String,String> tags)\n```\n\nすべてのメトリクスに共通で設定するタグを指定する。\n\n**パラメータ:**\n- `tags` - すべてのメトリクスに共通で設定するタグ\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setApplicationDisposer",
+      "level": 3,
+      "content": "```java\npublic void setApplicationDisposer(ApplicationDisposer applicationDisposer)\n```\n\n{@link ApplicationDisposer}を設定する。\n\n**パラメータ:**\n- `applicationDisposer` - {@link ApplicationDisposer}\n\n---",
+      "id": "s16"
+    }
+  ],
+  "id": "javadoc-nablarch-integration-micrometer-MeterRegistryFactory"
+}

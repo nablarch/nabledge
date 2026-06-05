@@ -1,0 +1,122 @@
+{
+  "title": "class Message",
+  "content": "**パッケージ:** nablarch.core.message\n\n---\n\n```java\npublic class Message\n```\n\nメッセージに必要な情報を保持し、メッセージのフォーマットを行うクラス。<br/>\n\n**作成者:** Koichi Asano  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "DEFAULT_MESSAGE_FORMATTER",
+      "level": 3,
+      "content": "```java\nprivate static final MessageFormatter DEFAULT_MESSAGE_FORMATTER\n```\n\nデフォルトのメッセージフォーマッタ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "level",
+      "level": 3,
+      "content": "```java\nprivate final MessageLevel level\n```\n\nメッセージの通知レベル。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "stringResource",
+      "level": 3,
+      "content": "```java\nprivate final StringResource stringResource\n```\n\nメッセージの文字列リソース。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "option",
+      "level": 3,
+      "content": "```java\nprivate final Object[] option\n```\n\nメッセージのパラメータ。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "DEFAULT_LOCALE",
+      "level": 3,
+      "content": "```java\nprivate static final Locale DEFAULT_LOCALE\n```\n\nデフォルトの言語\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "Message",
+      "level": 3,
+      "content": "```java\npublic Message(MessageLevel level, StringResource stringResource)\n```\n\nメッセージの通知レベル、文字列リソースを指定して、インスタンスを生成する。\n\n**パラメータ:**\n- `level` - メッセージの通知レベル\n- `stringResource` - メッセージの文字列リソース\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "Message",
+      "level": 3,
+      "content": "```java\npublic Message(MessageLevel level, StringResource stringResource, Object[] option)\n```\n\nメッセージの通知レベル、文字列リソース、オプションパラメータを指定して、インスタンスを生成する。\n\n**パラメータ:**\n- `level` - メッセージの通知レベル\n- `stringResource` - メッセージの文字列リソース\n- `option` - メッセージのオプションパラメータ\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s10"
+    },
+    {
+      "title": "getLevel",
+      "level": 3,
+      "content": "```java\npublic MessageLevel getLevel()\n```\n\nメッセージの通知レベルを取得する。\n\n**戻り値:**\nメッセージの通知レベル\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getMessageId",
+      "level": 3,
+      "content": "```java\npublic String getMessageId()\n```\n\n文字列リソースのメッセージIDを取得する。\n\n**戻り値:**\n文字列リソースのメッセージID\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "formatMessage",
+      "level": 3,
+      "content": "```java\npublic String formatMessage()\n```\n\nフォーマットしたメッセージを取得する。\n<p/>\nメッセージの言語には{@link ThreadContext#getLanguage()}に設定された言語を使用する。\nスレッドコンテキストに設定されていない場合は、{@link Locale#getDefault()}から取得した言語を返す。\n\n**戻り値:**\nフォーマットしたメッセージ\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getLanguage",
+      "level": 3,
+      "content": "```java\nprivate static Locale getLanguage()\n```\n\nスレッドコンテキストから言語を取得する。\n\nスレッドコンテキストに設定されていない場合は\n{@link Locale#getDefault()}から取得した言語を返す。\n\n**戻り値:**\n言語\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "formatMessage",
+      "level": 3,
+      "content": "```java\npublic String formatMessage(Locale locale)\n```\n\n言語を指定してフォーマットしたメッセージを取得する。<br/>\nオプションパラメータにMessageが含まれていた場合、フォーマットして使用する。\nオプションパラメータにStringResourceが含まれていた場合、言語に対応する文字列を取得して使用する。\n\n**パラメータ:**\n- `locale` - メッセージの言語\n\n**戻り値:**\nフォーマットしたメッセージ\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "equals",
+      "level": 3,
+      "content": "```java\npublic boolean equals(Object o)\n```\n\n文字列リソースが等価であるか判定する。\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "equals",
+      "level": 3,
+      "content": "```java\nprivate boolean equals(StringResource one, StringResource another)\n```\n\n文字列リソースが等価であるか判定する。\n\n**パラメータ:**\n- `one` - 比較対象１\n- `another` - 比較対象２\n\n**戻り値:**\n比較対象オブジェクトが等価の場合{@code true}\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "hashCode",
+      "level": 3,
+      "content": "```java\npublic int hashCode()\n```\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "getMessageFormatter",
+      "level": 3,
+      "content": "```java\nprivate MessageFormatter getMessageFormatter()\n```\n\nメッセージフォーマッタを取得する。\n\n**戻り値:**\nメッセージフォーマッター\n\n---",
+      "id": "s19"
+    }
+  ],
+  "id": "javadoc-nablarch-core-message-Message"
+}

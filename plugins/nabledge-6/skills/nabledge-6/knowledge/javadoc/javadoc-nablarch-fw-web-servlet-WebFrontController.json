@@ -1,0 +1,98 @@
+{
+  "title": "class WebFrontController",
+  "content": "**パッケージ:** nablarch.fw.web.servlet\n\n**継承階層:**\n```\njava.lang.Object\n  └─ HandlerQueueManager<WebFrontController>\n      └─ nablarch.fw.web.servlet.WebFrontController\n```\n\n**実装されたインタフェース:**\n- Filter\n\n---\n\n```java\npublic class WebFrontController\nextends HandlerQueueManager<WebFrontController>\nimplements Filter\n```\n\nアプリケーションサーバにデプロイして使用するリクエストコントローラ。\n<pre>\n本フレームワークをTomcat/Websphere等のアプリケーションサーバ上で使用する際に、\nサーブレットフィルタとしてデプロイして使用するリクエストエントリポイントである。\n各HTTPリクエスト毎に下記の処理を行う。\n  1. HttpServletRequestオブジェクトをラップした\n     HttpRequest, ExecutionContext オブジェクトを生成する。\n  2. それらを引数としてリクエストプロセッサに処理を委譲する。\n  3. その結果(HttpResponseオブジェクトの内容)に従って、\n     HTTPクライアントに対するレスポンス処理を行う。\nリクエストプロセッサの初期化処理は、本クラスのサブクラスを作成し、\nオーバライドしたinit()メソッドの中で行う。\n本サーブレットフィルタに処理が委譲された場合、必ずレスポンスかフォーワードを行う。\nこのため、後続のサーブレットフィルタチェインに処理が委譲されることは無い。\n\n-------------------------------------\nデプロイメントディスクリプタの記述例\n-------------------------------------\n&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?>\n&lt;web-app xmlns=\"https://jakarta.ee/xml/ns/jakartaee\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd\"\n         version=\"6.0\">\n  &lt;display-name>w8&lt;/display-name>\n  &lt;description>\n    The default application-context for w8.http-based applications.\n  &lt;/description>\n  &lt;filter>\n    &lt;filter-name>WebFrontController&lt;/filter-name>\n    &lt;filter-class>\n      nablarch.fw.web.servlet.WebFrontController\n    &lt;/filter-class>\n  &lt;/filter>\n  &lt;filter-mapping>\n    &lt;filter-name>WebFrontController&lt;/filter-name>\n   &lt;url-pattern>/*&lt;/url-pattern>\n  &lt;/filter-mapping>\n&lt;/web-app>\n\n</pre>\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "preventSessionCreation",
+      "level": 3,
+      "content": "```java\nprivate boolean preventSessionCreation\n```\n\nセッション生成を防止する機能を有効にするかどうかのフラグ。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "handlerQueue",
+      "level": 3,
+      "content": "```java\nprivate final List<Handler> handlerQueue\n```\n\nハンドラキュー\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "config",
+      "level": 3,
+      "content": "```java\nprivate FilterConfig config\n```\n\nフィルタ設定\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "WebFrontController",
+      "level": 3,
+      "content": "```java\npublic WebFrontController()\n```\n\nデフォルトコンストラクタ\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "doFilter",
+      "level": 3,
+      "content": "```java\npublic void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)\n              throws ServletException, IOException\n```\n\n{@inheritDoc}\n<pre>\n本クラスの実装では、HTTPリクエスト毎に下記の処理を行う。\n  1. HttpServletRequestオブジェクトをラップした\n     HttpRequest, ExecutionContext オブジェクトを生成する。\n  2. それらを引数としてリクエストプロセッサに処理を委譲する。\n  3. その結果(HttpResponseオブジェクトの内容)に従って、\n     HTTPクライアントに対するレスポンス処理を行う。\n</pre>\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "applyPreventingSessionCreation",
+      "level": 3,
+      "content": "```java\nprivate HttpServletRequest applyPreventingSessionCreation(HttpServletRequest request)\n```\n\nセッション生成防止機能が有効な場合は、指定したリクエストオブジェクトにセッション生成防止機能を適用する。\n<p/>\n機能が無効の場合は、受け取ったリクエストオブジェクトをそのまま返します。\n\n**パラメータ:**\n- `request` - 適用対象のリクエストオブジェクト\n\n**戻り値:**\n必要に応じてセッション生成防止機能が適用されたリクエストオブジェクト\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "init",
+      "level": 3,
+      "content": "```java\npublic void init(FilterConfig config)\n```\n\n{@inheritDoc}\n本クラスの実装では、リポジトリ上にコンポーネント\"webFrontController\"\nが存在すれば、そのインスタンスを以降の処理で使用する。\n存在しない場合は、このインスタンスをそのまま使用する。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getHandlerQueue",
+      "level": 3,
+      "content": "```java\npublic List<Handler> getHandlerQueue()\n```\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setServletFilterConfig",
+      "level": 3,
+      "content": "```java\npublic void setServletFilterConfig(FilterConfig config)\n```\n\nサーブレットフィルタの設定情報を設定する.\n\n**パラメータ:**\n- `config` - 設定情報\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getServletFilterConfig",
+      "level": 3,
+      "content": "```java\npublic FilterConfig getServletFilterConfig()\n```\n\nサーブレットフィルタの設定情報を取得する。\n\n**戻り値:**\n設定情報\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "destroy",
+      "level": 3,
+      "content": "```java\npublic void destroy()\n```\n\n{@inheritDoc}\n<pre>\n本クラスのdestroy()メソッドでは何も行わない。\n</pre>\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setPreventSessionCreation",
+      "level": 3,
+      "content": "```java\npublic void setPreventSessionCreation(boolean preventSessionCreation)\n```\n\nセッション生成を防止する機能を有効にするかどうかを設定する。\n\n**パラメータ:**\n- `preventSessionCreation` - 有効にする場合は {@code true}\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-servlet-WebFrontController"
+}

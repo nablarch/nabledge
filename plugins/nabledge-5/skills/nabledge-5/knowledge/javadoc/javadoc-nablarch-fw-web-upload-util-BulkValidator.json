@@ -1,0 +1,68 @@
+{
+  "title": "class BulkValidator",
+  "content": "**パッケージ:** nablarch.fw.web.upload.util\n\n---\n\n```java\npublic class BulkValidator\n```\n\nアップロードファイルを一括バリデーションするためのクラス。\n<p/>\nバリデーションエラーが存在した場合でも処理を継続し、全レコードのバリデーションを実行する。\n\n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "formatter",
+      "level": 3,
+      "content": "```java\nprivate final DataRecordFormatter formatter\n```\n\nアップロードファイルのレコードフォーマッタ\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "fileName",
+      "level": 3,
+      "content": "```java\nprivate final String fileName\n```\n\nアップロードされたファイルのファイル名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "BulkValidator",
+      "level": 3,
+      "content": "```java\nBulkValidator(DataRecordFormatter formatter, String fileName)\n```\n\nコンストラクタ。\n\n**パラメータ:**\n- `formatter` - アップロードファイルのレコードフォーマッタ\n- `fileName` - アップロードされたファイルのファイル名\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "getFormatter",
+      "level": 3,
+      "content": "```java\npublic DataRecordFormatter getFormatter()\n```\n\nレコードフォーマッタを取得する。<br/>\n特殊な要件のため、独自のアップロード処理をおこなわなければならない場合、\n本メソッドで取得した{@link DataRecordFormatter}を使用して、\n任意の処理を実行できる。\n\n**戻り値:**\nレコードフォーマッタ\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "validateAll",
+      "level": 3,
+      "content": "```java\npublic BulkValidationResult<FORM> validateAll(ValidatingStrategy<FORM> validatingStrategy)\n```\n\n一括バリデーション処理を行う。\n<p/>\n引数で与えられたバリデーションロジックを使用して、全レコードのバリデーション処理を行う。\n\n**パラメータ:**\n- `validatingStrategy` - バリデーションロジック\n- `<FORM>` - バリデーションに使用するフォームクラスの型\n\n**戻り値:**\nバリデーション結果\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setUpMessageIdOnError",
+      "level": 3,
+      "content": "```java\npublic ErrorHandlingBulkValidator setUpMessageIdOnError(String messageIdOnFormatError, String messageIdOnValidationError, String messageIdOnEmptyFile)\n```\n\nエラー発生時のメッセージIDを指定し、一括バリデーションクラスのインスタンスを生成する。\n<p/>\n本FWが提供しているバリデーションのみで要件を満たせる場合は、本コンストラクタで生成した一括バリデーションクラスを使う。\n要件を満たせない場合は、{@link #validateAll(ValidatingStrategy)}を使用する。\n\n**パラメータ:**\n- `messageIdOnFormatError` - 形式エラー（{@link InvalidDataFormatException}）発生時のメッセージID\n- `messageIdOnValidationError` - バリデーションエラー発生時のメッセージID\n- `messageIdOnEmptyFile` - ファイルが空の場合のメッセージID\n\n**戻り値:**\n一括バリデーションクラスのインスタンス\n\n---",
+      "id": "s10"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-upload-util-BulkValidator"
+}

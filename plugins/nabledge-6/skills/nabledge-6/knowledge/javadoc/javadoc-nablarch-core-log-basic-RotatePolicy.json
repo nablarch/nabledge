@@ -1,0 +1,56 @@
+{
+  "title": "interface RotatePolicy",
+  "content": "**パッケージ:** nablarch.core.log.basic\n\n---\n\n```java\npublic interface RotatePolicy\n```\n\nログのローテーションを行うインタフェース。<br>\nログのローテーションの種類毎に本インタフェースの実装クラスを作成する。\n\n**作成者:** Kotaro Taki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\nvoid initialize(ObjectSettings settings)\n```\n\n初期処理を行う。\n\n**パラメータ:**\n- `settings` - LogWriterの設定\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "needsRotate",
+      "level": 3,
+      "content": "```java\nboolean needsRotate(String message, Charset charset)\n```\n\nローテーションが必要かの判定を行う。\n\n**パラメータ:**\n- `message` - ログファイルに書き込まれるメッセージ\n- `charset` - 書き込み時に使用する文字エンコーディング\n\n**戻り値:**\nローテーションが必要な場合はtrue\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "decideRotatedFilePath",
+      "level": 3,
+      "content": "```java\nString decideRotatedFilePath()\n```\n\nローテーション先のファイル名を決定する。\n\n**戻り値:**\nローテーション先のファイル名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "rotate",
+      "level": 3,
+      "content": "```java\nvoid rotate(String rotatedFilePath)\n```\n\nローテーションを行う。\n\n**パラメータ:**\n- `rotatedFilePath` - ローテーション先のファイルパス\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "getSettings",
+      "level": 3,
+      "content": "```java\nString getSettings()\n```\n\nログファイル読み込み時に出力する、ローテーションの設定情報を返す。<br>\n\n**戻り値:**\n設定情報\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "onWrite",
+      "level": 3,
+      "content": "```java\nvoid onWrite(String message, Charset charset)\n```\n\nログファイル書き込み時に発生するイベント。<br>\nファイルサイズによるローテーションなどを独自で実装したい場合に使用する。\n\n**パラメータ:**\n- `message` - ログファイルに書き込まれるメッセージ\n- `charset` - 書き込み時に使用する文字エンコーディング\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "onOpenFile",
+      "level": 3,
+      "content": "```java\nvoid onOpenFile(File file)\n```\n\nログファイル読み込み時に発生するイベント。<br>\nファイルサイズによるローテーションなどを独自で実装したい場合に使用する。\n\n**パラメータ:**\n- `file` - 読み込まれたファイル\n\n---",
+      "id": "s8"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-basic-RotatePolicy"
+}

@@ -7,7 +7,7 @@
     {
       "id": "s1",
       "title": "ハンドラクラス名",
-      "content": "* nablarch.fw.web.handler.HttpCharacterEncodingHandler",
+      "content": "* [nablarch.fw.web.handler.HttpCharacterEncodingHandler](../../javadoc/javadoc-nablarch-fw-web-handler-HttpCharacterEncodingHandler.json)",
       "level": 2
     },
     {
@@ -25,19 +25,19 @@
     {
       "id": "s4",
       "title": "規定の文字エンコーディングを設定する",
-      "content": "文字エンコーディングは、 defaultEncoding プロパティに対して設定する。\n設定を省略した場合は、 `UTF-8` が使用される。\n\n以下に `Windows-31J` を設定する例を示す。\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\">\n  <property name=\"defaultEncoding\" value=\"Windows-31J\" />\n</component>\n```",
+      "content": "文字エンコーディングは、 [defaultEncoding](../../javadoc/javadoc-nablarch-fw-web-handler-HttpCharacterEncodingHandler.json) プロパティに対して設定する。\n設定を省略した場合は、 `UTF-8` が使用される。\n\n以下に `Windows-31J` を設定する例を示す。\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\">\n  <property name=\"defaultEncoding\" value=\"Windows-31J\" />\n</component>\n```",
       "level": 2
     },
     {
       "id": "s5",
       "title": "レスポンスに対する規定の文字エンコーディングの設定を切り替える",
-      "content": "本ハンドラでレスポンスに対して規定の文字エンコーディングを設定した場合、\n後続のハンドラで処理した全てのレスポンスに対して文字エンコーディングが設定される。\n\n例えば、後続で画像を返却した場合に、Content-Typeヘッダが「image/jpeg;charset=UTF-8」となる。\nこのため、本ハンドラのデフォルトの動作では、レスポンスに対しては、規定の文字エンコーディングを設定していない。\n\nWEB APIのように全てのレスポンスに対して規定の文字エンコーディングを設定する必要がある場合には、\n以下の例を参照し appendResponseCharacterEncoding プロパティに `true` を設定すること。\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\">\n  <property name=\"appendResponseCharacterEncoding\" value=\"true\" />\n</component>\n```",
+      "content": "本ハンドラでレスポンスに対して規定の文字エンコーディングを設定した場合、\n後続のハンドラで処理した全てのレスポンスに対して文字エンコーディングが設定される。\n\n例えば、後続で画像を返却した場合に、Content-Typeヘッダが「image/jpeg;charset=UTF-8」となる。\nこのため、本ハンドラのデフォルトの動作では、レスポンスに対しては、規定の文字エンコーディングを設定していない。\n\nWEB APIのように全てのレスポンスに対して規定の文字エンコーディングを設定する必要がある場合には、\n以下の例を参照し [appendResponseCharacterEncoding](../../javadoc/javadoc-nablarch-fw-web-handler-HttpCharacterEncodingHandler.json) プロパティに `true` を設定すること。\n\n```xml\n<component class=\"nablarch.fw.web.handler.HttpCharacterEncodingHandler\">\n  <property name=\"appendResponseCharacterEncoding\" value=\"true\" />\n</component>\n```",
       "level": 2
     },
     {
       "id": "s6",
       "title": "一律ではなくリクエストごとに文字エンコーディングを変更したい",
-      "content": "リクエスト毎に文字エンコーディングを変更する場合には、本ハンドラを継承して対応すること。\n\n例えば、外部サイトからのリクエストを処理するシステムで、外部サイト毎にエンコーディングが異なる場合には、この対応が必要となる。\n\n以下に例を示す。\n\nポイント\n\n* リクエストのエンコーディングを変更する場合は、 resolveRequestEncoding をオーバライドする。\n* レスポンスのエンコーディングを変更する場合は、 resolveResponseEncoding をオーバライドする。\n\n```java\npublic class CustomHttpCharacterEncodingHandler extends\n        HttpCharacterEncodingHandler {\n\n  @Override\n  protected Charset resolveRequestEncoding(HttpServletRequest req) {\n    return resolveCharacterEncoding(req);\n  }\n\n  @Override\n  protected Charset resolveResponseEncoding(HttpServletRequest req) {\n    return resolveCharacterEncoding(req);\n  }\n\n  /**\n   * 文字エンコードを解決する。<br />\n   *\n   * URIに{@code /shop1}が含まれている場合は、{@code Windows-31J}として扱う。\n   *\n   * @param req リクエスト\n   * @return 文字エンコード\n   */\n  private Charset resolveCharacterEncoding(HttpServletRequest req) {\n    if (req.getRequestURI().contains(\"/shop1\")) {\n      return Charset.forName(\"Windows-31J\");\n    }\n    return getDefaultEncoding();\n  }\n}\n```",
+      "content": "リクエスト毎に文字エンコーディングを変更する場合には、本ハンドラを継承して対応すること。\n\n例えば、外部サイトからのリクエストを処理するシステムで、外部サイト毎にエンコーディングが異なる場合には、この対応が必要となる。\n\n以下に例を示す。\n\nポイント\n\n* リクエストのエンコーディングを変更する場合は、 [resolveRequestEncoding](../../javadoc/javadoc-nablarch-fw-web-handler-HttpCharacterEncodingHandler.json) をオーバライドする。\n* レスポンスのエンコーディングを変更する場合は、 [resolveResponseEncoding](../../javadoc/javadoc-nablarch-fw-web-handler-HttpCharacterEncodingHandler.json) をオーバライドする。\n\n```java\npublic class CustomHttpCharacterEncodingHandler extends\n        HttpCharacterEncodingHandler {\n\n  @Override\n  protected Charset resolveRequestEncoding(HttpServletRequest req) {\n    return resolveCharacterEncoding(req);\n  }\n\n  @Override\n  protected Charset resolveResponseEncoding(HttpServletRequest req) {\n    return resolveCharacterEncoding(req);\n  }\n\n  /**\n   * 文字エンコードを解決する。<br />\n   *\n   * URIに{@code /shop1}が含まれている場合は、{@code Windows-31J}として扱う。\n   *\n   * @param req リクエスト\n   * @return 文字エンコード\n   */\n  private Charset resolveCharacterEncoding(HttpServletRequest req) {\n    if (req.getRequestURI().contains(\"/shop1\")) {\n      return Charset.forName(\"Windows-31J\");\n    }\n    return getDefaultEncoding();\n  }\n}\n```",
       "level": 2
     }
   ]

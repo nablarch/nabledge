@@ -1,0 +1,110 @@
+{
+  "title": "class DatabaseTableQueueReader",
+  "content": "**パッケージ:** nablarch.fw.reader\n\n**実装されたインタフェース:**\n- DataReader<SqlRow>\n\n---\n\n```java\npublic class DatabaseTableQueueReader\nimplements DataReader<SqlRow>\n```\n\nデータベースのテーブルを擬似的にキューのように扱うデータリーダ。\n<p/>\n本リーダはデータベースのテーブルをキューのように扱えるようにするため、\n処理対象レコードが存在しない場合でも{@link #hasNext(nablarch.fw.ExecutionContext)}は\n常に{@code true}を返却し、処理対象が存在するように振る舞う。\nこれにより、データが存在しない場合でも{@link #read(nablarch.fw.ExecutionContext)}が呼び出され、\nテーブルの最新情報を取得し直すことが可能となる。\n<p/>\n本リーダは、処理対象レコードが存在しない場合、再度最新の情報を取得する。\nこの際に、他のスレッドで処理中のレコードが未処理のまま残っている可能性がある。\nこのため、各スレッドで処理中のレコードをヒープ上に保持し、\n読み込んだ対象が他のスレッドで処理中のレコードではないことを確認する。\n<p/>\n対象のレコードが、他のスレッドで処理中である場合には、次のレコードを読み込み再度チェックを行う。\n対象のレコードが、他のスレッドで処理中でない場合には、読み込んだレコードをクライアントに返却する。\n\n**作成者:** hisaaki sioiri  \n**関連項目:** DatabaseRecordReader  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "workingInputDataHolder",
+      "level": 3,
+      "content": "```java\nprivate final WorkingInputDataHolder workingInputDataHolder\n```\n\n実行中要求を保持するオブジェクト\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "originalReader",
+      "level": 3,
+      "content": "```java\nprivate final DatabaseRecordReader originalReader\n```\n\nデータベースリーダ。\n<p/>\nデータベースへのアクセスは、このリーダに処理を移譲する。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "waitTime",
+      "level": 3,
+      "content": "```java\nprivate final int waitTime\n```\n\nデータが存在しない場合の待機時間(ミリ秒)。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "primaryKeys",
+      "level": 3,
+      "content": "```java\nprivate final String[] primaryKeys\n```\n\n主キーのカラム名リスト\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "closed",
+      "level": 3,
+      "content": "```java\nprivate boolean closed\n```\n\nリーダが閉じられているか否か\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "DatabaseTableQueueReader",
+      "level": 3,
+      "content": "```java\npublic DatabaseTableQueueReader(DatabaseRecordReader originalReader, int waitTime, String primaryKeys)\n```\n\nデータベースをキューとして扱うリーダを生成する。\n\n**パラメータ:**\n- `originalReader` - データベースレコードリーダ\n- `waitTime` - データが存在しない場合の待機時間（ミリ秒）\n- `primaryKeys` - レコードを一意に識別する主キーのカラム名\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s10"
+    },
+    {
+      "title": "read",
+      "level": 3,
+      "content": "```java\npublic synchronized SqlRow read(ExecutionContext ctx)\n```\n\n次のレコードを読み込み返却する。\n<p/>\n本実装では、次のレコードが存在しない場合（カーソルの終端に達した場合）、\nカーソルを再度開き直し最新の情報を取得後にレコードを読み込み返却する。\n<p/>\n読み込んだレコードが他スレッドで処理中のデータの場合には、\nそのレコードを読み飛ばし、他のスレッドが処理していないレコードを返却する。\n<p/>\n次に読み込むレコードが存在しない場合は{@code null}を返却する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\nレコード\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "writeLog",
+      "level": 3,
+      "content": "```java\nprotected void writeLog(InputDataIdentifier inputDataIdentifier)\n```\n\n要求の識別情報をログに出力する。\n<p/>\n識別情報に個人情報等のようにログに出力すべきではない項目が含まれる場合には、\n本メソッドをオーバーライドしマスク処理などを実施後にログ出力を行うこと。\n\n**パラメータ:**\n- `inputDataIdentifier` - 要求識別情報\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "hasNext",
+      "level": 3,
+      "content": "```java\npublic synchronized boolean hasNext(ExecutionContext ctx)\n```\n\n次に読み込むデータが存在するかどうかを返却する。\n<p/>\n本実装ではデータベース上に処理対象データが無くなった場合でも処理を継続するため、常にデータ有り{@code true}を返す。<br/>\nこのリーダが閉じられた場合は{@code false}を返す。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n読み込むデータが存在する場合 {@code true}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic synchronized void close(ExecutionContext ctx)\n```\n\nこのリーダの利用を停止し、内部的に保持している各種リソースを解放する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "waitThread",
+      "level": 3,
+      "content": "```java\nprivate void waitThread()\n```\n\n現在のスレッドを{@link #waitTime}分待機する。\n\n**例外:**\n- `RuntimeException` - 割り込みが発生した場合\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "verifyParameter",
+      "level": 3,
+      "content": "```java\nprivate void verifyParameter()\n```\n\nパラメータ情報が正しいことを検証する。\n\n**例外:**\n- `IllegalArgumentException` - 主キーのカラム名リストが{@code null}または空、\n                                  もしくは、主キーのカラム名が重複している場合\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getOriginalReader",
+      "level": 3,
+      "content": "```java\npublic DatabaseRecordReader getOriginalReader()\n```\n\nオリジナルのリーダ({@link DatabaseRecordReader})を取得する。\n<p/>\n本メソッドは、以下の理由によりプロダクションコードからの呼び出しは推奨しない。<br/>\n\nオリジナルリーダを取得すること自体は問題ないが、取得したオリジナルのリーダを操作してしまうと、\n本リーダ内で保持しているオリジナルのリーダの状態も変更されてしまうため。\n\n**戻り値:**\nオリジナルのリーダ\n\n---",
+      "id": "s17"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-reader-DatabaseTableQueueReader"
+}

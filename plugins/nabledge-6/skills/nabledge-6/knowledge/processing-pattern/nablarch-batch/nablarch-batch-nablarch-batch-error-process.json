@@ -7,19 +7,19 @@
     {
       "id": "s1",
       "title": "バッチ処理をリランできるようにする",
-      "content": "Nablarchバッチアプリケーションでは、ファイル入力を除き、\nバッチ処理をリランできるようにする機能を提供していない。\n\nそのため、処理対象レコードにステータスを持たせ、\n処理成功や失敗時にステータスを変更するといった、\nアプリケーションでの設計と実装が必要となる。\n処理成功や失敗時のステータス変更の実装方法については、\n[トランザクション終了時に任意の処理を実行したい](../../component/handlers/handlers-loop-handler.md#トランザクション終了時に任意の処理を実行したい) を参照。\n\nファイル入力については、\nResumeDataReader (レジューム機能付き読み込み)\nを使用することで、障害発生ポイントからの再実行ができる。",
+      "content": "Nablarchバッチアプリケーションでは、ファイル入力を除き、\nバッチ処理をリランできるようにする機能を提供していない。\n\nそのため、処理対象レコードにステータスを持たせ、\n処理成功や失敗時にステータスを変更するといった、\nアプリケーションでの設計と実装が必要となる。\n処理成功や失敗時のステータス変更の実装方法については、\n[トランザクション終了時に任意の処理を実行したい](../../component/handlers/handlers-loop-handler.json#トランザクション終了時に任意の処理を実行したい) を参照。\n\nファイル入力については、\n[ResumeDataReader (レジューム機能付き読み込み)](../../javadoc/javadoc-nablarch-fw-reader-ResumeDataReader.json)\nを使用することで、障害発生ポイントからの再実行ができる。",
       "level": 2
     },
     {
       "id": "s2",
       "title": "バッチ処理でエラー発生時に処理を継続する",
-      "content": "エラー発生時の処理継続は、 [常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#アーキテクチャ概要) のみ対応している。\n[都度起動バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#アーキテクチャ概要) は対応していない。\n\n[常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#アーキテクチャ概要) では、\nTransactionAbnormalEnd\nを送出すると、 [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#リトライハンドラ) により処理が継続される。\nただし、 [バッチ処理をリランできるようにする](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch-error-process.md#バッチ処理をリランできるようにする) に記載した内容で、\nバッチ処理がリランできるようになっている必要がある。\n\n> **Tip:**\n> [都度起動バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.md#アーキテクチャ概要) で\n> TransactionAbnormalEnd\n> が送出されると、バッチ処理が異常終了となる。",
+      "content": "エラー発生時の処理継続は、 [常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.json#アーキテクチャ概要) のみ対応している。\n[都度起動バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.json#アーキテクチャ概要) は対応していない。\n\n[常駐バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.json#アーキテクチャ概要) では、\n[TransactionAbnormalEnd](../../javadoc/javadoc-nablarch-fw-results-TransactionAbnormalEnd.json)\nを送出すると、 [リトライハンドラ](../../component/handlers/handlers-retry-handler.json#リトライハンドラ) により処理が継続される。\nただし、 [バッチ処理をリランできるようにする](../../processing-pattern/nablarch-batch/nablarch-batch-nablarch-batch-error-process.json#バッチ処理をリランできるようにする) に記載した内容で、\nバッチ処理がリランできるようになっている必要がある。\n\n> **Tip:**\n> [都度起動バッチ](../../processing-pattern/nablarch-batch/nablarch-batch-architecture.json#アーキテクチャ概要) で\n> [TransactionAbnormalEnd](../../javadoc/javadoc-nablarch-fw-results-TransactionAbnormalEnd.json)\n> が送出されると、バッチ処理が異常終了となる。",
       "level": 2
     },
     {
       "id": "s3",
       "title": "バッチ処理を異常終了にする",
-      "content": "アプリケーションでエラーを検知した場合に、\n処理を継続せずにバッチ処理を異常終了させたい場合がある。\n\nNablarchバッチアプリケーションでは、\nProcessAbnormalEnd\nを送出すると、バッチ処理を異常終了にできる。\nProcessAbnormalEnd\nが送出された場合、プロセス終了コードはこのクラスに指定された値となる。",
+      "content": "アプリケーションでエラーを検知した場合に、\n処理を継続せずにバッチ処理を異常終了させたい場合がある。\n\nNablarchバッチアプリケーションでは、\n[ProcessAbnormalEnd](../../javadoc/javadoc-nablarch-fw-launcher-ProcessAbnormalEnd.json)\nを送出すると、バッチ処理を異常終了にできる。\n[ProcessAbnormalEnd](../../javadoc/javadoc-nablarch-fw-launcher-ProcessAbnormalEnd.json)\nが送出された場合、プロセス終了コードはこのクラスに指定された値となる。",
       "level": 2
     }
   ]

@@ -1,0 +1,302 @@
+{
+  "title": "class FailureLogFormatter",
+  "content": "**パッケージ:** nablarch.core.log.app\n\n---\n\n```java\npublic class FailureLogFormatter\n```\n\n障害通知ログと障害解析ログのメッセージをフォーマットするクラス。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DEFAULT_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_FORMAT\n```\n\nデフォルトのフォーマット\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "FRAMEWORK_PACKAGE_PREFIX",
+      "level": 3,
+      "content": "```java\nprivate static final String FRAMEWORK_PACKAGE_PREFIX\n```\n\nフレームワークのパッケージ名のプレフィックス\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "PROPS_PREFIX",
+      "level": 3,
+      "content": "```java\npublic static final String PROPS_PREFIX\n```\n\nプロパティ名のプレフィックス\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "PROPS_DEFAULT_FAILURE_CODE",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_DEFAULT_FAILURE_CODE\n```\n\nデフォルトの障害コードを取得する際に使用するプロパティ名\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "PROPS_DEFAULT_MESSAGE",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_DEFAULT_MESSAGE\n```\n\nデフォルトのメッセージを取得する際に使用するプロパティ名\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "PROPS_LANGUAGE",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_LANGUAGE\n```\n\nメッセージを取得する際に使用する言語\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "PROPS_NOTIFICATION_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_NOTIFICATION_FORMAT\n```\n\n障害通知ログのフォーマットを取得する際に使用するプロパティ名\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "PROPS_ANALYSIS_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_ANALYSIS_FORMAT\n```\n\n障害解析ログのフォーマットを取得する際に使用するプロパティ名\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "PROPS_CONTACT_FILE_PATH",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_CONTACT_FILE_PATH\n```\n\n連絡先情報のファイルパスを取得する際に使用するプロパティ名\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "PROPS_APP_FAILURE_CODE_FILE_PATH",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_APP_FAILURE_CODE_FILE_PATH\n```\n\nアプリケーション用の障害コード変換情報のファイルパスを取得する際に使用するプロパティ名\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "PROPS_APP_MESSAGE_ID_FILE_PATH",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_APP_MESSAGE_ID_FILE_PATH\n```\n\nアプリケーション用のメッセージID変換情報のファイルパスを取得する際に使用するプロパティ名\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "PROPS_FW_FAILURE_CODE_FILE_PATH",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_FW_FAILURE_CODE_FILE_PATH\n```\n\nフレームワーク用の障害コード変換情報のファイルパスを取得する際に使用するプロパティ名\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "PROPS_FW_MESSAGE_ID_FILE_PATH",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_FW_MESSAGE_ID_FILE_PATH\n```\n\nフレームワーク用のメッセージID変換情報のファイルパスを取得する際に使用するプロパティ名\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "defaultFailureCode",
+      "level": 3,
+      "content": "```java\nprivate String defaultFailureCode\n```\n\nデフォルトの障害コード\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "defaultMessage",
+      "level": 3,
+      "content": "```java\nprivate String defaultMessage\n```\n\nデフォルトのメッセージ\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "locale",
+      "level": 3,
+      "content": "```java\nprivate Locale locale\n```\n\nメッセージの言語\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "appFailureCodes",
+      "level": 3,
+      "content": "```java\nprivate Map<String,String> appFailureCodes\n```\n\nアプリケーション用の障害コード(キーはソース上で指定した障害コード)\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "fwFailureCodes",
+      "level": 3,
+      "content": "```java\nprivate List<Map.Entry<String,String>> fwFailureCodes\n```\n\nフレームワーク用の障害コード(キーはパッケージ名)\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "notificationLogItems",
+      "level": 3,
+      "content": "```java\nprivate LogItem<FailureLogContext>[] notificationLogItems\n```\n\n障害通知ログのフォーマット済みのログ出力項目\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "analysisLogItems",
+      "level": 3,
+      "content": "```java\nprivate LogItem<FailureLogContext>[] analysisLogItems\n```\n\n障害解析ログのフォーマット済みのログ出力項目\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "KEY_LENGTH_DESCENDING_COMPARATOR",
+      "level": 3,
+      "content": "```java\nprivate static final Comparator<Map.Entry<String,String>> KEY_LENGTH_DESCENDING_COMPARATOR\n```\n\n{@link Map.Entry}リストのキー文字列の長さの降順にソートする場合に使用する{@link Comparator}\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s24"
+    },
+    {
+      "title": "FailureLogFormatter",
+      "level": 3,
+      "content": "```java\npublic FailureLogFormatter()\n```\n\nフォーマット済みのログ出力項目を初期化する。\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s26"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\nprotected void initialize()\n```\n\n初期化\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "initializeFailureCodes",
+      "level": 3,
+      "content": "```java\nprotected void initializeFailureCodes(Map<String,String> props)\n```\n\n障害コードの初期化\n\n**パラメータ:**\n- `props` - 各種ログ出力の設定情報\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "initializeMessage",
+      "level": 3,
+      "content": "```java\nprotected void initializeMessage(Map<String,String> props)\n```\n\nメッセージの初期化\n\n**パラメータ:**\n- `props` - 各種ログ出力の設定情報\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "initializeFormat",
+      "level": 3,
+      "content": "```java\nprotected void initializeFormat(Map<String,String> props)\n```\n\nフォーマットの初期化\n\n**パラメータ:**\n- `props` - 各種ログ出力の設定情報\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "initContacts",
+      "level": 3,
+      "content": "```java\nprivate void initContacts(Map<String,String> props, LogItem<FailureLogContext>[] formattedLogItems)\n```\n\n指定されたフォーマット済みのログ出力項目に連絡先が含まれている場合は、連絡先を初期化する。\nプロパティファイルのキー名の長さで降順にソートして返す。\n\n**パラメータ:**\n- `props` - 各種ログ出力の設定情報\n- `formattedLogItems` - フォーマット済みのログ出力項目\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "getContactList",
+      "level": 3,
+      "content": "```java\nprotected List<Map.Entry<String,String>> getContactList(Map<String,String> props)\n```\n\n連絡先を取得する。\nプロパティファイルのキー名の長さで降順にソートして返す。\n\n**パラメータ:**\n- `props` - 各種ログ出力の設定情報\n\n**戻り値:**\n連絡先\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "getAppFailureCodes",
+      "level": 3,
+      "content": "```java\nprotected Map<String,String> getAppFailureCodes(Map<String,String> props)\n```\n\nアプリケーション用の障害コード変換情報を取得する。\n\n**パラメータ:**\n- `props` - 各種ログの設定情報\n\n**戻り値:**\nアプリケーション用の障害コード変換情報\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "getFwFailureCodes",
+      "level": 3,
+      "content": "```java\nprotected List<Map.Entry<String,String>> getFwFailureCodes(Map<String,String> props)\n```\n\nフレームワーク用の障害コード変換情報を取得する。\nプロパティファイルのキー名の長さで降順にソートして返す。\n\n**パラメータ:**\n- `props` - 各種ログの設定情報\n\n**戻り値:**\nフレームワーク用の障害コード変換情報\n\n---",
+      "id": "s34"
+    },
+    {
+      "title": "getDefaultFailureCode",
+      "level": 3,
+      "content": "```java\nprotected String getDefaultFailureCode(Map<String,String> props)\n```\n\nデフォルトの障害コードを取得する。\n\n**パラメータ:**\n- `props` - 各種ログの設定情報\n\n**戻り値:**\nデフォルトの障害コード\n\n---",
+      "id": "s35"
+    },
+    {
+      "title": "getDefaultMessage",
+      "level": 3,
+      "content": "```java\nprotected String getDefaultMessage(Map<String,String> props)\n```\n\nデフォルトのメッセージを取得する。\n\n**パラメータ:**\n- `props` - 各種ログの設定情報\n\n**戻り値:**\nデフォルトのメッセージ\n\n---",
+      "id": "s36"
+    },
+    {
+      "title": "getNotificationFormat",
+      "level": 3,
+      "content": "```java\nprotected String getNotificationFormat(Map<String,String> props)\n```\n\n障害通知ログのフォーマットを取得する。\n\n**パラメータ:**\n- `props` - 各種ログの設定情報\n\n**戻り値:**\n障害通知ログのフォーマット\n\n---",
+      "id": "s37"
+    },
+    {
+      "title": "getAnalysisFormat",
+      "level": 3,
+      "content": "```java\nprotected String getAnalysisFormat(Map<String,String> props)\n```\n\n障害解析ログのフォーマットを取得する。\n\n**パラメータ:**\n- `props` - 各種ログの設定情報\n\n**戻り値:**\n障害解析ログのフォーマット\n\n---",
+      "id": "s38"
+    },
+    {
+      "title": "getProps",
+      "level": 3,
+      "content": "```java\nprotected Map<String,String> getProps(Map<String,String> props, String key, String defaultFilePath)\n```\n\nプロパティを取得する。\n\n**パラメータ:**\n- `props` - 各種ログの設定情報\n- `key` - プロパティのファイルパスを各種ログの設定情報から取得する際に使用するキー\n- `defaultFilePath` - デフォルトのファイルパス\n\n**戻り値:**\nプロパティ\n\n---",
+      "id": "s39"
+    },
+    {
+      "title": "getLogItems",
+      "level": 3,
+      "content": "```java\nprotected Map<String,LogItem<FailureLogContext>> getLogItems(Map<String,String> props)\n```\n\nフォーマット対象のログ出力項目を取得する。\n<p/>\nデフォルトで下記のプレースホルダを設定したログ出力項目を返す。\n<pre>\n  $failureCode$: 障害コード\n  $messageId$: 障害コード(旧メッセージID。下位互換性のため)\n  $message$: メッセージ\n  $data$: 処理対象データ\n  $contact$: 連絡先\n</pre>\n\n**パラメータ:**\n- `props` - 各種ログの設定情報\n\n**戻り値:**\nフォーマット対象のログ出力項目\n\n---",
+      "id": "s40"
+    },
+    {
+      "title": "formatNotificationMessage",
+      "level": 3,
+      "content": "```java\npublic String formatNotificationMessage(Throwable error, Object data, String failureCode, Object[] messageOptions)\n```\n\n障害通知ログのメッセージをフォーマットする。\n<pre>\nフォーマット対象の出力項目を下記に示す。\n障害コード\n障害コードから取得したメッセージ\n派生元実行時ID\n</pre>\n\n**パラメータ:**\n- `error` - エラー情報\n- `data` - 処理対象データ\n- `failureCode` - 障害コード\n- `messageOptions` - 障害コードからメッセージを取得する際に使用するオプション情報\n\n**戻り値:**\nフォーマット済みのメッセージ\n\n---",
+      "id": "s41"
+    },
+    {
+      "title": "formatAnalysisMessage",
+      "level": 3,
+      "content": "```java\npublic String formatAnalysisMessage(Throwable error, Object data, String failureCode, Object[] messageOptions)\n```\n\n障害解析ログのメッセージをフォーマットする。\n<pre>\nフォーマット対象の出力項目を下記に示す。\n障害コード\n障害コードから取得したメッセージ\n派生元実行時ID\n</pre>\n\n**パラメータ:**\n- `error` - エラー情報\n- `data` - 処理対象データ\n- `failureCode` - 障害コード\n- `messageOptions` - 障害コードからメッセージを取得する際に使用するオプション情報\n\n**戻り値:**\nフォーマット済みのメッセージ\n\n---",
+      "id": "s42"
+    },
+    {
+      "title": "format",
+      "level": 3,
+      "content": "```java\nprotected String format(LogItem<FailureLogContext>[] formattedLogItems, Throwable error, Object data, String failureCode, Object[] messageOptions)\n```\n\n指定されたフォーマット済みのログ出力項目を使用してメッセージをフォーマットする。\n<pre>\nフォーマット対象の出力項目を下記に示す。\n障害コード\n障害コードから取得したメッセージ\n派生元実行時ID\n</pre>\n\n**パラメータ:**\n- `formattedLogItems` - フォーマット済みのログ出力項目\n- `error` - エラー情報\n- `data` - 処理対象データ\n- `failureCode` - 障害コード\n- `messageOptions` - 障害コードからメッセージを取得する際に使用するオプション情報\n\n**戻り値:**\nフォーマット後のメッセージ\n\n---",
+      "id": "s43"
+    },
+    {
+      "title": "getMessage",
+      "level": 3,
+      "content": "```java\nprotected String getMessage(String failureCode, Object[] options, Throwable error)\n```\n\n障害コードからメッセージを取得する。\n<pre>\n障害コードがデフォルトの障害コードの場合は、デフォルトのメッセージを返す。\nデフォルトのメッセージが指定されていない場合はブランクとなる。\n\nメッセージ取得では、指定されたメッセージの言語を使用する。\nメッセージの言語が指定されていない場合は、{@link ThreadContext#getLanguage()}を使用する。\n\nメッセージ取得で例外が発生した場合は、下記の固定メッセージを返す。\n\n\"failed to get the message to output the failure log. failureCode = [障害コード]\"\n</pre>\n\n**パラメータ:**\n- `failureCode` - 障害コード\n- `options` - 障害コードからメッセージを取得する際に使用するオプション情報\n- `error` - エラー情報\n\n**戻り値:**\nメッセージ\n\n---",
+      "id": "s44"
+    },
+    {
+      "title": "getLocale",
+      "level": 3,
+      "content": "```java\nprivate Locale getLocale()\n```\n\n言語情報を取得する。\n\n**戻り値:**\n言語情報\n\n---",
+      "id": "s45"
+    },
+    {
+      "title": "getFailureCode",
+      "level": 3,
+      "content": "```java\nprotected String getFailureCode(String failureCode, Throwable error)\n```\n\nログ出力に使用する障害コードを取得する。\n\n**パラメータ:**\n- `failureCode` - 出力依頼時に指定された障害コード\n- `error` - エラー情報\n\n**戻り値:**\nログ出力に使用する障害コード\n\n---",
+      "id": "s46"
+    },
+    {
+      "title": "getFrameworkFailureCode",
+      "level": 3,
+      "content": "```java\nprotected String getFrameworkFailureCode(Throwable error)\n```\n\nフレームワーク用の障害コード変換情報から障害コードを取得する。\n<pre>\n下記の場合はデフォルトの障害コードを返す。\n・エラー情報のスタックトレースのルート要素がフレームワークでない場合\n・フレームワーク用の障害コード変換情報から障害コードを取得できない場合\n</pre>\n\n**パラメータ:**\n- `error` - エラー情報\n\n**戻り値:**\nフレームワーク用の障害コード\n\n---",
+      "id": "s47"
+    },
+    {
+      "title": "findEntryValue",
+      "level": 3,
+      "content": "```java\nstatic String findEntryValue(List<Map.Entry<String,String>> entries, String keyPrefix)\n```\n\n{@link Map.Entry}リストからキーのプレフィックス指定で値を検索する。\n\n**パラメータ:**\n- `entries` - {@link Map.Entry}リスト\n- `keyPrefix` - キーのプレフィックス\n\n**戻り値:**\n値。見つからない場合はnull\n\n---",
+      "id": "s48"
+    },
+    {
+      "title": "getRootExceptionPoint",
+      "level": 3,
+      "content": "```java\nprotected StackTraceElement getRootExceptionPoint(Throwable error)\n```\n\nスタックトレースからルート要素を取得する。\n\n**パラメータ:**\n- `error` - エラー情報\n\n**戻り値:**\nスタックトレースのルート要素。スタックトレースがない場合はnull\n\n---",
+      "id": "s49"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-app-FailureLogFormatter"
+}

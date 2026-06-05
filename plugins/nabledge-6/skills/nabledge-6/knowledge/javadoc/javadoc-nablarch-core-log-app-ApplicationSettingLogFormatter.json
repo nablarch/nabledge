@@ -1,0 +1,104 @@
+{
+  "title": "class ApplicationSettingLogFormatter",
+  "content": "**パッケージ:** nablarch.core.log.app\n\n---\n\n```java\npublic class ApplicationSettingLogFormatter\n```\n\nアプリケーション設定に関するログフォーマットを行うクラス。\n<p/>\n主に、{@link nablarch.core.repository.SystemRepository}内の設定値をログ出力する際に使用する。\n<p/>\nログ出力対象の設定値は、ログ設定ファイルに設定されたキー値によって決定される。\n{@link SystemRepository}に格納されている値が、{@link String}以外のオブジェクトの場合には、文字列への変換({@code toString()})を行った結果の値をログに出力する。\n<p/>\n以下に例を示す。\n<pre>\n◆ログ設定ファイル\n{@code\n# 複数の設定値をログ出力したい場合には、以下のようにカンマ区切りで複数項目を列挙する。\napplicationSettingLogFormatter.systemSettingItems = dbUser, dbUrl, threadCount\n}\n◆ログ出力イメージ\ndbUser = [scott]\ndbUrl = [jdbc:oracle:thin:@localhost:1521:xe]\nthreadCount = [3]\n</pre>\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "PROPS_PREFIX",
+      "level": 3,
+      "content": "```java\npublic static final String PROPS_PREFIX\n```\n\nプロパティ名のプレフィックス\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DEFAULT_APP_SETTINGS_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_APP_SETTINGS_FORMAT\n```\n\nアプリケーション設定のデフォルトフォーマット定義\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "DEFAULT_APP_SETTINGS_WITH_DATE_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_APP_SETTINGS_WITH_DATE_FORMAT\n```\n\nアプリケーション設定と業務日付のデフォルトフォーマット定義\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "appLogItem",
+      "level": 3,
+      "content": "```java\nprivate Map<String,LogItem<ApplicationSettingLogContext>> appLogItem\n```\n\nアプリケーション設定の出力項目\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "appWithDateLogItem",
+      "level": 3,
+      "content": "```java\nprivate Map<String,LogItem<ApplicationSettingLogContext>> appWithDateLogItem\n```\n\nアプリケーション設定及び業務日付の出力項目\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "ApplicationSettingLogFormatter",
+      "level": 3,
+      "content": "```java\npublic ApplicationSettingLogFormatter()\n```\n\nコンストラクタ。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\nprotected void initialize()\n```\n\n初期化処理。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getAppSettingsLogMsg",
+      "level": 3,
+      "content": "```java\npublic String getAppSettingsLogMsg()\n```\n\nアプリケーション設定に関するログメッセージを生成する。\n<p/>\n{@link #getAppSettingsLogFormat}から取得したログフォーマットに従いログメッセージの生成を行う。\nログ出力対象は、アプリケーション設定はプロパティファイル(\"classpath:app-log.properties\")\nに記載されている項目となる。<br>\nシステムプロパティ(\"nablarch.appLog.filePath\")が指定されている場合は、\nシステムプロパティで指定されたパスを使用する。\n\n**戻り値:**\n生成したアプリケーション設定ログ\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getAppSettingsWithDateLogMsg",
+      "level": 3,
+      "content": "```java\npublic String getAppSettingsWithDateLogMsg()\n```\n\nアプリケーション設定及び業務日付に関するログメッセージを生成する。\n<p/>\n{@link #getAppSettingsWithDateLogFormat}から取得したログフォーマットに従いログメッセージの生成を行う。\n業務日付は{@link BusinessDateUtil#getDate()}を利用して取得する。\n\n**戻り値:**\n生成したアプリケーション設定ログ\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getAppSettingsLogFormat",
+      "level": 3,
+      "content": "```java\nprotected String getAppSettingsLogFormat()\n```\n\nアプリケーション設定ログのフォーマットを取得する。\n<p/>\n設定ファイル(nablarch.core.log.app.AppLogUtil#getProps())にログフォーマットが指定されている場合は、\nそのフォーマットを返却する。\n設定されていない場合には、デフォルトのフォーマットを使用する。\n\n**戻り値:**\n生成したフォーマット\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getAppSettingsLogItems",
+      "level": 3,
+      "content": "```java\nprotected Map<String,LogItem<ApplicationSettingLogContext>> getAppSettingsLogItems()\n```\n\nアプリケーション設定用のログ出力項目を生成する。\n\n**戻り値:**\n生成したログ出力項目\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getAppSettingsWithDateLogFormat",
+      "level": 3,
+      "content": "```java\npublic String getAppSettingsWithDateLogFormat()\n```\n\nアプリケーション設定及び業務日付ログ用のログフォーマットを取得する。\n<p/>\n設定ファイル(nablarch.core.log.app.AppLogUtil#getProps())にログフォーマットが指定されている場合は、\nそのフォーマットを返却する。\n設定されていない場合には、デフォルトのフォーマットを使用する。\n\n**戻り値:**\n生成したフォーマット\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getAppSettingsWithDateLogItems",
+      "level": 3,
+      "content": "```java\npublic Map<String,LogItem<ApplicationSettingLogContext>> getAppSettingsWithDateLogItems()\n```\n\nアプリケーション設定及び日付出力用のログ出力項目を生成する。\n\n**戻り値:**\nログ出力項目\n\n---",
+      "id": "s16"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-app-ApplicationSettingLogFormatter"
+}

@@ -1,7 +1,7 @@
 # バリデーションエラーのメッセージを画面表示する
 
 サーバサイドで行ったバリデーションのエラーメッセージは、 [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#httpエラー制御ハンドラ) でリクエストスコープに格納される。
-テンプレートエンジンでは、リクエストスコープに格納された ErrorMessages にアクセスすることでエラーメッセージを表示できる。
+テンプレートエンジンでは、リクエストスコープに格納された [ErrorMessages](../../javadoc/javadoc-nablarch-fw-web-message-ErrorMessages.md) にアクセスすることでエラーメッセージを表示できる。
 リクエストスコープの変数名は、[エラーメッセージのリクエストスコープへの設定](../../component/handlers/handlers-HttpErrorHandler.md#例外の種類に応じた処理とレスポンスの生成) を参照。
 
 > **Tip:**
@@ -14,8 +14,8 @@
 
 特定のプロパティに対応したメッセージを表示したい
 
-ErrorMessages#hasError や
-ErrorMessages#getMessage
+[ErrorMessages#hasError](../../javadoc/javadoc-nablarch-fw-web-message-ErrorMessages.md) や
+[ErrorMessages#getMessage](../../javadoc/javadoc-nablarch-fw-web-message-ErrorMessages.md)
 を使用することでプロパティ(入力項目のname属性の値)に対応したエラー有無やメッセージの表示ができる。
 
 この例では、 `form.userName` プロパティに対応したエラーメッセージがリクエストスコープにある場合にメッセージが表示される。
@@ -28,7 +28,7 @@ ErrorMessages#getMessage
 
 グローバルメッセージ(プロパティに紐付かないメッセージ)を表示したい
 
-ErrorMessages#getGlobalMessages() を使用して
+[ErrorMessages#getGlobalMessages()](../../javadoc/javadoc-nablarch-fw-web-message-ErrorMessages.md) を使用して
 グローバルメッセージが表示できる。
 
 ```html
@@ -39,7 +39,7 @@ ErrorMessages#getGlobalMessages() を使用して
 
 全てのメッセージを表示したい
 
-ErrorMessages#getAllMessages() を使用して
+[ErrorMessages#getAllMessages()](../../javadoc/javadoc-nablarch-fw-web-message-ErrorMessages.md) を使用して
 全てのメッセージが表示できる。
 
 ```html

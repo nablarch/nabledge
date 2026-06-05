@@ -1,0 +1,86 @@
+{
+  "title": "class StandardFwHeaderDefinition",
+  "content": "**パッケージ:** nablarch.fw.messaging\n\n**実装されたインタフェース:**\n- FwHeaderDefinition\n\n---\n\n```java\npublic class StandardFwHeaderDefinition\nimplements FwHeaderDefinition\n```\n\nNablarch標準のフレームワーク制御ヘッダ定義。\n\n本実装では、各電文のメッセージボディの先頭レコード上に\n全てのフレームワーク制御ヘッダが定義されていることを前提としており、\nJMSヘッダー等のメッセージングプロバイダ実装に依存する項目は使用しない。\n<p/>\n以下は本クラスで使用できるフレームワーク制御ヘッダの定義例である。\nこのデータレコードが電文の先頭に位置している必要がある。\n<pre>\n#====================================================================\n# フレームワーク制御ヘッダ部 (50byte)\n#====================================================================\n[NablarchHeader]\n1   requestId   X(10)       # リクエストID\n11  userId      X(10)       # ユーザID\n21  resendFlag  X(1)  \"0\"   # 再送要求フラグ (0: 初回送信 1: 再送要求)\n22  statusCode  X(4)  \"200\" # ステータスコード\n26 ?filler      X(25)       # 予備領域\n#====================================================================\n</pre>\nフォーマット定義にフレームワーク制御ヘッダ以外の項目を含めた場合、\n{@link FwHeader}クラスの任意属性としてアクセスすることができる。\nこれらの属性は、PJ毎にフレームワーク制御ヘッダを簡易的に拡張する場合に\n利用することができる。\n<p/>\nなお、将来的な任意項目の追加およびフレームワークの機能追加に伴うヘッダ追加\nに対応するために、予備領域を設けておくことを強く推奨する。\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "formatFileDir",
+      "level": 3,
+      "content": "```java\nprivate String formatFileDir\n```\n\nフォーマット定義ファイル配置ディレクトリ論理名\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "formatFileName",
+      "level": 3,
+      "content": "```java\nprivate String formatFileName\n```\n\nフォーマット定義ファイル名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "resendFlagOffValue",
+      "level": 3,
+      "content": "```java\nprivate Object resendFlagOffValue\n```\n\n初回電文を表す再送要求フラグの値\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "readFwHeaderFrom",
+      "level": 3,
+      "content": "```java\npublic RequestMessage readFwHeaderFrom(ReceivedMessage message)\n```\n\n{@inheritDoc}\nこの実装ではメッセージボディの先頭レコードを取得し、\nフレームワーク制御ヘッダの各項目を読み込む。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "writeFwHeaderTo",
+      "level": 3,
+      "content": "```java\npublic void writeFwHeaderTo(SendingMessage message, FwHeader header)\n```\n\n{@inheritDoc}\nこの実装では、メッセージボディ部のバイト列の先頭にフレームワーク制御ヘッダ\nのバイト列を連結する。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setFormatFileDir",
+      "level": 3,
+      "content": "```java\npublic StandardFwHeaderDefinition setFormatFileDir(String dirName)\n```\n\nフレームワーク制御ヘッダーのフォーマット定義ファイルが配置されている\nディレクトリの論理名を設定する。\n設定を省略した場合のデフォルト値は\"format\"である。\n\n**パラメータ:**\n- `dirName` - フォーマット定義ファイル配置ディレクトリの論理名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setFormatFileName",
+      "level": 3,
+      "content": "```java\npublic StandardFwHeaderDefinition setFormatFileName(String fileName)\n```\n\nフレームワーク制御ヘッダーのフォーマット定義ファイルのファイル名\nを設定する。\n設定を省略した場合のデフォルト値は\"header.fmt\"となる。\n\n**パラメータ:**\n- `fileName` - フォーマット定義ファイル名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getFormatter",
+      "level": 3,
+      "content": "```java\npublic synchronized DataRecordFormatter getFormatter()\n```\n\nフレームワーク制御ヘッダーのフォーマット定義を返す。\n\n**戻り値:**\nフレームワーク制御ヘッダーのフォーマット定義\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getFormatter",
+      "level": 3,
+      "content": "```java\npublic synchronized DataRecordFormatter getFormatter(FilePathSetting filePathSetting, FormatterFactory formatterFactory)\n```\n\n指定された{@link FilePathSetting}インスタンスを使用して\nフレームワーク制御ヘッダーのフォーマット定義を返す。\n\n**パラメータ:**\n- `filePathSetting` - フォーマット定義ファイルを取得するための{@link FilePathSetting}\n- `formatterFactory` - フォーマット定義を生成するファクトリ\n\n**戻り値:**\nフレームワーク制御ヘッダーのフォーマット定義\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setResendFlagOffValue",
+      "level": 3,
+      "content": "```java\npublic StandardFwHeaderDefinition setResendFlagOffValue(Object value)\n```\n\n初回電文時に設定される再送要求フラグの値を設定する。\n\n**パラメータ:**\n- `value` - 初回電文時に設定される再送要求フラグの値\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getResendFlagOffValue",
+      "level": 3,
+      "content": "```java\npublic Object getResendFlagOffValue()\n```\n\n初回電文時に設定される再送要求フラグの値を返す。\n\n**戻り値:**\n初回電文時に設定される再送要求フラグの値\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-StandardFwHeaderDefinition"
+}

@@ -1,0 +1,122 @@
+{
+  "title": "class BulkValidationResult",
+  "content": "**パッケージ:** nablarch.fw.web.upload.util\n\n---\n\n```java\npublic class BulkValidationResult\n```\n\n一括バリデーション結果を保持するクラス。\n<p/>\nバリデーション結果の取得やバリデーション済みオブジェクトの登録機能を持つ。\n\n**param:** バリデーションに使用するフォームクラスの型  \n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "BATCH_SIZE",
+      "level": 3,
+      "content": "```java\nprivate static final int BATCH_SIZE\n```\n\nINSERT時の一括実行数のデフォルト値\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "validObjects",
+      "level": 3,
+      "content": "```java\nprivate final List<FORM> validObjects\n```\n\nバリデーション済みオブジェクト\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "errorMessages",
+      "level": 3,
+      "content": "```java\nprivate ErrorMessages errorMessages\n```\n\nエラーメッセージ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "batchSize",
+      "level": 3,
+      "content": "```java\nprivate final int batchSize\n```\n\nINSERT時の一括実行数\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "BulkValidationResult",
+      "level": 3,
+      "content": "```java\nBulkValidationResult()\n```\n\n{@code BulkValidationResult}を生成する。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "BulkValidationResult",
+      "level": 3,
+      "content": "```java\nBulkValidationResult(int batchSize)\n```\n\nINSERT時の一括実行数を指定して、{@code BulkValidationResult}を生成する。\n\n**パラメータ:**\n- `batchSize` - 一括実行数\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "hasError",
+      "level": 3,
+      "content": "```java\npublic boolean hasError()\n```\n\nエラーが発生しているかどうかを判定する。\n\n**戻り値:**\nエラーが１件でも発生している場合は、{@code true}\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getErrorMessages",
+      "level": 3,
+      "content": "```java\npublic ErrorMessages getErrorMessages()\n```\n\nエラーメッセージを取得する。\n<p/>\nエラーが発生していない場合、空の{@link ErrorMessages}が返却される。\n\n**戻り値:**\nエラーメッセージ\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "isEmpty",
+      "level": 3,
+      "content": "```java\npublic boolean isEmpty()\n```\n\nバリデーション対象があるかどうか。\n<p/>\nバリデーション実行前に呼び出した場合結果は保証されない。\n\n**戻り値:**\nバリデーション対象がない場合{@code true}\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getValidObjects",
+      "level": 3,
+      "content": "```java\npublic List<FORM> getValidObjects()\n                           throws ApplicationException\n```\n\nバリデーション済みオブジェクトを取得する。\n\n**戻り値:**\nバリデーション済みオブジェクト\n\n**例外:**\n- `ApplicationException` - 一件でもバリデーションエラーが発生していた場合。\n         この例外には、発生したすべてのバリデーションエラーのメッセージが格納されている。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "importWith",
+      "level": 3,
+      "content": "```java\npublic int importWith(DbAccessSupport dbAccessSupport, String insertSqlId)\n```\n\n指定されたSQLIDを用いて、バリデーション済みオブジェクト({@link #getValidObjects}の結果)を一括登録する。\n\n**パラメータ:**\n- `dbAccessSupport` - 登録に使用する{@link DbAccessSupport}クラス\n- `insertSqlId` - 登録に使用するSQLID\n\n**戻り値:**\nレコード登録件数(バリデーション済みオブジェクトがない場合は0を返す)\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "importAll",
+      "level": 3,
+      "content": "```java\npublic int importAll(InsertionStrategy<FORM> strategy)\n```\n\n登録ロジックを用いて、バリデーション済みオブジェクト({@link #getValidObjects}の結果)を一括登録する。\n\n**パラメータ:**\n- `strategy` - 登録ロジック\n\n**戻り値:**\nレコード登録件数(バリデーション済みオブジェクトがない場合は0を返す)\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "isTimeToExecBatch",
+      "level": 3,
+      "content": "```java\nprivate boolean isTimeToExecBatch(int cnt)\n```\n\nバッチ実行すべきタイミングであるかどうか判定する。\n\n**パラメータ:**\n- `cnt` - 現在のカウント\n\n**戻り値:**\nバッチ実行すべき場合は、{@code true}\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "addValidObject",
+      "level": 3,
+      "content": "```java\nvoid addValidObject(FORM validObject)\n```\n\nバリデーション結果として、バリデーション済みのオブジェクトを追加する。\n\n**パラメータ:**\n- `validObject` - 追加するバリデーション済みオブジェクト\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "addErrors",
+      "level": 3,
+      "content": "```java\nvoid addErrors(int recordNumber, List<Message> messages)\n```\n\nバリデーション結果として、エラーメッセージを追加する。\n\n**パラメータ:**\n- `recordNumber` - エラーとなったレコード行\n- `messages` - エラーメッセージ\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "addError",
+      "level": 3,
+      "content": "```java\nvoid addError(Integer recordNumber, Message message)\n```\n\nバリデーション結果として、エラーメッセージを追加する。\n\n**パラメータ:**\n- `recordNumber` - エラーとなったレコード行\n- `message` - エラーメッセージ\n\n---",
+      "id": "s19"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-upload-util-BulkValidationResult"
+}

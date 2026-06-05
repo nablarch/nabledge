@@ -25,8 +25,8 @@
 
 コンポーネント設定ファイルに設定する
 
-WebFrontController をコンポーネント設定ファイルに設定し、
-handlerQueue プロパティに
+[WebFrontController](../../javadoc/javadoc-nablarch-fw-web-servlet-WebFrontController.md) をコンポーネント設定ファイルに設定し、
+[handlerQueue](../../javadoc/javadoc-nablarch-fw-HandlerQueueManager.md) プロパティに
 アプリケーションで使用するハンドラを順番に追加していく。
 
 コンポーネント設定ファイルの設定例を以下に示す。
@@ -51,7 +51,7 @@ handlerQueue プロパティに
 
 サーブレットフィルタを設定する
 
-RepositoryBasedWebFrontController
+[RepositoryBasedWebFrontController](../../javadoc/javadoc-nablarch-fw-web-servlet-RepositoryBasedWebFrontController.md)
 をサーブレットフィルタとして web.xml に設定する。
 このフィルタによって、クライアントから受け取ったリクエストに対する処理は、先ほどシステムリポジトリに登録したハンドラキューへ委譲される。
 
@@ -87,7 +87,7 @@ web.xml への設定例を以下に示す。
 ウェブアプリケーションをベースとしたアプリケーションにおいて一部のリクエストをRESTfulウェブサービスとして処理したい場合など、
 ウェブアプリケーションとウェブサービスを併用したい場合が考えられる。
 そのような場合は、ハンドラ構成の異なるWebフロントコントローラを複数個定義する必要がある。
-RepositoryBasedWebFrontController はデフォルトでは
+[RepositoryBasedWebFrontController](../../javadoc/javadoc-nablarch-fw-web-servlet-RepositoryBasedWebFrontController.md) はデフォルトでは
 `webFrontController` という名前でシステムリポジトリが委譲するWebフロントコントローラを取得する。
 web.xml に初期化パラメータを設定することで、システムリポジトリから取得するWebフロントコントローラの名前を変更することができる。
 

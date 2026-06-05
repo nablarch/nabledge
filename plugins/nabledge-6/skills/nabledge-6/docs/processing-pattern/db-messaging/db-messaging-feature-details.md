@@ -24,7 +24,7 @@
 * [データベースアクセス](../../component/libraries/libraries-database-management.md#データベースアクセス)
 * 標準提供のデータリーダ
 
-  * DatabaseTableQueueReader (データベースのテーブルをキューとして扱うリーダ)
+  * [DatabaseTableQueueReader (データベースのテーブルをキューとして扱うリーダ)](../../javadoc/javadoc-nablarch-fw-reader-DatabaseTableQueueReader.md)
 
 ## 入力値のチェック
 

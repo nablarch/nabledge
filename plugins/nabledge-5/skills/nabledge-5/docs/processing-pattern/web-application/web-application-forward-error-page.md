@@ -13,7 +13,7 @@
 
 以下に例を示す。
 
-この例では、 NoDataException と javax.persistence.OptimisticLockException が発生した場合に、専用のエラー画面へ遷移させている。
+この例では、 [NoDataException](../../javadoc/javadoc-nablarch-common-dao-NoDataException.md) と javax.persistence.OptimisticLockException が発生した場合に、専用のエラー画面へ遷移させている。
 
 ```java
 public class ExampleErrorForwardHandler implements Handler<Object, Object> {
@@ -39,9 +39,9 @@ public class ExampleErrorForwardHandler implements Handler<Object, Object> {
 
 ## 1つの例外クラスに対して複数の遷移先がある場合の実装方法
 
-業務例外( ApplicationException )が発生した箇所によって、エラー時の遷移先画面を切り替えたい場合がる。
+業務例外( [ApplicationException](../../javadoc/javadoc-nablarch-core-message-ApplicationException.md) )が発生した箇所によって、エラー時の遷移先画面を切り替えたい場合がる。
 しかし、 [OnErrorインターセプタ](../../component/handlers/handlers-on-error.md#onerrorインターセプタ) では、例外クラスに対して1つの遷移先しか指定できないため、
-ApplicationException に対して複数の遷移先の画面を指定できない。
+[ApplicationException](../../javadoc/javadoc-nablarch-core-message-ApplicationException.md) に対して複数の遷移先の画面を指定できない。
 
 このような場合は、アクションのメソッド内で `try-catch` を用いて、例外を捕捉しエラー時の遷移先画面を設定する必要がある。
 

@@ -31,7 +31,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.jaxrs.JaxRsResponseHandler
+* [nablarch.fw.jaxrs.JaxRsResponseHandler](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxRsResponseHandler.md)
 
 ## モジュール一覧
 
@@ -48,13 +48,13 @@
 
 ## 例外及びエラーに応じたレスポンスの生成
 
-例外及びエラーに応じたレスポンス情報の生成は、 errorResponseBuilder プロパティに設定された
-ErrorResponseBuilder により行われる。
-ただし、発生した例外クラスが HttpErrorResponse の場合は、
-HttpErrorResponse#getResponse() から戻される
-HttpResponse がクライアントに戻される。
+例外及びエラーに応じたレスポンス情報の生成は、 [errorResponseBuilder](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxRsResponseHandler.md) プロパティに設定された
+[ErrorResponseBuilder](../../javadoc/javadoc-nablarch-fw-jaxrs-ErrorResponseBuilder.md) により行われる。
+ただし、発生した例外クラスが [HttpErrorResponse](../../javadoc/javadoc-nablarch-fw-web-HttpErrorResponse.md) の場合は、
+[HttpErrorResponse#getResponse()](../../javadoc/javadoc-nablarch-fw-web-HttpErrorResponse.md) から戻される
+[HttpResponse](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.md) がクライアントに戻される。
 
-設定を省略した場合は、デフォルト実装の ErrorResponseBuilder が使用される。
+設定を省略した場合は、デフォルト実装の [ErrorResponseBuilder](../../javadoc/javadoc-nablarch-fw-jaxrs-ErrorResponseBuilder.md) が使用される。
 デフォルト実装では、プロジェクト要件を満たせない場合は、デフォルト実装クラスを継承して対応すること。
 
 以下に設定例を示す。
@@ -75,10 +75,10 @@ HttpResponse がクライアントに戻される。
 
 ## 例外及びエラーに応じたログ出力
 
-例外及びエラーに応じたログ出力は errorLogWriter プロパティに設定された
-JaxRsErrorLogWriter により行われる。
+例外及びエラーに応じたログ出力は [errorLogWriter](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxRsResponseHandler.md) プロパティに設定された
+[JaxRsErrorLogWriter](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxRsErrorLogWriter.md) により行われる。
 
-設定を省略した場合は、デフォルト実装の JaxRsErrorLogWriter が使用される。
+設定を省略した場合は、デフォルト実装の [JaxRsErrorLogWriter](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxRsErrorLogWriter.md) が使用される。
 デフォルト実装では、プロジェクト要件を満たせない場合は、デフォルト実装クラスを継承して対応すること。
 
 以下に設定例を示す。
@@ -96,7 +96,7 @@ JaxRsErrorLogWriter により行われる。
 ### エラー時のレスポンスにメッセージを設定する
 
 バリデーションエラー発生時など、エラーレスポンスのボディにエラーメッセージを設定して返却したい場合がある。
-このような場合は、 ErrorResponseBuilder の継承クラスを作成して対応する。
+このような場合は、 [ErrorResponseBuilder](../../javadoc/javadoc-nablarch-fw-jaxrs-ErrorResponseBuilder.md) の継承クラスを作成して対応する。
 
 以下に、JSON形式のエラーメッセージをレスポンスに設定する場合の実装例を示す。
 
@@ -136,7 +136,7 @@ public class SampleErrorResponseBuilder extends ErrorResponseBuilder {
 本ハンドラの後続の処理で発生したエラーに対し、
 個別にステータスコードやボディを定義したエラーレスポンスを返却したい場合がある。
 
-その場合は ErrorResponseBuilder の継承クラスを作成し、
+その場合は [ErrorResponseBuilder](../../javadoc/javadoc-nablarch-fw-jaxrs-ErrorResponseBuilder.md) の継承クラスを作成し、
 送出された例外に応じたレスポンスの生成処理を個別に実装する。
 
 実装例を以下に示す。
@@ -160,7 +160,7 @@ public class SampleErrorResponseBuilder extends ErrorResponseBuilder {
 
 正常時やエラー発生時を問わず、クライアントに返すレスポンスに対してCORS対応やセキュリティ対応で共通的にレスポンスヘッダを指定したい場合がある。
 
-そのような場合に対応するため、フレームワークはレスポンスを仕上げる ResponseFinisher インタフェースを提供している。
+そのような場合に対応するため、フレームワークはレスポンスを仕上げる [ResponseFinisher](../../javadoc/javadoc-nablarch-fw-jaxrs-ResponseFinisher.md) インタフェースを提供している。
 レスポンスに共通処理を追加したい場合は、ResponseFinisherインタフェースを実装したクラスを作成し、
 本ハンドラのresponseFinishersプロパティに指定すればよい。
 
@@ -188,7 +188,7 @@ public class CustomResponseFinisher implements ResponseFinisher {
 
 セキュリティ関連のレスポンスヘッダを設定する [セキュアハンドラ](../../component/handlers/handlers-secure-handler.md#セキュアハンドラ) のような既存のハンドラをResponseFinisherとして使用したい場合がある。
 このような場合に対応するため、ハンドラをResponseFinisherに適用する
-AdoptHandlerResponseFinisher クラスを提供している。
+[AdoptHandlerResponseFinisher](../../javadoc/javadoc-nablarch-fw-jaxrs-AdoptHandlerResponseFinisher.md) クラスを提供している。
 
 AdoptHandlerResponseFinisherで使用できるハンドラは、自らレスポンスを作成せず、後続ハンドラが返すレスポンスに変更を加えるハンドラに限定される。
 

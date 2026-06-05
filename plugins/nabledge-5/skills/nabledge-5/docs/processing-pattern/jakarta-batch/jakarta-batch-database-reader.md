@@ -1,9 +1,9 @@
 # データベースを入力とするChunkステップ
 
 データベースから処理対象データを抽出する場合は、JSR352で提供されているリーダではなく
-本機能で提供する BaseDatabaseItemReader を実装すること。
+本機能で提供する [BaseDatabaseItemReader](../../javadoc/javadoc-nablarch-fw-batch-ee-chunk-BaseDatabaseItemReader.md) を実装すること。
 
-BaseDatabaseItemReader を実装することで、
+[BaseDatabaseItemReader](../../javadoc/javadoc-nablarch-fw-batch-ee-chunk-BaseDatabaseItemReader.md) を実装することで、
 リーダ専用のデータベース接続を使用してデータを抽出できる。
 これにより、トランザクション制御時にカーソルを自動的にクローズするデータベースの場合でも、
 データベースを入力とするChunkステップを実現できる。

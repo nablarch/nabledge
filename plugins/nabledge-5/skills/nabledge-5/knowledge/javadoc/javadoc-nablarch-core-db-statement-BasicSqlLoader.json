@@ -1,0 +1,122 @@
+{
+  "title": "class BasicSqlLoader",
+  "content": "**パッケージ:** nablarch.core.db.statement\n\n**実装されたインタフェース:**\n- StaticDataLoader<Map<String,String>>\n\n---\n\n```java\npublic class BasicSqlLoader\nimplements StaticDataLoader<Map<String,String>>\n```\n\nSQL文をクラスパス上のリソース(SQLファイル)からロードするクラス。<br/>\n<p/>\n本クラスでは、下記ルールに従いSQL文をロードする。<br/>\n<p/>\na) SQL_IDとSQL文の1グループは、空行で区切られて記述されている。\n<p/>\n1つのSQL文の中に空行はいれてはならない。\nまた、異なるSQL文との間には必ず空行を入れなくてはならない。\nコメント行は、空行とはならない。\n<p/>\nb) 1つのSQL文の最初の「=」までがSQL_IDとなる。\n<p/>\nSQL_IDとは、SQLファイル内でSQL文を一意に特定するためのIDである。\nSQL_IDには、任意の値を設定することが可能となっている。\n<p/>\nc) コメントは、「--」で開始されている必要がある。\n<p/>\n「--」以降の値は、コメントとして扱い読み込まない。<br/>\n※コメントは、行コメントとして扱う。複数行に跨るブロックコメントはサポートしない。\n<p/>\nd) SQL文の途中で改行を行っても良い。また、可読性を考慮してスペースやtabなどで桁揃えを行っても良い。\n\n**作成者:** Hisaaki Sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "fileEncoding",
+      "level": 3,
+      "content": "```java\nprivate String fileEncoding\n```\n\nファイルエンコーディング\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "COMMENT",
+      "level": 3,
+      "content": "```java\nprivate static final String COMMENT\n```\n\nコメント開始文字\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "extension",
+      "level": 3,
+      "content": "```java\nprivate String extension\n```\n\nSQLファイルの拡張子(デフォルトは、.sql)\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "sqlLoaderCallbackList",
+      "level": 3,
+      "content": "```java\nprivate List<SqlLoaderCallback> sqlLoaderCallbackList\n```\n\nコールバッククラス\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "setSqlLoaderCallback",
+      "level": 3,
+      "content": "```java\npublic void setSqlLoaderCallback(List<SqlLoaderCallback> sqlLoaderCallbackList)\n```\n\nコールバッククラスを設定する。\nコールバッククラスはリストの順序で実行される。\n\n**パラメータ:**\n- `sqlLoaderCallbackList` - SQLプリプロセッサのリスト\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setFileEncoding",
+      "level": 3,
+      "content": "```java\npublic void setFileEncoding(String fileEncoding)\n```\n\nファイルエンコーディングを設定する。<br/>\n<p/>\nここで設定されたエンコーディングを使用してSQLファイルを読み込む。\n本設定を行わない場合は、JVMのデフォルトエンコーディングを使用してSQLファイルが読み込まれる。\n\n**パラメータ:**\n- `fileEncoding` - ファイルエンコーディング\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setExtension",
+      "level": 3,
+      "content": "```java\npublic void setExtension(String extension)\n```\n\n拡張子を設定する。<br/>\nここで設定された拡張子を付加したファイルをSQLファイルとして読み込む。\n指定がない場合は、デフォルトで拡張子はsqlとなる。\n\n**パラメータ:**\n- `extension` - 拡張子\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getValue",
+      "level": 3,
+      "content": "```java\npublic Map<String,String> getValue(Object id)\n```\n\nSQL文をロードする。\n\n**パラメータ:**\n- `id` - データのID(SQL文が書かれたファイルのリソース名)\n\n**戻り値:**\nロードしたSQL文\n        <br/>\n        KEY->SQL_ID<br/>\n        VALUE->SQL文\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "registerSql",
+      "level": 3,
+      "content": "```java\nprivate void registerSql(String sqlResource, String line, Map<String,String> holder)\n```\n\n1SQLをSQL_IDとSQL文に分割し、保持する。\n\n**パラメータ:**\n- `sqlResource` - SQLリソース名\n- `line` - 1SQL\n- `holder` - SQL文を保持するMap\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "processOnAfterLoad",
+      "level": 3,
+      "content": "```java\nprivate String processOnAfterLoad(String before, String sqlId)\n```\n\nSQL文ロード後の加工処理を行う。\n{@link #setSqlLoaderCallback(List)}で設定されたコールバッククラスが順次適用される。\n\n**パラメータ:**\n- `before` - 元のSQL文\n- `sqlId` - 元SQLのSQL_ID\n\n**戻り値:**\n処理後のSQL文\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getValues",
+      "level": 3,
+      "content": "```java\npublic List<Map<String,String>> getValues(String indexName, Object key)\n```\n\n{@inheritDoc}\n<br/>\n本メソッドは、サポートしない。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "loadAll",
+      "level": 3,
+      "content": "```java\npublic List<Map<String,String>> loadAll()\n```\n\n{@inheritDoc}\n<br/>\n本メソッドはサポートしない。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getIndexNames",
+      "level": 3,
+      "content": "```java\npublic List<String> getIndexNames()\n```\n\n{@inheritDoc}\n<br/>\n本メソッドはサポートしない。\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getId",
+      "level": 3,
+      "content": "```java\npublic Object getId(Map<String,String> value)\n```\n\n{@inheritDoc}\n<br/>\n本メソッドはサポートしない。\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "generateIndexKey",
+      "level": 3,
+      "content": "```java\npublic Object generateIndexKey(String indexName, Map<String,String> value)\n```\n\n{@inheritDoc}\n<br/>\n本メソッドはサポートしない。\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "trimWhiteSpaceAndUnEscape",
+      "level": 3,
+      "content": "```java\nprivate String trimWhiteSpaceAndUnEscape(String sql)\n```\n\nSQL文から不要なスペース(スペースの定義は、{@link Character#isWhitespace(char)})を削除する。<br/>\n<br/>\n前後のスペースだけではなく、見た目を整えるために挿入されているSQL文中のスペースも削除する。<br/>\nまた、アンエスケープ処理を行う。\n\n**パラメータ:**\n- `sql` - SQL文\n\n**戻り値:**\nスペースを除去したSQL文\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "trimComment",
+      "level": 3,
+      "content": "```java\nprivate String trimComment(String line)\n```\n\nファイルから読み込んだ１行データからコメントを削除する。\n\n**パラメータ:**\n- `line` - 1行データ\n\n**戻り値:**\nコメントを削除したデータ\n\n---",
+      "id": "s19"
+    }
+  ],
+  "id": "javadoc-nablarch-core-db-statement-BasicSqlLoader"
+}

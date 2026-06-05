@@ -13,43 +13,43 @@
     {
       "id": "s2",
       "title": "HTTPセッションに依存している機能",
-      "content": "以下の機能は、デフォルトではHTTPセッションに依存している。\n\n* [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア)\n* [2重サブミット防止](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ)\n* [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ)\n* [HTTPリライトハンドラ](../../component/handlers/handlers-http-rewrite-handler.md#httpリライトハンドラ)\n* [hidden暗号化](../../component/libraries/libraries-tag.md#クライアントに保持するデータを暗号化するhidden暗号化)",
+      "content": "以下の機能は、デフォルトではHTTPセッションに依存している。\n\n* [セッションストア](../../component/libraries/libraries-session-store.json#セッションストア)\n* [2重サブミット防止](../../component/libraries/libraries-tag.json#二重サブミットを防ぐ)\n* [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.json#スレッドコンテキスト変数管理ハンドラ)\n* [HTTPリライトハンドラ](../../component/handlers/handlers-http-rewrite-handler.json#httpリライトハンドラ)\n* [hidden暗号化](../../component/libraries/libraries-tag.json#クライアントに保持するデータを暗号化するhidden暗号化)",
       "level": 2
     },
     {
       "id": "s3",
       "title": "HTTPセッション非依存機能の導入方法",
-      "content": "[HTTPセッションに依存している機能](../../component/libraries/libraries-stateless-web-app.md#httpセッションに依存している機能) の各機能について以下の通り設定することでHTTPセッションへの依存をなくすことができる。",
+      "content": "[HTTPセッションに依存している機能](../../component/libraries/libraries-stateless-web-app.json#httpセッションに依存している機能) の各機能について以下の通り設定することでHTTPセッションへの依存をなくすことができる。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "セッションストア",
-      "content": "* [有効期間をデータベースに保存する](../../component/handlers/handlers-SessionStoreHandler.md#有効期間をデータベースに保存する)",
+      "content": "* [有効期間をデータベースに保存する](../../component/handlers/handlers-SessionStoreHandler.json#有効期間をデータベースに保存する)",
       "level": 3
     },
     {
       "id": "s5",
       "title": "2重サブミット防止",
-      "content": "* [データベースを使用した二重サブミット防止](../../component/libraries/libraries-db-double-submit.md#データベースを使用した二重サブミット防止)",
+      "content": "* [データベースを使用した二重サブミット防止](../../component/libraries/libraries-db-double-submit.json#データベースを使用した二重サブミット防止)",
       "level": 3
     },
     {
       "id": "s6",
       "title": "スレッドコンテキスト変数管理ハンドラ",
-      "content": "[スレッドコンテキストの初期化](../../component/handlers/handlers-thread-context-handler.md#リクエスト毎にスレッドコンテキストの初期化を行う) に以下の部品を使用しない。\n\n* LanguageAttributeInHttpSession\n* TimeZoneAttributeInHttpSession\n* UserIdAttribute\n\nそれぞれ、HTTPセッションを使用しない実装として以下の部品で代替できる。\n\n* LanguageAttributeInHttpCookie\n* TimeZoneAttributeInHttpCookie\n* UserIdAttributeInSessionStore",
+      "content": "[スレッドコンテキストの初期化](../../component/handlers/handlers-thread-context-handler.json#リクエスト毎にスレッドコンテキストの初期化を行う) に以下の部品を使用しない。\n\n* [LanguageAttributeInHttpSession](../../javadoc/javadoc-nablarch-common-web-handler-threadcontext-LanguageAttributeInHttpSession.json)\n* [TimeZoneAttributeInHttpSession](../../javadoc/javadoc-nablarch-common-web-handler-threadcontext-TimeZoneAttributeInHttpSession.json)\n* [UserIdAttribute](../../javadoc/javadoc-nablarch-common-handler-threadcontext-UserIdAttribute.json)\n\nそれぞれ、HTTPセッションを使用しない実装として以下の部品で代替できる。\n\n* [LanguageAttributeInHttpCookie](../../javadoc/javadoc-nablarch-common-web-handler-threadcontext-LanguageAttributeInHttpCookie.json)\n* [TimeZoneAttributeInHttpCookie](../../javadoc/javadoc-nablarch-common-web-handler-threadcontext-TimeZoneAttributeInHttpCookie.json)\n* [UserIdAttributeInSessionStore](../../javadoc/javadoc-nablarch-common-web-handler-threadcontext-UserIdAttributeInSessionStore.json)",
       "level": 3
     },
     {
       "id": "s7",
       "title": "HTTPリライトハンドラ",
-      "content": "[HTTPリライトハンドラ](../../component/handlers/handlers-http-rewrite-handler.md#httpリライトハンドラ) を使用しない。\n使用する場合にはセッションスコープにアクセスしないよう設定する。",
+      "content": "[HTTPリライトハンドラ](../../component/handlers/handlers-http-rewrite-handler.json#httpリライトハンドラ) を使用しない。\n使用する場合にはセッションスコープにアクセスしないよう設定する。",
       "level": 3
     },
     {
       "id": "s8",
       "title": "hidden暗号化",
-      "content": "Nablarchでは [hidden暗号化](../../component/libraries/libraries-tag.md#クライアントに保持するデータを暗号化するhidden暗号化) の機能を提供している。\nこの機能はHTTPセッションに依存しているため、使用しないよう [useHiddenEncryption](../../component/libraries/libraries-tag.md#クライアントに保持するデータを暗号化するhidden暗号化) に `false` を設定する。",
+      "content": "Nablarchでは [hidden暗号化](../../component/libraries/libraries-tag.json#クライアントに保持するデータを暗号化するhidden暗号化) の機能を提供している。\nこの機能はHTTPセッションに依存しているため、使用しないよう [useHiddenEncryption](../../component/libraries/libraries-tag.json#クライアントに保持するデータを暗号化するhidden暗号化) に `false` を設定する。",
       "level": 3
     },
     {
@@ -61,7 +61,7 @@
     {
       "id": "s10",
       "title": "HTTPセッションの誤生成を検知する",
-      "content": "設定漏れや実装ミスによって誤ってHTTPセッションを生成してしまうことを防ぐために、HTTPセッションの生成を検知する機能を提供している。\nこの機能を有効にすると、HTTPセッションを生成しようとしたときに例外が送出されるようになる。\n\nこの機能は、 WebFrontController の `preventSessionCreation` プロパティに `true` を設定することで有効にできる（デフォルトは `false` で無効になっている）。\n\n具体的には、 WebFrontController のコンポーネントを定義した設定ファイルで、次のように記述することで検知機能を有効にできる。\n\n```xml\n<!-- ハンドラキュー構成 -->\n<component name=\"webFrontController\"\n           class=\"nablarch.fw.web.servlet.WebFrontController\">\n\n  <!-- HTTPセッションの誤生成を検知する -->\n  <property name=\"preventSessionCreation\" value=\"true\" />\n```",
+      "content": "設定漏れや実装ミスによって誤ってHTTPセッションを生成してしまうことを防ぐために、HTTPセッションの生成を検知する機能を提供している。\nこの機能を有効にすると、HTTPセッションを生成しようとしたときに例外が送出されるようになる。\n\nこの機能は、 [WebFrontController](../../javadoc/javadoc-nablarch-fw-web-servlet-WebFrontController.json) の `preventSessionCreation` プロパティに `true` を設定することで有効にできる（デフォルトは `false` で無効になっている）。\n\n具体的には、 [WebFrontController](../../javadoc/javadoc-nablarch-fw-web-servlet-WebFrontController.json) のコンポーネントを定義した設定ファイルで、次のように記述することで検知機能を有効にできる。\n\n```xml\n<!-- ハンドラキュー構成 -->\n<component name=\"webFrontController\"\n           class=\"nablarch.fw.web.servlet.WebFrontController\">\n\n  <!-- HTTPセッションの誤生成を検知する -->\n  <property name=\"preventSessionCreation\" value=\"true\" />\n```",
       "level": 2
     }
   ]

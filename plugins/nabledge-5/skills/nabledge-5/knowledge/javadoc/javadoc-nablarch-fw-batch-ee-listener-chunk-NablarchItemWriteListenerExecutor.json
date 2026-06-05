@@ -1,0 +1,62 @@
+{
+  "title": "class NablarchItemWriteListenerExecutor",
+  "content": "**パッケージ:** nablarch.fw.batch.ee.listener.chunk\n\n**実装されたインタフェース:**\n- ItemWriteListener\n\n---\n\n```java\npublic class NablarchItemWriteListenerExecutor\nimplements ItemWriteListener\n```\n\n{@link ItemWriteListener}を実装したクラスで、{@link NablarchItemWriteListener}を順次実行するクラス。\n<p/>\n本クラスでは、{@link SystemRepository}から実行対象のリスナー({@link NablarchItemWriteListener})のリストを取得する。\n{@link SystemRepository}からリスナーリストを取得する方法は以下のとおり。\n<ol>\n<li>ジョブ名称 + ステップ名 + \".itemWriteListeners\"でリスナーリストが登録されている場合、そのリストを使用する。</li>\n<li>ジョブ名称 + \".itemWriteListeners\"でリスナーリストが登録されている場合、そのリストを使用する。</li>\n<li>itemWriteListenersでリスナーリストが登録されている場合、そのリストを使用する。</li>\n<li>上記に該当しない場合、このリスナーは何もしない。</li>\n</ol>\n\n**作成者:** Naoki Yamamoto  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LISTENER_LIST_NAME",
+      "level": 3,
+      "content": "```java\nprivate static final String LISTENER_LIST_NAME\n```\n\n{@link SystemRepository}からリスナーリストを取得する際のコンポーネント名\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "jobContext",
+      "level": 3,
+      "content": "```java\nprivate JobContext jobContext\n```\n\n{@link JobContext }\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "stepContext",
+      "level": 3,
+      "content": "```java\nprivate StepContext stepContext\n```\n\n{@link StepContext}\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "executor",
+      "level": 3,
+      "content": "```java\nprivate NablarchListenerExecutor<NablarchItemWriteListener> executor\n```\n\n{@link NablarchListenerExecutor}\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "beforeWrite",
+      "level": 3,
+      "content": "```java\npublic void beforeWrite(List<Object> items)\n                 throws Exception\n```\n\n{@link NablarchItemWriteListener#beforeWrite(NablarchListenerContext, List)}を順次実行する。\n\n**パラメータ:**\n- `items` - 書き込み処理対象の{@link Object}\n\n**例外:**\n- `Exception` - {@link NablarchItemWriteListener#beforeWrite(NablarchListenerContext, List)} 実行時に送出された例外\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "afterWrite",
+      "level": 3,
+      "content": "```java\npublic void afterWrite(List<Object> items)\n                throws Exception\n```\n\n{@link NablarchItemWriteListener#afterWrite(NablarchListenerContext, List)}を逆順で実行する。\n\n**パラメータ:**\n- `items` - 書き込み処理対象の{@link Object}\n\n**例外:**\n- `Exception` - {@link NablarchItemWriteListener#afterWrite(NablarchListenerContext, List)} 実行時に送出された例外\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "onWriteError",
+      "level": 3,
+      "content": "```java\npublic void onWriteError(List<Object> items, Exception ex)\n                  throws Exception\n```\n\n{@link NablarchItemWriteListener#onWriteError(NablarchListenerContext, List, Exception)} を逆順で実行する。\n\n**パラメータ:**\n- `items` - 書き込み処理対象の{@link Object}\n- `ex` - 書き込み処理時に発生した{@link Exception}\n\n**例外:**\n- `Exception` - {@link NablarchItemWriteListener#onWriteError(NablarchListenerContext, List, Exception)} 実行時に送出された例外\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-batch-ee-listener-chunk-NablarchItemWriteListenerExecutor"
+}

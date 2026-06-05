@@ -1,0 +1,248 @@
+{
+  "title": "class SqlTimeMetricsDaoContext",
+  "content": "**パッケージ:** nablarch.integration.micrometer.instrument.dao\n\n**実装されたインタフェース:**\n- DaoContext\n\n---\n\n```java\npublic class SqlTimeMetricsDaoContext\nimplements DaoContext\n```\n\nSQLの処理実行時間をメトリクスとして計測する{@link DaoContext}のラッパークラス。\n<p>\nメトリクスは、{@code sql.process.time}という名前になる。\n</p>\n<p>\nまた、メトリクスには以下のタグが設定される。\n<ul>\n  <li>{@code sql.id}: SQLID(無い場合は{@code \"None\"})</li>\n  <li>{@code entity}: エンティティクラスの名前({@link Class#getName()})。</li>\n  <li>{@code method}: 実行された{@link DaoContext}のメソッドの単純名</li>\n</ul>\n</p>\n<p>\n引数で渡されたエンティティまたはエンティティのリストが、{@code null}または空のリストの場合は、\n時間は計測されない（委譲先のメソッドの処理は実行される）。\n</p>\n\n**作成者:** Tanaka Tomoyuki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "DEFAULT_METRICS_NAME",
+      "level": 3,
+      "content": "```java\nstatic final String DEFAULT_METRICS_NAME\n```\n\nデフォルトのメトリクス名。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DEFAULT_METRICS_DESCRIPTION",
+      "level": 3,
+      "content": "```java\nstatic final String DEFAULT_METRICS_DESCRIPTION\n```\n\nデフォルトのメトリクスの説明。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "TAG_NAME_SQL_ID",
+      "level": 3,
+      "content": "```java\nstatic final String TAG_NAME_SQL_ID\n```\n\nSQLIDのタグ名。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "TAG_NAME_ENTITY_NAME",
+      "level": 3,
+      "content": "```java\nstatic final String TAG_NAME_ENTITY_NAME\n```\n\nエンティティ名のタグ名。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "TAG_NAME_METHOD_NAME",
+      "level": 3,
+      "content": "```java\nstatic final String TAG_NAME_METHOD_NAME\n```\n\n実行されたメソッド名のタグ名。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "TAG_VALUE_NO_SQL_ID",
+      "level": 3,
+      "content": "```java\nstatic final String TAG_VALUE_NO_SQL_ID\n```\n\nSQLIDが無い場合に設定されるタグの値。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "delegate",
+      "level": 3,
+      "content": "```java\nprivate final DaoContext delegate\n```\n\n移譲先の{@link DaoContext}。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "meterRegistry",
+      "level": 3,
+      "content": "```java\nprivate final MeterRegistry meterRegistry\n```\n\n使用する{@link MeterRegistry}。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "metricsName",
+      "level": 3,
+      "content": "```java\nprivate String metricsName\n```\n\nメトリクス名。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "metricsDescription",
+      "level": 3,
+      "content": "```java\nprivate String metricsDescription\n```\n\nメトリクスの説明。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s12"
+    },
+    {
+      "title": "SqlTimeMetricsDaoContext",
+      "level": 3,
+      "content": "```java\npublic SqlTimeMetricsDaoContext(DaoContext delegate, MeterRegistry meterRegistry)\n```\n\n委譲先の {@link DaoContext}と{@link MeterRegistry}を指定するコンストラクタ。\n\n**パラメータ:**\n- `delegate` - 委譲先の{@link DaoContext}\n- `meterRegistry` - {@link MeterRegistry}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s14"
+    },
+    {
+      "title": "findById",
+      "level": 3,
+      "content": "```java\npublic T findById(Class<T> entityClass, Object id)\n```\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "findByIdOrNull",
+      "level": 3,
+      "content": "```java\npublic T findByIdOrNull(Class<T> entityClass, Object id)\n```\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "findAll",
+      "level": 3,
+      "content": "```java\npublic EntityList<T> findAll(Class<T> entityClass)\n```\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "findAllBySqlFile",
+      "level": 3,
+      "content": "```java\npublic EntityList<T> findAllBySqlFile(Class<T> entityClass, String sqlId, Object params)\n```\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "findAllBySqlFile",
+      "level": 3,
+      "content": "```java\npublic EntityList<T> findAllBySqlFile(Class<T> entityClass, String sqlId)\n```\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "findBySqlFile",
+      "level": 3,
+      "content": "```java\npublic T findBySqlFile(Class<T> entityClass, String sqlId, Object params)\n```\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "findBySqlFileOrNull",
+      "level": 3,
+      "content": "```java\npublic T findBySqlFileOrNull(Class<T> entityClass, String sqlId, Object params)\n```\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "countBySqlFile",
+      "level": 3,
+      "content": "```java\npublic long countBySqlFile(Class<T> entityClass, String sqlId, Object params)\n```\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "update",
+      "level": 3,
+      "content": "```java\npublic int update(T entity)\n           throws OptimisticLockException\n```\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "batchUpdate",
+      "level": 3,
+      "content": "```java\npublic void batchUpdate(List<T> entities)\n```\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "insert",
+      "level": 3,
+      "content": "```java\npublic void insert(T entity)\n```\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "batchInsert",
+      "level": 3,
+      "content": "```java\npublic void batchInsert(List<T> entities)\n```\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "delete",
+      "level": 3,
+      "content": "```java\npublic int delete(T entity)\n```\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "batchDelete",
+      "level": 3,
+      "content": "```java\npublic void batchDelete(List<T> entities)\n```\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "recordEntityListUpdate",
+      "level": 3,
+      "content": "```java\nprivate void recordEntityListUpdate(List<?> entities, String methodName, Runnable execution)\n```\n\nエンティティリストの更新系メソッドの時間を計測する。\n\n**パラメータ:**\n- `entities` - エンティティリスト\n- `methodName` - 実行された{@link DaoContext}のメソッド名\n- `execution` - 計測対象の更新処理\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "recordEntityUpdate",
+      "level": 3,
+      "content": "```java\nprivate T recordEntityUpdate(Object entity, String methodName, Supplier<T> execution)\n```\n\nエンティティの更新系メソッドの時間を計測する。\n\n**パラメータ:**\n- `entity` - エンティティ\n- `methodName` - 実行された{@link DaoContext}のメソッド名\n- `execution` - 計測対象の更新処理\n- `<T>` - {@code execution} が返す値の型\n\n**戻り値:**\n{@code execution} が返した値\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "recordTime",
+      "level": 3,
+      "content": "```java\nprivate T recordTime(String sqlId, Class<?> entityClass, String methodName, Supplier<T> execution)\n```\n\n指定された処理の時間を計測する。\n\n**パラメータ:**\n- `sqlId` - SQIID\n- `entityClass` - エンティティの{@link Class}オブジェクト\n- `methodName` - 実行された{@link DaoContext}のメソッド名\n- `execution` - 計測対象の処理\n- `<T>` - {@code execution} が返す値の型\n\n**戻り値:**\n{@code execution} が返した値\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "page",
+      "level": 3,
+      "content": "```java\npublic DaoContext page(long page)\n```\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "per",
+      "level": 3,
+      "content": "```java\npublic DaoContext per(long per)\n```\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "defer",
+      "level": 3,
+      "content": "```java\npublic DaoContext defer()\n```\n\n---",
+      "id": "s34"
+    },
+    {
+      "title": "setMetricsName",
+      "level": 3,
+      "content": "```java\npublic void setMetricsName(String metricsName)\n```\n\nメトリクスの名前を設定する。\n\n**パラメータ:**\n- `metricsName` - メトリクスの名前\n\n---",
+      "id": "s35"
+    },
+    {
+      "title": "getMetricsName",
+      "level": 3,
+      "content": "```java\npublic String getMetricsName()\n```\n\nメトリクス名を取得する。\n\n**戻り値:**\nメトリクス名\n\n---",
+      "id": "s36"
+    },
+    {
+      "title": "setMetricsDescription",
+      "level": 3,
+      "content": "```java\npublic void setMetricsDescription(String metricsDescription)\n```\n\nメトリクスの説明を設定する。\n\n**パラメータ:**\n- `metricsDescription` - メトリクスの説明\n\n---",
+      "id": "s37"
+    },
+    {
+      "title": "getMetricsDescription",
+      "level": 3,
+      "content": "```java\npublic String getMetricsDescription()\n```\n\nメトリクスの説明を取得する。\n\n**戻り値:**\nメトリクスの説明\n\n---",
+      "id": "s38"
+    },
+    {
+      "title": "getDelegate",
+      "level": 3,
+      "content": "```java\npublic DaoContext getDelegate()\n```\n\n委譲先の{@link DaoContext}を取得する。\n\n**戻り値:**\n委譲先の {@link DaoContext}\n\n---",
+      "id": "s39"
+    },
+    {
+      "title": "getMeterRegistry",
+      "level": 3,
+      "content": "```java\npublic MeterRegistry getMeterRegistry()\n```\n\n{@link MeterRegistry}を取得する。\n\n**戻り値:**\n{@link MeterRegistry}\n\n---",
+      "id": "s40"
+    }
+  ],
+  "id": "javadoc-nablarch-integration-micrometer-instrument-dao-SqlTimeMetricsDaoContext"
+}

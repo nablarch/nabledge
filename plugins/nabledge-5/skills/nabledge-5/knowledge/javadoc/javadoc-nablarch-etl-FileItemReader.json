@@ -1,0 +1,98 @@
+{
+  "title": "class FileItemReader",
+  "content": "**パッケージ:** nablarch.etl\n\n**継承階層:**\n```\njava.lang.Object\n  └─ AbstractItemReader\n      └─ nablarch.etl.FileItemReader\n```\n\n---\n\n```java\npublic class FileItemReader\nextends AbstractItemReader\n```\n\n入力ファイルからJavaオブジェクトへ変換を行う{@link javax.batch.api.chunk.ItemReader}実装クラス。\n<p/>\n本実装ではチェックポイントはサポートしない。このため、restart時にはファイルの先頭から処理を再開する。\n\n**作成者:** Hisaaki Shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "jobContext",
+      "level": 3,
+      "content": "```java\nprivate final JobContext jobContext\n```\n\n{@link JobContext}\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "stepContext",
+      "level": 3,
+      "content": "```java\nprivate final StepContext stepContext\n```\n\n{@link StepContext}\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "stepConfig",
+      "level": 3,
+      "content": "```java\nprivate final FileToDbStepConfig stepConfig\n```\n\nETLの設定\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "inputFileBasePath",
+      "level": 3,
+      "content": "```java\nprivate final File inputFileBasePath\n```\n\n入力ファイルのベースパス\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "progressManager",
+      "level": 3,
+      "content": "```java\nprivate final ProgressManager progressManager\n```\n\n進捗状況を管理するBean\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "reader",
+      "level": 3,
+      "content": "```java\nprivate ObjectMapper<?> reader\n```\n\nデータからJavaオブジェクトに変換を行うマッパー\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "FileItemReader",
+      "level": 3,
+      "content": "```java\npublic FileItemReader(JobContext jobContext, StepContext stepContext, StepConfig stepConfig, File inputFileBasePath, ProgressManager progressManager)\n```\n\nコンストラクタ。\n\n**パラメータ:**\n- `jobContext` - {@link JobContext}\n- `stepContext` - {@link StepContext}\n- `stepConfig` - ステップの設定\n- `inputFileBasePath` - 入力ファイルの配置ディレクトリ\n- `progressManager` - 進捗状況を管理するBean\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s10"
+    },
+    {
+      "title": "open",
+      "level": 3,
+      "content": "```java\npublic void open(Serializable checkpoint)\n          throws Exception\n```\n\n入力ファイルを開き、{@link ObjectMapper}を生成する。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getNumberOfRecordInInputFile",
+      "level": 3,
+      "content": "```java\nprivate long getNumberOfRecordInInputFile(InputStream inputStream)\n```\n\n入力ファイルのレコード数を返す。\n\n**パラメータ:**\n- `inputStream` - 入力ストリーム\n\n**戻り値:**\nレコード数\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "createFileInputStream",
+      "level": 3,
+      "content": "```java\nprivate InputStream createFileInputStream(File inputFilePath)\n```\n\n入力ファイルのストリームを生成する。\n\n**パラメータ:**\n- `inputFilePath` - 入力ファイルパス\n\n**戻り値:**\n入力ストリーム\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "readItem",
+      "level": 3,
+      "content": "```java\npublic Object readItem()\n                throws Exception\n```\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic void close()\n           throws Exception\n```\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-etl-FileItemReader"
+}

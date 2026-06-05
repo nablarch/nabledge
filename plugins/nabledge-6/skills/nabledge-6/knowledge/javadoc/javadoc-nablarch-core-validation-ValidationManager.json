@@ -1,0 +1,218 @@
+{
+  "title": "class ValidationManager",
+  "content": "**パッケージ:** nablarch.core.validation\n\n**実装されたインタフェース:**\n- Initializable\n\n---\n\n```java\npublic class ValidationManager\nimplements Initializable\n```\n\nバリデーションとデータの変換を行うクラス。<br/>\n実際のバリデーションとデータの変換はバリデータとコンバータに委譲する。\n\n**作成者:** Koichi Asano  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DEFAULT_SIZE_KEY_MAX_LENGTH",
+      "level": 3,
+      "content": "```java\nprivate static final int DEFAULT_SIZE_KEY_MAX_LENGTH\n```\n\nフォーム配列サイズキー文字列の最大長のデフォルト値(999まで指定可能)\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "formDefinitionCache",
+      "level": 3,
+      "content": "```java\nprivate StaticDataCache<FormValidationDefinition> formDefinitionCache\n```\n\nFormValidationDefinitionを保持するStaticDataCache。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "formCreator",
+      "level": 3,
+      "content": "```java\nprivate FormCreator formCreator\n```\n\nフォームの生成クラス。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "convertors",
+      "level": 3,
+      "content": "```java\nprivate List<Convertor> convertors\n```\n\nコンバータのリスト。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "validators",
+      "level": 3,
+      "content": "```java\nprivate List<Validator> validators\n```\n\nバリデータのリスト。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "useFormPropertyNameAsMessageId",
+      "level": 3,
+      "content": "```java\nprivate boolean useFormPropertyNameAsMessageId\n```\n\nフォームのプロパティ名をデフォルトのメッセージIDとして使用するかどうかの設定値。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "convertorMap",
+      "level": 3,
+      "content": "```java\nprivate Map<Class<?>,Convertor> convertorMap\n```\n\nコンバータのマップ。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "validatorMap",
+      "level": 3,
+      "content": "```java\nprivate Map<Class<? extends Annotation>,Validator> validatorMap\n```\n\nバリデータのマップ。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "formArraySizeValueMaxLength",
+      "level": 3,
+      "content": "```java\nprivate int formArraySizeValueMaxLength\n```\n\nフォーム配列サイズ文字列の最大長。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "invalidSizeKeyMessageId",
+      "level": 3,
+      "content": "```java\nprivate String invalidSizeKeyMessageId\n```\n\nValidationTargetアノテーションのsizeKeyに不正な長さを指定した際のエラーメッセージID。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "domainValidationHelper",
+      "level": 3,
+      "content": "```java\nprivate DomainValidationHelper domainValidationHelper\n```\n\nドメイン定義によるバリデーションをサポートするヘルパークラス\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s14"
+    },
+    {
+      "title": "setFormDefinitionCache",
+      "level": 3,
+      "content": "```java\npublic void setFormDefinitionCache(StaticDataCache<FormValidationDefinition> formDefinitionCache)\n```\n\nFormValidationDefinitionをキャッシュするStaticDataCacheをセットする。\n\n**パラメータ:**\n- `formDefinitionCache` - FormValidationDefinitionを保持するStaticDataCache\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setFormCreator",
+      "level": 3,
+      "content": "```java\npublic void setFormCreator(FormCreator formCreator)\n```\n\nフォームの生成クラスをセットする。<br/>\nセットしなかった場合、MapConstructorFormCreatorが使用される。\n\n**パラメータ:**\n- `formCreator` - フォームの生成クラス\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setMessageResource",
+      "level": 3,
+      "content": "```java\npublic void setMessageResource(StringResourceHolder stringResourceHolder)\n```\n\nメッセージリソースをセットする。\n\n<p><b>MessageUtilのメッセージリソースを使用するよう仕様変更を行ったため本プロパティは廃止しました。(値を設定しても意味がありません)</b>\n\n**パラメータ:**\n- `stringResourceHolder` - メッセージリソース\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setConvertors",
+      "level": 3,
+      "content": "```java\npublic void setConvertors(List<Convertor> convertors)\n```\n\nコンバータのリストをセットする。\n\n**パラメータ:**\n- `convertors` - セットするコンバータのリスト\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setValidators",
+      "level": 3,
+      "content": "```java\npublic void setValidators(List<Validator> validators)\n```\n\nバリデータのリストをセットする。\n\n**パラメータ:**\n- `validators` - バリデータのリスト\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "setUseFormPropertyNameAsMessageId",
+      "level": 3,
+      "content": "```java\npublic void setUseFormPropertyNameAsMessageId(boolean useFormPropertyNameAsMessageId)\n```\n\nフォームのプロパティ名をデフォルトのメッセージIDとして使用するかどうかの設定値を設定する。\n\n**パラメータ:**\n- `useFormPropertyNameAsMessageId` - フォームのプロパティ名をデフォルトのメッセージIDとして使用するかどうかの設定値。\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "setFormArraySizeValueMaxLength",
+      "level": 3,
+      "content": "```java\npublic void setFormArraySizeValueMaxLength(int formArraySizeKeyMaxLength)\n```\n\nフォーム配列サイズ文字列の最大長を設定する。\n\n**パラメータ:**\n- `formArraySizeKeyMaxLength` - フォーム配列サイズ文字列の最大長\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "setInvalidSizeKeyMessageId",
+      "level": 3,
+      "content": "```java\npublic void setInvalidSizeKeyMessageId(String invalidSizeKeyLengthMessageId)\n```\n\nValidationTargetアノテーションのsizeKeyに不正な長さを指定した際のエラーメッセージIDを設定する。\n\n**パラメータ:**\n- `invalidSizeKeyLengthMessageId` - ValidationTargetアノテーションのsizeKeyに不正な長さを指定した際のエラーメッセージID\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "validateAndConvert",
+      "level": 3,
+      "content": "```java\npublic ValidationContext<T> validateAndConvert(String prefix, Class<T> targetClass, Map<String,?> params, String validateFor)\n```\n\nバリデーションと値の変換を行う。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `prefix` - Mapに入ったキーのプレフィクス\n- `targetClass` - バリデーション対象のフォームのクラス\n- `params` - バリデーション対象のデータ\n- `validateFor` - バリデーション対象メソッド\n\n**戻り値:**\nバリデーション結果の入ったValidationContext\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "createValidationContext",
+      "level": 3,
+      "content": "```java\npublic ValidationContext<T> createValidationContext(Class<T> targetClass, Map<String,?> params, String innerPrefix, String validateFor)\n```\n\n{@link ValidationContext}を生成する。\n\n**パラメータ:**\n- `targetClass` - バリデーション対象のフォームのクラス\n- `params` - バリデーション対象のデータ\n- `innerPrefix` - Mapに入ったキーのプレフィクス\n- `<T>` - バリデーション結果で取得できる型\n- `validateFor` - バリデーション対象メソッド\n\n**戻り値:**\n{@link ValidationContext}\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "validateAndConvertAllProperty",
+      "level": 3,
+      "content": "```java\nprotected void validateAndConvertAllProperty(ValidationContext<T> context, FormValidationDefinition formValidationDefinition)\n```\n\nフォームのバリデーションと変換を行う。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - ValidationContext\n- `formValidationDefinition` - FormValidationDefinition\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "validateAndConvertProperty",
+      "level": 3,
+      "content": "```java\nprotected void validateAndConvertProperty(ValidationContext<T> context, FormValidationDefinition formDef, PropertyValidationDefinition propertyDef)\n```\n\nプロパティに対するバリデーションと変換を行う。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - ValidationContext\n- `formDef` - FormValidationDefinition\n- `propertyDef` - PropertyValidationDefinition\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "setDomainValidationHelper",
+      "level": 3,
+      "content": "```java\npublic void setDomainValidationHelper(DomainValidationHelper domainValidationHelper)\n```\n\nドメイン定義によるバリデーションをサポートするヘルパークラスを設定する。\n\n**パラメータ:**\n- `domainValidationHelper` - ドメイン定義によるバリデーションをサポートするヘルパークラス\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "getFormatAnnotation",
+      "level": 3,
+      "content": "```java\nprotected Annotation getFormatAnnotation(Annotation convertorFormatAnnotation)\n```\n\n{@link Convertor}に渡すフォーマットを指定するアノテーションを取得する。\n<p/>\n指定されたコンバータのアノテーションがドメイン定義の場合は、ドメイン定義に指定されたコンバータアノテーションを返す。\nそれ以外の場合は、指定されたコンバータのアノテーションをそのまま返す。\n\n**パラメータ:**\n- `convertorFormatAnnotation` - コンバータのアノテーション\n\n**戻り値:**\n{@link Convertor}に渡すフォーマットを指定するアノテーション\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "validate",
+      "level": 3,
+      "content": "```java\npublic void validate(ValidationContext<T> context, String propertyName, Class<? extends Annotation> annotation, Map<String,Object> params)\n```\n\n指定されたバリデーションアノテーションに沿ったバリデーション処理を行う。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - ValidationContext\n- `propertyName` - バリデーション対象のプロパティ名\n- `annotation` - バリデーションアノテーションクラス\n- `params` - バリデーションアノテーションのパラメータ\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "validateSizeValue",
+      "level": 3,
+      "content": "```java\nprivate int validateSizeValue(ValidationContext<T> context, String propertyName, String lenStr)\n```\n\nサイズキー文字列をバリデーションし、値を取得する。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - ValidationContext\n- `propertyName` - サイズキーのプロパティ名\n- `lenStr` - サイズ文字列\n\n**戻り値:**\nサイズキー文字列のパース結果。\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "addInvalidSizeKeyMessage",
+      "level": 3,
+      "content": "```java\nprivate void addInvalidSizeKeyMessage(ValidationContext<T> context, String propertyName)\n```\n\nサイズキーが不正であるエラーメッセージを設定。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - ValidationContext\n- `propertyName` - サイズキーのプロパティ名\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "createPropertyDisplayNameObject",
+      "level": 3,
+      "content": "```java\nprotected Object createPropertyDisplayNameObject(ValidationContext<T> context, PropertyValidationDefinition propertyDef)\n```\n\nプロパティの表示名を表すオブジェクトを作成する。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - ValidationContext\n- `propertyDef` - PropertyValidationDefinition\n\n**戻り値:**\nプロパティの表示名を表すオブジェクト\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "validate",
+      "level": 3,
+      "content": "```java\npublic void validate(ValidationContext<T> context, String[] propertyNames)\n```\n\nバリデーション対象のプロパティを指定してバリデーションを行う。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - ValidationContext\n- `propertyNames` - バリデーション対象とするプロパティ名の配列\n\n---",
+      "id": "s34"
+    },
+    {
+      "title": "validateWithout",
+      "level": 3,
+      "content": "```java\npublic void validateWithout(ValidationContext<T> context, String[] propertyNames)\n```\n\nバリデーション対象外のプロパティを指定してバリデーションを行う。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - ValidationContext\n- `propertyNames` - バリデーション対象としないプロパティ名の配列\n\n---",
+      "id": "s35"
+    }
+  ],
+  "id": "javadoc-nablarch-core-validation-ValidationManager"
+}

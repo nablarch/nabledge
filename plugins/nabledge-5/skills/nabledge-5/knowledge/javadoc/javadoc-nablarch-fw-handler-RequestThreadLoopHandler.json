@@ -1,0 +1,44 @@
+{
+  "title": "class RequestThreadLoopHandler",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**実装されたインタフェース:**\n- Handler<Object,Object>\n\n---\n\n```java\npublic class RequestThreadLoopHandler\nimplements Handler<Object,Object>\n```\n\n各サブスレッド上のループ毎にリクエスト処理を実行するハンドラ。\n<p/>\n本クラスは、サーバソケットや受信電文キュー等を監視し、リアルタイム応答を行う\nサーバ型プロセスで使用するハンドラである。\nサーバ型プロセスでは、マルチスレッドハンドラが生成する各サブスレッド上で\n次のループを繰り返す。\n<div><b>\nデータリーダによるリクエストの受信 → リクエスト処理の実行 → 次のリクエストの待機\n</b></div>\n本ハンドラではこの形態のループ制御を行う。\nサーバ型処理では、バッチ処理とは異なり、個々のリクエスト処理は完全に独立しており、\n1つのリクエスト処理がエラーとなっても他のリクエスト処理はそのまま継続しなければならない。\nこのため、本ハンドラで捕捉した例外は、プロセス正常停止要求や致命的な一部の例外を除き\nリトライ可能例外{@link RetryableException}として再送出する。\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "serviceUnavailabilityRetryInterval",
+      "level": 3,
+      "content": "```java\nprivate int serviceUnavailabilityRetryInterval\n```\n\n後続ハンドラから閉局中例外が送出された場合、\nこのスレッドが次のリクエスト処理を開始するまでに待機する時間。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Result handle(Object data, ExecutionContext ctx)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "setServiceUnavailabilityRetryInterval",
+      "level": 3,
+      "content": "```java\npublic RequestThreadLoopHandler setServiceUnavailabilityRetryInterval(int msec)\n```\n\n後続ハンドラから閉局中例外が送出された場合に、次のリクエスト処理を開始するまでに待機する時間を設定する。\n設定値が0以下の場合は、待機せずに即時リトライを行なう。\nデフォルトの設定値は1000msecである。\n\n**パラメータ:**\n- `msec` - 閉局エラー中の各スレッド待機時間 (単位: msec)\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s6"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-RequestThreadLoopHandler"
+}

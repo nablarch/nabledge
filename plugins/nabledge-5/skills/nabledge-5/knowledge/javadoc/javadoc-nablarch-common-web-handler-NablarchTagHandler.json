@@ -1,0 +1,134 @@
+{
+  "title": "class NablarchTagHandler",
+  "content": "**パッケージ:** nablarch.common.web.handler\n\n**実装されたインタフェース:**\n- HttpRequestHandler\n\n---\n\n```java\npublic class NablarchTagHandler\nimplements HttpRequestHandler\n```\n\nNablarchのカスタムタグ機能に必要なリクエスト処理を行うハンドラ。<br>\nこのハンドラは、1リクエストにつき一度だけ下記の処理を行う。\n内部フォワードにより1リクエストにつき複数回呼ばれても初回のみ処理を行う。\n<ul>\n<li>ボタン又はリンク毎のパラメータ変更機能を実現するために、リクエストに変更パラメータを設定する。</li>\n<li>リクエストにcheckboxタグのチェックなしに対応する値を設定する。</li>\n<li>hiddenタグの暗号化機能に対応する改竄チェックと復号を行う。</li>\n<li>HTTPアクセスログのリクエストパラメータを出力する。</li>\n<li>カスタムタグのデフォルト値をJSPで参照できるように、{@link nablarch.common.web.tag.CustomTagConfig}をリクエストスコープに設定する。</li>\n</ul>\n改竄チェックと復号は、カスタムタグのデフォルト値設定において、hiddenタグの暗号化機能を「使用する」に設定している場合のみ処理を行う。\nhiddenタグの暗号化機能を「使用しない」に設定している場合は、何もせずに次のハンドラに処理を委譲する。\nさらに、カスタムタグのデフォルト値設定の暗号化を行わないリクエストIDに現在のリクエストIDが含まれる場合は、\n改竄チェックと復号を行わずに次のハンドラに処理を委譲する。\n<br>\nこのハンドラを使用する場合は、改竄を検知した場合に遷移する画面とステータスを必ずプロパティで指定する必要がある。\n<br><br>\nHTTPアクセスログの出力は、{@link HttpAccessLogUtil}に委譲する。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DECRYPTED_PARAMS",
+      "level": 3,
+      "content": "```java\npublic static final String DECRYPTED_PARAMS\n```\n\n復号したリクエストパラメータをリクエストスコープに設定する属性名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "CUSTOM_TAG_CONFIG_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String CUSTOM_TAG_CONFIG_KEY\n```\n\n{@link CustomTagConfig}をリクエストスコープに格納する際に使用するキー\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "path",
+      "level": 3,
+      "content": "```java\nprivate String path\n```\n\n改竄を検知した場合に送信する画面のリソースパス\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "sessionExpirePath",
+      "level": 3,
+      "content": "```java\nprivate String sessionExpirePath\n```\n\nセッションから情報が取得出来なかった場合に表示する画面のリソースパス\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "statusCode",
+      "level": 3,
+      "content": "```java\nprivate int statusCode\n```\n\n改竄を検知した場合のレスポンスステータス\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "sessionExpireStatusCode",
+      "level": 3,
+      "content": "```java\nprivate int sessionExpireStatusCode\n```\n\nセッションから情報が取得出来なかった場合のレスポンスステータス\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "setPath",
+      "level": 3,
+      "content": "```java\npublic void setPath(String path)\n```\n\n改竄を検知した場合に送信する画面のリソースパスを設定する。\n\n**パラメータ:**\n- `path` - 改竄を検知した場合に送信する画面のリソースパス\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setSessionExpirePath",
+      "level": 3,
+      "content": "```java\npublic void setSessionExpirePath(String sessionExpirePath)\n```\n\nセッションから暗号化鍵情報が取得出来なかった場合に表示する画面のリソースパスを設定する。 <br />\nこの値を設定しなかった場合、 path プロパティに設定した改竄エラー画面が表示される。\n\n**パラメータ:**\n- `sessionExpirePath` - セッションから情報が取得出来なかった場合に表示する画面のリソースパス\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setStatusCode",
+      "level": 3,
+      "content": "```java\npublic void setStatusCode(int statusCode)\n```\n\n改竄を検知した場合のレスポンスステータスを設定する。<br>\nデフォルトは400。\n\n**パラメータ:**\n- `statusCode` - 改竄を検知した場合のレスポンスステータス\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setSessionExpireStatusCode",
+      "level": 3,
+      "content": "```java\npublic void setSessionExpireStatusCode(int sessionExpireStatusCode)\n```\n\nセッションから情報が取得出来なかった場合のレスポンスステータスを設定する。\n\n**パラメータ:**\n- `sessionExpireStatusCode` - セッションから情報が取得出来なかった場合のレスポンスステータス\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest request, ExecutionContext context)\n```\n\n{@inheritDoc}<br>\n<br>\n1リクエストにつき一度だけ下記の処理を順に行う。\n内部フォワードにより1リクエストにつき複数回呼ばれても初回のみ処理を行う。\n<ul>\n<li>リクエストに変更パラメータを設定する。</li>\n<li>\"nablarch_tag_config\"という変数名でリクエストスコープに{@link nablarch.common.web.tag.CustomTagConfig}を設定する。</li>\n<li>hiddenタグの値を復号し、リクエストパラメータに設定する。\n復号では、改竄チェックを行い、改竄を検知した場合は指定された画面に遷移する。\n復号が成功した場合は、次のハンドラに処理を委譲する。\n復号処理は、{@link HiddenEncryptionUtil#decryptHiddenValues(ExecutionContext, String)}に移譲する。</li>\n<li>HTTPアクセスログのリクエストパラメータを出力する。</li>\n</ul>\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "restoreKeyValueSet",
+      "level": 3,
+      "content": "```java\nprotected void restoreKeyValueSet(HttpRequest request)\n```\n\n複合キーの値を復元する。\n\n**パラメータ:**\n- `request` - {@link HttpRequest}\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "isDecryptionRequired",
+      "level": 3,
+      "content": "```java\nprivate boolean isDecryptionRequired(HttpRequest request, CustomTagConfig config)\n```\n\nhiddenタグの暗号化機能に対応する復号を行うか否かを判定する。\n<p/>\nhidden暗号化機能を使用する設定になっている場合、\nかつ現在のリクエストIDが暗号化しないリクエストID設定に含まれない場合にtrueを返す。\n\n**パラメータ:**\n- `config` - カスタムタグ設定\n- `request` - HTTPリクエストオブジェクト\n\n**戻り値:**\n復号を行う場合はtrue\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "writeParametersLog",
+      "level": 3,
+      "content": "```java\nprotected void writeParametersLog(HttpRequest request, ExecutionContext context)\n                        throws ClassCastException\n```\n\nHTTPアクセスログのリクエストパラメータを出力する。\n\n**パラメータ:**\n- `request` - {@link HttpRequest}\n- `context` - {@link ExecutionContext}\n\n**例外:**\n- `ClassCastException` - context の型がServletExecutionContext で無い場合。\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setNablarchHiddenValueToRequest",
+      "level": 3,
+      "content": "```java\nprivate void setNablarchHiddenValueToRequest(HttpRequest request, String submitName, Map<String,List<String>> params)\n```\n\nnablarch_hiddenパラメータをリクエストに設定する。\n\n**パラメータ:**\n- `request` - リクエスト\n- `submitName` - サブミットされた要素のname属性\n- `params` - nablarch_hiddenパラメータ\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setCheckboxOffValueToRequest",
+      "level": 3,
+      "content": "```java\nprivate void setCheckboxOffValueToRequest(HttpRequest request)\n```\n\ncheckboxタグのチェックなしに対応する値をリクエストに設定する。\n\n**パラメータ:**\n- `request` - リクエスト\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getNablarchHiddenValue",
+      "level": 3,
+      "content": "```java\nprivate String getNablarchHiddenValue(HttpRequest request)\n```\n\nnablarch_hiddenパラメータの値を取得する。\n\n**パラメータ:**\n- `request` - リクエスト\n\n**戻り値:**\nnablarch_hiddenパラメータの値。有効な値が存在しない場合はnull\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "getSubmitName",
+      "level": 3,
+      "content": "```java\nprivate String getSubmitName(HttpRequest request)\n```\n\nサブミットされた要素のname属性を取得する。\n\n**パラメータ:**\n- `request` - リクエスト\n\n**戻り値:**\nサブミットされた要素のname属性。有効な値が存在しない場合はnull\n\n---",
+      "id": "s21"
+    }
+  ],
+  "id": "javadoc-nablarch-common-web-handler-NablarchTagHandler"
+}

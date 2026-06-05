@@ -36,16 +36,16 @@
 
 ### ディレクトリと拡張子を設定する
 
-FilePathSetting にディレクトリ及び拡張子を設定し、
+[FilePathSetting](../../javadoc/javadoc-nablarch-core-util-FilePathSetting.md) にディレクトリ及び拡張子を設定し、
 コンポーネント設定ファイルに定義する。
 
 以下に例を示す。
 
 ポイント
 
-* FilePathSetting のコンポーネント名は `filePathSetting` とすること
-* basePathSettings にディレクトリを設定する
-* fileExtensions に拡張子を設定する
+* [FilePathSetting](../../javadoc/javadoc-nablarch-core-util-FilePathSetting.md) のコンポーネント名は `filePathSetting` とすること
+* [basePathSettings](../../javadoc/javadoc-nablarch-core-util-FilePathSetting.md) にディレクトリを設定する
+* [fileExtensions](../../javadoc/javadoc-nablarch-core-util-FilePathSetting.md) に拡張子を設定する
 * 1つのディレクトリに対して複数の拡張子を設定する場合には、論理名を複数設定する
 * 拡張子のないファイルの場合には、その論理名の拡張子設定を省略する
 * スキームは `file` と `classpath` が使用できる。省略した場合は、 `classpath` となる
@@ -92,7 +92,7 @@ FilePathSetting にディレクトリ及び拡張子を設定し、
 
 ## 論理名が示すファイルパスを取得する
 
-FilePathSetting を使用して、論理名に対応するファイルパスを取得する。
+[FilePathSetting](../../javadoc/javadoc-nablarch-core-util-FilePathSetting.md) を使用して、論理名に対応するファイルパスを取得する。
 
 以下に幾つかの使用例を示す。
 

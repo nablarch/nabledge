@@ -1,0 +1,134 @@
+{
+  "title": "class FilePathSetting",
+  "content": "**パッケージ:** nablarch.core.util\n\n---\n\n```java\npublic class FilePathSetting\n```\n\nベースパスの論理名と物理パスとの対応を管理するクラス。\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "basePathSettings",
+      "level": 3,
+      "content": "```java\nprivate Map<String,URL> basePathSettings\n```\n\nベースパスの論理名と物理パスとの対応を収めたMap\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "fileExtensions",
+      "level": 3,
+      "content": "```java\nprivate Map<String,String> fileExtensions\n```\n\nベースパスの論理名とデフォルト拡張子との対応を収めたMap。\nベースパスに対応するデフォルトの拡張子を使用する場合は、 本プロパティの設定を行う。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "REPOSITORY_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String REPOSITORY_KEY\n```\n\nシステムリポジトリ上の登録名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "DEFAULT_SETTING",
+      "level": 3,
+      "content": "```java\nprivate static final FilePathSetting DEFAULT_SETTING\n```\n\nデフォルトのコンバータ設定情報保持クラスのインスタンス。\nリポジトリからインスタンスを取得できなかった場合に、デフォルトでこのインスタンスが使用される。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "getInstance",
+      "level": 3,
+      "content": "```java\npublic static FilePathSetting getInstance()\n```\n\nこのクラスのインスタンスをリポジトリより取得する。\nリポジトリにインスタンスが存在しない場合は、デフォルトの設定で生成したこのクラスのインスタンスを返却する。\n\n**戻り値:**\nこのクラスのインスタンス\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getFile",
+      "level": 3,
+      "content": "```java\npublic File getFile(String basePathName, String fileName)\n             throws IllegalArgumentException\n```\n\n指定されたベースパスの直下に存在するファイルの抽象パスを取得する。\nファイルが存在しない場合は新たにファイルを作成してその抽象パスを返却する。\n\n**パラメータ:**\n- `basePathName` - ベースパスの論理名\n- `fileName` - 取得するファイル名\n\n**戻り値:**\n抽象パス\n\n**例外:**\n- `IllegalArgumentException` - 指定されたベースパス論理名に対応する物理パスが\n            設定されていない場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getFileIfExists",
+      "level": 3,
+      "content": "```java\npublic File getFileIfExists(String basePathName, String fileName)\n                     throws IllegalArgumentException\n```\n\n指定されたベースパスの直下に存在するファイルの抽象パスを取得する。\nその抽象パスを返却する。ファイルが存在しない場合はnullを返却する。\n\n**パラメータ:**\n- `basePathName` - ベースパスの論理名\n- `fileName` - 取得するファイル名\n\n**戻り値:**\n抽象パス\n\n**例外:**\n- `IllegalArgumentException` - 指定されたベースパス論理名に対応する物理パスが\n            設定されていない場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getFileWithoutCreate",
+      "level": 3,
+      "content": "```java\npublic File getFileWithoutCreate(String basePathName, String fileName)\n                          throws IllegalArgumentException\n```\n\n指定されたベースパスの直下に存在するファイルの抽象パスを取得する。\n\n**パラメータ:**\n- `basePathName` - ベースパスの論理名\n- `fileName` - 取得するファイル名\n\n**戻り値:**\n抽象パス\n\n**例外:**\n- `IllegalArgumentException` - 指定されたベースパス論理名に対応する物理パスが\n            設定されていない場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "resolvePath",
+      "level": 3,
+      "content": "```java\nprotected File resolvePath(String basePathName, String fileName, boolean createNew)\n                 throws IllegalArgumentException\n```\n\n指定されたベースパスの直下に存在するファイルの抽象パスを作成して返却する。\n\n**パラメータ:**\n- `basePathName` - ベースパスの論理名\n- `fileName` - 取得するファイル名\n- `createNew` - 指定したファイルが存在しない場合に新規ファイルを\n                      作成するかどうか。（作成する場合はtrue）\n\n**戻り値:**\n抽象パス\n\n**例外:**\n- `IllegalArgumentException` - 指定されたベースパス論理名に対応する物理パスが\n            設定されていない場合\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getBasePathUrl",
+      "level": 3,
+      "content": "```java\npublic URL getBasePathUrl(String basePathName)\n```\n\nベースパスのURLを取得する。\n\n**パラメータ:**\n- `basePathName` - ベースパスの論理名\n\n**戻り値:**\nURL\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getBaseDirectory",
+      "level": 3,
+      "content": "```java\npublic File getBaseDirectory(String basePathName)\n```\n\nベースディレクトリを取得する。\n\n**パラメータ:**\n- `basePathName` - ベースパスの論理名\n\n**戻り値:**\nベースディレクトリ\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getFileNameJoinExtension",
+      "level": 3,
+      "content": "```java\nprotected String getFileNameJoinExtension(String basePathName, String fileName)\n```\n\nベースパスの論理名に対応する拡張子が存在する場合、ファイル名と拡張子を結合した文字列を返却する。\n対応する拡張子が存在しない場合は、引数のファイル名をそのまま返却する。\n\n**パラメータ:**\n- `basePathName` - ベースパスの論理名\n- `fileName` - ファイル名\n\n**戻り値:**\nファイル名と拡張子を結合した文字列\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setBasePathSettings",
+      "level": 3,
+      "content": "```java\npublic FilePathSetting setBasePathSettings(Map<String,String> basePathSettings)\n```\n\nベースパスの論理名と物理パスとの対応を収めたMapを設定する。\n\n**パラメータ:**\n- `basePathSettings` - ベースパスの論理名と物理パス（URLで指定）との対応を収めたMap\n\n**戻り値:**\nこのクラス自体のインスタンス\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "addBasePathSetting",
+      "level": 3,
+      "content": "```java\npublic FilePathSetting addBasePathSetting(String basePathName, String path)\n```\n\nベースパスの設定を追加する。\n<p/>\nベースパスにはディレクトリのみ指定できる。ディレクトリでない場合、例外をスローする。\n<p/>\nベースパスはURLで指定すること。URLを使用して、ファイルシステムとクラスパス上のリソースを指定することができる。<br/>\nURLのフォーマットは下記の通りである。\n<pre>\n    &lt;スキーム名&gt;:&lt;リソースのパス&gt;\n\n    スキーム名:\n        ファイルパスの場合 \"file\"\n        クラスパスの場合 \"classpath\"\n</pre>\nURLの指定例を下記に示す。<br>\n<pre>\n    ファイルパスの場合\n        \"file:./main/format\"\n\n    クラスパスの場合\n        \"classpath:web/format\"\n</pre>\nベースパスにクラスパスを指定する場合、そのパスにはディレクトリが存在している必要がある。ディレクトリが存在しない場合は、例外をスローする。\n<p/>\nベースパスにファイルパスを指定する場合、そのパスにディレクトリが存在していなければ、本メソッド内でディレクトリを作成する。\n\n**パラメータ:**\n- `basePathName` - ベースパスの論理名\n- `path` - ベースパス（URLで指定）\n\n**戻り値:**\nこのクラス自体のインスタンス\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getAddBasePathExceptionMessage",
+      "level": 3,
+      "content": "```java\nprivate static String getAddBasePathExceptionMessage(String basePathName, String path)\n```\n\nベースパスを追加する際に発生する例外メッセージの共通部を取得する。\n\n**パラメータ:**\n- `basePathName` - ベースパスの論理名\n- `path` - ベースパス\n\n**戻り値:**\nベースパスが不正な場合の例外メッセージの共通部\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "addFileExtensions",
+      "level": 3,
+      "content": "```java\npublic FilePathSetting addFileExtensions(String name, String extension)\n```\n\nベースパスの論理名に対応する拡張子を追加する。\n\n**パラメータ:**\n- `name` - ベースパスの論理名\n- `extension` - ベースパスの論理名に対応する拡張子\n\n**戻り値:**\nこのクラス自体のインスタンス\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "getBasePathSettings",
+      "level": 3,
+      "content": "```java\npublic Map<String,URL> getBasePathSettings()\n```\n\nベースパスの論理名と物理パスとの対応を収めたMapを取得する。\n\n**戻り値:**\nベースパスの論理名と物理パスとの対応を収めたMap\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getFileExtensions",
+      "level": 3,
+      "content": "```java\npublic Map<String,String> getFileExtensions()\n```\n\nベースパスの論理名と拡張子との対応を収めたMapを取得する。\n\n**戻り値:**\nベースパスの論理名とデフォルト拡張子との対応を収めたMap\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "setFileExtensions",
+      "level": 3,
+      "content": "```java\npublic void setFileExtensions(Map<String,String> fileExtensions)\n```\n\nベースパスの論理名と拡張子との対応を収めたMapを設定する。\n\n**パラメータ:**\n- `fileExtensions` - ベースパスの論理名とデフォルト拡張子との対応を収めたMap\n\n---",
+      "id": "s21"
+    }
+  ],
+  "id": "javadoc-nablarch-core-util-FilePathSetting"
+}

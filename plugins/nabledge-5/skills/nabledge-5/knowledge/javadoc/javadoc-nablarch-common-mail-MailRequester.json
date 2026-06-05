@@ -1,0 +1,152 @@
+{
+  "title": "class MailRequester",
+  "content": "**パッケージ:** nablarch.common.mail\n\n---\n\n```java\npublic class MailRequester\n```\n\nメール送信要求を行うクラス。\n<p/>\n本クラスのメール送信要求メソッドを呼び出すことで、メール送信要求を管理用テーブル群にINSERTできる。\n<p/>\nメール送信要求の種類について<br>\nメール送信要求は以下の二種類がある。\n<ul>\n    <li>定型メール送信({@link TemplateMailContext})。\n        予めデータベースに登録されたテンプレートを元にメールを作成・送信する。</li>\n    <li>非定型メール送信({@link FreeTextMailContext})。任意の件名・本文でメールを作成・送信する。</li>\n</ul>\nメールの送信単位<br>\nメール送信要求はメール送信要求APIの呼び出し毎に一つ作成さる。一つのメール送信要求につき一通のメールが送信される。\n\n**作成者:** Shinsuke Yoshio  \n**関連項目:** MailUtil#getMailRequester()  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "mailRequestConfig",
+      "level": 3,
+      "content": "```java\nprivate MailRequestConfig mailRequestConfig\n```\n\nメール共通設定を保持するデータオブジェクト\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "mailConfig",
+      "level": 3,
+      "content": "```java\nprivate MailConfig mailConfig\n```\n\nメール関連のコード値を保持するデータオブジェクト\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "mailRequestIdGenerator",
+      "level": 3,
+      "content": "```java\nprivate IdGenerator mailRequestIdGenerator\n```\n\nメール送信要求IDジェネレータ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "mailRequestTable",
+      "level": 3,
+      "content": "```java\nprivate MailRequestTable mailRequestTable\n```\n\nメール要求管理テーブルのスキーマ情報\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "mailRecipientTable",
+      "level": 3,
+      "content": "```java\nprivate MailRecipientTable mailRecipientTable\n```\n\nメール送信先管理テーブルのスキーマ情報\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "mailAttachedFileTable",
+      "level": 3,
+      "content": "```java\nprivate MailAttachedFileTable mailAttachedFileTable\n```\n\n添付ファイル管理テーブルのスキーマ情報\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "mailTransactionManager",
+      "level": 3,
+      "content": "```java\nprivate SimpleDbTransactionManager mailTransactionManager\n```\n\nメール送信時のDB登録に利用するトランザクションマネージャ\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "templateEngineMailProcessor",
+      "level": 3,
+      "content": "```java\nprivate TemplateEngineMailProcessor templateEngineMailProcessor\n```\n\n定型メールの件名と本文を構築するテンプレートエンジン処理クラス\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "templateEngineContextPreparer",
+      "level": 3,
+      "content": "```java\nprivate final TemplateEngineContextPreparer templateEngineContextPreparer\n```\n\nテンプレートエンジンを使用して件名と本文の準備をするクラス\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s11"
+    },
+    {
+      "title": "requestToSend",
+      "level": 3,
+      "content": "```java\npublic String requestToSend(FreeTextMailContext ctx)\n                     throws AttachedFileSizeOverException, RecipientCountException\n```\n\n非定型メールの送信要求を行う。\n\n**パラメータ:**\n- `ctx` - 非定型メール送信要求\n\n**戻り値:**\nメール送信要求ID\n\n**例外:**\n- `AttachedFileSizeOverException` - 添付ファイルのサイズが上限値を超えた場合\n- `RecipientCountException` - 宛先数が上限値を超えた場合\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "requestToSend",
+      "level": 3,
+      "content": "```java\npublic String requestToSend(TemplateMailContext ctx)\n                     throws AttachedFileSizeOverException, RecipientCountException\n```\n\n定型メールの送信要求を行う。\n\n**パラメータ:**\n- `ctx` - 定型メール送信要求\n\n**戻り値:**\nメール送信要求ID\n\n**例外:**\n- `AttachedFileSizeOverException` - 添付ファイルのサイズが上限値を超えた場合\n- `RecipientCountException` - 宛先数が上限値を超えた場合\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "sendMail",
+      "level": 3,
+      "content": "```java\nprivate String sendMail(MailContext ctx)\n```\n\nメール送信要求処理\n\n**パラメータ:**\n- `ctx` - メール送信要求\n\n**戻り値:**\nメール送信要求ID\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setupMailWithTransactionName",
+      "level": 3,
+      "content": "```java\nprivate String setupMailWithTransactionName(MailContext ctx, String transactionName)\n```\n\nメール送信要求IDの採番、送信DBへの登録処理\n\n**パラメータ:**\n- `ctx` - メール送信要求\n- `transactionName` - トランザクション名\n\n**戻り値:**\nメール送信要求ID\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setupMail",
+      "level": 3,
+      "content": "```java\nprivate String setupMail(MailContext ctx)\n```\n\nメール送信要求IDの採番、送信DBへの登録処理\n\n**パラメータ:**\n- `ctx` - メール送信要求\n\n**戻り値:**\nメール送信要求ID\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setMailRequestConfig",
+      "level": 3,
+      "content": "```java\npublic void setMailRequestConfig(MailRequestConfig mailRequestConfig)\n```\n\nメール送信要求共通設定を保持するデータオブジェクトを設定する。\n\n**パラメータ:**\n- `mailRequestConfig` - メール送信要求共通設定を保持するデータオブジェクト\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setMailConfig",
+      "level": 3,
+      "content": "```java\npublic void setMailConfig(MailConfig mailConfig)\n```\n\nメール関連のコード値を保持するデータオブジェクトを設定する。\n\n**パラメータ:**\n- `mailConfig` - メール関連のコード値を保持するデータオブジェクト\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setMailRequestIdGenerator",
+      "level": 3,
+      "content": "```java\npublic void setMailRequestIdGenerator(IdGenerator mailRequestIdGenerator)\n```\n\nメール送信要求IDジェネレータを設定する。\n\n**パラメータ:**\n- `mailRequestIdGenerator` - メール送信要求IDジェネレータ\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "setMailRequestTable",
+      "level": 3,
+      "content": "```java\npublic void setMailRequestTable(MailRequestTable mailRequestTable)\n```\n\nmailSendRequestTable メール送信要求管理テーブルのスキーマ情報を設定する。\n\n**パラメータ:**\n- `mailRequestTable` - メール送信要求管理テーブルのスキーマ。\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "setMailRecipientTable",
+      "level": 3,
+      "content": "```java\npublic void setMailRecipientTable(MailRecipientTable mailRecipientTable)\n```\n\nメール送信先管理テーブルのスキーマ情報を設定する。\n\n**パラメータ:**\n- `mailRecipientTable` - メール送信先管理テーブルのスキーマ情報\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "setMailAttachedFileTable",
+      "level": 3,
+      "content": "```java\npublic void setMailAttachedFileTable(MailAttachedFileTable mailAttachedFileTable)\n```\n\n添付ファイル管理テーブルのスキーマ情報を設定する。\n\n**パラメータ:**\n- `mailAttachedFileTable` - 添付ファイル管理テーブルのスキーマ情報\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "setMailTransactionManager",
+      "level": 3,
+      "content": "```java\npublic void setMailTransactionManager(SimpleDbTransactionManager mailTransactionManager)\n```\n\nメール送信時に利用するトランザクションマネージャを設定する。\n\n**パラメータ:**\n- `mailTransactionManager` - トランザクションマネージャ\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "setTemplateEngineMailProcessor",
+      "level": 3,
+      "content": "```java\npublic void setTemplateEngineMailProcessor(TemplateEngineMailProcessor templateEngineMailProcessor)\n```\n\n定型メールの件名と本文を構築するテンプレートエンジン処理クラスを設定する。\n\n**パラメータ:**\n- `templateEngineMailProcessor` - 定型メールの件名と本文を構築するテンプレートエンジン処理クラス\n\n---",
+      "id": "s24"
+    }
+  ],
+  "id": "javadoc-nablarch-common-mail-MailRequester"
+}

@@ -1,0 +1,74 @@
+{
+  "title": "class HttpRequestJavaPackageMapping",
+  "content": "**パッケージ:** nablarch.fw.web.handler\n\n**実装されたインタフェース:**\n- HttpRequestHandler\n\n---\n\n```java\npublic class HttpRequestJavaPackageMapping\nimplements HttpRequestHandler\n```\n\nこのハンドラは、画面オンライン処理におけるリクエストパス中の部分文字列(ベースURI)を\nJavaパッケージ階層にマッピングすることで、動的に委譲先ハンドラを決定するディスパッチ処理を行う。\n本ハンドラの実装は基本的に {@link RequestPathJavaPackageMapping} のラッパーであり\nその機能は以下の2点を除けば全く同じものである。\n<pre>\n1. ディスパッチ対象のクラスが確定した時点で、HTTPアクセスログにその内容を出力する。\n2. ベースパスを設定する際にURLの書式バリデーションを行うアクセサ {@link #setBaseUri(String) }を追加。\n</pre>\n\n機能の詳細については、 {@link RequestPathJavaPackageMapping} を参照すること。\n\n**関連項目:** RequestPathJavaPackageMapping  \n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "mapping",
+      "level": 3,
+      "content": "```java\nprivate final Mapping mapping\n```\n\nディスパッチャの実体\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "HttpRequestJavaPackageMapping",
+      "level": 3,
+      "content": "```java\npublic HttpRequestJavaPackageMapping()\n```\n\nコンストラクタ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "HttpRequestJavaPackageMapping",
+      "level": 3,
+      "content": "```java\npublic HttpRequestJavaPackageMapping(String baseUri, String basePackage)\n```\n\nコンストラクタ\n\n**パラメータ:**\n- `baseUri` - マップ元リクエストURI\n- `basePackage` - マップ先Javaパッケージ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest request, ExecutionContext context)\n```\n\n{@inheritDoc}\nURI中の部分文字列をJavaパッケージへマッピングすることで動的に\n委譲先のハンドラを決定し、処理を委譲する。\nまた、委譲先のクラスがハンドラインターフェースを実装していない場合でも、\n{@link nablarch.fw.web.HttpMethodBinding} により処理を委譲する。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setBasePath",
+      "level": 3,
+      "content": "```java\npublic HttpRequestJavaPackageMapping setBasePath(String basePath)\n```\n\nベースパスを設定する。\n\n**パラメータ:**\n- `basePath` - ベースパス\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setBaseUri",
+      "level": 3,
+      "content": "```java\npublic HttpRequestJavaPackageMapping setBaseUri(String baseUri)\n```\n\nベースURIを設定する。({@link #setBasePath(String)}のシノニム)\n\n**パラメータ:**\n- `baseUri` - ベースURI\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setBasePackage",
+      "level": 3,
+      "content": "```java\npublic HttpRequestJavaPackageMapping setBasePackage(String basePackage)\n```\n\nベースパッケージを設定する。\n\n**パラメータ:**\n- `basePackage` - ベースパッケージ\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setOptionalPackageMappingEntries",
+      "level": 3,
+      "content": "```java\npublic HttpRequestJavaPackageMapping setOptionalPackageMappingEntries(List<JavaPackageMappingEntry> optionalPackageMappingEntries)\n```\n\nRequestHandlerEntryでURIに合致したマッピング先Javaパッケージを上書きする場合に使用する、JavaPackageMappingEntryのリストを設定する。\n\n**パラメータ:**\n- `optionalPackageMappingEntries` - RequestHandlerEntryでURIに合致したマッピング先Javaパッケージを上書きする場合に使用する、JavaPackageMappingEntryのリスト\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s11"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-HttpRequestJavaPackageMapping"
+}

@@ -1,0 +1,68 @@
+{
+  "title": "class ThreadContextHandler",
+  "content": "**パッケージ:** nablarch.common.handler.threadcontext\n\n**実装されたインタフェース:**\n- Handler<Object,Object>\n- InboundHandleable\n- OutboundHandleable\n\n---\n\n```java\npublic class ThreadContextHandler\nimplements Handler<Object,Object>, InboundHandleable, OutboundHandleable\n```\n\nスレッドコンテキストに保持される共通属性を管理するハンドラ。\n\nフレームワークには、スレッドコンテキストにユーザID・リクエストID・言語設定を保持する実装が含まれている。\nこれらを有効化するには以下のリポジトリ設定を追加する。\n  (同様にプロジェクト固有の属性を追加することも可能である。)\n<pre>\n&lt;component class=\"nablarch.common.handler.threadcontext.ThreadContextHandler\"&gt;\n  &lt;property name=\"attributes\"&gt;\n    &lt;list&gt;\n      &lt;!-- ユーザID --&gt;\n      &lt;component class=\"nablarch.common.handler.threadcontext.UserIdAttribute\"&gt;\n        &lt;property name=\"sessionKey\"  value=\"user.id\" /&gt;\n        &lt;property name=\"anonymousId\" value=\"guest\" /&gt;\n      &lt;/component&gt;\n\n      &lt;!-- リクエストID --&gt;\n      &lt;component class=\"nablarch.common.handler.threadcontext.RequestIdAttribute\" /&gt;\n\n      &lt;!-- 言語 --&gt;\n      &lt;component class=\"nablarch.common.handler.threadcontext.LanguageAttribute\"&gt;\n          &lt;property name=\"defaultLanguage\" value=\"ja\" /&gt;\n      &lt;/component&gt;\n    &lt;/list&gt;\n  &lt;/property&gt;\n&lt;/component&gt;\n</pre>\n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "attributes",
+      "level": 3,
+      "content": "```java\nprivate List<ThreadContextAttribute> attributes\n```\n\nこのハンドラが管理する属性のリスト\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "ThreadContextHandler",
+      "level": 3,
+      "content": "```java\npublic ThreadContextHandler(ThreadContextAttribute attributes)\n```\n\n引数に渡されたスレッドコンテキスト属性を管理するハンドラを生成する。\n<pre>\nこのメソッドの処理は以下のソースコードと等価である。\n\n    new ThreadContextHandler()\n        .setAttributes(Arrays.asList(attributes))\n</pre>\n\n**パラメータ:**\n- `attributes` - スレッドコンテキスト属性\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "ThreadContextHandler",
+      "level": 3,
+      "content": "```java\npublic ThreadContextHandler()\n```\n\nデフォルトコンストラクタ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(Object input, ExecutionContext ctx)\n```\n\n{@inheritDoc}\n<pre>\nこのクラスの実装では以下の処理を行う。\n\n  1. スレッドコンテキスト上の全てのエントリを削除する。\n  2. このハンドラに登録されている全ての属性について、\n     キー(ThreadContextAttribute#getKey()の結果)と値(ThreadContextAttribute#getValue()の結果)を\n     スレッドコンテキストに格納する。\n  3. 後続のリクエストハンドラに処理を委譲する。\n</pre>\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setAttributes",
+      "level": 3,
+      "content": "```java\npublic ThreadContextHandler setAttributes(List<ThreadContextAttribute> attributes)\n```\n\nこのハンドラが管理する属性のリストを登録する。\n\n**パラメータ:**\n- `attributes` - このハンドラが管理する属性のリスト\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "handleInbound",
+      "level": 3,
+      "content": "```java\npublic Result handleInbound(ExecutionContext context)\n```\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "handleOutbound",
+      "level": 3,
+      "content": "```java\npublic Result handleOutbound(ExecutionContext context)\n```\n\n---",
+      "id": "s10"
+    }
+  ],
+  "id": "javadoc-nablarch-common-handler-threadcontext-ThreadContextHandler"
+}

@@ -139,11 +139,11 @@ public List<Project> find(JaxRsHttpRequest req) {
 
 * 検索結果をJSON形式でクライアントに返却するため、 Produces アノテーションに
   `MediaType.APPLICATION_JSON` を指定する。
-* クエリパラメータは JaxRsHttpRequest から取得する。
-* BeanUtil を使用してリクエストパラメータからフォームを作成する。
-* ValidatorUtil#validate
+* クエリパラメータは [JaxRsHttpRequest](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxRsHttpRequest.md) から取得する。
+* [BeanUtil](../../javadoc/javadoc-nablarch-core-beans-BeanUtil.md) を使用してリクエストパラメータからフォームを作成する。
+* [ValidatorUtil#validate](../../javadoc/javadoc-nablarch-core-validation-ee-ValidatorUtil.md)
   を使用してフォームのバリデーションを行う。
-* フォームの値を BeanUtil を使用して検索条件Beanにコピーする。
+* フォームの値を [BeanUtil](../../javadoc/javadoc-nablarch-core-beans-BeanUtil.md) を使用して検索条件Beanにコピーする。
 * [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) を使用して取得したプロジェクト情報のリストを戻り値として返却する。
 * 戻り値のオブジェクトは [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#リクエストボディ変換ハンドラ) によってJSON形式に変換されるため、
   業務アクションメソッド内で変換処理を実装する必要はない。

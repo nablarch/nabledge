@@ -1,0 +1,206 @@
+{
+  "title": "class StringUtil",
+  "content": "**パッケージ:** nablarch.core.util\n\n---\n\n```java\npublic final class StringUtil\n```\n\n文字列ユーティリティクラス。<br/>\n文字列に関する汎用的な処理を提供する。\n<p/>\n本クラスのメソッドには、{@link #insert(String, String, int...)}のように\n文字列編集用途に使用するメソッドも用意されている。これらのメソッドは、\n例えば、電話番号をハイフン区切りに整形する等のフォーマット処理用に使用されることを想定している。\nプロジェクトでフォーマット用のユーティリティを作成する場合、これらのメソッドを使用するとよい。\n\n本クラスはサロゲートペアに対応している。\n\n**作成者:** Hisaaki Sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "StringUtil",
+      "level": 3,
+      "content": "```java\nprivate StringUtil()\n```\n\nprivateコンストラクタ。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "lpad",
+      "level": 3,
+      "content": "```java\npublic static String lpad(String string, int length, char padChar)\n```\n\n文字列の左側に、指定された文字を指定された文字列長に到達するまで加える。\n<p/>\n{@code string}の文字数 >= {@code length} の場合は{@code string}の文字列をそのまま返却。<br/>\n例:\n<code><pre>\nStringUtil.lpad(\"100\", 10, '0'); //--> \"0000000100\"\n</pre></code>\n\n**パラメータ:**\n- `string` - 文字列({@code null}不可)\n- `length` - 変換後文字列のサイズ(0以上)\n- `padChar` - 加える文字\n\n**戻り値:**\nフォーマット後文字列\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "rpad",
+      "level": 3,
+      "content": "```java\npublic static String rpad(String string, int length, char padChar)\n```\n\n文字列の右側に、指定された文字を指定された文字列長に到達するまで加える。\n<p/>\n{@code string}の文字数 >= {@code length} の場合は{@code string}の文字列をそのまま返却。<br/>\n例:\n<code><pre>\nStringUtil.rpad(\"100\", 10, '0'); //--> \"1000000000\"\n</pre></code>\n\n**パラメータ:**\n- `string` - 文字列({@code null}不可)\n- `length` - 変換後文字列のサイズ(0以上)\n- `padChar` - 加える文字\n\n**戻り値:**\nフォーマット後文字列\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "isNullOrEmpty",
+      "level": 3,
+      "content": "```java\npublic static boolean isNullOrEmpty(String string)\n```\n\n{@code null}または空文字列判定を行う。\n<pre>\n|引数                | 戻り値\n+--------------------+--------\n| null               | true\n| \"\"                 | true\n| \"hoge\"             | false\n| \" \" (半角スペース) | false\n| \"　\"(全角スペース) | false\n</pre>\n\n**パラメータ:**\n- `string` - 文字列\n\n**戻り値:**\n{@code null}または空文字列の場合は{@code true}\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "isNullOrEmpty",
+      "level": 3,
+      "content": "```java\npublic static boolean isNullOrEmpty(String strings)\n```\n\n{@code null}または空文字列判定を行う。\n<p/>\n与えられた文字列配列内の要素全てが{@code null}または空文字であれば{@code true}を返却する。\n<pre>\n|引数                | 戻り値\n+--------------------+--------\n| null               | true\n| {}                 | true\n| {\"\", null}         | true\n| { null, \"a\" }      | false\n| \" \" (半角スペース) | false\n| \"　\"(全角スペース) | false\n</pre>\n\n**パラメータ:**\n- `strings` - 文字列配列\n\n**戻り値:**\n全要素が{@code null}または空文字の時、{@code true}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "isNullOrEmpty",
+      "level": 3,
+      "content": "```java\npublic static boolean isNullOrEmpty(Collection<String> strings)\n```\n\n{@code null}または空文字列判定を行う。\n<p/>\n与えられたコレクション内の要素全てが{@code null}または空文字であれば{@code true}を返却する。\n<pre>\n|引数                | 戻り値\n+--------------------+--------\n| null               | true\n| {}                 | true\n| {\"\", null}         | true\n| { null, \"a\" }      | false\n| \" \" (半角スペース) | false\n| \"　\"(全角スペース) | false\n</pre>\n\n**パラメータ:**\n- `strings` - 文字列を格納したコレクション\n\n**戻り値:**\n全要素が{@code null}または空文字の時、{@code true}\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "hasValue",
+      "level": 3,
+      "content": "```java\npublic static boolean hasValue(String string)\n```\n\nStringインスタンスが何らかの文字を含んでいるか判定する。\n<p/>\n{@link StringUtil#isNullOrEmpty(String)}と逆の真偽値を返却する。\n否定演算子を使用することで可読性が劣る場合は本メソッドを使用すると良い。<br/>\n例を以下に示す。\n<code>\n<pre>\nprivate String something;\n\npublic void hasSomething() {\n    return (!StringUtil.isNullOrEmpty(this.something)) {\n}\n</pre>\n</code>\n以下のように書き換えることで、単純に読み下すことができる。\n<code>\n<pre>\npublic void hasSomething() {\n    return StringUtil.hasValue(this.something);\n}\n</pre>\n</code>\n\n**パラメータ:**\n- `string` - 文字列\n\n**戻り値:**\nなんらかの文字が含まれている場合は{@code true}\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "hasValue",
+      "level": 3,
+      "content": "```java\npublic static boolean hasValue(String strings)\n```\n\n文字列配列が何らかの文字列を含んでいるか判定する。\n<p/>\n{@link StringUtil#isNullOrEmpty(String...)}と逆の真偽値を返却する。\n否定演算子を使用することで可読性が劣る場合は本メソッドを使用すると良い。\n\n**パラメータ:**\n- `strings` - 調査対象となる文字列配列\n\n**戻り値:**\n何らかの文字列を含む場合、{@code true}\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "hasValue",
+      "level": 3,
+      "content": "```java\npublic static boolean hasValue(Collection<String> strings)\n```\n\nコレクションが何らかの文字列を含んでいるか判定する。\n<p/>\n{@link StringUtil#isNullOrEmpty(Collection)}と逆の真偽値を返却する。\n否定演算子を使用することで可読性が劣る場合は本メソッドを使用すると良い。\n\n**パラメータ:**\n- `strings` - 調査対象となるコレクション\n\n**戻り値:**\n何らかの文字列を含む場合、{@code true}\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "toString",
+      "level": 3,
+      "content": "```java\npublic static String toString(byte[] bytes, Charset charset)\n```\n\n指定された文字セットでバイト配列をデコードする。\n<p/>\nJDK1.6以上を使用する場合は、<code>java.lang.String(byte[], Charset)</code>を使用すること。<br/>\n{@code bytes}が{@code null}だった場合、{@code null}を返す。\n\n**パラメータ:**\n- `bytes` - バイト配列\n- `charset` - 文字セット\n\n**戻り値:**\n文字列\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "toString",
+      "level": 3,
+      "content": "```java\npublic static String toString(Object value)\n```\n\n指定された値を文字列に変換する。\n<p>\n指定された値が{@link java.math.BigDecimal}の場合には、\n{@link BigDecimal#toPlainString()}を使用して文字列に変換する。\nそれ以外のオブジェクトの場合には、{@code toString()}により文字列化を行う。\n\n**パラメータ:**\n- `value` - 文字列に変換する値\n\n**戻り値:**\n文字列に変換した値\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getBytes",
+      "level": 3,
+      "content": "```java\npublic static byte[] getBytes(String string, Charset charset)\n```\n\n指定された文字セットで文字列をエンコードする。\n<p/>\nJDK1.6以上を使用する場合は、<code>java.lang.String#getBytes(Charset)</code>を使用すること。<br/>\n{@code string}が{@code null}だった場合、{@code null}を返す。\n{@code string}が空文字だった場合、空のバイト配列を返す。\n\n**パラメータ:**\n- `string` - 文字列\n- `charset` - 文字セット\n\n**戻り値:**\nバイト配列\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "repeat",
+      "level": 3,
+      "content": "```java\npublic static String repeat(Object repeated, int times)\n```\n\n文字列を繰り返す。\n<p/>\n引数が文字列でない場合は、{@link String#valueOf(Object)}された文字列が繰り返される。\n\n**パラメータ:**\n- `repeated` - 繰り返し文字列({@code null}不可)\n- `times` - 繰り返し回数(0以上)\n\n**戻り値:**\n文字列\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "insert",
+      "level": 3,
+      "content": "```java\npublic static String insert(String target, String delimiter, int intervals)\n```\n\n区切り文字を文字列先頭から挿入する。\n<p/>\n例:\n<code><pre>\nStringUtil.insert(\"あいうえお\", \",\", 1, 1, 1); //-->あ,い,う,えお\n</pre></code>\n\n**パラメータ:**\n- `target` - 対象文字列({@code null}不可)\n- `delimiter` - 区切り文字({@code null}不可)\n- `intervals` - 挿入間隔({@code null}不可・0不可)\n\n**戻り値:**\n区切り文字挿入後の文字列\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "insertFromRight",
+      "level": 3,
+      "content": "```java\npublic static String insertFromRight(String target, String delimiter, int intervals)\n```\n\n区切り文字を右側から挿入する。\n<p/>\n例:\n<code><pre>\nStringUtil.insertFromRight(\"あいうえお\", \",\", 1, 1, 1); //-->あい,う,え,お\n</pre></code>\n\n**パラメータ:**\n- `target` - 対象文字列({@code null}不可)\n- `delimiter` - 区切り文字({@code null}不可)\n- `intervals` - 文字列後ろからの挿入間隔({@code null}不可・0不可)\n\n**戻り値:**\n区切り文字挿入後の文字列\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "insertRepeatedly",
+      "level": 3,
+      "content": "```java\npublic static String insertRepeatedly(String target, String delimiter, int interval)\n```\n\n区切り文字を等間隔で挿入する。\n<p/>\n例:\n<code><pre>\nStringUtil.insertRepeatedly(\"あいうえお\", \",\", 1) //-->あ,い,う,え,お\n</pre></code>\n\n**パラメータ:**\n- `target` - 対象文字列({@code null}不可)\n- `delimiter` - 区切り文字({@code null}不可)\n- `interval` - 間隔(0不可)\n\n**戻り値:**\n区切り文字挿入後の文字列\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "insertRepeatedlyFromRight",
+      "level": 3,
+      "content": "```java\npublic static String insertRepeatedlyFromRight(String target, String delimiter, int interval)\n```\n\n区切り文字を右側から等間隔で挿入する。\n<p/>\n例：\n<code><pre>\nStringUtil.insertRepeatedlyFromRight(\"あいうえお\", \",\", 1) //-->あ,い,う,え,お\n</pre></code>\n\n**パラメータ:**\n- `target` - 対象文字列\n- `delimiter` - 区切り文字\n- `interval` - 間隔(0不可)\n\n**戻り値:**\n区切り文字挿入後の文字列\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "insertAtRegularInterval",
+      "level": 3,
+      "content": "```java\nprivate static StringBuilder insertAtRegularInterval(String delimiter, int interval, StringIterator itr)\n```\n\n区切り文字を等間隔で挿入する。\n\n**パラメータ:**\n- `delimiter` - 区切り文字({@code null}不可)\n- `interval` - 間隔\n- `itr` - 文字列走査に使用するイテレータ\n\n**戻り値:**\n区切り文字挿入後の文字列\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "assertNotTrue",
+      "level": 3,
+      "content": "```java\nprivate static void assertNotTrue(boolean conditionThatMustNotBeTrue, String msgWhenTrue)\n```\n\n条件式が成り立たないことを表明する。<br/>\n\n**パラメータ:**\n- `conditionThatMustNotBeTrue` - {@code true}であってはならない条件\n- `msgWhenTrue` - 条件式が{@code true}であった場合のメッセージ\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "assertNotNull",
+      "level": 3,
+      "content": "```java\nprivate static void assertNotNull(Object argumentThatMustNotBeNull, String argumentName)\n```\n\n引数が{@code null}でないことを表明する。\n\n**パラメータ:**\n- `argumentThatMustNotBeNull` - {@code null}であってはならない引数\n- `argumentName` - 引数の名前\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "checkIntervals",
+      "level": 3,
+      "content": "```java\nprivate static void checkIntervals(int[] intervals)\n```\n\n文字列挿入の間隔チェックする。<br/>\n以下の場合、例外を送出する。\n<ul>\n<li>引数が{@code null}または要素数が0の場合</li>\n<li>要素のうち、いずれかが0以下である場合</li>\n</ul>\n\n**パラメータ:**\n- `intervals` - 間隔\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "checkInterval",
+      "level": 3,
+      "content": "```java\nprivate static void checkInterval(int interval)\n```\n\n文字列挿入の間隔をチェックする。\n0以下の場合は例外を送出する。\n\n**パラメータ:**\n- `interval` - 間隔\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "chomp",
+      "level": 3,
+      "content": "```java\npublic static String chomp(String target, String end)\n```\n\n行末の文字列を切り落とす。\n\n**パラメータ:**\n- `target` - 文字列({@code null}不可)\n- `end` - 取り除く文字列({@code null}不可)\n\n**戻り値:**\n行末を取り除いた文字列\n\n**例外:**\n- `{@link` - IllegalArgumentException} 引数が{@code null}の場合\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "merge",
+      "level": 3,
+      "content": "```java\npublic static String[] merge(String[] arrays)\n```\n\n文字列配列を連結する。\n\n**パラメータ:**\n- `arrays` - 配列({@code null}不可)\n\n**戻り値:**\n連結後の配列\n\n**例外:**\n- `{@link` - IllegalArgumentException} 配列が{@code null}の場合\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "toArray",
+      "level": 3,
+      "content": "```java\npublic static String[] toArray(Collection<String> collection)\n```\n\nコレクションを配列に変換する。\n\n**パラメータ:**\n- `collection` - 変換対象のコレクション({@code null}不可)\n\n**戻り値:**\n変換後の配列\n\n**例外:**\n- `{@link` - IllegalArgumentException} 変換対象のコレクションが{@code null}の場合\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "lowerAndTrimUnderScore",
+      "level": 3,
+      "content": "```java\npublic static String lowerAndTrimUnderScore(String value)\n```\n\n大文字を小文字にし、アンダースコアを削除する。\n<p/>\n\n**パラメータ:**\n- `value` - 変換対象の文字列({@code null}不可)\n\n**戻り値:**\n変換後の文字列\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "nullToEmpty",
+      "level": 3,
+      "content": "```java\npublic static String nullToEmpty(String value)\n```\n\n引数で渡された値が{@code null}の場合、空文字を返却する。<br/>\nそうでない場合は、引数をそのまま返却する。\n<pre>\n{@code\nStringUtil.nullToEmpty(null);   //--> \"\"\nStringUtil.nullToEmpty(\"\");     //--> \"\"\nStringUtil.nullToEmpty(\"hoge\"); //--> \"hoge\"\n}\n</pre>\n\n**パラメータ:**\n- `value` - 変換対象の値\n\n**戻り値:**\n変換後の値\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "join",
+      "level": 3,
+      "content": "```java\npublic static String join(String separator, List<String> params)\n```\n\n複数の文字列をセパレータを挟んで結合する。\n\n**パラメータ:**\n- `separator` - セパレータ\n- `params` - 結合する文字列\n\n**戻り値:**\nセパレータで結合した文字列\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "join",
+      "level": 3,
+      "content": "```java\npublic static String join(String separator, List<String> params, String nullToString)\n```\n\n複数の文字列をセパレータを挟んで結合する。\n\n**パラメータ:**\n- `separator` - セパレータ\n- `params` - 結合する文字列\n- `nullToString` - 結合する文字列がnullの場合に使用する文字列\n\n**戻り値:**\nセパレータで結合した文字列\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "split",
+      "level": 3,
+      "content": "```java\npublic static List<String> split(String str, String separator)\n```\n\n文字列をセパレータで分割する。\n\n**パラメータ:**\n- `str` - 分割対象文字列\n- `separator` - セパレータ\n\n**戻り値:**\n分割された文字列\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "split",
+      "level": 3,
+      "content": "```java\npublic static List<String> split(String str, String separator, boolean trim)\n```\n\n文字列をセパレータで分割する。\n\n**パラメータ:**\n- `str` - 文字列\n- `separator` - セパレータ\n- `trim` - 分割後の文字列をトリムする場合、{@code true}\n\n**戻り値:**\n分割された文字列\n\n---",
+      "id": "s33"
+    }
+  ],
+  "id": "javadoc-nablarch-core-util-StringUtil"
+}

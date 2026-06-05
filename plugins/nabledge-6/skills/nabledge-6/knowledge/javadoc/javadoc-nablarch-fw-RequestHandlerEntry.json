@@ -1,0 +1,74 @@
+{
+  "title": "class RequestHandlerEntry",
+  "content": "**パッケージ:** nablarch.fw\n\n**実装されたインタフェース:**\n- HandlerWrapper<TRequest,TResult>\n\n---\n\n```java\npublic class RequestHandlerEntry\nimplements HandlerWrapper<TRequest,TResult>\n```\n\n各リクエストのリクエストパスの内容に応じ、内部に保持するハンドラに\n処理を委譲するかどうかを判断するハンドラ。\n<p/>\nこのハンドラでは、その内部にあるハンドラに対する参照を保持し、\n各リクエストに対し、そのハンドラを実行する条件をリクエストパスのパターンで指定する。\n<p/>\nURIとリクエストパスのパターンの照合処理はRequestPathMappingHelperに委譲する。\n\n**param:** リクエストデータの型  \n**param:**   \n**関連項目:** Request#getRequestPath()  \n**関連項目:** RequestPathMatchingHelper  \n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "handler",
+      "level": 3,
+      "content": "```java\nprivate Handler<TRequest,TResult> handler\n```\n\nこのハンドラエントリが保持しているハンドラ。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "helper",
+      "level": 3,
+      "content": "```java\nprivate RequestPathMatchingHelper helper\n```\n\nURIとリクエストパターンのマッピングを行うクラス\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic TResult handle(TRequest request, ExecutionContext context)\n```\n\n{@inheritDoc}\nこの実装では、まずリクエストに対してこのエントリが保持する\nハンドラを実行する必要があるかどうかを{@link #isAppliedTo(Request, ExecutionContext)}\nにより決定する。\n必要があればこのエントリ内のハンドラを実行しその結果を返す。\n必要がなければこのエントリ内のハンドラは実行せずに、\nハンドラキュー上の後続ハンドラに処理を委譲し、その結果を返す。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "getDelegates",
+      "level": 3,
+      "content": "```java\npublic List<Object> getDelegates(TRequest request, ExecutionContext context)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getDelegate",
+      "level": 3,
+      "content": "```java\nprotected Handler<TRequest,TResult> getDelegate()\n```\n\n処理移譲対象となるハンドラを返す。\n\n**戻り値:**\n処理移譲対象のハンドラ\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setHandler",
+      "level": 3,
+      "content": "```java\npublic RequestHandlerEntry<TRequest,TResult> setHandler(Handler<TRequest,TResult> handler)\n```\n\nこのハンドラエントリ内にハンドラを設定する。\n\n**パラメータ:**\n- `handler` - リクエストハンドラ\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setRequestPattern",
+      "level": 3,
+      "content": "```java\npublic RequestHandlerEntry<TRequest,TResult> setRequestPattern(String requestPattern)\n```\n\nこのエントリ内のハンドラを実行するリクエストパスの\nパターン文字列を設定する。\n\n**パラメータ:**\n- `requestPattern` - リクエストパターン文字列\n\n**戻り値:**\nこのインスタンス自体\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "isAppliedTo",
+      "level": 3,
+      "content": "```java\npublic boolean isAppliedTo(TRequest request, ExecutionContext context)\n```\n\n渡されたリクエストに対して、ハンドラを実行する必要があるかどうかを判断する。\nこのエントリに設定されたリクエストパターンがリクエストパスにマッチする場合はtrueを返す。\n\n**パラメータ:**\n- `request` - リクエストデータ\n- `context` - 実行コンテキスト\n\n**戻り値:**\nハンドラを実行する必要がある場合はtrue\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "toString",
+      "level": 3,
+      "content": "```java\npublic String toString()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s11"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-RequestHandlerEntry"
+}

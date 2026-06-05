@@ -390,7 +390,7 @@ nablarch.test.core.db.BasicDefaultValuesクラスを使用し、
 
 ### Excelファイルに記述できるカラムのデータ型に関する注意点
 
-Excelファイルには、SqlPStatement で対応している型のカラムのみ
+Excelファイルには、[SqlPStatement](../../javadoc/javadoc-nablarch-core-db-statement-SqlPStatement.md) で対応している型のカラムのみ
 テストデータとして記述できる。
 
 そのため、それ以外のデータ型(例えば、OracleのROWIDやPostgreSQLのOIDなど)のカラムはテストデータとして記述できない点に注意すること。

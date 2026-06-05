@@ -1,0 +1,32 @@
+{
+  "title": "interface Convertor",
+  "content": "**パッケージ:** nablarch.core.validation\n\n---\n\n```java\npublic interface Convertor\n```\n\n入力値から対応するプロパティの型に変換するインタフェース。\n\n**作成者:** Koichi Asano  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "getTargetClass",
+      "level": 3,
+      "content": "```java\nClass<?> getTargetClass()\n```\n\n変換対象のクラスを取得する。\n\n**戻り値:**\n変換対象のクラス\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "isConvertible",
+      "level": 3,
+      "content": "```java\nboolean isConvertible(ValidationContext<T> context, String propertyName, Object propertyDisplayName, Object value, Annotation format)\n```\n\n変換可否のプレチェックを行う。<br/>\n変換できない文字列であった場合、エラーメッセージをValidationContextに追加し、falseを返却する。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - ValidationContext\n- `propertyName` - プロパティ名\n- `propertyDisplayName` - プロパティの表示名オブジェクト\n- `value` - 変換可否のプレチェックを行う値\n- `format` - フォーマットを指定するアノテーション（指定がない場合null)\n\n**戻り値:**\n変換できる場合true\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "convert",
+      "level": 3,
+      "content": "```java\nObject convert(ValidationContext<T> context, String propertyName, Object value, Annotation format)\n```\n\n変換を行う。<br/>\n変換に失敗した場合、ValidationContextにエラー内容を設定する。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - ValidationContext\n- `propertyName` - プロパティ名\n- `value` - 変換する値(データ型は様々な形式がありえる。)\n- `format` - フォーマットを指定するアノテーション（指定がない場合null)\n\n**戻り値:**\n変換結果のオブジェクト\n\n---",
+      "id": "s4"
+    }
+  ],
+  "id": "javadoc-nablarch-core-validation-Convertor"
+}

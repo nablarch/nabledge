@@ -1,0 +1,32 @@
+{
+  "title": "interface ExecutionHandlerCallback",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n---\n\n```java\npublic interface ExecutionHandlerCallback\n```\n\n実行制御ハンドラ内の処理状況に応じて呼び出される各種コールバックを定義する\nインターフェース。\n\n**param:** ハンドラへの入力データの型  \n**param:** ハンドラの処理結果データの型  \n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "preExecution",
+      "level": 3,
+      "content": "```java\nvoid preExecution(TData data, ExecutionContext context)\n```\n\n実行制御ハンドラが後続処理を実行する前にコールバックされる。\n一括処理実行前に、なんらかの初期処理を行う場合に実装する。\n\n**パラメータ:**\n- `data` - 入力データ\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "errorInExecution",
+      "level": 3,
+      "content": "```java\nvoid errorInExecution(Throwable error, ExecutionContext context)\n```\n\n実行制御ハンドラが後続処理を実行した後、\n後続のハンドラでエラーが発生した場合に呼ばれる。\n\n**パラメータ:**\n- `error` - 後続ハンドラの処理中に発生した実行時例外/エラー\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "postExecution",
+      "level": 3,
+      "content": "```java\nvoid postExecution(TResult result, ExecutionContext context)\n```\n\n実行制御ハンドラが後続処理を実行した後、正常、異常終了を問わず\n処理が全て完了した直後に呼ばれる。\n\nすなわち、正常終了時には、{@lik #preExecution(Object, ExecutionContext)}\nの後、異常終了時には {@link #errorInExecution(Throwable, ExecutionContext)}\nの後で本メソッドが呼ばれる。\n\n**パラメータ:**\n- `result` - ハンドラの戻り値となるオブジェクト\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s4"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-ExecutionHandlerCallback"
+}

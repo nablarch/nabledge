@@ -1,13 +1,13 @@
 {
   "id": "handlers-http-response-handler",
   "title": "HTTPレスポンスハンドラ",
-  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* 応答の変換方法\n* カスタムレスポンスライター\n* HTTPステータスコードの変更\n* 言語毎のコンテンツパスの切り替え\n* 本ハンドラ内で発生した致命的エラーの対応\n\n本ハンドラは、後続ハンドラが返す HttpResponse に従い、サーブレットAPIを\n呼び出しクライアントへのレスポンスを行う。\n応答の方法には、下記4通りが存在する。\n\nサーブレットフォワード\n\nサーブレットにフォワードを行い、レスポンスを描画する。主にJSPを使ったレスポンス時に使用する。\n\nカスタムレスポンスライター\n\nカスタムレスポンスライター（後述）を使用して、任意のレスポンス出力処理を行う。\n主にテンプレートエンジン等の外部ライブラリを使ったレスポンス時に使用する。\n\nリダイレクト\n\nクライアントにリダイレクトを行う応答を返す。\n\n直接レスポンス\n\nServletResponse の getOutputStream メソッドを使用して直接\nレスポンスを行う。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-http-response-handler/flow.png)",
+  "content": "**目次**\n\n* ハンドラクラス名\n* モジュール一覧\n* 制約\n* 応答の変換方法\n* カスタムレスポンスライター\n* HTTPステータスコードの変更\n* 言語毎のコンテンツパスの切り替え\n* 本ハンドラ内で発生した致命的エラーの対応\n\n本ハンドラは、後続ハンドラが返す [HttpResponse](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.json) に従い、サーブレットAPIを\n呼び出しクライアントへのレスポンスを行う。\n応答の方法には、下記4通りが存在する。\n\nサーブレットフォワード\n\nサーブレットにフォワードを行い、レスポンスを描画する。主にJSPを使ったレスポンス時に使用する。\n\nカスタムレスポンスライター\n\nカスタムレスポンスライター（後述）を使用して、任意のレスポンス出力処理を行う。\n主にテンプレートエンジン等の外部ライブラリを使ったレスポンス時に使用する。\n\nリダイレクト\n\nクライアントにリダイレクトを行う応答を返す。\n\n直接レスポンス\n\nServletResponse の getOutputStream メソッドを使用して直接\nレスポンスを行う。\n\n処理の流れは以下のとおり。\n\n![flow.png](assets/handlers-http-response-handler/flow.png)",
   "no_knowledge_content": false,
   "sections": [
     {
       "id": "s1",
       "title": "ハンドラクラス名",
-      "content": "* nablarch.fw.web.handler.HttpResponseHandler",
+      "content": "* [nablarch.fw.web.handler.HttpResponseHandler](../../javadoc/javadoc-nablarch-fw-web-handler-HttpResponseHandler.json)",
       "level": 2
     },
     {
@@ -25,13 +25,13 @@
     {
       "id": "s4",
       "title": "応答の変換方法",
-      "content": "本ハンドラでは、後続のハンドラから返されるスキーム [1] と、ステータスコード  [2] によりクライアントに返すレスポンスの方法を変更する。\n\n変換条件と応答方法は下記表の通り。\n\n| 変換条件 | 応答の方法 |\n|---|---|\n| スキームが `servlet` の場合 | カスタムレスポンスライターが処理対象と判定した場合はカスタムレスポンスライターに処理を委譲する。それ以外の場合はコンテンツパス別サーブレットへ処理をフォワードする。 |\n| スキームが `redirect` の場合 | 指定したURLへのリダイレクトを行う |\n| スキームが `http` または `https` の場合 | 指定したURLへのリダイレクトを行う |\n| スキームが上記以外で、 ステータスコードが400以上の場合 | ステータスコードに合うエラー画面の表示をおこなう。 |\n| 上記以外の場合 | HttpResponse#getBodyStream()の結果を応答する。 |\n\nここで言う「スキーム」とは、後続ハンドラが返した\nHttpResponse#getContentPath()\nで取得した  ResourceLocator の\ngetScheme() メソッド の戻り値のことを指す。\n明示的にスキームを指定しない場合のデフォルトスキームは `servlet` である。\n\nここで言う「ステータスコード」とは、後続ハンドラが返す\nHttpResponse クラスの\ngetStatusCode() メソッドの戻り値のことを示す。",
+      "content": "本ハンドラでは、後続のハンドラから返されるスキーム [1] と、ステータスコード  [2] によりクライアントに返すレスポンスの方法を変更する。\n\n変換条件と応答方法は下記表の通り。\n\n| 変換条件 | 応答の方法 |\n|---|---|\n| スキームが `servlet` の場合 | カスタムレスポンスライターが処理対象と判定した場合はカスタムレスポンスライターに処理を委譲する。それ以外の場合はコンテンツパス別サーブレットへ処理をフォワードする。 |\n| スキームが `redirect` の場合 | 指定したURLへのリダイレクトを行う |\n| スキームが `http` または `https` の場合 | 指定したURLへのリダイレクトを行う |\n| スキームが上記以外で、 ステータスコードが400以上の場合 | ステータスコードに合うエラー画面の表示をおこなう。 |\n| 上記以外の場合 | HttpResponse#getBodyStream()の結果を応答する。 |\n\nここで言う「スキーム」とは、後続ハンドラが返した\n[HttpResponse#getContentPath()](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.json)\nで取得した  [ResourceLocator](../../javadoc/javadoc-nablarch-fw-web-ResourceLocator.json) の\n[getScheme() メソッド](../../javadoc/javadoc-nablarch-fw-web-ResourceLocator.json) の戻り値のことを指す。\n明示的にスキームを指定しない場合のデフォルトスキームは `servlet` である。\n\nここで言う「ステータスコード」とは、後続ハンドラが返す\n[HttpResponse](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.json) クラスの\n[getStatusCode()](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.json) メソッドの戻り値のことを示す。",
       "level": 2
     },
     {
       "id": "s5",
       "title": "カスタムレスポンスライター",
-      "content": "本ハンドラのプロパティ `customResponseWriter` に\nCustomResponseWriter\nの実装クラスを設定することで、任意のレスポンス出力処理 [3] を実行できる。\n\n具体例として、JSPではなくテンプレートエンジンを使用してレスポンスを出力するというケースが挙げられる。\nNablarchが提供している実装としては、[ウェブアプリケーション Thymeleafアダプタ](../../component/adapters/adapters-web-thymeleaf-adaptor.md#ウェブアプリケーション-thymeleafアダプタ) がある。",
+      "content": "本ハンドラのプロパティ `customResponseWriter` に\n[CustomResponseWriter](../../javadoc/javadoc-nablarch-fw-web-handler-responsewriter-CustomResponseWriter.json)\nの実装クラスを設定することで、任意のレスポンス出力処理 [3] を実行できる。\n\n具体例として、JSPではなくテンプレートエンジンを使用してレスポンスを出力するというケースが挙げられる。\nNablarchが提供している実装としては、[ウェブアプリケーション Thymeleafアダプタ](../../component/adapters/adapters-web-thymeleaf-adaptor.json#ウェブアプリケーション-thymeleafアダプタ) がある。",
       "level": 2
     },
     {
@@ -43,7 +43,7 @@
     {
       "id": "s7",
       "title": "言語毎のコンテンツパスの切り替え",
-      "content": "本ハンドラは、HTTPリクエストに含まれる言語設定をもとにして、フォワード先を動的に切り替える機能を持つ。\nこの機能を使用することで、利用者が選んだ言語に合わせてフォワードするJSPを切り替える機能が実現できる。\n\nこの機能を使用する際は、本ハンドラの `contentPathRule` プロパティに下記いずれかのクラスを設定する。\n\n| クラス名 | 説明 |\n|---|---|\n| DirectoryBasedResourcePathRule | コンテキストルート直下のディレクトリを言語の切り替えに  使用するクラス。  ```bash # /management/user/search.jspを日本語(ja)と # 英語(en)に対応する場合の配置例 # コンテキストルート直下に言語ごとにディレクトリを作成する。 # ディレクトリ名は言語名とする。 コンテキストルート ├─en │  └─management │      └─user │           search.jsp └─ja     └─management         └─user              search.jsp ``` |\n| FilenameBasedResourcePathRule | ファイル名を言語の切り替えに使用するクラス。  ```bash # /management/user/search.jspを日本語(ja)と # 英語(en)に対応する場合の配置例 # 言語毎にファイルを作成する。 # ファイル名にはサフィックス「\"_\"＋言語名」を付ける。 コンテキストルート └─management         └─user              search_en.jsp              search_ja.jsp ``` |\n\nこの際の設定例は下記の通り。\n\n```xml\n<!-- リソースパスルール -->\n<component name=\"resourcePathRule\" class=\"nablarch.fw.web.i18n.DirectoryBasedResourcePathRule\" />\n\n<!-- HTTPレスポンスハンドラ -->\n<component class=\"nablarch.fw.web.handler.HttpResponseHandler\">\n  <property name=\"contentPathRule\" ref=\"resourcePathRule\" />\n</component>\n```\n\n上記以外の方法でコンテンツの切り替えを行いたい場合は、 ResourcePathRule\nクラスを継承したクラスを作成し、作成したクラスを上記同様に `resourcePathRule` プロパティに設定すること。\n\n> **Tip:**\n> カスタムレスポンスライター でレスポンス出力を行う場合、本機能は使用できない。\n> これは、テンプレートエンジン等が持っている多言語対応機能と混在させないためである。",
+      "content": "本ハンドラは、HTTPリクエストに含まれる言語設定をもとにして、フォワード先を動的に切り替える機能を持つ。\nこの機能を使用することで、利用者が選んだ言語に合わせてフォワードするJSPを切り替える機能が実現できる。\n\nこの機能を使用する際は、本ハンドラの `contentPathRule` プロパティに下記いずれかのクラスを設定する。\n\n| クラス名 | 説明 |\n|---|---|\n| [DirectoryBasedResourcePathRule](../../javadoc/javadoc-nablarch-fw-web-i18n-DirectoryBasedResourcePathRule.json) | コンテキストルート直下のディレクトリを言語の切り替えに  使用するクラス。  ```bash # /management/user/search.jspを日本語(ja)と # 英語(en)に対応する場合の配置例 # コンテキストルート直下に言語ごとにディレクトリを作成する。 # ディレクトリ名は言語名とする。 コンテキストルート ├─en │  └─management │      └─user │           search.jsp └─ja     └─management         └─user              search.jsp ``` |\n| [FilenameBasedResourcePathRule](../../javadoc/javadoc-nablarch-fw-web-i18n-FilenameBasedResourcePathRule.json) | ファイル名を言語の切り替えに使用するクラス。  ```bash # /management/user/search.jspを日本語(ja)と # 英語(en)に対応する場合の配置例 # 言語毎にファイルを作成する。 # ファイル名にはサフィックス「\"_\"＋言語名」を付ける。 コンテキストルート └─management         └─user              search_en.jsp              search_ja.jsp ``` |\n\nこの際の設定例は下記の通り。\n\n```xml\n<!-- リソースパスルール -->\n<component name=\"resourcePathRule\" class=\"nablarch.fw.web.i18n.DirectoryBasedResourcePathRule\" />\n\n<!-- HTTPレスポンスハンドラ -->\n<component class=\"nablarch.fw.web.handler.HttpResponseHandler\">\n  <property name=\"contentPathRule\" ref=\"resourcePathRule\" />\n</component>\n```\n\n上記以外の方法でコンテンツの切り替えを行いたい場合は、 [ResourcePathRule](../../javadoc/javadoc-nablarch-fw-web-i18n-ResourcePathRule.json)\nクラスを継承したクラスを作成し、作成したクラスを上記同様に `resourcePathRule` プロパティに設定すること。\n\n> **Tip:**\n> カスタムレスポンスライター でレスポンス出力を行う場合、本機能は使用できない。\n> これは、テンプレートエンジン等が持っている多言語対応機能と混在させないためである。",
       "level": 2
     },
     {

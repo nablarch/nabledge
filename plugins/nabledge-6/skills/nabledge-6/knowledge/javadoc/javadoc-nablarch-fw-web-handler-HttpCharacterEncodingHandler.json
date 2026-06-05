@@ -1,0 +1,86 @@
+{
+  "title": "class HttpCharacterEncodingHandler",
+  "content": "**パッケージ:** nablarch.fw.web.handler\n\n**実装されたインタフェース:**\n- Handler<Object,Object>\n\n---\n\n```java\npublic class HttpCharacterEncodingHandler\nimplements Handler<Object,Object>\n```\n\nHTTP エンコーディング制御ハンドラ。\n\n<pre>\n#setDefaultEncoding(String) に指定されたエンコーディングを HttpServletRequest/HttpServletResponse に対して設定する。\n明示的に設定しない場合は\"UTF-8\"を使用する。\n</pre>\n\n**作成者:** Toru Nagashima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "defaultEncoding",
+      "level": 3,
+      "content": "```java\nprivate Charset defaultEncoding\n```\n\nデフォルトエンコーディング\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "appendResponseCharacterEncoding",
+      "level": 3,
+      "content": "```java\nprivate boolean appendResponseCharacterEncoding\n```\n\nレスポンスのContent-Typeに「;charset=xx」を付加するかのフラグ(false:付加しない)\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "HttpCharacterEncodingHandler",
+      "level": 3,
+      "content": "```java\npublic HttpCharacterEncodingHandler()\n```\n\nデフォルトコンストラクタ。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "setDefaultEncoding",
+      "level": 3,
+      "content": "```java\npublic void setDefaultEncoding(String name)\n```\n\nデフォルトエンコーディングを設定する。<br />\n\n**パラメータ:**\n- `name` - エンコーディング名\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setDefaultEncodingCharset",
+      "level": 3,
+      "content": "```java\npublic void setDefaultEncodingCharset(Charset encoding)\n```\n\nデフォルトエンコーディングを設定する。<br />\n\n**パラメータ:**\n- `encoding` - エンコーディング\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getDefaultEncoding",
+      "level": 3,
+      "content": "```java\npublic Charset getDefaultEncoding()\n```\n\nデフォルトエンコーディングを取得する。<br />\n\n**戻り値:**\nエンコーディング\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setAppendResponseCharacterEncoding",
+      "level": 3,
+      "content": "```java\npublic void setAppendResponseCharacterEncoding(boolean appendResponseCharacterEncoding)\n```\n\nレスポンスのContent-Typeに「;charset=xx」を付加するかのフラグを設定する。<br />\n\n**パラメータ:**\n- `appendResponseCharacterEncoding` - フラグ\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(Object data, ExecutionContext context)\n```\n\nエンコーディングを設定する。<br />\n\n本ハンドラは以下の手順で処理を行う。\n<ol>\n<li>{@link #resolveRequestEncoding(HttpServletRequest)} で解決したエンコーディングを HttpServletRequest に設定する。</li>\n<li>{@link #resolveResponseEncoding(HttpServletRequest)} で解決したエンコーディングを HttpServletResponse に設定する。</li>\n<li>後続のハンドラに処理を委譲する。</li>\n</ol>\n\n**パラメータ:**\n- `data` - 入力データ\n- `context` - 実行コンテキスト\n\n**戻り値:**\n処理結果データ\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "resolveRequestEncoding",
+      "level": 3,
+      "content": "```java\nprotected Charset resolveRequestEncoding(HttpServletRequest request)\n```\n\nリクエストのエンコーディングを解決する。<br />\n<pre>\n本ハンドラでは設定されているデフォルトエンコーディングを返却する。\nURI 等のリクエスト情報によってエンコーディングを切り替える必要がある場合は、\n本メソッドを拡張し、エンコーディングを解決する処理を実装すること。\n\nただし、本メソッド内ではリクエストパラメータの取得を行ってはならない。\nリクエストパラメータの取得を行ってしまうと、エンコーディングの指定が行えなくなってしまうので、\n文字化けの原因となる。\n</pre>\n\n**パラメータ:**\n- `request` - リクエスト\n\n**戻り値:**\nリクエストのエンコーディング\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "resolveResponseEncoding",
+      "level": 3,
+      "content": "```java\nprotected Charset resolveResponseEncoding(HttpServletRequest request)\n```\n\nレスポンスのエンコーディングを解決する。<br />\n<pre>\n本ハンドラでは設定されているデフォルトエンコーディングを返却する。\nURI 等のリクエスト情報によってエンコーディングを切り替える必要がある場合は、\n本メソッドを拡張し、エンコーディングを解決する処理を実装すること。\n\nただし、本メソッド内ではリクエストパラメータの取得を行ってはならない。\nリクエストパラメータの取得を行ってしまうと、エンコーディングの指定が行えなくなってしまうので、\n文字化けの原因となる。\n</pre>\n\n**パラメータ:**\n- `request` - リクエスト\n\n**戻り値:**\nレスポンスのエンコーディング\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-HttpCharacterEncodingHandler"
+}

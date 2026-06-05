@@ -24,7 +24,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.handler.ProcessResidentHandler
+* [nablarch.fw.handler.ProcessResidentHandler](../../javadoc/javadoc-nablarch-fw-handler-ProcessResidentHandler.md)
 
 ## モジュール一覧
 
@@ -39,13 +39,13 @@
 
 本ハンドラは、リトライハンドラよりも後ろに設定すること
 
-本ハンドラで実行時例外を捕捉した場合、リトライ可能例外( RetryableException )でラップしてから再送出し、
+本ハンドラで実行時例外を捕捉した場合、リトライ可能例外( [RetryableException](../../javadoc/javadoc-nablarch-fw-handler-retry-RetryableException.md) )でラップしてから再送出し、
 プロセスの継続制御を [リトライハンドラ](../../component/handlers/handlers-retry-handler.md#リトライハンドラ) に委譲する。
 このため、このハンドラはリトライハンドラより後に設定する必要がある。
 
 ## データの監視間隔を設定する
 
-データの監視間隔は、 dataWatchInterval プロパティにミリ秒で設定する。
+データの監視間隔は、 [dataWatchInterval](../../javadoc/javadoc-nablarch-fw-handler-ProcessResidentHandler.md) プロパティにミリ秒で設定する。
 設定を省略した場合のデフォルト値は、1000ミリ秒(1秒)となっている。
 
 以下に例を示す。
@@ -63,10 +63,10 @@
 ## プロセス常駐化ハンドラの終了方法
 
 このハンドラはプロセスの正常終了を示す例外が送出された場合に、後続のハンドラの呼び出しを止め処理を終了する。
-デフォルトでは、 [プロセス停止制御ハンドラ](../../component/handlers/handlers-process-stop-handler.md#プロセス停止制御ハンドラ) が送出する処理停止を示す例外( ProcessStop (サブクラス含む))が送出された場合に、このハンドラは処理を終了する。
+デフォルトでは、 [プロセス停止制御ハンドラ](../../component/handlers/handlers-process-stop-handler.md#プロセス停止制御ハンドラ) が送出する処理停止を示す例外( [ProcessStop](../../javadoc/javadoc-nablarch-fw-handler-ProcessStopHandler.md) (サブクラス含む))が送出された場合に、このハンドラは処理を終了する。
 
-プロセスの正常終了を示す例外を変更したい場合には、 normalEndExceptions プロパティに例外クラスのリストを設定する。
-なお、例外リストを設定する場合にはデフォルトの設定が上書きされるため、 ProcessStop の設定を忘れずに行う必要がある。
+プロセスの正常終了を示す例外を変更したい場合には、 [normalEndExceptions](../../javadoc/javadoc-nablarch-fw-handler-ProcessResidentHandler.md) プロパティに例外クラスのリストを設定する。
+なお、例外リストを設定する場合にはデフォルトの設定が上書きされるため、 [ProcessStop](../../javadoc/javadoc-nablarch-fw-handler-ProcessStopHandler.md) の設定を忘れずに行う必要がある。
 
 以下に例を示す。
 
@@ -94,22 +94,22 @@
 
 以下に例外毎の処理内容を示す。
 
-サービス閉塞中例外( ServiceUnavailable )
+サービス閉塞中例外( [ServiceUnavailable](../../javadoc/javadoc-nablarch-fw-results-ServiceUnavailable.md) )
 
 サービス閉塞中例外の場合には、データ監視間隔に設定された時間分待機後に、再度後続ハンドラを実行する。
 
 リトライ可能例外
 
-リトライ可能例外( RetryUtil#isRetryable() が真を返す場合)の場合は、
+リトライ可能例外( [RetryUtil#isRetryable()](../../javadoc/javadoc-nablarch-fw-handler-retry-RetryUtil.md) が真を返す場合)の場合は、
 何もせずに捕捉した例外を再送出する。
 
 プロセスを異常終了する例外
 
 プロセスを異常終了させることを示す例外の場合は、なにもせずに捕捉した例外を再送出する。
 
-プロセスを異常終了させる例外は、 abnormalEndExceptions
+プロセスを異常終了させる例外は、 [abnormalEndExceptions](../../javadoc/javadoc-nablarch-fw-handler-ProcessResidentHandler.md)
 プロパティに設定する。
-デフォルトでは、 ProcessAbnormalEnd (サブクラス含む)が、異常終了対象クラスとなる。
+デフォルトでは、 [ProcessAbnormalEnd](../../javadoc/javadoc-nablarch-fw-launcher-ProcessAbnormalEnd.md) (サブクラス含む)が、異常終了対象クラスとなる。
 
 プロセスを正常終了させる例外
 
@@ -119,4 +119,4 @@
 
 上記以外の例外
 
-例外情報をログに記録し、リトライ可能例外 ( RetryableException )でラップし再送出する。
+例外情報をログに記録し、リトライ可能例外 ( [RetryableException](../../javadoc/javadoc-nablarch-fw-handler-retry-RetryableException.md) )でラップし再送出する。

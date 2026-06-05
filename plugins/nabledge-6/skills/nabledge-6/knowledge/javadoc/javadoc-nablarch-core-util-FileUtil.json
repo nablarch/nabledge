@@ -1,0 +1,104 @@
+{
+  "title": "class FileUtil",
+  "content": "**パッケージ:** nablarch.core.util\n\n---\n\n```java\npublic final class FileUtil\n```\n\nファイルの取り扱いに関するユーティリティクラス。\n\n**作成者:** Koichi Asano  \n**作成者:** Masato Inoue  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "ALNUM_CHAR_PATTERN",
+      "level": 3,
+      "content": "```java\nprivate static Pattern ALNUM_CHAR_PATTERN\n```\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "FileUtil",
+      "level": 3,
+      "content": "```java\nprivate FileUtil()\n```\n\n隠蔽コンストラクタ。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "closeQuietly",
+      "level": 3,
+      "content": "```java\npublic static void closeQuietly(Closeable closeables)\n```\n\nリソースを解放する。\n<p/>\n例外が発生した場合は何もせず、次のリソース解放を行う。\n\n**パラメータ:**\n- `closeables` - リソース解放を行うクラス\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getResource",
+      "level": 3,
+      "content": "```java\npublic static InputStream getResource(String url)\n                        throws IllegalArgumentException\n```\n\nリソースを取得する。\n<p/>\nファイルパスまたはクラスパス上のリソースを取得する。<br/>\n引数に指定するURLのフォーマットは下記の通り。\n<pre>\n    &lt;スキーム名&gt;:&lt;リソースのパス&gt;\n</pre>\nURLの指定例を下記に示す。\n<code><pre>\n//ファイルパスの場合\nFileUtil.getResource(\"file:/var/log/log.properties\");\n\n//クラスパスの場合\nFileUtil.getResource(\"classpath:nablarch/core/log/log.properties\");\n</pre></code>\n\n**パラメータ:**\n- `url` - URL\n\n**戻り値:**\nリソースのストリーム\n\n**例外:**\n- `IllegalArgumentException` - リソースを取得できなかった場合\n- `java.io.FileNotFoundException` - リソースファイルが見つからなかった場合\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getResourceURL",
+      "level": 3,
+      "content": "```java\npublic static URL getResourceURL(String url)\n```\n\nURLを取得する。\n<p/>\nファイルパスまたはクラスパス上のURLを取得する。<br/>\n引数に指定するURLのフォーマットは下記の通り。\n<pre>\n    {@literal <スキーム名>:<リソースのパス>}\n</pre>\nURLの指定例を下記に示す。\n<code><pre>\n//ファイルパスの場合\nFileUtil.getResourceURL(\"file:/var/log/log.properties\");\n\n//クラスパスの場合\nFileUtil.getResourceURL(\"classpath:nablarch/core/log/log.properties\");\n</pre></code>\n\n**パラメータ:**\n- `url` - URL文字列\n\n**戻り値:**\nリソースのURL\n\n**例外:**\n- `IllegalArgumentException` - URLが{@code null}または不正だった場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getClasspathResource",
+      "level": 3,
+      "content": "```java\npublic static InputStream getClasspathResource(String path)\n                                 throws IllegalArgumentException\n```\n\nクラスパス上のリソースを取得する。\n<p/>\n以下に例を示す。\n<code><pre>\nFileUtil.getClasspathResource(\"nablarch/core/log/log.properties\");\n</pre></code>\n\n**パラメータ:**\n- `path` - クラスパス\n\n**戻り値:**\nリソースのストリーム\n\n**例外:**\n- `IllegalArgumentException` - クラスパス及びクラスパスから取得するURLが{@code null}または、リソースが見つからない場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getClasspathResourceURL",
+      "level": 3,
+      "content": "```java\npublic static URL getClasspathResourceURL(String path)\n```\n\nクラスパス上のURLを取得する。\n<p/>\n以下に例を示す。\n<code><pre>\nFileUtil.getClasspathResource(\"nablarch/core/log/log.properties\");\n</pre></code>\n\n**パラメータ:**\n- `path` - リソースのパス\n\n**戻り値:**\nリソースのURL\n\n**例外:**\n- `IllegalArgumentException` - クラスパスが{@code null}だった場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "listFiles",
+      "level": 3,
+      "content": "```java\npublic static File[] listFiles(String dir, String name)\n```\n\nディレクトリ配下のファイルおよびディレクトリを検索し、名前で昇順ソートした結果の配列を返す。\n<p/>\nファイル名にはワイルドカード(\"*\")を指定できる。<br/>\nディレクトリは、絶対パスまたは相対パスで指定する。<br/>\nディレクトリが{@code null}だった場合、引数のファイル名を元に構築したFileオブジェクトを持つ要素が１つの配列が返される。<br/>\n\n**パラメータ:**\n- `dir` - ディレクトリ(null指定の場合、指定なし)\n- `name` - ファイル名\n\n**戻り値:**\n検索結果の配列\n\n**例外:**\n- `NullPointerException` - ファイル名が{@code null}だった場合\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "deleteFile",
+      "level": 3,
+      "content": "```java\npublic static boolean deleteFile(File file)\n```\n\nファイルを削除する。\n\n**パラメータ:**\n- `file` - 削除するファイル\n\n**戻り値:**\nファイルが削除に成功した場合は{@code true}、失敗した場合は{@code false}を返却する。ファイルが存在しない場合は{@code true}を返却する。\n\n**例外:**\n- `IllegalArgumentException` - 削除するファイルが{@code null}だった場合\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "extractSuffix",
+      "level": 3,
+      "content": "```java\npublic static String extractSuffix(String fileName)\n```\n\nファイル名から拡張子を抽出する。\n<p/>\n以下の仕様に当てはまる場合は、空文字列を返す。\n<ol>\n    <li>ファイル名の先頭がドット</li>\n    <li>ファイル名の末尾がドット</li>\n    <li>拡張子にドットがない</li>\n    <li>拡張子が英数字以外</li>\n</ol>\n\n**パラメータ:**\n- `fileName` - ファイル名\n\n**戻り値:**\n拡張子\n\n**例外:**\n- `IllegalArgumentException` - ファイル名が{@code null}だった場合\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "move",
+      "level": 3,
+      "content": "```java\npublic static void move(File src, File dest)\n```\n\nファイルを移動する。\n<p/>\n移動先に同名のファイルが存在していた場合、上書きする。\n\n**パラメータ:**\n- `src` - 移動元ファイル\n- `dest` - 移動先ファイル\n\n**例外:**\n- `IllegalArgumentException` - 移動元ファイルまたは移動先ファイルが{@code null}の場合\n- `RuntimeException` - コピー元のファイルが削除できなかった場合\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "copy",
+      "level": 3,
+      "content": "```java\npublic static void copy(File src, File dest)\n```\n\nファイルをコピーする。\n<p/>\nコピー先に同名のファイルが存在していた場合、上書きする。\n\n**パラメータ:**\n- `src` - コピー元ファイル\n- `dest` - コピー先ファイル\n\n**例外:**\n- `IllegalArgumentException` - コピー元ファイルまたはコピー先ファイルが{@code null}の場合\n- `RuntimeException` - コピーに失敗した場合\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "copy",
+      "level": 3,
+      "content": "```java\nprivate static void copy(InputStream src, OutputStream dest)\n          throws IOException\n```\n\nストリームのコピーを行う。\n\n**パラメータ:**\n- `src` - コピー元入力ストリーム\n- `dest` - コピー先出力ストリーム\n\n**例外:**\n- `IOException` - 入出力例外\n\n---",
+      "id": "s16"
+    }
+  ],
+  "id": "javadoc-nablarch-core-util-FileUtil"
+}

@@ -1,0 +1,254 @@
+{
+  "title": "class BeanUtil",
+  "content": "**パッケージ:** nablarch.core.beans\n\n---\n\n```java\npublic final class BeanUtil\n```\n\nJavaBeansに関する操作をまとめたユーティリティクラス。\n\n**作成者:** kawasima  \n**作成者:** tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "BeanUtil",
+      "level": 3,
+      "content": "```java\nprivate BeanUtil()\n```\n\n本クラスはインスタンスを生成しない。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "getPropertyDescriptors",
+      "level": 3,
+      "content": "```java\npublic static PropertyDescriptor[] getPropertyDescriptors(Class<?> beanClass)\n```\n\n指定したクラスに属する全てのプロパティの {@link PropertyDescriptor} を取得する。\nただし、classプロパティは取得対象外となる。\n\n**パラメータ:**\n- `beanClass` - プロパティを取得したいクラス\n\n**戻り値:**\nPropertyDescriptor[] 全てのプロパティの {@link PropertyDescriptor}\n\n**例外:**\n- `BeansException` - プロパティの取得に失敗した場合。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getPropertyDescriptor",
+      "level": 3,
+      "content": "```java\npublic static PropertyDescriptor getPropertyDescriptor(Class<?> beanClass, String propertyName)\n```\n\n指定したクラスから、特定のプロパティの{@link PropertyDescriptor} を取得する。<br/>\n\n**パラメータ:**\n- `beanClass` - プロパティを取得したいクラス\n- `propertyName` - 取得したいプロパティ名\n\n**戻り値:**\nPropertyDescriptor 取得したプロパティ\n\n**例外:**\n- `BeansException` - {@code propertyName} に対応するプロパティが定義されていない場合。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getProperty",
+      "level": 3,
+      "content": "```java\npublic static Object getProperty(Object bean, String propertyName)\n```\n\n指定したオブジェクトから、特定のプロパティの値を取得する。\n<p/>\n{@code propertyName}には、{@code bean}のトップレベル要素のみ指定可能である。\n<pre>\n    {@code\n    // ----------サンプルで使用するBean----------\n    public class SampleBean {\n        private String stringProp;\n        private List<String> listProp;\n        private String[] arrayProp;\n        private NestedBean nestedBean;\n        // setter及びgetterは省略\n    }\n\n    public class NestedBean {\n        private String nestedStringProp;\n        // setter及びgetterは省略\n    }\n\n    // ----------実装例----------\n    // 問題のないコード1\n    String stringProp = BeanUtil.getProperty(sampleBean, \"stringProp\");\n\n    // 問題のないコード2\n    String stringProp = BeanUtil.getProperty(sampleBean.nestedBean, \"nestedStringProp\");\n\n    // 以下のコードは動作しない\n    String nestedStringProp = BeanUtil.getProperty(sampleBean, \"nestedBean.nestedStringProp\");\n\n    }\n</pre>\n\n**パラメータ:**\n- `bean` - プロパティの値を取得したいBeanオブジェクト\n- `propertyName` - 取得したいプロパティ名\n\n**戻り値:**\nObject オブジェクトから取得したプロパティの値\n\n**例外:**\n- `BeansException` - {@code propertyName} に対応するプロパティが定義されていない場合。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getProperty",
+      "level": 3,
+      "content": "```java\npublic static Object getProperty(Object bean, String propertyName, Class<?> type)\n```\n\n指定したオブジェクトのプロパティの値を、指定した型に変換して取得する。\n</p>\n型変換の仕様は{@link ConversionUtil}を参照。\n<p/>\n{@code propertyName}の指定方法については{@link #getProperty(Object, String)}を参照。\n\n**パラメータ:**\n- `bean` - プロパティの値を取得したいBeanオブジェクト\n- `propertyName` - 取得したいプロパティの名称\n- `type` - 変換したい型 (nullを指定した場合は変換を行わず、プロパティの値をそのまま返す。)\n\n**戻り値:**\nObject 取得したプロパティを{@code type}に変換したオブジェクト\n\n**例外:**\n- `BeansException` - {@code propertyName} に対応するプロパティが定義されていない場合。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setProperty",
+      "level": 3,
+      "content": "```java\nprivate static void setProperty(Object bean, PropertyExpression expression, Object propertyValue)\n```\n\nプロパティに値を設定する。\n\n**パラメータ:**\n- `bean` - Beanオブジェクト\n- `expression` - プロパティを表すオブジェクト\n- `propertyValue` - プロパティに登録する値\n\n**例外:**\n- `BeansException` - インスタンス生成に失敗した場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setObjectProperty",
+      "level": 3,
+      "content": "```java\nprivate static void setObjectProperty(Object bean, PropertyExpression expression, Object propertyValue)\n```\n\n{@link Object}のプロパティに値を設定する。\n\n**パラメータ:**\n- `bean` - Beanオブジェクト\n- `expression` - プロパティを表すオブジェクト\n- `propertyValue` - プロパティに設定する値\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setListProperty",
+      "level": 3,
+      "content": "```java\nprivate static void setListProperty(Object bean, PropertyExpression expression, Object propertyValue, PropertyDescriptor pd)\n```\n\n{@link List}のプロパティに値を設定する。\n\n**パラメータ:**\n- `bean` - Beanオブジェクト\n- `expression` - プロパティを表すオブジェクト\n- `propertyValue` - プロパティに設定する値\n- `pd` - プロパティに対する{@link PropertyDescriptor}\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setArrayProperty",
+      "level": 3,
+      "content": "```java\nprivate static void setArrayProperty(Object bean, PropertyExpression expression, Object propertyValue, PropertyDescriptor pd)\n```\n\n配列のプロパティに値を設定する。\n\n**パラメータ:**\n- `bean` - Beanオブジェクト\n- `expression` - プロパティを表すオブジェクト\n- `propertyValue` - プロパティに設定する値\n- `pd` - プロパティに対する{@link PropertyDescriptor}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setPropertyValue",
+      "level": 3,
+      "content": "```java\nprivate static void setPropertyValue(Object bean, String propertyName, Object propertyValue)\n```\n\nプロパティに値を設定する。\n\n**パラメータ:**\n- `bean` - Beanオブジェクト\n- `propertyName` - 値を設定するプロパティ名\n- `propertyValue` - プロパティに設定する値\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setPropertyValue",
+      "level": 3,
+      "content": "```java\nprivate static void setPropertyValue(Object bean, PropertyDescriptor pd, Object propertyValue, CopyOptions copyOptions)\n```\n\nプロパティに値を設定する。\n\n**パラメータ:**\n- `bean` - Beanオブジェクト\n- `pd` - 値を設定するプロパティのプロパティディスクリプタ\n- `propertyValue` - プロパティに設定する値\n- `copyOptions` - コピーの設定\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getGenericType",
+      "level": 3,
+      "content": "```java\nprivate static Class<?> getGenericType(Object bean, String propertyName, PropertyDescriptor pd)\n```\n\nリスト、配列の要素の型を取得する.\n\n**パラメータ:**\n- `bean` - Beanオブジェクト\n- `propertyName` - プロパティ名\n- `pd` - プロパティディスクリプタ\n\n**戻り値:**\nリスト、配列の要素の型\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setProperty",
+      "level": 3,
+      "content": "```java\npublic static void setProperty(Object bean, String propertyName, Object propertyValue)\n```\n\n指定したオブジェクトのプロパティに値を登録する。\n<p/>\n対象のプロパティにsetterが定義されていない場合はなにもしない。\n<p/>\n{@code propertyValue}がnullの場合は、例外の送出やログ出力は行わずに、対象プロパティの値はnullになる。\n<p/>\nプロパティの指定方法<br/>\n    {@code propertyName}にはプロパティ名を指定する。\n    List型・配列型のプロパティでは、\"プロパティ名[インデックス]\"という形式で要素番号を指定して値を登録できる。\n    ネストしたプロパティを指定することも可能である。ネストの深さに制限はない。\n    ネストの親となるプロパティがnullである場合は、デフォルトコンストラクタを起動し\n    インスタンスを生成してから値を格納する。\n実装例<br/>\n<pre>\n{@code\n    // ----------サンプルで使用するBean----------\n    public class SampleBean {\n        private String stringProp;\n        private List<String> listProp;\n        private String[] arrayProp;\n        private NestedBean nestedBean;\n        // setter及びgetterは省略\n    }\n    public class NestedBean {\n        private String nestedStringProp;\n\n        // setter及びgetterは省略\n    }\n\n    // ----------実装例----------\n    SampleBean sampleBean = new SampleBean();\n\n    // stringPropプロパティに\"value\"を登録\n    BeanUtil.setProperty(sampleBean,\"stringProp\", \"value\");\n\n    // stringPropプロパティにnullを登録。stringPropはnullとなる\n    BeanUtil.setProperty(sampleBean,\"stringProp\", null);\n\n    // listPropPropプロパティの要素番号0の位置に\"list_value\"を登録\n    BeanUtil.setProperty(sampleBean,\"listProp[0]\", \"list_value\");\n\n    // 配列型のプロパティの要素番号0の位置に\"array_value\"を登録\n    // 十分な要素数が自動で確保される\n    BeanUtil.setProperty(sampleBean, \"arrayProp[0]\", \"array_value\");\n\n    // nestedBeanプロパティのnestedStringPropプロパティに\"nested_value\"を登録\n    BeanUtil.setProperty(sampleBean, \"nestedBean.nestedStringProp\", \"nested_value\");\n}\n</pre>\n<p/>\n\n**パラメータ:**\n- `bean` - 値を登録したいBeanオブジェクト\n- `propertyName` - 値を登録したいプロパティ名\n- `propertyValue` - 登録したい値\n\n**例外:**\n- `BeansException` - <ul>\n      <li>{@code propertyName}に対応するプロパティが定義されていない場合</li>\n      <li>List型・配列型以外のプロパティに、\"プロパティ名[インデックス]\"という形式で指定した場合</li>\n      <li>ネストの親となるプロパティのインスタンス生成に失敗した場合</li>\n  </ul>\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "createAndCopy",
+      "level": 3,
+      "content": "```java\npublic static T createAndCopy(Class<T> beanClass, Map<String,?> map, CopyOptions copyOptions)\n```\n\n{@link Map}からBeanを生成する。\n<p/>\n{@code map}がnullである場合は、デフォルトコンストラクタで{@code beanClass}を生成して返却する。\n<p/>\n{@code map}にvalueがnullのエントリがある場合、対応するプロパティの値はnullとなる。\n<p/>\n対象のプロパティにsetterが定義されていない場合はなにもしない。\n<p/>\nプロパティの指定方法<br/>\n  {@code map}に格納するエントリのキー値には、値を登録したいプロパティ名を指定する。\n  List型・配列型のプロパティでは、\"プロパティ名[インデックス]\"という形式で要素番号を指定して値を登録できる。\n  ネストしたプロパティを指定することも可能である。ネストの深さに制限はない。\n  ネストの親となるプロパティがnullである場合は、インスタンスを生成してから値を登録する。\n実装例<br/>\n<pre>\n{@code\n    // ----------サンプルで使用するBean----------\n    public class SampleBean {\n        private String stringProp;\n        private List<String> listProp;\n        private String[] arrayProp;\n        private NestedBean nestedBean;\n\n        // setter及びgetterは省略\n    }\n\n    public class NestedBean {\n        private String nestedStringProp;\n\n        // setter及びgetterは省略\n    }\n\n    // ----------実装例----------\n    // 格納したいプロパティ名をkeyに、値をvalueにもつMapを作成する\n    Map<String,Object> map = new HashMap();\n\n    // String型のプロパティに\"value\"を登録\n    map.put(\"stringProp\", \"value\");\n\n    // stringPropプロパティにnullを登録。stringPropはnullとなる。\n    map.put(\"stringProp\", null);\n\n    // List型のプロパティの要素番号0の位置に\"list_value\"を登録\n    map.put(\"listProp[0]\", \"list_value\");\n\n    // 配列型のプロパティの要素番号0の位置に\"array_value\"を登録\n    // 十分な要素数が自動で確保される\n    map.put(\"arrayProp[0]\", \"array_value\");\n\n    // ネストしたオブジェクトのプロパティに\"nested_value\"を登録\n    map.put(\"nestedBean.nestedStringProp\", \"nested_value\");\n\n    SampleBean sampleBean = BeanUtil.createAndCopy(SampleBean.class,map);\n}\n</pre>\n<p/>\n\n**パラメータ:**\n- `<T>` - 型引数\n- `beanClass` - 生成したいBeanクラス\n- `map` - JavaBeansのプロパティ名をエントリーのキー\n  プロパティの値をエントリーの値とするMap\n- `copyOptions` - コピーの設定\n\n**戻り値:**\nプロパティに値が登録されたBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code beanClass}にデフォルトコンストラクタが定義されていない場合や、\n  {@code beanClass}のコンストラクタ実行時に問題が発生した場合。\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "copy",
+      "level": 3,
+      "content": "```java\npublic static void copy(Class<? extends T> beanClass, T bean, Map<String,?> map, CopyOptions copyOptions)\n```\n\n{@link Map}からBeanインスタンスへコピーを行う。\n生成済みのインスタンスにコピーを行う点以外は、{@link #createAndCopy(Class, Map, CopyOptions)}と同じ動作である。\n\n**パラメータ:**\n- `beanClass` - 移送先BeanのClass\n- `bean` - 移送先Beanインスタンス\n- `map` - 移送元のMap\n           JavaBeansのプロパティ名をエントリーのキー\n           プロパティの値をエントリーの値とするMap\n- `copyOptions` - コピーの設定\n- `<T>` - 型引数\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "createAndCopy",
+      "level": 3,
+      "content": "```java\npublic static T createAndCopy(Class<T> beanClass, Map<String,?> map)\n```\n\n{@link Map}からBeanを生成する。\n\n<p>\n内部的には空の{@link CopyOptions}を渡して{@link #createAndCopy(Class, Map, CopyOptions)}を呼び出している。\n</p>\n\n**パラメータ:**\n- `<T>` - 型引数\n- `beanClass` - 生成したいBeanクラス\n- `map` - JavaBeansのプロパティ名をエントリーのキー\n  プロパティの値をエントリーの値とするMap\n\n**戻り値:**\nプロパティに値が登録されたBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code beanClass}にデフォルトコンストラクタが定義されていない場合や、\n  {@code beanClass}のコンストラクタ実行時に問題が発生した場合。\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "createAndCopyIncludes",
+      "level": 3,
+      "content": "```java\npublic static T createAndCopyIncludes(Class<T> beanClass, Map<String,?> map, String includes)\n```\n\n{@link Map}から、指定したプロパティのみをコピーしたBeanを生成する。\n<p/>\n{@code map}がnullである場合は、デフォルトコンストラクタで{@code beanClass}を生成して返却する。\n<p/>\n{@code map}でvalueがnullであるプロパティの値はnullになる。例外の送出やログ出力は行わない。\n<p/>\n対象のプロパティにsetterが定義されていない場合はなにもしない。\n<p/>\nプロパティの指定方法については{@link #createAndCopy(Class, Map)}を参照。\n\n**パラメータ:**\n- `<T>` - 型引数\n- `beanClass` - 生成したいBeanクラス\n- `map` - JavaBeansのプロパティ名をエントリーのキー\n  プロパティの値をエントリーの値とするMap\n- `includes` - コピー対象のプロパティ名\n\n**戻り値:**\nBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code beanClass}にデフォルトコンストラクタが定義されていない場合や、\n  {@code beanClass}のコンストラクタ実行時に問題が発生した場合。\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "createAndCopyExcludes",
+      "level": 3,
+      "content": "```java\npublic static T createAndCopyExcludes(Class<T> beanClass, Map<String,?> map, String excludes)\n```\n\n{@link Map}から指定されたプロパティ以外をコピーしてBeanを生成する。\n<p/>\n{@code map}がnullである場合は、デフォルトコンストラクタで{@code beanClass}を生成して返却する。\n<p/>\n{@code map}でvalueがnullであるプロパティの値はnullになる。例外の送出やログ出力は行わない。\n<p/>\n対象のプロパティにsetterが定義されていない場合はなにもしない。\n<p/>\nプロパティの指定方法については{@link #createAndCopy(Class, Map)}を参照。\n\n**パラメータ:**\n- `<T>` - 型引数\n- `beanClass` - 生成したいBeanクラス\n- `map` - JavaBeansのプロパティ名をエントリーのキー\n  プロパティの値をエントリーの値とするMap\n- `excludes` - コピー対象外のプロパティ名\n\n**戻り値:**\nプロパティに値が登録されたBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code beanClass}にデフォルトコンストラクタが定義されていない場合や、\n  {@code beanClass}のコンストラクタ実行時に問題が発生した場合。\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "createAndCopy",
+      "level": 3,
+      "content": "```java\npublic static T createAndCopy(Class<T> beanClass, Object srcBean)\n```\n\nJava Beansからプロパティをコピーして、別のBeanを作成する。\n<p/>\n{@code srcBean}がnullである場合、デフォルトコンストラクタで{@code beanClass}を生成して返却する。\n\n**パラメータ:**\n- `<T>` - 型引数\n- `beanClass` - コピー先のBeanクラス\n- `srcBean` - コピー元のBean\n\n**戻り値:**\nコピーされたBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code beanClass}にデフォルトコンストラクタが定義されていない場合や、\n  {@code beanClass}のコンストラクタの実行中に問題が発生した場合。\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "createAndCopy",
+      "level": 3,
+      "content": "```java\npublic static T createAndCopy(Class<T> beanClass, Object srcBean, CopyOptions copyOptions)\n```\n\nJava Beansからプロパティをコピーして、別のBeanを作成する。\n<p/>\n{@code srcBean}がnullである場合、デフォルトコンストラクタで{@code beanClass}を生成して返却する。\n\n**パラメータ:**\n- `<T>` - 型引数\n- `beanClass` - コピー先のBeanクラス\n- `srcBean` - コピー元のBean\n- `copyOptions` - コピーの設定\n\n**戻り値:**\nコピーされたBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code beanClass}にデフォルトコンストラクタが定義されていない場合や、\n  {@code beanClass}のコンストラクタの実行中に問題が発生した場合。\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "createAndCopyIncludes",
+      "level": 3,
+      "content": "```java\npublic static T createAndCopyIncludes(Class<T> beanClass, Object srcBean, String includes)\n```\n\nJava Beansから指定されたプロパティをコピーして、別のBeanを作成する。\n<p/>\n{@code srcBean}がnullである場合、デフォルトコンストラクタで{@code beanClass}を生成して返却する。\n\n**パラメータ:**\n- `<T>` - 型引数\n- `beanClass` - コピー先のBeanクラス\n- `srcBean` - コピー元のBean\n- `includes` - コピー対象のプロパティ名\n\n**戻り値:**\nコピーされたBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code beanClass}にデフォルトコンストラクタが定義されていない場合や、\n  {@code beanClass}のデフォルトコンストラクタの実行中に問題が発生した場合。\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "createAndCopyExcludes",
+      "level": 3,
+      "content": "```java\npublic static T createAndCopyExcludes(Class<T> beanClass, Object srcBean, String excludes)\n```\n\nJava Beansから指定されたプロパティ以外をコピーして、別のBeanを作成する。\n<p/>\n{@code srcBean}がnullである場合、デフォルトコンストラクタで{@code beanClass}を生成して返却する。\n<p/>\nプロパティのコピーは{@code srcBean}に定義されたプロパティをベースに実行される。\n{@code srcBean}に存在し、{@code beanClass}に存在しないプロパティはコピーされない。\n\n**パラメータ:**\n- `<T>` - 型引数\n- `beanClass` - コピー先のBeanクラス\n- `srcBean` - コピー元のBean\n- `excludes` - コピー対象外のプロパティ名\n\n**戻り値:**\nプロパティに値がコピーされたBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code beanClass}のデフォルトコンストラクタの実行中に問題が発生した場合や、\n  {@code beanClass}のプロパティのデフォルトコンストラクタの実行中に問題が発生した場合。\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "copyInner",
+      "level": 3,
+      "content": "```java\nprotected static DEST copyInner(SRC srcBean, DEST destBean, CopyOptions copyOptions)\n```\n\nBeanからBeanに値をコピーする。\n<p/>\n内部で共通的に使用されるメソッド。\n\n**パラメータ:**\n- `srcBean` - コピー元のBeanオブジェクト\n- `destBean` - コピー先のBeanオブジェクト\n- `copyOptions` - コピーの設定\n- `<SRC>` - コピー元のBeanの型\n- `<DEST>` - コピー先のBeanの型\n\n**戻り値:**\nコピー先のBeanオブジェクト\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "hasConverter",
+      "level": 3,
+      "content": "```java\nprivate static boolean hasConverter(PropertyDescriptor pd, CopyOptions copyOptions)\n```\n\n指定されたプロパティの情報をもとに有効な{@link Converter}または{@link ExtensionConverter}が存在するか判定する。\n\n**パラメータ:**\n- `pd` - プロパティの情報\n- `copyOptions` - コピーの設定\n\n**戻り値:**\n有効な{@link Converter}または{@link ExtensionConverter}が存在する場合は{@code true}\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "getProperty",
+      "level": 3,
+      "content": "```java\nprivate static Object getProperty(Object bean, PropertyDescriptor pd)\n```\n\n指定したオブジェクトのプロパティの値を取得する。\n\n**パラメータ:**\n- `bean` - プロパティの値を取得したいBeanオブジェクト\n- `pd` - 取得したいプロパティのプロパティディスクリプタ\n\n**戻り値:**\nオブジェクトから取得したプロパティの値\n\n**例外:**\n- `BeansException` - 取得したいプロパティにgetterが存在しない場合\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "copy",
+      "level": 3,
+      "content": "```java\npublic static DEST copy(SRC srcBean, DEST destBean)\n```\n\nBeanからBeanに値をコピーする。\n<p/>\nプロパティのコピーは{@code srcBean}に定義されたプロパティをベースに実行される。\n{@code srcBean}に存在し、{@code destBean}に存在しないプロパティはコピーされない。\n\n**パラメータ:**\n- `srcBean` - コピー元のBeanオブジェクト\n- `destBean` - コピー先のBeanオブジェクト\n- `<SRC>` - コピー元のBeanの型\n- `<DEST>` - コピー先のBeanの型\n\n**戻り値:**\nコピー先のBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code destBean}のプロパティのインスタンス生成に失敗した場合\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "copy",
+      "level": 3,
+      "content": "```java\npublic static DEST copy(SRC srcBean, DEST destBean, CopyOptions copyOptions)\n```\n\nBeanからBeanに値をコピーする。\n<p/>\nプロパティのコピーは{@code srcBean}に定義されたプロパティをベースに実行される。\n{@code srcBean}に存在し、{@code destBean}に存在しないプロパティはコピーされない。\n\n**パラメータ:**\n- `srcBean` - コピー元のBeanオブジェクト\n- `destBean` - コピー先のBeanオブジェクト\n- `copyOptions` - コピーの設定\n- `<SRC>` - コピー元のBeanの型\n- `<DEST>` - コピー先のBeanの型\n\n**戻り値:**\nコピー先のBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code destBean}のプロパティのインスタンス生成に失敗した場合\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "copyExcludesNull",
+      "level": 3,
+      "content": "```java\npublic static DEST copyExcludesNull(SRC srcBean, DEST destBean)\n```\n\nBeanからBeanに値をコピーする。ただしnullのプロパティはコピーしない。\n<p/>\nプロパティのコピーは{@code srcBean}に定義されたプロパティをベースに実行される。\n{@code srcBean}に存在し、{@code destBean}に存在しないプロパティはコピーされない。\n\n**パラメータ:**\n- `srcBean` - コピー元のBeanオブジェクト\n- `destBean` - コピー先のBeanオブジェクト\n- `<SRC>` - コピー元Beanの型\n- `<DEST>` - コピー先のBeanの型\n\n**戻り値:**\nコピー先のBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code destBean}のプロパティのインスタンス生成に失敗した場合\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "copyIncludes",
+      "level": 3,
+      "content": "```java\npublic static DEST copyIncludes(SRC srcBean, DEST destBean, String includes)\n```\n\nBeanからBeanに、指定されたプロパティをコピーする。\n<p/>\nプロパティのコピーは{@code srcBean}に定義されたプロパティをベースに実行される。\n{@code srcBean}に存在し、{@code destBean}に存在しないプロパティはコピーされない。\n<p/>\n{@code includes}には、{@code srcBean}のトップレベル要素のみ指定可能である。\nそれ以外を指定した場合はコピーされない。\n<pre>\n    {@code\n    // aaa.bbbはコピーされない\n    SampleBean copiedSampleBean = BeanUtil.createAndCopyIncludes(SampleBean.class, sampleBean, \"aaa.bbb\");\n    }\n</pre>\n\n**パラメータ:**\n- `srcBean` - コピー元のBeanオブジェクト\n- `destBean` - コピー先のBeanオブジェクト\n- `includes` - コピー対象のプロパティ名\n- `<SRC>` - コピー元Beanの型\n- `<DEST>` - コピー先のBeanの型\n\n**戻り値:**\nコピー先のBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code destBean}のプロパティのインスタンス生成に失敗した場合\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "copyExcludes",
+      "level": 3,
+      "content": "```java\npublic static DEST copyExcludes(SRC srcBean, DEST destBean, String excludes)\n```\n\nBeanからBeanに、指定されたプロパティ以外をコピーする。\n<p/>\nプロパティのコピーは{@code srcBean}に定義されたプロパティをベースに実行される。\n{@code srcBean}に存在し、{@code destBean}に存在しないプロパティはコピーされない。\n\n**パラメータ:**\n- `srcBean` - コピー元のBeanオブジェクト\n- `destBean` - コピー先のBeanオブジェクト\n- `excludes` - コピー対象外のプロパティ名\n- `<SRC>` - コピー元Beanの型\n- `<DEST>` - コピー先のBeanの型\n\n**戻り値:**\nコピー先のBeanオブジェクト\n\n**例外:**\n- `BeansException` - {@code destBean}のプロパティのインスタンス生成に失敗した場合\n\n---",
+      "id": "s34"
+    },
+    {
+      "title": "createMapAndCopy",
+      "level": 3,
+      "content": "```java\npublic static Map<String,Object> createMapAndCopy(SRC srcBean, CopyOptions copyOptions)\n```\n\nBeanからMapにプロパティの値をコピーする。\n<p>\nMapのキーはプロパティ名で、値はプロパティ値となる。\n値の型変換は行わず、Beanのプロパティの値を単純にMapの値に設定する。\nBeanがBeanを持つ構造の場合、Mapのキー値は「.」で連結された値となる。\n\n**パラメータ:**\n- `srcBean` - Bean\n- `copyOptions` - コピーの設定\n- `<SRC>` - Beanの型\n\n**戻り値:**\nBeanのプロパティをコピーしたMap\n\n---",
+      "id": "s35"
+    },
+    {
+      "title": "createMapAndCopy",
+      "level": 3,
+      "content": "```java\npublic static Map<String,Object> createMapAndCopy(SRC srcBean)\n```\n\nBeanからMapにプロパティの値をコピーする。\n\n<p>\n内部的には空の{@link CopyOptions}を渡して{@link #createMapAndCopy(Object, CopyOptions)}を呼び出している。\n</p>\n\n**パラメータ:**\n- `srcBean` - Bean\n- `<SRC>` - Beanの型\n\n**戻り値:**\nBeanのプロパティをコピーしたMap\n\n---",
+      "id": "s36"
+    },
+    {
+      "title": "createMapAndCopyExcludes",
+      "level": 3,
+      "content": "```java\npublic static Map<String,Object> createMapAndCopyExcludes(SRC srcBean, String excludeProperties)\n```\n\nBeanからMapにプロパティの値をコピーする。\n<p>\nMapのキーはプロパティ名で、値はプロパティ値となる。\n値の型変換は行わず、Beanのプロパティの値を単純にMapの値に設定する。\nBeanがBeanを持つ構造の場合、Mapのキー値は「.」で連結された値となる。\n<p>\n除外対象のプロパティ名が指定された場合は、そのプロパティがコピー対象から除外される。\n\n**パラメータ:**\n- `srcBean` - Bean\n- `excludeProperties` - 除外対象のプロパティ名\n- `<SRC>` - Beanの型\n\n**戻り値:**\nBeanのプロパティをコピーしたMap\n\n---",
+      "id": "s37"
+    },
+    {
+      "title": "createMapAndCopyIncludes",
+      "level": 3,
+      "content": "```java\npublic static Map<String,Object> createMapAndCopyIncludes(SRC srcBean, String includesProperties)\n```\n\nBeanからMapに指定されたプロパティの値をコピーする。\n<p>\nMapのキーはプロパティ名で、値はプロパティ値となる。\n値の型変換は行わず、Beanのプロパティの値を単純にMapの値に設定する。\nBeanがBeanを持つ構造の場合、Mapのキー値は「.」で連結された値となる。\n<p>\nコピー対象のプロパティ名として指定できるのは、トップ階層のBeanのプロパティ名となる。\nこのため、階層構造で子階層のBeanがinclude指定されていた場合、子階層のBeanのプロパティは全てコピーされる。\n\n**パラメータ:**\n- `srcBean` - Bean\n- `includesProperties` - コピー対象のプロパティ名のリスト\n- `<SRC>` - Beanの型\n\n**戻り値:**\nBeanのプロパティをコピーしたMap\n\n---",
+      "id": "s38"
+    },
+    {
+      "title": "createMapInner",
+      "level": 3,
+      "content": "```java\nprivate static Map<String,Object> createMapInner(SRC srcBean, String prefix, CopyOptions copyOptions)\n```\n\nMapを作成しBeanのプロパティ値をコピーする。\n\n**パラメータ:**\n- `srcBean` - コピー元のBean\n- `prefix` - プロパティ名のプレフィックス\n- `copyOptions` - コピーの設定\n- `<SRC>` - Beanの型\n\n**戻り値:**\nBeanのプロパティをコピーしたMap\n\n---",
+      "id": "s39"
+    },
+    {
+      "title": "createInstance",
+      "level": 3,
+      "content": "```java\nprivate static T createInstance(Class<T> clazz)\n```\n\nインスタンスを生成する.\n\n**パラメータ:**\n- `clazz` - クラス\n\n**戻り値:**\nインスタンス\n\n---",
+      "id": "s40"
+    },
+    {
+      "title": "clearCache",
+      "level": 3,
+      "content": "```java\nstatic void clearCache()\n```\n\n---",
+      "id": "s41"
+    }
+  ],
+  "id": "javadoc-nablarch-core-beans-BeanUtil"
+}

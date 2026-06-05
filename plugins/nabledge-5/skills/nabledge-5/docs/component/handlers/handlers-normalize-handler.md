@@ -20,7 +20,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.web.handler.NormalizationHandler
+* [nablarch.fw.web.handler.NormalizationHandler](../../javadoc/javadoc-nablarch-fw-web-handler-NormalizationHandler.md)
 
 ## モジュール一覧
 
@@ -42,13 +42,13 @@
 
 標準では、以下のノーマライズ処理を提供している。
 
-* リクエストパラメータの前後のホワイトスペースを除去するノーマライザ( TrimNormalizer ) [1]
+* リクエストパラメータの前後のホワイトスペースを除去するノーマライザ( [TrimNormalizer](../../javadoc/javadoc-nablarch-fw-web-handler-normalizer-TrimNormalizer.md) ) [1]
 
 ## ノーマライズ処理を追加する
 
 このハンドラはデフォルト動作で、リクエストパラメータの前後のホワイトスペース [1] を除去するノーマライザが有効となっている。
 
-プロジェクト要件で、ノーマライズ処理を追加する場合には、 Normalizer の実装クラスを作成し、本ハンドラに設定する。
+プロジェクト要件で、ノーマライズ処理を追加する場合には、 [Normalizer](../../javadoc/javadoc-nablarch-fw-web-handler-normalizer-Normalizer.md) の実装クラスを作成し、本ハンドラに設定する。
 
 以下に例を示す。
 

@@ -1,0 +1,134 @@
+{
+  "title": "class HttpMessagingRequestParsingHandler",
+  "content": "**パッケージ:** nablarch.fw.messaging.handler\n\n**実装されたインタフェース:**\n- Handler<HttpRequest,Object>\n\n---\n\n```java\npublic class HttpMessagingRequestParsingHandler\nimplements Handler<HttpRequest,Object>\n```\n\nHTTPメッセージングデータ解析ハンドラ\n<p/>\nHTTPリクエストの内容を解析し、メッセージング機能で使用される電文オブジェクトを作成することで、\n画面オンライン実行基盤にて使用されるハンドラ郡とメッセージング制御基盤にて使用されるハンドラ郡の\n橋渡し的な機能を提供する。\n\n**作成者:** TIS  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー *\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "MESSAGING_LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger MESSAGING_LOGGER\n```\n\n証跡ログを出力するロガー\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "CHARSET_PTN",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern CHARSET_PTN\n```\n\nContent-Typeヘッダから文字セットを取得するためのパターン\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "HTTP_HEADER_MESSAGE_ID",
+      "level": 3,
+      "content": "```java\nprivate static final String HTTP_HEADER_MESSAGE_ID\n```\n\nHTTPヘッダ名・メッセージID\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "HTTP_HEADER_CORRELATION_ID",
+      "level": 3,
+      "content": "```java\nprivate static final String HTTP_HEADER_CORRELATION_ID\n```\n\nHTTPヘッダ名・関連メッセージID\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "fwHeaderDefinition",
+      "level": 3,
+      "content": "```java\nprivate FwHeaderDefinition fwHeaderDefinition\n```\n\nフレームワーク制御ヘッダ定義\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "FORMAT_FILE_DIR",
+      "level": 3,
+      "content": "```java\nprivate static final String FORMAT_FILE_DIR\n```\n\n業務データフォーマット定義ファイル配置ディレクトリ論理名\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "BODY_READ_BUF_SIZE",
+      "level": 3,
+      "content": "```java\nprivate static final int BODY_READ_BUF_SIZE\n```\n\nデータ読み込み時バッファサイズ\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "bodyLengthLimit",
+      "level": 3,
+      "content": "```java\nprivate int bodyLengthLimit\n```\n\nリクエストのボディストリームから読み込む最大容量（単位：バイト）\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s11"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(HttpRequest req, ExecutionContext ctx)\n              throws ClassCastException\n```\n\n{@inheritDoc}\nこの実装ではHTTPRequestオブジェクトからRequestMessageオブジェクトへの変換および\nResponseMesssageオブジェクトからHttpResponseオブジェクトへの変換を行う。\n\n**例外:**\n- `java.lang.ClassCastException` - 引数 servletContext の実際の型が ServletExecutionContext でない場合。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "createRequestMessage",
+      "level": 3,
+      "content": "```java\nprivate RequestMessage createRequestMessage(HttpRequest request, ServletExecutionContext context, String messageId)\n```\n\nRequestMessageオブジェクトを作成する\n\n**パラメータ:**\n- `request` - HTTPリクエスト\n- `context` - 実行コンテキスト\n- `messageId` - メッセージID\n\n**戻り値:**\nRequestMessageオブジェクト\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "read",
+      "level": 3,
+      "content": "```java\nprivate ReceivedMessage read(ServletExecutionContext context, String messageId)\n```\n\nHTTPリクエストの入力ストリームから全てのデータを取得し、{@link ReceivedMessage}を返却する。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n- `messageId` - メッセージID\n\n**戻り値:**\n受信メッセージ\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "readHttpBody",
+      "level": 3,
+      "content": "```java\nprivate byte[] readHttpBody(HttpRequestWrapper request)\n```\n\nHTTPリクエストのBODY部を読み込む。\n\n**パラメータ:**\n- `request` - リクエスト\n\n**戻り値:**\nBODY部の内容\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "createFormatter",
+      "level": 3,
+      "content": "```java\nprivate DataRecordFormatter createFormatter(String formatFileName)\n```\n\nフォーマットファイル名からレコードフォーマットを生成する。\n\n**パラメータ:**\n- `formatFileName` - フォーマットファイル名\n\n**戻り値:**\nレコードフォーマット\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setFwHeaderDefinition",
+      "level": 3,
+      "content": "```java\npublic void setFwHeaderDefinition(FwHeaderDefinition fwHeaderDefinition)\n```\n\nフレームワーク制御ヘッダ定義を設定する。\n\n**パラメータ:**\n- `fwHeaderDefinition` - フレームワーク制御ヘッダ定義\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "emitLog",
+      "level": 3,
+      "content": "```java\nprivate void emitLog(InterSystemMessage<?> message, Charset charset)\n```\n\nメッセージングの証跡ログを出力する。\n\n**パラメータ:**\n- `message` - メッセージオブジェクト\n- `charset` - 出力に使用する文字レット\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "getCharsetFromContentType",
+      "level": 3,
+      "content": "```java\nprivate Charset getCharsetFromContentType(Map<String,String> headerMap)\n```\n\nContentTypeに設定されている文字セットを取得する。\n\n**パラメータ:**\n- `headerMap` - ヘッダ\n\n**戻り値:**\nContent-Typeヘッダに設定された文字セット、取得できない場合はデフォルト文字セット\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getBodyLengthLimit",
+      "level": 3,
+      "content": "```java\npublic int getBodyLengthLimit()\n```\n\nリクエストのボディストリームから読み込む最大容量を取得する。\n\n**戻り値:**\nbodyLengthLimit リクエストのボディストリームから読み込む最大容量（単位：バイト）\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "setBodyLengthLimit",
+      "level": 3,
+      "content": "```java\npublic void setBodyLengthLimit(int bodyLengthLimit)\n```\n\nリクエストのボディストリームから読み込む最大容量を設定する。\n\n**パラメータ:**\n- `bodyLengthLimit` - リクエストのボディストリームから読み込む最大容量（単位：バイト）\n\n---",
+      "id": "s21"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-handler-HttpMessagingRequestParsingHandler"
+}

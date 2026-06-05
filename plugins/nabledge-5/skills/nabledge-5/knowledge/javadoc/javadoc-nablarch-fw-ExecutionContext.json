@@ -1,0 +1,380 @@
+{
+  "title": "class ExecutionContext",
+  "content": "**パッケージ:** nablarch.fw\n\n**継承階層:**\n```\njava.lang.Object\n  └─ HandlerQueueManager<ExecutionContext>\n      └─ nablarch.fw.ExecutionContext\n```\n\n---\n\n```java\npublic class ExecutionContext\nextends HandlerQueueManager<ExecutionContext>\n```\n\n一連のハンドラ実行において、共通して読み書きするデータを保持するクラス。\n<p/>\n具体的には以下の情報を保持する。\n<ul>\n    <li>ハンドラキュー</li>\n    <li>データリーダ もしくは データリーダファクトリ</li>\n    <li>ユーザセッションスコープ情報</li>\n    <li>リクエストスコープ情報</li>\n</ul>\n本クラスのセッションスコープはスレッドアンセーフである。\n複数スレッドから使用する場合はセッションスコープにスレッドセーフなMap実装を設定すること。\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "FW_PREFIX",
+      "level": 3,
+      "content": "```java\npublic static final String FW_PREFIX\n```\n\n各種スコープ上の変数をフレームワークが使用する際に\n名前に付けるプレフィックス（予約名）\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "handlerQueue",
+      "level": 3,
+      "content": "```java\nprivate final ArrayList<Handler> handlerQueue\n```\n\nハンドラキュー\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "reader",
+      "level": 3,
+      "content": "```java\nprivate DataReader<?> reader\n```\n\nデータリーダ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "readerFactory",
+      "level": 3,
+      "content": "```java\nprivate DataReaderFactory<?> readerFactory\n```\n\nデータリーダファクトリ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "sessionScopeMap",
+      "level": 3,
+      "content": "```java\nprivate Map<String,Object> sessionScopeMap\n```\n\nセッションスコープ上の変数を格納したMap\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "sessionStoreMap",
+      "level": 3,
+      "content": "```java\nprivate Map<String,Object> sessionStoreMap\n```\n\nセッションストア上の変数を格納したMap\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "requestScopeMap",
+      "level": 3,
+      "content": "```java\nprivate Map<String,Object> requestScopeMap\n```\n\nリクエストスコープ上の変数を格納するMap\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "lastReadData",
+      "level": 3,
+      "content": "```java\nprivate Object lastReadData\n```\n\nこの実行コンテキストによって最後に読み込まれたデータ\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "lastRecordNumber",
+      "level": 3,
+      "content": "```java\nprivate int lastRecordNumber\n```\n\n現在、物理的に読み込んでいるレコードのレコード番号\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "processSucceeded",
+      "level": 3,
+      "content": "```java\nprivate boolean processSucceeded\n```\n\n処理結果\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "currentRequestObject",
+      "level": 3,
+      "content": "```java\nprivate Object currentRequestObject\n```\n\n現在処理中のリクエストオブジェクト\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "DATA_PROCESSED_WHEN_THROWN_MAP_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String DATA_PROCESSED_WHEN_THROWN_MAP_KEY\n```\n\n例外を送出したスレッドが例外発生時に処理していた入力データをリクエストスコープに格納する際に使用するキー\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "THROWN_EXCEPTION_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String THROWN_EXCEPTION_KEY\n```\n\n例外をリクエストスコープから取得する際に使用するキー\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "THROWN_APPLICATION_EXCEPTION_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String THROWN_APPLICATION_EXCEPTION_KEY\n```\n\n{@link ApplicationException}をリクエストスコープから取得する際に使用するキー\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s17"
+    },
+    {
+      "title": "ExecutionContext",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext()\n```\n\nデフォルトコンストラクタ\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "ExecutionContext",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext(ExecutionContext original)\n```\n\n元となる実行コンテキストから、新たな実行コンテキストのオブジェクトを作成する。\n<p/>\n作成される実行コンテキストの状態は以下の通り。\n<ul>\n    <li>ハンドラキューには、元のオブジェクトからシャローコピーを作成して設定する。</li>\n    <li>リクエストスコープには、新規インスタンスを設定する(コピーされない)。</li>\n    <li>それ以外のフィールドには、元のオブジェクトの参照を設定する。</li>\n</ul>\n\n**パラメータ:**\n- `original` - 元となる実行コンテキスト\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s20"
+    },
+    {
+      "title": "getHandlerQueue",
+      "level": 3,
+      "content": "```java\npublic List<Handler> getHandlerQueue()\n```\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "handleNext",
+      "level": 3,
+      "content": "```java\npublic TResult handleNext(TData data)\n                   throws NoMoreHandlerException, ClassCastException\n```\n\nハンドラキュー上の次のハンドラに処理を委譲する。\n\n**パラメータ:**\n- `<TData>` - 処理対象データの型\n- `<TResult>` - 処理結果データの型\n- `data` - 処理対象データ\n\n**戻り値:**\n実行結果\n\n**例外:**\n- `NoMoreHandlerException` - 次のハンドラが存在しない場合。\n- `ClassCastException` - ハンドラの型変数と実際のハンドラの戻り値の型が異なる場合。\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "getNextHandler",
+      "level": 3,
+      "content": "```java\npublic Handler<TData,TResult> getNextHandler()\n                                      throws NoMoreHandlerException, ClassCastException\n```\n\nハンドラキュー上の次のハンドラを取得する。\n\n**パラメータ:**\n- `<TData>` - 処理対象データの型\n- `<TResult>` - 処理結果データの型\n\n**戻り値:**\n次のハンドラ\n\n**例外:**\n- `NoMoreHandlerException` - 次のハンドラが存在しない場合。\n- `ClassCastException` - ハンドラの型変数と実際のハンドラの戻り値の型が異なる場合。\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "findHandler",
+      "level": 3,
+      "content": "```java\npublic T findHandler(Object data, Class<T> targetType, Class<?> stopType)\n```\n\nハンドラキュー上の後続ハンドラのうち、\n指定されたクラスもしくはインタフェースを実装している直近のハンドラを返す。\n<p/>\n該当するハンドラが登録されていなかった場合は{@code null}を返す。\n\n**パラメータ:**\n- `<T>` - 検索対象のハンドラ型\n- `data` - このハンドラに対する入力オブジェクト\n- `targetType` - 検索対象のハンドラ型\n- `stopType` - このタイプのハンドラよりも後続にあるハンドラを検索対象から除外する。\n\n**戻り値:**\n検索結果 (該当するハンドラが存在しなかった場合は{@code null}を返す。)\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "selectHandlers",
+      "level": 3,
+      "content": "```java\npublic List<T> selectHandlers(Object data, Class<T> targetType, Class<?> stopType)\n```\n\nハンドラキュー上の後続ハンドラのうち、\n指定されたクラスもしくはインタフェースを実装しているものを全て返す。\n<p/>\n該当するハンドラが登録されていなかった場合は空のリストを返す。\n\n**パラメータ:**\n- `<T>` - 検索対象のハンドラ型\n- `data` - このハンドラに対する入力オブジェクト\n- `targetType` - 検索対象のハンドラ型\n- `stopType` - このタイプのハンドラよりも後続にあるハンドラを検索対象から除外する。\n\n**戻り値:**\n検索結果\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "copy",
+      "level": 3,
+      "content": "```java\npublic final ExecutionContext copy()\n```\n\n自身の複製を返す。\n<p/>\n複製処理の本体は{@link ExecutionContext#copyInternal()}に委譲している。\n\n**戻り値:**\n自身の複製。\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "copyInternal",
+      "level": 3,
+      "content": "```java\nprotected ExecutionContext copyInternal()\n```\n\n自身の複製を返す。\n<p/>\n当メソッドが返すインスタンスはレシーバと同じ型でなければいけない。<br/>\nつまりobj.getClass() == obj.copy().getClass()がtrueでなければいけない。当メソッドをサブクラスでオーバーライドする場合はこの制約に注意して実装すること。\n\n**戻り値:**\n自身の複製。\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "readNextData",
+      "level": 3,
+      "content": "```java\npublic TData readNextData()\n```\n\nこの実行コンテキスト上のデータリーダを使用して、次のデータを読み込む。\n\n**パラメータ:**\n- `<TData>` - データリーダが読み込むデータの型\n\n**戻り値:**\n読み込んだデータ\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "getLastReadData",
+      "level": 3,
+      "content": "```java\npublic TData getLastReadData()\n```\n\nこの実行コンテキストが最後に読み込んだデータオブジェクトを返す。\n\n**パラメータ:**\n- `<TData>` - データオブジェクトの型\n\n**戻り値:**\nこの実行コンテキストが最後に読み込んだデータオブジェクト\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "clearLastReadData",
+      "level": 3,
+      "content": "```java\npublic void clearLastReadData()\n```\n\nこの実行コンテキストが最後に読み込んだデータオブジェクトをクリアする。\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "putDataOnException",
+      "level": 3,
+      "content": "```java\npublic void putDataOnException(Throwable e, Object data)\n```\n\n例外に関連するデータを追加する。\n<p/>\n指定された例外およびデータはリクエストスコープに保持する。\n\n**パラメータ:**\n- `e` - 例外\n- `data` - 例外に関連するデータ\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "getDataProcessedWhenThrown",
+      "level": 3,
+      "content": "```java\npublic Object getDataProcessedWhenThrown(Throwable e)\n```\n\n指定した例外を送出したスレッドが、例外発生時に処理していた入力データを返す。\n\n**パラメータ:**\n- `e` - 例外\n\n**戻り値:**\n指定した例外を送出したスレッドが例外発生時に処理していた入力データ。存在しない場合はnull\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "getDataProcessedWhenThrownMap",
+      "level": 3,
+      "content": "```java\nprivate Map<Throwable,Object> getDataProcessedWhenThrownMap()\n```\n\n例外を送出したスレッドが例外発生時に処理していた入力データを格納したマップをリクエストスコープから取得する。\n<p/>\n存在しない場合はマップを新規に作成しリクエストスコープに追加する。\n\n**戻り値:**\n例外を送出したスレッドが例外発生時に処理していた入力データを格納したマップ\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "hasNextData",
+      "level": 3,
+      "content": "```java\npublic boolean hasNextData()\n```\n\nこの実行コンテキスト上のデータリーダから次に読み出すことができるデータが残っているかどうか。\n\n**戻り値:**\n次に読み出すデータが存在する場合は{@code true}\n\n---",
+      "id": "s34"
+    },
+    {
+      "title": "getDataReader",
+      "level": 3,
+      "content": "```java\npublic DataReader<TData> getDataReader()\n```\n\nデータリーダを取得する。\n<p/>\nデータリーダが設定されていない場合は、\nデータリーダファクトリを使用してリーダを生成し、その結果を返す。\nファクトリも設定されていない場合はnullを返す。\n\n**パラメータ:**\n- `<TData>` - データリーダが読み込むデータ型\n\n**戻り値:**\nデータリーダ\n\n---",
+      "id": "s35"
+    },
+    {
+      "title": "setDataReader",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext setDataReader(DataReader<TData> reader)\n```\n\nデータリーダを設定する。\n\n**パラメータ:**\n- `<TData>` - データリーダが読み込むデータ型\n- `reader` - データリーダ\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s36"
+    },
+    {
+      "title": "setDataReaderFactory",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext setDataReaderFactory(DataReaderFactory<TData> factory)\n```\n\nデータリーダのファクトリを設定する。\n\n**パラメータ:**\n- `<TData>` - ファクトリが生成するデータリーダが読み込むデータ型\n- `factory` - 設定するデータリーダファクトリ\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s37"
+    },
+    {
+      "title": "closeReader",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext closeReader()\n```\n\n現在使用しているデータリーダを閉じる。\n<p/>\nリーダを閉じる際に例外が発生した場合は、ワーニングログを出力し、\n処理を継続する。\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s38"
+    },
+    {
+      "title": "getException",
+      "level": 3,
+      "content": "```java\npublic Throwable getException()\n```\n\nリクエストスコープから例外を取得する。\n<p/>\n{@link #THROWN_EXCEPTION_KEY}キーを使用する。\n\n**戻り値:**\n例外。リクエストスコープに例外が設定されていない場合はnull\n\n---",
+      "id": "s39"
+    },
+    {
+      "title": "getApplicationException",
+      "level": 3,
+      "content": "```java\npublic ApplicationException getApplicationException()\n```\n\nリクエストスコープから{@link ApplicationException}を取得する。\n<p/>\n{@link #THROWN_APPLICATION_EXCEPTION_KEY}キーを使用する。\n\n**戻り値:**\n{@link ApplicationException}。\n         リクエストスコープに{@link ApplicationException}が設定されていない場合はnull\n\n---",
+      "id": "s40"
+    },
+    {
+      "title": "setException",
+      "level": 3,
+      "content": "```java\npublic void setException(Throwable e)\n```\n\nリクエストスコープに例外を設定する。\n<p/>\n{@link #THROWN_EXCEPTION_KEY}キーに例外を設定する。\nさらに、例外が{@link ApplicationException}の場合は、\n{@link #THROWN_APPLICATION_EXCEPTION_KEY}キーにも設定する。\n\n**パラメータ:**\n- `e` - 例外\n\n---",
+      "id": "s41"
+    },
+    {
+      "title": "isProcessSucceeded",
+      "level": 3,
+      "content": "```java\npublic boolean isProcessSucceeded()\n```\n\n処理が正常終了したかどうかを取得する。\n\n**戻り値:**\n正常終了した場合{@code true}\n\n---",
+      "id": "s42"
+    },
+    {
+      "title": "setCurrentRequestObject",
+      "level": 3,
+      "content": "```java\npublic void setCurrentRequestObject(Object currentRequestObject)\n```\n\n現在処理中のリクエストオブジェクトを設定する。\n\n**パラメータ:**\n- `currentRequestObject` - 現在処理中のリクエストオブジェクト\n\n---",
+      "id": "s43"
+    },
+    {
+      "title": "getCurrentRequestObject",
+      "level": 3,
+      "content": "```java\npublic Object getCurrentRequestObject()\n```\n\n現在処理中のリクエストオブジェクトを取得する。\n<p/>\n本メソッドは、{@ref InboundHandleable}または{@ref OutboundHandleable}の処理中にリクエストオブジェクトを取得する際に使用する。\n\n**戻り値:**\n現在処理中のリクエストオブジェクト\n\n---",
+      "id": "s44"
+    },
+    {
+      "title": "setProcessSucceeded",
+      "level": 3,
+      "content": "```java\npublic void setProcessSucceeded(boolean processSucceeded)\n```\n\n処理が正常終了したかどうかを設定する。\n\n**パラメータ:**\n- `processSucceeded` - 正常終了の場合{@code true}\n\n---",
+      "id": "s45"
+    },
+    {
+      "title": "setRequestScopeMap",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext setRequestScopeMap(Map<String,Object> m)\n```\n\nリクエストスコープを設定する。\n\n**パラメータ:**\n- `m` - リクエストスコープ上の変数を格納するMap\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s46"
+    },
+    {
+      "title": "getRequestScopeMap",
+      "level": 3,
+      "content": "```java\npublic Map<String,Object> getRequestScopeMap()\n```\n\nリクエストスコープ上の変数を格納したMapオブジェクトへの参照を返す。\n<p/>\nこのMapへの変更はリクエストスコープに直接反映される。\n\n**戻り値:**\nリクエストスコープへの参照\n\n---",
+      "id": "s47"
+    },
+    {
+      "title": "getRequestScopedVar",
+      "level": 3,
+      "content": "```java\npublic T getRequestScopedVar(String varName)\n                      throws ClassCastException\n```\n\nリクエストスコープ上の変数の値を取得する。\n\n**パラメータ:**\n- `<T>` - 期待する変数の型\n- `varName` - 変数名\n\n**戻り値:**\n変数の値\n\n**例外:**\n- `ClassCastException` - 実際の変数の型が期待する変数の型と適合しなかった場合。\n\n---",
+      "id": "s48"
+    },
+    {
+      "title": "setRequestScopedVar",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext setRequestScopedVar(String varName, Object varValue)\n```\n\nリクエストスコープ上の変数の値を設定する。\n<p/>\n既に定義済みの変数は上書きされる。\n\n**パラメータ:**\n- `varName` - 変数名\n- `varValue` - 変数の値\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s49"
+    },
+    {
+      "title": "setSessionStoreMap",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext setSessionStoreMap(Map<String,Object> m)\n```\n\nセッションストア上の変数を格納したMapを設定する。\n\n**パラメータ:**\n- `m` - セッションストア上の変数を格納したMap\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s50"
+    },
+    {
+      "title": "getSessionStoreMap",
+      "level": 3,
+      "content": "```java\npublic Map<String,Object> getSessionStoreMap()\n```\n\nセッションストア情報を格納したMapオブジェクトへの参照を返す。\n<p/>\nこのMapへの変更はセッションストアに直接反映される。\n\n**戻り値:**\nセッションストアへの参照\n\n---",
+      "id": "s51"
+    },
+    {
+      "title": "getSessionStoredVar",
+      "level": 3,
+      "content": "```java\npublic T getSessionStoredVar(String varName)\n                      throws ClassCastException\n```\n\nセッションストア上の変数の値を取得する。\n\n**パラメータ:**\n- `<T>` - 期待する変数の型\n- `varName` - 変数名\n\n**戻り値:**\n変数の値\n\n**例外:**\n- `ClassCastException` - 実際の変数の型が期待する変数の型と適合しなかった場合。\n\n---",
+      "id": "s52"
+    },
+    {
+      "title": "setSessionStoredVar",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext setSessionStoredVar(String varName, Object varValue)\n```\n\nセッションストア上の変数の値を設定する。\n<p/>\n既に定義済みの変数は上書きされる。\n\n**パラメータ:**\n- `varName` - 変数名\n- `varValue` - 変数の値\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s53"
+    },
+    {
+      "title": "setSessionScopeMap",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext setSessionScopeMap(Map<String,Object> m)\n```\n\nセッションスコープ上の変数を格納したMapを設定する。\n\n**パラメータ:**\n- `m` - リクエストスコープ上の変数を格納したMap\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s54"
+    },
+    {
+      "title": "getSessionScopeMap",
+      "level": 3,
+      "content": "```java\npublic Map<String,Object> getSessionScopeMap()\n```\n\nセッションスコープ情報を格納したMapオブジェクトへの参照を返す。\n<p/>\nこのMapへの変更はセッションスコープに直接反映される。\n\n**戻り値:**\nセッションスコープへの参照\n\n---",
+      "id": "s55"
+    },
+    {
+      "title": "getSessionScopedVar",
+      "level": 3,
+      "content": "```java\npublic T getSessionScopedVar(String varName)\n                      throws ClassCastException\n```\n\nセッションスコープ上の変数の値を取得する。\n\n**パラメータ:**\n- `<T>` - 期待する変数の型\n- `varName` - 変数名\n\n**戻り値:**\n変数の値\n\n**例外:**\n- `ClassCastException` - 実際の変数の型が期待する変数の型と適合しなかった場合。\n\n---",
+      "id": "s56"
+    },
+    {
+      "title": "setSessionScopedVar",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext setSessionScopedVar(String varName, Object varValue)\n```\n\nセッションスコープ上の変数の値を設定する。\n<p/>\n既に定義済みの変数は上書きされる。\n\n**パラメータ:**\n- `varName` - 変数名\n- `varValue` - 変数の値\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s57"
+    },
+    {
+      "title": "invalidateSession",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext invalidateSession()\n```\n\n現在のリクエストに紐付けられたセッションスコープを無効化する。\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s58"
+    },
+    {
+      "title": "isNewSession",
+      "level": 3,
+      "content": "```java\npublic boolean isNewSession()\n```\n\n新規セッションであるかどうか。\n\n**戻り値:**\n新規セッションである場合は{@code true}\n\n---",
+      "id": "s59"
+    },
+    {
+      "title": "hasSession",
+      "level": 3,
+      "content": "```java\npublic boolean hasSession()\n```\n\nセッションがあるかどうか。\n\n**戻り値:**\nセッションがある場合[@code true}\n\n---",
+      "id": "s60"
+    },
+    {
+      "title": "setLastRecordNumber",
+      "level": 3,
+      "content": "```java\npublic void setLastRecordNumber(int lastRecordNumber)\n```\n\nデータリーダが、現時点で物理的に読み込んでいるレコードのレコード番号を設定する。\n\n**パラメータ:**\n- `lastRecordNumber` - 現時点で物理的に読み込んでいるレコードのレコード番号\n\n---",
+      "id": "s61"
+    },
+    {
+      "title": "getLastRecordNumber",
+      "level": 3,
+      "content": "```java\npublic int getLastRecordNumber()\n```\n\nデータリーダが、現時点で物理的に読み込んでいるレコードのレコード番号を返却する。\n<p/>\n本メソッドは、{@link nablarch.fw.reader.FileDataReader}を使用してファイルを読み込んでいる場合にのみ値を返却する。\nFileDataReader以外を使用している場合は0を返す。\n\n**戻り値:**\n現時点で物理的に読み込んでいるレコードのレコード番号\n\n---",
+      "id": "s62"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-ExecutionContext"
+}

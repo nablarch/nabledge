@@ -7,7 +7,7 @@
     {
       "id": "s1",
       "title": "ハンドラクラス名",
-      "content": "* nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler",
+      "content": "* [nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler](../../javadoc/javadoc-nablarch-fw-messaging-handler-HttpMessagingResponseBuildingHandler.json)",
       "level": 2
     },
     {
@@ -19,19 +19,19 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#httpレスポンスハンドラ) よりも後ろに設定すること\n\nこのハンドラで生成した HTTPレスポンスオブジェクト を\n[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#httpレスポンスハンドラ) がクライアントに返却するため。",
+      "content": "[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.json#httpレスポンスハンドラ) よりも後ろに設定すること\n\nこのハンドラで生成した [HTTPレスポンスオブジェクト](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.json) を\n[HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.json#httpレスポンスハンドラ) がクライアントに返却するため。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "レスポンスヘッダに設定される値",
-      "content": "後続のハンドラで作成された応答電文オブジェクトを元に以下のレスポンスヘッダを設定する。\n\n応答電文オブジェクトのステータスコードを設定する。\n\n応答電文オブジェクトの持つフォーマッタ(InterSystemMessage.getFormatter())から以下の値を取得し設定する。\n\n* MIME(DataRecordFormatterSupport#getMimeType()\n* cherset(DataRecordFormatterSupport#getDefaultEncoding()\n\nMIMEが `application/json` でcharsetが `utf-8` の場合、Content-Typeは以下の値となる。\n\n**application/json;charset=utf-8**\n\nレスポンスヘッダの `X-Correlation-Id` に、応答電文オブジェクトのヘッダに設定された `CorrelationId` の値を設定する。\n\n> **Important:**\n> このハンドラでは、上記に記載のないレスポンスヘッダを設定できない。\n\n> 上記外のレスポンスヘッダを使用したい場合は、プロジェクトでハンドラを作成し対応すること。",
+      "content": "後続のハンドラで作成された応答電文オブジェクトを元に以下のレスポンスヘッダを設定する。\n\n応答電文オブジェクトのステータスコードを設定する。\n\n応答電文オブジェクトの持つフォーマッタ([InterSystemMessage.getFormatter()](../../javadoc/javadoc-nablarch-fw-messaging-InterSystemMessage.json))から以下の値を取得し設定する。\n\n* MIME([DataRecordFormatterSupport#getMimeType()](../../javadoc/javadoc-nablarch-core-dataformat-DataRecordFormatterSupport.json)\n* cherset([DataRecordFormatterSupport#getDefaultEncoding()](../../javadoc/javadoc-nablarch-core-dataformat-DataRecordFormatterSupport.json)\n\nMIMEが `application/json` でcharsetが `utf-8` の場合、Content-Typeは以下の値となる。\n\n**application/json;charset=utf-8**\n\nレスポンスヘッダの `X-Correlation-Id` に、応答電文オブジェクトのヘッダに設定された `CorrelationId` の値を設定する。\n\n> **Important:**\n> このハンドラでは、上記に記載のないレスポンスヘッダを設定できない。\n\n> 上記外のレスポンスヘッダを使用したい場合は、プロジェクトでハンドラを作成し対応すること。",
       "level": 2
     },
     {
       "id": "s5",
       "title": "フレームワーク制御ヘッダのレイアウトを変更する",
-      "content": "応答電文内のフレームワーク制御ヘッダの定義を変更する場合には、プロジェクトで拡張したフレームワーク制御ヘッダの定義を設定する必要がある。\n設定しない場合は、デフォルトの StructuredFwHeaderDefinition が使用される。\n\nフレームワーク制御ヘッダの詳細は、 [フレームワーク制御ヘッダ](../../component/libraries/libraries-http-system-messaging.md#送受信電文のデータモデル) を参照。\n\n以下に設定例を示す。\n\n```xml\n<component class=\"nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler\">\n  <!-- フレームワーク制御ヘッダの設定 -->\n  <property name=\"fwHeaderDefinition\">\n    <component class=\"sample.SampleFwHeaderDefinition\" />\n  </property>\n</component>\n```",
+      "content": "応答電文内のフレームワーク制御ヘッダの定義を変更する場合には、プロジェクトで拡張したフレームワーク制御ヘッダの定義を設定する必要がある。\n設定しない場合は、デフォルトの [StructuredFwHeaderDefinition](../../javadoc/javadoc-nablarch-fw-messaging-reader-StructuredFwHeaderDefinition.json) が使用される。\n\nフレームワーク制御ヘッダの詳細は、 [フレームワーク制御ヘッダ](../../component/libraries/libraries-http-system-messaging.json#送受信電文のデータモデル) を参照。\n\n以下に設定例を示す。\n\n```xml\n<component class=\"nablarch.fw.messaging.handler.HttpMessagingResponseBuildingHandler\">\n  <!-- フレームワーク制御ヘッダの設定 -->\n  <property name=\"fwHeaderDefinition\">\n    <component class=\"sample.SampleFwHeaderDefinition\" />\n  </property>\n</component>\n```",
       "level": 2
     }
   ]

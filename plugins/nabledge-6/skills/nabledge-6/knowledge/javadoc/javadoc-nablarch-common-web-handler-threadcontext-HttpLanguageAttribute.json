@@ -1,0 +1,62 @@
+{
+  "title": "class HttpLanguageAttribute",
+  "content": "**パッケージ:** nablarch.common.web.handler.threadcontext\n\n**継承階層:**\n```\njava.lang.Object\n  └─ LanguageAttribute\n      └─ nablarch.common.web.handler.threadcontext.HttpLanguageAttribute\n```\n\n---\n\n```java\npublic class HttpLanguageAttribute\nextends LanguageAttribute\n```\n\nスレッドコンテキストに保持する言語属性をHTTPヘッダ(Accept-Language)から取得するクラス。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "supportedLanguages",
+      "level": 3,
+      "content": "```java\nprivate Set<String> supportedLanguages\n```\n\nサポート対象の言語\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "COMMA_PATTERN",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern COMMA_PATTERN\n```\n\nカンマを表す正規表現のパターン\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "setSupportedLanguages",
+      "level": 3,
+      "content": "```java\npublic void setSupportedLanguages(String supportedLanguages)\n```\n\nサポート対象の言語を設定する。\n\n**パラメータ:**\n- `supportedLanguages` - サポート対象の言語\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "getValue",
+      "level": 3,
+      "content": "```java\npublic Object getValue(Request<?> req, ExecutionContext ctx)\n```\n\nコンテキストスレッドに格納するこのプロパティの値を返す。 \n<p/>\n{@link #getLocale(HttpRequest, ServletExecutionContext)}に処理を委譲する。\n\n**パラメータ:**\n- `req` - リクエスト\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\nサポート対象の言語\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getLocale",
+      "level": 3,
+      "content": "```java\nprotected Locale getLocale(HttpRequest req, ServletExecutionContext ctx)\n```\n\nスレッドコンテキストに保持する言語属性を返す。\n<pre>\nこのクラスの実装では以下の処理を行う。\n\n1.Accept-Languageヘッダから言語の取得を試みる。\n  ({@link #getAcceptLanguage(HttpRequest, ServletExecutionContext)})\n\n  サポート対象の言語が取得できた場合は取得できた言語を返す。\n  サポート対象の言語が取得できない場合は2.に進む。\n\n2.デフォルトの言語を返す。\n  ({@link LanguageAttribute#getValue(Request, ExecutionContext)})\n\n</pre>\n\n**パラメータ:**\n- `req` - リクエスト\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\nサポート対象の言語\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getAcceptLanguage",
+      "level": 3,
+      "content": "```java\nprotected String getAcceptLanguage(HttpRequest req, ServletExecutionContext ctx)\n```\n\n\"Accept-Language\"ヘッダをパースし、一番優先度が高いサポート対象の言語を返す。\n\n**パラメータ:**\n- `req` - リクエスト\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\nサポート対象の言語。サポート対象の言語が取得できない場合はnull。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "isSupportedLanguage",
+      "level": 3,
+      "content": "```java\nprotected boolean isSupportedLanguage(String language)\n```\n\nサポート対象の言語か否かを判定する。\n\n**パラメータ:**\n- `language` - 言語\n\n**戻り値:**\nサポート対象の言語の場合はtrue\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-common-web-handler-threadcontext-HttpLanguageAttribute"
+}

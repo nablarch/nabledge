@@ -1,0 +1,68 @@
+{
+  "title": "class MessagingAction",
+  "content": "**パッケージ:** nablarch.fw.messaging.action\n\n**継承階層:**\n```\njava.lang.Object\n  └─ DbAccessSupport\n      └─ nablarch.fw.messaging.action.MessagingAction\n```\n\n**実装されたインタフェース:**\n- Handler<RequestMessage,ResponseMessage>\n- TransactionEventCallback<RequestMessage>\n\n---\n\n```java\npublic abstract class MessagingAction\nextends DbAccessSupport\nimplements Handler<RequestMessage,ResponseMessage>, TransactionEventCallback<RequestMessage>\n```\n\n被仕向同期応答処理を行う業務処理で使用するテンプレートクラス。\n<p/>\n業務アクションハンドラは、本クラスを継承し、本クラスに定義されたテンプレートメソッドを必要に応じて実装する。\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "MessagingAction",
+      "level": 3,
+      "content": "```java\npublic MessagingAction()\n```\n\nMessagingActionオブジェクトを生成する。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "onReceive",
+      "level": 3,
+      "content": "```java\nprotected abstract ResponseMessage onReceive(RequestMessage request, ExecutionContext context)\n```\n\n要求電文毎にフレームワークから起動され、要求電文の内容をもとに業務処理を実行する。\n<p/>\n\n**パラメータ:**\n- `request` - 要求電文オブジェクト\n- `context` - 実行コンテキスト\n\n**戻り値:**\n応答電文オブジェクト\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "onError",
+      "level": 3,
+      "content": "```java\nprotected ResponseMessage onError(Throwable e, RequestMessage request, ExecutionContext context)\n```\n\n業務トランザクションが異常終了した場合の処理を実行する。\n<p/>\n本メソッドは、業務トランザクションがロールバックされると起動される。\n任意のエラー応答電文({@link ResponseMessage})を返却したい場合は、本メソッドをオーバーライドすること。\nデフォルト実装ではなにもしない。\n<p/>\n注意:\n  以下のケースでは業務アクションへのディスパッチが行われる前にエラーが\n  発生するため、エラー応答電文の内容を制御することはできない。\n  <ul>\n      <li>フレームワーク制御ヘッダの形式不正</li>\n      <li>MOMミドルウェアのレイヤーで発生したエラー (JMSException等)</li>\n  </ul>\n\n**パラメータ:**\n- `e` - 発生したエラーオブジェクト\n- `request` - 要求電文オブジェクト\n- `context` - 実行コンテキスト\n\n**戻り値:**\nエラー応答用電文。{@code null}を返した場合はフレームワークが編集した電文が送信される。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "usesAutoRead",
+      "level": 3,
+      "content": "```java\nprotected boolean usesAutoRead()\n```\n\n電文のメッセージボディの内容をデフォルトのフォーマッタを使用して\n自動的に読み込むかどうかを指定する。\n<p/>\n一般に使用される電文は\n(ヘッダーレコード) + (業務レコード)\nの2レイアウトで構成されることが多い。\nそのようなケースでは本機能を有効にすることにより、\n業務処理に制御が移った時点で、業務データ部の解析が全て完了した状態となり、\n業務側で電文のレイアウトを意識した処理を実装する必要が無くなる。\n(このオプションはデフォルトで有効となっている。)\n<p/>\n業務データ部が複数のレコードによって構成されている場合や、\n単一のフォーマット定義ファイルで定義できない場合、さらには、電文レイアウトが\n動的に変更されるといったケースでは、本メソッドをオーバーライドしfalseを返すことで、\n業務データ部の読み込みを業務ロジック側で制御することができる。\n\n**戻り値:**\n電文のメッセージボディの内容を自動的に読み込む場合は true\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage handle(RequestMessage req, ExecutionContext ctx)\n```\n\n{@inheritDoc}\n本クラスの実装では、まず最初に{@link #usesAutoRead()}を呼ぶ。\nその結果がfalseであれば{@link #onReceive(RequestMessage, ExecutionContext)}\nに処理を移譲し、その結果を返す。\n<p/>\n{@link #usesAutoRead()}がtrueを返す場合は、業務ロジックに入る前に業務データ部の\nフォーマッタを使用して、メッセージボディから1レコード分のデータを読み込む。\n業務データ部からレコードが読み込めない場合、または、1レコードの読み込みが完了\nした時点でデータ終端に達しない場合はフォーマット不正のエラーを送出する。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "transactionCallBackWatchType",
+      "level": 3,
+      "content": "```java\npublic Class<TransactionManagementHandler> transactionCallBackWatchType()\n```\n\n{@inheritDoc}\nこのクラスでは、{@link TransactionManagementHandler} 上のトランザクションを監視する。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "transactionAbnormalEnd",
+      "level": 3,
+      "content": "```java\npublic void transactionAbnormalEnd(Throwable e, RequestMessage data, ExecutionContext ctx)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "transactionNormalEnd",
+      "level": 3,
+      "content": "```java\npublic void transactionNormalEnd(RequestMessage data, ExecutionContext ctx)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s10"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-action-MessagingAction"
+}

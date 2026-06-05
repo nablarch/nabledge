@@ -1,0 +1,116 @@
+{
+  "title": "class TimerMetricsHandler",
+  "content": "**パッケージ:** nablarch.integration.micrometer.instrument.handler\n\n**実装されたインタフェース:**\n- Handler<TData,TResult>\n\n---\n\n```java\npublic class TimerMetricsHandler\nimplements Handler<TData,TResult>\n```\n\nハンドラキューに追加することで、後続処理の実行時間をメトリクスとして収集するハンドラクラス。\n\n**param:** 処理対象データ型  \n**param:** 処理結果データ型  \n**作成者:** Tanaka Tomoyuki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "meterRegistry",
+      "level": 3,
+      "content": "```java\nprivate MeterRegistry meterRegistry\n```\n\n使用する{@link MeterRegistry}。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "handlerMetricsMetaDataBuilder",
+      "level": 3,
+      "content": "```java\nprivate HandlerMetricsMetaDataBuilder<TData,TResult> handlerMetricsMetaDataBuilder\n```\n\n{@link HandlerMetricsMetaDataBuilder}。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "percentiles",
+      "level": 3,
+      "content": "```java\nprivate double[] percentiles\n```\n\n収集対象のパーセンタイル。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "enablePercentileHistogram",
+      "level": 3,
+      "content": "```java\nprivate boolean enablePercentileHistogram\n```\n\nヒストグラムバケットの連携の有効・無効フラグ。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "serviceLevelObjectives",
+      "level": 3,
+      "content": "```java\nprivate Duration[] serviceLevelObjectives\n```\n\nSLOに基づく追加のバケット。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "minimumExpectedValue",
+      "level": 3,
+      "content": "```java\nprivate Long minimumExpectedValue\n```\n\nバケットの最小値。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "maximumExpectedValue",
+      "level": 3,
+      "content": "```java\nprivate Long maximumExpectedValue\n```\n\nバケットの最大値。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic TResult handle(TData param, ExecutionContext executionContext)\n```\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setupPercentileOptions",
+      "level": 3,
+      "content": "```java\nprivate void setupPercentileOptions(Timer.Builder builder)\n```\n\nパーセンタイルについての設定を行う。\n\n**パラメータ:**\n- `builder` - 設定対象の{@link io.micrometer.core.instrument.Timer.Builder}\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setMeterRegistry",
+      "level": 3,
+      "content": "```java\npublic void setMeterRegistry(MeterRegistry meterRegistry)\n```\n\n{@link MeterRegistry} を設定する。\n\n**パラメータ:**\n- `meterRegistry` - {@link MeterRegistry}\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setHandlerMetricsMetaDataBuilder",
+      "level": 3,
+      "content": "```java\npublic void setHandlerMetricsMetaDataBuilder(HandlerMetricsMetaDataBuilder<TData,TResult> handlerMetricsMetaDataBuilder)\n```\n\n{@link HandlerMetricsMetaDataBuilder} を設定する。\n\n**パラメータ:**\n- `handlerMetricsMetaDataBuilder` - {@link HandlerMetricsMetaDataBuilder}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setPercentiles",
+      "level": 3,
+      "content": "```java\npublic void setPercentiles(List<String> percentiles)\n```\n\nこのハンドラによって収集されるメトリクスに、指定されたパーセンタイルのメトリクスを追加する。\n<p>\n95パーセンタイルの情報を追加したい場合は、{@code 0.95}を設定する。\n</p>\n<p>\nこのセッターはコンポーネント定義ファイルからプロパティとして設定されることを想定している。<br>\nシステムリポジトリによるリストプロパティの設定は総称型に応じたキャストをサポートしていないため、\nいったん文字列で受け取って内部で{@code double}にパースしている。\n</p>\n<p>\nここで渡した値は、{@code io.micrometer.core.instrument.Timer.Builder#publishPercentiles(double...)}の引数に渡される。\n</p>\n\n**パラメータ:**\n- `percentiles` - 追加するパーセンタイルのリスト\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setEnablePercentileHistogram",
+      "level": 3,
+      "content": "```java\npublic void setEnablePercentileHistogram(boolean enablePercentileHistogram)\n```\n\nヒストグラムバケットを生成するかどうかを設定する。\n<p>\nここで渡した値は、{@code io.micrometer.core.instrument.Timer.Builder#publishPercentileHistogram(java.lang.Boolean)}の引数に渡される。\n</p>\n\n**パラメータ:**\n- `enablePercentileHistogram` - ヒストグラムバケットを生成する場合は{@code true}\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setServiceLevelObjectives",
+      "level": 3,
+      "content": "```java\npublic void setServiceLevelObjectives(List<String> serviceLevelObjectives)\n```\n\nサービスレベル目標（ミリ秒）のリストを設定する。\n<p>\nこのセッターはコンポーネント定義ファイルからプロパティとして設定されることを想定している。<br>\nシステムリポジトリによるリストプロパティの設定は総称型に応じたキャストをサポートしていないため、\nいったん文字列で受け取って内部で{@code long}にパースしている。\n</p>\n<p>\nここで渡した値は、{@code io.micrometer.core.instrument.Timer.Builder#serviceLevelObjectives(java.time.Duration...)}の引数に渡される。\n</p>\n\n**パラメータ:**\n- `serviceLevelObjectives` - サービスレベル目標のリスト\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setMinimumExpectedValue",
+      "level": 3,
+      "content": "```java\npublic void setMinimumExpectedValue(long minimumExpectedValue)\n```\n\nヒストグラムバケットの下限（ミリ秒）を設定する。\n<p>\nここで渡した値は、{@code io.micrometer.core.instrument.Timer.Builder#minimumExpectedValue(java.time.Duration)}の引数に渡される。\n</p>\n\n**パラメータ:**\n- `minimumExpectedValue` - ヒストグラムバケットの下限\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setMaximumExpectedValue",
+      "level": 3,
+      "content": "```java\npublic void setMaximumExpectedValue(long maximumExpectedValue)\n```\n\nヒストグラムバケットの上限（ミリ秒）を設定する。\n<p>\nここで渡した値は、{@code io.micrometer.core.instrument.Timer.Builder#maximumExpectedValue(java.time.Duration)}の引数に渡される。\n</p>\n\n**パラメータ:**\n- `maximumExpectedValue` - ヒストグラムバケットの上限\n\n---",
+      "id": "s18"
+    }
+  ],
+  "id": "javadoc-nablarch-integration-micrometer-instrument-handler-TimerMetricsHandler"
+}

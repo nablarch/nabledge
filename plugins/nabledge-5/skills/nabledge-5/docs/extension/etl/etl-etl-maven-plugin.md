@@ -72,18 +72,18 @@ Java Beansクラスから取得する情報は以下のとおり。
 | 取得する情報 | 取得元 |
 |---|---|
 | ワークテーブル名 | Table のname属性より取得する。 |
-| 入力ファイルの文字コード | Csv のtype属性より取得する。 |
-| 入力ファイルのヘッダレコードの有無 | Csv のtype属性より取得する。 |
-| 入力ファイルの項目の囲み文字 | Csv のtype属性より取得する。 |
-| 入力ファイルのフィールドの区切り文字 | Csv のtype属性より取得する。 |
-| 入力ファイルのレコードの区切り文字 | Csv のtype属性より取得する。 |
-| 入力ファイルの項目名リスト | Csv のproperties属性より取得する。 |
+| 入力ファイルの文字コード | [Csv](../../javadoc/javadoc-nablarch-common-databind-csv-Csv.md) のtype属性より取得する。 |
+| 入力ファイルのヘッダレコードの有無 | [Csv](../../javadoc/javadoc-nablarch-common-databind-csv-Csv.md) のtype属性より取得する。 |
+| 入力ファイルの項目の囲み文字 | [Csv](../../javadoc/javadoc-nablarch-common-databind-csv-Csv.md) のtype属性より取得する。 |
+| 入力ファイルのフィールドの区切り文字 | [Csv](../../javadoc/javadoc-nablarch-common-databind-csv-Csv.md) のtype属性より取得する。 |
+| 入力ファイルのレコードの区切り文字 | [Csv](../../javadoc/javadoc-nablarch-common-databind-csv-Csv.md) のtype属性より取得する。 |
+| 入力ファイルの項目名リスト | [Csv](../../javadoc/javadoc-nablarch-common-databind-csv-Csv.md) のproperties属性より取得する。 |
 
 Java Beansクラスの実装例を以下に示す。
 
 ポイント
 
-* Java Beansクラスは、 WorkItem を継承すること。
+* Java Beansクラスは、 [WorkItem](../../javadoc/javadoc-nablarch-etl-WorkItem.md) を継承すること。
 
 ```java
 @Entity

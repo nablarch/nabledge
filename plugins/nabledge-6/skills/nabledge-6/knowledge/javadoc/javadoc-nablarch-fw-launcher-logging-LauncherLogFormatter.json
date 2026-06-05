@@ -1,0 +1,86 @@
+{
+  "title": "class LauncherLogFormatter",
+  "content": "**パッケージ:** nablarch.fw.launcher.logging\n\n---\n\n```java\npublic class LauncherLogFormatter\n```\n\n{@link nablarch.fw.launcher.Main}で出力するログメッセージをフォーマットするクラス。\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "PROPS_PREFIX",
+      "level": 3,
+      "content": "```java\npublic static final String PROPS_PREFIX\n```\n\nプロパティ名のプレフィックス\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DEFAULT_START_LOG_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_START_LOG_FORMAT\n```\n\n開始ログのフォーマット定義\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "DEFAULT_END_LOG_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_END_LOG_FORMAT\n```\n\n終了ログのフォーマット定義\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "startLogItems",
+      "level": 3,
+      "content": "```java\nprivate final Map<String,LogItem<LauncherLogContext>> startLogItems\n```\n\n開始ログの出力項目\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "endLogItems",
+      "level": 3,
+      "content": "```java\nprivate final Map<String,LogItem<LauncherLogContext>> endLogItems\n```\n\n終了ログの出力項目\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "getStartLogMsg",
+      "level": 3,
+      "content": "```java\npublic String getStartLogMsg(CommandLine commandLine)\n```\n\n開始ログを生成する。\n<p/>\n{@link #getStartLogFormat()}から取得したログフォーマットに従いログメッセージ生成を行う。\n\n**パラメータ:**\n- `commandLine` - {@link CommandLine コマンドラインオブジェクト}\n\n**戻り値:**\n生成した開始ログ\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getEndLogMsg",
+      "level": 3,
+      "content": "```java\npublic String getEndLogMsg(int exitCode, long executeTime)\n```\n\n終了ログを生成する。\n<p/>\n{@link #getEndLogFormat()}から取得したログフォーマットに従いログメッセージの生成を行う。\n\n**パラメータ:**\n- `exitCode` - 終了コード\n- `executeTime` - 処理時間\n\n**戻り値:**\n生成した終了ログ\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getStartLogFormat",
+      "level": 3,
+      "content": "```java\nprotected String getStartLogFormat()\n```\n\n開始ログのフォーマットを取得する。\n<p/>\n設定ファイル(nablarch.core.log.app.AppLogUtil#getProps())にログフォーマットが指定されている場合は、そのフォーマットを返却する。\n設定されていない場合には、デフォルトのフォーマットを使用する。\n<p/>\nデフォルトのフォーマットは、以下の設定例のようにフォーマット定義を行うことにより変更可能\n<pre>\n{@code\nlauncherLogFormatter.startFormat = @@@@ BEGIN @@@@\\n\\tcommandLineArguments = [$commandLineArguments$]\n}\n</pre>\n\n**戻り値:**\n開始ログのフォーマット\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getStartLogItems",
+      "level": 3,
+      "content": "```java\nprotected Map<String,LogItem<LauncherLogContext>> getStartLogItems()\n```\n\n開始ログ用のログ出力項目を生成する。\n\n**戻り値:**\n生成したログ出力項目\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getEndLogItems",
+      "level": 3,
+      "content": "```java\nprotected Map<String,LogItem<LauncherLogContext>> getEndLogItems()\n```\n\n終了ログ用のログ出力項目を生成する。\n\n**戻り値:**\n生成したログ出力項目\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getEndLogFormat",
+      "level": 3,
+      "content": "```java\nprotected String getEndLogFormat()\n```\n\n終了ログのフォーマットを取得する。\n<p/>\n設定ファイル(nablarch.core.log.app.AppLogUtil#getProps())にログフォーマットが指定されている場合は、\nそのフォーマットを返却する。\n設定されていない場合には、デフォルトのフォーマットを使用する。\n<p/>\nデフォルトのフォーマットは、以下の設定例のようにフォーマット定義を行うことにより変更可能\n<pre>\n{@code\nlauncherLogFormatter.endFormat = @@@@ END @@@@ execute time(ms) = [$executeTime$], exit code = [$exitCode$]\n}\n</pre>\n\n**戻り値:**\n開始ログのフォーマット\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-launcher-logging-LauncherLogFormatter"
+}

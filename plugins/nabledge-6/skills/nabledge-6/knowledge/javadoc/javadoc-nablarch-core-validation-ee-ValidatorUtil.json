@@ -1,0 +1,86 @@
+{
+  "title": "class ValidatorUtil",
+  "content": "**パッケージ:** nablarch.core.validation.ee\n\n---\n\n```java\npublic final class ValidatorUtil\n```\n\n{@link Validator}に関するユーティリティクラス。\n\n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "VALIDATOR_FACTORY_BUILDER",
+      "level": 3,
+      "content": "```java\nprivate static final String VALIDATOR_FACTORY_BUILDER\n```\n\n{@link SystemRepository}から取得する際のキー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "ValidatorUtil",
+      "level": 3,
+      "content": "```java\nprivate ValidatorUtil()\n```\n\nコンストラクタ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "getValidator",
+      "level": 3,
+      "content": "```java\npublic static Validator getValidator()\n```\n\n{@link Validator}インスタンスを取得する。\n<p/>\n{@link Validator}インスタンスは以下の手順で取得される。<br/>\n<ol>\n    <li>\n        {@link SystemRepository}から\"validatorFactoryBuilder\"という名前で\n        {@link ValidatorFactoryBuilder}を取得する。\n        {@link SystemRepository}から{@link ValidatorFactoryBuilder}が取得できなかった場合は、\n        このクラスの内部クラスとして用意されている{@link ValidatorFactoryBuilder}のデフォルトの実装が使用される。\n    </li>\n    <li>\n        {@link ValidatorFactoryBuilder}を使用して、{@link ValidatorFactory}を生成する。\n    </li>\n    <li>\n        {@link ValidatorFactory}から{@link Validator}インスタンスを生成して返却する。\n    </li>\n</ol>\n\n**戻り値:**\n{@link Validator}インスタンス\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "clearCachedValidatorFactory",
+      "level": 3,
+      "content": "```java\npublic static void clearCachedValidatorFactory()\n```\n\nキャッシュをクリアする。\nテスト用。通常は使用しない。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getValidatorFactory",
+      "level": 3,
+      "content": "```java\npublic static ValidatorFactory getValidatorFactory()\n```\n\n{@link ValidatorFactory}インスタンスを取得する。\n\n**戻り値:**\n{@link ValidatorFactory}\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getValidatorFactoryBuilder",
+      "level": 3,
+      "content": "```java\nprivate static ValidatorFactoryBuilder getValidatorFactoryBuilder()\n```\n\n{@link ValidatorFactoryBuilder}インスタンスを取得する。\n\n**戻り値:**\n{@link ValidatorFactoryBuilder}\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "validate",
+      "level": 3,
+      "content": "```java\npublic static void validate(Object bean)\n```\n\n指定されたBeanオブジェクトに対してBean Validationを行う。\n<p/>\nバリデーションエラーが発生した場合には、発生した全てのメッセージを持つ{@link ApplicationException}を送出する。\n\n**パラメータ:**\n- `bean` - Bean Validation対象のオブジェクト\n\n**例外:**\n- `ApplicationException` - バリデーションエラーが発生した場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "validate",
+      "level": 3,
+      "content": "```java\npublic static void validate(Object bean, String propertyNames)\n```\n\n指定されたBeanオブジェクトのプロパティに対してBean Validationを行う。\n<p/>\n{@code propertyNames}が{@code null}または空の場合は何もしない。\nプロパティ名が重複している場合でも、バリデーションエラーの際に生成されるエラーメッセージは一つになる。\nバリデーションエラーが発生した場合は、発生した全てのメッセージを持つ{@link ApplicationException}を送出する。\n\n**パラメータ:**\n- `bean` - Bean Validation対象のオブジェクト\n- `propertyNames` - Bean Validation対象のプロパティ名\n\n**例外:**\n- `ApplicationException` - バリデーションエラーが発生した場合\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "validateWithGroup",
+      "level": 3,
+      "content": "```java\npublic static void validateWithGroup(Object bean, Class<?> groups)\n```\n\n指定されたBeanオブジェクトに対して、指定したグループを使用してBean Validationを行う。\n<p/>\nバリデーションエラーが発生した場合には、発生した全てのメッセージを持つ{@link ApplicationException}を送出する。\n\n**パラメータ:**\n- `bean` - Bean Validation対象のオブジェクト\n- `groups` - Bean Validationのグループ\n\n**例外:**\n- `ApplicationException` - バリデーションエラーが発生した場合\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "validateProperty",
+      "level": 3,
+      "content": "```java\npublic static void validateProperty(Object bean, String propertyName, Class<?> groups)\n```\n\n指定されたBeanオブジェクトのプロパティに対してBean Validationを行う。\n<p/>\nバリデーションエラーが発生した場合には、発生した全てのメッセージを持つ{@link ApplicationException}を送出する。\n\n**パラメータ:**\n- `bean` - Bean Validation対象のオブジェクト\n- `propertyName` - Bean Validation対象のプロパティ名\n- `groups` - Bean Validationのグループ\n\n**例外:**\n- `ApplicationException` - バリデーションエラーが発生した場合\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-core-validation-ee-ValidatorUtil"
+}

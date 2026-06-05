@@ -1,0 +1,92 @@
+{
+  "title": "class DateRotatePolicy",
+  "content": "**パッケージ:** nablarch.core.log.basic\n\n**実装されたインタフェース:**\n- RotatePolicy\n\n---\n\n```java\npublic class DateRotatePolicy\nimplements RotatePolicy\n```\n\n日時でログのローテーションを行うクラス。<br>\nログ書き込み時の現在日時 >= 保持している次回ローテーション日時の場合、ローテーションを行う。<br>\n<p>\nプロパティファイルの記述ルールを下記に示す。\n  <dl>\n    <dt>rotateTime</dt>\n    <dd>ローテーション時刻。オプション。<br>\n      特定の時刻にログファイルをローテーションしたい場合に指定する。<br>\n      時刻は、HH, HH:mm, HH:mm:ss のいずれかのフォーマットで指定する。デフォルトは00:00:00。</dd>\n  </dl>\n</p>\n<p>\n  次回ローテーション日時は、システム起動時とローテーション時に算出する。\n  計算方法は以下の通り。\n</p>\n<p>\n  まず、次回ローテーション日時を決めるための基準日時を決定する。\n  基準日時は、システム起動時かつログファイルが既に存在する場合とそれ以外の場合で以下の2通りの日時を採用する。\n  <ul>\n    <li>システム起動時かつログファイルが存在する場合 → ログファイルの最終更新日時</li>\n    <li>それ以外の場合 → システム日時</li>\n  </ul>\n</p>\n<p>\n  次に、基準日時の時刻と rotateTime の時刻を比較して、次回ローテーション日時の日付を決定する。\n  <ul>\n    <li>基準日時の時刻 <= rotateTime → 基準日時の日付</li>\n    <li>rotateTime < 基準日時の時刻 → 基準日時の日付 + 1日</li>\n  </ul>\n</p>\n<p>\n  この日付に rotateTime の時刻を設定したものを、次回ローテーション日時とする。\n</p>\n<p>\n  例えば、rotateTimeに 12:00:00 が設定されており、基準日時が 2023-03-25 11:59:59 の場合、\n  次回ローテーション日時は 2023-03-25 12:00:00 となる。<br>\n  rotateTimeに 12:00:00 が設定されており、基準日時が 2023-03-25 12:00:01 の場合、\n  次回ローテーション日時は 2023-03-26 12:00:00 となる。\n</p>\n<p>\n  ローテーション後のログファイル名は、 <ログファイルパス>.yyyyMMddHHmmssSSS.old となる。\n  yyyyMMddHHmmssSSSにはローテーション実施時刻が出力される。\n</p>\n\n**作成者:** Kotaro Taki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "logFilePath",
+      "level": 3,
+      "content": "```java\nprivate String logFilePath\n```\n\n書き込み先のファイルパス\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "nextRotateDateTime",
+      "level": 3,
+      "content": "```java\nprivate Date nextRotateDateTime\n```\n\n次回ローテーション日時\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "nextRotateTime",
+      "level": 3,
+      "content": "```java\nprivate Date nextRotateTime\n```\n\nプロパティファイルに設定された更新時刻から生成したDateオブジェクト\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize(ObjectSettings settings)\n```\n\n{@inheritDoc}\n起動時にログファイルパスにログファイルが既に存在する場合は、ファイルの更新時刻から次回ローテーション日時を算出する。\nこの初期化処理により、例えば2023年3月6日にログファイルに書き込み後アプリを停止。２日後にアプリを再起動する場合、\n起動時に本クラスが保持する次回ローテーション日時は2023年3月7日 となる。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "calcNextRotateDateTime",
+      "level": 3,
+      "content": "```java\nprivate Date calcNextRotateDateTime(Date currentDate)\n```\n\n次回ローテーション日時を計算する。<br>\n<br>\n引数で渡された現在日時の時刻部分をrotateTimeに設定されている時刻とする。<br>\nrotateTimeが設定されていない場合は、00:00:00。<br>\n上記で算出された次回ローテーション日時を元に、以下の通り次回ローテーション日時を計算する。<br>\n1.次回ローテーション日時 >= 現在日時 の場合は、次回ローテーション日時を返す。<br>\n2.次回ローテーション日時 < 現在日時 の場合は、次回ローテーション日時+1日を返す。\n\n**パラメータ:**\n- `currentDate` - 現在日時\n\n**戻り値:**\n次回ローテーション日時のDateオブジェクト\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "needsRotate",
+      "level": 3,
+      "content": "```java\npublic boolean needsRotate(String message, Charset charset)\n```\n\n{@inheritDoc}<br>\n現在時刻 >= 次回ローテーション日時の場合、ローテーションが必要と判定する。<br>\nそれ以外の場合は、ローテーションが不要と判定する。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "decideRotatedFilePath",
+      "level": 3,
+      "content": "```java\npublic String decideRotatedFilePath()\n```\n\n{@inheritDoc}\n古いログファイル名は、 <ログファイルパス>.yyyyMMddHHmmssSSS.old のフォーマットで出力される。\n日時には、ローテーション実施時刻が出力される。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "rotate",
+      "level": 3,
+      "content": "```java\npublic void rotate(String rotatedFilePath)\n```\n\n{@inheritDoc}\nリネーム完了後に、 次回ローテーション日時を更新する。\n\n**例外:**\n- `IllegalStateException` - ログファイルのリネームができない場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getSettings",
+      "level": 3,
+      "content": "```java\npublic String getSettings()\n```\n\n{@inheritDoc}\n設定情報のフォーマットを下記に示す。<br>\n<pre>\n{@code\nROTATE TIME         = [<ローテーション時刻>]\nNEXT ROTATE DATE    = [<次回ローテーション日時>]\nCURRENT DATE        = [<現在時刻>]\n}\n</pre>\n\n**戻り値:**\n設定情報\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "currentDate",
+      "level": 3,
+      "content": "```java\nprotected Date currentDate()\n```\n\n現在日時を返す。\n\n**戻り値:**\n現在日時\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "onWrite",
+      "level": 3,
+      "content": "```java\npublic void onWrite(String message, Charset charset)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "onOpenFile",
+      "level": 3,
+      "content": "```java\npublic void onOpenFile(File file)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s14"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-basic-DateRotatePolicy"
+}

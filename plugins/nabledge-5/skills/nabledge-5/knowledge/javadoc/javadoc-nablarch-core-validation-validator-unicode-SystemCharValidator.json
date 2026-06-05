@@ -1,0 +1,74 @@
+{
+  "title": "class SystemCharValidator",
+  "content": "**パッケージ:** nablarch.core.validation.validator.unicode\n\n**継承階層:**\n```\njava.lang.Object\n  └─ CharacterLimitationValidator<SystemChar>\n      └─ nablarch.core.validation.validator.unicode.SystemCharValidator\n```\n\n---\n\n```java\npublic class SystemCharValidator\nextends CharacterLimitationValidator<SystemChar>\n```\n\nシステム許容文字のみからなる文字列であるかをチェックするクラス。\n<p>\n  {@link SystemChar}アノテーションで設定された許容文字であるかをバリデーションする。\n\n  <p>\n    <b>使用するための設定</b>\n  </p>\n  許容文字集合 \"smallLetter\" を次のように定義する。\n  許容文字集合の定義方法は、範囲指定やリテラル指定などいくつかあるので、詳細は{@link nablarch.core.validation.validator.unicode}パッケージのjavadocを参照。\n  <pre>\n    {@code <component name=\"smallLetter\" class=\"nablarch.core.validation.validator.unicode.}{@link RangedCharsetDef}{@code \">\n        <property name=\"startCodePoint\" value=\"U+0061\" />\n        <property name=\"endCodePoint\" value=\"U+007A\" />\n        <property name=\"messageId\" value=\"MSG00002\" />\n    </component>}\n  </pre>\n  本バリデータを使用するには許容文字集合とメッセージIDのデフォルト値を設定する必要がある。\n  次の例では上で定義した許容文字集合 \"smallLetter\" をデフォルトの許容文字集合に、\n  メッセージID \"MSG90001\" をデフォルトのメッセージIDに設定する。\n  <pre>\n    {@code <component class=\"nablarch.core.validation.validator.unicode.SystemCharValidator\">\n        <!-- 定義した許容文字集合を設定 -->\n        <property name=\"defaultCharsetDef\" ref=\"smallLetter\"/>\n        <property name=\"messageId\" value=\"MSG90001\"/>\n    </component>}\n  </pre>\n\n  <p>\n    <b>プロパティごとの設定</b>\n  </p>\n  プロパティごとのバリデーションの内容を設定するには{@link SystemChar}アノテーションで設定する。\n  バリデーション内容として、別途定義された許容文字集合 \"passCharacter\"、メッセージID \"PASSWORD\" を設定する場合は\n  {@link SystemChar}アノテーションを次のように記述する。\n  <pre>\n    {@code @PropertyName(\"パスワード\")}\n    {@code @SystemChar(charsetDef = \"passCharacter\", messageId = \"PASSWORD\")\n    public void setConfirmPassword(String confirmPassword) {\n        this.confirmPassword = confirmPassword;\n    }}\n  </pre>\n\n  <p>\n    <b>使用されるメッセージIDの優先順位</b>\n  </p>\n  メッセージIDは{@link SystemChar}, {@link CharsetDef}, {@link SystemCharValidator}のそれぞれで設定できるが、\n  使用するメッセージIDの優先順は{@link SystemChar}, {@link CharsetDef}, {@link SystemCharValidator}の順となる。\n  例えば、全てにメッセージIDが指定されていた場合は{@link SystemChar}で指定されているメッセージIDが使用される。\n</p>\n\n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "allowSurrogatePair",
+      "level": 3,
+      "content": "```java\nprivate boolean allowSurrogatePair\n```\n\nサロゲートペアを許容するかどうか。\nデフォルトは{@code false}(許容しない）。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "defaultCharsetDef",
+      "level": 3,
+      "content": "```java\nprivate CharsetDef defaultCharsetDef\n```\n\nデフォルトの許容文字集合定義\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "isValid",
+      "level": 3,
+      "content": "```java\nprotected boolean isValid(SystemChar annotation, String value)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "getCharsetDefFrom",
+      "level": 3,
+      "content": "```java\nprivate CharsetDef getCharsetDefFrom(SystemChar annotation)\n```\n\nアノテーションから許容文字集合定義クラスを取得する。\n<p>\nアノテーションにて許容文字集合定義の名称が指定されていない場合、\nデフォルトの許容文字集合を使用する。\n明示的に指定されている場合はリポジトリから取得する。\n</p>\n\n**パラメータ:**\n- `annotation` - アノテーション\n\n**戻り値:**\n許容文字集合定義クラス\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getMessageIdFromAnnotation",
+      "level": 3,
+      "content": "```java\nprotected String getMessageIdFromAnnotation(SystemChar annotation)\n```\n\n{@inheritDoc}\n<p>\n指定された{@link SystemChar}がメッセージIDをを持つ場合は、\nそのメッセージIDを返却する。\n{@link SystemChar}がメッセージIDを持たない場合は、\n{@link CharsetDef}が持つメッセージIDを返却する。\n</p>\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getAnnotationClass",
+      "level": 3,
+      "content": "```java\npublic Class<? extends Annotation> getAnnotationClass()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setAllowSurrogatePair",
+      "level": 3,
+      "content": "```java\npublic void setAllowSurrogatePair(boolean allowSurrogatePair)\n```\n\nサロゲートペアを許容するかどうかを設定する。\n<p>\nデフォルトでは許容しない。サロゲートペアを許容すると、\n文字列のchar数({@link String#length()})と\nコードポイント数({@link String#codePointCount(int, int)})が\n合致しない文字列を扱うことになり、影響が非常に広範に渡るため\nデフォルトでは許容しない設定となっている。\n</p>\n\n**パラメータ:**\n- `allowSurrogatePair` - サロゲートペアを許容する場合、真\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setDefaultCharsetDef",
+      "level": 3,
+      "content": "```java\npublic void setDefaultCharsetDef(CharsetDef defaultCharsetDef)\n```\n\nデフォルトの許容文字集合定義を設定する。\n<p>\n{@link SystemChar#charsetDef()}が設定されていない場合、\nこの許容文字集合定義が使用される。\n</p>\n\n**パラメータ:**\n- `defaultCharsetDef` - デフォルトの許容文字集合定義\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "createAnnotation",
+      "level": 3,
+      "content": "```java\npublic SystemChar createAnnotation(Map<String,Object> params)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s11"
+    }
+  ],
+  "id": "javadoc-nablarch-core-validation-validator-unicode-SystemCharValidator"
+}

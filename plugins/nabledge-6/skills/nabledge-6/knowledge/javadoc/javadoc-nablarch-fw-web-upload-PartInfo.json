@@ -1,0 +1,236 @@
+{
+  "title": "class PartInfo",
+  "content": "**パッケージ:** nablarch.fw.web.upload\n\n---\n\n```java\npublic final class PartInfo\n```\n\nマルチパートの情報を保持するクラス。<br/>\n\n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "NOT_FOUND",
+      "level": 3,
+      "content": "```java\nprivate static final int NOT_FOUND\n```\n\n文字列が見つからなかったことを表す定数\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "name",
+      "level": 3,
+      "content": "```java\nprivate String name\n```\n\ninputタグに付与されたname属性の値\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "fileName",
+      "level": 3,
+      "content": "```java\nprivate String fileName\n```\n\nアップロードされたファイル名\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "contentType",
+      "level": 3,
+      "content": "```java\nprivate String contentType\n```\n\ncontent-type\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "savedFile",
+      "level": 3,
+      "content": "```java\nprivate File savedFile\n```\n\n一時保存されたファイル\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "size",
+      "level": 3,
+      "content": "```java\nprivate int size\n```\n\nファイルサイズ\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "status",
+      "level": 3,
+      "content": "```java\nprivate Status status\n```\n\n一時ファイルの状態\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "HEX_REPS",
+      "level": 3,
+      "content": "```java\nprivate static final char[] HEX_REPS\n```\n\nヘキサ表現文字\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "RANDOM_GEN",
+      "level": 3,
+      "content": "```java\nprivate static final Random RANDOM_GEN\n```\n\n乱数\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "DEFAULT_FILE_SUFFIX",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_FILE_SUFFIX\n```\n\nファイル保存に使用するデフォルト拡張子\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "seq",
+      "level": 3,
+      "content": "```java\nprivate static AtomicInteger seq\n```\n\nファイル名を作る時に使用するシーケンス番号。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s14"
+    },
+    {
+      "title": "PartInfo",
+      "level": 3,
+      "content": "```java\nprivate PartInfo()\n```\n\nコンストラクタ\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s16"
+    },
+    {
+      "title": "newInstance",
+      "level": 3,
+      "content": "```java\nstatic PartInfo newInstance(List<String> headers)\n```\n\n新しいインスタンスを取得する。</br>\n\n**パラメータ:**\n- `headers` - ヘッダ行\n\n**戻り値:**\n新しいインスタンス\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "newInstance",
+      "level": 3,
+      "content": "```java\npublic static PartInfo newInstance(String name)\n```\n\n新しいインスタンスを取得する。<br/>\n自動テスト時に使用されることを想定している。\n\n**パラメータ:**\n- `name` - inputタグに付与されたname属性の値\n\n**戻り値:**\n新しいインスタンス\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "getInputStream",
+      "level": 3,
+      "content": "```java\npublic InputStream getInputStream()\n```\n\nアップロードファイルを開く。<br/>\n入力ストリームはクライアント側でcloseする必要がある。\n\n**戻り値:**\n入力ストリーム\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "parseContentDisposition",
+      "level": 3,
+      "content": "```java\nprivate void parseContentDisposition(String orig, String lower)\n```\n\nContent-Dispositionの解析、設定を行う。\n\n**パラメータ:**\n- `orig` - Content-Dispositionの行\n- `lower` - 小文字化したContent-Dispositionの行\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "setContentType",
+      "level": 3,
+      "content": "```java\nprivate void setContentType(String line)\n```\n\nContent-Typeを解析し、文字列を取得する。<br>\n\n**パラメータ:**\n- `line` - 行データ\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "isFile",
+      "level": 3,
+      "content": "```java\nboolean isFile()\n```\n\nこのインスタンスが表すマルチパートがアップロードファイルであるかどうか判定する。\n\n**戻り値:**\nアップロードファイルの場合は真\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "getName",
+      "level": 3,
+      "content": "```java\npublic String getName()\n```\n\n名前を取得する。<br/>\n例えば、{@literal <input type=\"file\" name=\"picture\"/>}という\nHTMLタグでアップロードされた場合、本メソッドの戻り値は\"picture\"となる。\n\n**戻り値:**\nPOSTされたときのname属性\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getFileName",
+      "level": 3,
+      "content": "```java\npublic String getFileName()\n```\n\nファイル名を取得する。<br/>\n例えば、ユーザが\"C:\\doc\\myPicture.jpg\"というファイルをアップロードした場合、\n本メソッドの戻り値は\"myPicture.jpg\"となる。\n\n**戻り値:**\nアップロード元のファイル名\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "getContentType",
+      "level": 3,
+      "content": "```java\npublic String getContentType()\n```\n\nContent-Typeを取得する。\n\n**戻り値:**\nContent-Type\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "generateFileName",
+      "level": 3,
+      "content": "```java\nString generateFileName()\n```\n\nファイル名を生成する。\n\n**戻り値:**\nファイル名\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "getRandomToken",
+      "level": 3,
+      "content": "```java\nprivate String getRandomToken()\n```\n\n5byteのランダムデータのヘキサ表現(10文字)を返す。\n\n**戻り値:**\nランダム文字列\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "getOutputStream",
+      "level": 3,
+      "content": "```java\nOutputStream getOutputStream(File saveDir)\n```\n\n出力ストリームを開く。<br/>\n出力ストリームはクライアント側でcloseする必要がある。\n\n**パラメータ:**\n- `saveDir` - 出力先ディレクトリ\n\n**戻り値:**\n出力先ストリーム\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "createNewFile",
+      "level": 3,
+      "content": "```java\nprivate File createNewFile(File saveDir)\n```\n\n保存用に新しいファイルを作成する。\n\n**パラメータ:**\n- `saveDir` - 保存先ディレクトリ\n\n**戻り値:**\n新しいファイル\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "clean",
+      "level": 3,
+      "content": "```java\nvoid clean()\n```\n\n保存したファイルを削除する。\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "extractFileSuffix",
+      "level": 3,
+      "content": "```java\nString extractFileSuffix(String fileName)\n```\n\n拡張子を抽出する。\n\n**パラメータ:**\n- `fileName` - ファイル名\n\n**戻り値:**\n拡張子（拡張子が無い場合はデフォルト値）\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "generateSequence",
+      "level": 3,
+      "content": "```java\nprivate static synchronized int generateSequence()\n```\n\nシーケンス番号を生成する。\n\n**戻り値:**\nシーケンス番号\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "toString",
+      "level": 3,
+      "content": "```java\npublic String toString()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "size",
+      "level": 3,
+      "content": "```java\npublic int size()\n```\n\nアップロードされたファイルのサイズを取得する（単位はバイト）。\n\n**戻り値:**\nサイズ（バイト）\n\n---",
+      "id": "s34"
+    },
+    {
+      "title": "setSize",
+      "level": 3,
+      "content": "```java\npublic void setSize(int size)\n```\n\nアップロードされたファイルのサイズを設定する(単位はバイト)。\n\n**パラメータ:**\n- `size` - サイズ（バイト）\n\n---",
+      "id": "s35"
+    },
+    {
+      "title": "setSavedFile",
+      "level": 3,
+      "content": "```java\npublic void setSavedFile(File file)\n```\n\n保存ファイルを設定する。<br/>\n自動テスト時に使用されることを想定している。\n\n**パラメータ:**\n- `file` - ファイル\n\n---",
+      "id": "s36"
+    },
+    {
+      "title": "getSavedFile",
+      "level": 3,
+      "content": "```java\npublic File getSavedFile()\n```\n\n一時保存ファイルを取得する。<br/>\n取得したファイルが存在しなかったり、削除される可能性もあるので\n使用する際は、nullチェック、ファイルの存在チェックなどの事前チェックを必ず行うこと。\n\n**戻り値:**\n一時保存されたファイル\n\n---",
+      "id": "s37"
+    },
+    {
+      "title": "moveTo",
+      "level": 3,
+      "content": "```java\npublic void moveTo(File dir, String name)\n```\n\nファイルを移動する。<br/>\n本メソッドに対するヘルパーメソッドとして\n{@link nablarch.fw.web.upload.util.UploadHelper#moveFileTo(String, String)}を利用することもできる。\n\n**パラメータ:**\n- `dir` - 移動先ディレクトリ\n- `name` - 移動後のファイル名\n\n---",
+      "id": "s38"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-upload-PartInfo"
+}

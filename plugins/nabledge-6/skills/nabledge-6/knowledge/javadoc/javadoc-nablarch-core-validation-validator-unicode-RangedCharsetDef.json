@@ -1,0 +1,80 @@
+{
+  "title": "class RangedCharsetDef",
+  "content": "**パッケージ:** nablarch.core.validation.validator.unicode\n\n**継承階層:**\n```\njava.lang.Object\n  └─ CharsetDefSupport\n      └─ nablarch.core.validation.validator.unicode.RangedCharsetDef\n```\n\n---\n\n```java\npublic class RangedCharsetDef\nextends CharsetDefSupport\n```\n\nUnicodeコードポイントの範囲による許容文字集合定義クラス。<br/>\nコードポイントの開始位置と終了位置の範囲内が許容文字の集合となる。\nコードポイントは、Unicode標準の U+n 表記で指定する。\n<p>\n例えば、制御文字を除くASCII文字を定義したい場合、以下のようにプロパティを設定する。\n<pre>\n// \\u0020-\\u007E\n{@code\nCharset asciiWithoutControlCode = new RangedCharsetDef();\nasciiWithoutControlCode.setStartCodePoint(\"U+0020\");\nasciiWithoutControlCode.setEndCodePoint(\"U+007F\");\n}\n</pre>\n<p/>\nコンポーネント設定ファイルに定義する場合、以下の記述が等価となる。\n<pre>\n{@literal\n<component name=\"asciiWithoutControlCode\" class=\"nablarch.core.validation.validator.unicode.RangedCharsetDef\">\n  <property name=\"startCodePoint\" value=\"U+0020\" />\n  <property name=\"endCodePoint\" value=\"U+007F\" />\n</component>\n}\n</pre>\n<p/>\n実行例を以下に示す。\n<pre>\nasciiWithoutControlCode.contains(\"abc012\"); // -> true\nasciiWithoutControlCode.contains(\"\\t\");     // -> false\n</pre>\n</p>\n\n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "NOT_SET_YET",
+      "level": 3,
+      "content": "```java\nprivate static final int NOT_SET_YET\n```\n\nインスタンス変数が初期化前であることを示すための定数\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "start",
+      "level": 3,
+      "content": "```java\nprivate int start\n```\n\n開始位置\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "end",
+      "level": 3,
+      "content": "```java\nprivate int end\n```\n\n終了位置\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "UNICODE_CODE_POINT_EXP",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern UNICODE_CODE_POINT_EXP\n```\n\nコードポイント記法の正規表現 (U+n)\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "setStartCodePoint",
+      "level": 3,
+      "content": "```java\npublic void setStartCodePoint(String start)\n                       throws IllegalArgumentException, IllegalStateException\n```\n\n開始位置のコードポイントを設定する。\n\n**パラメータ:**\n- `start` - 開始位置(U+n表記)\n\n**例外:**\n- `IllegalArgumentException` - コードポイントが範囲外の場合\n- `IllegalStateException` - 開始終了位置の大小関係が逆転している場合\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setEndCodePoint",
+      "level": 3,
+      "content": "```java\npublic void setEndCodePoint(String end)\n                     throws IllegalArgumentException, IllegalStateException\n```\n\n終了位置のコードポイントを設定する。\n\n**パラメータ:**\n- `end` - 終了位置(U+n表記)\n\n**例外:**\n- `IllegalArgumentException` - コードポイントが範囲外の場合\n- `IllegalStateException` - 開始終了位置の大小関係が逆転している場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "toCodePoint",
+      "level": 3,
+      "content": "```java\nprivate int toCodePoint(String s)\n```\n\n文字列（U+n表記）をコードポイントに変換する。\n\n**パラメータ:**\n- `s` - 文字列\n\n**戻り値:**\nコードポイント\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "checkRange",
+      "level": 3,
+      "content": "```java\nprivate void checkRange(int codePoint)\n                throws IllegalArgumentException\n```\n\nコードポイントの範囲をチェックする。\n\n**パラメータ:**\n- `codePoint` - チェック対象となるコードポイント\n\n**例外:**\n- `IllegalArgumentException` - コードポイントが範囲外の場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "checkRelation",
+      "level": 3,
+      "content": "```java\nprivate void checkRelation()\n                   throws IllegalStateException\n```\n\n開始終了位置の関係をチェックする。\n\n**例外:**\n- `IllegalStateException` - 開始終了位置の大小関係が逆転している場合\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "contains",
+      "level": 3,
+      "content": "```java\npublic boolean contains(int codePoint)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s12"
+    }
+  ],
+  "id": "javadoc-nablarch-core-validation-validator-unicode-RangedCharsetDef"
+}

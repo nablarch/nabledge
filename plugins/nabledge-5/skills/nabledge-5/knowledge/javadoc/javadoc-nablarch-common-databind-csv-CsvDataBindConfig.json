@@ -1,0 +1,296 @@
+{
+  "title": "class CsvDataBindConfig",
+  "content": "**パッケージ:** nablarch.common.databind.csv\n\n**実装されたインタフェース:**\n- DataBindConfig\n\n---\n\n```java\npublic class CsvDataBindConfig\nimplements DataBindConfig\n```\n\nCSVのフォーマットを表すクラス。\n<p/>\nデフォルト設定を使用する場合は、{@link #DEFAULT}オブジェクトを使用する。<br/>\n独自の設定を行う場合は、{@link #CsvDataBindConfig(char, String, char, boolean, boolean, String[], String[], Charset, boolean, QuoteMode, List)}\nを使用しオブジェクトを生成するか、{@link #DEFAULT}オブジェクトのセッタを実行して値を設定する。\n<p/>\n下記にデフォルトの設定値を示す。\n<pre>\n列区切り文字                          -->  \",\"\n行区切り文字                          -->  \"\\r\\n\"(CRLF)\nフィールド囲み文字                    -->  \"\"\"\n空行を無視するか否か                  -->  無視する(true)\nヘッダ行が必須か否か                  -->  必須(true)\nヘッダーに出力するタイトル            -->  空のString型配列\nプロパティ名リスト                    -->  空のString型配列\n文字コード                            -->  UTF-8\n空のフィールドをnullに変換するか否か  --> 変換する(true)\nフィールド囲み文字で囲む\nフィールドを指定するモード            -->  NORMAL(フィールド囲み文字、フィールド区切り文字、改行が存在するフィールドが対象となる)\nフィールド囲み文字で囲む\nフィールドのリスト                    -->  空のリスト\n</pre>\n\n**作成者:** Naoki Yamamoto  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "VALID_LINE_SEPARATOR",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern VALID_LINE_SEPARATOR\n```\n\n有効な改行文字\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "fieldSeparator",
+      "level": 3,
+      "content": "```java\nprivate final char fieldSeparator\n```\n\n列区切り文字\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "lineSeparator",
+      "level": 3,
+      "content": "```java\nprivate final String lineSeparator\n```\n\n行区切り文字\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "quote",
+      "level": 3,
+      "content": "```java\nprivate final char quote\n```\n\nフィールド囲み文字\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "ignoreEmptyLine",
+      "level": 3,
+      "content": "```java\nprivate final boolean ignoreEmptyLine\n```\n\n空行を無視するか否か\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "requiredHeader",
+      "level": 3,
+      "content": "```java\nprivate final boolean requiredHeader\n```\n\nヘッダ行(タイトル行)が必須か否か\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "charset",
+      "level": 3,
+      "content": "```java\nprivate final Charset charset\n```\n\n文字コード\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "quoteMode",
+      "level": 3,
+      "content": "```java\nprivate final QuoteMode quoteMode\n```\n\n出力時にフィールド囲み文字で囲むフィールドを指定するモード\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "emptyToNull",
+      "level": 3,
+      "content": "```java\nprivate final boolean emptyToNull\n```\n\n空のフィールドをnullに変換するかどうか\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "quotedColumnNames",
+      "level": 3,
+      "content": "```java\nprivate final List<String> quotedColumnNames\n```\n\n出力時にフィールド囲み文字で囲むフィールドのリスト\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "headerTitles",
+      "level": 3,
+      "content": "```java\nprivate final String[] headerTitles\n```\n\nヘッダーレコードに出力するタイトルリスト\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "properties",
+      "level": 3,
+      "content": "```java\nprivate final String[] properties\n```\n\nプロパティ名リスト\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "DEFAULT",
+      "level": 3,
+      "content": "```java\npublic static final CsvDataBindConfig DEFAULT\n```\n\nデフォルトのフォーマット定義\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "RFC4180",
+      "level": 3,
+      "content": "```java\npublic static final CsvDataBindConfig RFC4180\n```\n\nRFC4180準拠のフォーマット定義\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "EXCEL",
+      "level": 3,
+      "content": "```java\npublic static final CsvDataBindConfig EXCEL\n```\n\nEXCEL形式のCSVフォーマット定義\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "TSV",
+      "level": 3,
+      "content": "```java\npublic static final CsvDataBindConfig TSV\n```\n\nタブ区切り(TSV)のフォーマット定義\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s18"
+    },
+    {
+      "title": "CsvDataBindConfig",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig(char fieldSeparator, String lineSeparator, char quote, boolean ignoreEmptyLine, boolean requiredHeader, String[] headerTitles, Charset charset, boolean emptyToNull, QuoteMode quoteMode, List<String> quotedColumnNames)\n```\n\nCSVのフォーマット定義を生成する。\n\n**パラメータ:**\n- `fieldSeparator` - 列区切り文字\n- `lineSeparator` - 行区切り文字(\\r\\n(CRLF) or \\r(CR) or \\n(LF)であること)\n- `quote` - フィールド囲み文字\n- `ignoreEmptyLine` - 空行を無視するか否か\n- `requiredHeader` - ヘッダ行(タイトル行)が必須か否か\n- `headerTitles` - ヘッダーに出力するタイトル\n- `charset` - 文字コード\n- `emptyToNull` - 空のフィールドをnullに変換するかどうか\n- `quoteMode` - 出力時にフィールド囲み文字で囲むフィールドを指定するモード\n- `quotedColumnNames` - フィールド囲み文字で囲むフィールドのリスト\n\n**例外:**\n- `IllegalArgumentException` - 行区切り文字が「\\r\\n(CRLF)・\\r(CR)・\\n(LF)」以外の場合\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "CsvDataBindConfig",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig(char fieldSeparator, String lineSeparator, char quote, boolean ignoreEmptyLine, boolean requiredHeader, String[] headerTitles, String[] properties, Charset charset, boolean emptyToNull, QuoteMode quoteMode, List<String> quotedColumnNames)\n```\n\nCSVのフォーマット定義を生成する。\n\n**パラメータ:**\n- `fieldSeparator` - 列区切り文字\n- `lineSeparator` - 行区切り文字(\\r\\n(CRLF) or \\r(CR) or \\n(LF)であること)\n- `quote` - フィールド囲み文字\n- `ignoreEmptyLine` - 空行を無視するか否か\n- `requiredHeader` - ヘッダ行(タイトル行)が必須か否か\n- `headerTitles` - ヘッダーに出力するタイトル\n- `properties` - プロパティ名リスト\n- `charset` - 文字コード\n- `emptyToNull` - 空のフィールドをnullに変換するかどうか\n- `quoteMode` - 出力時にフィールド囲み文字で囲むフィールドを指定するモード\n- `quotedColumnNames` - フィールド囲み文字で囲むフィールドのリスト\n\n**例外:**\n- `IllegalArgumentException` - 行区切り文字が「\\r\\n(CRLF)・\\r(CR)・\\n(LF)」以外の場合\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s21"
+    },
+    {
+      "title": "getFieldSeparator",
+      "level": 3,
+      "content": "```java\npublic char getFieldSeparator()\n```\n\n列区切り文字を取得する。\n\n**戻り値:**\n列区切り文字\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "withFieldSeparator",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withFieldSeparator(char newFieldSeparator)\n```\n\n列区切り文字を設定する。\n\n**パラメータ:**\n- `newFieldSeparator` - 新しい列区切り文字\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getLineSeparator",
+      "level": 3,
+      "content": "```java\npublic String getLineSeparator()\n```\n\n行区切り文字を取得する。\n\n**戻り値:**\n行区切り文字\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "withLineSeparator",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withLineSeparator(String newLineSeparator)\n```\n\n改行文字を設定する。\n<p/>\n改行文字が(CR|LF|CRLF)以外の場合はエラーとする。\n\n**パラメータ:**\n- `newLineSeparator` - 改行文字\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "getQuote",
+      "level": 3,
+      "content": "```java\npublic char getQuote()\n```\n\nフィールド囲み文字を取得する。\n\n**戻り値:**\nフィールド囲み文字\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "withQuote",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withQuote(char newQuote)\n```\n\nフィールド囲み文字を設定する。\n\n**パラメータ:**\n- `newQuote` - フィールド囲み文字\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "isIgnoreEmptyLine",
+      "level": 3,
+      "content": "```java\npublic boolean isIgnoreEmptyLine()\n```\n\n空行を無視するか否かを取得する。\n\n**戻り値:**\n空行を無視する場合{@code true}\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "withIgnoreEmptyLine",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withIgnoreEmptyLine()\n```\n\n空行を無視する。\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "withIgnoreEmptyLine",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withIgnoreEmptyLine(boolean newOption)\n```\n\n空行を無視するか否かを設定する。\n\n**パラメータ:**\n- `newOption` - 空行を無視する場合{@code true}\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "isRequiredHeader",
+      "level": 3,
+      "content": "```java\npublic boolean isRequiredHeader()\n```\n\nヘッダー行(タイトル行)が必須か否か。\n\n**戻り値:**\nヘッダー行(タイトル行)が必須の場合{@code true}\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "withRequiredHeader",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withRequiredHeader()\n```\n\nヘッダー行(タイトル行)を必須に設定する。\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "withRequiredHeader",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withRequiredHeader(boolean newOption)\n```\n\nヘッダー行(タイトル行)を必須とするか否かを設定する。\n\n**パラメータ:**\n- `newOption` - ヘッダーが必須な場合{@code true}\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "getHeaderTitles",
+      "level": 3,
+      "content": "```java\npublic String[] getHeaderTitles()\n```\n\nヘッダー行(タイトル行)に出力するタイトルのリスト。\n\n**戻り値:**\nヘッダー行に出力するタイトル\n\n---",
+      "id": "s34"
+    },
+    {
+      "title": "withHeaderTitles",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withHeaderTitles(String newHeaderTitles)\n```\n\nヘッダー行(タイトル行)に出力するタイトルを設定する。\n\n**パラメータ:**\n- `newHeaderTitles` - ヘッダー行(タイトル行)に出力するタイトル\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s35"
+    },
+    {
+      "title": "getProperties",
+      "level": 3,
+      "content": "```java\npublic String[] getProperties()\n```\n\nプロパティ名リストを取得する。\n\n**戻り値:**\nプロパティ名リスト\n\n---",
+      "id": "s36"
+    },
+    {
+      "title": "withProperties",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withProperties(String newProperties)\n```\n\nプロパティ名リストを設定する。\n\n**パラメータ:**\n- `newProperties` - プロパティ名リスト\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s37"
+    },
+    {
+      "title": "getKeys",
+      "level": 3,
+      "content": "```java\npublic String[] getKeys()\n```\n\nオブジェクトにマッピングする際に使用するキーのリストを取得する。\n<p>\n{@link #properties}が設定されていれば、{@link #properties}をキーとして返す。<br>\n{@link #properties}が設定されていなければ、{@link #headerTitles}をキーとして返す。\n\n**戻り値:**\nキーのリスト\n\n---",
+      "id": "s38"
+    },
+    {
+      "title": "getCharset",
+      "level": 3,
+      "content": "```java\npublic Charset getCharset()\n```\n\n文字コードを取得する。\n\n**戻り値:**\n文字コード\n\n---",
+      "id": "s39"
+    },
+    {
+      "title": "withCharset",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withCharset(String newCharset)\n```\n\n文字コードを設定する。\n\n**パラメータ:**\n- `newCharset` - 文字コード\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s40"
+    },
+    {
+      "title": "withCharset",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withCharset(Charset newCharset)\n```\n\n文字コードを設定する。\n\n**パラメータ:**\n- `newCharset` - 文字コード\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s41"
+    },
+    {
+      "title": "isEmptyToNull",
+      "level": 3,
+      "content": "```java\npublic boolean isEmptyToNull()\n```\n\n空フィールドをnullに置き換えるか否か。\n\n**戻り値:**\n置き換える場合は{@code true}\n\n---",
+      "id": "s42"
+    },
+    {
+      "title": "withEmptyToNull",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withEmptyToNull(boolean newEmptyToNull)\n```\n\n空フィールドをnullに置き換えるか否かを設定する。\n\n**パラメータ:**\n- `newEmptyToNull` - nullに置き換える場合は{@code true}\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s43"
+    },
+    {
+      "title": "getQuoteMode",
+      "level": 3,
+      "content": "```java\npublic QuoteMode getQuoteMode()\n```\n\nフィールド囲み文字で囲むフィールドを取得する。\n\n**戻り値:**\nフィールド囲み文字で囲むフィールド\n\n---",
+      "id": "s44"
+    },
+    {
+      "title": "withQuoteMode",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withQuoteMode(QuoteMode newQuoteMode)\n```\n\n出力時にフィールド囲み文字で囲むフィールドを設定する。\n\n**パラメータ:**\n- `newQuoteMode` - フィールド囲み文字で囲むフィールドを指定するモード\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s45"
+    },
+    {
+      "title": "getQuotedColumnNames",
+      "level": 3,
+      "content": "```java\npublic List<String> getQuotedColumnNames()\n```\n\n出力時にフィールド囲み文字({@link #getQuote()})で囲むフィールドのリストを取得する。\n\n**戻り値:**\nフィールド囲み文字で囲むフィールドのリスト\n\n---",
+      "id": "s46"
+    },
+    {
+      "title": "withQuotedColumnNames",
+      "level": 3,
+      "content": "```java\npublic CsvDataBindConfig withQuotedColumnNames(String fieldNames)\n```\n\nフィールド囲み文字({@link #getQuote()}で囲むフィールドのリストを設定する。\n<p/>\n{@link #getQuoteMode()}が{@link CsvDataBindConfig.QuoteMode#CUSTOM}の場合に、\n設定したフィールドがフィールド囲み文字で囲まれる。\n\n**パラメータ:**\n- `fieldNames` - フィールド囲み文字で囲むフィールド名称\n\n**戻り値:**\n新しい{@link CsvDataBindConfig}\n\n---",
+      "id": "s47"
+    },
+    {
+      "title": "verify",
+      "level": 3,
+      "content": "```java\npublic void verify()\n```\n\nコンフィグの妥当性検証を行う。\n<p/>\n以下の場合に検証エラーとする。\n<ul>\n    <li>ヘッダが必須でヘッダタイトルが未設定</li>\n    <li>ヘッダが任意でプロパティ名が未設定</li>\n    <li>ヘッダが必須でヘッダタイトルとプロパティ名のサイズが一致しない</li>\n</ul>\n\n---",
+      "id": "s48"
+    }
+  ],
+  "id": "javadoc-nablarch-common-databind-csv-CsvDataBindConfig"
+}

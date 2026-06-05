@@ -1,0 +1,86 @@
+{
+  "title": "class BasicCommitLogger",
+  "content": "**パッケージ:** nablarch.core.log.app\n\n**実装されたインタフェース:**\n- CommitLogger\n\n---\n\n```java\npublic class BasicCommitLogger\nimplements CommitLogger\n```\n\nコミットログ出力の基本実装クラス。\n<p/>\n{@link #setInterval(int)}で指定された間隔でコミットログを出力する。\nログ出力間隔の設定を省略した場合のデフォルト値は、500である。\nコミットログは、以下のフォーマットで出力される。\n<pre>\n{@code\n\nCOMMIT COUNT = [コミット件数]\nTOTAL COMMIT COUNT = [総コミット件数]    # 本ログは、最後に１度のみ出力される。\n}\n</pre>\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "commitCount",
+      "level": 3,
+      "content": "```java\nprivate long commitCount\n```\n\nコミット件数\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "totalCommitCount",
+      "level": 3,
+      "content": "```java\nprivate long totalCommitCount\n```\n\n総コミット件数\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "interval",
+      "level": 3,
+      "content": "```java\nprivate int interval\n```\n\nコミットログ出力間隔。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "initialized",
+      "level": 3,
+      "content": "```java\nprivate boolean initialized\n```\n\n初期化フラグ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nコミットログを出力する際に使用するロガー\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic synchronized void initialize()\n```\n\n{@inheritDoc}\nコミット件数及び、総コミット件数を初期化(0クリア)する。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "increment",
+      "level": 3,
+      "content": "```java\npublic synchronized void increment(long count)\n               throws IllegalStateException\n```\n\nコミット件数を加算する。\n\nコミット件数を加算した結果、ログ出力間隔を超えた場合にはコミットログの出力を行う。\n初期化が行われていない場合は、{@link IllegalStateException}を送出する。\n\n{@inheritDoc}\n\n**例外:**\n- `IllegalStateException` - 本オブジェクトが初期化されていない場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "formatForIncrement",
+      "level": 3,
+      "content": "```java\nprotected String formatForIncrement(long count)\n```\n\n{@link #increment}メソッドでログに出力する総コミット件数のメッセージをフォーマットする。\n\n**パラメータ:**\n- `count` - 総コミット件数\n\n**戻り値:**\nフォーマットされたメッセージ\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "terminate",
+      "level": 3,
+      "content": "```java\npublic synchronized void terminate()\n```\n\n{@inheritDoc}\n総コミット件数をログ出力する。\n初期化が行われていない場合は、何も行わない。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "formatForTerminate",
+      "level": 3,
+      "content": "```java\nprotected String formatForTerminate(long count)\n```\n\n{@link #terminate}メソッドでログに出力する総コミット件数のメッセージをフォーマットする。\n\n**パラメータ:**\n- `count` - 総コミット件数\n\n**戻り値:**\nフォーマットされたメッセージ\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setInterval",
+      "level": 3,
+      "content": "```java\npublic void setInterval(int interval)\n```\n\n間隔を設定する。\n\n**パラメータ:**\n- `interval` - 間隔\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-app-BasicCommitLogger"
+}

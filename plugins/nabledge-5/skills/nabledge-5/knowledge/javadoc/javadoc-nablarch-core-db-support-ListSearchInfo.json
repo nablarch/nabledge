@@ -1,0 +1,200 @@
+{
+  "title": "class ListSearchInfo",
+  "content": "**パッケージ:** nablarch.core.db.support\n\n**実装されたインタフェース:**\n- Serializable\n\n---\n\n```java\npublic abstract class ListSearchInfo\nimplements Serializable\n```\n\n一覧検索用の情報を保持する基底クラス。\n\n**作成者:** Kiyohito Itoh  \n**関連項目:** DbAccessSupport#search(String, ListSearchInfo)  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "serialVersionUID",
+      "level": 3,
+      "content": "```java\nprivate static final long serialVersionUID\n```\n\nserialVersionUID\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "pageNumber",
+      "level": 3,
+      "content": "```java\nprivate Integer pageNumber\n```\n\n取得対象のページ番号\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "max",
+      "level": 3,
+      "content": "```java\nprivate Integer max\n```\n\n1ページあたりの最大取得件数\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "resultCount",
+      "level": 3,
+      "content": "```java\nprivate int resultCount\n```\n\n検索結果の総件数\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "pageCount",
+      "level": 3,
+      "content": "```java\nprivate int pageCount\n```\n\n総ページ数\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "maxResultCount",
+      "level": 3,
+      "content": "```java\nprivate int maxResultCount\n```\n\n検索結果の最大件数(上限)\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "sortId",
+      "level": 3,
+      "content": "```java\nprivate String sortId\n```\n\nソートID\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "ListSearchInfo",
+      "level": 3,
+      "content": "```java\nprotected ListSearchInfo()\n```\n\n{@link SystemRepository}の設定値を元に{@code ListSearchInfo}を生成する。\n<p/>\n<pre>\n下記の初期化処理を行う。\n\n検索結果の最大件数(上限)：\n    リポジトリの設定値(nablarch.listSearch.maxResultCount)を取得して設定する。\n    リポジトリの設定値が存在しない場合は、200を設定する。\n\n検索結果のページ番号：\n    1を設定する。\n\n1ページあたりの最大取得件数：\n    リポジトリの設定値(nablarch.listSearch.max)を取得して設定する。\n    リポジトリの設定値が存在しない場合は、20を設定する。\n</pre>\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s11"
+    },
+    {
+      "title": "getConfigValue",
+      "level": 3,
+      "content": "```java\nprotected final Integer getConfigValue(String name)\n```\n\n{@link SystemRepository}から設定値を取得する。\n\n**パラメータ:**\n- `name` - 設定名\n\n**戻り値:**\n設定値。存在しない場合はnull\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getSearchConditionProps",
+      "level": 3,
+      "content": "```java\npublic abstract String[] getSearchConditionProps()\n```\n\n検索条件のプロパティ名を取得する。\n\n**戻り値:**\n検索条件のプロパティ名\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getPageNumber",
+      "level": 3,
+      "content": "```java\npublic final Integer getPageNumber()\n```\n\n取得対象のページ番号を取得する。\n\n**戻り値:**\n取得対象のページ番号\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setPageNumber",
+      "level": 3,
+      "content": "```java\npublic void setPageNumber(Integer pageNumber)\n```\n\n取得対象のページ番号を設定する。\n\n**パラメータ:**\n- `pageNumber` - 取得対象のページ番号\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getStartPosition",
+      "level": 3,
+      "content": "```java\npublic final int getStartPosition()\n```\n\n検索結果の取得開始位置を取得する。\n\n**戻り値:**\n検索結果の取得開始位置\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getEndPosition",
+      "level": 3,
+      "content": "```java\npublic final int getEndPosition()\n```\n\n検索結果の取得終了位置を取得する。\n<pre>\n検索結果の総件数が現在のページ番号に対する最大取得終了位置に満たない場合は、\n検索結果の総件数を返す。\n\n検索結果の総件数が現在のページ番号に対する最大取得終了位置以上の場合は、\n現在のページ番号に対する最大取得終了位置を返す。\n</pre>\n\n**戻り値:**\n検索結果の取得終了位置\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getMax",
+      "level": 3,
+      "content": "```java\npublic final Integer getMax()\n```\n\n1ページあたりの最大取得件数を取得する。\n\n**戻り値:**\n1ページあたりの最大取得件数\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setMax",
+      "level": 3,
+      "content": "```java\npublic void setMax(Integer max)\n```\n\n1ページあたりの最大取得件数を設定する。\n\n**パラメータ:**\n- `max` - 1ページあたりの最大取得件数\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getResultCount",
+      "level": 3,
+      "content": "```java\npublic final int getResultCount()\n```\n\n検索結果の総件数を取得する。\n\n**戻り値:**\n検索結果の総件数\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "setResultCount",
+      "level": 3,
+      "content": "```java\npublic final void setResultCount(int resultCount)\n```\n\n検索結果の総件数を設定する。\n\n本メソッドはフレームワークが検索処理を実行後に取得結果の総件数を設定するものである。\nアプリケーション側では、本メソッドを使用して値の設定は行わないこと。\n\n**パラメータ:**\n- `resultCount` - 検索結果の総件数\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "getMaxResultCount",
+      "level": 3,
+      "content": "```java\npublic final int getMaxResultCount()\n```\n\n検索結果の最大件数(上限)を取得する。\n\n**戻り値:**\n検索結果の最大件数(上限)\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "setMaxResultCount",
+      "level": 3,
+      "content": "```java\npublic void setMaxResultCount(int maxResultCount)\n```\n\n検索結果の最大件数(上限)を設定する。\n\n**パラメータ:**\n- `maxResultCount` - 検索結果の最大件数(上限)\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getSortId",
+      "level": 3,
+      "content": "```java\npublic final String getSortId()\n```\n\nソートIDを取得する。\n\n**戻り値:**\nソートID\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "setSortId",
+      "level": 3,
+      "content": "```java\npublic void setSortId(String sortId)\n```\n\nソートIDを設定する。\n\n**パラメータ:**\n- `sortId` - ソートID\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "getHasPrevPage",
+      "level": 3,
+      "content": "```java\npublic final boolean getHasPrevPage()\n```\n\n前のページが存在するか否かを取得する。\n\n**戻り値:**\n前のページが存在する場合は{@code true}\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "getHasNextPage",
+      "level": 3,
+      "content": "```java\npublic final boolean getHasNextPage()\n```\n\n次のページが存在するか否かを取得する。\n\n**戻り値:**\n次のページが存在する場合は{@code true}\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "getPageCount",
+      "level": 3,
+      "content": "```java\npublic final int getPageCount()\n```\n\n総ページ数を取得する。\n\n**戻り値:**\n総ページ数\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "getFirstPageNumber",
+      "level": 3,
+      "content": "```java\npublic final int getFirstPageNumber()\n```\n\n最初のページ番号を取得する。\n\n**戻り値:**\n最初のページ番号\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "getPrevPageNumber",
+      "level": 3,
+      "content": "```java\npublic final int getPrevPageNumber()\n```\n\n前のページ番号を取得する。\n\n**戻り値:**\n前のページ番号\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "getNextPageNumber",
+      "level": 3,
+      "content": "```java\npublic final int getNextPageNumber()\n```\n\n次のページ番号を取得する。\n\n**戻り値:**\n次のページ番号\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "getLastPageNumber",
+      "level": 3,
+      "content": "```java\npublic final int getLastPageNumber()\n```\n\n最終ページの番号を取得する。\n\n**戻り値:**\n最終ページの番号\n\n---",
+      "id": "s32"
+    }
+  ],
+  "id": "javadoc-nablarch-core-db-support-ListSearchInfo"
+}

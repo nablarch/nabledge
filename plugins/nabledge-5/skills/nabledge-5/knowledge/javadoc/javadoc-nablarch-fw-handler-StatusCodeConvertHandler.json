@@ -1,0 +1,26 @@
+{
+  "title": "class StatusCodeConvertHandler",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**実装されたインタフェース:**\n- Handler<Object,Integer>\n\n---\n\n```java\npublic class StatusCodeConvertHandler\nimplements Handler<Object,Integer>\n```\n\nステータスコードをプロセスの終了コードに変換するハンドラ。\n<p/>\n{@link nablarch.fw.launcher.Main}の直後のハンドラとして設定することにより、\n本ハンドラ以降のハンドラから戻された処理結果({@link Result})のステータスコードを\nプロセスの終了コードに変換するハンドラである。\n<p/>\n以下に変換ルールを示す。\n<table border=\"1\">\n<tr bgcolor=\"#CCCCFF\">\n<th>変換前</th>\n<th>変換後</th>\n</tr>\n<tr>\n<td>マイナス値の場合</td>\n<td>1</td>\n</tr>\n<tr>\n<td>0</td>\n<td>0</td>\n</tr>\n<tr>\n<td>1～199</td>\n<td>変換は行わない</td>\n</tr>\n<tr>\n<td>200～399</td>\n<td>0</td>\n</tr>\n<tr>\n<td>400</td>\n<td>10</td>\n</tr>\n<tr>\n<td>401</td>\n<td>11</td>\n</tr>\n<tr>\n<td>403</td>\n<td>12</td>\n</tr>\n<tr>\n<td>404</td>\n<td>13</td>\n</tr>\n<tr>\n<td>409</td>\n<td>14</td>\n</tr>\n<tr>\n<td>上記以外の400～499</td>\n<td>15</td>\n</tr>\n<tr>\n<td>500以上</td>\n<td>20</td>\n</tr>\n</table>\n注意点:<br/>\n<b>\n本ハンドラは結果オブジェクトを{@link Result}から{@link Integer}に変換して返却するため、\n本ハンドラより前に設定されたハンドラオブジェクトは、結果オブジェクト扱う場合はIntegerとして扱う必要がある。\n</b>\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Integer handle(Object o, ExecutionContext context)\n```\n\n{@inheritDoc}\n<p/>\n後続のハンドラに処理を委譲し、({@link ExecutionContext#handleNext(Object)})\n結果として返却されたステータスコード({@link nablarch.fw.Result#getStatusCode()})を変換し返却する。\n<p/>\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "convert",
+      "level": 3,
+      "content": "```java\nprivate static int convert(int statusCode)\n```\n\nステータスコードを変換する。\n\n**パラメータ:**\n- `statusCode` - 変換前ステータスコード\n\n**戻り値:**\n変換後ステータスコード\n\n---",
+      "id": "s3"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-StatusCodeConvertHandler"
+}

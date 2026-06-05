@@ -1,0 +1,110 @@
+{
+  "title": "class LogCountMetrics",
+  "content": "**パッケージ:** nablarch.integration.micrometer.instrument.binder.logging\n\n**実装されたインタフェース:**\n- MeterBinder\n- Closeable\n\n---\n\n```java\npublic class LogCountMetrics\nimplements MeterBinder, Closeable\n```\n\nログレベルごとのログ出力回数をメトリクスとして収集する{@link MeterBinder}。\n<p>\nメトリクス名は{@code log.count}になる。<br>\nまた、メトリクスのタグには以下の値が設定される。\n<ul>\n  <li>{@code level}: ログレベル</li>\n  <li>{@code logger}: 実行時ロガー名({@code LoggerManager.get(String)} の引数で渡した名前)</li>\n</ul>\n</p>\n<p>\nデフォルトでは{@code WARN}以上のログのみを集計する。<br>\n</p>\n\n**作成者:** Tanaka Tomoyuki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "DEFAULT_METRICS_NAME",
+      "level": 3,
+      "content": "```java\nstatic final String DEFAULT_METRICS_NAME\n```\n\nデフォルトのメトリクスの名前。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DEFAULT_METRICS_DESCRIPTION",
+      "level": 3,
+      "content": "```java\nstatic final String DEFAULT_METRICS_DESCRIPTION\n```\n\nデフォルトのメトリクスの説明。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "DEFAULT_LOG_LEVEL",
+      "level": 3,
+      "content": "```java\nprivate static final LogLevel DEFAULT_LOG_LEVEL\n```\n\nデフォルトのログレベル。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "TAG_NAME_LEVEL",
+      "level": 3,
+      "content": "```java\nstatic final String TAG_NAME_LEVEL\n```\n\nログレベルのタグ名。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "TAG_NAME_RUNTIME_LOGGER",
+      "level": 3,
+      "content": "```java\nstatic final String TAG_NAME_RUNTIME_LOGGER\n```\n\n実行時ロガー名のタグ名。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "thresholdOfLogLevel",
+      "level": 3,
+      "content": "```java\nprivate final LogLevel thresholdOfLogLevel\n```\n\n収集対象となるログレベルのしきい値。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "metricsMetaData",
+      "level": 3,
+      "content": "```java\nprivate final MetricsMetaData metricsMetaData\n```\n\nメトリクスのメタ情報。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "logListener",
+      "level": 3,
+      "content": "```java\nprivate LogListener logListener\n```\n\n{@link LogPublisher} に設定する {@link LogListener} のキャッシュ。\n<p>\n{@link #close()} のときに {@link LogPublisher#removeListener(LogListener)} で削除できるようにするため、\nフィールドで保持している。\n</p>\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s10"
+    },
+    {
+      "title": "LogCountMetrics",
+      "level": 3,
+      "content": "```java\npublic LogCountMetrics()\n```\n\nデフォルトコンストラクタ。\n<p>\nログレベルは{@link LogLevel#WARN}になる。\n</p>\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "LogCountMetrics",
+      "level": 3,
+      "content": "```java\npublic LogCountMetrics(LogLevel thresholdOfLogLevel)\n```\n\n収集するログレベルのしきい値を指定するコンストラクタ。\n<p>\n指定されたログレベル以上のログ出力が計測の対象となる。\n</p>\n\n**パラメータ:**\n- `thresholdOfLogLevel` - ログレベルのしきい値\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "LogCountMetrics",
+      "level": 3,
+      "content": "```java\npublic LogCountMetrics(MetricsMetaData metricsMetaData)\n```\n\nメトリクスの設定情報を指定するコンストラクタ。\n\n**パラメータ:**\n- `metricsMetaData` - メトリクスの設定情報\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "LogCountMetrics",
+      "level": 3,
+      "content": "```java\npublic LogCountMetrics(MetricsMetaData metricsMetaData, LogLevel thresholdOfLogLevel)\n```\n\nメトリクスの設定情報と、収集するログレベルのしきい値を指定するコンストラクタ。\n<p>\n指定されたログレベル以上のログ出力が計測の対象となる。\n</p>\n\n**パラメータ:**\n- `metricsMetaData` - メトリクスの設定情報\n- `thresholdOfLogLevel` - ログレベルのしきい値\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s15"
+    },
+    {
+      "title": "bindTo",
+      "level": 3,
+      "content": "```java\npublic void bindTo(MeterRegistry registry)\n```\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic void close()\n```\n\n---",
+      "id": "s17"
+    }
+  ],
+  "id": "javadoc-nablarch-integration-micrometer-instrument-binder-logging-LogCountMetrics"
+}

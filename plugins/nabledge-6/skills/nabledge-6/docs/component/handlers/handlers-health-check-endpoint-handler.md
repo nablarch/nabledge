@@ -13,7 +13,7 @@
 本ハンドラを使用して、 [Webアプリケーション](../../processing-pattern/web-application/web-application-web.md#ウェブアプリケーション編) と [RESTfulウェブサービス](../../processing-pattern/restful-web-service/restful-web-service-rest.md#restfulウェブサービス編)
 のヘルスチェックを行うエンドポイントを実現できる。
 
-ヘルスチェックのデフォルト実装として DB と
+ヘルスチェックのデフォルト実装として [DB](../../javadoc/javadoc-nablarch-fw-web-handler-health-DbHealthChecker.md) と
 [Redis](../../component/adapters/adapters-lettuce-adaptor.md#lettuceアダプタ) のヘルスチェックを提供している。
 
 本ハンドラでは、以下の処理を行う。
@@ -28,7 +28,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.web.handler.HealthCheckEndpointHandler
+* [nablarch.fw.web.handler.HealthCheckEndpointHandler](../../javadoc/javadoc-nablarch-fw-web-handler-HealthCheckEndpointHandler.md)
 
 ## モジュール一覧
 
@@ -49,7 +49,7 @@
 
 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#httpレスポンスハンドラ) または [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jakarta-restful-web-servicesレスポンスハンドラ) より後ろに配置すること
 
-本ハンドラで生成した HttpResponse を
+本ハンドラで生成した [HttpResponse](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.md) を
 [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#httpレスポンスハンドラ) または [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jakarta-restful-web-servicesレスポンスハンドラ) が処理するため、
 本ハンドラは [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#httpレスポンスハンドラ) または [Jakarta RESTful Web Servicesレスポンスハンドラ](../../component/handlers/handlers-jaxrs-response-handler.md#jakarta-restful-web-servicesレスポンスハンドラ) より後ろに配置する必要がある。
 
@@ -90,8 +90,8 @@
 {"status":"UP"}
 ```
 
-DB等のリソースのヘルスチェックは、 HealthChecker
-という抽象クラスが行う。 HealthChecker を継承したクラスを
+DB等のリソースのヘルスチェックは、 [HealthChecker](../../javadoc/javadoc-nablarch-fw-web-handler-health-HealthChecker.md)
+という抽象クラスが行う。 [HealthChecker](../../javadoc/javadoc-nablarch-fw-web-handler-health-HealthChecker.md) を継承したクラスを
 本ハンドラのhealthCheckersプロパティに指定すると、本ハンドラの実行時に対象ごとのヘルスチェックとして使用される。
 
 デフォルトで提供しているDBのヘルスチェックの設定例を以下に示す。
@@ -142,8 +142,8 @@ DB等のリソースのヘルスチェックは、 HealthChecker
 ## ヘルスチェックを追加する
 
 [ヘルスチェックのエンドポイントを作る](../../component/handlers/handlers-health-check-endpoint-handler.md#ヘルスチェックのエンドポイントを作る) で説明したように、
-DB等のリソースのヘルスチェックは HealthChecker
-という抽象クラスが行うので、HealthChecker を継承したクラスを作成し、
+DB等のリソースのヘルスチェックは [HealthChecker](../../javadoc/javadoc-nablarch-fw-web-handler-health-HealthChecker.md)
+という抽象クラスが行うので、[HealthChecker](../../javadoc/javadoc-nablarch-fw-web-handler-health-HealthChecker.md) を継承したクラスを作成し、
 本ハンドラのhealthCheckersプロパティに指定するとヘルスチェックを追加できる。
 
 実装例と設定例を以下に示す。
@@ -187,7 +187,7 @@ public class CustomHealthChecker extends HealthChecker {
 
 ## ヘルスチェック結果のレスポンスを変更する
 
-ヘルスチェック結果のレスポンスは HealthCheckResponseBuilder が作成する。
+ヘルスチェック結果のレスポンスは [HealthCheckResponseBuilder](../../javadoc/javadoc-nablarch-fw-web-handler-health-HealthCheckResponseBuilder.md) が作成する。
 デフォルトのレスポンスは以下となる。
 
 ステータスコード
@@ -219,7 +219,7 @@ public class CustomHealthChecker extends HealthChecker {
 
   * 実際は改行がなく1行となるが上記は見やすさのために整形している。
   * ヘルスチェック全体の結果はtargetsのヘルスチェック結果が1つでも失敗の場合に失敗となる。
-  * targetsは指定された HealthChecker の数だけ含まれる。
+  * targetsは指定された [HealthChecker](../../javadoc/javadoc-nablarch-fw-web-handler-health-HealthChecker.md) の数だけ含まれる。
 
 ヘルスチェック結果のラベル
 
@@ -252,7 +252,7 @@ public class CustomHealthChecker extends HealthChecker {
 ```
 
 レスポンスボディの内容を変更したい場合は、
-HealthCheckResponseBuilder を継承したクラスを作成する。
+[HealthCheckResponseBuilder](../../javadoc/javadoc-nablarch-fw-web-handler-health-HealthCheckResponseBuilder.md) を継承したクラスを作成する。
 
 実装例と設定例を以下に示す。
 

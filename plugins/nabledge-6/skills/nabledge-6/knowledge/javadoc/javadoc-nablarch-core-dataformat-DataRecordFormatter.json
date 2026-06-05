@@ -1,0 +1,74 @@
+{
+  "title": "interface DataRecordFormatter",
+  "content": "**パッケージ:** nablarch.core.dataformat\n\n**継承階層:**\n```\njava.lang.Object\n  └─ Closeable\n      └─ nablarch.core.dataformat.DataRecordFormatter\n```\n\n---\n\n```java\npublic interface DataRecordFormatter\nextends Closeable\n```\n\nデータファイルとJavaオブジェクトのシリアライズ／デシリアライズを行うクラスが実装するインタフェース。\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "readRecord",
+      "level": 3,
+      "content": "```java\nDataRecord readRecord()\n                      throws IOException, InvalidDataFormatException\n```\n\n入力ストリームから1レコード分のデータを読み込み、データレコードを返却する。\n入力ストリームが既に終端に達していた場合は{@code null}を返却する。\n\n**戻り値:**\nデータレコード\n\n**例外:**\n- `IOException` - 入力ストリームの読み込みに失敗した場合\n- `InvalidDataFormatException` - 読み込んだデータがフォーマット定義に違反している場合\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "writeRecord",
+      "level": 3,
+      "content": "```java\nvoid writeRecord(Map<String,?> record)\n                 throws IOException, InvalidDataFormatException\n```\n\n出力ストリームに1レコード分の内容を書き込む。\n<p/>\n出力時に使用するデータレイアウト（レコードタイプ）は、{@link Map}の内容をもとに自動的に判定される。\n<p/>\n引数が{@link DataRecord}型かつレコードタイプが指定されている場合、\nフォーマット定義ファイルのレコードタイプ識別フィールド定義よりも、指定されたレコードタイプを優先して書き込みを行う。\n\n**パラメータ:**\n- `record` - 出力するレコードの内容を格納したMap\n\n**例外:**\n- `IOException` - 出力ストリームの書き込みに失敗した場合\n- `InvalidDataFormatException` - 書き込むデータの内容がフォーマット定義に違反している場合\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "writeRecord",
+      "level": 3,
+      "content": "```java\nvoid writeRecord(String recordType, Map<String,?> record)\n                 throws IOException, InvalidDataFormatException\n```\n\n指定したデータレイアウト（レコードタイプ）で、出力ストリームに1レコード分の内容を書き込む。\n\n**パラメータ:**\n- `recordType` - レコードタイプ\n- `record` - 出力するレコードの内容を格納したMap\n\n**例外:**\n- `IOException` - 出力ストリームの書き込みに失敗した場合\n- `InvalidDataFormatException` - 書き込むデータの内容がフォーマット定義に違反している場合\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\nDataRecordFormatter initialize()\n```\n\n初期化処理を行う。\n\n**戻り値:**\n本クラスのインスタンス\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "setInputStream",
+      "level": 3,
+      "content": "```java\nDataRecordFormatter setInputStream(InputStream stream)\n```\n\n入力ストリームを設定する。\n\n**パラメータ:**\n- `stream` - 入力ストリーム\n\n**戻り値:**\n本クラスのインスタンス\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\nvoid close()\n```\n\n内部的に保持している各種リソースを開放する。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setDefinition",
+      "level": 3,
+      "content": "```java\nDataRecordFormatter setDefinition(LayoutDefinition definition)\n```\n\nフォーマット定義ファイルの情報を保持するクラスを設定する。\n\n**パラメータ:**\n- `definition` - フォーマット定義ファイルの定義情報\n\n**戻り値:**\n本クラスのインスタンス\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setOutputStream",
+      "level": 3,
+      "content": "```java\nDataRecordFormatter setOutputStream(OutputStream stream)\n```\n\n出力ストリームを設定する。\n\n**パラメータ:**\n- `stream` - 出力ストリーム\n\n**戻り値:**\n本クラスのインスタンス\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "hasNext",
+      "level": 3,
+      "content": "```java\nboolean hasNext()\n                throws IOException\n```\n\n次に読み込む行の有無を判定する。\n\n**戻り値:**\n次に読み込む行がある場合{@code true}\n\n**例外:**\n- `IOException` - 入力ストリームの読み込みに失敗した場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getRecordNumber",
+      "level": 3,
+      "content": "```java\nint getRecordNumber()\n```\n\n読み込みまたは書き込み中のレコードのレコード番号を返却する。\n\n**戻り値:**\nレコード番号\n\n---",
+      "id": "s11"
+    }
+  ],
+  "id": "javadoc-nablarch-core-dataformat-DataRecordFormatter"
+}

@@ -10,19 +10,19 @@ Nablarchバッチアプリケーションを作成する際に実装すべきク
 
 アクションクラスは、2つのことを行う。
 
-* 入力データの読み込みに使う DataReader を生成する。
-* DataReader が読み込んだデータレコードを元に業務ロジックを実行し、
-  Result を返却する。
+* 入力データの読み込みに使う [DataReader](../../javadoc/javadoc-nablarch-fw-DataReader.md) を生成する。
+* [DataReader](../../javadoc/javadoc-nablarch-fw-DataReader.md) が読み込んだデータレコードを元に業務ロジックを実行し、
+  [Result](../../javadoc/javadoc-nablarch-fw-Result.md) を返却する。
 
 例えば、ファイルの取り込みバッチであれば、業務ロジックとして以下の処理を行う。
 
 * データレコードからフォームクラスを作成して、バリデーションを行う。
 * フォームクラスからエンティティクラスを作成して、データベースにデータを追加する。
-* 処理結果として Success を返す。
+* 処理結果として [Success](../../javadoc/javadoc-nablarch-fw-Result.md) を返す。
 
 フォームクラス(form class)
 
-DataReader
+[DataReader](../../javadoc/javadoc-nablarch-fw-DataReader.md)
 が読み込んだデータレコードをマッピングするクラス。
 
 データレコードをバリデーションするためのアノテーションの設定や相関バリデーションのロジックを持つ。

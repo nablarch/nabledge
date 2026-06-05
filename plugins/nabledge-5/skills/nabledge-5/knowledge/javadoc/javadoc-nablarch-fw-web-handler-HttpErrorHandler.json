@@ -1,0 +1,80 @@
+{
+  "title": "class HttpErrorHandler",
+  "content": "**パッケージ:** nablarch.fw.web.handler\n\n**実装されたインタフェース:**\n- HttpRequestHandler\n\n---\n\n```java\npublic class HttpErrorHandler\nimplements HttpRequestHandler\n```\n\n共通エラーハンドラー。\n<pre>\nHttpResponse/HttpErrorResponse のHTTPエラーコードに対応した\nエラー画面に遷移させる。\nまた、実行時例外を捕捉し、システムエラー画面に遷移させる。\n</pre>\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "writeFailureLogPattern",
+      "level": 3,
+      "content": "```java\nprotected Pattern writeFailureLogPattern\n```\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "DOCROOT",
+      "level": 3,
+      "content": "```java\nprivate static final String DOCROOT\n```\n\nデフォルトページのドキュメントルート\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "defaultPages",
+      "level": 3,
+      "content": "```java\nprivate final Map<String,ResourceLocator> defaultPages\n```\n\n既定のデフォルトページ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setDefaultPage",
+      "level": 3,
+      "content": "```java\npublic HttpErrorHandler setDefaultPage(String statusCode, String contentPath)\n```\n\nレスポンスステータスコードごとのデフォルトページを設定する。\n\nHttpResponseオブジェクトのボディ内容(contentPath/contentBody)が設定されていない場合、\nここでステータスコード毎に設定したデフォルトページがボディとしてレスポンスされる。\n設定は後から設定した内容ほど優先される。\nステータスコードには1桁分のワイルドカードとして \".\" を使用することができる。\n\n設定例::\n<pre>\n  // デフォルトページ定義\n  setDefaultPage(\"303\", \"file:///www/docroot/redirecting.html\");\n  setDefaultPage(\"4..\", \"servlet://jsp/errors/userError.jsp\");\n  setDefaultPage(\"5..\", \"servlet://jsp/errors/systemError.jsp\");\n</pre>\n\nデフォルトページの設定を行わない場合、\nweb.xmlに定義されているエラーページに遷移する。\n\n**パラメータ:**\n- `statusCode` - ステータスコードのパターン\n- `contentPath` - デフォルトページのコンテンツパス\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setDefaultPages",
+      "level": 3,
+      "content": "```java\npublic HttpErrorHandler setDefaultPages(Map<String,String> defaultPages)\n```\n\nレスポンスステータスコードごとのデフォルトページを設定する。\n\n**パラメータ:**\n- `defaultPages` - デフォルトページ設定\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getDefaultPageFor",
+      "level": 3,
+      "content": "```java\npublic ResourceLocator getDefaultPageFor(int statusCode)\n```\n\n指定されたステータスコードに対するデフォルトページのコンテンツパスを返す。\n\n**パラメータ:**\n- `statusCode` - ステータスコード\n\n**戻り値:**\nデフォルト画面のコンテンツパス\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "matchingScore",
+      "level": 3,
+      "content": "```java\nprivate int matchingScore(String aStr, String bStr)\n```\n\n一致文字数を計数する。\n\n**パラメータ:**\n- `aStr` - 基準文字列\n- `bStr` - 比較対象文字列\n\n**戻り値:**\n一致する文字数\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setWriteFailureLogPattern",
+      "level": 3,
+      "content": "```java\npublic void setWriteFailureLogPattern(String writeFailureLogPattern)\n```\n\n{@link #handle(nablarch.fw.web.HttpRequest, nablarch.fw.ExecutionContext)}で、{@link Result.Error}を補足した際に、\n障害通知ログを出力する必要のあるステータスコードを正規表現で設定する。\n\nここで設定した正規表現が、{@link nablarch.fw.Result.Error#getStatusCode()}にマッチした場合のみ、\n障害通知ログが出力され障害として検知される。\nなお、本設定を省略した場合のデフォルト動作では、{@code 5([1-9][0-9]|0[012456789])}に一致するステータスコードが障害通知ログの出力対象となる。\n\n**パラメータ:**\n- `writeFailureLogPattern` - 障害通知対象のステータスコードを表す正規表現\n\n---",
+      "id": "s12"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-HttpErrorHandler"
+}

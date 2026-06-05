@@ -1,0 +1,200 @@
+{
+  "title": "class ValidationContext",
+  "content": "**パッケージ:** nablarch.core.validation\n\n---\n\n```java\npublic class ValidationContext\n```\n\nバリデーション実行中の情報を保持するクラス。\n\n**param:** バリデーション結果で取得できる型  \n**関連項目:** Message  \n**作成者:** Koichi Asano  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "prefix",
+      "level": 3,
+      "content": "```java\nprivate String prefix\n```\n\nバリデーション対象のプレフィクス。<br/>\nこのプレフィクスにマッチする入力値のみバリデーションの対象とする。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "messages",
+      "level": 3,
+      "content": "```java\nprivate List<Message> messages\n```\n\nバリデーション結果メッセージのリスト。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "params",
+      "level": 3,
+      "content": "```java\nprivate Map<String,?> params\n```\n\n変換前文字列のMap。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "convertedValues",
+      "level": 3,
+      "content": "```java\nprivate Map<String,Object> convertedValues\n```\n\n変換後オブジェクトのマップ。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "targetClass",
+      "level": 3,
+      "content": "```java\nprivate Class<T> targetClass\n```\n\nバリデーションの対象クラス。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "validateFor",
+      "level": 3,
+      "content": "```java\nprivate String validateFor\n```\n\nバリデーション対象メソッド。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "formCreator",
+      "level": 3,
+      "content": "```java\nprivate FormCreator formCreator\n```\n\nEntityCreator。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "invalidPropertyNames",
+      "level": 3,
+      "content": "```java\nprivate Set<String> invalidPropertyNames\n```\n\nバリデーション結果がvalidでないプロパティの名前\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "processedProperties",
+      "level": 3,
+      "content": "```java\nprivate Set<String> processedProperties\n```\n\nバリデーション実行済みのプロパティ名のセット。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s11"
+    },
+    {
+      "title": "ValidationContext",
+      "level": 3,
+      "content": "```java\npublic ValidationContext(String prefix, Class<T> targetClass, FormCreator formCreator, Map<String,?> params, String validateFor)\n```\n\n{@code ValidationContext}オブジェクトを生成する。\n\n**パラメータ:**\n- `prefix` - バリデーション対象のプレフィクス\n- `targetClass` - バリデーション対象のクラス\n- `formCreator` - FormCreator\n- `params` - パラメータのMap\n- `validateFor` - バリデーション対象メソッド\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s13"
+    },
+    {
+      "title": "addMessage",
+      "level": 3,
+      "content": "```java\npublic void addMessage(String messageId, Object params)\n```\n\nメッセージを追加する。\n\n**パラメータ:**\n- `messageId` - メッセージID\n- `params` - メッセージに埋め込む値\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "addMessages",
+      "level": 3,
+      "content": "```java\npublic void addMessages(List<Message> messages)\n```\n\nメッセージを追加する。\n\n**パラメータ:**\n- `messages` - メッセージのリスト\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "addResultMessage",
+      "level": 3,
+      "content": "```java\npublic void addResultMessage(String propertyName, String messageId, Object params)\n```\n\nバリデーション結果を追加する。\n\n**パラメータ:**\n- `propertyName` - プロパティ名\n- `messageId` - バリデーション結果メッセージのメッセージID\n- `params` - メッセージのオプションパラメータ\n\n**例外:**\n- `IllegalArgumentException` - プロパティ名が{@code null}または空文字だった場合\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getMessage",
+      "level": 3,
+      "content": "```java\npublic StringResource getMessage(String messageId)\n```\n\nメッセージIDに対応するメッセージを取得する。\n\n**パラメータ:**\n- `messageId` - メッセージID\n\n**戻り値:**\nメッセージIDに対応するメッセージ\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "createObject",
+      "level": 3,
+      "content": "```java\npublic T createObject()\n```\n\nフォームオブジェクトを生成する。\n\n**戻り値:**\nフォームオブジェクト\n\n**例外:**\n- `IllegalStateException` - フォームオブジェクトにバリデーションエラーのプロパティがある場合\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "createDirtyObject",
+      "level": 3,
+      "content": "```java\npublic T createDirtyObject()\n```\n\nフォームオブジェクトを生成する。\n<p/>\n{@link #createObject()}と異なり、生成前にフォームオブジェクトにバリデーションエラーがあるかチェックしない。<br/>\nそのため、バリデーションエラーがあるプロパティもフォームオブジェクトに設定される。<br/>\nただし、プロパティをフォームオブジェクトのプロパティの型に変換できない場合は設定されない。\n\n**戻り値:**\nフォームオブジェクト\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getParameters",
+      "level": 3,
+      "content": "```java\npublic Object getParameters(String propertyName)\n```\n\nプロパティ名に対応するプレフィクス付き文字列の配列を取得する。\n\n**パラメータ:**\n- `propertyName` - プロパティ名\n\n**戻り値:**\nプロパティ名に対応するプレフィクス付き文字列の配列\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "putConvertedValue",
+      "level": 3,
+      "content": "```java\npublic void putConvertedValue(String propertyName, Object value)\n```\n\nフォームオブジェクトのプロパティの型に変換したプロパティを追加する。\n\n**パラメータ:**\n- `propertyName` - 追加するプロパティ名\n- `value` - 変換したプロパティの値\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "getConvertedValue",
+      "level": 3,
+      "content": "```java\npublic Object getConvertedValue(String propertyName)\n```\n\nフォームオブジェクトのプロパティの型に変換したプロパティを取得する。\n<p/>\nプロパティにバリデーションエラーがある場合も変換した値を返す。\n変換できない場合、プロパティが見つからない場合は{@code null}を返す。\n\n**パラメータ:**\n- `propertyName` - 取得するプロパティ名\n\n**戻り値:**\n変換したプロパティの値\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "getTargetClass",
+      "level": 3,
+      "content": "```java\npublic Class<T> getTargetClass()\n```\n\n変換対象のフォームクラスを取得する。\n\n**戻り値:**\n変換対象のフォームクラス\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getMessages",
+      "level": 3,
+      "content": "```java\npublic List<Message> getMessages()\n```\n\nバリデーション結果メッセージのリストを取得する。\n\n**戻り値:**\nバリデーション結果メッセージのリスト\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "isValid",
+      "level": 3,
+      "content": "```java\npublic boolean isValid()\n```\n\nバリデーションエラーがないかどうかを取得する。\n\n**戻り値:**\nバリデーションエラーがない場合は{@code true}\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "abortIfInvalid",
+      "level": 3,
+      "content": "```java\npublic void abortIfInvalid()\n                    throws ApplicationException\n```\n\nバリデーションエラーがある場合に、\nバリデーション結果メッセージを保持した{@link ApplicationException}を送出する。\n<p/>\nバリデーションエラーのプロパティがない場合、本メソッドは何もしない。\n\n**例外:**\n- `ApplicationException` - バリデーションエラーのプロパティがある場合\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "isInvalid",
+      "level": 3,
+      "content": "```java\npublic boolean isInvalid(String propertyName)\n```\n\n指定されたプロパティにバリデーションエラーがあるかどうか判定する。\n<p/>\nバリデーション対象でないプロパティ名が指定された場合は{@code false}を返す。\n\n**パラメータ:**\n- `propertyName` - プロパティ名\n\n**戻り値:**\n指定されたプロパティにバリデーションエラーがある場合は{@code true}\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "setPropertyProcessed",
+      "level": 3,
+      "content": "```java\npublic void setPropertyProcessed(String propertyName)\n```\n\nバリデーション済みプロパティのセットにプロパティを追加する。\n\n**パラメータ:**\n- `propertyName` - 追加するプロパティ名\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "isProcessed",
+      "level": 3,
+      "content": "```java\npublic boolean isProcessed(String propertyName)\n```\n\nバリデーション済みプロパティか否か判定する。\n\n**パラメータ:**\n- `propertyName` - プロパティ名\n\n**戻り値:**\n指定したプロパティがバリデーション済みである場合{@code true}\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "getPrefix",
+      "level": 3,
+      "content": "```java\npublic String getPrefix()\n```\n\nバリデーション対象のプレフィクスを取得する。\n\n**戻り値:**\nバリデーション対象のプレフィクス\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "getParams",
+      "level": 3,
+      "content": "```java\npublic Map<String,?> getParams()\n```\n\nプロパティの値が文字列のMapを取得する。\n\n**戻り値:**\nプロパティの値が文字列のMap\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "getValidateFor",
+      "level": 3,
+      "content": "```java\npublic String getValidateFor()\n```\n\nバリデーション対象メソッドを取得する。\n\n**戻り値:**\nバリデーション対象メソッド\n\n---",
+      "id": "s32"
+    }
+  ],
+  "id": "javadoc-nablarch-core-validation-ValidationContext"
+}

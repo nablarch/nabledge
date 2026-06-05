@@ -1,0 +1,56 @@
+{
+  "title": "class ThymeleafMailProcessor",
+  "content": "**パッケージ:** nablarch.integration.mail.thymeleaf\n\n**実装されたインタフェース:**\n- TemplateEngineMailProcessor\n\n---\n\n```java\npublic class ThymeleafMailProcessor\nimplements TemplateEngineMailProcessor\n```\n\nThymeleafを使用する{@link TemplateEngineMailProcessor}の実装クラス。\n\n**作成者:** Taichi Uragami  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "templateEngine",
+      "level": 3,
+      "content": "```java\nprivate ITemplateEngine templateEngine\n```\n\nThymeleafのテンプレートエンジン\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "delimiter",
+      "level": 3,
+      "content": "```java\nprivate String delimiter\n```\n\n件名と本文を分けるデリミタ\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "process",
+      "level": 3,
+      "content": "```java\npublic TemplateEngineProcessedResult process(String templateId, String lang, Map<String,Object> variables)\n```\n\nテンプレートIDから取得されたテンプレートと変数をマージして、その結果を返す。\n\n<p>\nテンプレートの検索、テンプレートと変数のマージは{@link ITemplateEngine#process(String, IContext)}が使われる。\n</p>\n\n<p>\n※この実装ではテンプレートの検索が多言語対応していないため、第二引数の言語は使用されない。\n</p>\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "createContext",
+      "level": 3,
+      "content": "```java\nprotected IContext createContext(Map<String,Object> variables)\n```\n\n{@link IContext}を作成する。\n\n**パラメータ:**\n- `variables` - {@link #process(String, String, Map)}に渡された変数\n\n**戻り値:**\n{@link IContext}のインスタンス\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "setTemplateEngine",
+      "level": 3,
+      "content": "```java\npublic void setTemplateEngine(ITemplateEngine templateEngine)\n```\n\nThymeleafのエントリーポイントとなる{@link ITemplateEngine}を設定する。\n\n**パラメータ:**\n- `templateEngine` - Thymeleafのテンプレートエンジン\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setDelimiter",
+      "level": 3,
+      "content": "```java\npublic void setDelimiter(String delimiter)\n```\n\n件名と本文を分けるデリミタを設定する。\n\n<p>\nなにも設定されていなければ{@link TemplateEngineProcessedResult#DEFAULT_DELIMITER デフォルトのデリミタ}が使用される。\n</p>\n\n**パラメータ:**\n- `delimiter` - 件名と本文を分けるデリミタ\n\n---",
+      "id": "s8"
+    }
+  ],
+  "id": "javadoc-nablarch-integration-mail-thymeleaf-ThymeleafMailProcessor"
+}

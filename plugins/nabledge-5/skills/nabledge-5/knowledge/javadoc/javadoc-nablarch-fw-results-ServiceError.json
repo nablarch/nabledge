@@ -1,0 +1,116 @@
+{
+  "title": "class ServiceError",
+  "content": "**パッケージ:** nablarch.fw.results\n\n**継承階層:**\n```\njava.lang.Object\n  └─ nablarch.fw.Result.Error\n      └─ nablarch.fw.results.ServiceError\n```\n\n---\n\n```java\npublic abstract class ServiceError\nextends nablarch.fw.Result.Error\n```\n\nサービス側で生じた問題により処理が継続できないことを示す例外。\n<p/>\n問題解決には、サービス側での対処が必要となるため、エラーメッセージの内容として、\n呼び出し側が問題が発生したことをサービス管理者に連絡する方法と、\n管理者に伝えるべき内容を含める必要がある。\n\nまた、メッセージIDを設定することにより、\n運用ログへの出力に関する制御を行うことができる。\n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "logLevel",
+      "level": 3,
+      "content": "```java\nprivate LogLevel logLevel\n```\n\nログレベル\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "messageId",
+      "level": 3,
+      "content": "```java\nprivate String messageId\n```\n\nメッセージID\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "messageParams",
+      "level": 3,
+      "content": "```java\nprivate Object[] messageParams\n```\n\nメッセージ埋め込みパラメータ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "logOptions",
+      "level": 3,
+      "content": "```java\nprivate Object[] logOptions\n```\n\nログのオプション情報\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "ServiceError",
+      "level": 3,
+      "content": "```java\npublic ServiceError()\n```\n\nデフォルトコンストラクタ\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "ServiceError",
+      "level": 3,
+      "content": "```java\npublic ServiceError(String message)\n```\n\nコンストラクタ\n\n**パラメータ:**\n- `message` - エラーメッセージ\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "ServiceError",
+      "level": 3,
+      "content": "```java\npublic ServiceError(Throwable cause)\n```\n\nコンストラクタ\n\n**パラメータ:**\n- `cause` - 起因となる例外\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "ServiceError",
+      "level": 3,
+      "content": "```java\npublic ServiceError(String message, Throwable cause)\n```\n\nコンストラクタ\n\n**パラメータ:**\n- `message` - エラーメッセージ\n- `cause` - 起因となる例外\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "ServiceError",
+      "level": 3,
+      "content": "```java\npublic ServiceError(LogLevel logLevel, String messageId, Object messageParams)\n```\n\n運用ログへの出力に関する制御情報を含む例外を生成する。\n\n**パラメータ:**\n- `logLevel` - ログ出力レベル\n- `messageId` - ログ内容のメッセージID\n- `messageParams` - ログメッセージの埋め込みパラメータ\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "ServiceError",
+      "level": 3,
+      "content": "```java\npublic ServiceError(LogLevel logLevel, Throwable cause, String messageId, Object messageParams)\n```\n\n運用ログへの出力に関する制御情報を含む例外を生成する。\n\n**パラメータ:**\n- `logLevel` - ログ出力レベル\n- `cause` - 障害の起因となる例外\n- `messageId` - ログ内容のメッセージID\n- `messageParams` - ログメッセージの埋め込みパラメータ\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s13"
+    },
+    {
+      "title": "getMessageId",
+      "level": 3,
+      "content": "```java\npublic String getMessageId()\n```\n\nメッセージIDを返す。\n\n**戻り値:**\nメッセージID\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getMessageParams",
+      "level": 3,
+      "content": "```java\npublic Object[] getMessageParams()\n```\n\nメッセージパラメータを返す。\n\n**戻り値:**\nメッセージパラメータ\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getMessage",
+      "level": 3,
+      "content": "```java\npublic String getMessage()\n```\n\n{@inheritDoc}\n<p/>\nこのインスタンスにメッセージIDが指定されている場合は、\nそのIDに対応したメッセージ内容を返す。\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "writeLog",
+      "level": 3,
+      "content": "```java\npublic void writeLog(ExecutionContext context)\n```\n\nこの障害の内容について運用ログに出力する。\n<p/>\nログレベルがエラーレベル以上の場合に、障害内容を運用ログに出力する。\nワーニングレベル以下の場合は何もしない。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getStatusCode",
+      "level": 3,
+      "content": "```java\npublic int getStatusCode()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s18"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-results-ServiceError"
+}

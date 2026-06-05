@@ -83,7 +83,7 @@
 
 ### ユニバーサルDAO用に採番を設定する
 
-[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) で本機能を使用するためには、 BasicDaoContextFactory に対する設定が必要となる。
+[ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) で本機能を使用するためには、 [BasicDaoContextFactory](../../javadoc/javadoc-nablarch-common-dao-BasicDaoContextFactory.md) に対する設定が必要となる。
 
 この例では、シーケンス採番とテーブル採番の両方を設定しているが、使用しない採番の設定はしなくてよい。
 テーブル採番は推奨しないため、サロゲートキーの採番でシーケンス採番を使用する場合に sequenceIdGenerator を設定すれば良い。
@@ -126,6 +126,6 @@
 ### テーブル採番やシーケンス採番を置き換える
 
 テーブルやシーケンスを使った採番の実装を新しいものに置き換える場合には、
-IdGenerator を実装したクラスを作成することで対応できる。
+[IdGenerator](../../javadoc/javadoc-nablarch-common-idgenerator-IdGenerator.md) を実装したクラスを作成することで対応できる。
 
 作成したクラスは、 ユニバーサルDAO用に採番を設定する に従いコンポーネント設定ファイルに定義することで使用可能となる。

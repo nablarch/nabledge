@@ -54,7 +54,7 @@ public HttpResponse delete(HttpRequest request, ExecutionContext context) {
 
 この実装のポイント
 
-* 主キーを条件とした削除は、主キーが設定されたエンティティを引数に UniversalDao#delete
+* 主キーを条件とした削除は、主キーが設定されたエンティティを引数に [UniversalDao#delete](../../javadoc/javadoc-nablarch-common-dao-UniversalDao.md)
   を実行することで、SQLを作成しなくとも実行できる。
 
 > **Tip:**

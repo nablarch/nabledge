@@ -34,7 +34,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.messaging.handler.MessageResendHandler
+* [nablarch.fw.messaging.handler.MessageResendHandler](../../javadoc/javadoc-nablarch-fw-messaging-handler-MessageResendHandler.md)
 
 ## モジュール一覧
 
@@ -63,19 +63,19 @@
 このため、予め応答電文の保存用テーブルを作成しておく必要がある。
 
 応答電文を格納するテーブルの定義は以下の通り。
-デフォルトのテーブル名や物理名の値は、 SentMessageTableSchema を参照。
+デフォルトのテーブル名や物理名の値は、 [SentMessageTableSchema](../../javadoc/javadoc-nablarch-fw-messaging-tableschema-SentMessageTableSchema.md) を参照。
 
 | カラム名 | 制約等 | 格納する値 |
 |---|---|---|
 | リクエストID | 主キー   文字列型 | 要求電文のリクエストID |
 | メッセージID | 主キー   文字列型 | 要求電文のメッセージID  再送電文の場合には、メッセージIDではなく相関メッセージIDを使用する。  詳細は、 [同一電文(再送電文)の判定方法](../../component/handlers/handlers-message-resend-handler.md#同一電文再送電文の判定方法) を参照 |
-| 宛先キューの論理名 | 文字列型 | 応答電文を送信するための宛先キューの論理名   (InterSystemMessage#getDestination()) |
-| 処理結果コード | 文字列型 | 応答電文の処理結果コード   (ResponseMessage#getStatusCode()) |
-| 応答電文 | バイナリ型 | 応答電文の内容   (ResponseMessage#getBodyBytes()) |
+| 宛先キューの論理名 | 文字列型 | 応答電文を送信するための宛先キューの論理名   ([InterSystemMessage#getDestination()](../../javadoc/javadoc-nablarch-fw-messaging-InterSystemMessage.md)) |
+| 処理結果コード | 文字列型 | 応答電文の処理結果コード   ([ResponseMessage#getStatusCode()](../../javadoc/javadoc-nablarch-fw-messaging-ResponseMessage.md)) |
+| 応答電文 | バイナリ型 | 応答電文の内容   ([ResponseMessage#getBodyBytes()](../../javadoc/javadoc-nablarch-fw-messaging-ResponseMessage.md)) |
 
 デフォルトのテーブル名やカラム名を変更したい場合には、設定により変更できる。
-詳細は、 SentMessageTableSchema 及び
-sentMessageTableSchemaプロパティ を参照。
+詳細は、 [SentMessageTableSchema](../../javadoc/javadoc-nablarch-fw-messaging-tableschema-SentMessageTableSchema.md) 及び
+[sentMessageTableSchemaプロパティ](../../javadoc/javadoc-nablarch-fw-messaging-handler-MessageResendHandler.md) を参照。
 
 ## 同一電文(再送電文)の判定方法
 
@@ -96,7 +96,7 @@ sentMessageTableSchemaプロパティ を参照。
 ## フレームワーク制御ヘッダの設定
 
 応答電文内のフレームワーク制御ヘッダの定義を変更する場合には、プロジェクトで拡張したフレームワーク制御ヘッダの定義を設定する必要がある。
-設定しない場合は、デフォルトの StandardFwHeaderDefinition が使用される。
+設定しない場合は、デフォルトの [StandardFwHeaderDefinition](../../javadoc/javadoc-nablarch-fw-messaging-StandardFwHeaderDefinition.md) が使用される。
 
 フレームワーク制御ヘッダの詳細は、 [フレームワーク制御ヘッダ](../../component/libraries/libraries-mom-system-messaging.md#送受信電文のデータモデル) を参照。
 

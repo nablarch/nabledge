@@ -1,13 +1,13 @@
 {
   "id": "testing-framework-event-toggle-property",
   "title": "属性値の動的切替",
-  "content": "[属性値の動的切替](../../development-tools/testing-framework/testing-framework-event-toggle-property.md) は、\nチェックボックス・ラジオボタン・プルダウン要素の内容に応じて、\n特定の要素の属性値を動的に切替えるイベントアクションである。\nなお、切替えの対象となる属性値は真偽値型のDOM属性値(readonly/disabled/checked/selected) に限る。",
+  "content": "[属性値の動的切替](../../development-tools/testing-framework/testing-framework-event-toggle-property.json) は、\nチェックボックス・ラジオボタン・プルダウン要素の内容に応じて、\n特定の要素の属性値を動的に切替えるイベントアクションである。\nなお、切替えの対象となる属性値は真偽値型のDOM属性値(readonly/disabled/checked/selected) に限る。",
   "no_knowledge_content": false,
   "sections": [
     {
       "id": "s1",
       "title": "コードサンプル",
-      "content": "このアクションを実行するイベントは [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.md)\n(もしくは [サブウィンドウ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen-subwindow.md) ) を用いて定義する必要がある。\n\n以下のソースコードは、\nフォーム内の全てのチェックボックスをON/OFFするチェックボックスを作成する例である。\n\nclass属性に allCheck CSSクラスを指定したチェックボックスをクリックすると\n<event:toggle_property> イベントアクションが実行され、\nチェックボックスの全チェック・解除が行われる。\n\n```jsp\n<n:form>\n  <event:listen\n    event=\"input[type='checkbox'].allCheck click\">\n    <event:toggle_property\n      title=\"全てチェック/クリア\"\n      type=\"checked\"\n      toggleTarget=\"input[type='checkbox']:not('.allCheck')\"\n      condition=\".allCheck\">\n\n    </event:toggle_property>\n  </event:listen>\n\n  ... (中略) ...\n\n</n:form>\n```",
+      "content": "このアクションを実行するイベントは [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.json)\n(もしくは [サブウィンドウ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen-subwindow.json) ) を用いて定義する必要がある。\n\n以下のソースコードは、\nフォーム内の全てのチェックボックスをON/OFFするチェックボックスを作成する例である。\n\nclass属性に allCheck CSSクラスを指定したチェックボックスをクリックすると\n<event:toggle_property> イベントアクションが実行され、\nチェックボックスの全チェック・解除が行われる。\n\n```jsp\n<n:form>\n  <event:listen\n    event=\"input[type='checkbox'].allCheck click\">\n    <event:toggle_property\n      title=\"全てチェック/クリア\"\n      type=\"checked\"\n      toggleTarget=\"input[type='checkbox']:not('.allCheck')\"\n      condition=\".allCheck\">\n\n    </event:toggle_property>\n  </event:listen>\n\n  ... (中略) ...\n\n</n:form>\n```",
       "level": 2
     },
     {

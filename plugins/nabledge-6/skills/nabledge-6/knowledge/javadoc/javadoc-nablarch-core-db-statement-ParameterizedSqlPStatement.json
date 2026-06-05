@@ -1,0 +1,74 @@
+{
+  "title": "interface ParameterizedSqlPStatement",
+  "content": "**パッケージ:** nablarch.core.db.statement\n\n**継承階層:**\n```\njava.lang.Object\n  └─ SqlStatement\n      └─ nablarch.core.db.statement.ParameterizedSqlPStatement\n```\n\n---\n\n```java\npublic interface ParameterizedSqlPStatement\nextends SqlStatement\n```\n\n名前付きバインド変数をもつSQL文を実行するインタフェース。\n\n**作成者:** Hisaaki Sioiri  \n**関連項目:** java.sql.PreparedStatement  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "retrieve",
+      "level": 3,
+      "content": "```java\nSqlResultSet retrieve(Map<String,?> data)\n                      throws SqlStatementException\n```\n\n簡易検索機能。\n<p/>\n下記設定で検索を実行する。\n<ul>\n    <li>読み込み開始位置 = 1</li>\n    <li>最大行数 = 無制限</li>\n</ul>\n本メソッドを使用すると{@link #setMaxRows}で事前に設定した値は適用されない。\n\n**パラメータ:**\n- `data` - 検索条件を要素にもつMap\n\n**戻り値:**\n取得結果\n\n**例外:**\n- `SqlStatementException` - SQL実行時に{@link java.sql.SQLException}が発生した場合\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "retrieve",
+      "level": 3,
+      "content": "```java\nSqlResultSet retrieve(int startPos, int max, Map<String,?> data)\n                      throws SqlStatementException\n```\n\n簡易検索機能。\n\n**パラメータ:**\n- `startPos` - 取得開始位置\n- `max` - 取得最大件数\n- `data` - 検索条件を要素にもつMap\n\n**戻り値:**\n取得結果\n\n**例外:**\n- `SqlStatementException` - SQL実行時に{@link java.sql.SQLException}が発生した場合\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "retrieve",
+      "level": 3,
+      "content": "```java\nSqlResultSet retrieve(Object data)\n                      throws SqlStatementException\n```\n\n簡易検索機能。\n<p/>\n下記設定で検索を実行する。\n<ul>\n    <li>読み込み開始位置 = 1</li>\n    <li>最大行数 = 無制限</li>\n</ul>\n本メソッドを使用すると{@link #setMaxRows}で事前に設定した値は適用されない。\n\n**パラメータ:**\n- `data` - 検索条件をフィールドにもつオブジェクト\n\n**戻り値:**\n取得結果\n\n**例外:**\n- `SqlStatementException` - SQL実行時に{@link java.sql.SQLException}が発生した場合\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "retrieve",
+      "level": 3,
+      "content": "```java\nSqlResultSet retrieve(int startPos, int max, Object data)\n                      throws SqlStatementException\n```\n\n簡易検索機能。\n\n**パラメータ:**\n- `startPos` - 取得開始位置\n- `max` - 取得最大件数\n- `data` - 検索条件をフィールドにもつオブジェクト\n\n**戻り値:**\n取得結果\n\n**例外:**\n- `SqlStatementException` - SQL実行時に{@link java.sql.SQLException}が発生した場合\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "executeQueryByMap",
+      "level": 3,
+      "content": "```java\nResultSetIterator executeQueryByMap(Map<String,?> data)\n                                    throws SqlStatementException\n```\n\n{@link java.sql.PreparedStatement#executeQuery}のラッパー。\n\n**パラメータ:**\n- `data` - 検索条件を要素にもつMap\n\n**戻り値:**\n取得結果\n\n**例外:**\n- `SqlStatementException` - SQL実行時に{@link java.sql.SQLException}が発生した場合\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "executeQueryByObject",
+      "level": 3,
+      "content": "```java\nResultSetIterator executeQueryByObject(Object data)\n                                       throws SqlStatementException\n```\n\n{@link java.sql.PreparedStatement#executeQuery}のラッパー。\n\n**パラメータ:**\n- `data` - 検索条件をフィールドの値にもつオブジェクト\n\n**戻り値:**\n取得結果\n\n**例外:**\n- `SqlStatementException` - SQL実行時に{@link java.sql.SQLException}が発生した場合\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "executeUpdateByObject",
+      "level": 3,
+      "content": "```java\nint executeUpdateByObject(Object data)\n                          throws SqlStatementException\n```\n\nオブジェクトのフィールドの値をバインド変数に設定しSQLを実行する。\n\n**パラメータ:**\n- `data` - バインド変数にセットする値を保持したオブジェクト\n\n**戻り値:**\n更新件数\n\n**例外:**\n- `SqlStatementException` - 例外発生時\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "addBatchObject",
+      "level": 3,
+      "content": "```java\nvoid addBatchObject(Object data)\n```\n\nバッチ実行用にオブジェクトのフィールドの値をバインド変数にセットする。\n\n**パラメータ:**\n- `data` - バインド変数にセットする値を保持したオブジェクト\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "executeUpdateByMap",
+      "level": 3,
+      "content": "```java\nint executeUpdateByMap(Map<String,?> data)\n                       throws SqlStatementException\n```\n\nMapのvalueをバインド変数にセットしSQLを実行する。\n\n**パラメータ:**\n- `data` - バインド変数にセットする値を保持したMap\n\n**戻り値:**\n登録または、更新件数\n\n**例外:**\n- `SqlStatementException` - 例外発生時\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "addBatchMap",
+      "level": 3,
+      "content": "```java\nvoid addBatchMap(Map<String,?> data)\n```\n\nバッチ実行用にMapのvalueをバインド変数にセットする。\n\n**パラメータ:**\n- `data` - バインド変数にセットする値を保持したMap\n\n---",
+      "id": "s11"
+    }
+  ],
+  "id": "javadoc-nablarch-core-db-statement-ParameterizedSqlPStatement"
+}

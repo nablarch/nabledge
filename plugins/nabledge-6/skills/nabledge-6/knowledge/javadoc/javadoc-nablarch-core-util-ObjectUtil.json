@@ -1,0 +1,164 @@
+{
+  "title": "class ObjectUtil",
+  "content": "**パッケージ:** nablarch.core.util\n\n---\n\n```java\npublic final class ObjectUtil\n```\n\nフレームワークで使用する、オブジェクトの取り扱いを助けるユーティリティクラス。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "PRIMITIVE_TYPE_MAP",
+      "level": 3,
+      "content": "```java\nprivate static final Map<Class<?>,Class<?>> PRIMITIVE_TYPE_MAP\n```\n\nプリミティブ型のマップ。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "SETTER_METHOD_NAME_PATTERN",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern SETTER_METHOD_NAME_PATTERN\n```\n\nsetterメソッドのメソッド名パターン。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "GETTER_METHOD_NAME_PATTERN",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern GETTER_METHOD_NAME_PATTERN\n```\n\ngetterメソッドのメソッド名パターン。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "ObjectUtil",
+      "level": 3,
+      "content": "```java\nprivate ObjectUtil()\n```\n\n隠蔽コンストラクタ。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "createInstance",
+      "level": 3,
+      "content": "```java\npublic static T createInstance(String className)\n```\n\nクラス名からインスタンスを生成する。\n\n**パラメータ:**\n- `<T>` - 型引数\n- `className` - 完全修飾クラス名\n\n**戻り値:**\nインスタンス\n\n**例外:**\n- `IllegalArgumentException` - インスタンスの生成に失敗した場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setProperty",
+      "level": 3,
+      "content": "```java\npublic static void setProperty(Object obj, String propertyName, Object value)\n```\n\nオブジェクトのプロパティに値を設定する。\n\n本メソッドでは、対象プロパティがstaticの場合でも値は設定される。\n\n**パラメータ:**\n- `obj` - 対象のオブジェクト\n- `propertyName` - プロパティ名\n- `value` - 設定する値(NOT {@code null})\n\n**例外:**\n- `RuntimeException` - 対象プロパティにsetterが定義されていない場合か、\n  対象プロパティのsetterが対象プロパティの型かそのサブクラスを引数にとらない場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setProperty",
+      "level": 3,
+      "content": "```java\npublic static void setProperty(Object obj, String propertyName, Object value, boolean allowStatic)\n```\n\nオブジェクトのプロパティに値を設定する。\n\n本メソッドでは、対象プロパティがstaticの場合に値を設定するかどうかを引数で制御できる。\n引数allowStaticが{@code false}（許容しない）かつ対象プロパティがstaticである場合、\n例外が発生する。\n\n**パラメータ:**\n- `obj` - 対象のオブジェクト\n- `propertyName` - プロパティ名\n- `value` - 設定する値(NOT {@code null})\n- `allowStatic` - staticなプロパティに対する値の設定を許容するかどうか\n\n**例外:**\n- `RuntimeException` - 対象プロパティにsetterが定義されていない場合か、\n  対象プロパティのsetterが対象プロパティの型かそのサブクラスを引数にとらない場合\n- `IllegalConfigurationException` - 引数allowStaticが{@code false}（許容しない）かつ対象プロパティがstaticである場合。\n  (システムプロパティやweb.xml等の設定誤り)\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getSetterMethodName",
+      "level": 3,
+      "content": "```java\npublic static String getSetterMethodName(String propertyName)\n```\n\nプロパティ名からsetterメソッド名を取得する。\n\n**パラメータ:**\n- `propertyName` - プロパティ名\n\n**戻り値:**\nsetterメソッド名\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "findMatchMethod",
+      "level": 3,
+      "content": "```java\npublic static Method findMatchMethod(Class<?> objectClass, String methodName, Class<?> valueTypes)\n```\n\n指定したシグネチャにマッチするメソッドを検索する。\n<p/>\nマッチするメソッドが見つからなかった場合は{@code null}を返す。\n<p/>\nマッチング条件は以下である。\n<ul>\n    <li>{@code methodName}とメソッド名が一致していること</li>\n    <li>{@code valueTypes}と引数の数が一致していること</li>\n    <li>{@code valueTypes}と引数の型が一致していること。ただし、以下の場合は「同一の型」と見なす。\n        <ul>\n            <li>プリミティブ型とそのラッパー型とを比較した場合</li>\n            <li>{@code valueTypes}で指定した型とそのスーパークラスとを比較した場合</li>\n        </ul>\n    </li>\n</ul>\n\n**パラメータ:**\n- `objectClass` - 検索対象のクラス\n- `methodName` - メソッド名\n- `valueTypes` - 引数の型リスト(NOT {@code null})。\n                  引数の型の他、そのサブクラスでもマッチする。\n                  引数を取らないメソッドを検索する場合は、空の配列を引き渡す。\n\n**戻り値:**\n検索されたメソッド\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getAncestorClasses",
+      "level": 3,
+      "content": "```java\npublic static List<Class<?>> getAncestorClasses(Class<?> clazz)\n```\n\nクラスの全ての祖先を取得する。\n<p/>\n祖先のリストの並び順は、{@code clazz}からの近さ順となる。\n<p/>\n{@link Object}は取得結果リストに含まれない。<br/>\nそのため、{@code clazz}が{@link Object}以外を継承していないクラスである場合、空のリストを返す。\n\n**パラメータ:**\n- `clazz` - 祖先を取得するクラス\n\n**戻り値:**\nクラスの全ての祖先のリスト\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getPropertyType",
+      "level": 3,
+      "content": "```java\npublic static Class<?> getPropertyType(Class<?> clazz, String propertyName)\n```\n\nプロパティの型を取得する。\n<p/>\nsetterが定義されているプロパティのみ取得可能である。\n<p/>\n該当するプロパティが見つからない場合は{@code null}を返す。\n\n**パラメータ:**\n- `clazz` - プロパティの型を取得するクラス\n- `propertyName` - プロパティ名\n\n**戻り値:**\nプロパティの型\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getWritablePropertyNames",
+      "level": 3,
+      "content": "```java\npublic static List<String> getWritablePropertyNames(Class<?> clazz)\n```\n\n{@code clazz}に定義されたプロパティの名称リストを取得する。\nsetterが定義されているプロパティのみが対象となる。\n<p/>\n{@code clazz}にsetterが定義されたプロパティがない場合、空のリストを返す。\n\n**パラメータ:**\n- `clazz` - 取得対象のクラス\n\n**戻り値:**\n{@code clazz}に定義されたプロパティの名称リスト(setterが定義されているプロパティのみ取得する)\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getPropertyNameFromSetter",
+      "level": 3,
+      "content": "```java\npublic static String getPropertyNameFromSetter(Method method)\n```\n\nsetterメソッドからプロパティ名を取得する。\n\n**パラメータ:**\n- `method` - セッタメソッド\n\n**戻り値:**\nプロパティ名\n\n**例外:**\n- `IllegalArgumentException` - {@code method}の名称が\"set\"で開始していない場合\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getSetterMethods",
+      "level": 3,
+      "content": "```java\npublic static List<Method> getSetterMethods(Class<?> clazz)\n```\n\n{@code clazz}に定義されたsetterのリストを取得する。\n<p/>\nsetterが一つも定義されていない場合は空のリストを返す。\n\n**パラメータ:**\n- `clazz` - 取得対象のクラス\n\n**戻り値:**\n{@code clazz}に定義されたセッタのリスト\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getSetterMethod",
+      "level": 3,
+      "content": "```java\npublic static Method getSetterMethod(Class<?> targetClass, String propertyName)\n```\n\nsetterメソッドを検索する。\n\n**パラメータ:**\n- `targetClass` - ターゲットのクラス\n- `propertyName` - プロパティ名\n\n**戻り値:**\nsetterメソッド\n\n**例外:**\n- `RuntimeException` - {@code propertyName}に対応するsetterがない場合\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "getGetterMethod",
+      "level": 3,
+      "content": "```java\npublic static Method getGetterMethod(Class<?> targetClass, String propertyName)\n```\n\ngetterメソッドを検索する。\n\n**パラメータ:**\n- `targetClass` - ターゲットのクラス\n- `propertyName` - プロパティ名\n\n**戻り値:**\ngetterメソッド\n\n**例外:**\n- `RuntimeException` - {@code propertyName}に対応するgetterがない場合\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getGetterMethodName",
+      "level": 3,
+      "content": "```java\npublic static String getGetterMethodName(String propertyName)\n```\n\nプロパティ名からgetterメソッド名を取得する。\n\n**パラメータ:**\n- `propertyName` - プロパティ名\n\n**戻り値:**\ngetterメソッド名\n\n**例外:**\n- `IllegalArgumentException` - {@code propertyName}が{@code null}か空文字である場合\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "getPropertyNameFromGetter",
+      "level": 3,
+      "content": "```java\npublic static String getPropertyNameFromGetter(Method method)\n```\n\ngetterメソッドからプロパティ名を取得する。\n<p/>\n\n**パラメータ:**\n- `method` - getterメソッド\n\n**戻り値:**\nプロパティ名\n\n**例外:**\n- `IllegalArgumentException` - {@code method}の名前が\"get\"で開始していない場合\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "getGetterMethods",
+      "level": 3,
+      "content": "```java\npublic static List<Method> getGetterMethods(Class<?> clazz)\n```\n\nクラスにあるgetterのリストを取得する。\n<p/>\n{@link Object#getClass()}は取得対象から除く。\n<p/>\ngetterが一つも定義されていない場合は空のリストを返す。\n\n**パラメータ:**\n- `clazz` - 取得対象のクラス\n\n**戻り値:**\nクラスにあるgetterのリスト\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "getProperty",
+      "level": 3,
+      "content": "```java\npublic static Object getProperty(Object object, String propertyName)\n```\n\nオブジェクトからプロパティの値を取得する。\n\n**パラメータ:**\n- `object` - {@link Map}、またはプロパティ名のgetterを備えたオブジェクト\n- `propertyName` - プロパティ名\n\n**戻り値:**\nプロパティの値\n\n**例外:**\n- `IllegalArgumentException` - <ul>\n    <li>{@code object}がnullである場合</li>\n    <li>{@code propertyName}がnullか空文字である場合</li>\n    <li>{@code propertyName}に対応する、getterメソッドが定義されたプロパティがない場合</li>\n</ul>\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getPropertyIfExists",
+      "level": 3,
+      "content": "```java\npublic static Object getPropertyIfExists(Object object, String propertyName)\n```\n\nオブジェクトに、指定したプロパティが存在する場合に値を取得する。\n<br />\nプロパティが存在しなかった場合は{@code null}を返す。\n\n**パラメータ:**\n- `object` - {@link Map}またはプロパティ名のgetterを備えたオブジェクト\n- `propertyName` - プロパティ名\n\n**戻り値:**\nプロパティの値\n<ul>\n    <li>{@code object}がnullである場合</li>\n    <li>{@code propertyName}が{@code null}か空文字である場合</li>\n</ul>\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "getProperty",
+      "level": 3,
+      "content": "```java\nprivate static Object getProperty(Object object, String propertyName, boolean throwException)\n```\n\nオブジェクトからプロパティの値を取得する。\n<br />\nthrowException が false の場合、プロパティが存在しなかった場合に{@code null}を返す。 <br />\nthrowException が true の場合、そうでなかった場合には IllegalArgumentException を送出する。\n\n**パラメータ:**\n- `object` - オブジェクト。Mapまたはプロパティ名のgetterを備えたオブジェクト\n- `propertyName` - プロパティ名\n- `throwException` - プロパティが存在しなかった場合に例外を送出するか否かを指定するフラグ\n\n**戻り値:**\nプロパティの値\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "createExceptionsClassList",
+      "level": 3,
+      "content": "```java\npublic static List<Class<? extends RuntimeException>> createExceptionsClassList(List<String> originalExceptions)\n```\n\n例外の名称のリストから例外クラスのリストを生成する。\n<p/>\n指定された{@literal List<String>}の各要素を\n{@literal Class<? extends RuntimeException>}に変換し返却する。\n<p/>\n例外クラスは、{@code originalExceptions}の文字列クラス名の格納順にリストに格納されて返される。\n<p/>\n{@code originalExceptions}が空の場合は、空のリストを返す。\n\n**パラメータ:**\n- `originalExceptions` - 例外クラス名リスト。({@literal List<String>})\n\n**戻り値:**\n例外クラスリスト。({@literal List<Class<? extends RuntimeException>>})\n\n**例外:**\n- `RuntimeException` - 要素内の文字列クラス名が、RuntimeExceptionのサブクラス以外の場合\n\n---",
+      "id": "s26"
+    }
+  ],
+  "id": "javadoc-nablarch-core-util-ObjectUtil"
+}

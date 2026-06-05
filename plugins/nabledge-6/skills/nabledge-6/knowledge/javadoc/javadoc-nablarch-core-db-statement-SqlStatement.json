@@ -1,0 +1,98 @@
+{
+  "title": "interface SqlStatement",
+  "content": "**パッケージ:** nablarch.core.db.statement\n\n---\n\n```java\npublic interface SqlStatement\n```\n\nSQL文を実行するインタフェース。\n<p/>\n本インタフェースでは、JDBC標準SQL(バインド変数が「?」)と拡張SQL(バインド変数が名前付き変数)で共通となるインタフェースを定義している。\n<p/>\nこのクラスはリソースを解放する必要があるが、リソースの解放処理は{@link nablarch.core.db.connection.TransactionManagerConnection#terminate()}で行われるため、\nStatementを明示的にクローズする必要はない。\n\n**作成者:** Hisaaki Sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\nvoid close()\n```\n\n{@link java.sql.PreparedStatement#close}のラッパー。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "isClosed",
+      "level": 3,
+      "content": "```java\nboolean isClosed()\n```\n\nStatementがクローズされているか否か。\n\n**戻り値:**\nこのStatementオブジェクトがクローズされている場合は {@code true}、まだオープンしている場合は {@code false}\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "executeBatch",
+      "level": 3,
+      "content": "```java\nint[] executeBatch()\n```\n\n{@link java.sql.PreparedStatement#executeBatch}のラッパー。\n\n**戻り値:**\n更新件数\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "getBatchSize",
+      "level": 3,
+      "content": "```java\nint getBatchSize()\n```\n\nバッチサイズを取得する。\n\n**戻り値:**\nサイズ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "setJdbcTransactionTimeoutHandler",
+      "level": 3,
+      "content": "```java\nvoid setJdbcTransactionTimeoutHandler(JdbcTransactionTimeoutHandler jdbcTransactionTimeoutHandler)\n```\n\nトランザクションタイムアウトタイマーを設定する。\n<p/>\n本設定値を省略した場合、トランザクションのタイムアウト処理は行われない。\n\n**パラメータ:**\n- `jdbcTransactionTimeoutHandler` - トランザクションタイムアウトタイマー\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getConnection",
+      "level": 3,
+      "content": "```java\nAppDbConnection getConnection()\n```\n\nStatementを生成した{@link AppDbConnection}を取得する。\n\n**戻り値:**\nデータベース接続オブジェクト\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getFetchSize",
+      "level": 3,
+      "content": "```java\nint getFetchSize()\n```\n\n{@link java.sql.PreparedStatement#getFetchSize}のラッパー。\n\n**戻り値:**\nフェッチする行数\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setFetchSize",
+      "level": 3,
+      "content": "```java\nvoid setFetchSize(int rows)\n```\n\n{@link java.sql.PreparedStatement#setFetchSize}のラッパー。\n\n**パラメータ:**\n- `rows` - フェッチする行数\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getUpdateCount",
+      "level": 3,
+      "content": "```java\nint getUpdateCount()\n```\n\n{@link java.sql.PreparedStatement#getUpdateCount}のラッパー。\n\n**戻り値:**\n更新件数\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setQueryTimeout",
+      "level": 3,
+      "content": "```java\nvoid setQueryTimeout(int seconds)\n```\n\n{@link java.sql.PreparedStatement#setQueryTimeout}のラッパー。\n\n**パラメータ:**\n- `seconds` - タイムアウト時間\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getQueryTimeout",
+      "level": 3,
+      "content": "```java\nint getQueryTimeout()\n```\n\n{@link java.sql.PreparedStatement#getQueryTimeout}のラッパー。\n\n**戻り値:**\nタイムアウト時間\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getMaxRows",
+      "level": 3,
+      "content": "```java\nint getMaxRows()\n```\n\n{@link java.sql.PreparedStatement#getMaxRows}のラッパー。\n\n**戻り値:**\nこの Statement オブジェクトによって生成される{@link java.sql.ResultSet}オブジェクトの現在の最大行数。ゼロは無制限を意味する。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setMaxRows",
+      "level": 3,
+      "content": "```java\nvoid setMaxRows(int max)\n```\n\n{@link java.sql.PreparedStatement#setMaxRows}のラッパー。\n\n**パラメータ:**\n- `max` - 新しい最大行数の制限値。ゼロは無制限を意味する。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "clearBatch",
+      "level": 3,
+      "content": "```java\nvoid clearBatch()\n```\n\n{@link java.sql.PreparedStatement#clearBatch}のラッパー。\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-core-db-statement-SqlStatement"
+}

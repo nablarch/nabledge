@@ -1,0 +1,98 @@
+{
+  "title": "class SessionConcurrentAccessHandler",
+  "content": "**パッケージ:** nablarch.fw.web.handler\n\n**実装されたインタフェース:**\n- Handler<Object,Object>\n\n---\n\n```java\npublic class SessionConcurrentAccessHandler\nimplements Handler<Object,Object>\n```\n\nセッションスコープに対する並行アクセス制御を行うハンドラ。\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n**非推奨:** 本ハンドラは、{@link nablarch.common.web.session.SessionStore}を用いてセッション管理を行う\n            {@link nablarch.common.web.session.SessionStoreHandler}に置き換わりました。  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "concurrentAccessPolicy",
+      "level": 3,
+      "content": "```java\nprivate ConcurrentAccessPolicy concurrentAccessPolicy\n```\n\nセッションスコープ変数に対する並行アクセス同期ポリシー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "conflictWarningMessageId",
+      "level": 3,
+      "content": "```java\nprivate String conflictWarningMessageId\n```\n\nセッションへの書き込みの際に競合が発生した場合に表示されるメッセージのID\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "THROWS_ON_SESSION_WRITE_CONFLICT",
+      "level": 3,
+      "content": "```java\nprivate static final ThreadLocal<Boolean> THROWS_ON_SESSION_WRITE_CONFLICT\n```\n\nセッション変更の書き戻しに失敗した場合に実行時例外を送出するか否か\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(Object req, ExecutionContext ctx)\n```\n\n{@inheritDoc}\nこのハンドラの実装では、各並行アクセスポリシーを実装したMapWrapperによって\n実行コンテキスト上のセッションスコープをラップし、同期アクセス制御を開始する。\nその後、後続ハンドラに処理を委譲する。\n\n同期制御はこのハンドラの終了とともに停止する。\nそのため、JSPサーブレットからのセッション書込みを同期対象に含めるには、\n本ハンドラをレスポンスハンドラより上位に配置する必要がある。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "manageSessionRWConfliction",
+      "level": 3,
+      "content": "```java\nprivate void manageSessionRWConfliction(ExecutionContext ctx, RuntimeException e)\n```\n\nセッション書き込みの競合が発生した旨を知らせるワーニングを追加する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n- `e` - RuntimeException\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setConcurrentAccessPolicy",
+      "level": 3,
+      "content": "```java\npublic SessionConcurrentAccessHandler setConcurrentAccessPolicy(String policyName)\n                                                         throws IllegalArgumentException\n```\n\nセッションスコープ変数に対する並行アクセス同期ポリシーを定義する。\n<p>\n補足：<br>\nversion 1.5.0以降では、\"CONCURRENT\" のみ有効。本メソッドは互換性のために残っている。\n</p>\n\n**パラメータ:**\n- `policyName` - 平行アクセス同期ポリシーの名称(version 1.5.0以降では、\"CONCURRENT\" のみ有効)\n\n**戻り値:**\nこのオブジェクト自体\n\n**例外:**\n- `IllegalArgumentException` - 上記以外の文字列を指定した場合。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getConcurrentAccessPolicy",
+      "level": 3,
+      "content": "```java\npublic ConcurrentAccessPolicy getConcurrentAccessPolicy()\n```\n\n並行アクセス同期ポリシーを返す。\n<pre>\n</pre>\n\n**戻り値:**\n現状のセッションスコープ変数に対する並行アクセス同期ポリシー。\nversion 1.5.0以降では、{@link ConcurrentAccessPolicy.CONCURRENT}が常に返却される。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setConflictWarningMessageId",
+      "level": 3,
+      "content": "```java\npublic void setConflictWarningMessageId(String messageId)\n```\n\nセッションへの書き込みの際に競合が発生した場合に表示される文言の\nメッセージIDを設定する。\n\n**パラメータ:**\n- `messageId` - メッセージID\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "lockSession",
+      "level": 3,
+      "content": "```java\npublic static void lockSession(Map<String,Object> session)\n```\n\nセッションオブジェクトに対する排他ロックを獲得する。\n\n**パラメータ:**\n- `session` - セッションオブジェクト\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "unlockSession",
+      "level": 3,
+      "content": "```java\npublic static void unlockSession(Map<String,Object> session)\n```\n\nカレントスレッドがセッションオブジェクトに対する排他ロックを\n保持しているばあい、それを開放する。\n\n**パラメータ:**\n- `session` - セッションオブジェクト\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getSessionLock",
+      "level": 3,
+      "content": "```java\nprivate static Lock getSessionLock(Map<String,Object> session)\n```\n\nカレントスレッドが保持しているセッションオブジェクトに対する排他ロックを返す。\n\n**パラメータ:**\n- `session` - セッションオブジェクト\n\n**戻り値:**\nセッションオブジェクトに対する排他ロック\n         (保持していない場合はnullを返す。)\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setThrowsErrorOnSessionWriteConflict",
+      "level": 3,
+      "content": "```java\npublic static void setThrowsErrorOnSessionWriteConflict(boolean throwsError)\n```\n\nセッション変更の書き戻しに失敗した場合に実行時例外を送出するか否かを設定する。\n<pre>\n明示的に設定しない場合のデフォルトはfalse。\nこの場合、エラー画面にワーニングが表示されるものの、DBのトランザクションは正常にコミットされる。\n</pre>\n\n**パラメータ:**\n- `throwsError` - 例外を送出する場合はtrue\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-SessionConcurrentAccessHandler"
+}

@@ -47,7 +47,7 @@ public HttpResponse create(HttpRequest request, ExecutionContext context) {
 
 この実装のポイント
 
-* OnDoubleSubmission を付与して、
+* [OnDoubleSubmission](../../javadoc/javadoc-nablarch-common-web-token-OnDoubleSubmission.md) を付与して、
   業務アクションメソッドが二重に実行された場合にエラーページへ遷移させる。詳細は [二重サブミットを防ぐ](../../component/libraries/libraries-tag.md#二重サブミットを防ぐ) を参照。
 
 > **Tip:**

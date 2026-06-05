@@ -1,0 +1,80 @@
+{
+  "title": "class DomainValidationHelper",
+  "content": "**パッケージ:** nablarch.core.validation.domain\n\n---\n\n```java\npublic class DomainValidationHelper\n```\n\nドメイン定義によるバリデーションをサポートするヘルパークラス。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "domainAnnotation",
+      "level": 3,
+      "content": "```java\nprivate Class<? extends Annotation> domainAnnotation\n```\n\nドメインを表すアノテーションのクラス\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "setDomainAnnotation",
+      "level": 3,
+      "content": "```java\npublic void setDomainAnnotation(String fqcn)\n```\n\nPJ毎に作成するドメインを表すアノテーションのFQCNを設定する。\n<p/>\n「ドメイン定義を表すEnum」と「ドメインを表すアノテーション」を1対1でPJ毎に作成し、\n本プロパティに「ドメインを表すアノテーション」のFQCNを設定する。\n\n**パラメータ:**\n- `fqcn` - PJ毎に作成するドメインを表すアノテーションのFQCN\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "getDomainAnnotation",
+      "level": 3,
+      "content": "```java\npublic Class<? extends Annotation> getDomainAnnotation()\n```\n\nドメインを表すアノテーションのクラスを取得する。\n<p/>\nドメインを表すアノテーションのクラスが設定されていない場合は、{@link IllegalStateException}を送出する。\n\n**戻り値:**\nドメインを表すアノテーションのクラス\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "isDomainAnnotation",
+      "level": 3,
+      "content": "```java\npublic boolean isDomainAnnotation(Annotation annotation)\n```\n\n指定されたアノテーションがドメインを表すアノテーションであるか否かを判定する。\n\n**パラメータ:**\n- `annotation` - アノテーション\n\n**戻り値:**\n指定されたアノテーションがドメインを表すアノテーションである場合はtrue、それ以外はfalse\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getConvertorAnnotation",
+      "level": 3,
+      "content": "```java\npublic Annotation getConvertorAnnotation(Annotation annotation)\n```\n\nドメイン定義に指定されたコンバータのアノテーションを取得する。\n\n**パラメータ:**\n- `annotation` - ドメインを表すアノテーション\n\n**戻り値:**\nドメイン定義に指定されたコンバータのアノテーション。コンバータのアノテーションが指定されていない場合はnull\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getValidatorAnnotations",
+      "level": 3,
+      "content": "```java\npublic List<Annotation> getValidatorAnnotations(Annotation annotation)\n```\n\nドメイン定義に指定されたバリデータのアノテーションを取得する。\n\n**パラメータ:**\n- `annotation` - ドメインを表すアノテーション\n\n**戻り値:**\nドメイン定義に指定されたバリデータのアノテーション\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getDomainDefinition",
+      "level": 3,
+      "content": "```java\nprotected DomainDefinition getDomainDefinition(Annotation annotation)\n```\n\nアノテーションのvalue属性に指定された値を取得する。\n<p/>\nアノテーションの属性に指定された値が取得できない場合は、 {@link IllegalArgumentException}を送出する。\n\n**パラメータ:**\n- `annotation` - アノテーション\n\n**戻り値:**\nアノテーションのvalue属性に指定された値\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getConvertorAnnotation",
+      "level": 3,
+      "content": "```java\npublic static Annotation getConvertorAnnotation(Enum<?> domainEnum)\n```\n\nドメイン定義に指定されたコンバータのアノテーションを取得する。\n<p/>\n{@link DomainDefinition#getConvertorAnnotation()}の実装にて本メソッドを使用する。\n実装例を以下に示す。\n<pre>\npublic Annotation getConvertorAnnotation() {\n    return DomainValidationHelper.getConvertorAnnotation(this);\n}\n</pre>\n\n**パラメータ:**\n- `domainEnum` - ドメイン定義\n\n**戻り値:**\nドメイン定義に指定されたコンバータのアノテーション。コンバータのアノテーションが指定されていない場合はnull\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getValidatorAnnotations",
+      "level": 3,
+      "content": "```java\npublic static List<Annotation> getValidatorAnnotations(Enum<?> domainEnum)\n```\n\nドメイン定義に指定されたバリデータのアノテーションを取得する。\n<p/>\n{@link DomainDefinition#getValidatorAnnotations()}の実装にて本メソッドを使用する。\n実装例を以下に示す。\n<pre>\npublic List<Annotation> getValidatorAnnotations() {\n    return DomainValidationHelper.getValidatorAnnotations(this);\n}\n</pre>\n\n**パラメータ:**\n- `domainEnum` - ドメイン定義\n\n**戻り値:**\nドメイン定義に指定されたバリデータのアノテーション\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getAnnotations",
+      "level": 3,
+      "content": "```java\nprivate static List<Annotation> getAnnotations(Enum<?> targetEnum, Class<? extends Annotation> targetAnnotationClass)\n```\n\nEnumに指定されたアノテーションを取得する。\n\n**パラメータ:**\n- `targetEnum` - Enum\n- `targetAnnotationClass` - 取得対象のアノテーションを表すクラス\n\n**戻り値:**\nEnumに指定されたアノテーション\n\n---",
+      "id": "s12"
+    }
+  ],
+  "id": "javadoc-nablarch-core-validation-domain-DomainValidationHelper"
+}

@@ -54,7 +54,7 @@
 
 >   * >     フィールド名を文字列で指定する必要があり、IDEの補完も使えないなど、実装時にミスを起こしやすい。
 >   * >     アプリケーション側で、Mapから取り出した値をダウンキャストする必要がある。(誤ると、実行時に例外が送出される。)
-> * >   データとJavaオブジェクトのマッピングに BeanUtil を使用していないため、他の機能とはマッピング方法が異なる。
+> * >   データとJavaオブジェクトのマッピングに [BeanUtil](../../javadoc/javadoc-nablarch-core-beans-BeanUtil.md) を使用していないため、他の機能とはマッピング方法が異なる。
 > * >   出力対象の Map の扱い方がフォーマットによって異なる。このため、同じデータを複数のフォーマットに対応させる機能を使用した場合に、フォーマットによっては例外が発生するなど正常に動作しない場合がある。
 
 >   例えば、下のケースで問題がある。
@@ -65,10 +65,10 @@
 >   * >     JSON：必須の例外を送出
 > * >   出力対象のデータによってはJSONの仕様を満たせない場合がある。
 
->   例えば、 数値型 や 真偽値型 を使用し、出力対象のデータ型がこれらの型に対応していない場合に不正なJSONが出力される。
+>   例えば、 [数値型](../../javadoc/javadoc-nablarch-core-dataformat-convertor-datatype-JsonNumber.md) や [真偽値型](../../javadoc/javadoc-nablarch-core-dataformat-convertor-datatype-JsonBoolean.md) を使用し、出力対象のデータ型がこれらの型に対応していない場合に不正なJSONが出力される。
 
 >   例：数値型を指定し、出力対象が「data」などの文字列の場合、{"number":data}のような不正なJSONが出力される。
-> * >   データ形式によって使用できる データタイプ の実装クラスが異なるため拡張しづらい。また、この設定の誤りは実行時まで検知できない。
+> * >   データ形式によって使用できる [データタイプ](../../javadoc/javadoc-nablarch-core-dataformat-convertor-datatype-DataType.md) の実装クラスが異なるため拡張しづらい。また、この設定の誤りは実行時まで検知できない。
 
 > このため原則本機能はやむを得ない場合を除き非推奨とする。
 > なお、 [メッセージング編](../../processing-pattern/db-messaging/db-messaging-messaging.md#メッセージング編) は、内部で本機能を使用しているため、代替機能を使用できない。
@@ -162,7 +162,7 @@ type    = "02"
 
 データレコードの内容をファイルに出力する方法について説明する。
 
-ファイルへのデータ出力は、 FileRecordWriterHolder を使用することで実現できる。
+ファイルへのデータ出力は、 [FileRecordWriterHolder](../../javadoc/javadoc-nablarch-common-io-FileRecordWriterHolder.md) を使用することで実現できる。
 
 以下に実装例を示す。
 
@@ -170,8 +170,8 @@ type    = "02"
 
 * ファイルに書き込むデータは Map として準備する。
 * Map のキー値は、 [入出力データのフォーマットを定義する](../../component/libraries/libraries-data-format.md#入出力データのフォーマットを定義する) で定義したフィールド名を設定する。(大文字、小文字は区別しない)
-* FileRecordWriterHolder の open メソッドを呼び出して、ファイルリソースを書き込み可能状態にする。
-* FileRecordWriterHolder の write メソッドを呼び出して、データをファイルに書き込む。
+* [FileRecordWriterHolder](../../javadoc/javadoc-nablarch-common-io-FileRecordWriterHolder.md) の open メソッドを呼び出して、ファイルリソースを書き込み可能状態にする。
+* [FileRecordWriterHolder](../../javadoc/javadoc-nablarch-common-io-FileRecordWriterHolder.md) の write メソッドを呼び出して、データをファイルに書き込む。
 
 ```java
 // 書き込み対象のデータ
@@ -187,16 +187,16 @@ FileRecordWriterHolder.write(user, "user.csv");
 ```
 
 > **Tip:**
-> FileRecordWriterHolder を使用するためには、
+> [FileRecordWriterHolder](../../javadoc/javadoc-nablarch-common-io-FileRecordWriterHolder.md) を使用するためには、
 > [フォーマット定義ファイル](../../component/libraries/libraries-data-format.md#入出力データのフォーマットを定義する) の配置ディレクトリや出力先ディレクトリを
 > [ファイルパス管理](../../component/libraries/libraries-file-path-management.md#ファイルパス管理) に設定する必要がある。
 
-> 必要となるディレクトリの設定値については、 FileRecordWriterHolder を参照。
+> 必要となるディレクトリの設定値については、 [FileRecordWriterHolder](../../javadoc/javadoc-nablarch-common-io-FileRecordWriterHolder.md) を参照。
 
 > **Important:**
-> FileRecordWriterHolder で開いたファイルリソースは、
+> [FileRecordWriterHolder](../../javadoc/javadoc-nablarch-common-io-FileRecordWriterHolder.md) で開いたファイルリソースは、
 > [出力ファイル開放ハンドラ](../../component/handlers/handlers-file-record-writer-dispose-handler.md#出力ファイル開放ハンドラ) にて自動的に開放される。
-> このため、 FileRecordWriterHolder を使用する場合には、
+> このため、 [FileRecordWriterHolder](../../javadoc/javadoc-nablarch-common-io-FileRecordWriterHolder.md) を使用する場合には、
 > 必ず [出力ファイル開放ハンドラ](../../component/handlers/handlers-file-record-writer-dispose-handler.md#出力ファイル開放ハンドラ) をハンドラキュー上に設定すること。
 
 > **Important:**
@@ -216,25 +216,25 @@ FileRecordWriterHolder.write(user, "user.csv");
 > </component>
 > ```
 
-> 出力に使用するバッファサイズは FileRecordWriterHolder
+> 出力に使用するバッファサイズは [FileRecordWriterHolder](../../javadoc/javadoc-nablarch-common-io-FileRecordWriterHolder.md)
 > の open メソッドで指定できる。
 
 ### ファイルダウンロードで使用する
 
 データレコードの内容をファイルダウンロード形式でクライアントに応答する方法について解説する。
 
-ファイルダウンロード形式のレスポンスは、 DataRecordResponse を使用することで実現できる。
+ファイルダウンロード形式のレスポンスは、 [DataRecordResponse](../../javadoc/javadoc-nablarch-common-web-download-DataRecordResponse.md) を使用することで実現できる。
 
 以下に実装例を示す。
 
 ポイント
 
-* DataRecordResponse 生成時に、
+* [DataRecordResponse](../../javadoc/javadoc-nablarch-common-web-download-DataRecordResponse.md) 生成時に、
   フォーマット定義ファイルが格納された論理パス名と、フォーマット定義ファイル名を指定する。
-* DataRecordResponse#write を使って、
+* [DataRecordResponse#write](../../javadoc/javadoc-nablarch-common-web-download-DataRecordResponse.md) を使って、
   データを出力する。(複数のレコードをダウンロードする場合には、繰り返し出力する)
 * Content-Type 及び Content-Disposition を設定する。
-* 業務アクションから DataRecordResponse を返却する。
+* 業務アクションから [DataRecordResponse](../../javadoc/javadoc-nablarch-common-web-download-DataRecordResponse.md) を返却する。
 
 ```java
 public HttpResponse download(HttpRequest request, ExecutionContext context) {
@@ -283,14 +283,14 @@ public HttpResponse download(HttpRequest request, ExecutionContext context) {
 
 ポイント
 
-* HttpRequest#getPart を呼び出してアップロードされたファイルを取得する。
-* HttpRequest#getPart の引数には、パラメータ名を指定する。
-* FilePathSetting からフォーマット定義ファイルの File オブジェクトを取得する。
-* フォーマット定義ファイルを指定し、 FormatterFactory
-  から DataRecordFormatter を生成する。
-* DataRecordFormatter にアップロードファイルを読み込むための InputStream を設定する。
+* [HttpRequest#getPart](../../javadoc/javadoc-nablarch-fw-web-HttpRequest.md) を呼び出してアップロードされたファイルを取得する。
+* [HttpRequest#getPart](../../javadoc/javadoc-nablarch-fw-web-HttpRequest.md) の引数には、パラメータ名を指定する。
+* [FilePathSetting](../../javadoc/javadoc-nablarch-core-util-FilePathSetting.md) からフォーマット定義ファイルの File オブジェクトを取得する。
+* フォーマット定義ファイルを指定し、 [FormatterFactory](../../javadoc/javadoc-nablarch-core-dataformat-FormatterFactory.md)
+  から [DataRecordFormatter](../../javadoc/javadoc-nablarch-core-dataformat-DataRecordFormatter.md) を生成する。
+* [DataRecordFormatter](../../javadoc/javadoc-nablarch-core-dataformat-DataRecordFormatter.md) にアップロードファイルを読み込むための InputStream を設定する。
   設定する InputStream の実装クラスは、 mark/reset がサポートされている必要がある。
-* DataRecordFormatter のAPIを呼び出し、アップロードファイルのレコードを読み込む。
+* [DataRecordFormatter](../../javadoc/javadoc-nablarch-core-dataformat-DataRecordFormatter.md) のAPIを呼び出し、アップロードファイルのレコードを読み込む。
 
 ```java
 public HttpResponse upload(HttpRequest req, ExecutionContext ctx) {
@@ -329,7 +329,7 @@ public HttpResponse upload(HttpRequest req, ExecutionContext ctx) {
 
 アップロードヘルパーを使用したアップロードファイルの読み込み
 
-アップロードヘルパー( UploadHelper )を使用すると、
+アップロードヘルパー( [UploadHelper](../../javadoc/javadoc-nablarch-fw-web-upload-util-UploadHelper.md) )を使用すると、
 ファイルの読み込み、バリデーション、データベースへの保存を簡易的に実行出来る。
 
 しかし、この機能では以下の制限(デメリット)があるため、 [汎用データフォーマット(本機能)のみを使ったアップロードファイルの読み込み](../../component/libraries/libraries-data-format.md#アップロードしたファイルを読み込む)
@@ -342,13 +342,13 @@ public HttpResponse upload(HttpRequest req, ExecutionContext ctx) {
 
 ポイント
 
-* HttpRequest#getPart を呼び出してアップロードされたファイルを取得する。
-* HttpRequest#getPart の引数には、パラメータ名を指定する。
-* 取得したアップロードファイルを元に UploadHelper を生成する。
-* UploadHelper#applyFormat を使って、フォーマット定義ファイルを設定する。
-* setUpMessageIdOnError を使って、バリデーションエラー用のメッセージIDを設定する。
-* validateWith を使って、バリデーションを実行するJava Beansクラスとバリデーションメソッドを設定する。
-* importWith を使って、バリデーション実行後のJava Beansオブジェクトの内容をデータベースに登録する。
+* [HttpRequest#getPart](../../javadoc/javadoc-nablarch-fw-web-HttpRequest.md) を呼び出してアップロードされたファイルを取得する。
+* [HttpRequest#getPart](../../javadoc/javadoc-nablarch-fw-web-HttpRequest.md) の引数には、パラメータ名を指定する。
+* 取得したアップロードファイルを元に [UploadHelper](../../javadoc/javadoc-nablarch-fw-web-upload-util-UploadHelper.md) を生成する。
+* [UploadHelper#applyFormat](../../javadoc/javadoc-nablarch-fw-web-upload-util-UploadHelper.md) を使って、フォーマット定義ファイルを設定する。
+* [setUpMessageIdOnError](../../javadoc/javadoc-nablarch-fw-web-upload-util-BulkValidator.md) を使って、バリデーションエラー用のメッセージIDを設定する。
+* [validateWith](../../javadoc/javadoc-nablarch-fw-web-upload-util-BulkValidator.md) を使って、バリデーションを実行するJava Beansクラスとバリデーションメソッドを設定する。
+* [importWith](../../javadoc/javadoc-nablarch-fw-web-upload-util-BulkValidationResult.md) を使って、バリデーション実行後のJava Beansオブジェクトの内容をデータベースに登録する。
 
 ```java
 public HttpResponse upload(HttpRequest req, ExecutionContext ctx) {
@@ -474,7 +474,7 @@ JSON
 > 本機能でXMLを入力する場合、DTDをデフォルトで使用できない。DTDを使用したXMLを読み込もうとした場合、例外が発生する。
 > これは [XML外部実体参照(XXE)](https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing) を防止するための措置である。
 
-読み込み対象となるXMLが信頼できる場合は、 XmlDataParser の `allowDTD` プロパティを使用してDTDの使用を許可できる。
+読み込み対象となるXMLが信頼できる場合は、 [XmlDataParser](../../javadoc/javadoc-nablarch-core-dataformat-XmlDataParser.md) の `allowDTD` プロパティを使用してDTDの使用を許可できる。
 使用方法は下記の通り。
 
 `XmlDataParser` という名前で明示的にコンポーネント設定ファイルに設定を記載し、DTDの使用を許可する。
@@ -626,9 +626,9 @@ propertiesファイルには、「置き換え前の文字=置き換え後の文
 
 ポイント
 
-* CharacterReplacementManager をコンポーネント名 `characterReplacementManager` で設定する。
-* configList プロパティにリスト形式で CharacterReplacementConfig を設定する。
-* 複数のpropertiesファイルを定義する場合は、 typeName プロパティに異なる名前を設定する。
+* [CharacterReplacementManager](../../javadoc/javadoc-nablarch-core-dataformat-CharacterReplacementManager.md) をコンポーネント名 `characterReplacementManager` で設定する。
+* [configList](../../javadoc/javadoc-nablarch-core-dataformat-CharacterReplacementManager.md) プロパティにリスト形式で [CharacterReplacementConfig](../../javadoc/javadoc-nablarch-core-dataformat-CharacterReplacementConfig.md) を設定する。
+* 複数のpropertiesファイルを定義する場合は、 [typeName](../../javadoc/javadoc-nablarch-core-dataformat-CharacterReplacementConfig.md) プロパティに異なる名前を設定する。
 
 ```xml
 <component name="characterReplacementManager"
@@ -654,7 +654,7 @@ propertiesファイルには、「置き換え前の文字=置き換え後の文
 
 初期化コンポーネントの設定
 
-上記で設定した CharacterReplacementManager を初期化対象のリストに設定する。
+上記で設定した [CharacterReplacementManager](../../javadoc/javadoc-nablarch-core-dataformat-CharacterReplacementManager.md) を初期化対象のリストに設定する。
 
 ```xml
 <component name="initializer"
@@ -700,7 +700,7 @@ replacement の引数には、上記で設定した置き換えルールの type
 
 以下に手順を示す。
 
-1. フィールドタイプを処理するための DataType 実装クラスを作成する。
+1. フィールドタイプを処理するための [DataType](../../javadoc/javadoc-nablarch-core-dataformat-convertor-datatype-DataType.md) 実装クラスを作成する。
 2. 追加したフィールドタイプを有効にするため、フォーマットに応じたファクトリの継承クラスを作成する。
 3. 作成したファクトリクラスを、フォーマットに応じた設定クラスのプロパティに設定する。
 
@@ -708,7 +708,7 @@ replacement の引数には、上記で設定した置き換えルールの type
 
 フィールドタイプに対応したデータタイプ実装の追加
 
-DataType を実装したクラスを作成する。
+[DataType](../../javadoc/javadoc-nablarch-core-dataformat-convertor-datatype-DataType.md) を実装したクラスを作成する。
 
 > **Tip:**
 > 標準のフィールドタイプ実装は、 nablarch.core.dataformat.convertor.datatype パッケージ配下に配置されている。
@@ -723,10 +723,10 @@ DataType を実装したクラスを作成する。
 
 | フォーマット | ファクトリクラス名 |
 |---|---|
-| Fixed(固定長) | FixedLengthConvertorFactory |
-| Variable(可変長) | VariableLengthConvertorFactory |
-| JSON | JsonDataConvertorFactory |
-| XML | XmlDataConvertorFactory |
+| Fixed(固定長) | [FixedLengthConvertorFactory](../../javadoc/javadoc-nablarch-core-dataformat-convertor-FixedLengthConvertorFactory.md) |
+| Variable(可変長) | [VariableLengthConvertorFactory](../../javadoc/javadoc-nablarch-core-dataformat-convertor-VariableLengthConvertorFactory.md) |
+| JSON | [JsonDataConvertorFactory](../../javadoc/javadoc-nablarch-core-dataformat-convertor-JsonDataConvertorFactory.md) |
+| XML | [XmlDataConvertorFactory](../../javadoc/javadoc-nablarch-core-dataformat-convertor-XmlDataConvertorFactory.md) |
 
 Fixed(固定長)の場合の実装例を以下に示す。
 
@@ -750,10 +750,10 @@ public class CustomFixedLengthConvertorFactory extends FixedLengthConvertorFacto
 
 | フォーマット | 設定クラス名(コンポーネント名) | プロパティ名 |
 |---|---|---|
-| Fixed(固定長) | FixedLengthConvertorSetting (fixedLengthConvertorSetting) | fixedLengthConvertorFactory |
-| Variable(可変長) | VariableLengthConvertorSetting (variableLengthConvertorSetting) | variableLengthConvertorFactory |
-| JSON | JsonDataConvertorSetting (jsonDataConvertorSetting) | jsonDataConvertorFactory |
-| XML | XmlDataConvertorSetting (xmlDataConvertorSetting) | xmlDataConvertorFactory |
+| Fixed(固定長) | [FixedLengthConvertorSetting](../../javadoc/javadoc-nablarch-core-dataformat-convertor-FixedLengthConvertorSetting.md) (fixedLengthConvertorSetting) | [fixedLengthConvertorFactory](../../javadoc/javadoc-nablarch-core-dataformat-convertor-FixedLengthConvertorSetting.md) |
+| Variable(可変長) | [VariableLengthConvertorSetting](../../javadoc/javadoc-nablarch-core-dataformat-convertor-VariableLengthConvertorSetting.md) (variableLengthConvertorSetting) | [variableLengthConvertorFactory](../../javadoc/javadoc-nablarch-core-dataformat-convertor-VariableLengthConvertorSetting.md) |
+| JSON | [JsonDataConvertorSetting](../../javadoc/javadoc-nablarch-core-dataformat-convertor-JsonDataConvertorSetting.md) (jsonDataConvertorSetting) | [jsonDataConvertorFactory](../../javadoc/javadoc-nablarch-core-dataformat-convertor-JsonDataConvertorSetting.md) |
+| XML | [XmlDataConvertorSetting](../../javadoc/javadoc-nablarch-core-dataformat-convertor-XmlDataConvertorSetting.md) (xmlDataConvertorSetting) | [xmlDataConvertorFactory](../../javadoc/javadoc-nablarch-core-dataformat-convertor-XmlDataConvertorSetting.md) |
 
 Fixed(固定長)の場合の設定例を以下に示す。
 
@@ -781,15 +781,15 @@ Fixed(固定長)の場合の設定例を以下に示す。
 属性を持つ要素のコンテンツ名を変更するには、
 以下のクラスをコンポーネント設定ファイルに設定し、`contentName` プロパティに変更後のコンテンツ名をそれぞれ設定する。
 
-* XmlDataParser
-* XmlDataBuilder
+* [XmlDataParser](../../javadoc/javadoc-nablarch-core-dataformat-XmlDataParser.md)
+* [XmlDataBuilder](../../javadoc/javadoc-nablarch-core-dataformat-XmlDataBuilder.md)
 
 コンポーネント設定ファイルの設定例を以下に示す。
 
 ポイント
 
-* XmlDataParser のコンポーネント名は `XmlDataParser` とすること
-* XmlDataBuilder のコンポーネント名は `XmlDataBuilder` とすること
+* [XmlDataParser](../../javadoc/javadoc-nablarch-core-dataformat-XmlDataParser.md) のコンポーネント名は `XmlDataParser` とすること
+* [XmlDataBuilder](../../javadoc/javadoc-nablarch-core-dataformat-XmlDataBuilder.md) のコンポーネント名は `XmlDataBuilder` とすること
 
 ```xml
 <component name="XmlDataParser" class="nablarch.core.dataformat.XmlDataParser">

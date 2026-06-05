@@ -77,7 +77,7 @@ public class InnerProjectForm implements Serializable {
 この実装のポイント
 
 * 入れ子となったフォームに対しても  [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を実行するため、
-  @Required や @Domain
+  [@Required](../../javadoc/javadoc-nablarch-core-validation-ee-Required.md) や [@Domain](../../javadoc/javadoc-nablarch-core-validation-ee-Domain.md)
   などのバリデーション用のアノテーションを付与する。
 
 プロジェクト１つ分のフォームのリストをプロパティとして持つ親フォーム
@@ -325,16 +325,16 @@ public HttpResponse update(HttpRequest request, ExecutionContext context) {
 この実装のポイント
 
 * 基本的な実装方法は  [更新機能の作成：データベースを更新する業務アクションメソッドの作成](../../processing-pattern/web-application/web-application-getting-started-project-update.md#データベースの更新) と同様である。
-* UniversalDao#update を更新件数分実行する。
+* [UniversalDao#update](../../javadoc/javadoc-nablarch-common-dao-UniversalDao.md) を更新件数分実行する。
   排他制御エラーが発生した場合は全件の更新がロールバックされる。
 
   > **Tip:**
 > Exampleアプリケーションでは独自のエラー制御ハンドラを追加しているため、排他制御エラーにより OptimisticLockException が発生した場合、
   > 排他制御エラー画面へ遷移する。ハンドラによるエラー制御の作成方法は、 [ハンドラで例外クラスに対応したエラーページに遷移させる](../../processing-pattern/web-application/web-application-forward-error-page.md#ハンドラで共通の振る舞いを定義する) を参照。
-* UniversalDao には、エンティティのリストを引数に取る
-  UniversalDao#batchUpdate メソッドも用意されているが、
+* [UniversalDao](../../javadoc/javadoc-nablarch-common-dao-UniversalDao.md) には、エンティティのリストを引数に取る
+  [UniversalDao#batchUpdate](../../javadoc/javadoc-nablarch-common-dao-UniversalDao.md) メソッドも用意されているが、
   このメソッドは [バッチ実行](../../component/libraries/libraries-universal-dao.md#バッチ実行一括登録更新削除を行う) での使用を想定したものであり、排他制御を行わない。
-  排他制御が必要である場合は、 UniversalDao#update
+  排他制御が必要である場合は、 [UniversalDao#update](../../javadoc/javadoc-nablarch-common-dao-UniversalDao.md)
   を使用すること。
 
 完了画面の表示

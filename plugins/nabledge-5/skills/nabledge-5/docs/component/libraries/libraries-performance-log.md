@@ -71,17 +71,17 @@ performanceLogFormatter.format=\n\tpoint = [$point$] result = [$result$]\
 
 ### パフォーマンスログを出力する
 
-パフォーマンスログは、 PerformanceLogUtil を使用して出力する。
-PerformanceLogUtil は、
-処理の開始時に呼び出す PerformanceLogUtil#start と
-終了時に呼び出す PerformanceLogUtil#end
+パフォーマンスログは、 [PerformanceLogUtil](../../javadoc/javadoc-nablarch-core-log-app-PerformanceLogUtil.md) を使用して出力する。
+[PerformanceLogUtil](../../javadoc/javadoc-nablarch-core-log-app-PerformanceLogUtil.md) は、
+処理の開始時に呼び出す [PerformanceLogUtil#start](../../javadoc/javadoc-nablarch-core-log-app-PerformanceLogUtil.md) と
+終了時に呼び出す [PerformanceLogUtil#end](../../javadoc/javadoc-nablarch-core-log-app-PerformanceLogUtil.md)
 を提供する。
-PerformanceLogUtil は、
-PerformanceLogUtil#end
-が呼ばれた時点で、 PerformanceLogUtil#start
+[PerformanceLogUtil](../../javadoc/javadoc-nablarch-core-log-app-PerformanceLogUtil.md) は、
+[PerformanceLogUtil#end](../../javadoc/javadoc-nablarch-core-log-app-PerformanceLogUtil.md)
+が呼ばれた時点で、 [PerformanceLogUtil#start](../../javadoc/javadoc-nablarch-core-log-app-PerformanceLogUtil.md)
 で取得した日時とメモリ使用量を合わせて出力する。
 
-PerformanceLogUtil の使用例を下記に示す。
+[PerformanceLogUtil](../../javadoc/javadoc-nablarch-core-log-app-PerformanceLogUtil.md) の使用例を下記に示す。
 
 ```java
 // startメソッドでは、測定対象を識別するポイントを指定する。
@@ -100,9 +100,9 @@ PerformanceLogUtil.end(point, String.valueOf(searchResult.size()));
 ```
 
 > **Important:**
-> PerformanceLogUtil は、
+> [PerformanceLogUtil](../../javadoc/javadoc-nablarch-core-log-app-PerformanceLogUtil.md) は、
 > 測定対象を [実行時ID](../../component/libraries/libraries-log.md#ログのフォーマットを指定する) ＋ポイント名で一意に識別している。
-> このため、再帰呼び出しの中で PerformanceLogUtil
+> このため、再帰呼び出しの中で [PerformanceLogUtil](../../javadoc/javadoc-nablarch-core-log-app-PerformanceLogUtil.md)
 > を使用すると計測を実施出来ないため注意すること。
 
 ### パフォーマンスログの設定
@@ -113,7 +113,7 @@ PerformanceLogUtil.end(point, String.valueOf(searchResult.size()));
 
 performanceLogFormatter.className
 
-PerformanceLogFormatter を実装したクラス。
+[PerformanceLogFormatter](../../javadoc/javadoc-nablarch-core-log-app-PerformanceLogFormatter.md) を実装したクラス。
 差し替える場合に指定する。
 
 performanceLogFormatter.format
@@ -177,21 +177,21 @@ performanceLogFormatter.format=point:$point$ result:$result$ exe_time:$execution
 ### JSON形式の構造化ログとして出力する
 
 [JSON形式の構造化ログとして出力する](../../component/libraries/libraries-log.md#json形式の構造化ログとして出力する) 設定によりログをJSON形式で出力できるが、
-PerformanceLogFormatter では
+[PerformanceLogFormatter](../../javadoc/javadoc-nablarch-core-log-app-PerformanceLogFormatter.md) では
 パフォーマンスログの各項目はmessageの値に文字列として出力される。
 パフォーマンスログの各項目もJSONの値として出力するには、
-PerformanceJsonLogFormatter を使用する。
+[PerformanceJsonLogFormatter](../../javadoc/javadoc-nablarch-core-log-app-PerformanceJsonLogFormatter.md) を使用する。
 設定は、 [各種ログの設定](../../component/libraries/libraries-log.md#各種ログの設定) で説明したプロパティファイルに行う。
 
 記述ルール
 
-PerformanceJsonLogFormatter を用いる際に
+[PerformanceJsonLogFormatter](../../javadoc/javadoc-nablarch-core-log-app-PerformanceJsonLogFormatter.md) を用いる際に
 指定するプロパティは以下の通り。
 
 performanceLogFormatter.className `必須`
 
 JSON形式でログを出力する場合、
-PerformanceJsonLogFormatter を指定する。
+[PerformanceJsonLogFormatter](../../javadoc/javadoc-nablarch-core-log-app-PerformanceJsonLogFormatter.md) を指定する。
 
 performanceLogFormatter.targets
 
@@ -236,9 +236,9 @@ performanceLogFormatter.targetPoints
 performanceLogFormatter.structuredMessagePrefix
 
 フォーマット後のメッセージ文字列が JSON 形式に整形されていることを識別できるようにするために、メッセージの先頭に付与するマーカー文字列。
-メッセージの先頭にあるマーカー文字列が JsonLogFormatter に設定しているマーカー文字列と一致する場合、 JsonLogFormatter はメッセージを JSON データとして処理する。
+メッセージの先頭にあるマーカー文字列が [JsonLogFormatter](../../javadoc/javadoc-nablarch-core-log-basic-JsonLogFormatter.md) に設定しているマーカー文字列と一致する場合、 [JsonLogFormatter](../../javadoc/javadoc-nablarch-core-log-basic-JsonLogFormatter.md) はメッセージを JSON データとして処理する。
 デフォルトは `"$JSON$"` となる。
-変更する場合は、LogWriterの `structuredMessagePrefix` プロパティを使用して JsonLogFormatter にも同じ値を設定すること（LogWriterのプロパティについては [ログ出力の設定](../../component/libraries/libraries-log.md#ログ出力の設定) を参照）。
+変更する場合は、LogWriterの `structuredMessagePrefix` プロパティを使用して [JsonLogFormatter](../../javadoc/javadoc-nablarch-core-log-basic-JsonLogFormatter.md) にも同じ値を設定すること（LogWriterのプロパティについては [ログ出力の設定](../../component/libraries/libraries-log.md#ログ出力の設定) を参照）。
 
 記述例
 

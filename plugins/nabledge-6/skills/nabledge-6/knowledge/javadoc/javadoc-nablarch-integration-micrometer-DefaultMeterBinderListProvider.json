@@ -1,0 +1,62 @@
+{
+  "title": "class DefaultMeterBinderListProvider",
+  "content": "**パッケージ:** nablarch.integration.micrometer\n\n**実装されたインタフェース:**\n- MeterBinderListProvider\n- Disposable\n\n---\n\n```java\npublic class DefaultMeterBinderListProvider\nimplements MeterBinderListProvider, Disposable\n```\n\nデフォルトの{@link MeterBinder}リストを提供するクラス。\n<p>\n{@link MeterBinder}の中には{@link AutoCloseable}を実装したものがある（例：{@link JvmGcMetrics}）。<br>\nこのクラスは{@link Disposable}を実装しており、作成した{@link MeterBinder}の中に\n{@link AutoCloseable}を実装したものがある場合は、{@code close()}を呼ぶようになっている。\n</p>\n<p>\n{@link AutoCloseable}な{@link MeterBinder}を含むリストを返す独自の{@link MeterBinderListProvider}が必要な場合は、\nこのクラスを継承して{@link #createMeterBinderList()}をオーバーライドして作成することで\n{@code close()}の実装を省略できる。\n</p>\n\n**作成者:** Tanaka Tomoyuki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "meterBinderList",
+      "level": 3,
+      "content": "```java\nprivate final List<MeterBinder> meterBinderList\n```\n\n供給する {@link MeterBinder} のリスト。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "DefaultMeterBinderListProvider",
+      "level": 3,
+      "content": "```java\npublic DefaultMeterBinderListProvider()\n```\n\nコンストラクタ。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "createMeterBinderList",
+      "level": 3,
+      "content": "```java\nprotected List<MeterBinder> createMeterBinderList()\n```\n\n{@link #provide()}で返す{@link MeterBinder}のリストを生成する。\n\n**戻り値:**\n{@link #provide()}で返す{@link MeterBinder}のリスト\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "provide",
+      "level": 3,
+      "content": "```java\npublic List<MeterBinder> provide()\n```\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "dispose",
+      "level": 3,
+      "content": "```java\npublic void dispose()\n```\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-integration-micrometer-DefaultMeterBinderListProvider"
+}

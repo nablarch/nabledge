@@ -1,0 +1,62 @@
+{
+  "title": "class JdbcTransactionFactory",
+  "content": "**パッケージ:** nablarch.core.db.transaction\n\n**実装されたインタフェース:**\n- TransactionFactory\n\n---\n\n```java\npublic class JdbcTransactionFactory\nimplements TransactionFactory\n```\n\n{@link nablarch.core.db.transaction.JdbcTransaction}を生成するクラス。\n\n**作成者:** Hisaaki Sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "isolationLevel",
+      "level": 3,
+      "content": "```java\nprivate int isolationLevel\n```\n\nアイソレーションレベル\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "initSqlList",
+      "level": 3,
+      "content": "```java\nprivate List<String> initSqlList\n```\n\n初期SQL\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "transactionTimeoutSec",
+      "level": 3,
+      "content": "```java\nprivate int transactionTimeoutSec\n```\n\nトランザクションタイムアウト秒数\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "getTransaction",
+      "level": 3,
+      "content": "```java\npublic Transaction getTransaction(String connectionName)\n```\n\n{@link nablarch.core.db.transaction.JdbcTransaction}を生成する。\n\n**パラメータ:**\n- `connectionName` - コネクション名\n\n**戻り値:**\nトランザクションオブジェクト\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "setIsolationLevel",
+      "level": 3,
+      "content": "```java\npublic void setIsolationLevel(String isolationLevel)\n```\n\nアイソレーションレベルを設定する。<br>\n設定できる値は、下記のとおり。<br>\nREAD_COMMITTED:{@link java.sql.Connection#TRANSACTION_READ_COMMITTED}<br>\nREAD_UNCOMMITTED:{@link java.sql.Connection#TRANSACTION_READ_UNCOMMITTED}<br>\nREPEATABLE_READ:{@link java.sql.Connection#TRANSACTION_REPEATABLE_READ}<br>\nSERIALIZABLE:{@link java.sql.Connection#TRANSACTION_SERIALIZABLE}<br>\nアイソレーションレベルが設定されない場合は、デフォルトで{@link java.sql.Connection#TRANSACTION_READ_COMMITTED}が使用される。\n\n**パラメータ:**\n- `isolationLevel` - アイソレーションレベルを表す文字列。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setInitSqlList",
+      "level": 3,
+      "content": "```java\npublic void setInitSqlList(List<String> initSqlList)\n```\n\n初期SQLを設定する。<br>\n本メソッドで設定されたSQLは、トランザクション開始時({@link JdbcTransaction#begin()})に実行される。\n\n**パラメータ:**\n- `initSqlList` - 初期SQLを保持するListオブジェクト\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setTransactionTimeoutSec",
+      "level": 3,
+      "content": "```java\npublic void setTransactionTimeoutSec(int transactionTimeoutSec)\n```\n\nトランザクションタイムアウト秒数設定を設定する。\n<p/>\n設定を省略した場合または、0以下の値を設定した場合はトランザクションタイムアウト機能は無効化される。\n\n**パラメータ:**\n- `transactionTimeoutSec` - トランザクションタイムアウト秒数設定\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-core-db-transaction-JdbcTransactionFactory"
+}

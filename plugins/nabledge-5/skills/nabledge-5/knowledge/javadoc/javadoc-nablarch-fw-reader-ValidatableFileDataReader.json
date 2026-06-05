@@ -1,0 +1,104 @@
+{
+  "title": "class ValidatableFileDataReader",
+  "content": "**パッケージ:** nablarch.fw.reader\n\n**継承階層:**\n```\njava.lang.Object\n  └─ FileDataReader\n      └─ nablarch.fw.reader.ValidatableFileDataReader\n```\n\n---\n\n```java\npublic class ValidatableFileDataReader\nextends FileDataReader\n```\n\nファイル内容のバリデーション機能を追加したデータリーダ。\n<p/>\nファイル全件の読み込みを行い、このリーダが提供する{@link FileValidatorAction}に実装されたバリデーションロジックを\n{@link #setValidatorAction(FileValidatorAction)}から設定することができる。\nバリデーションが正常終了した場合は、入力ファイルを開きなおして本処理を行う。<br/>\nまた、{@link #setUseCache(boolean)}に{@code true}を設定することで、バリデーション時に読み込んだデータを\nメモリ上にキャッシュし、都度2回の読み込みを1回に削減することができる。<br/>\nただし、データ量によってはメモリリソースを大幅に消費する点に注意すること。<br/>\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "validatorAction",
+      "level": 3,
+      "content": "```java\nprivate FileValidatorAction validatorAction\n```\n\nバリデーションを実装したハンドラ\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "useCache",
+      "level": 3,
+      "content": "```java\nprivate boolean useCache\n```\n\nバリデーション時に読み込んだデータを本処理で使用するかどうか。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "recordCache",
+      "level": 3,
+      "content": "```java\nprivate List<DataRecord> recordCache\n```\n\nバリデーションで読み込んだデータを格納するキャッシュ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "validated",
+      "level": 3,
+      "content": "```java\nprivate boolean validated\n```\n\nバリデーション済みフラグ\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "ValidatableFileDataReader",
+      "level": 3,
+      "content": "```java\npublic ValidatableFileDataReader()\n```\n\n{@code ValidatableFileDataReader}オブジェクトを生成する。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "read",
+      "level": 3,
+      "content": "```java\npublic synchronized DataRecord read(ExecutionContext ctx)\n```\n\nデータファイルを1レコードづつ読み込む。\n<p/>\nファイルがバリデーション済みでない場合、バリデーションを行う。<br/>\n次に読み込むレコードが存在しない場合、{@code null}を返す。\n<p/>\nデータをキャッシュしている場合、キャッシュからデータを読み込み返却する。<br/>\nキャッシュしていない場合、データファイルからデータを読み込み返却する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n１レコード分のデータレコード\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "hasNext",
+      "level": 3,
+      "content": "```java\npublic synchronized boolean hasNext(ExecutionContext ctx)\n```\n\n次に読み込むデータが存在するかどうかを返却する。\n<p/>\nデータをキャッシュしている場合、キャッシュから結果を返却する。<br/>\nキャッシュしていない場合、データファイルから結果を返却する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n次に読み込むデータが存在する場合は {@code true}\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic synchronized void close(ExecutionContext ctx)\n```\n\nこのリーダの利用を停止し、内部的に保持している各種リソースを解放する。\n<p/>\nキャッシュを有効にしていた場合、キャッシュを削除する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "validate",
+      "level": 3,
+      "content": "```java\nprotected void validate(ExecutionContext ctx)\n```\n\nバリデーションを行う。\n<p/>\nキャッシュを有効にしている場合、読み込んだデータをキャッシュする。<br/>\n無効にしている場合、入力ファイルの再読み込みを行うため、{@link FileDataReader}を初期化する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**例外:**\n- `IllegalStateException` - バリデーション処理を実装したオブジェクトが{@code null}の場合\n- `RuntimeException` - 実行時例外が発生した場合\n- `Error` - エラーが発生した場合\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\nprotected void initialize()\n```\n\nキャッシュを使用しない場合、ファイルリーダを初期化する。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setUseCache",
+      "level": 3,
+      "content": "```java\npublic synchronized ValidatableFileDataReader setUseCache(boolean useCache)\n```\n\nバリデーション時に読み込んだデータをキャッシュし、本処理で使用するかどうかを設定する。\n\n**パラメータ:**\n- `useCache` - キャッシュを有効化する場合は{@code true}\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setValidatorAction",
+      "level": 3,
+      "content": "```java\npublic ValidatableFileDataReader setValidatorAction(FileValidatorAction validatorAction)\n```\n\nバリデーション処理を実装したアクションクラスを設定する。\n\n**パラメータ:**\n- `validatorAction` - バリデーションを実装したアクションクラス\n\n**戻り値:**\nこのオブジェクト自体\n\n**例外:**\n- `IllegalArgumentException` - バリデーションを実装したアクションクラスが{@code null}の場合\n\n---",
+      "id": "s16"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-reader-ValidatableFileDataReader"
+}

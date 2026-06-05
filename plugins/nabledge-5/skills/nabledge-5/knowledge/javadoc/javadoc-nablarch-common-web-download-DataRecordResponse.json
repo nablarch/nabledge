@@ -1,0 +1,62 @@
+{
+  "title": "class DataRecordResponse",
+  "content": "**パッケージ:** nablarch.common.web.download\n\n**継承階層:**\n```\njava.lang.Object\n  └─ HttpResponse\n      └─ nablarch.common.web.download.DataRecordResponse\n```\n\n---\n\n```java\npublic class DataRecordResponse\nextends HttpResponse\n```\n\nMap型のデータレコードのリストを一定のフォーマットに従って直列化し、\nその内容をレスポンスボディとするHTTPレスポンスオブジェクト。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "dest",
+      "level": 3,
+      "content": "```java\nprivate final ByteArrayOutputStream dest\n```\n\nフォーマットで使用する出力ストリーム\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "formatter",
+      "level": 3,
+      "content": "```java\nprivate final DataRecordFormatter formatter\n```\n\nデータレコードのフォーマッタ\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "DataRecordResponse",
+      "level": 3,
+      "content": "```java\npublic DataRecordResponse(String basePathName, String fileName)\n```\n\nコンストラクタ。\n<p/>\nフォーマット定義ファイルを元に、使用する{@link DataRecordFormatter}を設定する。\n\n**パラメータ:**\n- `basePathName` - フォーマット定義ファイルのベースパス論理名\n- `fileName` - フォーマット定義ファイルのファイル名\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "write",
+      "level": 3,
+      "content": "```java\npublic void write(Map<String,?> record)\n```\n\nメッセージボディに1レコード分のデータを書き込む。\n<p/>\nデータレイアウト(レコードタイプ）の決定方法については\n{@link DataRecordFormatter#writeRecord(Map)}を参照すること。\n\n**パラメータ:**\n- `record` - 1レコード分のデータ\n\n**例外:**\n- `RuntimeException` - 出力ストリームの書き込みに失敗した場合\n- `nablarch.core.dataformat.InvalidDataFormatException` - 書き込むデータの内容がフォーマット定義に違反している場合。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "write",
+      "level": 3,
+      "content": "```java\npublic void write(String recordType, Map<String,?> record)\n```\n\nデータレイアウト(レコードタイプ）を指定して、メッセージボディに1レコード分のデータを書き込む。\n\n**パラメータ:**\n- `recordType` - 出力時に使用するデータレイアウト\n- `record` - 1レコード分のデータ\n\n**例外:**\n- `RuntimeException` - 出力ストリームの書き込みに失敗した場合\n- `nablarch.core.dataformat.InvalidDataFormatException` - 書き込むデータの内容がフォーマット定義に違反している場合。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "cleanup",
+      "level": 3,
+      "content": "```java\npublic HttpResponse cleanup()\n```\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-common-web-download-DataRecordResponse"
+}

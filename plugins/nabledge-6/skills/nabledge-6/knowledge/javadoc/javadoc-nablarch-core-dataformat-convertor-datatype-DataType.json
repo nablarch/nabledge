@@ -1,0 +1,80 @@
+{
+  "title": "class DataType",
+  "content": "**パッケージ:** nablarch.core.dataformat.convertor.datatype\n\n---\n\n```java\npublic abstract class DataType\n```\n\nファイルや電文のストリームを読み書きし、\nフィールドへの変換を行うデータタイプが継承すべき抽象基底クラス。\n\n**param:** 入出力時のデータの型  \n**param:** 入力データが変換されるオブジェクトの型  \n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "field",
+      "level": 3,
+      "content": "```java\nprivate FieldDefinition field\n```\n\nフィールド定義\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "convertEmptyToNull",
+      "level": 3,
+      "content": "```java\nprotected boolean convertEmptyToNull\n```\n\n空文字列を{@code null}に変換するフラグ\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic abstract DataType<F,T> initialize(Object args)\n```\n\n初期化処理を行う。\n\n**パラメータ:**\n- `args` - データタイプのパラメータ\n\n**戻り値:**\n初期化されたデータタイプ （通常はthisをリターンする）\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "convertOnRead",
+      "level": 3,
+      "content": "```java\npublic abstract F convertOnRead(T data)\n```\n\n入力時に読み込んだデータを変換する。\n\n**パラメータ:**\n- `data` - フィールドの値データ\n\n**戻り値:**\n変換後の値\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "convertOnWrite",
+      "level": 3,
+      "content": "```java\npublic abstract T convertOnWrite(Object data)\n```\n\n出力時に書き込むデータの変換を行う。\n\n**パラメータ:**\n- `data` - 書き込みを行うデータ\n\n**戻り値:**\n変換後の値\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "init",
+      "level": 3,
+      "content": "```java\npublic DataType<F,T> init(FieldDefinition field, Object args)\n```\n\n初期化処理を行う。\n\n**パラメータ:**\n- `field` - フィールド定義\n- `args` - データタイプのパラメータ\n\n**戻り値:**\n初期化されたデータタイプ （通常はthisをリターンする）\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getSize",
+      "level": 3,
+      "content": "```java\npublic abstract Integer getSize()\n```\n\n扱うデータ型に応じたデータサイズを返却する。\n（固定長データを扱う場合はバイト長、可変長データを扱う場合は文字列長を返却する）\n\n**戻り値:**\nデータサイズ\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getField",
+      "level": 3,
+      "content": "```java\npublic FieldDefinition getField()\n```\n\nフィールド定義を取得する。\n\n**戻り値:**\nフィールド定義\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "removePadding",
+      "level": 3,
+      "content": "```java\npublic F removePadding(Object data)\n```\n\nパディングを取り除く。\n\n**パラメータ:**\n- `data` - 対象データ\n\n**戻り値:**\nパディング除去後のデータ\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setConvertEmptyToNull",
+      "level": 3,
+      "content": "```java\npublic void setConvertEmptyToNull(boolean convertEmptyToNull)\n```\n\n空文字列を{@code null}に変換するかを設定する。\n\n**パラメータ:**\n- `convertEmptyToNull` - 空文字列を{@code null}に変換するならtrue\n\n---",
+      "id": "s12"
+    }
+  ],
+  "id": "javadoc-nablarch-core-dataformat-convertor-datatype-DataType"
+}

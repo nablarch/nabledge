@@ -1,0 +1,32 @@
+{
+  "title": "interface ProcessStopHandler",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**継承階層:**\n```\njava.lang.Object\n  └─ Handler<Object,Object>\n      └─ nablarch.fw.handler.ProcessStopHandler\n```\n\n---\n\n```java\npublic interface ProcessStopHandler\nextends Handler<Object,Object>\n```\n\n処理中のプロセスを停止するためのハンドラ。\n<p/>\n本ハンドラは、{@link LoopHandler}や{@link ProcessResidentHandler}の後続ハンドラに設定することにより、\n処理中に安全にプロセスを停止することが可能となる。\n<p/>\nなお、プロセスを停止するために{@link ProcessStop}を送出するため、障害通知ログが出力されプロセスは異常終了する。\n異常終了する際に終了コードは、{@link #setExitCode(int)}によって設定することが出来る。\n終了コードの設定を省略した場合のデフォルト動作として終了コードは1となる。\n<b>また、未コミットのトランザクションは全てロールバックされることに注意すること。</b>\n<p/>\n※処理を異常終了するかどうかは、前段に設定されたハンドラによって決定される。\n<p/>\n処理を停止するか否かのチェックは、リクエストテーブルにて行う。\n本ハンドラが使用するリクエストテーブルの定義情報を下記に示す。\n<p/>\n<pre>\n-----------------------------+----------------------------------------------------------\nカラム名                     | 説明\n-----------------------------+----------------------------------------------------------\nリクエストID                 | プロセスを特定するためのリクエストID\n処理停止フラグ               | 処理を停止するか否かの情報\n                             | 本フラグの値が'1'の場合に処理を停止する。\n                             |\n                             | <b>本フラグの値は、自動的に'0'には変更されないため再実行する際には、\n                             | 手動で'0'に変更する必要がある。</b>\n-----------------------------+----------------------------------------------------------\n</pre>\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "isProcessStop",
+      "level": 3,
+      "content": "```java\nboolean isProcessStop(String requestId)\n```\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "setCheckInterval",
+      "level": 3,
+      "content": "```java\npublic void setCheckInterval(int checkInterval)\n```\n\nチェック間隔（{@link #handle(Object, nablarch.fw.ExecutionContext)}が\n何回呼び出されるごとに停止フラグを確認するか？）を設定する。\n<p/>\n\n**パラメータ:**\n- `checkInterval` - チェック間隔(0以下の値が設定された場合は1)\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "setExitCode",
+      "level": 3,
+      "content": "```java\npublic void setExitCode(int exitCode)\n```\n\n終了コードを設定する。\n<p/>\n終了コードの設定がない場合、デフォルトで{@link nablarch.fw.results.InternalError#STATUS_CODE}が使用される。\n\n**パラメータ:**\n- `exitCode` - 終了コード\n\n---",
+      "id": "s4"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-ProcessStopHandler"
+}

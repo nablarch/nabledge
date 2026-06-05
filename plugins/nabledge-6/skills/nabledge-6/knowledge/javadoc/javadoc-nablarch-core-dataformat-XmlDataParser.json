@@ -1,0 +1,86 @@
+{
+  "title": "class XmlDataParser",
+  "content": "**パッケージ:** nablarch.core.dataformat\n\n**継承階層:**\n```\njava.lang.Object\n  └─ StructuredDataEditorSupport\n      └─ nablarch.core.dataformat.XmlDataParser\n```\n\n**実装されたインタフェース:**\n- StructuredDataParser\n\n---\n\n```java\npublic class XmlDataParser\nextends StructuredDataEditorSupport\nimplements StructuredDataParser\n```\n\nXMLパーサー。<br>\nこの実装ではDOMを使用してXMLデータの解析を行います。\n\n5u14より、DTDの使用を禁止するように修正を行った。これはXXE攻撃を防ぐためである。\n後方互換性を維持するため、DTDの使用を許可するプロパティを設けている({@link #setAllowDTD(boolean)})。\n読み込み対象となるXMLが信頼できるものであり、かつ、DTDを使用しなければならない場合のみ、\n本プロパティを使用してDTDの使用を許可することができる。\n\n**作成者:** TIS  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "contentName",
+      "level": 3,
+      "content": "```java\nprivate String contentName\n```\n\n属性あり要素のコンテンツ名(デフォルトはbody)\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "allowDTD",
+      "level": 3,
+      "content": "```java\nprivate boolean allowDTD\n```\n\nDTDの使用を許可するか否か(デフォルトは「許可しない」({@code false})\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "parseData",
+      "level": 3,
+      "content": "```java\npublic Map<String,?> parseData(InputStream xml, LayoutDefinition layoutDef)\n                        throws IOException, InvalidDataFormatException\n```\n\nフラットマップを作成します。\n\n**パラメータ:**\n- `xml` - XML文字列\n- `layoutDef` - フォーマット定義\n\n**戻り値:**\nフラットマップ\n\n**例外:**\n- `IOException` - 読み込みに伴うIO処理で問題が発生した場合\n- `InvalidDataFormatException` - 読み込んだデータがフォーマット定義に違反している場合\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "createDocumentBuilderFactory",
+      "level": 3,
+      "content": "```java\nprotected DocumentBuilderFactory createDocumentBuilderFactory(LayoutDefinition layoutDef)\n                                                    throws ParserConfigurationException\n```\n\n本クラスで使用する{@link DocumentBuilderFactory}のインスタンスを生成する。\n\n**パラメータ:**\n- `layoutDef` - レイアウト定義 (本実装では使用しないがオーバーライド用に用意している。)\n\n**戻り値:**\n{@link DocumentBuilderFactory}のインスタンス\n\n**例外:**\n- `ParserConfigurationException` - {@link DocumentBuilderFactory#setFeature(String, boolean)}に失敗した場合\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "makeMap",
+      "level": 3,
+      "content": "```java\nprivate void makeMap(String currentKeyBase, Map<String,Object> outMap, LayoutDefinition layoutDef, RecordDefinition recordDef, Element parent)\n```\n\nフラットMap作成処理</br>\nXMLを解析したDOMから、キーで階層構造を表現した１階層のMapを作成します。\n\n**パラメータ:**\n- `currentKeyBase` - キー名ベース\n- `outMap` - 出力対象マップ\n- `layoutDef` - フォーマット定義\n- `recordDef` - レコードタイプ定義\n- `parent` - 親ノード\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "isElementNode",
+      "level": 3,
+      "content": "```java\nprivate boolean isElementNode(Element element)\n```\n\n指定した要素の子要素に{@link Node#ELEMENT_NODE}が含まれるか判定する。\n\n**パラメータ:**\n- `element` - 要素\n\n**戻り値:**\n子要素に {@link Node#ELEMENT_NODE} が含まれていれば{@code true}\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getChildElement",
+      "level": 3,
+      "content": "```java\nprivate Element getChildElement(String targetNodeName, Element parent)\n```\n\n子ノードを取得します。\n\n**パラメータ:**\n- `targetNodeName` - 取得対象となるノード名\n- `parent` - 取得元の親ノード\n\n**戻り値:**\n子ノード\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "toString",
+      "level": 3,
+      "content": "```java\nprivate String toString(Node node)\n```\n\nノードを文字列に変換する。\n\n**パラメータ:**\n- `node` - 変換対象となるノード\n\n**戻り値:**\n返還後の文字列（引数がnullの場合はnullが返却される）\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "toStringArray",
+      "level": 3,
+      "content": "```java\nprivate String[] toStringArray(NodeList nodeList)\n```\n\nNodeListを文字列配列に変換する。\n\n**パラメータ:**\n- `nodeList` - 変換対象となるNodeList\n\n**戻り値:**\n返還後の文字列配列\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setContentName",
+      "level": 3,
+      "content": "```java\npublic void setContentName(String contentName)\n```\n\n属性あり要素のコンテンツ名を設定する。\n\n**パラメータ:**\n- `contentName` - 属性あり要素のコンテンツ名\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setAllowDTD",
+      "level": 3,
+      "content": "```java\npublic void setAllowDTD(boolean allowDTD)\n```\n\nDTDの使用を許可する。\nデフォルトは「許可しない」({@code false})。\n\n**パラメータ:**\n- `allowDTD` - 許可する場合、真\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-core-dataformat-XmlDataParser"
+}

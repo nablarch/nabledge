@@ -98,7 +98,7 @@ Nablarchでウェブアプリケーションを構築する際の、必要最小
 | 1 | [HTTP文字エンコード制御ハンドラ](../../component/handlers/handlers-http-character-encoding-handler.md#http文字エンコード制御ハンドラ) | リクエストとレスポンスに文字エンコーディングを設定する。 |  |  |
 | 2 | [グローバルエラーハンドラ](../../component/handlers/handlers-global-error-handler.md#グローバルエラーハンドラ) |  |  | 実行時例外、またはエラーの場合、ログ出力を行う。 |
 | 3 | [HTTPレスポンスハンドラ](../../component/handlers/handlers-http-response-handler.md#httpレスポンスハンドラ) |  | サーブレットフォーワード、リダイレクト、レスポンス書き込みのいずれかを行う。 | 実行時例外、またはエラーの場合、既定のエラーページを表示する。 |
-| 4 | [セキュアハンドラ](../../component/handlers/handlers-secure-handler.md#セキュアハンドラ) |  | レスポンスオブジェクト(HttpResponse)にセキュリティ関連のレスポンスヘッダを設定する。 |  |
+| 4 | [セキュアハンドラ](../../component/handlers/handlers-secure-handler.md#セキュアハンドラ) |  | レスポンスオブジェクト([HttpResponse](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.md))にセキュリティ関連のレスポンスヘッダを設定する。 |  |
 | 5 | [マルチパートリクエストハンドラ](../../component/handlers/handlers-multipart-handler.md#マルチパートリクエストハンドラ) | リクエストがマルチパート形式の場合、その内容を一時ファイルに保存する。 | 保存した一時ファイルを削除する。 |  |
 | 6 | [セッション変数保存ハンドラ](../../component/handlers/handlers-SessionStoreHandler.md#セッション変数保存ハンドラ) | セッションストアから内容を読み込む。 | セッションストアに内容を書き込む。 |  |
 | 7 | [ノーマライズハンドラ](../../component/handlers/handlers-normalize-handler.md#ノーマライズハンドラ) | リクエストパラメータのノーマライズ処理を行う。 |  |  |

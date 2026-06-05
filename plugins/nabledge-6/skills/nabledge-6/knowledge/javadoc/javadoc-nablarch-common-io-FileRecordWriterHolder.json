@@ -1,0 +1,164 @@
+{
+  "title": "class FileRecordWriterHolder",
+  "content": "**パッケージ:** nablarch.common.io\n\n---\n\n```java\npublic class FileRecordWriterHolder\n```\n\n{@link FileRecordWriter}のインスタンスをスレッド毎に管理するクラス。\n<p/>\nスレッド毎に管理する{@link FileRecordWriter}インスタンスの生成及び取得、クローズ機能を持つ。\n<p/>\n{@link FileRecordWriterDisposeHandler}をハンドラとして設定する場合、\n本クラスがスレッド上で管理するすべての{@link FileRecordWriter}が{@link FileRecordWriterDisposeHandler}により自動的にクローズされるので、\n業務アプリケーションで本クラスの{@link #close}メソッドを呼び出す必要はない。\n<p/>\n{@link #close(String, String)}及び{@link #close(String)}では、{@link ThreadLocal#remove()}の呼び出しを行わない。\nスレッド上の値を削除するためには、{@link #closeAll()}の呼び出しが必要となる。\n\n**関連項目:** FileRecordWriter  \n**作成者:** Masato Inoue  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "DEFAULT_BUFFER_SIZE",
+      "level": 3,
+      "content": "```java\nprivate static final int DEFAULT_BUFFER_SIZE\n```\n\nファイル読み込みの際に使用するバッファのサイズ（デフォルトは8192B）\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "KEY_SEPARATOR",
+      "level": 3,
+      "content": "```java\nprivate static final String KEY_SEPARATOR\n```\n\nコンバータを保持するキーとして使用する、ベースパスとファイル名の区切り文字\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "REPOSITORY_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String REPOSITORY_KEY\n```\n\nシステムリポジトリ上の登録名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "DEFAULT_HOLDER",
+      "level": 3,
+      "content": "```java\nprivate static final FileRecordWriterHolder DEFAULT_HOLDER\n```\n\nデフォルトのコンバータ設定情報保持クラスのインスタンス。\nリポジトリからインスタンスを取得できなかった場合に、デフォルトでこのインスタンスが使用される。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "WRITERS",
+      "level": 3,
+      "content": "```java\nprivate static final ThreadLocal<Map<String,FileRecordWriter>> WRITERS\n```\n\nカレントスレッド上で管理されるファイル毎のファイルレコードライタを格納する。\nファイルレコードライタは{@link InheritableThreadLocal}クラスで管理されるので、親スレッドから子スレッドへインスタンスが引き継がれる。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "getInstance",
+      "level": 3,
+      "content": "```java\npublic static FileRecordWriterHolder getInstance()\n```\n\n本クラスのインスタンスを{@link SystemRepository}より取得する。\n<p>\n{@link SystemRepository}にインスタンスが存在しない場合は、クラスロード時に生成した本クラスのインスタンスを返却する。\n\n**戻り値:**\n本クラスのインスタンス\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "open",
+      "level": 3,
+      "content": "```java\npublic static void open(String dataFileName, String layoutFileName)\n```\n\n{@link FilePathSetting}から\"output\"という論理名で取得したベースパス配下のファイルをオープンする。\n<p/>\nこのとき、フォーマット定義ファイルも{@link FilePathSetting}から\"format\"という論理名で取得したベースパス配下より読み込む。<br/>\nまた、バッファサイズには、デフォルトの値(8192B)が使用される。\n\n**パラメータ:**\n- `dataFileName` - 書き込むデータファイルのファイル名\n- `layoutFileName` - フォーマット定義ファイルのファイル名\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "open",
+      "level": 3,
+      "content": "```java\npublic static void open(String dataFileName, String layoutFileName, int bufferSize)\n```\n\n{@link FilePathSetting}から\"output\"という論理名で取得したベースパス配下のファイルをオープンする。\n<p/>\nこのとき、フォーマット定義ファイルも{@link FilePathSetting}から\"format\"という論理名で取得したベースパス配下より読み込む。<br/>\nまた、引数でデータファイルに書き込む際のバッファサイズを指定する。\n\n**パラメータ:**\n- `dataFileName` - 書き込むデータファイルのファイル名\n- `layoutFileName` - フォーマット定義ファイルのファイル名\n- `bufferSize` - バッファサイズ\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "open",
+      "level": 3,
+      "content": "```java\npublic static void open(String dataFileBasePathName, String dataFileName, String layoutFileName)\n```\n\n{@link FilePathSetting}に設定した論理名(論理ベースパス）配下のファイルをオープンする。\n<p/>\nこのとき、フォーマット定義ファイルは{@link FilePathSetting}から\"format\"という論理名で取得したベースパス配下より読み込む。<br/>\nまた、データファイルに書き込む際のバッファサイズはデフォルト値(8192B)が使用される。\n\n**パラメータ:**\n- `dataFileBasePathName` - 書き込むデータファイルのベースパスの論理名\n- `dataFileName` - 書き込むデータファイルのファイル名\n- `layoutFileName` - フォーマット定義ファイルのファイル名\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "open",
+      "level": 3,
+      "content": "```java\npublic static void open(String dataFileBasePathName, String dataFileName, String layoutFileName, int bufferSize)\n```\n\n{@link FilePathSetting}に設定した論理名(論理ベースパス）配下のファイルをオープンする。\n<p/>\nこのとき、フォーマット定義ファイルは{@link FilePathSetting}から\"format\"という論理名で取得したベースパス配下より読み込む。<br/>\nまた、引数でデータファイルに書き込む際のバッファサイズを指定する。\n\n**パラメータ:**\n- `dataFileBasePathName` - 書き込むデータファイルのベースパスの論理名\n- `dataFileName` - 書き込むデータファイルのファイル名\n- `layoutFileName` - フォーマット定義ファイルのファイル名\n- `bufferSize` - バッファサイズ\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "init",
+      "level": 3,
+      "content": "```java\npublic static void init()\n```\n\nカレントスレッド上で開いたファイルを管理するための初期処理を行う。\n<p>\n本処理を呼ばなかった場合、子スレッド側で開いたファイルは管理対象とならないため注意すること。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "open",
+      "level": 3,
+      "content": "```java\npublic static void open(String dataFileBasePathName, String dataFileName, String layoutFileBasePathName, String layoutFileName)\n```\n\n{@link FilePathSetting}に設定した論理名(論理ベースパス）配下のファイルをオープンする。\n<p/>\nこのとき、フォーマット定義ファイルは{@link FilePathSetting}から\"format\"という論理名で取得したベースパス配下より読み込む。\nまた、データファイルに書き込む際のバッファサイズはデフォルト値(8192B)が使用される。\n\n**パラメータ:**\n- `dataFileBasePathName` - 書き込むデータファイルのベースパスの論理名\n- `dataFileName` - 書き込むデータファイルのファイル名\n- `layoutFileBasePathName` - フォーマット定義ファイルのベースパス論理名\n- `layoutFileName` - フォーマット定義ファイルのファイル名\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "open",
+      "level": 3,
+      "content": "```java\npublic static void open(String dataFileBasePathName, String dataFileName, String layoutFileBasePathName, String layoutFileName, int bufferSize)\n```\n\n{@link FilePathSetting}に設定した論理名(論理ベースパス）配下のファイルをオープンする。\n<p>\nまた、引数でデータファイルに書き込む際のバッファサイズと、{@link FilePathSetting}に設定したフォーマット定義ファイルの論理名を指定する。\n</p>\n\n**パラメータ:**\n- `dataFileBasePathName` - 書き込むデータファイルのベースパスの論理名\n- `dataFileName` - 書き込むデータファイルのファイル名\n- `layoutFileBasePathName` - フォーマット定義ファイルのベースパスの論理名\n- `layoutFileName` - フォーマット定義ファイルのファイル名\n- `bufferSize` - バッファサイズ\n\n**例外:**\n- `IllegalArgumentException` - {@code bufferSize}以外の引数がnullまたは空の場合\n- `IllegalStateException` - カレントスレッド上の{@link FileRecordWriter}が既にオープンしている場合\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "write",
+      "level": 3,
+      "content": "```java\npublic static void write(Map<String,?> record, String fileName)\n```\n\n{@link FilePathSetting}から\"output\"という論理名で取得したベースパス配下のデータファイルにレコードを出力する。\n\n**パラメータ:**\n- `record` - ファイルに出力するレコード\n- `fileName` - 書き込むデータファイルのファイル名\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "write",
+      "level": 3,
+      "content": "```java\npublic static void write(Map<String,?> record, String basePathName, String fileName)\n```\n\n{@link FilePathSetting}に設定した論理名(論理ベースパス）配下のデータファイルにレコードを出力する。\n\n**パラメータ:**\n- `record` - ファイルに出力するレコード\n- `basePathName` - 書き込むデータファイルのベースパスの論理名\n- `fileName` - 書き込むデータファイルのファイル名\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "write",
+      "level": 3,
+      "content": "```java\npublic static void write(String recordType, Map<String,?> record, String fileName)\n```\n\n{@link FilePathSetting}から\"output\"という論理名で取得したベースパス配下のデータファイルにレコードを出力する。\n<p>\nまた、引数で出力するレコードのレコードタイプを指定する。\n</p>\n\n**パラメータ:**\n- `recordType` - 出力するレコードのレコードタイプ\n- `record` - ファイルに出力するレコード\n- `fileName` - 書き込むデータファイルのファイル名\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "write",
+      "level": 3,
+      "content": "```java\npublic static void write(String recordType, Map<String,?> record, String basePathName, String fileName)\n```\n\n引数で指定したデータファイルにレコードを出力する。\n\n**パラメータ:**\n- `recordType` - 出力するレコードのレコードタイプ\n- `record` - ファイルに出力するレコード\n- `basePathName` - 書き込むデータファイルのベースパスの論理名\n- `fileName` - 書き込むデータファイルのファイル名\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "createFileRecordWriter",
+      "level": 3,
+      "content": "```java\nprotected FileRecordWriter createFileRecordWriter(String dataFileBasePathName, String dataFileName, String layoutFileBasePathName, String layoutFileName, int bufferSize)\n```\n\n{@link FileRecordWriter}のインスタンスを生成する。\n\n**パラメータ:**\n- `dataFileBasePathName` - ベースパスの論理名\n- `dataFileName` - 書き込むデータファイルのファイル名\n- `layoutFileName` - レイアウトファイル名\n- `layoutFileBasePathName` - レイアウトファイルの配置ディレクトリの論理名\n- `bufferSize` - ファイル読み込み時のバッファサイズ\n\n**戻り値:**\nFileRecordWriterのインスタンス\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "createKey",
+      "level": 3,
+      "content": "```java\nprotected String createKey(String basePathName, String fileName)\n```\n\nスレッドに保持するキーを生成する。\n\n**パラメータ:**\n- `basePathName` - ベースパスの論理名\n- `fileName` - 書き込むデータファイルのファイル名\n\n**戻り値:**\nキー\n\n**例外:**\n- `IllegalArgumentException` - {@code basePathName}に\"&\"が含まれていなかった場合\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "get",
+      "level": 3,
+      "content": "```java\npublic static FileRecordWriter get(String fileName)\n```\n\n{@link FilePathSetting}から\"output\"という論理名で取得したベースパス配下のファイルに書き出しを行う{@link FileRecordWriter}を取得する。\n\n**パラメータ:**\n- `fileName` - 書き込むデータファイルのファイル名\n\n**戻り値:**\n{@link FileRecordWriter}\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "get",
+      "level": 3,
+      "content": "```java\npublic static FileRecordWriter get(String basePathName, String fileName)\n```\n\n{@link FilePathSetting}に設定した論理名(論理ベースパス）配下のファイルに書き出しを行う{@link FileRecordWriter}を取得する。\n\n**パラメータ:**\n- `basePathName` - 書き込むデータファイルのベースパスの論理名\n- `fileName` - 書き込むデータファイルのファイル名\n\n**戻り値:**\n{@link FileRecordWriter}\n\n**例外:**\n- `IllegalArgumentException` - カレントスレッド上の{@link FileRecordWriter}が閉じている場合\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic static void close(String fileName)\n```\n\n{@link FilePathSetting}から\"output\"という論理名で取得したベースパス配下のファイルに書き出しを行う{@link FileRecordWriter}をクローズし、\nインスタンスをカレントスレッド上から削除する。\n\n**パラメータ:**\n- `fileName` - 書き込むデータファイルのファイル名\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic static void close(String basePathName, String fileName)\n```\n\n{@link FilePathSetting}に設定した論理名(論理ベースパス）配下のファイルに書き出しを行う{@link FileRecordWriter}をクローズし、\nインスタンスをカレントスレッド上から削除する。\n\n**パラメータ:**\n- `basePathName` - 書き込むデータファイルのベースパスの論理名\n- `fileName` - 書き込むデータファイルのファイル名\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "closeAll",
+      "level": 3,
+      "content": "```java\npublic static void closeAll()\n```\n\n本クラスがカレントスレッド上で管理している全ての{@link FileRecordWriter}のファイルストリームを\nクローズし、また、それら全ての{@link FileRecordWriter}をカレントスレッド上から削除する。\n\n---",
+      "id": "s26"
+    }
+  ],
+  "id": "javadoc-nablarch-common-io-FileRecordWriterHolder"
+}

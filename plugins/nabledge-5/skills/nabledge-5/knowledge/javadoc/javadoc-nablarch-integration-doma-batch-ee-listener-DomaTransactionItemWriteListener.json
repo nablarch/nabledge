@@ -1,0 +1,56 @@
+{
+  "title": "class DomaTransactionItemWriteListener",
+  "content": "**パッケージ:** nablarch.integration.doma.batch.ee.listener\n\n**継承階層:**\n```\njava.lang.Object\n  └─ AbstractNablarchItemWriteListener\n      └─ nablarch.integration.doma.batch.ee.listener.DomaTransactionItemWriteListener\n```\n\n---\n\n```java\npublic class DomaTransactionItemWriteListener\nextends AbstractNablarchItemWriteListener\n```\n\n{@link javax.batch.api.chunk.listener.ItemWriteListener}レベルでDomaのトランザクション制御を行う{@link NablarchItemWriteListener}の実装クラス。\n<p>\n前段に配置した{@link DomaTransactionStepListener}からDomaの{@link LocalTransaction}を取得し、トランザクション制御を行う。\n<p>\n{@link javax.batch.api.chunk.ItemWriter}が正常に終了した場合には、トランザクションの確定({@link LocalTransaction#commit()})を実行し、\nその後に{@link LocalTransaction}を開始({@link LocalTransaction#begin()})する。\n<br>\n{@link javax.batch.api.chunk.ItemWriter}で{@link Exception}が発生した場合には、トランザクションの破棄({@link LocalTransaction#rollback()}を行う。\n\n**作成者:** d-maeno  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "connectionFactory",
+      "level": 3,
+      "content": "```java\nprivate ConnectionFactoryFromDomaConnection connectionFactory\n```\n\nコネクションファクトリ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "afterWrite",
+      "level": 3,
+      "content": "```java\npublic void afterWrite(NablarchListenerContext context, List<Object> items)\n```\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "onWriteError",
+      "level": 3,
+      "content": "```java\npublic void onWriteError(NablarchListenerContext context, List<Object> items, Exception ex)\n```\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "removeNablarchConnection",
+      "level": 3,
+      "content": "```java\nprivate void removeNablarchConnection()\n```\n\nnablarch用のデータベース接続の破棄処理を行う。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "addConnectionToNablarch",
+      "level": 3,
+      "content": "```java\nprivate void addConnectionToNablarch()\n```\n\nNablarchのデータベースアクセスが利用出来るようにコネクションを{@link DbConnectionContext}の設定する。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setConnectionFactory",
+      "level": 3,
+      "content": "```java\npublic void setConnectionFactory(ConnectionFactoryFromDomaConnection connectionFactory)\n```\n\nコネクションファクトリを設定する。\n\n**パラメータ:**\n- `connectionFactory` - コネクションファクトリ\n\n---",
+      "id": "s8"
+    }
+  ],
+  "id": "javadoc-nablarch-integration-doma-batch-ee-listener-DomaTransactionItemWriteListener"
+}

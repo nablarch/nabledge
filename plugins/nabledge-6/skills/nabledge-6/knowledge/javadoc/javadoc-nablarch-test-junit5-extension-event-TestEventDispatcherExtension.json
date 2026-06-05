@@ -1,0 +1,98 @@
+{
+  "title": "class TestEventDispatcherExtension",
+  "content": "**パッケージ:** nablarch.test.junit5.extension.event\n\n**実装されたインタフェース:**\n- TestInstancePostProcessor\n- BeforeAllCallback\n- AfterAllCallback\n- BeforeEachCallback\n- AfterEachCallback\n\n---\n\n```java\npublic abstract class TestEventDispatcherExtension\nimplements TestInstancePostProcessor, BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback\n```\n\nNTF の JUnit 5 用 Extension の基底となる抽象クラス。\n<p>\nこのクラスは、 {@link TestEventDispatcher} が提供する JUnit 4 用の拡張機能を、\nJUnit 5 の Extension の仕組みで再現する。\n</p>\n<p>\n各 Extension はこのクラスを継承して作成することで、共通する部分の処理を省略できる。\n</p>\n\n**作成者:** Tanaka Tomoyuki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "NOOP_STATEMENT",
+      "level": 3,
+      "content": "```java\nprivate static final Statement NOOP_STATEMENT\n```\n\n何も処理を行わない{@link Statement}。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "support",
+      "level": 3,
+      "content": "```java\nprotected TestEventDispatcher support\n```\n\nExtension が生成しテストクラスにインジェクションする、サポートクラスのインスタンス。\n<p>\nこのフィールドは、 {@link #postProcessTestInstance(Object, ExtensionContext)} が実行されたときに初期化される。\n設定される値は、 {@link #createSupport(Object, ExtensionContext)} が返却したインスタンスが使用される。\n</p>\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "postProcessTestInstance",
+      "level": 3,
+      "content": "```java\npublic void postProcessTestInstance(Object testInstance, ExtensionContext context)\n                             throws Exception\n```\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "createSupport",
+      "level": 3,
+      "content": "```java\nprotected abstract TestEventDispatcher createSupport(Object testInstance, ExtensionContext context)\n```\n\nテストインスタンスにインジェクションするサポートクラスのインスタンスを生成する。\n\n**パラメータ:**\n- `testInstance` - テストインスタンス\n- `context` - コンテキスト\n\n**戻り値:**\nサポートクラスのインスタンス\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "buildInjectionTargetCondition",
+      "level": 3,
+      "content": "```java\nprivate Predicate<Field> buildInjectionTargetCondition(Class<? extends TestEventDispatcher> supportClass)\n```\n\n指定されたフィールドが、サポートクラスのインスタンスをインジェクションする対象となるか判定するための\n{@link Predicate} を生成する。\n\n**パラメータ:**\n- `supportClass` - 生成されたサポートクラスの {@link Class} オブジェクト\n\n**戻り値:**\nインジェクション対象の判定を行うための {@link Predicate}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "beforeAll",
+      "level": 3,
+      "content": "```java\npublic void beforeAll(ExtensionContext context)\n```\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "beforeEach",
+      "level": 3,
+      "content": "```java\npublic void beforeEach(ExtensionContext context)\n                throws Exception\n```\n\nテストメソッドの前処理を実行する。\n\n**パラメータ:**\n- `context` - コンテキスト\n\n**例外:**\n- `Exception` - 例外がスローされた場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "emulateTestRules",
+      "level": 3,
+      "content": "```java\nprivate void emulateTestRules(ExtensionContext context)\n```\n\nJUnit4の{@link TestRule}を再現する。\n\n**パラメータ:**\n- `context` - コンテキスト\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "convert",
+      "level": 3,
+      "content": "```java\nprivate Description convert(ExtensionContext extensionContext)\n```\n\n{@link ExtensionContext}(JUnit5) の情報を {@link Description}(JUnit4) に詰め替える。\n\n**パラメータ:**\n- `extensionContext` - {@link ExtensionContext}\n\n**戻り値:**\n{code extensionContext} の情報をもとに構築された {@link Description}\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "resolveTestRules",
+      "level": 3,
+      "content": "```java\nprotected List<TestRule> resolveTestRules()\n```\n\nテストに対して適用する JUnit 4 の {@link TestRule} のリストを取得する。\n<p>\nJUnit 4 時代に作成した独自のサポートクラスを移植する場合は、\nこのメソッドをオーバーライドしてサポートクラスで宣言したルールインスタンスを\nリストにして返却するように実装する。<br>\nオーバーライドした場合は、親クラスが返したリストに追加する形でルールを追加すること。\n以下に実装例を示す。\n</p>\n<pre>{@code\npublic List<TestRule> resolveTestRules() {\n    // 親の resolveTestRules() が返したリストをベースにする\n    List<TestRule> testRules = new ArrayList<>(super.resolveTestRules());\n    // 独自の TestRule を追加する\n    testRules.add(((YourSupport)support).yourTestRule);\n    return testRules;\n}\n}</pre>\n\n**戻り値:**\nテストに適用したい JUnit 4 の {@link TestRule} のリスト\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "afterEach",
+      "level": 3,
+      "content": "```java\npublic void afterEach(ExtensionContext context)\n               throws Exception\n```\n\nテストメソッドの後処理を実行する。\n\n**パラメータ:**\n- `context` - コンテキスト\n\n**例外:**\n- `Exception` - 例外がスローされた場合\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "afterAll",
+      "level": 3,
+      "content": "```java\npublic void afterAll(ExtensionContext context)\n```\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "findAnnotation",
+      "level": 3,
+      "content": "```java\nprotected A findAnnotation(Object testInstance, Class<A> annotationClass)\n```\n\n指定されたテストインスタンスのクラスに設定されたアノテーションを取得する。\n\n**パラメータ:**\n- `testInstance` - テストインスタンス(null不可)\n- `annotationClass` - 取得するアノテーションの型\n- `<A>` - アノテーションの型\n\n**戻り値:**\nテストクラスに設定されたアノテーション\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-test-junit5-extension-event-TestEventDispatcherExtension"
+}

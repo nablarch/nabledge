@@ -1,0 +1,92 @@
+{
+  "title": "class DbConnectionContext",
+  "content": "**パッケージ:** nablarch.core.db.connection\n\n---\n\n```java\npublic final class DbConnectionContext\n```\n\nデータベース接続({@link AppDbConnection})をスレッド単位に管理するクラス。\n<p/>\n設定されたデータベース接続をスレッドに紐付けて管理する。<br/>\nデータベース接続の取得要求があった場合は、スレッドに紐付いているデータベース接続を返す。<br/>\n\n**作成者:** Koichi Asano  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "connection",
+      "level": 3,
+      "content": "```java\nprivate static final ThreadLocal<Map<String,AppDbConnection>> connection\n```\n\nスレッドに紐付けたDB接続\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "DbConnectionContext",
+      "level": 3,
+      "content": "```java\nprivate DbConnectionContext()\n```\n\n隠蔽コンストラクタ。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "setConnection",
+      "level": 3,
+      "content": "```java\npublic static void setConnection(AppDbConnection con)\n```\n\nデータベース接続をデフォルトの名前でスレッドに設定する。\n<p/>\nデータベース接続の設定には、\"transaction\"という名前が使用される。\n設定できるデフォルトのデータベース接続はカレントスレッドに対して一つまでである。\n\n**パラメータ:**\n- `con` - データベース接続\n\n**例外:**\n- `IllegalArgumentException` - カレントスレッドに対してデフォルトのデータベース接続を複数設定した場合\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "setConnection",
+      "level": 3,
+      "content": "```java\npublic static void setConnection(String connectionName, AppDbConnection con)\n```\n\nデータベース接続を指定した名前でスレッドに設定する。\n<p/>\n名前はスレッド内でユニークでなければならない。\n\n**パラメータ:**\n- `connectionName` - データベース接続名\n- `con` - データベース接続\n\n**例外:**\n- `IllegalArgumentException` - カレントスレッドに対して同じ名前のデータベース接続が設定されている場合\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getConnection",
+      "level": 3,
+      "content": "```java\npublic static AppDbConnection getConnection()\n```\n\n現在のスレッドに紐付けられたデフォルトのデータベース接続を取得する。\n<p/>\nデータベース接続の取得には、\"transaction\"という名前が使用される。\n\n**戻り値:**\nデータベース接続\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getConnection",
+      "level": 3,
+      "content": "```java\npublic static AppDbConnection getConnection(String connectionName)\n```\n\n現在のスレッドに紐付けられた指定した名前のデータベース接続を取得する。\n\n**パラメータ:**\n- `connectionName` - データベース接続名\n\n**戻り値:**\nデータベース接続\n\n**例外:**\n- `IllegalArgumentException` - データベース接続が見つからなかった場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "containConnection",
+      "level": 3,
+      "content": "```java\npublic static boolean containConnection(String connectionName)\n```\n\n現在のスレッドに指定した名前のデータベース接続が保持されているか判定する。\n\n**パラメータ:**\n- `connectionName` - データベース接続名\n\n**戻り値:**\nデータベース接続が保持されていれば{@code true}\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "removeConnection",
+      "level": 3,
+      "content": "```java\npublic static void removeConnection()\n```\n\n現在のスレッドに紐付いたデフォルトのデータベース接続を削除する。\n<p/>\nデータベース接続の取得には\"transaction\"という名前が使用される。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "removeConnection",
+      "level": 3,
+      "content": "```java\npublic static void removeConnection(String connectionName)\n```\n\n現在のスレッドに紐付いた指定した名前のデータベース接続を削除する。\n\n**パラメータ:**\n- `connectionName` - データベース接続名\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getTransactionManagerConnection",
+      "level": 3,
+      "content": "```java\npublic static TransactionManagerConnection getTransactionManagerConnection()\n```\n\n現在のスレッドに紐付いたデフォルトのトランザクション制御を取得する。\n<p/>\nトランザクション制御の取得には、\"transaction\"という名前が使用される。\n\n**戻り値:**\nトランザクション制御\n\n**例外:**\n- `ClassCastException` - データベース接続の実体が{@link TransactionManagerConnection}を実装していない場合\n- `IllegalArgumentException` - データベース接続が見つからなかった場合\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getTransactionManagerConnection",
+      "level": 3,
+      "content": "```java\npublic static TransactionManagerConnection getTransactionManagerConnection(String connectionName)\n```\n\n現在のスレッドから指定した名前のトランザクション制御を取得する。\n\n**パラメータ:**\n- `connectionName` - データベース接続名\n\n**戻り値:**\nトランザクション制御\n\n**例外:**\n- `ClassCastException` - データベース接続の実体が{@link TransactionManagerConnection}を実装していない場合\n- `IllegalArgumentException` - データベース接続が見つからなかった場合\n\n---",
+      "id": "s14"
+    }
+  ],
+  "id": "javadoc-nablarch-core-db-connection-DbConnectionContext"
+}

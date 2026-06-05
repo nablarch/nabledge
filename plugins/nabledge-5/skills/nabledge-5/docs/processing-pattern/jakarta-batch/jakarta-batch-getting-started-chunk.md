@@ -155,7 +155,7 @@ INNER JOIN GRADE ON EMPLOYEE.GRADE_CODE = GRADE.GRADE_CODE
   詳細は、 [BatchletのNamedとDependentの説明](../../processing-pattern/jakarta-batch/jakarta-batch-getting-started-batchlet.md#対象テーブルのデータを削除する) を参照。
 * open メソッドで処理対象のデータを読み込む。
 * SQLファイルの配置場所や作成方法などは、 [任意のSQL(SQLファイル)で検索する](../../component/libraries/libraries-universal-dao.md#任意のsqlsqlファイルで検索する) を参照。
-* 大量のデータを読み込む場合は、メモリの逼迫を防ぐために UniversalDao#defer を使用して
+* 大量のデータを読み込む場合は、メモリの逼迫を防ぐために [UniversalDao#defer](../../javadoc/javadoc-nablarch-common-dao-UniversalDao.md) を使用して
   検索結果を [遅延ロード](../../component/libraries/libraries-universal-dao.md#検索結果を遅延ロードする) する。
 * readItem メソッドで読み込んだデータから一行分のデータを返却する。
   このメソッドで返却したオブジェクトが、後続する ItemProcessor の processItem メソッドの引数として与えられる。
@@ -240,7 +240,7 @@ public class BonusWriter extends AbstractItemWriter {
 
 この実装のポイント
 
-* UniversalDao#batchInsert を使用してエンティティのリストを一括登録する。
+* [UniversalDao#batchInsert](../../javadoc/javadoc-nablarch-common-dao-UniversalDao.md) を使用してエンティティのリストを一括登録する。
 * writeItems メソッド実行後にトランザクションがコミットされ、新たなトランザクションが開始される。
 * writeItems メソッド実行後、バッチ処理が readItem メソッド実行から繰り返される。
 

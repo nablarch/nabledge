@@ -24,7 +24,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.web.handler.ForwardingHandler
+* [nablarch.fw.web.handler.ForwardingHandler](../../javadoc/javadoc-nablarch-fw-web-handler-ForwardingHandler.md)
 
 ## モジュール一覧
 

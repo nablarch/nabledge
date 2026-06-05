@@ -1,0 +1,116 @@
+{
+  "title": "class FwHeaderReader",
+  "content": "**パッケージ:** nablarch.fw.messaging.reader\n\n**実装されたインタフェース:**\n- DataReader<RequestMessage>\n\n---\n\n```java\npublic class FwHeaderReader\nimplements DataReader<RequestMessage>\n```\n\n受信電文のフレームワーク制御ヘッダの解析を行うデータリーダ。\n<p/>\n{@link MessageReader}が読み込んだ受信電文のメッセージボディから\nフレームワーク制御ヘッダ部分を読み込み、後続のハンドラからそれらの値を参照可能とする。<br/>\nこのデータリーダの戻り値の型である{@link RequestMessage}は、フレームワーク制御ヘッダに\n対するアクセサを保持し、{@link nablarch.fw.Request}インターフェースを実装する。\n<p/>\n受信電文読み込み時にエラーが発生した場合は、必ず例外({@link MessageReadError})を送出する。\nこの場合、業務処理へのディスパッチは発生せず、フレームワークが直接エラー応答を行うことになる。\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "messageReader",
+      "level": 3,
+      "content": "```java\nprivate DataReader<ReceivedMessage> messageReader\n```\n\n受信電文のリーダ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "fwHeaderDef",
+      "level": 3,
+      "content": "```java\nprivate FwHeaderDefinition fwHeaderDef\n```\n\nフレームワーク制御ヘッダー定義\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "formatFileDir",
+      "level": 3,
+      "content": "```java\nprivate String formatFileDir\n```\n\n業務データフォーマット定義ファイル配置ディレクトリ論理名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "messageFormatFileNamePattern",
+      "level": 3,
+      "content": "```java\nprivate String messageFormatFileNamePattern\n```\n\n業務データフォーマット定義ファイル名パターン\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "replyMessageFormatFileNamePattern",
+      "level": 3,
+      "content": "```java\nprivate String replyMessageFormatFileNamePattern\n```\n\n応答電文のフォーマット定義ファイル名のパターン\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "read",
+      "level": 3,
+      "content": "```java\npublic RequestMessage read(ExecutionContext ctx)\n```\n\n受信電文のフレームワーク制御ヘッダ部分を読み込む。\n<p/>\n{@link MessageReader}で取得した受信電文オブジェクトの\nフレームワーク制御項目を読み込み、下記項目をスレッドコンテキストに設定する。\n<ul>\n    <li>リクエストID</li>\n    <li>内部リクエストID</li>\n    <li>ユーザID(フレームワーク制御項目に設定されている場合のみ)</li>\n</ul>\nまた、受信電文の業務データ部の読み込みと応答電文の業務データ部生成に使用する\nフォーマッタを決定し、要求電文オブジェクトに設定する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n要求電文オブジェクト（受信電文オブジェクトが{@code null}の場合は{@code null}を返す）\n\n**例外:**\n- `MessageReadError` - フレームワーク制御ヘッダのパースに失敗した場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "hasNext",
+      "level": 3,
+      "content": "```java\npublic boolean hasNext(ExecutionContext ctx)\n```\n\n次に読み込むデータが存在するかどうかを返却する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n次に読み込むデータが存在する場合は{@code true}\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic void close(ExecutionContext ctx)\n```\n\nこのリーダの利用を停止し、内部的に保持している各種リソースを解放する。\n\n**パラメータ:**\n- `ctx` - \n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "prepareMessageFormatter",
+      "level": 3,
+      "content": "```java\nprivate void prepareMessageFormatter(RequestMessage req)\n```\n\n受信電文の業務データ部を読み込む際に使用するフォーマッターを設定する。\n\n**パラメータ:**\n- `req` - 要求電文オブジェクト\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "prepareMessageFormatterOfReply",
+      "level": 3,
+      "content": "```java\nprivate void prepareMessageFormatterOfReply(RequestMessage req)\n```\n\n応答電文の業務データ部を作成する際に使用するフォーマッターを設定する。\n\n**パラメータ:**\n- `req` - 要求電文オブジェクト\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "formatterAt",
+      "level": 3,
+      "content": "```java\nprivate DataRecordFormatter formatterAt(String dirName, String fileName)\n```\n\n指定されたパス上のフォーマット定義ファイルを元に\nレコードフォーマッタを構成して返す。\n<p/>\n指定されたパス上にファイルが存在しなかった場合は{@code null}を返す。\n\n**パラメータ:**\n- `dirName` - フォーマット定義ファイルの配置先ディレクトリ(論理名)\n- `fileName` - フォーマット定義ファイルのファイル名\n\n**戻り値:**\nレコードフォーマッター\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setMessageReader",
+      "level": 3,
+      "content": "```java\npublic FwHeaderReader setMessageReader(DataReader<ReceivedMessage> messageReader)\n```\n\n受信電文を読み込むリーダを設定する。\n\n**パラメータ:**\n- `messageReader` - データリーダ\n\n**戻り値:**\nこのオブジェクト自体\n\n**例外:**\n- `IllegalArgumentException` - データリーダが{@code null}の場合\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setFwHeaderDefinition",
+      "level": 3,
+      "content": "```java\npublic FwHeaderReader setFwHeaderDefinition(FwHeaderDefinition def)\n```\n\nフレームワーク制御ヘッダ定義を設定する。\n\n**パラメータ:**\n- `def` - フレームワーク制御ヘッダ設定\n\n**戻り値:**\nこのオブジェクト自体\n\n**例外:**\n- `IllegalArgumentException` - フレームワーク制御ヘッダ設定が{@code null}の場合\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setFormatFileDir",
+      "level": 3,
+      "content": "```java\npublic FwHeaderReader setFormatFileDir(String dirName)\n```\n\n業務データ部のフォーマット定義ファイルの配置先ディレクトリ論理名を設定する。\n<p/>\nデフォルト値は\"format\"。\n\n**パラメータ:**\n- `dirName` - フォーマット定義ファイルの配置先ディレクトリ論理名\n\n**戻り値:**\nこのオブジェクト自体\n\n**例外:**\n- `IllegalArgumentException` - 配置先ディレクトリ論理名が無効な場合\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setMessageFormatFileNamePattern",
+      "level": 3,
+      "content": "```java\npublic FwHeaderReader setMessageFormatFileNamePattern(String pattern)\n```\n\n受信電文のフォーマット定義ファイル名のパターン文字列を設定する。\n<p/>\nデフォルトの設定では、以下の名称のフォーマット定義ファイルを取得する。\n<pre>\n(リクエストID) + \"_RECEIVE.fmt\"\n</pre>\n\n**パラメータ:**\n- `pattern` - フォーマット定義ファイル名のパターン文字列\n\n**戻り値:**\nこのオブジェクト自体\n\n**例外:**\n- `IllegalArgumentException` - パターン文字列が無効な場合\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setReplyMessageFormatFileNamePattern",
+      "level": 3,
+      "content": "```java\npublic FwHeaderReader setReplyMessageFormatFileNamePattern(String pattern)\n```\n\n応答電文のフォーマット定義ファイル名のパターン文字列を設定する。\n<p/>\nデフォルトの設定では、以下の名称のフォーマット定義ファイルを取得する。\n<pre>\n(リクエストID) + \"_SEND.fmt\"\n</pre>\n\n**パラメータ:**\n- `pattern` - フォーマット定義ファイル名のパターン文字列\n\n**戻り値:**\nこのオブジェクト自体\n\n**例外:**\n- `IllegalArgumentException` - パターン文字列が無効な場合\n\n---",
+      "id": "s18"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-reader-FwHeaderReader"
+}

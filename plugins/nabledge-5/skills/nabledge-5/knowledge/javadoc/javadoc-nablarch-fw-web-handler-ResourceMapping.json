@@ -1,0 +1,80 @@
+{
+  "title": "class ResourceMapping",
+  "content": "**パッケージ:** nablarch.fw.web.handler\n\n**実装されたインタフェース:**\n- HttpRequestHandler\n\n---\n\n```java\npublic class ResourceMapping\nimplements HttpRequestHandler\n```\n\nリクエストURIに応じて、リソースファイルに対するマッピングを行うリクエストハンドラ。\n<pre>\n画像等の静的ファイルへのリクエストやフォーワードを介さないJSP画面へのアクセスは、\n通常、Webサーバ・アプリケーションサーバでレスポンスを行う為、フレームワーク側で制御することができない。\nこのリクエストハンドラを経由させることで、これらのアクセスについても\n認可を始めとする共通処理の制御下におくことができる。\nマッピング先のパスには、{@link HttpResponse#setContentPath(String)}の書式に従って、\n以下の3種類のいずれかを指定することができる。\n  1. コンテキストクラスローダ上のリソース\n  2. サーブレットフォーワード（JSPを含む)\n  3. 内部フォーワードの実行結果\nただし、ファイルシステム上のローカルファイル(file://スキーム)は使用できない。\n\n次の例では、特定のベースURI(/webapp/resource/)下の画像ファイルに対するリクエストを、\nサーブレットコンテキスト上のリソース(/WEB-INF/resource/)を参照するようにマッピングしている。\nこうすることで、これらのファイルをフレームワークの認証・認可の制御下に置くことができる。\n  new StaticResource(\"/admin/resource/\", \"servlet:///WEB-INF/resource/\");\nHTTPリクエストと、それに対するレスポンスのコンテンツパスとの対応は以下のようになる。\n===========================================================================\n HTTPリクエストライン                コンテンツパス [コンテンツタイプ]\n===========================================================================\nGET /admin/resource/style.css  ->  servlet:///WEB-INF/resource/style.css \n                                   [text/css]\n-------------------------------    --------------------------------------\nGET /admin/resource/js/init.js ->  servlet:///WEB-INF/resource/js/init.js\n                                   [application/javascript]\n===========================================================================\n</pre>\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n**関連項目:** HttpResponse#setContentPath(String)  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "baseUri",
+      "level": 3,
+      "content": "```java\nprivate String baseUri\n```\n\nマッピング元ベースURI\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "scheme",
+      "level": 3,
+      "content": "```java\nprivate String scheme\n```\n\nマッピング先リソーススキーム\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "basePath",
+      "level": 3,
+      "content": "```java\nprivate String basePath\n```\n\nマッピング先ベースパス\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "ResourceMapping",
+      "level": 3,
+      "content": "```java\npublic ResourceMapping(String baseUri, String basePath)\n```\n\n特定のbaseUri配下へのリクエストを静的ファイルにマッピングする\nリクエストハンドラを生成する。\n\n**パラメータ:**\n- `baseUri` - マッピング元ベースURI\n- `basePath` - マッピング先リソースパス\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "ResourceMapping",
+      "level": 3,
+      "content": "```java\npublic ResourceMapping()\n```\n\nデフォルトコンストラクタ。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "setBaseUri",
+      "level": 3,
+      "content": "```java\npublic ResourceMapping setBaseUri(String baseUri)\n```\n\nマッピング元ベースURIを設定する。\n\n**パラメータ:**\n- `baseUri` - マッピング元ベースURI\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setBasePath",
+      "level": 3,
+      "content": "```java\npublic ResourceMapping setBasePath(String basePath)\n```\n\nマッピング先リソースパスを設定する。\n\n**パラメータ:**\n- `basePath` - マッピング先リソースパス\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx)\n```\n\n{@inheritDoc}\n<pre>\nこのクラスの実装では以下の処理を行う。\n  1. リクエストURI中のbaseUri以下の部分を取得する。\n  2. docRootに1.の結果を連結した文字列をコンテンツタイプとする。\n  3. リクエストURIの拡張子からコンテンツタイプを判定する。\n  4. HttpResponseを生成し、2,3の結果をそれに設定する。\n  5. 4の結果を返す。\n</pre>\n\n---",
+      "id": "s12"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-ResourceMapping"
+}

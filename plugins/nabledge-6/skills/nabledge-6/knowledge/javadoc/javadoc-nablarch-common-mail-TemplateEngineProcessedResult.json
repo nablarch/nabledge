@@ -1,0 +1,86 @@
+{
+  "title": "class TemplateEngineProcessedResult",
+  "content": "**パッケージ:** nablarch.common.mail\n\n---\n\n```java\npublic class TemplateEngineProcessedResult\n```\n\nテンプレートエンジンで処理した結果を保持するクラス。\n\n**作成者:** Taichi Uragami  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "DEFAULT_DELIMITER",
+      "level": 3,
+      "content": "```java\npublic static final String DEFAULT_DELIMITER\n```\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "subject",
+      "level": 3,
+      "content": "```java\nprivate final String subject\n```\n\n件名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "mailBody",
+      "level": 3,
+      "content": "```java\nprivate final String mailBody\n```\n\n本文\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "charset",
+      "level": 3,
+      "content": "```java\nprivate final String charset\n```\n\n文字セット\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "TemplateEngineProcessedResult",
+      "level": 3,
+      "content": "```java\npublic TemplateEngineProcessedResult(String subject, String mailBody, String charset)\n```\n\n{@link TemplateEngineProcessedResult}のインスタンスを生成する。\n\n**パラメータ:**\n- `subject` - 件名\n- `mailBody` - 本文\n- `charset` - 文字セット\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "valueOf",
+      "level": 3,
+      "content": "```java\npublic static TemplateEngineProcessedResult valueOf(String value)\n```\n\nルールに則って文字列を件名と本文に分割して{@link TemplateEngineProcessedResult}のインスタンスを生成するファクトリーメソッド。\n\n<p>\nこれは{@link #DEFAULT_DELIMITER デフォルトのデリミタ}を指定して{@link #valueOf(String, String)}を呼び出すショートカットである。\n</p>\n\n**パラメータ:**\n- `value` - 件名と本文を含む文字列\n\n**戻り値:**\n件名と本文がセットされたインスタンス\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "valueOf",
+      "level": 3,
+      "content": "```java\npublic static TemplateEngineProcessedResult valueOf(String value, String delimiter)\n                                      throws IllegalArgumentException\n```\n\nテンプレートエンジンで処理済みの文字列を件名と本文に分割して{@link TemplateEngineProcessedResult}のインスタンスを生成するファクトリーメソッド。\n\n<p>\n文字列はデリミタによって件名と本文に分割される。\n基本的なルールは次の通り。\n</p>\n\n<ol>\n<li>デリミタは引数{@code delimiter}で表される文字列だけからなる行とする（つまり前後に余計な文字を含むものはデリミタとみなさない）</li>\n<li>デリミタより前にある行は件名とみなす</li>\n<li>デリミタより後の文字列をすべて本文とみなす</li>\n</ol>\n\n<p>\n例えば、このファクトリーメソッドに次のような文字列が渡されたとする。\n</p>\n\n<pre>{@code テスト件名\n---\nテスト本文１\nテスト本文２\nテスト本文３\n}</pre>\n\n<p>\nデリミタが{@literal \"---\"}である場合、{@code テスト件名}が件名となり、{@code テスト本文１}以降が本文となる。\n</p>\n\n<p>\nデリミタよりも前、件名を期待するエリアでは空行は無視される。\nつまり、次のような文字列は有効である。\n</p>\n\n<pre>{@code\nテスト件名\n\n\n---\nテスト本文１\nテスト本文２\nテスト本文３\n}</pre>\n\n<p>\nデリミタよりも後、本文を構成するエリアでは空行も無視されずそのまま本文として扱われる。\n</p>\n\n<p>\nなお、このファクトリーメソッドでは文字セットは設定されない。\n</p>\n\n**パラメータ:**\n- `value` - 件名とデリミタと本文を含む文字列\n- `delimiter` - 件名と本文を分けるデリミタ\n\n**戻り値:**\n件名と本文がセットされたインスタンス\n\n**例外:**\n- `IllegalArgumentException` - 次のいずれかの場合に投げられる。\n         <ul>\n         <li>デリミタが含まれない場合</li>\n         <li>件名が無い場合</li>\n         <li>件名が改行を含んで複数行に渡っている場合</li>\n         <li>本文が無い場合</li>\n         </ul>\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getSubject",
+      "level": 3,
+      "content": "```java\npublic String getSubject()\n```\n\n件名を取得する。\n\n**戻り値:**\n件名\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getMailBody",
+      "level": 3,
+      "content": "```java\npublic String getMailBody()\n```\n\n本文を取得する。\n\n**戻り値:**\n本文\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getCharset",
+      "level": 3,
+      "content": "```java\npublic String getCharset()\n```\n\n文字セットを取得する。\n\n**戻り値:**\n文字セット\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-common-mail-TemplateEngineProcessedResult"
+}

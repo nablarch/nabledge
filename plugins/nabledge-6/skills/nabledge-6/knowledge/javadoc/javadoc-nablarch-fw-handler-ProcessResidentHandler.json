@@ -1,0 +1,86 @@
+{
+  "title": "class ProcessResidentHandler",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**実装されたインタフェース:**\n- Handler<Object,Object>\n\n---\n\n```java\npublic class ProcessResidentHandler\nimplements Handler<Object,Object>\n```\n\nプロセスを常駐化するためのハンドラ。\n<p/>\n本ハンドラは、プロセスを常駐化するものであり下記表の条件に従い、\n後続処理の呼び出しや処理停止の判断を行う。\n<pre>\n-----------------------------+----------------------------------------------------------------------\n正常に処理を終了する条件     | {@link #setNormalEndExceptions(java.util.List)}で設定した例外が送出された場合(サブクラス含む)\n                             |\n                             | 設定を省略した場合のデフォルト動作として、{@link ProcessStop}が発生した場合に処理を停止する。\n                             | これは、本ハンドラの後続ハンドラに{@link ProcessStopHandler}を設定することにより、\n                             | 安全に常駐プロセスを停止することを可能としている。\n-----------------------------+----------------------------------------------------------------------\n異常終了する条件             | {@link #setAbnormalEndExceptions(java.util.List)}で設定した例外が送出された場合(サブクラス含む)\n                             | または、{@link Error}が送出された場合(サブクラス含む)\n-----------------------------+----------------------------------------------------------------------\n後続ハンドラを呼び出す条件   | 上記に該当しない例外が発生した場合は、障害通知ログを出力後に一定時間待機し、\n                             | 再度後続ハンドラに処理を委譲する。\n                             | また、例外が発生せずに後続ハンドラが正常に処理を終了した場合も、\n                             | 一定時間待機後に再度後続ハンドラに処理を委譲する。\n                             |\n                             | 待機時間(データ監視間隔)は、{@link #setDataWatchInterval(int)}によって設定した時間(ms)となる。\n                             | 設定を省略した場合のデータ監視間隔は1000msとなる。\n                             |\n                             | なお、本ハンドラはサービス閉塞中例外({@link ServiceUnavailable})が発生した場合は、\n                             | 一定時間待機後に後続ハンドラを呼び出す仕様となっている。\n                             | このため、本ハンドラの後続ハンドラに{@link nablarch.common.handler.ServiceAvailabilityCheckHandler}を設定することにより、\n                             | プロセスが開局されるまで業務処理(バッチアクション)の実行を抑制することが可能となっている。\n-----------------------------+----------------------------------------------------------------------\n</pre>\n以下は、本ハンドラの設定例である。\n<p/>\nデータ監視間隔は、常駐プロセスごとに異なる値を設定する事が想定される。\n常駐プロセスごとに異なる値を設定するには、下記例のように設定ファイルを記述し、\n常駐プロセス起動時にデータ監視間隔を指定すれば良い。\n<pre>\n&lt;!-- 常駐化ハンドラの設定 -->\n&lt;component class=\"nablarch.fw.handler.ProcessResidentHandler\">\n  &lt;!--\n  データ監視間隔\n  データ監視間隔は、プレースホルダ形式で記述しシステムプロパティの値を埋め込めるようにする。\n  -->\n  &lt;property name=\"dataWatchInterval\" value=\"${data-watch-interval}\" />\n&lt;/component>\n</pre>\n\n<pre>\n// 常駐プロセス起動時にシステムプロパティ(-Dオプション)にデータ監視間隔を設定する。\n// 500msを設定する場合の例\njava -Ddata-watch-interval=500 ・・・\n</pre>\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "dataWatchInterval",
+      "level": 3,
+      "content": "```java\nprivate int dataWatchInterval\n```\n\nデータの監視間隔。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "normalEndExceptions",
+      "level": 3,
+      "content": "```java\nprivate final List<Class<? extends RuntimeException>> normalEndExceptions\n```\n\n正常にプロセスを停止する例外のリスト。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "abnormalEndExceptions",
+      "level": 3,
+      "content": "```java\nprivate final List<Class<? extends RuntimeException>> abnormalEndExceptions\n```\n\nプロセスを異常終了させる例外のリスト。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(Object data, ExecutionContext context)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "isProcessAbnormalEnd",
+      "level": 3,
+      "content": "```java\nprivate boolean isProcessAbnormalEnd(RuntimeException runtimeException)\n```\n\nプロセスを異常終了させるか否か。\n\n**パラメータ:**\n- `runtimeException` - エラー情報\n\n**戻り値:**\n処理を異常終了させる場合はtrue\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "isProcessNormalEnd",
+      "level": 3,
+      "content": "```java\nprivate boolean isProcessNormalEnd(RuntimeException runtimeException)\n```\n\n正常に処理を終了させるか否か。\n<p/>\nパラメータで指定された{@link RuntimeException}が、\n{@link #setNormalEndExceptions(java.util.List)}で設定された例外クラスの場合\n(サブクラス含む)は、処理を正常に終了する。\n\n**パラメータ:**\n- `runtimeException` - エラー情報\n\n**戻り値:**\n処理を正常に停止させる場合はtrue\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setDataWatchInterval",
+      "level": 3,
+      "content": "```java\npublic void setDataWatchInterval(int dataWatchInterval)\n```\n\nデータ監視間隔(ミリ秒)を設定する。\n\n**パラメータ:**\n- `dataWatchInterval` - データ監視間隔(ミリ秒)\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setNormalEndExceptions",
+      "level": 3,
+      "content": "```java\npublic void setNormalEndExceptions(List<String> normalEndExceptions)\n```\n\n処理を正常に終了させる例外クラスを設定する。\n\n**パラメータ:**\n- `normalEndExceptions` - 正常に処理を終了させる例外クラス\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setAbnormalEndExceptions",
+      "level": 3,
+      "content": "```java\npublic void setAbnormalEndExceptions(List<String> abnormalEndExceptions)\n```\n\n処理を異常終了させる例外クラスを設定する。\n\n**パラメータ:**\n- `abnormalEndExceptions` - 異常終了させる例外クラス\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "restoreHandlerQueue",
+      "level": 3,
+      "content": "```java\nprivate ExecutionContext restoreHandlerQueue(ExecutionContext context, List<Handler> snapshot)\n```\n\nハンドラキューの内容を、ループ開始前の状態に戻す。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n- `snapshot` - ハンドラキューのスナップショット\n\n**戻り値:**\n実行コンテキスト(引数と同じインスタンス)\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-ProcessResidentHandler"
+}

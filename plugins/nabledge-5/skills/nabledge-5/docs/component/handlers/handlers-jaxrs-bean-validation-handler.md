@@ -10,7 +10,7 @@
 
 本ハンドラは、リソース(アクション)クラスが受け取るForm(Bean)に対して、[Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を実行する。
 バリデーションでバリデーションエラーが発生した場合には、後続のハンドラに処理は委譲せずに、
-ApplicationException を送出して処理を終了する。
+[ApplicationException](../../javadoc/javadoc-nablarch-core-message-ApplicationException.md) を送出して処理を終了する。
 
 本ハンドラでは、以下の処理を行う。
 
@@ -22,7 +22,7 @@ ApplicationException を送出して処理を終了する。
 
 ## ハンドラクラス名
 
-* nablarch.fw.jaxrs.JaxRsBeanValidationHandler
+* [nablarch.fw.jaxrs.JaxRsBeanValidationHandler](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxRsBeanValidationHandler.md)
 
 ## モジュール一覧
 

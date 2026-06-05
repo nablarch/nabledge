@@ -1,0 +1,98 @@
+{
+  "title": "class BasicStaticDataCache",
+  "content": "**パッケージ:** nablarch.core.cache\n\n**実装されたインタフェース:**\n- StaticDataCache<T>\n- Initializable\n\n---\n\n```java\npublic class BasicStaticDataCache\nimplements StaticDataCache<T>, Initializable\n```\n\nStaticDataCacheインタフェースの基本実装クラス。<br/>\n静的データをHashMapに保持する。\n\n**作成者:** Koichi Asano  \n**param:** 静的データの型  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "loadOnStartup",
+      "level": 3,
+      "content": "```java\nprivate boolean loadOnStartup\n```\n\n初期化時ロード要否。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "loader",
+      "level": 3,
+      "content": "```java\nprivate StaticDataLoader<T> loader\n```\n\n静的データのローダ。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "cache",
+      "level": 3,
+      "content": "```java\nprivate Map<Object,T> cache\n```\n\n静的データのキャッシュ。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "indexes",
+      "level": 3,
+      "content": "```java\nprivate Map<String,Map<Object,List<T>>> indexes\n```\n\n静的データのインデックス。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "setLoader",
+      "level": 3,
+      "content": "```java\npublic void setLoader(StaticDataLoader<T> loader)\n```\n\n静的データのローダを設定する。\n\n**パラメータ:**\n- `loader` - 静的データのローダ\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setLoadOnStartup",
+      "level": 3,
+      "content": "```java\npublic void setLoadOnStartup(boolean loadOnStartup)\n```\n\n初期化時ロード要否を設定する。\n\n**パラメータ:**\n- `loadOnStartup` - 初期化時ロード要否\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "refresh",
+      "level": 3,
+      "content": "```java\npublic void refresh()\n```\n\n{@inheritDoc}<br/>\n\n一括ロードを実行する際は、データを全てロードしてからキャッシュデータの上書きを\n行うことで、切り替えによるデータ取得をブロッキングする時間を最小化している。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getValue",
+      "level": 3,
+      "content": "```java\npublic T getValue(Object id)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "loadValue",
+      "level": 3,
+      "content": "```java\nprivate synchronized T loadValue(Object id)\n```\n\n静的データのローダからIDに紐付くデータをロードする。\n\n**パラメータ:**\n- `id` - ロードするデータのID\n\n**戻り値:**\nロードしたデータ\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getValues",
+      "level": 3,
+      "content": "```java\npublic List<T> getValues(String indexName, Object key)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "loadIndexValues",
+      "level": 3,
+      "content": "```java\nprivate synchronized List<T> loadIndexValues(String indexName, Object key, Map<Object,List<T>> index)\n```\n\nインデックスに紐付くデータのリストをロードする。\n\n**パラメータ:**\n- `indexName` - インデックス名\n- `key` - キー\n- `index` - インデックス\n\n**戻り値:**\nロードしたデータのリスト\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "addIndex",
+      "level": 3,
+      "content": "```java\nprivate Map<Object,List<T>> addIndex(String indexName)\n```\n\nインデックスを追加する。\n\n**パラメータ:**\n- `indexName` - インデックス名\n\n**戻り値:**\n追加したインデックスのMap\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-core-cache-BasicStaticDataCache"
+}

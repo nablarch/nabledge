@@ -39,7 +39,7 @@
 ### フォーマッタを使用する
 
 フォーマットをする際は
-FormatterUtil
+[FormatterUtil](../../javadoc/javadoc-nablarch-core-text-FormatterUtil.md)
 を使用する。
 
 フォーマッタは、使用するフォーマッタを特定するためにクラス名とは別にフォーマッタ名を持つ。
@@ -176,9 +176,9 @@ public class SampleDto {
 
 フォーマッタを追加する場合は、以下の手順が必要となる。
 
-1. Formatter の実装クラスを作成する。
+1. [Formatter](../../javadoc/javadoc-nablarch-core-text-Formatter.md) の実装クラスを作成する。
 
-フォーマット処理は Formatter を実装したクラスが行う。
+フォーマット処理は [Formatter](../../javadoc/javadoc-nablarch-core-text-Formatter.md) を実装したクラスが行う。
 
 1. コンポーネント設定ファイルに作成したフォーマッタの設定を追加する
 

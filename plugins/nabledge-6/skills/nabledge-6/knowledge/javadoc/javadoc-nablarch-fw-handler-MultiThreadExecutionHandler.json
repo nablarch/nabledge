@@ -1,0 +1,116 @@
+{
+  "title": "class MultiThreadExecutionHandler",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**実装されたインタフェース:**\n- ExecutionHandler<Object,MultiStatus,MultiThreadExecutionHandler>\n\n---\n\n```java\npublic class MultiThreadExecutionHandler\nimplements ExecutionHandler<Object,MultiStatus,MultiThreadExecutionHandler>\n```\n\n後続ハンドラの処理を子スレッドを用いて実行するハンドラ。\n<p/>\n本ハンドラ以降の処理は、新たに作成する子スレッド上で実行される。\nこれにより、後続スレッドの処理に対するタイムアウトの設定や、\n停止要求(graceful-termination)を行うことが可能となる。\n<p/>\nまた、並行実行数を設定することにより、後続処理を複数のスレッド上で並行実行する\nことができる。(デフォルトの並行実行数は1)\n<p/>\nこのハンドラでは、全てのスレッドで単一のデータリーダインスタンスを共有する。\n従って、データリーダがアクセスするリソースに対する同期制御は各データリーダ側\nで担保されている必要がある。\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "concurrentNumber",
+      "level": 3,
+      "content": "```java\nprivate int concurrentNumber\n```\n\n並行実行スレッド数 (デフォルト: 1スレッド)\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "terminationTimeout",
+      "level": 3,
+      "content": "```java\nprivate long terminationTimeout\n```\n\n処理停止要求のタイムアウト秒数 (デフォルト: 600秒)\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "commitLogger",
+      "level": 3,
+      "content": "```java\nprivate CommitLogger commitLogger\n```\n\nコミットログ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "taskExecutor",
+      "level": 3,
+      "content": "```java\nprivate ThreadPoolExecutor taskExecutor\n```\n\nスレッド実行管理モジュール\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "taskStatus",
+      "level": 3,
+      "content": "```java\nprivate CompletionService<Result> taskStatus\n```\n\nスレッド実行状況監視モジュール\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "taskTracker",
+      "level": 3,
+      "content": "```java\nprivate List<Future<Result>> taskTracker\n```\n\n各スレッドの処理実行状況を保持するリスト\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "support",
+      "level": 3,
+      "content": "```java\nprivate final ExecutionHandler.Support<Object,MultiStatus> support\n```\n\nユーティリティ\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s10"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic MultiStatus handle(Object data, ExecutionContext context)\n```\n\n{@inheritDoc}\nこの実装では、実行コンテキストのクローンを作成し、後続のハンドラ処理を並列実行する。\n<p/>\n後続処理のいずれかのスレッドにおいて例外が発生した場合は、\n処理中の全スレッドに対して中止要求(interruption)をかけ、その完了を待つ。\nスレッド停止後、各スレッドでの処理状況の詳細をログに出力した後、\n元例外をラップした Result.InternalError を送出する。\n<p/>\nただし、中止要求後、terminationTimeout値に指定された秒数を過ぎても完了しない\nスレッドがあった場合は、当該スレッドの停止を断念しリターンする。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "terminate",
+      "level": 3,
+      "content": "```java\nprivate void terminate(ExecutionContext context)\n```\n\n使用中のデータリーダを閉じ、現在実行中の全てのスレッドに対して停止要求をかける。\n<p/>\nterminationTimeoutに設定された時間内にスレッドが停止しなかった場合、\nその内容をログに出力する。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "reportThreadStatus",
+      "level": 3,
+      "content": "```java\nprivate void reportThreadStatus(ExecutionContext context)\n```\n\nスレッドプール上の各スレッドの終了状態をログに出力する。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "initializeThreadPool",
+      "level": 3,
+      "content": "```java\nprivate void initializeThreadPool()\n```\n\nスレッドプールを初期化する。\n\nスレッドプールの通常値と上限値を一致させスレッドサイズを固定化する。\nまた、タスクキューの上限は設けないので、\nタスク追加の時点で拒否されたり、ブロックされたりすることは無い。\n\nなお、本ハンドラが複数回実行された場合、前回実行時に作成したスレッドプールが\nアクティブであるかをチェックし、もしそうであれば再作成せずに流用する。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "createTaskFor",
+      "level": 3,
+      "content": "```java\nprivate Callable<Result> createTaskFor(Object data, ExecutionContext context)\n```\n\n実行コンテキストのクローンを作成し、そのコンテキストを使用して\n後続処理を行うタスクを作成する。\n\n**パラメータ:**\n- `data` - 入力データオブジェクト\n- `context` - 実行コンテキスト\n\n**戻り値:**\nタスク\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setConcurrentNumber",
+      "level": 3,
+      "content": "```java\npublic MultiThreadExecutionHandler setConcurrentNumber(int concurrentNumber)\n```\n\n並行実行スレッド数を設定する。\n<p/>\nデフォルト値は1である。\n\n**パラメータ:**\n- `concurrentNumber` - 並行実行スレッド数\n\n**戻り値:**\nこのハンドラ自体\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setTerminationTimeout",
+      "level": 3,
+      "content": "```java\npublic MultiThreadExecutionHandler setTerminationTimeout(int terminationTimeout)\n```\n\n処理停止要求のタイムアウト秒数を設定する。\n<p/>\nデフォルト値は 600秒 である。\n\n**パラメータ:**\n- `terminationTimeout` - 処理停止要求のタイムアウト秒数\n\n**戻り値:**\nこのハンドラ自体。\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setCommitLogger",
+      "level": 3,
+      "content": "```java\npublic void setCommitLogger(CommitLogger commitLogger)\n```\n\nコミットログ出力オブジェクトを設定する。\n\n**パラメータ:**\n- `commitLogger` - コミットログ出力オブジェクト\n\n---",
+      "id": "s18"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-MultiThreadExecutionHandler"
+}

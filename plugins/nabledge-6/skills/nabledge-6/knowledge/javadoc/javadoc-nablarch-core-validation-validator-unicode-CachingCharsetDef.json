@@ -1,0 +1,62 @@
+{
+  "title": "class CachingCharsetDef",
+  "content": "**パッケージ:** nablarch.core.validation.validator.unicode\n\n**継承階層:**\n```\njava.lang.Object\n  └─ CharsetDefSupport\n      └─ nablarch.core.validation.validator.unicode.CachingCharsetDef\n```\n\n---\n\n```java\npublic class CachingCharsetDef\nextends CharsetDefSupport\n```\n\n許容文字かどうかの判定結果をキャッシュする{@link CharsetDef}実装クラス。<br/>\n他の{@link CharsetDef}実装クラスにラップして使用することで、\n判定処理に要する処理速度を改善できる。\n\n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "MAX",
+      "level": 3,
+      "content": "```java\nprivate static final int MAX\n```\n\n文字（コードポイント）の最大数。\n{@link BitSet}はスレッドセーフでないため、初期状態で十分な容量を確保し\n使用領域に拡張が発生しないようにする。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "allowed",
+      "level": 3,
+      "content": "```java\nprivate final BitSet allowed\n```\n\n許可文字のキャッシュ\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "rejected",
+      "level": 3,
+      "content": "```java\nprivate final BitSet rejected\n```\n\n不許可許可文字のキャッシュ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "charsetDef",
+      "level": 3,
+      "content": "```java\nprivate CharsetDef charsetDef\n```\n\n実際の許容文字定義\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "setCharsetDef",
+      "level": 3,
+      "content": "```java\npublic void setCharsetDef(CharsetDef charsetDef)\n```\n\n許容文字集合定義を設定する。\n\n**パラメータ:**\n- `charsetDef` - 許容文字集合定義\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "contains",
+      "level": 3,
+      "content": "```java\npublic synchronized boolean contains(int codePoint)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getDelegate",
+      "level": 3,
+      "content": "```java\nprivate CharsetDef getDelegate()\n                       throws IllegalStateException\n```\n\n委譲先の許容文字集合定義を取得する。\n\n**戻り値:**\n許容文字集合定義\n\n**例外:**\n- `IllegalStateException` - 委譲先の許容文字集合定義が設定されていな場合\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-core-validation-validator-unicode-CachingCharsetDef"
+}

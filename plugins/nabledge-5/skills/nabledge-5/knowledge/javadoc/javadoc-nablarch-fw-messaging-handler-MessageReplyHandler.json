@@ -1,0 +1,74 @@
+{
+  "title": "class MessageReplyHandler",
+  "content": "**パッケージ:** nablarch.fw.messaging.handler\n\n**実装されたインタフェース:**\n- Handler<Object,Result>\n\n---\n\n```java\npublic class MessageReplyHandler\nimplements Handler<Object,Result>\n```\n\n受信電文に設定された宛先に対して応答電文を送信するハンドラ。 \n\n本ハンドラは、後続ハンドラの処理結果であるResponseMessageオブジェクトの内容を\nもとに応答電文を構築し送信する。\n送信した応答電文オブジェクトをこのハンドラの戻り値として返す。\n\n<div><b>他のハンドラとの前後関係</b></div>\n<hr/>\n\n<pre>\n- トランザクション制御ハンドラ\n   同ハンドラとの前後関係は、2相コミットを使用するか否かで変わる。\n\n   a) 2相コミットを使用する場合。\n      DBトランザクションとJMSトランザクションをトランザクションマネージャー側で\n      まとめてコミットするので、トランザクション制御ハンドラは、このハンドラより\n      先に実行されなければならない。\n\n   b) 2相コミットを使用しない場合。\n     このハンドラが応答を送信する前に、DBトランザクション終了させ、業務処理の結果を\n     確定させる必要がある。\n     このため、トランザクション制御ハンドラはこのハンドラの後に実行されなければ\n     ならない。\n\n- データリードハンドラ\n   要求電文のフォーマット不正に起因する例外はデータリーダで発生する可能性があり、\n   そのエラー応答電文をこのハンドラで送出する必要がある。\n   このため、データリードハンドラはこのハンドラの後に実行されなければならない。\n</pre>\n\n\n<div><b>例外制御</b></div>\n<hr/>\nこのハンドラでは、全てのエラー(java.lang.Error)及び実行時例外を補足しエラー応答を行う。\n(従って、本ハンドラではいかなる場合においても応答電文の送信処理を実行することになる。)\nエラー応答が正常に終了した場合は、捕捉した例外を再送出する。\nFatalログの出力およびサーバプロセス停止要否の判断はnablarch.fw.handler.RequestThreadLoopHandlerで行う。\n</p>\n応答電文の送信処理中にエラーが発生した場合は、以下の処理を行う。\nいずれのケースにおいても、Fatalログの出力はnablarch.fw.handler.RequestThreadLoopHandlerで行われる。\n<pre>\n1. 後続ハンドラが正常終了していた(=応答電文オブジェクトがリターンされていた)場合。\n     送信エラーを再送出する。\n\n2. 後続ハンドラが異常終了していた(=実行時例外/エラーが送出されていた)場合。\n     送信エラーの内容をWarningレベルのログに出力した上で、\n     後続ハンドラが送出した例外を再送出する。　\n</pre>\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "fwHeaderDefinition",
+      "level": 3,
+      "content": "```java\nprivate FwHeaderDefinition fwHeaderDefinition\n```\n\n応答電文中のフレームワークヘッダ定義\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "MessageReplyHandler",
+      "level": 3,
+      "content": "```java\npublic MessageReplyHandler()\n```\n\nコンストラクタ。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Result handle(Object data, ExecutionContext ctx)\n```\n\n{@inheritDoc}\nこの実装では後続ハンドラの処理結果であるResponseMessageのオブジェクトの内容を\nもとに応答電文を構築し送信する。\nまた、送信した応答電文オブジェクトをハンドラの戻り値として返す。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "errorResponseOf",
+      "level": 3,
+      "content": "```java\nprotected ResponseMessage errorResponseOf(Throwable e, ExecutionContext ctx)\n```\n\n後続ハンドラの処理中に未捕捉の例外が発生した場合に応答するエラー電文を作成する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n- `e` - 発生した例外\n\n**戻り値:**\nエラー応答電文\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getStatusCode",
+      "level": 3,
+      "content": "```java\nprotected String getStatusCode(ResponseMessage message)\n```\n\n応答電文のフレームワーク制御ヘッダに設定するステータスコードを取得する。\n<p/>\nデフォルトの設定では、Result.getStatusCode() の戻り値と同じ値を\nフレームワーク制御ヘッダーに指定する。\n\nプロジェクト固有のステータスコード体系を定義している場合は、本メソッドを\nオーバーライドすること。\n\n**パラメータ:**\n- `message` - 応答電文オブジェクト\n\n**戻り値:**\nフレームワーク制御ヘッダに設定するステータスコード\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "rethrow",
+      "level": 3,
+      "content": "```java\nprivate void rethrow(Throwable e)\n```\n\n渡された例外を再送出する。\n\n**パラメータ:**\n- `e` - 例外\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setFwHeaderDefinition",
+      "level": 3,
+      "content": "```java\npublic MessageReplyHandler setFwHeaderDefinition(FwHeaderDefinition def)\n```\n\n応答電文中のフレームワーク制御ヘッダ定義を設定する。\n\n**パラメータ:**\n- `def` - フレームワーク制御ヘッダ定義\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s11"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-handler-MessageReplyHandler"
+}

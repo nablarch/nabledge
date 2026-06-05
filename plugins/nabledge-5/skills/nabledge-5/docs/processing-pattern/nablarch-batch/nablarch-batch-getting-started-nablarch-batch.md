@@ -102,15 +102,15 @@ public class ZipCodeForm {
 
 この実装のポイント
 
-* [データバインド](../../component/libraries/libraries-data-bind.md#データバインド) を用いてフォームにCSVをバインドするため、Csv
-  及び CsvFormat を付与する。
+* [データバインド](../../component/libraries/libraries-data-bind.md#データバインド) を用いてフォームにCSVをバインドするため、[Csv](../../javadoc/javadoc-nablarch-common-databind-csv-Csv.md)
+  及び [CsvFormat](../../javadoc/javadoc-nablarch-common-databind-csv-CsvFormat.md) を付与する。
 * [Bean Validation](../../component/libraries/libraries-bean-validation.md#bean-validation) を実施するために、バリデーション用のアノテーションを付与する。
-* 行数プロパティを定義し、ゲッタに LineNumber を付与することで、
+* 行数プロパティを定義し、ゲッタに [LineNumber](../../javadoc/javadoc-nablarch-common-databind-LineNumber.md) を付与することで、
   対象データが何行目のデータであるかを自動的に設定できる。
 
 データリーダの作成
 
-ファイルを読み込んで一行ずつ業務アクションメソッドへ引き渡す、 DataReader の実装クラスを作成する。
+ファイルを読み込んで一行ずつ業務アクションメソッドへ引き渡す、 [DataReader](../../javadoc/javadoc-nablarch-fw-DataReader.md) の実装クラスを作成する。
 
 ZipCodeFileReader.java
 
@@ -195,7 +195,7 @@ public class ZipCodeFileReader implements DataReader<ZipCodeForm> {
 * close メソッドにファイルの読み込み終了後のストリームのclose処理を実装する。
 
 > **Tip:**
-> ObjectMapper のように
+> [ObjectMapper](../../javadoc/javadoc-nablarch-common-databind-ObjectMapper.md) のように
 > hasNext メソッドを持たないクラスからデータを読み込む場合、イテレータを作成することでデータリーダの実装をシンプルにできる上、
 > データ読み込み処理をバッチごとに実装する手間を省くことができる。
 > イテレータの実装に関してはExampleアプリケーションの ObjectMapperIterator.java の実装を参照。
@@ -208,7 +208,7 @@ public class ZipCodeFileReader implements DataReader<ZipCodeForm> {
 
 業務アクションの作成
 
-BatchAction を継承し、業務アクションクラスを作成する。
+[BatchAction](../../javadoc/javadoc-nablarch-fw-action-BatchAction.md) を継承し、業務アクションクラスを作成する。
 
 ImportZipCodeFileAction.java
 
@@ -253,7 +253,7 @@ public class ImportZipCodeFileAction extends BatchAction<ZipCodeForm> {
 この実装のポイント
 
 * handle メソッドに、データリーダから渡された一行分のデータに対する処理を実装する。
-* UniversalDao#insert を使用して住所エンティティをデータベースに登録する。
+* [UniversalDao#insert](../../javadoc/javadoc-nablarch-common-dao-UniversalDao.md) を使用して住所エンティティをデータベースに登録する。
 * createReader メソッドでは使用するデータリーダクラスのインスタンスを返却する。
 
 > **Tip:**

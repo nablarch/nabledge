@@ -1,0 +1,92 @@
+{
+  "title": "class HttpRequestTimeMetricsMetaDataBuilder",
+  "content": "**パッケージ:** nablarch.integration.micrometer.instrument.http\n\n**実装されたインタフェース:**\n- HandlerMetricsMetaDataBuilder<HttpRequest,Object>\n\n---\n\n```java\npublic class HttpRequestTimeMetricsMetaDataBuilder\nimplements HandlerMetricsMetaDataBuilder<HttpRequest,Object>\n```\n\nHTTPリクエストの処理時間のメトリクスに設定するメタ情報を構築するビルダー。\n<p>\nメトリクスの名前は{@code \"http.server.requests\"}を返す。\n</p>\n<p>\nまた、タグのリストは以下の内容で作成する。\n<table>\n  <tr>\n    <th>タグ</th>\n    <th>説明</th>\n  </tr>\n  <tr>\n    <td>class</td>\n    <td>\n      リクエストを処理したクラスの名前({@link Class#getName()})。<br>\n      クラスの情報を取得できない場合は {@code UNKNOWN}。\n    </td>\n  </tr>\n  <tr>\n    <td>method</td>\n    <td>\n      リクエストを処理したメソッドを表す文字列。<br>\n      この文字列は、メソッド名の後ろに引数の型の正規名({@link Class#getCanonicalName()})をアンダースコア({@code _})で\n      つなげたものになる（例:{@code fooMethod_int_java.lang.String}）。<br>\n      メソッドの情報を取得できない場合は {@code UNKNOWN}。\n    </td>\n  </tr>\n  <tr>\n    <td>httpMethod</td>\n    <td>HTTPメソッド</td>\n  </tr>\n  <tr>\n    <td>status</td>\n    <td>HTTPステータスコード</td>\n  </tr>\n  <tr>\n    <td>outcome</td>\n    <td>\n      HTTPステータスコードの種類を表す文字列。<br>\n      1XX は {@code INFORMATION}, 2XX は {@code SUCCESS}, 3XX は {@code REDIRECTION},\n      4XX は {@code CLIENT_ERROR}, 5XX は {@code SERVER_ERROR}, それ以外の場合は {@code UNKNOWN}。\n    </td>\n  </tr>\n  <tr>\n    <td>exception</td>\n    <td>例外がスローされた場合は、そのクラスの単純名（スローされていない場合は {@code \"None\"}）</td>\n  </tr>\n</table>\n</p>\n\n**作成者:** Tanaka Tomoyuki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "DEFAULT_METRICS_NAME",
+      "level": 3,
+      "content": "```java\nstatic final String DEFAULT_METRICS_NAME\n```\n\nデフォルトのメトリクス名。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DEFAULT_METRICS_DESCRIPTION",
+      "level": 3,
+      "content": "```java\nstatic final String DEFAULT_METRICS_DESCRIPTION\n```\n\nデフォルトのメトリクスの説明。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "metricsName",
+      "level": 3,
+      "content": "```java\nprivate String metricsName\n```\n\nメトリクス名。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "metricsDescription",
+      "level": 3,
+      "content": "```java\nprivate String metricsDescription\n```\n\nメトリクスの説明。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "buildTagList",
+      "level": 3,
+      "content": "```java\npublic List<Tag> buildTagList(HttpRequest request, ExecutionContext context, Object result, Throwable thrownThrowable)\n```\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "buildMethodTag",
+      "level": 3,
+      "content": "```java\nprivate String buildMethodTag(Method method)\n```\n\n{@code method} タグに設定する値を構築する。\n\n**パラメータ:**\n- `method` - 実行されたメソッド\n\n**戻り値:**\n{@code method} タグに設定する値\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "resolveOutcome",
+      "level": 3,
+      "content": "```java\nprivate String resolveOutcome(int statusCode)\n```\n\n{@code outcome} タグに設定する値を解決する。\n\n**パラメータ:**\n- `statusCode` - レスポンスのステータスコード\n\n**戻り値:**\n{@code outcome} タグに設定する値\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "resolveException",
+      "level": 3,
+      "content": "```java\nprivate String resolveException(ExecutionContext context, Throwable thrownThrowable)\n```\n\n{@code exception} タグに設定する値を解決する。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n- `thrownThrowable` - スローされた例外\n\n**戻り値:**\n{@code exception} タグに設定する値\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getMetricsName",
+      "level": 3,
+      "content": "```java\npublic String getMetricsName()\n```\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getMetricsDescription",
+      "level": 3,
+      "content": "```java\npublic String getMetricsDescription()\n```\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setMetricsName",
+      "level": 3,
+      "content": "```java\npublic void setMetricsName(String metricsName)\n```\n\nメトリクス名を設定する。\n\n**パラメータ:**\n- `metricsName` - メトリクス名\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setMetricsDescription",
+      "level": 3,
+      "content": "```java\npublic void setMetricsDescription(String metricsDescription)\n```\n\nメトリクスの説明を設定する。\n\n**パラメータ:**\n- `metricsDescription` - メトリクスの説明\n\n---",
+      "id": "s14"
+    }
+  ],
+  "id": "javadoc-nablarch-integration-micrometer-instrument-http-HttpRequestTimeMetricsMetaDataBuilder"
+}

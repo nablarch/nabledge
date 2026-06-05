@@ -1,0 +1,44 @@
+{
+  "title": "class NoInputDataBatchAction",
+  "content": "**パッケージ:** nablarch.fw.action\n\n**継承階層:**\n```\njava.lang.Object\n  └─ BatchAction<Object>\n      └─ nablarch.fw.action.NoInputDataBatchAction\n```\n\n---\n\n```java\npublic abstract class NoInputDataBatchAction\nextends BatchAction<Object>\n```\n\n入力データを必要としないバッチ処理用の基本実装クラス。\n<p/>\n本クラスの各メソッドがフレームワークによって呼び出される順序は以下のとおり。\n<pre>\n{@code\ninitialize()              <-- 本処理開始前に一度だけ呼ばれる。\ntry {\n  handle()                <-- 1度だけ呼ばれる。\n} catch(e) {\n  error()                 <-- 本処理がエラー終了した場合に、一度だけ呼ばれる。\n} finally {\n  terminate()             <-- 本処理が全て終了した後、一度だけ呼ばれる。\n}\n}\n</pre>\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "NoInputDataBatchAction",
+      "level": 3,
+      "content": "```java\npublic NoInputDataBatchAction()\n```\n\nインスタンスを生成する。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic final Result handle(Object inputData, ExecutionContext ctx)\n```\n\nデータリーダによって読み込まれた1件分の入力データに対する 業務処理を実行する。\n<p/>\n処理を{@link #handle(nablarch.fw.ExecutionContext)}に委譲する。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic abstract Result handle(ExecutionContext ctx)\n```\n\n本処理を実行する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n処理結果を表す{@link Result}\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "createReader",
+      "level": 3,
+      "content": "```java\npublic final DataReader<Object> createReader(ExecutionContext ctx)\n```\n\n1度だけ本処理を呼び出すための{@link DataReader}を生成する。\n\n---",
+      "id": "s6"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-action-NoInputDataBatchAction"
+}

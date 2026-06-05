@@ -26,7 +26,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.RequestHandlerEntry
+* [nablarch.fw.RequestHandlerEntry](../../javadoc/javadoc-nablarch-fw-RequestHandlerEntry.md)
 
 ## モジュール一覧
 

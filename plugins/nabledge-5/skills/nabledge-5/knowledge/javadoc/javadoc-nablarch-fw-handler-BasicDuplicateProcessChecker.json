@@ -1,0 +1,134 @@
+{
+  "title": "class BasicDuplicateProcessChecker",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**実装されたインタフェース:**\n- DuplicateProcessChecker\n- Initializable\n\n---\n\n```java\npublic class BasicDuplicateProcessChecker\nimplements DuplicateProcessChecker, Initializable\n```\n\nデータベースのテーブルを用いてプロセスの多重起動防止を行う{@link DuplicateProcessChecker}の実装クラス。\n<p/>\n２重起動チェックは、データベースのテーブルを用いて行う。\nデータベースのテーブルには、予めプロセスを識別するための値を設定しておく必要がある。\nプロセスを識別する値が設定さていない場合は、２重起動チェックが正しく行えないが、\n２重起動の可能性もあるため２重起動であることを示す例外を送出する。\n<p/>\n２重起動チェック用テーブルレイアウト例を以下に示す。\n<pre>\n----------------------------------   ------------------------------------------------------\nカラム名                             説明\n----------------------------------   ------------------------------------------------------\nプロセス識別子                       プロセスを一意に識別するための値を格納する。\n\n                                     例えばジョブIDなど\n\nプロセスアクティブフラグ             プロセスの現在の状態を格納する。\n\n                                     * 0:非アクティブ(実行されていない状態)\n                                     * 1:アクティブ(実行されている状態)\n----------------------------------   ------------------------------------------------------\n</pre>\n\n**作成者:** Hisaaki Shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "dbTransactionManager",
+      "level": 3,
+      "content": "```java\nprivate SimpleDbTransactionManager dbTransactionManager\n```\n\nデータベーストランザクションマネージャ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "tableName",
+      "level": 3,
+      "content": "```java\nprivate String tableName\n```\n\nテーブル名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "processIdentifierColumnName",
+      "level": 3,
+      "content": "```java\nprivate String processIdentifierColumnName\n```\n\nリクエストIDの物理カラム名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "processActiveFlgColumnName",
+      "level": 3,
+      "content": "```java\nprivate String processActiveFlgColumnName\n```\n\nアクティブフラグの物理カラム名\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "activeSql",
+      "level": 3,
+      "content": "```java\nprivate String activeSql\n```\n\nチェック用SQL文\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "inactiveSql",
+      "level": 3,
+      "content": "```java\nprivate String inactiveSql\n```\n\nアクティブフラグを非アクティブに更新するSQL文\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "permitProcessIdentifier",
+      "level": 3,
+      "content": "```java\nprivate List<String> permitProcessIdentifier\n```\n\n２重起動を許可するリクエストID\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize()\n```\n\n２重起動チェック用のSQL文を構築する。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "buildActiveSql",
+      "level": 3,
+      "content": "```java\nprivate String buildActiveSql()\n```\n\nプロセスをアクティブ化するSQLを構築する。\n\n**戻り値:**\n構築したSQL文\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "buildInactiveSql",
+      "level": 3,
+      "content": "```java\nprivate String buildInactiveSql()\n```\n\nプロセスを非アクティブ化するSQL文を構築する。\n\n**戻り値:**\n構築したSQL文\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setDbTransactionManager",
+      "level": 3,
+      "content": "```java\npublic void setDbTransactionManager(SimpleDbTransactionManager dbTransactionManager)\n```\n\nデータベーストランザクションマネージャを設定する。\n\n**パラメータ:**\n- `dbTransactionManager` - データベーストランザクションマネージャ\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setTableName",
+      "level": 3,
+      "content": "```java\npublic void setTableName(String tableName)\n```\n\nテーブル名を設定する。\n\n**パラメータ:**\n- `tableName` - テーブル名\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setProcessIdentifierColumnName",
+      "level": 3,
+      "content": "```java\npublic void setProcessIdentifierColumnName(String processIdentifierColumnName)\n```\n\nプロセスを特定するための識別子が格納されるカラムの物理名を設定する。\n\n**パラメータ:**\n- `processIdentifierColumnName` - プロセスを識別する値のカラム物理名\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setProcessActiveFlgColumnName",
+      "level": 3,
+      "content": "```java\npublic void setProcessActiveFlgColumnName(String processActiveFlgColumnName)\n```\n\nプロセスが起動中であることを示すフラグが格納されるカラムの物理名を設定する。\n\n**パラメータ:**\n- `processActiveFlgColumnName` - プロセス起動中フラグのカラム物理名\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setPermitProcessIdentifier",
+      "level": 3,
+      "content": "```java\npublic void setPermitProcessIdentifier(String[] permitProcessIdentifier)\n```\n\n２重起動を許可するプロセスの識別子リストを設定する。\n\n**パラメータ:**\n- `permitProcessIdentifier` - 許可リクエストIDのリスト\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "checkAndActive",
+      "level": 3,
+      "content": "```java\npublic void checkAndActive(String processIdentifier)\n                    throws AlreadyProcessRunningException\n```\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "isDuplicateProcess",
+      "level": 3,
+      "content": "```java\nprivate boolean isDuplicateProcess(String processIdentifier)\n```\n\n２重起動チェックと現在のプロセスのアクティブ化を行う。\n\n**パラメータ:**\n- `processIdentifier` - チェック対象のリクエストID\n\n**戻り値:**\n２重起動の場合はtrue\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "inactive",
+      "level": 3,
+      "content": "```java\npublic void inactive(String processIdentifier)\n```\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "isPermitProcess",
+      "level": 3,
+      "content": "```java\nprivate boolean isPermitProcess(String processIdentifier)\n```\n\n２重起動が許可されたプロセスか否か\n\n**パラメータ:**\n- `processIdentifier` - プロセスを識別する値\n\n**戻り値:**\n２重起動が許可されている場合は{@code true}\n\n---",
+      "id": "s21"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-BasicDuplicateProcessChecker"
+}

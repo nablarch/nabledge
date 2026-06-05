@@ -1,0 +1,80 @@
+{
+  "title": "class FileSizeRotatePolicy",
+  "content": "**パッケージ:** nablarch.core.log.basic\n\n**実装されたインタフェース:**\n- RotatePolicy\n\n---\n\n```java\npublic class FileSizeRotatePolicy\nimplements RotatePolicy\n```\n\nファイルサイズによるログのローテーションを行うクラス。<br>\n設定したファイルの最大サイズを超える場合にローテーションを行う。\nファイルの最大サイズが指定されていない場合は、ローテーションしない。\n<p>\nプロパティファイルの記述ルールを下記に示す。<br>\n  <dl>\n    <dt>maxFileSize</dt>\n    <dd>書き込み先ファイルの最大サイズ。オプション。<br>\n      単位はキロバイト。1000バイトを1キロバイトと換算する。<br>\n      指定値が解析可能な整数値(Long.parseLong)でない場合は自動切替なし。<br>\n      指定値が０以下の場合は自動切替なし。</dd>\n  </dl>\n</p>\n<p>\n  ローテーション後のログファイル名は、 <ログファイルパス>.yyyyMMddHHmmssSSS.old となる。\n  yyyyMMddHHmmssSSSはローテーション実施時刻。\n</p>\n\n**作成者:** Kotaro Taki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "maxFileSize",
+      "level": 3,
+      "content": "```java\nprivate long maxFileSize\n```\n\n書き込み先ファイルの最大サイズ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "logFilePath",
+      "level": 3,
+      "content": "```java\nprivate String logFilePath\n```\n\n書き込み先のファイルパス\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "currentFileSize",
+      "level": 3,
+      "content": "```java\nprivate long currentFileSize\n```\n\n書き込み先ファイルの現在のサイズ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize(ObjectSettings settings)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "rotate",
+      "level": 3,
+      "content": "```java\npublic void rotate(String rotatedFilePath)\n```\n\n{@inheritDoc}\n\n**例外:**\n- `IllegalStateException` - ログファイルのリネームができない場合\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "needsRotate",
+      "level": 3,
+      "content": "```java\npublic boolean needsRotate(String message, Charset charset)\n```\n\n{@inheritDoc}<br>\n設定したファイルの最大サイズを超える場合にtrueを返す。\nファイルの最大サイズが指定されていない場合はfalseを返す。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "decideRotatedFilePath",
+      "level": 3,
+      "content": "```java\npublic String decideRotatedFilePath()\n```\n\n{@inheritDoc}\n古いログファイル名は、 <ログファイルパス>.yyyyMMddHHmmssSSS.old のフォーマットで出力される。\n日時には、ローテーション実施時刻が出力される。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "onOpenFile",
+      "level": 3,
+      "content": "```java\npublic void onOpenFile(File file)\n```\n\n{@inheritDoc}<br>\n読み込んだファイルサイズを現在のファイルサイズとして、インスタンス変数に保持する。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "onWrite",
+      "level": 3,
+      "content": "```java\npublic void onWrite(String message, Charset charset)\n```\n\n{@inheritDoc}<br>\nファイルサイズに書き込むメッセージサイズを足すことで、現在のファイルサイズを更新する。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getSettings",
+      "level": 3,
+      "content": "```java\npublic String getSettings()\n```\n\n{@inheritDoc}\n設定情報のフォーマットを下記に示す。<br>\n<pre>\n{@code\nFILE AUTO CHANGE    = [<ログファイルを自動で切り替えるか否か。>]\nMAX FILE SIZE       = [<書き込み先ファイルの最大サイズ>]\nCURRENT FILE SIZE   = [<書き込み先ファイルの現在のサイズ>]\n}\n</pre>\n\n**戻り値:**\n設定情報\n\n---",
+      "id": "s12"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-basic-FileSizeRotatePolicy"
+}

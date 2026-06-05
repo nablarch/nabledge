@@ -1,0 +1,62 @@
+{
+  "title": "class OsEnvironmentVariableExternalizedLoader",
+  "content": "**パッケージ:** nablarch.core.repository.di.config.externalize\n\n**実装されたインタフェース:**\n- ExternalizedComponentDefinitionLoader\n\n---\n\n```java\npublic class OsEnvironmentVariableExternalizedLoader\nimplements ExternalizedComponentDefinitionLoader\n```\n\nOS環境変数をコンポーネント定義として読み込む{@link ExternalizedComponentDefinitionLoader}。\n<p/>\nこのローダーは、読み込み済みのコンポーネントの名前を元に、OS環境変数を検索する。<br/>\nこのとき、OS環境変数で使用できる文字種に制限があることを踏まえて、コンポーネント名を\n次のように変換してから検索する。\n<ol>\n  <li>ドット({@code \".\"})とハイフン({@code \"-\"})をアンダーバー({@code \"_\"})に置換する</li>\n  <li>小文字を大文字に変換する({@link String#toUpperCase()})</li>\n</ol>\n<p/>\nつまり、{@code \"foo-bar.fizz-buzz\"}という名前のコンポーネントが存在した場合は、\n{@code \"FOO_BAR_FIZZ_BUZZ\"}という名前でOS環境変数が検索されることになる。\n<p/>\n変換後の名前でOS環境変数が見つかった場合は、その値を{@code String}のコンポーネントとして読み込む。\n\n**作成者:** Tomoyuki Tanaka  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "env",
+      "level": 3,
+      "content": "```java\nprivate final Map<String,String> env\n```\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "OsEnvironmentVariableExternalizedLoader",
+      "level": 3,
+      "content": "```java\npublic OsEnvironmentVariableExternalizedLoader()\n```\n\nコンストラクタ。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "OsEnvironmentVariableExternalizedLoader",
+      "level": 3,
+      "content": "```java\nOsEnvironmentVariableExternalizedLoader(Map<String,String> env)\n```\n\n環境変数の{@link Map}を外部から指定するコンストラクタ。\n<p/>\nこのコンストラクタは単体テスト用のため、アプリケーションのコードからは利用しないこと。\n\n**パラメータ:**\n- `env` - 環境変数の{@link Map}\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "load",
+      "level": 3,
+      "content": "```java\npublic List<ComponentDefinition> load(DiContainer container, Map<String,ComponentHolder> loadedComponents)\n```\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "convertToEnvName",
+      "level": 3,
+      "content": "```java\nprivate String convertToEnvName(String componentName)\n```\n\nコンポーネント名を、検索用のOS環境変数名に変換する。\n\n**パラメータ:**\n- `componentName` - コンポーネント名\n\n**戻り値:**\n変換後のOS環境変数名\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-core-repository-di-config-externalize-OsEnvironmentVariableExternalizedLoader"
+}

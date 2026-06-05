@@ -1,0 +1,32 @@
+{
+  "title": "class DbLessLoopHandler",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**実装されたインタフェース:**\n- Handler<Object,Result>\n\n---\n\n```java\npublic class DbLessLoopHandler\nimplements Handler<Object,Result>\n```\n\nトランザクション制御をせず処理するループ制御ハンドラークラス。\n<p/>\n本ハンドラは、アプリケーションが処理すべきデータが存在する間、後続のハンドラに対して繰り返し処理を委譲する。\n処理すべきデータが存在するかは、{@link nablarch.fw.ExecutionContext#hasNextData()}により判断する。\n\n**作成者:** Shinya Hijiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Result handle(Object data, ExecutionContext context)\n```\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "shouldStop",
+      "level": 3,
+      "content": "```java\npublic boolean shouldStop(ExecutionContext context)\n```\n\n現在の処理終了後にループを止める場合にtrueを返す。\n<p/>\nデフォルトの実装では、実行コンテキスト上のデータリーダのデータが\n空になるまで繰り返し処理を行う。\n<p/>\nこれと異なる条件でループを停止させたい場合は、本メソッドをオーバライドすること。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n**戻り値:**\nループを止める場合はtrue\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "restoreHandlerQueue",
+      "level": 3,
+      "content": "```java\nprivate ExecutionContext restoreHandlerQueue(ExecutionContext context, List<Handler> snapshot)\n```\n\nハンドラキューの内容を、ループ開始前の状態に戻す。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n- `snapshot` - ハンドラキューのスナップショット\n\n**戻り値:**\n実行コンテキスト(引数と同じインスタンス)\n\n---",
+      "id": "s4"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-DbLessLoopHandler"
+}

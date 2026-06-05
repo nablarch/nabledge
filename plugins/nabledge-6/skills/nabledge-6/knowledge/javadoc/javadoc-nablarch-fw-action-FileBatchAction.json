@@ -1,0 +1,32 @@
+{
+  "title": "class FileBatchAction",
+  "content": "**パッケージ:** nablarch.fw.action\n\n**継承階層:**\n```\njava.lang.Object\n  └─ FileBatchActionBase<DataRecord>\n      └─ nablarch.fw.action.FileBatchAction\n```\n\n**実装されたインタフェース:**\n- DataReaderFactory<DataRecord>\n\n---\n\n```java\npublic abstract class FileBatchAction\nextends FileBatchActionBase<DataRecord>\nimplements DataReaderFactory<DataRecord>\n```\n\nファイル入力バッチにおける業務処理のサポートクラス。\n<p/>\n業務処理を実装するメソッドのシグニチャは{@link nablarch.fw.handler.RecordTypeBinding}の仕様に従って作成すること。<br/>\n{@code\ndo[レコードタイプ名](DataRecord record, ExecutionContext context)\n}\n\n**関連項目:** nablarch.fw.reader.FileDataReader  \n**関連項目:** nablarch.fw.handler.RecordTypeBinding  \n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "FileBatchAction",
+      "level": 3,
+      "content": "```java\npublic FileBatchAction()\n```\n\nFileBatchActionオブジェクトを生成する。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "createReader",
+      "level": 3,
+      "content": "```java\npublic ResumeDataReader<DataRecord> createReader(ExecutionContext context)\n```\n\nデータリーダを作成する。\n<p/>\nこの実装では、入力ファイルを読み込む{@link nablarch.core.dataformat.FileRecordReader}を作成し、\n{@link ResumeDataReader}にラップして返却する。<br/>\nまた、入力ファイルの事前検証処理が必要な場合は{@link #getValidatorAction()}をオーバーライドし、\nFileRecordReaderを{@link ValidatableFileDataReader}でラップする。\n\n---",
+      "id": "s4"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-action-FileBatchAction"
+}

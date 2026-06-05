@@ -1,0 +1,134 @@
+{
+  "title": "class FileDataReader",
+  "content": "**パッケージ:** nablarch.fw.reader\n\n**実装されたインタフェース:**\n- DataReader<DataRecord>\n\n---\n\n```java\npublic class FileDataReader\nimplements DataReader<DataRecord>\n```\n\nファイルデータを１レコードづつ読み込み、\n読み込んだフィールドの内容を{@link DataRecord}にマッピングして返却するデータリーダ。\n<p/>\n実際のレコード読み込み処理は、{@link FileRecordReader}に委譲する。\n<p/>\nこのクラスを使用するにあたって設定が必須となるプロパティの実装例を下記に示す。\n<pre>{@code\n    FileDataReader reader = new FileDataReader()\n        //フォーマット定義ファイルのベースパス論理名とフォーマット定義ファイル名(拡張子無し)を設定する。\n        .setLayoutFile(\"format\", \"formatFile\")\n        //データファイルベースパス論理名とデータファイル名(拡張子無し)を設定する。\n        .setDataFile(\"input\", \"dataFile\");\n}</pre>\n\nこのクラスは読み込み対象のファイルやフォーマット定義ファイルが存在しない場合には例外を送出する。\n読み込み対象のファイルが空(0バイト)の場合は、例外の送出は行わない。\n\n**作成者:** Masato Inoue  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "fileReader",
+      "level": 3,
+      "content": "```java\nprivate FileRecordReader fileReader\n```\n\nファイルからの読み込みを行うリーダ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "layoutFileName",
+      "level": 3,
+      "content": "```java\nprivate String layoutFileName\n```\n\nフォーマット定義ファイル名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "dataFileName",
+      "level": 3,
+      "content": "```java\nprivate String dataFileName\n```\n\nデータファイル名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "bufferSize",
+      "level": 3,
+      "content": "```java\nprivate int bufferSize\n```\n\nファイル読み込みの際に使用するバッファのサイズ（デフォルトは8192B）\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "layoutFileBasePathName",
+      "level": 3,
+      "content": "```java\nprivate String layoutFileBasePathName\n```\n\nフォーマット定義ファイルのベースパス論理名\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "dataFileBasePathName",
+      "level": 3,
+      "content": "```java\nprivate String dataFileBasePathName\n```\n\nデータファイルのベースパス論理名\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "FileDataReader",
+      "level": 3,
+      "content": "```java\npublic FileDataReader()\n```\n\n{@code FileDataReader}オブジェクトを生成する。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s10"
+    },
+    {
+      "title": "read",
+      "level": 3,
+      "content": "```java\npublic synchronized DataRecord read(ExecutionContext ctx)\n```\n\nデータファイルを1レコードづつ読み込む。\n<p/>\n読み込んだ際のレコード番号を実行コンテキストに格納する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n1レコード分のデータレコード（読み込むデータがなかった場合は{@code null}）\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "hasNext",
+      "level": 3,
+      "content": "```java\npublic synchronized boolean hasNext(ExecutionContext ctx)\n```\n\n次に読み込むデータが存在するかどうかを返却する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n読み込むデータが存在する場合は {@code true}\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic synchronized void close(ExecutionContext ctx)\n```\n\n指定されたデータファイルに対するストリームを閉じ、ファイルハンドラを開放する。\n<p/>\nこのリーダを閉じる前に、読み込んだファイルの最終レコードのレコード番号を実行コンテキストに設定する。\n<p/>\nこのリーダが既に閉じられている場合は何もしない。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setLayoutFile",
+      "level": 3,
+      "content": "```java\npublic FileDataReader setLayoutFile(String layoutFile)\n```\n\n拡張子を除いた、フォーマット定義ファイルのファイル名を設定する。\n<p/>\n\"format\"という論理名のベースパス配下に存在する当該ファイルがフォーマット定義ファイルとして使用される。\n\n**パラメータ:**\n- `layoutFile` - フォーマット定義ファイル名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setLayoutFile",
+      "level": 3,
+      "content": "```java\npublic FileDataReader setLayoutFile(String basePathName, String fileName)\n```\n\nフォーマット定義ファイルのベースパス論理名および拡張子を除いたファイル名を設定する。\n<p/>\n設定した論理名のペースパス配下に存在する当該ファイルがフォーマット定義ファイルとして使用される。\n\n**パラメータ:**\n- `basePathName` - ベースパス論理名\n- `fileName` - フォーマット定義ファイル名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setDataFile",
+      "level": 3,
+      "content": "```java\npublic FileDataReader setDataFile(String fileName)\n```\n\nデータファイルのファイル名を設定する。\n<p/>\n\"input\"という論理名のベースパス配下に存在する当該ファイルがデータファイルとして使用される。\n\n**パラメータ:**\n- `fileName` - データファイル名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setDataFile",
+      "level": 3,
+      "content": "```java\npublic FileDataReader setDataFile(String basePathName, String fileName)\n```\n\nデータファイルのベースパス論理名およびファイル名を設定する。\n<p/>\n設定したベースパス配下に存在する当該のファイルがデータファイルとして使用される。\n\n**パラメータ:**\n- `basePathName` - ベースパス論理名\n- `fileName` - データファイル名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setBufferSize",
+      "level": 3,
+      "content": "```java\npublic FileDataReader setBufferSize(int bufferSize)\n```\n\nレコード読み込み時に使用するバッファのサイズを設定する。\n<p/>\nデフォルトでは8KBのバッファを使用する。\n\n**パラメータ:**\n- `bufferSize` - レコード読み込み時に使用するバッファのサイズ\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "createFileRecordReader",
+      "level": 3,
+      "content": "```java\nprotected FileRecordReader createFileRecordReader()\n```\n\n{@code FileRecordReader}オブジェクトを生成する。\n\n**戻り値:**\nFileRecordReaderオブジェクト\n\n**例外:**\n- `IllegalStateException` - 必須であるプロパティが設定されていない場合\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getFileReader",
+      "level": 3,
+      "content": "```java\nprotected synchronized FileRecordReader getFileReader()\n```\n\n{@code FileRecordReader}オブジェクトを取得する。\n\n**戻り値:**\nFileRecordReaderオブジェクト（FileRecordReaderオブジェクトが生成されていない場合は{@code null}）\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "setFileReader",
+      "level": 3,
+      "content": "```java\nprotected synchronized void setFileReader(FileRecordReader fileReader)\n```\n\n{@code FileRecordReader}オブジェクトを設定する。\n\n**パラメータ:**\n- `fileReader` - {@code FileRecordReader}オブジェクト\n\n---",
+      "id": "s21"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-reader-FileDataReader"
+}

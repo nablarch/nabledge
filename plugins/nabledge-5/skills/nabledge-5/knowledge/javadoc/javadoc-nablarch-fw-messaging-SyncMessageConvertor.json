@@ -1,0 +1,38 @@
+{
+  "title": "class SyncMessageConvertor",
+  "content": "**パッケージ:** nablarch.fw.messaging\n\n---\n\n```java\npublic class SyncMessageConvertor\n```\n\nメッセージ同期送信に使用する電文を変換するクラス。\n<pre>\n本クラスは下記の変換を行う。\n\n    要求電文({@link SyncMessage})→送信電文({@link SendingMessage})[初回送信時、再送時]\n    受信電文({@link ReceivedMessage})→応答電文({@link SyncMessage})[受信時]\n\n</pre>\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "convertOnSendSync",
+      "level": 3,
+      "content": "```java\npublic SendingMessage convertOnSendSync(MessageSenderSettings settings, SyncMessage requestMessage)\n```\n\n要求電文を送信電文に変換する。(初回送信時)\n<pre>\n指定された設定情報をもとに送信電文を作成する。\nフレームワーク制御ヘッダ以外の設定は\n{@link #createSendingMessage(MessageSenderSettings, SyncMessage)}メソッドに委譲する。\n\n{@link FwHeader}を使用して下記のフレームワーク制御ヘッダを設定する。\n\n    リクエストIDヘッダ: 送信電文の設定情報が保持している送信用リクエストID\n    再送電文フラグ: 初回を表す\"0\"。再送しない場合は設定しない\n</pre>\n\n**パラメータ:**\n- `settings` - 送信電文の設定情報\n- `requestMessage` - 要求電文\n\n**戻り値:**\n送信電文\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "convertOnRetry",
+      "level": 3,
+      "content": "```java\npublic SendingMessage convertOnRetry(MessageSenderSettings settings, SyncMessage requestMessage, SendingMessage timeoutMessage, int retryCount)\n```\n\n要求電文を送信電文に変換する。(再送時)\n<pre>\n指定された設定情報をもとに送信電文を作成する。\nフレームワーク制御ヘッダ以外の設定は\n{@link #createSendingMessage(MessageSenderSettings, SyncMessage)}メソッドに委譲する。\n\n{@link FwHeader}を使用して下記のフレームワーク制御ヘッダを設定する。\n\n    リクエストIDヘッダ: 送信電文の設定情報が保持している送信用リクエストID\n    再送電文フラグ: 再送を表す\"1\"\n\n再送する送信電文には、タイムアウトした送信電文と関連付けるために、\nタイムアウトした送信電文のメッセージIDを設定する。\n\n本実装ではリトライ回数を使用しない。\n</pre>\n\n**パラメータ:**\n- `settings` - {@link MessageSender}の設定情報\n- `requestMessage` - 要求電文\n- `timeoutMessage` - タイムアウトした送信電文\n- `retryCount` - リトライ回数。初回送信時は0\n\n**戻り値:**\n送信電文\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "createSendingMessage",
+      "level": 3,
+      "content": "```java\nprotected SendingMessage createSendingMessage(MessageSenderSettings settings, SyncMessage requestMessage)\n```\n\n指定された設定情報をもとに送信電文を作成する。\n<pre>\n設定情報から下記の項目を送信電文に設定する。\n\n    送信宛先キューの論理名\n    応答宛先キューの論理名\n\nメッセージボディ部にヘッダとデータを追加する。\n下記のレコードタイプを使用する。\n\n    ヘッダ: \"header\"\n    データ: \"data\"\n\n</pre>\n\n**パラメータ:**\n- `settings` - {@link MessageSender}の設定情報\n- `requestMessage` - 要求電文\n\n**戻り値:**\n送信電文\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "convertOnReceiveSync",
+      "level": 3,
+      "content": "```java\npublic SyncMessage convertOnReceiveSync(MessageSenderSettings settings, SyncMessage requestMessage, SendingMessage sendingMessage, ReceivedMessage receivedMessage)\n```\n\n受信電文を応答電文に変換する。(受信時)\n<pre>\n設定情報が提供するフォーマッタを使用して、\n受信電文のメッセージボディ部からヘッダとデータを取り出し、応答電文を作成する。\n\n本実装では送信電文を使用しない。\n</pre>\n\n**パラメータ:**\n- `settings` - {@link MessageSender}の設定情報\n- `requestMessage` - 要求電文\n- `sendingMessage` - 送信電文\n- `receivedMessage` - 受信電文\n\n**戻り値:**\n応答電文\n\n---",
+      "id": "s5"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-SyncMessageConvertor"
+}

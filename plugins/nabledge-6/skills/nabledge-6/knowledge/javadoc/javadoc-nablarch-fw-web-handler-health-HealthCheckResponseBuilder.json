@@ -1,0 +1,110 @@
+{
+  "title": "class HealthCheckResponseBuilder",
+  "content": "**パッケージ:** nablarch.fw.web.handler.health\n\n---\n\n```java\npublic class HealthCheckResponseBuilder\n```\n\nヘルスチェック結果からレスポンスを作成するビルダ。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "healthyStatusCode",
+      "level": 3,
+      "content": "```java\nprivate int healthyStatusCode\n```\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "healthyStatus",
+      "level": 3,
+      "content": "```java\nprivate String healthyStatus\n```\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "unhealthyStatusCode",
+      "level": 3,
+      "content": "```java\nprivate int unhealthyStatusCode\n```\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "unhealthyStatus",
+      "level": 3,
+      "content": "```java\nprivate String unhealthyStatus\n```\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "writeBody",
+      "level": 3,
+      "content": "```java\nprivate boolean writeBody\n```\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "build",
+      "level": 3,
+      "content": "```java\npublic HttpResponse build(HttpRequest request, ExecutionContext context, HealthCheckResult result)\n```\n\nヘルスチェック結果からレスポンスを作成する。\n\nデフォルトではJSONのレスポンスを作成する。\n\nヘルスチェックが成功した場合\n{\"status\":\"UP\",\"targets\":[{\"name\":\"DB\",\"status\":\"UP\"},{\"name\":\"Redis\",\"status\":\"UP\"}]}\n\nヘルスチェックが失敗した場合\n{\"status\":\"DOWN\",\"targets\":[{\"name\":\"DB\",\"status\":\"UP\"},{\"name\":\"Redis\",\"status\":\"DOWN\"}]}\n\n**パラメータ:**\n- `request` - リクエスト\n- `context` - コンテキスト\n- `result` - ヘルスチェック結果\n\n**戻り値:**\nレスポンス\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getContentType",
+      "level": 3,
+      "content": "```java\nprotected String getContentType()\n```\n\nコンテンツタイプを取得する。\n\n**戻り値:**\nコンテンツタイプ\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "buildResponseBody",
+      "level": 3,
+      "content": "```java\nprotected String buildResponseBody(HttpRequest request, ExecutionContext context, HealthCheckResult result)\n```\n\nレスポンスボディを作成する。\n\n**パラメータ:**\n- `request` - リクエスト\n- `context` - コンテキスト\n- `result` - ヘルスチェック結果\n\n**戻り値:**\nレスポンスボディ\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "targets",
+      "level": 3,
+      "content": "```java\nprivate String targets(List<HealthCheckResult.Target> targets)\n```\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getStatus",
+      "level": 3,
+      "content": "```java\nprotected String getStatus(boolean isHealthy)\n```\n\nヘルスチェック結果に応じたステータスの表現を取得する。\n\n**パラメータ:**\n- `isHealthy` - ヘルスチェック結果。成功した場合はtrue\n\n**戻り値:**\nヘルスチェック結果に応じたステータスの表現\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setHealthyStatusCode",
+      "level": 3,
+      "content": "```java\npublic void setHealthyStatusCode(int healthyStatusCode)\n```\n\nヘルスチェックが成功した場合のステータスコードを設定する。\n\nデフォルトは\"200\"。\n\n**パラメータ:**\n- `healthyStatusCode` - ヘルスチェックが成功した場合のステータスコード\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setHealthyStatus",
+      "level": 3,
+      "content": "```java\npublic void setHealthyStatus(String healthyStatus)\n```\n\nヘルスチェックが成功した場合のステータスの表現を設定する。\n\nデフォルトは\"UP\"。\n\n**パラメータ:**\n- `healthyStatus` - ヘルスチェックが成功した場合のステータスの表現\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setUnhealthyStatusCode",
+      "level": 3,
+      "content": "```java\npublic void setUnhealthyStatusCode(int unhealthyStatusCode)\n```\n\nヘルスチェックが失敗した場合のステータスコードを設定する。\n\nデフォルトは\"503\"。\n\n**パラメータ:**\n- `unhealthyStatusCode` - ヘルスチェックが失敗した場合のステータスコード\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setUnhealthyStatus",
+      "level": 3,
+      "content": "```java\npublic void setUnhealthyStatus(String unhealthyStatus)\n```\n\nヘルスチェックが失敗した場合のステータスの表現を設定する。\n\nデフォルトは\"DOWN\"。\n\n**パラメータ:**\n- `unhealthyStatus` - ヘルスチェックが失敗した場合のステータスの表現\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setWriteBody",
+      "level": 3,
+      "content": "```java\npublic void setWriteBody(boolean writeBody)\n```\n\nレスポンスボディを書き込むか否かを設定する。\n\nデフォルトは\"true\"。\nステータスコードだけでよい場合は\"false\"を指定する。\n\n**パラメータ:**\n- `writeBody` - レスポンスボディを書き込む場合はtrue\n\n---",
+      "id": "s17"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-health-HealthCheckResponseBuilder"
+}

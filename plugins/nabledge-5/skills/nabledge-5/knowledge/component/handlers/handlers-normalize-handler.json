@@ -7,7 +7,7 @@
     {
       "id": "s1",
       "title": "ハンドラクラス名",
-      "content": "* nablarch.fw.web.handler.NormalizationHandler",
+      "content": "* [nablarch.fw.web.handler.NormalizationHandler](../../javadoc/javadoc-nablarch-fw-web-handler-NormalizationHandler.json)",
       "level": 2
     },
     {
@@ -19,19 +19,19 @@
     {
       "id": "s3",
       "title": "制約",
-      "content": "[マルチパートリクエストハンドラ](../../component/handlers/handlers-multipart-handler.md#マルチパートリクエストハンドラ) より後ろに配置すること\n\nこのハンドラはリクエストパラータにアクセスする。\nこのため、 [マルチパートリクエストハンドラ](../../component/handlers/handlers-multipart-handler.md#マルチパートリクエストハンドラ) よりも後ろに設定する必要がある。",
+      "content": "[マルチパートリクエストハンドラ](../../component/handlers/handlers-multipart-handler.json#マルチパートリクエストハンドラ) より後ろに配置すること\n\nこのハンドラはリクエストパラータにアクセスする。\nこのため、 [マルチパートリクエストハンドラ](../../component/handlers/handlers-multipart-handler.json#マルチパートリクエストハンドラ) よりも後ろに設定する必要がある。",
       "level": 2
     },
     {
       "id": "s4",
       "title": "標準で提供しているノーマライズ処理",
-      "content": "標準では、以下のノーマライズ処理を提供している。\n\n* リクエストパラメータの前後のホワイトスペースを除去するノーマライザ( TrimNormalizer ) [1]",
+      "content": "標準では、以下のノーマライズ処理を提供している。\n\n* リクエストパラメータの前後のホワイトスペースを除去するノーマライザ( [TrimNormalizer](../../javadoc/javadoc-nablarch-fw-web-handler-normalizer-TrimNormalizer.json) ) [1]",
       "level": 2
     },
     {
       "id": "s5",
       "title": "ノーマライズ処理を追加する",
-      "content": "このハンドラはデフォルト動作で、リクエストパラメータの前後のホワイトスペース [1] を除去するノーマライザが有効となっている。\n\nプロジェクト要件で、ノーマライズ処理を追加する場合には、 Normalizer の実装クラスを作成し、本ハンドラに設定する。\n\n以下に例を示す。\n\nノーマライザの実装例\n\n```java\npublic class SampleNormalizer implements Normalizer {\n\n    @Override\n    public boolean canNormalize(final String key) {\n      // パラメータのキー値にnumが含まれた場合は、そのパラメータをノーマライズする\n      return key.contains(\"num\");\n    }\n\n    @Override\n    public String[] normalize(final String[] value) {\n      // パラメータ中のカンマ(,)を除去する\n      final String[] result = new String[value.length];\n      for (int i = 0; i < value.length; i++) {\n          result[i] = value[i].replace(\",\", \"\");\n      }\n      return result;\n    }\n}\n```\n\nコンポーネント設定ファイルに定義する\n\n以下の設定例のように、適用したいノーマライザを設定する。\n複数のノーマライザを設定した場合、より上に設定したものから順次ノーマライズ処理が実行される。\nこのため、ノーマライズ処理に順序性がある場合には、設定順に注意すること。\n\n```xml\n<component class=\"nablarch.fw.web.handler.NormalizationHandler\">\n  <property name=\"normalizers\">\n    <list>\n      <component class=\"sample.SampleNormalizer\" />\n      <component class=\"nablarch.fw.web.handler.normalizer.TrimNormalizer\" />\n    </list>\n  </property>\n</component>\n```\n\n> **Tip:**\n> ノーマライザを設定せずに、以下のようにハンドラを設定した場合、デフォルトで提供される前後のホワイトスペースを除去するノーマライザが自動的に適用される。\n\n> ```xml\n> <component class=\"nablarch.fw.web.handler.NormalizationHandler\" />\n> ```\n\nホワイトスペースの定義は Character#isWhitespace を参照",
+      "content": "このハンドラはデフォルト動作で、リクエストパラメータの前後のホワイトスペース [1] を除去するノーマライザが有効となっている。\n\nプロジェクト要件で、ノーマライズ処理を追加する場合には、 [Normalizer](../../javadoc/javadoc-nablarch-fw-web-handler-normalizer-Normalizer.json) の実装クラスを作成し、本ハンドラに設定する。\n\n以下に例を示す。\n\nノーマライザの実装例\n\n```java\npublic class SampleNormalizer implements Normalizer {\n\n    @Override\n    public boolean canNormalize(final String key) {\n      // パラメータのキー値にnumが含まれた場合は、そのパラメータをノーマライズする\n      return key.contains(\"num\");\n    }\n\n    @Override\n    public String[] normalize(final String[] value) {\n      // パラメータ中のカンマ(,)を除去する\n      final String[] result = new String[value.length];\n      for (int i = 0; i < value.length; i++) {\n          result[i] = value[i].replace(\",\", \"\");\n      }\n      return result;\n    }\n}\n```\n\nコンポーネント設定ファイルに定義する\n\n以下の設定例のように、適用したいノーマライザを設定する。\n複数のノーマライザを設定した場合、より上に設定したものから順次ノーマライズ処理が実行される。\nこのため、ノーマライズ処理に順序性がある場合には、設定順に注意すること。\n\n```xml\n<component class=\"nablarch.fw.web.handler.NormalizationHandler\">\n  <property name=\"normalizers\">\n    <list>\n      <component class=\"sample.SampleNormalizer\" />\n      <component class=\"nablarch.fw.web.handler.normalizer.TrimNormalizer\" />\n    </list>\n  </property>\n</component>\n```\n\n> **Tip:**\n> ノーマライザを設定せずに、以下のようにハンドラを設定した場合、デフォルトで提供される前後のホワイトスペースを除去するノーマライザが自動的に適用される。\n\n> ```xml\n> <component class=\"nablarch.fw.web.handler.NormalizationHandler\" />\n> ```\n\nホワイトスペースの定義は Character#isWhitespace を参照",
       "level": 2
     }
   ]

@@ -1,0 +1,56 @@
+{
+  "title": "class LoggerManager",
+  "content": "**パッケージ:** nablarch.core.log\n\n---\n\n```java\npublic final class LoggerManager\n```\n\nログ出力機能の全体を取りまとめるクラス。<br>\n<br>\nクラスローダ毎に設定で指定された{@link LoggerFactory}の生成、保持を行う。<br>\nログ出力機能の実装に依存する初期処理、終了処理、{@link Logger}の生成は{@link LoggerFactory}に委譲する。<br>\nクラスローダ毎に{@link LoggerFactory}を保持するのは、クラスローダ階層により生じる問題に対応するためである。\n<p/>\n使用する{@link LoggerFactory}は、プロパティファイルに設定する。<br>\nプロパティファイルのパスは、システムプロパティを使用して、”nablarch.log.filePath”をキーにファイルパスを指定する。<br>\nこのファイルパスは、クラスパスとファイルシステム上のパスのどちらを指定しても良い。<br>\nファイルパスの指定方法は、{@link nablarch.core.util.FileUtil#getResource(String)}を参照すること。<br>\nシステムプロパティを指定しなかった場合は、クラスパス直下のlog.propertiesを使用する。<br>\nプロパティファイルが存在しない場合は、例外を送出する。<br>\n<p/>\nログの出力先によってはリソースの確保と解放が必要となるため、本クラスは初期処理と終了処理を行う。<br>\n初期処理は、初回の{@link Logger}の取得が行われるタイミングで本クラスが内部的に実行する。<br>\n終了処理は、フレームワーク側で実行するタイミングを判断できないので、\nログの出力要求を行うアプリケーション毎にアプリケーションの終了時に{@link #terminate()}メソッドを呼び出すこと。<br>\nアプリケーションの終了時とは、例えばWebアプリケーションの場合であれば、\nServletContextListener#contextDestroyedメソッドが呼ばれるタイミングを想定している。\n\n**作成者:** Kiyohito Itoh  \n**関連項目:** nablarch.core.log.LoggerFactory  \n**関連項目:** Logger  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER_FACTORY_CREATOR",
+      "level": 3,
+      "content": "```java\nprivate static final ObjectCreator<LoggerFactory> LOGGER_FACTORY_CREATOR\n```\n\nLoggerFactoryを生成する{@link ObjectCreator}\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "LoggerManager",
+      "level": 3,
+      "content": "```java\nprivate LoggerManager()\n```\n\n隠蔽コンストラクタ。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "terminate",
+      "level": 3,
+      "content": "```java\npublic static void terminate()\n```\n\nログ出力の終了処理を行う。<br>\n<br>\nクラスローダに紐付く全てのオブジェクトを解放する。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "get",
+      "level": 3,
+      "content": "```java\npublic static Logger get(Class<?> clazz)\n```\n\nロガーを取得する。<br>\n<br>\n指定されたクラスのFQCNを指定して{@link #get(String)}メソッドを呼び出す。\n\n**パラメータ:**\n- `clazz` - ロガー名に使用するクラス。クラスのFQCNをロガー名に使用する。\n\n**戻り値:**\nロガー\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "get",
+      "level": 3,
+      "content": "```java\npublic static Logger get(String name)\n```\n\nロガーを取得する。<br>\n<br>\nクラスローダに紐付く{@link LoggerFactory}から取得したロガーを返す。<br>\n<br>\nロガー名に対応するロガーが見つからない場合は、何も処理しないロガーを返す。\n\n**パラメータ:**\n- `name` - ロガー名\n\n**戻り値:**\nロガー\n\n---",
+      "id": "s8"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-LoggerManager"
+}

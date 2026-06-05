@@ -1,0 +1,146 @@
+{
+  "title": "class AsyncMessageSendAction",
+  "content": "**パッケージ:** nablarch.fw.messaging.action\n\n**継承階層:**\n```\njava.lang.Object\n  └─ BatchAction<SqlRow>\n      └─ nablarch.fw.messaging.action.AsyncMessageSendAction\n```\n\n---\n\n```java\npublic class AsyncMessageSendAction\nextends BatchAction<SqlRow>\n```\n\nMQ応答なし送信用の共通アクション。\n<p/>\n本クラスでは、送信用のテーブル（一時テーブル）から送信対象のデータを取得し、メッセージを送信する。\n<p/>\n送信対象のメッセージのリクエストIDは、本バッチの起動時の引数(起動パラメータ名:messageRequestId)として指定すること。\n<p/>\n送信対象のデータを抽出するSQL文は、テーブル単位に用意する必要がある。\n詳細は、{@link nablarch.fw.messaging.action.AsyncMessageSendAction#createStatement()}を参照\n<p/>\nメッセージが正常に送信できた場合には、#transactionNormalEnd(nablarch.core.db.statement.SqlRow, nablarch.fw.ExecutionContext)にて\n対象データのステータスを処理済みに更新する。\n<p/>\nメッセージ送信時に例外が発生した場合には、#transactionAbnormalEnd(Throwable, nablarch.core.db.statement.SqlRow, nablarch.fw.ExecutionContext)にて\n対象データのステータスをエラーに更新する。\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "ACTION_SETTINGS_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String ACTION_SETTINGS_KEY\n```\n\nシステムリポジトリ上の設定クラスの格納キー値\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "LAYOUT_FILE_NAME_SUFFIX",
+      "level": 3,
+      "content": "```java\nprivate static final String LAYOUT_FILE_NAME_SUFFIX\n```\n\n電文フォーマット定義ファイルのサフィックス\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "formConstructor",
+      "level": 3,
+      "content": "```java\nprivate Constructor<?> formConstructor\n```\n\nFormクラスのインスタンスを生成するためのコンストラクタ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "sendMessageRequestId",
+      "level": 3,
+      "content": "```java\nprivate String sendMessageRequestId\n```\n\n送信メッセージのメッセージリクエストID\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\nprotected void initialize(CommandLine command, ExecutionContext context)\n```\n\n初期処理を行う。\n<p/>\n起動引数から送信対象のメッセージのリクエストIDを取得し、保持する。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Result handle(SqlRow inputData, ExecutionContext ctx)\n```\n\n入力データからヘッダ部及び業務データ部からなるメッセージオブジェクトを生成し、\n送信処理（キューへのPUT）を行う。\n<p/>\n処理詳細は、以下のとおり。\n<ol>\n<li>ヘッダ部は、{@link #createHeaderRecord(nablarch.core.db.statement.SqlRow)}で生成する。</li>\n<li>業務データ部は、インプットデータ(本メソッドの引数)をそのまま使用する。</li>\n<li>送信先のキューは、{@link #getQueueName()}から取得する。</li>\n</ol>\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "transactionNormalEnd",
+      "level": 3,
+      "content": "```java\npublic void transactionNormalEnd(SqlRow inputData, ExecutionContext ctx)\n```\n\nインプットテーブルの対象レコードのステータスを処理済みに更新する。\nこれにより、次回対象データ抽出時に処理済みのレコードは対象外となり、\n2重送信を防止する事が出来る。\n<p/>\nステータスを更新するSQL文は、{@link #getSqlResource()}で取得した\nSQLリソース内に記述されたSQL_ID=UPDATE_NORMAL_ENDを使用する。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "transactionAbnormalEnd",
+      "level": 3,
+      "content": "```java\npublic void transactionAbnormalEnd(Throwable e, SqlRow inputData, ExecutionContext ctx)\n```\n\nインプットテーブルの対象レコードのステータスをエラーに更新する。\nこれにより、エラーレコードを再度送信することを防止する事ができる。\n<p/>\n（エラーレコードは、何度送信してもエラーになることが考えられるため\nステータスをエラーに変更する必要がある。)\n<p/>\nステータスを更新するSQL文は、{@link #getSqlResource()}で取得した\nSQLリソース内に記述されたSQL_ID=UPDATE_ABNORMAL_ENDを使用する。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "updateStatus",
+      "level": 3,
+      "content": "```java\nprotected void updateStatus(SqlRow inputData, String sqlId)\n```\n\nステータスを更新する。\n<p/>\n指定されたインプットデータ、SQL_IDを元にステータスを更新する。\nステータスを更新するためのFormクラスは、nablarch.fw.messaging.action.AsyncMessageSendActionSettings#getFormClassName()\nから取得したFormクラスを使用して行う。\n\n**パラメータ:**\n- `inputData` - インプットデータ\n- `sqlId` - SQL_ID\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "createReader",
+      "level": 3,
+      "content": "```java\npublic DataReader<SqlRow> createReader(ExecutionContext ctx)\n```\n\n送信対象のデータを抽出するための{@link nablarch.fw.reader.DatabaseRecordReader}を生成する。\n{@link nablarch.fw.reader.DatabaseRecordReader}生成時に指定する{@link SqlPStatement}は、\n#createStatement()により生成する。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "createStatement",
+      "level": 3,
+      "content": "```java\nprotected SqlPStatement createStatement()\n```\n\nインプットデータを抽出するための{@link SqlPStatement}を生成する。\n<p/>\n{@link SqlPStatement}を生成するためのSQLは、下記ルールに従い取得する。\n<ui>\n<li>SQLリソースは、{@link #getSqlResource()}の実装に準拠する</li>\n<li>SQL_IDは、SELECT_SEND_DATA固定</li>\n</ui>\n\n**戻り値:**\n{@link SqlPStatement}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getSqlResource",
+      "level": 3,
+      "content": "```java\nprotected String getSqlResource()\n```\n\nSQLリソース名称を取得する。\n<p/>\n返却するSQLリソース名称は、「nablarch.fw.messaging.action.AsyncMessageSendActionSettings#getSqlFilePackage() + \".\" + バッチ起動時に指定した送信メッセージのメッセージリクエストID」となる。\n\n**戻り値:**\nSQLリソース名称\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getSettings",
+      "level": 3,
+      "content": "```java\nprotected AsyncMessageSendActionSettings getSettings()\n```\n\n本アクションを実行するために必要となる設定値を保持するオブジェクトを取得する。\n<p/>\nデフォルト動作では、リポジトリ({@link SystemRepository})から設定オブジェクトを取得する。\n\n**戻り値:**\n設定オブジェクト\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "createHeaderRecordFormatter",
+      "level": 3,
+      "content": "```java\nprotected DataRecordFormatter createHeaderRecordFormatter()\n```\n\nヘッダ部のフォーマットを生成する。\n<p/>\nヘッダ部を表すフォーマット定義ファイル名は、{@link #getHeaderFormatName()}より取得する。\n\n**戻り値:**\n生成したフォーマッタ\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getHeaderFormatName",
+      "level": 3,
+      "content": "```java\nprotected String getHeaderFormatName()\n```\n\nヘッダ部のフォーマット定義ファイル名を取得する。\n<p/>\nヘッダ部のフォーマット定義ファイル名は、nablarch.fw.messaging.action.AsyncMessageSendActionSettings#getHeaderFormatName()\nから取得した値となる。\n\n**戻り値:**\nフォーマット定義ファイル名\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "createHeaderRecord",
+      "level": 3,
+      "content": "```java\nprotected Map<String,Object> createHeaderRecord(SqlRow inputData)\n```\n\nヘッダデータを生成する。\n<p/>\nヘッダ部に設定する項目は以下のとおり。\n<ul>\n<li>リクエストIDを設定するフィールド(項目名:requestId)があること。\nリクエストID部には、バッチ起動時に指定された送信メッセージのメッセージIDを設定する。\n</li>\n<li>リクエストID以外の項目は、任意の項目を設定することが可能である。\n設定する項目は、nablarch.fw.messaging.action.AsyncMessageSendActionSettings#getHeaderItemList()から取得した項目となり、\n設定する値は{@link #handle(nablarch.core.db.statement.SqlRow, nablarch.fw.ExecutionContext)}のインプットデータから取得する。\n</li>\n</ul>\n\n**パラメータ:**\n- `inputData` - 入力データ\n\n**戻り値:**\n生成したヘッダ情報\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "createDataRecordFormatter",
+      "level": 3,
+      "content": "```java\nprotected DataRecordFormatter createDataRecordFormatter()\n```\n\nデータ部のフォーマッタ生成する。\n\n**戻り値:**\n生成したフォーマッタ\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getQueueName",
+      "level": 3,
+      "content": "```java\nprotected String getQueueName()\n```\n\n送信キュー名を取得する。\n\n**戻り値:**\n送信キュー名\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "getFormatDir",
+      "level": 3,
+      "content": "```java\nprotected String getFormatDir()\n```\n\nフォーマット定義ファイルの配置ディレクトリを示す論理名を取得する。\n\n**戻り値:**\nフォーマット定義ファイルの配置ディレクトリ(論理名)\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "createFormInstance",
+      "level": 3,
+      "content": "```java\nprotected synchronized Object createFormInstance(Map<String,?> inputData)\n```\n\n送信用一時テーブルを更新するためのFormオブジェクトを生成する。\n\n**パラメータ:**\n- `inputData` - Formインスタンスを生成するためのインプットデータ\n\n**戻り値:**\n生成したFormクラスのインスタンス\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "getTransactionName",
+      "level": 3,
+      "content": "```java\nprivate String getTransactionName()\n```\n\nトランザクション名を取得する。\n\n**戻り値:**\nトランザクション名\n\n---",
+      "id": "s23"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-action-AsyncMessageSendAction"
+}

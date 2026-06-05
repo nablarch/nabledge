@@ -14,7 +14,7 @@
 本ハンドラは、アプリケーションの機能ごとに行う処理を記載するアクションに処理を委譲する。
 本ハンドラは、主に [メッセージング](../../processing-pattern/db-messaging/db-messaging-messaging.md#メッセージング編) の機能で、任意のアクションにディスパッチする目的で使用する。
 
-本ハンドラでは、 Request#getRequestPath() で取得した
+本ハンドラでは、 [Request#getRequestPath()](../../javadoc/javadoc-nablarch-fw-Request.md) で取得した
 リクエストパスを元に、ディスパッチ先のアクションを選択する。
 リクエストパスの形式は以下を想定している。
 
@@ -31,7 +31,7 @@
 `/batch/ExampleBatchAction` のようにリクエストパスを指定する。
 
 > **Important:**
-> 通常、 Request#getRequestPath() で取得されるリクエストパスは、
+> 通常、 [Request#getRequestPath()](../../javadoc/javadoc-nablarch-fw-Request.md) で取得されるリクエストパスは、
 > [共通起動ランチャ](../../component/handlers/handlers-main.md#共通起動ランチャ) に記載の通り、コマンドラインで起動する際に `-requestPath` オプションで指定する。
 
 本ハンドラでは、以下の処理を行う。
@@ -44,7 +44,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.handler.RequestPathJavaPackageMapping
+* [nablarch.fw.handler.RequestPathJavaPackageMapping](../../javadoc/javadoc-nablarch-fw-handler-RequestPathJavaPackageMapping.md)
 
 ## モジュール一覧
 
@@ -114,7 +114,7 @@
 | /BaseApp | nablarch.sample.base.BaseApp |
 
 このようなディスパッチを行う場合、以下のように `optionalPackageMappingEntries` プロパティに
-JavaPackageMappingEntry クラスを使用して設定する。
+[JavaPackageMappingEntry](../../javadoc/javadoc-nablarch-fw-handler-JavaPackageMappingEntry.md) クラスを使用して設定する。
 
 ```xml
 <component class="nablarch.fw.handler.RequestPathJavaPackageMapping">

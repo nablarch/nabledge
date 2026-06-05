@@ -22,7 +22,7 @@ MOMメッセージングの詳細は、 [システム間メッセージング](.
 
 ## ハンドラクラス名
 
-* nablarch.fw.messaging.handler.MessagingContextHandler
+* [nablarch.fw.messaging.handler.MessagingContextHandler](../../javadoc/javadoc-nablarch-fw-messaging-handler-MessagingContextHandler.md)
 
 ## モジュール一覧
 
@@ -39,12 +39,12 @@ MOMメッセージングの詳細は、 [システム間メッセージング](.
 
 ## MQの接続先を設定する
 
-このハンドラは、 messagingProvider
-プロパティに設定されたプロバイダクラス( MessagingProvider 実装クラス)を使用してMQ接続を取得する。
+このハンドラは、 [messagingProvider](../../javadoc/javadoc-nablarch-fw-messaging-handler-MessagingContextHandler.md)
+プロパティに設定されたプロバイダクラス( [MessagingProvider](../../javadoc/javadoc-nablarch-fw-messaging-MessagingProvider.md) 実装クラス)を使用してMQ接続を取得する。
 
 以下に設定例を示す。
 プロバイダクラスの設定内容については、使用する
-MessagingProvider 実装クラスのJavadocを参照。
+[MessagingProvider](../../javadoc/javadoc-nablarch-fw-messaging-MessagingProvider.md) 実装クラスのJavadocを参照。
 
 ```xml
 <!-- メッセージコンテキスト管理ハンドラ -->

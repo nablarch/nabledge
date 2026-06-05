@@ -10,10 +10,10 @@
 
 JSR352に準拠したバッチアプリケーションの場合、バッチの起動はJSR352で規定されたAPIを使用して行う。
 
-Nablarchでは、標準の実装クラスとして、nablarch.fw.batch.ee.Main を提供している。
+Nablarchでは、標準の実装クラスとして、[nablarch.fw.batch.ee.Main](../../javadoc/javadoc-nablarch-fw-batch-ee-Main.md) を提供している。
 このクラスは実行引数として対象JOBのXMLファイル名(.xmlを除いたファイル名)を指定する。
 
-ジョブ実行時にパラメータを指定したい場合は、 nablarch.fw.batch.ee.Main に対して起動オプションを指定する。
+ジョブ実行時にパラメータを指定したい場合は、 [nablarch.fw.batch.ee.Main](../../javadoc/javadoc-nablarch-fw-batch-ee-Main.md) に対して起動オプションを指定する。
 起動オプションで指定した値は、 JobOperator#start のjobParametersに設定される。
 
 起動オプションは、名前に `--` を付加し、名前の次の引数に値を設定する。

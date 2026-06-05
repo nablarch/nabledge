@@ -68,13 +68,13 @@ Batchletで、ループを伴う処理を行う必要がある場合には、下
 
 ポイント
 
-* processメソッドの先頭で、処理対象件数(データベースへのcount結果やファイルのレコード数等)を取得し、 inputCount に設定する。
+* processメソッドの先頭で、処理対象件数(データベースへのcount結果やファイルのレコード数等)を取得し、 [inputCount](../../javadoc/javadoc-nablarch-fw-batch-ee-progress-ProgressManager.md) に設定する。
 
   > **Important:**
-> TPSの算出の起点となる時間は、 inputCount が呼び出されたタイミングとなる。
-  > inputCount を呼び出し後にデータベースから対象データを抽出するなどの重い処理を行った場合、
+> TPSの算出の起点となる時間は、 [inputCount](../../javadoc/javadoc-nablarch-fw-batch-ee-progress-ProgressManager.md) が呼び出されたタイミングとなる。
+  > [inputCount](../../javadoc/javadoc-nablarch-fw-batch-ee-progress-ProgressManager.md) を呼び出し後にデータベースから対象データを抽出するなどの重い処理を行った場合、
   > TPSが実際と異なる(実際より小さい値)結果となるので注意すること。
-* 処理を行うループ処理内で、一定間隔ごとに進捗ログを出力する outputProgressInfo を呼び出す。
+* 処理を行うループ処理内で、一定間隔ごとに進捗ログを出力する [outputProgressInfo](../../javadoc/javadoc-nablarch-fw-batch-ee-progress-ProgressManager.md) を呼び出す。
 
 実装例
 
@@ -130,12 +130,12 @@ ItemReader
 
 ポイント
 
-* コンストラクタインジェクションを使用して、進捗ログを出力するインタフェース( ProgressManager )をインジェクションする。
-* openメソッドにて、処理対象件数(データベースへのcount結果やファイルのレコード数等)を取得し、 inputCount に設定する。
+* コンストラクタインジェクションを使用して、進捗ログを出力するインタフェース( [ProgressManager](../../javadoc/javadoc-nablarch-fw-batch-ee-progress-ProgressManager.md) )をインジェクションする。
+* openメソッドにて、処理対象件数(データベースへのcount結果やファイルのレコード数等)を取得し、 [inputCount](../../javadoc/javadoc-nablarch-fw-batch-ee-progress-ProgressManager.md) に設定する。
 
   > **Important:**
-> TPSの算出の起点となる時間は、 inputCount が呼び出されたタイミングとなる。
-  > inputCount を呼び出し後にデータベースから対象データを抽出するなどの重い処理を行った場合、
+> TPSの算出の起点となる時間は、 [inputCount](../../javadoc/javadoc-nablarch-fw-batch-ee-progress-ProgressManager.md) が呼び出されたタイミングとなる。
+  > [inputCount](../../javadoc/javadoc-nablarch-fw-batch-ee-progress-ProgressManager.md) を呼び出し後にデータベースから対象データを抽出するなどの重い処理を行った場合、
   > TPSが実際と異なる(実際より小さい値)結果となるので注意すること。
 
 実装例
@@ -210,4 +210,4 @@ public class ProgressReader extends AbstractItemReader {
 > の読み込み済み件数が実態とずれることに起因する。
 
 > このため、Retrying Exceptionsを使用して例外発生時のリトライ処理を行いたい場合には、 ItemWriter の実装クラスにて処理済み件数を計算し、
-> outputProgressInfo を使用して進捗ログを出力すること。
+> [outputProgressInfo](../../javadoc/javadoc-nablarch-fw-batch-ee-progress-ProgressManager.md) を使用して進捗ログを出力すること。

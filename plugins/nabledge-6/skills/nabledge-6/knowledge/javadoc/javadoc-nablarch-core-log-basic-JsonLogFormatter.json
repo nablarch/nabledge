@@ -1,0 +1,188 @@
+{
+  "title": "class JsonLogFormatter",
+  "content": "**パッケージ:** nablarch.core.log.basic\n\n**実装されたインタフェース:**\n- LogFormatter\n\n---\n\n```java\npublic class JsonLogFormatter\nimplements LogFormatter\n```\n\n{@link LogFormatter}のJSON形式フォーマット実装クラス。<br>\n<br>\nJsonLogFormatterは、出力項目を指定してフォーマットを指定する。\n出力項目の一覧を下記に示す。\n<pre>\ndate\n    このログ出力を要求した時点の日時。\nlogLevel\n    このログ出力のログレベル。\n    デフォルトはLogLevel列挙型の名称を文言に使用する。\n    文言はプロパティファイルの設定で変更することができる。\nloggerName\n    このログ出力が対応するロガー設定の名称。\n    このログ出力を呼び出した箇所に関わらず、プロパティファイル(log.properties)に記載したロガー名となる。\nruntimeLoggerName\n    実行時に、{@link nablarch.core.log.LoggerManager}からロガー取得に指定した名称。\n    このログ出力を呼び出した際に{@link nablarch.core.log.LoggerManager#get(Class)}で指定したクラス名\n    または{@link nablarch.core.log.LoggerManager#get(String)}で指定した名称となる。\nbootProcess\n    起動プロセスを識別する名前。\n    起動プロセスは、システムプロパティ\"nablarch.bootProcess\"から取得する。\n    指定がない場合はブランク。\nprocessingSystem\n    処理方式を識別する名前。\n    処理方式は、プロパティファイル(\"nablarch.processingSystem\")から取得する。\n    指定がない場合はブランク。\nrequestId\n    このログ出力を要求した時点のリクエストID。\nexecutionId\n    このログ出力を要求した時点の実行時ID\nuserId\n    このログ出力を要求した時点のログインユーザのユーザID。\nmessage\n    このログ出力のメッセージ。\npayload\n    オプション情報に指定されたオブジェクトのフィールド情報。\n    オブジェクトの型は {@code Map<String, Object> } でなければならない。\n    Mapのアイテムがルート階層に追加される。\n    キーが重複した場合は、いずれか一つのみが出力される。\nstackTrace\n    エラー情報に指定された例外オブジェクトのスタックトレース。\n    エラー情報の指定がない場合は表示しない。\n</pre>\nプロパティファイルの記述ルールを下記に示す。<br>\n<br>\n<dl>\n  <dt>{@code writer.<LogWriterの名称>.formatter.label.<LogLevelの名称の小文字>}<dt/>\n  <dd>{@link LogLevel}に使用するラベル。オプション。<br>\n      指定しなければ{@link LogLevel}の名称を使用する。<dd/>\n  <dt>{@code writer.<LogWriterの名称>.formatter.targets}<dt/>\n  <dd>出力項目をカンマ区切りで指定する。オプション。\n      指定しなければ全ての出力項目が出力の対象となる。<dd/>\n  <dt>{@code writer.<LogWriterの名称>.formatter.datePattern}<dt/>\n  <dd>日時のフォーマットに使用するパターン。オプション。<br>\n      指定しなければyyyy-MM-dd HH:mm:ss.SSSを使用する。<dd/>\n  <dt>{@code writer.<LogWriterの名称>.formatter.structuredMessagePrefix}<dt/>\n  <dd>各種ログで使用される組み込み処理用の接頭辞。オプション。<br>\n      指定しなければ$JSON$を使用する。<dd/>\n</dl>\n\n**関連項目:** LogWriter  \n**作成者:** Shuji Kitamura  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "TARGET_NAME_DATE",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_NAME_DATE\n```\n\n出力日時の項目名\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "TARGET_NAME_LOG_LEVEL",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_NAME_LOG_LEVEL\n```\n\nログレベルの項目名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "TARGET_NAME_LOGGER_NAME",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_NAME_LOGGER_NAME\n```\n\nロガー名の項目名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "TARGET_NAME_RUNTIME_LOGGER_NAME",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_NAME_RUNTIME_LOGGER_NAME\n```\n\n実行時ロガー名の項目名\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "TARGET_NAME_BOOT_PROCESS",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_NAME_BOOT_PROCESS\n```\n\n起動プロセスの項目名\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "TARGET_NAME_PROCESSING_SYSTEM",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_NAME_PROCESSING_SYSTEM\n```\n\n処理方式の項目名\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "TARGET_NAME_REQUEST_ID",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_NAME_REQUEST_ID\n```\n\nリクエストIDの項目名\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "TARGET_NAME_EXECUTION_ID",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_NAME_EXECUTION_ID\n```\n\n実行時IDの項目名\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "TARGET_NAME_USER_ID",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_NAME_USER_ID\n```\n\nユーザIDの項目名\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "TARGET_NAME_MESSAGE",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_NAME_MESSAGE\n```\n\nメッセージの項目名\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "TARGET_NAME_STACK_TRACE",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_NAME_STACK_TRACE\n```\n\nエラー情報に指定された例外オブジェクトのスタックトレーの項目名\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "TARGET_NAME_PAYLOAD",
+      "level": 3,
+      "content": "```java\nprivate static final String TARGET_NAME_PAYLOAD\n```\n\nオプション情報に指定されたオブジェクトの項目名\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "SYSTEM_PROP_PROCESSING_SYSTEM",
+      "level": 3,
+      "content": "```java\nprivate static final String SYSTEM_PROP_PROCESSING_SYSTEM\n```\n\nシステムプロパティから処理方式を識別する文字列を取得する際に使用するキー\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "PROPS_TARGETS",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_TARGETS\n```\n\n出力項目のプロパティ名\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "DEFAULT_TARGETS",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_TARGETS\n```\n\n出力項目のデフォルト値\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "PROPS_STRUCTURED_MESSAGE_PREFIX",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_STRUCTURED_MESSAGE_PREFIX\n```\n\nmessageを構造化されていることを示す接頭辞のプロパティ名\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "DEFAULT_STRUCTURED_MESSAGE_PREFIX",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_STRUCTURED_MESSAGE_PREFIX\n```\n\nmessageを構造化されていることを示す接頭辞のデフォルト値\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "serializationManager",
+      "level": 3,
+      "content": "```java\nprivate JsonSerializationManager serializationManager\n```\n\nJsonのシリアライズに使用する管理クラス\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "structuredTargets",
+      "level": 3,
+      "content": "```java\nprivate List<JsonLogObjectBuilder<LogContext>> structuredTargets\n```\n\nログ出力項目\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "formatErrorSupport",
+      "level": 3,
+      "content": "```java\nprivate FormatErrorSupport formatErrorSupport\n```\n\nフォーマットエラーを処理するクラス\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s22"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize(ObjectSettings settings)\n```\n\n{@inheritDoc}<br>\n<br>\n出力項目を初期化する。\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "createFormatErrorSupport",
+      "level": 3,
+      "content": "```java\nprotected FormatErrorSupport createFormatErrorSupport()\n```\n\nフォーマットエラーを処理するクラスを生成する。\n\n**戻り値:**\nフォーマットエラーを処理するクラス\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "createSerializationManager",
+      "level": 3,
+      "content": "```java\nprotected JsonSerializationManager createSerializationManager(ObjectSettings settings)\n```\n\nJsonのシリアライズに使用する管理クラスを生成する。\n\n**パラメータ:**\n- `settings` - LogFormatterの設定\n\n**戻り値:**\nJsonのシリアライズに使用する管理クラス\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "createStructuredTargets",
+      "level": 3,
+      "content": "```java\nprotected List<JsonLogObjectBuilder<LogContext>> createStructuredTargets(ObjectSettings settings)\n```\n\nログ出力項目を生成する。\n\n**パラメータ:**\n- `settings` - LogFormatterの設定\n\n**戻り値:**\nログ出力項目\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "getStructuredMessagePrefix",
+      "level": 3,
+      "content": "```java\nprivate String getStructuredMessagePrefix(ObjectSettings settings)\n```\n\n構造化済みメッセージを示す接頭辞を取得する。\n\n**パラメータ:**\n- `settings` - LogFormatterの設定\n\n**戻り値:**\n構造化済みメッセージを示す接頭辞\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "getLogLevelLabelProvider",
+      "level": 3,
+      "content": "```java\nprotected LogLevelLabelProvider getLogLevelLabelProvider(ObjectSettings settings)\n```\n\nLogLevelLabelProviderを取得する。\n\n**パラメータ:**\n- `settings` - LogFormatterの設定\n\n**戻り値:**\nLogLevelLabelProvider\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "format",
+      "level": 3,
+      "content": "```java\npublic String format(LogContext context)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "createStructuredObject",
+      "level": 3,
+      "content": "```java\nprotected Map<String,Object> createStructuredObject(LogContext context)\n```\n\nログコンテキストからシリアライズ用のオブジェクトを作成する。\n\n**パラメータ:**\n- `context` - ログコンテキスト\n\n**戻り値:**\nシリアライズ用のオブジェクト\n\n---",
+      "id": "s30"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-basic-JsonLogFormatter"
+}

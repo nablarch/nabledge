@@ -1,0 +1,194 @@
+{
+  "title": "class MessagingLogFormatter",
+  "content": "**パッケージ:** nablarch.fw.messaging.logging\n\n---\n\n```java\npublic class MessagingLogFormatter\n```\n\nメッセージ送受信処理の中でログ出力を行うクラス。\n\nログファイルはキュー毎に個別に設定できる。\nログが出力されるタイミングは以下のとおり\n<pre>\n1. 送信処理完了時 (ローカルキューへのPUT完了直後)\n2. 電文受信時\n</pre>\n\n出力可能な項目は以下のとおり。\n<pre>\n1. 共通プロトコルヘッダ\n  - メッセージID (String)\n  - 関連メッセージID (String)\n  - 送信宛先キュー論理名 (String)\n  - 応答宛先キュー論理名 (String)\n\n2. メッセージボディデータ\n  - メッセージボディのバイト長 (int)\n  - メッセージボディ\n  - メッセージボディのヘキサダンプ\n\n  ※メッセージボディに含まれる個人情報や機密情報はマスクして出力することが可能である(マスク用の設定が必要)\n\n3. MOM固有プロトコルヘッダ(以下はJmsMessagingProviderの場合)\n    JMSType\n    JMSDeliveryMode\n    JMSPriority\n    JMSTimestamp\n    JMSExpiration   \n    JMSRedelivered\n    JMSXDeliveryCount\n    JMSXGroupID\n    JMSXGroupSeq\n    JMSXProducerTXID\n\n4. そのほか\n    - スレッド名\n    - メッセージヘッダ\n</pre>\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "PROPS_PREFIX",
+      "level": 3,
+      "content": "```java\npublic static final String PROPS_PREFIX\n```\n\nプロパティ名のプレフィックス\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "PROPS_MASKING_CHAR",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_MASKING_CHAR\n```\n\nマスク文字を取得する際に使用するプロパティ名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "PROPS_MASKING_PATTERNS",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_MASKING_PATTERNS\n```\n\n本文のマスク対象のパターンを取得する際に使用するプロパティ名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "DEFAULT_MASKING_CHAR",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_MASKING_CHAR\n```\n\nデフォルトのマスク文字\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "DEFAULT_MASKING_PATTERNS",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern[] DEFAULT_MASKING_PATTERNS\n```\n\nデフォルトのマスク対象のパターン\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "MULTIVALUE_SEPARATOR_PATTERN",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern MULTIVALUE_SEPARATOR_PATTERN\n```\n\n多値指定(カンマ区切り)のプロパティを分割する際に使用するパターン\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "props",
+      "level": 3,
+      "content": "```java\nprivate Map<String,String> props\n```\n\nプロパティ\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "logItems",
+      "level": 3,
+      "content": "```java\nprivate Map<String,LogItem<MessagingLogContext>> logItems\n```\n\nログ出力項目\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "sentMessageLogItems",
+      "level": 3,
+      "content": "```java\nprivate final LogItem<MessagingLogContext>[] sentMessageLogItems\n```\n\nログ出力項目\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "PROPS_SENT_MESSAGE_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_SENT_MESSAGE_FORMAT\n```\n\nフォーマット定義のプロパティ名\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "DEFAULT_SENT_MESSAGE_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_SENT_MESSAGE_FORMAT\n```\n\nデフォルトのフォーマット\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "receivedMessageLogItems",
+      "level": 3,
+      "content": "```java\nprivate final LogItem<MessagingLogContext>[] receivedMessageLogItems\n```\n\nログ出力項目\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "PROPS_RECEIVED_MESSAGE_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_RECEIVED_MESSAGE_FORMAT\n```\n\nフォーマット定義のプロパティ名\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "DEFAULT_RECEIVED_MESSAGE_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_RECEIVED_MESSAGE_FORMAT\n```\n\nデフォルトのフォーマット\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "httpSentMessageLogItems",
+      "level": 3,
+      "content": "```java\nprivate final LogItem<MessagingLogContext>[] httpSentMessageLogItems\n```\n\nログ出力項目\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "PROPS_HTTP_SENT_MESSAGE_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_HTTP_SENT_MESSAGE_FORMAT\n```\n\nフォーマット定義のプロパティ名\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "DEFAULT_HTTP_SENT_MESSAGE_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_HTTP_SENT_MESSAGE_FORMAT\n```\n\nデフォルトのフォーマット\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "httpReceivedMessageLogItems",
+      "level": 3,
+      "content": "```java\nprivate final LogItem<MessagingLogContext>[] httpReceivedMessageLogItems\n```\n\nログ出力項目\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "PROPS_HTTP_RECEIVED_MESSAGE_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String PROPS_HTTP_RECEIVED_MESSAGE_FORMAT\n```\n\nフォーマット定義のプロパティ名\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "DEFAULT_HTTP_RECEIVED_MESSAGE_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_HTTP_RECEIVED_MESSAGE_FORMAT\n```\n\nデフォルトのフォーマット\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s22"
+    },
+    {
+      "title": "getSentMessageLog",
+      "level": 3,
+      "content": "```java\npublic String getSentMessageLog(SendingMessage message)\n```\n\n同期送信処理開始時に出力されるログ文字列を生成する。\n\n**パラメータ:**\n- `message` - 電文オブジェクト\n\n**戻り値:**\nログ文字列\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getReceivedMessageLog",
+      "level": 3,
+      "content": "```java\npublic String getReceivedMessageLog(ReceivedMessage message)\n```\n\n同期送信処理開始時に出力されるログ文字列を生成する。\n\n**パラメータ:**\n- `message` - 電文オブジェクト\n\n**戻り値:**\nログ文字列\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "getHttpSentMessageLog",
+      "level": 3,
+      "content": "```java\npublic String getHttpSentMessageLog(SendingMessage message, Charset charset)\n```\n\n同期送信処理開始時に出力されるログ文字列を生成する。\n\n**パラメータ:**\n- `message` - 電文オブジェクト\n- `charset` - 出力に使用する文字セット\n\n**戻り値:**\nログ文字列\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "getHttpReceivedMessageLog",
+      "level": 3,
+      "content": "```java\npublic String getHttpReceivedMessageLog(ReceivedMessage message, Charset charset)\n```\n\n同期送信処理開始時に出力されるログ文字列を生成する。\n\n**パラメータ:**\n- `message` - 電文オブジェクト\n- `charset` - 出力に使用する文字セット\n\n**戻り値:**\nログ文字列\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "getFormattedLogItems",
+      "level": 3,
+      "content": "```java\nprotected LogItem<MessagingLogContext>[] getFormattedLogItems(Map<String,LogItem<MessagingLogContext>> logItems, Map<String,String> props, String formatPropName, String defaultFormat)\n```\n\nフォーマット済みのログ出力項目を取得する。\n\n**パラメータ:**\n- `logItems` - フォーマット対象のログ出力項目\n- `props` - 各種ログ出力の設定情報\n- `formatPropName` - フォーマットのプロパティ名\n- `defaultFormat` - デフォルトのフォーマット\n\n**戻り値:**\nフォーマット済みのログ出力項目\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "getLogItems",
+      "level": 3,
+      "content": "```java\nprotected Map<String,LogItem<MessagingLogContext>> getLogItems()\n```\n\nフォーマット対象のログ出力項目を取得する。\n\n**戻り値:**\nフォーマット対象のログ出力項目\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "getMaskingChar",
+      "level": 3,
+      "content": "```java\nprotected char getMaskingChar(Map<String,String> props)\n```\n\nマスク文字を取得する。\n\n**パラメータ:**\n- `props` - 各種ログの設定情報\n\n**戻り値:**\nマスク文字\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "getBodyMaskingPatterns",
+      "level": 3,
+      "content": "```java\nprotected Pattern[] getBodyMaskingPatterns(Map<String,String> props)\n```\n\n本文のマスク対象のパラメータ名を取得する。<br>\nプロパティの指定がない場合はデフォルト値を返す。\n\n**パラメータ:**\n- `props` - 各種ログの設定情報\n\n**戻り値:**\nマスク対象のパラメータ名\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "getProp",
+      "level": 3,
+      "content": "```java\nprotected String getProp(Map<String,String> props, String propName, String defaultValue)\n```\n\nプロパティを取得する。<br>\nプロパティの指定がない場合はデフォルト値を返す。\n\n**パラメータ:**\n- `props` - 各種ログの設定情報\n- `propName` - プロパティ名\n- `defaultValue` - プロパティのデフォルト値\n\n**戻り値:**\nプロパティ\n\n---",
+      "id": "s31"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-logging-MessagingLogFormatter"
+}

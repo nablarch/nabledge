@@ -24,7 +24,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.web.handler.HttpRewriteHandler
+* [nablarch.fw.web.handler.HttpRewriteHandler](../../javadoc/javadoc-nablarch-fw-web-handler-HttpRewriteHandler.md)
 
 ## モジュール一覧
 
@@ -49,7 +49,7 @@
 
 ## 書き換えの設定
 
-書き換えの設定は、 本ハンドラ  のプロパティ requestPathRewriteRules または contentPathRewriteRules に対して行う。
+書き換えの設定は、 [本ハンドラ](../../javadoc/javadoc-nablarch-fw-web-handler-HttpRewriteHandler.md)  のプロパティ requestPathRewriteRules または contentPathRewriteRules に対して行う。
 
 以下に設定例を示す。
 
@@ -97,14 +97,14 @@
 </component>
 ```
 
-この例からわかる通り、設定は HttpRequestRewriteRule
-(リクエストパスを書き換える場合)または ContentPathRewriteRule
+この例からわかる通り、設定は [HttpRequestRewriteRule](../../javadoc/javadoc-nablarch-fw-web-handler-HttpRequestRewriteRule.md)
+(リクエストパスを書き換える場合)または [ContentPathRewriteRule](../../javadoc/javadoc-nablarch-fw-web-handler-ContentPathRewriteRule.md)
 (コンテンツパスを書き換える場合)を使用して行う。
 
-HttpRequestRewriteRule
-および ContentPathRewriteRule
+[HttpRequestRewriteRule](../../javadoc/javadoc-nablarch-fw-web-handler-HttpRequestRewriteRule.md)
+および [ContentPathRewriteRule](../../javadoc/javadoc-nablarch-fw-web-handler-ContentPathRewriteRule.md)
 には、下記のプロパティが存在する。(プロパティは、スーパークラスの
-RewriteRule に定義されている。)
+[RewriteRule](../../javadoc/javadoc-nablarch-fw-handler-RewriteRule.md) に定義されている。)
 
 | プロパティ名 | 説明 |
 |---|---|
@@ -113,11 +113,11 @@ RewriteRule に定義されている。)
 | conditions | パス以外の追加の適用条件 |
 | exports | 変数の書き換え設定 |
 
-HttpRequestRewriteRule
-および ContentPathRewriteRule
+[HttpRequestRewriteRule](../../javadoc/javadoc-nablarch-fw-web-handler-HttpRequestRewriteRule.md)
+および [ContentPathRewriteRule](../../javadoc/javadoc-nablarch-fw-web-handler-ContentPathRewriteRule.md)
 では、conditionsの設定に変数を使用できる。
-HttpRequestRewriteRule
-、 ContentPathRewriteRule
+[HttpRequestRewriteRule](../../javadoc/javadoc-nablarch-fw-web-handler-HttpRequestRewriteRule.md)
+、 [ContentPathRewriteRule](../../javadoc/javadoc-nablarch-fw-web-handler-ContentPathRewriteRule.md)
 それぞれで使用可能な変数は下記の通り。
 
 | 変数種別 | 書式 | 適用可能なクラス |
@@ -137,8 +137,8 @@ HttpRequestRewriteRule
 HTTPリライトハンドラでは、パスの書き換え以外に リクエストスコープ、セッションスコープ、
 スレッドコンテキスト、ウィンドウスコープへ変数を設定できる。
 
-変数を設定するには、HttpRequestRewriteRule
-または ContentPathRewriteRule の
+変数を設定するには、[HttpRequestRewriteRule](../../javadoc/javadoc-nablarch-fw-web-handler-HttpRequestRewriteRule.md)
+または [ContentPathRewriteRule](../../javadoc/javadoc-nablarch-fw-web-handler-ContentPathRewriteRule.md) の
 export プロパティを設定する。
 
 以下に設定例を示す。

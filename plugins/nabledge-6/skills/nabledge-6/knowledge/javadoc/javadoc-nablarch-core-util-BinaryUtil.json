@@ -1,0 +1,68 @@
+{
+  "title": "class BinaryUtil",
+  "content": "**パッケージ:** nablarch.core.util\n\n---\n\n```java\npublic final class BinaryUtil\n```\n\nバイナリ操作用ユーティリティクラス\n\n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "BinaryUtil",
+      "level": 3,
+      "content": "```java\nprivate BinaryUtil()\n```\n\nコンストラクタ。<br/>\n本クラスはインスタンス化できない。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "convertToBytes",
+      "level": 3,
+      "content": "```java\npublic static byte[] convertToBytes(String original, int length, Charset encoding)\n```\n\n引数で与えられた文字列をバイト列に変換し、引数のバイト長に満たない場合、右側0x00埋めを行う。\n<p/>\n引数が16進数文字列である場合は、16進数をビット列と見なしバイト列に変換して返却する。\n<p/>\n変換処理の仕様は{@link #convertToBytes(String, Charset)}を参照すること。\n<p/>\n\n**パラメータ:**\n- `original` - 文字列\n- `length` - バイト長\n- `encoding` - 文字エンコーディング(引数が16進数文字列である場合は使用されない)\n\n**戻り値:**\nバイト列\n\n**例外:**\n- `NumberFormatException` - 引数が\"0x\"から開始しており、かつ16進数文字列として成立していない場合\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "convertToHexString",
+      "level": 3,
+      "content": "```java\npublic static String convertToHexString(byte[] bytes)\n```\n\nバイト配列を16進数文字列に変換する。\n<p/>\n引数がnullや空文字である場合の挙動は以下となる。\n<ul>\n    <li>引数で与えられたバイト列がnullである場合は、\"null\"という文字列を返却する</li>\n    <li>引数で与えられたバイト列の長さが0である場合は、空文字を返却する</li>\n</ul>\n\n**パラメータ:**\n- `bytes` - バイト配列\n\n**戻り値:**\n16進数文字列\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "convertToHexStringWithPrefix",
+      "level": 3,
+      "content": "```java\npublic static String convertToHexStringWithPrefix(byte[] bytes)\n```\n\nバイト配列を16進数文字列に変換する。\n<p/>\n変換後の文字列には\"0x\"が先頭に付加される。\n<p/>\n引数で与えられたバイト列がnullであるか長さが0である場合、空文字を返却する。\n\n**パラメータ:**\n- `bytes` - バイト配列\n\n**戻り値:**\n16進数文字列\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "convertToBytes",
+      "level": 3,
+      "content": "```java\npublic static byte[] convertToBytes(String original, Charset encoding)\n                      throws NumberFormatException\n```\n\n引数で与えられた文字列をバイト列に変換する。\n<p/>\n引数で与えられた文字列がnullか空の場合は、長さ0のバイト列を返却する。\n<p/>\n引数が16進数として解釈可能な場合((0x[0-9A-F]+)に適合する場合)は以下の処理を行う。\n<ul>\n    <li>16進数をビット列と見なし、バイト列に変換して返却する。</li>\n    <li>\n        16進数文字列として成立していない場合(original.matches(\"0x[0-9A-F].\")が成立しない場合)\n        NumberFormatExceptionを送出する。具体例を以下に示す。\n        <ul>\n            <li>\"0x\"のみの文字列</li>\n            <li>\"0xあああ\"</li>\n        </ul>\n   </li>\n</ul>\n引数が16進数として解釈できない場合は以下の処理を行う。\n<ul>\n    <li>文字列全体を引数で指定した文字セットでエンコーディングし、バイト列に変換して返却する</li>\n</ul>\n</p>\n\n**パラメータ:**\n- `original` - 16進数文字列（0x[0-9A-F]+）\n- `encoding` - 文字エンコーディング(引数が16進数文字列である場合は使用されない)\n\n**戻り値:**\nバイト列\n\n**例外:**\n- `NumberFormatException` - 引数が\"0x\"から開始しておりかつ16進数文字列として成立していない場合\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "convertHexToBytes",
+      "level": 3,
+      "content": "```java\npublic static byte[] convertHexToBytes(String hexString)\n```\n\n16進数文字列をバイト列に変換する。\n<p/>\n引数の文字列が以下の条件に当てはまる場合{@link NumberFormatException}を送出する。\n<ul>\n    <li>文字列がnullや空文字である場合</li>\n    <li>（[0-9A-F]+）に当てはまらない場合</li>\n    <li>16進数文字列であるが、先頭が\"0x\"で開始している場合。\n        \"0x\"で開始する16進数文字列を変換する場合は{@link #convertToBytes(String, Charset)}を利用すること。</li>\n</ul>\n<p/>\n\n**パラメータ:**\n- `hexString` - 16進数文字列（[0-9A-F]+）\n\n**戻り値:**\nバイト配列\n\n**例外:**\n- `NumberFormatException` - 16進数文字列として成立していない場合、\n                               文字列がnullか空文字である場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "fillZerosRight",
+      "level": 3,
+      "content": "```java\npublic static byte[] fillZerosRight(byte[] orig, int length)\n```\n\n右側0詰めを行う。<br/>\nただし、以下の場合は0詰めを行わない。\n<ul>\n<li>元データ(orig)が0バイトの場合は、0バイトのバイト配列が返却される。</li>\n<li>元データ(orig)の要素数が、バイト長(length)以上の場合、元データがそのまま返却される。</li>\n</ul>\n\n**パラメータ:**\n- `orig` - 元データ\n- `length` - バイト長\n\n**戻り値:**\n0詰め後のバイト列\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "toByteArray",
+      "level": 3,
+      "content": "```java\npublic static byte[] toByteArray(InputStream inputStream)\n```\n\n入力ストリームをバイト配列に変換する。<br/>\n引数であたえられた入力ストリームはクローズされる。\n\n**パラメータ:**\n- `inputStream` - 入力ストリーム\n\n**戻り値:**\nバイト配列\n\n---",
+      "id": "s10"
+    }
+  ],
+  "id": "javadoc-nablarch-core-util-BinaryUtil"
+}

@@ -1,0 +1,140 @@
+{
+  "title": "class CharacterReplacementManager",
+  "content": "**パッケージ:** nablarch.core.dataformat\n\n**実装されたインタフェース:**\n- Initializable\n\n---\n\n```java\npublic class CharacterReplacementManager\nimplements Initializable\n```\n\n寄せ字変換処理を行うクラス。\n<p>\n本クラスは、文字列中のある特定の文字を等価な代替文字に変換する用途での使用を想定している。<br/>\n想定する変換の例：　髙→高　碕→崎<br/>\nこのような文字列変換処理のことを、寄せ時変換処理と呼ぶ。\n</p>\n<p>\n禁則文字を一括で豆腐（■）に変換するような処理は、本クラスでは想定していないので、<br/>\n文字を検知した場合に、ワーニングログを出力する機能や、呼び出し元に検知したことを通知する機能は提供しない。<br/>\n想定しない変換の例：　唖→■  \\→[ \n<p>\n寄せ字変換処理は、寄せ字タイプごとに定義された寄せ字変換定義ファイルの情報をもとに行う。<br/>\n寄せ字変換定義ファイルは初期化時に読み込み、メモリ上にキャッシュする。\n</p>\n<p>\n本クラスは、文字列中の特定の1文字を、特定の1文字に変換することしかサポートしない（サロゲートペアの変換もサポートしない）。<br/>\nよって、寄せ字変換定義ファイルに、「ﾍ゜」のような半角2文字で1文字を表現する合字などの複数の文字や、サロゲートペアが定義された場合は、例外をスローする。\n</p>\n\n**作成者:** Masato Inoue  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー *\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "REPOSITORY_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String REPOSITORY_KEY\n```\n\n本クラスのコンポーネント設定ファイル上の名前\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "configList",
+      "level": 3,
+      "content": "```java\nprivate List<CharacterReplacementConfig> configList\n```\n\n寄せ字変換処理の設定を保持するList\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "replacementDefinitionMap",
+      "level": 3,
+      "content": "```java\nprivate Map<String,CharacterReplacementDefinition> replacementDefinitionMap\n```\n\n寄せ字変換テーブルを保持するクラスのMap\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "CHARACTER_LENGTH_INVALID_MESSAGE",
+      "level": 3,
+      "content": "```java\nprivate static final String CHARACTER_LENGTH_INVALID_MESSAGE\n```\n\n文字長が異なる場合にスローする例外のメッセージ\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "getInstance",
+      "level": 3,
+      "content": "```java\npublic static CharacterReplacementManager getInstance()\n```\n\nFormatterFactoryクラスのインスタンスをリポジトリより取得する。\nリポジトリより取得できなかった場合は、デフォルトで本クラスのインスタンスを返却する。\n\n**戻り値:**\n{@link CharacterReplacementManager}のインスタンス\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize()\n```\n\n初期化処理を行う。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "createReplacementTables",
+      "level": 3,
+      "content": "```java\nprotected void createReplacementTables()\n```\n\n寄せ字変換定義ファイルを読み込み、寄せ字変換テーブルを生成する。\n<p>\n寄せ字変換定義ファイルに定義された変換前および変換後の文字列が1文字でない（Stringのlengthが1でない）場合は、\n例外をスローする。\n</p>\n<p>\n変換前と変換後の文字のバイト長一致チェックが有効な場合、\n寄せ字変換定義ファイルに定義された変換前および変換後の文字列を指定されたエンコーディングに従いバイト配列に変換し、\n変換前と変換後のバイト長が一致しない場合は、例外をスローする。\n</p>\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "createReplacementTable",
+      "level": 3,
+      "content": "```java\nprotected CharacterReplacementDefinition createReplacementTable(CharacterReplacementConfig config)\n```\n\n寄せ字変換定義ファイルを読み込み、寄せ字変換テーブルを生成する。\n\n**パラメータ:**\n- `config` - 寄せ字変換処理の設定を保持するクラス\n\n**戻り値:**\n寄せ字変換テーブルを保持するクラス\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setEncodingToTable",
+      "level": 3,
+      "content": "```java\nprotected void setEncodingToTable(CharacterReplacementConfig config, CharacterReplacementDefinition definition)\n```\n\n寄せ字変換テーブルに、文字エンコーディングを設定する。\n\n**パラメータ:**\n- `config` - 寄せ字変換処理の設定を保持するクラス\n- `definition` - 寄せ字変換テーブルを保持するクラス\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "loadPropertyFile",
+      "level": 3,
+      "content": "```java\nprotected Properties loadPropertyFile(String filePath)\n```\n\n寄せ字変換定義ファイルをロードする。\n\n**パラメータ:**\n- `filePath` - 寄せ字変換定義ファイルのパス\n\n**戻り値:**\n寄せ字変換定義ファイルをロードしたPropertiesクラス\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "checkReplacementCharacterLength",
+      "level": 3,
+      "content": "```java\nprotected void checkReplacementCharacterLength(String fromStr, String toStr, CharacterReplacementConfig config)\n```\n\n寄せ字変換定義ファイルに設定された変換前文字列と変換後文字列の文字列長が「1」であることを確認する。\n\n**パラメータ:**\n- `fromStr` - 寄せ字変換前の文字列\n- `toStr` - 寄せ字変換後の文字列\n- `config` - 寄せ字変換処理の設定を保持するクラス\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "toHexString",
+      "level": 3,
+      "content": "```java\nprivate String toHexString(String str)\n```\n\n引数の文字列を16進数に変換する。\n\n**パラメータ:**\n- `str` - 変換前の文字列\n\n**戻り値:**\n16進数に変換した文字列\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "checkByteLength",
+      "level": 3,
+      "content": "```java\nprotected void checkByteLength(String fromStr, String toStr, CharacterReplacementConfig config)\n```\n\n変換前文字列と変換後文字列のバイト長チェックを行う。\nバイト長チェックは、文字エンコーディングに従い行う。\n\n**パラメータ:**\n- `fromStr` - 変換前文字列\n- `toStr` - 変換後文字列\n- `config` - 寄せ字変換処理の設定を保持するクラス\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "checkProperty",
+      "level": 3,
+      "content": "```java\nprotected void checkProperty(String name, String value, CharacterReplacementConfig config)\n                   throws IllegalStateException\n```\n\n設定されたプロパティの妥当性をチェックする。\n\n**パラメータ:**\n- `name` - プロパティ名\n- `value` - プロパティの値\n- `config` - 寄せ字変換処理の設定を保持するクラス\n\n**例外:**\n- `IllegalStateException` - プロパティが設定されていない場合\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "replaceCharacter",
+      "level": 3,
+      "content": "```java\npublic String replaceCharacter(String typeName, String input)\n```\n\n引数で渡された文字列に対して、寄せ字変換処理を行う。\n\n**パラメータ:**\n- `typeName` - 寄せ字タイプ名\n- `input` - 入力文字列\n\n**戻り値:**\n寄せ字変換処理後の文字列\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "outputLog",
+      "level": 3,
+      "content": "```java\nprotected void outputLog(String typeName, char from, char to, String input)\n```\n\n文字を変換した際のログを出力する。\n\n**パラメータ:**\n- `typeName` - 寄せ字変換タイプ名\n- `from` - 寄せ字変換前の文字\n- `to` - 寄せ字変換後の文字\n- `input` - 入力文字列\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "setConfigList",
+      "level": 3,
+      "content": "```java\npublic CharacterReplacementManager setConfigList(List<CharacterReplacementConfig> configList)\n```\n\n寄せ字変換処理の設定を保持するListを設定する。\n\n**パラメータ:**\n- `configList` - 寄せ字変換処理の設定を保持するList\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "containsReplacementType",
+      "level": 3,
+      "content": "```java\npublic boolean containsReplacementType(String typeName)\n```\n\n引数で指定された寄せ字タイプ名が、寄せ字タイプ名として定義されているかどうかチェックする。\n\n**パラメータ:**\n- `typeName` - 寄せ字タイプ名\n\n**戻り値:**\n引数で指定された寄せ字タイプ名が定義されている場合、true\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "checkReplacementTypeEncoding",
+      "level": 3,
+      "content": "```java\npublic boolean checkReplacementTypeEncoding(String typeName, Charset encoding)\n```\n\n引数で指定された寄せ字タイプ名と文字エンコーディングの組み合わせが、定義された組み合わせと一致するかどうかをチェックする。\n<p>\n寄せ字タイプ名と、文字エンコーディングの組み合わせは、通常コンポーネント設定ファイルで定義される。\n</p>\n\n**パラメータ:**\n- `typeName` - 寄せ字タイプ名\n- `encoding` - 文字エンコーディング\n\n**戻り値:**\n寄せ字タイプ名が\n\n---",
+      "id": "s22"
+    }
+  ],
+  "id": "javadoc-nablarch-core-dataformat-CharacterReplacementManager"
+}

@@ -90,9 +90,9 @@ public class ProjectDownloadDto implements Serializable {
 
 この実装のポイント
 
-* ダウンロードするCSVファイルの内容と、Beanのプロパティとの紐付けの設定は、 @Csv を使用する。
-  受け付けるCSVのフォーマットの指定は、 @CsvFormat を使用する。
-  （ [デフォルトのフォーマットの指定](../../component/libraries/libraries-data-bind.md#csvファイルのフォーマットとして指定できるフォーマットセット) を使用する場合は、 @CsvFormat は不要）
+* ダウンロードするCSVファイルの内容と、Beanのプロパティとの紐付けの設定は、 [@Csv](../../javadoc/javadoc-nablarch-common-databind-csv-Csv.md) を使用する。
+  受け付けるCSVのフォーマットの指定は、 [@CsvFormat](../../javadoc/javadoc-nablarch-common-databind-csv-CsvFormat.md) を使用する。
+  （ [デフォルトのフォーマットの指定](../../component/libraries/libraries-data-bind.md#csvファイルのフォーマットとして指定できるフォーマットセット) を使用する場合は、 [@CsvFormat](../../javadoc/javadoc-nablarch-common-databind-csv-CsvFormat.md) は不要）
   アノテーションの設定方法の詳細は、 [CSVファイルをJava Beansクラスにバインドする場合のフォーマット指定方法](../../component/libraries/libraries-data-bind.md#csvファイルのフォーマットを指定する) を参照。
 
 業務アクションメソッドの作成
@@ -135,16 +135,16 @@ public HttpResponse download(HttpRequest request, ExecutionContext context) {
 
 * 検索処理の実装方法については  [検索機能の作成：業務アクションの実装](../../processing-pattern/web-application/web-application-getting-started-project-search.md#検索する) を参照。
 * Beanをファイルにバインドして出力するには、 [データバインド](../../component/libraries/libraries-data-bind.md#データバインド) が提供する、
-  ObjectMapper を使用する。
-* ファイルに出力されたデータをダウンロードさせるには、 FileResponse を使用する。
+  [ObjectMapper](../../javadoc/javadoc-nablarch-common-databind-ObjectMapper.md) を使用する。
+* ファイルに出力されたデータをダウンロードさせるには、 [FileResponse](../../javadoc/javadoc-nablarch-common-web-download-FileResponse.md) を使用する。
   詳細は、 [データバインドをダウンロードで使用する](../../component/libraries/libraries-data-bind.md#ファイルダウンロードで使用する) を参照。
-* 大量のデータを読み込む場合は、メモリの逼迫を防ぐために UniversalDao#defer を使用して、
+* 大量のデータを読み込む場合は、メモリの逼迫を防ぐために [UniversalDao#defer](../../javadoc/javadoc-nablarch-common-dao-UniversalDao.md) を使用して、
   検索結果を [遅延ロード](../../component/libraries/libraries-universal-dao.md#検索結果を遅延ロードする) する。
 * レスポンスのコンテンツタイプは
-  HttpResponse#setContentType を使用して設定する。
+  [HttpResponse#setContentType](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.md) を使用して設定する。
   詳細は [汎用データフォーマットをダウンロードで使用する](../../component/libraries/libraries-data-format.md#ファイルダウンロードで使用する) を参照。
 * ダウンロードファイルのファイル名は
-  HttpResponse#setContentDisposition を使用して設定する。
+  [HttpResponse#setContentDisposition](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.md) を使用して設定する。
   詳細は [汎用データフォーマットをダウンロードで使用する](../../component/libraries/libraries-data-format.md#ファイルダウンロードで使用する) を参照。
 
 ファイルダウンロード機能の解説は以上。

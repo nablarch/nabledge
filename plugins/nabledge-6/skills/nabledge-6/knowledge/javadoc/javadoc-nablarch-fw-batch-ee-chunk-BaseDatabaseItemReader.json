@@ -1,0 +1,50 @@
+{
+  "title": "class BaseDatabaseItemReader",
+  "content": "**パッケージ:** nablarch.fw.batch.ee.chunk\n\n**継承階層:**\n```\njava.lang.Object\n  └─ AbstractItemReader\n      └─ nablarch.fw.batch.ee.chunk.BaseDatabaseItemReader\n```\n\n---\n\n```java\npublic abstract class BaseDatabaseItemReader\nextends AbstractItemReader\n```\n\nデータベースを入力とする{@link jakarta.batch.api.chunk.ItemReader}の抽象クラス。\n<p/>\n本リーダを継承することで、リーダ専用のコネクションを使用してデータを読み込むことができる。\n<p/>\nDB製品によっては、トランザクション制御時にカーソルが閉じられてしまうため、リーダ専用のコネクションを使用して読み込みを行っている。\n\n**作成者:** Naoki Yamamoto  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "connection",
+      "level": 3,
+      "content": "```java\nprivate TransactionManagerConnection connection\n```\n\nリーダ専用のコネクション\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "open",
+      "level": 3,
+      "content": "```java\npublic final void open(Serializable checkpoint)\n          throws Exception\n```\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic final void close()\n           throws Exception\n```\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "doOpen",
+      "level": 3,
+      "content": "```java\nprotected abstract void doOpen(Serializable checkpoint)\n            throws Exception\n```\n\nデータベースからのデータ読み込みを行う。\n\n**パラメータ:**\n- `checkpoint` - チェックポイント\n\n**例外:**\n- `Exception` - 発生した例外\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "doClose",
+      "level": 3,
+      "content": "```java\nprotected void doClose()\n             throws Exception\n```\n\nリーダの終了処理（リソースの解放など）を行う。\n\n**例外:**\n- `Exception` - 発生した例外\n\n---",
+      "id": "s7"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-batch-ee-chunk-BaseDatabaseItemReader"
+}

@@ -1,0 +1,230 @@
+{
+  "title": "class HttpMessagingClient",
+  "content": "**パッケージ:** nablarch.fw.messaging.realtime.http.client\n\n**実装されたインタフェース:**\n- MessageSenderClient\n\n---\n\n```java\npublic class HttpMessagingClient\nimplements MessageSenderClient\n```\n\nHTTPを利用したメッセージング機能の実装。\n\n**作成者:** Masaya Seko  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "MESSAGING_LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger MESSAGING_LOGGER\n```\n\n証跡ログを出力するロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "SYNCMESSAGE_STATUS_CODE",
+      "level": 3,
+      "content": "```java\npublic static final String SYNCMESSAGE_STATUS_CODE\n```\n\nSyncMessageのヘッダレコードからステータスコードを取り出すために使用するキー\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "HTTP_HEADER_MESSAGE_ID",
+      "level": 3,
+      "content": "```java\nprivate static final String HTTP_HEADER_MESSAGE_ID\n```\n\nHTTPヘッダ名・メッセージID\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "responseMessageFormatFileNamePattern",
+      "level": 3,
+      "content": "```java\nprivate String responseMessageFormatFileNamePattern\n```\n\n応答電文のデータフォーマット定義ファイル名パターン\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "requestMessageFormatFileNamePattern",
+      "level": 3,
+      "content": "```java\nprivate String requestMessageFormatFileNamePattern\n```\n\n要求電文のフォーマット定義ファイル名のパターン\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "userIdToFormatKey",
+      "level": 3,
+      "content": "```java\nprivate String userIdToFormatKey\n```\n\nメッセージ定義から取得したユーザIDを、フォーマット定義ファイルのどのキーと紐付けるか(コンポーネント定義ファイルからの設定を想定した変数)。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "EXIST_BODY_HTTP_METHOD",
+      "level": 3,
+      "content": "```java\nprivate static final List<String> EXIST_BODY_HTTP_METHOD\n```\n\n送信にbody部が存在するHTTPメソッド\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "queryStringEncoding",
+      "level": 3,
+      "content": "```java\nprivate String queryStringEncoding\n```\n\nクエリストリングをエンコードする際に使用するエンコーディング\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "CHARSET_PTN",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern CHARSET_PTN\n```\n\nContent-Typeヘッダから文字セットを取得するためのパターン\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s11"
+    },
+    {
+      "title": "sendSync",
+      "level": 3,
+      "content": "```java\npublic SyncMessage sendSync(MessageSenderSettings settings, SyncMessage requestMessage)\n                     throws MessagingException\n```\n\nHTTPを使用したリアルタイム通信通信を行う。\n\n**パラメータ:**\n- `settings` - {@link nablarch.fw.messaging.MessageSender}の設定情報\n- `requestMessage` - 要求電文\n\n**戻り値:**\n応答電文\n\n**例外:**\n- `MessagingException` - 通信に失敗した際に送出される。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "addCommonValue",
+      "level": 3,
+      "content": "```java\nprotected void addCommonValue(HttpRequestMethodEnum httpMethod, MessageSenderSettings settings, SyncMessage requestMessage)\n```\n\n要求電文に、共通プロトコルヘッダ相当部分及びフレームワーク制御ヘッダ部で使用する要素を追加する。\n\n**パラメータ:**\n- `httpMethod` - HTTPメソッド\n- `settings` - {@link nablarch.fw.messaging.MessageSender}の設定情報\n- `requestMessage` - 要求電文\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "createHttpProtocolClient",
+      "level": 3,
+      "content": "```java\nprotected HttpProtocolClient createHttpProtocolClient()\n```\n\nHTTPプロトコルを実装したクラスのインスタンスを生成する。\n\n**戻り値:**\nHTTPプロトコルを用いた通信を行うクラスのインスタンス\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "initHttpProtocolClient",
+      "level": 3,
+      "content": "```java\nprotected void initHttpProtocolClient(HttpProtocolClient argHttpProtocolClient, MessageSenderSettings settings, String mimeType)\n```\n\nHTTPプロトコルを実装したクラスのインスタンスの初期化を行う。\n\n**パラメータ:**\n- `argHttpProtocolClient` - 初期化対象のHttpProtocolClientのインスタンス\n- `settings` - {@link nablarch.fw.messaging.MessageSender}の設定情報\n- `mimeType` - 送信するデータの種別\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getAccept",
+      "level": 3,
+      "content": "```java\nprotected String getAccept()\n```\n\nレスポンスの本文として受信可能なタイプを取得します\n\n**戻り値:**\nレスポンスの本文として受信可能なタイプ\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "mapToUriString",
+      "level": 3,
+      "content": "```java\nprotected String mapToUriString(String preUri, HttpRequestMethodEnum httpMethod, SyncMessage requestMessage)\n```\n\nURIを生成する。\n<p>\nこのメソッドはURI生成ルールのカスタマイズのために存在している。本クラスの実装では、引数preUriを返却する。\n</p>\n\n**パラメータ:**\n- `preUri` - メッセージ送信定義に記述されているURI\n- `httpMethod` - HTTPメソッド\n- `requestMessage` - 要求電文\n\n**戻り値:**\nURI\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "mapToQueryMap",
+      "level": 3,
+      "content": "```java\nprotected Map<String,String> mapToQueryMap(String preUri, HttpRequestMethodEnum httpMethod, SyncMessage requestMessage)\n```\n\nクエリストリングを生成する。\n<p>\nこのメソッドはクエリストリング生成ルールのカスタマイズのために存在している。本クラスの実装では、空のMapを返す。\n</p>\n\n**パラメータ:**\n- `preUri` - メッセージ送信定義に記述されているURI\n- `httpMethod` - HTTPメソッド\n- `requestMessage` - 要求電文\n\n**戻り値:**\nURI\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "mapToHeaderMap",
+      "level": 3,
+      "content": "```java\nprotected Map<String,List<String>> mapToHeaderMap(SyncMessage requestMessage)\n```\n\nHTTPヘッダに含める内容を生成する。\n\n**パラメータ:**\n- `requestMessage` - 要求電文\n\n**戻り値:**\nHTTPヘッダに含める内容を格納したMap\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "mapToBodyString",
+      "level": 3,
+      "content": "```java\nprotected SimpleDataConvertResult mapToBodyString(String uri, HttpRequestMethodEnum httpMethod, SyncMessage requestMessage)\n                                        throws HttpMessagingInvalidDataFormatException\n```\n\nHTTP通信のボディ部を生成する。\n\n**パラメータ:**\n- `uri` - 接続先\n- `httpMethod` - HTTPメソッド\n- `requestMessage` - 要求電文\n\n**戻り値:**\n変換後の文字列\n\n**例外:**\n- `HttpMessagingInvalidDataFormatException` - 電文フォーマット変換に失敗した場合に送出される。\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "getRequestContentsType",
+      "level": 3,
+      "content": "```java\nprotected String getRequestContentsType(HttpRequestMethodEnum httpMethod, SimpleDataConvertResult requestBodyDataConvertResult)\n```\n\n送信時に設定するコンテンツタイプを取得する。\n\n**パラメータ:**\n- `httpMethod` - HTTPメソッド\n- `requestBodyDataConvertResult` - 本文のデータ変換結果\n\n**戻り値:**\nコンテンツタイプ\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "execute",
+      "level": 3,
+      "content": "```java\nprotected HttpResult execute(HttpProtocolClient httpProtocolClient, HttpRequestMethodEnum httpMethod, String uri, Map<String,List<String>> headerInfo, Map<String,String> urlParams, String charset, String bodyText)\n```\n\nHTTPリクエストを送出する。\n\n**パラメータ:**\n- `httpProtocolClient` - HTTPリクエストを発行するオブジェクト\n- `httpMethod` - HTTPメソッド\n- `uri` - 送信先\n- `headerInfo` - HTTPリクエストのヘッダ情報\n- `urlParams` - URLパラメータ\n- `charset` - 文字コード\n- `bodyText` - HTTPリクエストの本文\n\n**戻り値:**\n送信結果\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "createCharHttpStreamReader",
+      "level": 3,
+      "content": "```java\nprotected HttpInputStreamReader createCharHttpStreamReader()\n```\n\nHTTPリクエストを発行後、OutputStreamを読み取り結果を返却させるためのIFを生成する。\n\n**戻り値:**\nOutputStreamを読み取り結果を返却させるためのIF\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "createCharHttpStreamWritter",
+      "level": 3,
+      "content": "```java\nprotected HttpOutputStreamWriter createCharHttpStreamWritter(String charset, String bodyText)\n```\n\nHTTPリクエストを発行時の送信内容を保持するオブジェクトを生成する。\n\n**パラメータ:**\n- `charset` - 文字コード\n- `bodyText` - 送信時の本文\n\n**戻り値:**\n送信内容を表すオブジェクト\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "headerToMap",
+      "level": 3,
+      "content": "```java\nprotected Map<String,Object> headerToMap(SyncMessage requestMessage, HttpResult httpResult)\n```\n\n返信のヘッダ部分を解析し、応答電文に設定するデータを生成する。\n\n**パラメータ:**\n- `requestMessage` - 要求電文\n- `httpResult` - 送信結果\n\n**戻り値:**\n解析後のMap\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "bodyStringToMap",
+      "level": 3,
+      "content": "```java\nprotected SimpleDataConvertResult bodyStringToMap(String uri, HttpRequestMethodEnum httpMethod, SyncMessage requestMessage, HttpResult httpResult)\n                                        throws HttpMessagingInvalidDataFormatException\n```\n\n返信のボディ部分を解析し、応答電文に設定するデータを生成する。\n\n**パラメータ:**\n- `uri` - 接続先\n- `httpMethod` - HTTPメソッド\n- `requestMessage` - 要求電文\n- `httpResult` - 送信結果\n\n**戻り値:**\n解析後のMap\n\n**例外:**\n- `HttpMessagingInvalidDataFormatException` - 電文フォーマット変換に失敗した場合に送出される。\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "getResponseMessageFormatFileNamePattern",
+      "level": 3,
+      "content": "```java\nprotected String getResponseMessageFormatFileNamePattern()\n```\n\n応答電文のデータフォーマット定義ファイル名パターンを取得する。\n\n**戻り値:**\n応答電文のデータフォーマット定義ファイル名パターン\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "getRequestMessageFormatFileNamePattern",
+      "level": 3,
+      "content": "```java\nprotected String getRequestMessageFormatFileNamePattern()\n```\n\n要求電文のフォーマット定義ファイル名のパターンを取得する。\n\n**戻り値:**\n要求電文のフォーマット定義ファイル名のパターン\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "getUserIdToFormatKey",
+      "level": 3,
+      "content": "```java\npublic String getUserIdToFormatKey()\n```\n\nユーザIDとフォーマット定義ファイル上のキーとの対応を取得する。\n\n**戻り値:**\nフォーマット定義ファイル上のキー\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "setUserIdToFormatKey",
+      "level": 3,
+      "content": "```java\npublic void setUserIdToFormatKey(String userIdToFormatKey)\n```\n\nユーザIDとフォーマット定義ファイル上のキーとの対応を設定する。\n\n**パラメータ:**\n- `userIdToFormatKey` - フォーマット定義ファイル上のキー\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "getExistBodyHttpMethod",
+      "level": 3,
+      "content": "```java\nprotected List<String> getExistBodyHttpMethod()\n```\n\n送信にbody部が存在するHTTPメソッドのリストを取得する。\n\n**戻り値:**\n送信にbody部が存在するHTTPメソッドのリスト\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "getQueryStringEncoding",
+      "level": 3,
+      "content": "```java\npublic String getQueryStringEncoding()\n```\n\nクエリストリングをエンコードする際に使用する文字コードを取得する。\n\n**戻り値:**\n文字コード\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "setQueryStringEncoding",
+      "level": 3,
+      "content": "```java\npublic void setQueryStringEncoding(String queryStringEncoding)\n```\n\nクエリストリングをエンコードする際に使用する文字コードを設定する。\n\n**パラメータ:**\n- `queryStringEncoding` - 文字コード\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "emitRequestLog",
+      "level": 3,
+      "content": "```java\nprivate void emitRequestLog(Map<String,Object> requestHeader, HttpRequestMethodEnum method, String uri, String bodyText, String charsetName)\n```\n\nメッセージングの証跡ログを出力する。\n\n**パラメータ:**\n- `requestHeader` - 要求ヘッダ情報\n- `method` - HTTPメソッド\n- `uri` - 接続先URI\n- `bodyText` - 変換済みの要求メッセージ本文\n- `charsetName` - 変換に使用した文字セット\n\n---",
+      "id": "s34"
+    },
+    {
+      "title": "emitResponseLog",
+      "level": 3,
+      "content": "```java\nprivate void emitResponseLog(Map<String,Object> responseHeader, String bodyText, String charsetName)\n```\n\nメッセージングの証跡ログを出力する。\n\n**パラメータ:**\n- `responseHeader` - 応答ヘッダ情報\n- `bodyText` - 変換前の応答メッセージ本文\n- `charsetName` - 変換に使用した文字セット\n\n---",
+      "id": "s35"
+    },
+    {
+      "title": "getResponseBody",
+      "level": 3,
+      "content": "```java\nprivate String getResponseBody(HttpResult httpResult)\n```\n\n応答データの本文を取得する。\n\n**パラメータ:**\n- `httpResult` - 応答データ\n\n**戻り値:**\n応答データの本文\n\n---",
+      "id": "s36"
+    },
+    {
+      "title": "getResponseCharset",
+      "level": 3,
+      "content": "```java\nprivate String getResponseCharset(Map<String,Object> resHeadderMap)\n```\n\n応答データの文字セットを取得する。\n\n**パラメータ:**\n- `resHeadderMap` - 応答データのヘッダ\n\n**戻り値:**\nContent-Typeヘッダに設定された文字セット、取得できない場合はデフォルト文字セット\n\n---",
+      "id": "s37"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-realtime-http-client-HttpMessagingClient"
+}

@@ -42,7 +42,7 @@
 > **Tip:**
 > HTTPメッセージングでは [ルーティングアダプタ](../../component/adapters/adapters-router-adaptor.md#ルーティングアダプタ) を使用できない。
 > HTTPメッセージングは、[MOMメッセージング](../../component/libraries/libraries-mom-system-messaging.md#momメッセージング) が提供する
-> MessagingAction
+> [MessagingAction](../../javadoc/javadoc-nablarch-fw-messaging-action-MessagingAction.md)
 > でアクションクラスを作成するため、URIに応じてアクションクラスのメソッドを呼び分ける想定がないため。
 
 ## 国際化対応

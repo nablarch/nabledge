@@ -1,0 +1,32 @@
+{
+  "title": "class ForwardingHandler",
+  "content": "**パッケージ:** nablarch.fw.web.handler\n\n**実装されたインタフェース:**\n- HttpRequestHandler\n\n---\n\n```java\npublic class ForwardingHandler\nimplements HttpRequestHandler\n```\n\n内部フォーワード処理を行うHTTPリクエストハンドラクラス。\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx)\n```\n\n{@inheritDoc}\nこの実装では、レスポンスコンテンツパスのスキームが\n\"forward://\" であった場合に内部フォーワード処理を行う。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "needsForwarding",
+      "level": 3,
+      "content": "```java\nprivate boolean needsForwarding(HttpResponse res)\n```\n\nこのHTTPレスポンスを処理する際に内部フォーワードが必要か？\n\n**パラメータ:**\n- `res` - HTTPレスポンスオブジェクト\n\n**戻り値:**\n内部フォーワードが必要な場合はtrue\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "doForwarding",
+      "level": 3,
+      "content": "```java\nprivate HttpResponse doForwarding(HttpResponse res, HttpRequest req, ExecutionContext ctx)\n```\n\n内部フォーワードを処理する。\n<pre>\nコンテンツパスのスキーム値が \"forward\" であった場合、\n指定されたパスをリクエストURIに設定した上で、\nリクエストプロセッサ以降の処理を再実行し、その結果を返す。\n\n</pre>\n\n**パラメータ:**\n- `res` - HTTPレスポンスオブジェクト\n- `req` - HTTPリクエストオブジェクト\n- `ctx` - 実行コンテキストオブジェクト\n\n**戻り値:**\nフォーワード結果\n\n---",
+      "id": "s4"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-ForwardingHandler"
+}

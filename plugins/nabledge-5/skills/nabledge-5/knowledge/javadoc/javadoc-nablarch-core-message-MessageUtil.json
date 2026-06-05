@@ -1,0 +1,62 @@
+{
+  "title": "class MessageUtil",
+  "content": "**パッケージ:** nablarch.core.message\n\n---\n\n```java\npublic final class MessageUtil\n```\n\nアプリケーションがメッセージを取得する際に使用するユーティリティクラス。\n<p/>\n{@link SystemRepository}から{@link StringResourceHolder}を取得する。\n取得できなかった場合は、{@link PropertiesStringResourceLoader}でロードしたリソースキャッシュを持つ{@link StringResourceHolder}を取得する。\n\n**作成者:** Koichi Asano  \n**関連項目:** SystemRepository  \n**関連項目:** PropertiesStringResourceLoader  \n**関連項目:** StringResourceHolder  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "STRING_RESOURCE_HOLDER_NAME",
+      "level": 3,
+      "content": "```java\nprivate static final String STRING_RESOURCE_HOLDER_NAME\n```\n\nメッセージリソースのコンポーネント名。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DEFAULT_STRING_RESOURCE_HOLDER",
+      "level": 3,
+      "content": "```java\nprivate static final StringResourceHolder DEFAULT_STRING_RESOURCE_HOLDER\n```\n\n{@link StringResourceHolder}の初期値。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "MessageUtil",
+      "level": 3,
+      "content": "```java\nprivate MessageUtil()\n```\n\n隠蔽コンストラクタ。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "getStringResourceHolder",
+      "level": 3,
+      "content": "```java\nprivate static StringResourceHolder getStringResourceHolder()\n```\n\n{@link StringResourceHolder}をリポジトリから取得する。\n\n**戻り値:**\n取得したStringResourceHolder\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "createMessage",
+      "level": 3,
+      "content": "```java\npublic static Message createMessage(MessageLevel level, String messageId, Object options)\n```\n\nメッセージを生成する。\nテンプレート文字列が以下であるときの例を示す。<br/>\n「errors.maxLength={0}は{1}文字以下で入力してください。」<br/>\n例:\n<pre>\n{@code\nMessage message = MessageUtil.createMessage(MessageLevel.ERROR, \"errors.maxLength\", \"sample\", 2);\nString str = message.formatMessage(); //--> sampleは2文字以下で入力してください。\n}</pre>\n\n**パラメータ:**\n- `level` - メッセージレベル\n- `messageId` - メッセージID\n- `options` - メッセージフォーマットに使用するオプション引数\n\n**戻り値:**\n生成した{@link Message}\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getStringResource",
+      "level": 3,
+      "content": "```java\npublic static StringResource getStringResource(String messageId)\n```\n\nメッセージIDに対応する{@link StringResource}を取得する。\nメッセージIDがnullである場合は、nullを返す。\n<p/>\nテンプレート文字列が以下であるときの例を示す。<br/>\n「errors.maxLength={0}は{1}文字以下で入力してください。」<br/>\n例:\n<pre>\n{@code\nStringResource resource = MessageUtil.getStringResource(\"errors.maxLength\"); //-->メッセージIDに対応する文字列リソースを取得。\n}</pre>\n\n**パラメータ:**\n- `messageId` - メッセージID\n\n**戻り値:**\n取得したメッセージ\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-core-message-MessageUtil"
+}

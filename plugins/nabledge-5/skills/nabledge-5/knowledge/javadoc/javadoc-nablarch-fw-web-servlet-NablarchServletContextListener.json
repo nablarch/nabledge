@@ -1,0 +1,98 @@
+{
+  "title": "class NablarchServletContextListener",
+  "content": "**パッケージ:** nablarch.fw.web.servlet\n\n**実装されたインタフェース:**\n- ServletContextListener\n\n---\n\n```java\npublic class NablarchServletContextListener\nimplements ServletContextListener\n```\n\nコンテキストの初期化を行う。<br/>\n<br/>\n本クラスにおけるロガーの取得処理は、アプリケーションの起動時にログの初期処理を確実に行う意図があるため、削除しないこと。\n\n**作成者:** Koichi Asano  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DI_CONTAINER_CONFIG_FILE_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String DI_CONTAINER_CONFIG_FILE_KEY\n```\n\nDIコンテナの設定ファイル名の設定キー。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "DI_CONTAINER_DUPLICATE_DEFINITION_CONFIG_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String DI_CONTAINER_DUPLICATE_DEFINITION_CONFIG_KEY\n```\n\n設定値に重複する設定が存在した場合の動作ポリシーの設定キー。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "DI_CONTAINER_ALLOW_STATIC_PROPERTY_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String DI_CONTAINER_ALLOW_STATIC_PROPERTY_KEY\n```\n\nstaticプロパティインジェクションの許可設定キー。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "INITIALIZATION_COMPLETED_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String INITIALIZATION_COMPLETED_KEY\n```\n\n初期化成否を格納するためのキー\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "contextInitialized",
+      "level": 3,
+      "content": "```java\npublic void contextInitialized(ServletContextEvent event)\n```\n\n{@inheritDoc}<br/>\n<br/>\nリポジトリの初期化処理を行う。<br/>\n初期化処理完了後にINFOレベルでログを出力する。\nリクエスト単体テスト時にはリポジトリの初期化は行わない（自動テストフレームワークにて実施）。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "setInitializationCompleted",
+      "level": 3,
+      "content": "```java\nprivate void setInitializationCompleted()\n```\n\n初期化に成功したことを後続処理で検知するために\nリポジトリに{@link Object}を登録する。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "isInitializationCompleted",
+      "level": 3,
+      "content": "```java\npublic static boolean isInitializationCompleted()\n```\n\n初期化成否を返す。\n\n**戻り値:**\n初期化に成功した場合true\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "initializeRepository",
+      "level": 3,
+      "content": "```java\nprivate void initializeRepository(ServletContextEvent event)\n```\n\nリポジトリの初期化を行う。\n\n**パラメータ:**\n- `event` - ServletContextEvent\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "evaluateDuplicateDefinitionPolicy",
+      "level": 3,
+      "content": "```java\nprivate DuplicateDefinitionPolicy evaluateDuplicateDefinitionPolicy(String stringExpression)\n```\n\n文字列から、設定値重複時の動作ポリシーを評価する。\n\n**パラメータ:**\n- `stringExpression` - 文字列表現\n\n**戻り値:**\n設定値重複時の動作ポリシー\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "isRequestTest",
+      "level": 3,
+      "content": "```java\nprivate boolean isRequestTest()\n```\n\nリクエスト単体テストであるか判定する。\n\n**戻り値:**\n判定結果\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "initializeLog",
+      "level": 3,
+      "content": "```java\nprivate void initializeLog()\n```\n\n各種ログの初期化を行う。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "contextDestroyed",
+      "level": 3,
+      "content": "```java\npublic void contextDestroyed(ServletContextEvent event)\n```\n\n{@inheritDoc}<br/>\n<br/>\nコンポーネントの廃棄処理と、ログの終了処理を行う。<br/>\nログの終了処理の直前にINFOレベルでログを出力する。\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-servlet-NablarchServletContextListener"
+}

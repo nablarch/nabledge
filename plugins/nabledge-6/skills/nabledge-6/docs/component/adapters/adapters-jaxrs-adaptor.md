@@ -63,16 +63,16 @@
 
 以下にJersey用アダプタの適用方法を示す。
 
-JaxRsMethodBinderFactory#handlerList
-に対して、Jersey用のハンドラを構築するファクトリクラス(JerseyJaxRsHandlerListFactory)
+[JaxRsMethodBinderFactory#handlerList](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxRsMethodBinderFactory.md)
+に対して、Jersey用のハンドラを構築するファクトリクラス([JerseyJaxRsHandlerListFactory](../../javadoc/javadoc-nablarch-integration-jaxrs-jersey-JerseyJaxRsHandlerListFactory.md))
 をファクトリインジェクションする。これにより、Jersey用の以下のハンドラ構成が自動的に設定される。
 
 * [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#リクエストボディ変換ハンドラ) の設定(以下のコンバータが設定される)
 
-  * JSONのコンバータには Jackson2BodyConverter が設定される。
-  * XMLのコンバータには JaxbBodyConverter が設定される。
-  * application/x-www-form-urlencodedのコンバータには FormUrlEncodedConverter が設定される。
-  * multipart/form-dataのコンバータには MultipartFormDataBodyConverter が設定される。
+  * JSONのコンバータには [Jackson2BodyConverter](../../javadoc/javadoc-nablarch-integration-jaxrs-jackson-Jackson2BodyConverter.md) が設定される。
+  * XMLのコンバータには [JaxbBodyConverter](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxbBodyConverter.md) が設定される。
+  * application/x-www-form-urlencodedのコンバータには [FormUrlEncodedConverter](../../javadoc/javadoc-nablarch-fw-jaxrs-FormUrlEncodedConverter.md) が設定される。
+  * multipart/form-dataのコンバータには [MultipartFormDataBodyConverter](../../javadoc/javadoc-nablarch-fw-jaxrs-MultipartFormDataBodyConverter.md) が設定される。
 
 > **Tip:**
 > JSONのコンバータには、Date and Time APIを使用するために [jackson-modules-java8(外部サイト、英語)](https://github.com/FasterXML/jackson-modules-java8) に含まれるJava 8 Date/timeモジュールの追加および設定を行っている。
@@ -105,16 +105,16 @@ JaxRsMethodBinderFactory#handlerList
 
 以下にRESTEasy用アダプタの適用方法を示す。
 
-JaxRsMethodBinderFactory#handlerList
-に対して、RESTEasy用のハンドラを構築するファクトリクラス(ResteasyJaxRsHandlerListFactory)
+[JaxRsMethodBinderFactory#handlerList](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxRsMethodBinderFactory.md)
+に対して、RESTEasy用のハンドラを構築するファクトリクラス([ResteasyJaxRsHandlerListFactory](../../javadoc/javadoc-nablarch-integration-jaxrs-resteasy-ResteasyJaxRsHandlerListFactory.md))
 をファクトリインジェクションする。これにより、RESTEasy用の以下のハンドラ構成が自動的に設定される。
 
 * [リクエストボディ変換ハンドラ](../../component/handlers/handlers-body-convert-handler.md#リクエストボディ変換ハンドラ) の設定(以下のコンバータが設定される)
 
-  * JSONのコンバータには Jackson2BodyConverter が設定される。
-  * XMLのコンバータには JaxbBodyConverter が設定される。
-  * application/x-www-form-urlencodedのコンバータには FormUrlEncodedConverter が設定される。
-  * multipart/form-dataのコンバータには MultipartFormDataBodyConverter が設定される。
+  * JSONのコンバータには [Jackson2BodyConverter](../../javadoc/javadoc-nablarch-integration-jaxrs-jackson-Jackson2BodyConverter.md) が設定される。
+  * XMLのコンバータには [JaxbBodyConverter](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxbBodyConverter.md) が設定される。
+  * application/x-www-form-urlencodedのコンバータには [FormUrlEncodedConverter](../../javadoc/javadoc-nablarch-fw-jaxrs-FormUrlEncodedConverter.md) が設定される。
+  * multipart/form-dataのコンバータには [MultipartFormDataBodyConverter](../../javadoc/javadoc-nablarch-fw-jaxrs-MultipartFormDataBodyConverter.md) が設定される。
 
 > **Tip:**
 > JSONのコンバータには、Date and Time APIを使用するために [jackson-modules-java8(外部サイト、英語)](https://github.com/FasterXML/jackson-modules-java8) に含まれるJava 8 Date/timeモジュールの追加および設定を行っている。
@@ -142,8 +142,8 @@ JaxRsMethodBinderFactory#handlerList
 
 ## 各環境下で使用するボディコンバータを変更（追加）したい
 
-プロジェクトで対応すべきMIMEが増えた場合には、 JaxRsHandlerListFactory を実装し対応する。
+プロジェクトで対応すべきMIMEが増えた場合には、 [JaxRsHandlerListFactory](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxRsHandlerListFactory.md) を実装し対応する。
 
 実装方法は、本アダプタ
-(JerseyJaxRsHandlerListFactory 、 ResteasyJaxRsHandlerListFactory)
+([JerseyJaxRsHandlerListFactory](../../javadoc/javadoc-nablarch-integration-jaxrs-jersey-JerseyJaxRsHandlerListFactory.md) 、 [ResteasyJaxRsHandlerListFactory](../../javadoc/javadoc-nablarch-integration-jaxrs-resteasy-ResteasyJaxRsHandlerListFactory.md))
 を参考にすると良い。

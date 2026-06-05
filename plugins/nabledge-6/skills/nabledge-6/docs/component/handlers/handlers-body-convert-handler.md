@@ -27,7 +27,7 @@ Consumes 及び Produces アノテーションで指定する。
 
 ## ハンドラクラス名
 
-* nablarch.fw.jaxrs.BodyConvertHandler
+* [nablarch.fw.jaxrs.BodyConvertHandler](../../javadoc/javadoc-nablarch-fw-jaxrs-BodyConvertHandler.md)
 
 ## モジュール一覧
 
@@ -48,10 +48,10 @@ Consumes 及び Produces アノテーションで指定する。
 
 ## 変換処理を行うコンバータを設定する
 
-このハンドラでは、 bodyConverters プロパティに設定された、
-BodyConverter の実装クラスを使用してリクエスト及びレスポンスの変換処理を行う。
-bodyConverters プロパティには、
-プロジェクトで使用するMIMEに対応した、 BodyConverter を設定すること。
+このハンドラでは、 [bodyConverters](../../javadoc/javadoc-nablarch-fw-jaxrs-BodyConvertHandler.md) プロパティに設定された、
+[BodyConverter](../../javadoc/javadoc-nablarch-fw-jaxrs-BodyConverter.md) の実装クラスを使用してリクエスト及びレスポンスの変換処理を行う。
+[bodyConverters](../../javadoc/javadoc-nablarch-fw-jaxrs-BodyConvertHandler.md) プロパティには、
+プロジェクトで使用するMIMEに対応した、 [BodyConverter](../../javadoc/javadoc-nablarch-fw-jaxrs-BodyConverter.md) を設定すること。
 
 以下に例を示す。
 
@@ -69,7 +69,7 @@ bodyConverters プロパティには、
 ```
 
 > **Tip:**
-> bodyConverters プロパティに設定されたコンバータで、
+> [bodyConverters](../../javadoc/javadoc-nablarch-fw-jaxrs-BodyConvertHandler.md) プロパティに設定されたコンバータで、
 > 変換出来ないMIMEが使用された場合、サポートしていないメディアタイプであることを示すステータスコード(`415`)を返却する。
 
 ## リクエストボディをFormに変換する
@@ -81,7 +81,7 @@ bodyConverters プロパティには、
 リソース(アクション)のメソッドの実装例を以下に示す。
 
 この例では、 `MediaType.APPLICATION_JSON` が示す `application/json` に対応した
-BodyConverter でリクエストボディが `Person` に変換される。
+[BodyConverter](../../javadoc/javadoc-nablarch-fw-jaxrs-BodyConverter.md) でリクエストボディが `Person` に変換される。
 
 ```java
 @Consumes(MediaType.APPLICATION_JSON)
@@ -99,7 +99,7 @@ public HttpResponse saveJson(Person person) {
 リソース(アクション)のメソッドの実装例を以下に示す。
 
 この例では、 `MediaType.APPLICATION_JSON` が示す `application/json` に対応した
-BodyConverter でリクエストボディが `Person` に変換される。
+[BodyConverter](../../javadoc/javadoc-nablarch-fw-jaxrs-BodyConverter.md) でリクエストボディが `Person` に変換される。
 
 ```java
 GET

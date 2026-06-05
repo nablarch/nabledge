@@ -1,0 +1,164 @@
+{
+  "title": "class CopyOptions",
+  "content": "**パッケージ:** nablarch.core.beans\n\n---\n\n```java\npublic final class CopyOptions\n```\n\n{@link BeanUtil#copy(Object, Object) Beanのコピー}で使用される設定をまとめたクラス。\n\n<p>\n当クラスのインスタンスは{@link #options() options}メソッドを起点としたビルダーパターンで構築する。\n</p>\n\n<p>\n例えば次のコードは日付パターン{@code yyyy/MM/dd}を設定して、\nさらにプロパティ{@code createdDate}に対しては{@code yyyy/MM/dd HH:mm}を設定している。\n</p>\n<pre>{@code\nCopyOptions copyOptions = CopyOptions.options()\n        .datePattern(\"yyyy/MM/dd\")\n        .datePatternByName(\"createdDate\", \"yyyy/MM/dd HH:mm\")\n        .build();\n}</pre>\n\n<p>\n{@link Builder#datePattern(String) datePattern}メソッドと{@link Builder#numberPattern(String) numberPattern}は\n内部的には{@link Builder#converter(Class, Converter) converter}メソッドを呼び出している。\n</p>\n\n<p>\n{@link Builder#datePattern(String) datePattern}メソッドは次のクラスに対する{@link Converter}を追加する。\n</p>\n<ul>\n<li>{@link java.util.Date}</li>\n<li>{@link java.sql.Date}</li>\n<li>{@link java.sql.Timestamp}</li>\n<li>{@link java.lang.String}</li>\n</ul>\n\n<p>\n{@link Builder#numberPattern(String) numberPattern}メソッドは次のクラスに対する{@link Converter}を追加する。\n</p>\n<ul>\n<li>{@code short}とそのラッパークラス</li>\n<li>{@code int}とそのラッパークラス</li>\n<li>{@code long}とそのラッパークラス</li>\n<li>{@link java.math.BigDecimal}</li>\n<li>{@link java.lang.String}</li>\n</ul>\n\n<p>\n同じクラスに対して{@link Builder#converter(Class, Converter) converter}メソッドが複数回呼び出されると、\n先に登録されたものが有効となる。\nつまり次のコードで{@link java.util.Date}に対するフォーマットは{@code yyyy/MM/dd}が有効となり、\n{@code CustomDateConverter}は無視される。\n</p>\n\n<pre>{@code\nCopyOptions copyOptions = CopyOptions.options()\n        .datePattern(\"yyyy/MM/dd\")\n        .converter(java.util.Date.class, new CustomDateConverter())\n        .build();\n}</pre>\n\n**作成者:** Taichi Uragami  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "FROM_ANNOTATION_CACHE",
+      "level": 3,
+      "content": "```java\nprivate static final WeakHashMap<Class<?>,CopyOptions> FROM_ANNOTATION_CACHE\n```\n\n{@link CopyOption}アノテーションから構築される{@link CopyOptions}のキャッシュ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "EMPTY",
+      "level": 3,
+      "content": "```java\nprivate static final CopyOptions EMPTY\n```\n\n空の{@link CopyOptions}\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "typedConverters",
+      "level": 3,
+      "content": "```java\nprivate final Map<Class<?>,Converter<?>> typedConverters\n```\n\nクラスに紐づいたコンバーター\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "namedConverters",
+      "level": 3,
+      "content": "```java\nprivate final Map<String,Map<Class<?>,Converter<?>>> namedConverters\n```\n\nプロパティ名とクラスに紐づいたコンバーター\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "excludesNull",
+      "level": 3,
+      "content": "```java\nprivate final boolean excludesNull\n```\n\nコピー元プロパティが{@code null}の場合にコピーしないかどうかを決定するフラグ\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "excludesProperties",
+      "level": 3,
+      "content": "```java\nprivate final Collection<String> excludesProperties\n```\n\nコピー対象外のプロパティ名\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "includesProperties",
+      "level": 3,
+      "content": "```java\nprivate final Collection<String> includesProperties\n```\n\nコピー対象のプロパティ名\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "CopyOptions",
+      "level": 3,
+      "content": "```java\nprivate CopyOptions(Map<Class<?>,Converter<?>> typedConverters, Map<String,Map<Class<?>,Converter<?>>> namedConverters, boolean excludesNull, Collection<String> excludesProperties, Collection<String> includesProperties)\n```\n\n当クラスは使用者が明示的にコンストラクタを呼び出すのではなく、\n{@link Builder#build()}によってインスタンス化されることを想定しているため、\nコンストラクタの可視性は{@code private}としている。\n\n**パラメータ:**\n- `typedConverters` - クラスに紐づいたコンバーター\n- `namedConverters` - プロパティ名とクラスに紐づいたコンバーター\n- `excludesNull` - コピー元プロパティが{@code null}の場合にコピーしないかどうかを決定するフラグ\n- `excludesProperties` - コピー対象外のプロパティ名\n- `includesProperties` - コピー対象のプロパティ名\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "CopyOptions",
+      "level": 3,
+      "content": "```java\nprivate CopyOptions(Map<Class<?>,Converter<?>> typedConverters, Map<String,Map<Class<?>,Converter<?>>> namedConverters, boolean excludesNull, Collection<String> excludesProperties)\n```\n\n{@link #cloneForNestedObjectInCreateMapInner()}から呼び出されるコンストラクタ。\n\n<p>\n深くネストされたオブジェクトがコピーされる場合、\n{@link Collections#unmodifiableMap(Map)}および{@link Collections#unmodifiableCollection(Collection)}で多重にラップされることを避けるために、\nこのコンストラクタは定義されている。\n</p>\n\n<p>\n<strong>このコンストラクタの呼び出し元は{@link #cloneForNestedObjectInCreateMapInner()}メソッドだけを想定している。\nその他のメソッドからは呼び出してはいけない。</strong>\n</p>\n\n**パラメータ:**\n- `typedConverters` - クラスに紐づいたコンバーター\n- `namedConverters` - プロパティ名とクラスに紐づいたコンバーター\n- `excludesNull` - コピー元プロパティが{@code null}の場合にコピーしないかどうかを決定するフラグ\n- `excludesProperties` - コピー対象外のプロパティ名\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s12"
+    },
+    {
+      "title": "cloneForNestedObjectInCreateMapInner",
+      "level": 3,
+      "content": "```java\nCopyOptions cloneForNestedObjectInCreateMapInner()\n```\n\n{@link BeanUtil}の{@code createMapInner}メソッドでネストしたプロパティのコピーをするため、\n{@code createMapInner}メソッドを再帰的に呼び出す際に渡す{@link CopyOptions}を生成して返す。\n\n<p>\n具体的には{@link #includesProperties}が空で他のフィールドは元の{@link CopyOptions}の値を引き継ぐ。\n</p>\n\n<p>\n<strong>このメソッドの呼び出し元は{@link BeanUtil}の{@code createMapInner}メソッドだけを想定している。\nその他のメソッドからは呼び出してはいけない。</strong>\n</p>\n\n**戻り値:**\n{@link #includesProperties}以外を引き継いで作られた{@link CopyOptions}のインスタンス\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "options",
+      "level": 3,
+      "content": "```java\npublic static Builder options()\n```\n\nビルダーを取得する。\n\n**戻り値:**\nビルダー\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "empty",
+      "level": 3,
+      "content": "```java\npublic static CopyOptions empty()\n```\n\n空の{@link CopyOptions}を取得する。\n\n**戻り値:**\n空の{@link CopyOptions}\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "fromAnnotation",
+      "level": 3,
+      "content": "```java\npublic static CopyOptions fromAnnotation(Class<?> clazz)\n```\n\n{@link CopyOption}アノテーションを読み取って構築された{@link CopyOptions}を取得する。\n\n**パラメータ:**\n- `clazz` - アノテーションを読み取る対象のクラス\n\n**戻り値:**\n{@link CopyOption}アノテーションを読み取って構築された{@link CopyOptions}\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "reduce",
+      "level": 3,
+      "content": "```java\nCopyOptions reduce(String propertyName)\n```\n\n{@link CopyOptions#includesProperties}および{@link CopyOptions#excludesProperties}で、\n指定した親プロパティ名を持つプロパティから親プロパティ名を削除した新しい{@link CopyOptions}を返す。\n\n**パラメータ:**\n- `propertyName` - 親プロパティ名\n\n**戻り値:**\n新しい {@link CopyOptions}\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "merge",
+      "level": 3,
+      "content": "```java\npublic CopyOptions merge(CopyOptions other)\n```\n\n他の{@link CopyOptions}をマージする。\n\n<p>\nマージ処理は{@code this}をベースにして差分を{@code other}から持ってくる。\n例えば同一のプロパティに紐づいた{@link Converter}が{@code this}と{@code other}の両方にあった場合、\nマージ後の{@link CopyOptions}には{@code this}が持つ{@link Converter}が残る。\n</p>\n\n**パラメータ:**\n- `other` - 他の{@link CopyOptions}インスタンス\n\n**戻り値:**\nマージされたインスタンス\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "merge",
+      "level": 3,
+      "content": "```java\nprivate static Map<K,V> merge(Map<K,V> main, Map<K,V> sub)\n```\n\nふたつの{@link Map}をマージして作られた新しい{@link Map}を返す。\n\n**パラメータ:**\n- `<K>` - キーの型\n- `<V>` - 値の型\n- `main` - ベースとなる{@link Map}\n- `sub` - マージされる{@link Map}\n\n**戻り値:**\nマージされた{@link Map}\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "merge",
+      "level": 3,
+      "content": "```java\nprivate static Collection<String> merge(Collection<String> main, Collection<String> sub)\n```\n\nふたつの{@link Collection}をマージして作られた新しい{@link Collection}を返す。\n\n**パラメータ:**\n- `main` - ベースとなる{@link Collection}\n- `sub` - マージされる{@link Collection}\n\n**戻り値:**\nマージされた{@link Collection}\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "hasTypedConverter",
+      "level": 3,
+      "content": "```java\npublic boolean hasTypedConverter(Class<?> clazz)\n```\n\n指定されたクラスに紐づいたコンバーターを保持しているかどうかを返す。\n\n**パラメータ:**\n- `clazz` - クラス\n\n**戻り値:**\n指定されたクラスに紐づいたコンバーターを保持していれば{@code true}\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "hasNamedConverter",
+      "level": 3,
+      "content": "```java\npublic boolean hasNamedConverter(String propertyName, Class<?> clazz)\n```\n\n指定されたプロパティ名とクラスに紐づいたコンバーターを保持しているかどうかを判断して返す。\n\n**パラメータ:**\n- `propertyName` - プロパティ名\n- `clazz` - クラス\n\n**戻り値:**\n指定されたプロパティ名とクラスに紐づいたコンバーターを保持していれば{@code true}\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "convertByType",
+      "level": 3,
+      "content": "```java\npublic Object convertByType(Class<?> clazz, Object value)\n```\n\nクラスに紐づいたコンバーターを使用して値を変換する。\n\n<p>\nクラスに紐づいたコンバーターが見つからなければ{@link IllegalArgumentException}をスローする。\n</p>\n\n**パラメータ:**\n- `clazz` - クラス\n- `value` - 変換前の値\n\n**戻り値:**\n変換後の値\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "convertByName",
+      "level": 3,
+      "content": "```java\npublic Object convertByName(String propertyName, Class<?> clazz, Object value)\n```\n\nプロパティ名とクラスに紐づいたコンバーターを使用して値を変換する。\n\n<p>\nプロパティ名とクラスに紐づいたコンバーターが見つからなければ{@link IllegalArgumentException}をスローする。\n</p>\n\n**パラメータ:**\n- `propertyName` - プロパティ名\n- `clazz` - クラス\n- `value` - 変換前の値\n\n**戻り値:**\n変換後の値\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "isExcludesNull",
+      "level": 3,
+      "content": "```java\npublic boolean isExcludesNull()\n```\n\nコピー元プロパティが{@code null}の場合にコピーしないかどうかを返す。\n\n**戻り値:**\nコピー元プロパティが{@code null}の場合にコピーしない場合は{@code true}\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "isTargetProperty",
+      "level": 3,
+      "content": "```java\npublic boolean isTargetProperty(String propertyName)\n```\n\n指定されたプロパティがコピー対象かどうかを返す。\n\n**パラメータ:**\n- `propertyName` - プロパティ名\n\n**戻り値:**\nコピー対象なら{@code true}\n\n---",
+      "id": "s26"
+    }
+  ],
+  "id": "javadoc-nablarch-core-beans-CopyOptions"
+}

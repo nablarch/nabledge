@@ -1,0 +1,68 @@
+{
+  "title": "class TimeRetryContext",
+  "content": "**パッケージ:** nablarch.fw.handler.retry\n\n**継承階層:**\n```\njava.lang.Object\n  └─ RetryContextSupport\n      └─ nablarch.fw.handler.retry.TimeRetryContext\n```\n\n---\n\n```java\npublic class TimeRetryContext\nextends RetryContextSupport\n```\n\nリトライ時間によりリトライ処理を制御するクラス。\n<p/>\n本クラスは、指定された時間の間、リトライを行う。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "retryTime",
+      "level": 3,
+      "content": "```java\nprivate final long retryTime\n```\n\nリトライ時間(単位:msec)\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "retryStartTime",
+      "level": 3,
+      "content": "```java\nprivate long retryStartTime\n```\n\nリトライ開始時間\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "firstRetry",
+      "level": 3,
+      "content": "```java\nprivate boolean firstRetry\n```\n\n1回目のリトライであるか否か。\n1回目のリトライである場合はtrue\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "TimeRetryContext",
+      "level": 3,
+      "content": "```java\nprotected TimeRetryContext(long retryTime, long maxRetryTime, long retryIntervals)\n```\n\nコンストラクタ。\n\n**パラメータ:**\n- `retryTime` - リトライ時間(単位:msec)\n- `maxRetryTime` - 最長リトライ時間(単位:msec)\n- `retryIntervals` - リトライ間隔(単位:msec)\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "onIsRetryable",
+      "level": 3,
+      "content": "```java\nprotected boolean onIsRetryable()\n```\n\n{@inheritDoc}\n<p/>\n1回目のリトライである場合はtrueを返す。\n2回目以降のリトライでは、\nリトライ開始後の経過時間がリトライ時間プロパティ以下の場合にtrueを返す。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "prepareRetry",
+      "level": 3,
+      "content": "```java\npublic void prepareRetry()\n```\n\n{@inheritDoc}\n<p/>\n1回目のリトライである場合は、親クラスの処理に加えて、リトライ開始時間の設定を行う。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "reset",
+      "level": 3,
+      "content": "```java\npublic void reset()\n```\n\n{@inheritDoc}\n<p/>\n親クラスの処理に加えて、リトライ開始時間をリセットする。\n\n---",
+      "id": "s10"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-retry-TimeRetryContext"
+}

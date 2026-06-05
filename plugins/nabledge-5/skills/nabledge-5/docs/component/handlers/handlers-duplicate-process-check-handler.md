@@ -29,7 +29,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.handler.DuplicateProcessCheckHandler
+* [nablarch.fw.handler.DuplicateProcessCheckHandler](../../javadoc/javadoc-nablarch-fw-handler-DuplicateProcessCheckHandler.md)
 
 ## モジュール一覧
 
@@ -50,9 +50,9 @@
 ## 多重起動防止チェックを行うための設定
 
 本ハンドラには、バッチプロセスの多重起動防止チェックを行うクラスなどを設定する必要がある。
-設定する項目の詳細は、 DuplicateProcessCheckHandler を参照。
+設定する項目の詳細は、 [DuplicateProcessCheckHandler](../../javadoc/javadoc-nablarch-fw-handler-DuplicateProcessCheckHandler.md) を参照。
 
-多重起動防止チェックを行うクラスの詳細は、 BasicDuplicateProcessChecker を参照。
+多重起動防止チェックを行うクラスの詳細は、 [BasicDuplicateProcessChecker](../../javadoc/javadoc-nablarch-fw-handler-BasicDuplicateProcessChecker.md) を参照。
 
 以下に例を示す。
 
@@ -93,6 +93,6 @@
 
 ## 多重起動防止チェック処理をカスタマイズする
 
-多重起動防止チェック処理をカスタマイズしたい場合は、 DuplicateProcessChecker の実装クラスを作成することで対応出来る。
+多重起動防止チェック処理をカスタマイズしたい場合は、 [DuplicateProcessChecker](../../javadoc/javadoc-nablarch-fw-handler-DuplicateProcessChecker.md) の実装クラスを作成することで対応出来る。
 
 実装したクラスは、 [多重起動防止チェックを行うための設定](../../component/handlers/handlers-duplicate-process-check-handler.md#多重起動防止チェックを行うための設定) で説明したように、本ハンドラに設定することで使用できる。

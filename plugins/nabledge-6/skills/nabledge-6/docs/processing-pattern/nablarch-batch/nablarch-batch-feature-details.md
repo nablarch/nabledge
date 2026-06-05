@@ -31,16 +31,16 @@
 * [データベースアクセス](../../component/libraries/libraries-database-management.md#データベースアクセス)
 * 標準提供のデータリーダ
 
-  * DatabaseRecordReader (データベース読み込み)
+  * [DatabaseRecordReader (データベース読み込み)](../../javadoc/javadoc-nablarch-fw-reader-DatabaseRecordReader.md)
 
 ## ファイル入出力
 
 * [ファイル入出力](../../component/libraries/libraries-data-converter.md#様々なフォーマットのデータへのアクセス)
 * 標準提供のデータリーダ
 
-  * FileDataReader (ファイル読み込み)
-  * ValidatableFileDataReader (バリデージョン機能付きファイル読み込み)
-  * ResumeDataReader (レジューム機能付き読み込み)
+  * [FileDataReader (ファイル読み込み)](../../javadoc/javadoc-nablarch-fw-reader-FileDataReader.md)
+  * [ValidatableFileDataReader (バリデージョン機能付きファイル読み込み)](../../javadoc/javadoc-nablarch-fw-reader-ValidatableFileDataReader.md)
+  * [ResumeDataReader (レジューム機能付き読み込み)](../../javadoc/javadoc-nablarch-fw-reader-ResumeDataReader.md)
 
 ## 排他制御
 

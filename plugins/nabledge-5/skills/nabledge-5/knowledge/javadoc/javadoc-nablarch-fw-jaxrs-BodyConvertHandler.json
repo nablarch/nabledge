@@ -1,0 +1,74 @@
+{
+  "title": "class BodyConvertHandler",
+  "content": "**パッケージ:** nablarch.fw.jaxrs\n\n**実装されたインタフェース:**\n- HttpRequestHandler\n\n---\n\n```java\npublic class BodyConvertHandler\nimplements HttpRequestHandler\n```\n\n{@link BodyConverter}によるリクエスト/レスポンスの変換を行うハンドラ。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "bodyConverters",
+      "level": 3,
+      "content": "```java\nprivate List<BodyConverter> bodyConverters\n```\n\n{@link BodyConverter}\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest request, ExecutionContext context)\n```\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "copy",
+      "level": 3,
+      "content": "```java\nprivate void copy(EntityResponse from, HttpResponse to)\n```\n\n{@link EntityResponse}からコンバートされた{@link HttpResponse}にコピーする。\n<p>\nレスポンスヘッダとステータスコードをコピーする。\nレスポンスヘッダは上書きしない。\nステータスコードは指定された場合のみコピーする。\n\n**パラメータ:**\n- `from` - {@link EntityResponse}\n- `to` - コンバートされた{@link HttpResponse}\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "findConverter",
+      "level": 3,
+      "content": "```java\nprivate BodyConverter findConverter(String mediaType)\n```\n\nメディアタイプを変換するための{@link BodyConverter}を取得する。\n<p>\n変換対象の{@link BodyConverter}が存在しない場合は、{@link Status#UNSUPPORTED_MEDIA_TYPE}を持つ{@link HttpErrorResponse}を送出する。\n\n**パラメータ:**\n- `mediaType` - メディアタイプ\n\n**戻り値:**\n{@link BodyConverter}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "cast",
+      "level": 3,
+      "content": "```java\nprivate HttpResponse cast(Object response)\n```\n\nレスポンスのキャストを行う。\n<p/>\nレスポンスが{@code null}でなく、{@link HttpResponse}にキャストできない場合は、\n{@link IllegalStateException}をスローする。\n\n**パラメータ:**\n- `response` - レスポンス\n\n**戻り値:**\n{@link HttpResponse}\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "supportsMediaType",
+      "level": 3,
+      "content": "```java\nprotected boolean supportsMediaType(String contentType, String consumesMediaType)\n```\n\nHTTPヘッダーのContent-Typeに指定されたメディアタイプをサポートしているかを判定する。\n<p>\n以下の場合のみサポートしていると判定する。\n<pre>\n・Content-Typeが指定され、かつメディアタイプと一致する場合。（GET以外の場合を想定）\n・Content-Typeが未指定で、かつメディアタイプも未指定の場合。（GETの場合を想定）\n</pre>\n\n**パラメータ:**\n- `contentType` - リクエストされたContent-Type\n- `consumesMediaType` - {@link javax.ws.rs.Consumes}アノテーションに指定されたメディアタイプ\n\n**戻り値:**\nサポートしている場合は<code>true</code>\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setBodyConverters",
+      "level": 3,
+      "content": "```java\npublic void setBodyConverters(List<BodyConverter> bodyConverters)\n```\n\n{@link BodyConverter}のリストを設定する。\n<p>\n既に設定されていた{@link BodyConverter}のリストは破棄される。\n\n**パラメータ:**\n- `bodyConverters` - {@link BodyConverter}\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "addBodyConverter",
+      "level": 3,
+      "content": "```java\npublic void addBodyConverter(BodyConverter bodyConverter)\n```\n\n{@link BodyConverter}を追加する。\n\n**パラメータ:**\n- `bodyConverter` - 追加する{@link BodyConverter}\n\n---",
+      "id": "s11"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-jaxrs-BodyConvertHandler"
+}

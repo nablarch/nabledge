@@ -1,0 +1,80 @@
+{
+  "title": "class RequestMessage",
+  "content": "**パッケージ:** nablarch.fw.messaging\n\n**継承階層:**\n```\njava.lang.Object\n  └─ ReceivedMessage\n      └─ nablarch.fw.messaging.RequestMessage\n```\n\n**実装されたインタフェース:**\n- Request<Object>\n\n---\n\n```java\npublic class RequestMessage\nextends ReceivedMessage\nimplements Request<Object>\n```\n\n外部システムから受信した処理要求電文の内容を格納し、対応する応答電文を作成するクラス。\n<p/>\n{@link ReceivedMessage}と比べて、以下の処理が追加されている。\n<ul>\n    <li>フレームワーク制御ヘッダ({@link FwHeader})を保持する</li>\n    <li>応答電文({@link ResponseMessage})オブジェクトを作成する</li>\n</ul>\n<p/>\n本クラスは以下のデータを格納する。\n<pre>\n  1. プロトコルヘッダ (Map)\n       - メッセージID (String)\n       - 宛先キュー名 (String)   ...等\n\n  2.  フレームワーク制御ヘッダ (Map)\n       - リクエストID (String)\n       - ユーザID (String)\n       - 再送制御フラグ (Boolean)\n       - 処理結果ステータスコード (String)  ...等\n\n  3.  メッセージボディ(byte[])\n     ※ フレームワーク制御ヘッダに相当するデータは含まれない。\n</pre>\n<p/>\nこのクラスは{@link Request}インタフェースを実装しており、後続業務処理の入力となる。\n(リクエストパスとして、フレームワーク制御ヘッダのリクエストIDを使用する。)\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "fwHeader",
+      "level": 3,
+      "content": "```java\nprivate final FwHeader fwHeader\n```\n\nフレームワーク制御ヘッダ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "formatterOfReply",
+      "level": 3,
+      "content": "```java\nprivate DataRecordFormatter formatterOfReply\n```\n\n応答電文のフォーマッタ *\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "RequestMessage",
+      "level": 3,
+      "content": "```java\npublic RequestMessage(FwHeader header, ReceivedMessage message)\n```\n\n**パラメータ:**\n- `header` - フレームワーク制御ヘッダ\n- `message` - 受信電文オブジェクト(フレームワーク制御ヘッダに相当するデータが抜き出し済みであること)\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "reply",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage reply()\n                      throws UnsupportedOperationException\n```\n\nこの電文に対する応答電文({@link ResponseMessage})オブジェクトを作成する。\n<p/>\n{@link RequestMessage#setFormatter}で応答電文のフォーマットが指定されている場合はそれを設定する。\n指定がなければ、{@link InterSystemMessage#getFormatter}を実行し、電文共通のフォーマットを取得して設定する。\n<p/>\n応答電文オブジェクトの生成については、{@link #createResponseMessage}を参照。\n\n**戻り値:**\n返信用電文オブジェクト\n\n**例外:**\n- `MessagingException` - この電文にReplyToヘッダが指定されていない場合。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "createResponseMessage",
+      "level": 3,
+      "content": "```java\nprotected ResponseMessage createResponseMessage()\n```\n\n応答電文オブジェクトを作成する。\n<p/>\nこの実装では、応答電文オブジェクトのヘッダの設定は\n{@link ResponseMessage#ResponseMessage(RequestMessage)}にて行われる。\n<p/>\nデフォルト以外の応答電文クラスを使用する場合はサブクラスで本メソッドをオーバーライドすること。\n\n**戻り値:**\n応答電文オブジェクト\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getRequestPath",
+      "level": 3,
+      "content": "```java\npublic String getRequestPath()\n```\n\n{@inheritDoc}\n\n**例外:**\n- `IllegalArgumentException` - {@code requestPath}が{@code null}か空文字である場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setRequestPath",
+      "level": 3,
+      "content": "```java\npublic RequestMessage setRequestPath(String requestPath)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getFwHeader",
+      "level": 3,
+      "content": "```java\npublic FwHeader getFwHeader()\n```\n\nフレームワーク制御ヘッダの内容を返す。\n\n**戻り値:**\nフレームワーク制御ヘッダ部の内容\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setFormatterOfReply",
+      "level": 3,
+      "content": "```java\npublic RequestMessage setFormatterOfReply(DataRecordFormatter formatter)\n```\n\n応答電文のフォーマットを指定する。\n\n**パラメータ:**\n- `formatter` - 応答電文のフォーマット\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s12"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-RequestMessage"
+}

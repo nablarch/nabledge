@@ -1,0 +1,86 @@
+{
+  "title": "class TransactionManagementHandler",
+  "content": "**パッケージ:** nablarch.common.handler\n\n**継承階層:**\n```\njava.lang.Object\n  └─ TransactionEventCallback.Provider<Object>\n      └─ nablarch.common.handler.TransactionManagementHandler\n```\n\n**実装されたインタフェース:**\n- Handler<Object,Object>\n- InboundHandleable\n- OutboundHandleable\n\n---\n\n```java\npublic class TransactionManagementHandler\nextends TransactionEventCallback.Provider<Object>\nimplements Handler<Object,Object>, InboundHandleable, OutboundHandleable\n```\n\n後続処理における透過的トランザクションを実現するハンドラ。<br/>\n通常の {@ref Handler} として使用する場合と、{@ref InboundHandleable} {@ref OutboundHandleable} として使用する場合で動作が異なる。\n\n<pre>\n{@ref Handler} として使用する場合、本ハンドラの詳細な処理内容は以下の通り。\n\n1.  トランザクションファクトリから使用するトランザクションオブジェクトを取得し、\n    {@link nablarch.core.transaction.TransactionContext}上に設定する。\n2.  トランザクションを開始する。\n3.  ハンドラスタックから次のリクエストハンドラを取得し、処理を委譲する。\n4a. 委譲先の処理において例外が発生しなければトランザクションをコミットする。\n4b. 例外が発生した場合はトランザクションをロールバックする。\n    ただし、このとき送出された例外が、{@link #setTransactionCommitExceptions(java.util.List)}で設定された例外の\n    いずれかのサブクラスである場合はトランザクションをコミットする。\n5.  トランザクションオブジェクトを{@link TransactionContext}から除去する。\n\n設定例:<br/>\n{@code\n<component class=\"nablarch.common.handler.TransactionManagementHandler\">\n     <!-- トランザクションファクトリ -->\n     <property name=\"transactionFactory\"\n               value=\"transactionFactory\"/>\n     <!-- トランザクションをコミットする例外 -->\n     <property name=\"transactionCommitExceptions\">\n         <list>\n             <value>example.TransactionCommitException</value>\n             <value>example.TransactionCommitException2</value>\n         </list>\n     </property>\n</component>\n}\n</pre>\n\n{@ref InboundHandleable} {@ref OutboundHandleable} として使用する場合、Inbound処理の際にトランザクションを開始し、\nOutbound処理の際にトランザクションをコミットまたはロールバックする。<br/>\nコミットとロールバックの判定は、 isProcessSucceded が true を返すか false を返すかで判定する。\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n**作成者:** Koichi Asano <asano.koichi@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "transactionFactory",
+      "level": 3,
+      "content": "```java\nprivate TransactionFactory transactionFactory\n```\n\nトランザクションオブジェクトを取得するためのファクトリ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "transactionName",
+      "level": 3,
+      "content": "```java\nprivate String transactionName\n```\n\nトランザクションが使用するコネクションの登録名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "transactionCommitExceptions",
+      "level": 3,
+      "content": "```java\nprivate List<Class<? extends RuntimeException>> transactionCommitExceptions\n```\n\n送出されてもトランザクションをコミットしなければならない例外クラスの一覧\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "setTransactionFactory",
+      "level": 3,
+      "content": "```java\npublic void setTransactionFactory(TransactionFactory transactionFactory)\n```\n\nトランザクションオブジェクトを取得するためのファクトリを設定する。\n\n**パラメータ:**\n- `transactionFactory` - トランザクションオブジェクトを取得するためのファクトリ\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "setTransactionName",
+      "level": 3,
+      "content": "```java\npublic void setTransactionName(String transactionName)\n```\n\nこのハンドラが管理するトランザクションの、スレッドコンテキスト上での登録名を設定する。\n<pre>\nデフォルトでは既定のトランザクション名\n({@link TransactionContext#DEFAULT_TRANSACTION_CONTEXT_KEY})を使用する。\n\n</pre>\n\n**パラメータ:**\n- `transactionName` - データベース接続のスレッドコンテキスト上の登録名\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setTransactionCommitExceptions",
+      "level": 3,
+      "content": "```java\npublic void setTransactionCommitExceptions(List<String> exceptionClassNames)\n```\n\n送出されてもトランザクションをコミットしなければならない例外クラスの一覧を設定する。\n<pre>\n指定可能な例外は実行時例外（RuntimeExceptionのサブクラス）のみである。\nなにも指定しなかった場合はいかなる例外についてもロールバックする。\n</pre>\n\n**パラメータ:**\n- `exceptionClassNames` - 送出されてもトランザクションをコミットしなければならない例外クラスの一覧\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "mustBeCommittedWhenThrown",
+      "level": 3,
+      "content": "```java\nboolean mustBeCommittedWhenThrown(RuntimeException e)\n```\n\nトランザクションの期間中に指定された例外が送出された場合、\n当該のトランザクションをコミットする必要があるか否かを返す。\n\n**パラメータ:**\n- `e` - トランザクション期間中に送出された例外オブジェクト\n\n**戻り値:**\nコミットする必要があればtrueを返す。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(Object inputData, ExecutionContext ctx)\n```\n\n{@inheritDoc}\n<pre>\nこのクラスの実装では後続ハンドラに対する処理委譲の前後に、\nデータベース接続オブジェクトの初期化と終了の処理をそれぞれ行う。\n</pre>\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "handleInbound",
+      "level": 3,
+      "content": "```java\npublic Result handleInbound(ExecutionContext context)\n```\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "handleOutbound",
+      "level": 3,
+      "content": "```java\npublic Result handleOutbound(ExecutionContext context)\n```\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "isCompleteTransaction",
+      "level": 3,
+      "content": "```java\nprotected boolean isCompleteTransaction(ExecutionContext context)\n```\n\nトランザクションが正常終了したかどうかを判定する。<br/>\nこの実装では、ExecutionContext#isProcessSucceded() がtrueを返すかどうかで、判定を行う。\n\n**パラメータ:**\n- `context` - ExecutionContext\n\n**戻り値:**\n正常終了した場合 true\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-common-handler-TransactionManagementHandler"
+}

@@ -1,0 +1,560 @@
+{
+  "title": "class HttpRequestTestSupport",
+  "content": "**パッケージ:** nablarch.test.core.http\n\n**継承階層:**\n```\njava.lang.Object\n  └─ TestEventDispatcher\n      └─ nablarch.test.core.http.HttpRequestTestSupport\n```\n\n---\n\n```java\npublic class HttpRequestTestSupport\nextends TestEventDispatcher\n```\n\nHTTPリクエストテスト用の基底クラス。\n\n**作成者:** hisaaki sioiri  \n**作成者:** Masato Inoue  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "HTML_TYPE",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern HTML_TYPE\n```\n\nHTMLであることを判定する正規表現\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "fileSeparator",
+      "level": 3,
+      "content": "```java\nprivate static final char fileSeparator\n```\n\nファイルセパレータ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "server",
+      "level": 3,
+      "content": "```java\nprivate static HttpServer server\n```\n\nHttpServer\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "HTTP_TEST_CONFIGURATION",
+      "level": 3,
+      "content": "```java\nprivate static final String HTTP_TEST_CONFIGURATION\n```\n\nHttpTestConfigurationのリポジトリキー\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "handler",
+      "level": 3,
+      "content": "```java\nprivate static HttpRequestTestSupportHandler handler\n```\n\nrequest processor handler\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "servletForwardVerifier",
+      "level": 3,
+      "content": "```java\nprivate static ServletForwardVerifier servletForwardVerifier\n```\n\nフォワード先検証クラス\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "SKIP_RESOURCE_COPY",
+      "level": 3,
+      "content": "```java\nprivate static final String SKIP_RESOURCE_COPY\n```\n\nHTMLリソースコピー抑止システムプロパティ\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "dbSupport",
+      "level": 3,
+      "content": "```java\nprivate final DbAccessTestSupport dbSupport\n```\n\nデータベースアクセス自動テスト用基底クラス\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "replaceFiles",
+      "level": 3,
+      "content": "```java\nprivate final List<File> replaceFiles\n```\n\n静的ファイルコピー時に内容を置き換える対象のファイルリスト\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "initialized",
+      "level": 3,
+      "content": "```java\nprivate static boolean initialized\n```\n\n初期化完了フラグ。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "DUMP_FILE_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String DUMP_FILE_KEY\n```\n\nExecutionContextにダンプファイルを格納する際に使用するキー\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "testClass",
+      "level": 3,
+      "content": "```java\nprotected final Class<?> testClass\n```\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "preClassName",
+      "level": 3,
+      "content": "```java\nprivate String preClassName\n```\n\n前回{@link #execute(Class, String, nablarch.fw.web.HttpRequest, nablarch.fw.ExecutionContext)}が実行された時のクラス名\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "HTTP_SERVER_FACTORY_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String HTTP_SERVER_FACTORY_KEY\n```\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "jsTestResourcePath",
+      "level": 3,
+      "content": "```java\nstatic String jsTestResourcePath\n```\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "CSS_URL_PATTERN",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern CSS_URL_PATTERN\n```\n\nCSSのurlパターン。\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "JS_REPLACED_PATTERN",
+      "level": 3,
+      "content": "```java\nprivate static final Map<Pattern,String> JS_REPLACED_PATTERN\n```\n\nJSの置き換えパターン\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "ATTACH",
+      "level": 3,
+      "content": "```java\nprivate static final String ATTACH\n```\n\nマルチパート指定の記法\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "ATTACH_CLOSE",
+      "level": 3,
+      "content": "```java\nprivate static final String ATTACH_CLOSE\n```\n\nマルチパート指定の閉じ括弧\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s22"
+    },
+    {
+      "title": "HttpRequestTestSupport",
+      "level": 3,
+      "content": "```java\npublic HttpRequestTestSupport(Class<?> testClass)\n```\n\nコンストラクタ。\n\n**パラメータ:**\n- `testClass` - テストクラス\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "HttpRequestTestSupport",
+      "level": 3,
+      "content": "```java\nprotected HttpRequestTestSupport()\n```\n\nコンストラクタ<br/>\n本メソッドはサブクラスから使用されることを想定している。\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s25"
+    },
+    {
+      "title": "execute",
+      "level": 3,
+      "content": "```java\nprotected HttpResponse execute(String caseName, HttpRequest req, ExecutionContext ctx)\n```\n\n自動テスト用HTTPサーバを使用して、リクエスト単体テストを実現する。\n\n**パラメータ:**\n- `req` - テスト対象のアクションを呼び出すためのHttpRequest\n- `caseName` - テストケース名\n- `ctx` - ExecutionContext\n\n**戻り値:**\nHttpResponse\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "initializeIfNotYet",
+      "level": 3,
+      "content": "```java\nprotected void initializeIfNotYet(HttpTestConfiguration config, File dumpDir, String className)\n```\n\n初回時のみ初期化を実行する。\n\n**パラメータ:**\n- `config` - HttpTestConfiguration\n- `dumpDir` - HTMLダンプ先のディレクトリ\n- `className` - テストクラス\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\nprivate void initialize(HttpTestConfiguration config, File dumpDir, String className)\n```\n\n初期化する。\n\n**パラメータ:**\n- `config` - HttpTestConfiguration\n- `dumpDir` - ダンプディレクトリ\n- `className` - クラス名\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "copyHtmlResources",
+      "level": 3,
+      "content": "```java\nprivate void copyHtmlResources(HttpTestConfiguration config, File dumpDir)\n```\n\nHTMLリソースをコピーする。\n\n**パラメータ:**\n- `config` - HttpTestConfiguration\n- `dumpDir` - ダンプディレクトリ\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "isResourceCopySuppressed",
+      "level": 3,
+      "content": "```java\nprivate boolean isResourceCopySuppressed()\n```\n\nHTMLリソースのコピーを行うかどうか判定する。\nシステムプロパティの指定により判定する。\n\n**戻り値:**\n判定結果\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "execute",
+      "level": 3,
+      "content": "```java\npublic HttpResponse execute(Class<?> testClass, String caseName, HttpRequest req, ExecutionContext ctx)\n```\n\n自動テスト用HTTPサーバを使用して、リクエスト単体テストを実現する。\n\n**パラメータ:**\n- `testClass` - テストクラス\n- `req` - テスト対象のアクションを呼び出すためのHttpRequest\n- `caseName` - テストケース名\n- `ctx` - ExecutionContext\n\n**戻り値:**\nHttpResponse\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "checkHtml",
+      "level": 3,
+      "content": "```java\nvoid checkHtml(String dumpFilePath, HttpTestConfiguration config)\n```\n\n生成されたHtmlファイルのチェックを行う。<br/>\nチェックする内容は下記のとおりである。\n<ul>\n<li>正しい文法に則って記載されていること。</li>\n<li>使用を許可されていないタグ・属性が使用されていないこと。</li>\n</ul>\n\n**パラメータ:**\n- `dumpFilePath` - チェック対象htmlファイルパス\n- `config` - HttpTestConfiguration\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "createHttpServer",
+      "level": 3,
+      "content": "```java\nprotected HttpServer createHttpServer(HttpTestConfiguration config)\n```\n\nHttpServerを生成する。\n\n**パラメータ:**\n- `config` - HttpTestConfiguration\n\n**戻り値:**\nHTTPサーバ\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "getTestSupportHandler",
+      "level": 3,
+      "content": "```java\npublic static HttpRequestTestSupportHandler getTestSupportHandler()\n```\n\nサポートハンドラを取得する。\n\n**戻り値:**\nサポートハンドラ\n\n---",
+      "id": "s34"
+    },
+    {
+      "title": "prepareHandlerQueue",
+      "level": 3,
+      "content": "```java\nprotected void prepareHandlerQueue(List<Handler> handlerQueue)\n```\n\nハンドラキューの準備を行う。\n\n**パラメータ:**\n- `handlerQueue` - ハンドラキュー\n\n---",
+      "id": "s35"
+    },
+    {
+      "title": "getWarBasePaths",
+      "level": 3,
+      "content": "```java\nprivate List<ResourceLocator> getWarBasePaths(HttpTestConfiguration config)\n```\n\nWarベースパスを取得する。\n\n**パラメータ:**\n- `config` - HttpTestConfiguration\n\n**戻り値:**\nWarベースパス\n\n---",
+      "id": "s36"
+    },
+    {
+      "title": "buildWarDirUri",
+      "level": 3,
+      "content": "```java\nprivate ResourceLocator buildWarDirUri(String pathToWarDir)\n```\n\nWarディレクトリのURIを組み立てる。\n\n**パラメータ:**\n- `pathToWarDir` - Warディレクトリへの相対パス\n\n**戻り値:**\nURI\n\n---",
+      "id": "s37"
+    },
+    {
+      "title": "createHttpServer",
+      "level": 3,
+      "content": "```java\nprotected HttpServer createHttpServer()\n```\n\nHttpServerのインスタンスを生成する。\n\n**戻り値:**\nHttpServerのインスタンス\n\n---",
+      "id": "s38"
+    },
+    {
+      "title": "makeDumpDir",
+      "level": 3,
+      "content": "```java\nprivate static File makeDumpDir(String className, HttpTestConfiguration config)\n```\n\nダンプファイルの出力ディレクトリを作成する。<br>\n\n**パラメータ:**\n- `className` - クラス名\n- `config` - HttpTestConfiguration\n\n**戻り値:**\nダンプディレクトリ\n\n---",
+      "id": "s39"
+    },
+    {
+      "title": "copyHtmlResourceToDumpDir",
+      "level": 3,
+      "content": "```java\nprotected void copyHtmlResourceToDumpDir(HttpTestConfiguration config, File destDir, ResourceLocator warBaseLocator)\n```\n\nHTMLリソースをダンプファイルの出力ディレクトリへコピーする。\n\n**パラメータ:**\n- `config` - HttpTestConfiguration\n- `destDir` - 出力ディレクトリ\n- `warBaseLocator` - warベースディレクトリのリソースロケータ\n\n---",
+      "id": "s40"
+    },
+    {
+      "title": "deleteHtmlResourceFile",
+      "level": 3,
+      "content": "```java\nprotected void deleteHtmlResourceFile(File srcDir, File destDir)\n```\n\nダンプディレクトリのHTMLリソースファイルを削除する。\n\n**パラメータ:**\n- `srcDir` - HTMLリソースフォルダ\n- `destDir` - HTMLリソースのコピーフォルダ\n\n---",
+      "id": "s41"
+    },
+    {
+      "title": "rewriteResourceFile",
+      "level": 3,
+      "content": "```java\nprotected void rewriteResourceFile(HttpTestConfiguration config, File dumpDir, ResourceLocator warBaseLocator)\n```\n\nHTMLリソースディレクトリ内のCSSファイルを置換する。\n\n<p>\n出力したCSSファイルのタイムスタンプには、出力元CSSファイルのタイムスタンプを設定する。\n次回、出力時にはタイムスタンプに変更がない限り、出力は行わない。\n\n**パラメータ:**\n- `config` - HttpTestConfiguration\n- `dumpDir` - 出力先ディレクトリ\n- `warBaseLocator` - warベースのリソースロケータ\n\n---",
+      "id": "s42"
+    },
+    {
+      "title": "rewritePath",
+      "level": 3,
+      "content": "```java\nprotected String rewritePath(String text, String replaceAbsolutePath)\n```\n\n静的リソース内のパスを置き換える。\n\n**パラメータ:**\n- `text` - 文字列\n- `replaceAbsolutePath` - ファイルの絶対パスからwarのルートパスを取り除いたパス。\n\n**戻り値:**\n置換後の文字列\n\n---",
+      "id": "s43"
+    },
+    {
+      "title": "getAbsoluteCssUriPrefix",
+      "level": 3,
+      "content": "```java\nprotected String getAbsoluteCssUriPrefix(String uri, String replaceAbsolutePath)\n```\n\nURI型の絶対パス参照文字列から、URIのプレフィックスを取得する。\n\n**パラメータ:**\n- `uri` - URI型の絶対パス参照文字列\n- `replaceAbsolutePath` - HTMLリソースの絶対パスからwarのルートパスを取り除いたパス。\n\n**戻り値:**\nURIのプレフックス\n\n---",
+      "id": "s44"
+    },
+    {
+      "title": "getDepth",
+      "level": 3,
+      "content": "```java\nprivate int getDepth(String replaceAbsolutePath)\n```\n\nwarのルートパスからのHTMLリソースの深さを取得する。\n深さを判別するための区切り文字は、システムプロパティから取得する。\n\n**パラメータ:**\n- `replaceAbsolutePath` - HTMLリソースの絶対パスからwarのルートパスを取り除いたパス。\n\n**戻り値:**\nwarのルートパスからの深さ\n\n---",
+      "id": "s45"
+    },
+    {
+      "title": "getFileFilter",
+      "level": 3,
+      "content": "```java\nprotected FileFilter getFileFilter(HttpTestConfiguration config)\n```\n\nFileFilterを取得する。\n\n**パラメータ:**\n- `config` - HttpTestConfiguration\n\n**戻り値:**\nFileFilter\n\n---",
+      "id": "s46"
+    },
+    {
+      "title": "setHttpHeader",
+      "level": 3,
+      "content": "```java\nprotected static void setHttpHeader(HttpRequest req, HttpTestConfiguration config)\n```\n\nHTTPHeaderを設定する。<br>\nすでにHttpRequestに設定されている項目は、設定しない。\n\n**パラメータ:**\n- `req` - HTTPHeaderを設定するHttpRequest\n- `config` - HttpTestConfiguration\n\n---",
+      "id": "s47"
+    },
+    {
+      "title": "assertForward",
+      "level": 3,
+      "content": "```java\npublic void assertForward(String msg, String expectedUri)\n```\n\nフォワード先URIが想定通りであることを表明する。\n\n**パラメータ:**\n- `msg` - アサート失敗時のメッセージ\n- `expectedUri` - 期待するフォワード先URI\n\n---",
+      "id": "s48"
+    },
+    {
+      "title": "assertStatusCode",
+      "level": 3,
+      "content": "```java\nprotected void assertStatusCode(String message, int expected, HttpResponse response)\n```\n\nステータスコードが想定通りであることを表明する。<br/>\n\n<p>\n内蔵サーバから戻り値で返却されたHTTPレスポンスがリダイレクトである場合、\nステータスコードが303または302であることを表明する。\nこのとき、内蔵サーバから返却されるHTTPレスポンスと比較しないのは、後方互換性を保つためである。\n（内蔵サーバは、リダイレクト時のステータスコードに'302 FOUND'を使用する）\n\n<p>\n上記以外の場合は、{@link HttpRequestTestSupportHandler#getStatusCode()}\nのステータスコードを比較対象とする。\n\n**パラメータ:**\n- `message` - アサート失敗時のメッセージ\n- `expected` - 期待するステータスコード値\n- `response` - HTTPレスポンス\n\n---",
+      "id": "s49"
+    },
+    {
+      "title": "is3XXStatusCode",
+      "level": 3,
+      "content": "```java\npublic boolean is3XXStatusCode(int statusCode)\n```\n\n300系の HTTP ステータスコードかどうか判定する\n\n**パラメータ:**\n- `statusCode` - 判定対象のHTTPステータスコード\n\n**戻り値:**\n300系の HTTP ステータスコードであれば true\n\n---",
+      "id": "s50"
+    },
+    {
+      "title": "assertApplicationMessageId",
+      "level": 3,
+      "content": "```java\npublic void assertApplicationMessageId(String expectedCommaSeparated, ExecutionContext actual)\n```\n\nメッセージIDのアサートを行う。<br>\n\n**パラメータ:**\n- `expectedCommaSeparated` - 期待するメッセージID（カンマ区切り）\n- `actual` - 実行結果(メッセージIDをリクエストスコープにもつExecutionContext)\n\n---",
+      "id": "s51"
+    },
+    {
+      "title": "assertApplicationMessageId",
+      "level": 3,
+      "content": "```java\npublic void assertApplicationMessageId(String msg, String expectedCommaSeparated, ExecutionContext actual)\n```\n\nメッセージIDのアサートを行う。<br>\n\n**パラメータ:**\n- `msg` - 任意のメッセージ\n- `expectedCommaSeparated` - 期待するメッセージID（カンマ区切り）\n- `actual` - 実行結果(メッセージIDをリクエストスコープにもつExecutionContext)\n\n---",
+      "id": "s52"
+    },
+    {
+      "title": "splitAndTrim",
+      "level": 3,
+      "content": "```java\nprivate String[] splitAndTrim(String commaSeparated)\n```\n\n指定された文字列をカンマ(,)で分割し各要素をトリムする。\n\n**パラメータ:**\n- `commaSeparated` - カンマ区切り文字列\n\n**戻り値:**\n変換した配列（引数がnullまたは空文字列の場合には、サイズ0の配列）\n\n---",
+      "id": "s53"
+    },
+    {
+      "title": "trim",
+      "level": 3,
+      "content": "```java\nprivate void trim(String[] array)\n```\n\n配列の各要素をトリムする(破壊的メソッド)。\n\n**パラメータ:**\n- `array` - 配列\n\n---",
+      "id": "s54"
+    },
+    {
+      "title": "assertApplicationMessageId",
+      "level": 3,
+      "content": "```java\npublic void assertApplicationMessageId(String[] expected, ExecutionContext actual)\n```\n\nメッセージIDのアサートを行う。<br>\n\n**パラメータ:**\n- `expected` - 期待するメッセージIDの配列\n- `actual` - 実行結果(メッセージIDをリクエストスコープにもつExecutionContext)\n\n---",
+      "id": "s55"
+    },
+    {
+      "title": "assertApplicationMessageId",
+      "level": 3,
+      "content": "```java\npublic void assertApplicationMessageId(String msg, String[] expected, ExecutionContext actual)\n```\n\nメッセージIDのアサートを行う。<br>\n\n**パラメータ:**\n- `msg` - 任意のメッセージ\n- `expected` - 期待するメッセージIDの配列\n- `actual` - 実行結果(メッセージIDをリクエストスコープにもつExecutionContext)\n\n---",
+      "id": "s56"
+    },
+    {
+      "title": "backupDumpFile",
+      "level": 3,
+      "content": "```java\nprivate static void backupDumpFile(HttpTestConfiguration config)\n```\n\nダンプファイルをバックアップする。\n\n**パラメータ:**\n- `config` - HttpsConfigurator\n\n---",
+      "id": "s57"
+    },
+    {
+      "title": "deleteBackupFile",
+      "level": 3,
+      "content": "```java\nprivate static void deleteBackupFile(File target)\n```\n\ndelete from backup file.\n\n**パラメータ:**\n- `target` - target file\n\n---",
+      "id": "s58"
+    },
+    {
+      "title": "setValidToken",
+      "level": 3,
+      "content": "```java\npublic void setValidToken(HttpRequest request, ExecutionContext context)\n```\n\n有効なトークンをリクエストパラメータとセッションスコープに設定する。<br/>\n二重サブミットを防止しているアクションのメソッドをテストする場合は、このメソッドを呼び出しトークンを設定する。\n\n**パラメータ:**\n- `request` - テスト対象のアクションを呼び出すためのHttpRequest\n- `context` - ExecutionContext\n\n---",
+      "id": "s59"
+    },
+    {
+      "title": "setToken",
+      "level": 3,
+      "content": "```java\npublic void setToken(HttpRequest request, ExecutionContext context, boolean valid)\n```\n\nトークンをリクエストパラメータとセッションスコープに設定する。<br/>\n引数validが真の場合、有効なトークンを設定する。偽の場合はトークンを無効にする。\n\n**パラメータ:**\n- `request` - テスト対象のアクションを呼び出すためのHttpRequest\n- `context` - ExecutionContext\n- `valid` - 有効なトークンを設定するかどうか\n\n---",
+      "id": "s60"
+    },
+    {
+      "title": "createHttpRequest",
+      "level": 3,
+      "content": "```java\npublic HttpRequest createHttpRequest(String requestUri, String httpMethod, Map<String,String[]> params)\n```\n\nリクエストパラメータを作成する。\n\n**パラメータ:**\n- `requestUri` - リクエストURI\n- `httpMethod` - HTTPメソッド\n- `params` - パラメータが格納されたMap\n\n**戻り値:**\nリクエストパラメータ\n\n---",
+      "id": "s61"
+    },
+    {
+      "title": "createHttpRequest",
+      "level": 3,
+      "content": "```java\npublic HttpRequest createHttpRequest(String requestUri, Map<String,String[]> params)\n```\n\nリクエストパラメータを作成する。\n\n**パラメータ:**\n- `requestUri` - リクエストURI\n- `params` - パラメータが格納されたMap\n\n**戻り値:**\nリクエストパラメータ\n\n---",
+      "id": "s62"
+    },
+    {
+      "title": "extractMultipart",
+      "level": 3,
+      "content": "```java\nprivate PartInfoHolder extractMultipart(Map<String,String[]> params)\n```\n\nマルチパートの抽出を行う。\n\n**パラメータ:**\n- `params` - リクエストパラメータのテストデータ\n\n**戻り値:**\n抽出されたマルチパート\n\n---",
+      "id": "s63"
+    },
+    {
+      "title": "isAttached",
+      "level": 3,
+      "content": "```java\nprivate boolean isAttached(String value)\n```\n\nテストデータの値がアップロード用の情報であるかどうか判定する\n\n**パラメータ:**\n- `value` - テストデータ\n\n**戻り値:**\n{@literal ${attach:ファイル名}}に合致する場合、真\n\n---",
+      "id": "s64"
+    },
+    {
+      "title": "extractFileName",
+      "level": 3,
+      "content": "```java\nprivate String extractFileName(String value)\n```\n\nファイル名を抽出する。\n\n**パラメータ:**\n- `value` - パラメータの値\n\n**戻り値:**\n抽出されたファイル名\n\n---",
+      "id": "s65"
+    },
+    {
+      "title": "createPartInfo",
+      "level": 3,
+      "content": "```java\nprivate PartInfo createPartInfo(String name, String fileName)\n                        throws IllegalStateException\n```\n\nマルチパート情報を作成する。\n\n**パラメータ:**\n- `name` - name属性\n- `fileName` - ファイル名\n\n**戻り値:**\n作成したインスタンス\n\n**例外:**\n- `IllegalStateException` - アップロードファイルが存在しない場合\n\n---",
+      "id": "s66"
+    },
+    {
+      "title": "createHttpRequestWithConversion",
+      "level": 3,
+      "content": "```java\npublic HttpRequest createHttpRequestWithConversion(String requestUri, String httpMethod, Map<String,String> commaSeparated, Map<String,String> cookie, Map<String,String> queryParams)\n```\n\n---",
+      "id": "s67"
+    },
+    {
+      "title": "appendQueryParamsToUri",
+      "level": 3,
+      "content": "```java\nprivate String appendQueryParamsToUri(String uri, Map<String,String> queryParams)\n```\n\nクエリパラメータをURIに追加する。\n\n**パラメータ:**\n- `uri` - リクエストURI\n- `queryParams` - クエリパラメータのマップ\n\n**戻り値:**\nクエリパラメータが追加されたURI\n\n---",
+      "id": "s68"
+    },
+    {
+      "title": "encode",
+      "level": 3,
+      "content": "```java\nprivate String encode(String rawString)\n```\n\n文字列をパーセントエンコーディングする。\n\n**パラメータ:**\n- `rawString` - エンコード前文字列\n\n**戻り値:**\nエンコード後文字列\n\n---",
+      "id": "s69"
+    },
+    {
+      "title": "createHttpRequestWithConversion",
+      "level": 3,
+      "content": "```java\npublic HttpRequest createHttpRequestWithConversion(String requestUri, Map<String,String> commaSeparated, Map<String,String> cookie)\n```\n\nリクエストパラメータを作成する。\n\n**パラメータ:**\n- `requestUri` - リクエストURI\n- `commaSeparated` - パラメータが格納されたMap\n- `cookie` - Cookie情報が格納されたMap\n\n**戻り値:**\nリクエストパラメータ\n\n---",
+      "id": "s70"
+    },
+    {
+      "title": "createHttpRequestWithConversion",
+      "level": 3,
+      "content": "```java\npublic HttpRequest createHttpRequestWithConversion(String requestUri, String httpMethod, Map<String,String> commaSeparated, Map<String,String> cookie)\n```\n\nリクエストパラメータを作成する。\n\n**パラメータ:**\n- `requestUri` - リクエストURI\n- `httpMethod` - HTTPメソッド\n- `commaSeparated` - パラメータが格納されたMap\n- `cookie` - Cookie情報が格納されたMap\n\n**戻り値:**\nリクエストパラメータ\n\n---",
+      "id": "s71"
+    },
+    {
+      "title": "createExecutionContext",
+      "level": 3,
+      "content": "```java\npublic ExecutionContext createExecutionContext(String userId)\n```\n\n{@link ExecutionContext}を生成する。\n\n**パラメータ:**\n- `userId` - セッションスコープに格納するユーザID\n\n**戻り値:**\n生成したExecutionContext\n\n---",
+      "id": "s72"
+    },
+    {
+      "title": "getConfig",
+      "level": 3,
+      "content": "```java\nprivate HttpTestConfiguration getConfig()\n```\n\nリクエスト単体テスト用のコンフィギュレーションを取得する。\n\n**戻り値:**\nコンフィギュレーション\n\n---",
+      "id": "s73"
+    },
+    {
+      "title": "getDumpFile",
+      "level": 3,
+      "content": "```java\nprotected File getDumpFile(ExecutionContext ctx)\n```\n\nHTTPレスポンスボディが出力されたファイルを取得する。\n\n**パラメータ:**\n- `ctx` - ExecutionContext\n\n**戻り値:**\nファイル。HTTPダンプ出力が無効な場合はnull\n\n---",
+      "id": "s74"
+    },
+    {
+      "title": "setDumpFile",
+      "level": 3,
+      "content": "```java\nprotected void setDumpFile(ExecutionContext ctx, File file)\n```\n\nHTTPレスポンスボディが出力されたファイルを設定する。\n\n**パラメータ:**\n- `ctx` - ExecutionContext\n- `file` - ファイル\n\n---",
+      "id": "s75"
+    },
+    {
+      "title": "setUpDb",
+      "level": 3,
+      "content": "```java\npublic void setUpDb(String sheetName)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#setUpDb(String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - シート名\n\n---",
+      "id": "s76"
+    },
+    {
+      "title": "setUpDb",
+      "level": 3,
+      "content": "```java\npublic void setUpDb(String sheetName, String groupId)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#setUpDb(String, String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - シート名\n- `groupId` - グループID\n\n---",
+      "id": "s77"
+    },
+    {
+      "title": "assertSqlResultSetEquals",
+      "level": 3,
+      "content": "```java\npublic void assertSqlResultSetEquals(String message, String sheetName, String id, SqlResultSet actual)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#assertSqlResultSetEquals(String, String, String, nablarch.core.db.statement.SqlResultSet)}\nへの委譲メソッド。\n\n**パラメータ:**\n- `message` - 比較失敗時のメッセージ\n- `sheetName` - 期待値を格納したシート名\n- `id` - シート内のデータを特定するためのID\n- `actual` - 実際の値\n\n---",
+      "id": "s78"
+    },
+    {
+      "title": "assertSqlRowEquals",
+      "level": 3,
+      "content": "```java\npublic void assertSqlRowEquals(String message, String sheetName, String id, SqlRow actual)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#assertSqlRowEquals(String, String, String, nablarch.core.db.statement.SqlRow)}\nへの委譲メソッド。\n\n**パラメータ:**\n- `message` - 比較失敗時のメッセージ\n- `sheetName` - 期待値を格納したシート名\n- `id` - シート内のデータを特定するためのID\n- `actual` - 実際の値\n\n---",
+      "id": "s79"
+    },
+    {
+      "title": "getListMap",
+      "level": 3,
+      "content": "```java\npublic List<Map<String,String>> getListMap(String sheetName, String id)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#getListMap(String, String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - シート名\n- `id` - ID\n\n**戻り値:**\nList-Map形式のデータ\n\n---",
+      "id": "s80"
+    },
+    {
+      "title": "getListParamMap",
+      "level": 3,
+      "content": "```java\npublic List<Map<String,String[]>> getListParamMap(String sheetName, String id)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#getListParamMap(String, String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - シート名\n- `id` - ID\n\n**戻り値:**\nList-Map<String, String[]>形式のデータ\n\n---",
+      "id": "s81"
+    },
+    {
+      "title": "getParamMap",
+      "level": 3,
+      "content": "```java\npublic Map<String,String[]> getParamMap(String sheetName, String id)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#getParamMap(String, String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - シート名\n- `id` - ID\n\n**戻り値:**\nMap<String,String[]>形式のデータ\n\n---",
+      "id": "s82"
+    },
+    {
+      "title": "assertTableEquals",
+      "level": 3,
+      "content": "```java\npublic void assertTableEquals(String sheetName)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#assertTableEquals(String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - 期待値を格納したシート名\n\n---",
+      "id": "s83"
+    },
+    {
+      "title": "assertTableEquals",
+      "level": 3,
+      "content": "```java\npublic void assertTableEquals(String sheetName, String groupId)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#assertTableEquals(String, String)}への委譲メソッド。\n\n**パラメータ:**\n- `sheetName` - 期待値を格納したシート名\n- `groupId` - グループID（オプション）\n\n---",
+      "id": "s84"
+    },
+    {
+      "title": "assertTableEquals",
+      "level": 3,
+      "content": "```java\npublic void assertTableEquals(String message, String sheetName, String groupId)\n```\n\n{@link nablarch.test.core.db.DbAccessTestSupport#assertTableEquals(String, String, String)} への委譲メソッド。\n\n**パラメータ:**\n- `message` - 比較失敗時のメッセージ\n- `groupId` - グループID（オプション）\n- `sheetName` - 期待値を格納したシート名\n\n---",
+      "id": "s85"
+    },
+    {
+      "title": "assertEntity",
+      "level": 3,
+      "content": "```java\npublic void assertEntity(String sheetName, String id, Object actual)\n```\n\n{@link nablarch.test.core.db.EntityTestSupport#assertGetterMethod(String, String, Object)}への移譲メソッド。\n\n**パラメータ:**\n- `sheetName` - シート名\n- `id` - ケース表のID(LIST_MAP=testの場合は、testを指定する。)\n- `actual` - 実行結果のオブジェクト(Java Beansオブジェクト)\n\n---",
+      "id": "s86"
+    },
+    {
+      "title": "assertObjectPropertyEquals",
+      "level": 3,
+      "content": "```java\npublic void assertObjectPropertyEquals(String message, String sheetName, String id, Object actual)\n```\n\nObject に設定されたプロパティをアサートする。 <br />\nチェック条件の詳細は {@link nablarch.test.Assertion#assertProperties(java.util.Map, Object)} を参照。\n\n**パラメータ:**\n- `message` - メッセージ\n- `sheetName` - シート名\n- `id` - ケース表のID(LIST_MAP=testの場合は、testを指定する。)\n- `actual` - 実際の値\n\n---",
+      "id": "s87"
+    },
+    {
+      "title": "assertObjectArrayPropertyEquals",
+      "level": 3,
+      "content": "```java\npublic void assertObjectArrayPropertyEquals(String message, String sheetName, String id, Object[] actual)\n```\n\nObject配列に設定されたプロパティをアサートする。 <br />\nチェック条件の詳細は {@link nablarch.test.Assertion#assertProperties(java.util.Map, Object)} を参照。\n\n**パラメータ:**\n- `message` - メッセージ\n- `sheetName` - シート名\n- `id` - ケース表のID(LIST_MAP=testの場合は、testを指定する。)\n- `actual` - 実際の値\n\n---",
+      "id": "s88"
+    },
+    {
+      "title": "assertObjectListPropertyEquals",
+      "level": 3,
+      "content": "```java\npublic void assertObjectListPropertyEquals(String message, String sheetName, String id, List<?> actual)\n```\n\nObject に設定されたプロパティをアサートする。 <br />\nチェック条件の詳細は {@link nablarch.test.Assertion#assertProperties(java.util.Map, Object)} を参照。\n\n**パラメータ:**\n- `message` - メッセージ\n- `sheetName` - シート名\n- `id` - ケース表のID(LIST_MAP=testの場合は、testを指定する。)\n- `actual` - 実際の値\n\n---",
+      "id": "s89"
+    },
+    {
+      "title": "resetHttpServer",
+      "level": 3,
+      "content": "```java\npublic static void resetHttpServer()\n```\n\nキャッシュした HttpServer をリセットする。\n\n---",
+      "id": "s90"
+    },
+    {
+      "title": "getParamMap",
+      "level": 3,
+      "content": "```java\npublic Map<String,String[]> getParamMap(HttpRequest request)\n```\n\n{@link HttpRequest#getParamMap()}を呼び出す。\n\n**パラメータ:**\n- `request` - HTTPリクエスト\n\n**戻り値:**\nリクエストパラメータのMap\n\n---",
+      "id": "s91"
+    },
+    {
+      "title": "getParam",
+      "level": 3,
+      "content": "```java\npublic String[] getParam(HttpRequest request, String name)\n```\n\n{@link HttpRequest#getParam(String)}を呼び出す。\n\n**パラメータ:**\n- `request` - HTTPリクエスト\n- `name` - パラメータ名\n\n**戻り値:**\nリクエストパラメータの値\n\n---",
+      "id": "s92"
+    }
+  ],
+  "id": "javadoc-nablarch-test-core-http-HttpRequestTestSupport"
+}

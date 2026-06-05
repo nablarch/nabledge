@@ -1,0 +1,44 @@
+{
+  "title": "class ItemWriteTransactionManagementListener",
+  "content": "**パッケージ:** nablarch.fw.batch.ee.listener.chunk\n\n**継承階層:**\n```\njava.lang.Object\n  └─ AbstractNablarchItemWriteListener\n      └─ nablarch.fw.batch.ee.listener.chunk.ItemWriteTransactionManagementListener\n```\n\n---\n\n```java\npublic class ItemWriteTransactionManagementListener\nextends AbstractNablarchItemWriteListener\n```\n\n{@link jakarta.batch.api.chunk.listener.ItemWriteListener}レベルでトランザクション制御を行う{@link NablarchItemWriteListener}の実装クラス。\n<p/>\n{@link TransactionContext}から{@link Transaction}を取得しトランザクション制御を行う。\n{@link Transaction}は、前段のリスナーにて{@link TransactionContext}に設定しておく必要がある。\n{@link #setTransactionName(String)}で設定するトランザクション名は、前段のリスナーで設定したトランザクション名と一致させる必要がある。\n複数のトランザクションを設定する必要がないのであれば、デフォルトのトランザクション名を使用することを推奨する。\n(デフォルトのトランザクション名は、設定不要の場合に自動的に選択される。)\n<p/>\n{@link jakarta.batch.api.chunk.ItemWriter}が正常に終了した場合には、トランザクションの確定({@link Transaction#commit()})を実行し、\n{@link jakarta.batch.api.chunk.ItemWriter}で{@link Exception}が発生した場合には、トランザクションの破棄({@link Transaction#rollback()}を行う。\n\n**作成者:** Hisaaki Shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "transactionName",
+      "level": 3,
+      "content": "```java\nprivate String transactionName\n```\n\nトランザクション名\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "setTransactionName",
+      "level": 3,
+      "content": "```java\npublic void setTransactionName(String transactionName)\n```\n\nトランザクション名を設定する。\n\n**パラメータ:**\n- `transactionName` - トランザクション名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "afterWrite",
+      "level": 3,
+      "content": "```java\npublic void afterWrite(NablarchListenerContext context, List<Object> items)\n```\n\nトランザクションを確定(commit)する。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "onWriteError",
+      "level": 3,
+      "content": "```java\npublic void onWriteError(NablarchListenerContext context, List<Object> items, Exception ex)\n```\n\nトランザクションを破棄(rollback)する。\n\n---",
+      "id": "s6"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-batch-ee-listener-chunk-ItemWriteTransactionManagementListener"
+}

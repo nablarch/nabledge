@@ -35,7 +35,7 @@ public HttpResponse input(HttpRequest request, ExecutionContext context) {
 この実装のポイント
 
 * [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア) から顧客情報を取得する。
-* 取得した顧客情報を登録画面に表示するため、BeanUtil を使用して顧客エンティティをフォームに変換し、リクエストスコープに登録する。
+* 取得した顧客情報を登録画面に表示するため、[BeanUtil](../../javadoc/javadoc-nablarch-core-beans-BeanUtil.md) を使用して顧客エンティティをフォームに変換し、リクエストスコープに登録する。
 * レスポンスオブジェクトの遷移先を、初期表示処理への内部フォーワードとする
   (登録画面を表示する際、再度プルダウンに表示する業種情報を取得するため)。
 * 初期表示処理で [セッションストア](../../component/libraries/libraries-session-store.md#セッションストア) へ登録したオブジェクトを削除する(戻るボタンを押下せずにヘッダメニューから直接登録画面に遷移された場合等を考慮)。

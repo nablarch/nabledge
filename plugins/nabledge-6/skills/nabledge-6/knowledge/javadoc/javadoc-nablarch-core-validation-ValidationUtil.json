@@ -1,0 +1,104 @@
+{
+  "title": "class ValidationUtil",
+  "content": "**パッケージ:** nablarch.core.validation\n\n---\n\n```java\npublic final class ValidationUtil\n```\n\nバリデーションの実行時に使用するユーティリティクラス。<br/>\n全てのメソッドは{@link SystemRepository}から\"validationManager\"という名前で取得した{@link ValidationManager}に処理を委譲する。\n\n**作成者:** Koichi Asano  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "VALIDATION_MANAGER_NAME",
+      "level": 3,
+      "content": "```java\nprivate static final String VALIDATION_MANAGER_NAME\n```\n\n{@link SystemRepository}に定義されている{@link ValidationManager}の名称。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "ValidationUtil",
+      "level": 3,
+      "content": "```java\nprivate ValidationUtil()\n```\n\n隠蔽コンストラクタ。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "getManager",
+      "level": 3,
+      "content": "```java\nprivate static ValidationManager getManager()\n```\n\n{@link SystemRepository}から{@link ValidationManager}を取得する。\n\n**戻り値:**\n{@link SystemRepository}から取得した{@link ValidationManager}\n\n**例外:**\n- `IllegalStateException` - {@link ValidationManager}を取得できなかった場合\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "validate",
+      "level": 3,
+      "content": "```java\npublic static void validate(ValidationContext<T> context, String[] propertyNames)\n```\n\nバリデーション対象のプロパティを指定してバリデーションを行う。\n<p/>\nバリデーション結果は{@link ValidationContext}に保持される。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - バリデーションコンテキスト\n- `propertyNames` - バリデーション対象とするプロパティ名の配列\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "validate",
+      "level": 3,
+      "content": "```java\npublic static void validate(ValidationContext<T> context, String propertyName, Class<? extends Annotation> annotation, Map<String,Object> params)\n```\n\n対象のプロパティについて、指定したアノテーションクラスに従ったバリデーションを行う。\n<p/>\nバリデーション結果は{@link ValidationContext}に保持される。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - バリデーションコンテキスト\n- `propertyName` - バリデーション対象とするプロパティ名\n- `annotation` - バリデーション用のアノテーションクラス\n- `params` - バリデーション用のアノテーションパラメータ\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "validate",
+      "level": 3,
+      "content": "```java\npublic static void validate(ValidationContext<T> context, String propertyName, Class<? extends Annotation> annotation)\n```\n\n対象のプロパティについて、指定したアノテーションクラスに従ったバリデーションを行う。\n<p/>\nバリデーション結果は{@link ValidationContext}に保持される。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - バリデーションコンテキスト\n- `propertyName` - バリデーション対象とするプロパティ名\n- `annotation` - バリデーション用のアノテーションクラス\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "validateWithout",
+      "level": 3,
+      "content": "```java\npublic static void validateWithout(ValidationContext<T> context, String[] propertyNames)\n```\n\nバリデーション対象としないプロパティを指定してバリデーションを行う。\n<p/>\nバリデーション結果は{@link ValidationContext}に保持される。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - バリデーションコンテキスト\n- `propertyNames` - バリデーション対象としないプロパティ名の配列\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "validateAll",
+      "level": 3,
+      "content": "```java\npublic static void validateAll(ValidationContext<T> context)\n```\n\nすべてのプロパティについてバリデーションを行う。\n<p/>\nバリデーション結果は{@link ValidationContext}に保持される。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `context` - バリデーションコンテキスト\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "validateAndConvertRequest",
+      "level": 3,
+      "content": "```java\npublic static ValidationContext<T> validateAndConvertRequest(Class<T> targetClass, Map<String,?> params, String validateFor)\n```\n\nリクエストのバリデーションと変換を行う。\n<p/>\nバリデーション結果は{@link ValidationContext}に保持される。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `targetClass` - バリデーション対象のフォームクラス\n- `params` - バリデーション対象のデータ\n- `validateFor` - targetClassのバリデーション対象メソッドに付与した{@link ValidateFor}の値\n\n**戻り値:**\nバリデーション結果の入ったバリデーションコンテキスト\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "validateAndConvertRequest",
+      "level": 3,
+      "content": "```java\npublic static ValidationContext<T> validateAndConvertRequest(Class<T> targetClass, Validatable<?> request, String validateFor)\n```\n\nリクエストのバリデーションと変換を行う。\n<p/>\nバリデーション結果は{@link ValidationContext}に保持される。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `targetClass` - バリデーション対象のフォームクラス\n- `request` - リクエスト\n- `validateFor` - targetClassのバリデーション対象メソッドに付与した{@link ValidateFor}の値\n\n**戻り値:**\nバリデーション結果の入ったバリデーションコンテキスト\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "validateAndConvertRequest",
+      "level": 3,
+      "content": "```java\npublic static ValidationContext<T> validateAndConvertRequest(String prefix, Class<T> targetClass, Map<String,?> params, String validateFor)\n```\n\nリクエストのバリデーションと変換を行う。\n<p/>\nバリデーション結果は{@link ValidationContext}に保持される。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `prefix` - リクエストパラメータ名のプレフィクス\n- `targetClass` - バリデーション対象のフォームクラス\n- `params` - バリデーション対象のデータ\n- `validateFor` - targetClassのバリデーション対象メソッドに付与した{@link ValidateFor}の値\n\n**戻り値:**\nバリデーション結果の入ったバリデーションコンテキスト\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "validateAndConvertRequest",
+      "level": 3,
+      "content": "```java\npublic static ValidationContext<T> validateAndConvertRequest(String prefix, Class<T> targetClass, Validatable<?> request, String validateFor)\n```\n\nリクエストのバリデーションと変換を行う。\n<p/>\nバリデーション結果は{@link ValidationContext}に保持される。\n\n**パラメータ:**\n- `<T>` - バリデーション結果で取得できる型\n- `prefix` - リクエストパラメータ名のプレフィクス\n- `targetClass` - バリデーション対象のフォームクラス\n- `request` - リクエスト\n- `validateFor` - targetClassのバリデーション対象メソッドに付与した{@link ValidateFor}の値\n\n**戻り値:**\nバリデーション結果の入ったバリデーションコンテキスト\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "createMessageForProperty",
+      "level": 3,
+      "content": "```java\npublic static Message createMessageForProperty(String fullPropertyName, String messageId, Object options)\n```\n\n特定のプロパティに対するバリデーションエラーメッセージを作成する。\n\n**パラメータ:**\n- `fullPropertyName` - プレフィクスを含むプロパティ名\n- `messageId` - エラーメッセージのメッセージID\n- `options` - メッセージフォーマットのテンプレート文字列に埋め込む値\n\n**戻り値:**\n特定のプロパティに対するバリデーションエラーメッセージ\n\n---",
+      "id": "s16"
+    }
+  ],
+  "id": "javadoc-nablarch-core-validation-ValidationUtil"
+}

@@ -99,7 +99,7 @@ messagingLogFormatter.httpReceivedMessageFormat=@@@@ HTTP RECEIVED MESSAGE @@@@\
 
 messagingLogFormatter.className
 
-MessagingLogFormatter を実装したクラス。
+[MessagingLogFormatter](../../javadoc/javadoc-nablarch-fw-messaging-logging-MessagingLogFormatter.md) を実装したクラス。
 差し替える場合に指定する。
 
 messagingLogFormatter.maskingPatterns
@@ -281,21 +281,21 @@ messagingLogFormatter.httpReceivedMessageFormat=@@@@ HTTP RECEIVED MESSAGE @@@@\
 ### JSON形式の構造化ログとして出力する
 
 [JSON形式の構造化ログとして出力する](../../component/libraries/libraries-log.md#json形式の構造化ログとして出力する) 設定によりログをJSON形式で出力できるが、
-MessagingLogFormatter では
+[MessagingLogFormatter](../../javadoc/javadoc-nablarch-fw-messaging-logging-MessagingLogFormatter.md) では
 メッセージングログの各項目はmessageの値に文字列として出力される。
 メッセージングログの各項目もJSONの値として出力するには、
-MessagingJsonLogFormatter を使用する。
+[MessagingJsonLogFormatter](../../javadoc/javadoc-nablarch-fw-messaging-logging-MessagingJsonLogFormatter.md) を使用する。
 設定は、 [各種ログの設定](../../component/libraries/libraries-log.md#各種ログの設定) で説明したプロパティファイルに行う。
 
 記述ルール
 
-MessagingJsonLogFormatter を用いる際に
+[MessagingJsonLogFormatter](../../javadoc/javadoc-nablarch-fw-messaging-logging-MessagingJsonLogFormatter.md) を用いる際に
 指定するプロパティは以下の通り。
 
 messagingLogFormatter.className `必須`
 
 JSON形式でログを出力する場合、
-MessagingJsonLogFormatter を指定する。
+[MessagingJsonLogFormatter](../../javadoc/javadoc-nablarch-fw-messaging-logging-MessagingJsonLogFormatter.md) を指定する。
 
 messagingLogFormatter.maskingPatterns
 
@@ -436,9 +436,9 @@ HTTP受信メッセージログのlabelに出力する値。
 messagingLogFormatter.structuredMessagePrefix
 
 フォーマット後のメッセージ文字列が JSON 形式に整形されていることを識別できるようにするために、メッセージの先頭に付与するマーカー文字列。
-メッセージの先頭にあるマーカー文字列が JsonLogFormatter に設定しているマーカー文字列と一致する場合、 JsonLogFormatter はメッセージを JSON データとして処理する。
+メッセージの先頭にあるマーカー文字列が [JsonLogFormatter](../../javadoc/javadoc-nablarch-core-log-basic-JsonLogFormatter.md) に設定しているマーカー文字列と一致する場合、 [JsonLogFormatter](../../javadoc/javadoc-nablarch-core-log-basic-JsonLogFormatter.md) はメッセージを JSON データとして処理する。
 デフォルトは `"$JSON$"` となる。
-変更する場合は、LogWriterの `structuredMessagePrefix` プロパティを使用して JsonLogFormatter にも同じ値を設定すること（LogWriterのプロパティについては [ログ出力の設定](../../component/libraries/libraries-log.md#ログ出力の設定) を参照）。
+変更する場合は、LogWriterの `structuredMessagePrefix` プロパティを使用して [JsonLogFormatter](../../javadoc/javadoc-nablarch-core-log-basic-JsonLogFormatter.md) にも同じ値を設定すること（LogWriterのプロパティについては [ログ出力の設定](../../component/libraries/libraries-log.md#ログ出力の設定) を参照）。
 
 * **messageBody:** 電文をISO-8859-1固定でエンコードした結果を出力する。
 * **messageBodyHex:** messageBodyの内容をヘキサダンプして出力する。

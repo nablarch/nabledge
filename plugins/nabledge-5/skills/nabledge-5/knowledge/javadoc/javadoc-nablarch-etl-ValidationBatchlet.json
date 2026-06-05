@@ -1,0 +1,134 @@
+{
+  "title": "class ValidationBatchlet",
+  "content": "**パッケージ:** nablarch.etl\n\n**継承階層:**\n```\njava.lang.Object\n  └─ AbstractBatchlet\n      └─ nablarch.etl.ValidationBatchlet\n```\n\n---\n\n```java\npublic class ValidationBatchlet\nextends AbstractBatchlet\n```\n\n一時テーブルのデータをバリデーションする{@link javax.batch.api.Batchlet}実装クラス。\n<p/>\n一時テーブルのデータを全レコード取得し、{@link ValidationStepConfig#getBean()}のバリデーションルールに従いバリデーションを実施する。\nエラーが発生した場合には、そのレコードを退避テーブル(エラーテーブル)({@link ValidationStepConfig#getErrorEntity}に対応するテーブル)に移動する。\nまた、エラーの詳細はワーニングレベルでログ出力を行う。\n<p/>\nエラー発生時にジョブを継続するか否かのモード指定によって切り替えることができる。\n{@link ValidationStepConfig#getMode()}が{@link Mode#CONTINUE}の場合には処理を継続し、\n{@link Mode#ABORT}の場合には、{@link EtlJobAbortedException}を送出しジョブを異常終了する。\n<p/>\n許容するエラー数が設定でき、その数を超えた場合には即ジョブをアボートする。\n許容するエラー数の設定は、{@link ValidationStepConfig#getErrorLimit()}より取得する。\nこの値が設定されていない場合やマイナス値の場合は、この機能は無効化される。\n\n**作成者:** Hisaaki Shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "jobContext",
+      "level": 3,
+      "content": "```java\nprivate final JobContext jobContext\n```\n\n{@link JobContext}\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "stepContext",
+      "level": 3,
+      "content": "```java\nprivate final StepContext stepContext\n```\n\n{@link StepContext}\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "stepConfig",
+      "level": 3,
+      "content": "```java\nprivate final ValidationStepConfig stepConfig\n```\n\nETLの設定\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "progressManager",
+      "level": 3,
+      "content": "```java\nprivate final ProgressManager progressManager\n```\n\n進捗状況を管理するBean\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "progressLogOutputInterval",
+      "level": 3,
+      "content": "```java\nString progressLogOutputInterval\n```\n\n進捗ログを出す間隔\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "ValidationBatchlet",
+      "level": 3,
+      "content": "```java\npublic ValidationBatchlet(JobContext jobContext, StepContext stepContext, StepConfig stepConfig, ProgressManager progressManager)\n```\n\nコンストラクタ。\n\n**パラメータ:**\n- `jobContext` - {@link JobContext}\n- `stepContext` - {@link StepContext}\n- `stepConfig` - ステップの設定\n- `progressManager` - 進捗状況を管理するBean\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s10"
+    },
+    {
+      "title": "process",
+      "level": 3,
+      "content": "```java\npublic String process()\n               throws Exception\n```\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "truncateErrorTable",
+      "level": 3,
+      "content": "```java\nprivate static void truncateErrorTable(Class<?> errorTable)\n```\n\nエラーテーブルの内容をクリーニングする。\n<p/>\n本処理では、TRUNCATEのSQL文を構築する際にステートメントを発行しているが、\nRDBMS製品によっては、TRUNCATE文の発行はトランザクション内の最初のステートメントである必要があるため、\nTRUNCATEのSQL文の構築後に明示的にトランザクションをロールバックしている。\n<p/>\nそのため、もしステップリスナ等で事前にデータベースへの更新等を行っている場合、\nその処理は取り消されるため注意すること。\n\n**パラメータ:**\n- `errorTable` - エラーテーブルの内容\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getRecordCountInInputTable",
+      "level": 3,
+      "content": "```java\nprivate long getRecordCountInInputTable()\n```\n\n入力テーブルのレコード数を取得する。\n\n**戻り値:**\nレコード数\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "deleteErrorRecord",
+      "level": 3,
+      "content": "```java\nprivate static void deleteErrorRecord(Class<?> inputTable, Class<?> errorTable)\n```\n\n一時テーブルからエラーのレコード情報を削除する。\n\n**パラメータ:**\n- `inputTable` - 一時テーブル\n- `errorTable` - エラーテーブル\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "buildDeleteSql",
+      "level": 3,
+      "content": "```java\nprivate static String buildDeleteSql(Class<?> inputTable, Class<?> errorTable)\n```\n\nエラーレコードをクリーニングするためのSQL文を構築する。\n\n**パラメータ:**\n- `inputTable` - 一時テーブル\n- `errorTable` - エラーテーブル\n\n**戻り値:**\nSQL文\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "verifyConfig",
+      "level": 3,
+      "content": "```java\nprivate void verifyConfig()\n```\n\n設定値の検証を行う。\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "buildResult",
+      "level": 3,
+      "content": "```java\nprivate String buildResult(ValidationResult validationResult)\n```\n\n結果を構築する。\n\n**パラメータ:**\n- `validationResult` - バリデーション結果\n\n**戻り値:**\n終了ステータス\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "onError",
+      "level": 3,
+      "content": "```java\nprivate static void onError(WorkItem item, Set<ConstraintViolation<WorkItem>> constraintViolations, Class<?> errorTable)\n```\n\nValidationエラー時の処理を行う。\n\n**パラメータ:**\n- `item` - Validationエラーが発生したアイテム\n- `constraintViolations` - Validationのエラー内容\n- `errorTable` - エラーテーブルのエンティティクラス\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "isOverLimit",
+      "level": 3,
+      "content": "```java\nprivate static boolean isOverLimit(ValidationStepConfig stepConfig, ValidationResult validationResult)\n```\n\nエラーの許容数を超えたか否か。\n\n**パラメータ:**\n- `stepConfig` - 設定値\n- `validationResult` - バリデーション結果情報\n\n**戻り値:**\n超えている場合は{@code true}\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "commit",
+      "level": 3,
+      "content": "```java\nprivate static void commit()\n```\n\nコミットを行う。\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "getLogInterval",
+      "level": 3,
+      "content": "```java\nprivate long getLogInterval()\n```\n\n進捗ログの出力間隔を取得する。\n\n**戻り値:**\n進捗ログの出力間隔\n\n---",
+      "id": "s21"
+    }
+  ],
+  "id": "javadoc-nablarch-etl-ValidationBatchlet"
+}

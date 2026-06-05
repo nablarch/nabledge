@@ -1,0 +1,170 @@
+{
+  "title": "class BasicExclusiveControlManager",
+  "content": "**パッケージ:** nablarch.common.exclusivecontrol\n\n**実装されたインタフェース:**\n- ExclusiveControlManager\n\n---\n\n```java\npublic class BasicExclusiveControlManager\nimplements ExclusiveControlManager\n```\n\n{@link ExclusiveControlManager}の基本実装クラス。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "INITIAL_VERSION",
+      "level": 3,
+      "content": "```java\nprivate static final long INITIAL_VERSION\n```\n\nバージョン番号の初期値\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "exclusiveControlTableSchemaAndSqlHolderCache",
+      "level": 3,
+      "content": "```java\nprivate static Map<String,ExclusiveControlTable> exclusiveControlTableSchemaAndSqlHolderCache\n```\n\nSQL文のキャッシュ\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "optimisticLockErrorMessageId",
+      "level": 3,
+      "content": "```java\nprivate String optimisticLockErrorMessageId\n```\n\n楽観ロックエラーメッセージID\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "setOptimisticLockErrorMessageId",
+      "level": 3,
+      "content": "```java\npublic void setOptimisticLockErrorMessageId(String optimisticLockErrorMessageId)\n```\n\n楽観ロックエラーメッセージIDを設定する。\n\n**パラメータ:**\n- `optimisticLockErrorMessageId` - 楽観ロックエラーメッセージID\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getVersion",
+      "level": 3,
+      "content": "```java\npublic Version getVersion(ExclusiveControlContext context)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "checkVersions",
+      "level": 3,
+      "content": "```java\npublic void checkVersions(List<Version> versions)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getOptimisticLockErrorMessage",
+      "level": 3,
+      "content": "```java\nprotected Message getOptimisticLockErrorMessage()\n```\n\n楽観的ロックエラー発生時のメッセージを取得する。\n\n**戻り値:**\n楽観的ロックエラー発生時のメッセージ。メッセージIDが設定されていない場合はnull\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "updateVersionsWithCheck",
+      "level": 3,
+      "content": "```java\npublic void updateVersionsWithCheck(List<Version> versions)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "updateVersion",
+      "level": 3,
+      "content": "```java\npublic void updateVersion(ExclusiveControlContext context)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getInitialVersion",
+      "level": 3,
+      "content": "```java\nprotected Long getInitialVersion()\n```\n\n初期バージョン番号を取得する。\n<p/>\nこのメソッドは、バージョン番号追加時に使用される。\nデフォルト実装では、\"1\"を返す。\n\n**戻り値:**\n初期バージョン番号\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "addVersion",
+      "level": 3,
+      "content": "```java\npublic void addVersion(ExclusiveControlContext context)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "removeVersion",
+      "level": 3,
+      "content": "```java\npublic void removeVersion(ExclusiveControlContext context)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getExclusiveControlTableHolder",
+      "level": 3,
+      "content": "```java\nprotected ExclusiveControlTable getExclusiveControlTableHolder(ExclusiveControlContext context)\n```\n\n排他制御用テーブルに対応した{@link ExclusiveControlTable}を取得する。\n<p/>\n{@link #getExclusiveControlTableHolder(String, String, String...)}に処理を委譲する。\n\n**パラメータ:**\n- `context` - 排他制御コンテキスト\n\n**戻り値:**\n排他制御用テーブルに対応した{@link ExclusiveControlTable}\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getExclusiveControlTableHolder",
+      "level": 3,
+      "content": "```java\nprotected ExclusiveControlTable getExclusiveControlTableHolder(Version version)\n```\n\n排他制御用テーブルに対応した{@link ExclusiveControlTable}を取得する。\n<p/>\n{@link #getExclusiveControlTableHolder(String, String, String...)}に処理を委譲する。\n\n**パラメータ:**\n- `version` - バージョン番号\n\n**戻り値:**\n排他制御用テーブルに対応した{@link ExclusiveControlTable}\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getExclusiveControlTableHolder",
+      "level": 3,
+      "content": "```java\nprotected ExclusiveControlTable getExclusiveControlTableHolder(String tableName, String versionColumnName, String primaryKeyColumnNames)\n```\n\n排他制御用テーブルに対応した{@link ExclusiveControlTable}を取得する。\n<p/>\n一度生成した{@link ExclusiveControlTable}は、メモリ上にキャッシュしている。\nこのため、キャッシュに存在する場合は、キャッシュしているものを返し、\nキャッシュに存在しない場合は、{@link ExclusiveControlTable}を生成し、キャッシュに追加したものを返す。\n{@link ExclusiveControlTable}の生成では、排他制御用テーブルのスキーマ情報からSQL文を作成する。\n\n**パラメータ:**\n- `tableName` - 排他制御用テーブルのテーブル名\n- `versionColumnName` - バージョン番号カラム名\n- `primaryKeyColumnNames` - 主キーのカラム名\n\n**戻り値:**\n排他制御用テーブルに対応した{@link ExclusiveControlTable}\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "createExclusiveControlTableSchemaAndSqlHolder",
+      "level": 3,
+      "content": "```java\nprotected ExclusiveControlTable createExclusiveControlTableSchemaAndSqlHolder(String tableName, String versionColumnName, String primaryKeyColumnNames)\n```\n\n排他制御用テーブルのスキーマ情報から{@link ExclusiveControlTable}を生成する。\n<p/>\n下記のメソッドから各SQL文のテンプレートを取得し、プレースホルダを置換することでSQL文を作成する。\nSQL文を変更したい場合は、下記メソッドをオーバライドして対応する。\n<ul>\n<li>{@link #getSelectSqlTemplate()}</li>\n<li>{@link #getSelectAndCheckSqlTemplate()}</li>\n<li>{@link #getInsertSqlTemplate()}</li>\n<li>{@link #getUpdateSqlTemplate()}</li>\n<li>{@link #getUpdateAndCheckSqlTemplate()}</li>\n<li>{@link #getDeleteSqlTemplate()}</li>\n</ul>\nデフォルト実装で作成されるSQL文は下記のとおり。\n<pre>\n排他制御用テーブルのスキーマ情報を下記に示す。\n\n排他制御用テーブルのテーブル名: USER_TBL\nバージョン番号カラム名    : VERSION\n主キーのカラム名          : USER_ID, PK2, PK3\n\nバージョン番号を取得するSQL文(バージョン番号の更新チェックなし)\n\n    \"SELECT VERSION FROM USER_TBL WHERE USER_ID = :user_id AND PK2 = :pk2 AND PK3 = :pk3\"\n\nバージョン番号を取得するSQL文(バージョン番号の更新チェックあり)\n\n    \"SELECT VERSION FROM USER_TBL WHERE USER_ID = :user_id AND PK2 = :pk2 AND PK3 = :pk3 AND VERSION = :version\"\n\nバージョン番号を追加するSQL文\n\n    \"INSERT INTO USER_TBL (USER_ID, PK2, PK3) VALUES (:user_id, :pk2, :pk3)\"\n\nバージョン番号を更新するSQL文(バージョン番号の更新チェックなし)\n\n    \"UPDATE USER_TBL SET VERSION = (VERSION + 1) WHERE USER_ID = :user_id AND PK2 = :pk2 AND PK3 = :pk3\"\n\nバージョン番号を更新するSQL文(バージョン番号の更新チェックあり)\n\n    \"UPDATE USER_TBL SET VERSION = (VERSION + 1) WHERE USER_ID = :user_id AND PK2 = :pk2 AND PK3 = :pk3 AND VERSION = :version\"\n\nバージョン番号を削除するSQL文\n\n    \"DELETE FROM USER_TBL WHERE WHERE USER_ID = :user_id AND PK2 = :pk2 AND PK3 = :pk3\"\n\n</pre>\n\n**パラメータ:**\n- `tableName` - 排他制御用テーブルのテーブル名\n- `versionColumnName` - バージョン番号カラム名\n- `primaryKeyColumnNames` - 主キーのカラム名\n\n**戻り値:**\n{@link ExclusiveControlTable}\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "getSelectSqlTemplate",
+      "level": 3,
+      "content": "```java\nprotected String getSelectSqlTemplate()\n```\n\nバージョン番号を取得するSQL文(バージョン番号の更新チェックなし)のテンプレートを取得する。\n<pre>\n下記のプレースホルダを使用してテンプレートを作成する。\n\n$VERSION$: バージョン番号カラム名\n$TABLE_NAME$: 排他制御用テーブルのテーブル名\n$PRIMARY_KEYS_CONDITION$: 主キーの条件(例: \"PK1 = :pk1 AND PK2 = :pk2\")\n\nデフォルト実装では、下記のテンプレートを返す。\n\n\"SELECT $VERSION$ FROM $TABLE_NAME$ WHERE $PRIMARY_KEYS_CONDITION$\"\n\n変換例を下記に示す。\n\nテーブル定義\n\n    CREATE TABLE EXCLUSIVE_USER (\n        USER_ID CHAR(6) NOT NULL,\n        VERSION NUMBER(10) NOT NULL,\n        PRIMARY KEY(USER_ID)\n    )\n\nテンプレートから作成されるSQL文\n\n    \"SELECT VERSION FROM EXCLUSIVE_USER WHERE USER_ID = :user_id\"\n\n</pre>\n\n**戻り値:**\nバージョン番号を取得するSQL文(バージョン番号の更新チェックなし)のテンプレート\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getSelectAndCheckSqlTemplate",
+      "level": 3,
+      "content": "```java\nprotected String getSelectAndCheckSqlTemplate()\n```\n\nバージョン番号を取得するSQL文(バージョン番号の更新チェックあり)のテンプレートを取得する。\n<pre>\n下記のプレースホルダを使用してテンプレートを作成する。\n\n$VERSION$: バージョン番号カラム名\n$TABLE_NAME$: 排他制御用テーブルのテーブル名\n$PRIMARY_KEYS_CONDITION$: 主キーの条件(例: \"PK1 = :pk1 AND PK2 = :pk2\")\n$VERSION_CONDITION$: バージョン番号の条件(例: \"VERSION = :version\")\n\nデフォルト実装では、下記のテンプレートを返す。\n\n\"SELECT $VERSION$ FROM $TABLE_NAME$ WHERE $PRIMARY_KEYS_CONDITION$ AND $VERSION_CONDITION$\"\n\n変換例を下記に示す。\n\nテーブル定義\n\n    CREATE TABLE EXCLUSIVE_USER (\n        USER_ID CHAR(6) NOT NULL,\n        VERSION NUMBER(10) NOT NULL,\n        PRIMARY KEY(USER_ID)\n    )\n\nテンプレートから作成されるSQL文\n\n    \"SELECT VERSION FROM EXCLUSIVE_USER WHERE USER_ID = :user_id AND VERSION = :version\"\n\n</pre>\n\n**戻り値:**\nバージョン番号を取得するSQL文(バージョン番号の更新チェックあり)のテンプレート\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "getInsertSqlTemplate",
+      "level": 3,
+      "content": "```java\nprotected String getInsertSqlTemplate()\n```\n\nバージョン番号を追加するSQL文のテンプレートを取得する。\n<pre>\n下記のプレースホルダを使用してテンプレートを作成する。\n\n$TABLE_NAME$: 排他制御用テーブルのテーブル名\n$COLUMNS_AND_VALUES$: INSERT文のカラム名と値(例: \"(PK1, PK2, VERSION) VALUES (:pk1, :pk2, :version)\")\n\nデフォルト実装では、下記のテンプレートを返す。\n\n\"INSERT INTO $TABLE_NAME$ $COLUMNS_AND_VALUES$\"\n\n変換例を下記に示す。\n\nテーブル定義\n\n    CREATE TABLE EXCLUSIVE_USER (\n        USER_ID CHAR(6) NOT NULL,\n        VERSION NUMBER(10) NOT NULL,\n        PRIMARY KEY(USER_ID)\n    )\n\nテンプレートから作成されるSQL文\n\n    \"INSERT INTO EXCLUSIVE_USER (USER_ID, VERSION) VALUES (:user_id, :version)\"\n\n</pre>\n\n**戻り値:**\nバージョン番号を追加するSQL文のテンプレート\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "getUpdateSqlTemplate",
+      "level": 3,
+      "content": "```java\nprotected String getUpdateSqlTemplate()\n```\n\nバージョン番号を更新するSQL文(バージョン番号の更新チェックなし)のテンプレートを取得する。\n<pre>\n下記のプレースホルダを使用してテンプレートを作成する。\n\n$VERSION$: バージョン番号カラム名\n$TABLE_NAME$: 排他制御用テーブルのテーブル名\n$PRIMARY_KEYS_CONDITION$: 主キーの条件(例: \"PK1 = :pk1 AND PK2 = :pk2\")\n\nデフォルト実装では、下記のテンプレートを返す。\n\n\"UPDATE $TABLE_NAME$ SET $VERSION$ = ($VERSION$ + 1) WHERE $PRIMARY_KEYS_CONDITION$\"\n\n変換例を下記に示す。\n\nテーブル定義\n\n    CREATE TABLE EXCLUSIVE_USER (\n        USER_ID CHAR(6) NOT NULL,\n        VERSION NUMBER(10) NOT NULL,\n        PRIMARY KEY(USER_ID)\n    )\n\nテンプレートから作成されるSQL文\n\n    \"UPDATE EXCLUSIVE_USER SET VERSION = (VERSION + 1) WHERE USER_ID = :user_id\"\n\n</pre>\n\n**戻り値:**\nバージョン番号を更新するSQL文(バージョン番号の更新チェックなし)のテンプレート\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "getUpdateAndCheckSqlTemplate",
+      "level": 3,
+      "content": "```java\nprotected String getUpdateAndCheckSqlTemplate()\n```\n\nバージョン番号を更新するSQL文(バージョン番号の更新チェックあり)のテンプレートを取得する。\n<pre>\n下記のプレースホルダを使用してテンプレートを作成する。\n\n$VERSION$: バージョン番号カラム名\n$TABLE_NAME$: 排他制御用テーブルのテーブル名\n$PRIMARY_KEYS_CONDITION$: 主キーの条件(例: \"PK1 = :pk1 AND PK2 = :pk2\")\n$VERSION_CONDITION$: バージョン番号の条件(例: \"VERSION = :version\")\n\nデフォルト実装では、下記のテンプレートを返す。\n\n\"UPDATE $TABLE_NAME$ SET $VERSION$ = ($VERSION$ + 1) WHERE $PRIMARY_KEYS_CONDITION$ AND $VERSION_CONDITION$\"\n\n変換例を下記に示す。\n\nテーブル定義\n\n    CREATE TABLE EXCLUSIVE_USER (\n        USER_ID CHAR(6) NOT NULL,\n        VERSION NUMBER(10) NOT NULL,\n        PRIMARY KEY(USER_ID)\n    )\n\nテンプレートから作成されるSQL文\n\n    \"UPDATE EXCLUSIVE_USER SET VERSION = (VERSION + 1) WHERE USER_ID = :user_id AND VERSION = :version\"\n\n</pre>\n\n**戻り値:**\nバージョン番号を更新するSQL文(バージョン番号の更新チェックあり)のテンプレート\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getDeleteSqlTemplate",
+      "level": 3,
+      "content": "```java\nprotected String getDeleteSqlTemplate()\n```\n\nバージョン番号を削除するSQL文のテンプレートを取得する。\n<pre>\n下記のプレースホルダを使用してテンプレートを作成する。\n\n$TABLE_NAME$: 排他制御用テーブルのテーブル名\n$PRIMARY_KEYS_CONDITION$: 主キーの条件(例: \"PK1 = :pk1 AND PK2 = :pk2\")\n\nデフォルト実装では、下記のテンプレートを返す。\n\n\"DELETE FROM $TABLE_NAME$ WHERE $PRIMARY_KEYS_CONDITION$\"\n\n変換例を下記に示す。\n\nテーブル定義\n\n    CREATE TABLE EXCLUSIVE_USER (\n        USER_ID CHAR(6) NOT NULL,\n        VERSION NUMBER(10) NOT NULL,\n        PRIMARY KEY(USER_ID)\n    )\n\nテンプレートから作成されるSQL文\n\n    \"DELETE FROM EXCLUSIVE_USER WHERE USER_ID = :user_id\"\n\n</pre>\n\n**戻り値:**\nバージョン番号を削除するSQL文のテンプレート\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "getInsertColumnsAndValues",
+      "level": 3,
+      "content": "```java\nprotected String getInsertColumnsAndValues(String[] primaryKeyColumnNames, String versionColumnName)\n```\n\nINSERT文のカラムと値を取得する。\n\n**パラメータ:**\n- `primaryKeyColumnNames` - 主キーカラム名\n- `versionColumnName` - バージョン番号カラム名\n\n**戻り値:**\nINSERT文のカラムと値\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "getPrimaryKeysCondition",
+      "level": 3,
+      "content": "```java\nprotected String getPrimaryKeysCondition(String[] columnNames)\n```\n\n主キー条件を取得する。\n\n**パラメータ:**\n- `columnNames` - カラム名\n\n**戻り値:**\n主キー条件\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "putVersionNo",
+      "level": 3,
+      "content": "```java\nprivate static void putVersionNo(Map<String,Object> data, ExclusiveControlTable exclusiveControlTableHolder, Version version)\n```\n\nバージョン番号をデータオブジェクトに追加する。\n\n**パラメータ:**\n- `data` - データオブジェクト\n- `exclusiveControlTableHolder` - 排他制御テーブルの情報\n- `version` - バージョン情報\n\n---",
+      "id": "s27"
+    }
+  ],
+  "id": "javadoc-nablarch-common-exclusivecontrol-BasicExclusiveControlManager"
+}

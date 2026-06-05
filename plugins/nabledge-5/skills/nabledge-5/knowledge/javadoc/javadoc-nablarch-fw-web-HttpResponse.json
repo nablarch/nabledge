@@ -1,0 +1,446 @@
+{
+  "title": "class HttpResponse",
+  "content": "**パッケージ:** nablarch.fw.web\n\n**実装されたインタフェース:**\n- Result\n\n---\n\n```java\npublic class HttpResponse\nimplements Result\n```\n\nHTTPレスポンスメッセージを生成する際に必要な情報を格納したクラス。\n<p/>\nHTTPクライアントに対するレスポンス処理をフレームワークが行うために必要な\n以下の情報を保持する。\n<ul>\n    <li>レスポンスステータスコード</li>\n    <li>レスポンスヘッダ</li>\n    <li>レスポンスボディ</li>\n</ul>\nレスポンスボディの内容は、以下のいずれかの方式によって保持する。\n<ol>\n    <li>内容をこのオブジェクトに直接保持する方式(バッファ方式)</li>\n    <li>ボディに書き込むコンテンツファイルのパスのみを指定する方式(コンテンツパス方式)</li>\n</ol>\n{@link #setContentPath(String)} の値を設定することで後者の方式がとられるようになる。<br/>\nメモリ消費の観点や、コンテンツファイル管理の容易さから、\n通常はコンテンツパスによる方式を使用すべきである。\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n**作成者:** Masato Inoue  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LS",
+      "level": 3,
+      "content": "```java\npublic static final String LS\n```\n\nHTTP行終端文字(CRLF)\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "ASCII",
+      "level": 3,
+      "content": "```java\nprivate static final Charset ASCII\n```\n\nアスキーエンコーディング\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "UTF_8",
+      "level": 3,
+      "content": "```java\nprivate static final Charset UTF_8\n```\n\nUTF-8エンコーディング\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "CHARSET_ATTR_IN_CONTENT_PATH",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern CHARSET_ATTR_IN_CONTENT_PATH\n```\n\nContent-Typeヘッダのcharsetが設定されたパターン\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "wasBytes",
+      "level": 3,
+      "content": "```java\nprivate boolean wasBytes\n```\n\nHTTPメッセージをbyte配列から作成したかどうか\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "status",
+      "level": 3,
+      "content": "```java\nprivate Status status\n```\n\nHTTPレスポンスステータス\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "httpVersion",
+      "level": 3,
+      "content": "```java\nprivate String httpVersion\n```\n\nHTTPプロトコルバージョン\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "HTTP_VERSION_SYNTAX",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern HTTP_VERSION_SYNTAX\n```\n\nHTTPバージョンの書式\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "headers",
+      "level": 3,
+      "content": "```java\nprivate Map<String,String> headers\n```\n\nHTTPレスポンスヘッダを格納するMap\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "charset",
+      "level": 3,
+      "content": "```java\nprivate Charset charset\n```\n\n文字エンコーディング\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "CONTENT_DISPOSITION",
+      "level": 3,
+      "content": "```java\nprotected static final String CONTENT_DISPOSITION\n```\n\nContent-Dispositionヘッダ。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "cookies",
+      "level": 3,
+      "content": "```java\nprivate final List<Cookie> cookies\n```\n\nCookie文字列を格納する{@link List}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "MAGIC",
+      "level": 3,
+      "content": "```java\nstatic final MimetypesFileTypeMap MAGIC\n```\n\nファイル識別子からコンテンツタイプを判定する。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "body",
+      "level": 3,
+      "content": "```java\nprivate final ResponseBody body\n```\n\nHTTPレスポンスのボディ内容を格納するオブジェクト。\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "HTTP_HEADER_SYNTAX",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern HTTP_HEADER_SYNTAX\n```\n\nHTTPヘッダの書式\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "HTTP_STATUS_CODE_SYNTAX",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern HTTP_STATUS_CODE_SYNTAX\n```\n\nHTTPステータスコードの書式\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s18"
+    },
+    {
+      "title": "HttpResponse",
+      "level": 3,
+      "content": "```java\npublic HttpResponse()\n```\n\n{@code HttpResponse}オブジェクトを生成する。\n<p/>\n以下のHTTPレスポンスメッセージに相当する{@code HttpResponse}オブジェクトを生成する。\n<pre>\n    HTTP/1.1 200 OK\n    Content-Type: text/plain;charset=UTF-8\n</pre>\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "HttpResponse",
+      "level": 3,
+      "content": "```java\npublic HttpResponse(int statusCode)\n```\n\n指定されたステータスコードの{@code HttpResponse}オブジェクトを生成する。\n<p/>\nこのメソッドの処理は以下のソースコードと等価である。\n<code><pre>\n    new HttpResponse().setStatusCode(statusCode);\n</pre></code>\n\n**パラメータ:**\n- `statusCode` - HTTPステータスコード\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "HttpResponse",
+      "level": 3,
+      "content": "```java\npublic HttpResponse(int statusCode, String contentPath)\n```\n\n指定されたHTTPステータスコードとコンテンツパスの{@code HttpResponse}オブジェクトを生成する。\n<p/>\nこのメソッドの処理は以下のソースコードと等価である。\n<code><pre>\n    new HttpResponse().setStatusCode(statusCode)\n                      .setContentPath(contentPath);\n</pre></code>\n\n**パラメータ:**\n- `statusCode` - HTTPステータスコード\n- `contentPath` - コンテンツパス\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "HttpResponse",
+      "level": 3,
+      "content": "```java\npublic HttpResponse(String contentPath)\n```\n\n指定されたコンテンツパスの{@code HttpResponse}オブジェクトを生成する。\n<p/>\nこのメソッドの処理は以下のソースコードと等価である。\n<code><pre>\n    new HttpResponse().setStatusCode(200)\n                      .setContentPath(contentPath);\n</pre></code>\n\n**パラメータ:**\n- `contentPath` - コンテンツパス\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s23"
+    },
+    {
+      "title": "parse",
+      "level": 3,
+      "content": "```java\npublic static HttpResponse parse(String message)\n```\n\nHTTPレスポンスメッセージの内容から{@code HttpResponse}オブジェクトを生成する。\n\n**パラメータ:**\n- `message` - HTTPレスポンスメッセージ\n\n**戻り値:**\nHTTPレスポンスメッセージの内容に対応した{@code HttpResponse}オブジェクト\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "parse",
+      "level": 3,
+      "content": "```java\npublic static HttpResponse parse(byte[] message)\n```\n\nHTTPレスポンスメッセージの内容から{@code HttpResponse}オブジェクトを生成する。\n\n**パラメータ:**\n- `message` - HTTPレスポンスメッセージ\n\n**戻り値:**\nHTTPレスポンスメッセージの内容に対応した{@code HttpResponse}オブジェクト\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "getStatusCode",
+      "level": 3,
+      "content": "```java\npublic int getStatusCode()\n```\n\nHTTPレスポンスのステータスコードの値を返す。\n<p/>\nHTTPレスポンスがリダイレクトである場合は{@code 302}を返す。\n\n**戻り値:**\nHTTPステータスコード\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "isRedirectStatusCode",
+      "level": 3,
+      "content": "```java\nprivate boolean isRedirectStatusCode()\n```\n\n{@link #status}がリダイレクトを示すステータスコードかどうか。\n\n**戻り値:**\nリダイレクトを示すステータスコード(301, 302, 303, 307)の場合はtrue\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "setStatusCode",
+      "level": 3,
+      "content": "```java\npublic HttpResponse setStatusCode(int code)\n```\n\nHTTPレスポンスのステータスコードを設定する。\n<p/>\nデフォルトのステータスコードは{@code 200}である。\n\n**パラメータ:**\n- `code` - HTTPステータスコード\n\n**戻り値:**\n本オブジェクト\n\n**例外:**\n- `IllegalArgumentException` - 指定されたステータスコードが無効な場合\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "getReasonPhrase",
+      "level": 3,
+      "content": "```java\npublic String getReasonPhrase()\n```\n\nHTTPレスポンスのステータスフレーズを返す。\n\n**戻り値:**\nステータスフレーズ\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "getMessage",
+      "level": 3,
+      "content": "```java\npublic String getMessage()\n```\n\n処理結果に対する詳細情報を返す。\n<p/>\n返される詳細情報は以下の通りである。\n<pre>\n  (ステータスコード): (ステータスフレーズ)\n</pre>\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "getHttpVersion",
+      "level": 3,
+      "content": "```java\npublic String getHttpVersion()\n```\n\nHTTPバージョンを表す文字列を返す。\n\n**戻り値:**\nHTTPバージョン名\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "setHttpVersion",
+      "level": 3,
+      "content": "```java\npublic HttpResponse setHttpVersion(String httpVersion)\n```\n\nHTTPバージョンを設定する。\n<p/>\nデフォルト値は \"HTTP/1.1\" である。\n\n**パラメータ:**\n- `httpVersion` - HTTPバージョン名\n\n**戻り値:**\n本オブジェクト\n\n**例外:**\n- `IllegalArgumentException` - HTTPバージョンの書式が無効な場合\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "getHeaderMap",
+      "level": 3,
+      "content": "```java\npublic Map<String,String> getHeaderMap()\n```\n\nHTTPレスポンスヘッダを格納するMapを返す。\n<p/>\nこのMapに対する変更はレスポンスヘッダの内容に直接反映される。\n\n**戻り値:**\nHTTPレスポンスヘッダを格納するMap\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "getHeader",
+      "level": 3,
+      "content": "```java\npublic String getHeader(String headerName)\n```\n\nHTTPレスポンスヘッダの値を返す。\n\n**パラメータ:**\n- `headerName` - ヘッダー名\n\n**戻り値:**\nヘッダーの値\n\n---",
+      "id": "s34"
+    },
+    {
+      "title": "setHeader",
+      "level": 3,
+      "content": "```java\npublic void setHeader(String headerName, String value)\n```\n\nHTTPレスポンスヘッダの値を設定する。\n\n**パラメータ:**\n- `headerName` - ヘッダー名\n- `value` - ヘッダーの値\n\n---",
+      "id": "s35"
+    },
+    {
+      "title": "getContentType",
+      "level": 3,
+      "content": "```java\npublic String getContentType()\n```\n\nContent-Typeの値を取得する。\n<p/>\nContent-Typeが設定されている場合は、以下のソースコードと等価である。\n<code><pre>\n  this.headers().get(\"Content-Type\")\n</pre></code>\n<p/>\n\nContent-Typeが設定されていない場合は、以下の処理を行う。<br />\n・{@link WebConfig#getAddDefaultContentTypeForNoBodyResponse()} がtrueの場合、\nまたはボディが存在する場合に\"text/plain;charset=UTF-8\"を設定する。<br />\n\n**戻り値:**\nContents-Typeの値\n\n---",
+      "id": "s36"
+    },
+    {
+      "title": "needsDefaultContentType",
+      "level": 3,
+      "content": "```java\nprivate boolean needsDefaultContentType()\n```\n\nContent-Type設定されていない場合に、デフォルトのContent-Typeを付与するべきか否かを判定する。\n\n**戻り値:**\nデフォルトのContent-Typeを付与すべき時はtrue。\n\n---",
+      "id": "s37"
+    },
+    {
+      "title": "getCharset",
+      "level": 3,
+      "content": "```java\npublic Charset getCharset()\n```\n\nContent-Typeに指定された文字エンコーディングを取得する。\n\n**戻り値:**\n文字エンコーディング\n\n---",
+      "id": "s38"
+    },
+    {
+      "title": "setContentType",
+      "level": 3,
+      "content": "```java\npublic HttpResponse setContentType(String contentType)\n```\n\nContent-Typeを設定する。\n<p/>\nContent-Typeのデフォルト値は、\"text/plain;charset=UTF-8\" である。<br/>\nボディに書き込む内容をコンテンツパスで指定する場合、\nContent-Typeはコンテンツパスの拡張子から自動的に決定される為、\nこのメソッドを明示的に使用する必要は無い。\n\n**パラメータ:**\n- `contentType` - Content-Typeの値\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s39"
+    },
+    {
+      "title": "getLocation",
+      "level": 3,
+      "content": "```java\npublic String getLocation()\n```\n\nLocationの値を取得する。\n<p/>\nこのメソッドの処理は以下のソースコードと等価である。\n<code><pre>\n  this.headers().get(\"Location\")\n</pre></code>\n\n**戻り値:**\nLocationの値\n\n---",
+      "id": "s40"
+    },
+    {
+      "title": "setLocation",
+      "level": 3,
+      "content": "```java\npublic HttpResponse setLocation(String location)\n```\n\nLocationの値を設定する。\n<p/>\nリダイレクト時のHTTPクライアントの遷移先URIを設定する。<br/>\nデフォルトでは設定されない。\n\n**パラメータ:**\n- `location` - 遷移先URI\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s41"
+    },
+    {
+      "title": "setContentDisposition",
+      "level": 3,
+      "content": "```java\npublic HttpResponse setContentDisposition(String fileName)\n```\n\nContent-Dispositionの値を設定する。\n<p/>\nContent-Typeが明示的に設定されていない場合、\n設定されたファイル名の拡張子に応じたContent-Typeを自動的に設定する。<br/>\n本メソッドではattachment属性を指定するため、ダウンロード時にダイアログが必ず表示される。\n\n**パラメータ:**\n- `fileName` - ファイル名\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s42"
+    },
+    {
+      "title": "setContentDisposition",
+      "level": 3,
+      "content": "```java\npublic HttpResponse setContentDisposition(String fileName, boolean inline)\n```\n\nContent-Dispositionの値を設定する。\n<p/>\nContent-Typeが明示的に設定されていない場合、\n設定されたファイル名の拡張子に応じたContent-Typeを自動的に設定する。<br/>\n{@code inline}に{@code true}を指定した場合、ダウンロードされたファイルは\nクライアントアプリで自動的に開かれる。<br/>\nただし、実際にそのような挙動となるかどうかは、クライアントの設定\nおよびOSのセキュリティ設定に依存する。\n\n**パラメータ:**\n- `fileName` - ファイル名\n- `inline` - インライン表示する場合は{@code true}\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s43"
+    },
+    {
+      "title": "getContentDisposition",
+      "level": 3,
+      "content": "```java\npublic String getContentDisposition()\n```\n\nContent-Dispositionの値を取得する。\n\n**戻り値:**\nContent-Dispositionの値\n\n---",
+      "id": "s44"
+    },
+    {
+      "title": "getTransferEncoding",
+      "level": 3,
+      "content": "```java\npublic String getTransferEncoding()\n```\n\nTransfer-Encodingの値を取得する。\n<p/>\nこのメソッドの処理は以下のソースコードと等価である。\n<pre>\n  this.headers().get(\"Transfer-Encoding\")\n</pre>\n\n**戻り値:**\nTransfer-Encodingの値\n\n---",
+      "id": "s45"
+    },
+    {
+      "title": "setTransferEncoding",
+      "level": 3,
+      "content": "```java\npublic HttpResponse setTransferEncoding(String encoding)\n```\n\nTransfer-Encodingの値を設定する。\n<p/>\nこのヘッダの値が\"chunked\"であった場合、\nコンテンツボディはchunked-encodingに従って読み書きされる。<br/>\nデフォルトではこのヘッダは設定されない。\n\n**パラメータ:**\n- `encoding` - Transfer-Encodingの値\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s46"
+    },
+    {
+      "title": "getCookie",
+      "level": 3,
+      "content": "```java\npublic HttpCookie getCookie()\n```\n\nサーバ側から送信されたクッキー情報のうち先頭のクッキーをを取得する。\n\n**戻り値:**\nサーバ側から送信されたクッキー情報のうち先頭のクッキー。クッキーが存在しない場合は<code>null</code>\n\n---",
+      "id": "s47"
+    },
+    {
+      "title": "getCookieList",
+      "level": 3,
+      "content": "```java\npublic List<Cookie> getCookieList()\n```\n\nサーバ側から送信されたクッキー情報のリストを取得する。\n\n**戻り値:**\nクッキー情報のリスト\n\n---",
+      "id": "s48"
+    },
+    {
+      "title": "getHttpCookies",
+      "level": 3,
+      "content": "```java\npublic List<HttpCookie> getHttpCookies()\n```\n\nサーバ側から送信されたクッキーのリストを{@link HttpCookie}として取得する。\n{@link HttpCookie}は同じ属性を持つ複数のクッキーを保持する仕様であるため、\nクッキーの属性が各々異なることを考慮し、リストとして返却する。\n\n**戻り値:**\nクッキー ({@link HttpCookie})のリスト\n\n---",
+      "id": "s49"
+    },
+    {
+      "title": "setCookie",
+      "level": 3,
+      "content": "```java\npublic HttpResponse setCookie(HttpCookie cookie)\n```\n\nサーバ側から送信されたクッキー情報を設定する。\n\n**パラメータ:**\n- `cookie` - クッキー情報オブジェクト\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s50"
+    },
+    {
+      "title": "addCookie",
+      "level": 3,
+      "content": "```java\npublic HttpResponse addCookie(HttpCookie cookie)\n```\n\nサーバ側から送信されたクッキー情報を設定する。\n\n**パラメータ:**\n- `cookie` - クッキー情報オブジェクト\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s51"
+    },
+    {
+      "title": "setContentPath",
+      "level": 3,
+      "content": "```java\npublic HttpResponse setContentPath(String path)\n```\n\nコンテンツパスを設定する。\n<p/>\n本処理は{@link #setContentPath(ResourceLocator)}に委譲する。\n\n**パラメータ:**\n- `path` - コンテンツパス\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s52"
+    },
+    {
+      "title": "setContentPath",
+      "level": 3,
+      "content": "```java\npublic HttpResponse setContentPath(ResourceLocator resource)\n```\n\nコンテンツパスを設定する。\n<p/>\n指定した{@link ResourceLocator}オブジェクトが{@code null}でない場合は、\nリソース名からContent-Typeを自動的に設定した後、コンテンツパスを設定する。<br/>\n{@code ResourceLocator}オブジェクトが{@code null}の場合は、コンテンツパスのみ設定する。\n\n**パラメータ:**\n- `resource` - コンテンツパス\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s53"
+    },
+    {
+      "title": "getContentPath",
+      "level": 3,
+      "content": "```java\npublic ResourceLocator getContentPath()\n```\n\nコンテンツパスを取得する。\n<p/>\nHTTPレスポンスボディに書き込むコンテンツパスを取得する。\n\n**戻り値:**\nコンテンツパス\n\n---",
+      "id": "s54"
+    },
+    {
+      "title": "getContentLength",
+      "level": 3,
+      "content": "```java\npublic String getContentLength()\n```\n\nContent-Lengthの値を取得する。\n<p/>\nHTTPレスポンスボディの内容がこのオブジェクト自体に保持されている場合に限り、\nそのバイト数を返す。<br/>\nそれ以外は{@code null}を返す。\n\n**戻り値:**\nContent-Lengthの値\n\n---",
+      "id": "s55"
+    },
+    {
+      "title": "cleanup",
+      "level": 3,
+      "content": "```java\npublic HttpResponse cleanup()\n```\n\nリソースを開放する。\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s56"
+    },
+    {
+      "title": "isBodyEmpty",
+      "level": 3,
+      "content": "```java\npublic boolean isBodyEmpty()\n```\n\nHTTPレスポンスボディの内容が設定されていなければ{@code true}を返す。\n\n**戻り値:**\nボディの内容が設定されていなければ{@code true}\n\n---",
+      "id": "s57"
+    },
+    {
+      "title": "getBodyString",
+      "level": 3,
+      "content": "```java\npublic String getBodyString()\n```\n\nHTTPレスポンスボディの内容を表す文字列を返す。\n\n**戻り値:**\nボディの内容を表す文字列を返す\n\n---",
+      "id": "s58"
+    },
+    {
+      "title": "getBodyStream",
+      "level": 3,
+      "content": "```java\npublic InputStream getBodyStream()\n```\n\nHTTPレスポンスボディの内容を保持するストリームを取得する。\n\n**戻り値:**\nHTTPレスポンスボディの内容を保持するストリーム\n\n---",
+      "id": "s59"
+    },
+    {
+      "title": "setBodyStream",
+      "level": 3,
+      "content": "```java\npublic HttpResponse setBodyStream(InputStream bodyStream)\n```\n\nHTTPレスポンスボディの内容を保持するストリームを設定する。\n\n**パラメータ:**\n- `bodyStream` - HTTPレスポンスボディの内容を保持するストリーム\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s60"
+    },
+    {
+      "title": "write",
+      "level": 3,
+      "content": "```java\npublic HttpResponse write(CharSequence text)\n                   throws HttpErrorResponse\n```\n\nHTTPレスポンスボディに文字列を書き込む。\n<p/>\nこのメソッドで書き込まれたデータは、本オブジェクトが保持する\nバッファに保持され、クライアントソケットに対する書き込みは一切発生しない。\n(このライタに対するflush()は単に無視される。)<br/>\n実際にソケットに対するレスポンス処理が行われるのは、\n{@link nablarch.fw.web.handler.HttpResponseHandler}にレスポンスオブジェクトが戻された後である。\nまた、このオブジェクトにコンテンツパスが設定されている場合、\nこのライタに書き込まれた内容は単に無視される。\n\n**パラメータ:**\n- `text` - 書き込む文字列\n\n**戻り値:**\n本オブジェクト\n\n**例外:**\n- `HttpErrorResponse` - バッファの上限を越えてデータが書き込まれた場合\n\n---",
+      "id": "s61"
+    },
+    {
+      "title": "write",
+      "level": 3,
+      "content": "```java\npublic HttpResponse write(byte[] bytes)\n                   throws HttpErrorResponse\n```\n\nHTTPレスポンスボディにバイト配列を書き込む。\n<p/>\nこのメソッドで書き込まれたデータは、本オブジェクトが保持する\nバッファに保持され、クライアントソケットに対する書き込みは一切発生しない。\n(このライタに対するflush()は単に無視される。)<br/>\n実際にソケットに対するレスポンス処理が行われるのは、\n{@link nablarch.fw.web.handler.HttpResponseHandler}にレスポンスオブジェクトが戻された後である。\nまた、このオブジェクトにコンテンツパスが設定されている場合、\nこのライタに書き込まれた内容は単に無視される。\n\n**パラメータ:**\n- `bytes` - 書き込むバイト配列\n\n**戻り値:**\n本オブジェクト\n\n**例外:**\n- `HttpErrorResponse` - バッファの上限を越えてデータが書き込まれた場合\n\n---",
+      "id": "s62"
+    },
+    {
+      "title": "write",
+      "level": 3,
+      "content": "```java\npublic HttpResponse write(ByteBuffer bytes)\n                   throws HttpErrorResponse\n```\n\nHTTPレスポンスボディにバイト配列を書き込む。\n<p/>\nこのメソッドで書き込まれたデータは、本オブジェクトが保持する\nバッファに保持され、クライアントソケットに対する書き込みは一切発生しない。\n(このライタに対するflush()は単に無視される。)<br/>\n実際にソケットに対するレスポンス処理が行われるのは、\n{@link nablarch.fw.web.handler.HttpResponseHandler}にレスポンスオブジェクトが戻された後である。\nまた、このオブジェクトにコンテンツパスが設定されている場合、\nこのライタに書き込まれた内容は単に無視される。\n\n**パラメータ:**\n- `bytes` - 書き込むバイト列を格納したバッファ\n\n**戻り値:**\n本オブジェクト\n\n**例外:**\n- `HttpErrorResponse` - バッファの上限を越えてデータが書き込まれた場合\n\n---",
+      "id": "s63"
+    },
+    {
+      "title": "toString",
+      "level": 3,
+      "content": "```java\npublic String toString()\n```\n\nオブジェクトの内容と等価なHTTPレスポンスメッセージを返す。\n\n---",
+      "id": "s64"
+    },
+    {
+      "title": "parseMessage",
+      "level": 3,
+      "content": "```java\nprivate void parseMessage(Reader source)\n```\n\nHTTPレスポンスメッセージを読み込んでHttpResponseオブジェクトを生成する。\n\n**パラメータ:**\n- `source` - HTTPレスポンスメッセージ\n\n---",
+      "id": "s65"
+    },
+    {
+      "title": "scanResponseBody",
+      "level": 3,
+      "content": "```java\nprivate void scanResponseBody(Scanner message)\n```\n\nHTTPレスポンスボディの内容を読み込む。\n\n**パラメータ:**\n- `message` - HTTPレスポンスメッセージ\n\n---",
+      "id": "s66"
+    },
+    {
+      "title": "getBytes",
+      "level": 3,
+      "content": "```java\nprivate byte[] getBytes(CharSequence chars, Charset charset)\n```\n\n文字シーケンスをバイト配列に変換し、取得する。\n\n**パラメータ:**\n- `chars` - 文字シーケンス\n- `charset` - 文字シーケンスの文字コード\n\n**戻り値:**\n文字シーケンスを変換したバイト配列\n\n---",
+      "id": "s67"
+    },
+    {
+      "title": "scanChunkedBody",
+      "level": 3,
+      "content": "```java\nprivate void scanChunkedBody(Scanner message)\n```\n\n\"chunked\" Transfer-Encodingによる\nHTTPレスポンスボディの内容を読み込む。\n\n**パラメータ:**\n- `message` - HTTPレスポンスメッセージ\n\n---",
+      "id": "s68"
+    },
+    {
+      "title": "scanHttpResponseHeader",
+      "level": 3,
+      "content": "```java\nprivate void scanHttpResponseHeader(String header)\n```\n\nHTTPレスポンスヘッダの内容を読み込む。\n\n**パラメータ:**\n- `header` - HTTPレスポンスメッセージ\n\n---",
+      "id": "s69"
+    },
+    {
+      "title": "scanHttpVersion",
+      "level": 3,
+      "content": "```java\nprivate void scanHttpVersion(Scanner scanner)\n```\n\nHTTPバージョンを読み込む。\n\n**パラメータ:**\n- `scanner` - HTTPレスポンスメッセージ\n\n---",
+      "id": "s70"
+    },
+    {
+      "title": "scanHttpStatus",
+      "level": 3,
+      "content": "```java\nprivate void scanHttpStatus(Scanner scanner)\n```\n\nHTTPレスポンスステータスを読み込む。\n\n**パラメータ:**\n- `scanner` - HTTPレスポンスメッセージ\n\n---",
+      "id": "s71"
+    },
+    {
+      "title": "parseError",
+      "level": 3,
+      "content": "```java\nprivate void parseError(Object obj)\n```\n\nパース処理中のエラーを送出する。\n\n**パラメータ:**\n- `obj` - エラー情報オブジェクト\n\n---",
+      "id": "s72"
+    },
+    {
+      "title": "isSuccess",
+      "level": 3,
+      "content": "```java\npublic boolean isSuccess()\n```\n\n処理が正常終了したかどうかを返す。\n<p/>\nHTTPステータスコードが400未満であれば正常終了とみなす。\n\n---",
+      "id": "s73"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-HttpResponse"
+}

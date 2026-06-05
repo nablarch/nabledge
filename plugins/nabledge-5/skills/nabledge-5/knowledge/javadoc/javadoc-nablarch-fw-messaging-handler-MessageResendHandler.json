@@ -1,0 +1,104 @@
+{
+  "title": "class MessageResendHandler",
+  "content": "**パッケージ:** nablarch.fw.messaging.handler\n\n**実装されたインタフェース:**\n- Handler<RequestMessage,ResponseMessage>\n\n---\n\n```java\npublic class MessageResendHandler\nimplements Handler<RequestMessage,ResponseMessage>\n```\n\n応答電文の再送処理制御を行うハンドラ。\n<p/>\n一般に、外部システムに対する要求電文がタイムアウトした場合、その補償電文として\n再送要求電文、もしくは、取り消し電文を送信することになる。\n本ハンドラでは、このうち再送要求電文に対する制御をフレームワークレベルで実装している。\n<p/>\n※ 本機能では、初回電文/再送要求電文の判定をフレームワーク制御ヘッダ中の\n   再送要求フラグの値を用いて行う。\n   このため、フレームワーク制御ヘッダが定義されていない電文に対しては\n   再送制御を行うことができない。\n\n<div><b>再送制御</b></div>\n<hr/>\n本システムに対する処理要求メッセージ(初回電文)が、転送経路上のネットワークエラーや\n遅延により外部システム側でタイムアウトし、その補償電文として再送要求電文が送信されたとする。\nこの際、再送要求電文を受信した時点でのシステムの状態は、以下の4つに分類できる。\n\n<pre>\n1. ネットワークエラーもしくは遅延により、初回電文が未受信。\n2. 初回電文を処理中。\n3. 初回電文に対する業務処理は正常終了(トランザクションをコミット)したが、\n   ネットワークエラーもしくは遅延により応答電文が未達。\n4. 初回電文に対する業務処理が異常終了(トランザクションをロールバック)し、\n   ネットワークエラーもしくは遅延によりエラー応答電文が未達。\n</pre>\n\nそれぞれのケースについて、本システムの挙動は以下のようになる。\n\n<pre>\n1. 初回電文が未受信\n   再送要求電文を初回電文として処理する。\n   この場合、再送要求電文を処理中に、遅延していた初回電文を並行実行する可能性があるが\n   先にコミットされたトランザクションのみ正常終了し、それ以外はロールバックする。\n   また、ロールバックされた要求の応答として、先に正常終了した電文の応答を再送する。\n\n2. 本システムで初回電文を処理中\n   再送要求電文も初回電文として処理し、先に完了したトランザクションをコミットし、\n   もう一方をロールバックする。\n   (1.と同じ扱い。)\n\n3. 業務処理は正常終了したが応答電文が未達\n   再送用電文テーブルから当該メッセージIDの電文データを取得し、応答電文として送信する。\n   業務処理は実行されない。\n\n4. 業務処理が正常終了したがエラー応答電文が未達\n   再送要求電文を初回電文として処理する。\n</pre>\n\n本機能は大きく以下の2つの機能によって構成されている。\n\n<pre>\n再送応答機能:\n   接続先システムから再送要求電文が送信された場合に、\n   後述の送信済電文保存機能が保持する過去の応答電文の内容を再送信する機能。\n\n送信済電文保存機能:\n   ローカルキューに対するPUT命令が完了したメッセージの内容をデータベース上の\n   送信済電文テーブルに保存する機能。\n   送信済み電文の内容は業務トランザクションとともにコミットされる。\n   従って、業務処理がエラー終了した場合には再送用電文は残らない。\n\n   再送電文管理テーブルのスキーマ構造については {@link SentMessageTableSchema}\n   を参照すること。\n</pre>\n\n**関連項目:** SentMessageTableSchema  \n**関連項目:** FwHeader#isResendingRequest()  \n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "schema",
+      "level": 3,
+      "content": "```java\nprivate SentMessageTableSchema schema\n```\n\n再送電文管理テーブルスキーマ定義\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "findAlreadySentMessageQuery",
+      "level": 3,
+      "content": "```java\nprivate String findAlreadySentMessageQuery\n```\n\n再送対象の電文を検索する際に使用するSQLクエリー\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "insertNewSentMessageDml",
+      "level": 3,
+      "content": "```java\nprivate String insertNewSentMessageDml\n```\n\n再送電文管理テーブルに送信電文を新規登録するSQL文\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "fwHeaderDefinition",
+      "level": 3,
+      "content": "```java\nprivate FwHeaderDefinition fwHeaderDefinition\n```\n\n応答電文中のフレームワークヘッダ定義\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "MessageResendHandler",
+      "level": 3,
+      "content": "```java\npublic MessageResendHandler()\n```\n\nデフォルトコンストラクタ。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic synchronized void initialize()\n```\n\n本ハンドラで使用するSQL文を構築する。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage handle(RequestMessage request, ExecutionContext context)\n```\n\n{@inheritDoc}\n本ハンドラの実装では、再送電文管理テーブルを確認し、当該の受信電文に対する\n応答電文が登録されているかどうかを確認する。\n応答電文が登録されていればそれを返却する。\n登録されていない場合は、要求電文を初回電文として処理し、その応答電文を返す。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "saveReply",
+      "level": 3,
+      "content": "```java\npublic void saveReply(RequestMessage request, ResponseMessage response)\n```\n\n応答電文を再送電文テーブルに格納する。\n\n**パラメータ:**\n- `request` - 要求電文オブジェクト\n- `response` - 応答電文オブジェクト\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "insertNewSentMessage",
+      "level": 3,
+      "content": "```java\npublic void insertNewSentMessage(Map<String,Object> values)\n```\n\n再送電文管理テーブルに送信電文を新規登録する。\n\n**パラメータ:**\n- `values` - 登録するレコード\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getAlreadySentReply",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage getAlreadySentReply(RequestMessage request)\n```\n\n再送電文テーブルの内容を確認し、メッセージIDが一致する電文があれば\nその内容をもとに応答電文を作成して返す\n該当する電文が存在しなければnullを返す。\n\n**パラメータ:**\n- `request` - 要求電文オブジェクト\n\n**戻り値:**\n再送用応答電文オブジェクト。\n         メッセージIDが一致するものが存在しない場合はnull\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "findAlreadySentMessage",
+      "level": 3,
+      "content": "```java\npublic SqlRow findAlreadySentMessage(String messageId, String requestId)\n```\n\n再送対象の電文レコードを検索し、当該の電文のレコードを返却する。\nレコードが存在しなかった場合はnullを返却する。\n\n**パラメータ:**\n- `messageId` - 初回電文のメッセージID (=再送要求電文の関連ID)\n- `requestId` - 要求電文のリクエストID\n\n**戻り値:**\n当該電文のレコード\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setSentMessageTableSchema",
+      "level": 3,
+      "content": "```java\npublic MessageResendHandler setSentMessageTableSchema(SentMessageTableSchema schema)\n```\n\n再送電文管理テーブルのスキーマ定義を設定する。\n\n**パラメータ:**\n- `schema` - スキーマ定義\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setFwHeaderDefinition",
+      "level": 3,
+      "content": "```java\npublic MessageResendHandler setFwHeaderDefinition(FwHeaderDefinition def)\n```\n\n応答電文中のフレームワーク制御ヘッダ定義を設定する。\n\n**パラメータ:**\n- `def` - フレームワーク制御ヘッダ定義\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s16"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-handler-MessageResendHandler"
+}

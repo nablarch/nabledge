@@ -1,0 +1,86 @@
+{
+  "title": "class Main",
+  "content": "**パッケージ:** nablarch.fw.launcher\n\n**継承階層:**\n```\njava.lang.Object\n  └─ HandlerQueueManager<Main>\n      └─ nablarch.fw.launcher.Main\n```\n\n**実装されたインタフェース:**\n- Handler<CommandLine,Integer>\n\n---\n\n```java\npublic class Main\nextends HandlerQueueManager<Main>\nimplements Handler<CommandLine,Integer>\n```\n\n本フレームワークの起動シーケンスの起点となるクラス。\n<p/>\n本クラスをjavaコマンドから直接起動することで、以下の処理を行う。\n<pre>\n1. コマンドライン引数のパース。\n2. コンポーネント設定ファイル（xml)の読み込みとハンドラー構成の初期化\n3. ハンドラーキューに対する後続処理の委譲。\n4. 終了/エラー処理。\n   (結果コードはハンドラキューの戻り値、または送出された例外をもとに設定する。)\n</pre>\n<p/>\n以下は、本クラスの使用例である。\n(起動オプションに設定した値は、{@link CommandLine}オブジェクトから取得できる。)\n<p/>\n<b>起動コマンドの例</b>\n<pre/>\njava                                                 \\\n    -server                                          \\\n    -Xmx128m                                         \\\n    -Dsample=100                                     \\\nnablarch.fw.launcher.Main                            \\\n    -diConfig    file:./batch-config.xml             \\\n    -requestPath admin.DataUnloadBatchAction/BC0012  \\\n    -userId      testUser                            \\\n    -namedParam  value                               \\\n    value1\n</pre>\n<b>起動コマンドの説明</b><br/>\n<pre>\n\n<b>アプリケーション引数（JVMへの設定である起動コマンドの説明は行わない）</b>\n\n          -Dsample      コンポーネント設定ファイル中の埋め込みパラメータの値。例では、${sample}に100が設定される。\n\n<b>Mainクラスへの引数</b>\n\n  (必須)  -diConfig     コンポーネント設定ファイルのファイルパス。クラスパス配下のxmlファイルを指定。\n  (必須)  -requestPath  実行対象のアクションハンドラクラス名/リクエストIDを指定。\n  (必須)  -userId       プロセスの実行権限ユーザID。セッション変数とスレッドコンテキストに保持される。\n          -namedParam   名前付きパラメータ。{@link CommandLine}に使用される属性値を指定。\n          value1        無名パラメータ。{@link CommandLine}に使用される属性値を指定。\n</pre>\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "handlerQueue",
+      "level": 3,
+      "content": "```java\nprivate List<Handler> handlerQueue\n```\n\nハンドラ({@link Handler})キュー\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "UNKNOWN_ERROR",
+      "level": 3,
+      "content": "```java\nprivate static final int UNKNOWN_ERROR\n```\n\n既定のエラーコード\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "getHandlerQueue",
+      "level": 3,
+      "content": "```java\npublic List<Handler> getHandlerQueue()\n```\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "main",
+      "level": 3,
+      "content": "```java\npublic static void main(String args)\n```\n\nメインメソッド。\n<p/>\n本メソッドでは、以下の内容をログ出力する。\n<ul>\n<li>起動時</li>\n起動オプションや、起動引数(詳細は、{@link LauncherLogUtil#getStartLogMsg(CommandLine)}を参照)\n<li>終了時</li>\n終了コードや処理時間(詳細は、{@link LauncherLogUtil#getEndLogMsg(int, long)}を参照})\n</ul>\n及び処理終了時\n\n**パラメータ:**\n- `args` - コマンドライン引数\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Integer handle(CommandLine commandLine, ExecutionContext context)\n```\n\n{@inheritDoc}\nこの実装では、ハンドラキューに後続処理を委譲し、その処理結果から\nこのプロセスの終了コードを算出して返す。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "execute",
+      "level": 3,
+      "content": "```java\npublic static int execute(CommandLine commandLine)\n```\n\nバッチを実行する。\n<p/>\n{@link #handle(CommandLine, ExecutionContext)}に処理を委譲して結果を返す。\n\n**パラメータ:**\n- `commandLine` - 起動オプション\n\n**戻り値:**\n終了コード\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setupExecutionContext",
+      "level": 3,
+      "content": "```java\nprotected Main setupExecutionContext(CommandLine commandLine, ExecutionContext context)\n```\n\nバッチコントローラ起動前準備を行う。<br/>\n実行コンテキストを生成し、以下の処理を行う。\n<ul>\n    <li>コンポーネント設定ファイルに定義したハンドラキューの設定</li>\n    <li>{@link DataReader}の設定</li>\n    <li>{@link DataReaderFactory}の設定</li>\n    <li>ディスパッチハンドラの設定</li>\n    <li>セッションスコープにプロセスの実行権限ユーザIDと、起動オプションのマップを設定</li>\n</ul>\n\n**パラメータ:**\n- `commandLine` - 起動オプション\n- `context` - 実行コンテキスト\n\n**戻り値:**\n初期化されたコントローラ\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setUpSystemRepository",
+      "level": 3,
+      "content": "```java\nprotected void setUpSystemRepository(String configFilePath)\n```\n\nコンポーネント設定ファイルの設定にしたがって、システムリポジトリの初期化を行う。\n\n**パラメータ:**\n- `configFilePath` - コンポーネント設定ファイルのパス\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "initializeLog",
+      "level": 3,
+      "content": "```java\nprotected void initializeLog()\n```\n\n各種ログの初期化を行う。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "outputAppSettingsLog",
+      "level": 3,
+      "content": "```java\nprotected void outputAppSettingsLog()\n```\n\nアプリケーション設定のログを出力する。\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-launcher-Main"
+}

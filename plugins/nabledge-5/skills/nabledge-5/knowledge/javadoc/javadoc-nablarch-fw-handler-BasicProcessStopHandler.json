@@ -1,0 +1,128 @@
+{
+  "title": "class BasicProcessStopHandler",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**実装されたインタフェース:**\n- ProcessStopHandler\n- Initializable\n\n---\n\n```java\npublic class BasicProcessStopHandler\nimplements ProcessStopHandler, Initializable\n```\n\n処理中のプロセスを停止するためのハンドラ。\n<p/>\n本ハンドラは、{@link LoopHandler}や{@link ProcessResidentHandler}の後続ハンドラに設定することにより、\n処理中に安全にプロセスを停止することが可能となる。\n<p/>\nなお、プロセスを停止するために{@link ProcessStop}を送出するため、障害通知ログが出力されプロセスは異常終了する。\n異常終了する際に終了コードは、{@link #setExitCode(int)}によって設定することが出来る。\n終了コードの設定を省略した場合のデフォルト動作として終了コードは1となる。\n<b>また、未コミットのトランザクションは全てロールバックされることに注意すること。</b>\n<p/>\n※処理を異常終了するかどうかは、前段に設定されたハンドラによって決定される。\n<p/>\n処理を停止するか否かのチェックは、リクエストテーブルにて行う。\n本ハンドラが使用するリクエストテーブルの定義情報を下記に示す。\n<p/>\n<pre>\n-----------------------------+----------------------------------------------------------\nカラム名                     | 説明\n-----------------------------+----------------------------------------------------------\nリクエストID                 | プロセスを特定するためのリクエストID\n処理停止フラグ               | 処理を停止するか否かの情報\n                             | 本フラグの値が'1'の場合に処理を停止する。\n                             |\n                             | <b>本フラグの値は、自動的に'0'には変更されないため再実行する際には、\n                             | 手動で'0'に変更する必要がある。</b>\n-----------------------------+----------------------------------------------------------\n</pre>\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "PROCESS_STOP",
+      "level": 3,
+      "content": "```java\nprivate static final String PROCESS_STOP\n```\n\nプロセス停止を示す値\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "checkInterval",
+      "level": 3,
+      "content": "```java\nprivate int checkInterval\n```\n\nプロセスを停止するか否かをチェックする間隔\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "dbTransactionManager",
+      "level": 3,
+      "content": "```java\nprivate SimpleDbTransactionManager dbTransactionManager\n```\n\nデータベーストランザクションマネージャ\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "tableName",
+      "level": 3,
+      "content": "```java\nprivate String tableName\n```\n\nチェック対象のテーブル名\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "requestIdColumnName",
+      "level": 3,
+      "content": "```java\nprivate String requestIdColumnName\n```\n\nリクエストIDを示すカラム名\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "processHaltColumnName",
+      "level": 3,
+      "content": "```java\nprivate String processHaltColumnName\n```\n\n処理停止フラグを示すカラム名\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "query",
+      "level": 3,
+      "content": "```java\nprivate String query\n```\n\nプロセス停止可否をチェックするためのSQL文\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "exitCode",
+      "level": 3,
+      "content": "```java\nprivate int exitCode\n```\n\n終了コード\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "count",
+      "level": 3,
+      "content": "```java\nprivate final ThreadLocal<Integer> count\n```\n\n現在の処理件数\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s11"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(Object o, ExecutionContext context)\n```\n\n{@inheritDoc}\n<p/>\n処理停止チェックを行う。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "isProcessStop",
+      "level": 3,
+      "content": "```java\npublic boolean isProcessStop(String requestId)\n```\n\nプロセス停止可否を判定する。\n\n**パラメータ:**\n- `requestId` - リクエストID\n\n**戻り値:**\nプロセスを停止する必要がある場合はtrue\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setCheckInterval",
+      "level": 3,
+      "content": "```java\npublic void setCheckInterval(int checkInterval)\n```\n\nチェック間隔（{@link #handle(Object, ExecutionContext)}が\n何回呼び出されるごとに停止フラグを確認するか？）を設定する。\n<p/>\n\n**パラメータ:**\n- `checkInterval` - チェック間隔(0以下の値が設定された場合は1)\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setDbTransactionManager",
+      "level": 3,
+      "content": "```java\npublic void setDbTransactionManager(SimpleDbTransactionManager dbTransactionManager)\n```\n\nトランザクションマネージャ({@link SimpleDbTransactionManager})を設定する。\n<p/>\n本ハンドラは、ここで設定されたトランザクションマネージャを使用してデータベースアクセスを行う。\n\n**パラメータ:**\n- `dbTransactionManager` - トランザクションマネージャ\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize()\n```\n\n{@inheritDoc}\n<p/>\nプロセス停止可否をチェックするためのSELECT文を構築する。\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setTableName",
+      "level": 3,
+      "content": "```java\npublic void setTableName(String tableName)\n```\n\nプロセス停止可否のチェックを行うテーブルの物理名を設定する。\n\n**パラメータ:**\n- `tableName` - テーブル物理名\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setRequestIdColumnName",
+      "level": 3,
+      "content": "```java\npublic void setRequestIdColumnName(String requestIdColumnName)\n```\n\nプロセスを特定するためのリクエストIDが格納されるカラムの物理名を設定する。\n\n**パラメータ:**\n- `requestIdColumnName` - リクエストIDカラムの物理名\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setProcessHaltColumnName",
+      "level": 3,
+      "content": "```java\npublic void setProcessHaltColumnName(String processHaltColumnName)\n```\n\nプロセス停止フラグが格納されるカラムの物理名を設定する。\n\n**パラメータ:**\n- `processHaltColumnName` - プロセス停止カラムフラグの物理名\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "setExitCode",
+      "level": 3,
+      "content": "```java\npublic void setExitCode(int exitCode)\n```\n\n終了コードを設定する。\n<p/>\n終了コードの設定がない場合、デフォルトで{@link Result.InternalError#STATUS_CODE}が使用される。\n\n**パラメータ:**\n- `exitCode` - 終了コード\n\n---",
+      "id": "s20"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-BasicProcessStopHandler"
+}

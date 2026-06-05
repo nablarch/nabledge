@@ -1,0 +1,134 @@
+{
+  "title": "class DbStore",
+  "content": "**パッケージ:** nablarch.common.web.session.store\n\n**継承階層:**\n```\njava.lang.Object\n  └─ SessionStore\n      └─ nablarch.common.web.session.store.DbStore\n```\n\n**実装されたインタフェース:**\n- Initializable\n\n---\n\n```java\npublic class DbStore\nextends SessionStore\nimplements Initializable\n```\n\nセッションの内容をDBに格納/読み込みする{@link DbStore}。\n<p/>\nデフォルトのストア名は\"db\"。\n\n**作成者:** TIS  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "dbManager",
+      "level": 3,
+      "content": "```java\nprivate SimpleDbTransactionManager dbManager\n```\n\nSimpleDbTransactionManagerのインスタンス。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "userSessionSchema",
+      "level": 3,
+      "content": "```java\nprivate UserSessionSchema userSessionSchema\n```\n\nユーザセッションテーブルのスキーマ。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "selectUserSessionSql",
+      "level": 3,
+      "content": "```java\nprivate String selectUserSessionSql\n```\n\nユーザセッションテーブルを取得するSQL\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "insertUserSessionSql",
+      "level": 3,
+      "content": "```java\nprivate String insertUserSessionSql\n```\n\nユーザセッションテーブルを追加するSQL\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "updateUserSessionSql",
+      "level": 3,
+      "content": "```java\nprivate String updateUserSessionSql\n```\n\nユーザセッションテーブルを更新するSQL\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "deleteUserSessionSql",
+      "level": 3,
+      "content": "```java\nprivate String deleteUserSessionSql\n```\n\nユーザセッションテーブルを削除するSQL\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "DbStore",
+      "level": 3,
+      "content": "```java\npublic DbStore()\n```\n\nコンストラクタ。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s10"
+    },
+    {
+      "title": "setDbManager",
+      "level": 3,
+      "content": "```java\npublic void setDbManager(SimpleDbTransactionManager dbManager)\n```\n\nDbManagerのインスタンスをセットする。\n\n**パラメータ:**\n- `dbManager` - SimpleDbTransactionManagerのインスタンス\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setUserSessionSchema",
+      "level": 3,
+      "content": "```java\npublic void setUserSessionSchema(UserSessionSchema userSessionSchema)\n```\n\nユーザセッションテーブルのスキーマをセットする。\n\n**パラメータ:**\n- `userSessionSchema` - ユーザセッションテーブルのスキーマ\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "load",
+      "level": 3,
+      "content": "```java\npublic List<SessionEntry> load(String sessionId, ExecutionContext executionContext)\n```\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "save",
+      "level": 3,
+      "content": "```java\npublic void save(String sessionId, List<SessionEntry> entries, ExecutionContext executionContext)\n```\n\nユーザセッションテーブルにセッション情報を保存する。\n<p>\n新規でセッション情報を保存する場合で複数スレッドから同時に本処理が呼び出された場合、\n登録処理(insert)が同時実行され片方の処理が一意制約違反となる。\nこのため、一意制約違反が発生した場合には、1回だけリトライを実施する。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "delete",
+      "level": 3,
+      "content": "```java\npublic void delete(String sessionId, ExecutionContext executionContext)\n```\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "invalidate",
+      "level": 3,
+      "content": "```java\npublic void invalidate(String sessionId, ExecutionContext executionContext)\n```\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "saveSession",
+      "level": 3,
+      "content": "```java\nprivate void saveSession(String sessionId, List<SessionEntry> entries)\n```\n\nユーザセッションテーブルにセッション情報を登録する。\n<p>\n保存対象のセッション情報が空の場合は、テーブルからレコードを削除する。\nそれ以外の場合は、更新処理を行う。更新対象が存在しない場合には、新規にセッションが追加された場合なので、レコードの追加を行う。\n\n**パラメータ:**\n- `sessionId` - セッションID\n- `entries` - セッションに保存する情報\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "updateUserSession",
+      "level": 3,
+      "content": "```java\nprivate int updateUserSession(String sessionId, List<SessionEntry> entries, AppDbConnection connection)\n```\n\nユーザセッションを更新する。\n\n**パラメータ:**\n- `sessionId` - セッションID\n- `entries` - セッションエントリ\n- `connection` - {@link AppDbConnection}\n\n**戻り値:**\n更新件数\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "insertUserSession",
+      "level": 3,
+      "content": "```java\nprivate void insertUserSession(String sessionId, List<SessionEntry> entries, AppDbConnection connection)\n```\n\nユーザセッションテーブルにセッションの内容を挿入する。\n\n**パラメータ:**\n- `sessionId` - セッションID\n- `entries` - セッションエントリ\n- `connection` - {@link AppDbConnection}\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "deleteUserSession",
+      "level": 3,
+      "content": "```java\nprivate void deleteUserSession(String sessionId, AppDbConnection connection)\n```\n\nユーザセッションテーブルからセッションの内容を削除する。\n\n**パラメータ:**\n- `sessionId` - セッションID\n- `connection` - {@link AppDbConnection}\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize()\n```\n\n初期化処理。\n\n---",
+      "id": "s21"
+    }
+  ],
+  "id": "javadoc-nablarch-common-web-session-store-DbStore"
+}

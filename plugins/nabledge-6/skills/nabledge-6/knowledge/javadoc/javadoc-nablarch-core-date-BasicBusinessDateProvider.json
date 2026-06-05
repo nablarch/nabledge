@@ -1,0 +1,206 @@
+{
+  "title": "class BasicBusinessDateProvider",
+  "content": "**パッケージ:** nablarch.core.date\n\n**実装されたインタフェース:**\n- BusinessDateProvider\n- Initializable\n\n---\n\n```java\npublic class BasicBusinessDateProvider\nimplements BusinessDateProvider, Initializable\n```\n\n業務日付を提供するクラス。\n<p/>\n本クラスでは、テーブルで管理されている業務日付を取得する機能を提供する。\n<p/>\n業務日付の取得要求の都度データベースアクセスを行うとパフォーマンス上問題となる場合がある。\nこのため、{@link #cacheEnabled}プロパティを使用して業務日付のキャッシュ有無を設定でき、\nデータベースアクセスを最小限に抑えることが可能となっている。\n<p/>\n{@link #cacheEnabled}にtrueを設定するとキャッシュが有効になり、\n初回アクセス時にテーブルの情報が{@link ThreadContext}にキャッシュされる。\nキャッシュされた値の生存期間は、{@link ThreadContext}がクリアされるか、\nスレッドが破棄されるかのどちらかである。\n<p/>\n例えば、画面オンライン処理の場合は、リクエスト受付時に{@link ThreadContext}の情報がクリアされるため、\n業務日付のキャッシュ有効期間はクライアントからの１リクエストを処理する間となる。\n<p/>\n業務日付を管理するテーブルのレイアウトを以下に示す。\n<table border=\"1\">\n<tr  bgcolor=\"#CCCCFF\">\n<th>カラム名</th>\n<th>説明</th>\n</tr>\n<tr>\n<td>区分</td>\n<td>\n業務日付を特定するための区分<br/>\n例えば、画面処理とバッチ処理で日付の更新タイミングが異なる場合は、<br/>\n画面処理用とバッチ処理用の区分を設けて日付を管理すれば良い。\n</td>\n</tr>\n<tr>\n<td>日付</td>\n<td>区分に対応する業務日付</td>\n</tr>\n</table>\n<p/>\nなお、本クラスでは特定の区分の業務日付をリポジトリ({@link SystemRepository})\nに登録した日付で上書きする機能を提供する。\nこの機能は、バッチアプリケーションなどで指定した日付で業務処理を実行したい場合に使用する。<br/>\n<b>リポジトリに登録された日付の形式が不正な場合、初回アクセス時に{@link RuntimeException}を送出する。</b>\n<p/>\nリポジトリには、下記形式で上書きを行いたい日付を登録すること。\n<table border=\"1\">\n<tr  bgcolor=\"#CCCCFF\">\n<th>キー</th>\n<th>値</th>\n</tr>\n<tr>\n<td>BasicBusinessDateProvider.区分値</td>\n<td>上書く日付</td>\n</tr>\n</table>\n以下に例を示す。:\n<pre>\n{@code\n区分値:00の日付を20110101に上書きする場合\n\nシステムプロパティに「BasicBusinessDateProvider.00=20110101」を設定しプロセスを起動する。\njava -DBasicBusinessDateProvider.00=20110101 Main\n}\n</pre>\n\n**作成者:** Miki Habu  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "tableName",
+      "level": 3,
+      "content": "```java\nprivate String tableName\n```\n\n業務日付テーブル物理名\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "segmentColumnName",
+      "level": 3,
+      "content": "```java\nprivate String segmentColumnName\n```\n\n業務日付テーブルの区分カラム物理名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "dateColumnName",
+      "level": 3,
+      "content": "```java\nprivate String dateColumnName\n```\n\n業務日付テーブルの日付カラム物理名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "defaultSegment",
+      "level": 3,
+      "content": "```java\nprivate String defaultSegment\n```\n\n区分値省略時のデフォルト値\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "selectSql",
+      "level": 3,
+      "content": "```java\nprivate String selectSql\n```\n\n取得用SQL\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "selectAllSql",
+      "level": 3,
+      "content": "```java\nprivate String selectAllSql\n```\n\n取得用SQL(全ての業務日付)\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "updateDateSql",
+      "level": 3,
+      "content": "```java\nprivate String updateDateSql\n```\n\n更新用SQL(業務日付)\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "cacheEnabled",
+      "level": 3,
+      "content": "```java\nprivate boolean cacheEnabled\n```\n\nキャッシュ有無\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "dbTransactionName",
+      "level": 3,
+      "content": "```java\nprivate String dbTransactionName\n```\n\nトランザクション名称\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "transactionManager",
+      "level": 3,
+      "content": "```java\nprivate SimpleDbTransactionManager transactionManager\n```\n\nトランザクションマネージャ\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "CACHE_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String CACHE_KEY\n```\n\nキャッシュキー\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "CLASS_NAME",
+      "level": 3,
+      "content": "```java\nprivate static final String CLASS_NAME\n```\n\nクラス名(単純形式)。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "validSegment",
+      "level": 3,
+      "content": "```java\nprivate static Set<String> validSegment\n```\n\n有効な日付の区分を保持するSet。\n<br/>\nリポジトリに登録された日付のバリデーションを必要最低限に留めるために、\nバリデーション済みまたはリポジトリに未登録の区分を保持する。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s15"
+    },
+    {
+      "title": "setTableName",
+      "level": 3,
+      "content": "```java\npublic void setTableName(String tableName)\n```\n\n業務日付テーブル物理名を設定する。\n\n**パラメータ:**\n- `tableName` - 業務日付テーブル物理名\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setSegmentColumnName",
+      "level": 3,
+      "content": "```java\npublic void setSegmentColumnName(String segmentColumnName)\n```\n\n業務日付テーブルの区分カラム物理名を設定する。\n\n**パラメータ:**\n- `segmentColumnName` - 業務日付テーブルの区分カラム物理名\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setDateColumnName",
+      "level": 3,
+      "content": "```java\npublic void setDateColumnName(String dateColumnName)\n```\n\n業務日付テーブルの日付カラム物理名を設定する。\n\n**パラメータ:**\n- `dateColumnName` - 業務日付テーブルの日付カラム物理名\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setDefaultSegment",
+      "level": 3,
+      "content": "```java\npublic void setDefaultSegment(String defaultSegment)\n```\n\n区分省略時のデフォルト値を設定する。\n\n**パラメータ:**\n- `defaultSegment` - 区分省略時のデフォルト値\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "setCacheEnabled",
+      "level": 3,
+      "content": "```java\npublic void setCacheEnabled(boolean cache)\n```\n\nキャッシュ有無を設定する。\n<br/>\n本設定を省略した場合のデフォルト動作は、キャッシュ有りとなる。\n\n**パラメータ:**\n- `cache` - キャッシュをするか否か。（キャッシュを行う場合は、true)\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "setDbTransactionName",
+      "level": 3,
+      "content": "```java\npublic void setDbTransactionName(String dbTransactionName)\n```\n\nトランザクション名称を設定する。\n<p/>\n本設定は、デフォルトのトランザクション名({@link TransactionContext#DEFAULT_TRANSACTION_CONTEXT_KEY})\n以外のトランザクション名を使用する場合に設定を行えば良い。\n<p/>\nなお、本プロパティに設定したトランザクション名称に紐付く{@link AppDbConnection}が存在しない場合は、\n{@link #setDbTransactionManager(nablarch.core.db.transaction.SimpleDbTransactionManager)}で設定された\nトランザクションマネージャを使用して、短期的なトランザクションを用いて日付の取得処理を行う。\n\n**パラメータ:**\n- `dbTransactionName` - トランザクション名称。\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "setDbTransactionManager",
+      "level": 3,
+      "content": "```java\npublic void setDbTransactionManager(SimpleDbTransactionManager transactionManager)\n```\n\n{@link SimpleDbTransactionManager トランザクションマネージャ}を設定する。\n<p/>\nデータベースから日付を取得する際に使用するトランザクションを設定すること。\n\n**パラメータ:**\n- `transactionManager` - {@link SimpleDbTransactionManager トランザクションマネージャ}\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "getDate",
+      "level": 3,
+      "content": "```java\npublic String getDate()\n```\n\n{@inheritDoc}\nリポジトリに日付が設定されている場合は、その日付を返却する。\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getDate",
+      "level": 3,
+      "content": "```java\npublic String getDate(String segment)\n```\n\n{@inheritDoc}\nリポジトリに日付が設定されている場合は、その日付を返却する。\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "getDateBySegment",
+      "level": 3,
+      "content": "```java\nprivate String getDateBySegment(AppDbConnection connection, String segment)\n                        throws IllegalStateException\n```\n\n日付取得用のSQL文を実行し結果を返却する。\n\n**パラメータ:**\n- `connection` - {@link AppDbConnection データベース接続}\n- `segment` - 区分\n\n**戻り値:**\n取得した業務日付\n\n**例外:**\n- `IllegalStateException` - 区分に対応するデータが存在しない場合\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "getAllDate",
+      "level": 3,
+      "content": "```java\npublic Map<String,String> getAllDate()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "getAllBusinessDate",
+      "level": 3,
+      "content": "```java\nprivate Map<String,String> getAllBusinessDate()\n```\n\n全ての業務日付を取得する。\n<p/>\n取得したデータは、下記形式の{@link Map}として返却する。\n<pre>\nkey:区分\nvalue:日付\n</pre>\n\n**戻り値:**\n全業務日付\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "getDateByUnCondition",
+      "level": 3,
+      "content": "```java\nprivate SqlResultSet getDateByUnCondition(AppDbConnection connection)\n                                  throws IllegalStateException\n```\n\n条件なしで、全日付データを取得する。\n\n**パラメータ:**\n- `connection` - {@link AppDbConnection データベース接続}\n\n**戻り値:**\n取得した日付データ\n\n**例外:**\n- `IllegalStateException` - 日付が存在しない場合\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "setDate",
+      "level": 3,
+      "content": "```java\npublic void setDate(String segment, String date)\n             throws IllegalArgumentException\n```\n\n{@inheritDoc}\n<p/>\n指定された区分に対応する業務日付を更新する。\n\n**例外:**\n- `IllegalArgumentException` - 区分または、業務日付がnullまたは空文字列の場合。\nまたは、指定された業務日付が'yyyyMMdd'形式でない場合。\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "updateDate",
+      "level": 3,
+      "content": "```java\nprivate void updateDate(String segment, String date, AppDbConnection connection)\n```\n\n指定された区分に対応する日付を指定された日付に更新する。\n\n**パラメータ:**\n- `segment` - 区分\n- `date` - 更新する日付\n- `connection` - {@link AppDbConnection データベース接続}\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize()\n```\n\n初期化処理を行う。<br>\nSQLを組み立てる\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "getRepositoryDate",
+      "level": 3,
+      "content": "```java\nprivate static String getRepositoryDate(String segment)\n```\n\nリポジトリから指定された区分に対応する業務日付を取得する。\n\n**パラメータ:**\n- `segment` - 区分\n\n**戻り値:**\n業務日付。リポジトリに指定された区分が存在しない場合は、null。\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "getCacheData",
+      "level": 3,
+      "content": "```java\nprivate Map<String,String> getCacheData()\n```\n\nキャッシュされた業務日付を取得する。\n<p/>\nキャッシュにデータが存在しない場合は、{@link #getAllBusinessDate()}を使用して、\n全ての業務日付を取得しキャッシュを行う。\n<p/>\n本機能でキャッシュしたデータは、{@link nablarch.common.handler.threadcontext.ThreadContextHandler#handle(Object, nablarch.fw.ExecutionContext)}\nでクリアされる。\n\n**戻り値:**\n業務日付データ\n\n---",
+      "id": "s33"
+    }
+  ],
+  "id": "javadoc-nablarch-core-date-BasicBusinessDateProvider"
+}

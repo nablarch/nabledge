@@ -1,0 +1,7 @@
+{
+  "title": "@interface OnError",
+  "content": "**パッケージ:** nablarch.fw.web.interceptor\n\n---\n\n```java\npublic @interface OnError\n```\n\nリクエストハンドラが例外を送出した場合のレスポンスを指定する{@link Interceptor}。\n<pre>\n次の例では、\"ApplicationException\"が送出された場合の遷移先を\n入力画面(registerForm.jsp)に設定している。\n\n{@code @OnError} (\n     type = ApplicationException.class\n   , path =\"servlet://registerForm.jsp\"\n )\n public HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n     registerUser(req.getParamMap());\n     return new HttpResponse(200, \"servlet://registrationCompleted.jsp\");\n }\n\n この処理は、以下のコードによる処理と本質的に同等である。\n\n public HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n     try {\n         registerUser(req.getParamMap());\n         return new HttpResponse(200, \"servlet://registrationCompleted.jsp\");\n     } catch(ApplicationException ae) {\n         throw new HttpErrorResponse(400, \"servlet://registerForm.jsp\", ae);\n     }\n }\n</pre>\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n**関連項目:** OnError.Impl  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [],
+  "id": "javadoc-nablarch-fw-web-interceptor-OnError"
+}

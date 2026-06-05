@@ -1,0 +1,176 @@
+{
+  "title": "class InterSystemMessage",
+  "content": "**パッケージ:** nablarch.fw.messaging\n\n---\n\n```java\npublic abstract class InterSystemMessage\n```\n\n外部システムに対する送受信電文の内容を格納するデータオブジェクト。\n\nこのオブジェクトは以下のデータを保持する。\n<ul>\n<li> プロトコルヘッダー\n<li> メッセージボディ\n</ul>\n\n<h4>プロトコルヘッダー</h4>\n<p>\nプロトコルヘッダーはMOM間のメッセージ転送制御に関連する制御情報であり、\nMOM側で自動的に解析される。\nこれらの情報の多くは、MOM製品に依存した仕様であるため、本フレームワークは\nプロトコルヘッダーに極力依存しない設計となっている。\n</p>\n本フレームワークが直接使用するプロトコルヘッダーは以下の5つのみである。\n<ul>\n<li> メッセージIDヘッダ\n<li> 関連メッセージIDヘッダ\n<li> 送信宛先ヘッダ\n<li> 応答宛先ヘッダ\n<li> メッセージ有効期間ヘッダ (送信電文のみ)\n</ul>\n\n<h4>メッセージボディ</h4>\n<p>\nプロトコルヘッダーを除いた電文のデータ部をメッセージボディと呼ぶ。\nメッセージボディ部は、MOM側では単にバイナリデータとして扱うものとし、\n解析は全てフレームワーク側で行う。\n</p>\n<p>\nメッセージボディのフォーマットは nablarch.core.dataformat パッケージが提供する\n機能を用いて定義する。解析後の電文はList-Map形式でアクセスすることが可能である。\n</p>\nメッセージボディ内は通常、以下に示すような階層構造をもち、その解析は各階層に\n対応したデータリーダもしくはハンドラによって段階的に行われる。\n<ul>\n<li> フレームワーク制御ヘッダ\n<li> 業務共通ヘッダ\n<li> 業務データ\n</ul>\nなお、メッセージボディの階層化はデータリーダやハンドラの構成を含め、フレームワークの\n全体構造に関わる重要な要素なので、可能な限り早い段階で確定させておく必要がある。\n\n<h4>クラス構成</h4>\n<p>\nこのクラスは各電文クラスに共通する機能やデータ構造を実装するものの、\n直接インスタンスを作成することはできない。\nこれは、JMSのjavax.jms.Messageのような汎用メッセージオブジェクトを使いまわすのではなく、\nその用途に応じて以下の4つの具象クラスを使いわける設計となっているためである。\n<p>\n<ol>\n<li> ReceivedMessage (受信メッセージ)\n<li> SendingMessage  (送信メッセージ)\n<li> RequestMessage  (被仕向け要求受信メッセージ) : ReceivedMessageのサブクラス\n<li> ResponseMessage (応答送信メッセージ) : SendingMessageのサブクラス\n</ol>\n\n**param:** 各具象クラスの型  \n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "headers",
+      "level": 3,
+      "content": "```java\nprivate final Map<String,Object> headers\n```\n\nメッセージヘッダ情報を格納するMap\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "bodyData",
+      "level": 3,
+      "content": "```java\nprivate final List<DataRecord> bodyData\n```\n\nメッセージボディデータ\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "formatter",
+      "level": 3,
+      "content": "```java\nprivate DataRecordFormatter formatter\n```\n\nメッセージボディのフォーマッター\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "InterSystemMessage",
+      "level": 3,
+      "content": "```java\npublic InterSystemMessage()\n```\n\nデフォルトコンストラクタ\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "InterSystemMessage",
+      "level": 3,
+      "content": "```java\npublic InterSystemMessage(InterSystemMessage<?> orgMessage)\n```\n\nコピーコンストラクタ\n\n**パラメータ:**\n- `orgMessage` - コピー元電文\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "setFormatter",
+      "level": 3,
+      "content": "```java\npublic TSelf setFormatter(DataRecordFormatter formatter)\n```\n\nメッセージボディのフォーマット定義を設定する。\n\n**パラメータ:**\n- `formatter` - フォーマット定義オブジェクト\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getFormatter",
+      "level": 3,
+      "content": "```java\npublic DataRecordFormatter getFormatter()\n```\n\nメッセージボディのフォーマット定義を返す。\n\n**戻り値:**\nメッセージボディのフォーマット定義\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getRecordOf",
+      "level": 3,
+      "content": "```java\npublic DataRecord getRecordOf(String recordType)\n```\n\n指定された種別のレコードを返す。\n複数存在する場合は、その先頭のレコードを返す。\n存在しない場合はnullを返す。\n\n**パラメータ:**\n- `recordType` - レコード名\n\n**戻り値:**\n指定した種別のデータレコード (存在しない場合はnull)\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getRecords",
+      "level": 3,
+      "content": "```java\npublic List<DataRecord> getRecords()\n```\n\nメッセージボディに含まれる全レコードを返す。\n\n**戻り値:**\nメッセージボディに含まれる全てのレコード\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getRecordsOf",
+      "level": 3,
+      "content": "```java\npublic List<DataRecord> getRecordsOf(String recordType)\n```\n\nメッセージボディに含まれる指定された種別の全レコードを返す。\n該当するレコードが存在しない場合は空のリストを返す。\n\n**パラメータ:**\n- `recordType` - レコード種別\n\n**戻り値:**\nメッセージボディに含まれる指定された種別の全レコード\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getParamMap",
+      "level": 3,
+      "content": "```java\npublic Map<String,Object> getParamMap()\n```\n\n電文のデータ部の末尾レコードを返す。\n<p/>\n主にシングルレコード形式の電文で使用することを想定している。\nレコードが存在しない場合はnullを返す。\n\n**戻り値:**\n受信電文内の各フィールドの値を格納したMap\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getParam",
+      "level": 3,
+      "content": "```java\npublic Object getParam(String name)\n```\n\n電文のデータ部の末尾レコードの中から指定されたフィールドの値を取得して返す。\n<p/>\n主にシングルレコード形式の電文で使用することを想定している。\nレコードが存在しない場合、もしくは、レコードに指定された項目が存在しない\n場合はnullを返す。\n。\n\n**パラメータ:**\n- `name` - 取得するフィールドの名称\n\n**戻り値:**\nフィールドの値\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getBodyBytes",
+      "level": 3,
+      "content": "```java\npublic abstract byte[] getBodyBytes()\n```\n\nメッセーボディのバイナリ表現を返す。\n\n送信(仕向)電文の場合はデータレコードをレコードフォーマッタで直列化したものを返す。\n受信(被仕向)電文の場合はパース前の送信電文の内容をそのまま返す。\n\n**戻り値:**\nメッセーボディのバイナリ表現\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getHeaderMap",
+      "level": 3,
+      "content": "```java\npublic Map<String,Object> getHeaderMap()\n```\n\nヘッダーの一覧をMap形式で返す。\n\n**戻り値:**\nヘッダーの一覧\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getHeader",
+      "level": 3,
+      "content": "```java\npublic T getHeader(String headerName)\n```\n\nヘッダーの値を返す。\n\n**パラメータ:**\n- `<T>` - 期待するヘッダの型\n- `headerName` - 値を取得するヘッダーの名前\n\n**戻り値:**\nヘッダーの値\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setHeader",
+      "level": 3,
+      "content": "```java\npublic TSelf setHeader(String name, Object value)\n```\n\nヘッダーの値を設定する。\n\n**パラメータ:**\n- `name` - 値を設定するヘッダーの名前\n- `value` - ヘッダーの値\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "setHeaderMap",
+      "level": 3,
+      "content": "```java\npublic TSelf setHeaderMap(Map<String,?> headers)\n```\n\nヘッダーの一覧を設定する。\n(既存のヘッダーは全て削除される。)\n\n**パラメータ:**\n- `headers` - ヘッダーの一覧\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "getMessageId",
+      "level": 3,
+      "content": "```java\npublic String getMessageId()\n```\n\nこの電文に割り当てられた識別子(メッセージID)を返す。\n\nメッセージIDは電文送信時にMOMによって自動的に割り振られるため、\n書式や一意性の範囲は製品依存となる。\nまた、送信前の電文にはnullが設定されている。\n\n**戻り値:**\nこの電文のID文字列 (送信前はnull)\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "setMessageId",
+      "level": 3,
+      "content": "```java\npublic TSelf setMessageId(String messageId)\n```\n\nメッセージIDを設定する。\n\nメッセージIDはMOM側で採番される値であり、\nこのメソッドは単体テスト用に便宜的に容易されているものである。\n\n**パラメータ:**\n- `messageId` - メッセージIDとして指定する文字列\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "getDestination",
+      "level": 3,
+      "content": "```java\npublic String getDestination()\n```\n\nこの電文の宛先キューの論理名を取得する。\n\nMessagingContext.send(SendingMessage) メソッドでは、この戻り値に対応する\n宛先に送信される。\n\n**戻り値:**\n宛先キューの論理名\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "setDestination",
+      "level": 3,
+      "content": "```java\npublic TSelf setDestination(String destination)\n```\n\n送信宛先キューの論理名を設定する。\n\n**パラメータ:**\n- `destination` - 応答宛先キューの論理名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "getCorrelationId",
+      "level": 3,
+      "content": "```java\npublic String getCorrelationId()\n```\n\nこの電文に関連付けられているメッセージのメッセージIDを返す。\n\n**戻り値:**\nこの電文のID文字列\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "setCorrelationId",
+      "level": 3,
+      "content": "```java\npublic TSelf setCorrelationId(String messageId)\n```\n\nこの電文に既存のメッセージのIDを関連付ける。\n\n**パラメータ:**\n- `messageId` - 関連付けるメッセージのID\n\n**戻り値:**\nこの電文のID文字列\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "getReplyTo",
+      "level": 3,
+      "content": "```java\npublic String getReplyTo()\n```\n\n応答宛先キューの論理名を返す。\n\n**戻り値:**\nこの電文のID文字列\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "setReplyTo",
+      "level": 3,
+      "content": "```java\npublic TSelf setReplyTo(String replyTo)\n```\n\nこの電文に対する応答宛先となるキューの論理名を設定する。\n\n**パラメータ:**\n- `replyTo` - 応答宛先キューの論理名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s28"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-InterSystemMessage"
+}

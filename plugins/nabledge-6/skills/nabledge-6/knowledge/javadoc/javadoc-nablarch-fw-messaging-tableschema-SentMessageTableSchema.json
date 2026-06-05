@@ -1,0 +1,128 @@
+{
+  "title": "class SentMessageTableSchema",
+  "content": "**パッケージ:** nablarch.fw.messaging.tableschema\n\n---\n\n```java\npublic class SentMessageTableSchema\n```\n\n再送電文管理テーブルスキーマ定義クラス。\n<p/>\n以下のようなテーブル構造を想定している。\n<pre>\n=====================================\nメッセージID   VARCHAR PK\nリクエストID   VARCHAR PK\n応答宛先キュー VARCHAR\n処理結果コード VARCHAR\n電文データ部   BLOB\n=====================================\n</pre>\n以下にデフォルト設定でのテーブル名、カラム名に沿ったテーブルスキーマの\nサンプルを示す。\n\n<pre>\nCREATE TABLE SENT_MESSAGE (\n    MESSAGE_ID  VARCHAR(64)\n  , REQUEST_ID  VARCHAR(64)\n  , REPLY_QUEUE VARCHAR(64)\n  , STATUS_CODE CHAR(4)\n  , BODY_DATA   BLOB\n  , CONSTRAINT pk_SENT_MESSAGE\n      PRIMARY KEY(MESSAGE_ID, REQUEST_ID)\n);\n</pre>\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "tableName",
+      "level": 3,
+      "content": "```java\nprivate String tableName\n```\n\n再送電文管理テーブルのテーブル名\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "messageIdColumn",
+      "level": 3,
+      "content": "```java\nprivate String messageIdColumn\n```\n\nメッセージIDを保持するカラムの名称\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "requestIdColumn",
+      "level": 3,
+      "content": "```java\nprivate String requestIdColumn\n```\n\n要求電文のリクエストIDを保持するカラムの名称\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "replyQueueColumn",
+      "level": 3,
+      "content": "```java\nprivate String replyQueueColumn\n```\n\n応答電文の宛先キューの論理名を保持するカラムの名称\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "statusCodeColumn",
+      "level": 3,
+      "content": "```java\nprivate String statusCodeColumn\n```\n\n処理結果のステータスコードを保持するカラムの名称\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "bodyDataColumn",
+      "level": 3,
+      "content": "```java\nprivate String bodyDataColumn\n```\n\nメッセージボディデータの内容をバイト配列で保持するカラムの名称\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "setTableName",
+      "level": 3,
+      "content": "```java\npublic SentMessageTableSchema setTableName(String tableName)\n```\n\n再送電文管理テーブルの名称を設定する。\n\n**パラメータ:**\n- `tableName` - テーブル名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getTableName",
+      "level": 3,
+      "content": "```java\npublic String getTableName()\n```\n\n再送電文管理テーブルの名称を返す。\n\n**戻り値:**\nテーブルの名称\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setReplyQueueColumnName",
+      "level": 3,
+      "content": "```java\npublic SentMessageTableSchema setReplyQueueColumnName(String columnName)\n```\n\n応答電文の宛先キューの論理名を保持するカラムの名称を設定する。\n(デフォルトは\"REPLY_QUEUE\")\n\n**パラメータ:**\n- `columnName` - カラムの名称\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getReplyQueueColumnName",
+      "level": 3,
+      "content": "```java\npublic String getReplyQueueColumnName()\n```\n\n応答電文の宛先キューの論理名を保持するカラムの名称を返す。\n\n**戻り値:**\nカラムの名称\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setMessageIdColumnName",
+      "level": 3,
+      "content": "```java\npublic SentMessageTableSchema setMessageIdColumnName(String columnName)\n```\n\nメッセージIDを保持するカラムの名称を設定する。\n(デフォルトは\"MESSAGE_ID\")\n\n**パラメータ:**\n- `columnName` - カラムの名称\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getMessageIdColumnName",
+      "level": 3,
+      "content": "```java\npublic String getMessageIdColumnName()\n```\n\nメッセージIDを保持するカラムの名称をを返す。\n\n**戻り値:**\nカラムの名称\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setBodyDataColumnName",
+      "level": 3,
+      "content": "```java\npublic SentMessageTableSchema setBodyDataColumnName(String columnName)\n```\n\nメッセージボディデータの内容をバイト配列で保持するカラムの名称を設定する。\n(デフォルトは\"BODY_DATA\")\n\n**パラメータ:**\n- `columnName` - カラムの名称\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getBodyDataColumnName",
+      "level": 3,
+      "content": "```java\npublic String getBodyDataColumnName()\n```\n\nメッセージボディデータの内容をバイト配列で保持するカラムの名称をを返す。\n\n**戻り値:**\nカラムの名称\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setRequestIdColumnName",
+      "level": 3,
+      "content": "```java\npublic SentMessageTableSchema setRequestIdColumnName(String columnName)\n```\n\n要求電文のリクエストIDを保持するカラムの名称を設定する。\n(デフォルトは\"REQUEST_ID\")\n\n**パラメータ:**\n- `columnName` - カラムの名称\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getRequestIdColumnName",
+      "level": 3,
+      "content": "```java\npublic String getRequestIdColumnName()\n```\n\n要求電文のリクエストIDを保持するカラムの名称をを返す。\n\n**戻り値:**\nカラムの名称\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setStatusCodeColumnName",
+      "level": 3,
+      "content": "```java\npublic SentMessageTableSchema setStatusCodeColumnName(String columnName)\n```\n\n要求電文のユーザIDを保持するカラムの名称を設定する。\n(デフォルトは\"USER_ID\")\n\n**パラメータ:**\n- `columnName` - カラムの名称\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getStatusCodeColumnName",
+      "level": 3,
+      "content": "```java\npublic String getStatusCodeColumnName()\n```\n\n要求電文のユーザIDを保持するカラムの名称をを返す。\n\n**戻り値:**\nカラムの名称\n\n---",
+      "id": "s20"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-tableschema-SentMessageTableSchema"
+}

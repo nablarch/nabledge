@@ -28,12 +28,12 @@ public class BatchActionSample extends BatchAction<Object> {
 ```
 
 > **Tip:**
-> ExecutionContext のスコープを使用して、上記実装例と同じことが実現できる。
-> ただし、 ExecutionContext を使用した場合、
+> [ExecutionContext](../../javadoc/javadoc-nablarch-fw-ExecutionContext.md) のスコープを使用して、上記実装例と同じことが実現できる。
+> ただし、 [ExecutionContext](../../javadoc/javadoc-nablarch-fw-ExecutionContext.md) を使用した場合、
 > どのような値を保持しているかが分かりづらいデメリットがある。
-> このため、 ExecutionContext を使用するのではなく、上記実装例のようにバッチアクション側で状態を保持することを推奨する。
+> このため、 [ExecutionContext](../../javadoc/javadoc-nablarch-fw-ExecutionContext.md) を使用するのではなく、上記実装例のようにバッチアクション側で状態を保持することを推奨する。
 
-> なお、 ExecutionContext を使用した場合、スコープの考え方は以下のようになる。
+> なお、 [ExecutionContext](../../javadoc/javadoc-nablarch-fw-ExecutionContext.md) を使用した場合、スコープの考え方は以下のようになる。
 
 > スレッドごとに状態を保持する領域
 

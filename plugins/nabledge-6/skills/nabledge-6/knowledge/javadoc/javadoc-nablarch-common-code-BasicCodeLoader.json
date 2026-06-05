@@ -1,0 +1,134 @@
+{
+  "title": "class BasicCodeLoader",
+  "content": "**パッケージ:** nablarch.common.code\n\n**実装されたインタフェース:**\n- StaticDataLoader<Code>\n- Initializable\n\n---\n\n```java\npublic class BasicCodeLoader\nimplements StaticDataLoader<Code>, Initializable\n```\n\nデータベースからコードをロードするクラス。\n\n**作成者:** Koichi Asano  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "dbSchema",
+      "level": 3,
+      "content": "```java\nprivate Map<String,String> dbSchema\n```\n\n使用するテーブル名／カラム名\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "patternColumnNames",
+      "level": 3,
+      "content": "```java\nprivate String[] patternColumnNames\n```\n\nパターンカラム名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "optionNameColumnNames",
+      "level": 3,
+      "content": "```java\nprivate String[] optionNameColumnNames\n```\n\nオプション名称のカラム名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "dbManager",
+      "level": 3,
+      "content": "```java\nprivate SimpleDbTransactionManager dbManager\n```\n\nデータベーストランザクションマネージャ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "selectAllStatement",
+      "level": 3,
+      "content": "```java\nprivate String selectAllStatement\n```\n\n全てのコードをロードするSQL文。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "selectOneCodeStatement",
+      "level": 3,
+      "content": "```java\nprivate String selectOneCodeStatement\n```\n\n1つのコードをロードするSQL文。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "setCodeNameSchema",
+      "level": 3,
+      "content": "```java\npublic void setCodeNameSchema(CodeNameSchema codeNameSchema)\n```\n\nコード名称テーブルのスキーマ情報を設定する。\n\n**パラメータ:**\n- `codeNameSchema` - コード名称テーブルのスキーマ情報\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setCodePatternSchema",
+      "level": 3,
+      "content": "```java\npublic void setCodePatternSchema(CodePatternSchema codePatternSchema)\n```\n\nコードパターンテーブルのスキーマ情報を設定する。\n\n**パラメータ:**\n- `codePatternSchema` - コードパターンテーブルのスキーマ情報\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setDbManager",
+      "level": 3,
+      "content": "```java\npublic void setDbManager(SimpleDbTransactionManager dbManager)\n```\n\nデータベーストランザクションマネージャを設定する。\n\n**パラメータ:**\n- `dbManager` - データベーストランザクションマネージャ\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "generateIndexKey",
+      "level": 3,
+      "content": "```java\npublic Object generateIndexKey(String indexName, Code value)\n```\n\n{@inheritDoc}<br/>\n<br/>\n\n本機能ではインデックスは提供しないためnullを返す。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getId",
+      "level": 3,
+      "content": "```java\npublic Object getId(Code value)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getIndexNames",
+      "level": 3,
+      "content": "```java\npublic List<String> getIndexNames()\n```\n\n{@inheritDoc}<br/>\n<br/>\n\n本機能ではインデックスは提供しないためnullを返す。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getValue",
+      "level": 3,
+      "content": "```java\npublic Code getValue(Object id)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getValues",
+      "level": 3,
+      "content": "```java\npublic List<Code> getValues(String indexName, Object key)\n```\n\n{@inheritDoc}<br/>\n<br/>\n\n本機能ではインデックスは提供しないためnullを返す。\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "loadAll",
+      "level": 3,
+      "content": "```java\npublic List<Code> loadAll()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "createResult",
+      "level": 3,
+      "content": "```java\nprivate List<Code> createResult(SqlResultSet queryResults)\n```\n\nデータベースの検索結果からBasicCodeのListを作成する。\n\n**パラメータ:**\n- `queryResults` - データベースの検索結果\n\n**戻り値:**\nBasicCodeのList\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "initializeStatements",
+      "level": 3,
+      "content": "```java\nprivate void initializeStatements()\n```\n\nSQL文を初期化する。\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "replaceStatement",
+      "level": 3,
+      "content": "```java\nprivate String replaceStatement(String statement)\n```\n\nSQL文の置き換え文字の置き換えを行う。\n\n**パラメータ:**\n- `statement` - 置き換え対象の文字\n\n**戻り値:**\n置き換え文字を置き換えた文字列。\n\n---",
+      "id": "s21"
+    }
+  ],
+  "id": "javadoc-nablarch-common-code-BasicCodeLoader"
+}

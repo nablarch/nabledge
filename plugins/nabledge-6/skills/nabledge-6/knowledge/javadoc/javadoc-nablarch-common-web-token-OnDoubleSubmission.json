@@ -1,0 +1,7 @@
+{
+  "title": "@interface OnDoubleSubmission",
+  "content": "**パッケージ:** nablarch.common.web.token\n\n---\n\n```java\npublic @interface OnDoubleSubmission\n```\n\n二重サブミットを防止する{@link Interceptor}。\n<p>\n業務アクションハンドラのメソッドに付与することで、二重サブミット(同一リクエストの二重送信)のチェックを行う。\n</p>\n\n<p>\n本インターセプタを使用するためには、トークン設定が必要である。\nトークン設定はトークンの生成とHTMLへの埋め込みがある。\nトークンの生成は{@link UseToken}でできる。\nHTMLへの埋め込みはリクエストに格納されたトークンをテンプレートエンジンでinput要素を組み立てればよい。\nThymeleafの例を示す。\n</p>\n<pre>{@code <input type=\"hidden\" name=\"nablarch_token\" th:value=\"${nablarch_request_token}\"/>}</pre>\n\n<p>\nJSPを使用している場合はn:formタグでトークンを設定できる。\n</p>\n<pre>\n    {@code <n:form useToken=\"true\">\n    <n:submit type=\"button\" value=\"Submit\" uri=\"/XXXXX\" allowDoubleSubmission=\"false\">\n    </n:form>}\n</pre>\n本インターセプタは、業務アクションハンドラに次のように実装する。\n<pre>\n    {@code @OnDoubleSubmission(path = \"XXX.jsp\")}\n    {@code @OnError(type = ApplicationException.class, path = \"forward://XXX.html\")\n    public HttpResponse handle(HttpRequest req, ExecutionContext ctx) {\n        // 省略\n    }}\n</pre>\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [],
+  "id": "javadoc-nablarch-common-web-token-OnDoubleSubmission"
+}

@@ -147,9 +147,9 @@ yyyyMMdd形式で、指定しない場合は”99991231”
 
 認可チェックを使うためには、以下のとおり設定する。
 
-* BasicPermissionFactory
+* [BasicPermissionFactory](../../javadoc/javadoc-nablarch-common-permission-BasicPermissionFactory.md)
   の設定をコンポーネント定義に追加する。
-* BasicPermissionFactory は、
+* [BasicPermissionFactory](../../javadoc/javadoc-nablarch-common-permission-BasicPermissionFactory.md) は、
   [認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#認可チェックハンドラ) に設定して使うので、コンポーネント名は任意の名前を指定する。
 
 ```xml
@@ -212,7 +212,7 @@ yyyyMMdd形式で、指定しない場合は”99991231”
 </component>
 ```
 
-BasicPermissionFactory は、
+[BasicPermissionFactory](../../javadoc/javadoc-nablarch-common-permission-BasicPermissionFactory.md) は、
 初期化が必要なので、以下のコンポーネント定義も追加する。
 
 ```xml
@@ -229,10 +229,10 @@ BasicPermissionFactory は、
 
 ### サーバサイドで認可チェックを行う
 
-認可チェックは、 Permission を使用する。
+認可チェックは、 [Permission](../../javadoc/javadoc-nablarch-common-permission-Permission.md) を使用する。
 [認可チェックハンドラ](../../component/handlers/handlers-permission-check-handler.md#認可チェックハンドラ) により、スレッドコンテキストに
-Permission が設定されているので、
-PermissionUtil.getPermission
+[Permission](../../javadoc/javadoc-nablarch-common-permission-Permission.md) が設定されているので、
+[PermissionUtil.getPermission](../../javadoc/javadoc-nablarch-common-permission-PermissionUtil.md)
 を使って取得する。
 
 ```java

@@ -85,13 +85,13 @@ Nablarchの後方互換性ポリシーについて説明します。
 
 > **Important:**
 > この後方互換性ポリシーは、フレームワークのAPIのうち、Nablarchが定める公開APIを対象にしています。
-> Nablarchが定める公開APIは、 Published
+> Nablarchが定める公開APIは、 [Published](../../javadoc/javadoc-nablarch-core-util-annotation-Published.md)
 > アノテーションが付与されたAPIになります。
 > クラスの全APIを公開する場合はクラス宣言に、
 > 個別にメソッドを公開する場合はメソッド宣言に
-> Published
+> [Published](../../javadoc/javadoc-nablarch-core-util-annotation-Published.md)
 > アノテーションを付与しています。
-> Published
+> [Published](../../javadoc/javadoc-nablarch-core-util-annotation-Published.md)
 > アノテーションが付与されていないAPIは、非公開APIになります。
 
 > **非公開APIは、後方互換性が維持されないバージョンアップを行う場合がありますので、プロジェクトにて非公開APIを使用しないでください。**

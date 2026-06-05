@@ -1,0 +1,56 @@
+{
+  "title": "class NablarchMessageInterpolator",
+  "content": "**パッケージ:** nablarch.core.validation.ee\n\n**実装されたインタフェース:**\n- MessageInterpolator\n\n---\n\n```java\npublic class NablarchMessageInterpolator\nimplements MessageInterpolator\n```\n\nNablarchのメッセージ管理機能を使用してメッセージを構築するクラス。\n<p>\nこの実装では、メッセージの取得処理を{@link MessageUtil#createMessage(MessageLevel, String, Object...)}に委譲する。\n{@link MessageUtil#createMessage(MessageLevel, String, Object...)}に指定するメッセージIDは以下のルールにより導出する。\n<ol>\n<li>メッセージが\"{\"、\"}\"で囲まれていてメッセージ内に\"}\"が存在しない場合は、前後のカッコを取り除いた値をメッセージIDとする。</li>\n<li>上記以外の場合は、メッセージをデフォルトの{@link MessageInterpolator}によりメッセージに変換する。</li>\n</ol>\n<p>\n以下に例をしめす。\n<pre>\n<code>\n// カッコが取り除かれ「user.required.message」がメッセージIDとなる。\n{@literal @}Required(message = \"{user.required.message}\")\n\n// 「{user.{required}.message}」をメッセージとして、\n// デフォルトのMessageInterpolatorによりメッセージを構築する。\n{@literal @}Required(message = \"{user.{required}.message}\")\n\n// 「入力してください。」をメッセージとして、\n// デフォルトのMessageInterpolatorによりメッセージを構築する。\n{@literal @}Required(message = \"入力してください。\")\n</code>\n</pre>\n\n**作成者:** Hisaaki Shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "MESSAGE_ID_PATTERN",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern MESSAGE_ID_PATTERN\n```\n\nメッセージIDの形式\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "defaultMessageInterpolator",
+      "level": 3,
+      "content": "```java\nprivate final MessageInterpolator defaultMessageInterpolator\n```\n\nデフォルトの{@link MessageInterpolator}\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "interpolate",
+      "level": 3,
+      "content": "```java\npublic String interpolate(String message, Context context)\n```\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "interpolate",
+      "level": 3,
+      "content": "```java\npublic String interpolate(String message, Context context, Locale locale)\n```\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "isMessageId",
+      "level": 3,
+      "content": "```java\nprivate static boolean isMessageId(String message)\n```\n\nメッセージがメッセージID形式かどうか判定する。\n<p>\nメッセージが、\"{\"、\"}\"で囲まれている場合はメッセージID形式とする。\nただし、メッセージ中に\"}\"がある場合は、メッセージID形式とはならない。\n\n**パラメータ:**\n- `message` - メッセージ\n\n**戻り値:**\nメッセージID形式の場合{@code true}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getMessageId",
+      "level": 3,
+      "content": "```java\nprivate static String getMessageId(String message)\n```\n\nメッセージIDを取得する。\n<p>\nメッセージIDの前後の\"{\"、\"}\"を除去する。\n\n**パラメータ:**\n- `message` - メッセージ\n\n**戻り値:**\nメッセージID\n\n---",
+      "id": "s8"
+    }
+  ],
+  "id": "javadoc-nablarch-core-validation-ee-NablarchMessageInterpolator"
+}

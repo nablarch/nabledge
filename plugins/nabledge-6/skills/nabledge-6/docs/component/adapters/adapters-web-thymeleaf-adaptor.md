@@ -28,8 +28,8 @@
 ## ウェブアプリケーション Thymeleafアダプタを使用するための設定を行う
 
 本アダプタを使用するためには、コンポーネント設定ファイルで
-ThymeleafResponseWriter を
-HttpResponseHandler へ設定する。
+[ThymeleafResponseWriter](../../javadoc/javadoc-nablarch-fw-web-handler-responsewriter-thymeleaf-ThymeleafResponseWriter.md) を
+[HttpResponseHandler](../../javadoc/javadoc-nablarch-fw-web-handler-HttpResponseHandler.md) へ設定する。
 
 `ThymeleafResponseWriter` にはThymeleafが提供する `TemplateEngine` を設定する必要がある。
 
@@ -69,8 +69,8 @@ HttpResponseHandler へ設定する。
 
 ### 処理対象判定について
 
-ThymeleafResponseWriter は
-HttpResponse のコンテンツパスの内容によって、
+[ThymeleafResponseWriter](../../javadoc/javadoc-nablarch-fw-web-handler-responsewriter-thymeleaf-ThymeleafResponseWriter.md) は
+[HttpResponse](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.md) のコンテンツパスの内容によって、
 テンプレートエンジンを使用してレスポンスを出力するか否かを判断する。
 デフォルトではコンテンツパスが `.html` で終了している場合、処理対象と判定しテンプレートエンジンにより出力する。
 

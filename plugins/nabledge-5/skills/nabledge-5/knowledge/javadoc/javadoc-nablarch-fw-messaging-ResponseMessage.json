@@ -1,0 +1,146 @@
+{
+  "title": "class ResponseMessage",
+  "content": "**パッケージ:** nablarch.fw.messaging\n\n**継承階層:**\n```\njava.lang.Object\n  └─ SendingMessage\n      └─ nablarch.fw.messaging.ResponseMessage\n```\n\n**実装されたインタフェース:**\n- Result\n\n---\n\n```java\npublic class ResponseMessage\nextends SendingMessage\nimplements Result\n```\n\n本システムに対する要求電文への応答電文を表すクラス。\n\n本クラスでは、RequestMessageと同様、応答電文の内容をフレームワークヘッダ部と\n業務データ部に分離して管理しており、業務ロジックからは業務データ部しか操作できない\nようになっている。\n\nメッセージボディを直列化する際には、フレームワークヘッダ部と業務データ部をそれぞれ\n直列化して連結したものを返す。\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "fwHeader",
+      "level": 3,
+      "content": "```java\nprivate final FwHeader fwHeader\n```\n\nフレームワーク制御ヘッダ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "fwHeaderDefinition",
+      "level": 3,
+      "content": "```java\nprivate FwHeaderDefinition fwHeaderDefinition\n```\n\nフレームワーク制御ヘッダ定義\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "result",
+      "level": 3,
+      "content": "```java\nprivate Result result\n```\n\n業務処理の結果\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "wroteHeader",
+      "level": 3,
+      "content": "```java\nprivate boolean wroteHeader\n```\n\nフレームワーク制御ヘッダが電文に反映されたか否か\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "ResponseMessage",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage(FwHeader fwHeader, ReceivedMessage message)\n```\n\n受信電文に対する応答電文を作成する。\n\n**パラメータ:**\n- `fwHeader` - 応答電文に付加するフレームワーク制御ヘッダ\n- `message` - 受信電文\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "ResponseMessage",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage(RequestMessage message)\n```\n\n要求電文に対する応答電文を作成する。\nRequestMessage#reply() から呼ばれることを想定している。\n\n**パラメータ:**\n- `message` - 要求電文オブジェクト\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "getBodyBytes",
+      "level": 3,
+      "content": "```java\npublic byte[] getBodyBytes()\n```\n\n{@inheritDoc}\nこの実装では、フレームワーク制御ヘッダ部と業務データ部をそれぞれ直列化し、\n連結したものを返す。\nただし、フレームワーク制御ヘッダを直列化する際、フレームワーク制御ヘッダ定義\nを使用する。これは、通常{@link nablarch.fw.messaging.handler.MessageReplyHandler}によって設定される。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "throwAsError",
+      "level": 3,
+      "content": "```java\npublic void throwAsError(Throwable e)\n```\n\n実行時例外を送出し、現在の業務トランザクションをロールバックさせ、\nこの電文の内容をエラー応答として送信する。\n\n**パラメータ:**\n- `e` - 起因となる例外\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "throwAsError",
+      "level": 3,
+      "content": "```java\npublic void throwAsError()\n```\n\n実行時例外を送出し、現在の業務トランザクションをロールバックさせ、\nこの電文の内容をエラー応答として送信する。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getStatusCode",
+      "level": 3,
+      "content": "```java\npublic int getStatusCode()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getMessage",
+      "level": 3,
+      "content": "```java\npublic String getMessage()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "isSuccess",
+      "level": 3,
+      "content": "```java\npublic boolean isSuccess()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setResult",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage setResult(Result result)\n```\n\n業務処理の結果を設定する。\n\n**パラメータ:**\n- `result` - 業務処理結果\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getFwHeader",
+      "level": 3,
+      "content": "```java\npublic FwHeader getFwHeader()\n```\n\nフレームワーク制御ヘッダを取得する。\n\n**戻り値:**\nフレームワーク制御ヘッダ\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setFwHeaderDefinition",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage setFwHeaderDefinition(FwHeaderDefinition def)\n```\n\nフレームワークヘッダ定義を設定する。\n\n**パラメータ:**\n- `def` - フレームワーク制御ヘッダ\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setStatusCodeHeader",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage setStatusCodeHeader(String statusCode)\n```\n\nフレームワーク制御ヘッダの処理結果コードの値を設定する。\n\n**パラメータ:**\n- `statusCode` - 処理結果コード\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "addRecord",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage addRecord(Map<String,?> record)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "addRecord",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage addRecord(String recordType, Map<String,?> record)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "addRecord",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage addRecord(Object recordObj)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "addRecord",
+      "level": 3,
+      "content": "```java\npublic ResponseMessage addRecord(String recordType, Object recordObj)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s23"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-ResponseMessage"
+}

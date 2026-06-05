@@ -1,0 +1,74 @@
+{
+  "title": "class MultipartHandler",
+  "content": "**パッケージ:** nablarch.fw.web.upload\n\n**実装されたインタフェース:**\n- HttpRequestHandler\n\n---\n\n```java\npublic class MultipartHandler\nimplements HttpRequestHandler\n```\n\nマルチパートを解析するハンドラ。<br/>\n<p/>\n<p>\n本ハンドラは、サーブレットの入力ストリーム\n（{@link jakarta.servlet.http.HttpServletRequest#getInputStream()}）から\nリクエストのメッセージボディを読み込み、マルチパートの解析を行う。\nHTTPリクエストがマルチパートでない場合（Content-Typeがmultipart/form-dataでない場合）、\n何もせずに後続のハンドラに処理を委譲する。\n</p>\n<p>\n解析結果は、{@link HttpRequest}に格納される。\nアップロードファイルに関する情報は{@link HttpRequest#getPart(String)}で取得できる。\nアップロードファイル以外のパラメータはHTTPリクエストパラメータに格納されるので、通常のように\n{@link HttpRequest#getParamMap()}等で取得できる。\n</p>\n<p>\nマルチパートの解析前はリクエストパラメータにアクセス出来ないため、\nリクエストパラメータを扱う以下のハンドラは本ハンドラの後続に配置する必要がある。\n<ul>\n    <li>{@link nablarch.common.web.session.SessionStoreHandler}</li>\n    <li>{@link nablarch.common.web.handler.NablarchTagHandler}</li>\n</ul>\n</p>\n<p>\n実際の解析処理は{@link MultipartParser}に委譲され、マルチパートの解析およびアップロードファイルの一時保存が行われる。\nデフォルト設定では、一時ファイルは本ハンドラの処理終了時点（すなわちHTTPリクエストの処理終了時点）で削除される。\n</p>\n<p>\nアップロードに関する各種設定は{@link UploadSettings}から取得する。\n</p>\n\n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "settings",
+      "level": 3,
+      "content": "```java\nprivate UploadSettings settings\n```\n\n各種設定値\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "COMPLETED_FLG_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String COMPLETED_FLG_KEY\n```\n\nマルチパート処理状態を格納するキー値\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "setUploadSettings",
+      "level": 3,
+      "content": "```java\npublic void setUploadSettings(UploadSettings settings)\n```\n\nマルチパート用の各種設定値を設定する。\n\n**パラメータ:**\n- `settings` - 各種設定値\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest request, ExecutionContext context)\n```\n\n{@inheritDoc}\n\n**パラメータ:**\n- `request` - {@link HttpRequestWrapper}でなければならない。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "createParser",
+      "level": 3,
+      "content": "```java\nMultipartParser createParser(HttpRequestWrapper wrapper, UploadSettings settings)\n```\n\n{@link MultipartParser}インスタンスを生成する。\n\n**パラメータ:**\n- `wrapper` - {@link HttpRequestWrapper}\n- `settings` - {@link UploadSettings}\n\n**戻り値:**\nインスタンス\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "cast",
+      "level": 3,
+      "content": "```java\nprivate HttpRequestWrapper cast(HttpRequest request)\n                        throws UnsupportedOperationException\n```\n\n{@link HttpRequest}を{@link HttpRequestWrapper}にキャストする。\n\n**パラメータ:**\n- `request` - キャスト対象のHttpRequest\n\n**戻り値:**\nキャスト後のインスタンス\n\n**例外:**\n- `UnsupportedOperationException` - キャストに失敗した場合。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "isParseCompleted",
+      "level": 3,
+      "content": "```java\nprivate boolean isParseCompleted(ExecutionContext context)\n```\n\nマルチパートの解析処理が終了しているか否か。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n**戻り値:**\n解析が終了している場合は {@code true}\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "cleanup",
+      "level": 3,
+      "content": "```java\nprivate void cleanup(PartInfoHolder parts)\n```\n\n一時保存されたアップロードファイルを削除する。\n\n**パラメータ:**\n- `parts` - パート情報\n\n---",
+      "id": "s11"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-upload-MultipartHandler"
+}

@@ -1,7 +1,7 @@
 {
   "id": "testing-framework-fileupload",
   "title": "リクエスト単体テストの実施方法(ファイルアップロード)",
-  "content": "ファイルアップロードのテストは、画面オンライン処理のテストの一種である。\nしたがって、ファイルアップロードのテストを実施するには、画面オンライン処理の [リクエスト単体テストの実施方法](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.md) が前提となる。\n\nファイルアップロードのテストをする場合、HTTPリクエストパラメータにアップロードファイルを指定する必要がある。\n本項では、HTTPリクエストパラメータにアップロードファイルを指定する方法を解説する。\n\n-----",
+  "content": "ファイルアップロードのテストは、画面オンライン処理のテストの一種である。\nしたがって、ファイルアップロードのテストを実施するには、画面オンライン処理の [リクエスト単体テストの実施方法](../../development-tools/testing-framework/testing-framework-02-requestunittest-index.json) が前提となる。\n\nファイルアップロードのテストをする場合、HTTPリクエストパラメータにアップロードファイルを指定する必要がある。\n本項では、HTTPリクエストパラメータにアップロードファイルを指定する方法を解説する。\n\n-----",
   "no_knowledge_content": false,
   "sections": [
     {
@@ -19,7 +19,7 @@
     {
       "id": "s3",
       "title": "固定長ファイル、CSVファイルの場合",
-      "content": "[固定長ファイル](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#固定長ファイルの準備)や\n[CSVファイル](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.md#可変長ファイルcsvファイルの準備) をアップロードする場合、\nそのファイル内容をテストデータシートに記載する。\nテスト実行時に、自動テストフレームワークがこのデータを元にファイルを作成する。\n\n以下の例では、workディレクトリ配下にmember_list.csvファイルを作成し、\nそのファイルをアップロード対象として指定している。\n\n-----\n\n`LIST_MAP=requestParams`\n\n| uploadfile | comment |\n|---|---|\n| `${attach:work/member_list.csv}` | 10月度新規会員を登録 |\n\n`SETUP_FIXED=work/member_list.csv`\n\n// ディレクティブ\n\n| text-encoding | Windows-31J |  |\n|---|---|---|\n| record-separator | CRLF |  |\n\n// データ\n\n| name | age | address |\n|---|---|---|\n| 山田太郎 | 30 | 東京都港区芝浦1-1 |\n| 田中次郎 | 20 | 大阪府門真市東田町2-2 |\n\n-----\n\n> **Note:**\n> 固定長ファイルやCSVファイルをアップロードする場合でも、\n> バイナリファイルと同様に、事前にファイルを用意しておくことも可能であるが、\n> テストデータの保守容易性を考慮するとテストデータシートに記載しておくべきである。",
+      "content": "[固定長ファイル](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.json#固定長ファイルの準備)や\n[CSVファイル](../../development-tools/testing-framework/testing-framework-02-requestunittest-batch.json#可変長ファイルcsvファイルの準備) をアップロードする場合、\nそのファイル内容をテストデータシートに記載する。\nテスト実行時に、自動テストフレームワークがこのデータを元にファイルを作成する。\n\n以下の例では、workディレクトリ配下にmember_list.csvファイルを作成し、\nそのファイルをアップロード対象として指定している。\n\n-----\n\n`LIST_MAP=requestParams`\n\n| uploadfile | comment |\n|---|---|\n| `${attach:work/member_list.csv}` | 10月度新規会員を登録 |\n\n`SETUP_FIXED=work/member_list.csv`\n\n// ディレクティブ\n\n| text-encoding | Windows-31J |  |\n|---|---|---|\n| record-separator | CRLF |  |\n\n// データ\n\n| name | age | address |\n|---|---|---|\n| 山田太郎 | 30 | 東京都港区芝浦1-1 |\n| 田中次郎 | 20 | 大阪府門真市東田町2-2 |\n\n-----\n\n> **Note:**\n> 固定長ファイルやCSVファイルをアップロードする場合でも、\n> バイナリファイルと同様に、事前にファイルを用意しておくことも可能であるが、\n> テストデータの保守容易性を考慮するとテストデータシートに記載しておくべきである。",
       "level": 2
     }
   ]

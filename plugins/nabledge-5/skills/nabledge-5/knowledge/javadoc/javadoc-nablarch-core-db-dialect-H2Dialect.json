@@ -1,0 +1,92 @@
+{
+  "title": "class H2Dialect",
+  "content": "**パッケージ:** nablarch.core.db.dialect\n\n**継承階層:**\n```\njava.lang.Object\n  └─ DefaultDialect\n      └─ nablarch.core.db.dialect.H2Dialect\n```\n\n---\n\n```java\npublic class H2Dialect\nextends DefaultDialect\n```\n\nH2用のSQL方言クラス。\n<p>\nこのクラスは、1.4.191 および 2.1.214 により動作確認を行っている。\n\n**作成者:** Masaya Seko  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "UNIQUE_ERROR_SQL_STATE",
+      "level": 3,
+      "content": "```java\nprivate static final String UNIQUE_ERROR_SQL_STATE\n```\n\n一意制約違反を表すSQLState\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "QUERY_CANCEL_SQL_STATE",
+      "level": 3,
+      "content": "```java\nprivate static final String QUERY_CANCEL_SQL_STATE\n```\n\nQuery Timeアウト時に発生する例外のエラーコード\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "LOCK_TIMEOUT_SQL_STATE",
+      "level": 3,
+      "content": "```java\nprivate static final String LOCK_TIMEOUT_SQL_STATE\n```\n\n2.1.214 でロック試行タイムアウト時に発生する例外のエラーコード\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "supportsIdentity",
+      "level": 3,
+      "content": "```java\npublic boolean supportsIdentity()\n```\n\n{@inheritDoc}\n<p/>\nH2では、IDENTITYカラムを使用できるため、 {@code true}を返す。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "supportsIdentityWithBatchInsert",
+      "level": 3,
+      "content": "```java\npublic boolean supportsIdentityWithBatchInsert()\n```\n\n{@inheritDoc}\n\nH2では、batch insertでIDENTITYカラムが使用できるため、{@code true}を返す。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "supportsSequence",
+      "level": 3,
+      "content": "```java\npublic boolean supportsSequence()\n```\n\n{@inheritDoc}\n<p/>\nH2では、シーケンスオブジェクトが使用できるので、 {@code true}を返す。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "supportsOffset",
+      "level": 3,
+      "content": "```java\npublic boolean supportsOffset()\n```\n\n{@inheritDoc}\n<p/>\nH2では、{@code offset}がサポートされるので{@code true}を返す。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "isDuplicateException",
+      "level": 3,
+      "content": "```java\npublic boolean isDuplicateException(SQLException sqlException)\n```\n\n{@inheritDoc}\n<p/>\n{@link SQLException#getSQLState()}が23505(unique_violation:一意制約違反)の場合、一意制約違反とする。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "isTransactionTimeoutError",
+      "level": 3,
+      "content": "```java\npublic boolean isTransactionTimeoutError(SQLException sqlException)\n```\n\n{@inheritDoc}\n<p/>\nH2の場合、以下例外の場合タイムアウト対象の例外として扱う。\n<ul>\n<li>SQLState:57014(クエリタイムアウト時に送出される例外コード)</li>\n<li>SQLState:HYT00(ロック試行タイムアウト時に送出される例外コード)</li>\n</ul>\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "buildSequenceGeneratorSql",
+      "level": 3,
+      "content": "```java\npublic String buildSequenceGeneratorSql(String sequenceName)\n```\n\n{@inheritDoc}\n<p/>\n{@code nextval}関数を使用して、次の順序を取得するSQL文を構築する。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "convertPaginationSql",
+      "level": 3,
+      "content": "```java\npublic String convertPaginationSql(String sql, SelectOption selectOption)\n```\n\n{@inheritDoc}\n<p/>\n{@code offset}と{@code limit}を使用したSQL文に変換する。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getPingSql",
+      "level": 3,
+      "content": "```java\npublic String getPingSql()\n```\n\n---",
+      "id": "s14"
+    }
+  ],
+  "id": "javadoc-nablarch-core-db-dialect-H2Dialect"
+}

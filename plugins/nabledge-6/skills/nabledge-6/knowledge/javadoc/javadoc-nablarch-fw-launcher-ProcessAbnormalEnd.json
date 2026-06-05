@@ -1,0 +1,26 @@
+{
+  "title": "class ProcessAbnormalEnd",
+  "content": "**パッケージ:** nablarch.fw.launcher\n\n**継承階層:**\n```\njava.lang.Object\n  └─ TransactionAbnormalEnd\n      └─ nablarch.fw.launcher.ProcessAbnormalEnd\n```\n\n---\n\n```java\npublic class ProcessAbnormalEnd\nextends TransactionAbnormalEnd\n```\n\nアプリケーションを異常終了させる際に送出する例外クラス。\n<p/>\nこの例外が送出された場合、フレームワークは以下の処理を行う。\n<pre>\n1. 運用ログへの出力\n  Fatalレベルで運用ログを出力する。\n\n2. 業務処理の中断\n  後続の業務処理の受付を停止し、現在処理中の業務処理についても割り込み要求を行って\n  処理終了まで待機する。\n\n3. プロセスの停止\n  業務処理停止後、指定された終了コードでプロセスを終了させる。\n</pre>\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "ProcessAbnormalEnd",
+      "level": 3,
+      "content": "```java\npublic ProcessAbnormalEnd(int exitCode, String failureCode, Object messageOptions)\n```\n\n終了コードとメッセージ（障害コードとオプション）を元に例外を構築する。\n\n**パラメータ:**\n- `exitCode` - 終了コード(プロセスを終了({@link System#exit(int)})する際に設定する値)\n- `failureCode` - 障害コード\n- `messageOptions` - 障害コードからメッセージを取得する際に使用するオプション情報\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "ProcessAbnormalEnd",
+      "level": 3,
+      "content": "```java\npublic ProcessAbnormalEnd(int exitCode, Throwable error, String failureCode, Object messageOptions)\n```\n\n終了コードとメッセージ（障害コードとオプション）、元例外{@link Throwable}を元に例外を構築する。\n<p/>\n元例外が存在しない場合は、{@link #ProcessAbnormalEnd(int, String, Object...)} を使用する。\n\n**パラメータ:**\n- `exitCode` - 終了コード(プロセスを終了({@link System#exit(int)})する際に設定する値)\n- `error` - 元例外\n- `failureCode` - 障害コード\n- `messageOptions` - 障害コードからメッセージを取得する際に使用するオプション情報\n\n---",
+      "id": "s3"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-launcher-ProcessAbnormalEnd"
+}

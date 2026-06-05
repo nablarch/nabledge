@@ -1,0 +1,50 @@
+{
+  "title": "class ConstructorInjectionComponentCreator",
+  "content": "**パッケージ:** nablarch.core.repository.di.config\n\n**継承階層:**\n```\njava.lang.Object\n  └─ BeanComponentCreator\n      └─ nablarch.core.repository.di.config.ConstructorInjectionComponentCreator\n```\n\n---\n\n```java\npublic class ConstructorInjectionComponentCreator\nextends BeanComponentCreator\n```\n\nコンストラクタインジェクションできるよう拡張した{@link BeanComponentCreator}。\n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "createComponent",
+      "level": 3,
+      "content": "```java\npublic Object createComponent(DiContainer container, ComponentDefinition def)\n```\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "createComponentWithConstructorInjection",
+      "level": 3,
+      "content": "```java\nprivate Object createComponentWithConstructorInjection(DiContainer container, Constructor<?> constructor)\n```\n\nコンポーネントの生成とコンストラクタインジェクションを行う。\n\n**パラメータ:**\n- `container` - DIコンテナ\n- `constructor` - コンストラクタ\n\n**戻り値:**\nインジェクション済のコンポーネント\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "newContainerProcessException",
+      "level": 3,
+      "content": "```java\nprivate ContainerProcessException newContainerProcessException(Constructor<?> constructor, Exception cause)\n```\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "getComponent",
+      "level": 3,
+      "content": "```java\nprivate Object getComponent(DiContainer container, Class<?> type, Annotation[] annotations)\n```\n\nコンストラクタの引数にインジェクトするコンポーネントを取得する。\n{@link ConfigValue}、{@link ComponentRef}が付与された引数の場合名前でコンポーネントを取得\nそれ以外の引数は型でコンポーネントを取得する。\n\n**パラメータ:**\n- `container` - DIコンテナ\n- `type` - コンストラクタ引数の型\n- `annotations` - コンストラクタ引数に付与されたアノテーション\n\n**戻り値:**\nインジェクトするコンポーネント\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "getConfigValueComponent",
+      "level": 3,
+      "content": "```java\nprivate Object getConfigValueComponent(DiContainer container, Class<?> type, ConfigValue annotation)\n```\n\n{@link ConfigValue}の情報をもとに設定値を取得する。\n\n**パラメータ:**\n- `container` - DIコンテナ\n- `type` - コンストラクタ引数の型\n- `annotation` - アノテーション\n\n**戻り値:**\n{@link ConfigValue}に指定した変数を解決した設定値\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getReferenceComponent",
+      "level": 3,
+      "content": "```java\nprivate Object getReferenceComponent(DiContainer container, Class<?> type, ComponentRef annotation)\n```\n\n{@link ComponentRef}の情報をもとにコンポーネントを取得する。\n\n**パラメータ:**\n- `container` - DIコンテナ\n- `type` - コンストラクタ引数の型\n- `annotation` - アノテーション\n\n**戻り値:**\n{@link ComponentRef}の名前で取得したコンポーネント\n\n---",
+      "id": "s7"
+    }
+  ],
+  "id": "javadoc-nablarch-core-repository-di-config-ConstructorInjectionComponentCreator"
+}

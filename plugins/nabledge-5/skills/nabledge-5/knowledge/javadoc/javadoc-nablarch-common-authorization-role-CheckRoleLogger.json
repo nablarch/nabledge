@@ -1,0 +1,86 @@
+{
+  "title": "class CheckRoleLogger",
+  "content": "**パッケージ:** nablarch.common.authorization.role\n\n**実装されたインタフェース:**\n- Initializable\n\n---\n\n```java\npublic class CheckRoleLogger\nimplements Initializable\n```\n\nアクションメソッドに設定された{@link CheckRole}アノテーションの情報をログに出力するロガー。\n<p>\nこのクラスは、指定されたパッケージ以下に存在するクラスを走査して、\n各メソッドとそこに設定された{@link CheckRole}アノテーションの情報を抽出する。\nそして、抽出した情報をログにデバッグレベルで出力する。<br>\nこれは、アクションメソッドへの{@link CheckRole}の設定が設計通りになっているかを\n確認することを目的とした機能となる。\n</p>\n<p>\nこのクラスは、まず{@code targetPackage}で指定されたパッケージ配下を再帰的に走査し、\n処理対象の候補となるクラスを発見する。\n次に、発見したクラスの完全修飾名が{@code targetClassPattern}で指定された正規表現に\n一致するかどうかを確認し、一致する場合は対象のクラスとして処理する。<br>\nそして、処理対象となったクラスから、そのクラスで宣言された{@code public}メソッドの情報が抽出される\n（親クラスで宣言されたメソッドは対象にならない）。\n抽出されたメソッドからは、以下の情報が取り出されてログに出力される。\n</p>\n<ul>\n  <li>クラスの完全修飾名({@code Class.getName()}で取得できる値)</li>\n  <li>シグネチャ(メソッド名と引数の型の並び)</li>\n  <li>{@link CheckRole}アノテーションの {@code value} に設定された値(未設定の場合は空)</li>\n  <li>{@link CheckRole}アノテーションの {@code anyOf} に設定された値(未設定の場合は空)</li>\n</ul>\n<p>\nこのクラスは{@link Initializable}を実装しており、アプリケーション起動時の初期化のタイミングで\nログを出力する。\n</p>\n\n**作成者:** Tanaka Tomoyuki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LINE_SEP",
+      "level": 3,
+      "content": "```java\nprivate static final String LINE_SEP\n```\n\n行の区切り文字。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "SEP",
+      "level": 3,
+      "content": "```java\nprivate static final String SEP\n```\n\n要素の区切り文字。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "TITLE",
+      "level": 3,
+      "content": "```java\nprivate static final String TITLE\n```\n\nログのタイトル。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "HEADER",
+      "level": 3,
+      "content": "```java\nprivate static final String HEADER\n```\n\nログのヘッダー。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "targetPackage",
+      "level": 3,
+      "content": "```java\nprivate String targetPackage\n```\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "targetClassPattern",
+      "level": 3,
+      "content": "```java\nprivate String targetClassPattern\n```\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize()\n```\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "findTargetMethods",
+      "level": 3,
+      "content": "```java\nprivate List<Method> findTargetMethods()\n```\n\n出力対象のメソッドを抽出する。\n\n**戻り値:**\n出力対象のメソッド一覧\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "formatMethodSettings",
+      "level": 3,
+      "content": "```java\nprivate List<String> formatMethodSettings(List<Method> targetMethods)\n```\n\n各メソッドに設定された{@link CheckRole}の情報をログ出力用にフォーマットする。\n\n**パラメータ:**\n- `targetMethods` - 出力対象のメソッド一覧\n\n**戻り値:**\n各メソッドの設定をフォーマットしたログメッセージ一覧\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setTargetPackage",
+      "level": 3,
+      "content": "```java\npublic void setTargetPackage(String targetPackage)\n```\n\n走査対象となるパッケージの名前を設定する。\n\n**パラメータ:**\n- `targetPackage` - 走査対象となるパッケージの名前\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setTargetClassPattern",
+      "level": 3,
+      "content": "```java\npublic void setTargetClassPattern(String targetClassPattern)\n```\n\n処理対象となるクラスを特定するための正規表現を設定する。\n<p>\nこの正規表現は、クラスの完全修飾名に対して適用される。<br>\nデフォルトは {@code ^.*Action$} が設定されている({@code \"Action\"}で終わるクラスが対象)。\n</p>\n\n**パラメータ:**\n- `targetClassPattern` - 処理対象となるクラスを特定するための正規表現\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-common-authorization-role-CheckRoleLogger"
+}

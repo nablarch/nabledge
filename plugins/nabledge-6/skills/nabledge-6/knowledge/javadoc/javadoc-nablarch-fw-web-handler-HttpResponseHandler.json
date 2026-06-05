@@ -1,0 +1,212 @@
+{
+  "title": "class HttpResponseHandler",
+  "content": "**パッケージ:** nablarch.fw.web.handler\n\n**実装されたインタフェース:**\n- Handler<HttpRequest,HttpResponse>\n\n---\n\n```java\npublic class HttpResponseHandler\nimplements Handler<HttpRequest,HttpResponse>\n```\n\nServletAPIを通じてHTTPレスポンス処理を行うハンドラ。\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n**作成者:** Masato Inoue  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "USER_AGENT",
+      "level": 3,
+      "content": "```java\nprotected static final String USER_AGENT\n```\n\nUser-Agentヘッダ。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "usesFlush",
+      "level": 3,
+      "content": "```java\nprivate boolean usesFlush\n```\n\nレスポンスヘッダ設定時にFlushするかどうか\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "convertMode",
+      "level": 3,
+      "content": "```java\nprivate HttpResponseUtil.StatusConvertMode convertMode\n```\n\nHTTPレスポンスコードの変換モード。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "downloadFileNameEncoderFactory",
+      "level": 3,
+      "content": "```java\nprivate DownloadFileNameEncoderFactory downloadFileNameEncoderFactory\n```\n\nダウンロードファイル名のエンコーダを取得するクラス。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "BUFFER_SIZE",
+      "level": 3,
+      "content": "```java\nprivate static final int BUFFER_SIZE\n```\n\nストリームに出力する際のバッファサイズ。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "customResponseWriter",
+      "level": 3,
+      "content": "```java\nprivate CustomResponseWriter customResponseWriter\n```\n\nHTTPレスポンス出力クラス\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "contentPathRule",
+      "level": 3,
+      "content": "```java\nprivate ResourcePathRule contentPathRule\n```\n\n言語対応コンテンツパスのルール\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "fatalErrorMessage",
+      "level": 3,
+      "content": "```java\nprivate final String fatalErrorMessage\n```\n\nどうしようも無いときのエラーレスポンスで送信する内容。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s11"
+    },
+    {
+      "title": "setForceFlushAfterWritingHeaders",
+      "level": 3,
+      "content": "```java\npublic void setForceFlushAfterWritingHeaders(boolean usesFlush)\n```\n\nHTTPヘッダーをwriteした直後にFlushするかどうかの設定\nデフォルト値はtrueである。\n\n**パラメータ:**\n- `usesFlush` - Flushの有無\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setDownloadFileNameEncoderFactory",
+      "level": 3,
+      "content": "```java\npublic HttpResponseHandler setDownloadFileNameEncoderFactory(DownloadFileNameEncoderFactory factory)\n```\n\nダウンロードファイル名のエンコーダを取得するクラスを設定する\n\n**パラメータ:**\n- `factory` - ダウンロードファイル名のエンコーダを取得するクラス\n\n**戻り値:**\nこのオブジェクト自体。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setConvertMode",
+      "level": 3,
+      "content": "```java\npublic void setConvertMode(String convertMode)\n```\n\nHTTPレスポンスコードの変換モードを設定する。<br>\n<p>\nHTTPレスポンスコードの変換モードは以下のいずれかである。\n<ul>\n<li>CONVERT_ONLY_400_TO_200</li>\n<li>CONVERT_ALL_TO_200</li>\n</ul>\nデフォルトは、CONVERT_ONLY_400_TO_200である。\n</p>\n<p>\n設定した値は、{@link HttpResponseUtil#chooseResponseStatusCode(HttpResponse, ServletExecutionContext)}で使用される。<br>\n変換の仕様については、{@link HttpResponseUtil#chooseResponseStatusCode(HttpResponse, ServletExecutionContext)}を参照。\n</p>\n\n**パラメータ:**\n- `convertMode` - HTTPレスポンスコードの変換モード。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setCustomResponseWriter",
+      "level": 3,
+      "content": "```java\npublic void setCustomResponseWriter(CustomResponseWriter customResponseWriter)\n```\n\nHTTPレスポンス出力クラスを設定する。\nこのプロパティを設定することで、任意のレスポンス出力処理を実行できる。\n設定されていない場合はサーブレットフォワード(JSP)によるレスポンス出力が実行される。\n\n**パラメータ:**\n- `customResponseWriter` - HTTPレスポンス出力クラス\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest req, ExecutionContext ctx)\n                    throws ClassCastException\n```\n\n{@inheritDoc}\n<p>\nこの実装では、後続ハンドラの処理結果(HttpResponse)の内容をもとに、\nクライアントに対するレスポンス処理を行う。\n</p>\n\n**例外:**\n- `ClassCastException` - 引数 ctx の実際の型が ServletExecutionContext でない場合。\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "handleServletScheme",
+      "level": 3,
+      "content": "```java\nprivate void handleServletScheme(HttpResponse res, ServletExecutionContext context)\n                         throws ServletException, IOException\n```\n\n{@link HttpResponse}のschemeが\"servlet\"の場合の処理を行う。\n\n{@link CustomResponseWriter}が、このレスポンスを処理対象と判断した場合、\n{@link CustomResponseWriter}に処理を移譲する。\nそうでない場合、サーブレットフォワードを行う。\n\n**パラメータ:**\n- `res` - HTTPレスポンス\n- `context` - 実行コンテキスト\n\n**例外:**\n- `ServletException` - Servlet API使用時に発生した例外\n- `IOException` - 入出力例外(ソケットI/Oエラー等)\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "isClientDisconnected",
+      "level": 3,
+      "content": "```java\nprivate boolean isClientDisconnected(ServletException e)\n```\n\nサーブレット例外がクライアントの接続断に起因する例外であるかを判定する。\n<p>\n本実装は、WebLogic 11g のJSP処理中にクライアントの接続断が起きた際に発生する\nSocketException を原因とする例外の場合、trueを返す。\n</p>\n\n**パラメータ:**\n- `e` - サーブレット例外\n\n**戻り値:**\nサーブレット例外がクライアントの接続断に起因する例外である場合はtrue\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "writeResponse",
+      "level": 3,
+      "content": "```java\npublic void writeResponse(HttpResponse res, ServletExecutionContext ctx)\n```\n\nHTTPレスポンスオブジェクトの内容をもとに、\nクライアントにレスポンスを返す。\n\n**パラメータ:**\n- `res` - HTTPレスポンスオブジェクト\n- `ctx` - 実行コンテキスト\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "isErrorResponse",
+      "level": 3,
+      "content": "```java\nprotected boolean isErrorResponse(HttpResponse res)\n```\n\nレスポンスがエラーか否かを判定する。\n<p>\nステータスコードが400以上であればtrue、\nそれ以外であればfalseを返す。\n</p>\n\n**パラメータ:**\n- `res` - HTTPレスポンス\n\n**戻り値:**\n判定結果\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "isServletScheme",
+      "level": 3,
+      "content": "```java\nprivate boolean isServletScheme(HttpResponse res)\n```\n\n{@link HttpResponse}のschemeが\"servlet\"であるか判定する。\n\n**パラメータ:**\n- `res` - 判定対象のHTTPレスポンスオブジェクト\n\n**戻り値:**\n\"servlet\"である場合、真\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "doesRedirect",
+      "level": 3,
+      "content": "```java\nprivate boolean doesRedirect(HttpResponse res)\n```\n\nこのリクエストのレスポンスでリダイレクトを要求する場合かどうかを返す。\n\n**パラメータ:**\n- `res` - HTTPレスポンスオブジェクト\n\n**戻り値:**\nリダイレクトを要求を行う場合はtrue\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "doServletForward",
+      "level": 3,
+      "content": "```java\nprivate void doServletForward(String pathToForward, ServletExecutionContext ctx)\n                      throws ServletException, IOException\n```\n\nサーブレットフォーワード処理を行う。\n\n**パラメータ:**\n- `pathToForward` - フォワード先のパス\n- `ctx` - 実行コンテキスト\n\n**例外:**\n- `ServletException` - フォーワード先においてエラーが発生した場合。\n- `IOException` - レスポンス処理中でのIOエラー\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "exportSessionStore",
+      "level": 3,
+      "content": "```java\nprivate void exportSessionStore(ServletExecutionContext ctx)\n```\n\nセッションストアの内容をリクエストスコープに移送する。\n同名のキーがリクエストスコープに存在する場合は、その項目は移送されない。\n\n**パラメータ:**\n- `ctx` - {@link ServletExecutionContext}\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "isSessionExportRequired",
+      "level": 3,
+      "content": "```java\nprivate boolean isSessionExportRequired(String pathToForward)\n```\n\nフォワード先のパスが、セッションを移送すべきパスかどうか判定する。\n指定されたpathが\".\"を含む場合、真と判定する。\n\n**パラメータ:**\n- `pathToForward` - フォワード先のパス\n\n**戻り値:**\n移送すべき場合、真\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "doRedirect",
+      "level": 3,
+      "content": "```java\nprivate void doRedirect(HttpResponse res, ServletExecutionContext ctx)\n                throws IOException\n```\n\nリダイレクト処理を行う。\nリダイレクト先のURLをURLリライトし、コンテナに処理を委譲する。\n\n**パラメータ:**\n- `res` - HTTPレスポンスオブジェクト\n- `ctx` - 実行コンテキスト\n\n**例外:**\n- `IOException` - リダイレクト処理中のIOエラー\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "getPathForLanguage",
+      "level": 3,
+      "content": "```java\nprivate String getPathForLanguage(HttpResponse res, ServletExecutionContext ctx)\n```\n\n言語対応のコンテンツパスを取得する。\n<p/>\n自身の{@link #contentPathRule}プロパティに指定された{@link ResourcePathRule}に処理を委譲する。\n\n**パラメータ:**\n- `res` - HTTPレスポンスオブジェクト\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n言語対応のコンテンツパス\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "setContentPathRule",
+      "level": 3,
+      "content": "```java\npublic void setContentPathRule(ResourcePathRule contentPathRule)\n```\n\n言語対応コンテンツパスのルールを設定する。\n\n**パラメータ:**\n- `contentPathRule` - 言語対応コンテンツパスのルール\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "writeHeaders",
+      "level": 3,
+      "content": "```java\nprivate void writeHeaders(HttpResponse res, ServletExecutionContext ctx)\n                  throws IOException\n```\n\nHTTPステータス・HTTPヘッダの内容をクライアントに送信する。\n\n**パラメータ:**\n- `res` - HTTPレスポンスオブジェクト\n- `ctx` - 実行コンテキストオブジェクト\n\n**例外:**\n- `IOException` - ソケットI/Oにおけるエラー\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "setStatusCode",
+      "level": 3,
+      "content": "```java\nprotected static void setStatusCode(HttpResponse res, ServletExecutionContext ctx)\n```\n\nクライアントに送信するステータスコードを設定する。\n\n**パラメータ:**\n- `res` - HTTPレスポンスオブジェクト\n- `ctx` - 実行コンテキスト\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "setHeaders",
+      "level": 3,
+      "content": "```java\nprivate void setHeaders(HttpResponse res, ServletExecutionContext ctx)\n```\n\nサーブレットレスポンスにヘッダを設定する。\n\n**パラメータ:**\n- `res` - HTTPレスポンスオブジェクト\n- `ctx` - 実行コンテキストオブジェクト\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "replaceContentDisposition",
+      "level": 3,
+      "content": "```java\nprivate String replaceContentDisposition(String dispositionValue, HttpServletRequest nativeReq)\n```\n\nContent-Dispositionに設定されたファイル名を、エンコーダを用いて変換する。\n\n**パラメータ:**\n- `dispositionValue` - Content-Dispositionヘッダの値\n- `nativeReq` - サーブレットリクエスト\n\n**戻り値:**\nファイル名がエンコードされたContent-Disposition\n\n---",
+      "id": "s32"
+    },
+    {
+      "title": "writeBody",
+      "level": 3,
+      "content": "```java\npublic static void writeBody(InputStream in, HttpServletResponse nativeRes)\n               throws IOException\n```\n\nメッセージボディの内容をクライアントに送信する。\n\n**パラメータ:**\n- `in` - 入力ストリームの内容\n- `nativeRes` - サーブレットレスポンス\n\n**例外:**\n- `IOException` - ソケットI/Oにおけるエラー\n\n---",
+      "id": "s33"
+    },
+    {
+      "title": "getFatalErrorResponse",
+      "level": 3,
+      "content": "```java\nprivate HttpResponse getFatalErrorResponse()\n```\n\nどうしようも無いときのエラーレスポンスを作成する。\n\n**戻り値:**\nエラーレスポンス\n\n---",
+      "id": "s34"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-HttpResponseHandler"
+}

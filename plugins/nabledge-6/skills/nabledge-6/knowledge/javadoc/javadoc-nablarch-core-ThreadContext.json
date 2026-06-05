@@ -1,0 +1,182 @@
+{
+  "title": "class ThreadContext",
+  "content": "**パッケージ:** nablarch.core\n\n---\n\n```java\npublic final class ThreadContext\n```\n\nスレッド内で共有すべきオブジェクトを保持するクラス。\n<p/>\n本クラスで保持する値は、子スレッドが起動された場合、\n暗黙的に全ての情報を子スレッドに引き継ぐ仕様となっている。\nこのため、子スレッドでは個別に値を設定することなく、親スレッドで設定した値を使用することが出来る。\nまた、子スレッドで個別に値を変更することも出来るが、ThreadLocalに格納したオブジェクトは各スレッドで共有され、\n別スレッドの動作に影響を与える危険があるので、イミュータブルな値とスレッドセーフな値のみを格納すること。\n\n**作成者:** Koichi Asano  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LANG_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String LANG_KEY\n```\n\n言語のキー。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "TIME_ZONE_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String TIME_ZONE_KEY\n```\n\nタイムゾーンのキー。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "USER_ID_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String USER_ID_KEY\n```\n\nユーザIDのキー。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "REQUEST_ID_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String REQUEST_ID_KEY\n```\n\nリクエストIDのキー。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "INTERNAL_REQUEST_ID_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String INTERNAL_REQUEST_ID_KEY\n```\n\n内部リクエストIDのキー。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "EXECUTION_ID_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String EXECUTION_ID_KEY\n```\n\n実行時IDのキー。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "CONCURRENT_NUMBER_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String CONCURRENT_NUMBER_KEY\n```\n\n並行実行スレッド数のキー。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "genericObjects",
+      "level": 3,
+      "content": "```java\nprivate static ThreadLocal<Map<String,Object>> genericObjects\n```\n\nスレッド内で共有するオブジェクトを保持するThreadLocal。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s10"
+    },
+    {
+      "title": "ThreadContext",
+      "level": 3,
+      "content": "```java\nprivate ThreadContext()\n```\n\n隠蔽コンストラクタ。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s12"
+    },
+    {
+      "title": "getLanguage",
+      "level": 3,
+      "content": "```java\npublic static Locale getLanguage()\n```\n\nスレッドローカルから言語を取得する。\n\n**戻り値:**\n言語\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setLanguage",
+      "level": 3,
+      "content": "```java\npublic static void setLanguage(Locale locale)\n```\n\nスレッドローカルに言語を設定する。\n\n**パラメータ:**\n- `locale` - 言語\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getTimeZone",
+      "level": 3,
+      "content": "```java\npublic static TimeZone getTimeZone()\n```\n\nスレッドローカルからタイムゾーンを取得する。\n\n**戻り値:**\nタイムゾーン\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setTimeZone",
+      "level": 3,
+      "content": "```java\npublic static void setTimeZone(TimeZone timeZone)\n```\n\nスレッドローカルにタイムゾーンを設定する。\n\n**パラメータ:**\n- `timeZone` - タイムゾーン\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getUserId",
+      "level": 3,
+      "content": "```java\npublic static String getUserId()\n```\n\nスレッドローカルからユーザIDを取得する。\n\n**戻り値:**\nユーザID\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setUserId",
+      "level": 3,
+      "content": "```java\npublic static void setUserId(String userId)\n```\n\nスレッドローカルにユーザIDを設定する。\n\n**パラメータ:**\n- `userId` - ユーザID\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "getRequestId",
+      "level": 3,
+      "content": "```java\npublic static String getRequestId()\n```\n\nスレッドローカルからリクエストIDを取得する。\n\n**戻り値:**\nリクエストID\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "setRequestId",
+      "level": 3,
+      "content": "```java\npublic static void setRequestId(String requestId)\n```\n\nスレッドローカルにリクエストIDを設定する。\n\n**パラメータ:**\n- `requestId` - リクエストID\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "getInternalRequestId",
+      "level": 3,
+      "content": "```java\npublic static String getInternalRequestId()\n```\n\nスレッドローカルから内部リクエストIDを取得する。\n\n**戻り値:**\n内部リクエストID\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "setInternalRequestId",
+      "level": 3,
+      "content": "```java\npublic static void setInternalRequestId(String requestId)\n```\n\nスレッドローカルに内部リクエストIDを設定する。\n\n**パラメータ:**\n- `requestId` - 内部リクエストID\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "getExecutionId",
+      "level": 3,
+      "content": "```java\npublic static String getExecutionId()\n```\n\nスレッドローカルから実行時IDを取得する。\n\n**戻り値:**\n実行時ID\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "setExecutionId",
+      "level": 3,
+      "content": "```java\npublic static void setExecutionId(String executionId)\n```\n\nスレッドローカルに実行時IDを設定する。\n\n**パラメータ:**\n- `executionId` - 実行時ID\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "setObject",
+      "level": 3,
+      "content": "```java\npublic static void setObject(String key, Object object)\n```\n\nスレッドコンテキストにオブジェクトを設定する。\n\n**パラメータ:**\n- `key` - オブジェクトのキー\n- `object` - 設定するオブジェクト\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "getObject",
+      "level": 3,
+      "content": "```java\npublic static Object getObject(String key)\n```\n\nスレッドコンテキストからオブジェクトを取得する。\n\n**パラメータ:**\n- `key` - オブジェクトのキー\n\n**戻り値:**\n取得したオブジェクト\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "clear",
+      "level": 3,
+      "content": "```java\npublic static void clear()\n```\n\nスレッドコンテキストの内容をクリアする。\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "getConcurrentNumber",
+      "level": 3,
+      "content": "```java\npublic static int getConcurrentNumber()\n```\n\nスレッドコンテキストから並行実行スレッド数を取得する。\n\n**戻り値:**\n並行実行スレッド数\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "setConcurrentNumber",
+      "level": 3,
+      "content": "```java\npublic static void setConcurrentNumber(int value)\n```\n\nスレッドコンテキストに並行実行スレッド数を設定する。\n\n**パラメータ:**\n- `value` - 並行実行スレッド数\n\n---",
+      "id": "s29"
+    }
+  ],
+  "id": "javadoc-nablarch-core-ThreadContext"
+}

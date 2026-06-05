@@ -1,0 +1,74 @@
+{
+  "title": "class SystemRepository",
+  "content": "**パッケージ:** nablarch.core.repository\n\n---\n\n```java\npublic final class SystemRepository\n```\n\n設定値およびコンポーネントを保持するクラス。<br/>\nアプリケーションの設定値の取得とコンポーネントを生成する責務は{@link ObjectLoader}を実装したクラスが持つ。\n\n**作成者:** Koichi Asano  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "objects",
+      "level": 3,
+      "content": "```java\nprivate static Map<String,Object> objects\n```\n\nリポジトリに配置されたオブジェクトのMap。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "SystemRepository",
+      "level": 3,
+      "content": "```java\nprivate SystemRepository()\n```\n\n隠蔽コンストラクタ。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "clear",
+      "level": 3,
+      "content": "```java\npublic static void clear()\n```\n\nロードされたオブジェクトをクリアする。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "load",
+      "level": 3,
+      "content": "```java\npublic static void load(ObjectLoader loader)\n```\n\n{@link ObjectLoader}からオブジェクトをロードする。\n<p/>\n本メソッドは、登録済みのオブジェクトに対して追加でロードを行う。\nよって、登録済みのオブジェクトは、再度本メソッドを起動してもクリアされない。\n<p/>\n登録済みのオブジェクトと同名のオブジェクトを{@link ObjectLoader}からロードした場合上書きされる。\n\n**パラメータ:**\n- `loader` - オブジェクトローダ\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getObject",
+      "level": 3,
+      "content": "```java\npublic static Object getObject(String name)\n```\n\nコンポーネント名を指定して、リポジトリに登録されたコンポーネントを取得する。\n\n**パラメータ:**\n- `name` - コンポーネント名\n\n**戻り値:**\nリポジトリに登録されたコンポーネント\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getString",
+      "level": 3,
+      "content": "```java\npublic static String getString(String name)\n```\n\n設定値の登録名を指定してリポジトリに登録された文字列の設定値を取得する。\n\n**パラメータ:**\n- `name` - 設定値の登録名\n\n**戻り値:**\nリポジトリに登録された文字列設定値\n\n**例外:**\n- `ClassCastException` - リポジトリに登録されたオブジェクトが、String型にキャストできない型であった場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getBoolean",
+      "level": 3,
+      "content": "```java\npublic static boolean getBoolean(String name)\n```\n\n設定値の登録名を指定してリポジトリに登録された真偽値の設定値を取得する。\n<p/>\n以下の文字列と一致する設定値が登録されていた場合に「true」を返却する。大文字・小文字は区別しない。\n<ul>\n    <li>\"true\"</li>\n    <li>\"on\"</li>\n    <li>\"yes\"</li>\n</ul>\n\n**パラメータ:**\n- `name` - 設定値の登録名\n\n**戻り値:**\nリポジトリに登録されたBoolean型の設定値\n\n**例外:**\n- `ClassCastException` - リポジトリに登録されたオブジェクトが、String型にキャストできない型であった場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "get",
+      "level": 3,
+      "content": "```java\npublic static T get(String name)\n      throws ClassCastException\n```\n\nリポジトリに登録されたコンポーネントを取得する。\n\n**パラメータ:**\n- `<T>` - 取得するコンポーネントの型\n- `name` - コンポーネント名\n\n**戻り値:**\nコンポーネント コンポーネントが見つからなかった場合はnullを返却する\n\n**例外:**\n- `ClassCastException` - 型引数{@code <T>}が、リポジトリに登録されたコンポーネントの型と一致しなかった場合\n\n---",
+      "id": "s11"
+    }
+  ],
+  "id": "javadoc-nablarch-core-repository-SystemRepository"
+}

@@ -46,7 +46,7 @@ loggers.OPERATOR.writerNames=operationLog
 
 ポイント
 
-* OperationLogger#write
+* [OperationLogger#write](../../javadoc/javadoc-nablarch-core-log-operation-OperationLogger.md)
   を使用してログを出力する。
 * 運用担当者向けのログ出力とともにバッチ処理を異常終了させたい場合には、例外を送出すること。
 

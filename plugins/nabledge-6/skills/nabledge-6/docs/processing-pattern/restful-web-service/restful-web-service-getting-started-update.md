@@ -122,13 +122,13 @@ public HttpResponse update(ProjectUpdateForm form) {
   `MediaType.APPLICATION_JSON` を指定する。
 * Valid アノテーションを使用して、リクエストのバリデーションを行う。
   詳細は [Jakarta RESTful Web Servcies Bean Validationハンドラ](../../component/handlers/handlers-jaxrs-bean-validation-handler.md#jakarta-restful-web-servcies-bean-validationハンドラ) を参照。
-* BeanUtil でフォームからエンティティを作成し、
+* [BeanUtil](../../javadoc/javadoc-nablarch-core-beans-BeanUtil.md) でフォームからエンティティを作成し、
   [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) を使用してプロジェクト情報を更新する。
-* 更新に成功した場合は、正常終了(ステータスコード： `200` )を表す HttpResponse を返却する。
+* 更新に成功した場合は、正常終了(ステータスコード： `200` )を表す [HttpResponse](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.md) を返却する。
 
 > **Tip:**
-> Exampleアプリケーションでは ErrorResponseBuilder を独自に拡張しており、
-> NoDataException が発生した場合は `404` 、
+> Exampleアプリケーションでは [ErrorResponseBuilder](../../javadoc/javadoc-nablarch-fw-jaxrs-ErrorResponseBuilder.md) を独自に拡張しており、
+> [NoDataException](../../javadoc/javadoc-nablarch-common-dao-NoDataException.md) が発生した場合は `404` 、
 > OptimisticLockException が発生した場合は `409`
 > のレスポンスを生成してクライアントに返却している。
 

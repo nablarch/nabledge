@@ -10,7 +10,7 @@
 業務アクションやハンドラで開いた出力ファイルを閉じる(リソースの解放)ハンドラ。
 
 > **Important:**
-> このハンドラで解放対象となるのは、 FileRecordWriterHolder を使用して開いた出力ファイルとなる。
+> このハンドラで解放対象となるのは、 [FileRecordWriterHolder](../../javadoc/javadoc-nablarch-common-io-FileRecordWriterHolder.md) を使用して開いた出力ファイルとなる。
 > それ以外のAPI(例えば、 java.io パッケージ)を使って開いたリソースについては、個別にクローズ処理を行うこと。
 
 処理の流れは以下のとおり。
@@ -19,7 +19,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.common.io.FileRecordWriterDisposeHandler
+* [nablarch.common.io.FileRecordWriterDisposeHandler](../../javadoc/javadoc-nablarch-common-io-FileRecordWriterDisposeHandler.md)
 
 ## モジュール一覧
 

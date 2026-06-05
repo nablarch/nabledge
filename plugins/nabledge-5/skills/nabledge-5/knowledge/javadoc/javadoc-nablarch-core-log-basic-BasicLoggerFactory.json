@@ -1,0 +1,98 @@
+{
+  "title": "class BasicLoggerFactory",
+  "content": "**パッケージ:** nablarch.core.log.basic\n\n**実装されたインタフェース:**\n- LoggerFactory\n\n---\n\n```java\npublic class BasicLoggerFactory\nimplements LoggerFactory\n```\n\n{@link LoggerFactory}の基本実装クラス。<br>\n<br>\nフレームワーク実装の設定は、{@link nablarch.core.log.LoggerManager LoggerManager}が読み込むプロパティファイルに記述する。<br>\nプロパティファイルの設定は、システムプロパティを使用して同じキー名に値を指定することで上書きすることができる。<br>\n<br>\nプロパティファイルの記述ルールを下記に示す。<br>\n<dl>\n<dt>writerNames\n<dd>使用する全ての{@link LogWriter}の名称。必須。<br>\n    複数指定する場合はカンマ区切り。<br>\n    「”writer.” + &lt;ここで指定した{@link LogWriter}の名称&gt;」をキーのプレフィックスにして、{@link LogWriter}毎の設定を行う。\n\n<dt>writer.&lt;{@link LogWriter}の名称&gt;.className\n<dd>{@link LogWriter}のクラス名。必須。<br>\n    {@link LogWriter}を実装したクラスのFQCNを指定する。\n\n<dt>writer.&lt;{@link LogWriter}の名称&gt;.<プロパティ名>\n<dd>{@link LogWriter}毎のプロパティに設定する値。<br>\n    設定内容は、使用する{@link LogWriter}のJavadocを参照すること。\n\n<dt>availableLoggersNamesOrder\n<dd>使用する全ての{@link Logger}設定の名称。必須。<br>\n    複数指定する場合はカンマ区切り。<br>\n    「”loggers.” + &lt;ここで指定された{@link Logger}設定の名称&gt;」をキーのプレフィックスに使用して、{@link Logger}設定毎の設定を行う。\n\n<dt>loggers.&lt;{@link Logger}設定の名称&gt;.nameRegex\n<dd>{@link Logger}名とのマッチングに使用する正規表現。必須。<br>\n    正規表現は、{@link Logger}設定の対象となる{@link Logger}を絞り込むために使用する。<br>\n    {@link Logger}の取得時に指定された{@link Logger}名\n    （つまり{@link nablarch.core.log.LoggerManager#get(String) LoggerManager#get}メソッドの引数に指定された{@link Logger}名）に対してマッチングを行う。\n\n<dt>logger.&lt;{@link Logger}設定の名称&gt;.level\n<dd>{@link LogLevel}の名称。必須。<br>\n    {@link LogLevel}の名称を指定する。<br>\n    ここで指定したレベル以上のログを全て出力する。\n\n<dt>logger.&lt;{@link Logger}設定の名称&gt;.writerNames\n<dd>{@link LogWriter}の名称。必須。<br>\n    複数指定する場合はカンマ区切り。<br>\n    ここで指定した全ての{@link LogWriter}に対してログの書き込みを行う。\n</dl>\navailableLoggersNamesOrderプロパティは、記述順に意味があるので注意すること。<br>\n{@link Logger}の取得では、ログ出力を行うクラスが指定した{@link Logger}名に対して、\nここに記述した順番で{@link Logger}のマッチングを行い、最初にマッチした{@link Logger}を返す。<br>\nそのため、availableLoggersNamesOrderプロパティは、より限定的な正規表現を指定した{@link Logger}から順に記述すること。<br>\n<br>\n初期処理完了後に、各{@link LogWriter}に対して、出力されるログレベルの書き込みを行う。<br>\n初期処理完了後の出力例を下記に示す。\n<pre>\n2010-09-14 15:26:32.345 nablarch.core.log.basic.BasicLoggerFactory INFO [main] user_id[null] request_id[null] initialized.\n     NAME REGEX = [MONITOR] LEVEL = [ERROR]\n     NAME REGEX = [tis\\.w8\\.web\\.handler\\.HttpAccessLogHandler] LEVEL = [INFO]\n     NAME REGEX = [.*] LEVEL = [WARN]\n</pre>\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "NULL_LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger NULL_LOGGER\n```\n\n何も処理しない{@link Logger}\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "loggerDefinitions",
+      "level": 3,
+      "content": "```java\nprivate List<LoggerDefinition> loggerDefinitions\n```\n\n設定で指定された全ての{@link Logger}定義\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "writers",
+      "level": 3,
+      "content": "```java\nprivate Map<String,LogWriter> writers\n```\n\n設定で指定された全ての{@link LogWriter}\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize(LogSettings settings)\n```\n\n{@inheritDoc}<br>\n<br>\nログ出力の設定に応じて、インスタンスの生成と初期化を行う。<br>\n設定に不備がある場合は{@link IllegalArgumentException}をスローする。<br>\n<br>\n初期処理完了後に、各{@link LogWriter}に対して、出力されるログレベルの書き込みを行う。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "assertLoggerDefinitionMatching",
+      "level": 3,
+      "content": "```java\nprivate void assertLoggerDefinitionMatching(LogSettings settings)\n```\n\n使用可能なロガー設定と、全てのロガー設定が一致するか検証する。<br>\n一致しない場合は{@link IllegalArgumentException}を送出する。<br>\nこの検証は、設定ミスを防ぐために設けている。\n\n**パラメータ:**\n- `settings` - ログ出力の設定\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "writeLoggerSettings",
+      "level": 3,
+      "content": "```java\nprivate void writeLoggerSettings()\n```\n\n{@link LogWriter}毎に、自身に設定されているロガー設定を出力する。<br>\n設定情報のフォーマットを下記に示す。<br>\n<br>\nLOGGER = [&lt;{@link Logger}名&gt;] NAME REGEX = [&lt;{@link Logger}名に対するマッチングに使用する正規表現&gt;] LEVEL = [&lt;ログの出力制御の基準とする{@link LogLevel}&gt;]\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "createWriters",
+      "level": 3,
+      "content": "```java\nprivate Map<String,LogWriter> createWriters(LogSettings settings)\n```\n\n設定で指定された全ての{@link LogWriter}の生成と初期化を行う。\n\n**パラメータ:**\n- `settings` - ログ出力の設定内容\n\n**戻り値:**\n設定で指定された全ての{@link LogWriter}\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "createLoggerDefinitions",
+      "level": 3,
+      "content": "```java\nprivate List<LoggerDefinition> createLoggerDefinitions(LogSettings settings)\n```\n\n設定で指定された全ての{@link Logger}定義を生成する。\n\n**パラメータ:**\n- `settings` - ログ出力の設定内容\n\n**戻り値:**\n設定で指定された全ての{@link Logger}定義\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "terminate",
+      "level": 3,
+      "content": "```java\npublic void terminate()\n```\n\n{@inheritDoc}<br>\n<br>\n全ての{@link LogWriter}の終了処理を行う。<br>\n{@link LogWriter}の終了処理で例外が発生した場合は、発生した例外をキャッチし、標準エラーにスタックトレースを出力する。<br>\n発生した例外の再スローは行わない。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "get",
+      "level": 3,
+      "content": "```java\npublic Logger get(String name)\n```\n\n{@inheritDoc}<br>\n<br>\navailableLoggersNamesOrderプロパティで指定された順番に{@link Logger}名のマッチングを行い、最初にマッチした{@link Logger}を返す。<br>\nマッチする{@link Logger}が見つからない場合は、何もしない{@link Logger}を返す。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "createLogWriter",
+      "level": 3,
+      "content": "```java\nprivate LogWriter createLogWriter(ObjectSettings settings)\n```\n\n設定を使用して{@link LogWriter}を生成する。\n\n**パラメータ:**\n- `settings` - {@link LogWriter}の設定\n\n**戻り値:**\n設定を使用して生成した{@link LogWriter}\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "createLoggerDefinition",
+      "level": 3,
+      "content": "```java\nprivate LoggerDefinition createLoggerDefinition(String name, ObjectSettings settings)\n```\n\n設定を使用して{@link Logger}定義を生成する。\n\n**パラメータ:**\n- `name` - ロガー設定の名称\n- `settings` - {@link Logger}定義の設定\n\n**戻り値:**\n設定を使用して生成した{@link Logger}定義\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getLogWriters",
+      "level": 3,
+      "content": "```java\nprivate List<LogWriter> getLogWriters(ObjectSettings settings)\n```\n\n{@link Logger}定義に指定された{@link LogWriter}を取得する。\n\n**パラメータ:**\n- `settings` - {@link Logger}定義の設定\n\n**戻り値:**\n{@link Logger}に指定された{@link LogWriter}\n\n---",
+      "id": "s15"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-basic-BasicLoggerFactory"
+}

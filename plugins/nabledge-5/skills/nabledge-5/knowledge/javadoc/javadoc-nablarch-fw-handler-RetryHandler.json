@@ -1,0 +1,86 @@
+{
+  "title": "class RetryHandler",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n**実装されたインタフェース:**\n- Handler<Object,Object>\n\n---\n\n```java\npublic class RetryHandler\nimplements Handler<Object,Object>\n```\n\nリトライ可能な例外を捕捉した場合に後続ハンドラの処理をリトライするハンドラ。\n<p/>\n{@link nablarch.fw.handler.retry.Retryable}インタフェースを実装した例外をリトライ可能な例外と判断する。\n<p/>\nリトライ処理の制御は{@link RetryContext}を実装したクラスに委譲する。\n{@link RetryContext}を実装したクラスは{@link RetryContextFactory}から取得するので、\n本クラスを使用する場合は{@link RetryContextFactory}オブジェクトをプロパティに設定すること。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "retryContextFactory",
+      "level": 3,
+      "content": "```java\nprivate RetryContextFactory retryContextFactory\n```\n\nリトライコンテキストを生成する{@link RetryContextFactory}オブジェクト\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "retryLimitExceededExitCode",
+      "level": 3,
+      "content": "```java\nprivate int retryLimitExceededExitCode\n```\n\nリトライ上限を超えた場合に使用する終了コード(プロセスを終了({@link System#exit(int)})する際に設定する値)\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "retryLimitExceededFailureCode",
+      "level": 3,
+      "content": "```java\nprivate String retryLimitExceededFailureCode\n```\n\nリトライ上限を超えた場合に使用する障害コード\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "destroyReader",
+      "level": 3,
+      "content": "```java\nprivate boolean destroyReader\n```\n\nリトライ時に実行コンテキスト上の{@link nablarch.fw.DataReader}を破棄するか否か\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(Object data, ExecutionContext context)\n```\n\n{@inheritDoc}\n<p/>\nリトライ対象でない例外を捕捉した場合は、補足した例外を再送出する。\n<br/>\nリトライ可能な例外を捕捉した場合、かつリトライ上限を超えていない場合は\n後続ハンドラの処理をリトライする。\nリトライ可能な例外を捕捉した場合、かつリトライ上限を超えている場合は\n{@link #retryLimitExceededExitCode}プロパティと\n{@link #retryLimitExceededFailureCode}プロパティを使用して\n{@link ProcessAbnormalEnd}を送出する。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "destroyDataReader",
+      "level": 3,
+      "content": "```java\nprivate static void destroyDataReader(ExecutionContext context)\n```\n\n実行コンテキスト上に設定された{@link nablarch.fw.DataReader}及び{@link nablarch.fw.DataReaderFactory}を破棄する。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setDestroyReader",
+      "level": 3,
+      "content": "```java\npublic void setDestroyReader(boolean destroyReader)\n```\n\nリトライ時に{@link ExecutionContext}上に設定された{@link nablarch.fw.DataReader}を破棄するか否かを設定する。。\n<p/>\n本設定値に{@code true}を設定した場合、リトライ時に{@link ExecutionContext}上に設定された{@link nablarch.fw.DataReader}を破棄（削除）する。\nこれにより、後続ハンドラで{@link nablarch.fw.DataReader}が再生成される。\n\n**パラメータ:**\n- `destroyReader` - リトライ時にリーダを破棄するか否か\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setRetryContextFactory",
+      "level": 3,
+      "content": "```java\npublic void setRetryContextFactory(RetryContextFactory retryContextFactory)\n```\n\nリトライコンテキストを生成する{@link RetryContextFactory}オブジェクトを設定する。\n\n**パラメータ:**\n- `retryContextFactory` - リトライコンテキストを生成する{@link RetryContextFactory}オブジェクト\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setRetryLimitExceededExitCode",
+      "level": 3,
+      "content": "```java\npublic void setRetryLimitExceededExitCode(int retryLimitExceededExitCode)\n```\n\nリトライ上限を超えた場合に使用する終了コード(プロセスを終了({@link System#exit(int)})する際に設定する値)を設定する。\n\n**パラメータ:**\n- `retryLimitExceededExitCode` - リトライ上限を超えた場合に使用する終了コード(プロセスを終了({@link System#exit(int)})する際に設定する値)\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setRetryLimitExceededFailureCode",
+      "level": 3,
+      "content": "```java\npublic void setRetryLimitExceededFailureCode(String retryLimitExceededFailureCode)\n```\n\nリトライ上限を超えた場合に使用する障害コードを設定する。\n\n**パラメータ:**\n- `retryLimitExceededFailureCode` - リトライ上限を超えた場合に使用する障害コード\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-RetryHandler"
+}

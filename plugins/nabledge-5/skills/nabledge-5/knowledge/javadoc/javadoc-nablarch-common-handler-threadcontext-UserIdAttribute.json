@@ -1,0 +1,62 @@
+{
+  "title": "class UserIdAttribute",
+  "content": "**パッケージ:** nablarch.common.handler.threadcontext\n\n**実装されたインタフェース:**\n- ThreadContextAttribute<Object>\n\n---\n\n```java\npublic class UserIdAttribute\nimplements ThreadContextAttribute<Object>\n```\n\nスレッドコンテキストに保持するユーザID属性。\n<pre>\nHTTPセッション上に格納されているログインユーザIDを\nスレッドコンテキストに格納する。\n</pre>\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "sessionKey",
+      "level": 3,
+      "content": "```java\nprivate String sessionKey\n```\n\nログインユーザIDが格納されているHTTPセッション上のキー名\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "anonymousId",
+      "level": 3,
+      "content": "```java\nprivate String anonymousId\n```\n\n未ログイン時にスレッドコンテキストに設定されるID\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "setSessionKey",
+      "level": 3,
+      "content": "```java\npublic void setSessionKey(String sessionKey)\n```\n\nログインユーザIDが格納されているHTTPセッション上のキー名を設定する。\n<pre>\nデフォルトでは{@link #getKey()}の値を使用する。\n</pre>\n\n**パラメータ:**\n- `sessionKey` - HTTPセッション上のキー名\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "setAnonymousId",
+      "level": 3,
+      "content": "```java\npublic void setAnonymousId(String anonymousId)\n```\n\n未ログイン時にスレッドコンテキストに設定されるIDを設定する。\n<pre>\n明示的にこの値を設定しなかった場合、\n未ログイン時にスレッドコンテキスト上のユーザIDは設定されない。\n</pre>\n\n**パラメータ:**\n- `anonymousId` - 未ログイン時にスレッドコンテキストに設定されるID\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getKey",
+      "level": 3,
+      "content": "```java\npublic String getKey()\n```\n\n{@inheritDoc}\n<pre>\n{@link ThreadContext#USER_ID_KEY} を使用する。\n</pre>\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getValue",
+      "level": 3,
+      "content": "```java\npublic Object getValue(Object req, ExecutionContext ctx)\n```\n\n{@inheritDoc}\n<pre>\nスレッドコンテキストに格納するユーザIDの値は以下のように決定される。\n  1. HTTPセッション上のキー{@link #sessionKey} の値を取得する。\n     その値がnullでなければスレッドコンテキストに設定する。\n  2. HTTPセッション上の値がnullであり、かつ {@link #anonymousId} が\n     設定されていれば、その値をスレッドコンテキストに設定する。\n  3. 上記以外の場合はnullを設定する。\n</pre>\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getUserIdSession",
+      "level": 3,
+      "content": "```java\nprotected Object getUserIdSession(ExecutionContext ctx, String skey)\n```\n\nセッションからユーザIDを取得する。\nデフォルトではHTTPセッションからユーザIDを取得する。\n必要に応じてオーバーライドすること。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n- `skey` - ユーザIDのキー\n\n**戻り値:**\nユーザID\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-common-handler-threadcontext-UserIdAttribute"
+}

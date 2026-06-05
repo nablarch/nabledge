@@ -20,7 +20,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.jaxrs.JaxRsAccessLogHandler
+* [nablarch.fw.jaxrs.JaxRsAccessLogHandler](../../javadoc/javadoc-nablarch-fw-jaxrs-JaxRsAccessLogHandler.md)
 
 ## モジュール一覧
 
@@ -35,7 +35,7 @@
 
 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ) より後ろに配置すること
 
-このハンドラから呼ばれるログ出力の処理内では、通常 ThreadContext に保持する内容が必要となる。
+このハンドラから呼ばれるログ出力の処理内では、通常 [ThreadContext](../../javadoc/javadoc-nablarch-core-ThreadContext.md) に保持する内容が必要となる。
 このため、 [スレッドコンテキスト変数管理ハンドラ](../../component/handlers/handlers-thread-context-handler.md#スレッドコンテキスト変数管理ハンドラ) より後ろに配置する必要がある。
 
 [HTTPエラー制御ハンドラ](../../component/handlers/handlers-HttpErrorHandler.md#httpエラー制御ハンドラ) より前に配置すること

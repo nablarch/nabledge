@@ -1,0 +1,68 @@
+{
+  "title": "class AsyncMessageReceiveAction",
+  "content": "**パッケージ:** nablarch.fw.messaging.action\n\n**継承階層:**\n```\njava.lang.Object\n  └─ BatchAction<RequestMessage>\n      └─ nablarch.fw.messaging.action.AsyncMessageReceiveAction\n```\n\n---\n\n```java\npublic class AsyncMessageReceiveAction\nextends BatchAction<RequestMessage>\n```\n\nMQ応答なし受信用アクション。\n<p/>\n本クラスでは、受信したメッセージが保持するリクエストID({@link nablarch.fw.messaging.RequestMessage#getRequestPath()})を元に、\n受信テーブルに電文を保存する。\n<p/>\n受信テーブルの構造は、必ず下記構造にすること。\n<pre>\n----------------- -----------------------------------------------------\n受信電文連番       主キー\n                  受信した電文(メッセージ)を一意に識別するためのIDを格納するカラム。\n                  本カラムに設定する値は、#generateReceivedSequence()にて採番を行う。\n                  カラムの桁数は、任意の桁数を設定可能となっている。\n----------------- -----------------------------------------------------\n業務電文部         業務電文を格納するカラムを定義する。\n                  電文の種類に応じて、業務電文の各項目に対するカラムを定義すれば良い。\n----------------- -----------------------------------------------------\n共通項目部         各プロジェクトの方式に応じて必要なカラムを定義する。\n                  たとえば、下記のカラムを定義することが想定される。\n                  ・登録情報(ユーザID、タイムスタンプ、リクエストID、実行時ID)\n                  ・更新情報(ユーザID、タイムスタンプ)\n----------------- -----------------------------------------------------\n</pre>\n<p/>\n本クラスは1電文を1レコードとして受信テーブルに保存する場合に利用できる。\n1電文を複数レコードとして登録する場合や、複数テーブルに保存する場合は本クラスを継承し\n#handle(nablarch.fw.messaging.RequestMessage, nablarch.fw.ExecutionContext)や\n#insertMessageTable(String, Object)をオーバライドすること。\n\n**作成者:** hisaaki sioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "ACTION_SETTINGS_KEY",
+      "level": 3,
+      "content": "```java\nprivate static final String ACTION_SETTINGS_KEY\n```\n\nシステムリポジトリ上の設定クラスの格納キー値\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Result handle(RequestMessage inputData, ExecutionContext ctx)\n```\n\n{@inheritDoc}\n<p/>\n本処理では、メッセージキューから受信した電文オブジェクトを、{@link nablarch.fw.messaging.RequestMessage#getRequestPath()}\nより取得したリクエストIDに対応する受信テーブルに格納する。\n<p/>\nリクエストIDに対応した受信テーブルに格納する際には、下記オブジェクトや定義が必要になるため、\nリクエストID単位に作成する必要がある。\n<p/>\n<ol>\n<li>リクエストIDに対応したFormクラス</li>\n<li>受信電文INSERT用のSQL文</li>\n<li></li>\n</ol>\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "createReader",
+      "level": 3,
+      "content": "```java\npublic DataReader<RequestMessage> createReader(ExecutionContext ctx)\n```\n\n{@inheritDoc}\n本実装では、{@link DataReader}の生成は行わない。\nこのため、メッセージキューからメッセージをリードするための{@link DataReader}の設定は、\nコンポーネント設定ファイル側に行う必要がある。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "insertMessageTable",
+      "level": 3,
+      "content": "```java\nprotected void insertMessageTable(String requestId, Object form)\n```\n\n業務用の受信テーブルに受信電文を登録する。\n\n**パラメータ:**\n- `requestId` - リクエストID\n- `form` - 登録対象の電文を持ったオブジェクト\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "createForm",
+      "level": 3,
+      "content": "```java\nprotected Object createForm(String requestId, RequestMessage message)\n```\n\n受信テーブルにINSERTを行うためのFormオブジェクトを生成する。\n<p/>\n生成するフォームクラスのクラス名は、パッケージ名:nablarch.fw.messaging.action.AsyncMessageReceiveActionSettings#getFormClassPackage()\nから取得したパッケージ名、クラス名:リクエストID + \"Form\"となる。\n<p/>\nまた、Formクラスには下記引数を持つコンストラクタを定義し、受信メッセージの内容を保持すること。\n<oi>\n<li>受信電文連番:{@link String}</li>\n<li>受信メッセージ:{@link RequestMessage}</li>\n</oi>\n\n**パラメータ:**\n- `requestId` - リクエストID\n- `message` - リクエストメッセージ\n\n**戻り値:**\n生成したFormオブジェクト\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "generateReceivedSequence",
+      "level": 3,
+      "content": "```java\nprotected String generateReceivedSequence()\n```\n\n受信電文連番を採番する。\n<p/>\n受信電文連番採番時には、nablarch.fw.messaging.action.AsyncMessageReceiveActionSettings#getReceivedSequenceFormatter()\nで取得したフォーマッタを使用して、IDのフォーマットを行う。\n採番対象を識別するためのIDは、nablarch.fw.messaging.action.AsyncMessageReceiveActionSettings#getTargetGenerateId()より取得する\n\n**戻り値:**\n受信メッセージID\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getSettings",
+      "level": 3,
+      "content": "```java\nprotected AsyncMessageReceiveActionSettings getSettings()\n```\n\n本アクションを実行するために必要となる設定値を保持するオブジェクトを取得する。\n<p/>\nデフォルト動作では、リポジトリ({@link SystemRepository})から設定オブジェクトを取得する。\n\n**戻り値:**\n設定オブジェクト\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getSqlResource",
+      "level": 3,
+      "content": "```java\nprivate String getSqlResource(String requestId)\n```\n\n電文を受信テーブルに登録するためのINSERT文を表すSQLリソースを取得する。\n<p/>\nSQLリソースは、「SQLリソース名」 + \"#\" + 「SQL_ID」形式となる。\n<ol>\n<li>SQLリソースは、「{@link AsyncMessageReceiveActionSettings#getSqlFilePackage()} + /<電文のリクエストID>」であること。</li>\n<li>SQL_IDは、INSERT_MESSAGEであること</li>\n</ol>\n\n**パラメータ:**\n- `requestId` - リクエストID\n\n**戻り値:**\nSQLリソース\n\n---",
+      "id": "s10"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-messaging-action-AsyncMessageReceiveAction"
+}

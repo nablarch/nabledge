@@ -309,7 +309,7 @@ Date now = provider.getDate();
 ```
 
 > **Tip:**
-> テーブル採番用の設定値の詳細は、 IdGenerator を参照すること。
+> テーブル採番用の設定値の詳細は、 [IdGenerator](../../javadoc/javadoc-nablarch-common-idgenerator-IdGenerator.md) を参照すること。
 
 ### Excelファイル記述例
 

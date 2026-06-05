@@ -1,0 +1,116 @@
+{
+  "title": "interface DaoContext",
+  "content": "**パッケージ:** nablarch.common.dao\n\n---\n\n```java\npublic interface DaoContext\n```\n\n{@link UniversalDao}の実行コンテキスト。\n<p/>\nページネーションのためのページ数などを状態としてもつ必要があるので、\nこのコンテキストを介してSQLの実行処理が行われる。\n\n**作成者:** kawasima  \n**作成者:** Hisaaki Shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "findById",
+      "level": 3,
+      "content": "```java\nT findById(Class<T> entityClass, Object id)\n```\n\nプライマリーキーによる検索を行う。\n\n**パラメータ:**\n- `<T>` - エンティティクラスの型\n- `entityClass` - エンティティクラス\n- `id` - プライマリーキー (複合キーの場合は定義順)\n\n**戻り値:**\nエンティティオブジェクト\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "findByIdOrNull",
+      "level": 3,
+      "content": "```java\nT findByIdOrNull(Class<T> entityClass, Object id)\n```\n\nプライマリーキーによる検索を行う。\n\n**パラメータ:**\n- `<T>` - エンティティクラスの型\n- `entityClass` - エンティティクラス\n- `id` - プライマリーキー (複合キーの場合は定義順)\n\n**戻り値:**\nエンティティオブジェクト。0件の場合はnull。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "findAll",
+      "level": 3,
+      "content": "```java\nEntityList<T> findAll(Class<T> entityClass)\n```\n\n全件の検索を行う。\n\n**パラメータ:**\n- `<T>` - エンティティクラスの型\n- `entityClass` - エンティティクラス\n\n**戻り値:**\n検索結果リスト。0件の場合は空リスト。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "findAllBySqlFile",
+      "level": 3,
+      "content": "```java\nEntityList<T> findAllBySqlFile(Class<T> entityClass, String sqlId, Object params)\n```\n\nSQL_IDをもとにバインド変数を展開して検索処理を行う。\n\n**パラメータ:**\n- `<T>` - 検索結果をマッピングするBeanクラスの型\n- `entityClass` - 検索結果をマッピングするBeanクラス\n- `sqlId` - SQL_ID\n- `params` - バインド変数\n\n**戻り値:**\n検索結果リスト。0件の場合は空リスト。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "findAllBySqlFile",
+      "level": 3,
+      "content": "```java\nEntityList<T> findAllBySqlFile(Class<T> entityClass, String sqlId)\n```\n\nSQL_IDをもとに検索を行う。\n\n**パラメータ:**\n- `<T>` - 検索結果をマッピングするBeanクラスの型\n- `entityClass` - 検索結果をマッピングするBeanクラス\n- `sqlId` - SQL_ID\n\n**戻り値:**\n検索結果リスト。0件の場合は空リスト。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "findBySqlFile",
+      "level": 3,
+      "content": "```java\nT findBySqlFile(Class<T> entityClass, String sqlId, Object params)\n```\n\nSQL_IDをもとに1件検索を行う。\n\n**パラメータ:**\n- `<T>` - 検索結果をマッピングするBeanクラスの型\n- `entityClass` - 検索結果をマッピングするBeanクラス\n- `sqlId` - SQL_ID\n- `params` - バインド変数\n\n**戻り値:**\nエンティティオブジェクト\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "findBySqlFileOrNull",
+      "level": 3,
+      "content": "```java\nT findBySqlFileOrNull(Class<T> entityClass, String sqlId, Object params)\n```\n\nSQL_IDをもとに1件検索を行う。\n\n**パラメータ:**\n- `<T>` - 検索結果をマッピングするBeanクラスの型\n- `entityClass` - 検索結果をマッピングするBeanクラス\n- `sqlId` - SQL_ID\n- `params` - バインド変数\n\n**戻り値:**\nエンティティオブジェクト。0件の場合はnull。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "countBySqlFile",
+      "level": 3,
+      "content": "```java\nlong countBySqlFile(Class<T> entityClass, String sqlId, Object params)\n```\n\nSQL_IDをもとに結果件数を取得する。\n\n**パラメータ:**\n- `<T>` - エンティティクラスの型\n- `entityClass` - エンティティクラス\n- `sqlId` - SQL_ID\n- `params` - バインド変数\n\n**戻り値:**\n件数\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "update",
+      "level": 3,
+      "content": "```java\nint update(T entity)\n           throws OptimisticLockException\n```\n\nエンティティオブジェクトを元に更新処理を行う。\n<p/>\nエンティティの主キーが更新条件となる。\n\n**パラメータ:**\n- `<T>` - エンティティクラスの型\n- `entity` - エンティティオブジェクト\n\n**戻り値:**\n更新件数\n\n**例外:**\n- `OptimisticLockException` - バージョン不一致で更新対象が存在しない場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "batchUpdate",
+      "level": 3,
+      "content": "```java\nvoid batchUpdate(List<T> entities)\n```\n\nエンティティオブジェクトの情報を元に一括更新を行う。\n<p/>\n{@link #update(Object)}とは異なり、一括更新処理ではバージョン不一致チェックは行わない。\n例えば、バージョン番号が変更になっていた場合はそのレコードのみ更新されずに処理は正常に終了する。\nバージョン番号のチェックを必要とする場合には、{@link #update(Object)}を使用すること。\n\n**パラメータ:**\n- `entities` - 更新対象のエンティティリスト\n- `<T>` - エンティティクラスの型\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "insert",
+      "level": 3,
+      "content": "```java\nvoid insert(T entity)\n```\n\nエンティティオブジェクトを元に登録処理を行う。\n\n**パラメータ:**\n- `<T>` - エンティティクラスの型\n- `entity` - エンティティオブジェクト\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "batchInsert",
+      "level": 3,
+      "content": "```java\nvoid batchInsert(List<T> entities)\n```\n\nエンティティオブジェクトの情報を一括で登録する。\n\n**パラメータ:**\n- `entities` - エンティティリスト\n- `<T>` - エンティティクラスの型\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "delete",
+      "level": 3,
+      "content": "```java\nint delete(T entity)\n```\n\nエンティティオブジェクトを元に削除処理を行う。\n<p/>\nエンティティの主キーが削除条件となる。\n\n**パラメータ:**\n- `<T>` - エンティティクラスの型\n- `entity` - エンティティオブジェクト\n\n**戻り値:**\n削除件数\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "batchDelete",
+      "level": 3,
+      "content": "```java\nvoid batchDelete(List<T> entities)\n```\n\nエンティティオブジェクトを元に一括削除処理を行う。\n<p/>\nエンティティの主キーが削除条件となる。\n\n**パラメータ:**\n- `entities` - エンティティリスト\n- `<T>` - エンティティクラスの型\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "page",
+      "level": 3,
+      "content": "```java\nDaoContext page(long page)\n```\n\nページングの何ページ目を検索するかを指定する。\n\n**パラメータ:**\n- `page` - ページ番号(1-origin)\n\n**戻り値:**\nDaoContextがそのまま返る。\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "per",
+      "level": 3,
+      "content": "```java\nDaoContext per(long per)\n```\n\nページングの1ページにつき何件表示するかを指定する。\n\n**パラメータ:**\n- `per` - ページ内表示件数\n\n**戻り値:**\nDaoContextがそのまま返る。\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "defer",
+      "level": 3,
+      "content": "```java\nDaoContext defer()\n```\n\n検索結果の取得を遅延させる。\n\n**戻り値:**\nDaoContextがそのまま返る。\n\n---",
+      "id": "s18"
+    }
+  ],
+  "id": "javadoc-nablarch-common-dao-DaoContext"
+}

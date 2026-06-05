@@ -1,0 +1,62 @@
+{
+  "title": "class KeitaiAccessHandler",
+  "content": "**パッケージ:** nablarch.fw.web.handler\n\n**実装されたインタフェース:**\n- Handler<HttpRequest,HttpResponse>\n\n---\n\n```java\npublic class KeitaiAccessHandler\nimplements Handler<HttpRequest,HttpResponse>\n```\n\n携帯端末からのアクセスに対して、以下の処理を行うハンドラ。\n\n<pre>\n- 遷移先のJSPページで、javascriptを使用しないページを出力させる\n  フラグ(nablarch_jsUnsupported)をリクエストスコープ変数に設定する。\n\n- リクエストパラメータ中に\"nablarch_uri_override_\"で始まる名前のパラメータが\n  存在した場合、パラメータ名中の残りの文字列でリクエストパスを置換する。\n</pre>\n\n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "rewriteHandler",
+      "level": 3,
+      "content": "```java\nprivate final HttpRewriteHandler rewriteHandler\n```\n\nHTTPリクエスト・レスポンスの書き換えを行うハンドラ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "requestPathRewriteRule",
+      "level": 3,
+      "content": "```java\nprivate final HttpRequestRewriteRule requestPathRewriteRule\n```\n\nHTTPリクエスト中のリクエストパスに対する書き換えルール\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "JS_UNSUPPORTED_FLAG_NAME",
+      "level": 3,
+      "content": "```java\npublic static final String JS_UNSUPPORTED_FLAG_NAME\n```\n\njavascriptを使用できない端末を想定した挙動に変更する際に使用する\nリクエストスコープ上のフラグ変数の名称\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "URI_OVERRIDE_PRAM_PREFIX",
+      "level": 3,
+      "content": "```java\npublic static final String URI_OVERRIDE_PRAM_PREFIX\n```\n\njavascriptが利用できない場合に、遷移先URIおよび、submit_button パラメータの\n値を保持するリクエストパラメータの接頭辞\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "KeitaiAccessHandler",
+      "level": 3,
+      "content": "```java\npublic KeitaiAccessHandler()\n```\n\nデフォルトコンストラクタ\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest request, ExecutionContext context)\n```\n\n{@inheritDoc}\n 本ハンドラに対する設定に従い、 {@link HttpRewriteHandler} による\n リクエストパスとコンテンツパスに対する書き換え処理を行う。\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-KeitaiAccessHandler"
+}

@@ -65,7 +65,7 @@ web.xml への設定例を以下に示す。
 
 ## 初期化の成否を後続処理で取得する
 
-本クラスの初期化に成功したか否かは、NablarchServletContextListener#isInitializationCompleted を使用して取得できる。
+本クラスの初期化に成功したか否かは、[NablarchServletContextListener#isInitializationCompleted](../../javadoc/javadoc-nablarch-fw-web-servlet-NablarchServletContextListener.md) を使用して取得できる。
 初期化に成功した場合は上記メソッドは `true` を返却する。
 
 本クラスの初期化に失敗するとアプリケーションの起動も失敗するが、サーブレットコンテキストリスナーを複数登録していた場合は、

@@ -1,0 +1,116 @@
+{
+  "title": "class CodeUtil",
+  "content": "**パッケージ:** nablarch.common.code\n\n---\n\n```java\npublic final class CodeUtil\n```\n\nコードの値、及び名称の取り扱いのために使用するユーティリティ。\n</p>\nコードの値、及び名称の取得処理は{@link CodeManager}によって提供される。\n{@link CodeManager}の実装は、SystemRepositoryからコンポーネント名{@value #CODE_MANGER_NAME}で取得される。\n</p>\n\n**関連項目:** CodeManager  \n**作成者:** Koichi Asano  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "CODE_MANGER_NAME",
+      "level": 3,
+      "content": "```java\nprivate static final String CODE_MANGER_NAME\n```\n\nメッセージリソースのコンポーネント名。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "CodeUtil",
+      "level": 3,
+      "content": "```java\nprivate CodeUtil()\n```\n\n隠蔽コンストラクタ。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "getName",
+      "level": 3,
+      "content": "```java\npublic static String getName(String codeId, String value)\n               throws IllegalArgumentException\n```\n\nコード値に対応するコード名称を取得する。\n<p/>\n対象の言語は{@link nablarch.core.ThreadContext}で設定された言語となる。\n{@link nablarch.core.ThreadContext}で設定が行われていない場合は、デフォルトロケールの言語となる。\n<p/>\n\n**パラメータ:**\n- `codeId` - コードID\n- `value` - コード値\n\n**戻り値:**\nコード値に対応するコード名称\n\n**例外:**\n- `IllegalArgumentException` - 指定したコードIDが存在しないか、対象のコード値または言語に対応するデータが存在しない場合\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getName",
+      "level": 3,
+      "content": "```java\npublic static String getName(String codeId, String value, Locale locale)\n               throws IllegalArgumentException\n```\n\nコード値、言語に対応するコード名称を取得する。\n\n**パラメータ:**\n- `codeId` - コードID\n- `value` - コード値\n- `locale` - 言語\n\n**戻り値:**\nコード値に対応するコード名称\n\n**例外:**\n- `IllegalArgumentException` - 指定したコードIDが存在しないか、対象のコード値または言語に対応するデータが存在しない場合\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getShortName",
+      "level": 3,
+      "content": "```java\npublic static String getShortName(String codeId, String value)\n                    throws IllegalArgumentException\n```\n\nコード値に対応するコードの略称を取得する。\n<p/>\n対象の言語は{@link nablarch.core.ThreadContext}にて設定された言語となる。\n{@link nablarch.core.ThreadContext}で設定が行われていない場合は、デフォルトロケールの言語となる。\n<p/>\n\n**パラメータ:**\n- `codeId` - コードID\n- `value` - コード値\n\n**戻り値:**\nコード値に対応するコードの略称\n\n**例外:**\n- `IllegalArgumentException` - 指定したコードIDが存在しないか、対象のコード値または言語に対応するデータが存在しない場合\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getShortName",
+      "level": 3,
+      "content": "```java\npublic static String getShortName(String codeId, String value, Locale locale)\n                    throws IllegalArgumentException\n```\n\nコード値、言語に対応するコードの略称を取得する。\n\n**パラメータ:**\n- `codeId` - コードID\n- `value` - コード値\n- `locale` - 言語\n\n**戻り値:**\nコード値に対応するコードの略称\n\n**例外:**\n- `IllegalArgumentException` - 指定したコードIDが存在しないか、対象のコード値または言語に対応するデータが存在しない場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getOptionalName",
+      "level": 3,
+      "content": "```java\npublic static String getOptionalName(String codeId, String value, String optionColumnName)\n                       throws IllegalArgumentException\n```\n\nコード値に対応するコードのオプション名称(名称、略称の他に使用する補助名称)を取得する。\n<p/>\n対象の言語は{@link nablarch.core.ThreadContext}にて設定された言語となる。\n{@link nablarch.core.ThreadContext}で設定が行われていない場合は、デフォルトロケールの言語となる。\n\n**パラメータ:**\n- `codeId` - コードID\n- `value` - コード値\n- `optionColumnName` - 取得するオプション名称のカラム名（大文字・小文字を区別せずに使用する）\n\n**戻り値:**\nコード値に対応するコードのオプション名称\n\n**例外:**\n- `IllegalArgumentException` - 指定したコードIDが存在しないか、対象のコード値または言語に対応するデータが存在しない場合\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getOptionalName",
+      "level": 3,
+      "content": "```java\npublic static String getOptionalName(String codeId, String value, String optionColumnName, Locale locale)\n                       throws IllegalArgumentException\n```\n\nコード値、言語に対応するコードのオプション名称を取得する。\n<p/>\n対象の言語は引数の言語によって決定される。\n\n**パラメータ:**\n- `codeId` - コードID\n- `value` - コード値\n- `optionColumnName` - 取得するオプション名称のカラム名（大文字・小文字を区別せずに使用する）\n- `locale` - 言語\n\n**戻り値:**\nコード値に対応するコードのオプション名称\n\n**例外:**\n- `IllegalArgumentException` - 指定したコードIDが存在しないか、対象のコード値または言語に対応するデータが存在しない場合\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getValues",
+      "level": 3,
+      "content": "```java\npublic static List<String> getValues(String codeId)\n                       throws IllegalArgumentException\n```\n\nコードIDに紐付く全てのコード値を取得する。\n</p>\nコード値の順序は、コード名称テーブルのソート順カラムに、言語ごとに設定された値で決定される。\n返却値は、言語ごとに定義されたソート順に従い、並び替えが行われる。\n\n**パラメータ:**\n- `codeId` - コードID\n\n**戻り値:**\nコードIDに紐付く全てのコード値\n\n**例外:**\n- `IllegalArgumentException` - 指定したコードIDが存在しないか、対象のコード値または言語に対応するデータが存在しない場合\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getValues",
+      "level": 3,
+      "content": "```java\npublic static List<String> getValues(String codeId, String pattern)\n                       throws IllegalArgumentException\n```\n\nコードIDとパターンに紐付くコード値を取得する。\n</p>\nコード値の順序は、コード名称テーブルのソート順カラムに、言語ごとに設定された値で決定される。\n返却値は、言語ごとに定義されたソート順に従い、並び替えが行われる。\n対象の言語は{@link nablarch.core.ThreadContext}にて設定された言語となる。\n{@link nablarch.core.ThreadContext}で設定が行われていない場合は、デフォルトロケールの言語となる。\n\n**パラメータ:**\n- `codeId` - コードID\n- `pattern` - 使用するパターンのカラム名（大文字・小文字を区別せずに使用する）\n\n**戻り値:**\nコードIDとパターンに紐付くコード値\n\n**例外:**\n- `IllegalArgumentException` - 指定したコードIDが存在しないか、パターンまたは言語に対応するデータが存在しない場合\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getValues",
+      "level": 3,
+      "content": "```java\npublic static List<String> getValues(String codeId, Locale locale)\n                       throws IllegalArgumentException\n```\n\nコードIDに紐付く全てのコード値を取得する。\n</p>\nコード値の順序は、コード名称テーブルのソート順カラムに、言語ごとに設定された値で決定される。\n返却値は、言語ごとに定義されたソート順に従い、並び替えが行われる。\n\n**パラメータ:**\n- `codeId` - コードID\n- `locale` - 言語\n\n**戻り値:**\nコードIDに紐付く全てのコード値\n\n**例外:**\n- `IllegalArgumentException` - 指定したコードIDが存在しないか、コード値または言語に対応するデータが存在しない場合\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getValues",
+      "level": 3,
+      "content": "```java\npublic static List<String> getValues(String codeId, String pattern, Locale locale)\n                       throws IllegalArgumentException\n```\n\nコードIDとパターンに紐付くコード値を取得する。\n</p>\nコード値の順序は、コード名称テーブルのソート順カラムに、言語ごとに設定された値で決定される。\n返却値は、言語ごとに定義されたソート順に従い、並び替えが行われる。\n\n**パラメータ:**\n- `codeId` - コードID\n- `pattern` - 使用するパターンのカラム名（大文字・小文字を区別せずに使用する）\n- `locale` - 言語\n\n**戻り値:**\nコードIDとパターンに紐付くコード値\n\n**例外:**\n- `IllegalArgumentException` - 指定したコードIDが存在しないか、パターンまたは言語に対応するデータが存在しない場合\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "contains",
+      "level": 3,
+      "content": "```java\npublic static boolean contains(String codeId, String value)\n                 throws IllegalArgumentException\n```\n\nコード値がコードに存在するかチェックする。\n\n**パラメータ:**\n- `codeId` - コードID\n- `value` - コード値\n\n**戻り値:**\nコード値がコードに存在する場合 true\n\n**例外:**\n- `IllegalArgumentException` - 指定したコードIDが存在しない場合\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "contains",
+      "level": 3,
+      "content": "```java\npublic static boolean contains(String codeId, String pattern, String value)\n                 throws IllegalArgumentException\n```\n\nコード値がパターンに存在するかチェックする。\n\n**パラメータ:**\n- `codeId` - コードID\n- `pattern` - 使用するパターンのカラム名（大文字・小文字を区別せずに使用する）\n- `value` - コード値\n\n**戻り値:**\nコード値がコードに存在する場合 true\n\n**例外:**\n- `IllegalArgumentException` - 指定したコードIDが存在しない場合か、指定したパターンが存在しない場合\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getCodeManager",
+      "level": 3,
+      "content": "```java\nprivate static CodeManager getCodeManager()\n```\n\nCodeManagerをリポジトリから取得する。\n\n**戻り値:**\nリポジトリから取得したCodeManager\n\n---",
+      "id": "s18"
+    }
+  ],
+  "id": "javadoc-nablarch-common-code-CodeUtil"
+}

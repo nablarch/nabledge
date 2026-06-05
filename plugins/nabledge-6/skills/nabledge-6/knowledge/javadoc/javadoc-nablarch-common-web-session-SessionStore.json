@@ -1,0 +1,134 @@
+{
+  "title": "class SessionStore",
+  "content": "**パッケージ:** nablarch.common.web.session\n\n---\n\n```java\npublic abstract class SessionStore\n```\n\nセッションの内容をストアに格納/読み込みするクラスが継承する共通実装。\n\n**作成者:** kawasima  \n**作成者:** tajima  \n**関連項目:** nablarch.common.web.session.store  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "name",
+      "level": 3,
+      "content": "```java\nprivate String name\n```\n\nセッションストア名\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "expiresMilliSeconds",
+      "level": 3,
+      "content": "```java\nprivate Long expiresMilliSeconds\n```\n\n有効期間(ミリ秒)\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "stateEncoder",
+      "level": 3,
+      "content": "```java\nprivate StateEncoder stateEncoder\n```\n\nセッション内容の直列化モジュール\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "SessionStore",
+      "level": 3,
+      "content": "```java\nprotected SessionStore(String name)\n```\n\nコンストラクタ。\nデフォルトのセッションストア名を設定する。\n\n**パラメータ:**\n- `name` - セッションストア名\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "setName",
+      "level": 3,
+      "content": "```java\npublic void setName(String name)\n```\n\nセッションストア名を設定する。\n\n**パラメータ:**\n- `name` - セッションストア名\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getName",
+      "level": 3,
+      "content": "```java\npublic String getName()\n```\n\nセッションストア名を取得する。\n\n**戻り値:**\nセッションストア名\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setExpires",
+      "level": 3,
+      "content": "```java\npublic void setExpires(Long expires)\n```\n\n有効期限(単位:秒)を設定する。\n\n**パラメータ:**\n- `expires` - 有効期限(単位:秒)\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setExpires",
+      "level": 3,
+      "content": "```java\npublic void setExpires(Long expires, TimeUnit timeUnit)\n```\n\n有効期限を設定する。\n\n**パラメータ:**\n- `expires` - 有効期限\n- `timeUnit` - 時間単位\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "load",
+      "level": 3,
+      "content": "```java\npublic abstract List<SessionEntry> load(String sessionId, ExecutionContext executionContext)\n```\n\nセッションの内容をストアからロードする。\n\nセッションの内容が存在しない場合は空リストを返す。\n\n**パラメータ:**\n- `sessionId` - セッションID\n- `executionContext` - コンテキスト\n\n**戻り値:**\nセッションエントリリスト\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "save",
+      "level": 3,
+      "content": "```java\npublic abstract void save(String sessionId, List<SessionEntry> entries, ExecutionContext executionContext)\n```\n\nセッションの内容をストアに保存する。\n\n**パラメータ:**\n- `sessionId` - セッションID\n- `entries` - セッションエントリリスト\n- `executionContext` - コンテキスト\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "delete",
+      "level": 3,
+      "content": "```java\npublic abstract void delete(String sessionId, ExecutionContext executionContext)\n```\n\nセッションの内容をストアから削除する。\n\n**パラメータ:**\n- `sessionId` - セッションID\n- `executionContext` - コンテキスト\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "invalidate",
+      "level": 3,
+      "content": "```java\npublic abstract void invalidate(String sessionId, ExecutionContext executionContext)\n```\n\nセッションストアを無効にする。\n\n**パラメータ:**\n- `sessionId` - セッションID\n- `executionContext` - コンテキスト\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "encode",
+      "level": 3,
+      "content": "```java\nprotected byte[] encode(List<SessionEntry> entries)\n```\n\nセッションエントリリストをエンコードする。\n\n**パラメータ:**\n- `entries` - セッションエントリリスト\n\n**戻り値:**\nバイト配列\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "decode",
+      "level": 3,
+      "content": "```java\nprotected List<SessionEntry> decode(byte[] encoded)\n```\n\nセッションエントリリストをデコードする。\n\n**パラメータ:**\n- `encoded` - エンコードされたバイト配列\n\n**戻り値:**\nセッションエントリリスト\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getExpiresMilliSeconds",
+      "level": 3,
+      "content": "```java\npublic long getExpiresMilliSeconds()\n```\n\n有効期限(単位:ミリ秒)で取得する。\n\n**戻り値:**\n有効期限(単位:ミリ秒)\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "isExtendable",
+      "level": 3,
+      "content": "```java\npublic boolean isExtendable()\n```\n\nセッション全体の有効期限に寄与するかを取得する。\n\nストアの有効期限をセッショントラキングIDの保持期限に反映させない場合は、\n本メソッドをサブクラス側でオーバーライドしてfalseを返却するようにする。\n\n**戻り値:**\nこのストアの有効期限をセッションの維持期間に反映させる場合はtrue\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getStateEncoder",
+      "level": 3,
+      "content": "```java\npublic StateEncoder getStateEncoder()\n```\n\nセッション内容の直列化モジュールを取得する。\n\n**戻り値:**\nセッション内容の直列化モジュール\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "setStateEncoder",
+      "level": 3,
+      "content": "```java\npublic void setStateEncoder(StateEncoder stateEncoder)\n```\n\nセッション内容の直列化モジュールを設定する。\n\n**パラメータ:**\n- `stateEncoder` - セッション内容の直列化モジュール\n\n---",
+      "id": "s21"
+    }
+  ],
+  "id": "javadoc-nablarch-common-web-session-SessionStore"
+}

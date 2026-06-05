@@ -1,0 +1,128 @@
+{
+  "title": "class RewriteRule",
+  "content": "**パッケージ:** nablarch.fw.handler\n\n---\n\n```java\npublic abstract class RewriteRule\n```\n\n置換ルール。\n\n**param:** 処理対象オブジェクトの型  \n**param:** 継承型  \n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "COND_LINE_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern COND_LINE_FORMAT\n```\n\n記述書式\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "pattern",
+      "level": 3,
+      "content": "```java\nprivate Pattern pattern\n```\n\n処理対象パターン\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "rewriteTo",
+      "level": 3,
+      "content": "```java\nprivate String rewriteTo\n```\n\n置換先文字列\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "conditions",
+      "level": 3,
+      "content": "```java\nprivate final List<Condition> conditions\n```\n\n適用条件\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "exports",
+      "level": 3,
+      "content": "```java\nprivate final List<Export> exports\n```\n\n変数定義\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "PLACE_HOLDER",
+      "level": 3,
+      "content": "```java\nprivate static final Pattern PLACE_HOLDER\n```\n\n埋め込み変数のプレースホルダー\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s8"
+    },
+    {
+      "title": "getPathToRewrite",
+      "level": 3,
+      "content": "```java\nprotected abstract String getPathToRewrite(TData data)\n```\n\n書き換え対象のパスを取得する。\n\n**パラメータ:**\n- `data` - 処理対象オブジェクト\n\n**戻り値:**\n書き換え対象パス文字列\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "applyRewrittenPath",
+      "level": 3,
+      "content": "```java\nprotected abstract void applyRewrittenPath(String rewrittenPath, TData data)\n```\n\n書き換えられたパスを処理対象オブジェクトに反映する。\n\n**パラメータ:**\n- `rewrittenPath` - 書き換えられたパス\n- `data` - 処理対象オブジェクト\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getParam",
+      "level": 3,
+      "content": "```java\nprotected Object getParam(String scope, String name, TData data, ExecutionContext context)\n```\n\n変数の値を返す。\n\nこの実装では、以下の変数種別に対応する。\n<pre>\n----------- ------------------------\n種別名       内容\n----------- ------------------------\nrequest     リクエストスコープ変数\nsession     セッションスコープ変数\nthread      スレッドコンテキスト変数\n----------- ------------------------\n</pre>\nなお、該当する変数が定義されていなかった場合はnullを返す。\n\n**パラメータ:**\n- `scope` - 変数種別\n- `name` - 変数名\n- `data` - 処理対象オブジェクト\n- `context` - 実行コンテキスト\n\n**戻り値:**\n変数の値\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "exportParam",
+      "level": 3,
+      "content": "```java\nprotected void exportParam(String scope, String name, String value, TData data, ExecutionContext context)\n```\n\n変数を定義する。\n\n**パラメータ:**\n- `scope` - 変数種別\n- `name` - 変数名\n- `value` - 変数の値\n- `data` - 処理対象オブジェクト\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "rewrite",
+      "level": 3,
+      "content": "```java\npublic String rewrite(TData data, ExecutionContext context)\n```\n\nこのオブジェクトの設定に従ってパスの置換処理をおこない、\n置換後のパス文字列を返す。\n置換処理が行われなかった場合はnullを返す。\n\n**パラメータ:**\n- `data` - 処理対象オブジェクト\n- `context` - 実行コンテキスト\n\n**戻り値:**\n置換処理が行われた場合は置換後の文字列。\n         行われなかった場合はnull。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "interpolate",
+      "level": 3,
+      "content": "```java\nprivate String interpolate(String str, Map<String,List<String>> backRefs, TData data, ExecutionContext context)\n```\n\n埋め込み文字列を反映する。\n\n**パラメータ:**\n- `str` - 処理対象文字列\n- `backRefs` - バックリファレンス\n- `data` - 処理対象オブジェクト\n- `context` - 実行コンテキスト\n\n**戻り値:**\n処理結果文字列\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setPattern",
+      "level": 3,
+      "content": "```java\npublic TSelf setPattern(String pattern)\n```\n\nこの置換ルールが適用されるパスのパターンを正規表現で設定する。\n\n**パラメータ:**\n- `pattern` - この置換ルールが適用されるパスのパターン\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setRewriteTo",
+      "level": 3,
+      "content": "```java\npublic TSelf setRewriteTo(String rewriteTo)\n```\n\nこの置換ルールが適用された場合に置き換えられる文字列を指定する。\nこの文字列中では、以下の埋め込みパラメータを使用することができる。\n\n**パラメータ:**\n- `rewriteTo` - この置換ルールが適用された場合に置き換えられる文字列\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setExports",
+      "level": 3,
+      "content": "```java\npublic TSelf setExports(List<String> exportDefinitions)\n```\n\n変数定義を設定する。\n\n既存の設定はクリアされる。\n\n**パラメータ:**\n- `exportDefinitions` - 変数定義\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "addExport",
+      "level": 3,
+      "content": "```java\npublic TSelf addExport(String exportDefinition)\n```\n\nリクエストスコープ変数定義を追加する。\n\n同名の変数が既に定義されていた場合は上書きする。\n\n**パラメータ:**\n- `exportDefinition` - 変数名\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setConditions",
+      "level": 3,
+      "content": "```java\npublic TSelf setConditions(List<String> conditions)\n```\n\n置換処理の適用条件を設定する。\n\n既存の設定はクリアされる。\n\n**パラメータ:**\n- `conditions` - 適用条件\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "addCondition",
+      "level": 3,
+      "content": "```java\npublic TSelf addCondition(String condition)\n```\n\n置換処理の適用条件を追加する。\n\n**パラメータ:**\n- `condition` - 適用条件\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s20"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-handler-RewriteRule"
+}

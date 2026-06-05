@@ -1,0 +1,200 @@
+{
+  "title": "class DeferredEntityList",
+  "content": "**パッケージ:** nablarch.common.dao\n\n**継承階層:**\n```\njava.lang.Object\n  └─ EntityList<E>\n      └─ nablarch.common.dao.DeferredEntityList\n```\n\n**実装されたインタフェース:**\n- Closeable\n\n---\n\n```java\npublic class DeferredEntityList\nextends EntityList<E>\nimplements Closeable\n```\n\n遅延Entityリストを表すクラス。\n<p/>\n本クラスでは、データベースの検索結果をクライアントカーソルとして保持するのではなくサーバサイドカーソルとして保持する。\nそのため、必要な処理が終了したタイミングで{@link #close()}メソッドを使用し、リソース解放を行うこと。\n<p/>\n検索結果は、{@link #iterator()}で取得した{@link java.util.Iterator}を用いて取得する。\n{@link java.util.Iterator#next()}を呼び出したタイミングで、\n{@link java.sql.ResultSet#next()}を呼び出し次レコードの値を返却する。\n<p/>\n{@link #iterator()}の複数回呼び出しはサポートしない。\nこれは、{@link java.sql.ResultSet#TYPE_FORWARD_ONLY}のカーソルしかサポートしないため、\n一度読み込んだレコードを再度読み込むことは出来ないためである。\n<p/>\n本クラスでは、{@link #iterator()}のみサポートする。\nこれ以外のメソッドが呼び出された場合は、{@link java.lang.UnsupportedOperationException}を送出する。\n\n**param:** 型パラメータ  \n**作成者:** kawasima  \n**作成者:** Hisaaki Shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "serialVersionUID",
+      "level": 3,
+      "content": "```java\nprivate static final long serialVersionUID\n```\n\nserialVersionUID\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "resourceHolder",
+      "level": 3,
+      "content": "```java\nprivate final transient SqlResourceHolder resourceHolder\n```\n\nSQL情報\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "entityClass",
+      "level": 3,
+      "content": "```java\nprivate final Class<E> entityClass\n```\n\nエンティティクラス\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "DeferredEntityList",
+      "level": 3,
+      "content": "```java\npublic DeferredEntityList(Class<E> entityClass, SqlResourceHolder resourceHolder)\n```\n\n遅延EntityListを生成する。\n\n**パラメータ:**\n- `entityClass` - Entityのクラス\n- `resourceHolder` - SQLリソース\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "iterator",
+      "level": 3,
+      "content": "```java\npublic Iterator<E> iterator()\n```\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic void close()\n```\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "dispose",
+      "level": 3,
+      "content": "```java\nprivate void dispose()\n```\n\nSQLリソースを解放する。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "listIterator",
+      "level": 3,
+      "content": "```java\npublic ListIterator<E> listIterator()\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "listIterator",
+      "level": 3,
+      "content": "```java\npublic ListIterator<E> listIterator(int index)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "add",
+      "level": 3,
+      "content": "```java\npublic boolean add(E e)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "addAll",
+      "level": 3,
+      "content": "```java\npublic boolean addAll(Collection<? extends E> c)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "clear",
+      "level": 3,
+      "content": "```java\npublic void clear()\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "contains",
+      "level": 3,
+      "content": "```java\npublic boolean contains(Object o)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "ensureCapacity",
+      "level": 3,
+      "content": "```java\npublic void ensureCapacity(int minCapacity)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "get",
+      "level": 3,
+      "content": "```java\npublic E get(int index)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "indexOf",
+      "level": 3,
+      "content": "```java\npublic int indexOf(Object o)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "isEmpty",
+      "level": 3,
+      "content": "```java\npublic boolean isEmpty()\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "lastIndexOf",
+      "level": 3,
+      "content": "```java\npublic int lastIndexOf(Object o)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "remove",
+      "level": 3,
+      "content": "```java\npublic boolean remove(Object o)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "removeRange",
+      "level": 3,
+      "content": "```java\nprotected void removeRange(int fromIndex, int toIndex)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "size",
+      "level": 3,
+      "content": "```java\npublic int size()\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "toArray",
+      "level": 3,
+      "content": "```java\npublic Object[] toArray()\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "toArray",
+      "level": 3,
+      "content": "```java\npublic T[] toArray(T[] a)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "trimToSize",
+      "level": 3,
+      "content": "```java\npublic void trimToSize()\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "subList",
+      "level": 3,
+      "content": "```java\npublic List<E> subList(int fromIndex, int toIndex)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "containsAll",
+      "level": 3,
+      "content": "```java\npublic boolean containsAll(Collection<?> c)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "removeAll",
+      "level": 3,
+      "content": "```java\npublic boolean removeAll(Collection<?> c)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s30"
+    },
+    {
+      "title": "retainAll",
+      "level": 3,
+      "content": "```java\npublic boolean retainAll(Collection<?> c)\n```\n\n本メソッドは利用できない。\n\n呼び出した場合、{@link UnsupportedOperationException}を送出する。\n\n---",
+      "id": "s31"
+    },
+    {
+      "title": "toString",
+      "level": 3,
+      "content": "```java\npublic String toString()\n```\n\n---",
+      "id": "s32"
+    }
+  ],
+  "id": "javadoc-nablarch-common-dao-DeferredEntityList"
+}

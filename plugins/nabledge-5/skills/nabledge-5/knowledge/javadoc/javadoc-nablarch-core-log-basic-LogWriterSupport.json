@@ -1,0 +1,110 @@
+{
+  "title": "class LogWriterSupport",
+  "content": "**パッケージ:** nablarch.core.log.basic\n\n**実装されたインタフェース:**\n- LogWriter\n\n---\n\n```java\npublic abstract class LogWriterSupport\nimplements LogWriter\n```\n\n{@link LogWriter}の実装をサポートするクラス。<br>\n<br>\nこのクラスでは、下記の機能を提供する。\n<ul>\n<li>{@link LogLevel}に応じた出力制御</li>\n<li>{@link LogFormatter}を使用したログのフォーマット</li>\n</ul>\n上記の機能は、プロパティファイルに設定を記述して使用する。<br>\nプロパティファイルの記述ルールを下記に示す。\n<dl>\n<dt>writer.&lt;{@link LogWriter}の名称&gt;.level\n<dd>{@link LogLevel}の名称。オプション。<br>\n    {@link LogLevel}の名称を指定する。<br>\n    ここで指定したレベル以上のログを全て出力する。\n    指定がない場合はレベルに応じた出力制御を行わず、全てのレベルのログを出力する。\n\n<dt>writer.&lt;{@link LogWriter}の名称&gt;.formatter.className\n<dd>{@link LogWriter}で使用する{@link LogFormatter}のクラス名。<br>\n    {@link LogFormatter}を実装したクラスのFQCNを指定する。\n    指定がない場合は{@link BasicLogFormatter}を使用する。\n\n<dt>writer.&lt;{@link LogWriter}の名称&gt;.formatter.<プロパティ名>\n<dd>{@link LogFormatter}毎のプロパティに設定する値。<br>\n    設定内容は、使用する{@link LogFormatter}のJavadocを参照すること。\n</dl>\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "name",
+      "level": 3,
+      "content": "```java\nprivate String name\n```\n\n設定で指定された{@link LogWriter}の名称\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "baseLevel",
+      "level": 3,
+      "content": "```java\nprivate LogLevel baseLevel\n```\n\nログの出力制御の基準とする{@link LogLevel}\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "baseLevelValue",
+      "level": 3,
+      "content": "```java\nprivate int baseLevelValue\n```\n\nログの出力制御の基準とする{@link LogLevel}の値\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "formatter",
+      "level": 3,
+      "content": "```java\nprivate LogFormatter formatter\n```\n\n{@link LogFormatter}\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize(ObjectSettings settings)\n```\n\n{@inheritDoc}<br>\n<br>\n設定を使用して{@link LogLevel}と{@link LogFormatter}を初期化する。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "createLogFormatter",
+      "level": 3,
+      "content": "```java\nprotected LogFormatter createLogFormatter(ObjectSettings settings)\n```\n\n設定を使用して{@link LogFormatter}を生成する。\n\n**パラメータ:**\n- `settings` - {@link LogFormatter}の設定\n\n**戻り値:**\n設定を使用して生成した{@link LogFormatter}。指定がない場合は<code>null</code>\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "onInitialize",
+      "level": 3,
+      "content": "```java\nprotected void onInitialize(ObjectSettings settings)\n```\n\n初期処理を行う。<br>\nログの出力先に応じたリソースの確保などを実装する。<br>\nデフォルト実装では何もしない。\n\n**パラメータ:**\n- `settings` - {@link LogWriter}の設定内容\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "terminate",
+      "level": 3,
+      "content": "```java\npublic void terminate()\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "onTerminate",
+      "level": 3,
+      "content": "```java\nprotected void onTerminate()\n```\n\n終了処理を行う。<br>\nログの出力先に応じて確保しているリソースの解放などを実装する。<br>\nデフォルト実装では何もしない。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "write",
+      "level": 3,
+      "content": "```java\npublic void write(LogContext context)\n```\n\nフォーマット済みのログを出力先に書き込む。<br>\n<br>\n設定で{@link LogLevel}が指定されている場合は、有効なレベルの場合のみ{@link #onWrite(String)}メソッドを呼び出す。<br>\n有効なレベルのログでない場合は、何も処理しない。\n\n**パラメータ:**\n- `context` - {@link LogContext}\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "needsToWrite",
+      "level": 3,
+      "content": "```java\npublic boolean needsToWrite(LogContext context)\n```\n\n現在の設定から、指定されたログエントリを出力するか否かを返す。\n\n**パラメータ:**\n- `context` - ログエントリオブジェクト\n\n**戻り値:**\nログを出力する場合はtrue\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "onWrite",
+      "level": 3,
+      "content": "```java\nprotected abstract void onWrite(String formattedMessage)\n```\n\nフォーマット済みのログを出力先に書き込む。\n\n**パラメータ:**\n- `formattedMessage` - フォーマット済みのログ\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getSettings",
+      "level": 3,
+      "content": "```java\nprotected String getSettings()\n```\n\n設定情報を取得する。<br>\n<br>\n設定情報のフォーマットを下記に示す。<br>\n<br>\nWRITER NAME        = [&lt;{@link LogWriter}の名称&gt;]<br>\nWRITER CLASS       = [&lt;{@link LogWriter}のクラス名&gt;]<br>\nFORMATTER CLASS    = [&lt;{@link LogFormatter}のクラス名&gt;]<br>\nLEVEL              = [&lt;ログの出力制御の基準とする{@link LogLevel}&gt;]\n\n**戻り値:**\n設定情報\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getName",
+      "level": 3,
+      "content": "```java\nprotected String getName()\n```\n\n設定で指定された{@link LogWriter}の名称を取得する。\n\n**戻り値:**\n設定で指定された{@link LogWriter}の名称\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getFormatter",
+      "level": 3,
+      "content": "```java\nprotected LogFormatter getFormatter()\n```\n\n{@link LogFormatter}を取得する。\n\n**戻り値:**\n{@link LogFormatter}\n\n---",
+      "id": "s17"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-basic-LogWriterSupport"
+}

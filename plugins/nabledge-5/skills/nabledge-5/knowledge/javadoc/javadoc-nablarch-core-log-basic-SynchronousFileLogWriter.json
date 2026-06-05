@@ -1,0 +1,158 @@
+{
+  "title": "class SynchronousFileLogWriter",
+  "content": "**パッケージ:** nablarch.core.log.basic\n\n**継承階層:**\n```\njava.lang.Object\n  └─ FileLogWriter\n      └─ nablarch.core.log.basic.SynchronousFileLogWriter\n```\n\n---\n\n```java\npublic class SynchronousFileLogWriter\nextends FileLogWriter\n```\n\nロックファイルを用いて排他制御を行いながらファイルにログを書き込むクラス。\n<p>\n本クラスを使用するとプロセスをまたがってログ出力処理を直列化できるので、複数プロセスから同一のファイルにログ出力を行う場合でも確実にログを出力できる。<br/>\n本クラスは障害通知ログのように出力頻度が低く、かつサーバ単位でログファイルを一元管理するほうが効率的なログの出力にのみ使用することを想定している。\n頻繁にログの出力が行われる場面で本クラスを使用するとロック取得待ちによって性能が劣化する可能性があるので、\nアプリケーションログやアクセスログのように出力頻度の高いログの出力に本クラスを使用してはいけない。<br/>\n</p>\n<p>\n本クラスはロック取得の待機時間を超えてもロックを取得できない場合、\n強制的にロックファイルを削除し、ロックファイルを生成してからログの出力を行う。<br/>\nもし強制的にロックファイルを削除できない場合は、ロックを取得していない状態で強制的にログの出力を行い、処理を終了する。<br/>\nまた、ロックファイルの生成に失敗した場合および、ロック取得待ちの際に割り込みが発生した場合も、ロックを取得していない状態で強制的にログの出力を行い、処理を終了する。\n</p>\n\n**作成者:** Masato Inoue  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "MIN_LOCK_RETRY_INTERVAL",
+      "level": 3,
+      "content": "```java\nprivate static final int MIN_LOCK_RETRY_INTERVAL\n```\n\nロック取得の再試行間隔（ミリ秒）の最小値（0にするとsleepなしのループになるので、1を最小値とする）\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "MIN_LOCK_WAIT_TIME",
+      "level": 3,
+      "content": "```java\nprivate static final int MIN_LOCK_WAIT_TIME\n```\n\nロック取得の待機時間（ミリ秒）の最小値\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "DEFAULT_LOCK_RETRY_INTERVAL",
+      "level": 3,
+      "content": "```java\nprivate static final int DEFAULT_LOCK_RETRY_INTERVAL\n```\n\nロック取得の再試行間隔（ミリ秒）のデフォルト値\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "DEFAULT_LOCK_WAIT_TIME",
+      "level": 3,
+      "content": "```java\nprivate static final int DEFAULT_LOCK_WAIT_TIME\n```\n\nロック取得の待機時間（ミリ秒）のデフォルト値\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "lockFile",
+      "level": 3,
+      "content": "```java\nprivate File lockFile\n```\n\nロックファイル\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "lockFilePath",
+      "level": 3,
+      "content": "```java\nprivate String lockFilePath\n```\n\nロックファイルのパス\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "lockRetryInterval",
+      "level": 3,
+      "content": "```java\nprivate long lockRetryInterval\n```\n\nロック取得の再試行間隔（ミリ秒）\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "lockWaitTime",
+      "level": 3,
+      "content": "```java\nprivate long lockWaitTime\n```\n\nロック取得の待機時間（ミリ秒）\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "failureCodeCreateLockFile",
+      "level": 3,
+      "content": "```java\nprivate String failureCodeCreateLockFile\n```\n\nロックファイルが生成できない場合の障害通知コード\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "failureCodeReleaseLockFile",
+      "level": 3,
+      "content": "```java\nprivate String failureCodeReleaseLockFile\n```\n\n生成したロックファイルを解放（削除）できない場合の障害通知コード\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "failureCodeForceDeleteLockFile",
+      "level": 3,
+      "content": "```java\nprivate String failureCodeForceDeleteLockFile\n```\n\n解放されないロックファイルを強制削除できない場合の障害通知コード（待機時間を超えた場合に発生）\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "failureCodeInterruptLockWait",
+      "level": 3,
+      "content": "```java\nprivate String failureCodeInterruptLockWait\n```\n\nロック待ちでスレッドをスリープしている際に、割り込みが発生した場合の障害通知コード\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s14"
+    },
+    {
+      "title": "onInitialize",
+      "level": 3,
+      "content": "```java\nprotected void onInitialize(ObjectSettings settings)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getSettings",
+      "level": 3,
+      "content": "```java\nprotected String getSettings()\n```\n\n設定情報を取得する。<br>\n<br>\n設定情報のフォーマットを下記に示す。<br>\n<br>\n<pre>\n{@literal\nWRITER NAME        = [<{@link LogWriter}の名称>]\nWRITER CLASS       = [<{@link LogWriter}のクラス名>]\nFORMATTER CLASS    = [<{@link LogFormatter}のクラス名>]\nLEVEL              = [<ログの出力制御の基準とするLogLevel>]\nFILE PATH          = [<書き込み先のファイルパス>]\nENCODING           = [<書き込み時に使用する文字エンコーディング>]\nOUTPUT BUFFER SIZE = [<出力バッファのサイズ>]\nFILE AUTO CHANGE   = [<ログファイルを自動で切り替えるか否か。>]\nMAX FILE SIZE      = [<書き込み先ファイルの最大サイズ>]\nCURRENT FILE SIZE  = [<書き込み先ファイルの現在のサイズ>]\nLOCK FILE PATH                      = [<ロックファイルのパス>]\nLOCK RETRY INTERVAL                 = [<ロック取得の再試行間隔（ミリ秒）>]\nLOCK WAIT TIME                      = [<ロック取得の待機時間（ミリ秒）>]\nFAILURE CODE CREATE LOCK FILE       = [<生成したロックファイルを削除できない場合の障害コード>]\nFAILURE CODE RELEASE LOCK FILE      = [<生成したロックファイルを解放（削除）できない場合の障害コード>]\nFAILURE CODE FORCE DELETE LOCK FILE = [<解放されないロックファイルを強制削除できない場合の障害コードド>]\nFAILURE CODE INTERRUPT LOCK WAIT    = [<ロック待ちでスレッドをスリープしている際に、割り込みが発生した場合の障害コード>]\n}\n</pre>\n\n**戻り値:**\n設定情報\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "write",
+      "level": 3,
+      "content": "```java\npublic void write(LogContext context)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "onWrite",
+      "level": 3,
+      "content": "```java\nprotected synchronized void onWrite(String formattedMessage, LogContext context)\n```\n\nロックファイルを使用して排他制御を行いながらファイルにログ書き込みを行う。\n<p/>\n排他制御の仕様を以下に示す。\n<ul>\n<li>ロックファイルの生成に成功した場合、ログ書き込みを行い、ロックファイルを削除する。</li>\n<li>ファイルパス不正などでロックファイルの生成に失敗した場合、引数で渡されたメッセージとロックファイルが作成できなかった旨のメッセージを、強制的にログファイルに出力する。</li>\n<li>既にロックファイルが存在するためにロックファイルの生成に失敗した場合、一定時間処理をスリープさせ、再試行する。</li>\n<li>ロック取得待機時間を超えてもロックファイルを生成できなかった場合、不要なロックファイルが残存しているとみなしロックファイルを削除し、再度ロックファイルの生成を試みる。\nもしロックファイルの削除に失敗した場合、引数で渡されたメッセージとロックファイルの削除に失敗した旨のメッセージを、強制的にログファイルに出力する。</li>\n<li>ロック取得待ちの際に割り込みが発生した場合、引数で渡されたメッセージと割り込みが発生した旨のメッセージを、強制的にログファイルに出力する。</li>\n</ul>\n\n**パラメータ:**\n- `formattedMessage` - フォーマット済みのログ\n- `context` - ログエントリオブジェクト\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "lockFile",
+      "level": 3,
+      "content": "```java\nprotected boolean lockFile(String formattedMessage, LogContext context)\n```\n\nロックファイルを作成し、ログファイルをロックする。\n\n**パラメータ:**\n- `formattedMessage` - フォーマット済みのログ\n- `context` - ログエントリオブジェクト\n\n**戻り値:**\nロックファイルの作成結果（true:成功 false:失敗）\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "waitLock",
+      "level": 3,
+      "content": "```java\nprotected boolean waitLock(File lockFile, String formattedMessage, LogContext context)\n```\n\nロック待ち処理を行う。\n<p/>\nロック取得の再試行間隔（ミリ秒）で設定された時間、スレッドをスリープさせる。\n\n**パラメータ:**\n- `lockFile` - ロックファイル\n- `formattedMessage` - フォーマット済みのログ\n- `context` - ログエントリオブジェクト\n\n**戻り値:**\nもし割り込みが発生した場合にはfalse\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "deleteLockFileExceedsLockWaitTime",
+      "level": 3,
+      "content": "```java\nprotected boolean deleteLockFileExceedsLockWaitTime(File lockFile, String formattedMessage, LogContext context)\n```\n\n待機時間を過ぎても残存しているロックファイルを強制的に削除する。\n\n**パラメータ:**\n- `lockFile` - ロックファイル\n- `formattedMessage` - フォーマット済みのログ\n- `context` - ログエントリオブジェクト\n\n**戻り値:**\nロックファイルの強制削除が正常に終了したかどうか\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "forceWrite",
+      "level": 3,
+      "content": "```java\nprotected void forceWrite(String formattedMessage, LogContext context, String lockErrorMessage)\n```\n\nロック取得に失敗した場合に、強制的にログ出力を行う。\n\n**パラメータ:**\n- `formattedMessage` - フォーマット済みのログ\n- `context` - ログエントリオブジェクト\n- `lockErrorMessage` - ロック取得に失敗した原因のログ\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "releaseLock",
+      "level": 3,
+      "content": "```java\nprotected void releaseLock(String formattedMessage, LogContext context)\n```\n\nログ出力後に、ロックを解放する。\n<p/>\nロックの解放処理は、ロックファイルを削除することによって行う。\n\n**パラメータ:**\n- `formattedMessage` - フォーマット済みのログ(本メソッドでは使用していない)\n- `context` - ログエントリオブジェクト\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getFormattingFailureMessage",
+      "level": 3,
+      "content": "```java\nprivate String getFormattingFailureMessage(LogContext context, String defaultMessage, String failureCode, Object messageOptions)\n```\n\n障害メッセージを取得する。\n\n**パラメータ:**\n- `context` - ログエントリオブジェクト\n- `defaultMessage` - デフォルトメッセージ\n- `failureCode` - 障害コード\n- `messageOptions` - 障害コードからメッセージを取得する際に使用するオプション情報\n\n**戻り値:**\n障害メッセージ\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "getFormattingMessage",
+      "level": 3,
+      "content": "```java\nprivate String getFormattingMessage(LogLevel level, LogContext context, String defaultMessage)\n```\n\nデフォルトフォーマットのメッセージを取得する。\n\n**パラメータ:**\n- `level` - ログレベル\n- `context` - ログエントリオブジェクト\n- `defaultMessage` - メッセージ\n\n**戻り値:**\nデフォルトフォーマットのメッセージ\n\n---",
+      "id": "s25"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-basic-SynchronousFileLogWriter"
+}

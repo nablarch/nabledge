@@ -1,13 +1,13 @@
 {
   "id": "testing-framework-event-listen-subwindow",
   "title": "サブウィンドウ内イベント定義",
-  "content": "[サブウィンドウ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen-subwindow.md) はサブウィンドウ内で発生した各種イベントに対して\nあらかじめ登録しておいたJavaScript処理をイベント発生時に実行するウィジェットである。\n\n本ウィジェットの仕様の多くは [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.md) と共通であるため、\n以下では [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.md) との差分のみについて述べる。\n本項に記述されていない部分については別途 [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.md) の項を参照すること。",
+  "content": "[サブウィンドウ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen-subwindow.json) はサブウィンドウ内で発生した各種イベントに対して\nあらかじめ登録しておいたJavaScript処理をイベント発生時に実行するウィジェットである。\n\n本ウィジェットの仕様の多くは [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.json) と共通であるため、\n以下では [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.json) との差分のみについて述べる。\n本項に記述されていない部分については別途 [ページ内イベント定義](../../development-tools/testing-framework/testing-framework-event-listen.json) の項を参照すること。",
   "no_knowledge_content": false,
   "sections": [
     {
       "id": "s1",
       "title": "コードサンプル",
-      "content": "以下のソースコード例では、特定のボタンから開かれたサブウィンドウについて、\nサブウィンドウ内のテーブルの各行を監視対象要素としている。\nその選択リンクに対するクリックイベントが発生すると、イベントアクションを順次実行する。\n\nイベントアクションでは選択された行の内容を、親ウィンドウ上の対応する項目に出力している。\n(ここで使用しているイベントアクションの詳細については [項目内容変更イベントアクション](../../development-tools/testing-framework/testing-framework-event-write-to.md) を参照。)\n\n```jsp\n <event:listen_subwindow\n   openTrigger = \"#openSelectUserWindow\"\n   watchTarget = \"table tr\"\n   event       = \"a.select click\">\n   <event:write_to\n     target = \".user_name\"\n     format = \"{td.userName}\">\n   </event:write_to>\n   <event:write_to\n     target = \".user_id input\"\n     format = \"{td.userId}\">\n   </event:write_to>\n\n   ... (中略) ...\n\n</event:listen_subwindow>\n```",
+      "content": "以下のソースコード例では、特定のボタンから開かれたサブウィンドウについて、\nサブウィンドウ内のテーブルの各行を監視対象要素としている。\nその選択リンクに対するクリックイベントが発生すると、イベントアクションを順次実行する。\n\nイベントアクションでは選択された行の内容を、親ウィンドウ上の対応する項目に出力している。\n(ここで使用しているイベントアクションの詳細については [項目内容変更イベントアクション](../../development-tools/testing-framework/testing-framework-event-write-to.json) を参照。)\n\n```jsp\n <event:listen_subwindow\n   openTrigger = \"#openSelectUserWindow\"\n   watchTarget = \"table tr\"\n   event       = \"a.select click\">\n   <event:write_to\n     target = \".user_name\"\n     format = \"{td.userName}\">\n   </event:write_to>\n   <event:write_to\n     target = \".user_id input\"\n     format = \"{td.userId}\">\n   </event:write_to>\n\n   ... (中略) ...\n\n</event:listen_subwindow>\n```",
       "level": 2
     },
     {

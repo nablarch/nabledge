@@ -1,0 +1,146 @@
+{
+  "title": "class SessionStoreHandler",
+  "content": "**パッケージ:** nablarch.common.web.session\n\n**実装されたインタフェース:**\n- Handler<Object,Object>\n\n---\n\n```java\npublic class SessionStoreHandler\nimplements Handler<Object,Object>\n```\n\nストアを選択できるセッション保存機能のためのハンドラ。\n\n**作成者:** kawasima  \n**作成者:** tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "sessionManager",
+      "level": 3,
+      "content": "```java\nprivate SessionManager sessionManager\n```\n\nセッションマネージャ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "cookieName",
+      "level": 3,
+      "content": "```java\nprivate String cookieName\n```\n\nクッキーの名称。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "cookiePath",
+      "level": 3,
+      "content": "```java\nprivate String cookiePath\n```\n\nクッキーのpath属性。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "cookieDomain",
+      "level": 3,
+      "content": "```java\nprivate String cookieDomain\n```\n\nクッキーのdomain属性。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "cookieSecure",
+      "level": 3,
+      "content": "```java\nprivate boolean cookieSecure\n```\n\nクッキーにsecure属性を指定するかどうか。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "IS_INVALIDATED_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String IS_INVALIDATED_KEY\n```\n\nセッションがinvalidateされたことを示すフラグを\nリクエストスコープに設定する際に使用するキー\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "expiration",
+      "level": 3,
+      "content": "```java\nprivate Expiration expiration\n```\n\n有効期限\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "isInvalidated",
+      "level": 3,
+      "content": "```java\nprivate boolean isInvalidated(ExecutionContext ctx)\n```\n\nセッションがinvalidateされたかを取得する。\n\n**パラメータ:**\n- `ctx` - コンテキスト\n\n**戻り値:**\nセッションがinvalidateされた場合はtrue\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "handleLoadFailed",
+      "level": 3,
+      "content": "```java\nprotected HttpResponse handleLoadFailed(Object data, ExecutionContext context, RuntimeException e)\n```\n\nセッションのロード時に発生した{@link RuntimeException}を処理する。\n<p/>\n次の例外が発生した場合は、クライアントによる改竄の可能性があるため、\nステータスコード400のエラーレスポンスを返却する。\n<pre>\n・{@link HiddenStoreLoadFailedException}\n</pre>\nそれ以外は、指定された例外をそのまま再送出する。\n\n**パラメータ:**\n- `data` - 入力データ\n- `context` - 実行コンテキスト\n- `e` - {@link RuntimeException}\n\n**戻り値:**\nレスポンスオブジェクト\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic Object handle(Object data, ExecutionContext context)\n```\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "invalidateHttpSession",
+      "level": 3,
+      "content": "```java\nprivate static void invalidateHttpSession(ServletExecutionContext context)\n```\n\nHttpSessionを無効化する。\n\n**パラメータ:**\n- `context` - Servlet実行コンテキスト\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "writeId",
+      "level": 3,
+      "content": "```java\nprotected void writeId(Session session, ServletExecutionContext context)\n```\n\nセッションIDを書き出す。\n\n**パラメータ:**\n- `session` - セッション\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setSessionTrackingCookie",
+      "level": 3,
+      "content": "```java\nprotected void setSessionTrackingCookie(Session session, HttpServletResponse response)\n```\n\nセッションIDを保持するためのクッキーをレスポンスのSet-Cookieヘッダに追加する。\n\n**パラメータ:**\n- `session` - セッション\n- `response` - サーブレットレスポンス\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "readId",
+      "level": 3,
+      "content": "```java\nprotected String readId(ServletExecutionContext context, long current)\n```\n\nクッキーからセッションIDを読み出す。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n**戻り値:**\nセッションID\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getSessionId",
+      "level": 3,
+      "content": "```java\nprivate String getSessionId(ServletExecutionContext context)\n```\n\nセッションIDを取得する。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n**戻り値:**\nセッションID\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setSessionManager",
+      "level": 3,
+      "content": "```java\npublic void setSessionManager(SessionManager sessionManager)\n```\n\nセッションマネージャを設定する。\n\n**パラメータ:**\n- `sessionManager` - セッションマネージャ\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setCookieName",
+      "level": 3,
+      "content": "```java\npublic void setCookieName(String cookieName)\n```\n\nセッションIDを保持するクッキーの名称を設定する。\nデフォルトは \"NABLARCH_SID\"\n\n**パラメータ:**\n- `cookieName` - クッキー名\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "setCookiePath",
+      "level": 3,
+      "content": "```java\npublic void setCookiePath(String cookiePath)\n```\n\nセッションIDを保持するクッキーのpath属性を設定する。\nデフォルトではホスト配下の全てのパスを送信対象とする。\n\n**パラメータ:**\n- `cookiePath` - クッキーパス\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "setCookieDomain",
+      "level": 3,
+      "content": "```java\npublic void setCookieDomain(String cookieDomain)\n```\n\nセッションIDを保持するクッキーのdomain属性を設定する。\nデフォルトでは未指定。\nこの場合、当該のクッキーは発行元ホストのみに送信される。\n\n**パラメータ:**\n- `cookieDomain` - クッキードメイン\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "setCookieSecure",
+      "level": 3,
+      "content": "```java\npublic void setCookieSecure(boolean cookieSecure)\n```\n\nセッショントラッキングIDを保持するクッキーにsecure属性を指定するかどうかを設定する。\ntrueに設定した場合、当該のクッキーはSSL接続されたリクエストでのみ送信される。\nデフォルトはfalse。\n\n**パラメータ:**\n- `cookieSecure` - セキュア属性を付けたいならばtrue\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "setExpiration",
+      "level": 3,
+      "content": "```java\npublic void setExpiration(Expiration expiration)\n```\n\n有効期限を設定する。\n\n**パラメータ:**\n- `expiration` - 有効期限\n\n---",
+      "id": "s23"
+    }
+  ],
+  "id": "javadoc-nablarch-common-web-session-SessionStoreHandler"
+}

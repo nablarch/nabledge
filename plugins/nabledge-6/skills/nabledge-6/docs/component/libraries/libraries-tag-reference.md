@@ -919,7 +919,7 @@ HTMLタグを出力せず、ウィンドウスコープに値を出力する。
 | infoCss | 情報レベルのメッセージに使用するCSSクラス名。 デフォルトは `nablarch_info` 。 |
 | warnCss | 警告レベルのメッセージに使用するCSSクラス名。 デフォルトは `nablarch_warn` 。 |
 | errorCss | エラーレベルのメッセージに使用するCSSクラス名。 デフォルトは `nablarch_error` 。 |
-| filter | リストに含めるメッセージのフィルタ条件。 下記のいずれかを指定する。 all(全てのメッセージを表示する) global(入力項目に対応しないメッセージのみを表示) デフォルトは `all` 。 globalの場合、 ValidationResultMessage のプロパティ名が入っているメッセージを取り除いて出力する。 |
+| filter | リストに含めるメッセージのフィルタ条件。 下記のいずれかを指定する。 all(全てのメッセージを表示する) global(入力項目に対応しないメッセージのみを表示) デフォルトは `all` 。 globalの場合、 [ValidationResultMessage](../../javadoc/javadoc-nablarch-core-validation-ValidationResultMessage.md) のプロパティ名が入っているメッセージを取り除いて出力する。 |
 
 ### errorタグ
 

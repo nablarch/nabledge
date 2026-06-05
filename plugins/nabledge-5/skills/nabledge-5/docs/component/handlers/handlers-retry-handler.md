@@ -9,11 +9,11 @@
 
 本ハンドラはデータベースアクセス時のデッドロックのように、単純リトライによってリカバリ可能なエラーについて、自動的なリトライを制御する。
 
-本ハンドラでは、 Retryable を実装した実行時例外をリトライ可能なエラーとみなし、後続ハンドラを再実行する。
-なお、リトライ上限の判定に関する処理は、 RetryContext の実装クラスとして外部化されている。デフォルトでは以下の実装が提供されている。
+本ハンドラでは、 [Retryable](../../javadoc/javadoc-nablarch-fw-handler-retry-Retryable.md) を実装した実行時例外をリトライ可能なエラーとみなし、後続ハンドラを再実行する。
+なお、リトライ上限の判定に関する処理は、 [RetryContext](../../javadoc/javadoc-nablarch-fw-handler-RetryHandler.md) の実装クラスとして外部化されている。デフォルトでは以下の実装が提供されている。
 
-* リトライ回数による上限設定
-* 経過時間による上限設定
+* [リトライ回数による上限設定](../../javadoc/javadoc-nablarch-fw-handler-retry-CountingRetryContext.md)
+* [経過時間による上限設定](../../javadoc/javadoc-nablarch-fw-handler-retry-TimeRetryContext.md)
 
 本ハンドラでは、以下の処理を行う。
 
@@ -26,7 +26,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.handler.RetryHandler
+* [nablarch.fw.handler.RetryHandler](../../javadoc/javadoc-nablarch-fw-handler-RetryHandler.md)
 
 ## モジュール一覧
 
@@ -50,8 +50,8 @@
 
 上限設定は、上述したとおり以下の2種類から選択できる。プロジェクト要件とマッチしない場合には、プロジェクト側で実装を追加し対応すること。
 
-* リトライ回数による上限設定
-* 経過時間による上限設定
+* [リトライ回数による上限設定](../../javadoc/javadoc-nablarch-fw-handler-retry-CountingRetryContext.md)
+* [経過時間による上限設定](../../javadoc/javadoc-nablarch-fw-handler-retry-TimeRetryContext.md)
 
 以下にリトライ回数による上限設定の例を示す。
 

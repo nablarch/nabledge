@@ -1,0 +1,7 @@
+{
+  "title": "@interface UseToken",
+  "content": "**パッケージ:** nablarch.common.web.token\n\n---\n\n```java\npublic @interface UseToken\n```\n\n二重サブミットを防止するために使用されるトークンを生成する{@link Interceptor}。\n\n<p>\n本インターセプタで生成されたトークンは{@link OnDoubleSubmission}インターセプタでチェックされる。\n例えば、入力画面→確認画面→登録処理＆完了画面という画面構成の場合、\n確認画面を開くアクションでトークンを生成して登録処理のアクションでトークンのチェックを行うようにする。\n</p>\n\n<p>\n次にコード例を示す。\n</p>\n\n<pre>\n{@code @UseToken}\npublic HttpResponse confirm(HttpRequest req, ExecutionContext ctx) {\n    // 省略\n}\n\n{@code @OnDoubleSubmission(path = \"xxx.jsp\")}\npublic HttpResponse executeAndComplete(HttpRequest req, ExecutionContext ctx) {\n    // 省略\n}\n</pre>\n\n<p>\nなお、ビューにJSPを使用している場合はn:formカスタムタグのuseToken属性をtrueにすることで、\n本インターセプタを適用しなくてもトークンを生成できる。\n</p>\n\n**作成者:** Taichi Uragami  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [],
+  "id": "javadoc-nablarch-common-web-token-UseToken"
+}

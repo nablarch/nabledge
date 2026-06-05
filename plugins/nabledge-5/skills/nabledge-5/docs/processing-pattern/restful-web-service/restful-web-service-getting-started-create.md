@@ -107,9 +107,9 @@ public HttpResponse save(ProjectForm project) {
   `MediaType.APPLICATION_JSON` を指定する。
 * Valid アノテーションを使用して、リクエストのバリデーションを行う。
   詳細は [JAX-RS BeanValidationハンドラ](../../component/handlers/handlers-jaxrs-bean-validation-handler.md#jax-rs-beanvalidationハンドラ) を参照。
-* BeanUtil でフォームをエンティティに変換し、
+* [BeanUtil](../../javadoc/javadoc-nablarch-core-beans-BeanUtil.md) でフォームをエンティティに変換し、
   [ユニバーサルDAO](../../component/libraries/libraries-universal-dao.md#ユニバーサルdao) を使用してプロジェクト情報をデータベースに登録する。
-* 戻り値として、リソースの作成完了(ステータスコード： `201` )を表す HttpResponse を返却する。
+* 戻り値として、リソースの作成完了(ステータスコード： `201` )を表す [HttpResponse](../../javadoc/javadoc-nablarch-fw-web-HttpResponse.md) を返却する。
 
 URLとのマッピングを定義
 

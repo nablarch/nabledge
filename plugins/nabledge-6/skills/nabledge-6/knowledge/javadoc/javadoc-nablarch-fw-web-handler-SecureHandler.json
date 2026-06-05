@@ -1,0 +1,68 @@
+{
+  "title": "class SecureHandler",
+  "content": "**パッケージ:** nablarch.fw.web.handler\n\n**実装されたインタフェース:**\n- HttpRequestHandler\n\n---\n\n```java\npublic class SecureHandler\nimplements HttpRequestHandler\n```\n\nWebアプリケーションのセキュリティに関する処理やヘッダ設定を行うハンドラ。\n<p>\nレスポンスヘッダに設定する値は、{@link #setSecureResponseHeaderList(List)}に設定された、値から取得する。\n特定条件の場合に出力を抑制する場合は、{@link SecureResponseHeader#isOutput(HttpResponse, ServletExecutionContext)}で、{@code false}を返すこと。\n\n**作成者:** Hisaaki Shioiri  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "CSP_NONCE_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String CSP_NONCE_KEY\n```\n\nCSP nonce生成の要求を表す値をリクエストスコープに設定する際に使用するキー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "secureResponseHeaderList",
+      "level": 3,
+      "content": "```java\nprivate List<? extends SecureResponseHeader> secureResponseHeaderList\n```\n\nセキュリティ関連のレスポンスヘッダを構築するオブジェクト\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "generateCspNonce",
+      "level": 3,
+      "content": "```java\nprivate boolean generateCspNonce\n```\n\nnonceを自動生成するかどうか\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "random",
+      "level": 3,
+      "content": "```java\nprivate final SecureRandom random\n```\n\nnonceの生成用の乱数ジェネレータ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "isGenerateCspNonce",
+      "level": 3,
+      "content": "```java\npublic boolean isGenerateCspNonce()\n```\n\nnonceを自動生成するかどうか。\n\n**戻り値:**\ntrueの場合は、自動生成する\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setGenerateCspNonce",
+      "level": 3,
+      "content": "```java\npublic void setGenerateCspNonce(boolean generateCspNonce)\n```\n\nnonceを自動生成するかどうかの設定。\nデフォルト値はfalseである。\n\n**パラメータ:**\n- `generateCspNonce` - nonceを自動生成するかどうか\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest request, ExecutionContext context)\n```\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setSecureResponseHeaderList",
+      "level": 3,
+      "content": "```java\npublic void setSecureResponseHeaderList(List<? extends SecureResponseHeader> secureResponseHeaderList)\n```\n\nセキュリティ関連のヘッダ情報を生成する{@link SecureResponseHeader}を設定する。\n\n**パラメータ:**\n- `secureResponseHeaderList` - {@code SecureResponseHeader}のリスト\n\n---",
+      "id": "s10"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-SecureHandler"
+}

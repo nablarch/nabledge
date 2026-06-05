@@ -1,0 +1,92 @@
+{
+  "title": "class TestEventDispatcher",
+  "content": "**パッケージ:** nablarch.test.event\n\n---\n\n```java\npublic abstract class TestEventDispatcher\n```\n\nテストイベントディスパッチャクラス。<br/>\nテスト実行時における各種イベントを検知し、リポジトリに登録されたリスナーに通知する。\nテストクラスは本クラスまたは本クラスのサブクラスを継承することで、\nリスナーに自動的にイベント通知を行えるようになる。\n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "TEST_EVENT_LISTENERS_KEY",
+      "level": 3,
+      "content": "```java\nstatic final String TEST_EVENT_LISTENERS_KEY\n```\n\nテストイベントリスナを取得するためのキー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "first",
+      "level": 3,
+      "content": "```java\nprivate static boolean first\n```\n\n初回のテストかどうか\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "errorInStaticInitializer",
+      "level": 3,
+      "content": "```java\nprivate static Throwable errorInStaticInitializer\n```\n\n静的初期化子で発生した例外。<br/>\nこの例外が設定されている場合、すなわち静的初期化子で例外が発生した場合は、\n本クラスのサブクラスは全てエラー（テスト失敗）となる。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "testName",
+      "level": 3,
+      "content": "```java\npublic final TestName testName\n```\n\nテスト名\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "initializeDefaultRepository",
+      "level": 3,
+      "content": "```java\nprivate static void initializeDefaultRepository()\n```\n\nブートストラップの為のリポジトリ初期化を行う。<br/>\n本メソッドはクラスの静的初期化子から起動される。\n<p>\n{@link BeforeClass}でリポジトリの初期化を行うと、\n他の{@link BeforeClass}メソッドが先に呼ばれた場合に\nリポジトリが初期化されていないという事態が発生しうる。\nこれを回避するために静的初期化子にてリポジトリの初期化を行う。\n</p>\n<p>\n静的初期化子起動時に例外・エラーが発生すると、初回クラスロード時には\n{@link java.lang.ExceptionInInitializerError}が発生する。しかし、\n2回目以降のクラス生成時には{@link java.lang.NoClassDefFoundError}が発生するので、\n単独ではエラーになった理由がわからない。\n原因究明が容易になるよう、静的初期化子では例外・エラーを発生させないようにしている。\n例外・エラーが発生した場合は、これをキャッチして内部的に保持しておき、\n静的初期化子の実行は正常に終了させる。\nテスト実行前に呼び出される{@link #dispatchEventOfBeforeTestClassAndBeforeSuit()}にて、\n保持しておいた発生した例外・エラーをスローする\n（{@link #checkErrorInStaticInitializer()}）。\n</p>\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getListeners",
+      "level": 3,
+      "content": "```java\nprivate static List<TestEventListener> getListeners()\n```\n\nイベントリスナーの初期化を行う。\n\n**戻り値:**\n初期化されたリスナー\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getMethodName",
+      "level": 3,
+      "content": "```java\nprotected final String getMethodName()\n```\n\nテストメソッド名を取得する。\nサブクラスは、テストメソッド内で本メソッドを起動することで、\n実行中のテストメソッド名を取得できる。\n<pre>\n{@code\n\n**戻り値:**\n実行中のテストメソッド名\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "dispatchEventOfBeforeTestClassAndBeforeSuit",
+      "level": 3,
+      "content": "```java\npublic static void dispatchEventOfBeforeTestClassAndBeforeSuit()\n```\n\nテストクラス前とテストスイート前のイベントをディスパッチする。\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "dispatchEventOfBeforeTestMethod",
+      "level": 3,
+      "content": "```java\npublic final void dispatchEventOfBeforeTestMethod()\n```\n\nテストメソッド前のイベントをディスパッチする。\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "dispatchEventOfAfterTestMethod",
+      "level": 3,
+      "content": "```java\npublic final void dispatchEventOfAfterTestMethod()\n```\n\nテストメソッド後のイベントをディスパッチする。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "dispatchEventOfAfterTestClass",
+      "level": 3,
+      "content": "```java\npublic static void dispatchEventOfAfterTestClass()\n```\n\nテストクラス終了後のイベントをディスパッチする。\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "checkErrorInStaticInitializer",
+      "level": 3,
+      "content": "```java\nprivate static void checkErrorInStaticInitializer()\n                                   throws Error\n```\n\n静的初期化子でエラーが発生していないかどうか確認する。\n\n**例外:**\n- `Error` - 静的初期化子でエラーが発生していた場合\n\n---",
+      "id": "s14"
+    }
+  ],
+  "id": "javadoc-nablarch-test-event-TestEventDispatcher"
+}

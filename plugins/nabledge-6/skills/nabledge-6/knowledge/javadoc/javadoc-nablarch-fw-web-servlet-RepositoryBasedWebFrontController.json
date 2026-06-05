@@ -1,0 +1,44 @@
+{
+  "title": "class RepositoryBasedWebFrontController",
+  "content": "**パッケージ:** nablarch.fw.web.servlet\n\n**実装されたインタフェース:**\n- Filter\n\n---\n\n```java\npublic class RepositoryBasedWebFrontController\nimplements Filter\n```\n\nリポジトリ機能を使用して構築した{@link WebFrontController}を保持し、\nそこに対してリクエスト処理を委譲するリクエストコントローラー.<br>\ncontrollerNameのパラメータ値にコントローラ名を設定することで、設定した名前を元に移譲するWebFrontControllerを取得することができる。\nデフォルトではwebFrontControllerという名前で移譲するWebFrontControllerを取得する。\n<pre>{@code\n-------------------------------------\nデプロイメントディスクリプタの記述例\n-------------------------------------\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<web-app xmlns=\"https://jakarta.ee/xml/ns/jakartaee\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"https://jakarta.ee/xml/ns/jakartaee\n         web-app_6_0.xsd\"\n         version=\"6.0\">\n  <display-name>w8</display-name>\n  <description>\n    The default application-context for w8.http-based applications.\n  </description>\n  <filter>\n    <filter-name>webEntryPoint</filter-name>\n    <filter-class>\n      nablarch.fw.web.servlet.RepositoryBasedWebFrontController\n    </filter-class>\n    <init-param>\n      <param-name>controllerName</param-name>\n      <param-value>otherNameController</param-value>\n    </init-param>\n  </filter>\n  <filter-mapping>\n    <filter-name>webEntryPoint</filter-name>\n   <url-pattern>/*</url-pattern>\n  </filter-mapping>\n</web-app>\n }</pre>\n\n**関連項目:** WebFrontController  \n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "controller",
+      "level": 3,
+      "content": "```java\nprivate WebFrontController controller\n```\n\n処理を委譲するリクエストコントローラのインスタンス\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "destroy",
+      "level": 3,
+      "content": "```java\npublic void destroy()\n```\n\n{@inheritDoc}\nこの実装では、保持しているリクエストコントローラに対して\n処理を委譲するのみ。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "doFilter",
+      "level": 3,
+      "content": "```java\npublic void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)\n              throws IOException, ServletException\n```\n\n{@inheritDoc}\nこの実装では、保持しているリクエストコントローラに対して\n処理を委譲するのみ。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "init",
+      "level": 3,
+      "content": "```java\npublic void init(FilterConfig filterConfig)\n          throws ServletException\n```\n\n{@inheritDoc}\nリポジトリ機能を用いてWebFrontControllerのインスタンスを初期化し、\n以降の全ての処理をそこへ委譲する。\n\n---",
+      "id": "s6"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-servlet-RepositoryBasedWebFrontController"
+}

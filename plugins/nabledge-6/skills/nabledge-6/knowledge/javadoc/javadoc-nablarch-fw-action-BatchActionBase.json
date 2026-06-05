@@ -1,0 +1,104 @@
+{
+  "title": "class BatchActionBase",
+  "content": "**パッケージ:** nablarch.fw.action\n\n**継承階層:**\n```\njava.lang.Object\n  └─ DbAccessSupport\n      └─ nablarch.fw.action.BatchActionBase\n```\n\n**実装されたインタフェース:**\n- ExecutionHandlerCallback<CommandLine,Result>\n- TransactionEventCallback<D>\n\n---\n\n```java\npublic abstract class BatchActionBase\nextends DbAccessSupport\nimplements ExecutionHandlerCallback<CommandLine,Result>, TransactionEventCallback<D>\n```\n\nバッチ処理方式において、業務処理が継承する抽象基底クラス。\n<p/>\nこのクラスには、{@link ExecutionHandlerCallback}インタフェースに関するNOP実装が与えられており、\n必要に応じてオーバーライドできるようになっている。\n\n**param:** 本タスクが処理する入力データの型  \n**作成者:** Iwauo Tajima  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "LOG",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOG\n```\n\nロガー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s3"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\nprotected void initialize(CommandLine command, ExecutionContext context)\n```\n\n実行管理ハンドラ({@link nablarch.fw.handler.ExecutionHandler})の本処理開始前に一度だけ実行される。\n<p/>\nデフォルトでは何もしない。\n必要に応じてオーバライドすること。\n\n**パラメータ:**\n- `command` - 起動コマンドライン\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "error",
+      "level": 3,
+      "content": "```java\nprotected void error(Throwable error, ExecutionContext context)\n```\n\n実行時例外/エラーの発生によって本処理が終了した場合に一度だけ実行される。\n<p/>\nデフォルトでは何もしない。\n必要に応じてオーバライドすること。\n\n**パラメータ:**\n- `error` - 本処理で発生した実行時例外/エラー\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "terminate",
+      "level": 3,
+      "content": "```java\nprotected void terminate(Result result, ExecutionContext context)\n```\n\n本処理が終了した場合に一度だけ実行される。\n（エラー終了した場合でも実行される。）\n<p/>\nデフォルトでは何もしない。\n必要に応じてオーバライドすること。\n\n**パラメータ:**\n- `result` - 本処理の実行結果\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "transactionSuccess",
+      "level": 3,
+      "content": "```java\nprotected void transactionSuccess(D inputData, ExecutionContext context)\n```\n\nトランザクション処理が正常終了した場合に実行される。\n<p/>\nデフォルトでは何もしない。\n必要に応じてオーバライドすること。\n\n**パラメータ:**\n- `inputData` - 入力データ\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "transactionFailure",
+      "level": 3,
+      "content": "```java\nprotected void transactionFailure(D inputData, ExecutionContext context)\n```\n\nトランザクション処理が異常終了した場合に実行される。\n<p/>\nデフォルトでは何もしない。\n必要に応じてオーバライドすること。\n\n**パラメータ:**\n- `inputData` - 入力データ\n- `context` - 実行コンテキスト\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "writeLog",
+      "level": 3,
+      "content": "```java\nprotected void writeLog(String msgId, Object msgOptions)\n```\n\nINFOレベルでログ出力を行う。\n\n**パラメータ:**\n- `msgId` - メッセージID\n- `msgOptions` - メッセージIDから取得したメッセージに埋め込む値\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "writeErrorLog",
+      "level": 3,
+      "content": "```java\nprotected void writeErrorLog(Object data, String failureCode, Object msgOptions)\n```\n\nERRORレベルで障害ログ出力を行う。\n<p/>\n障害ログは、障害通知ログと障害解析ログの２種類に分けて出力される。\n\n**パラメータ:**\n- `data` - 処理対象データ\n- `failureCode` - 障害コード（メッセージID）\n- `msgOptions` - 障害コードから取得したメッセージに埋め込む値\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "writeFatalLog",
+      "level": 3,
+      "content": "```java\nprotected void writeFatalLog(Object data, String failureCode, Object msgOptions)\n```\n\nFATALレベルで障害ログ出力を行う。\n<p/>\n障害ログは、障害通知ログと障害解析ログの２種類に分けて出力される。\n\n**パラメータ:**\n- `data` - 処理対象データ\n- `failureCode` - 障害コード（メッセージID）\n- `msgOptions` - 障害コードから取得したメッセージに埋め込む値\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "preExecution",
+      "level": 3,
+      "content": "```java\npublic final void preExecution(CommandLine commandLine, ExecutionContext context)\n```\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "errorInExecution",
+      "level": 3,
+      "content": "```java\npublic final void errorInExecution(Throwable error, ExecutionContext context)\n```\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "postExecution",
+      "level": 3,
+      "content": "```java\npublic final void postExecution(Result result, ExecutionContext context)\n```\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "transactionNormalEnd",
+      "level": 3,
+      "content": "```java\npublic void transactionNormalEnd(D data, ExecutionContext ctx)\n```\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "transactionAbnormalEnd",
+      "level": 3,
+      "content": "```java\npublic void transactionAbnormalEnd(Throwable e, D data, ExecutionContext ctx)\n```\n\n---",
+      "id": "s16"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-action-BatchActionBase"
+}

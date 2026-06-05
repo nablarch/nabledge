@@ -1,0 +1,74 @@
+{
+  "title": "class BasicLogFormatter",
+  "content": "**パッケージ:** nablarch.core.log.basic\n\n**実装されたインタフェース:**\n- LogFormatter\n\n---\n\n```java\npublic class BasicLogFormatter\nimplements LogFormatter\n```\n\n{@link LogFormatter}の基本実装クラス。<br>\n<br>\nBasicLogFormatterクラスの特徴を下記に示す。<br>\n<ul>\n<li>ログに最低限必要な情報（日時、リクエストID、ユーザIDなど）を出力できる。</li>\n<li>アプリケーションを起動しているプロセスを識別するために、システムプロパティで指定されたプロセス名をログに出力できる。</li>\n<li>オブジェクトを指定してフィールド情報を出力できる。</li>\n<li>例外オブジェクトを指定してスタックトレースを出力できる。</li>\n<li>フォーマットを設定のみで変更することができる。</li>\n</ul>\nBasicLogFormatterは、プレースホルダを使用してフォーマットを指定する。\nフォーマットに指定可能なプレースホルダの一覧を下記に示す。\n<pre>\n$date$\n    このログ出力を要求した時点の日時。\n$logLevel$\n    このログ出力のログレベル。\n    デフォルトはLogLevel列挙型の名称を文言に使用する。\n    文言はプロパティファイルの設定で変更することができる。\n$loggerName$\n    このログ出力が対応するロガー設定の名称。\n    このログ出力を呼び出した箇所に関わらず、プロパティファイル(log.properties)に記載したロガー名となる。\n$runtimeLoggerName$\n    実行時に、{@link nablarch.core.log.LoggerManager}からロガー取得に指定した名称。\n    このログ出力を呼び出した際に{@link nablarch.core.log.LoggerManager#get(Class)}で指定したクラス名\n    または{@link nablarch.core.log.LoggerManager#get(String)}で指定した名称となる。\n$bootProcess$\n    起動プロセスを識別する名前。\n    起動プロセスは、システムプロパティ\"nablarch.bootProcess\"から取得する。\n    指定がない場合はブランク。\n$processingSystem$\n    処理方式を識別する名前。\n    処理方式は、プロパティファイル(\"nablarch.processingSystem\")から取得する。\n    指定がない場合はブランク。\n$requestId$\n    このログ出力を要求した時点のリクエストID。\n$executionId$\n    このログ出力を要求した時点の実行時ID\n$userId$\n    このログ出力を要求した時点のログインユーザのユーザID。\n$message$\n    このログ出力のメッセージ。\n    指定がない場合はブランク。\n$information$\n    オプション情報に指定されたオブジェクトのフィールド情報。\n    オブジェクトのフィールドに対して、Object#toString()メソッドを実行した結果を表示する。\n    オプション情報に指定されたオブジェクトが基本データ型のラッパクラス、CharSequenceインタフェース、\n    Dateクラスの場合は、オブジェクトに対してObject#toString()メソッドを実行した結果のみを表示する。\n    オブジェクト情報の指定がない場合は表示しない。\n$stackTrace$\n    エラー情報に指定された例外オブジェクトのスタックトレース。\n    エラー情報の指定がない場合は表示しない。\n</pre>\nフォーマット指定が無い場合に使用するフォーマットを下記に示す。\n<br>\n$date$ -$logLevel$- $loggerName$ [$executionId$]\nboot_proc = [$bootProcess$] proc_sys = [$processingSystem$]\nreq_id = [$requestId$] usr_id = [$userId$] $message$$information$$stackTrace$\n<br>\n<br>\nプロパティファイルの記述ルールを下記に示す。\n<dl>\n  <dt>writer.&lt;{@link LogWriter}の名称&gt;.formatter.label.&lt;{@link LogLevel}の名称の小文字&gt;\n  <dd>{@link LogLevel}に使用するラベル。オプション。<br>\n      指定しなければ{@link LogLevel}の名称を使用する。\n  <dt>writer.&lt;{@link LogWriter}の名称&gt;.formatter.format\n  <dd>フォーマット。オプション。\n  <dt>writer.&lt;{@link LogWriter}の名称&gt;.formatter.datePattern\n  <dd>日時のフォーマットに使用するパターン。オプション。<br>\n      指定しなければはyyyy-MM-dd HH:mm:ss.SSSを使用する。\n</dl>\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "DEFAULT_DATE_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final DateFormat DEFAULT_DATE_FORMAT\n```\n\nデフォルトの日時フォーマット\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DEFAULT_FORMAT",
+      "level": 3,
+      "content": "```java\nprivate static final String DEFAULT_FORMAT\n```\n\nフォーマット指定が無い場合に使用するフォーマット\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "formattedLogItems",
+      "level": 3,
+      "content": "```java\nprivate LogItem<LogContext>[] formattedLogItems\n```\n\nフォーマット済みのログ出力項目\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic void initialize(ObjectSettings settings)\n```\n\n{@inheritDoc}<br>\n<br>\nフォーマットとログレベルに使用するラベルを初期化する。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getLogItems",
+      "level": 3,
+      "content": "```java\nprotected Map<String,LogItem<LogContext>> getLogItems(ObjectSettings settings)\n```\n\nフォーマット対象のログ出力項目を取得する。\n\n**パラメータ:**\n- `settings` - LogFormatterの設定\n\n**戻り値:**\nフォーマット対象のログ出力項目\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "getDateFormat",
+      "level": 3,
+      "content": "```java\nprotected DateFormat getDateFormat(ObjectSettings settings)\n```\n\n日時フォーマットを取得する。\n\n**パラメータ:**\n- `settings` - LogFormatterの設定\n\n**戻り値:**\n日時フォーマット\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getLogLevelLabelProvider",
+      "level": 3,
+      "content": "```java\nprotected LogLevelLabelProvider getLogLevelLabelProvider(ObjectSettings settings)\n```\n\nLogLevelLabelProviderを取得する。\n\n**パラメータ:**\n- `settings` - LogFormatterの設定\n\n**戻り値:**\nLogLevelLabelProvider\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getFormat",
+      "level": 3,
+      "content": "```java\nprotected String getFormat(ObjectSettings settings)\n```\n\nフォーマットを取得する。\n\n**パラメータ:**\n- `settings` - LogFormatterの設定\n\n**戻り値:**\nフォーマット\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "format",
+      "level": 3,
+      "content": "```java\npublic String format(LogContext context)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s11"
+    }
+  ],
+  "id": "javadoc-nablarch-core-log-basic-BasicLogFormatter"
+}

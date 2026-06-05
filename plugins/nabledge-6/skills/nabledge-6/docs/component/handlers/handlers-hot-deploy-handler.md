@@ -28,7 +28,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.hotdeploy.HotDeployHandler
+* [nablarch.fw.hotdeploy.HotDeployHandler](../../javadoc/javadoc-nablarch-fw-hotdeploy-HotDeployHandler.md)
 
 ## モジュール一覧
 
@@ -45,7 +45,7 @@
 
 ## ホットデプロイ対象のパッケージを指定する
 
-ホットデプロイ対象となるパッケージは、targetPackages プロパティに設定する。
+ホットデプロイ対象となるパッケージは、[targetPackages](../../javadoc/javadoc-nablarch-fw-hotdeploy-HotDeployHandler.md) プロパティに設定する。
 
 設定例を以下に示す。
 

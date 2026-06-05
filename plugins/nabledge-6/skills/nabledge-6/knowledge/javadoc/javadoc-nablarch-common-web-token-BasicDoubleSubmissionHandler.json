@@ -1,0 +1,62 @@
+{
+  "title": "class BasicDoubleSubmissionHandler",
+  "content": "**パッケージ:** nablarch.common.web.token\n\n**実装されたインタフェース:**\n- DoubleSubmissionHandler\n\n---\n\n```java\npublic class BasicDoubleSubmissionHandler\nimplements DoubleSubmissionHandler\n```\n\n{@link DoubleSubmissionHandler}の基本実装クラス。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "path",
+      "level": 3,
+      "content": "```java\nprivate String path\n```\n\n二重サブミットと判定した場合の遷移先のリソースパス\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "messageId",
+      "level": 3,
+      "content": "```java\nprivate String messageId\n```\n\n二重サブミットと判定した場合の遷移先画面に表示するエラーメッセージに使用するメッセージID\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "statusCode",
+      "level": 3,
+      "content": "```java\nprivate int statusCode\n```\n\n二重サブミットと判定した場合のレスポンスステータス\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "setPath",
+      "level": 3,
+      "content": "```java\npublic void setPath(String path)\n```\n\n二重サブミットと判定した場合の遷移先のリソースパスを設定する。<br>\n{@link OnDoubleSubmission}アノテーションで個別に指定していない場合は、ここに指定したリソースパスを使用する。\n\n**パラメータ:**\n- `path` - 二重サブミットと判定した場合の遷移先のリソースパス\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "setMessageId",
+      "level": 3,
+      "content": "```java\npublic void setMessageId(String messageId)\n```\n\n二重サブミットと判定した場合の遷移先画面に表示するエラーメッセージに使用するメッセージIDを設定する。\n{@link OnDoubleSubmission}アノテーションで個別に指定していない場合は、ここに指定したメッセージIDを使用する。\n\n**パラメータ:**\n- `messageId` - 二重サブミットと判定した場合の遷移先画面に表示するエラーメッセージに使用するメッセージID\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setStatusCode",
+      "level": 3,
+      "content": "```java\npublic void setStatusCode(int statusCode)\n```\n\n二重サブミットと判定した場合のレスポンスステータスを設定する。\n{@link OnDoubleSubmission}アノテーションで個別に指定していない場合は、ここに指定したレスポンスステータスを使用する。\nデフォルトは400。\n\n**パラメータ:**\n- `statusCode` - 二重サブミットと判定した場合のレスポンスステータス\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest request, ExecutionContext context, Handler<HttpRequest,HttpResponse> originalHandler, OnDoubleSubmission annotation)\n```\n\n{@inheritDoc}\n<pre>\n{@link HttpErrorResponse}を生成して返す。\n\n{@link OnDoubleSubmission}アノテーションの属性が指定されている場合は、アノテーションの属性を使用する。\nアノテーションの属性が指定されていない場合は、自身に設定されている値を使用する。\n\nメッセージIDが指定されていない場合は、メッセージの取得を行わない。\n</pre>\n\n---",
+      "id": "s9"
+    }
+  ],
+  "id": "javadoc-nablarch-common-web-token-BasicDoubleSubmissionHandler"
+}

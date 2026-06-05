@@ -90,17 +90,17 @@ Nablarchでは、データベースをキューとして扱うメッセージン
 | 9 | [マルチスレッド実行制御ハンドラ](../../component/handlers/handlers-multi-thread-execution-handler.md#マルチスレッド実行制御ハンドラ) | メイン | サブスレッドを作成し、後続ハンドラの処理を並行実行する。 | 全スレッドの正常終了まで待機する。 | 処理中のスレッドが完了するまで待機し起因例外を再送出する。 |
 | 10 | [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) (業務処理用) | サブ | DB接続を取得する。 | DB接続を解放する。 |  |
 | 11 | [リクエストスレッド内ループ制御ハンドラ](../../component/handlers/handlers-request-thread-loop-handler.md#リクエストスレッド内ループ制御ハンドラ) | サブ |  | 再度後続のハンドラに処理を委譲する。 | 例外/エラーに応じたログ出力処理と再送出処理を行う。 |
-| 12 | [プロセス停止制御ハンドラ](../../component/handlers/handlers-process-stop-handler.md#プロセス停止制御ハンドラ) | サブ | リクエストテーブル上の処理停止フラグがオンであった場合は、後続ハンドラの処理は行なわずにプロセス停止例外( ProcessStop )を送出する。 |  |  |
+| 12 | [プロセス停止制御ハンドラ](../../component/handlers/handlers-process-stop-handler.md#プロセス停止制御ハンドラ) | サブ | リクエストテーブル上の処理停止フラグがオンであった場合は、後続ハンドラの処理は行なわずにプロセス停止例外( [ProcessStop](../../javadoc/javadoc-nablarch-fw-handler-ProcessStopHandler.md) )を送出する。 |  |  |
 | 13 | [データリードハンドラ](../../component/handlers/handlers-data-read-handler.md#データリードハンドラ) | サブ | データリーダを使用してレコードを1件読み込み、後続ハンドラの引数として渡す。 また [実行時ID](../../component/libraries/libraries-log.md#ログのフォーマットを指定する) を採番する。 |  | 読み込んだレコードをログ出力した後、元例外を再送出する。 |
 | 14 | [トランザクション制御ハンドラ](../../component/handlers/handlers-transaction-management-handler.md#トランザクション制御ハンドラ) (業務処理用) | サブ | トランザクションを開始する。 | トランザクションをコミットする。 | トランザクションをロールバックする。 |
 
 ## 使用するデータリーダ
 
 データベースをキューとして扱う場合には、以下のデータリーダを使用する。
-バッチ用のDatabaseRecordReader を使用した場合、
+[バッチ用のDatabaseRecordReader](../../javadoc/javadoc-nablarch-fw-reader-DatabaseRecordReader.md) を使用した場合、
 繰り返しテーブルを監視できないので注意すること。
 
-* DatabaseTableQueueReader
+* [DatabaseTableQueueReader](../../javadoc/javadoc-nablarch-fw-reader-DatabaseTableQueueReader.md)
 
 > **Important:**
 > 上記のリーダで要件を満たすことができず、プロジェクトでリーダを作成する場合は以下の点に注意して実装すること。
@@ -108,7 +108,7 @@ Nablarchでは、データベースをキューとして扱うメッセージン
 > * >   対象データがなくなった場合でも、継続して対象データを監視できるようにすること
 > * >   マルチススレッド環境下で使われる場合に、同一データを複数のスレッドで処理することがないようにすること
 
-> なお、 DatabaseTableQueueReader は、上記を満たすために以下の実装となっている
+> なお、 [DatabaseTableQueueReader](../../javadoc/javadoc-nablarch-fw-reader-DatabaseTableQueueReader.md) は、上記を満たすために以下の実装となっている
 
 > * >   テーブルに未処理のデータが無くなった場合、再度検索用SQLを実行し未処理データを抽出する
 > * >   複数スレッドで同一データを処理することがないように、現在処理中のデータの識別子(主キーの値)を保持し、処理されていないデータを読み込んでいる
@@ -117,4 +117,4 @@ Nablarchでは、データベースをキューとして扱うメッセージン
 
 データベースをキューとして扱う場合は、以下のテンプレートクラスを使用する。
 
-* BatchAction (汎用的なバッチアクション)
+* [BatchAction (汎用的なバッチアクション)](../../javadoc/javadoc-nablarch-fw-action-BatchAction.md)

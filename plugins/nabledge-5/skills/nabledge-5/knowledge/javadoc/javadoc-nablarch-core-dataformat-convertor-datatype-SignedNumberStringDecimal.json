@@ -1,0 +1,170 @@
+{
+  "title": "class SignedNumberStringDecimal",
+  "content": "**パッケージ:** nablarch.core.dataformat.convertor.datatype\n\n**継承階層:**\n```\njava.lang.Object\n  └─ NumberStringDecimal\n      └─ nablarch.core.dataformat.convertor.datatype.SignedNumberStringDecimal\n```\n\n---\n\n```java\npublic class SignedNumberStringDecimal\nextends NumberStringDecimal\n```\n\n符号付き数値のデータタイプ。\n<p>\n入力時にはバイトデータを数値（BigDecimal）に変換し、\n出力時にはオブジェクトをバイトデータに変換して返却する。\n<p>\n{@link NumberStringDecimal}を継承し、符号付き数値を読み書きする機能を追加している。\n</p>\n<b>データタイプの引数として設定可能なパラメータ</b>\n<p>\nデータタイプの第1引数にはバイト長を指定する。必須項目である。\n</p>\n<p>\nデータタイプの第2引数には小数点位置を指定する。ここで指定された小数点位置に従い、データの読み書きを行う。<br/>\nただし、入力データに小数点が含まれている場合（例：123.45）は、ここで指定した小数点位置は無視され、入力データ内の小数点をもとにデータの読み込みが行われる。\n</p>\n<p>\n本データタイプは符号付き数値の入出力データを扱うことを前提として設計されている。<br/>\n入出力データとして符号なし数値のみを扱う場合は、{@link NumberStringDecimal}を使用すること。\n</p>\n<p>\nデータタイプの引数の一覧を以下に示す。</br>\n<table border=\"1\">\n<tr bgcolor=\"#cccccc\">\n<th>引数</th>\n<th>パラメータ名</th>\n<th>パラメータの型</th>\n<th>必須/任意</th>\n<th>デフォルト値</th>\n</tr>\n<tr>\n<td>第1引数</td>\n<td>バイト長</td>\n<td>Integer</td>\n<td>必須</td>\n<th>-</th>\n</tr>\n<tr>\n<td>第2引数</td>\n<td>小数点位置</td>\n<td>Integer</td>\n<td>任意</td>\n<td>0</td>\n</tr>\n</table>\n</p>\n<b>セッターを使用して設定可能なパラメータ</b>\n<p>\n小数点の要否は#setRequiredDecimalPoint(boolean)によって指定できる。<br/>\ntrueを設定した場合、出力データに小数点が付与される。\n</p>\n<p>\n符号位置は#setFixedSignPosition(boolean)によって指定できる。<br/>\ntrueを設定した場合、符号位置は固定となる。<br/>\n符号位置が固定の場合、入力データの先頭に符号が存在すると想定してデータを読み込み、また、符号を先頭に付与した出力データを書き込む。\n</p>\n<p>\n正の符号の要否は#setFixedSignPosition(boolean)によって指定できる。<br/>\ntrueを設定した場合、正の符号は必須となる。<br/>\n正の符号が必須の場合、入力データに正の符号が含まれないと例外をスローし、また出力データの先頭に正の符号を付与する。\n</p>\n<p>\nセッターを使用して設定可能なパラメータの一覧を以下に示す。これらのパラメータはディレクティブを使用して設定することを想定している。\n<table border=\"1\">\n<tr bgcolor=\"#cccccc\">\n<th>パラメータ名</th>\n<th>パラメータの型</th>\n<th>必須/任意</th>\n<th>デフォルト値</th>\n</tr>\n<tr>\n<td>小数点の要否</td>\n<td>boolean</td>\n<td>任意</td>\n<td>true</td>\n</tr>\n<tr>\n<td>符号位置の固定/非固定</td>\n<td>boolean</td>\n<td>任意</td>\n<td>true</td>\n</tr>\n<tr>\n<td>正の符号の要否</td>\n<td>boolean</td>\n<td>任意</td>\n<td>false</td>\n</tr>\n</table>\n</p>\n<p>\n入力時にはトリム処理を、出力時にはパディング処理を行う。<br/>\nパディング/トリム文字として、デフォルトでは\"0\"を使用するが、個別にパディング/トリム文字を使用することもできる。<br/>\n（※パディング/トリム文字として指定できるのは1バイトの文字のみである。また、パディング/トリム文字として1～9の文字を使用することはできない）\n</p>\n<b>設定例</b>\n<p>\n入力データを読み込む場合の設定例を以下に示す。</br>\n<table border=\"1\">\n<tr bgcolor=\"#cccccc\">\n<th>入力データ</th>\n<th>バイト長</th>\n<th>小数点位置</th>\n<th>符号位置の固定/非固定</th>\n<th>正の符号の要否</th>\n<th>パディング/トリム文字</th>\n<th>入力データ変換後の値（BigDecimal）</th>\n</tr>\n<tr>\n<td>0000012345</td>\n<td>10</td>\n<td>0</td>\n<td>固定</td>\n<td>不要</td>\n<td>0</td>\n<td>12345</td>\n</tr>\n<tr>\n<td>+000012345</td>\n<td>10</td>\n<td>0</td>\n<td>固定</td>\n<td>必要</td>\n<td>0</td>\n<td>12345</td>\n</tr>\n<tr>\n<td>-000012345</td>\n<td>10</td>\n<td>0</td>\n<td>固定</td>\n<td>不要</td>\n<td>0</td>\n<td>-12345</td>\n</tr>\n<tr>\n<td>0000+12345</td>\n<td>10</td>\n<td>0</td>\n<td>非固定</td>\n<td>必要</td>\n<td>0</td>\n<td>12345</td>\n</tr>\n<tr>\n<td>0000-12345</td>\n<td>10</td>\n<td>0</td>\n<td>非固定</td>\n<td>不要</td>\n<td>0</td>\n<td>-12345</td>\n</tr>\n<tr>\n<td>(半角スペース4個)+12345</td>\n<td>10</td>\n<td>0</td>\n<td>非固定</td>\n<td>不要</td>\n<td>半角スペース</td>\n<td>12345</td>\n</tr>\n<tr>\n<td>-000012345</td>\n<td>10</td>\n<td>2</td>\n<td>固定</td>\n<td>不要</td>\n<td>0</td>\n<td>-123.45</td>\n</tr>\n</table>\n</p>\n<p>\n出力データを書き込む場合の設定例を以下に示す。</br>\n<table border=\"1\">\n<tr bgcolor=\"#cccccc\">\n<th>出力データ</th>\n<th>出力データの型</th>\n<th>バイト長</th>\n<th>小数点位置</th>\n<th>符号位置の固定/非固定</th>\n<th>正の符号の要否</th>\n<th>パディング/トリム文字</th>\n<th>出力データ変換後の値（byte[]）</th>\n</tr>\n<tr>\n<td>12345</td>\n<td>String</td>\n<td>10</td>\n<td>0</td>\n<td>固定</td>\n<td>不要</td>\n<td>0</td>\n<td>0000012345</td>\n</tr>\n<tr>\n<td>12345</td>\n<td>String</td>\n<td>10</td>\n<td>0</td>\n<td>固定</td>\n<td>必要</td>\n<td>0</td>\n<td>+000012345</td>\n</tr>\n<tr>\n<td>-12345</td>\n<td>String</td>\n<td>10</td>\n<td>0</td>\n<td>固定</td>\n<td>不要</td>\n<td>0</td>\n<td>-000012345</td>\n</tr>\n<tr>\n<td>12345</td>\n<td>String</td>\n<td>10</td>\n<td>0</td>\n<td>非固定</td>\n<td>必要</td>\n<td>0</td>\n<td>0000+12345</td>\n</tr>\n<tr>\n<td>-12345</td>\n<td>String</td>\n<td>10</td>\n<td>0</td>\n<td>非固定</td>\n<td>不要</td>\n<td>0</td>\n<td>0000-12345</td>\n</tr>\n<tr>\n<td>12345</td>\n<td>String</td>\n<td>10</td>\n<td>0</td>\n<td>非固定</td>\n<td>必要</td>\n<td>半角スペース</td>\n<td>(半角スペース4個)+12345</td>\n</tr>\n<tr>\n<td>12345</td>\n<td>BigDecimal</td>\n<td>10</td>\n<td>0</td>\n<td>非固定</td>\n<td>必要</td>\n<td>0</td>\n<td>0000+12345</td>\n</tr>\n<tr>\n<td>12345</td>\n<td>BigDecimal</td>\n<td>10</td>\n<td>2</td>\n<td>非固定</td>\n<td>必要</td>\n<td>0</td>\n<td>000+123.45</td>\n</tr>\n</table>\n<br/>\n小数点の要否の設定例については、親クラス{@link NumberStringDecimal}のjavadocを参照すること。\n</p>\n\n**作成者:** Masato Inoue  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "PLUS_SIGN",
+      "level": 3,
+      "content": "```java\nprivate static final String PLUS_SIGN\n```\n\n正の符号\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "MINUS_SIGN",
+      "level": 3,
+      "content": "```java\nprivate static final String MINUS_SIGN\n```\n\n負の符号\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "NUMBER_PATTERN",
+      "level": 3,
+      "content": "```java\nprivate static final String NUMBER_PATTERN\n```\n\n数値のパターン\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "isFixedSignPosition",
+      "level": 3,
+      "content": "```java\nprivate boolean isFixedSignPosition\n```\n\n符号位置が固定かどうか\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "isRequiredPlusSign",
+      "level": 3,
+      "content": "```java\nprivate boolean isRequiredPlusSign\n```\n\n正の符号が必要かどうか\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "plusSignBytes",
+      "level": 3,
+      "content": "```java\nprivate byte[] plusSignBytes\n```\n\n正の符号のバイトデータ\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "minusSignBytes",
+      "level": 3,
+      "content": "```java\nprivate byte[] minusSignBytes\n```\n\n負の符号のバイトデータ\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "dataPatternFixedSign",
+      "level": 3,
+      "content": "```java\nprivate Pattern dataPatternFixedSign\n```\n\n符号位置固定、正の符号不要の数値のパターン\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "dataPatternFixedAndRequiredPlusSign",
+      "level": 3,
+      "content": "```java\nprivate Pattern dataPatternFixedAndRequiredPlusSign\n```\n\n符号位置固定、正の符号必要の数値のパターン\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "dataPatternNonFixedSign",
+      "level": 3,
+      "content": "```java\nprivate Pattern dataPatternNonFixedSign\n```\n\n符号位置非固定、正の符号不要の数値のパターン\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "dataPatternNonFixedAndRequiredPlusSign",
+      "level": 3,
+      "content": "```java\nprivate Pattern dataPatternNonFixedAndRequiredPlusSign\n```\n\n符号位置非固定、正の符号必要の数値のパターン\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s13"
+    },
+    {
+      "title": "initialize",
+      "level": 3,
+      "content": "```java\npublic DataType<BigDecimal,byte[]> initialize(Object args)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "createPattern",
+      "level": 3,
+      "content": "```java\nprivate Pattern createPattern(Object elements)\n```\n\nパターンを生成する。\n\n**パラメータ:**\n- `elements` - 要素\n\n**戻り値:**\nパターン\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getPlusOrMinusPattern",
+      "level": 3,
+      "content": "```java\nprivate String getPlusOrMinusPattern()\n```\n\n正負の符号を結合したパターンを返却する。\n\n**戻り値:**\n正負の符号を結合したパターン\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "validateReadDataFormat",
+      "level": 3,
+      "content": "```java\nprotected void validateReadDataFormat(String strData)\n```\n\n入力データフォーマットの妥当性を検証する。\n\n**パラメータ:**\n- `strData` - 入力データ\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "validateFormat",
+      "level": 3,
+      "content": "```java\nprivate void validateFormat(String strData, Pattern pattern)\n```\n\n入力データの妥当性を検証する。\n\n**パラメータ:**\n- `strData` - 入力データ\n- `pattern` - パターン\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "trim",
+      "level": 3,
+      "content": "```java\nprotected String trim(String str)\n```\n\nトリム処理を行う。\n\n**パラメータ:**\n- `str` - トリム対象の文字列\n\n**戻り値:**\nトリム後の文字列\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "convertOnWrite",
+      "level": 3,
+      "content": "```java\npublic byte[] convertOnWrite(Object data)\n```\n\n出力時に書き込むデータの変換を行う。\n<p/>\nこの実装では、出力データ（数値）をバイトデータに変換する。\n\n**パラメータ:**\n- `data` - 書き込みを行うデータ\n\n**戻り値:**\n変換後のバイトデータ\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "convertToBytes",
+      "level": 3,
+      "content": "```java\nprotected byte[] convertToBytes(String strData, boolean isMinus)\n```\n\n文字列をエンコーディングに従いバイトデータに変換する。\n<p/>\n負数の場合は符号を削除したバイトデータを返却する。\n\n**パラメータ:**\n- `strData` - 文字列\n- `isMinus` - 負数かどうか\n\n**戻り値:**\n文字列を変換したバイトデータ\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "padding",
+      "level": 3,
+      "content": "```java\nprivate byte[] padding(byte[] bytes, boolean isMinus)\n```\n\nパディングを行う。\n\n**パラメータ:**\n- `bytes` - 出力データのバイトデータ\n- `isMinus` - 負数かどうか\n\n**戻り値:**\nパディング後のバイトデータ\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "margeBytes",
+      "level": 3,
+      "content": "```java\nprivate byte[] margeBytes(byte[] sign, byte[] data)\n```\n\n符号とデータをマージする。\n\n**パラメータ:**\n- `sign` - 符号\n- `data` - データ\n\n**戻り値:**\n符号とデータをマージしたバイトデータ\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getPlusSign",
+      "level": 3,
+      "content": "```java\nprotected String getPlusSign()\n```\n\n正の符号を取得する。\n<p/>\n本メソッドをオーバーライドすることで正の符号を変更することが可能である。\n\n**戻り値:**\n正の符号\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "getMinusSign",
+      "level": 3,
+      "content": "```java\nprotected String getMinusSign()\n```\n\n負の符号を取得する。\n<p/>\n本メソッドをオーバーライドすることで負の符号を変更することが可能である。\nたとえば、本メソッドを「▲」を返却するようにオーバーライドすれば、負の符号として▲が使用される。\n\n**戻り値:**\n負の符号\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "setRequiredPlusSign",
+      "level": 3,
+      "content": "```java\npublic SignedNumberStringDecimal setRequiredPlusSign(boolean isRequiredPlusSign)\n```\n\n正の符号の要否を設定する。\n\n**パラメータ:**\n- `isRequiredPlusSign` - 正の符号の要否（trueの場合、必要）\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "setFixedSignPosition",
+      "level": 3,
+      "content": "```java\npublic SignedNumberStringDecimal setFixedSignPosition(boolean isFixedSignPosition)\n```\n\n符号位置の固定/非固定を設定する。\n\n**パラメータ:**\n- `isFixedSignPosition` - 符号位置の固定/非固定（trueの場合、固定）\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s27"
+    }
+  ],
+  "id": "javadoc-nablarch-core-dataformat-convertor-datatype-SignedNumberStringDecimal"
+}

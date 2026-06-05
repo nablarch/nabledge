@@ -1,0 +1,92 @@
+{
+  "title": "class JobExecutor",
+  "content": "**パッケージ:** nablarch.fw.batch.ee\n\n---\n\n```java\npublic class JobExecutor\n```\n\nJOB の実行をするクラス\n<p/>\nJOBを実行し、終了するまで待機して以下の戻り値を返す。\n<ul>\n<li>正常終了：0 - 終了ステータスが \"WARNING\" 以外の場合で、バッチステータスが {@link BatchStatus#COMPLETED}の場合</li>\n<li>異常終了：1 - 終了ステータスが \"WARNING\" 以外の場合で、バッチステータスが {@link BatchStatus#COMPLETED} 以外の場合</li>\n<li>警告終了：2 - 終了ステータスが \"WARNING\" の場合</li>\n</ul>\nなお、JOBの終了待ちの間に中断された場合は、異常終了のコードを返す。\n<p/>\nバリデーションエラーなど警告すべき事項が発生している場合に、警告終了させることができる。\n警告終了の方法はchunkまたはbatchlet内で、{@link jakarta.batch.runtime.context.JobContext#setExitStatus(String)}を\n呼び出し \"WARNING\" を終了ステータスとして設定する。警告終了時は、バッチステータスは任意の値を許可するため、\nchunkまたはbatchlet内で、 例外を送出しバッチステータスが {@link BatchStatus#FAILED} となる場合であっても、\n終了ステータスに “WARNING” を設定していれば、警告終了する。\n\n**作成者:** T.Shimoda  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "jobXmlName",
+      "level": 3,
+      "content": "```java\nprivate final String jobXmlName\n```\n\nJOB XMLファイル名（.xmlを除いた名前）\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "properties",
+      "level": 3,
+      "content": "```java\nprivate final Properties properties\n```\n\nバッチ起動時に指定する引数\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "jobExecution",
+      "level": 3,
+      "content": "```java\nprivate JobExecution jobExecution\n```\n\nJOBの実行情報。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "JobExecutor",
+      "level": 3,
+      "content": "```java\npublic JobExecutor(String jobXmlName, Properties properties)\n```\n\nコンストラクタ\n\n**パラメータ:**\n- `jobXmlName` - JOB XMLファイル名\n- `properties` - properties\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "getJobXmlName",
+      "level": 3,
+      "content": "```java\npublic String getJobXmlName()\n```\n\nJOB XMLファイル名を返す。\n\n**戻り値:**\nJOB XMLファイル名\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getJobExecution",
+      "level": 3,
+      "content": "```java\npublic JobExecution getJobExecution()\n```\n\nJOBの実行情報を返す。\n開始時刻や終了時刻などJOBの詳細を取得したい場合にこのAPIから取得する。\n\n**戻り値:**\nJOBの実行情報、開始前はnullを返す。\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "execute",
+      "level": 3,
+      "content": "```java\npublic int execute()\n```\n\nJOBを実行する。JOBが終了または中断されるまで待機する。\n\n**戻り値:**\n終了コード\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "execute",
+      "level": 3,
+      "content": "```java\npublic int execute(long mills)\n```\n\nJOBを実行する。JOBが終了または中断されるまで待機する。\n指定したミリ秒間隔で終了しているかどうかのチェックを行う。\n\n**パラメータ:**\n- `mills` - 終了をチェックするミリ秒の間隔\n\n**戻り値:**\n終了コード\n\n**例外:**\n- `IllegalArgumentException` - ミリ秒が0以下の場合\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "start",
+      "level": 3,
+      "content": "```java\nprivate void start()\n```\n\nJOBを開始する。非同期で開始するため、終了を待つには、{@link JobExecutor#waitForEnd}を呼び出す。\n\n**例外:**\n- `IllegalStateException` - JOBが既に開始されている場合\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "waitForEnd",
+      "level": 3,
+      "content": "```java\nprivate int waitForEnd(long mills)\n```\n\n開始したJOBの終了を待つ。\n指定したミリ秒間隔で終了しているかどうかのチェックを行う。\n\n**パラメータ:**\n- `mills` - チェックを行うミリ秒\n\n**戻り値:**\n終了コード\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "getExitCode",
+      "level": 3,
+      "content": "```java\nprivate int getExitCode()\n```\n\n終了コードを導出する\n\n**戻り値:**\n終了コード\n\n---",
+      "id": "s14"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-batch-ee-JobExecutor"
+}

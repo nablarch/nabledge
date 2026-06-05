@@ -1,0 +1,170 @@
+{
+  "title": "class HttpExclusiveControlUtil",
+  "content": "**パッケージ:** nablarch.common.web.exclusivecontrol\n\n---\n\n```java\npublic final class HttpExclusiveControlUtil\n```\n\n画面処理における排他制御機能(楽観的ロック)のユーティリティクラス。\n<p/>\n楽観的ロックは、下記の機能により実現する。\n<ul>\n<li>処理対象データに対するバージョン番号を取得する。</li>\n<li>取得済みのバージョン番号が更新されていないかチェックする。</li>\n<li>取得済みのバージョン番号が更新されていないかチェックし、バージョン番号を更新する。</li>\n</ul>\n取得したバージョン番号は、フレームワークにより、ウィンドウスコープを使用して画面間を持回る。\nこのため、本クラスは、n:formタグとhiddenタグの暗号化機能の使用を前提とする。\n\n本クラスは、画面処理に依存しない楽観的ロック機能の処理を{@link ExclusiveControlUtil}に委譲する。\n\n{@link nablarch.common.dao.UniversalDao UniversalDao}を使用する場合には、\nこのクラスではなく{@link nablarch.common.dao.UniversalDao UniversalDao}を使用して排他制御を行うこと。\n\n**作成者:** Kiyohito Itoh  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "VERSION_PARAM_NAME",
+      "level": 3,
+      "content": "```java\npublic static final String VERSION_PARAM_NAME\n```\n\nバージョン番号をhiddenタグに出力する際に使用するパラメータ名\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "VERSIONS_VARIABLE_NAME",
+      "level": 3,
+      "content": "```java\npublic static final String VERSIONS_VARIABLE_NAME\n```\n\nバージョン番号をリクエストスコープに設定する際に使用する変数名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "HttpExclusiveControlUtil",
+      "level": 3,
+      "content": "```java\nprivate HttpExclusiveControlUtil()\n```\n\n隠蔽コンストラクタ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s6"
+    },
+    {
+      "title": "prepareVersions",
+      "level": 3,
+      "content": "```java\npublic static boolean prepareVersions(ExecutionContext context, List<? extends ExclusiveControlContext> exclusiveControlContexts)\n```\n\nバージョン番号を準備する。\n<p/>\n指定された{@link ExclusiveControlContext}リストを使用してバージョン番号を取得し、\n次回リクエスト時にバージョン番号を送信するために、バージョン番号をリクエストスコープに設定する。\nリクエストスコープに設定したバージョン番号は、n:formタグによりウィンドウスコープに設定される。\n<p/>\n1つでもバージョン番号を準備できなかった場合は処理を中断しfalseを返す。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n- `exclusiveControlContexts` - 排他制御コンテキストリスト\n\n**戻り値:**\nすべてのバージョン番号を準備できた場合はtrue\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "prepareVersion",
+      "level": 3,
+      "content": "```java\npublic static boolean prepareVersion(ExecutionContext context, ExclusiveControlContext exclusiveControlContext)\n```\n\nバージョン番号を準備する。\n<p/>\n指定された{@link ExclusiveControlContext}を使用してバージョン番号を取得し、\n次回リクエスト時にバージョン番号を送信するために、バージョン番号をリクエストスコープに設定する。\nリクエストスコープに設定したバージョン番号は、n:formタグによりウィンドウスコープに設定される。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n- `exclusiveControlContext` - 排他制御コンテキスト\n\n**戻り値:**\nバージョン番号を準備できた場合はtrue\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getVersions",
+      "level": 3,
+      "content": "```java\nprivate static List<String> getVersions(ExecutionContext context)\n```\n\nリクエストスコープからバージョン番号リストを取得する。\n\n**パラメータ:**\n- `context` - 実行コンテキスト\n\n**戻り値:**\nバージョン番号リスト\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "convertToVersionString",
+      "level": 3,
+      "content": "```java\nprivate static String convertToVersionString(Version version)\n```\n\nバージョン番号オブジェクトを復元可能な文字列に変換する。\n\n**パラメータ:**\n- `version` - バージョン番号オブジェクト\n\n**戻り値:**\n復元可能な文字列\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "convertToConditionString",
+      "level": 3,
+      "content": "```java\nprivate static String convertToConditionString(Map<String,Object> condition)\n```\n\nバージョン番号の主キー条件を復元可能な文字列に変換する。\n\n**パラメータ:**\n- `condition` - バージョン番号の主キー条件\n\n**戻り値:**\n復元可能な文字列\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "checkVersions",
+      "level": 3,
+      "content": "```java\npublic static void checkVersions(HttpRequest request, ExecutionContext context)\n                   throws OptimisticLockException\n```\n\nバージョン番号をチェックする。\n<p/>\nリクエストパラメータに含まれるバージョン番号を使用して、\nバージョン番号が更新されていないかをチェックする。\nどれか一つでもバージョン番号が更新されていた場合は、\n更新されているバージョン番号を設定した{@link OptimisticLockException}を送出する。\n<p/>\n全てのバージョン番号が更新されていない場合は、\n次回リクエスト時にバージョン番号を送信するために、バージョン番号をリクエストスコープに設定する。\nリクエストスコープに設定したバージョン番号は、n:formタグによりウィンドウスコープに設定される。\n\n**パラメータ:**\n- `request` - リクエスト\n- `context` - 実行コンテキスト\n\n**例外:**\n- `OptimisticLockException` - バージョン番号が更新されていた場合\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "checkVersions",
+      "level": 3,
+      "content": "```java\npublic static void checkVersions(HttpRequest request, ExecutionContext context, String targetPkListParamName)\n                   throws OptimisticLockException\n```\n\n指定されたウィンドウスコープ変数上の配列に格納された各PK値に対して\nバージョン番号をチェックする。\n<p/>\nリクエストパラメータに含まれるバージョン番号を使用して、\nバージョン番号が更新されていないかをチェックする。\nどれか一つでもバージョン番号が更新されていた場合は、\n更新されているバージョン番号を設定した{@link OptimisticLockException}を送出する。\n<p/>\n全てのバージョン番号が更新されていない場合は、\n次回リクエスト時にバージョン番号を送信するために、バージョン番号をリクエストスコープに設定する。\nリクエストスコープに設定したバージョン番号は、n:formタグによりウィンドウスコープに設定される。\n<p/>\nなお、PKが組み合わせキーとなる場合は{@link HttpExclusiveControlUtil#checkVersion(HttpRequest, ExecutionContext, ExclusiveControlContext)}\nを使用すること。\n\n**パラメータ:**\n- `request` - リクエスト\n- `context` - 実行コンテキスト\n- `targetPkListParamName` - 更新対象のPK値の配列を格納したウィンドウスコープ変数名\n\n**例外:**\n- `OptimisticLockException` - バージョン番号が更新されていた場合\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "checkVersion",
+      "level": 3,
+      "content": "```java\npublic static void checkVersion(HttpRequest request, ExecutionContext context, ExclusiveControlContext exclusiveControlContext)\n                  throws OptimisticLockException\n```\n\n引数で渡された排他制御コンテキストに格納されたPK値に対してバージョン番号をチェックする。\n<p/>\n排他制御コンテキストに格納されたバージョン番号を使用して、バージョン番号が更新されていないかをチェックする。\nどれか一つでもバージョン番号が更新されていた場合は、更新されているバージョン番号を設定した{@link OptimisticLockException}を送出する。\n<p/>\n全てのバージョン番号が更新されていない場合は、\n次回リクエスト時にバージョン番号を送信するために、バージョン番号をリクエストスコープに設定する。\nリクエストスコープに設定したバージョン番号は、n:formタグによりウィンドウスコープに設定される。\n\n**パラメータ:**\n- `request` - リクエスト\n- `context` - 実行コンテキスト\n- `exclusiveControlContext` - 排他制御コンテキスト\n\n**例外:**\n- `OptimisticLockException` - バージョン番号が更新されていた場合\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "executeCheckVersions",
+      "level": 3,
+      "content": "```java\nprivate static void executeCheckVersions(HttpRequest request, ExecutionContext context, String targetPkListParamName)\n                          throws OptimisticLockException\n```\n\n論理排他チェックを行う。\n\n**パラメータ:**\n- `request` - リクエスト\n- `context` - 実行コンテキスト\n- `targetPkListParamName` - 更新対象のPK値の配列を格納したウィンドウスコープ変数名\n\n**例外:**\n- `OptimisticLockException` - バージョン番号が更新されていた場合\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getVersions",
+      "level": 3,
+      "content": "```java\nprivate static List<Version> getVersions(HttpRequest request)\n```\n\nリクエストパラメータに含まれるバージョン番号を取得する。\n\n**パラメータ:**\n- `request` - リクエスト\n\n**戻り値:**\nバージョン番号\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getVersions",
+      "level": 3,
+      "content": "```java\nprivate static List<Version> getVersions(HttpRequest request, String targetPkListParamName)\n```\n\nバージョン番号を取得する。\n\n**パラメータ:**\n- `request` - HTTPリクエストオブジェクト\n- `targetPkListParamName` - 更新対象PK値のリストを格納したウィンドウスコープ上の変数名\n\n**戻り値:**\nバージョン番号\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getVersion",
+      "level": 3,
+      "content": "```java\nprivate static List<Version> getVersion(HttpRequest request, ExclusiveControlContext context)\n```\n\n指定された排他制御コンテキストに対応するバージョン番号をリクエストパラメータから取得する。\n\n**パラメータ:**\n- `request` - HTTPリクエストオブジェクト\n- `context` - 排他制御コンテキスト\n\n**戻り値:**\nバージョン番号\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "isSameTable",
+      "level": 3,
+      "content": "```java\nprivate static boolean isSameTable(ExclusiveControlContext context, Version version)\n```\n\n排他制御コンテキストのテーブルとリクエストパラメータから取得したテーブルが一致するか否かを判定する。\n\n**パラメータ:**\n- `context` - 排他制御コンテキスト\n- `version` - リクエストパラメータから取得したバージョン情報\n\n**戻り値:**\n排他制御コンテキストとリクエストパラメータのテーブルが一致する場合は {@code true}\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "isSameCondition",
+      "level": 3,
+      "content": "```java\nprivate static boolean isSameCondition(Map<String,Object> contextCondition, Map<String,Object> paramCondition, Enum<?>[] primaryKeyColumnNames)\n```\n\n排他制御コンテキストの主キー条件とリクエストパラメータから取得した主キー条件が一致するか否かを判定する。\n<p/>\nどちらか一方の主キー値が取得できない場合は、falseを返す。\n\n**パラメータ:**\n- `contextCondition` - 排他制御コンテキストの主キー条件\n- `paramCondition` - リクエストパラメータから取得した主キー条件\n- `primaryKeyColumnNames` - 主キーのカラム名の配列\n\n**戻り値:**\n主キー条件が全てマッチすればtrue、一つでも異なればfalse\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "getPrimaryKeyValue",
+      "level": 3,
+      "content": "```java\nprivate static Object getPrimaryKeyValue(Map<String,Object> condition, String primaryKeyColumnName)\n```\n\n主キー値を取得する。\n\n**パラメータ:**\n- `condition` - 主キー条件\n- `primaryKeyColumnName` - 取得したい主キーのカラム名\n\n**戻り値:**\n主キー値\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "convertToVersion",
+      "level": 3,
+      "content": "```java\nprivate static Version convertToVersion(String versionString)\n```\n\nバージョン番号文字列からバージョン番号オブジェクトに変換する。\n\n**パラメータ:**\n- `versionString` - バージョン番号文字列\n\n**戻り値:**\nバージョン番号オブジェクト\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "convertToCondition",
+      "level": 3,
+      "content": "```java\nprivate static Map<String,Object> convertToCondition(String conditionString)\n```\n\n主キー条件文字列からマップオブジェクトに変換する。\n\n**パラメータ:**\n- `conditionString` - 主キー条件文字列\n\n**戻り値:**\nマップオブジェクト\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "updateVersionsWithCheck",
+      "level": 3,
+      "content": "```java\npublic static void updateVersionsWithCheck(HttpRequest request)\n                             throws OptimisticLockException\n```\n\nバージョン番号の更新チェックとバージョン番号の更新を行う。\n<p/>\nリクエストパラメータに含まれるバージョン番号を使用して、\nバージョン番号が更新されていないかのチェックと更新を行う。\nどれか一つでもバージョン番号が更新されていた場合は、\n更新されているバージョン番号を設定した{@link OptimisticLockException}を送出する。\n\n**パラメータ:**\n- `request` - リクエスト\n\n**例外:**\n- `OptimisticLockException` - バージョン番号が更新されていた場合\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "updateVersionsWithCheck",
+      "level": 3,
+      "content": "```java\npublic static void updateVersionsWithCheck(HttpRequest request, String targetPkListParamName)\n                             throws OptimisticLockException\n```\n\n指定されたウィンドウスコープ変数上の配列に格納された各PK値に対して\nバージョン番号の更新チェックとバージョン番号の更新を行う。\n<p/>\nリクエストパラメータに含まれるバージョン番号を使用して、\nバージョン番号が更新されていないかのチェックと更新を行う。\nどれか一つでもバージョン番号が更新されていた場合は、\n更新されているバージョン番号を設定した{@link OptimisticLockException}を送出する。\n<p/>\nなお、PKが組み合わせキーとなる場合は、{@link HttpExclusiveControlUtil#updateVersionWithCheck(HttpRequest, ExclusiveControlContext)}\nを使用すること。\n\n**パラメータ:**\n- `request` - リクエスト\n- `targetPkListParamName` - 更新対象のPK値の配列を格納したウィンドウスコープ変数名\n\n**例外:**\n- `OptimisticLockException` - バージョン番号が更新されていた場合\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "updateVersionWithCheck",
+      "level": 3,
+      "content": "```java\npublic static void updateVersionWithCheck(HttpRequest request, ExclusiveControlContext exclusiveControlContext)\n                            throws OptimisticLockException\n```\n\n引数で渡された排他制御コンテキストに格納されたPK値に対してバージョン番号のチェックとバージョン情報の更新を行う。\n<p/>\n排他制御コンテキストに格納されたバージョン番号を使用して、バージョン番号が更新されていないかのチェックと更新を行う。\nどれか一つでもバージョン番号が更新されていた場合は、更新されているバージョン番号を設定した{@link OptimisticLockException}を送出する。\n<p/>\n\n**パラメータ:**\n- `request` - リクエスト\n- `exclusiveControlContext` - 排他制御コンテキスト\n\n**例外:**\n- `OptimisticLockException` - バージョン番号が更新されていた場合\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "executeUpdateVersionsWithCheck",
+      "level": 3,
+      "content": "```java\nprivate static void executeUpdateVersionsWithCheck(HttpRequest request, String targetPkListParamName)\n                                    throws OptimisticLockException\n```\n\n論理排他チェック後、バージョン番号を更新する。\n\n**パラメータ:**\n- `request` - リクエスト\n- `targetPkListParamName` - 更新対象のPK値の配列を格納したウィンドウスコープ変数名\n\n**例外:**\n- `OptimisticLockException` - バージョン番号が更新されていた場合\n\n---",
+      "id": "s27"
+    }
+  ],
+  "id": "javadoc-nablarch-common-web-exclusivecontrol-HttpExclusiveControlUtil"
+}

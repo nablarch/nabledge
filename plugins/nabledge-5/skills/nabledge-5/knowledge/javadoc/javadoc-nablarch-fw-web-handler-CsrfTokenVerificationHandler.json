@@ -1,0 +1,104 @@
+{
+  "title": "class CsrfTokenVerificationHandler",
+  "content": "**パッケージ:** nablarch.fw.web.handler\n\n**実装されたインタフェース:**\n- HttpRequestHandler\n\n---\n\n```java\npublic class CsrfTokenVerificationHandler\nimplements HttpRequestHandler\n```\n\nCSRFトークンの検証を行うハンドラ。\n\n<p>\n本ハンドラの処理は次の順番で行われる。\n</p>\n\n<ol>\n<li>セッションストアからCSRFトークンを取得する</li>\n<li>取得できなかった場合はCSRFトークンを生成してセッションストアへ保存する</li>\n<li>HTTPリクエストが検証対象かどうかを判定する</li>\n<li>検証対象の場合はHTTPリクエストヘッダ、またはHTTPリクエストパラメータからCSRFトークンを取得して検証を行う</li>\n<li>検証に失敗した場合はBadRequest(400)のレスポンスを返す</li>\n<li>検証に成功した場合は次のハンドラへ処理を移す</li>\n</ol>\n\n**作成者:** Uragami Taichi  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "REQUEST_REGENERATE_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String REQUEST_REGENERATE_KEY\n```\n\nCSRFトークン再生成の要求を表す値をリクエストスコープに設定する際に使用するキー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "LOGGER",
+      "level": 3,
+      "content": "```java\nprivate static final Logger LOGGER\n```\n\nロガー\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "csrfTokenGenerator",
+      "level": 3,
+      "content": "```java\nprivate CsrfTokenGenerator csrfTokenGenerator\n```\n\nCSRFトークンの生成を行うインターフェース\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "verificationTargetMatcher",
+      "level": 3,
+      "content": "```java\nprivate VerificationTargetMatcher verificationTargetMatcher\n```\n\nHTTPリクエストがCSRFトークンの検証対象となるか判定を行うインターフェース\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "verificationFailureHandler",
+      "level": 3,
+      "content": "```java\nprivate VerificationFailureHandler verificationFailureHandler\n```\n\nCSRFトークンの検証失敗時の処理を行うインタフェース\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "handle",
+      "level": 3,
+      "content": "```java\npublic HttpResponse handle(HttpRequest request, ExecutionContext context)\n```\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "isTargetOfVerification",
+      "level": 3,
+      "content": "```java\nprivate boolean isTargetOfVerification(HttpRequest request)\n```\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "verifyToken",
+      "level": 3,
+      "content": "```java\nprivate boolean verifyToken(String userSentToken, String sessionAssociatedToken)\n```\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getUserSentToken",
+      "level": 3,
+      "content": "```java\nprivate String getUserSentToken(HttpRequest request)\n```\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getSessionAssociatedToken",
+      "level": 3,
+      "content": "```java\nprivate String getSessionAssociatedToken(ExecutionContext context)\n```\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "generateAndSaveToken",
+      "level": 3,
+      "content": "```java\nprivate String generateAndSaveToken(ExecutionContext context)\n```\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setCsrfTokenGenerator",
+      "level": 3,
+      "content": "```java\npublic void setCsrfTokenGenerator(CsrfTokenGenerator csrfTokenGenerator)\n```\n\nCSRFトークンの生成を行うインターフェースを設定する。\n\n**パラメータ:**\n- `csrfTokenGenerator` - CSRFトークンの生成を行うインターフェース\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setVerificationTargetMatcher",
+      "level": 3,
+      "content": "```java\npublic void setVerificationTargetMatcher(VerificationTargetMatcher verificationTargetMatcher)\n```\n\nHTTPリクエストがCSRFトークンの検証対象となるか判定を行うインターフェースを設定する。\n\n**パラメータ:**\n- `verificationTargetMatcher` - HTTPリクエストがCSRFトークンの検証対象となるか判定を行うインターフェース\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "setVerificationFailureHandler",
+      "level": 3,
+      "content": "```java\npublic void setVerificationFailureHandler(VerificationFailureHandler verificationFailureHandler)\n```\n\nCSRFトークンの検証失敗時の処理を行うインタフェースを設定する。\n\n**パラメータ:**\n- `verificationFailureHandler` - CSRFトークンの検証失敗時の処理を行うインタフェース\n\n---",
+      "id": "s16"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-handler-CsrfTokenVerificationHandler"
+}

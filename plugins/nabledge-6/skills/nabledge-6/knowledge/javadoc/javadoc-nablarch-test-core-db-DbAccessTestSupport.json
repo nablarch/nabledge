@@ -1,0 +1,188 @@
+{
+  "title": "class DbAccessTestSupport",
+  "content": "**パッケージ:** nablarch.test.core.db\n\n**継承階層:**\n```\njava.lang.Object\n  └─ TestEventDispatcher\n      └─ nablarch.test.core.db.DbAccessTestSupport\n```\n\n---\n\n```java\npublic class DbAccessTestSupport\nextends TestEventDispatcher\n```\n\nデータベースアクセス自動テスト用基底クラス。<br/>\nデータベースアクセスクラスの自動テストを行う場合には、本クラスを継承しテストクラスを作成する。<br/>\n本クラス以外の基底クラスを継承しなければならない場合は、<br/>\n本クラスのインスタンスを生成し処理を委譲することで代替可能である。\n\n**作成者:** Tsuyoshi Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "TRANSACTIONS_KEY",
+      "level": 3,
+      "content": "```java\npublic static final String TRANSACTIONS_KEY\n```\n\nデータベーストランザクション名を取得する為のキー\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "DB_TRANSACTION_FOR_TEST",
+      "level": 3,
+      "content": "```java\npublic static final String DB_TRANSACTION_FOR_TEST\n```\n\nテストクラス用トランザクション名\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "DB_TRANSACTION_FOR_TEST_FW",
+      "level": 3,
+      "content": "```java\npublic static final String DB_TRANSACTION_FOR_TEST_FW\n```\n\nテスティングフレームワーク用トランザクション名\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "transactionManagers",
+      "level": 3,
+      "content": "```java\nprivate final List<SimpleDbTransactionManager> transactionManagers\n```\n\nトランザクションマネージャ\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "testSupport",
+      "level": 3,
+      "content": "```java\nprivate final TestSupport testSupport\n```\n\nテストサポート\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "コンストラクタの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s7"
+    },
+    {
+      "title": "DbAccessTestSupport",
+      "level": 3,
+      "content": "```java\nprotected DbAccessTestSupport()\n```\n\nデフォルトコンストラクタ<br/>\nサブクラスからの呼び出しを想定している。<br/>\nサブクラス以外から本クラスを使用する場合は、{@link DbAccessTestSupport#DbAccessTestSupport(Class)}を使用すること。\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "DbAccessTestSupport",
+      "level": 3,
+      "content": "```java\npublic DbAccessTestSupport(Class<?> testClass)\n```\n\nコンストラクタ\n\n**パラメータ:**\n- `testClass` - テストクラス（テスト対象クラスではない）\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "DbAccessTestSupport",
+      "level": 3,
+      "content": "```java\npublic DbAccessTestSupport(TestSupport testSupport)\n```\n\nコンストラクタ\n\n**パラメータ:**\n- `testSupport` - テストサポート\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s11"
+    },
+    {
+      "title": "beginTransactions",
+      "level": 3,
+      "content": "```java\npublic void beginTransactions()\n```\n\nデータベースアクセスクラスのテスト用にトランザクションを開始する。<br/>\n開始対象のトランザクション名は、設定ファイルより取得する。<br/>\n複数のトランザクションを開始する場合には、カンマ(\",\")区切りで複数のトランザクション名を設定する。<br/>\n設定ファイル例:<br/>\n<p/>\n<pre>\ndbAccessTest.dbTransactionName = transaction-name1,transaction-name2\n</pre>\n<p/>\nデフォルトのトランザクション(nablarch.core.db.connection.DbConnectionContext#getConnection()で取得されるトランザクション)は、<br/>\n設定ファイルの記述の有無に関わらず開始される。<br/>\nデフォルトのトランザクションのみを使用する場合は、設定ファイルへの記述は不要である。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getDefaultManager",
+      "level": 3,
+      "content": "```java\nprivate SimpleDbTransactionManager getDefaultManager()\n```\n\nデフォルトのトランザクションマネージャを取得する。\n\n**戻り値:**\nデフォルトのトランザクションマネージャ\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "commitTransactions",
+      "level": 3,
+      "content": "```java\npublic void commitTransactions()\n```\n\nコミットを実行する。\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "rollbackTransactions",
+      "level": 3,
+      "content": "```java\npublic void rollbackTransactions()\n```\n\nトランザクションをロールバックする。\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "endTransactions",
+      "level": 3,
+      "content": "```java\npublic void endTransactions()\n```\n\nトランザクションを終了する。\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "setUpDb",
+      "level": 3,
+      "content": "```java\npublic void setUpDb(String sheetName)\n```\n\nデータベースにデータを投入する。<br/>\n\n**パラメータ:**\n- `sheetName` - シート名\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "setUpDb",
+      "level": 3,
+      "content": "```java\npublic void setUpDb(String sheetName, String groupId)\n```\n\nデータベースにデータを投入する。<br/>\n\n**パラメータ:**\n- `sheetName` - シート名\n- `groupId` - グループID\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "setThreadContextValues",
+      "level": 3,
+      "content": "```java\npublic void setThreadContextValues(String sheetName, String id)\n```\n\nThreadContextに値を設定する。<br/>\n\n**パラメータ:**\n- `sheetName` - 取得元シート名\n- `id` - 取得元ID\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "assertSqlResultSetEquals",
+      "level": 3,
+      "content": "```java\npublic void assertSqlResultSetEquals(String message, String sheetName, String id, SqlResultSet actual)\n```\n\nSqlResultSetの値とExcelファイルに記載したデータの比較を行う。<br/>\n検索系テスト実行結果の検索結果確認に使用する。<br/>\n\n**パラメータ:**\n- `message` - 比較失敗時のメッセージ\n- `sheetName` - 期待値を格納したシート名\n- `id` - シート内のデータを特定するためのID\n- `actual` - 実際の値\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "assertSqlRowEquals",
+      "level": 3,
+      "content": "```java\npublic void assertSqlRowEquals(String message, String sheetName, String id, SqlRow actual)\n```\n\nSqlRowの値とExcelファイルに記載したデータの比較を行う。<br/>\n検索系テスト実行結果の検索結果確認に使用する。<br/>\n\n**パラメータ:**\n- `message` - 比較失敗時のメッセージ\n- `sheetName` - 期待値を格納したシート名\n- `id` - シート内のデータを特定するためのID\n- `actual` - 実際の値\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "getListMap",
+      "level": 3,
+      "content": "```java\npublic List<Map<String,String>> getListMap(String sheetName, String id)\n```\n\nList-Map形式でデータを取得する。<br/>\n\n**パラメータ:**\n- `sheetName` - シート名\n- `id` - ID\n\n**戻り値:**\nList-Map形式のデータ\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "getListParamMap",
+      "level": 3,
+      "content": "```java\npublic List<Map<String,String[]>> getListParamMap(String sheetName, String id)\n```\n\nList-Map形式でデータを取得する。<br/>\nHTTPパラメータと同じ形式で取得できる（Mapの値がString[]となる）。\n\n**パラメータ:**\n- `sheetName` - シート名\n- `id` - ID\n\n**戻り値:**\nList-Map形式のデータ\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getParamMap",
+      "level": 3,
+      "content": "```java\npublic Map<String,String[]> getParamMap(String sheetName, String id)\n```\n\nList-Map形式でデータを取得する。<br/>\nHTTPパラメータと同じ形式で取得できる（Mapの値がString[]となる）。\n\n**パラメータ:**\n- `sheetName` - シート名\n- `id` - ID\n\n**戻り値:**\nMap形式のデータ\n\n---",
+      "id": "s24"
+    },
+    {
+      "title": "assertTableEquals",
+      "level": 3,
+      "content": "```java\npublic void assertTableEquals(String sheetName)\n```\n\nデータベースのテーブルの値とExcelファイルに記載した値の比較を行う。<br/>\n更新系テスト実行後の更新結果確認用に使用する。\nテストクラスと同一のパッケージに存在するテストデータファイルから、 期待値を読み取り実際のテーブルと比較を行う。\n\n**パラメータ:**\n- `sheetName` - 期待値を格納したシート名\n\n---",
+      "id": "s25"
+    },
+    {
+      "title": "assertTableEquals",
+      "level": 3,
+      "content": "```java\npublic void assertTableEquals(String message, String sheetName, boolean failIfNoDataFound)\n                       throws IllegalArgumentException\n```\n\nテーブルの比較を行う。<br/>\nテストクラスと同一のパッケージに存在するテストデータファイルから、\n期待値を読み取り実際のテーブルと比較を行う。\n\n**パラメータ:**\n- `message` - 比較失敗時のメッセージ\n- `sheetName` - 期待値を格納したシート名\n- `failIfNoDataFound` - データが存在しない場合に例外とするかどうか\n\n**例外:**\n- `IllegalArgumentException` - 期待値のデータが存在せず、failIfNoDataFoundが真の場合\n\n---",
+      "id": "s26"
+    },
+    {
+      "title": "assertTableEquals",
+      "level": 3,
+      "content": "```java\npublic void assertTableEquals(String sheetName, String groupId)\n                       throws IllegalArgumentException\n```\n\nテーブルの比較を行う。<br/>\nテストクラスと同一のパッケージに存在するテストデータファイルから、\n期待値を読み取り実際のテーブルと比較を行う。\n\n**パラメータ:**\n- `sheetName` - 期待値を格納したシート名\n- `groupId` - グループID（オプション）\n\n**例外:**\n- `IllegalArgumentException` - 期待値のデータが存在しない場合\n\n---",
+      "id": "s27"
+    },
+    {
+      "title": "assertTableEquals",
+      "level": 3,
+      "content": "```java\npublic void assertTableEquals(String message, String sheetName, String groupId)\n                       throws IllegalArgumentException\n```\n\nテーブルの比較を行う。<br/>\nテストクラスと同一のパッケージに存在するテストデータファイルから、\n期待値を読み取り実際のテーブルと比較を行う。\n\n**パラメータ:**\n- `message` - 比較失敗時のメッセージ\n- `groupId` - グループID（オプション）\n- `sheetName` - 期待値を格納したシート名\n\n**例外:**\n- `IllegalArgumentException` - 期待値のデータが存在しない場合\n\n---",
+      "id": "s28"
+    },
+    {
+      "title": "assertTableEquals",
+      "level": 3,
+      "content": "```java\npublic void assertTableEquals(String message, String sheetName, String groupId, boolean failIfNoDataFound)\n                       throws IllegalArgumentException\n```\n\nテーブルの比較を行う。<br/>\nテストクラスと同一のパッケージに存在するテストデータファイルから、\n期待値を読み取り実際のテーブルと比較を行う。\n\n**パラメータ:**\n- `message` - 比較失敗時のメッセージ\n- `groupId` - グループID（オプション）\n- `sheetName` - 期待値を格納したシート名\n- `failIfNoDataFound` - データが存在しない場合に例外とするかどうか\n\n**例外:**\n- `IllegalArgumentException` - 期待値のデータが存在せず、failIfNoDataFoundが真の場合\n\n---",
+      "id": "s29"
+    },
+    {
+      "title": "getTestSupport",
+      "level": 3,
+      "content": "```java\npublic TestSupport getTestSupport()\n```\n\nテストサポートクラスを返却する。\n\n**戻り値:**\nテストクラス\n\n---",
+      "id": "s30"
+    }
+  ],
+  "id": "javadoc-nablarch-test-core-db-DbAccessTestSupport"
+}

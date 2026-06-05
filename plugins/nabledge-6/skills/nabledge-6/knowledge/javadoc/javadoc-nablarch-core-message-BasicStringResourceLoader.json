@@ -1,0 +1,140 @@
+{
+  "title": "class BasicStringResourceLoader",
+  "content": "**パッケージ:** nablarch.core.message\n\n**実装されたインタフェース:**\n- StaticDataLoader<StringResource>\n\n---\n\n```java\npublic class BasicStringResourceLoader\nimplements StaticDataLoader<StringResource>\n```\n\nStringResourceHolderが使うキャッシュに必要な文字列リソースをデータベースから取得するクラス。<br/>\nStringResourceの実装にはBasicStringResourceを用いる。\n\n**作成者:** Koichi Asano  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "dbManager",
+      "level": 3,
+      "content": "```java\nprivate SimpleDbTransactionManager dbManager\n```\n\nデータロードに使用するSimpleDbTransactionManagerのインスタンス。\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "tableName",
+      "level": 3,
+      "content": "```java\nprivate String tableName\n```\n\nメッセージが格納されたテーブルのテーブル名。\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "idColumnName",
+      "level": 3,
+      "content": "```java\nprivate String idColumnName\n```\n\nメッセージIDカラム名。\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "langColumnName",
+      "level": 3,
+      "content": "```java\nprivate String langColumnName\n```\n\n言語カラム名。\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "valueColumnName",
+      "level": 3,
+      "content": "```java\nprivate String valueColumnName\n```\n\nメッセージカラム名。\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "idQueryCreated",
+      "level": 3,
+      "content": "```java\nprivate boolean idQueryCreated\n```\n\nSQL文作成済みフラグ。\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "selectByIdQuery",
+      "level": 3,
+      "content": "```java\nprivate String selectByIdQuery\n```\n\nIDによるクエリ用SQL文\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s9"
+    },
+    {
+      "title": "setDbManager",
+      "level": 3,
+      "content": "```java\npublic void setDbManager(SimpleDbTransactionManager dbManager)\n```\n\nデータロードに使用するDbManagerのインスタンスをセットする。\n\n**パラメータ:**\n- `dbManager` - データロードに使用するDbManagerのインスタンス\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setTableName",
+      "level": 3,
+      "content": "```java\npublic void setTableName(String tableName)\n```\n\nメッセージが格納されたテーブルのテーブル名をセットする。\n\n**パラメータ:**\n- `tableName` - メッセージが格納されたテーブルのテーブル名\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "setIdColumnName",
+      "level": 3,
+      "content": "```java\npublic void setIdColumnName(String idColumnName)\n```\n\nメッセージIDカラム名をセットする。\n\n**パラメータ:**\n- `idColumnName` - メッセージIDカラム名\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setLangColumnName",
+      "level": 3,
+      "content": "```java\npublic void setLangColumnName(String langColumnName)\n```\n\n言語カラム名をセットする。\n\n**パラメータ:**\n- `langColumnName` - 言語カラム名\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setValueColumnName",
+      "level": 3,
+      "content": "```java\npublic void setValueColumnName(String valueColumnName)\n```\n\nメッセージカラム名をセットする。\n\n**パラメータ:**\n- `valueColumnName` - メッセージカラム名\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "getId",
+      "level": 3,
+      "content": "```java\npublic Object getId(StringResource value)\n```\n\n{@inheritDoc}\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "generateIndexKey",
+      "level": 3,
+      "content": "```java\npublic Object generateIndexKey(String indexName, StringResource value)\n```\n\n{@inheritDoc}<br/>\n本実装ではindexの使用を想定しないため、nullを返す。\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getIndexNames",
+      "level": 3,
+      "content": "```java\npublic List<String> getIndexNames()\n```\n\n{@inheritDoc}<br/>\n本実装ではindexの使用を想定しないため、nullを返す。\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getValue",
+      "level": 3,
+      "content": "```java\npublic StringResource getValue(Object id)\n```\n\nメッセージを格納したテーブルからメッセージIDに対応するメッセージを取得する。\n\n**パラメータ:**\n- `id` - メッセージID\n\n**戻り値:**\nメッセージIDに対応するメッセージ\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "getMessage",
+      "level": 3,
+      "content": "```java\nprivate SqlResultSet getMessage(Object id)\n```\n\n指定されたIDに紐づくメッセージ情報をデータベースから取得する。\n\n**パラメータ:**\n- `id` - ID\n\n**戻り値:**\n取得したメッセージ情報\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getValues",
+      "level": 3,
+      "content": "```java\npublic List<StringResource> getValues(String indexName, Object key)\n```\n\nメッセージを格納したテーブルからメッセージIDに対応するメッセージを取得する。\n\n**パラメータ:**\n- `indexName` - インデックス名\n- `key` - 静的データのキー\n\n**戻り値:**\nインデックス名、キーに対応するデータのリスト\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "loadAll",
+      "level": 3,
+      "content": "```java\npublic List<StringResource> loadAll()\n```\n\nメッセージを格納したテーブルから全てのメッセージを取得する。\n\n**戻り値:**\n全てのメッセージのリスト。\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "createMessage",
+      "level": 3,
+      "content": "```java\nprivate List<StringResource> createMessage(SqlResultSet results)\n```\n\nSqlResultSetを元に、メッセージのリストを作成する。\n\n**パラメータ:**\n- `results` - 元となるSqlResultSet\n\n**戻り値:**\n作成したメッセージのリスト\n\n---",
+      "id": "s22"
+    }
+  ],
+  "id": "javadoc-nablarch-core-message-BasicStringResourceLoader"
+}

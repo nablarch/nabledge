@@ -1,0 +1,152 @@
+{
+  "title": "class HttpRequest",
+  "content": "**パッケージ:** nablarch.fw.web\n\n**実装されたインタフェース:**\n- Request<String[]>\n- Validatable<String[]>\n\n---\n\n```java\npublic abstract class HttpRequest\nimplements Request<String[]>, Validatable<String[]>\n```\n\nHTTP/1.1(RFC2616)におけるリクエストメッセージのパーサ及び\nその結果を格納するデータオブジェクト。\n\n**作成者:** Iwauo Tajima <iwauo@tis.co.jp>  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "DEFAULT_USER_AGENT_PARSER",
+      "level": 3,
+      "content": "```java\nprivate static final UserAgentParser DEFAULT_USER_AGENT_PARSER\n```\n\nデフォルトの{@link UserAgentParser}実装クラス\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "requestUri",
+      "level": 3,
+      "content": "```java\nprivate String requestUri\n```\n\nHTTPリクエストURI\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "multipart",
+      "level": 3,
+      "content": "```java\nprivate Map<String,List<PartInfo>> multipart\n```\n\nマルチパート\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "getMethod",
+      "level": 3,
+      "content": "```java\npublic abstract String getMethod()\n```\n\nHTTPリクエストメソッド名を返す。\n\n**戻り値:**\nリクエストメソッド名\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getRequestUri",
+      "level": 3,
+      "content": "```java\npublic String getRequestUri()\n```\n\nHTTPリクエストURIを返す。\n\n**戻り値:**\nリクエストURI\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setRequestUri",
+      "level": 3,
+      "content": "```java\npublic HttpRequest setRequestUri(String requestUri)\n```\n\nHTTPリクエストURIを設定する。\n\n**パラメータ:**\n- `requestUri` - リクエストURI\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "getRequestPath",
+      "level": 3,
+      "content": "```java\npublic String getRequestPath()\n```\n\nHTTPリクエストURIのパス部分(クエリストリングを除いた部分)を返す。\n\n**戻り値:**\nHTTPリクエストURIのパス部分\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setRequestPath",
+      "level": 3,
+      "content": "```java\npublic HttpRequest setRequestPath(String requestPath)\n```\n\nリクエストパスを設定する。\n<p/>\nこの実装では、リクエストURI中のリクエストパスを書き換える。\n\n**パラメータ:**\n- `requestPath` - リクエストパス\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "getHttpVersion",
+      "level": 3,
+      "content": "```java\npublic abstract String getHttpVersion()\n```\n\nHTTPバージョン名を返す。\n\n**戻り値:**\nHTTPバージョン名\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "getParamMap",
+      "level": 3,
+      "content": "```java\npublic abstract Map<String,String[]> getParamMap()\n```\n\nリクエストパラメータのMapを返す。\n<pre>\nHTTPリクエストメッセージ中の以下のパラメータを格納したMapを返す。\n  1. リクエストURI中のクエリパラメータ\n  2. メッセージボディ内のPOSTパラメータ\nパラメータ名は重複する可能性があるので、値の型はString[]で定義されている。\n</pre>\n\n**戻り値:**\nリクエストパラメータのMap\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "getParam",
+      "level": 3,
+      "content": "```java\npublic abstract String[] getParam(String name)\n```\n\nリクエストパラメータを取得する。\n\n**パラメータ:**\n- `name` - パラメータ名\n\n**戻り値:**\nパラメータの値\n\n---",
+      "id": "s13"
+    },
+    {
+      "title": "setParam",
+      "level": 3,
+      "content": "```java\npublic abstract HttpRequest setParam(String name, String params)\n```\n\nリクエストパラメータを設定する。\n\n**パラメータ:**\n- `name` - パラメータ名\n- `params` - パラメータの値\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s14"
+    },
+    {
+      "title": "setParamMap",
+      "level": 3,
+      "content": "```java\npublic abstract HttpRequest setParamMap(Map<String,String[]> params)\n```\n\nリクエストパラメータを設定する。\n\n**パラメータ:**\n- `params` - リクエストパラメータのMap\n\n**戻り値:**\n本オブジェクト\n\n---",
+      "id": "s15"
+    },
+    {
+      "title": "getHeaderMap",
+      "level": 3,
+      "content": "```java\npublic abstract Map<String,String> getHeaderMap()\n```\n\nHTTPリクエストヘッダを格納したMapを取得する。\n\n**戻り値:**\nHTTPリクエストヘッダのMap\n\n---",
+      "id": "s16"
+    },
+    {
+      "title": "getHeader",
+      "level": 3,
+      "content": "```java\npublic abstract String getHeader(String headerName)\n```\n\nHTTPリクエストヘッダの値を返す。\n\n**パラメータ:**\n- `headerName` - リクエストヘッダ名\n\n**戻り値:**\nHTTPリクエストヘッダの値\n\n---",
+      "id": "s17"
+    },
+    {
+      "title": "getHost",
+      "level": 3,
+      "content": "```java\npublic String getHost()\n```\n\nHTTPリクエストのホストヘッダを取得する。\n\n**戻り値:**\nホストヘッダ\n\n---",
+      "id": "s18"
+    },
+    {
+      "title": "getCookie",
+      "level": 3,
+      "content": "```java\npublic abstract HttpCookie getCookie()\n```\n\n本リクエストで送信されるクッキー情報を取得する。\n\n**戻り値:**\nクッキー情報オブジェクト\n\n---",
+      "id": "s19"
+    },
+    {
+      "title": "getPart",
+      "level": 3,
+      "content": "```java\npublic List<PartInfo> getPart(String name)\n```\n\nマルチパートの一部を取得する。\n<p/>\n引数で指定した名称に合致するパートが存在しない場合、空のリストが返却される。\n\n**パラメータ:**\n- `name` - 名称(inputタグのname属性)\n\n**戻り値:**\nマルチパート\n\n---",
+      "id": "s20"
+    },
+    {
+      "title": "setMultipart",
+      "level": 3,
+      "content": "```java\npublic void setMultipart(Map<String,List<PartInfo>> multipart)\n```\n\nマルチパートを設定する。\n\n**パラメータ:**\n- `multipart` - マルチパート\n\n---",
+      "id": "s21"
+    },
+    {
+      "title": "getMultipart",
+      "level": 3,
+      "content": "```java\npublic Map<String,List<PartInfo>> getMultipart()\n```\n\n本HTTPリクエストの全マルチパートを取得する。\n<p/>\n戻り値のMapの構造を以下に示す。\n<dl>\n<dt>キー</dt>\n<dl>名称(inputタグのname属性)</dl>\n<dt>値</dt>\n<dl>キーのname属性でアップロードされたマルチパート</dl>\n</dl>\n\n**戻り値:**\n全マルチパート\n\n---",
+      "id": "s22"
+    },
+    {
+      "title": "getUserAgent",
+      "level": 3,
+      "content": "```java\npublic UA getUserAgent()\n```\n\nUserAgent情報を取得する。\n<p/>\nHTTPヘッダ(\"User-Agent\")よりUser-Agent文字列を取得し、\n{@link SystemRepository}に設定された{@link UserAgentParser}(コンポーネント名\"userAgentParser\")で解析を行う。\n<br/>\nパーサーが取得できない場合は、\n全ての項目にデフォルト値が設定された{@link UserAgent}オブジェクトが返却される。\n\n**パラメータ:**\n- `<UA>` - userAgentの型\n\n**戻り値:**\nUserAgentオブジェクト\n\n---",
+      "id": "s23"
+    },
+    {
+      "title": "getUserAgentParser",
+      "level": 3,
+      "content": "```java\nprivate UserAgentParser getUserAgentParser()\n```\n\n{@link UserAgentParser}実装クラスのインスタンスを取得する。\n\n**戻り値:**\n{@link UserAgentParser}実装クラスのインスタンス\n\n---",
+      "id": "s24"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-web-HttpRequest"
+}

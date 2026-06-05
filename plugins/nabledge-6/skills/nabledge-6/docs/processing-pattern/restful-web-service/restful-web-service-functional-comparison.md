@@ -29,7 +29,7 @@
 | 再送制御 | × [9] | [○](../../component/handlers/handlers-message-resend-handler.md#再送電文制御ハンドラ) | － |
 | サービス提供の可否チェック | × [10] | × [10] | － |
 | トランザクション制御 | × [11] | × [11] | － |
-| 業務処理エラー時のコールバック | × [12] | ○ | － |
+| 業務処理エラー時のコールバック | × [12] | [○](../../javadoc/javadoc-nablarch-fw-messaging-action-MessagingAction.md) | － |
 
 HTTPメッセージングはRESTを考慮した作りになっていない。RESTfulウェブサービスには、Jakarta RESTful Web Servicesサポートを使用する。
 

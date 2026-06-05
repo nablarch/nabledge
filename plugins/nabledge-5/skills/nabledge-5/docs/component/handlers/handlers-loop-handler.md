@@ -22,7 +22,7 @@
 
 ## ハンドラクラス名
 
-* nablarch.fw.handler.LoopHandler
+* [nablarch.fw.handler.LoopHandler](../../javadoc/javadoc-nablarch-fw-handler-LoopHandler.md)
 
 ## モジュール一覧
 
@@ -52,19 +52,19 @@
 
 ## トランザクション制御対象を設定する
 
-このハンドラは、 transactionFactory
-プロパティに設定されたファクトリクラス( TransactionFactory の実装クラス)を使用してトランザクションの制御対象を取得しスレッド上で管理する。
+このハンドラは、 [transactionFactory](../../javadoc/javadoc-nablarch-fw-handler-LoopHandler.md)
+プロパティに設定されたファクトリクラス( [TransactionFactory](../../javadoc/javadoc-nablarch-core-transaction-TransactionFactory.md) の実装クラス)を使用してトランザクションの制御対象を取得しスレッド上で管理する。
 
 スレッド上で管理する際には、トランザクションを識別するための名前を設定する。
-デフォルトでは、 `transaction` が使用されるが、任意の名前を使用する場合は、 transactionName プロパティに設定すること。
+デフォルトでは、 `transaction` が使用されるが、任意の名前を使用する場合は、 [transactionName](../../javadoc/javadoc-nablarch-fw-handler-LoopHandler.md) プロパティに設定すること。
 
 > **Tip:**
 > [データベース接続管理ハンドラ](../../component/handlers/handlers-database-connection-management-handler.md#データベース接続管理ハンドラ) で設定したデータベースに対してトランザクションを制御する場合は、
-> DbConnectionManagementHandler#connectionName に設定した値と同じ値を
-> transactionName プロパティに設定すること。
+> [DbConnectionManagementHandler#connectionName](../../javadoc/javadoc-nablarch-common-handler-DbConnectionManagementHandler.md) に設定した値と同じ値を
+> [transactionName](../../javadoc/javadoc-nablarch-fw-handler-LoopHandler.md) プロパティに設定すること。
 
-> なお、 DbConnectionManagementHandler#connectionName に値を設定していない場合は、
-> transactionName への設定は省略して良い。
+> なお、 [DbConnectionManagementHandler#connectionName](../../javadoc/javadoc-nablarch-common-handler-DbConnectionManagementHandler.md) に値を設定していない場合は、
+> [transactionName](../../javadoc/javadoc-nablarch-fw-handler-LoopHandler.md) への設定は省略して良い。
 
 以下の設定ファイル例を参考にし、このハンドラを設定すること。
 
@@ -84,7 +84,7 @@
 
 ## コミット間隔を指定する
 
-バッチ処理のコミット間隔は、 commitInterval プロパティに設定する。
+バッチ処理のコミット間隔は、 [commitInterval](../../javadoc/javadoc-nablarch-fw-handler-LoopHandler.md) プロパティに設定する。
 概要で述べたように、コミット間隔を調整することで、バッチ処理のスループットを向上させることができる。
 
 以下に設定例を示す。
@@ -100,8 +100,8 @@
 
 このハンドラでは、後続のハンドラの処理実行後にコールバック処理を行う。
 
-コールバックされる処理は、このハンドラより後続に設定されたハンドラの中で、 TransactionEventCallback を実装しているものとなる。
-もし、複数のハンドラが  TransactionEventCallback を実装している場合は、より手前に設定されているハンドラから順次コールバック処理を実行する。
+コールバックされる処理は、このハンドラより後続に設定されたハンドラの中で、 [TransactionEventCallback](../../javadoc/javadoc-nablarch-fw-TransactionEventCallback.md) を実装しているものとなる。
+もし、複数のハンドラが  [TransactionEventCallback](../../javadoc/javadoc-nablarch-fw-TransactionEventCallback.md) を実装している場合は、より手前に設定されているハンドラから順次コールバック処理を実行する。
 
 後続ハンドラが正常に処理を終えた場合のコールバック処理は、後続ハンドラと同一のトランザクションで実行される。
 コールバック処理で行った処理は、次回のコミットタイミングで一括コミットされる。
@@ -117,10 +117,10 @@
 
 コールバック処理を行うハンドラの作成
 
-以下実装例のように、  TransactionEventCallback を実装したハンドラを作成する。
+以下実装例のように、  [TransactionEventCallback](../../javadoc/javadoc-nablarch-fw-TransactionEventCallback.md) を実装したハンドラを作成する。
 
-transactionNormalEnd にトランザクションコミット時のコールバック処理を実装し、
-transactionAbnormalEnd にトランザクションロールバック時のコールバック処理を実装する。
+[transactionNormalEnd](../../javadoc/javadoc-nablarch-fw-TransactionEventCallback.md) にトランザクションコミット時のコールバック処理を実装し、
+[transactionAbnormalEnd](../../javadoc/javadoc-nablarch-fw-TransactionEventCallback.md) にトランザクションロールバック時のコールバック処理を実装する。
 
 ```java
 public static class SampleHandler

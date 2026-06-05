@@ -1,0 +1,68 @@
+{
+  "title": "interface LettuceRedisClient",
+  "content": "**パッケージ:** nablarch.integration.redisstore.lettuce\n\n**継承階層:**\n```\njava.lang.Object\n  └─ Disposable\n      └─ nablarch.integration.redisstore.lettuce.LettuceRedisClient\n```\n\n---\n\n```java\npublic interface LettuceRedisClient\nextends Disposable\n```\n\nセッションストアの実装に必要となる Redis コマンドを定義したインターフェース。\n\n**作成者:** Tanaka Tomoyuki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "getType",
+      "level": 3,
+      "content": "```java\nString getType()\n```\n\n実装クラスを識別する種別を取得する。\n\n**戻り値:**\n実装クラスを識別する値\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "set",
+      "level": 3,
+      "content": "```java\nvoid set(String key, byte[] value)\n```\n\n値を保存する。\n\n**パラメータ:**\n- `key` - キー\n- `value` - 値\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "pexpire",
+      "level": 3,
+      "content": "```java\nvoid pexpire(String key, long milliseconds)\n```\n\nキーの有効期限を設定する。\n\n**パラメータ:**\n- `key` - キー\n- `milliseconds` - 有効期限（ミリ秒）\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "pexpireat",
+      "level": 3,
+      "content": "```java\nvoid pexpireat(String key, long milliseconds)\n```\n\nキーの有効期限をUTC時間で設定する\n\n**パラメータ:**\n- `key` - キー\n- `milliseconds` - UTC時間で指定された有効期限（ミリ秒）\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "pttl",
+      "level": 3,
+      "content": "```java\nlong pttl(String key)\n```\n\nキーの残りの生存期間を取得する。\n<p>\nキーに有効期限が設定されていない場合は {@code -1} を返し、\nキーが存在しない場合は {@code -2} を返す。\n</p>\n\n**パラメータ:**\n- `key` - キー\n\n**戻り値:**\n残りの生存期間（ミリ秒）\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "get",
+      "level": 3,
+      "content": "```java\nbyte[] get(String key)\n```\n\n値を取得する。\n<p>\n該当するキーが存在しない場合は {@code null} を返す。\n</p>\n\n**パラメータ:**\n- `key` - キー\n\n**戻り値:**\n値\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "del",
+      "level": 3,
+      "content": "```java\nvoid del(String key)\n```\n\n値を削除する。\n\n**パラメータ:**\n- `key` - キー\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "exists",
+      "level": 3,
+      "content": "```java\nboolean exists(String key)\n```\n\n指定したキーが存在するか確認する。\n\n**パラメータ:**\n- `key` - キー\n\n**戻り値:**\nキーが存在する場合は {@code true}\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "dispose",
+      "level": 3,
+      "content": "```java\nvoid dispose()\n```\n\nRedisサーバーとの接続を閉じる。\n\n---",
+      "id": "s10"
+    }
+  ],
+  "id": "javadoc-nablarch-integration-redisstore-lettuce-LettuceRedisClient"
+}

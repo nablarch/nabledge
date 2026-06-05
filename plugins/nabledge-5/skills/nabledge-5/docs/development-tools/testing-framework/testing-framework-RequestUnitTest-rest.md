@@ -144,7 +144,7 @@ RestMockHttpRequest newRequest(String httpMethod, String uri)
 > **Tip:**
 > `RestMockHttpRequest` は流れるようなインターフェイスでパラメータなどを設定できるよう
 > メソッドをオーバーライドして自身のインスタンスを返すようにしてある。
-> 使用できるメソッドの詳細は Javadoc を参照
+> 使用できるメソッドの詳細は [Javadoc](../../javadoc/javadoc-nablarch-fw-web-RestMockHttpRequest.md) を参照
 
 > リクエストを構築する例
 

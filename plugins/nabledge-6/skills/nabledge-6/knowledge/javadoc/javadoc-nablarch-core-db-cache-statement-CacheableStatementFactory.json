@@ -1,0 +1,80 @@
+{
+  "title": "class CacheableStatementFactory",
+  "content": "**パッケージ:** nablarch.core.db.cache.statement\n\n**継承階層:**\n```\njava.lang.Object\n  └─ BasicStatementFactory\n      └─ nablarch.core.db.cache.statement.CacheableStatementFactory\n```\n\n---\n\n```java\npublic class CacheableStatementFactory\nextends BasicStatementFactory\n```\n\nキャッシュ機能を備えた{@link nablarch.core.db.statement.StatementFactory}実装クラス。\n\n**作成者:** T.Kawasaki  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "expirationSetting",
+      "level": 3,
+      "content": "```java\nprivate ExpirationSetting expirationSetting\n```\n\n有効期限設定\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "resultSetCache",
+      "level": 3,
+      "content": "```java\nprivate ResultSetCache resultSetCache\n```\n\nキャッシュ\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s4"
+    },
+    {
+      "title": "getSqlPStatementBySqlId",
+      "level": 3,
+      "content": "```java\npublic SqlPStatement getSqlPStatementBySqlId(String sqlId, Connection con, DbExecutionContext context)\n                                      throws SQLException\n```\n\n{@inheritDoc}\n指定されたSQL IDがキャッシュ対象かどうかを判定し、\nキャッシュ対象である場合は、キャッシュ機能を備えた{@link CacheableSqlPStatement}を返却する。\nキャッシュ対象でない場合、スーパクラスのメソッドが起動される。\n\n**パラメータ:**\n- `sqlId` - 下記形式のSQL_ID（SQLリソース名 + \"#\" + SQL_ID）\n\n**戻り値:**\n{@link SqlPStatement}実装クラスのインスタンス\n\n---",
+      "id": "s5"
+    },
+    {
+      "title": "getParameterizedSqlPStatementBySqlId",
+      "level": 3,
+      "content": "```java\npublic ParameterizedSqlPStatement getParameterizedSqlPStatementBySqlId(String sqlId, Connection con, DbExecutionContext context)\n                                                                throws SQLException\n```\n\n{@inheritDoc}\n指定されたSQL IDがキャッシュ対象かどうかを判定し、\nキャッシュ対象である場合は、キャッシュ機能を備えた{@link CacheableSqlPStatement}を返却する。\nキャッシュ対象でない場合、スーパクラスのメソッドが起動される。\n\n**パラメータ:**\n- `sqlId` - 下記形式のSQL_ID（SQLリソース名 + \"#\" + SQL_ID）\n- `con` - コネクション\n\n**戻り値:**\n{@link ParameterizedSqlPStatement}実装クラスのインスタンス\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "getParameterizedSqlPStatementBySqlId",
+      "level": 3,
+      "content": "```java\npublic ParameterizedSqlPStatement getParameterizedSqlPStatementBySqlId(String original, String sqlId, Connection con, DbExecutionContext context)\n                                                                throws SQLException\n```\n\n{@inheritDoc}\n指定されたSQL IDがキャッシュ対象かどうかを判定し、\nキャッシュ対象である場合は、キャッシュ機能を備えた{@link CacheableSqlPStatement}を返却する。\nキャッシュ対象でない場合、スーパクラスのメソッドが起動される。\n\n**パラメータ:**\n- `original` - オリジナルのSQL\n- `sqlId` - SQL ID（SQLリソース名 + \"#\" + SQL_ID）\n- `con` - コネクション\n\n**戻り値:**\n{@link ParameterizedSqlPStatement}実装クラスのインスタンス\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "setRSCacheAttrTo",
+      "level": 3,
+      "content": "```java\nprotected void setRSCacheAttrTo(CacheableSqlPStatement sqlp)\n```\n\n指定されたステートメントにキャッシュに関する以下の属性を設定する。\n<ul>\n<li>有効期限設定</li>\n<li>キャッシュ</li>\n</ul>\n\n**パラメータ:**\n- `sqlp` - 設定対象となるステートメント\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "isCacheTarget",
+      "level": 3,
+      "content": "```java\nprivate boolean isCacheTarget(String sqlId)\n```\n\n指定されたSQL IDがキャッシュ対象かどうか判定する。\n\n**パラメータ:**\n- `sqlId` - 判定対象となるSQL ID\n\n**戻り値:**\nキャッシュ対象である場合、真\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "setExpirationSetting",
+      "level": 3,
+      "content": "```java\npublic void setExpirationSetting(ExpirationSetting expirationSetting)\n```\n\nキャッシュ有効期限設定を設定する（必須）。\n本メソッドはDIコンテナから起動されることを想定している。\n\n**パラメータ:**\n- `expirationSetting` - 有効期限設定\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "setResultSetCache",
+      "level": 3,
+      "content": "```java\npublic void setResultSetCache(ResultSetCache resultSetCache)\n```\n\nキャッシュを設定する（必須）。\n本メソッドはDIコンテナから起動されることを想定している。\n\n**パラメータ:**\n- `resultSetCache` - キャッシュ\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "checkStatus",
+      "level": 3,
+      "content": "```java\nprivate void checkStatus()\n```\n\nステータスのチェックを行う。\n必要なプロパティが全て設定されていることを確認する。\n\n---",
+      "id": "s12"
+    }
+  ],
+  "id": "javadoc-nablarch-core-db-cache-statement-CacheableStatementFactory"
+}

@@ -1,0 +1,86 @@
+{
+  "title": "class ResumeDataReader",
+  "content": "**パッケージ:** nablarch.fw.reader\n\n**実装されたインタフェース:**\n- DataReader<TData>\n\n---\n\n```java\npublic class ResumeDataReader\nimplements DataReader<TData>\n```\n\nファイルを読み込むデータリーダをラップして、レジューム機能を追加するデータリーダ。\n<p>\n本クラスは、ラップしたデータリーダの{@link DataReader#read(ExecutionContext) read}メソッドの実行回数を、\n正常に処理できたポイントとして実行管理テーブルに保存する。<br/>\n正常に処理できたポイントは業務処理がコミットされるタイミングで保存される。\n業務処理が失敗しトランザクションがロールバックされる場合、正常に処理できたポイントの保存は行われない。<br/>\n障害発生時などに処理を再実行する場合、本クラスは正常に処理できたポイントまでのファイル読み込み（業務処理）をスキップし、\n再開ポイント(正常に処理できたポイントの次のポイント)からファイル読み込みを再開する。<br/>\nそのため、再開ポイント以前のデータに対してパッチを当てた際は、正常に処理できたポイントを0クリアする必要がある。<br/>\nなお、{@link nablarch.fw.action.FileBatchAction}を継承したバッチ業務アクションを作成する場合は、\n{@code FileBatchAction}がデフォルトで{@link ValidatableFileDataReader}をラップした{@code ResumeDataReader}を生成するので、\nアプリケーションプログラマが上記２つのオブジェクトを生成するコードを実装する必要はない。\n<p>\nまた本クラスは内部的に{@link ResumePointManager}を使用するため、{@link ResumePointManager}の設定を行っておくこと。\n\n**param:** このクラスが読み込んだデータの型  \n**作成者:** Masato Inoue  \n**関連項目:** FileDataReader  \n**関連項目:** nablarch.fw.reader.ResumePointManager  \n\n---",
+  "no_knowledge_content": false,
+  "sections": [
+    {
+      "title": "フィールドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s1"
+    },
+    {
+      "title": "sourceReader",
+      "level": 3,
+      "content": "```java\nprivate DataReader<TData> sourceReader\n```\n\nレジューム機能を追加するデータリーダ\n\n---",
+      "id": "s2"
+    },
+    {
+      "title": "resumePointManager",
+      "level": 3,
+      "content": "```java\nprivate ResumePointManager resumePointManager\n```\n\n実行管理テーブルに格納されている、正常に処理できたポイントの参照・更新を行うクラスのインスタンス\n\n---",
+      "id": "s3"
+    },
+    {
+      "title": "resumePoint",
+      "level": 3,
+      "content": "```java\nprivate int resumePoint\n```\n\n正常に処理できたポイント\n\n---",
+      "id": "s4"
+    },
+    {
+      "title": "メソッドの詳細",
+      "level": 2,
+      "content": "",
+      "id": "s5"
+    },
+    {
+      "title": "read",
+      "level": 3,
+      "content": "```java\npublic synchronized TData read(ExecutionContext ctx)\n```\n\nレジューム機能を追加するデータリーダからデータを読み込む。\n<p/>\nデータを読み込んだ回数を正常に処理できたポイントとして実行管理テーブルに保存し、\n処理再開時にはその次のポイントから読み込みを再開する。<br/>\nトランザクションループ制御ハンドラの設定により一定件数ごとにコミットを行なっている場合は、\nコミット前の最後の処理で正常に処理できたポイントを実行管理テーブルに保存する。<br/>\n次に読み込むデータが存在しない場合は{@code null}を返す。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n入力データオブジェクト\n\n---",
+      "id": "s6"
+    },
+    {
+      "title": "hasNext",
+      "level": 3,
+      "content": "```java\npublic synchronized boolean hasNext(ExecutionContext ctx)\n```\n\n次に読み込むデータが存在するかどうかを返却する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**戻り値:**\n次に読み込むデータが存在する場合は{@code true}\n\n---",
+      "id": "s7"
+    },
+    {
+      "title": "close",
+      "level": 3,
+      "content": "```java\npublic synchronized void close(ExecutionContext ctx)\n```\n\nこのリーダの利用を停止し、内部的に保持している各種リソースを解放する。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n---",
+      "id": "s8"
+    },
+    {
+      "title": "readToResumePoint",
+      "level": 3,
+      "content": "```java\nprotected void readToResumePoint(ExecutionContext ctx)\n```\n\nレジューム機能が有効になっている場合、正常に処理できたポイントまでのレジュームを行う。\n\n**パラメータ:**\n- `ctx` - 実行コンテキスト\n\n**例外:**\n- `IllegalStateException` - 次に読み込むデータが存在しない場合\n\n---",
+      "id": "s9"
+    },
+    {
+      "title": "getInvalidResumePointMessage",
+      "level": 3,
+      "content": "```java\nprivate String getInvalidResumePointMessage(int resumePoint, int numberOfReads)\n```\n\n実行管理テーブルに格納されている、正常に処理できたポイントが不正な場合の例外メッセージを取得する。\n\n**パラメータ:**\n- `resumePoint` - 正常に処理できたポイント\n- `numberOfReads` - 入力データの読み込み回数\n\n**戻り値:**\n正常に処理できたポイントが不正な場合の例外メッセージ\n\n---",
+      "id": "s10"
+    },
+    {
+      "title": "loadResumePoint",
+      "level": 3,
+      "content": "```java\nprotected int loadResumePoint()\n```\n\n正常に処理できたポイントを取得する。\n<p/>\nレジューム機能が無効になっている場合は0を返す。\n\n**戻り値:**\n正常に処理できたポイント\n\n---",
+      "id": "s11"
+    },
+    {
+      "title": "saveResumePoint",
+      "level": 3,
+      "content": "```java\nprotected void saveResumePoint()\n```\n\n正常に処理できたポイントを保存する。\n<p/>\nレジューム機能が無効になっている場合は何もしない。\n\n---",
+      "id": "s12"
+    },
+    {
+      "title": "setSourceReader",
+      "level": 3,
+      "content": "```java\npublic synchronized ResumeDataReader<TData> setSourceReader(DataReader<TData> sourceReader)\n```\n\nレジューム機能を追加するデータリーダを設定する。\n\n**パラメータ:**\n- `sourceReader` - レジューム機能を追加するデータリーダ\n\n**戻り値:**\nこのオブジェクト自体\n\n---",
+      "id": "s13"
+    }
+  ],
+  "id": "javadoc-nablarch-fw-reader-ResumeDataReader"
+}
