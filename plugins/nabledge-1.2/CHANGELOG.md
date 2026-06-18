@@ -4,6 +4,14 @@ nabledge-1.2プラグインの主な変更内容を記録しています。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に基づいています。
 
+## [0.3] - 2026-06-18
+
+### 追加
+- 質問に含まれる概念（データ変換、排他制御など）から、その概念を担当するNablarchクラスが記述されたページを推論して選定できるようになりました。クラス名を知らなくても、より適切なドキュメントページが回答に使われるようになりました。
+
+### 変更
+- コード分析の依存グラフに表示するクラス数を最大15件に制限しました。大規模なコードベースでも見やすい図が生成されるようになりました。
+
 ## [0.2] - 2026-05-26
 
 ### 変更
@@ -24,5 +32,6 @@ nabledge-1.2プラグインの主な変更内容を記録しています。
 
 - Nablarch 1.2の全ドキュメントをカバーする知識ファイルを追加しました。
 
+[0.3]: https://github.com/nablarch/nabledge/releases/tag/0.10
 [0.2]: https://github.com/nablarch/nabledge/releases/tag/0.9
 [0.1]: https://github.com/nablarch/nabledge/releases/tag/0.8

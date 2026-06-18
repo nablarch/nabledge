@@ -4,6 +4,15 @@ nabledge-6プラグインの主な変更内容を記録しています。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に基づいています。
 
+## [0.9] - 2026-06-18
+
+### 追加
+- 既存の知識ファイルから参照しているJavadocを知識として追加しました。メソッドの動作、パラメータ、戻り値、例外など、Javadocレベルの詳細についてnabledgeに直接質問できるようになりました。
+- 質問に含まれる概念（データ変換、排他制御など）から、その概念を担当するNablarchクラスが記述されたページを推論して選定できるようになりました。クラス名を知らなくても、より適切なドキュメントページが回答に使われるようになりました。
+
+### 変更
+- コード分析の依存グラフに表示するクラス数を最大15件に制限しました。大規模なコードベースでも見やすい図が生成されるようになりました。
+
 ## [0.8] - 2026-05-26
 
 ### 変更
@@ -64,6 +73,7 @@ nabledge-6プラグインの主な変更内容を記録しています。
 ### 追加
 - 評価版として、Nablarch 6のバッチ処理に関する基礎知識とコード分析ワークフローを提供
 
+[0.9]: https://github.com/nablarch/nabledge/releases/tag/0.10
 [0.8]: https://github.com/nablarch/nabledge/releases/tag/0.9
 [0.7]: https://github.com/nablarch/nabledge/releases/tag/0.7
 [0.6]: https://github.com/nablarch/nabledge/releases/tag/0.6
