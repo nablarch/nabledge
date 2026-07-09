@@ -187,7 +187,25 @@ Otherwise, generate a Japanese answer following the steps below.
 **注意点**: Constraints, resource management, common mistakes
 - Omit this section if nothing applies
 
-参照: Only sections actually cited in the answer (file.json:sN format, omit category path)
+参照: One entry per cited file, in this format:
+- Page title (text before ` > ` in the `# Page > Section` header from `sections_content`)
+  .claude/skills/nabledge-6/docs/<derived path with .md extension>
+  Section title (text after ` > ` in the header)
+  Additional section title (repeat for each further section cited from the same file)
+
+Path derivation: take the JSON path from the `=== file : sN ===` delimiter (e.g. `component/libraries/libraries-database.json`), prepend `.claude/skills/nabledge-6/docs/`, replace `.json` with `.md`.
+
+Example:
+参照:
+- データベースアクセス(JDBCラッパー)
+  .claude/skills/nabledge-6/docs/component/libraries/libraries-database.md
+  現在のトランザクションとは異なるトランザクションでSQLを実行する
+- ユニバーサルDAO
+  .claude/skills/nabledge-6/docs/component/libraries/libraries-universal-dao.md
+  現在のトランザクションとは異なるトランザクションで実行する
+  条件を指定して検索する
+
+Only include sections actually cited in the answer.
 
 Note: General Java/programming knowledge (try-catch, Bean, getter/setter, etc.) may be used alongside knowledge sections.
 

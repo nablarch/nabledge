@@ -167,7 +167,10 @@ For each Nablarch component, include:
 3. **使用方法**: Code example
 4. **重要ポイント**: Critical points (why use, gotchas, performance)
 5. **このコードでの使い方**: How it's used in analyzed code
-6. **詳細**: Link to knowledge base
+6. **詳細**: Markdown link to the knowledge docs file (using `sections_metadata`), followed by indented section title(s) on the next line(s). Format:
+   [page_title](docs_path)
+     section_title
+   If multiple sections from the same file, list all section titles indented.
 
 **Example**:
 
@@ -196,7 +199,15 @@ mapper.close();
 - `handle()`で各レコードを`mapper.write(dto)`で出力
 - `terminate()`で`mapper.close()`してリソース解放
 
-**詳細**: [データバインド知識ベース](../../.claude/skills/nabledge-1.4/docs/features/libraries/data-bind.md)
+**詳細**: [データベースアクセス(検索、更新、登録、削除)機能](../../.claude/skills/nabledge-1.4/docs/component/libraries/libraries-04-DbAccessSpec.md)
+  概要
+```
+
+Multiple sections from the same file:
+```markdown
+**詳細**: [データベースアクセス(検索、更新、登録、削除)機能](../../.claude/skills/nabledge-1.4/docs/component/libraries/libraries-04-DbAccessSpec.md)
+  概要
+  特徴
 ```
 
 ### {{knowledge_base_links}}

@@ -123,7 +123,15 @@ Output directory: .nabledge/20260210
      ```
    - Read all results (up to 10 sections; if more, prioritize sections whose titles directly match Nablarch class names from Step 2)
 
-**Output**: Knowledge file basenames for Step 4.2, knowledge content for documentation
+4. **Build sections_metadata** for Step 4.4 `**詳細**:` links:
+   - For each section in the `read-sections.sh` output, extract three values from two different lines:
+     - `file` (JSON path): from the `=== <file> : sN ===` delimiter line (e.g. `component/libraries/libraries-universal-dao.json`)
+     - `page_title`: text before ` > ` in the `# <page_title> > <section_title>` header line
+     - `section_title`: text after ` > ` in the `# <page_title> > <section_title>` header line
+   - Compute `docs_path`: take `file` (e.g. `component/libraries/libraries-universal-dao.json`), prepend `../../.claude/skills/nabledge-5/docs/`, replace `.json` with `.md` → e.g. `../../.claude/skills/nabledge-5/docs/component/libraries/libraries-universal-dao.md`
+   - Save as `sections_metadata`: list of `{file, page_title, section_title, docs_path}`
+
+**Output**: Knowledge file basenames for Step 4.2, knowledge content for documentation, `sections_metadata` for Step 4.4
 
 ### Step 4: Generate and output documentation
 
