@@ -4,6 +4,12 @@ nabledge-1.2プラグインの主な変更内容を記録しています。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に基づいています。
 
+## [0.4] - 2026-07-10
+
+### 変更
+- 質問回答の「参照」欄に、引用したドキュメントの名称・ファイルパス・セクション名が表示されるようになりました。参照先のドキュメントとセクションをすぐに確認できます。
+- コード分析の「詳細」リンクに、参照先のドキュメントの名称・ファイルパス・セクション名が表示されるようになりました。参照先のドキュメントとセクションをすぐに確認できます。
+
 ## [0.3] - 2026-06-18
 
 ### 追加
@@ -32,6 +38,7 @@ nabledge-1.2プラグインの主な変更内容を記録しています。
 
 - Nablarch 1.2の全ドキュメントをカバーする知識ファイルを追加しました。
 
+[0.4]: https://github.com/nablarch/nabledge/releases/tag/0.11
 [0.3]: https://github.com/nablarch/nabledge/releases/tag/0.10
 [0.2]: https://github.com/nablarch/nabledge/releases/tag/0.9
 [0.1]: https://github.com/nablarch/nabledge/releases/tag/0.8

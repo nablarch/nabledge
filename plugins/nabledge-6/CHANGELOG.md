@@ -4,6 +4,12 @@ nabledge-6プラグインの主な変更内容を記録しています。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に基づいています。
 
+## [0.10] - 2026-07-10
+
+### 変更
+- 質問回答の「参照」欄に、引用したドキュメントの名称・ファイルパス・セクション名が表示されるようになりました。参照先のドキュメントとセクションをすぐに確認できます。
+- コード分析の「詳細」リンクに、参照先のドキュメントの名称・ファイルパス・セクション名が表示されるようになりました。参照先のドキュメントとセクションをすぐに確認できます。
+
 ## [0.9] - 2026-06-18
 
 ### 追加
@@ -73,6 +79,7 @@ nabledge-6プラグインの主な変更内容を記録しています。
 ### 追加
 - 評価版として、Nablarch 6のバッチ処理に関する基礎知識とコード分析ワークフローを提供
 
+[0.10]: https://github.com/nablarch/nabledge/releases/tag/0.11
 [0.9]: https://github.com/nablarch/nabledge/releases/tag/0.10
 [0.8]: https://github.com/nablarch/nabledge/releases/tag/0.9
 [0.7]: https://github.com/nablarch/nabledge/releases/tag/0.7
