@@ -4,6 +4,12 @@ nabledge-6プラグインの主な変更内容を記録しています。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) に基づいています。
 
+## [1.0] - 2026-08-03
+
+### 変更
+
+- Nablarch 6対応プラグインの安定版をリリースしました。
+
 ## [0.10] - 2026-07-10
 
 ### 変更
@@ -79,6 +85,7 @@ nabledge-6プラグインの主な変更内容を記録しています。
 ### 追加
 - 評価版として、Nablarch 6のバッチ処理に関する基礎知識とコード分析ワークフローを提供
 
+[1.0]: https://github.com/nablarch/nabledge/releases/tag/1.0
 [0.10]: https://github.com/nablarch/nabledge/releases/tag/0.11
 [0.9]: https://github.com/nablarch/nabledge/releases/tag/0.10
 [0.8]: https://github.com/nablarch/nabledge/releases/tag/0.9
