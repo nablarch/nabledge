@@ -99,6 +99,6 @@ nabledge-1.3 が実行するコマンドのうち、`scripts/` 配下のスク�
 
 > The terminal is awaiting input. Please provide the required input to the terminal.
 
-**原因**: VS Code の Copilot 拡張に含まれるターミナル出力監視（`chat-terminal-output-monitor`）がコマンドの完了を誤検知する既知の問題です。Nabledge 固有の問題ではありません（microsoft/vscode#309107）。
+**原因**: VS Code の Copilot 拡張に含まれるターミナル出力監視（`chat-terminal-output-monitor`）がコマンドの完了を誤検知する既知の問題です。本プラグイン固有の問題ではありません（microsoft/vscode#309107）。
 
 **対処法**: 操作不要です。そのまま待てばワークフローは正常に完了します。メッセージが消えない場合は「Focus terminal」をクリックしてから Enter を押すと処理が続行します。
