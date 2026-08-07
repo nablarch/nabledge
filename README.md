@@ -14,7 +14,24 @@
 | [nabledge-1.3](plugins/nabledge-1.3/README.md) | Nablarch 1.3.7 |
 | [nabledge-1.2](plugins/nabledge-1.2/README.md) | Nablarch 1.2.8 |
 
-インストール方法や使い方は各プラグインのREADMEを参照してください。
+## インストール
+
+プロジェクトルートで以下のコマンドを実行するだけでインストールできます。
+`-v` には上記表の `nabledge-` に続く値（`6` `5` `1.4` `1.3` `1.2`）を指定します。
+
+**Claude Code**:
+```bash
+curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-cc.sh | bash -s -- -v 6
+```
+
+**GitHub Copilot**:
+```bash
+curl -sSL https://raw.githubusercontent.com/nablarch/nabledge/main/setup-ghc.sh | bash -s -- -v 6
+```
+
+`-v 5,6` のようにカンマ区切りで複数、`-v all` で全バージョンをインストールできます。
+
+詳しい使い方は上記プラグインのリンクから各バージョンの利用ガイドを参照してください。
 
 ## 変更履歴
 
