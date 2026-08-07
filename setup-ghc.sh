@@ -37,7 +37,7 @@ while getopts "v:h" opt; do
             echo ""
             echo "Options:"
             echo "  -v <version>  Version(s) to install. Comma-separated or 'all'."
-            echo "                Available: 5, 6, all (default: all)"
+            echo "                Available: 6, 5, 1.4, 1.3, 1.2, all (default: all)"
             echo ""
             echo "Examples:"
             echo "  setup-ghc.sh            # Install all versions"
